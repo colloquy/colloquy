@@ -670,7 +670,6 @@
 		92823CEB168FE6CB000EC36E /* CQIgnoreRulesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQIgnoreRulesController.m; sourceTree = "<group>"; };
 		92823CED168FE6EC000EC36E /* KAIgnoreRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KAIgnoreRule.h; sourceTree = "<group>"; };
 		92823CEE168FE6EC000EC36E /* KAIgnoreRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KAIgnoreRule.m; sourceTree = "<group>"; };
-		92823D31169114FA000EC36E /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		92823D3316911677000EC36E /* CQConsoleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQConsoleController.h; path = Mobile/Controllers/CQConsoleController.h; sourceTree = "<group>"; };
 		92823D3416911677000EC36E /* CQConsoleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQConsoleController.m; path = Mobile/Controllers/CQConsoleController.m; sourceTree = "<group>"; };
 		92823D3D169123FD000EC36E /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDLog.h; path = Logging/DDLog.h; sourceTree = "<group>"; };
@@ -1391,7 +1390,6 @@
 				929BCABA17C0D3D60046B081 /* SafariServices.framework */,
 				92AD95A417E2F1780044B8B1 /* Social.framework */,
 				1CBC07CD0F0741E400EEBCFB /* SystemConfiguration.framework */,
-				92823D31169114FA000EC36E /* Twitter.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1C957EBB11F7EFF3001950FD /* libicucore.dylib */,
 				92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */,
