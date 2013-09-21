@@ -19,6 +19,7 @@
 
 - (NSUInteger) indexOfViewController:(id <CQChatViewController>) controller;
 - (void) addViewController:(id <CQChatViewController>) controller;
+- (void) addViewControllers:(NSArray *) controllers;
 - (void) removeViewController:(id <CQChatViewController>) controller;
 
 - (BOOL) connectionHasAnyChatRooms:(MVChatConnection *) connection;

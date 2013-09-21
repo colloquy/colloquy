@@ -1166,12 +1166,12 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (NSRange) rangeOfRegex:(NSString *) regex inRange:(NSRange) range {
-	return [self rangeOfRegex:regex options:NSMatchingReportCompletion inRange:range capture:0 error:nil];
+	return [self rangeOfRegex:regex options:0 inRange:range capture:0 error:nil];
 }
 
 - (NSRange) rangeOfRegex:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error {
 	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];	
-	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingCompleted range:range];
+	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:range];
 
 	NSRange foundRange = [result rangeAtIndex:capture];
 	if (!(foundRange.location + foundRange.length))
@@ -1185,7 +1185,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 - (NSString *) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error {
 	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
-	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:options range:range];
+	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:range];
 
 	NSRange resultRange = [result rangeAtIndex:capture];
 
@@ -1197,7 +1197,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 - (NSArray *) captureComponentsMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options range:(NSRange) range error:(NSError **) error {
 	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
-	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:options range:range];
+	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:range];
 
 	if (!result)
 		return nil;

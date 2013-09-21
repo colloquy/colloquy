@@ -23,13 +23,6 @@
 	if (!(self = [super initWithStyle:UITableViewStylePlain]))
 		return nil;
 
-	self.title = NSLocalizedString(@"Connections", @"Connections view title");
-
-	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showPreferences:)];
-	self.navigationItem.leftBarButtonItem = settingsItem;
-
-	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"Add connection.", @"Voiceover add connection label");
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionNicknameAcceptedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionNicknameRejectedNotification object:nil];
 
@@ -88,6 +81,13 @@
 
 - (void) viewDidLoad {
 	[super viewDidLoad];
+
+	self.title = NSLocalizedString(@"Connections", @"Connections view title");
+
+	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showPreferences:)];
+	self.navigationItem.leftBarButtonItem = settingsItem;
+
+	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"Add connection.", @"Voiceover add connection label");
 
 	self.tableView.allowsSelectionDuringEditing = YES;
 

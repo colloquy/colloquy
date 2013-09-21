@@ -362,7 +362,7 @@ static BOOL showingKeyboard;
 	for (NSDictionary *message in _recentMessages) {
 		static NSArray *sameKeys = nil;
 		if (!sameKeys)
-			sameKeys = [[NSArray alloc] initWithObjects:@"message", @"messagePlain", @"action", @"notice", @"highlighted", @"identifier", @"type", nil];
+			sameKeys = @[@"message", @"messagePlain", @"action", @"notice", @"highlighted", @"identifier", @"type"];
 
 		NSMutableDictionary *newMessage = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:message];
 
@@ -616,7 +616,7 @@ static BOOL showingKeyboard;
 			[completions addObject:nickname];
 
 		static NSArray *services;
-		if (!services) services = [[NSArray alloc] initWithObjects:@"NickServ", @"ChanServ", @"MemoServ", nil];
+		if (!services) services = @[@"NickServ", @"ChanServ", @"MemoServ", @"OperServ"];
 
 		for (NSString *service in services) {
 			if ([service hasCaseInsensitivePrefix:word] && ![service isCaseInsensitiveEqualToString:word])
@@ -633,12 +633,11 @@ static BOOL showingKeyboard;
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/join", @"/list", @"/away", @"/whois", @"/say", @"/raw", @"/quote", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/onotice", @"/umode", @"/globops",
+		if (!commands) commands = @[@"/me", @"/msg", @"/nick", @"/join", @"/list", @"/away", @"/whois", @"/say", @"/raw", @"/quote", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/onotice", @"/umode", @"/globops",
 #if ENABLE(FILE_TRANSFERS)
 		@"/dcc",
 #endif
-		@"/aaway", @"/anick", @"/aquit", @"/amsg", @"/ame", @"/google", @"/wikipedia", @"/amazon", @"/safari", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/ipod", @"/music", @"/squit", @"/welcome", @"/sysinfo",
-		@"/ignore", @"/unignore", nil];
+		@"/aaway", @"/anick", @"/aquit", @"/amsg", @"/ame", @"/google", @"/wikipedia", @"/amazon", @"/safari", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/ipod", @"/music", @"/squit", @"/welcome", @"/sysinfo", @"/ignore", @"/unignore"];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])

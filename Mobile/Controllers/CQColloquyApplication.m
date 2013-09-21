@@ -281,7 +281,7 @@ static NSMutableArray *highlightWords;
 	CQChatPresentationController *presentationController = [CQChatController defaultController].chatPresentationController;
 	[presentationController setStandardToolbarItems:@[_connectionsBarButtonItem] animated:NO];
 
-	NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQChatController defaultController].chatNavigationController, presentationController, nil];
+	NSArray *viewControllers = @[[CQChatController defaultController].chatNavigationController, presentationController];
 	splitViewController.viewControllers = viewControllers;
 	
 	_mainViewController = splitViewController;
@@ -309,7 +309,7 @@ static NSMutableArray *highlightWords;
 		UITabBarController *tabBarController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
 		tabBarController.delegate = self;
 
-		NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQConnectionsController defaultController].connectionsNavigationController, [CQChatController defaultController].chatNavigationController, nil];
+		NSArray *viewControllers = @[[CQConnectionsController defaultController].connectionsNavigationController, [CQChatController defaultController].chatNavigationController];
 		tabBarController.viewControllers = viewControllers;
 
 		tabBarController.selectedIndex = [[CQSettingsController settingsController] integerForKey:@"CQSelectedTabIndex"];
@@ -532,8 +532,10 @@ static NSMutableArray *highlightWords;
 	if (singly && self.modalViewController) {
 		[self dismissModalViewControllerAnimated:animated];
 		if (animated) {
-			NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:modalViewController, @"modalViewController", @(animated), @"animated", nil];
-			[self performSelector:@selector(_presentModalViewControllerWithInfo:) withObject:info afterDelay:0.5];
+			[self performSelector:@selector(_presentModalViewControllerWithInfo:) withObject:@{
+				@"modalViewController": modalViewController,
+				@"animated": @(animated)
+			} afterDelay:0.5];
 			return;
 		}
 	}

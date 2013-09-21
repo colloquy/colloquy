@@ -32,6 +32,10 @@
 	self.contentSizeForViewInPopover = CGSizeMake(width, height);
 }
 
+- (BOOL) shouldAutorotate {
+	return YES;
+}
+
 - (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
 	return UIInterfaceOrientationPortrait;
 }

@@ -176,9 +176,7 @@
 	[self layoutSubviewsWithAnimation:animated withDelay:animationDelay];
 
 	if (animated) {
-		animationDelay += 0.15;
-
-		[UIView animateWithDuration:.2 delay:0. options:UIViewAnimationOptionCurveEaseIn animations:^{
+		[UIView animateWithDuration:.35 delay:0. options:UIViewAnimationOptionCurveEaseIn animations:^{
 			label.alpha = (_available ? 1. : 0.5);
 		} completion:^(BOOL finished) {
 			_animating = NO;
@@ -193,9 +191,7 @@
 - (void) prepareForReuse {
 	[super prepareForReuse];
 
-	for (UILabel *label in _chatPreviewLabels)
-		[label removeFromSuperview];
-
+	[_chatPreviewLabels makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	[_chatPreviewLabels removeAllObjects];
 
 	self.name = @"";

@@ -7,7 +7,7 @@
 	if (!(self = [super init]))
 		return nil;
 
-	_standardToolbarItems = [[NSArray alloc] init];
+	_standardToolbarItems = @[];
 
 	return self;
 }
@@ -31,12 +31,6 @@
 	[_toolbar sizeToFit];
 
 	[view addSubview:_toolbar];
-}
-
-- (void) viewDidUnload {
-	[super viewDidUnload];
-
-	_toolbar = nil;
 }
 
 - (void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation duration:(NSTimeInterval) duration {

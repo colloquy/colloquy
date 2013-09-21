@@ -451,6 +451,8 @@ static CQSoundController *fileTransferSound;
 }
 
 - (void) restorePersistentState:(NSDictionary *) state forConnection:(MVChatConnection *) connection {
+	NSMutableArray *viewControllers = [NSMutableArray array];
+
 	for (NSDictionary *controllerState in state[@"chatControllers"]) {
 		NSString *className = controllerState[@"class"];
 		Class class = NSClassFromString(className);
@@ -461,11 +463,13 @@ static CQSoundController *fileTransferSound;
 		if (!controller)
 			continue;
 
-		[[CQChatOrderingController defaultController] addViewController:controller];
+		[viewControllers addObject:controller];
 
 		if ([controllerState[@"active"] boolValue])
 			_nextController = controller;
 	}
+
+	[[CQChatOrderingController defaultController] addViewControllers:viewControllers];
 }
 
 #pragma mark -

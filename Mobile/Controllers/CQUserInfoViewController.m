@@ -11,15 +11,25 @@
 static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFormat) {
 	static NSDictionary *singularWords;
 	if (!singularWords)
-		singularWords = [[NSDictionary alloc] initWithObjectsAndKeys:NSLocalizedString(@"second", "Singular second"), @1U, NSLocalizedString(@"minute", "Singular minute"), @60U, NSLocalizedString(@"hour", "Singular hour"), @3600U, NSLocalizedString(@"day", "Singular day"), @86400U, NSLocalizedString(@"week", "Singular week"), @604800U, NSLocalizedString(@"month", "Singular month"), @2628000U, NSLocalizedString(@"year", "Singular year"), @31536000U, nil];
+		singularWords = @{
+			@(1U): NSLocalizedString(@"second", "Singular second"), @(60U): NSLocalizedString(@"minute", "Singular minute"),
+			@(3600U): NSLocalizedString(@"hour", "Singular hour"), @(86400U): NSLocalizedString(@"day", "Singular day"),
+			@(604800U): NSLocalizedString(@"week", "Singular week"), @(2628000U): NSLocalizedString(@"month", "Singular month"),
+			@(31536000U): NSLocalizedString(@"year", "Singular year")
+		};
 
 	static NSDictionary *pluralWords;
 	if (!pluralWords)
-		pluralWords = [[NSDictionary alloc] initWithObjectsAndKeys:NSLocalizedString(@"seconds", "Plural seconds"), @1U, NSLocalizedString(@"minutes", "Plural minutes"), @60U, NSLocalizedString(@"hours", "Plural hours"), @3600U, NSLocalizedString(@"days", "Plural days"), @86400U, NSLocalizedString(@"weeks", "Plural weeks"), @604800U, NSLocalizedString(@"months", "Plural months"), @2628000U, NSLocalizedString(@"years", "Plural years"), @31536000U, nil];
+		pluralWords = @{
+			@(1U): NSLocalizedString(@"seconds", "Plural seconds"), @(60U): NSLocalizedString(@"minutes", "Plural minutes"),
+			@(3600U): NSLocalizedString(@"hours", "Plural hours"), @(86400U): NSLocalizedString(@"days", "Plural days"),
+			@(604800U): NSLocalizedString(@"weeks", "Plural weeks"), @(2628000U): NSLocalizedString(@"months", "Plural months"),
+			@(31536000U): NSLocalizedString(@"years", "Plural years")
+		};
 
 	static NSArray *breaks;
 	if (!breaks)
-		breaks = [[NSArray alloc] initWithObjects:@(1U), @(60U), @(3600U), @(86400U), @(604800U), @(2628000U), @(31536000U), nil];
+		breaks = @[@(1U), @(60U), @(3600U), @(86400U), @(604800U), @(2628000U), @(31536000U)];
 
 	NSTimeInterval seconds = ABS(interval);
 

@@ -83,13 +83,26 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return [_chatControllers indexOfObjectIdenticalTo:controller];
 }
 
-- (void) addViewController:(id <CQChatViewController>) controller {
+- (void) _addViewController:(id <CQChatViewController>) controller resortingRightAway:(BOOL) resortingRightAway {
 	[_chatControllers addObject:controller];
 
-	[self _sortChatControllers];
+	if (resortingRightAway)
+		[self _sortChatControllers];
 
 	NSDictionary *notificationInfo = @{@"controller": controller};
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerAddedChatViewControllerNotification object:self userInfo:notificationInfo];
+}
+
+- (void) addViewController:(id <CQChatViewController>) controller {
+	[self _addViewController:controller resortingRightAway:YES];
+}
+
+- (void) addViewControllers:(NSArray *) controllers {
+	for (id <CQChatViewController> controller in controllers) {
+		NSAssert([controller conformsToProtocol:@protocol(CQChatViewController)], @"Cannot add chat view controller that does not conform to CQChatViewController");
+		[self _addViewController:controller resortingRightAway:NO];
+	}
+	[self _sortChatControllers];
 }
 
 - (void) removeViewController:(id <CQChatViewController>) controller {

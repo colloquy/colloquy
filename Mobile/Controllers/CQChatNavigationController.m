@@ -9,12 +9,6 @@
 	if (!(self = [super init]))
 		return nil;
 
-	self.title = NSLocalizedString(@"Colloquies", @"Colloquies tab title");
-	self.tabBarItem.image = [UIImage imageNamed:@"colloquies.png"];
-	self.delegate = self;
-
-	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	return self;
@@ -34,6 +28,12 @@
 	if (!_chatListViewController) {
 		_chatListViewController = [[CQChatListViewController alloc] init];
 		[self pushViewController:_chatListViewController animated:NO];
+
+		self.title = NSLocalizedString(@"Colloquies", @"Colloquies tab title");
+		self.tabBarItem.image = [UIImage imageNamed:@"colloquies.png"];
+		self.delegate = self;
+
+		self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 	}
 
 	[[CQChatController defaultController] showPendingChatControllerAnimated:NO];

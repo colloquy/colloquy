@@ -723,7 +723,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 #pragma mark -
 
-- (UIViewController *) documentInteractionControllerViewControllerForPreview: (UIDocumentInteractionController *) controller {
+#if ENABLE(FILE_TRANSFERS)
+- (UIViewController *) documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *) controller {
 	return self;
 }
 
@@ -733,6 +734,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	return NO;
 }
+#endif
 
 #pragma mark -
 

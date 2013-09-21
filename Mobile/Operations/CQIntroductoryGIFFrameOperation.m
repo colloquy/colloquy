@@ -154,8 +154,9 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 
 	[_connection cancel];
 
+	NSLog(@"%@", [NSThread callStackSymbols]);
 	__strong __typeof__((_target)) strongTarget = _target;
-	if (strongTarget && _action)
+	if (_action)
 		[strongTarget performSelectorOnMainThread:_action withObject:self waitUntilDone:NO];
 }
 
