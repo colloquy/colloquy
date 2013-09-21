@@ -433,11 +433,6 @@ static BOOL showingKeyboard;
 
 	[self _updateRightBarButtonItemAnimated:NO];
 
-	if ([UIDevice currentDevice].isSystemSeven) {
-		CGFloat topInset = CGRectGetHeight(self.navigationController.navigationBar.frame) + CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
-		transcriptView.scrollView.contentInset = UIEdgeInsetsMake(topInset, 0., 0., 0.);
-	}
-
 	chatInputBar.accessibilityLabel = NSLocalizedString(@"Enter chat message.", @"Voiceover enter chat message label");
 	chatInputBar.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
 
