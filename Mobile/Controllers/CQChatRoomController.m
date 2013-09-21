@@ -231,8 +231,8 @@ static BOOL showLeaveEvents;
 
 		if (!_currentUserListNavigationController) {
 			_currentUserListNavigationController = [[UINavigationController alloc] initWithRootViewController:_currentUserListViewController];
-			_currentUserListNavigationController.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
-
+			if (![UIDevice currentDevice].isSystemSeven)
+				_currentUserListNavigationController.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 		}
 
 		_showingMembersInModalController = YES;

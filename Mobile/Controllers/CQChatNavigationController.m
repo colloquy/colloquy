@@ -33,7 +33,8 @@
 		self.tabBarItem.image = [UIImage imageNamed:@"colloquies.png"];
 		self.delegate = self;
 
-		self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
+		if (![UIDevice currentDevice].isSystemSeven)
+			self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 	}
 
 	[[CQChatController defaultController] showPendingChatControllerAnimated:NO];
@@ -82,6 +83,7 @@
 	if (![NSThread isMainThread])
 		return;
 
-	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
+	if (![UIDevice currentDevice].isSystemSeven)
+		self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 }
 @end

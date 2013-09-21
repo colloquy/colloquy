@@ -36,7 +36,8 @@
 	self.tabBarItem.image = [UIImage imageNamed:@"connections.png"];
 	self.delegate = self;
 
-	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
+	if (![UIDevice currentDevice].isSystemSeven)
+		self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
 	[self pushViewController:_connectionsViewController animated:NO];
 }
@@ -89,6 +90,7 @@
 	if (![NSThread isMainThread])
 		return;
 
-	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
+	if (![UIDevice currentDevice].isSystemSeven)
+		self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 }
 @end
