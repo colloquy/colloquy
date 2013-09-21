@@ -1,6 +1,7 @@
 #import "CQPreferencesListViewController.h"
 #import "CQPreferencesListEditViewController.h"
 #import "CQPreferencesListChannelEditViewController.h"
+#import "CQPreferencesTextViewController.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -141,7 +142,11 @@ enum {
 	} else if (_listType == CQPreferencesListTypeImage) {
 		NSString *path = [[NSBundle mainBundle] pathForResource:item ofType:@"aiff"];
 		if (path.length)
-			return  UITableViewCellAccessoryDetailDisclosureButton;
+			return UITableViewCellAccessoryDetailDisclosureButton;
+	} else {
+		NSString *license = self.details[indexPath.row];
+		if (license.length)
+			return UITableViewCellAccessoryDetailDisclosureButton;
 	}
 
 	return  UITableViewCellAccessoryNone;
@@ -322,6 +327,18 @@ enum {
 		path = [[NSBundle mainBundle] pathForResource:item ofType:@"aiff"];
 	else if (_listType == CQPreferencesListTypeImage)
 		path = [[NSBundle mainBundle] pathForResource:item ofType:@"png"];
+	else {
+		NSString *license = self.details[indexPath.row];
+		if (!license.length)
+			return;
+
+		CQPreferencesTextViewController *textViewController = [[CQPreferencesTextViewController alloc] init];
+		textViewController.text = license;
+		textViewController.title = [self tableView:tableView cellForRowAtIndexPath:indexPath].textLabel.text;
+		[self.navigationController pushViewController:textViewController animated:YES];
+
+		return;
+	}
 
 	if (!path.length)
 		return;

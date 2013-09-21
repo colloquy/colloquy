@@ -291,6 +291,8 @@
 		92AFF84A16B0CE4700940E5D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92AFF84916B0CE4700940E5D /* AVFoundation.framework */; };
 		92AFF85216B0D25D00940E5D /* NSRegularExpressionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AFF85116B0D25D00940E5D /* NSRegularExpressionAdditions.m */; };
 		92B257CA174023B300F303B5 /* CQSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B257C9174023B300F303B5 /* CQSettingsController.m */; };
+		92B6661417ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 92B6661317ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf */; };
+		92B6661717ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B6661617ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m */; };
 		92BB78BD17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */; };
 		92D30F2C116D2B020060EE33 /* UIViewControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */; };
 		92DE5D7917420B05004437C9 /* info-dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 92DE5D7817420B05004437C9 /* info-dark.png */; };
@@ -707,6 +709,9 @@
 		92B257C8174023B300F303B5 /* CQSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQSettingsController.h; sourceTree = "<group>"; };
 		92B257C9174023B300F303B5 /* CQSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQSettingsController.m; sourceTree = "<group>"; };
 		92B257D017403B2900F303B5 /* Colloquy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Colloquy.entitlements; path = ../../Colloquy.entitlements; sourceTree = "<group>"; };
+		92B6661317ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenDyslexic-Regular.otf"; sourceTree = "<group>"; };
+		92B6661517ED7E0D00BA3DD9 /* CQPreferencesTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesTextViewController.h; path = Controllers/CQPreferencesTextViewController.h; sourceTree = "<group>"; };
+		92B6661617ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesTextViewController.m; path = Controllers/CQPreferencesTextViewController.m; sourceTree = "<group>"; };
 		92BB78BB17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQIntroductoryGIFFrameOperation.h; sourceTree = "<group>"; };
 		92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQIntroductoryGIFFrameOperation.m; sourceTree = "<group>"; };
 		92D30F2A116D2B020060EE33 /* UIViewControllerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIViewControllerAdditions.h; path = Mobile/Additions/UIViewControllerAdditions.h; sourceTree = "<group>"; };
@@ -942,6 +947,8 @@
 				1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */,
 				1C6D464B10FAEA1A00BE77ED /* CQPreferencesTableViewController.m */,
 				1C6D464A10FAEA1A00BE77ED /* CQPreferencesTableViewController.h */,
+				92B6661517ED7E0D00BA3DD9 /* CQPreferencesTextViewController.h */,
+				92B6661617ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m */,
 				924B8239116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m */,
 				924B8238116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.h */,
 				89E87C080FA0450800B49230 /* CQSoundController.m */,
@@ -1332,6 +1339,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				92B6661217ED7C5000BA3DD9 /* Fonts */,
 				1CA2652E11C35FB200AB4E44 /* Images */,
 				1CA2653111C35FB800AB4E44 /* Images (2x) */,
 				1C4CE6240FA03D7800215521 /* Sounds */,
@@ -1421,6 +1429,14 @@
 				922B1FDF16926749002ECDFD /* MVDelegateLogger.h */,
 			);
 			name = Logging;
+			sourceTree = "<group>";
+		};
+		92B6661217ED7C5000BA3DD9 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				92B6661317ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf */,
+			);
+			name = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1548,6 +1564,7 @@
 				1C9C34430FFF319C00F79731 /* sectionHeader.png in Resources */,
 				1C9C34F70FFFEFE500F79731 /* disclosureArrow.png in Resources */,
 				1C9C351C0FFFF2C500F79731 /* sectionHeaderHighlighted.png in Resources */,
+				92B6661417ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf in Resources */,
 				1CBEA7C7100318EF00546847 /* bouncer.png in Resources */,
 				1C34A67010183ED900BAA714 /* personBlueSmall.png in Resources */,
 				1C34A6861018411B00BAA714 /* personWhiteSmall.png in Resources */,
@@ -1792,6 +1809,7 @@
 				9290603616B261840095EC03 /* CQPreferencesViewController.m in Sources */,
 				92196CA316C918D10020FE35 /* CQChatRoomInfoDisplayViewController.m in Sources */,
 				92196CA416C918D10020FE35 /* CQChatRoomInfoViewController.m in Sources */,
+				92B6661717ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m in Sources */,
 				9271923C16CFA831003380F0 /* CQChatOrderingController.m in Sources */,
 				927192C616D3272E003380F0 /* CQImportantChatMessageViewController.m in Sources */,
 				922C766B16D9B25400AEFCB4 /* CQBookmarkingController.m in Sources */,

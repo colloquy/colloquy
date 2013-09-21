@@ -73,6 +73,10 @@
 	<true/>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
 	<string>http://colloquy.mobi</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>OpenDyslexic-Regular.otf</string>
+	</array>
 	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UIRequiresPersistentWiFi</key>

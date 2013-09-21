@@ -24,6 +24,7 @@ static NSString *const CQPSEmail = @"Email";
 static NSString *const CQPSFile = @"File";
 static NSString *const CQPSValues = @"Values";
 static NSString *const CQPSTitles = @"Titles";
+static NSString *const CQPSLicenses = @"Licenses";
 static NSString *const CQPSFooterText = @"FooterText";
 static NSString *const CQPSAutocorrectType = @"AutocorrectionType";
 static NSString *const CQPSAutocorrectionTypeDefault = @"Default";
@@ -271,6 +272,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 		CQPreferencesListViewController *preferencesListViewController = [[CQPreferencesListViewController alloc] init];
 		preferencesListViewController.allowEditing = NO;
 		preferencesListViewController.items = rowDictionary[CQPSTitles];
+		preferencesListViewController.details = rowDictionary[CQPSLicenses];
 
 		id key = rowDictionary[CQPSKey];
 		id value = [[CQSettingsController settingsController] objectForKey:key];

@@ -38,6 +38,7 @@ typedef enum {
 @property (nonatomic) BOOL allowEditing;
 @property (nonatomic) NSInteger selectedItemIndex;
 @property (nonatomic, copy) NSArray *items;
+@property (nonatomic, copy) NSArray *details;
 @property (nonatomic, strong) UIImage *itemImage;
 @property (nonatomic, copy) NSString *addItemLabelText;
 @property (nonatomic, copy) NSString *noItemsLabelText;
