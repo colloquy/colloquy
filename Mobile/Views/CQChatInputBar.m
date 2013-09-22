@@ -90,8 +90,6 @@ static BOOL hardwareKeyboard;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
-	_animationDuration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
-
 	_accessoryButton = [UIButton buttonWithType:UIButtonTypeCustom];
 
 	[_accessoryButton addTarget:self action:@selector(accessoryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
