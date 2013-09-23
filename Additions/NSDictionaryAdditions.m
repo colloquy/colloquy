@@ -31,11 +31,15 @@
 	if (!(self = [self init]))
 		return nil;
 
+	[self setObjectsForKeys:keys fromDictionary:dictionary];
+
+	return self;
+}
+
+- (void) setObjectsForKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary {
 	for (id key in keys) {
 		id value = [dictionary objectForKey:key];
 		if (value) [self setObject:value forKey:key];
 	}
-
-	return self;
 }
 @end

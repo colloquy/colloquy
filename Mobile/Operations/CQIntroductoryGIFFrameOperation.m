@@ -101,7 +101,8 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 #pragma mark -
 
 - (void) start {
-	_started = YES;
+	if (_started)
+		return;
 
 	[super start];
 
@@ -109,6 +110,9 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 }
 
 - (void) main {
+	if (_started)
+		return;
+
 	_started = YES;
 
 	[super main];
@@ -154,7 +158,6 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 
 	[_connection cancel];
 
-	NSLog(@"%@", [NSThread callStackSymbols]);
 	__strong __typeof__((_target)) strongTarget = _target;
 	if (_action)
 		[strongTarget performSelectorOnMainThread:_action withObject:self waitUntilDone:NO];

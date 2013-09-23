@@ -5,3 +5,7 @@
 
 - (NSData *) postDataRepresentation; // doesn't support form data
 @end
+
+@interface NSMutableDictionary (NSDictionaryAdditions)
+- (void) setObjectsForKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary;;
+@end

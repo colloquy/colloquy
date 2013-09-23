@@ -100,7 +100,7 @@ static NSString *timestampFormat;
 
 #pragma mark -
 
-static void commonChatReplacment(NSMutableString *string, NSRangePointer textRange) {
+static void commonChatAndImageReplacment(NSMutableString *string, NSRangePointer textRange, NSMutableDictionary *foundGIFs) {
 	if (graphicalEmoticons)
 		[string substituteEmoticonsForEmojiInRange:textRange withXMLSpecialCharactersEncodedAsEntities:YES];
 
@@ -110,7 +110,6 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 	static NSString *urlRegex = @"(\\B(?<!&amp;)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&;#]{2,}\\b)|(\\b(?:[a-zA-Z][a-zA-Z0-9+.-]{2,6}:(?://){0,1}|www\\.)[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+[\\p{L}\\p{N}\\p{M}\\p{S}\\p{C}]\\)?)|([\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+@(?:[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+\\.)+[\\w]{2,})"; 
 
 	NSRange matchedRange = [string rangeOfRegex:urlRegex options:NSRegularExpressionCaseInsensitive inRange:*textRange capture:0 error:NULL];
-	NSMutableDictionary *foundGIFs = [NSMutableDictionary dictionary];
 	while (matchedRange.location != NSNotFound && (matchedRange.location + matchedRange.length) > 0) {
 		NSArray *components = [string cq_captureComponentsMatchedByRegex:urlRegex options:RKLCaseless range:matchedRange error:NULL];
 		NSCAssert(components.count == 4, @"component count needs to be 4");
@@ -149,9 +148,10 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 
 				if (inlineImages && [NSFileManager isValidImageFormat:fullURL.pathExtension]) {
 					if ([fullURL.pathExtension isCaseInsensitiveEqualToString:@"gif"]) {
-						NSNumber *key = @(fullURL.hash);
-						foundGIFs[key] = fullURL;
-						linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\"><img id=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></a>", @(fullURL.hash), [fullURL absoluteString]];
+						NSString *key = [NSString stringWithFormat:@"%d-%d", fullURL.hash, arc4random()];
+						if (foundGIFs)
+							foundGIFs[key] = fullURL;
+						linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\"><img id=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></a>", fullURL, key];
 					} else linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\"><img src=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></a>", [fullURL absoluteString], [fullURL absoluteString]];
 				} else {
 					url = [url stringByReplacingOccurrencesOfString:@"/" withString:@"/\u200b"];
@@ -179,7 +179,7 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 	}
 }
 
-static void mentionChatReplacment(NSMutableString *string, NSRangePointer textRange) {
+static void mentionChatReplacment(NSMutableString *string, NSRangePointer textRange, NSMutableDictionary *unused) {
 	if (!mentionServiceRegex)
 		return;
 
@@ -197,7 +197,7 @@ static void mentionChatReplacment(NSMutableString *string, NSRangePointer textRa
 	}
 }
 
-static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRangePointer range, void (*function)(NSMutableString *, NSRangePointer)) {
+static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRangePointer range, NSMutableDictionary *foundGIFs, void (*function)(NSMutableString *, NSRangePointer, NSMutableDictionary *)) {
 	if (!html || !function || !range)
 		return;
 
@@ -211,7 +211,7 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 
 			NSRange textRange = NSMakeRange(NSMaxRange(tagEndRange), length);
 
-			function(html, &textRange);
+			function(html, &textRange, foundGIFs);
 			range->length += (textRange.length - length);
 
 			break;
@@ -220,7 +220,7 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 		NSUInteger length = (tagStartRange.location - NSMaxRange(tagEndRange));
 		NSRange textRange = NSMakeRange(NSMaxRange(tagEndRange), length);
 		if (length) {
-			function(html, &textRange);
+			function(html, &textRange, foundGIFs);
 			range->length += (textRange.length - length);
 		}
 
@@ -251,20 +251,24 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	if (!messageString.length)
 		return;
 
+	NSMutableDictionary *foundGIFs = [NSMutableDictionary dictionary];
 	NSRange range = NSMakeRange(0, messageString.length);
 	if (stripMessageFormatting) {
 		[messageString stripXMLTags];
 
 		range = NSMakeRange(0, messageString.length);
-		commonChatReplacment(messageString, &range);
+		commonChatAndImageReplacment(messageString, &range, foundGIFs);
+		_processedMessage[CQInlineGIFImageKey] = foundGIFs;
 
 		range = NSMakeRange(0, messageString.length);
-		mentionChatReplacment(messageString, &range);
+		mentionChatReplacment(messageString, &range, NULL);
 		return;
 	}
 
-	applyFunctionToTextInMutableHTMLString(messageString, &range, commonChatReplacment);
-	applyFunctionToTextInMutableHTMLString(messageString, &range, mentionChatReplacment);
+	applyFunctionToTextInMutableHTMLString(messageString, &range, foundGIFs, commonChatAndImageReplacment);
+	applyFunctionToTextInMutableHTMLString(messageString, &range, NULL, mentionChatReplacment);
+
+	_processedMessage[CQInlineGIFImageKey] = foundGIFs;
 }
 
 #pragma mark -
@@ -281,9 +285,8 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	NSMutableString *messageString = [self _processMessageData:_message[@"message"]];
 	MVChatUser *user = _message[@"user"];
 
-	if ([_ignoreController shouldIgnoreMessage:messageString fromUser:user inRoom:_target]) {
+	if ([_ignoreController shouldIgnoreMessage:messageString fromUser:user inRoom:_target])
 		return;
-	}
 
 	BOOL highlighted = NO;
 
@@ -328,13 +331,15 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 		highlighted = [stylelessMessageString isMatchedByRegex:regex options:NSRegularExpressionCaseInsensitive inRange:NSMakeRange(0, stylelessMessageString.length) error:NULL];
 	}
 
+	_processedMessage = [NSMutableDictionary dictionary];
+
 	[self _processMessageString:messageString];
 
 	static NSArray *sameKeys = nil;
 	if (!sameKeys)
 		sameKeys = @[@"user", @"action", @"notice", @"identifier"];
 
-	_processedMessage = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:_message];
+	[_processedMessage setObjectsForKeys:sameKeys fromDictionary:_message];
 
 	_processedMessage[@"type"] = @"message";
 	_processedMessage[@"message"] = messageString;

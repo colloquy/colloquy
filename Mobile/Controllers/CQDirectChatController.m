@@ -1994,10 +1994,14 @@ static BOOL showingKeyboard;
 	}];
 }
 
+
+
 - (void) _GIFProcessed:(CQIntroductoryGIFFrameOperation *) operation {
-	NSString *imageString = operation.introductoryFrameImageData.base64Encoding;
-	if (!imageString.length)
-		imageString = operation.url.absoluteString;
+	NSString *base64Encoding = operation.introductoryFrameImageData.base64Encoding;
+	NSString *imageString = nil;
+	if (base64Encoding.length)
+		imageString = [NSString stringWithFormat:@"data:image;base64, %@", base64Encoding];
+	else imageString = operation.url.absoluteString;
 	[transcriptView insertImage:imageString forElementWithIdentifier:operation.userInfo[@"id"]];
 
 }
