@@ -27,14 +27,22 @@ static BOOL hardwareKeyboard;
 	CGRect frame = self.bounds;
 	frame.size.height += 1;
 
-	_backgroundView = [[UIToolbar alloc] initWithFrame:frame];
-	_backgroundView.userInteractionEnabled = NO;
 	if ([UIDevice currentDevice].isSystemSeven) {
-		_backgroundView.backgroundColor = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
-	} else _backgroundView.tintColor = [UIColor lightGrayColor];
+		self.backgroundColor = [UIColor clearColor];
+
+		_backgroundView = [[UIInputView alloc] initWithFrame:frame inputViewStyle:UIInputViewStyleKeyboard];
+		_backgroundView.tintColor = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
+
+		_topLineView = [[UIView alloc] initWithFrame:CGRectZero];
+		_topLineView.backgroundColor = [UIColor colorWithWhite:(172. / 255.) alpha:1.];
+	} else {
+		_backgroundView = [[UIToolbar alloc] initWithFrame:frame];
+		_backgroundView.tintColor = [UIColor lightGrayColor];
+	}
 	_backgroundView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
 
 	[self addSubview:_backgroundView];
+	[self addSubview:_topLineView];
 
 	if ([UIDevice currentDevice].isSystemSeven)
 		if ([UIDevice currentDevice].isRetina)
@@ -589,10 +597,14 @@ retry:
 - (void) layoutSubviews {
 	[super layoutSubviews];
 
+	_backgroundView.frame = self.bounds;
+
+	if ([UIDevice currentDevice].isRetina)
+		_topLineView.frame = CGRectMake(0., 0., CGRectGetWidth(_backgroundView.frame), .5);
+	else _topLineView.frame = CGRectMake(0., 0., CGRectGetWidth(_backgroundView.frame), 1.);
 #define ButtonMargin 6.5
 #define ButtonWidth 18.
 	__block CGRect frame = _backgroundView.frame;
-	frame.origin.y = 1.;
 	if ([UIDevice currentDevice].isRetina)
 		frame.size.width -= (ButtonWidth + ButtonMargin);
 	else frame.size.width -= (ButtonWidth + floorf(ButtonMargin));

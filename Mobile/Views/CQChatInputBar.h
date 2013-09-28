@@ -10,7 +10,7 @@ typedef enum {
 
 @interface CQChatInputBar : UIView <UITextViewDelegate, CQTextCompletionViewDelegate> {
 	@protected
-	UIToolbar *_backgroundView;
+	UIView *_backgroundView;
 	UITextView *_inputView;
 	CQTextCompletionView *_completionView;
 	NSArray *_completions;
@@ -27,6 +27,7 @@ typedef enum {
 	UIButton *_accessoryButton;
 	UIImageView *_overlayBackgroundView;
 	UIImageView *_overlayBackgroundViewPiece;
+	UIView *_topLineView;
 	NSMutableDictionary *_accessoryImages;
 	CQChatInputBarResponderState _responderState;
 }
