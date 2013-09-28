@@ -180,6 +180,16 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 			<key>DefaultValue</key>
 			<string></string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Dynamic Type</string>
+			<key>Key</key>
+			<string>CQUseDynamicType</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
 	</array>
 </dict>
 </plist>

@@ -136,5 +136,7 @@
 	<string>NO</string>
 	<key>CQShowRoomTopic</key>
 	<integer>2</integer>
+	<key>CQUseDynamicType</key>
+	<true/>
 </dict>
 </plist>
