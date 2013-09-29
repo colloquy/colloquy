@@ -8,13 +8,22 @@
 
 #topicArea {
 	position: relative;
-	background-repeat: repeat-x;
-	background-position: top;
-	border-bottom: 1px solid rgb( 154, 154, 154 );
 	overflow: hidden;
 	min-height: 23px;
 	height: 23px;
+}
+
+#topicArea.topicSix {
+	border-bottom: 1px solid rgb( 154, 154, 154 );
+
+	background-repeat: repeat-x;
+	background-position: top;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfcfc), color-stop(1%,#ededed), color-stop(100%,#dedede));
+}
+
+#topicArea.topicSeven {
+	border-bottom: 1px solid rgb( 178, 178, 178 );
+	background-color: rgba( 235, 235, 235, .85 );
 }
 
 #topicMessage {
