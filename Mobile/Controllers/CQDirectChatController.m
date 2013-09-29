@@ -443,7 +443,8 @@ static BOOL showingKeyboard;
 
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clear.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateNormal];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clearPressed.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateHighlighted];
-	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"info-dark.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
+	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"info.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
+	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoPressed.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateHighlighted];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
