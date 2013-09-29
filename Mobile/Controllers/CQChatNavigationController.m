@@ -9,6 +9,9 @@
 	if (!(self = [super init]))
 		return nil;
 
+	self.title = NSLocalizedString(@"Colloquies", @"Colloquies tab title");
+	self.tabBarItem.image = [UIImage imageNamed:@"colloquies.png"];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	return self;
@@ -29,8 +32,6 @@
 		_chatListViewController = [[CQChatListViewController alloc] init];
 		[self pushViewController:_chatListViewController animated:NO];
 
-		self.title = NSLocalizedString(@"Colloquies", @"Colloquies tab title");
-		self.tabBarItem.image = [UIImage imageNamed:@"colloquies.png"];
 		self.delegate = self;
 
 		if (![UIDevice currentDevice].isSystemSeven)

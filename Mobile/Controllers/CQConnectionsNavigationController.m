@@ -11,6 +11,9 @@
 	if (!(self = [super init]))
 		return nil;
 
+	self.title = NSLocalizedString(@"Connections", @"Connections tab title");
+	self.tabBarItem.image = [UIImage imageNamed:@"connections.png"];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	return self;
@@ -32,8 +35,6 @@
 
 	_connectionsViewController = [[CQConnectionsViewController alloc] init];
 
-	self.title = NSLocalizedString(@"Connections", @"Connections tab title");
-	self.tabBarItem.image = [UIImage imageNamed:@"connections.png"];
 	self.delegate = self;
 
 	if (![UIDevice currentDevice].isSystemSeven)
