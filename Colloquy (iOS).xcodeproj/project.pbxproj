@@ -291,10 +291,12 @@
 		92B6661717ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B6661617ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m */; };
 		92B6661B17EE437B00BA3DD9 /* Default-7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B6661A17EE437B00BA3DD9 /* Default-7@2x.png */; };
 		92B6661D17EE441D00BA3DD9 /* Default-7-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B6661C17EE441D00BA3DD9 /* Default-7-568h@2x.png */; };
-		92B666F717F7AF0D00BA3DD9 /* info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B666F517F7AF0D00BA3DD9 /* info@2x.png */; };
-		92B666F817F7AF0D00BA3DD9 /* infoPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B666F617F7AF0D00BA3DD9 /* infoPressed@2x.png */; };
-		92B666FB17F7AF1C00BA3DD9 /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B666F917F7AF1C00BA3DD9 /* info.png */; };
-		92B666FC17F7AF1C00BA3DD9 /* infoPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B666FA17F7AF1C00BA3DD9 /* infoPressed.png */; };
+		92B666FB17F7AF1C00BA3DD9 /* infoButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B666F917F7AF1C00BA3DD9 /* infoButton.png */; };
+		92B666FC17F7AF1C00BA3DD9 /* infoButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B666FA17F7AF1C00BA3DD9 /* infoButtonPressed.png */; };
+		92B666FE17F7B46000BA3DD9 /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B666FD17F7B46000BA3DD9 /* info.png */; };
+		92B6670017F7B46900BA3DD9 /* info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B666FF17F7B46900BA3DD9 /* info@2x.png */; };
+		92B6670317F7B48000BA3DD9 /* infoButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B6670117F7B48000BA3DD9 /* infoButton@2x.png */; };
+		92B6670417F7B48000BA3DD9 /* infoButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B6670217F7B48000BA3DD9 /* infoButtonPressed@2x.png */; };
 		92BB78BD17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */; };
 		92D30F2C116D2B020060EE33 /* UIViewControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */; };
 		92F1C9E3161D936D0035A9AF /* UIActionSheetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F1C9E2161D936D0035A9AF /* UIActionSheetAdditions.m */; };
@@ -709,10 +711,12 @@
 		92B6661617ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesTextViewController.m; path = Controllers/CQPreferencesTextViewController.m; sourceTree = "<group>"; };
 		92B6661A17EE437B00BA3DD9 /* Default-7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-7@2x.png"; sourceTree = "<group>"; };
 		92B6661C17EE441D00BA3DD9 /* Default-7-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-7-568h@2x.png"; sourceTree = "<group>"; };
-		92B666F517F7AF0D00BA3DD9 /* info@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info@2x.png"; sourceTree = "<group>"; };
-		92B666F617F7AF0D00BA3DD9 /* infoPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "infoPressed@2x.png"; sourceTree = "<group>"; };
-		92B666F917F7AF1C00BA3DD9 /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info.png; sourceTree = "<group>"; };
-		92B666FA17F7AF1C00BA3DD9 /* infoPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = infoPressed.png; sourceTree = "<group>"; };
+		92B666F917F7AF1C00BA3DD9 /* infoButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = infoButton.png; sourceTree = "<group>"; };
+		92B666FA17F7AF1C00BA3DD9 /* infoButtonPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = infoButtonPressed.png; sourceTree = "<group>"; };
+		92B666FD17F7B46000BA3DD9 /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info.png; sourceTree = "<group>"; };
+		92B666FF17F7B46900BA3DD9 /* info@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info@2x.png"; sourceTree = "<group>"; };
+		92B6670117F7B48000BA3DD9 /* infoButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "infoButton@2x.png"; sourceTree = "<group>"; };
+		92B6670217F7B48000BA3DD9 /* infoButtonPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "infoButtonPressed@2x.png"; sourceTree = "<group>"; };
 		92BB78BB17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQIntroductoryGIFFrameOperation.h; sourceTree = "<group>"; };
 		92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQIntroductoryGIFFrameOperation.m; sourceTree = "<group>"; };
 		92D30F2A116D2B020060EE33 /* UIViewControllerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIViewControllerAdditions.h; path = Mobile/Additions/UIViewControllerAdditions.h; sourceTree = "<group>"; };
@@ -1138,8 +1142,9 @@
 				92AD95EE17EC21020044B8B1 /* Icon-60.png */,
 				1C6F6881113AE6E600514C0C /* Icon-72.png */,
 				92AD95EF17EC21020044B8B1 /* Icon-76.png */,
-				92B666F917F7AF1C00BA3DD9 /* info.png */,
-				92B666FA17F7AF1C00BA3DD9 /* infoPressed.png */,
+				92B666FD17F7B46000BA3DD9 /* info.png */,
+				92B666F917F7AF1C00BA3DD9 /* infoButton.png */,
+				92B666FA17F7AF1C00BA3DD9 /* infoButtonPressed.png */,
 				92AD960017EC26500044B8B1 /* iTunesArtwork */,
 				1CA9DFC111967186008149F9 /* members-large.png */,
 				1CC64A790EE90DC000DE91D0 /* members.png */,
@@ -1205,8 +1210,9 @@
 				92AD95F917EC21230044B8B1 /* Icon-76@2x.png */,
 				1CA2662B11C4B36200AB4E44 /* Icon-114.png */,
 				1C2C99841609029C0041F46C /* Icon-144.png */,
-				92B666F517F7AF0D00BA3DD9 /* info@2x.png */,
-				92B666F617F7AF0D00BA3DD9 /* infoPressed@2x.png */,
+				92B666FF17F7B46900BA3DD9 /* info@2x.png */,
+				92B6670117F7B48000BA3DD9 /* infoButton@2x.png */,
+				92B6670217F7B48000BA3DD9 /* infoButtonPressed@2x.png */,
 				92AD960217EC265C0044B8B1 /* iTunesArtwork@2x */,
 				1CA2655911C44B0900AB4E44 /* members@2x.png */,
 				1C1004F7162A4C30003090A9 /* members-large@2x.png */,
@@ -1513,8 +1519,10 @@
 				1C61FEA10ED24BA40016F968 /* deleteButtonNormal.png in Resources */,
 				1C61FEA20ED24BA40016F968 /* deleteButtonPressed.png in Resources */,
 				1CF50F710EDA7BC600CBE5E3 /* roomIconSmall.png in Resources */,
+				92B6670317F7B48000BA3DD9 /* infoButton@2x.png in Resources */,
 				1CE69F820EE2F50100389442 /* ChatView.xib in Resources */,
 				1CAE8BF50EE612DA00CE1AF8 /* base.html in Resources */,
+				92B6670017F7B46900BA3DD9 /* info@2x.png in Resources */,
 				1CAE8BF60EE612DA00CE1AF8 /* standard.css in Resources */,
 				1CAE8BF70EE612DA00CE1AF8 /* gradientHighlight.png in Resources */,
 				1CC64A7A0EE90DC000DE91D0 /* members.png in Resources */,
@@ -1567,7 +1575,6 @@
 				1C34A67010183ED900BAA714 /* personBlueSmall.png in Resources */,
 				1C34A6861018411B00BAA714 /* personWhiteSmall.png in Resources */,
 				1CB24E03101EBE4800217B50 /* verbs.plist in Resources */,
-				92B666F817F7AF0D00BA3DD9 /* infoPressed@2x.png in Resources */,
 				1CA3DCEA1027AEFF008B1AD2 /* help.png in Resources */,
 				1CA3DD5710287D5F008B1AD2 /* Help.plist in Resources */,
 				1CA3DEFD10291146008B1AD2 /* help-base.html in Resources */,
@@ -1577,11 +1584,12 @@
 				1C79735C1029D0EF00649250 /* screencastSelected.png in Resources */,
 				1CD467EE102A5A7300A7A49E /* new.png in Resources */,
 				1CD46802102A5EBB00A7A49E /* whats-new.html in Resources */,
-				92B666FC17F7AF1C00BA3DD9 /* infoPressed.png in Resources */,
+				92B666FC17F7AF1C00BA3DD9 /* infoButtonPressed.png in Resources */,
 				1CD468C4102A98AB00A7A49E /* chatBubble.png in Resources */,
 				1CD468C5102A98AB00A7A49E /* chatBubbleSelected.png in Resources */,
-				92B666FB17F7AF1C00BA3DD9 /* info.png in Resources */,
+				92B666FB17F7AF1C00BA3DD9 /* infoButton.png in Resources */,
 				92AD960117EC26500044B8B1 /* iTunesArtwork in Resources */,
+				92B666FE17F7B46000BA3DD9 /* info.png in Resources */,
 				1CD468C6102A98AB00A7A49E /* web.png in Resources */,
 				1CD468C7102A98AB00A7A49E /* webSelected.png in Resources */,
 				1C6F689A113AEB6800514C0C /* Icon-72.png in Resources */,
@@ -1625,6 +1633,7 @@
 				1CA265FC11C4AEF300AB4E44 /* chatBubbleSelected@2x.png in Resources */,
 				1CA265FF11C4AF0300AB4E44 /* screencast@2x.png in Resources */,
 				1CA2660011C4AF0300AB4E44 /* screencastSelected@2x.png in Resources */,
+				92B6670417F7B48000BA3DD9 /* infoButtonPressed@2x.png in Resources */,
 				92AD95F217EC21020044B8B1 /* Icon-40.png in Resources */,
 				1CA2662C11C4B36200AB4E44 /* Icon-114.png in Resources */,
 				92AD95FB17EC21230044B8B1 /* Icon-29@2x.png in Resources */,
@@ -1655,7 +1664,6 @@
 				920B6D5917196C6700879D86 /* topic.css in Resources */,
 				920B6D5C17196E3F00879D86 /* roomTopicBanner.js in Resources */,
 				92A55443173F68AA0046C359 /* topicToggleDown.png in Resources */,
-				92B666F717F7AF0D00BA3DD9 /* info@2x.png in Resources */,
 				92A55444173F68AA0046C359 /* topicToggleUp.png in Resources */,
 				922C845F174206DC008061B6 /* clear.png in Resources */,
 				922C8460174206DC008061B6 /* clearPressed.png in Resources */,
