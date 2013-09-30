@@ -2,6 +2,10 @@
 
 #import "CQChatController.h"
 
+#import "CQNavigationToolbar.h"
+
+#import "UIDeviceAdditions.h"
+
 @implementation CQChatPresentationController
 - (id) init {
 	if (!(self = [super init]))
@@ -21,10 +25,15 @@
 	view.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
 	view.clipsToBounds = YES;
 
-	_toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
-	_toolbar.layer.shadowOpacity = 1.;
-	_toolbar.layer.shadowRadius = 3.;
-	_toolbar.layer.shadowOffset = CGSizeMake(0., 0.);
+	if ([UIDevice currentDevice].isSystemSeven) {
+		_toolbar = [[CQNavigationToolbar alloc] initWithFrame:CGRectZero];
+		_toolbar.layer.shadowOpacity = 0.;
+	} else {
+		_toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
+		_toolbar.layer.shadowOpacity = 1.;
+		_toolbar.layer.shadowRadius = 3.;
+		_toolbar.layer.shadowOffset = CGSizeMake(0., 0.);
+	}
 	_toolbar.items = _standardToolbarItems;
 	_toolbar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin);
 
@@ -54,11 +63,17 @@
 	if (title.length) {
 		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 		titleLabel.backgroundColor = [UIColor clearColor];
-		titleLabel.textColor = [UIColor colorWithRed:(113. / 255.) green:(120. / 255.) blue:(128. / 255.) alpha:1.];
-		titleLabel.font = [UIFont boldSystemFontOfSize:20.];
+		titleLabel.tag = 1000;
+		if ([UIDevice currentDevice].isSystemSeven) {
+			titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
+			titleLabel.textColor = [UIColor blackColor];
+		} else {
+			titleLabel.font = [UIFont boldSystemFontOfSize:20.];
+			titleLabel.textColor = [UIColor colorWithRed:(113. / 255.) green:(120. / 255.) blue:(128. / 255.) alpha:1.];
+			titleLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+			titleLabel.shadowOffset = CGSizeMake(0., 1.);
+		}
 		titleLabel.text = title;
-		titleLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
-		titleLabel.shadowOffset = CGSizeMake(0., 1.);
 
 		[titleLabel sizeToFit];
 
@@ -122,12 +137,20 @@
 
 	if (_topChatViewController) {
 		CGRect frame = self.view.bounds;
-		frame.origin.y += _toolbar.frame.size.height;
-		frame.size.height -= _toolbar.frame.size.height;
+		if (![UIDevice currentDevice].isSystemSeven) {
+			frame.origin.y += _toolbar.frame.size.height;
+			frame.size.height -= _toolbar.frame.size.height;
+		}
 		view.frame = frame;
 
+		[_toolbar sizeToFit];
 		frame = _toolbar.frame;
 		frame.size.width = view.frame.size.width;
+
+		if ([UIDevice currentDevice].isSystemSeven) {
+			// If we are on iOS 7 or up, the statusbar is now part of the navigation bar, so, we need to fake its height
+			frame.size.height += [UIApplication sharedApplication].statusBarFrame.size.height;
+		}
 		_toolbar.frame = frame;
 
 		[_topChatViewController viewWillAppear:NO];
@@ -144,7 +167,7 @@
 	if (!_topChatViewController)
 		return;
 
-	[self.view insertSubview:view aboveSubview:_toolbar];
+	[self.view insertSubview:view belowSubview:_toolbar];
 	[_topChatViewController viewDidAppear:NO];
 }
 @end

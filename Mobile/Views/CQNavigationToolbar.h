@@ -1,0 +1,2 @@
+@interface CQNavigationToolbar : UIToolbar
+@end

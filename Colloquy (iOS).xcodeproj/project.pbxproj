@@ -297,6 +297,8 @@
 		92B6670017F7B46900BA3DD9 /* info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B666FF17F7B46900BA3DD9 /* info@2x.png */; };
 		92B6670317F7B48000BA3DD9 /* infoButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B6670117F7B48000BA3DD9 /* infoButton@2x.png */; };
 		92B6670417F7B48000BA3DD9 /* infoButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B6670217F7B48000BA3DD9 /* infoButtonPressed@2x.png */; };
+		92B6670717F927E200BA3DD9 /* CQNavigationToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B6670617F927E200BA3DD9 /* CQNavigationToolbar.m */; };
+		92B6670B17F935E700BA3DD9 /* pixel-172.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B6670A17F935E700BA3DD9 /* pixel-172.png */; };
 		92BB78BD17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */; };
 		92D30F2C116D2B020060EE33 /* UIViewControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */; };
 		92F1C9E3161D936D0035A9AF /* UIActionSheetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F1C9E2161D936D0035A9AF /* UIActionSheetAdditions.m */; };
@@ -717,6 +719,9 @@
 		92B666FF17F7B46900BA3DD9 /* info@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info@2x.png"; sourceTree = "<group>"; };
 		92B6670117F7B48000BA3DD9 /* infoButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "infoButton@2x.png"; sourceTree = "<group>"; };
 		92B6670217F7B48000BA3DD9 /* infoButtonPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "infoButtonPressed@2x.png"; sourceTree = "<group>"; };
+		92B6670517F927E200BA3DD9 /* CQNavigationToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQNavigationToolbar.h; sourceTree = "<group>"; };
+		92B6670617F927E200BA3DD9 /* CQNavigationToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQNavigationToolbar.m; sourceTree = "<group>"; };
+		92B6670A17F935E700BA3DD9 /* pixel-172.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pixel-172.png"; sourceTree = "<group>"; };
 		92BB78BB17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQIntroductoryGIFFrameOperation.h; sourceTree = "<group>"; };
 		92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQIntroductoryGIFFrameOperation.m; sourceTree = "<group>"; };
 		92D30F2A116D2B020060EE33 /* UIViewControllerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIViewControllerAdditions.h; path = Mobile/Additions/UIViewControllerAdditions.h; sourceTree = "<group>"; };
@@ -1074,6 +1079,8 @@
 				1CBEA7331002CC5C00546847 /* CQAlertView.h */,
 				1CE69FD80EE317F200389442 /* CQChatInputBar.m */,
 				1CE69FD70EE317F200389442 /* CQChatInputBar.h */,
+				1C34A4971016C73800BAA714 /* CQChatRoomInfoTableCell.m */,
+				1C34A4961016C73800BAA714 /* CQChatRoomInfoTableCell.h */,
 				1C82C1950D83CF1D009ABD9F /* CQChatTableCell.m */,
 				1C82C1960D83CF1D009ABD9F /* CQChatTableCell.h */,
 				1CAE8BC70EE6111900CE1AF8 /* CQChatTranscriptView.m */,
@@ -1082,8 +1089,8 @@
 				1C82C1A10D83D133009ABD9F /* CQConnectionTableCell.h */,
 				97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */,
 				97F85EBC0F2713CA008486E1 /* CQFileTransferTableCell.h */,
-				1C34A4971016C73800BAA714 /* CQChatRoomInfoTableCell.m */,
-				1C34A4961016C73800BAA714 /* CQChatRoomInfoTableCell.h */,
+				92B6670617F927E200BA3DD9 /* CQNavigationToolbar.m */,
+				92B6670517F927E200BA3DD9 /* CQNavigationToolbar.h */,
 				1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */,
 				1CC575960ED3A71900FEC2C1 /* CQPreferencesDeleteCell.h */,
 				1C6100D20ED31C8B0016F968 /* CQPreferencesSwitchCell.m */,
@@ -1152,6 +1159,7 @@
 				1C840BF90F15BD9A004665DC /* notesBackground.png */,
 				1C34A66F10183ED900BAA714 /* personBlueSmall.png */,
 				1C34A6851018411B00BAA714 /* personWhiteSmall.png */,
+				92B6670A17F935E700BA3DD9 /* pixel-172.png */,
 				9290604316B27A3E0095EC03 /* playAudioAccessory-pressed.png */,
 				9290604416B27A3E0095EC03 /* playAudioAccessory.png */,
 				1CD949810D8E18DB00756ACD /* roomIcon.png */,
@@ -1606,6 +1614,7 @@
 				92AD95F117EC21020044B8B1 /* Icon-29.png in Resources */,
 				1CA2651311C35C1100AB4E44 /* sectionHeader@2x.png in Resources */,
 				1CA2651411C35C1100AB4E44 /* sectionHeaderHighlighted@2x.png in Resources */,
+				92B6670B17F935E700BA3DD9 /* pixel-172.png in Resources */,
 				1CA2652111C35F4800AB4E44 /* roomIcon@2x.png in Resources */,
 				1CA2652211C35F4800AB4E44 /* roomIconSmall@2x.png in Resources */,
 				1CA2652911C35F5F00AB4E44 /* directChatIcon@2x.png in Resources */,
@@ -1794,6 +1803,7 @@
 				1C716EE213100F220088C737 /* MVChatConnection.m in Sources */,
 				1C716EE313100F220088C737 /* MVChatRoom.m in Sources */,
 				1C716EE413100F220088C737 /* MVChatUser.m in Sources */,
+				92B6670717F927E200BA3DD9 /* CQNavigationToolbar.m in Sources */,
 				1C716EE513100F220088C737 /* MVChatUserWatchRule.m in Sources */,
 				1C716EE613100F220088C737 /* MVDirectChatConnection.m in Sources */,
 				1C716EE713100F220088C737 /* MVDirectClientConnection.m in Sources */,
