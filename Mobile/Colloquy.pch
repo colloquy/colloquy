@@ -12,10 +12,6 @@
 #define SYSTEM_IOS_SIMULATOR 1
 #endif
 
-#ifndef __IPHONE_7_0
-#define __IPHONE_7_0     70000
-#endif
-
 #ifdef __OBJC__
 
 #import <Foundation/Foundation.h>
@@ -41,7 +37,3 @@
 #endif
 
 #import "MVUtilities.h"
-
-#if !defined(__unsafe_unretained)
-#define objc_unretainedObject(object) (id)(object)
-#endif
