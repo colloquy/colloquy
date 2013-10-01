@@ -164,14 +164,21 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 #pragma mark -
 
-
 - (void) longPressGestureRecognizerRecognized:(UILongPressGestureRecognizer *) longPressGestureRecognizer {
 	if (longPressGestureRecognizer.state != UIGestureRecognizerStateBegan)
 		return;
 
-	CGPoint point = [longPressGestureRecognizer locationInView:self];
-	NSString *tappedURL = nil;
+	BOOL shouldBecomeFirstResponder = YES;
+	if ([_transcriptDelegate respondsToSelector:@selector(transcriptViewShouldBecomeFirstResponder:)])
+		shouldBecomeFirstResponder = [_transcriptDelegate transcriptViewShouldBecomeFirstResponder:self];
 
+	if (shouldBecomeFirstResponder)
+		[self performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.];
+
+	CGPoint point = [longPressGestureRecognizer locationInView:self];
+	point = [self convertPoint:point toView:self.scrollView];
+
+	NSString *tappedURL = nil;
 #define TappedPointOffset 15
 	for (int x = point.x - TappedPointOffset, i = 0; i < 3 && !tappedURL.length; x += TappedPointOffset, i++)
 		for (int y = point.y - TappedPointOffset, j = 0; j < 3 && !tappedURL.length; y += TappedPointOffset, j++)

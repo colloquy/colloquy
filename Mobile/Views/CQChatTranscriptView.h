@@ -61,5 +61,6 @@ typedef enum {
 - (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url;
 - (void) transcriptView:(CQChatTranscriptView *) transcriptView handleNicknameTap:(NSString *) nickname atLocation:(CGPoint) location;
 - (void) transcriptView:(CQChatTranscriptView *) transcriptView handleLongPressURL:(NSURL *) url atLocation:(CGPoint) location;
+- (BOOL) transcriptViewShouldBecomeFirstResponder:(CQChatTranscriptView *) transcriptView;
 - (void) transcriptViewWasReset:(CQChatTranscriptView *) transcriptView;
 @end

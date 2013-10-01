@@ -1347,6 +1347,10 @@ static BOOL showingKeyboard;
 	[[CQColloquyApplication sharedApplication] showActionSheet:actionSheet fromPoint:location];
 }
 
+- (BOOL) transcriptViewShouldBecomeFirstResponder:(CQChatTranscriptView *) transcriptView {
+	return chatInputBar.isFirstResponder;
+}
+
 - (void) transcriptViewWasReset:(CQChatTranscriptView *) view {
 	if (_pendingPreviousSessionComponents.count) {
 		[view addPreviousSessionComponents:_pendingPreviousSessionComponents];
