@@ -670,7 +670,7 @@ retry:
 
 	NSAssert(keyboardClass, @"UIKeyboardImpl class does not exist.");
 
-	id keyboard = [keyboardClass performPrivateSelector:@"activeInstance"];
+	__strong id keyboard = [keyboardClass performPrivateSelector:@"activeInstance"];
 	if (!keyboard)
 		return;
 
@@ -692,9 +692,6 @@ retry:
 		[keyboard performSelector:takeTextInputTraitsFromSelector withObject:_inputView];
 
 #pragma clang diagnostic pop
-
-	if (![UIDevice currentDevice].isSystemSeven)
-		[keyboard performPrivateSelector:@"updateReturnKey:" withBoolean:YES];
 #endif
 }
 
