@@ -1710,8 +1710,8 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "if [ \"$(BUILD_STYLE)\" -eq \"Distribution\" ]; then\n    export KEY=`security 2>&1 >/dev/null find-generic-password -ga pocket-iphone |ruby -e 'print $1 if STDIN.gets =~ /^password: \"(.*)\"$/'`\n    perl -p -i -e 's/Pocket_iPhone_Consumer_Key/$(KEY)/g' \"$(SRCROOT)/Shared/Controllers/CQPocketController.m\"\n\n    export KEY=`security 2>&1 >/dev/null find-generic-password -ga pocket-ipad |ruby -e 'print $1 if STDIN.gets =~ /^password: \"(.*)\"$/'`\n    perl -p -i -e 's/Pocket_iPad_Consumer_Key/$(KEY)/g' \"$(SRCROOT)/Shared/Controllers/CQPocketController.m\"\nfi";
+			shellPath = /bin/zsh;
+			shellScript = "if [[ \"$BUILD_STYLE\" == \"Distribution\" ]]; then\n  KEYCHAINS=`security list-keychains`\n\n  if ! [[ \"$KEYCHAINS\" =~ \"colloquy\" ]]; then\n    open `pwd`/Shared/Resources/colloquy.keychain\n  fi\n\n  IPHONE_KEY=`security find-generic-password -wa pocket-iphone`\n  perl -p -i -e \"s/Pocket_iPhone_Consumer_Key/$IPHONE_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  IPAD_KEY=`security find-generic-password -wa pocket-ipad`\n  perl -p -i -e \"s/Pocket_iPad_Consumer_Key/$IPAD_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
