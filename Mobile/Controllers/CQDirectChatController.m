@@ -95,10 +95,10 @@ static BOOL showingKeyboard;
 
 	timestampFormat = [[CQSettingsController settingsController] objectForKey:@"CQTimestampFormat"];
 	timestampFormat = [NSDateFormatter dateFormatFromTemplate:timestampFormat options:0 locale:[NSLocale currentLocale]];
-
 	timestampInterval = [[CQSettingsController settingsController] doubleForKey:@"CQTimestampInterval"];
 	timestampEveryMessage = (timestampInterval == -1);
 	timestampOnLeft = [[CQSettingsController settingsController] boolForKey:@"CQTimestampOnLeft"];
+
 	privateMessageAlertTimeout = [[CQSettingsController settingsController] doubleForKey:@"CQPrivateMessageAlertTimeout"];
 	graphicalEmoticons = [[CQSettingsController settingsController] boolForKey:@"CQGraphicalEmoticons"];
 	naturalChatActions = [[CQSettingsController settingsController] boolForKey:@"MVChatNaturalActions"];
@@ -1524,7 +1524,7 @@ static BOOL showingKeyboard;
 	else timestamp = [NSDate formattedShortTimeStringForDate:[NSDate date]];
 	timestamp = [timestamp stringByEncodingXMLSpecialCharactersAsEntities];
 
-	[self addEventMessage:timestamp withIdentifier:@"timestamp" announceWithVoiceOver:NO];
+	[self addEventMessage:timestamp withIdentifier:@"" announceWithVoiceOver:NO];
 
 	_lastTimestampTime = currentTime;
 }
@@ -1691,7 +1691,7 @@ static BOOL showingKeyboard;
 	transcriptView.styleIdentifier = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptStyle"];
 	transcriptView.fontFamily = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFont"];
 	transcriptView.fontSize = chatTranscriptFontSize;
-	transcriptView.timestampOnLeft = timestampOnLeft;
+	transcriptView.timestampPosition = timestampEveryMessage ? (timestampOnLeft ? CQTimestampPositionLeft : CQTimestampPositionRight) : CQTimestampPositionCenter;
 	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
 
 	if ([self isViewLoaded] && transcriptView)

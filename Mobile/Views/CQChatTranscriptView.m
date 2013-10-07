@@ -98,13 +98,14 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[self _reloadVariantStyle];
 }
 
-- (void) setTimestampOnLeft:(BOOL) timestampOnLeft {
-	if (_timestampOnLeft == timestampOnLeft)
-		return;
+- (void) setTimestampPosition:(CQTimestampPosition) timestampPosition {
+	_timestampPosition = timestampPosition;
 
-	_timestampOnLeft = timestampOnLeft;
-
-	[self _reloadVariantStyle];
+	if (_timestampPosition == CQTimestampPositionLeft)
+		[super stringByEvaluatingJavaScriptFromString:@"setTimestampPosition(\"left\");"];
+	else if (_timestampPosition == CQTimestampPositionRight)
+		[super stringByEvaluatingJavaScriptFromString:@"setTimestampPosition(\"right\");"];
+	else [super stringByEvaluatingJavaScriptFromString:@"setTimestampPosition(null);"];
 }
 
 #pragma mark -
@@ -526,6 +527,9 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[self performSelector:@selector(_unhideBlockerView) withObject:nil afterDelay:0.05];
 
 	[self noteTopicChangeTo:_roomTopic by:_roomTopicSetter];
+
+	// initialize this here as well because if first we set it before the document finishes loading, it won't take.
+	self.timestampPosition = _timestampPosition;
 }
 
 - (void) _hideRoomTopic {

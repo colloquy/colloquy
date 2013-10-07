@@ -6,6 +6,7 @@ var targetScrollTop = 0;
 var animationComplete = 0;
 var autoscrollSuspended = false;
 var scrollbackLimit = 300;
+var timestampPosition = null;
 
 function animateScroll(target, duration, callback) {
 	function cubicInOut(t, b, c, d) {
@@ -109,9 +110,10 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 	className = "sender";
 	if (self) className += " self";
 
+	var timestampClassName = timestampPosition === null ? "timestamp" : "timestamp " + timestampPosition;
 	if (!previousSession && timestamp !== null) {
 		var timestampElement = document.createElement("div");
-		timestampElement.className = "timestamp";
+		timestampElement.className = timestampClassName;
 		timestampElement.innerHTML = timestamp;
 		messageWrapperElement.appendChild(timestampElement);
 	}
@@ -168,6 +170,15 @@ function markScrollback() {
 	markElement.className = "mark";
 
 	container.appendChild(markElement);
+}
+
+function setTimestampPosition(position) {
+	timestampPosition = position;
+
+	var className = timestampPosition === null ? "event" : "timestamp " + timestampPosition;
+	var elements = document.getElementsByClassName("timestamp");
+	for (var i = 0; i < elements.length; i++)
+		element[i].className = className;
 }
 
 function setScrollbackLimit(limit) {

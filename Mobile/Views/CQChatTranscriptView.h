@@ -6,6 +6,12 @@ typedef enum {
 	CQShowRoomTopicAlways
 } CQShowRoomTopic;
 
+typedef enum {
+	CQTimestampPositionLeft,
+	CQTimestampPositionRight,
+	CQTimestampPositionCenter
+} CQTimestampPosition;
+
 @interface CQChatTranscriptView : UIWebView <UIGestureRecognizerDelegate, UIWebViewDelegate> {
 	@protected
 	UIView *_blockerView;
@@ -19,7 +25,7 @@ typedef enum {
 	BOOL _resetPending;
 	CGPoint _lastTouchLocation;
 	BOOL _allowsStyleChanges;
-	BOOL _timestampOnLeft;
+	CQTimestampPosition _timestampPosition;
 	BOOL _allowSingleSwipeGesture;
 	NSMutableArray *_singleSwipeGestureRecognizers;
 	CQShowRoomTopic _showRoomTopic;
@@ -33,7 +39,7 @@ typedef enum {
 @property (nonatomic, copy) NSString *styleIdentifier;
 @property (nonatomic, copy) NSString *fontFamily;
 @property (nonatomic, assign) NSUInteger fontSize;
-@property (nonatomic, assign) BOOL timestampOnLeft;
+@property (nonatomic, assign) CQTimestampPosition timestampPosition;
 @property (nonatomic, assign) BOOL allowSingleSwipeGesture;
 
 - (void) addPreviousSessionComponents:(NSArray *) components;
