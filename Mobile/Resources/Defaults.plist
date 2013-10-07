@@ -135,7 +135,7 @@
 	<key>CQTimestampOnLeft</key>
 	<string>NO</string>
 	<key>CQShowRoomTopic</key>
-	<integer>2</integer>
+	<integer>0</integer>
 	<key>CQUseDynamicType</key>
 	<true/>
 </dict>
