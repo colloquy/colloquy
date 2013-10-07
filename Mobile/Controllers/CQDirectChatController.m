@@ -93,9 +93,11 @@ static BOOL showingKeyboard;
 	if (![NSThread isMainThread])
 		return;
 
+	timestampFormat = [[CQSettingsController settingsController] objectForKey:@"CQTimestampFormat"];
+	timestampFormat = [NSDateFormatter dateFormatFromTemplate:timestampFormat options:0 locale:[NSLocale currentLocale]];
+
 	timestampInterval = [[CQSettingsController settingsController] doubleForKey:@"CQTimestampInterval"];
 	timestampEveryMessage = (timestampInterval == -1);
-	timestampFormat = [[CQSettingsController settingsController] objectForKey:@"CQTimestampFormat"];
 	timestampOnLeft = [[CQSettingsController settingsController] boolForKey:@"CQTimestampOnLeft"];
 	privateMessageAlertTimeout = [[CQSettingsController settingsController] doubleForKey:@"CQPrivateMessageAlertTimeout"];
 	graphicalEmoticons = [[CQSettingsController settingsController] boolForKey:@"CQGraphicalEmoticons"];
@@ -443,8 +445,8 @@ static BOOL showingKeyboard;
 
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clear.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateNormal];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clearPressed.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateHighlighted];
-	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"info.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
-	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoPressed.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateHighlighted];
+	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButton.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
+	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButtonPressed.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateHighlighted];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
