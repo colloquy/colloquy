@@ -24,6 +24,7 @@ static BOOL showJoinEvents;
 static BOOL showHostmasksOnJoin;
 static BOOL showHostmasksOnPart;
 static BOOL showLeaveEvents;
+static CQShowRoomTopic showRoomTopic;
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
 - (void) _addPendingComponentsAnimated:(BOOL) animated;
@@ -43,6 +44,7 @@ static BOOL showLeaveEvents;
 	showHostmasksOnJoin = [[CQSettingsController settingsController] boolForKey:@"CQShowHostmaskOnJoin"];
 	showHostmasksOnPart = [[CQSettingsController settingsController] boolForKey:@"CQShowHostmaskOnPart"];
 	showLeaveEvents = [[CQSettingsController settingsController] boolForKey:@"CQShowLeaveEvents"];
+	showRoomTopic = (CQShowRoomTopic)[[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
 }
 
 + (void) initialize {
@@ -526,6 +528,9 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 }
 
 - (void) _displayTopicChange:(CQProcessChatMessageOperation *) operation {
+	if (showRoomTopic != CQShowRoomTopicNever)
+		return;
+
 	NSString *topicString = operation.processedMessageAsHTML;
 	MVChatUser *user = operation.userInfo[@"author"];
 
