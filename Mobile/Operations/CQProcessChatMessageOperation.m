@@ -134,21 +134,9 @@ static void commonChatAndImageReplacment(NSMutableString *string, NSRangePointer
 				fullURL = [NSURL URLWithString:[@"http://" stringByAppendingString:url]];
 
 			if ([[CQColloquyApplication sharedApplication] canOpenURL:fullURL]) {
-				if (![NSFileManager isValidImageFormat:fullURL.pathExtension]) {
-					NSString *temporaryURLString = nil;
-
-					// rebuild URL, since we can't assume .png at the end (due to params and stuff)
-					if ([fullURL.host hasCaseInsensitiveSubstring:@"imgur"])
-						temporaryURLString = [NSString stringWithFormat:@"%@://%@%@.jpg", fullURL.scheme, fullURL.host, fullURL.path];
-					else if ([fullURL.host hasCaseInsensitiveSubstring:@"twitpic"])
-						temporaryURLString = [NSString stringWithFormat:@"%@://%@/show/full%@", fullURL.scheme, fullURL.host, fullURL.path];
-					if (temporaryURLString.length)
-						fullURL = [NSURL URLWithString:temporaryURLString];
-				}
-
 				if (inlineImages && [NSFileManager isValidImageFormat:fullURL.pathExtension]) {
 					if ([fullURL.pathExtension isCaseInsensitiveEqualToString:@"gif"]) {
-						NSString *key = [NSString stringWithFormat:@"%d-%d", fullURL.hash, arc4random()];
+						NSString *key = [NSString stringWithFormat:@"%zd-%d", fullURL.hash, arc4random()];
 						if (foundGIFs)
 							foundGIFs[key] = fullURL;
 						linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\"><img id=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></a>", fullURL, key];
