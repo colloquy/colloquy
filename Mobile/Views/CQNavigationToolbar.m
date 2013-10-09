@@ -57,7 +57,7 @@
 
 		CGFloat offset = [UIApplication sharedApplication].statusBarFrame.size.height;
 		frame.size.height = CGRectGetHeight(self.frame);
-		frame.origin.y = (((CGRectGetHeight(self.frame) + offset) / 2.) - (CGRectGetHeight(frame) / 2.));
+		frame.origin.y = floorf((((CGRectGetHeight(self.frame) + offset) / 2.) - (CGRectGetHeight(frame) / 2.)));
 		view.frame = frame;
 	}
 
