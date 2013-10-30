@@ -55,7 +55,10 @@
 		if (view != _bottomLineView && CGRectGetWidth(frame) == CGRectGetWidth(self.frame))
 			continue;
 
-		CGFloat offset = [UIApplication sharedApplication].statusBarFrame.size.height;
+		CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
+		statusBarFrame = [[UIApplication sharedApplication].delegate.window convertRect:statusBarFrame toView:self];
+
+		CGFloat offset = statusBarFrame.size.height;
 		frame.size.height = CGRectGetHeight(self.frame);
 		frame.origin.y = floorf((((CGRectGetHeight(self.frame) + offset) / 2.) - (CGRectGetHeight(frame) / 2.)));
 		view.frame = frame;

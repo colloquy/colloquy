@@ -44,6 +44,10 @@ static NSMutableArray *highlightWords;
 
 #pragma mark -
 
+- (UIWindow *) window {
+	return _mainWindow;
+}
+
 - (UITabBarController *) tabBarController {
 	if ([_mainViewController isKindOfClass:[UITabBarController class]])
 		return (UITabBarController *)_mainViewController;

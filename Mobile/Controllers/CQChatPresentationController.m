@@ -6,6 +6,9 @@
 
 #import "UIDeviceAdditions.h"
 
+@interface CQChatPresentationController ()
+@end
+
 @implementation CQChatPresentationController
 - (id) init {
 	if (!(self = [super init]))
@@ -13,6 +16,7 @@
 
 	_standardToolbarItems = @[];
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applyiOS7NavigationBarSizing) name:UIApplicationWillChangeStatusBarFrameNotification object:nil];
 	return self;
 }
 
@@ -105,6 +109,8 @@
 		[allItems addObject:rightBarButtonItem];
 
 	[_toolbar setItems:allItems animated:animated];
+
+	[self _applyiOS7NavigationBarSizing];
 }
 
 #pragma mark -
@@ -143,15 +149,7 @@
 		}
 		view.frame = frame;
 
-		[_toolbar sizeToFit];
-		frame = _toolbar.frame;
-		frame.size.width = view.frame.size.width;
-
-		if ([UIDevice currentDevice].isSystemSeven) {
-			// If we are on iOS 7 or up, the statusbar is now part of the navigation bar, so, we need to fake its height
-			frame.size.height += [UIApplication sharedApplication].statusBarFrame.size.height;
-		}
-		_toolbar.frame = frame;
+		[self _applyiOS7NavigationBarSizing];
 
 		[_topChatViewController viewWillAppear:NO];
 	}
@@ -169,5 +167,26 @@
 
 	[self.view insertSubview:view belowSubview:_toolbar];
 	[_topChatViewController viewDidAppear:NO];
+}
+
+#pragma mark -
+
+- (void) _applyiOS7NavigationBarSizing {
+	[_toolbar sizeToFit];
+
+	CGRect frame = _toolbar.frame;
+	frame.size.width = self.view.frame.size.width;
+
+	// If we are on iOS 7 or up, the statusbar is now part of the navigation bar, so, we need to fake its height
+	if ([UIDevice currentDevice].isSystemSeven) {
+		CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
+		// We can't do the following:
+		// CGFloat height = [[UIApplication sharedApplication].delegate.window convertRect:statusBarFrame toView:nil];
+		// because when the app first loads, it fails to convert the rect, and we are given {{0, 0}, {20, 1024}} as the
+		// statusBarFrame, even after self.view is added to its superview, is loaded, and self.view.window is set.
+		CGFloat statusBarHeight = fminf(statusBarFrame.size.height, statusBarFrame.size.width);
+		frame.size.height += statusBarHeight;
+	}
+	_toolbar.frame = frame;
 }
 @end
