@@ -184,7 +184,7 @@
 		// CGFloat height = [[UIApplication sharedApplication].delegate.window convertRect:statusBarFrame toView:nil];
 		// because when the app first loads, it fails to convert the rect, and we are given {{0, 0}, {20, 1024}} as the
 		// statusBarFrame, even after self.view is added to its superview, is loaded, and self.view.window is set.
-		CGFloat statusBarHeight = fminf(statusBarFrame.size.height, statusBarFrame.size.width);
+		CGFloat statusBarHeight = fmin(statusBarFrame.size.height, statusBarFrame.size.width);
 		frame.size.height += statusBarHeight;
 	}
 	_toolbar.frame = frame;
