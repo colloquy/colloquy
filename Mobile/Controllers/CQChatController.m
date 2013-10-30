@@ -607,7 +607,7 @@ static CQSoundController *fileTransferSound;
 
 - (void) joinSupportRoom {
 	MVChatConnection *connection = [[CQConnectionsController defaultController] connectionForServerAddress:@"freenode.net"];
-	if (!connection) connection = [[CQConnectionsController defaultController] connectionForServerAddress:@"freenode.com"];
+	if (!connection) connection = [[CQConnectionsController defaultController] connectionForServerAddress:@"freenode.net"];
 
 	if (!connection) {
 		connection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
