@@ -528,11 +528,14 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 }
 
 - (void) _displayTopicChange:(CQProcessChatMessageOperation *) operation {
-	if (showRoomTopic != CQShowRoomTopicNever)
-		return;
-
 	NSString *topicString = operation.processedMessageAsHTML;
 	MVChatUser *user = operation.userInfo[@"author"];
+
+	if (showRoomTopic != CQShowRoomTopicNever) {
+		[self _noteTopicChangeTo:topicString by:user.displayName];
+
+		return;
+	}
 
 	if (!topicString.length || !user)
 		return;
@@ -544,8 +547,6 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		NSString *eventMessageFormat = [NSLocalizedString(@"%@ changed the topic to \"%@\".", "User changed the room topic event message") stringByEncodingXMLSpecialCharactersAsEntities];
 		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user], topicString] withIdentifier:@"topicChanged" announceWithVoiceOver:YES];
 	}
-
-	[self _noteTopicChangeTo:topicString by:user.displayName];
 }
 
 - (void) _topicChanged:(NSNotification *) notification {

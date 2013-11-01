@@ -307,9 +307,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	}
 
 	if (shouldHideTopic) {
-		_topicIsHidden = YES;
-
-		[super stringByEvaluatingJavaScriptFromString:@"hideTopic()"];
+		[self _hideRoomTopic];
 	} else if (_topicIsHidden && !shouldHideTopic) {
 		_topicIsHidden = NO;
 
@@ -534,6 +532,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 - (void) _hideRoomTopic {
 	[super stringByEvaluatingJavaScriptFromString:@"hideTopic()"];
+	_topicIsHidden = YES;
 }
 
 - (void) _unhideBlockerView {
