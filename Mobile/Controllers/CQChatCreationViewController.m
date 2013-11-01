@@ -71,8 +71,11 @@
 - (void) commit:(id) sender {
 	CQChatEditViewController *editViewController = (CQChatEditViewController *)_rootViewController;
 	MVChatConnection *connection = editViewController.selectedConnection;
-	if (!connection) {
+
+	if ([UIDevice currentDevice].isPadModel || !connection)
 		[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
+
+	if (!connection) {
 		return;
 	}
 
