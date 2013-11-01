@@ -2,11 +2,11 @@ var topicSize = 0;
 var topicToggled = false;
 
 function hideTopic() {
-	document.getElementByClass( 'topicArea' ).style.setProperty( 'display', 'none' );
+	document.getElementById( 'topicArea' ).style.setProperty( 'display', 'none' );
 }
 
 function showTopic() {
-	document.getElementByClass( 'topicArea' ).style.setProperty( 'display', 'block' );
+	document.getElementById( 'topicArea' ).style.setProperty( 'display', 'block' );
 }
 
 function toggleTopic( e ) {
