@@ -217,7 +217,7 @@ static NSMutableArray *highlightWords;
 	[analyticsController setObject:information forKey:@"locale"];
 
 	[analyticsController setObject:([UIDevice currentDevice].multitaskingSupported ? @"1" : @"0") forKey:@"multitasking-supported"];
-	[analyticsController setObject:[NSNumber numberWithDouble:[UIScreen mainScreen].scale] forKey:@"screen-scale-factor"];
+	[analyticsController setObject:@([UIScreen mainScreen].scale) forKey:@"screen-scale-factor"];
 
 	if (_deviceToken.length)
 		[analyticsController setObject:_deviceToken forKey:@"device-push-token"];

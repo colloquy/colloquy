@@ -53,7 +53,7 @@
 	NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
 
 	result[@"identifier"] = _identifier;
-	result[@"bouncerType"] = [NSNumber numberWithLongLong:_type];
+	result[@"bouncerType"] = @(_type);
 
 	if (_displayName.length)
 		result[@"bouncerDescription"] = _displayName;

@@ -302,7 +302,7 @@ end:
 		if (_connectedTime)
 			info[@"connectedTime"] = @(_connectedTime);
 		if (_encoding)
-			info[@"encoding"] = [NSNumber numberWithInteger:_encoding];
+			info[@"encoding"] = @(_encoding);
 
 		[_delegate bouncerConnection:self didRecieveConnectionInfo:info];
 	}

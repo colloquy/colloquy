@@ -41,7 +41,7 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 	NSUInteger value = (seconds / stop);
 	NSDictionary *words = (value != 1 ? pluralWords : singularWords);
 
-	NSMutableString *result = [NSMutableString stringWithFormat:NSLocalizedString(@"%u %@", "Time with a unit word"), value, words[[NSNumber numberWithUnsignedInt:stop]]];
+	NSMutableString *result = [NSMutableString stringWithFormat:NSLocalizedString(@"%u %@", "Time with a unit word"), value, words[@(stop)]];
 	if (longFormat && i > 0) {
 		NSUInteger remainder = ((NSUInteger)seconds % (NSUInteger)stop);
 		stop = [breaks[--i] floatValue];

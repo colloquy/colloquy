@@ -341,7 +341,7 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 		numberFormatter.positiveFormat = NSLocalizedString(@"#,##0", @"Plain large number format string");
 	}
 
-	NSString *formattedCount = [numberFormatter stringFromNumber:[NSNumber numberWithInteger:_matchedRooms.count]];
+	NSString *formattedCount = [numberFormatter stringFromNumber:@(_matchedRooms.count)];
 	self.title = [NSString stringWithFormat:NSLocalizedString(@"Rooms (%@)", @"Rooms list view title with count"), formattedCount];
 }
 

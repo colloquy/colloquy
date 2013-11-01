@@ -1489,7 +1489,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	for (NSInteger i = (connections.count - 1); i >= 0; --i) {
 		MVChatConnection *connection = connections[i];
-		NSDictionary *notificationInfo = @{@"connection": connection, @"index": [NSNumber numberWithUnsignedInteger:i]};
+		NSDictionary *notificationInfo = @{@"connection": connection, @"index": @(i)};
 		[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerRemovedConnectionNotification object:self userInfo:notificationInfo];
 	}
 }
