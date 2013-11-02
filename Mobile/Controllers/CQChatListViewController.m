@@ -571,6 +571,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		_previousContentInset = self.tableView.contentInset;
 		self.tableView.contentInset = UIEdgeInsetsZero;
 	}
+
+	// reload data, as the unread counts may be inaccurate due to swiping to change rooms
+	[self.tableView reloadData];
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
