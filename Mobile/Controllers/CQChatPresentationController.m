@@ -188,5 +188,7 @@
 		frame.size.height += statusBarHeight;
 	}
 	_toolbar.frame = frame;
+
+	_topChatViewController.scrollView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(_toolbar.frame), 0., 0., 0.);
 }
 @end

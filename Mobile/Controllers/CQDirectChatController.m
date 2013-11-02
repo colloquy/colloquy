@@ -376,7 +376,6 @@ static BOOL showingKeyboard;
 		else if (user.localUser) newMessage[@"localUser"] = @YES;
 
 		[messages addObject:newMessage];
-
 	}
 
 	if (messages.count)
@@ -426,6 +425,12 @@ static BOOL showingKeyboard;
 		return;
 
 	[self _showUserInfoControllerForUser:self.user];
+}
+
+#pragma mark -
+
+- (UIScrollView *) scrollView {
+	return transcriptView.scrollView;
 }
 
 #pragma mark -

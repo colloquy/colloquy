@@ -89,6 +89,10 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 @property (nonatomic, readonly) NSUInteger importantUnreadCount;
 
 @property (nonatomic, readonly) UIActionSheet *actionSheet;
+
+#if SYSTEM(IOS)
+@property (nonatomic, readonly) UIScrollView *scrollView;
+#endif
 @end
 
 @interface MVIRCChatRoom (CQChatControllerAdditions)
