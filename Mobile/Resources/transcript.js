@@ -7,6 +7,7 @@ var animationComplete = 0;
 var autoscrollSuspended = false;
 var scrollbackLimit = 300;
 var timestampPosition = null;
+var firstNonTopicElement = null;
 
 function animateScroll(target, duration, callback) {
 	function cubicInOut(t, b, c, d) {
@@ -107,6 +108,10 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 	var messageWrapperElement = document.createElement("div");
 	messageWrapperElement.className = className;
 
+	if (firstNonTopicElement === null) {
+		firstNonTopicElement = messageWrapperElement;
+	}
+
 	className = "sender";
 	if (self) className += " self";
 
@@ -146,6 +151,10 @@ function appendConsoleMessage(container, messageHTML, outbound) {
 	consoleElement.className = className;
 	consoleElement.innerHTML = messageHTML;
 
+	if (firstNonTopicElement === null) {
+		firstNonTopicElement = consoleElement;
+	}
+
 	container.appendChild(consoleElement);
 }
 
@@ -157,6 +166,10 @@ function appendEventMessage(container, messageHTML, identifier, previousSession)
 	var eventElement = document.createElement("div");
 	eventElement.className = className;
 	eventElement.innerHTML = messageHTML;
+
+	if (firstNonTopicElement === null) {
+		firstNonTopicElement = eventElement;
+	}
 
 	container.appendChild(eventElement);
 }
@@ -259,4 +272,24 @@ function urlUnderTapAtPoint(x, y) {
 	}
 
     return url;
+}
+
+function addOffsetForTopicToFirstElement() {
+	if (firstNonTopicElement === null) {
+		return;
+	}
+
+	firstNonTopicElement.style.marginTop = '23px';
+	firstNonTopicElement.style.top = 0;
+	firstNonTopicElement.style.zIndex = 1;
+}
+
+function removeOffsetForTopicFromFirstElement() {
+	if (firstNonTopicElement === null) {
+		return;
+	}
+
+	firstNonTopicElement.style.marginTop = null;
+	firstNonTopicElement.style.top = null;
+	firstNonTopicElement.style.zIndex = null;
 }

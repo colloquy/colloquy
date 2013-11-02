@@ -312,6 +312,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 		_topicIsHidden = NO;
 
 		[super stringByEvaluatingJavaScriptFromString:@"showTopic()"];
+		[super stringByEvaluatingJavaScriptFromString:@"addOffsetForTopicToFirstElement()"];
 	}
 }
 
@@ -412,6 +413,8 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[command appendFormat:@"],%@,false,%@)", (previousSession ? @"true" : @"false"), (animated ? @"false" : @"true")];
 
 	[super stringByEvaluatingJavaScriptFromString:command];
+	if (_showRoomTopic)
+		[super stringByEvaluatingJavaScriptFromString:@"addOffsetForTopicToFirstElement()"];
 }
 
 - (void) _commonInitialization {
@@ -532,6 +535,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 - (void) _hideRoomTopic {
 	[super stringByEvaluatingJavaScriptFromString:@"hideTopic()"];
+	[super stringByEvaluatingJavaScriptFromString:@"removeOffsetForTopicFromFirstElement()"];
 	_topicIsHidden = YES;
 }
 
