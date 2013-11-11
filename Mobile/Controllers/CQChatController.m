@@ -550,7 +550,7 @@ static CQSoundController *fileTransferSound;
 	} else {
 		if (_chatNavigationController.presentedViewController != nil) {
 			[_chatNavigationController popToRootViewControllerAnimated:NO];
-			[_chatNavigationController pushViewController:(UIViewController *)controller animated:NO];
+			[_chatNavigationController pushViewController:controller animated:NO];
 			[_chatNavigationController dismissViewControllerAnimated:animated completion:NULL];
 		} else {
 			if (!_chatNavigationController.rootViewController)
@@ -562,7 +562,7 @@ static CQSoundController *fileTransferSound;
 				[_chatNavigationController popToRootViewControllerAnimated:animated];
 			} else {
 				[_chatNavigationController popToRootViewControllerAnimated:NO];
-				[_chatNavigationController pushViewController:(UIViewController *)controller animated:animated];
+				[_chatNavigationController pushViewController:controller animated:animated];
 
 				_nextController = nil;
 			}

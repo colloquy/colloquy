@@ -316,17 +316,17 @@ static NSMutableArray *highlightWords;
 		NSArray *viewControllers = @[[CQConnectionsController defaultController].connectionsNavigationController, [CQChatController defaultController].chatNavigationController];
 		tabBarController.viewControllers = viewControllers;
 
-		tabBarController.selectedIndex = [[CQSettingsController settingsController] integerForKey:@"CQSelectedTabIndex"];
-
 		_mainViewController = tabBarController;
 		_mainWindow.rootViewController = _mainViewController;
+
+		tabBarController.selectedIndex = [[CQSettingsController settingsController] integerForKey:@"CQSelectedTabIndex"];
 	}
 
 	[_mainWindow makeKeyAndVisible];
 
 	[self handleNotificationWithUserInfo:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
 
-	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];
+7+8	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];
 
 	return YES;
 }
