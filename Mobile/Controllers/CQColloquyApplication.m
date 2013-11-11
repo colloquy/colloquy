@@ -326,7 +326,7 @@ static NSMutableArray *highlightWords;
 
 	[self handleNotificationWithUserInfo:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
 
-7+8	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];
+	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];
 
 	return YES;
 }
