@@ -65,8 +65,7 @@ enum {
 	self.tableView.dataSource = self;
 	self.tableView.delegate = self;
 
-	UIBarButtonItem *segmentedItem = [[UIBarButtonItem alloc] initWithCustomView:_segmentedControl];
-	NSArray *items = @[segmentedItem];
+	NSArray *items = @[[[UIBarButtonItem alloc] initWithCustomView:_segmentedControl]];
 
 	[self setToolbarItems:items animated:[UIView areAnimationsEnabled]];
 
@@ -78,7 +77,9 @@ enum {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshBanList:) name:MVChatRoomBannedUsersSyncedNotification object:_room];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_topicChanged:) name:MVChatRoomTopicChangedNotification object:_room];
 
-	_segmentedControl.frame = CGRectInset(self.navigationController.toolbar.bounds, 5, 5);
+	if ([UIDevice currentDevice].isSystemSeven)
+		_segmentedControl.frame = CGRectInset(self.navigationController.toolbar.bounds, 20., 5.);
+	else _segmentedControl.frame = CGRectInset(self.navigationController.toolbar.bounds, 5., 5.);
 	_segmentedControl.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
 }
 

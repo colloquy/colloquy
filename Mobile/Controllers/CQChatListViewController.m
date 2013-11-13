@@ -567,11 +567,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	[super viewWillAppear:animated];
 
-	if ([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
-		_previousContentInset = self.tableView.contentInset;
-		self.tableView.contentInset = UIEdgeInsetsZero;
-	}
-
 	// reload data, as the unread counts may be inaccurate due to swiping to change rooms
 	[self.tableView reloadData];
 }
@@ -580,9 +575,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	[super viewWillDisappear:animated];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
-
-	if ([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation))
-		self.tableView.contentInset = _previousContentInset;
 }
 
 - (void) viewDidDisappear:(BOOL) animated {

@@ -278,16 +278,15 @@ static NSMutableArray *highlightWords;
 	_colloquiesBarButtonItem = nil;
 
 	UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
-	splitViewController.delegate = self;
 
 	_connectionsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connections", @"Connections button title") style:UIBarButtonItemStyleBordered target:self action:@selector(toggleConnections:)];
 
 	CQChatPresentationController *presentationController = [CQChatController defaultController].chatPresentationController;
 	[presentationController setStandardToolbarItems:@[_connectionsBarButtonItem] animated:NO];
 
-	NSArray *viewControllers = @[[CQChatController defaultController].chatNavigationController, presentationController];
-	splitViewController.viewControllers = viewControllers;
-	
+	splitViewController.viewControllers = @[[CQChatController defaultController].chatNavigationController, presentationController];
+	splitViewController.delegate = self;
+
 	_mainViewController = splitViewController;
 	_mainWindow.rootViewController = _mainViewController;
 }
