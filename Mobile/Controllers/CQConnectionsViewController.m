@@ -448,6 +448,7 @@
 	if (self.tableView.editing)
 		settings = [CQConnectionsController defaultController].bouncers[(header.section - 2)];
 	else settings = [CQConnectionsController defaultController].bouncers[(header.section - 1)];
+
 	[self.navigationController editBouncer:settings];
 
 	header.selected = YES;
@@ -460,15 +461,17 @@
 
 	NSUInteger count = ([CQConnectionsController defaultController].connections.count ? 1 : 0) + [CQConnectionsController defaultController].bouncers.count;
 	if (count) {
-		NSIndexSet *insertionIndexSet = [NSIndexSet indexSetWithIndex:0];
+		NSIndexSet *updateSectionIndexSet = [NSIndexSet indexSetWithIndex:0];
 		BOOL hasConnectionsToRefresh = ([CQConnectionsController defaultController].bouncers.count || [CQConnectionsController defaultController].connections.count);
+		[self.tableView beginUpdates];
 		if (editing) {
-			[self.tableView insertSections:insertionIndexSet withRowAnimation:UITableViewRowAnimationTop];
+			[self.tableView insertSections:updateSectionIndexSet withRowAnimation:UITableViewRowAnimationTop];
 			if (hasConnectionsToRefresh) [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, count)] withRowAnimation:UITableViewRowAnimationNone];
 		} else {
-			[self.tableView deleteSections:insertionIndexSet withRowAnimation:UITableViewRowAnimationTop];
-			if (hasConnectionsToRefresh) [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, count)] withRowAnimation:UITableViewRowAnimationNone];
+			[self.tableView deleteSections:updateSectionIndexSet withRowAnimation:UITableViewRowAnimationTop];
+			if (hasConnectionsToRefresh) [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, count)] withRowAnimation:UITableViewRowAnimationNone];
 		}
+		[self.tableView endUpdates];
 	} else {
 		[self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.25];
 		self.navigationItem.rightBarButtonItem = nil;
@@ -558,7 +561,7 @@
 	view.textLabel.text = title;
 	view.section = section;
 
-	if (!(tableView.editing && section == 1))
+	if (!(tableView.editing && section > 0) || (tableView.editing && section > 1))
 		[view addTarget:self action:@selector(tableSectionHeaderSelected:) forControlEvents:UIControlEventTouchUpInside];
 	else view.showsDisclosureState = NO;
 
