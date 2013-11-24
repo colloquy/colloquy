@@ -97,7 +97,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	_ignoreControllers = [[NSMutableDictionary alloc] initWithCapacity:2];
 
 	[self _loadConnectionList];
-	[self _pruneKnownBadServers];
 
 #if TARGET_IPHONE_SIMULATOR
 	_shouldLogRawMessagesToConsole = YES;
@@ -1262,17 +1261,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	if (_bouncers.count)
 		[self performSelector:@selector(_refreshBouncerConnectionLists) withObject:nil afterDelay:1.];
-}
-
-- (void) _pruneKnownBadServers {
-	for (MVChatConnection *connection in _connections) {
-		// irc.undernet.org`, which is a round robin that contains all of Undernet's  servers. The problem with this is that not all of their servers are accessible everywhere.
-		// Some servers block US connections, others are US-only. And some servers aren't necessarily up at all right now, due to DDoS (but are still in the round robin for up to two weeks).
-		// And for a long time, Mobile Colloquy had irc.undernet.org as the server address to connect to in the default server list. Bad us. Remove the bad server.
-		// (We will prompt the user for a new server elsewhere.)
-		if ([connection.server isCaseInsensitiveEqualToString:@"irc.undernet.org"])
-			connection.server = @"";
-	}
 }
 
 - (void) _connectAutomaticConnections {
