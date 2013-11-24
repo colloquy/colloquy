@@ -252,6 +252,7 @@
 		9261B6FA18419DF0001B14C3 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6F918419DF0001B14C3 /* CoreText.framework */; };
 		9261B6FC18419FCA001B14C3 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6FB18419FCA001B14C3 /* HockeySDK.framework */; };
 		9261B6FE1841A83C001B14C3 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9261B6FD1841A83C001B14C3 /* HockeySDKResources.bundle */; };
+		9261B7011841AEA1001B14C3 /* UIApplicationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261B7001841AEA1001B14C3 /* UIApplicationAdditions.m */; };
 		9271923C16CFA831003380F0 /* CQChatOrderingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9271923B16CFA831003380F0 /* CQChatOrderingController.m */; };
 		9271928A16D211DD003380F0 /* textField.png in Resources */ = {isa = PBXBuildFile; fileRef = 9271928816D211DD003380F0 /* textField.png */; };
 		9271928B16D211DD003380F0 /* textFieldDark.png in Resources */ = {isa = PBXBuildFile; fileRef = 9271928916D211DD003380F0 /* textFieldDark.png */; };
@@ -664,6 +665,8 @@
 		9261B6F918419DF0001B14C3 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		9261B6FB18419FCA001B14C3 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Shared/Frameworks/HockeySDK.framework; sourceTree = "<group>"; };
 		9261B6FD1841A83C001B14C3 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = HockeySDKResources.bundle; path = Shared/Frameworks/HockeySDK.framework/Versions/A/Resources/HockeySDKResources.bundle; sourceTree = SOURCE_ROOT; };
+		9261B6FF1841AEA1001B14C3 /* UIApplicationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIApplicationAdditions.h; path = Mobile/Additions/UIApplicationAdditions.h; sourceTree = "<group>"; };
+		9261B7001841AEA1001B14C3 /* UIApplicationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIApplicationAdditions.m; path = Mobile/Additions/UIApplicationAdditions.m; sourceTree = "<group>"; };
 		9271923A16CFA831003380F0 /* CQChatOrderingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatOrderingController.h; sourceTree = "<group>"; };
 		9271923B16CFA831003380F0 /* CQChatOrderingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatOrderingController.m; sourceTree = "<group>"; };
 		9271928816D211DD003380F0 /* textField.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textField.png; sourceTree = "<group>"; };
@@ -756,6 +759,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CBC07CE0F0741E400EEBCFB /* SystemConfiguration.framework in Frameworks */,
 				1CF50C870ED8BE1100CBE5E3 /* Security.framework in Frameworks */,
 				9261B6FA18419DF0001B14C3 /* CoreText.framework in Frameworks */,
 				9261B6F818419DEB001B14C3 /* QuartzCore.framework in Frameworks */,
@@ -769,7 +773,6 @@
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				1C1896110E29CF74003CFED0 /* CoreGraphics.framework in Frameworks */,
 				1C1896120E29CF75003CFED0 /* CFNetwork.framework in Frameworks */,
-				1CBC07CE0F0741E400EEBCFB /* SystemConfiguration.framework in Frameworks */,
 				1C124A720F097575008F181B /* AudioToolbox.framework in Frameworks */,
 				1CD84C2B10040AB300E56A7E /* MediaPlayer.framework in Frameworks */,
 				1C957EBC11F7EFF3001950FD /* libicucore.dylib in Frameworks */,
@@ -1317,6 +1320,8 @@
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				92F1C9E2161D936D0035A9AF /* UIActionSheetAdditions.m */,
 				92F1C9E1161D936D0035A9AF /* UIActionSheetAdditions.h */,
+				9261B7001841AEA1001B14C3 /* UIApplicationAdditions.m */,
+				9261B6FF1841AEA1001B14C3 /* UIApplicationAdditions.h */,
 				1C3CD7951112357100FE29AA /* UIDeviceAdditions.m */,
 				1C3CD7941112357100FE29AA /* UIDeviceAdditions.h */,
 				9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */,
@@ -1770,6 +1775,7 @@
 				1CBCFF2D0F04632900EEBCFB /* CQTextCompletionView.m in Sources */,
 				1C1254A40F0D8D7F008F181B /* CQChatCreationViewController.m in Sources */,
 				1C1255670F0EAA69008F181B /* CQChatEditViewController.m in Sources */,
+				9261B7011841AEA1001B14C3 /* UIApplicationAdditions.m in Sources */,
 				9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */,
 				89E87C090FA0450800B49230 /* CQSoundController.m in Sources */,
 				1C633C9C0FABD06C00BB5866 /* CQConnectionPushEditController.m in Sources */,

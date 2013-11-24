@@ -9,12 +9,13 @@
 #import "CQChatPresentationController.h"
 #import "CQConnectionsController.h"
 #import "CQConnectionsNavigationController.h"
-#import "CQWelcomeController.h"
-#import "RegexKitLite.h"
-
 #import "CQPocketController.h"
+#import "CQWelcomeController.h"
+
+#import "UIApplicationAdditions.h"
 
 #import <HockeySDK/HockeySDK.h>
+#import "RegexKitLite.h"
 
 typedef enum {
 	CQSidebarOrientationNone,
@@ -170,6 +171,8 @@ static NSMutableArray *highlightWords;
 		[[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyappIdentifier delegate:self];
 		[[BITHockeyManager sharedHockeyManager] startManager];
 	}
+
+	[self cq_beginReachabilityMonitoring];
 
 	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
 	NSString *version = infoDictionary[@"CFBundleShortVersionString"];

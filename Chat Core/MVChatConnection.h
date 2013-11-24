@@ -278,6 +278,7 @@ extern NSString *MVChatConnectionErrorDomain;
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname;
 - (void) disconnect;
 - (void) disconnectWithReason:(MVChatString *) reason;
+- (void) forceDisconnect;
 
 #pragma mark -
 

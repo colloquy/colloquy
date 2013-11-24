@@ -24,6 +24,8 @@
 #import <ChatCore/MVChatConnectionPrivate.h>
 #import <ChatCore/MVChatRoom.h>
 
+#import "UIApplicationAdditions.h"
+
 NSString *CQConnectionsControllerAddedConnectionNotification = @"CQConnectionsControllerAddedConnectionNotification";
 NSString *CQConnectionsControllerChangedConnectionNotification = @"CQConnectionsControllerChangedConnectionNotification";
 NSString *CQConnectionsControllerRemovedConnectionNotification = @"CQConnectionsControllerRemovedConnectionNotification";
@@ -61,6 +63,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidReceiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillResignActive) name:UIApplicationWillResignActiveNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationNetworkStatusDidChange:) name:CQReachabilityStateDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:nil];
@@ -407,6 +410,67 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 }
 
+- (void) _applicationNetworkStatusDidChange:(NSNotification *) notification {
+	CQReachabilityState newState = [notification.userInfo[CQReachabilityNewStateKey] intValue];
+	CQReachabilityState oldState = [notification.userInfo[CQReachabilityOldStateKey] intValue];
+
+	// Happens on app launch if we don't have an available network to connect over
+	if (oldState == newState)
+		return;
+
+	if (!_automaticallySetConnectionAwayStatus)
+		_automaticallySetConnectionAwayStatus = [[NSMutableSet alloc] init];
+
+	if (newState == CQReachabilityStateNotReachable) {
+		[self performSelector:@selector(_networkConnectionLost) withObject:nil afterDelay:2.];
+	} else if (oldState == CQReachabilityStateNotReachable) {
+		[self performSelector:@selector(_networkConnectionFound) withObject:nil afterDelay:2.];
+	}
+}
+
+- (void) _networkConnectionLost {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_networkConnectionFound) object:nil];
+
+	if (self._anyConnectedOrConnectingConnections) {
+		if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+			UIAlertView *alertView = [[UIAlertView alloc] init];
+			alertView.title = NSLocalizedString(@"Disconnected", @"Disconnected alert title");
+			alertView.message = NSLocalizedString(@"You have been disconnected due to the loss of network connectivity", @"Disconnected due to network alert message");
+			alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+			[alertView show];
+		} else {
+			UILocalNotification *notification = [[UILocalNotification alloc] init];
+
+			notification.alertBody = NSLocalizedString(@"You have been disconnected due to the loss of network connectivity", @"Disconnected due to network local notification body");
+			notification.soundName = UILocalNotificationDefaultSoundName;
+			notification.hasAction = NO;
+
+			[[CQColloquyApplication sharedApplication] presentLocalNotificationNow:notification];
+		}
+	}
+
+	for (MVChatConnection *connection in _connections) {
+		BOOL wasConnected = connection.connected || connection.status == MVChatConnectionConnectingStatus;
+		[connection forceDisconnect];
+		if (wasConnected)
+			[connection _setStatus:MVChatConnectionSuspendedStatus];
+
+		if (connection.awayStatusMessage.length)
+			[_automaticallySetConnectionAwayStatus addObject:connection];
+	}
+}
+
+- (void) _networkConnectionFound {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_networkConnectionLost) object:nil];
+
+	for (MVChatConnection *connection in _connections) {
+		if (connection.status == MVChatConnectionSuspendedStatus)
+			[connection connectAppropriately];
+	}
+}
+
 - (BOOL) _anyConnectedOrConnectingConnections {
 	for (MVChatConnection *connection in _connections)
 		if (connection.status == MVChatConnectionConnectedStatus || connection.status == MVChatConnectionConnectingStatus)
@@ -556,7 +620,8 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 }
 
 - (void) _didEnterBackground {
-	_automaticallySetConnectionAwayStatus = [[NSMutableSet alloc] init];
+	if (!_automaticallySetConnectionAwayStatus)
+		_automaticallySetConnectionAwayStatus = [[NSMutableSet alloc] init];
 
 	NSTimeInterval remainingTime = [UIApplication sharedApplication].backgroundTimeRemaining;
 	NSTimeInterval multitaskingTimeout = [[CQSettingsController settingsController] doubleForKey:@"CQMultitaskingTimeout"];
@@ -825,6 +890,14 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	if (!connection.directConnection)
 		connection.temporaryDirectConnection = NO;
+
+	// re-set the away status to be sent after connect; this only occurs in cases where we lose device connectivity
+	// (because we go into a tunnel or something).
+	if (connection.awayStatusMessage.length) {
+		connection.awayStatusMessage = connection.awayStatusMessage;
+
+		[_automaticallySetConnectionAwayStatus removeObject:self];
+	}
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {

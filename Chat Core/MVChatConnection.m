@@ -371,6 +371,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	[self doesNotRecognizeSelector:_cmd];
 }
 
+- (void) forceDisconnect {
+	[self._chatConnection disconnect];
+}
+
 #pragma mark -
 
 - (NSError *) lastError {
