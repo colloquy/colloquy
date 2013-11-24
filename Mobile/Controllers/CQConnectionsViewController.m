@@ -103,18 +103,19 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
 
-	[self.tableView reloadData];
-
 	[self _startUpdatingConnectTimes];
 
 	if (![CQConnectionsController defaultController].directConnections.count && ![CQConnectionsController defaultController].bouncers.count) {
-		self.editing = YES;
+		if (!self.editing)
+			self.editing = YES;
 
 		self.navigationItem.rightBarButtonItem = nil;
 	} else {
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
 		self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"Edit connections.", @"Voiceover edit connections label");
 	}
+
+	[self.tableView reloadData];
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
@@ -459,19 +460,16 @@
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
 	[super setEditing:editing animated:animated];
 
-	NSUInteger count = ([CQConnectionsController defaultController].connections.count ? 1 : 0) + [CQConnectionsController defaultController].bouncers.count;
-	if (count) {
+	NSUInteger numberOfSections = [self.tableView numberOfSections];
+	if (numberOfSections) {
 		NSIndexSet *updateSectionIndexSet = [NSIndexSet indexSetWithIndex:0];
-		BOOL hasConnectionsToRefresh = ([CQConnectionsController defaultController].bouncers.count || [CQConnectionsController defaultController].connections.count);
-		[self.tableView beginUpdates];
 		if (editing) {
 			[self.tableView insertSections:updateSectionIndexSet withRowAnimation:UITableViewRowAnimationTop];
-			if (hasConnectionsToRefresh) [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, count)] withRowAnimation:UITableViewRowAnimationNone];
+			if (numberOfSections) [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, numberOfSections)] withRowAnimation:UITableViewRowAnimationNone];
 		} else {
 			[self.tableView deleteSections:updateSectionIndexSet withRowAnimation:UITableViewRowAnimationTop];
-			if (hasConnectionsToRefresh) [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, count)] withRowAnimation:UITableViewRowAnimationNone];
+			if (numberOfSections - 1) [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, numberOfSections - 1)] withRowAnimation:UITableViewRowAnimationNone];
 		}
-		[self.tableView endUpdates];
 	} else {
 		[self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.25];
 		self.navigationItem.rightBarButtonItem = nil;
