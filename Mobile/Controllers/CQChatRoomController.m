@@ -296,7 +296,11 @@ static CQShowRoomTopic showRoomTopic;
 	if ([theChatInputBar isFirstResponder]) {
 		theChatInputBar.textView.text = nil;
 
-		return;
+		// Work around behavior where textViewDidChange: isn't called when you change the text programatically.
+		if ([theChatInputBar.textView.delegate respondsToSelector:@selector(textViewDidChange:)])
+			[theChatInputBar.textView.delegate textViewDidChange:theChatInputBar.textView];
+
+		asdfreturn;
 	}
 
 	UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
