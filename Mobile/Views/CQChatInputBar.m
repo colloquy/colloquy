@@ -501,7 +501,7 @@ retry:
 	text = [text stringByReplacingCharactersInRange:range withString:string];
 
 	for (NSInteger i = (range.location + string.length - 1); i >= 0; --i) {
-		if (i > text.length) {
+		if (i > (NSInteger)text.length) {
 			wordRange.length = 0;
 			break;
 		}
@@ -521,7 +521,7 @@ retry:
 	BOOL canShowCompletionForCurrentWord = textView.text.length;
 	if (canShowCompletionForCurrentWord) {
 		if (!((range.location + range.length) == textView.text.length)) { // if we're in the middle of a line, only show completions if the next letter is a space
-			NSInteger idx = (range.location + range.length);
+			NSUInteger idx = (range.location + range.length);
 			if (textView.text.length > idx) {
 				unichar character = [textView.text characterAtIndex:idx];
 				canShowCompletionForCurrentWord = [[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:character];
