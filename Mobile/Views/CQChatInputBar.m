@@ -538,7 +538,7 @@ retry:
 - (void) textViewDidChange:(UITextView *) textView {
 	if (textView.hasText && textView.text.length) {
 		CGSize lineSize = [@"a" sizeWithFont:textView.font];
-		CGSize suggestedTextSize = [textView.text sizeWithFont:textView.font constrainedToSize:CGSizeMake(CGRectGetWidth(textView.frame), 90000) lineBreakMode:NSLineBreakByWordWrapping];
+		CGSize suggestedTextSize = [textView.text sizeWithFont:textView.font constrainedToSize:CGSizeMake((textView.contentSize.width - 10.), 90000) lineBreakMode:NSLineBreakByWordWrapping];
 		CGFloat numberOfLines = roundf(suggestedTextSize.height / lineSize.height);
 		CGFloat contentHeight = fminf((CQInactiveLineHeight + ((numberOfLines - 1) * CQLineHeight)), CQMaxLineHeight);
 
