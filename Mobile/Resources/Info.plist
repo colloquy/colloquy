@@ -78,9 +78,7 @@
 		<string>OpenDyslexic-Regular.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
-	<array>
-		<string>remote-notification</string>
-	</array>
+	<array/>
 	<key>UILaunchImages</key>
 	<array>
 		<dict>
