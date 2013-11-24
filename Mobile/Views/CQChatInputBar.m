@@ -44,11 +44,9 @@ static BOOL hardwareKeyboard;
 	[self addSubview:_backgroundView];
 	[self addSubview:_topLineView];
 
-	if ([UIDevice currentDevice].isSystemSeven)
-		if ([UIDevice currentDevice].isRetina)
-			frame = CGRectMake(6.5, 6.5, frame.size.width - 12., frame.size.height - 12.);
-		else frame = CGRectMake(6., 7., frame.size.width - 12., frame.size.height - 12.);
-	else frame = CGRectMake(6., 7., frame.size.width - 12., frame.size.height - 14.);
+	if ([UIDevice currentDevice].isRetina)
+		frame = CGRectMake(6.5, 6.5, frame.size.width - 12., frame.size.height - 12.);
+	else frame = CGRectMake(6., 7., frame.size.width - 12., frame.size.height - 12.);
 
 	_inputView = [[UITextView alloc] initWithFrame:frame];
 	_inputView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
@@ -226,7 +224,7 @@ static BOOL hardwareKeyboard;
 	}
 
 	if (![UIDevice currentDevice].isSystemSeven) {
-		if ([color isEqual:[UIColor blackColor]]) {
+		if ([color isEqual:[UIColor blackColor]] || [color isEqual:[UIColor colorWithWhite:(247. / 255.) alpha:1.]]) {
 			_inputView.keyboardAppearance = UIKeyboardAppearanceAlert;
 			_overlayBackgroundView.image = [[UIImage imageNamed:@"textFieldDark.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 20, 22, 20)];
 			_overlayBackgroundViewPiece.image = [[UIImage imageNamed:@"textFieldDarkPiece.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(22., 1., 22., 1.)];
@@ -617,21 +615,17 @@ retry:
 	[UIView animateWithDuration:_animationDuration delay:.0 options:(_animationCurve << 16) animations:^{
 #define ImageBorderInset 12.
 		frame = self.bounds;
-		if ([UIDevice currentDevice].isSystemSeven)
-			if ([UIDevice currentDevice].isRetina)
-				frame = CGRectMake(6.5, 6.5, frame.size.width - 12., frame.size.height - 12.);
-			else frame = CGRectMake(6., 7., frame.size.width - 12., frame.size.height - 12.);
-		else frame = CGRectMake(6., 7., frame.size.width - 12., frame.size.height - 14.);
+		if ([UIDevice currentDevice].isRetina)
+			frame = CGRectMake(6.5, 6.5, frame.size.width - 12., frame.size.height - 12.);
+		else frame = CGRectMake(6., 7., frame.size.width - 12., frame.size.height - 12.);
 
 		frame.size.width = _backgroundView.frame.size.width - (frame.origin.x * 2);
 		if ([UIDevice currentDevice].isRetina)
 			frame.size.width -= (ButtonWidth + ButtonMargin);
 		else frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
 
-		if ([UIDevice currentDevice].isSystemSeven) {
-			frame.size.height = (self.frame.size.height - (17));
-			frame.origin.y = (self.frame.size.height - frame.size.height) / 2.;
-		} else frame.size.height = _backgroundView.frame.size.height - (ImageBorderInset * 2);
+		frame.size.height = (self.frame.size.height - (17));
+		frame.origin.y = (self.frame.size.height - frame.size.height) / 2.;
 		_inputView.frame = frame;
 
 		frame = _accessoryButton.frame;
@@ -719,12 +713,7 @@ retry:
 - (void) _resetTextViewHeight {
 	self.height = CQInactiveLineHeight;
 
-	if ([UIDevice currentDevice].isSystemSeven)
-		_inputView.contentInset = UIEdgeInsetsMake(-6., 2., 5., 0.);
-	else {
-		_inputView.contentOffset = CGPointMake(0., 7.);
-		_inputView.contentInset = UIEdgeInsetsMake(-4., 0., 5., 0.);
-	}
+	_inputView.contentInset = UIEdgeInsetsMake(-6., 2., 5., 0.);
 	_inputView.scrollEnabled = NO;
 }
 
