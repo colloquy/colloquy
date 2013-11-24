@@ -14,6 +14,8 @@
 
 #import "CQPocketController.h"
 
+#import <HockeySDK/HockeySDK.h>
+
 typedef enum {
 	CQSidebarOrientationNone,
 	CQSidebarOrientationPortrait,
@@ -26,6 +28,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #define BrowserAlertTag 1
 
 static NSMutableArray *highlightWords;
+
+@interface CQColloquyApplication () <BITHockeyManagerDelegate>
+@end
 
 @implementation CQColloquyApplication
 + (CQColloquyApplication *) sharedApplication {
@@ -159,6 +164,13 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) performDeferredLaunchWork {
+	NSString *hockeyappIdentifier = @"";
+	// Hacky check to make sure the identifier was replaced with a string that isn't ""
+	if (hockeyappIdentifier.length != 24) {
+		[[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyappIdentifier delegate:self];
+		[[BITHockeyManager sharedHockeyManager] startManager];
+	}
+
 	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
 	NSString *version = infoDictionary[@"CFBundleShortVersionString"];
 

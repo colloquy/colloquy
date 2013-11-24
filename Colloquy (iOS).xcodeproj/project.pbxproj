@@ -248,6 +248,10 @@
 		924B8240116FEB520007F1F8 /* CQAwayStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 924B823F116FEB520007F1F8 /* CQAwayStatusViewController.m */; };
 		925C594C1177CB63001995E0 /* CQModalNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C594B1177CB63001995E0 /* CQModalNavigationController.m */; };
 		925C59591177D84C001995E0 /* CQAwayStatusController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C59581177D84C001995E0 /* CQAwayStatusController.m */; };
+		9261B6F818419DEB001B14C3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6F718419DEB001B14C3 /* QuartzCore.framework */; };
+		9261B6FA18419DF0001B14C3 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6F918419DF0001B14C3 /* CoreText.framework */; };
+		9261B6FC18419FCA001B14C3 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6FB18419FCA001B14C3 /* HockeySDK.framework */; };
+		9261B6FE1841A83C001B14C3 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9261B6FD1841A83C001B14C3 /* HockeySDKResources.bundle */; };
 		9271923C16CFA831003380F0 /* CQChatOrderingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9271923B16CFA831003380F0 /* CQChatOrderingController.m */; };
 		9271928A16D211DD003380F0 /* textField.png in Resources */ = {isa = PBXBuildFile; fileRef = 9271928816D211DD003380F0 /* textField.png */; };
 		9271928B16D211DD003380F0 /* textFieldDark.png in Resources */ = {isa = PBXBuildFile; fileRef = 9271928916D211DD003380F0 /* textFieldDark.png */; };
@@ -656,6 +660,10 @@
 		925C594B1177CB63001995E0 /* CQModalNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQModalNavigationController.m; path = Mobile/Controllers/CQModalNavigationController.m; sourceTree = "<group>"; };
 		925C59571177D84C001995E0 /* CQAwayStatusController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQAwayStatusController.h; sourceTree = "<group>"; };
 		925C59581177D84C001995E0 /* CQAwayStatusController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQAwayStatusController.m; sourceTree = "<group>"; };
+		9261B6F718419DEB001B14C3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		9261B6F918419DF0001B14C3 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		9261B6FB18419FCA001B14C3 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Shared/Frameworks/HockeySDK.framework; sourceTree = "<group>"; };
+		9261B6FD1841A83C001B14C3 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = HockeySDKResources.bundle; path = Shared/Frameworks/HockeySDK.framework/Versions/A/Resources/HockeySDKResources.bundle; sourceTree = SOURCE_ROOT; };
 		9271923A16CFA831003380F0 /* CQChatOrderingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatOrderingController.h; sourceTree = "<group>"; };
 		9271923B16CFA831003380F0 /* CQChatOrderingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatOrderingController.m; sourceTree = "<group>"; };
 		9271928816D211DD003380F0 /* textField.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textField.png; sourceTree = "<group>"; };
@@ -748,6 +756,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CF50C870ED8BE1100CBE5E3 /* Security.framework in Frameworks */,
+				9261B6FA18419DF0001B14C3 /* CoreText.framework in Frameworks */,
+				9261B6F818419DEB001B14C3 /* QuartzCore.framework in Frameworks */,
 				92AD95A517E2F1780044B8B1 /* Social.framework in Frameworks */,
 				929BCABB17C0D3D60046B081 /* SafariServices.framework in Frameworks */,
 				92196C9E16C911310020FE35 /* MessageUI.framework in Frameworks */,
@@ -758,11 +769,11 @@
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				1C1896110E29CF74003CFED0 /* CoreGraphics.framework in Frameworks */,
 				1C1896120E29CF75003CFED0 /* CFNetwork.framework in Frameworks */,
-				1CF50C870ED8BE1100CBE5E3 /* Security.framework in Frameworks */,
 				1CBC07CE0F0741E400EEBCFB /* SystemConfiguration.framework in Frameworks */,
 				1C124A720F097575008F181B /* AudioToolbox.framework in Frameworks */,
 				1CD84C2B10040AB300E56A7E /* MediaPlayer.framework in Frameworks */,
 				1C957EBC11F7EFF3001950FD /* libicucore.dylib in Frameworks */,
+				9261B6FC18419FCA001B14C3 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1361,6 +1372,7 @@
 				92B257D017403B2900F303B5 /* Colloquy.entitlements */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				1CA718A90EF5F136006225CD /* Settings.bundle */,
+				9261B6FD1841A83C001B14C3 /* HockeySDKResources.bundle */,
 				1CA3DF0010291176008B1AD2 /* help.css */,
 				1CA3DEFC10291146008B1AD2 /* help-base.html */,
 				1CD46801102A5EBB00A7A49E /* whats-new.html */,
@@ -1391,6 +1403,7 @@
 				1C124A710F097575008F181B /* AudioToolbox.framework */,
 				1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */,
 				1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */,
+				9261B6F918419DF0001B14C3 /* CoreText.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				1CD84C2A10040AB300E56A7E /* MediaPlayer.framework */,
 				92196C9D16C911310020FE35 /* MessageUI.framework */,
@@ -1398,10 +1411,12 @@
 				929BCABA17C0D3D60046B081 /* SafariServices.framework */,
 				92AD95A417E2F1780044B8B1 /* Social.framework */,
 				1CBC07CD0F0741E400EEBCFB /* SystemConfiguration.framework */,
+				9261B6F718419DEB001B14C3 /* QuartzCore.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1C957EBB11F7EFF3001950FD /* libicucore.dylib */,
 				92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */,
 				1C3A8B2213293CC8005EB3A6 /* libSystem.dylib */,
+				9261B6FB18419FCA001B14C3 /* HockeySDK.framework */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -1572,6 +1587,7 @@
 				1C4CE6440FA03D7800215521 /* Stoof.aiff in Resources */,
 				1C4CE6450FA03D7800215521 /* Switch.aiff in Resources */,
 				1C4CE6460FA03D7800215521 /* Whip.aiff in Resources */,
+				9261B6FE1841A83C001B14C3 /* HockeySDKResources.bundle in Resources */,
 				1C633FB80FAE528100BB5866 /* tableCellCheck.png in Resources */,
 				1C633FC20FAE56A600BB5866 /* tableCellCheckSelected.png in Resources */,
 				8900D7340FBFB2D900DE3E3B /* Servers.plist in Resources */,
@@ -1711,7 +1727,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
-			shellScript = "if [[ \"$CONFIGURATION\" == \"Distribution\" ]]; then\n  KEYCHAINS=`security list-keychains`\n\n  if ! [[ \"$KEYCHAINS\" =~ \"colloquy\" ]]; then\n    open `pwd`/Shared/Resources/colloquy.keychain\n  fi\n\n  IPHONE_KEY=`security find-generic-password -wa pocket-iphone`\n  perl -p -i -e \"s/Pocket_iPhone_Consumer_Key/$IPHONE_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  IPAD_KEY=`security find-generic-password -wa pocket-ipad`\n  perl -p -i -e \"s/Pocket_iPad_Consumer_Key/$IPAD_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\nfi\n";
+			shellScript = "# if [[ \"$CONFIGURATION\" == \"Distribution\" ]]; then\n  KEYCHAINS=`security list-keychains`\n\n  if ! [[ \"$KEYCHAINS\" =~ \"colloquy\" ]]; then\n    open `pwd`/Shared/Resources/colloquy.keychain\n  fi\n\n  POCKET_IPHONE_KEY=`security find-generic-password -wa pocket-iphone`\n  perl -p -i -e \"s/Pocket_iPhone_Consumer_Key/$POCKET_IPHONE_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  POCKET_IPAD_KEY=`security find-generic-password -wa pocket-ipad`\n  perl -p -i -e \"s/Pocket_iPad_Consumer_Key/$POCKET_IPAD_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  HOCKEYAPP_IDENTIFIER=`security find-generic-password -wa hockeyapp`\n  perl -p -i -e \"s/Hockeyapp_App_Identifier/$HOCKEYAPP_IDENTIFIER/g\" \"$SRCROOT/Mobile/Controllers/CQColloquyApplication.m\"\n# fi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1894,6 +1910,10 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/zach/Code/Cocoa/colloquy2/Shared/Frameworks,
+				);
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
@@ -1922,6 +1942,10 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/zach/Code/Cocoa/colloquy2/Shared/Frameworks,
+				);
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
@@ -1949,6 +1973,10 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/zach/Code/Cocoa/colloquy2/Shared/Frameworks,
+				);
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
