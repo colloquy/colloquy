@@ -569,6 +569,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	// reload data, as the unread counts may be inaccurate due to swiping to change rooms
 	[self.tableView reloadData];
+
+	self.navigationController.navigationBar.barTintColor = nil;
 }
 
 - (void) viewWillDisappear:(BOOL) animated {

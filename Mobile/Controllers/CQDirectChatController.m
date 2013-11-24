@@ -469,6 +469,9 @@ static BOOL showingKeyboard;
 	}
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didNotBookmarkLink:) name:CQBookmarkingDidNotSaveLinkNotification object:nil];
+
+	if ([transcriptView.styleIdentifier hasCaseInsensitiveSuffix:@"-dark"])
+		self.navigationController.navigationBar.barTintColor = [[UIColor darkGrayColor] colorWithAlphaComponent:.9];
 }
 
 - (void) viewDidAppear:(BOOL) animated {
