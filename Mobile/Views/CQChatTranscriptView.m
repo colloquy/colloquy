@@ -123,10 +123,6 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 }
 
 - (void) didFinishScrolling {
-	CGPoint offset = self.scrollView.contentOffset;
-	NSString *command = [NSString stringWithFormat:@"updateScrollPosition(%f)", offset.y];
-	[super stringByEvaluatingJavaScriptFromString:command];
-
 	[super stringByEvaluatingJavaScriptFromString:@"resumeAutoscroll()"];
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(didFinishScrollingRecently) object:nil];

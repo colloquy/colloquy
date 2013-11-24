@@ -216,10 +216,6 @@ function resumeAutoscroll() {
 	autoscrollSuspended = false;
 }
 
-function updateScrollPosition(position) {
-	currentScrollTop = position;
-}
-
 function nearBottom() {
 	return (animatingScroll || currentScrollTop >= (document.body.scrollHeight - window.innerHeight - 30));
 }
