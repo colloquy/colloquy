@@ -36,6 +36,19 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 #endif
 }
 
+- (BOOL) isSystemSevenOne {
+	static BOOL result;
+	static BOOL cached;
+
+	if (cached)
+		return result;
+
+	result = ([self.systemVersion doubleValue] >= 7.1);
+	cached = YES;
+
+	return result;
+}
+
 - (BOOL) isSystemSeven {
 	static BOOL result;
 	static BOOL cached;

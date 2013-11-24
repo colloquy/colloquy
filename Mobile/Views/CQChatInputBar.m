@@ -50,7 +50,7 @@ static BOOL hardwareKeyboard;
 
 	_inputView = [[UITextView alloc] initWithFrame:frame];
 	_inputView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
-	_inputView.contentSize = CGSizeMake(230., 20.);
+	_inputView.contentSize = CGSizeMake(230., CQLineHeight);
 	_inputView.dataDetectorTypes = UIDataDetectorTypeNone;
 	_inputView.returnKeyType = UIReturnKeySend;
 	_inputView.autocapitalizationType = UITextAutocapitalizationTypeSentences;
@@ -201,15 +201,25 @@ static BOOL hardwareKeyboard;
 	return _inputView.selectedRange;
 }
 
-- (void) setHeight:(CGFloat) height {
+- (void) setHeight:(CGFloat) height numberOfLines:(NSUInteger) numberOfLines {
+	if (height == CGRectGetHeight(self.frame))
+		return;
+
 	BOOL shouldSetHeight = YES;
 	if (_delegate && [_delegate respondsToSelector:@selector(chatInputBar:shouldChangeHeightBy:)])
 		shouldSetHeight = [_delegate chatInputBar:self shouldChangeHeightBy:(self.frame.size.height - height)];
 
-	if (shouldSetHeight)
+	if (shouldSetHeight) {
 		self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, height);
 
-	[self layoutSubviews];
+		[self setNeedsLayout];
+		[self layoutIfNeeded];
+
+		// Work around iOS 7 bug where the input view frame doesn't update right away after being set, causing text to be clipped.
+		if ([UIDevice currentDevice].isSystemSeven)
+			_inputView.frame = _inputView.frame;
+		_inputView.contentSize = CGSizeMake(_inputView.contentSize.width, ((numberOfLines + 1) * CQLineHeight));
+	}
 }
 
 - (UIColor *) tintColor {
@@ -221,11 +231,13 @@ static BOOL hardwareKeyboard;
 		if ([UIDevice currentDevice].isSystemSeven)
 			color = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
 		else color = [UIColor lightGrayColor];
+	} else if ([UIDevice currentDevice].isSystemSeven && [color isEqual:[UIColor blackColor]]) {
+		color = [UIColor colorWithWhite:(43. / 255.) alpha:1.];
 	}
 
 	if (![UIDevice currentDevice].isSystemSeven) {
 		if ([color isEqual:[UIColor blackColor]] || [color isEqual:[UIColor colorWithWhite:(247. / 255.) alpha:1.]]) {
-			_inputView.keyboardAppearance = UIKeyboardAppearanceAlert;
+			_inputView.keyboardAppearance = UIKeyboardAppearanceDark;
 			_overlayBackgroundView.image = [[UIImage imageNamed:@"textFieldDark.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 20, 22, 20)];
 			_overlayBackgroundViewPiece.image = [[UIImage imageNamed:@"textFieldDarkPiece.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(22., 1., 22., 1.)];
 		} else {
@@ -236,7 +248,7 @@ static BOOL hardwareKeyboard;
 
 		_backgroundView.tintColor = color;
 	} else {
-		if ([color isEqual:[UIColor blackColor]]) {
+		if ([color isEqual:[UIColor blackColor]] || [color isEqual:[UIColor colorWithWhite:(43. / 255.) alpha:1.]]) {
 			_inputView.keyboardAppearance = UIKeyboardAppearanceDark;
 			_backgroundView.backgroundColor = [UIColor colorWithWhite:(43. / 255.) alpha:1.];
 		} else {
@@ -538,15 +550,14 @@ retry:
 - (void) textViewDidChange:(UITextView *) textView {
 	if (textView.hasText && textView.text.length) {
 		CGSize lineSize = [@"a" sizeWithFont:textView.font];
-		CGSize suggestedTextSize = [textView.text sizeWithFont:textView.font constrainedToSize:CGSizeMake((textView.contentSize.width - 10.), 90000) lineBreakMode:NSLineBreakByWordWrapping];
+		CGSize suggestedTextSize = [textView.text sizeWithFont:textView.font constrainedToSize:CGSizeMake((textView.contentSize.width - 15.), 90000) lineBreakMode:NSLineBreakByWordWrapping];
 		CGFloat numberOfLines = roundf(suggestedTextSize.height / lineSize.height);
 		CGFloat contentHeight = fminf((CQInactiveLineHeight + ((numberOfLines - 1) * CQLineHeight)), CQMaxLineHeight);
 
 		if (contentHeight < CQMaxLineHeight)
 			textView.scrollEnabled = NO;
 		else textView.scrollEnabled = YES;
-
-		self.height = floorf(contentHeight);
+		[self setHeight:contentHeight numberOfLines:(numberOfLines - 1)];
 	} else {
 		[self _resetTextViewHeight];
 	}
@@ -711,7 +722,7 @@ retry:
 }
 
 - (void) _resetTextViewHeight {
-	self.height = CQInactiveLineHeight;
+	[self setHeight:CQInactiveLineHeight numberOfLines:0];
 
 	_inputView.contentInset = UIEdgeInsetsMake(-6., 2., 5., 0.);
 	_inputView.scrollEnabled = NO;
