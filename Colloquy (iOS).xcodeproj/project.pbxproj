@@ -1727,7 +1727,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
-			shellScript = "# if [[ \"$CONFIGURATION\" == \"Distribution\" ]]; then\n  KEYCHAINS=`security list-keychains`\n\n  if ! [[ \"$KEYCHAINS\" =~ \"colloquy\" ]]; then\n    open `pwd`/Shared/Resources/colloquy.keychain\n  fi\n\n  POCKET_IPHONE_KEY=`security find-generic-password -wa pocket-iphone`\n  perl -p -i -e \"s/Pocket_iPhone_Consumer_Key/$POCKET_IPHONE_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  POCKET_IPAD_KEY=`security find-generic-password -wa pocket-ipad`\n  perl -p -i -e \"s/Pocket_iPad_Consumer_Key/$POCKET_IPAD_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  HOCKEYAPP_IDENTIFIER=`security find-generic-password -wa hockeyapp`\n  perl -p -i -e \"s/Hockeyapp_App_Identifier/$HOCKEYAPP_IDENTIFIER/g\" \"$SRCROOT/Mobile/Controllers/CQColloquyApplication.m\"\n# fi\n";
+			shellScript = "if [[ \"$CONFIGURATION\" == \"Distribution\" ]]; then\n  KEYCHAINS=`security list-keychains`\n\n  if ! [[ \"$KEYCHAINS\" =~ \"colloquy\" ]]; then\n    open `pwd`/Shared/Resources/colloquy.keychain\n  fi\n\n  POCKET_IPHONE_KEY=`security find-generic-password -wa pocket-iphone`\n  perl -p -i -e \"s/Pocket_iPhone_Consumer_Key/$POCKET_IPHONE_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  POCKET_IPAD_KEY=`security find-generic-password -wa pocket-ipad`\n  perl -p -i -e \"s/Pocket_iPad_Consumer_Key/$POCKET_IPAD_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  HOCKEYAPP_IDENTIFIER=`security find-generic-password -wa hockeyapp`\n  perl -p -i -e \"s/Hockeyapp_App_Identifier/$HOCKEYAPP_IDENTIFIER/g\" \"$SRCROOT/Mobile/Controllers/CQColloquyApplication.m\"\nfi\n ";
 		};
 /* End PBXShellScriptBuildPhase section */
 
