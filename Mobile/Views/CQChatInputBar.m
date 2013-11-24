@@ -501,6 +501,11 @@ retry:
 	text = [text stringByReplacingCharactersInRange:range withString:string];
 
 	for (NSInteger i = (range.location + string.length - 1); i >= 0; --i) {
+		if (i > text.length) {
+			wordRange.length = 0;
+			break;
+		}
+
 		if ([text characterAtIndex:i] == ' ') {
 			wordRange.location = i + 1;
 			wordRange.length = ((range.location + string.length) - wordRange.location);
@@ -515,9 +520,13 @@ retry:
 	NSArray *completions = nil;
 	BOOL canShowCompletionForCurrentWord = textView.text.length;
 	if (canShowCompletionForCurrentWord) {
-		if (!((range.location + range.length) == textView.text.length)) // if we're in the middle of a line, only show completions if the next letter is a space
-			canShowCompletionForCurrentWord = [[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:[textView.text characterAtIndex:(range.location + range.length)]];
-		else canShowCompletionForCurrentWord = YES; // if we are at the end of the line, we can show completions since there's nothing else after it
+		if (!((range.location + range.length) == textView.text.length)) { // if we're in the middle of a line, only show completions if the next letter is a space
+			NSInteger idx = (range.location + range.length);
+			if (textView.text.length > idx) {
+				unichar character = [textView.text characterAtIndex:idx];
+				canShowCompletionForCurrentWord = [[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:character];
+			}
+		} else canShowCompletionForCurrentWord = YES; // if we are at the end of the line, we can show completions since there's nothing else after it
 	} else canShowCompletionForCurrentWord = YES; // if we don't have any text, we can maybe show completions although we probably won't (not enough context yet)
 
 	if (_autocomplete && canShowCompletionForCurrentWord && !_disableCompletionUntilNextWord && word.length && ![self _hasMarkedText] && [_delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
