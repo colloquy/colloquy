@@ -21,6 +21,7 @@ typedef enum {
 	NSString *_noItemsLabelText;
 	NSString *_editViewTitle;
 	NSString *_editPlaceholder;
+	NSString *_footerText;
 	NSUInteger _editingIndex;
 	NSInteger _selectedItemIndex;
 	CQPreferencesListEditViewController *_editingViewController;
@@ -44,6 +45,7 @@ typedef enum {
 @property (nonatomic, copy) NSString *noItemsLabelText;
 @property (nonatomic, copy) NSString *editViewTitle;
 @property (nonatomic, copy) NSString *editPlaceholder;
+@property (nonatomic, copy) NSString *footerText;
 @property (nonatomic, strong) id customEditingViewController;
 
 @property (nonatomic, weak) id target;

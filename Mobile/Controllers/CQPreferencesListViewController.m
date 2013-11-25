@@ -229,6 +229,10 @@ enum {
 	return _items.count;
 }
 
+- (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
+	return _footerText;
+}
+
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 

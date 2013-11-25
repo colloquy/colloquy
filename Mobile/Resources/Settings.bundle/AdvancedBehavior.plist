@@ -208,6 +208,8 @@
 			</array>
 			<key>DefaultValue</key>
 			<integer>600</integer>
+			<key>FooterText</key>
+			<string>iOS may close apps earlier than desired. Background time not guaranteed.</string>
 		</dict>
 		<dict>
 			<key>Type</key>

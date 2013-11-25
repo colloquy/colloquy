@@ -273,6 +273,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 		preferencesListViewController.allowEditing = NO;
 		preferencesListViewController.items = rowDictionary[CQPSTitles];
 		preferencesListViewController.details = rowDictionary[CQPSLicenses];
+		preferencesListViewController.footerText = rowDictionary[CQPSFooterText];
 
 		id key = rowDictionary[CQPSKey];
 		id value = [[CQSettingsController settingsController] objectForKey:key];
