@@ -117,7 +117,7 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 
 	var timestampClassName = timestampPosition === null ? "timestamp" : "timestamp " + timestampPosition;
 	if (!previousSession && timestamp !== null) {
-		var timestampElement = document.createElement("div");
+		var timestampElement = document.createElement("span");
 		timestampElement.className = timestampClassName;
 		timestampElement.innerHTML = timestamp;
 		messageWrapperElement.appendChild(timestampElement);
@@ -127,7 +127,7 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 	aElement.className = "nickname " + senderNickname;
 	aElement.setAttribute("href", "colloquy://" + senderNickname);
 
-	var senderElement = document.createElement("div");
+	var senderElement = document.createElement("span");
 	senderElement.className = className;
 	senderElement.appendChild(aElement);
 	senderElement.textContent = senderText(senderNickname, highlighted, action, type === "notice", self);
@@ -135,7 +135,7 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 	aElement.appendChild(senderElement);
 	messageWrapperElement.appendChild(aElement);
 
-	var messageElement = document.createElement("div");
+	var messageElement = document.createElement("span");
 	messageElement.className = type;
 	messageElement.innerHTML = messageHTML;
 	messageWrapperElement.appendChild(messageElement);
@@ -191,7 +191,7 @@ function setTimestampPosition(position) {
 	var className = timestampPosition === null ? "event" : "timestamp " + timestampPosition;
 	var elements = document.getElementsByClassName("timestamp");
 	for (var i = 0; i < elements.length; i++)
-		element[i].className = className;
+		elements[i].className = className;
 }
 
 function setScrollbackLimit(limit) {
@@ -257,17 +257,18 @@ function isDocumentReady() {
 
 function urlUnderTapAtPoint(x, y) {
 	var url = null;
-	var e = document.elementFromPoint(x,y);
-
+	var e = document.elementFromPoint(x, y);
 	while (e) {
-		if (e.href.length) {
-			url = e.href;
-			break;
+		if (typeof e.href !== "undefined" && e.href.length) {
+			console.log("href: " + e.href + " prefix? " + e.href.indexOf("colloquy"));
+			if (e.href.indexOf("colloquy") != 0){
+				url = e.href;
+				break;
+			}
 		}
 		e = e.parentNode;
 	}
-
-    return url;
+	return url;
 }
 
 function addOffsetForTopicToFirstElement() {

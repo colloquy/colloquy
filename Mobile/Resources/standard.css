@@ -7,9 +7,14 @@ body {
 	-webkit-text-size-adjust: none;
 }
 
+a {
+	pointer-events: auto;
+}
+
 .notice-wrapper, .message-wrapper {
 	padding: 2px 8px;
 	border-top: 1px solid rgba(0, 0, 0, 0.1);
+	pointer-events: none;
 }
 
 .previous-session {
