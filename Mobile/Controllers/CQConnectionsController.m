@@ -1192,7 +1192,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	}
 
 	info[@"uniqueIdentifier"] = connection.uniqueIdentifier;
-	info[@"server"] = connection.server;
+	if (info[@"server"]) info[@"server"] = connection.server;
 	info[@"type"] = connection.urlScheme;
 	info[@"secure"] = @(connection.secure);
 	info[@"requestsSASL"] = @(connection.requestsSASL);
