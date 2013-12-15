@@ -288,9 +288,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	[self changeEncoding:nil];
 
-	[send setHorizontallyResizable:YES];
-	[send setVerticallyResizable:YES];
-	[send setAutoresizingMask:NSViewWidthSizable];
 	[send setSelectable:YES];
 	[send setEditable:YES];
 	[send setRichText:YES];
@@ -1122,7 +1119,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputRetainsFormatting"] )
 		[send setTypingAttributes:typingAttributes];
-
 
 	[self textDidChange:nil];
 	[display scrollToBottom];
