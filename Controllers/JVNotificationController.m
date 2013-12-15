@@ -90,6 +90,12 @@ static JVNotificationController *sharedInstance = nil;
 	if ( target && action && [target respondsToSelector:action] )
 		[target performSelector:action withObject:nil];
 }
+
+- (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center shouldPresentNotification:(NSUserNotification *)notification {
+	// Always show when asked, because we have our own preference for "only notify when not active".
+	return YES;
+}
+
 @end
 
 #pragma mark -
