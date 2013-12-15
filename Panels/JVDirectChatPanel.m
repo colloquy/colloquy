@@ -1060,11 +1060,12 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( [sender isKindOfClass:[NSNumber class]] && [sender boolValue] ) action = YES;
 
 	[[[send textStorage] mutableString] replaceOccurrencesOfString:@"\r" withString:@"\n" options:NSLiteralSearch range:NSMakeRange( 0, [[send string] length] )];
+	NSTextStorage *storage = [[send textStorage] mutableCopy];
 
-	while( [[send string] length] ) {
-		range = [[[send textStorage] string] rangeOfString:@"\n"];
-		if( ! range.length ) range.location = [[send string] length];
-		subMsg = [[[send textStorage] attributedSubstringFromRange:NSMakeRange( 0, range.location )] mutableCopy];
+	while( [[storage string] length] ) {
+		range = [[storage string] rangeOfString:@"\n"];
+		if( ! range.length ) range.location = [[storage string] length];
+		subMsg = [[storage attributedSubstringFromRange:NSMakeRange( 0, range.location )] mutableCopy];
 
 		if( ( [subMsg length] >= 1 && range.length ) || ( [subMsg length] && ! range.length ) ) {
 			if( [[subMsg string] hasPrefix:@"/"] && ! [[subMsg string] hasPrefix:@"//"] ) {
@@ -1107,13 +1108,12 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 					[self sendMessage:cmessage];
 					[self echoSentMessageToDisplay:cmessage]; // echo after the plugins process the message
-
 				}
 			}
 		}
 
 		if( range.length ) range.location++;
-		[[send textStorage] deleteCharactersInRange:NSMakeRange( 0, range.location )];
+		[storage deleteCharactersInRange:NSMakeRange( 0, range.location )];
 	}
 
 	NSDictionary *typingAttributes = [send typingAttributes];

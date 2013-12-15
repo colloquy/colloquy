@@ -216,7 +216,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) addMessageToDisplay:(NSString *) message asOutboundMessage:(BOOL) outbound {
 	NSAttributedString *msg = nil;
-	NSMutableString *strMsg = [message mutableCopy];
+	id strMsg = [message mutableCopy];
 	NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
 	NSMutableParagraphStyle *para = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	NSUInteger numeric = 0;
