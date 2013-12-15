@@ -1,8 +1,6 @@
 #import "JVBuddy.h"
 #import "MVConnectionsController.h"
 
-#import <ChatCore/NSStringAdditions.h>
-
 NSString *JVBuddyCameOnlineNotification = @"JVBuddyCameOnlineNotification";
 NSString *JVBuddyWentOfflineNotification = @"JVBuddyWentOfflineNotification";
 

@@ -308,7 +308,6 @@
 		9200338D13D92515005B69BA /* MVFileTransfer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 9200338B13D92515005B69BA /* MVFileTransfer.nib */; };
 		9220565E11018298005CD72D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9220565D11018298005CD72D /* NSDateAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		92823CF2168FFA0A000EC36E /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CF1168FFA0A000EC36E /* KAIgnoreRule.m */; };
-		928FB03113EE643E00A0DF4B /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 928FB03013EE643E00A0DF4B /* NSStringAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		928FB03413EE648400A0DF4B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 928FB03313EE648400A0DF4B /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		928FB03613EE64C700A0DF4B /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 928FB03513EE64C700A0DF4B /* libicucore.dylib */; };
 		9295C85D1675E227009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
@@ -2514,7 +2513,6 @@
 				891EF3D1106426CB00CCEA35 /* PFMoveApplicationController.m in Sources */,
 				9220565E11018298005CD72D /* NSDateAdditions.m in Sources */,
 				891E8467123F0AEF00EC3C0F /* NSCharacterSetAdditions.m in Sources */,
-				928FB03113EE643E00A0DF4B /* NSStringAdditions.m in Sources */,
 				928FB03413EE648400A0DF4B /* RegexKitLite.m in Sources */,
 				92823CF2168FFA0A000EC36E /* KAIgnoreRule.m in Sources */,
 			);
