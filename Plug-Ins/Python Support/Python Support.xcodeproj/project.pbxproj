@@ -12,6 +12,7 @@
 		1C4FD36807C6BC25000EA451 /* JVPythonPluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FD36607C6BC25000EA451 /* JVPythonPluginLoader.m */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		9295C9821678302E009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9295C9811678302E009F9014 /* ChatCore.framework */; };
+		C2EC59E9185E11F9008797B7 /* libpython2.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C2EC59E8185E11F9008797B7 /* libpython2.7.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,8 @@
 		92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Colloquy (Old).xcodeproj"; path = "/Users/zach/Desktop/Colloquy-For-Reverts/Colloquy (Old).xcodeproj"; sourceTree = "<absolute>"; };
 		9295C9811678302E009F9014 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChatCore.framework; path = ../../build/Development/ChatCore.framework; sourceTree = "<group>"; };
 		A1F6108B0957E4BB001B65CD /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C2EC59E8185E11F9008797B7 /* libpython2.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.7.dylib; path = /System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config/libpython2.7.dylib; sourceTree = "<absolute>"; };
+		C2EC59EC185E1570008797B7 /* pyobjc-compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pyobjc-compat.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +73,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9295C9821678302E009F9014 /* ChatCore.framework in Frameworks */,
+				C2EC59E9185E11F9008797B7 /* libpython2.7.dylib in Frameworks */,
 				8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -131,6 +135,7 @@
 		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C2EC59E8185E11F9008797B7 /* libpython2.7.dylib */,
 				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
@@ -168,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				1C0A141508B0380800324E25 /* pyobjc-api.h */,
+				C2EC59EC185E1570008797B7 /* pyobjc-compat.h */,
 			);
 			indentWidth = 4;
 			name = "Other Sources";
@@ -325,11 +331,12 @@
 					../../Panels,
 					../../Views,
 					../../Shared/Models,
+					/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7,
 				);
 				INFOPLIST_FILE = Info.plist;
-				OTHER_LDFLAGS = (
-					"-weak_library",
-					/System/Library/Frameworks/Python.framework/Versions/2.5/Python,
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config",
 				);
 				PRODUCT_NAME = "Python Support";
 				WRAPPER_EXTENSION = plugin;
@@ -353,11 +360,12 @@
 					../../Panels,
 					../../Views,
 					../../Shared/Models,
+					/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7,
 				);
 				INFOPLIST_FILE = Info.plist;
-				OTHER_LDFLAGS = (
-					"-weak_library",
-					/System/Library/Frameworks/Python.framework/Versions/2.5/Python,
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config",
 				);
 				PRODUCT_NAME = "Python Support";
 				WRAPPER_EXTENSION = plugin;
