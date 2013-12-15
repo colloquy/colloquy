@@ -10,9 +10,6 @@
 	#import <Foundation/Foundation.h>
 #else
 	#import <Cocoa/Cocoa.h>
-
-	CF_EXPORT CFRunLoopRef CFRunLoopGetMain(void);
-
 #endif
 #endif
 

@@ -1,13 +1,5 @@
 #import "Basic.pch"
 
-#ifndef NSAppKitVersionNumber10_7
-	#define NSAppKitVersionNumber10_7 1138
-#endif
-
-#ifndef NSAppKitVersionNumber10_8
-	#define NSAppKitVersionNumber10_8 1187
-#endif
-
 #ifdef __OBJC__
 
 #import <WebKit/WebKit.h>
