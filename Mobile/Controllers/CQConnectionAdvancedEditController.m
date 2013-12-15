@@ -17,10 +17,6 @@ static inline __attribute__((always_inline)) BOOL isDefaultValue(NSString *strin
 	return [string isEqualToString:@"<<default>>"];
 }
 
-static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *string) {
-	return [string isEqualToString:@"<<placeholder>>"];
-}
-
 static inline __attribute__((always_inline)) NSString *currentPreferredNickname(MVChatConnection *connection) {
 	NSString *preferredNickname = connection.preferredNickname;
 	return (isDefaultValue(preferredNickname) ? [MVChatConnection defaultNickname] : preferredNickname);

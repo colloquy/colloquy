@@ -2,11 +2,6 @@
 
 #import <Security/Security.h>
 
-MVInline size_t stringByteLength(NSString *string) {
-	const char * const utf8String = [string UTF8String];
-	return (utf8String ? strlen(utf8String) : 0);
-}
-
 @implementation CQKeychain
 + (CQKeychain *) standardKeychain {
 	static CQKeychain *sharedInstance;

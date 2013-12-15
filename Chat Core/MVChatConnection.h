@@ -3,49 +3,49 @@
 #import <ChatCore/MVAvailability.h>
 #import <ChatCore/MVChatString.h>
 
-typedef enum {
+typedef NS_ENUM(NSInteger, MVChatConnectionType) {
 	MVChatConnectionUnsupportedType = 0,
 	MVChatConnectionICBType = 'icbC',
 	MVChatConnectionIRCType = 'ircC',
 	MVChatConnectionSILCType = 'silC',
 	MVChatConnectionXMPPType = 'xmpC'
-} MVChatConnectionType;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, MVChatConnectionStatus) {
 	MVChatConnectionDisconnectedStatus = 'disC',
 	MVChatConnectionServerDisconnectedStatus = 'sdsC',
 	MVChatConnectionConnectingStatus = 'conG',
 	MVChatConnectionConnectedStatus = 'conD',
 	MVChatConnectionSuspendedStatus = 'susP'
-} MVChatConnectionStatus;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, MVChatConnectionProxy) {
 	MVChatConnectionNoProxy = 'nonE',
 	MVChatConnectionHTTPProxy = 'httP',
 	MVChatConnectionHTTPSProxy = 'htpS',
 	MVChatConnectionSOCKS4Proxy = 'soK4',
 	MVChatConnectionSOCKS5Proxy = 'soK5'
-} MVChatConnectionProxy;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, MVChatConnectionBouncer) {
 	MVChatConnectionNoBouncer = 'nonB',
 	MVChatConnectionGenericBouncer = 'gbnC',
 	MVChatConnectionColloquyBouncer = 'cbnC'
-} MVChatConnectionBouncer;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, MVChatConnectionPublicKeyType) {
 	MVChatConnectionServerPublicKeyType = 'serV',
 	MVChatConnectionClientPublicKeyType = 'clnT'
-} MVChatConnectionPublicKeyType;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, MVChatMessageFormat) {
 	MVChatConnectionDefaultMessageFormat = 'cDtF',
 	MVChatNoMessageFormat = 'nOcF',
 	MVChatWindowsIRCMessageFormat = 'mIrF',
 	MVChatCTCPTwoMessageFormat = 'ct2F'
-} MVChatMessageFormat;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, MVChatConnectionError) {
 	MVChatConnectionUnknownError = -1,
 	MVChatConnectionNoSuchUserError = -2,
 	MVChatConnectionNoSuchRoomError = -3,
@@ -69,7 +69,7 @@ typedef enum {
 	MVChatConnectionRoomDoesNotSupportModesError = -21,
 	MVChatConnectionNickChangedByServicesError = -22,
 	MVChatConnectionServicesDownError = -23
-} MVChatConnectionError;
+};
 
 @class MVChatRoom;
 @class MVChatUser;
