@@ -17,6 +17,8 @@ static NSString *const CQPSType = @"Type";
 static NSString *const CQPSTitle = @"Title";
 static NSString *const CQPSKey = @"Key";
 static NSString *const CQPSDefaultValue = @"DefaultValue";
+static NSString *const CQPSTrueValue = @"TrueValue";
+static NSString *const CQPSFalseValue = @"FalseValue";
 static NSString *const CQPSAction = @"CQAction";
 static NSString *const CQPSAddress = @"CQAddress";
 static NSString *const CQPSLink = @"Link";
@@ -224,10 +226,24 @@ static NSString *const CQPSListTypeFont = @"Font";
 		return cell;
 	} else if ([rowDictionary[CQPSType] isEqualToString:CQPSToggleSwitchSpecifier]) {
 		CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
-		cell.switchControl.on = [value boolValue];
+		id trueValue = rowDictionary[CQPSTrueValue];
+		id falseValue = rowDictionary[CQPSFalseValue];
+
+		BOOL isTrueValue = [trueValue isEqual:value];
+		BOOL isFalseValue = [falseValue isEqual:value];
+		if (isTrueValue)
+			cell.switchControl.on = YES;
+		else if (isFalseValue)
+			cell.switchControl.on = NO;
+		else cell.switchControl.on = [value boolValue];
+
 		cell.textLabel.text = [[NSBundle mainBundle] localizedStringForKey:rowDictionary[CQPSTitle] value:@"" table:nil];
 		cell.switchControlBlock = ^(UISwitch *switchControl) {
-			[[CQSettingsController settingsController] setBool:switchControl.on forKey:key];
+			if (trueValue && switchControl.on)
+				[[CQSettingsController settingsController] setBool:YES forKey:key];
+			else if (falseValue && !switchControl.on)
+				[[CQSettingsController settingsController] setBool:NO forKey:key];
+			else [[CQSettingsController settingsController] setBool:switchControl.on forKey:key];
 		};
 
 		return cell;
