@@ -61,12 +61,15 @@ static void reachabilityStatusChangedCallback(SCNetworkReachabilityRef target, S
 	SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
 
 	[self associateObject:(__bridge id)reachability forKey:@"reachability"];
+
+	CFRelease(reachability);
 }
 
 - (void) cq_endReachabilityMonitoring {
 	SCNetworkReachabilityRef reachability = (__bridge SCNetworkReachabilityRef)[self associatedObjectForKey:@"reachability"];
-	if (reachability)
+	if (reachability) {
 		SCNetworkReachabilityUnscheduleFromRunLoop(reachability, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-	CFRelease(reachability);
+		[self associateObject:nil forKey:@"reachability"];
+	}
 }
 @end
