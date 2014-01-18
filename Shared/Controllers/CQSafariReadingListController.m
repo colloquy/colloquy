@@ -32,6 +32,5 @@ NSString *const CQBookmarkingServiceSafariReadingList = @"CQBookmarkingServiceSa
 	else [[NSNotificationCenter defaultCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:link userInfo:@{
 		@"error": error, @"service": [self serviceName]
 	}];
-
 }
 @end

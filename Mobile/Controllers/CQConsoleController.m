@@ -84,13 +84,17 @@ static BOOL verbose;
 
 #pragma mark -
 
+- (void) awakeFromNib {
+	[super awakeFromNib];
+
+	transcriptView.styleIdentifier = @"console";
+	transcriptView.allowsStyleChanges = NO;
+}
+
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
 	self.navigationItem.title = NSLocalizedString(@"Console", @"Console view title");
-
-	transcriptView.styleIdentifier = @"console";
-	transcriptView.allowsStyleChanges = NO;
 
 	[transcriptView noteTopicChangeTo:@"" by:@""];
 }
@@ -172,7 +176,7 @@ static BOOL verbose;
 	[self addMessage:notification.userInfo[@"message"] outbound:[notification.userInfo[@"outbound"] boolValue]];
 }
 
-- (void) socketTrafficDidOccur:(NSString *) socketTraffic context:(void *) context {
+- (void) delegateLogger:(MVDelegateLogger *) delegateLogger socketTrafficDidOccur:(NSString *) socketTraffic context:(void *) context {
 	if (hideSocketInformation)
 		return;
 

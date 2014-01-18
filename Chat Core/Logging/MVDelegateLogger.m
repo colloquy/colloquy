@@ -11,10 +11,10 @@
 }
 
 - (void) logMessage:(DDLogMessage *) logMessage {
-	[_delegate socketTrafficDidOccur:logMessage->logMsg context:(uintptr_t)logMessage->logContext];
+	[_delegate delegateLogger:self socketTrafficDidOccur:logMessage->logMsg context:(uintptr_t)logMessage->logContext];
 }
 
 - (NSString *) loggerName {
-	return @"info.colloquy.delegateLogger";
+	return [NSString stringWithFormat:@"info.colloquy.delegateLogger-%p", self];
 }
 @end
