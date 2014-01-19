@@ -240,9 +240,9 @@ static NSString *const CQPSListTypeFont = @"Font";
 		cell.textLabel.text = [[NSBundle mainBundle] localizedStringForKey:rowDictionary[CQPSTitle] value:@"" table:nil];
 		cell.switchControlBlock = ^(UISwitch *switchControl) {
 			if (trueValue && switchControl.on)
-				[[CQSettingsController settingsController] setBool:YES forKey:key];
+				[[CQSettingsController settingsController] setObject:trueValue forKey:key];
 			else if (falseValue && !switchControl.on)
-				[[CQSettingsController settingsController] setBool:NO forKey:key];
+				[[CQSettingsController settingsController] setObject:falseValue forKey:key];
 			else [[CQSettingsController settingsController] setBool:switchControl.on forKey:key];
 		};
 
