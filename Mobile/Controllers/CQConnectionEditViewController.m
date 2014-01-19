@@ -74,11 +74,11 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL) animated {
+	[super viewWillAppear:animated];
+
 	if (pushAvailable)
 		[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:PushTableSection] withAnimation:UITableViewRowAnimationNone];
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:AutomaticTableSection] withAnimation:UITableViewRowAnimationNone];
-
-	[super viewWillAppear:animated];
 }
 
 #pragma mark -
@@ -507,6 +507,11 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 - (void) automaticJoinRoomsChanged:(CQPreferencesListViewController *) sender {
 	_connection.automaticJoinedRooms = sender.items;
+
+	[self.tableView beginUpdates];
+	[self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForItem:2 inSection:AutomaticTableSection]] withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self.tableView endUpdates];
+
 }
 
 - (void) ignoreListChanged:(CQPreferencesListViewController *) sender {
