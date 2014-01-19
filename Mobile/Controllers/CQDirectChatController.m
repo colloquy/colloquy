@@ -1713,13 +1713,15 @@ static BOOL showingKeyboard;
 	chatInputBar.autocomplete = ![completionBehavior isEqualToString:@"Disabled"];
 	chatInputBar.spaceCyclesCompletions = [completionBehavior isEqualToString:@"Keyboard"];
 
-	BOOL autocorrect = [[CQSettingsController settingsController] boolForKey:@"CQDisableChatAutocorrection"];
-	chatInputBar.autocorrect = !autocorrect;
+	BOOL autocorrect = ![[CQSettingsController settingsController] boolForKey:@"CQDisableChatAutocorrection"];
+	chatInputBar.autocorrect = autocorrect;
 
 	chatInputBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
-	NSString *capitalizationBehavior = [[CQSettingsController settingsController] stringForKey:@"CQChatAutocapitalizationBehavior"];
-	chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
+	id capitalizationBehavior = [[CQSettingsController settingsController] objectForKey:@"CQChatAutocapitalizationBehavior"];
+	if ([capitalizationBehavior isKindOfClass:[NSNumber class]])
+		chatInputBar.autocapitalizationType = ([capitalizationBehavior boolValue] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
+	else chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
 }
 
 - (void) _nicknameDidChange:(NSNotification *) notification {
