@@ -288,7 +288,7 @@ static CQShowRoomTopic showRoomTopic;
 	if (nicknames.count == 0)
 		return NO;
 
-	NSString *nicknamesDisplayString = [nicknames componentsJoinedByString:@"%@ ", [[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator]];
+	NSString *nicknamesDisplayString = [nicknames componentsJoinedByString:[NSString stringWithFormat:@"%@ ", [[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator]]];
 
 	[self addEventMessage:[NSString stringWithFormat:NSLocalizedString(@"You have invited %@ to %@.", @"You have invited %@ to %@ locally echoed message"), nicknamesDisplayString, self.room.displayName] withIdentifier:@"event"];
 
