@@ -283,6 +283,19 @@ static CQShowRoomTopic showRoomTopic;
 	return YES;
 }
 
+- (BOOL) handleInviteCommandWithArguments:(NSString *) arguments {
+	NSArray *nicknames = [arguments componentsSeparatedByString:@" "];
+	if (nicknames.count == 0)
+		return NO;
+
+	NSString *nicknamesDisplayString = [nicknames componentsJoinedByString:@"%@ ", [[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator]];
+
+	[self addEventMessage:[NSString stringWithFormat:NSLocalizedString(@"You have invited %@ to %@.", @"You have invited %@ to %@ locally echoed message"), nicknamesDisplayString, self.room.displayName] withIdentifier:@"event"];
+
+	// return NO to pass the command on to the server directly
+	return NO;
+}
+
 - (void) popoverControllerDidDismissPopover:(UIPopoverController *) popoverController {
 	if (popoverController == _currentUserListPopoverController) {
 		_currentUserListViewController = nil;
@@ -323,7 +336,7 @@ static CQShowRoomTopic showRoomTopic;
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands = nil;
-		if (!commands) commands = @[@"/me", @"/msg", @"/nick", @"/join", @"/away", @"/topic", @"/kick", @"/ban", @"/kickban", @"/mode", @"/op", @"/voice", @"/halfop", @"/quiet", @"/deop", @"/devoice", @"/dehalfop", @"/dequiet", @"/unban", @"/bankick", @"/cycle", @"/hop"];
+		if (!commands) commands = @[@"/me", @"/msg", @"/nick", @"/join", @"/away", @"/topic", @"/kick", @"/ban", @"/kickban", @"/mode", @"/op", @"/voice", @"/halfop", @"/quiet", @"/deop", @"/devoice", @"/dehalfop", @"/dequiet", @"/unban", @"/bankick", @"/cycle", @"/hop", @"/invite"];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
