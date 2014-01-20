@@ -165,7 +165,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) performDeferredLaunchWork {
-	NSString *hockeyappIdentifier = @"";
+	NSString *hockeyappIdentifier = @"Hockeyapp_App_Identifier";
 	// Hacky check to make sure the identifier was replaced with a string that isn't ""
 	if (hockeyappIdentifier.length != 24) {
 		[[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyappIdentifier delegate:self];
