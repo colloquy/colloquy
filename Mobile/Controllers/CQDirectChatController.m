@@ -429,6 +429,21 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
+- (NSArray *) keyCommands {
+	static NSArray *keyCommands = nil;
+	if (!keyCommands) {
+		UIKeyCommand *altTabKeyCommand = [UIKeyCommand keyCommandWithInput:@"\t" modifierFlags:UIKeyModifierAlternate action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *shiftAltTabKeyCommand = [UIKeyCommand keyCommandWithInput:@"\t" modifierFlags:(UIKeyModifierAlternate | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *cmdUpKeyCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputUpArrow modifierFlags:UIKeyModifierCommand action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *cmdDownKeyCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputDownArrow modifierFlags:UIKeyModifierCommand action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *optCmdUpKeyCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputUpArrow modifierFlags:(UIKeyModifierCommand | UIKeyModifierAlternate) action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *optCmdDownKeyCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputDownArrow modifierFlags:(UIKeyModifierCommand | UIKeyModifierAlternate) action:@selector(_handleKeyCommand:)];
+
+		keyCommands = @[altTabKeyCommand, shiftAltTabKeyCommand, cmdUpKeyCommand, cmdDownKeyCommand, optCmdUpKeyCommand, optCmdDownKeyCommand];
+	}
+	return keyCommands;
+}
+
 - (UIScrollView *) scrollView {
 	return transcriptView.scrollView;
 }
@@ -1291,6 +1306,33 @@ static BOOL showingKeyboard;
 
 - (void) handleResetbadgeCommandWithArguments:(NSString *) arguments {
 	[CQColloquyApplication sharedApplication].applicationIconBadgeNumber = 0;
+}
+
+#pragma mark -
+
+- (void) _handleKeyCommand:(UIKeyCommand *) command {
+	id nextViewController = nil;
+
+	BOOL optKeyPressed = (command.modifierFlags & UIKeyModifierAlternate) == UIKeyModifierAlternate;
+	BOOL shiftKeyPressed = (command.modifierFlags & UIKeyModifierShift) == UIKeyModifierShift;
+	BOOL commandKeyPressed = (command.modifierFlags & UIKeyModifierCommand) == UIKeyModifierCommand;
+
+	if ([command.input isEqualToString:@"\t"]) {
+		if (optKeyPressed) {
+			if (shiftKeyPressed)
+				nextViewController = [[CQChatOrderingController defaultController] chatViewControllerPreceedingChatController:self requiringActivity:NO requiringHighlight:NO];
+			else nextViewController = [[CQChatOrderingController defaultController] chatViewControllerFollowingChatController:self requiringActivity:NO requiringHighlight:NO];
+		}
+	} else if ([command.input isEqualToString:UIKeyInputUpArrow]) {
+		if (commandKeyPressed)
+			nextViewController = [[CQChatOrderingController defaultController] chatViewControllerPreceedingChatController:self requiringActivity:optKeyPressed requiringHighlight:NO];
+	} else if ([command.input isEqualToString:UIKeyInputDownArrow]) {
+		if (commandKeyPressed)
+			nextViewController = [[CQChatOrderingController defaultController] chatViewControllerFollowingChatController:self requiringActivity:optKeyPressed requiringHighlight:NO];
+	}
+
+	if (nextViewController)
+		[[CQChatController defaultController] showChatController:nextViewController animated:NO];
 }
 
 #pragma mark -
