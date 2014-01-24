@@ -19,7 +19,7 @@
 
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		validExtensions = [[NSArray alloc] initWithObjects:@"aiff", @"aif", @"aifc", @"cdda", @"amr", @"mp3", @"swa", @"mpeg", @"mpg", @"mp3", @"m4a", @"m4b", @"m4p", nil];
+		validExtensions = [[NSArray alloc] initWithObjects:@"aac", @"aiff", @"aif", @"aifc", @"cdda", @"amr", @"mp3", @"swa", @"mpeg", @"mpg", @"mp3", @"m4a", @"m4b", @"m4p", nil];
 	});
 
 	return [validExtensions containsObject:[extension lowercaseString]];

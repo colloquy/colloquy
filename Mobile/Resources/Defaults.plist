@@ -126,6 +126,12 @@
 	<integer>3</integer>
 	<key>CQInlineImages</key>
 	<true/>
+	<key>CQInlineVideo</key>
+	<true/>
+	<key>CQInlineAudio</key>
+	<true/>
+	<key>CQPausePlaybackWhenHidden</key>
+	<false/>
 	<key>CQBookmarkingService</key>
 	<string>CQBookmarkingServiceSafariReadingList</string>
 	<key>CQMentionLinkService</key>

@@ -21,6 +21,8 @@ static BOOL graphicalEmoticons;
 static BOOL stripMessageFormatting;
 static NSMutableDictionary *highlightRegexes;
 static BOOL inlineImages;
+static BOOL inlineVideo;
+static BOOL inlineAudio;
 static NSString *mentionServiceRegex;
 static NSString *mentionServiceReplacementFormat;
 static BOOL timestampEveryMessage;
@@ -39,6 +41,8 @@ static NSString *timestampFormat;
 	highlightRegexes = nil;
 	highlightRegexes = [[NSMutableDictionary alloc] init];
 	inlineImages = [[CQSettingsController settingsController] boolForKey:@"CQInlineImages"];
+	inlineVideo = [[CQSettingsController settingsController] boolForKey:@"CQInlineVideo"];
+	inlineAudio = [[CQSettingsController settingsController] boolForKey:@"CQInlineAudio"];
 
 	CQMentionLinkService mentionService = (CQMentionLinkService)[[CQSettingsController settingsController] integerForKey:@"CQMentionLinkService"];
 	if (mentionService == CQMentionLinkServiceAppDotNet) {
@@ -139,9 +143,13 @@ static void commonChatAndImageReplacment(NSMutableString *string, NSRangePointer
 						NSString *key = [NSString stringWithFormat:@"%zd-%d", fullURL.hash, arc4random()];
 						if (foundGIFs)
 							foundGIFs[key] = fullURL;
-						linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\"><img id=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></a>", fullURL, key];
+						linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\"><img id=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></a>", [fullURL absoluteString], key];
 					} else linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\"><img src=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></a>", [fullURL absoluteString], [fullURL absoluteString]];
-				} else {
+				} else if (inlineAudio && [NSFileManager isValidAudioFormat:fullURL.pathExtension]) {
+					linkHTMLString = [NSString stringWithFormat:@"<audio controls preload=\"metadata\" src=\"%@\" id=\"%@\" style=\"max-width: 100%%; max-height: 75%%\"></audio>", [fullURL absoluteString], [fullURL absoluteString]];
+				} else if (inlineVideo && [NSFileManager isValidVideoFormat:fullURL.pathExtension]) {
+					linkHTMLString = [NSString stringWithFormat:@"<video controls preload=\"metadata\" src=\"%@\" id=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></video>", [fullURL absoluteString], [fullURL absoluteString]];
+				}  else {
 					url = [url stringByReplacingOccurrencesOfString:@"/" withString:@"/\u200b"];
 					url = [url stringByReplacingOccurrencesOfString:@"?" withString:@"?\u200b"];
 					url = [url stringByReplacingOccurrencesOfString:@"=" withString:@"=\u200b"];
