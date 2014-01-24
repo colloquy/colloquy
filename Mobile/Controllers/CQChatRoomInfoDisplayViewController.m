@@ -223,7 +223,7 @@ enum {
 		if (attribute || !mode) {
 			CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 			cell.textLabel.text = title;
-			cell.textField.text = [attribute stringValue];
+			cell.textField.text = [attribute description];
 			cell.textField.enabled = canEditModes;
 			cell.textField.keyboardType = keyboardType;
 			cell.textField.delegate = self;
