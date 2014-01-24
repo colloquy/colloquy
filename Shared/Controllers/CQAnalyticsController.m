@@ -216,7 +216,7 @@ fail:
 	[_data setObject:@"ppc" forKey:@"machine-class"];
 #elif __i386__ || __x86_64__
 	[_data setObject:@"i386" forKey:@"machine-class"];
-#elif __arm__
+#elif __arm__ || __arm64__
 	[_data setObject:@"arm" forKey:@"machine-class"];
 #else
 	[_data setObject:@"unknown" forKey:@"machine-class"];
