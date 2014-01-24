@@ -217,7 +217,7 @@ function resumeAutoscroll() {
 }
 
 function nearBottom() {
-	return (animatingScroll || currentScrollTop >= (document.body.scrollHeight - window.innerHeight - 30));
+	return (animatingScroll || (window.innerHeight + window.scrollY) + 45 >= document.body.offsetHeight);
 }
 
 function scrollToBottomIfNeeded(animated) {
@@ -260,7 +260,6 @@ function urlUnderTapAtPoint(x, y) {
 	var e = document.elementFromPoint(x, y);
 	while (e) {
 		if (typeof e.href !== "undefined" && e.href.length) {
-			console.log("href: " + e.href + " prefix? " + e.href.indexOf("colloquy"));
 			if (e.href.indexOf("colloquy") != 0){
 				url = e.href;
 				break;
