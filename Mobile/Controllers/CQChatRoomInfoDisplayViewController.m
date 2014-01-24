@@ -320,7 +320,7 @@ enum {
 	NSMutableSet *users = [_room.memberUsers mutableCopy];
 	[users minusSet:_room.bannedUsers];
 
-	chatUserListViewController.users = users.allObjects;
+	[chatUserListViewController setRoomUsers:users.allObjects];
 
 	[self.navigationController pushViewController:chatUserListViewController animated:[UIView areAnimationsEnabled]];
 }

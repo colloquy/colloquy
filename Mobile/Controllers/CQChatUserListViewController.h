@@ -18,7 +18,6 @@ typedef enum {
 @interface CQChatUserListViewController : CQPreferencesTableViewController <UIActionSheetDelegate, UISearchDisplayDelegate> {
 	@protected
 	NSMutableArray *_users;
-	NSMutableArray *_matchedUsers;
 	NSString *_currentSearchString;
 	MVChatRoom *_room;
 	UISearchBar *_searchBar;
@@ -26,7 +25,9 @@ typedef enum {
 	QChatUserListMode _listMode;
 	id <CQChatUserListViewDelegate> __weak _chatUserDelegate;
 }
-@property (nonatomic, copy) NSArray *users;
+
+- (void) setRoomUsers:(NSArray *) roomUsers;
+
 @property (nonatomic, strong) MVChatRoom *room;
 @property (nonatomic, assign) QChatUserListMode listMode;
 

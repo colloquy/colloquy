@@ -212,7 +212,7 @@ static CQShowRoomTopic showRoomTopic;
 			[self _sortMembers];
 
 		_currentUserListViewController = [[CQChatUserListViewController alloc] init];
-		_currentUserListViewController.users = _orderedMembers;
+		[_currentUserListViewController setRoomUsers:_orderedMembers];
 		_currentUserListViewController.room = self.room;
 	}
 
@@ -1051,7 +1051,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	// This should add/remove each user individually. But this isn't
 	// common, so we just replace the list.
-	_currentUserListViewController.users = _orderedMembers;
+	[_currentUserListViewController setRoomUsers:_orderedMembers];
 }
 
 - (void) _memberJoined:(NSNotification *) notification {
