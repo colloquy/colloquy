@@ -85,21 +85,23 @@ static NSMutableArray *highlightWords;
 }
 
 - (NSArray *) highlightWords {
-	if (!highlightWords) {
-		highlightWords = [[NSMutableArray alloc] init];
+	@synchronized(self) {
+		if (!highlightWords) {
+			highlightWords = [[NSMutableArray alloc] init];
 
-		NSString *highlightWordsString = [[CQSettingsController settingsController] stringForKey:@"CQHighlightWords"];
-		if (highlightWordsString.length) {
-			[highlightWords addObjectsFromArray:[highlightWordsString cq_componentsMatchedByRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" capture:1]];
+			NSString *highlightWordsString = [[CQSettingsController settingsController] stringForKey:@"CQHighlightWords"];
+			if (highlightWordsString.length) {
+				[highlightWords addObjectsFromArray:[highlightWordsString cq_componentsMatchedByRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" capture:1]];
 
-			highlightWordsString = [highlightWordsString stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" withString:@""];
+				highlightWordsString = [highlightWordsString stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" withString:@""];
 
-			[highlightWords addObjectsFromArray:[highlightWordsString componentsSeparatedByString:@" "]];
-			[highlightWords removeObject:@""];
+				[highlightWords addObjectsFromArray:[highlightWordsString componentsSeparatedByString:@" "]];
+				[highlightWords removeObject:@""];
+			}
 		}
-	}
 
-	return highlightWords;
+		return highlightWords;
+	}
 }
 
 - (void) updateAnalytics {
@@ -143,7 +145,9 @@ static NSMutableArray *highlightWords;
 	if (![NSThread isMainThread])
 		return;
 
-	highlightWords = nil;
+	@synchronized(self) {
+		highlightWords = nil;
+	}
 
 	if ([UIDevice currentDevice].isPadModel) {
 		NSNumber *newSwipeOrientationValue = [[CQSettingsController settingsController] objectForKey:@"CQSplitSwipeOrientations"];
@@ -167,7 +171,7 @@ static NSMutableArray *highlightWords;
 - (void) performDeferredLaunchWork {
 	NSString *hockeyappIdentifier = @"Hockeyapp_App_Identifier";
 	// Hacky check to make sure the identifier was replaced with a string that isn't ""
-	if (hockeyappIdentifier.length != 24) {
+	if (![hockeyappIdentifier hasPrefix:@"Hockeyapp"]) {
 		[[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyappIdentifier delegate:self];
 		[[BITHockeyManager sharedHockeyManager] startManager];
 	}
