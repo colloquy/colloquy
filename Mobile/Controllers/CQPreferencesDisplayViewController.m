@@ -138,7 +138,8 @@ static NSString *const CQPSListTypeFont = @"Font";
 		}
 	}];
 
-	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+	if ([self isViewLoaded])
+		[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
 }
 
 #pragma mark -

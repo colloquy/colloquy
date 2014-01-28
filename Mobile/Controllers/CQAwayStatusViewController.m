@@ -26,14 +26,16 @@
 	if (defaultAwayStatus.length && ![awayStatuses containsObject:defaultAwayStatus])
 		[awayStatuses addObject:defaultAwayStatus];
 	else {
-		if (![self statusIsDefaultAwayStatus:awayStatuses[0]]) {
-			for (NSUInteger i = 1; i <  awayStatuses.count; i++) {
-				NSString *status = awayStatuses[i];
-				if ([self statusIsDefaultAwayStatus:status])
-					[awayStatuses removeObjectAtIndex:i];
-			}
+		if (awayStatuses.count) {
+			if (![self statusIsDefaultAwayStatus:awayStatuses[0]]) {
+				for (NSUInteger i = 1; i <  awayStatuses.count; i++) {
+					NSString *status = awayStatuses[i];
+					if ([self statusIsDefaultAwayStatus:status])
+						[awayStatuses removeObjectAtIndex:i];
+				}
 
-			[awayStatuses insertObject:defaultAwayStatus atIndex:0];
+				[awayStatuses insertObject:defaultAwayStatus atIndex:0];
+			}
 		}
 	}
 
