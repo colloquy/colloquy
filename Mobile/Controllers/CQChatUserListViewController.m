@@ -126,6 +126,31 @@ static NSString *membersFilteredCountFormat;
 	return [self.matchedUsers indexOfObjectIdenticalTo:user];
 }
 
+- (void) _moveUser:(MVChatUser *) user atIndex:(NSUInteger) fromIndex toIndex:(NSUInteger) toIndex withAnimation:(UITableViewRowAnimation) animation {
+	NSParameterAssert(user != nil);
+	NSParameterAssert(fromIndex <= self.users.count);
+	NSParameterAssert(toIndex <= self.users.count);
+
+	[self.users removeObjectAtIndex:fromIndex];
+	[self.users insertObject:user atIndex:toIndex];
+
+	if (toIndex > fromIndex)
+		--toIndex;
+
+	if (!_currentSearchString.length || [user.nickname hasCaseInsensitiveSubstring:_currentSearchString]) {
+		NSInteger insertionMatchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:fromIndex];
+		NSInteger removalMatchesIndex = [self _indexForRemovedMatchUser:user];
+
+		if (insertionMatchesIndex > removalMatchesIndex)
+			--insertionMatchesIndex;
+
+		[self.matchedUsers removeObjectAtIndex:removalMatchesIndex];
+		[self.matchedUsers insertObject:user atIndex:insertionMatchesIndex];
+
+		[self.tableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:removalMatchesIndex inSection:0] toIndexPath:[NSIndexPath indexPathForRow:insertionMatchesIndex inSection:0]];
+	}
+}
+
 - (void) _insertUser:(MVChatUser *) user atIndex:(NSUInteger) index withAnimation:(UITableViewRowAnimation) animation {
 	NSParameterAssert(user != nil);
 	NSParameterAssert(index <= self.users.count);
@@ -164,15 +189,16 @@ static NSString *membersFilteredCountFormat;
 	if (self.users.count == self.matchedUsers.count)
 		self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
 	else self.title = [NSString stringWithFormat:membersFilteredCountFormat, self.matchedUsers.count, self.users.count];
-
-	[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 }
 
 #pragma mark -
 
 - (void) insertUser:(MVChatUser *) user atIndex:(NSUInteger) index {
 	BOOL searchBarFocused = [_searchController isActive];
+
+	[self.tableView beginUpdates];
 	[self _insertUser:user atIndex:index withAnimation:UITableViewRowAnimationLeft];
+	[self.tableView endUpdates];
 
 	if (searchBarFocused)
 		[_searchController setActive:YES animated:YES];
@@ -198,11 +224,9 @@ static NSString *membersFilteredCountFormat;
 	[self.tableView beginUpdates];
 
 	if (oldMatchesIndex == newMatchesIndex) {
-		[self _removeUserAtIndex:oldIndex withAnimation:UITableViewRowAnimationFade];
-		[self _insertUser:user atIndex:newIndex withAnimation:UITableViewRowAnimationFade];
+		[self _moveUser:user atIndex:oldIndex toIndex:newIndex withAnimation:UITableViewRowAnimationFade];
 	} else {
-		[self _removeUserAtIndex:oldIndex withAnimation:(newIndex > oldIndex ? UITableViewRowAnimationBottom : UITableViewRowAnimationTop)];
-		[self _insertUser:user atIndex:newIndex withAnimation:(newIndex > oldIndex ? UITableViewRowAnimationTop : UITableViewRowAnimationBottom)];
+		[self _moveUser:user atIndex:oldIndex toIndex:newIndex withAnimation:(newIndex > oldIndex ? UITableViewRowAnimationBottom : UITableViewRowAnimationTop)];
 	}
 
 	[self.tableView endUpdates];
@@ -214,14 +238,16 @@ static NSString *membersFilteredCountFormat;
 
 - (void) removeUserAtIndex:(NSUInteger) index {
 	BOOL searchBarFocused = [_searchController isActive];
+
+	[self.tableView beginUpdates];
 	[self _removeUserAtIndex:index withAnimation:UITableViewRowAnimationRight];
+	[self.tableView endUpdates];
 
 	if (searchBarFocused)
 		[_searchController setActive:YES animated:YES];
 
 	if ([[UIDevice currentDevice] isPadModel])
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
-
 }
 
 - (void) updateUserAtIndex:(NSUInteger) index {
@@ -234,7 +260,9 @@ static NSString *membersFilteredCountFormat;
 
 	BOOL searchBarFocused = [_searchController isActive];
 
+	[self.tableView beginUpdates];
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:matchesIndex inSection:0] withAnimation:UITableViewRowAnimationFade];
+	[self.tableView endUpdates];
 
 	if (searchBarFocused)
 		[_searchController setActive:YES animated:YES];
