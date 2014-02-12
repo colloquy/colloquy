@@ -279,6 +279,8 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	}
 
 	NSMutableString *messageString = [self _processMessageData:_message[@"message"]];
+	if (!messageString)
+		return;
 	MVChatUser *user = _message[@"user"];
 
 	if ([_ignoreController shouldIgnoreMessage:messageString fromUser:user inRoom:_target])
@@ -338,7 +340,8 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	[_processedMessage setObjectsForKeys:sameKeys fromDictionary:_message];
 
 	_processedMessage[@"type"] = @"message";
-	_processedMessage[@"message"] = messageString;
+	if (messageString)
+		_processedMessage[@"message"] = messageString;
 	if (timestampEveryMessage) {
 		NSString *timestamp = nil;
 		if (timestampFormat.length)
