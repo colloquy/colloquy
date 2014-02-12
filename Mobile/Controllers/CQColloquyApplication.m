@@ -511,7 +511,7 @@ static NSMutableArray *highlightWords;
 	}
 
 	UITabBar *tabBar = self.tabBarController.tabBar;
-	if (tabBar && !self.modalViewController) {
+	if (tabBar && tabBar.window && !self.modalViewController) {
 		[sheet showFromTabBar:tabBar];
 		return;
 	}

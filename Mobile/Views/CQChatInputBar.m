@@ -458,102 +458,104 @@ retry:
 }
 
 - (BOOL) textView:(UITextView *) textView shouldChangeTextInRange:(NSRange) range replacementText:(NSString *) string {
-	if ([string isEqualToString:@"\n"]) {
-		[self textViewShouldReturn:textView];
+	@synchronized(textView) {
+		if ([string isEqualToString:@"\n"]) {
+			[self textViewShouldReturn:textView];
 
-		return NO;
-	}
-
-	if ([string isEqualToString:@"\t"]) {
-		hardwareKeyboard = YES;
-
-		if ([_delegate respondsToSelector:@selector(chatInputBarShouldIndent:)] && ![_delegate chatInputBarShouldIndent:self])
 			return NO;
-	}
-
-	if (_autocapitalizeNextLetter) {
-		_autocapitalizeNextLetter = NO;
-		_inputView.autocapitalizationType = _defaultAutocapitalizationType;
-		[self _updateTextTraits];
-	}
-
-	if (![_delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![_delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:)])
-		return YES;
-
-	if (_spaceCyclesCompletions && _completionCapturedKeyboard && self.showingCompletions && [string isEqualToString:@" "] && !_completionView.closeSelected) {
-		if (_completionView.selectedCompletion != NSNotFound)
-			++_completionView.selectedCompletion;
-		else _completionView.selectedCompletion = 0;
-		return NO;
-	}
-
-	_completionCapturedKeyboard = NO;
-
-	NSString *text = _inputView.text;
-	BOOL replaceManually = NO;
-	if (_spaceCyclesCompletions && self.showingCompletions && _completionView.selectedCompletion != NSNotFound && !range.length && ![string isEqualToString:@" "]) {
-		replaceManually = YES;
-		text = [_inputView.text stringByReplacingCharactersInRange:NSMakeRange(range.location, 0) withString:@" "];
-		++range.location;
-	}
-
-	NSRange wordRange = {0, range.location + string.length};
-	text = [text stringByReplacingCharactersInRange:range withString:string];
-
-	for (NSInteger i = (range.location + string.length - 1); i >= 0; --i) {
-		if (i > (NSInteger)text.length) {
-			wordRange.length = 0;
-			break;
 		}
 
-		if ([text characterAtIndex:i] == ' ') {
-			wordRange.location = i + 1;
-			wordRange.length = ((range.location + string.length) - wordRange.location);
-			break;
+		if ([string isEqualToString:@"\t"]) {
+			hardwareKeyboard = YES;
+
+			if ([_delegate respondsToSelector:@selector(chatInputBarShouldIndent:)] && ![_delegate chatInputBarShouldIndent:self])
+				return NO;
 		}
-	}
 
-	if (!wordRange.length)
-		_disableCompletionUntilNextWord = NO;
+		if (_autocapitalizeNextLetter) {
+			_autocapitalizeNextLetter = NO;
+			_inputView.autocapitalizationType = _defaultAutocapitalizationType;
+			[self _updateTextTraits];
+		}
 
-	NSString *word = [text substringWithRange:wordRange];
-	NSArray *completions = nil;
-	BOOL canShowCompletionForCurrentWord = textView.text.length;
-	if (canShowCompletionForCurrentWord) {
-		if (!((range.location + range.length) == textView.text.length)) { // if we're in the middle of a line, only show completions if the next letter is a space
-			NSUInteger idx = (range.location + range.length);
-			if (textView.text.length > idx) {
-				unichar character = [textView.text characterAtIndex:idx];
-				canShowCompletionForCurrentWord = [[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:character];
+		if (![_delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![_delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:)])
+			return YES;
+
+		if (_spaceCyclesCompletions && _completionCapturedKeyboard && self.showingCompletions && [string isEqualToString:@" "] && !_completionView.closeSelected) {
+			if (_completionView.selectedCompletion != NSNotFound)
+				++_completionView.selectedCompletion;
+			else _completionView.selectedCompletion = 0;
+			return NO;
+		}
+
+		_completionCapturedKeyboard = NO;
+
+		NSString *text = _inputView.text;
+		BOOL replaceManually = NO;
+		if (_spaceCyclesCompletions && self.showingCompletions && _completionView.selectedCompletion != NSNotFound && !range.length && ![string isEqualToString:@" "]) {
+			replaceManually = YES;
+			text = [_inputView.text stringByReplacingCharactersInRange:NSMakeRange(range.location, 0) withString:@" "];
+			++range.location;
+		}
+
+		NSRange wordRange = {0, range.location + string.length};
+		text = [text stringByReplacingCharactersInRange:range withString:string];
+
+		for (NSInteger i = (range.location + string.length - 1); i >= 0; --i) {
+			if (i > (NSInteger)text.length) {
+				wordRange.length = 0;
+				break;
 			}
-		} else canShowCompletionForCurrentWord = YES; // if we are at the end of the line, we can show completions since there's nothing else after it
-	} else canShowCompletionForCurrentWord = YES; // if we don't have any text, we can maybe show completions although we probably won't (not enough context yet)
 
-	if (_autocomplete && canShowCompletionForCurrentWord && !_disableCompletionUntilNextWord && word.length && ![self _hasMarkedText] && [_delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
-		completions = [_delegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
-		if (completions.count)
-			[self showCompletions:completions forText:text inRange:wordRange];
-		 else [self hideCompletions];
-	} else [self hideCompletions];
+			if ([text characterAtIndex:i] == ' ') {
+				wordRange.location = i + 1;
+				wordRange.length = ((range.location + string.length) - wordRange.location);
+				break;
+			}
+		}
 
-	word = [text substringWithRange:wordRange];
+		if (!wordRange.length)
+			_disableCompletionUntilNextWord = NO;
 
-	UITextAutocorrectionType newAutocorrectionType = UITextAutocorrectionTypeDefault;
-	if (!_autocorrect || completions.count || ([_delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![_delegate chatInputBar:self shouldAutocorrectWordWithPrefix:word]))
-		newAutocorrectionType = UITextAutocorrectionTypeNo;
+		NSString *word = [text substringWithRange:wordRange];
+		NSArray *completions = nil;
+		BOOL canShowCompletionForCurrentWord = textView.text.length;
+		if (canShowCompletionForCurrentWord) {
+			if (!((range.location + range.length) == textView.text.length)) { // if we're in the middle of a line, only show completions if the next letter is a space
+				NSUInteger idx = (range.location + range.length);
+				if (textView.text.length > idx) {
+					unichar character = [textView.text characterAtIndex:idx];
+					canShowCompletionForCurrentWord = [[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:character];
+				}
+			} else canShowCompletionForCurrentWord = YES; // if we are at the end of the line, we can show completions since there's nothing else after it
+		} else canShowCompletionForCurrentWord = YES; // if we don't have any text, we can maybe show completions although we probably won't (not enough context yet)
 
-	if (newAutocorrectionType != _inputView.autocorrectionType) {
-		_inputView.autocorrectionType = newAutocorrectionType;
-		[self _updateTextTraits];
+		if (_autocomplete && canShowCompletionForCurrentWord && !_disableCompletionUntilNextWord && word.length && ![self _hasMarkedText] && [_delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
+			completions = [_delegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
+			if (completions.count)
+				[self showCompletions:completions forText:text inRange:wordRange];
+			 else [self hideCompletions];
+		} else [self hideCompletions];
+
+		word = [text substringWithRange:wordRange];
+
+		UITextAutocorrectionType newAutocorrectionType = UITextAutocorrectionTypeDefault;
+		if (!_autocorrect || completions.count || ([_delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![_delegate chatInputBar:self shouldAutocorrectWordWithPrefix:word]))
+			newAutocorrectionType = UITextAutocorrectionTypeNo;
+
+		if (newAutocorrectionType != _inputView.autocorrectionType) {
+			_inputView.autocorrectionType = newAutocorrectionType;
+			[self _updateTextTraits];
+		}
+
+		if (replaceManually) {
+			_inputView.text = text;
+			[self _moveCaretToOffset:(range.location + string.length)];
+			return NO;
+		}
+
+		return YES;
 	}
-
-	if (replaceManually) {
-		_inputView.text = text;
-		[self _moveCaretToOffset:(range.location + string.length)];
-		return NO;
-	}
-
-	return YES;
 }
 
 - (void) textViewDidChange:(UITextView *) textView {
@@ -710,24 +712,26 @@ retry:
 }
 
 - (void) _sendText {
-	// Resign and become first responder to accept any pending auto-correction.
-	[_inputView resignFirstResponder];
-	[_inputView becomeFirstResponder];
+	@synchronized(_inputView) {
+		// Resign and become first responder to accept any pending auto-correction.
+		[_inputView resignFirstResponder];
+		[_inputView becomeFirstResponder];
 
-	NSString *text = _inputView.text;
-	text = [text stringBySubstitutingEmojiForEmoticons];
+		NSString *text = _inputView.text;
+		text = [text stringBySubstitutingEmojiForEmoticons];
 
-	if (![_delegate chatInputBar:self sendText:text])
-		return;
+		if (![_delegate chatInputBar:self sendText:text])
+			return;
 
-	_disableCompletionUntilNextWord = NO;
-	_completionCapturedKeyboard = NO;
+		_disableCompletionUntilNextWord = NO;
+		_completionCapturedKeyboard = NO;
 
-	_inputView.text = @"";
-	_inputView.autocorrectionType = (_autocorrect ? UITextAutocorrectionTypeDefault : UITextAutocorrectionTypeNo);
+		_inputView.text = @"";
+		_inputView.autocorrectionType = (_autocorrect ? UITextAutocorrectionTypeDefault : UITextAutocorrectionTypeNo);
 
-	[self hideCompletions];
-	[self _resetTextViewHeight];
+		[self hideCompletions];
+		[self _resetTextViewHeight];
+	}
 }
 
 - (void) _resetTextViewHeight {
