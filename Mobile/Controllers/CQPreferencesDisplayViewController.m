@@ -52,7 +52,10 @@ static NSString *const CQPSListTypeAudio = @"Audio";
 static NSString *const CQPSListTypeImage = @"Image";
 static NSString *const CQPSListTypeFont = @"Font";
 
-@implementation CQPreferencesDisplayViewController
+@implementation CQPreferencesDisplayViewController {
+	BOOL _active;
+}
+
 - (id) initWithRootPlist {
 	return [self initWithPlistNamed:@"Root"];
 }
@@ -78,6 +81,14 @@ static NSString *const CQPSListTypeFont = @"Font";
 		[self.tableView reloadRowsAtIndexPaths:@[_selectedIndexPath] withRowAnimation:UITableViewRowAnimationNone];
 		[self.tableView endUpdates];
 	}
+
+	_active = YES;
+}
+
+- (void) viewDidDisappear:(BOOL) animated {
+	[super viewDidDisappear:animated];
+
+	_active = NO;
 }
 
 #pragma mark -
@@ -138,7 +149,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 		}
 	}];
 
-	if ([self isViewLoaded])
+	if ([self isViewLoaded] && _active)
 		[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
 }
 
