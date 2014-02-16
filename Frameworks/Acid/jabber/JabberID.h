@@ -130,7 +130,6 @@
   "" if none.
 */
 -(NSString*) resource;
--(BOOL) hasUsername;
 /*!
   @method hasResource
   @abstract returns YES if there is a resource on the Jabber Identifier
