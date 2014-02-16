@@ -124,8 +124,8 @@
 #pragma mark Accessors
 
 - (NSString *) description {
-	NSString *s = [NSString stringWithFormat:@"Length: %d, type: %c, ",
-	                                         self.length, _type];
+	NSString *s = [NSString stringWithFormat:@"Length: %lu, type: %c, ",
+	                                         (unsigned long)self.length, _type];
 
 	if( _fields.count == 0 )
 		s = [s stringByAppendingString:@"no fields"];
