@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -78,7 +78,6 @@
 		431261C3072EE37A00720AD1 /* MVSILCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */; };
 		899F4EFE12617870003B9D9A /* NSFileManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */; };
 		899F4EFF12617870003B9D9A /* NSFileManagerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */; };
-		89FB4F2612FAAC6800668905 /* Less Common Settings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */; };
 		922453BB1689057200BFF3FF /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 922453B91689057200BFF3FF /* GCDAsyncSocket.h */; };
 		922453BC1689057200BFF3FF /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 922453B91689057200BFF3FF /* GCDAsyncSocket.h */; };
 		922453BD1689057200BFF3FF /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 922453BA1689057200BFF3FF /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -754,9 +753,10 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 0500;
 			};
 			buildConfigurationList = 1C041DDE08553AD200A5A5BA /* Build configuration list for PBXProject "Chat Core" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -821,7 +821,6 @@
 				1CCA51800598AFBA00F0A4CD /* ChatCore.scriptSuite in Resources */,
 				1CCA51810598AFBA00F0A4CD /* ChatCore.scriptTerminology in Resources */,
 				1C11B7A109C27AC800789814 /* BSD License.txt in Resources */,
-				89FB4F2612FAAC6800668905 /* Less Common Settings.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -950,6 +949,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
 				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
@@ -976,8 +976,17 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INSTALL_PATH = "@executable_path/../Frameworks/";
 				ONLY_ACTIVE_ARCH = YES;
 				SYMROOT = build;
@@ -988,6 +997,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
 				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
@@ -1012,7 +1022,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = NS_BLOCK_ASSERTIONS;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INSTALL_PATH = "@executable_path/../Frameworks/";
 				SYMROOT = build;
 			};
@@ -1022,10 +1041,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
 				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
@@ -1046,6 +1061,7 @@
 					"RKL_CACHE_SIZE=47",
 					"RKL_BLOCKS=0",
 				);
+				GCC_THUMB_SUPPORT = NO;
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
@@ -1077,10 +1093,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
 				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
@@ -1101,6 +1113,7 @@
 					"RKL_CACHE_SIZE=47",
 					"RKL_BLOCKS=0",
 				);
+				GCC_THUMB_SUPPORT = NO;
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
