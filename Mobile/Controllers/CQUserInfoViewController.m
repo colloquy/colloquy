@@ -199,7 +199,8 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 			NSArray *rooms = [_user attributeForKey:MVChatUserKnownRoomsAttribute];
 			if (rooms) {
 				if (rooms.count) {
-					NSString *roomsString = [rooms componentsJoinedByString:NSLocalizedString(@", ", "User info rooms list separator")];
+					NSString *separator = [[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator];
+					NSString *roomsString = [rooms componentsJoinedByString:[NSString stringWithFormat:@"%@ ", separator]];
 					cell.detailTextLabel.text = roomsString;
 					cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Rooms: %@", @"Voiceover rooms label"), roomsString];
 				} else {
