@@ -111,6 +111,185 @@ static const NSStringEncoding supportedEncodings[] = {
 	0
 };
 
+
+@interface MVIRCChatConnection (MVIRCChatConnectionProtocolHandlers)
+
+#pragma mark Connecting Replies
+
+- (void) _handleCapWithParameters:(NSArray *) parameters fromSender:(id) sender;
+- (void) _handleAuthenticateWithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+- (void) _handle900WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** RPL_SASLSUCCESS */
+- (void) _handle903WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_SASLFAIL */
+- (void) _handle904WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_SASLTOOLONG */
+- (void) _handle905WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_SASLABORTED */
+- (void) _handle906WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_SASLALREADY */
+- (void) _handle907WithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+/** RPL_WELCOME */
+- (void) _handle001WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** RPL_ISUPPORT */
+- (void) _handle005WithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+/** ERR_NICKNAMEINUSE */
+- (void) _handle433WithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+#pragma mark Incoming Message Replies
+
+- (MVChatRoom*) _chatRoomFromMessageTarget:(NSString*)messageTarget;
+
+- (void) _handlePrivmsg:(NSMutableDictionary *) privmsgInfo;
+- (void) _handlePrivmsgWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender;
+
+- (void) _handleNotice:(NSMutableDictionary *) noticeInfo;
+- (void) _handleNoticeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender;
+
+- (void) _handleCTCP:(NSDictionary *) ctcpInfo;
+- (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender toTarget:(id) target forRoom:(MVChatRoom *) room;
+
+#pragma mark Room Replies
+
+- (void) _handleJoinWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender;
+- (void) _handlePartWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender;
+- (void) _handleQuitWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender;
+- (void) _handleKickWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender;
+
+- (void) _handleTopic:(NSDictionary *)topicInfo;
+- (void) _handleTopicWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender;
+
+- (void) _parseRoomModes:(NSArray *) parameters forRoom:(MVChatRoom *) room fromSender:(MVChatUser *) sender;
+- (void) _handleModeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender;
+/** RPL_CHANNELMODEIS */
+- (void) _handle324WithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+#pragma mark Misc. Replies
+
+- (void) _handlePingWithParameters:(NSArray *) parameters fromSender:(id) sender;
+- (void) _handleInviteWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender;
+- (void) _handleNickWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender;
+
+/** RPL_ISON */
+- (void) _handle303WithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+#pragma mark Away Replies
+
+/** RPL_AWAY */
+- (void) _handle301WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** RPL_UNAWAY */
+- (void) _handle305WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** RPL_NOWAWAY */
+- (void) _handle306WithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+#pragma mark NAMES Replies
+
+/** RPL_NAMREPLY */
+- (void) _handle353WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** RPL_ENDOFNAMES */
+- (void) _handle366WithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+#pragma mark WHO Replies
+
+/** RPL_WHOREPLY */
+- (void) _handle352WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** RPL_ENDOFWHO */
+- (void) _handle315WithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+
+#pragma mark Channel List Reply
+
+/** RPL_LIST */
+- (void) _handle322WithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+#pragma mark Ban List Replies
+
+/** RPL_BANLIST */
+- (void) _handle367WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** RPL_ENDOFBANLIST */
+- (void) _handle368WithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+#pragma mark Topic Replies
+
+/** RPL_TOPIC */
+- (void) _handle332WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** RPL_TOPICWHOTIME_IRCU */
+- (void) _handle333WithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+#pragma mark WHOIS Replies
+
+/** RPL_WHOISUSER */
+- (void) _handle311WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** RPL_WHOISSERVER */
+- (void) _handle312WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** RPL_WHOISOPERATOR */
+- (void) _handle313WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** RPL_WHOISIDLE */
+- (void) _handle317WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** RPL_ENDOFWHOIS */
+- (void) _handle318WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** RPL_WHOISCHANNELS */
+- (void) _handle319WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** RPL_WHOISIDENTIFIED */
+- (void) _handle320WithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+#pragma mark Error Replies
+
+/** ERR_NOSUCHNICK */
+- (void) _handle401WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_NOSUCHSERVER */
+- (void) _handle402WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_CANNOTSENDTOCHAN */
+- (void) _handle404WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** "services down" (freenode/hyperion) or "Invalid CAP subcommand" (freenode/ircd-seven, not supported here) */
+- (void) _handle410WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_UNKNOWNCOMMAND */
+- (void) _handle421WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_ERRONEUSNICKNAME, "<nick> :Erroneous nickname" */
+- (void) _handle432WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_BANONCHAN Bahamut (also ERR_SERVICECONFUSED on Unreal, not implemented here) */
+- (void) _handle435WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_BANNICKCHANGE Unreal (also ERR_UNAVAILRESOURCE in RFC2812, not implemented here) */
+- (void) _handle437WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_NICKTOOFAST_IRCU */
+- (void) _handle438WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_SERVICESDOWN_BAHAMUT_UNREAL (also freenode/ircd-seven) */
+- (void) _handle440WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_ALREADYREGISTERED (RFC1459) */
+- (void) _handle462WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_CHANNELISFULL */
+- (void) _handle471WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_INVITEONLYCHAN */
+- (void) _handle473WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_BANNEDFROMCHAN */
+- (void) _handle474WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_BADCHANNELKEY */
+- (void) _handle475WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERR_NOCHANMODES_RFC2812 or ERR_NEEDREGGEDNICK_BAHAMUT_IRCU_UNREAL */
+- (void) _handle477WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** ERROR message: <http://tools.ietf.org/html/rfc2812#section-3.7.4> */
+- (void) _handleErrorWithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** freenode/hyperion: identify with services to talk in this room */
+- (void) _handle506WithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+#pragma mark Watch Replies
+
+/** RPL_NOWON_BAHAMUT_UNREAL */
+- (void) _handle604WithParameters:(NSArray *) parameters fromSender:(id) sender;
+/** RPL_LOGON_BAHAMUT_UNREAL */
+- (void) _handle600WithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+#pragma mark EFnet / umich captcha
+
+/** irc.umich.edu (efnet) uses this code to show a captcha to users without identd which we have to reply to automatically. */
+- (void) _handle998WithParameters:(NSArray *) parameters fromSender:(id) sender;
+
+@end
+
+
 @implementation MVIRCChatConnection {
 	dispatch_queue_t _connectionQueue;
 
@@ -4101,7 +4280,7 @@ end:
 }
 
 #pragma mark -
-#pragma mark Watch Replies
+#pragma mark EFnet / umich captcha
 
 - (void) _handle998WithParameters:(NSArray *) parameters fromSender:(id) sender { // undefined code, irc.umich.edu (efnet) uses this to show a captcha to users without identd (= us) which we have to reply to
 	if( ![self isConnected] && parameters.count == 2 ) {

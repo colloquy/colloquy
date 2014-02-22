@@ -27,7 +27,12 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 @interface MVDirectClientConnection (MVDirectClientConnectionPrivate)
 - (void) _setupThread;
+- (void) _connect:(NSDictionary *) info;
+- (void) _acceptConnectionOnFirstPortInRange:(NSValue *) portsObject;
 - (void) _sendDelegateAcceptingConnections;
+- (void) _portMappingStatusChanged:(NSNotification *) notification;
+- (void) _finish;
+- (oneway void) _dccRunloop;
 @end
 
 #pragma mark -
