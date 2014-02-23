@@ -50,8 +50,8 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 #pragma mark -
 
 @implementation MVFileTransfer (MVFileTransferSilcPrivate)
-- (void) _silcPostError:(SilcClientFileError) error {
-	switch ( error ) {
+- (void) _silcPostError:(SilcClientFileError) silcClientFileError {
+	switch ( silcClientFileError ) {
 		case SILC_CLIENT_FILE_UNKNOWN_SESSION:
 		case SILC_CLIENT_FILE_ERROR: {
 			NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:@"The file transfer terminated unexpectedly.", NSLocalizedDescriptionKey, nil];

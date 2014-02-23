@@ -596,8 +596,8 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 
 	const char *bytes = [data bytes];
 	NSUInteger length = data.length;
-	NSUInteger i = 0, j = 0, start = 0, end = 0;
-	for( i = 0, start = 0; i < length; i++ ) {
+	NSUInteger j = 0, start = 0, end = 0;
+	for( NSUInteger i = 0; i < length; i++ ) {
 		if( bytes[i] == '\006' ) {
 			end = i;
 			j = ++i;

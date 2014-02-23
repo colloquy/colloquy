@@ -851,10 +851,10 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	[self retain];
 
-	id old = _chatConnection;
+	GCDAsyncSocket *oldChatConnection = _chatConnection;
 	_chatConnection = nil;
-	[old setDelegate:nil];
-	[old release];
+	[oldChatConnection setDelegate:nil];
+	[oldChatConnection release];
 
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self _stopSendQueue];
@@ -3443,9 +3443,9 @@ end:
 				}
 			} else {
 				if( argsNeeded.count ) {
-					NSUInteger value = [[argsNeeded objectAtIndex:0] unsignedLongValue];
-					BOOL enabled = ( ( value & enabledHighBit ) ? YES : NO );
-					int mode = ( value & ~enabledHighBit );
+					NSUInteger innerValue = [[argsNeeded objectAtIndex:0] unsignedLongValue];
+					BOOL enabled = ( ( innerValue & enabledHighBit ) ? YES : NO );
+					int mode = ( innerValue & ~enabledHighBit );
 
 					if( mode == MVChatRoomMemberFounderMode || mode == MVChatRoomMemberAdministratorMode || mode == MVChatRoomMemberOperatorMode || mode == MVChatRoomMemberHalfOperatorMode || mode == MVChatRoomMemberVoicedMode ) {
 						MVChatUser *member = [self chatUserWithUniqueIdentifier:param];

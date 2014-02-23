@@ -369,6 +369,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			unichar c = [cStr characterAtIndex:0];
 			switch( c ) {
 			case '\017': // reset all
+			{
 				boldStack = italicStack = underlineStack = strikeStack = 0;
 				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:NSBoldFontMask];
 				if( font ) [attributes setObject:font forKey:NSFontAttributeName];
@@ -378,6 +379,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				[attributes removeObjectForKey:NSForegroundColorAttributeName];
 				[attributes removeObjectForKey:NSBackgroundColorAttributeName];
 				break;
+			}
 			case '\002': // toggle bold
 				boldStack = ! boldStack;
 				if( boldStack && ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {

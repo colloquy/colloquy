@@ -537,18 +537,18 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 
 		if( channels ) {
 			NSMutableArray *chanArray = [[NSMutableArray allocWithZone:nil] init];
-			SilcDList list = silc_channel_payload_parse_list( channels -> data, channels -> len );
-			if( list ) {
-				silc_dlist_start( list );
+			SilcDList silcDList = silc_channel_payload_parse_list( channels -> data, channels -> len );
+			if( silcDList ) {
+				silc_dlist_start( silcDList );
 
 				SilcChannelPayload entry = NULL;
-				while( ( entry = silc_dlist_get( list ) ) != SILC_LIST_END ) {
+				while( ( entry = silc_dlist_get( silcDList ) ) != SILC_LIST_END ) {
 					SilcUInt32 name_len = 0;
 					unsigned char *name = silc_channel_get_name( entry, &name_len );
 					[chanArray addObject:[NSString stringWithUTF8String:(char *)name]];
 				}
 
-				silc_channel_payload_list_free( list );
+				silc_channel_payload_list_free( silcDList );
 
 				if( chanArray.count ) [user setAttribute:chanArray forKey:MVChatUserKnownRoomsAttribute];
 			}
