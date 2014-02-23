@@ -64,9 +64,6 @@ NSString *MVChatConnectionChatRoomListUpdatedNotification = @"MVChatConnectionCh
 
 NSString *MVChatConnectionSelfAwayStatusChangedNotification = @"MVChatConnectionSelfAwayStatusChangedNotification";
 
-NSString *MVChatConnectionWatchedUserOnlineNotification = @"MVChatConnectionWatchedUserOnlineNotification";
-NSString *MVChatConnectionWatchedUserOfflineNotification = @"MVChatConnectionWatchedUserOfflineNotification";
-
 NSString *MVChatConnectionNicknameAcceptedNotification = @"MVChatConnectionNicknameAcceptedNotification";
 NSString *MVChatConnectionNicknameRejectedNotification = @"MVChatConnectionNicknameRejectedNotification";
 
