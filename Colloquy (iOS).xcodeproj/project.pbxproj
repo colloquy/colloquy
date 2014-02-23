@@ -1918,7 +1918,7 @@
 				DEPLOYMENT_POSTPROCESSING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/zach/Code/Cocoa/colloquy2/Shared/Frameworks,
+					"$(SRCROOT)/Shared/Frameworks",
 				);
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1950,7 +1950,7 @@
 				DEPLOYMENT_POSTPROCESSING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/zach/Code/Cocoa/colloquy2/Shared/Frameworks,
+					"$(SRCROOT)/Shared/Frameworks",
 				);
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1981,7 +1981,7 @@
 				DEPLOYMENT_POSTPROCESSING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/zach/Code/Cocoa/colloquy2/Shared/Frameworks,
+					"$(SRCROOT)/Shared/Frameworks",
 				);
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
