@@ -186,8 +186,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) dealloc {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
-
 
 	nextTextView = nil;
 	_transcript = nil;
@@ -200,7 +200,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	_body = nil;
 	_bodyTemplate = nil;
 	_messagesToAppend = nil;
-
 }
 
 #pragma mark -
@@ -844,7 +843,6 @@ quickEnd:
 
 		NSNotification *note = [NSNotification notificationWithName:JVStyleViewDidChangeStylesNotification object:self userInfo:nil];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
 	}
 }
 

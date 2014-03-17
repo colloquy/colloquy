@@ -38,6 +38,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 }
 
 - (void) dealloc {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 

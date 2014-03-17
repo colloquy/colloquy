@@ -257,7 +257,7 @@
 	NSRange range = [self selectedRange];
 	if( ! [self isEditable] ) return;
 	if( [color alphaComponent] == 0. ) color = nil;
-	if( ! range.length ) {
+	if( color && ! range.length ) {
 		NSMutableDictionary *attributes = [[self typingAttributes] mutableCopyWithZone:nil];
 		[attributes setObject:color forKey:NSBackgroundColorAttributeName];
 		[self setTypingAttributes:attributes];

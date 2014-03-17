@@ -306,14 +306,13 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 }
 
 - (void) dealloc {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	if( _watchRule ) [[self connection] removeChatUserWatchRule:_watchRule];
 
-
 	for( id alert in _waitingAlerts )
 		NSReleaseAlertPanel( alert );
-
 
 	_target = nil;
 	_sendHistory = nil;
@@ -322,7 +321,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	_settings = nil;
 	_encodingMenu = nil;
 	_spillEncodingMenu = nil;
-
 }
 
 #pragma mark -

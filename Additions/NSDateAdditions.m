@@ -8,6 +8,8 @@
 		dateFormatter.dateFormat = format;
 
 		[[NSThread currentThread].threadDictionary setObject:dateFormatter forKey:format];
+
+		MVAutorelease(dateFormatter);
 	}
 
 	return [dateFormatter stringFromDate:date];
@@ -30,6 +32,8 @@
 		dateFormatter.timeStyle = timeStyle;
 
 		[dateFormatters setObject:dateFormatter forKey:key];
+
+		MVAutorelease(dateFormatter);
 	}
 
 	return [dateFormatter stringFromDate:date];

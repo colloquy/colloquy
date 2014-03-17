@@ -145,6 +145,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 }
 
 - (void) dealloc {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	_shouldIndex = NO;

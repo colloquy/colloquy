@@ -109,6 +109,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (void) dealloc {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[display setUIDelegate:nil];
@@ -125,7 +126,6 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	_searchQuery = nil;
 	_searchQueryRegex = nil;
 	_windowController = nil;
-
 }
 
 - (NSString *) description {
