@@ -40,6 +40,8 @@
 #import "MVXMPPChatConnection.h"
 #endif
 
+#import "GCDAsyncSocket.h"
+
 NSString *MVChatConnectionSASLFeature = @"MVChatConnectionSASLFeature";
 NSString *MVChatConnectionMultipleNicknamePrefixFeature = @"MVChatConnectionMultipleNicknamePrefixFeature";
 

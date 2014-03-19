@@ -1,3 +1,5 @@
+#import <TargetConditionals.h>
+
 #define ENABLE(FEATURE) (defined(ENABLE_##FEATURE) && ENABLE_##FEATURE)
 #define SYSTEM(NAME) (defined(SYSTEM_##NAME) && SYSTEM_##NAME)
 

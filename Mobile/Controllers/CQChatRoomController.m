@@ -1201,8 +1201,10 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	if (buttonIndex == alertView.cancelButtonIndex)
 		return;
 
-	if (alertView.tag != ReconnectAlertTag && alertView.tag != RejoinRoomAlertTag)
-		return [super alertView:alertView clickedButtonAtIndex:buttonIndex];
+	if (alertView.tag != ReconnectAlertTag && alertView.tag != RejoinRoomAlertTag) {
+		[super alertView:alertView clickedButtonAtIndex:buttonIndex];
+		return;
+	}
 
 	if (alertView.tag == ReconnectAlertTag || alertView.tag == RejoinRoomAlertTag)
 		[self join];
