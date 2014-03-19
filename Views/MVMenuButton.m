@@ -1,7 +1,7 @@
 #import "MVMenuButton.h"
 
 @implementation MVMenuButton
-@synthesize controlSize = _controlSize;
+@synthesize controlSize = _size;
 @synthesize smallImage = _smallImage;
 @synthesize toolbarItem = _toolbarItem;
 @synthesize drawsArrow = _drawsArrow;

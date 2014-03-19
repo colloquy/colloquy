@@ -4,8 +4,6 @@
 
 #import "NSAttributedStringMoreAdditions.h"
 
-#import "NSStringAdditions.h"
-
 #import <libxml/tree.h>
 
 static void setItalicOrObliqueFont( NSMutableDictionary *attrs ) {
