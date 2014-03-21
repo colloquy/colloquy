@@ -297,8 +297,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[send setAllowsUndo:YES];
 	[send setUsesRuler:NO];
 	[send setDelegate:self];
-	[send setContinuousSpellCheckingEnabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatSpellChecking"]];
-	[send setUsesSystemCompleteOnTab:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVUsePantherTextCompleteOnTab"]];
 	[send reset:nil];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
@@ -1418,6 +1416,10 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	// Commit the changes
 	[[[send superview] superview] setFrame:sendFrame];
+	sendFrame = [send frame];
+	sendFrame.size.width = newFrame.size.width;
+	[send setFrame:sendFrame];
+
 	[display setFrame:webFrame];
 }
 
