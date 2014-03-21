@@ -955,12 +955,21 @@
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Basic.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"${GCC_PREPROCESSOR_DEFINITIONS}",
+					"$(GCC_PREPROCESSOR_DEFINITIONS)",
+					"ENABLE_AUTO_PORT_MAPPING=1",
+					"ENABLE_SCRIPTING=1",
+					"ENABLE_PLUGINS=1",
+					"ENABLE_SILC=1",
+					"ENABLE_ICB=1",
+					"ENABLE_IRC=1",
+					"ENABLE_XMPP=1",
 					RKL_FAST_MUTABLE_CHECK,
 					"RKL_CACHE_SIZE=47",
+					"RKL_BLOCKS=0",
 				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
+				OTHER_CFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
@@ -1007,10 +1016,19 @@
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Basic.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"${GCC_PREPROCESSOR_DEFINITIONS}",
+					"$(GCC_PREPROCESSOR_DEFINITIONS)",
+					"ENABLE_AUTO_PORT_MAPPING=1",
+					"ENABLE_SCRIPTING=1",
+					"ENABLE_PLUGINS=1",
+					"ENABLE_SILC=1",
+					"ENABLE_ICB=1",
+					"ENABLE_IRC=1",
+					"ENABLE_XMPP=1",
 					RKL_FAST_MUTABLE_CHECK,
 					"RKL_CACHE_SIZE=47",
+					"RKL_BLOCKS=0",
 				);
+				OTHER_CFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,

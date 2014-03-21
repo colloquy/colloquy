@@ -7,6 +7,7 @@
 #import "NSMethodSignatureAdditions.h"
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
+#import "NSAttributedStringAdditions.h"
 #import "NSDataAdditions.h"
 #import "MVUtilities.h"
 #import "MVChatString.h"
