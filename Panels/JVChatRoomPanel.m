@@ -48,7 +48,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		_sortedMembers = [[NSMutableArray allocWithZone:nil] initWithCapacity:100];
 		_preferredTabCompleteNicknames = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
 		_nextMessageAlertMembers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
-		_memberRegexes = [NSMapTable weakToWeakObjectsMapTable];
+		_memberRegexes = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
 		_cantSendMessages = YES;
 		_kickedFromRoom = NO;
 		_banListSynced = NO;
@@ -384,7 +384,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		if( [[member nickname] length] > [plainText length] )
 			continue;
 
-		AGRegex *regex = [_memberRegexes objectForKey:member];
+		AGRegex *regex = (id)CFDictionaryGetValue(_memberRegexes, (__bridge const void *)(member));
 		if( !regex ) {
 			NSMutableString *escapedName = [[member nickname] mutableCopy];
 			[escapedName escapeCharactersInSet:escapeSet];
@@ -392,7 +392,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 			NSString *pattern = [[NSString alloc] initWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", escapedName];
 			regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
 
-			[_memberRegexes setObject:regex forKey:member];
+			 CFDictionarySetValue(_memberRegexes, (__bridge const void *)(member), (__bridge const void *)(regex));
 		}
 
 		NSArray *matches = [regex findAllInString:plainText];
@@ -960,7 +960,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 - (void) _selfNicknameChanged:(NSNotification *) notification {
 	JVChatRoomMember *member = [self chatRoomMemberForUser:[[notification object] localUser]];
-	[_memberRegexes removeObjectForKey:member];
+	CFDictionaryRemoveValue(_memberRegexes, (__bridge const void *)(member));
 
 	[self resortMembers];
 	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as <span class=\"member\">%@</span>.", "you changed nicknames" ), [[[self connection] nickname] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"newNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[self localChatRoomMember], @"who", nil]];
@@ -974,7 +974,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	JVChatRoomMember *member = [self chatRoomMemberForUser:[notification object]];
 	if( ! member ) return;
 
-	[_memberRegexes removeObjectForKey:member];
+	CFDictionaryRemoveValue(_memberRegexes, (__bridge const void *)(member));
 
 	NSString *oldNickname = [[notification userInfo] objectForKey:@"oldNickname"];
 
@@ -1055,7 +1055,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	[_nextMessageAlertMembers removeObject:mbr];
 	[_windowController reloadListItem:self andChildren:YES];
 
-	[_memberRegexes removeObjectForKey:mbr];
+	CFDictionaryRemoveValue(_memberRegexes, (__bridge const void *)(mbr)); 
 }
 
 - (void) _userBricked:(NSNotification *) notification {
