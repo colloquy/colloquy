@@ -1350,7 +1350,10 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	if (![self containsTypicalEmoticonCharacters])
 		return;
 
-	NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
+	static NSCharacterSet *escapedCharacters = nil;
+	if (!escapedCharacters)
+		escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
+
 	for (const struct EmojiEmoticonPair *entry = emoticonToEmojiList; entry && entry->emoticon; ++entry) {
 		NSString *searchEmoticon = objc_unretainedObject(entry->emoticon);
 		if (encoded) searchEmoticon = [searchEmoticon stringByEncodingXMLSpecialCharactersAsEntities];
