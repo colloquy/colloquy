@@ -42,7 +42,7 @@ static BOOL verbose;
 	hideCTCPs = defaultNamed(@"Unknown");
 	hidePINGs = defaultNamed(@"Ping");
 	hideUnknown = defaultNamed(@"Ctcp");
-	hideSocketInformation = !defaultNamed(@"Socket");
+	hideSocketInformation = defaultNamed(@"Socket");
 
 	verbose = defaultNamed(@"Verbose");
 }
@@ -180,7 +180,7 @@ static BOOL verbose;
 	if (hideSocketInformation)
 		return;
 
-	if (context != (__bridge void *)(_connection._chatConnection))
+	if (context != (__bridge void *)_connection._chatConnection)
 		return;
 
 	[self addMessage:socketTraffic outbound:NO];
