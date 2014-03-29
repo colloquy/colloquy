@@ -4,10 +4,6 @@
 
 #define CompletionsCaptureKeyboardDelay 0.5
 
-#define CQLineHeight 22.
-#define CQInactiveLineHeight 44.
-#define CQMaxLineHeight 84.
-
 static BOOL hardwareKeyboard;
 
 #pragma mark -
@@ -50,7 +46,7 @@ static BOOL hardwareKeyboard;
 
 	_inputView = [[UITextView alloc] initWithFrame:frame];
 	_inputView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
-	_inputView.contentSize = CGSizeMake(230., CQLineHeight);
+	_inputView.contentSize = CGSizeMake(230., self._lineHeight);
 	_inputView.dataDetectorTypes = UIDataDetectorTypeNone;
 	_inputView.returnKeyType = UIReturnKeySend;
 	_inputView.autocapitalizationType = UITextAutocapitalizationTypeSentences;
@@ -218,7 +214,7 @@ static BOOL hardwareKeyboard;
 		// Work around iOS 7 bug where the input view frame doesn't update right away after being set, causing text to be clipped.
 		if ([UIDevice currentDevice].isSystemSeven)
 			_inputView.frame = _inputView.frame;
-		_inputView.contentSize = CGSizeMake(_inputView.contentSize.width, ((numberOfLines + 1) * CQLineHeight));
+		_inputView.contentSize = CGSizeMake(_inputView.contentSize.width, ((numberOfLines + 1) * self._lineHeight));
 	}
 }
 
@@ -258,6 +254,16 @@ static BOOL hardwareKeyboard;
 
 		self.backgroundColor = color;
 	}
+}
+
+- (UIFont *) font {
+	return _inputView.font;
+}
+
+- (void) setFont:(UIFont *) font {
+	_inputView.font = font;
+
+	[self _resetTextViewHeight];
 }
 
 #pragma mark -
@@ -563,9 +569,9 @@ retry:
 		CGSize lineSize = [@"a" sizeWithFont:textView.font];
 		CGSize suggestedTextSize = [textView.text sizeWithFont:textView.font constrainedToSize:CGSizeMake((textView.contentSize.width - 15.), 90000) lineBreakMode:NSLineBreakByWordWrapping];
 		CGFloat numberOfLines = roundf(suggestedTextSize.height / lineSize.height);
-		CGFloat contentHeight = fminf((CQInactiveLineHeight + ((numberOfLines - 1) * CQLineHeight)), CQMaxLineHeight);
+		CGFloat contentHeight = fminf((self._inactiveLineHeight + ((numberOfLines - 1) * self._lineHeight)), self._maxLineHeight);
 
-		if (contentHeight < CQMaxLineHeight)
+		if (contentHeight < self._maxLineHeight)
 			textView.scrollEnabled = NO;
 		else textView.scrollEnabled = YES;
 		[self setHeight:contentHeight numberOfLines:(numberOfLines - 1)];
@@ -733,7 +739,7 @@ retry:
 }
 
 - (void) _resetTextViewHeight {
-	[self setHeight:CQInactiveLineHeight numberOfLines:0];
+	[self setHeight:self._inactiveLineHeight numberOfLines:0];
 
 	_inputView.contentInset = UIEdgeInsetsMake(-6., 2., 5., 0.);
 	_inputView.scrollEnabled = NO;
@@ -750,5 +756,23 @@ retry:
 	if (pressedImage)
 		[_accessoryButton setImage:pressedImage forState:UIControlStateHighlighted];
 	else [_accessoryButton setImage:nil forState:UIControlStateHighlighted];
+}
+
+#pragma mark -
+
+#define CQLineHeight 22.
+#define CQInactiveLineHeight 44.
+#define CQMaxLineHeight 84.
+
+- (CGFloat) _lineHeight {
+	return fmaxf(CQLineHeight, [@"Jy" sizeWithFont:_inputView.font].height);
+}
+
+- (CGFloat) _inactiveLineHeight {
+	return fmax(self._lineHeight * 2, CQInactiveLineHeight);
+}
+
+- (CGFloat) _maxLineHeight {
+	return fmax(self._lineHeight * 4, CQMaxLineHeight);
 }
 @end

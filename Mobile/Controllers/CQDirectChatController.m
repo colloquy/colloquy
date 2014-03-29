@@ -1017,9 +1017,6 @@ static BOOL showingKeyboard;
 }
 
 - (BOOL) handleMusicCommandWithArguments:(NSString *) arguments {
-	if (!NSClassFromString(@"MPMusicPlayerController") || !NSClassFromString(@"MPMediaItem"))
-		return NO;
-
 	MPMusicPlayerController *musicController = [MPMusicPlayerController iPodMusicPlayer];
 	MPMediaItem *nowPlayingItem = musicController.nowPlayingItem;
 
@@ -1749,6 +1746,7 @@ static BOOL showingKeyboard;
 	transcriptView.timestampPosition = timestampEveryMessage ? (timestampOnLeft ? CQTimestampPositionLeft : CQTimestampPositionRight) : CQTimestampPositionCenter;
 	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
 
+	chatInputBar.font = [chatInputBar.font fontWithSize:chatTranscriptFontSize];
 	if ([self isViewLoaded] && transcriptView)
 		self.view.backgroundColor = transcriptView.backgroundColor;
 

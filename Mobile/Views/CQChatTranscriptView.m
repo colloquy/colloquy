@@ -238,6 +238,12 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[self performSelector:@selector(_checkIfLoadingFinished) withObject:nil afterDelay:0.];
 
 	[super stringByEvaluatingJavaScriptFromString:@"document.body.style.webkitTouchCallout='none';"];
+
+	NSString *dynamicBodyFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].fontName;
+	BOOL isBold = [dynamicBodyFont hasCaseInsensitiveSubstring:@"Bold"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Italic"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Medium"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Black"];
+	if (isBold)
+		[super stringByEvaluatingJavaScriptFromString:@"document.body.style.fontWeight='bold';"];
+	else [super stringByEvaluatingJavaScriptFromString:@"document.body.style.fontWeight='';"];
 }
 
 #pragma mark -

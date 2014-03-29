@@ -34,6 +34,7 @@ typedef enum {
 @property (nonatomic, weak) IBOutlet id <CQChatInputBarDelegate> delegate;
 
 @property (nonatomic, strong) UIColor *tintColor;
+@property (nonatomic, strong) UIFont *font;
 
 @property (nonatomic) BOOL autocomplete;
 @property (nonatomic) BOOL spaceCyclesCompletions;
