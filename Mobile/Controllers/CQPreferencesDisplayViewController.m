@@ -5,6 +5,8 @@
 #import "CQPreferencesSwitchCell.h"
 #import "CQPreferencesTextCell.h"
 
+#import <objc/runtime.h>
+
 // These are defined as constants because they are used in Settings.app
 static NSString *const CQPSGroupSpecifier = @"PSGroupSpecifier";
 static NSString *const CQPSTextFieldSpecifier = @"PSTextFieldSpecifier";
@@ -26,6 +28,7 @@ static NSString *const CQPSEmail = @"Email";
 static NSString *const CQPSFile = @"File";
 static NSString *const CQPSValues = @"Values";
 static NSString *const CQPSTitles = @"Titles";
+static NSString *const CQPSViewController = @"ViewController";
 static NSString *const CQPSLicenses = @"Licenses";
 static NSString *const CQPSFooterText = @"FooterText";
 static NSString *const CQPSAutocorrectType = @"AutocorrectionType";
@@ -272,7 +275,8 @@ static NSString *const CQPSListTypeFont = @"Font";
 		cell.textLabel.text = [[NSBundle mainBundle] localizedStringForKey:rowDictionary[CQPSTitle] value:@"" table:nil];
 
 		NSUInteger index = [rowDictionary[CQPSValues] indexOfObject:value];
-		cell.detailTextLabel.text = rowDictionary[CQPSTitles][index];
+		if (index != NSNotFound)
+			cell.detailTextLabel.text = rowDictionary[CQPSTitles][index];
 
 		return cell;
 	} else if ([rowDictionary[CQPSType] isEqualToString:CQPSTitleValueSpecifier]) {
@@ -294,7 +298,16 @@ static NSString *const CQPSListTypeFont = @"Font";
 
 	UIViewController *viewController = nil;
 	NSDictionary *rowDictionary = _preferences[indexPath.section][@"rows"][indexPath.row];
-	if ([rowDictionary[CQPSType] isEqualToString:CQPSChildPaneSpecifier]) {
+	if (rowDictionary[CQPSViewController]) {
+		NSString *className = rowDictionary[CQPSViewController];
+		Class class = objc_lookUpClass([className UTF8String]);
+		if (!class || ![class isSubclassOfClass:[UIViewController class]])
+			return;
+
+		[self.navigationController pushViewController:[[class alloc] init] animated:YES];
+
+		[tableView deselectRowAtIndexPath:indexPath animated:[UIView areAnimationsEnabled]];
+	} else if ([rowDictionary[CQPSType] isEqualToString:CQPSChildPaneSpecifier]) {
 		viewController = [[CQPreferencesDisplayViewController alloc] initWithPlistNamed:rowDictionary[CQPSFile]];
 	} else if ([rowDictionary[CQPSType] isEqualToString:CQPSMultiValueSpecifier]) {
 		CQPreferencesListViewController *preferencesListViewController = [[CQPreferencesListViewController alloc] init];
