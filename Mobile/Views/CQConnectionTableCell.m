@@ -106,11 +106,11 @@
 		unsigned hours = (absoluteInterval / 3600);
 
 		if (interval >= 1.) {
-			if (hours) newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"-%u:%02u:%02u", @"Countdown time format with hours, minutes and seconds"), hours, minutes, seconds];
-			else newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"-%u:%02u", @"Countdown time format with minutes and seconds"), minutes, seconds];
+			if (hours) newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"-%zd:%02zd:%02zd", @"Countdown time format with hours, minutes and seconds"), hours, minutes, seconds];
+			else newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"-%u:%02zd", @"Countdown time format with minutes and seconds"), minutes, seconds];
 		} else {
-			if (hours) newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"%u:%02u:%02u", @"Countup time format with hours, minutes and seconds"), hours, minutes, seconds];
-			else newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"%u:%02u", @"Countup time format with minutes and seconds"), minutes, seconds];
+			if (hours) newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"%u:%02zd:%02zd", @"Countup time format with hours, minutes and seconds"), hours, minutes, seconds];
+			else newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"%u:%02zd", @"Countup time format with minutes and seconds"), minutes, seconds];
 		}
 	}
 
