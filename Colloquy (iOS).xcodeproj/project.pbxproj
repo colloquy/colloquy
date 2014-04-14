@@ -571,7 +571,7 @@
 		1CDDE9F5118CD2B800C83EBE /* NSObjectAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSObjectAdditions.m; path = Additions/NSObjectAdditions.m; sourceTree = "<group>"; };
 		1CE3FB100D8A3DC100FB035F /* CQConnectionCreationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQConnectionCreationViewController.h; sourceTree = "<group>"; };
 		1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQConnectionCreationViewController.m; sourceTree = "<group>"; };
-		1CE69F810EE2F50100389442 /* ChatView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatView.xib; sourceTree = "<group>"; };
+		1CE69F810EE2F50100389442 /* ChatView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatView.xib; sourceTree = "<group>"; };
 		1CE69FD70EE317F200389442 /* CQChatInputBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatInputBar.h; sourceTree = "<group>"; };
 		1CE69FD80EE317F200389442 /* CQChatInputBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatInputBar.m; sourceTree = "<group>"; };
 		1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQKeychain.h; sourceTree = "<group>"; };
@@ -665,6 +665,7 @@
 		9261B6FD1841A83C001B14C3 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = HockeySDKResources.bundle; path = Shared/Frameworks/HockeySDK.framework/Versions/A/Resources/HockeySDKResources.bundle; sourceTree = SOURCE_ROOT; };
 		9261B6FF1841AEA1001B14C3 /* UIApplicationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIApplicationAdditions.h; path = Mobile/Additions/UIApplicationAdditions.h; sourceTree = "<group>"; };
 		9261B7001841AEA1001B14C3 /* UIApplicationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIApplicationAdditions.m; path = Mobile/Additions/UIApplicationAdditions.m; sourceTree = "<group>"; };
+		926CF29018FBB09100A81159 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = Mobile/Languages/it.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
 		9271923A16CFA831003380F0 /* CQChatOrderingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatOrderingController.h; sourceTree = "<group>"; };
 		9271923B16CFA831003380F0 /* CQChatOrderingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatOrderingController.m; sourceTree = "<group>"; };
 		9271928816D211DD003380F0 /* textField.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textField.png; sourceTree = "<group>"; };
@@ -1512,6 +1513,7 @@
 				German,
 				en,
 				de,
+				it,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -1867,6 +1869,7 @@
 			children = (
 				1C8CFE960F60E11900B672F9 /* en */,
 				1C8CFEAB0F60EC8F00B672F9 /* de */,
+				926CF29018FBB09100A81159 /* it */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
