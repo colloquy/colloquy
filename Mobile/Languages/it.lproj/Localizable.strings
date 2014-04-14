@@ -1,0 +1,1388 @@
+/* Time with a unit word, appended to a previous larger unit of time */
+" %u %@" = " %1$u %2$@";
+
+/* Plain large number format string */
+"#,##0" = "#,##0";
+
+/* Unread count view title, uses the view's normal title with a number */
+"%@ (%u)" = "%1$@ (%2$u)";
+
+/* User changed the room topic event message */
+"%@ changed the topic to \"%@\"." = "%1$@ ha cambiato l'argomento del canale in: %2$@.";
+
+/* User no longer has special voice status and can't talk in moderated rooms mode event message */
+"%@ had voice removed by %@." = "%2$@ ha disattivato la modalità VOICE su %1$@.";
+
+/* You removed user's special voice status and can't talk in moderated rooms mode event message */
+"%@ had voice removed by you." = "Hai disattivato la modalità VOICE su %@.";
+
+/* User is no longer quieted because of someone else in the room mode event message */
+"%@ is no longer quieted because of %@." = "%2$@ ha disattivato la modalità QUIET su %1$@.";
+
+/* a user is no longer quieted because of us mode event message */
+"%@ is no longer quieted because of you." = "Hai disattivato la modalità QUIET su %@.";
+
+/* User changed nicknames event message */
+"%@ is now known as %@." = "%1$@ ha cambiato il suo nick in %2$@.";
+
+/* User has join the room event message */
+"%@ joined the room." = "%@ è entrato.";
+
+/* User has left the room event message */
+"%@ left the room." = "%@ è uscito.";
+
+/* User has left the room with reason event message */
+"%@ left the room. (%@)" = "%1$@ è uscito. (%2$@)";
+
+/* User removed a ban in the room event message */
+"%@ removed the ban on %@." = "%1$@ ha disattivato il BAN su %2$@.";
+
+/* User set a ban in the room event message */
+"%@ set a ban on %@." = "%1$@ ha attivato il BAN su %2$@.";
+
+/* File download alert message */
+"%@ wants to send you \"%@\"." = "%1$@ vuole inviarti un file:%2$@.";
+
+/* User is no longer a room administrator mode event message */
+"%@ was demoted from administrator by %@." = "%2$@ ha rimosso %1$@ dalla carica di amministratore.";
+
+/* You removed user's room administrator mode event message */
+"%@ was demoted from administrator by you." = "Hai rimosso %@ dalla carica di amministratore.";
+
+/* User is no longer a room half-operator mode event message */
+"%@ was demoted from half-operator by %@." = "%2$@ ha disattivato la modalità Half-OP su %1$@.";
+
+/* You removed user's room half-operator mode event message */
+"%@ was demoted from half-operator by you." = "Hai disattivato la modalità Half-OP su %@.";
+
+/* User is no longer a room operator mode event message */
+"%@ was demoted from operator by %@." = "%2$@ ha disattivato la modalità OP su %1$@.";
+
+/* You removed user's room operator mode event message */
+"%@ was demoted from operator by you." = "Hai disattivato la modalità OP su %@.";
+
+/* User is no longer a room founder mode event message */
+"%@ was demoted from room founder by %@." = "%2$@ ha rimosso %1$@ dal gruppo dei fondatori del canale.";
+
+/* You removed user's room founder mode event message */
+"%@ was demoted from room founder by you." = "Hai rimosso %@ dal gruppo dei fondatori del canale.";
+
+/* User now has special voice status to talk in moderated rooms mode event message */
+"%@ was granted voice by %@." = "%2$@ ha attivato la modalità VOICE su %1$@.";
+
+/* You gave user special voice status to talk in moderated rooms mode event message */
+"%@ was granted voice by you." = "Hai attivato la modalità VOICE su %@.";
+
+/* A user was kicked from the room event message */
+"%@ was kicked from the room by %@." = "%1$@ è stato mandato fuori da %2$@.";
+
+/* A user was kicked from the room with reason event message */
+"%@ was kicked from the room by %@. (%@)" = "%1$@ è stato mandato fuori da %2$@. (%3$@)";
+
+/* User is now a room administrator mode event message */
+"%@ was promoted to administrator by %@." = "%2$@ ha promosso %1$@ alla carica di amministratore.";
+
+/* You gave user room administrator mode event message */
+"%@ was promoted to administrator by you." = "Hai promosso %@ alla carica di amministratore.";
+
+/* User is now a room half-operator mode event message */
+"%@ was promoted to half-operator by %@." = "%2$@ ha attivato la modalità Half-OP su %1$@.";
+
+/* You gave user room half-operator mode event message */
+"%@ was promoted to half-operator by you." = "Hai attivato la modalità Half-OP su %@.";
+
+/* User is now a room operator mode event message */
+"%@ was promoted to operator by %@." = "%2$@ ha attivato la modalità OP su %1$@.";
+
+/* You gave user room operator mode event message */
+"%@ was promoted to operator by you." = "Hai attivato la modalità OP su %@.";
+
+/* User is now a room founder mode event message */
+"%@ was promoted to room founder by %@." = "%2$@ ha aggiunto %1$@ nel gruppo dei fondatori del canale.";
+
+/* You gave user room founder mode event message */
+"%@ was promoted to room founder by you." = "Hai aggiunto %@ nel gruppo dei fondatori del canale.";
+
+/* User was quieted by someone else in the room mode event message */
+"%@ was quieted by %@." = "%2$@ ha attivato la modalità QUIET su %1$@.";
+
+/* You quieted someone else in the room mode event message */
+"%@ was quieted by you." = "Hai attivato la modalità QUIET su %@.";
+
+/* Voiceover highlights and unread messages in chat label */
+"%@: %u highlighted and %u unread messages." = "%1$@: %2$u messaggi evidenziati e %3$u non ancora letti.";
+
+/* Voiceover highlights in chat label */
+"%@: %u highlighted messages." = "%1$@: %2$u messaggi evidenziati.";
+
+/* Voiceover unread messages in chat label */
+"%@: %u unread messages." = "%1$@: %2$u messaggi non letti.";
+
+/* Time with a unit word */
+"%u %@" = "%1$u %2$@";
+
+/* Countup time format with minutes and seconds */
+"%u:%02u" = "%u:%02u";
+
+/* Countup time format with hours, minutes and seconds */
+"%u:%02u:%02u" = "%u:%02u:%02u";
+
+/* User info rooms list separator */
+", " = ", ";
+
+/* Countdown time format with minutes and seconds */
+"-%u:%02u" = "-%u:%02u";
+
+/* Countdown time format with hours, minutes and seconds */
+"-%u:%02u:%02u" = "-%u:%02u:%02u";
+
+/* Colloquy bouncer welcome description */
+"A Colloquy Bouncer allows you to stay\nconnected and receive push notifications\nwhen Colloquy is closed on your device." = "Il Colloquy-Bouncer ti permette di restare\nsempre connesso e ricevere notifiche Push\nanche quando la app non è aperta.";
+
+/* Accept alert button title */
+"Accept" = "Accetta";
+
+/* Account connection setting label */
+"Account" = "Account";
+
+/* Voiceover account label */
+"Account: %@" = "Account: %@";
+
+/* Add a Colloquy bouncer button label */
+"Add a Colloquy Bouncer..." = "Aggiungi un Colloquy-Bouncer&";
+
+/* Add a IRC connection button label */
+"Add an IRC Connection..." = "Aggiungi una rete IRC&";
+
+/* Add chat room label */
+"Add chat room" = "Aggiungi una stanza";
+
+/* Add command label */
+"Add command" = "Aggiungi un comando";
+
+/* Voiceover add connection label */
+"Add connection." = "Aggiungi una rete.";
+
+/* Add item label */
+"Add item" = "Aggiungi una voce";
+
+/* Add New Connection button title */
+"Add New Connection" = "Nuova Connessione";
+
+/* Add nickname label */
+"Add nickname" = "Aggiungi nick";
+
+/* Add status label */
+"Add status" = "Aggiungi uno stato";
+
+/* Address connection setting label */
+"Address" = "Indirizzo";
+
+/* Voiceover address label */
+"Address: %@" = "Indirizzo: %@";
+
+/* Advanced connection setting label
+   Advanced view title */
+"Advanced" = "Avanzate";
+
+/* Alt. Nicknames connection setting label */
+"Alt. Nicknames" = "Nick Alternativi";
+
+/* Voiceover alternate nicknames label */
+"Alternate Nicknames: %@" = "Nick Alternativi: %@";
+
+/* Voiceover alternate nicknames count label */
+"Alternate Nicknames: %u nicknames" = "Nick alternativi: %u diversi";
+
+/* Voiceover Alternate Nicknames none label */
+"Alternate Nicknames: None" = "Nick Alternativi: Nessuno";
+
+/* Encoding name */
+"Arabic (ISO 8859-6)" = "Arabic (ISO 8859-6)";
+
+/* Encoding name */
+"Arabic (Windows)" = "Arabic (Windows)";
+
+/* Authentication section title */
+"Authentication" = "Autenticazione";
+
+/* Auto Commands connection setting label */
+"Auto Commands" = "Comandi Automatici";
+
+/* Automatic Actions section title */
+"Automatic Actions" = "Azioni Automatiche";
+
+/* Voiceover automatic commands label */
+"Automatic Commands: %u commands" = "Comandi Automatici: %u comandi diversi";
+
+/* Voiceover automatic commands none label */
+"Automatic Commands: None" = "Comandi Automatici: Nessuno";
+
+/* Away from my %@ label */
+"Away from my %@" = "Allontanato da %@";
+
+/* Away Info user info label */
+"away info" = "away info";
+
+/* Voiceover away information not available */
+"Away information not available." = "Informazioni Away non disponibili.";
+
+/* Voiceover away information label */
+"Away information: %@" = "Informazioni Away: %@";
+
+/* Voiceover back label */
+"Back" = "Indietro";
+
+/* Encoding name */
+"Baltic Rim (ISO Latin 7)" = "Baltic Rim (ISO Latin 7)";
+
+/* Encoding name */
+"Baltic Rim (Windows)" = "Baltic Rim (Windows)";
+
+/* Ban From Room button title */
+"Ban from Room" = "Attiva BAN";
+
+/* cannot change used nickname error */
+"Can't change nick from \"%@\" to \"%@\" because it is already taken on \"%@\"." = "Impossibile cambiare da:%1$@ a: %2$@ Perché il nick è già usato da qualcun'altro%3$@.";
+
+/* Can't change nickname alert title */
+"Can't Change Nickname" = "Cambio del nick non riuscito";
+
+/* Can't change nick too fast alert message */
+"Can't change nicknames too fast on \"%@\", wait and try again." = "Su %@non ti è permesso cambiare nick troppe volte. Aspetta e riprova dopo.";
+
+/* Can't change nick because of room alert message */
+"Can't change your nickname while in \"%@\" on \"%@\". Leave the room and try again." = "Impossibile cambiare nick su %1$@ - %2$@. Esci dal canale e poi riprova.";
+
+/* Can't Connect to Bouncer alert title */
+"Can't Connect to Bouncer" = "Connessione al Bouncer Non Riuscita";
+
+/* Can't Connect to Server alert title */
+"Can't Connect to Server" = "Connessione al Server Non Riuscita";
+
+/* Can't connect to bouncer alert message */
+"Can't connect to the bouncer \"%@\". Check the bouncer settings and try again." = "Impossibile connettersi al bouncer %@. Controlla che le impostazioni siano valide, poi riprova.";
+
+/* Connect directly alert message */
+"Can't connect to the server \"%@\" via \"%@\". Would you like to connect directly?" = "Impossibile connettersi al server %1$@ via %2$@. Vuoi provare la connessione diretta?";
+
+/* Cannot connect alert message */
+"Can't connect to the server \"%@\"." = "Connessione al server %@ Non Riuscita.";
+
+/* Can't join room alert title */
+"Can't Join Room" = "Impossibile Entrare nella Stanza";
+
+/* Can't send command alert title */
+"Can't Send Command" = "Impossibile Inviare il Comando";
+
+/* Can't send message alert title */
+"Can't Send Message" = "Invio Messaggio Non Riuscito";
+
+/* Cant send message alert message */
+"Can't send messages to \"%@\" due to some room restriction." = "L'invio del messaggio a %@ non è riuscito, a causa di una restrizione del canale.";
+
+/* cant send to room error */
+"Can't send to room \"%@\" on \"%@\"." = "Impossibile inviare msg al canale %1$@ su %2$@.";
+
+/* Cancel button title */
+"Cancel" = "Annulla";
+
+/* Encoding name */
+"Central European (ISO Latin 2)" = "Central European (ISO Latin 2)";
+
+/* Encoding name */
+"Central European (ISO Latin 4)" = "Central European (ISO Latin 4)";
+
+/* Encoding name */
+"Central European (Mac OS)" = "Central European (Mac OS)";
+
+/* Encoding name */
+"Central European (Windows Latin 2)" = "Central European (Windows Latin 2)";
+
+/* Channel Key textfield placeholder */
+"Channel Key" = "Codice Canale";
+
+/* character remaining tableview footer */
+"character remaining" = "carattere rimanente";
+
+/* characters remaining tableview footer */
+"characters remaining" = "caratteri rimanenti";
+
+/* Chat button title */
+"Chat" = "Chat";
+
+/* Chat Room placeholder */
+"Chat Room" = "Canale di Chat";
+
+/* Chat Room section title */
+"Chat Room Information" = "Informazioni sul Canale";
+
+/* Chat Server section title */
+"Chat Server" = "Server della Chat";
+
+/* Encoding name */
+"Chinese (GB 18030)" = "Chinese (GB 18030)";
+
+/* Choose Contact button title */
+"Choose Contact" = "Scegli Contatto";
+
+/* Choose Existing Photo button title */
+"Choose Existing Photo" = "Scegli una Foto Esistente";
+
+/* Class user info label */
+"class" = "class";
+
+/* Voiceover class label */
+"Class: %@" = "Classe: %@";
+
+/* Close remove confirmation button title */
+"Close" = "Chiudi";
+
+/* Close all rooms button title */
+"Close All Chat Rooms" = "Chiudi Tutti i Canali";
+
+/* Close all private chats button title */
+"Close All Private Chats" = "Chiudi Tutte le Chat Private";
+
+/* Colloquies tab title
+   Colloquies view title */
+"Colloquies" = "Conversazioni";
+
+/* Colloquy Bouncer button title */
+"Colloquy Bouncer" = "Colloquy-Bouncer";
+
+/* Colloquy Bouncer Server section title */
+"Colloquy Bouncer Server" = "Colloquy-Bouncer Server";
+
+/* Quit message, with the device name inserted */
+"Colloquy for %@ - http://colloquy.mobi" = "Colloquy for %@ - http://colloquy.mobi";
+
+/* Default real name */
+"Colloquy User" = "Colloquy User";
+
+/* Default nickname */
+"ColloquyUser" = "ColloquyUser";
+
+/* Command placeholder */
+"Command" = "Comando";
+
+/* Commands view title */
+"Commands" = "Comandi";
+
+/* Connect button title */
+"Connect" = "Connetti";
+
+/* Connect at Launch connection setting label */
+"Connect at Launch" = "Auto-Connetti all'apertura dell'App";
+
+/* Voiceover connect at launch off label */
+"Connect at Launch: Off" = "Auto-Connessione all'apertura dell'App: Off";
+
+/* Voiceover connect at launch on label */
+"Connect at Launch: On" = "Auto-Connessione all'apertura dell'App: Attiva";
+
+/* Connect Directly button title */
+"Connect Directly" = "Connessione Diretta";
+
+/* Voiceover connect to server label */
+"Connect to Server" = "Connetti al Server";
+
+/* Connected user info label */
+"connected" = "connesso";
+
+/* Connected to server event message */
+"Connected to the server." = "Connesso al server.";
+
+/* Voiceover Connected label */
+"Connected: %@" = "Connesso: %@";
+
+/* Connection setting label */
+"Connection" = "Connessione";
+
+/* Voiceover connection password label */
+"Connection password." = "Password per la connessione.";
+
+/* Connection Settings section title */
+"Connection Settings" = "Impostazioni Connessione";
+
+/* Voiceover connection label */
+"Connection: %@" = "Connessione: %@";
+
+/* Connections button title
+   Connections tab title
+   Connections view title */
+"Connections" = "Connessioni";
+
+/* Could not authenticate title */
+"Couldn't Authenticate with Instapaper" = "Autenticazione Instapaper Non Riuscita";
+
+/* Create Away Status title */
+"Create Away Status&" = "Crea Stato di Away&";
+
+/* Current topic event message */
+"Current chat topic is \"%@\", set by %@." = "L'argomento è %1$@, scritto da %2$@.";
+
+/* Current topic set by you event message */
+"Current chat topic is \"%@\", set by you." = "L'argomento è %@, scritto da te.";
+
+/* Current topic with no user event message */
+"Current chat topic is \"%@\"." = "L'argomento è %@.";
+
+/* Encoding name */
+"Cyrillic (ISO 8859-5)" = "Cyrillic (ISO 8859-5)";
+
+/* Encoding name */
+"Cyrillic (KOI8-R)" = "Cyrillic (KOI8-R)";
+
+/* Encoding name */
+"Cyrillic (Mac OS)" = "Cyrillic (Mac OS)";
+
+/* Encoding name */
+"Cyrillic (Windows)" = "Cyrillic (Windows)";
+
+/* Singular day */
+"day" = "giorno";
+
+/* Plural days */
+"days" = "giorni";
+
+/* Delete alert button title
+   Delete button title */
+"Delete" = "Elimina";
+
+/* Delete Bouncer alert title
+   Delete Bouncer button title */
+"Delete Bouncer" = "Elimina Bouncer";
+
+/* Delete Connection alert title
+   Delete Connection button title */
+"Delete Connection" = "Elimina Connessione";
+
+/* Demote from Admin button title */
+"Demote from Admin" = "Rimuovi da Admin";
+
+/* Demote from Founder button title */
+"Demote from Founder" = "Rimuovi da Fondatori";
+
+/* Demote From Half-Operator button title */
+"Demote from Half-Operator" = "Disattiva Half-OP";
+
+/* Demote from Operator button title */
+"Demote from Operator" = "Disattiva OP";
+
+/* Deny alert button title */
+"Deny" = "Nega";
+
+/* Description connection setting label */
+"Description" = "Descrizione";
+
+/* Voiceover description label */
+"Description: %@" = "Descrizione: %@";
+
+/* Direct Connections section title */
+"Direct Connections" = "Connessioni Dirette";
+
+/* Disconnect button title */
+"Disconnect" = "Disconnetti";
+
+/* Disconnect from the server event message */
+"Disconnected from the server." = "Disconnesso dal server.";
+
+/* Dismiss alert button title */
+"Dismiss" = "Respingi";
+
+/* Done button title */
+"Done" = "Finito";
+
+/* Edit view title */
+"Edit" = "Modifica";
+
+/* Edit Chat Room view title */
+"Edit Chat Room" = "Modifica Canale";
+
+/* Edit Command view title */
+"Edit Command" = "Modifica Comando";
+
+/* Voiceover edit connections label */
+"Edit connections." = "Modifica connessioni.";
+
+/* Edit Nickname view title */
+"Edit Nickname" = "Modifica Nick";
+
+/* Encoding connection setting label
+   Encoding view title */
+"Encoding" = "Encoding";
+
+/* Voiceover encoding label */
+"Encoding: %@" = "Encoding: %@";
+
+/* Voiceover enter chat message label */
+"Enter chat message." = "Inserisci un messaggio chat.";
+
+/* File Download alert title */
+"File Download" = "Scarica File";
+
+/* File Transfers section title */
+"File Transfers" = "Trasferimenti";
+
+/* Force Quiet button title */
+"Force Quiet" = "Forza il Quiet";
+
+/* From: label */
+"From:" = "Da:";
+
+/* Fully Disconnect button title */
+"Fully Disconnect" = "Disconnetti del Tutto";
+
+/* Getting Connected welcome screen header */
+"Getting Connected" = "Mi sto Connettendo";
+
+/* Grant Voice button title */
+"Grant Voice" = "Attiva VOICE";
+
+/* Encoding name */
+"Greek (ISO 8859-7)" = "Greek (ISO 8859-7)";
+
+/* Encoding name */
+"Greek (Mac OS)" = "Greek (Mac OS)";
+
+/* Encoding name */
+"Greek (Windows)" = "Greek (Windows)";
+
+/* Encoding name */
+"Hebrew (ISO 8859-8)" = "Hebrew (ISO 8859-8)";
+
+/* Encoding name */
+"Hebrew (Windows)" = "Hebrew (Windows)";
+
+/* Help button title
+   Help view title */
+"Help" = "Aiuto";
+
+/* Help button label */
+"Help & Troubleshooting" = "Aiuto & Risoluzione dei Problemi";
+
+/* Hostname user info label */
+"hostname" = "hostname";
+
+/* Voiceover hostname not available label */
+"Hostname not available." = "Hostname non disponibile.";
+
+/* Voiceover hostname label */
+"Hostname: %@" = "Hostname: %@";
+
+/* Singular hour */
+"hour" = "ora";
+
+/* Plural hours */
+"hours" = "ore";
+
+/* Identify to join room alert message */
+"Identify with network services to join \"%@\" on \"%@\"." = "Devi Autenticarti con la rete %2$@ per entrare nel canale %1$@.";
+
+/* Idle Time user info label */
+"idle time" = "tempo di inattività";
+
+/* Instapaper Temporarily Unavailable title */
+"Instapaper Unavailable" = "Instapaper Non Disponibile";
+
+/* Internet Relay Chat Server section title */
+"Internet Relay Chat Server" = "Internet Relay Chat Server";
+
+/* Invited to room alert title */
+"Invited to Room" = "Invitato nel Canale";
+
+/* IRC Connection button title */
+"IRC Connection" = "Connessione IRC";
+
+/* Listening to music by an artist from an album */
+"is listening to %@ by %@ from %@." = "sta ascoltando %1$@ di %2$@ da %3$@.";
+
+/* Listening to music by an artist */
+"is listening to %@ by %@." = "sta ascoltando %1$@ di %2$@.";
+
+/* Listening to music from an album */
+"is listening to %@ from %@." = "sta ascoltando %1$@ da %2$@.";
+
+/* Listening to music */
+"is listening to %@." = "sta ascoltando %@.";
+
+/* Listening to untitled music */
+"is listening to an untitled song." = "sta ascoltando una canzone senza titolo.";
+
+/* Not listening to music message */
+"is not currently listening to music." = "non sta ascoltando musica al momento.";
+
+/* System info message with battery level */
+"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %.0f%% battery life remaining. " = "sta usando ColloquyMobile %1$@ in modalità %2$@ su un %3$@ - iOS %4$@ con il %5$.0f%% di batteria rimanente. ";
+
+/* System info message */
+"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@. " = "sta usando ColloquyMobile %1$@ in modalità %2$@ su un %3$@ - iOS %4$@. ";
+
+/* iTunes application name */
+"iTunes" = "iTunes";
+
+/* Encoding name */
+"Japanese (EUC)" = "Japanese (EUC)";
+
+/* Encoding name */
+"Japanese (ISO 2022-JP)" = "Japanese (ISO 2022-JP)";
+
+/* Encoding name */
+"Japanese (Mac OS)" = "Japanese (Mac OS)";
+
+/* Encoding name */
+"Japanese (Shift JIS)" = "Japanese (Shift JIS)";
+
+/* Encoding name */
+"Japanese (Windows, DOS)" = "Japanese (Windows, DOS)";
+
+/* Join button title */
+"Join" = "Entra";
+
+/* Join a Chat Room button title */
+"Join a Chat Room" = "Entra nel Canale";
+
+/* Join Chat Room button title
+   Join Chat Room view title */
+"Join Chat Room" = "Entra nel Canale";
+
+/* Join Colloquy Support Room label */
+"Join Colloquy Support Room" = "Entra nel Canale di Supporto per Colloquy";
+
+/* Join Room button title
+   Voiceover join room label */
+"Join Room" = "Entra nel Canale";
+
+/* Join Rooms connection setting label
+   Join Rooms view title */
+"Join Rooms" = "Entra nei Canali";
+
+/* Voiceover join rooms label */
+"Join Rooms: %@" = "Entra nei Canali: %@";
+
+/* Join Support Room button title */
+"Join Support Room" = "Entra nel Canale di Supporto";
+
+/* JPG button title */
+"JPG" = "JPG";
+
+/* Kick from Room button title */
+"Kick from Room" = "Manda Via dal Canale";
+
+/* Kicked from room alert title */
+"Kicked from Room" = "Mandato Via dal Canale";
+
+/* Encoding name */
+"Korean (EUC)" = "Korean (EUC)";
+
+/* Encoding name */
+"Korean (Mac OS)" = "Korean (Mac OS)";
+
+/* Encoding name */
+"Korean (Windows, DOS)" = "Korean (Windows, DOS)";
+
+/* landscape orientation */
+"landscape" = "Orizzontale";
+
+/* Leave remove confirmation button title */
+"Leave" = "Esci";
+
+/* Leave Chat Room button title */
+"Leave Chat Room" = "Esci dal Canale";
+
+/* Mail application name */
+"Mail" = "Mail";
+
+/* Make sure your Instapaper username and password are correct alert message */
+"Make sure your Instapaper username and password are correct." = "Assicurati che Username/Password di Instapaper siano corretti.";
+
+/* Manage button title */
+"Manage" = "Gestione";
+
+/* Voiceover manage chats label */
+"Manage chats." = "Gestione chats.";
+
+/* Maps application name */
+"Maps" = "Mappe";
+
+/* Members back button label */
+"Members" = "Membri";
+
+/* Members with filtered count view title */
+"Members (%u of %u)" = "Membri (%1$u su %2$u)";
+
+/* Members with single count view title */
+"Members (%u)" = "Membri (%u)";
+
+/* Voiceover members list label */
+"Members List" = "Lista Membri";
+
+/* Message a User button title */
+"Message a User" = "Parla in Privato con un Utente";
+
+/* Message User view title */
+"Message User" = "Parla in Privato";
+
+/* Singular minute */
+"minute" = "minuto";
+
+/* Plural minutes */
+"minutes" = "minuti";
+
+/* Singular month */
+"month" = "mese";
+
+/* Plural months */
+"months" = "mesi";
+
+/* Not Applicable or Not Available */
+"n/a" = "n/d";
+
+/* Name setting label */
+"Name" = "Nome";
+
+/* Network Identity section title */
+"Network Identity" = "Identità sulla Rete";
+
+/* New away status label */
+"New away status" = "Nuovo stato Away";
+
+/* New Bouncer view title */
+"New Bouncer" = "Nuovo Bouncer";
+
+/* Voiceover new chat label */
+"New chat." = "Nuova chat.";
+
+/* New Connection view title */
+"New Connection" = "Nuova Connessione";
+
+/* Nickname Password connection setting label */
+"Nick Pass." = "Nick Passw.";
+
+/* Nickname connection setting label
+   Nickname placeholder
+   Nickname setting label */
+"Nickname" = "Nick";
+
+/* Nick changed by server alert title */
+"Nickname Changed" = "Nick Cambiato";
+
+/* Nickname in use alert title */
+"Nickname in use" = "Nick occupato";
+
+/* Voiceover nickname password label */
+"Nickname password." = "Password per questo nick.";
+
+/* Voiceover nickname label */
+"Nickname: %@" = "Nick: %@";
+
+/* Nicknames view title */
+"Nicknames" = "Nicks";
+
+/* NickServ Password textfield placeholder */
+"NickServ Password" = "Password";
+
+/* No away statuses label */
+"No away statuses" = "Nessun stato di away impostato";
+
+/* No chat rooms label */
+"No chat rooms" = "Nessun canale impostato";
+
+/* No chat topic event message */
+"No chat topic is set." = "Argomento non impostato nel canale.";
+
+/* No commands label */
+"No commands" = "Nessun comando";
+
+/* No Instapaper username alert title */
+"No Instapaper Username" = "Non hai messo lo Username per Instapaper";
+
+/* No items label */
+"No items" = "Nessun elemento in lista";
+
+/* No nicknames label */
+"No nicknames" = "Nessun Nick in lista";
+
+/* None label */
+"None" = "Nessuno";
+
+/* Normal user class */
+"Normal User" = "Utente Normale";
+
+/* Off label */
+"Off" = "Off";
+
+/* Offline label */
+"Offline" = "Offline";
+
+/* On label */
+"On" = "On";
+
+/* Open button title */
+"Open" = "Apri";
+
+/* Voiceover open in safari label */
+"Open in Safari." = "Apri con Safari.";
+
+/* Open link in app alert title */
+"Open Link in %@?" = "Apri Link con %@?";
+
+/* Open link alert title */
+"Open Link?" = "Vuoi Aprire il Link?";
+
+/* Opening link alert message */
+"Opening this link will close Colloquy." = "Se apri questo link Colloquy verrà chiuso.";
+
+/* Operator Actions button title */
+"Operator Actions..." = "Azioni per OPs&";
+
+/* Optional connection setting placeholder
+   Optional setting placeholder
+   Voiceover optional label */
+"Optional" = "Opzionale";
+
+/* Password connection setting label
+   Password setting label
+   Voiceover password label */
+"Password" = "Password";
+
+/* Password (Optional) textfield placeholder */
+"Password (Optional)" = "Password (Opzionale)";
+
+/* PNG button title */
+"PNG" = "PNG";
+
+/* Bouncer Port setting label */
+"Port" = "Porta";
+
+/* Voiceover port label */
+"Port: %hu" = "Porta: %hu";
+
+/* portrait orientation */
+"portrait" = "verticale";
+
+/* Push Notification section footer title */
+"Private messages and highlighted room messages\nare pushed. Push notifications require connecting\nto apush aware bouncer." = "I Messaggi Privati o quelli pubblici che\ncontengono il tuo nick vengono notificati.\nPerò le notifiche-Push, per funzionare,\nrichiedono una connessione ad un Bouncer\nche sia compatibile con Push.";
+
+/* Bouncer Push Notification section footer title */
+"Private messages and highlighted\nroom messages are pushed." = "Sia i Messaggi Privati, sia quelli Pubblici\ncontenenti il tuo nick, vengono notificati.";
+
+/* Push Notification section footer title */
+"Private messages and highlighted\nroom messages are pushed.\n\nPush notifications require connecting\nto a push aware bouncer." = "I Messaggi Privati, o quelli pubblici che\ncontengono il tuo nick, vengono notificati.\nPerò le notifiche-Push, per funzionare,\nrichiedono una connessione ad un Bouncer\nche sia compatibile con Push.";
+
+/* Promote to Admin button title */
+"Promote to Admin" = "Promuovi alla carica di Admin";
+
+/* Promote to Founder button title */
+"Promote to Founder" = "Aggiungi al gruppo dei Fondatori";
+
+/* Promote to Half-Operator button title */
+"Promote to Half-Operator" = "Attiva mod. Half-OP";
+
+/* Promote to Operator button title */
+"Promote to Operator" = "Attiva mod. OP";
+
+/* Push Notifications connection setting label
+   Push Notifications view title */
+"Push Notifications" = "Notifiche Push";
+
+/* Voiceover push notification off label */
+"Push Notifications: Off" = "Notifiche Push: Off";
+
+/* Voiceover push notifications on label */
+"Push Notifications: On" = "Notifiche Push: On";
+
+/* Real Name connection setting label */
+"Real Name" = "Nome Reale";
+
+/* Real Name user info label */
+"real name" = "nome reale";
+
+/* Voiceover real name not available label */
+"Real name not available." = "Nome reale non disponibile.";
+
+/* Voiceover real name label */
+"Real Name: %@" = "Nome Reale: %@";
+
+/* Receiving: label */
+"Receiving:" = "In ricezione:";
+
+/* Voiceover refresh information label */
+"Refresh information." = "Aggiorna informazioni.";
+
+/* Registered user class */
+"Registered User" = "Utente Registrato";
+
+/* Rejoin alert button title */
+"Rejoin" = "Rientra";
+
+/* voiceover reload label */
+"Reload" = "Ricarica";
+
+/* Remove Away Status button title */
+"Remove Away Status" = "Rimuovi lo stato di Away";
+
+/* Rmeove Force Quiet button title */
+"Remove Force Quiet" = "Rimuovi il \"Force Quiet\"";
+
+/* Remove Voice button title */
+"Remove Voice" = "Disattiva mod. VOICE";
+
+/* Required connection setting placeholder
+   Required setting placeholder
+   Voiceover required label */
+"Required" = "Richiesto";
+
+/* Bouncer Server section footer title */
+"Requires a Mac running Colloquy with\nthe bouncer enabled in Preferences." = "Richiede un Mac + Colloquy e\nl'attivazione del bouncer su Preferenze.";
+
+/* Retry button title */
+"Retry" = "Riprova";
+
+/* Room Key (optional) text placeholder */
+"Room Key (optional)" = "Codice Canale";
+
+/* Room modes not supported alert title */
+"Room Modes Unsupported" = "Modalità Stanza Non Supportate";
+
+/* Voiceover room password label */
+"Room password." = "Codice del Canale.";
+
+/* Voiceover room to join label. */
+"Room to join." = "Canale nel quale entrare.";
+
+/* Rooms list view title
+   Rooms view title */
+"Rooms" = "Canali";
+
+/* Rooms user info label */
+"rooms" = "Canali";
+
+/* Rooms list view title with count */
+"Rooms (%@)" = "Canali (%@)";
+
+/* Voiceover rooms not available label */
+"Rooms not available." = "Canali non disponibili.";
+
+/* Voiceover rooms label */
+"Rooms: %@" = "Canali: %@";
+
+/* Voiceover rooms none label */
+"Rooms: None" = "Canali: Nessuno";
+
+/* Safari application name */
+"Safari" = "Safari";
+
+/* Voiceover save to instapaper label */
+"Save to Instapaper." = "Salva suInstapaper.";
+
+/* Search placeholder text */
+"Search" = "Ricerca";
+
+/* Voiceover search members label */
+"Search Members" = "Cerca fra i Membri";
+
+/* Singular second */
+"second" = "secondo";
+
+/* Plural seconds */
+"seconds" = "secondi";
+
+/* Send File button title */
+"Send File" = "Invia File";
+
+/* Voiceover send link to active chat label */
+"Send link to chat." = "Manda un Link alla chat.";
+
+/* Send Message button title */
+"Send Message" = "Invia Messaggio";
+
+/* Sending: label */
+"Sending:" = "Invio in corso:";
+
+/* Server user info label */
+"server" = "server";
+
+/* Voiceover server not available label */
+"Server not available." = "Server non disponibile.";
+
+/* Server operator class */
+"Server Operator" = "Operatore del Server";
+
+/* Server Port connection setting label */
+"Server Port" = "Porta tcp/ip del server";
+
+/* Voiceover server port label */
+"Server Port: %hu" = "Porta tcp/ip del server: %hu";
+
+/* Voiceover server label */
+"Server: %@" = "Server: %@";
+
+/* Servers view title */
+"Servers" = "Servers";
+
+/* services down error */
+"Services down on \"%@\"." = "Servizi fuori uso su %@.";
+
+/* Services won't let you change your nickname alert message */
+"Services won't let you change your nickname to \"%@\" on \"%@\"." = "Su %2$@ il server non ti permette di cambiare nick a %1$@.";
+
+/* Set Away Status& button title */
+"Set Away Status&" = "Imposta lo stato di Away&";
+
+/* Settings alert button title */
+"Settings" = "Impostazioni";
+
+/* Encoding name */
+"Simplified Chinese (EUC)" = "Simplified Chinese (EUC)";
+
+/* Encoding name */
+"Simplified Chinese (Mac OS)" = "Simplified Chinese (Mac OS)";
+
+/* Encoding name */
+"Simplified Chinese (Windows, DOS)" = "Simplified Chinese (Windows, DOS)";
+
+/* Stop remove confirmation button title
+   Voiceover stop label */
+"Stop" = "Stop";
+
+/* Stop Connection Timer button title */
+"Stop Connection Timer" = "Ferma il Timer Connessione";
+
+/* Twitter support was removed message */
+"Support was removed due to Twitter removing basic authentication support. Sorry for any inconvenience." = "Non è più supportato a causa del rinnovamento delle API Twitter per l'autenticazione. Siamo spiacenti per l'inconvenienza.";
+
+/* Take Photo button title */
+"Take Photo" = "Scatta una Foto";
+
+/* Encoding name */
+"Thai (ISO 8859-11)" = "Thai (ISO 8859-11)";
+
+/* Encoding name */
+"Thai (Mac OS)" = "Thai (Mac OS)";
+
+/* Encoding name */
+"Thai (Windows, DOS)" = "Thai (Windows, DOS)";
+
+/* Voiceover help is default room label */
+"The #help room is joined by default." = "Il canale #help viene sempre aperto di default.";
+
+/* user not on the server */
+"The command \"%@\" is not a valid command on the \"%@\" server." = "Il comando %1$@ non è riconosciuto dal server  %2$@ .";
+
+/* Authentication section footer title */
+"The nickname password is used to\nauthenticate with services (e.g. NickServ)." = "La password associata serve per\nautenticarsi con il server (i.e. NickServ).";
+
+/* room does not support modes error */
+"The room \"%@\" on \"%@\" does not support modes." = "Il canale %1$@ su %2$@ non supporta i cambiamenti delle modalità.";
+
+/* Room does not support modes alert message */
+"The room \"%@\" on \"%@\" doesn't support modes." = "Il canale %1$@ su %2$@ non supporta i cambiamenti delle modalità.";
+
+/* room encountered unknown error */
+"The room \"%@\" on \"%@\" encountered an unknown error, see server details for more information." = "Il canale %1$@ su %2$@ ha riportato un errore non identificato. Per maggiori info controlla i Dettagli Server.";
+
+/* Room is full alert message
+   room is full error */
+"The room \"%@\" on \"%@\" is full." = "Il canale %1$@ su %2$@ è pieno.";
+
+/* invite only room error */
+"The room \"%@\" on \"%@\" is invite only." = "Ti serve un invito per entrare nel canale %1$@ su %2$@.";
+
+/* Room is invite-only alert message */
+"The room \"%@\" on \"%@\" is invite-only." = "Ti serve un invito per entrare nel canale %1$@ su %2$@.";
+
+/* Room is full alert message */
+"The room \"%@\" on \"%@\" is password protected, and you didn't supply the correct password." = "Serve un codice per entrare su %1$@ - %2$@, e tu non hai fornito un codice corretto.";
+
+/* room password protected error */
+"The room \"%@\" on \"%@\" is password protected." = "Serve un codice per entrare su %1$@ - %2$@ .";
+
+/* user not on the server */
+"The user \"%@\" is no longer connected (or never was connected) to the \"%@\" server." = "L'utente %1$@ si è disconnesso dal server %2$@(o non si è proprio connesso).";
+
+/* Can't send message to user because they are disconnected alert message */
+"The user is not connected." = "L'utente non è connesso.";
+
+/* no such user error */
+"There is no user called \"%@\" on \"%@\"." = "Non c'è nessun utente con il nome di %1$@ su %2$@.";
+
+/* To: label */
+"To:" = "A:";
+
+/* Encoding name */
+"Traditional Chinese (Big 5 HKSCS)" = "Traditional Chinese (Big 5 HKSCS)";
+
+/* Encoding name */
+"Traditional Chinese (Big 5)" = "Traditional Chinese (Big 5)";
+
+/* Encoding name */
+"Traditional Chinese (EUC)" = "Traditional Chinese (EUC)";
+
+/* Encoding name */
+"Traditional Chinese (Mac OS)" = "Traditional Chinese (Mac OS)";
+
+/* Encoding name */
+"Traditional Chinese (Windows, DOS)" = "Traditional Chinese (Windows, DOS)";
+
+/* Twitter removed alert title */
+"Tweet Support Removed" = "I Tweets non Sono più Supportati";
+
+/* Unable to send URL because Instapaper is temporarily unavailable alert message */
+"Unable to send the URL because Instapaper is temporarily unavailable." = "Impossibile inviare l'URL: Instapaper non è raggiungibile al momento.";
+
+/* Unable to send the URL to Instapaper alert message */
+"Unable to send the URL to Instapaper." = "Impossibile inviare l'URL ad Instapaper.";
+
+/* Unable to send URL alert title */
+"Unable To Send URL" = "Impossibile inviare l'URL";
+
+/* Encoding name */
+"Unicode (UTF-8)" = "Unicode (UTF-8)";
+
+/* Update Connection List button label */
+"Update Connection List" = "Aggiorna la Lista Connessioni";
+
+/* Updating chat room list label */
+"Updating Chat Room List..." = "Aggiorna la Lista Canali&";
+
+/* Updating help topics label */
+"Updating Help Topics..." = "Sto aggiornando i Argomenti Guida&";
+
+/* Use SSL connection setting label */
+"Use SSL" = "Usa SSL";
+
+/* Voiceover use SSL off label */
+"Use SSL: Off" = "Usa SSL: Off";
+
+/* Voiceover use SSL on label */
+"Use SSL: On" = "Usa SSL: On";
+
+/* User Identity section title */
+"User Identity" = "Ident. dell'Utente";
+
+/* User Information button title
+   Voiceover user information label */
+"User Information" = "Informazioni sull'Utente";
+
+/* Voiceover user offline label */
+"User offline" = "Utente offline";
+
+/* Voiceover user offline label */
+"User offline." = "Utente offline.";
+
+/* Voiceover user to message label */
+"User to message." = "Utente da contattare.";
+
+/* Username user info label */
+"username" = "username";
+
+/* Username connection setting label
+   Username textfield placeholder */
+"Username" = "Nome Utente";
+
+/* Voiceover username not available label */
+"Username not available." = "Nome Utente non disponibile.";
+
+/* Voiceover username label */
+"Username: %@" = "Nome Utente: %@";
+
+/* Singular week */
+"week" = "settimana";
+
+/* Plural weeks */
+"weeks" = "settimane";
+
+/* Welcome back button label */
+"Welcome" = "Benvenuto";
+
+/* Welcome view title */
+"Welcome to Colloquy" = "Benvenuto su Colloquy";
+
+/* Encoding name */
+"Western (ASCII)" = "Western (ASCII)";
+
+/* Encoding name */
+"Western (ISO Latin 1)" = "Western (ISO Latin 1)";
+
+/* Encoding name */
+"Western (ISO Latin 3)" = "Western (ISO Latin 3)";
+
+/* Encoding name */
+"Western (ISO Latin 9)" = "Western (ISO Latin 9)";
+
+/* Encoding name */
+"Western (Mac OS Roman)" = "Western (Mac OS Roman)";
+
+/* Encoding name */
+"Western (Windows Latin 1)" = "Western (Windows Latin 1)";
+
+/* What's New view title */
+"What's New" = "Novità di Versione";
+
+/* What's New in Colloquy button label */
+"What's New in Colloquy" = "Novità dell'ultima versione di Colloquy";
+
+/* Singular year */
+"year" = "anno";
+
+/* Plural years */
+"years" = "anni";
+
+/* Banned from room alert message */
+"You are banned from \"%@\" on \"%@\"." = "Sei Bannato da %1$@ su %2$@.";
+
+/* banned from room error */
+"You are banned from the room \"%@\" on \"%@\"." = "Sei Bannato dal Canale %1$@ su %2$@.";
+
+/* Can't send message to user because server is connecting alert message */
+"You are currently connecting,\ntry sending again soon." = "Connessione in corso,\ninvia nuovamente il messaggio più tardi.";
+
+/* Can't send message to room because server is connecting alert message */
+"You are currently connecting,\nyou should join the room shortly." = "Connessione in corso,\ntra poco entrerai nel canale.";
+
+/* Can't send message to room because server is disconnected alert message
+   Can't send message to user because server is disconnected alert message */
+"You are currently disconnected,\nreconnect and try again." = "Non sei connesso al momento,\nconnettiti e riprova.";
+
+/* You are no longer quieted and can talk mode event message */
+"You are no longer quieted, thanks to %@." = "Non hai più la modalità QUIET, grazie a %@.";
+
+/* Can't send message to room because not a member alert message */
+"You are not a room member,\nrejoin and try again." = "Non sei all'interno del canale,\nentrarci e riprova.";
+
+/* You changed nicknames event message */
+"You are now known as %@." = "Hai cambiato il tuo nick in %@.";
+
+/* cant change nick because of chatroom error */
+"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again." = "Non puoi cambiare il tuo nick mentre sei dentro %1$@ su %2$@. Esci dal canale e riprova.";
+
+/* You changed the room topic event message */
+"You changed the topic to \"%@\"." = "Hai cambiato l'argomento in %@.";
+
+/* cant change nick too fast error */
+"You changed your nickname too fast on \"%@\", please wait and try again." = "Hai cambiato il tuo nick con troppa insistenza su %@, aspetta un momento e riprova.";
+
+/* You removed our room administrator mode event message */
+"You demoted yourself from administrator." = "Ti sei rimosso dalla carica di amministratore.";
+
+/* You removed our room half-operator mode event message */
+"You demoted yourself from half-operator." = "Hai disattivato la modalità Half-OP su di te.";
+
+/* You removed our room operator mode event message */
+"You demoted yourself from operator." = "Hai disattivato la modalità OP su di te.";
+
+/* You removed our room founder mode event message */
+"You demoted yourself from room founder." = "Ti sei rimosso dal gruppo dei fondatori del canale.";
+
+/* You gave ourself special voice status to talk in moderated rooms mode event message */
+"You gave yourself voice." = "Hai attivato la modalità VOICE su di te.";
+
+/* You no longer has special voice status and can't talk in moderated rooms mode event message */
+"You had voice removed by %@." = "%@ ha disattivato la modalità VOICE su di te.";
+
+/* Returned from being away event message */
+"You have returned from being away." = "Il tuo stato non è più \'Away\'.";
+
+/* Marked as away event message */
+"You have set yourself as away with the message \"%@\"." = "Il tuo stato è ora di \'Away\', con il messaggio: %@.";
+
+/* Joined room event message */
+"You joined the room." = "Sei entrato nel canale.";
+
+/* You kicked a user from the room event message */
+"You kicked %@ from the room." = "Hai mandato via %@ dal canale.";
+
+/* You kicked a user from the room with reason event message */
+"You kicked %@ from the room. (%@)" = "Hai mandato via %1$@ dal canale. (%2$@)";
+
+/* Left room event message */
+"You left the room." = "Sei uscito dal canale.";
+
+/* You are no longer quieted and can talk ourself mode event message */
+"You made yourself no longer quieted." = "Hai disattivato la modalità QUIET su di te.";
+
+/* No Instapaper username alert message */
+"You need to enter an Instapaper username in Colloquy's Settings." = "Devi inserire il Nome Utente per Instapaper nelle Impostazioni.";
+
+/* identify to join room error */
+"You need to identify with network services to join the room \"%@\" on \"%@\"." = "Devi essere registrato ed identificato con il server per entrare nel canale %1$@ su %2$@.";
+
+/* You gave ourself the room administrator mode event message */
+"You promoted yourself to Administrator." = "Ti sei promosso alla carica di Amministratore.";
+
+/* You gave ourself the room half-operator mode event message */
+"You promoted yourself to half-operator." = "Hai attivato la modalità Half-OP su di te.";
+
+/* You gave ourself the room operator mode event message */
+"You promoted yourself to operator." = "Hai attivato la modalità OP su di te.";
+
+/* You gave ourself the room founder mode event message */
+"You promoted yourself to room founder." = "Ti sei aggiunto nel gruppo dei fondatori del canale.";
+
+/* You quieted and can't talk ourself mode event message */
+"You quieted yourself." = "Hai attivato la modalità QUIET su di te.";
+
+/* You removed a ban in the room event message */
+"You removed the ban on %@." = "Hai rimosso il Ban da %@.";
+
+/* You removed our special voice status to talk in moderated rooms mode event message */
+"You removed voice from yourself." = "Hai disattivato la modalità VOICE su di te.";
+
+/* You set a ban in the room event message */
+"You set a ban on %@." = "Hai attivato un BAN su %@.";
+
+/* You are no longer a room administrator mode event message */
+"You were demoted from administrator by %@." = "%@ ti ha rimosso dalla carica di amministratore.";
+
+/* You are no longer a room half-operator mode event message */
+"You were demoted from half-operator by %@." = "%@ ha disattivato la modalità Half-OP su di te.";
+
+/* You are no longer a room operator mode event message */
+"You were demoted from operator by %@." = "%@ ha disattivato la modalità OP su di te.";
+
+/* You are no longer a room founder mode event message */
+"You were demoted from room founder by %@." = "%@ ti ha rimosso dal gruppo dei fondatori del canale.";
+
+/* You now have special voice status to talk in moderated rooms mode event message */
+"You were granted voice by %@." = "%@ ha attivato la modalità VOICE su di te.";
+
+/* Invited to join room alert message */
+"You were invited to \"%@\" by \"%@\" on \"%@\"." = "%2$@ ti ha invitato nel canale %1$@ su %3$@.";
+
+/* Kicked from room alert message */
+"You were kicked from \"%@\" by \"%@\" on \"%@\"." = "%2$@ ti ha mandato via dal canale %1$@ su %3$@.";
+
+/* You were kicked from the room event message */
+"You were kicked from the room by %@." = "%@ ti ha mandato via dal canale.";
+
+/* You were kicked from the room with reason event message */
+"You were kicked from the room by %@. (%@)" = "%1$@ ti ha mandato via dal canale. (%2$@)";
+
+/* You are now a room administrator mode event message */
+"You were promoted to administrator by %@." = "%@ ti ha promosso alla carica di amministratore.";
+
+/* You are now a room half-operator mode event message */
+"You were promoted to half-operator by %@." = "%@ ha attivato la modalità Half-OP su di te.";
+
+/* You are now a room operator mode event message */
+"You were promoted to operator by %@." = "%@ ha attivato la modalità OP su di te.";
+
+/* You are now a room founder mode event message */
+"You were promoted to room founder by %@." = "%@ ti ha aggiunto al gruppo dei fondatori del canale.";
+
+/* You are now quieted and can't talk mode event message */
+"You were quieted by %@." = "%@ ha attivato la modalità QUIET su di te.";
+
+/* Your device token is only shown locally and is: */
+"Your device token is only shown locally and is:" = "Il token del tuo dispositivo è disponibile solo localmente, ed è:";
+
+/* nickname changed by services error */
+"Your nickname is being changed by services on \"%@\" because it is registered and you did not supply the correct password to identify." = "Il nick che hai scelto è registrato. Se non fornisci la password per confermare di esserne il proprietario, il tuo nick verrà cambiato dai server %@.";
+
+/* Username was changed by server alert message */
+"Your nickname is being changed on \"%@\" because you didn't identify." = "Il tuo nick è stato cambiato dai server %@ perché non hai fornito la password.";
+
+/* YouTube application name */
+"YouTube" = "YouTube";

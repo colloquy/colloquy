@@ -170,6 +170,16 @@
 			<key>DefaultValue</key>
 			<string>Beta Tester</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Nanneddu</string>
+			<key>Key</key>
+			<string>CQCreditsTranslatorNanneddu</string>
+			<key>DefaultValue</key>
+			<string>Italian Translation</string>
+		</dict>
 	</array>
 </dict>
 </plist>
