@@ -95,7 +95,7 @@
 		1C79735C1029D0EF00649250 /* screencastSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C79735A1029D0EF00649250 /* screencastSelected.png */; };
 		1C7EBE6D0E01816C0018B0C8 /* CQPreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7EBE6C0E01816C0018B0C8 /* CQPreferencesTextCell.m */; };
 		1C82C1970D83CF1D009ABD9F /* CQChatTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1950D83CF1D009ABD9F /* CQChatTableCell.m */; };
-		1C82C1A30D83D133009ABD9F /* CQConnectionTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1A20D83D133009ABD9F /* CQConnectionTableCell.m */; };
+		1C82C1A30D83D133009ABD9F /* CQConnectionTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1A20D83D133009ABD9F /* CQConnectionTableHeaderView.m */; };
 		1C82C1AF0D83D30F009ABD9F /* CQConnectionsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1AD0D83D30F009ABD9F /* CQConnectionsController.m */; };
 		1C82C27D0D847EA4009ABD9F /* CQChatListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C27C0D847EA4009ABD9F /* CQChatListViewController.m */; };
 		1C82C52A0D850B1B009ABD9F /* CQConnectionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C5290D850B1B009ABD9F /* CQConnectionsViewController.m */; };
@@ -452,8 +452,8 @@
 		1C7EBE6C0E01816C0018B0C8 /* CQPreferencesTextCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesTextCell.m; sourceTree = "<group>"; };
 		1C82C1950D83CF1D009ABD9F /* CQChatTableCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatTableCell.m; sourceTree = "<group>"; };
 		1C82C1960D83CF1D009ABD9F /* CQChatTableCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatTableCell.h; sourceTree = "<group>"; };
-		1C82C1A10D83D133009ABD9F /* CQConnectionTableCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQConnectionTableCell.h; sourceTree = "<group>"; };
-		1C82C1A20D83D133009ABD9F /* CQConnectionTableCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQConnectionTableCell.m; sourceTree = "<group>"; };
+		1C82C1A10D83D133009ABD9F /* CQConnectionTableHeaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQConnectionTableHeaderView.h; sourceTree = "<group>"; };
+		1C82C1A20D83D133009ABD9F /* CQConnectionTableHeaderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQConnectionTableHeaderView.m; sourceTree = "<group>"; };
 		1C82C1AD0D83D30F009ABD9F /* CQConnectionsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQConnectionsController.m; sourceTree = "<group>"; };
 		1C82C1AE0D83D30F009ABD9F /* CQConnectionsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQConnectionsController.h; sourceTree = "<group>"; };
 		1C82C27B0D847EA4009ABD9F /* CQChatListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatListViewController.h; sourceTree = "<group>"; };
@@ -678,8 +678,8 @@
 		92823CEB168FE6CB000EC36E /* CQIgnoreRulesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQIgnoreRulesController.m; sourceTree = "<group>"; };
 		92823CED168FE6EC000EC36E /* KAIgnoreRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KAIgnoreRule.h; sourceTree = "<group>"; };
 		92823CEE168FE6EC000EC36E /* KAIgnoreRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KAIgnoreRule.m; sourceTree = "<group>"; };
-		92823D3316911677000EC36E /* CQConsoleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQConsoleController.h; path = Mobile/Controllers/CQConsoleController.h; sourceTree = "<group>"; };
-		92823D3416911677000EC36E /* CQConsoleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQConsoleController.m; path = Mobile/Controllers/CQConsoleController.m; sourceTree = "<group>"; };
+		92823D3316911677000EC36E /* CQConsoleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConsoleController.h; sourceTree = "<group>"; };
+		92823D3416911677000EC36E /* CQConsoleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConsoleController.m; sourceTree = "<group>"; };
 		92823D3D169123FD000EC36E /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDLog.h; path = Logging/DDLog.h; sourceTree = "<group>"; };
 		92823D3E169123FD000EC36E /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDLog.m; path = Logging/DDLog.m; sourceTree = "<group>"; };
 		92823D531691390E000EC36E /* CQProcessConsoleMessageOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQProcessConsoleMessageOperation.h; sourceTree = "<group>"; };
@@ -888,6 +888,8 @@
 				1C633C9A0FABD06C00BB5866 /* CQConnectionPushEditController.h */,
 				1C6E3D210ED1CEB6001822BD /* CQConnectionAdvancedEditController.m */,
 				1C6E3D200ED1CEB6001822BD /* CQConnectionAdvancedEditController.h */,
+				92823D3416911677000EC36E /* CQConsoleController.m */,
+				92823D3316911677000EC36E /* CQConsoleController.h */,
 				1C16F77C0FFF049F008D7BB3 /* CQBouncerCreationViewController.m */,
 				1C16F77B0FFF049F008D7BB3 /* CQBouncerCreationViewController.h */,
 				1C16F77E0FFF049F008D7BB3 /* CQBouncerEditViewController.m */,
@@ -950,8 +952,6 @@
 			children = (
 				1C0931010D80C6E900A2705D /* CQColloquyApplication.m */,
 				1C0931020D80C6E900A2705D /* CQColloquyApplication.h */,
-				92823D3416911677000EC36E /* CQConsoleController.m */,
-				92823D3316911677000EC36E /* CQConsoleController.h */,
 				1CA3DD5410287BF3008B1AD2 /* CQHelpTopicsViewController.m */,
 				1CA3DD5310287BF3008B1AD2 /* CQHelpTopicsViewController.h */,
 				1CA3DEBB10290B0F008B1AD2 /* CQHelpTopicViewController.m */,
@@ -1100,8 +1100,8 @@
 				1C82C1960D83CF1D009ABD9F /* CQChatTableCell.h */,
 				1CAE8BC70EE6111900CE1AF8 /* CQChatTranscriptView.m */,
 				1CAE8BC60EE6111900CE1AF8 /* CQChatTranscriptView.h */,
-				1C82C1A20D83D133009ABD9F /* CQConnectionTableCell.m */,
-				1C82C1A10D83D133009ABD9F /* CQConnectionTableCell.h */,
+				1C82C1A20D83D133009ABD9F /* CQConnectionTableHeaderView.m */,
+				1C82C1A10D83D133009ABD9F /* CQConnectionTableHeaderView.h */,
 				97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */,
 				97F85EBC0F2713CA008486E1 /* CQFileTransferTableCell.h */,
 				92B6670617F927E200BA3DD9 /* CQNavigationToolbar.m */,
@@ -1754,7 +1754,7 @@
 				1C0938960D813A6C00A2705D /* CQChatRoomController.m in Sources */,
 				1C82C1970D83CF1D009ABD9F /* CQChatTableCell.m in Sources */,
 				929BCAB917C0D2630046B081 /* CQSafariReadingListController.m in Sources */,
-				1C82C1A30D83D133009ABD9F /* CQConnectionTableCell.m in Sources */,
+				1C82C1A30D83D133009ABD9F /* CQConnectionTableHeaderView.m in Sources */,
 				1C82C1AF0D83D30F009ABD9F /* CQConnectionsController.m in Sources */,
 				1C82C27D0D847EA4009ABD9F /* CQChatListViewController.m in Sources */,
 				1C82C52A0D850B1B009ABD9F /* CQConnectionsViewController.m in Sources */,

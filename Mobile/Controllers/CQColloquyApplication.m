@@ -54,9 +54,9 @@ static NSMutableArray *highlightWords;
 	return _mainWindow;
 }
 
-- (UITabBarController *) tabBarController {
-	if ([_mainViewController isKindOfClass:[UITabBarController class]])
-		return (UITabBarController *)_mainViewController;
+- (UINavigationController *) navigationController {
+	if ([_mainViewController isKindOfClass:[UINavigationController class]])
+		return (UINavigationController *)_mainViewController;
 	return nil;
 }
 
@@ -271,7 +271,7 @@ static NSMutableArray *highlightWords;
 			[UIView setAnimationsEnabled:NO];
 
 			if (![[UIDevice currentDevice] isPadModel])
-				self.tabBarController.selectedViewController = [CQChatController defaultController].chatNavigationController;;
+				[self.navigationController popToRootViewControllerAnimated:NO];
 
 			if (roomName.length) {
 				if ([action isEqualToString:@"j"])
@@ -301,7 +301,7 @@ static NSMutableArray *highlightWords;
 	_connectionsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connections", @"Connections button title") style:UIBarButtonItemStyleBordered target:self action:@selector(toggleConnections:)];
 
 	CQChatPresentationController *presentationController = [CQChatController defaultController].chatPresentationController;
-	[presentationController setStandardToolbarItems:@[_connectionsBarButtonItem] animated:NO];
+	[presentationController setStandardToolbarItems:@[] animated:NO];
 
 	splitViewController.viewControllers = @[[CQChatController defaultController].chatNavigationController, presentationController];
 	splitViewController.delegate = self;
@@ -328,16 +328,8 @@ static NSMutableArray *highlightWords;
 	if ([[UIDevice currentDevice] isPadModel]) {
 		[self reloadSplitViewController];
 	} else {
-		UITabBarController *tabBarController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
-		tabBarController.delegate = self;
-
-		NSArray *viewControllers = @[[CQConnectionsController defaultController].connectionsNavigationController, [CQChatController defaultController].chatNavigationController];
-		tabBarController.viewControllers = viewControllers;
-
-		_mainViewController = tabBarController;
+		_mainViewController = [CQChatController defaultController].chatNavigationController;
 		_mainWindow.rootViewController = _mainViewController;
-
-		tabBarController.selectedIndex = [[CQSettingsController settingsController] integerForKey:@"CQSelectedTabIndex"];
 	}
 
 	[_mainWindow makeKeyAndVisible];
@@ -427,10 +419,8 @@ static NSMutableArray *highlightWords;
 	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;
 	NSMutableArray *items = [chatPresentationController.standardToolbarItems mutableCopy];
 
-	if (items[0] == barButtonItem) {
-
+	if (items[0] == barButtonItem)
 		return;
-	}
 
 	if (viewController == [CQChatController defaultController].chatNavigationController) {
 		_colloquiesPopoverController = popoverController;
@@ -507,12 +497,6 @@ static NSMutableArray *highlightWords;
 			_visibleActionSheet = sheet;
 		}
 
-		return;
-	}
-
-	UITabBar *tabBar = self.tabBarController.tabBar;
-	if (tabBar && tabBar.window && !self.modalViewController) {
-		[sheet showFromTabBar:tabBar];
 		return;
 	}
 
@@ -612,16 +596,16 @@ static NSMutableArray *highlightWords;
 
 - (void) showConnections:(id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
-		if (!_connectionsPopoverController)
-			_connectionsPopoverController = [[UIPopoverController alloc] initWithContentViewController:[CQConnectionsController defaultController].connectionsNavigationController];
+//		if (!_connectionsPopoverController)
+//			_connectionsPopoverController = [[UIPopoverController alloc] initWithContentViewController:[CQConnectionsController defaultController].connectionsNavigationController];
 
-		if (!_connectionsPopoverController.popoverVisible) {
-			[self dismissPopoversAnimated:NO];
-			[_connectionsPopoverController presentPopoverFromBarButtonItem:_connectionsBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-		}
+//		if (!_connectionsPopoverController.popoverVisible) {
+//			[self dismissPopoversAnimated:NO];
+//			[_connectionsPopoverController presentPopoverFromBarButtonItem:_connectionsBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+//		}
 	} else {
 		[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
-		self.tabBarController.selectedViewController = [CQConnectionsController defaultController].connectionsNavigationController;
+		[self.navigationController popToRootViewControllerAnimated:NO];
 	}
 }
 
@@ -642,9 +626,7 @@ static NSMutableArray *highlightWords;
 			[_colloquiesPopoverController presentPopoverFromBarButtonItem:_colloquiesBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 		}
 	} else {
-		self.tabBarController.selectedViewController = [CQChatController defaultController].chatNavigationController;
-		if (hidingTopViewController)
-			[[CQChatController defaultController].chatNavigationController popToRootViewControllerAnimated:YES];
+		[self.navigationController popToRootViewControllerAnimated:YES];
 	}
 }
 
@@ -733,12 +715,6 @@ static NSMutableArray *highlightWords;
 	if (alertView.tag != BrowserAlertTag || alertView.cancelButtonIndex == buttonIndex)
 		return;
 	[super openURL:[alertView associatedObjectForKey:@"userInfo"]];
-}
-
-#pragma mark -
-
-- (void) tabBarController:(UITabBarController *) tabBarController didSelectViewController:(UIViewController *) viewController {
-	[[CQSettingsController settingsController] setInteger:tabBarController.selectedIndex forKey:@"CQSelectedTabIndex"];
 }
 
 #pragma mark -

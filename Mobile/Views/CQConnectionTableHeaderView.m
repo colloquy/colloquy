@@ -1,13 +1,15 @@
-#import "CQConnectionTableCell.h"
+#import "CQConnectionTableHeaderView.h"
 
 #import "CQConnectionsController.h"
 
 #import <ChatCore/MVChatConnection.h>
 
-@implementation CQConnectionTableCell
-- (id) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
-	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
+@implementation CQConnectionTableHeaderView
+- (id) initWithReuseIdentifier:(NSString *) reuseIdentifier {
+	if (!(self = [super initWithReuseIdentifier:reuseIdentifier]))
 		return nil;
+
+	self.tintColor = [UIApplication sharedApplication].keyWindow.tintColor;
 
 	_iconImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
 	_badgeImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
@@ -43,6 +45,9 @@
 #pragma mark -
 
 - (void) takeValuesFromConnection:(MVChatConnection *) connection {
+	if (!connection)
+		return;
+
 	self.server = connection.displayName;
 	self.nickname = connection.nickname;
 
@@ -82,6 +87,7 @@
 }
 
 - (void) setServer:(NSString *) server {
+	self.textLabel.text = nil;
 	_serverLabel.text = server;
 
 	self.accessibilityLabel = server;
@@ -158,14 +164,15 @@
 
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
 	[UIView animateWithDuration:(animated ? .3 : .0) delay:0. options:(editing ? UIViewAnimationOptionCurveEaseIn : UIViewAnimationOptionCurveEaseOut) animations:^{
-		[super setEditing:editing animated:animated];
-
 		_timeLabel.alpha = editing ? 0. : 1.;
 	} completion:NULL];
 }
 
 - (void) layoutSubviews {
 	[super layoutSubviews];
+
+	[self.textLabel removeFromSuperview];
+	[self.detailTextLabel removeFromSuperview];
 
 #define ICON_LEFT_MARGIN 10.
 #define ICON_RIGHT_MARGIN 10.
@@ -193,8 +200,7 @@
 		frame.origin.x = self.bounds.size.width - contentRect.origin.x;
 	else if (self.editing)
 		frame.origin.x = contentRect.size.width - frame.size.width;
-	else
-		frame.origin.x = contentRect.size.width - frame.size.width - TEXT_RIGHT_MARGIN;
+	else frame.origin.x = contentRect.size.width - frame.size.width - TEXT_RIGHT_MARGIN;
 
 	_timeLabel.frame = frame;
 

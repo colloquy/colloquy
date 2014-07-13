@@ -12,6 +12,8 @@
 	UIEdgeInsets _previousContentInset;
 	BOOL _active;
 	BOOL _needsUpdate;
+	NSTimer *_connectTimeUpdateTimer;
+	NSMapTable *_headerViewsForConnections;
 }
 @property (nonatomic) BOOL active;
 

@@ -8,7 +8,7 @@ typedef enum {
 	CQConnectionTableCellConnectedStatus
 } CQConnectionTableCellStatus;
 
-@interface CQConnectionTableCell : UITableViewCell {
+@interface CQConnectionTableHeaderView : UITableViewHeaderFooterView {
 	@protected
 	UIImageView *_iconImageView;
 	UIImageView *_badgeImageView;
@@ -25,4 +25,10 @@ typedef enum {
 @property (nonatomic, copy) NSString *nickname;
 @property (nonatomic, copy) NSDate *connectDate;
 @property (nonatomic) CQConnectionTableCellStatus status;
+
+@property (nonatomic) BOOL editing;
+- (void) setEditing:(BOOL) editing animated:(BOOL) animated;
+
+@property (nonatomic) BOOL showingDeleteConfirmation;
+@property (nonatomic) BOOL showsReorderControl;
 @end

@@ -5,7 +5,7 @@
 #import "CQAwayStatusController.h"
 #import "CQBouncerSettings.h"
 #import "CQChatController.h"
-#import "CQConnectionTableCell.h"
+#import "CQConnectionTableHeaderView.h"
 #import "CQConnectionsController.h"
 #import "CQConnectionsNavigationController.h"
 
@@ -52,8 +52,8 @@
 
 - (void) _updateConnectTimes {
 	NSArray *visibleCells = [self.tableView visibleCells];
-	for (CQConnectionTableCell *cell in visibleCells)
-		if ([cell isKindOfClass:[CQConnectionTableCell class]])
+	for (CQConnectionTableHeaderView *cell in visibleCells)
+		if ([cell isKindOfClass:[CQConnectionTableHeaderView class]])
 			[cell updateConnectTime];
 }
 
@@ -61,7 +61,7 @@
 	NSIndexPath *indexPath = [self indexPathForConnection:connection];
 	if (!indexPath)
 		return;
-	CQConnectionTableCell *cell = (CQConnectionTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+	CQConnectionTableHeaderView *cell = (CQConnectionTableHeaderView *)[self.tableView cellForRowAtIndexPath:indexPath];
 	[cell takeValuesFromConnection:connection];
 }
 
@@ -543,13 +543,14 @@
 
 	MVChatConnection *connection = [self connectionAtIndexPath:indexPath];
 
-	CQConnectionTableCell *cell = [CQConnectionTableCell reusableTableViewCellInTableView:tableView];
+//	CQConnectionTableCell *cell = [CQConnectionTableCell reusableTableViewCellInTableView:tableView];
 
-	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+//	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
-	[cell takeValuesFromConnection:connection];
+//	[cell takeValuesFromConnection:connection];
 
-	return cell;
+//	return cell;
+	return nil;
 }
 
 - (CGFloat) tableView:(UITableView *) tableView heightForHeaderInSection:(NSInteger) section {
