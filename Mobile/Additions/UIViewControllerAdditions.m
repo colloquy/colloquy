@@ -9,13 +9,13 @@
 	if (![[UIDevice currentDevice] isPadModel])
 		return;
 
-	CGFloat width = self.contentSizeForViewInPopover.width;
+	CGFloat width = self.preferredContentSize.width;
 
 	NSUInteger numberOfRows = [tableView numberOfRows];
 	NSUInteger numberOfSections = [tableView numberOfSections];
 
 	if (!numberOfRows && numberOfSections == 1) {
-		self.contentSizeForViewInPopover = CGSizeMake(width, CQMinimumPopoverHeight);
+		self.preferredContentSize = CGSizeMake(width, CQMinimumPopoverHeight);
 		return;
 	}
 
@@ -29,7 +29,7 @@
 			height = CQMaximumLandscapePopoverHeight;
 	} else height = CQMinimumPopoverHeight;
 
-	self.contentSizeForViewInPopover = CGSizeMake(width, height);
+	self.preferredContentSize = CGSizeMake(width, height);
 }
 
 - (BOOL) shouldAutorotate {

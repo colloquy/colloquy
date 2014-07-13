@@ -541,7 +541,7 @@
 		return cell;
 	}
 
-	MVChatConnection *connection = [self connectionAtIndexPath:indexPath];
+//	MVChatConnection *connection = [self connectionAtIndexPath:indexPath];
 
 //	CQConnectionTableCell *cell = [CQConnectionTableCell reusableTableViewCellInTableView:tableView];
 

@@ -337,7 +337,7 @@ static BOOL hardwareKeyboard;
 
 	NSArray *completions = _completions;
 	NSString *prefixText = [text substringToIndex:_completionRange.location];
-	CGSize textSize = [prefixText sizeWithFont:_inputView.font];
+	CGSize textSize = [prefixText sizeWithAttributes:@{ NSFontAttributeName: _inputView.font }];
 
 	CGRect inputFrame = [self convertRect:_inputView.frame toView:self.superview];
 
@@ -523,7 +523,7 @@ retry:
 		if (!wordRange.length)
 			_disableCompletionUntilNextWord = NO;
 
-		NSString *word = [text substringWithRange:wordRange];
+		NSString *word = [[text substringWithRange:wordRange] copy];
 		NSArray *completions = nil;
 		BOOL canShowCompletionForCurrentWord = textView.text.length;
 		if (canShowCompletionForCurrentWord) {
@@ -537,7 +537,9 @@ retry:
 		} else canShowCompletionForCurrentWord = YES; // if we don't have any text, we can maybe show completions although we probably won't (not enough context yet)
 
 		if (_autocomplete && canShowCompletionForCurrentWord && !_disableCompletionUntilNextWord && word.length && ![self _hasMarkedText] && [_delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
-			completions = [_delegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
+			@synchronized(_delegate) {
+				completions = [_delegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
+			}
 			if (completions.count)
 				[self showCompletions:completions forText:text inRange:wordRange];
 			 else [self hideCompletions];
@@ -566,8 +568,16 @@ retry:
 
 - (void) textViewDidChange:(UITextView *) textView {
 	if (textView.hasText && textView.text.length) {
-		CGSize lineSize = [@"a" sizeWithFont:textView.font];
-		CGSize suggestedTextSize = [textView.text sizeWithFont:textView.font constrainedToSize:CGSizeMake((textView.contentSize.width - 15.), 90000) lineBreakMode:NSLineBreakByWordWrapping];
+		CGSize lineSize = [@"a" sizeWithAttributes:@{ NSFontAttributeName: textView.font }];
+
+		NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+		paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+
+		CGSize suggestedTextSize = [textView.text boundingRectWithSize:CGSizeMake((textView.contentSize.width - 15.), 90000) options:(NSStringDrawingOptions)NSStringDrawingUsesLineFragmentOrigin attributes:@{
+			NSFontAttributeName: textView.font,
+			NSParagraphStyleAttributeName: paragraphStyle
+		} context:nil].size;
+
 		CGFloat numberOfLines = roundf(suggestedTextSize.height / lineSize.height);
 		CGFloat contentHeight = fminf((self._inactiveLineHeight + ((numberOfLines - 1) * self._lineHeight)), self._maxLineHeight);
 
@@ -765,7 +775,9 @@ retry:
 #define CQMaxLineHeight 84.
 
 - (CGFloat) _lineHeight {
-	return fmaxf(CQLineHeight, [@"Jy" sizeWithFont:_inputView.font].height);
+	if (!_inputView.font)
+		return CQLineHeight;
+	return fmaxf(CQLineHeight, [@"Jy" sizeWithAttributes:@{ NSFontAttributeName: _inputView.font }].height);
 }
 
 - (CGFloat) _inactiveLineHeight {

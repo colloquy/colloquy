@@ -49,7 +49,6 @@ enum {
 
 	_segmentedControl = [[UISegmentedControl alloc] initWithItems:items];
 	_segmentedControl.backgroundColor = [UIColor clearColor];
-	_segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
 	_segmentedControl.selectedSegmentIndex = CQChatRoomInfoModes;
 
 	[_segmentedControl addTarget:self action:@selector(_segmentSelected:) forControlEvents:UIControlEventValueChanged];

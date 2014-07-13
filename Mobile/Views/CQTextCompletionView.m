@@ -86,7 +86,7 @@
 		else CGContextSetRGBFillColor(ctx, (25. / 255.), (121. / 255.), (227. / 255.), 1.);
 
 		completion = [completion stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-		[completion drawAtPoint:textPoint withFont:font];
+		[completion drawAtPoint:textPoint withAttributes:@{ NSFontAttributeName: font }];
 
 		offset += textSize.width + (CompletionMargin * 2.);
 	}
@@ -119,12 +119,12 @@
 
 	font = [UIFont systemFontOfSize:18.];
 
-	CGSize textSize = [@"\u00d7" sizeWithFont:font];
+	CGSize textSize = [@"\u00d7" sizeWithAttributes:@{ NSFontAttributeName: font }];
 	CGPoint textPoint = CGPointZero;
 	textPoint.x = round(enclosingRect.origin.x + offset + 2.);
 	textPoint.y = round(enclosingRect.origin.y + (enclosingRect.size.height / 2.) - (textSize.height / 2.) - 1.);
 
-	[@"\u00d7" drawAtPoint:textPoint withFont:font];
+	[@"\u00d7" drawAtPoint:textPoint withAttributes:@{ NSFontAttributeName: font }];
 }
 
 
@@ -142,7 +142,7 @@
 			continue;
 
 		objects[i] = completion;
-		_completionTextSizes[i] = [[completion stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] sizeWithFont:font];
+		_completionTextSizes[i] = [[completion stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] sizeWithAttributes:@{ NSFontAttributeName: font }];
 
 		[existingCompletions addObject:completion];
 
