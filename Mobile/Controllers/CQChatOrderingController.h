@@ -39,4 +39,7 @@
 
 - (id <CQChatViewController>) chatViewControllerPreceedingChatController:(id <CQChatViewController>) chatViewController requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight;
 - (id <CQChatViewController>) chatViewControllerFollowingChatController:(id <CQChatViewController>) chatViewController requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight;
+
+- (id) connectionAtIndex:(NSInteger) index;
+- (NSUInteger) sectionIndexForConnection:(id) connection;
 @end

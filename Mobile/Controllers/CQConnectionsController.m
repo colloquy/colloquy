@@ -225,7 +225,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	if (alertView.tag == CannotConnectToBouncerTag) {
 		CQBouncerSettings *settings = [alertView associatedObjectForKey:@"userInfo"];
-		[_connectionsNavigationController editBouncer:settings];
+//		[_connectionsNavigationController editBouncer:settings];
 		[[CQColloquyApplication sharedApplication] showConnections:nil];
 		return;
 	}

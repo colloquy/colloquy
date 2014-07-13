@@ -219,6 +219,19 @@
 	_nicknameLabel.frame = frame;
 }
 
+- (void) touchesBegan:(NSSet *) touches withEvent:(UIEvent *) event {
+
+}
+
+- (void) touchesCancelled:(NSSet *) touches withEvent:(UIEvent *) event {
+
+}
+
+- (void) touchesEnded:(NSSet *) touches withEvent:(UIEvent *) event {
+	if (_selectedConnectionHeaderView)
+		_selectedConnectionHeaderView();
+}
+
 - (void) tintColorDidChange {
 	_timeLabel.textColor = self.tintColor;
 }

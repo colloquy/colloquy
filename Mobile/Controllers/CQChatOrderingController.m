@@ -365,4 +365,34 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	return [self _enumerateChatViewControllersFromChatController:chatViewController withOption:0 requiringActivity:requiringActivity requiringHighlight:requiringHighlight];
 }
+
+#pragma mark -
+
+- (NSArray *) orderedConnections {
+	NSArray *bouncers = [CQConnectionsController defaultController].bouncers;
+	NSArray *connections = [CQConnectionsController defaultController].directConnections;
+
+	NSMutableArray *allConnections = [bouncers mutableCopy];
+	[allConnections addObjectsFromArray:connections];
+	return [allConnections copy];
+}
+
+- (id) connectionAtIndex:(NSInteger) index {
+	@synchronized([CQConnectionsController defaultController]) {
+		return self.orderedConnections[index];
+	}
+}
+
+- (NSUInteger) sectionIndexForConnection:(id) connection {
+	__block NSUInteger sectionIndex = 0;
+	[self.orderedConnections enumerateObjectsUsingBlock:^(id object, NSUInteger objectIndex, BOOL *stop) {
+		if (object == connection) {
+			sectionIndex = objectIndex;
+			*stop = YES;
+		}
+	}];
+
+	return sectionIndex;
+}
+
 @end

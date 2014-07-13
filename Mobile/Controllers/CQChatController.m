@@ -323,17 +323,20 @@ static CQSoundController *fileTransferSound;
 		return;
 	}
 
+	if (buttonIndex == 0) {
+		[[CQConnectionsController defaultController] showNewConnectionPrompt:[actionSheet associatedObjectForKey:@"userInfo"]];
+		return;
+	}
+
 	if (actionSheet.tag == NewChatActionSheetTag) {
 		CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
 
-		if (buttonIndex == 0)
+		if (buttonIndex == 1)
 			creationViewController.roomTarget = YES;
 
 		[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
 	} else if (actionSheet.tag == NewConnectionActionSheetTag) {
-		if (buttonIndex == 0) {
-			[[CQConnectionsController defaultController] showNewConnectionPrompt:[actionSheet associatedObjectForKey:@"userInfo"]];
-		} else if (buttonIndex == 1) {
+		if (buttonIndex == 1) {
 			[self joinSupportRoom];
 		}
 #if ENABLE(FILE_TRANSFERS)
@@ -480,6 +483,8 @@ static CQSoundController *fileTransferSound;
 
 	[sheet associateObject:sender forKey:@"userInfo"];
 
+	[sheet addButtonWithTitle:NSLocalizedString(@"Add New Connection", @"Add New Connection button title")];
+
 	if ([CQConnectionsController defaultController].connections.count) {
 		sheet.tag = NewChatActionSheetTag;
 
@@ -488,7 +493,6 @@ static CQSoundController *fileTransferSound;
 	} else {
 		sheet.tag = NewConnectionActionSheetTag;
 
-		[sheet addButtonWithTitle:NSLocalizedString(@"Add New Connection", @"Add New Connection button title")];
 		[sheet addButtonWithTitle:NSLocalizedString(@"Join Support Room", @"Join Support Room button title")];
 	}
 

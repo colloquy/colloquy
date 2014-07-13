@@ -31,4 +31,6 @@ typedef enum {
 
 @property (nonatomic) BOOL showingDeleteConfirmation;
 @property (nonatomic) BOOL showsReorderControl;
+
+@property (atomic, copy) void (^selectedConnectionHeaderView)();
 @end

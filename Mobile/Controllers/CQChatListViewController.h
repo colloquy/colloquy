@@ -6,14 +6,17 @@
 @interface CQChatListViewController : CQTableViewController <UIActionSheetDelegate, UIDocumentInteractionControllerDelegate> {
 	@protected
 	UILongPressGestureRecognizer *_longPressGestureRecognizer;
+	UIActionSheet *_currentConnectionActionSheet;
 	UIActionSheet *_currentChatViewActionSheet;
 	id <UIActionSheetDelegate> _currentChatViewActionSheetDelegate;
 	id <CQChatViewController> _previousSelectedChatViewController;
 	UIEdgeInsets _previousContentInset;
 	BOOL _active;
 	BOOL _needsUpdate;
+	BOOL _ignoreNotifications;
 	NSTimer *_connectTimeUpdateTimer;
 	NSMapTable *_headerViewsForConnections;
+	NSMapTable *_connectionsForHeaderViews;
 }
 @property (nonatomic) BOOL active;
 
