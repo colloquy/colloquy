@@ -17,6 +17,7 @@ typedef enum {
 	UILabel *_timeLabel;
 	NSDate *_connectDate;
 	CQConnectionTableCellStatus _status;
+	UIButton *_disclosureButton;
 }
 - (void) takeValuesFromConnection:(MVChatConnection *) connection;
 - (void) updateConnectTime;

@@ -16,12 +16,17 @@
 	_serverLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	_nicknameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	_timeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+	_disclosureButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
 
 	[self.contentView addSubview:_iconImageView];
 	[self.contentView addSubview:_badgeImageView];
 	[self.contentView addSubview:_timeLabel];
 	[self.contentView addSubview:_nicknameLabel];
 	[self.contentView addSubview:_serverLabel];
+	[self.contentView addSubview:_disclosureButton];
+
+	_disclosureButton.alpha = 0.;
+	[_disclosureButton addTarget:self action:@selector(_disclosureButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 
 	_iconImageView.image = [UIImage imageNamed:@"server.png"];
 
@@ -165,7 +170,10 @@
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
 	[UIView animateWithDuration:(animated ? .3 : .0) delay:0. options:(editing ? UIViewAnimationOptionCurveEaseIn : UIViewAnimationOptionCurveEaseOut) animations:^{
 		_timeLabel.alpha = editing ? 0. : 1.;
+		_disclosureButton.alpha = editing ? 1. : 0.;
 	} completion:NULL];
+
+	self.editing = editing;
 }
 
 - (void) layoutSubviews {
@@ -198,8 +206,6 @@
 
 	if (self.showingDeleteConfirmation || self.showsReorderControl)
 		frame.origin.x = self.bounds.size.width - contentRect.origin.x;
-	else if (self.editing)
-		frame.origin.x = contentRect.size.width - frame.size.width;
 	else frame.origin.x = contentRect.size.width - frame.size.width - TEXT_RIGHT_MARGIN;
 
 	_timeLabel.frame = frame;
@@ -217,22 +223,43 @@
 	frame.origin.y = round(contentRect.size.height / 2.);
 	frame.size.width = _timeLabel.frame.origin.x - frame.origin.x - TEXT_RIGHT_MARGIN;
 	_nicknameLabel.frame = frame;
+
+	[_disclosureButton sizeToFit];
+	frame = _disclosureButton.frame;
+	frame.origin.x = contentRect.size.width - frame.size.width - TEXT_RIGHT_MARGIN;
+	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
+	_disclosureButton.frame = frame;
 }
 
 - (void) touchesBegan:(NSSet *) touches withEvent:(UIEvent *) event {
+	[super touchesBegan:touches withEvent:event];
 
+	// background: darken
 }
 
 - (void) touchesCancelled:(NSSet *) touches withEvent:(UIEvent *) event {
+	[super touchesCancelled:touches withEvent:event];
 
+	// background: default
 }
 
 - (void) touchesEnded:(NSSet *) touches withEvent:(UIEvent *) event {
+	[super touchesEnded:touches withEvent:event];
+
+	// background: default
+
 	if (_selectedConnectionHeaderView)
 		_selectedConnectionHeaderView();
 }
 
 - (void) tintColorDidChange {
 	_timeLabel.textColor = self.tintColor;
+}
+
+#pragma mark -
+
+- (void) _disclosureButtonPressed:(id) sender {
+	if (_selectedConnectionHeaderView)
+		_selectedConnectionHeaderView();
 }
 @end

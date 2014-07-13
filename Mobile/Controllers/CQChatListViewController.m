@@ -729,7 +729,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	// reload data, as the unread counts may be inaccurate due to swiping to change rooms
 	[self.tableView reloadData];
 
-
 	if ([self.navigationController.navigationBar respondsToSelector:@selector(setBarTintColor:)])
 		self.navigationController.navigationBar.barTintColor = nil;
 }
@@ -1157,6 +1156,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		CQConnectionTableHeaderView *tableCell = [_headerViewsForConnections objectForKey:connection];
 		if (tableCell == nil) {
 			tableCell = [[CQConnectionTableHeaderView alloc] initWithReuseIdentifier:nil];
+			tableCell.tintColor = [CQColloquyApplication sharedApplication].window.tintColor;
 
 			__weak __typeof__((self)) weakSelf = self;
 			__weak __typeof__((tableView)) weakTableView = tableView;
