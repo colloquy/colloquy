@@ -1352,7 +1352,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 	static NSCharacterSet *escapedCharacters = nil;
 	if (!escapedCharacters)
-		escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
+		escapedCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"] retain];
 
 	for (const struct EmojiEmoticonPair *entry = emoticonToEmojiList; entry && entry->emoticon; ++entry) {
 		NSString *searchEmoticon = objc_unretainedObject(entry->emoticon);
