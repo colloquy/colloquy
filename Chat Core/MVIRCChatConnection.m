@@ -2558,9 +2558,17 @@ end:
 		id target = room;
 		if( !target ) target = targetUser;
 
-		NSMutableData *msgData = [parameters objectAtIndex:1];
+		id msgData = [parameters objectAtIndex:1];
+		if (![msgData respondsToSelector:@selector(bytes)])
+		{
+			if ( ![msgData respondsToSelector:@selector(dataUsingEncoding:)] ) {
+				NSLog(@"Dropping message because we do not know how to handle PRIVMSG parameters: %@", parameters);
+				return;
+			}
+			msgData = [msgData dataUsingEncoding:self.encoding];
+		}
 		const char *bytes = (const char *)[msgData bytes];
-		BOOL ctcp = ( *bytes == '\001' && msgData.length > 2 );
+		BOOL ctcp = ( *bytes == '\001' && [msgData length] > 2 );
 
 		if( ctcp ) {
 			[self _handleCTCP:msgData asRequest:YES fromSender:sender toTarget:target forRoom:room];
