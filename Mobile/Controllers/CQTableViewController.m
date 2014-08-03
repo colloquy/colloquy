@@ -17,6 +17,7 @@
 #pragma mark -
 
 - (void) viewDidLoad {
+	[super viewDidLoad];
 	[self.tableView performSelectorOnMainThread:@selector(hideEmptyCells) withObject:nil waitUntilDone:YES];
 }
 

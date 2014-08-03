@@ -935,7 +935,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (BOOL) documentInteractionController:(UIDocumentInteractionController *) controller canPerformAction:(SEL) action {
-	if (action == @selector(print:) && NSClassFromString(@"UIPrintInteractionController") && [UIPrintInteractionController canPrintURL:controller.URL])
+	if (action == @selector(print:) && [UIPrintInteractionController canPrintURL:controller.URL])
 		return YES;
 
 	return NO;

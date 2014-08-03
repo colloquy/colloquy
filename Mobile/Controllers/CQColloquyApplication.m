@@ -13,6 +13,7 @@
 #import "CQWelcomeController.h"
 
 #import "UIApplicationAdditions.h"
+#import "UIWindowAdditions.h"
 
 #import <HockeySDK/HockeySDK.h>
 #import "RegexKitLite.h"
@@ -54,15 +55,21 @@ static NSMutableArray *highlightWords;
 	return _mainWindow;
 }
 
-- (UINavigationController *) navigationController {
-	if ([_mainViewController isKindOfClass:[UINavigationController class]])
-		return (UINavigationController *)_mainViewController;
-	return nil;
-}
-
+<<<<<<< .mine
 - (UISplitViewController *) splitViewController {
 	if ([_mainViewController isKindOfClass:[UISplitViewController class]])
 		return (UISplitViewController *)_mainViewController;
+	return nil;
+}
+
+- (UITabBarController *) tabBarController {
+	if ([_mainViewController isKindOfClass:[UITabBarController class]])
+		return (UITabBarController *)_mainViewController;
+=======
+- (UINavigationController *) navigationController {
+	if ([_mainViewController isKindOfClass:[UINavigationController class]])
+		return (UINavigationController *)_mainViewController;
+>>>>>>> .r6026
 	return nil;
 }
 
@@ -297,6 +304,11 @@ static NSMutableArray *highlightWords;
 	_colloquiesBarButtonItem = nil;
 
 	UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
+	CGFloat previousPrimaryColumnWidth = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQPrimaryColumnWidth"];
+	previousPrimaryColumnWidth = MIN(previousPrimaryColumnWidth, (_mainWindow.orientedBounds.size.width / 2.0));
+
+	if (previousPrimaryColumnWidth > 0.)
+		[splitViewController performPrivateSelector:@"setMasterColumnWidth:" withFloat:previousPrimaryColumnWidth];
 
 	_connectionsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connections", @"Connections button title") style:UIBarButtonItemStyleBordered target:self action:@selector(toggleConnections:)];
 
@@ -320,12 +332,16 @@ static NSMutableArray *highlightWords;
 	[CQChatController defaultController];
 
 	_mainWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+
 	if ([_mainWindow respondsToSelector:@selector(setTintColor:)])
 		_mainWindow.tintColor = [UIColor colorWithRed:0.427 green:0.086 blue:0.396 alpha:1];
 
 	[self userDefaultsChanged];
 
 	if ([[UIDevice currentDevice] isPadModel]) {
+		UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognizerPanned:)];
+		[_mainWindow addGestureRecognizer:panGestureRecognizer];
+
 		[self reloadSplitViewController];
 	} else {
 		_mainViewController = [CQChatController defaultController].chatNavigationController;
@@ -419,7 +435,11 @@ static NSMutableArray *highlightWords;
 	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;
 	NSMutableArray *items = [chatPresentationController.standardToolbarItems mutableCopy];
 
+<<<<<<< .mine
+	if (items[0] == barButtonItem) {
+=======
 	if (items[0] == barButtonItem)
+>>>>>>> .r6026
 		return;
 
 	if (viewController == [CQChatController defaultController].chatNavigationController) {
@@ -729,6 +749,38 @@ static NSMutableArray *highlightWords;
 	if ([style isEqualToString:@"notes"])
 		return [UIColor colorWithRed:0.224 green:0.082 blue:0. alpha:1.];
 	return nil;
+}
+
+#pragma mark -
+
+- (void) panGestureRecognizerPanned:(UIPanGestureRecognizer *) panGestureRecognizer {
+	if (panGestureRecognizer.state == UIGestureRecognizerStateCancelled || panGestureRecognizer.state == UIGestureRecognizerStateEnded) {
+		_isPanningSplitView = NO;
+		return;
+	}
+
+	UIViewController *primaryViewController = self.splitViewController.viewControllers.firstObject;
+	BOOL shouldHide = [self splitViewController:self.splitViewController shouldHideViewController:primaryViewController inOrientation:[UIApplication sharedApplication].statusBarOrientation];
+	if (shouldHide)
+		return;
+
+	if (!_isPanningSplitView && panGestureRecognizer.state != UIGestureRecognizerStateBegan)
+		return;
+
+	CGPoint locationInView = [panGestureRecognizer locationInView:panGestureRecognizer.view];
+	if (panGestureRecognizer.state == UIGestureRecognizerStateBegan) {
+		if (fabs(locationInView.x - CGRectGetMaxX(primaryViewController.view.frame)) > 20)
+			return;
+
+		_isPanningSplitView = YES;
+	}
+
+	if (locationInView.x > 180. && locationInView.x < (_mainWindow.orientedBounds.size.width / 2.0)) {
+		[self.splitViewController performPrivateSelector:@"setMasterColumnWidth:" withFloat:locationInView.x];
+
+		[[NSUserDefaults standardUserDefaults] setFloat:locationInView.x forKey:@"CQPrimaryColumnWidth"];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+	}
 }
 
 #pragma mark -

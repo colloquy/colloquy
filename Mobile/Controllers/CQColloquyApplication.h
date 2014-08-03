@@ -18,6 +18,7 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 	UIActionSheet *_visibleActionSheet;
 	NSNumber *_oldSwipeOrientationValue;
 	BOOL _userDefaultsChanged;
+	BOOL _isPanningSplitView;
 }
 + (CQColloquyApplication *) sharedApplication;
 
