@@ -1171,15 +1171,12 @@
 				1C82C1960D83CF1D009ABD9F /* CQChatTableCell.h */,
 				1CAE8BC70EE6111900CE1AF8 /* CQChatTranscriptView.m */,
 				1CAE8BC60EE6111900CE1AF8 /* CQChatTranscriptView.h */,
-<<<<<<< .mine
 				92FF338B193E9D1400605CE9 /* CQChatTranscriptView2.m */,
 				92FF338A193E9D1400605CE9 /* CQChatTranscriptView2.h */,
 				1C82C1A20D83D133009ABD9F /* CQConnectionTableCell.m */,
 				1C82C1A10D83D133009ABD9F /* CQConnectionTableCell.h */,
-=======
 				1C82C1A20D83D133009ABD9F /* CQConnectionTableHeaderView.m */,
 				1C82C1A10D83D133009ABD9F /* CQConnectionTableHeaderView.h */,
->>>>>>> .r6026
 				97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */,
 				97F85EBC0F2713CA008486E1 /* CQFileTransferTableCell.h */,
 				92B6670617F927E200BA3DD9 /* CQNavigationToolbar.m */,
