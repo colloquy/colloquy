@@ -313,6 +313,8 @@ static CQShowRoomTopic showRoomTopic;
 		if ([theChatInputBar.textView.delegate respondsToSelector:@selector(textViewDidChange:)])
 			[theChatInputBar.textView.delegate textViewDidChange:theChatInputBar.textView];
 
+		[theChatInputBar hideCompletions];
+
 		return;
 	}
 
