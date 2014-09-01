@@ -13,7 +13,6 @@
 #import "CQConnectionsNavigationController.h"
 #import "CQConnectionCreationViewController.h"
 #import "CQConnectionEditViewController.h"
-#import "CQConnectionsViewController.h"
 #import "CQIgnoreRulesController.h"
 #import "CQKeychain.h"
 
@@ -83,9 +82,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
 
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-		[UIDevice currentDevice].batteryMonitoringEnabled = YES;
-	});
+	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
 
 	_connectionsNavigationController = [[CQConnectionsNavigationController alloc] init];
 

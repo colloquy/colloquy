@@ -7,7 +7,6 @@
 @class CQChatRoomController;
 @class CQConnectionEditViewController;
 @class CQConnectionsNavigationController;
-@class CQConnectionsViewController;
 @class CQDirectChatController;
 @class CQIgnoreRulesController;
 @class KAIgnoreRule;

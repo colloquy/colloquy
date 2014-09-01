@@ -1,4 +1,3 @@
-@class CQConnectionsViewController;
 @class MVChatConnection;
 @class CQBouncerSettings;
 

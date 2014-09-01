@@ -17,6 +17,8 @@
 	_nicknameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	_timeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	_disclosureButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+	_disclosureButton.showsTouchWhenHighlighted = YES;
+	_disclosureButton.adjustsImageWhenHighlighted = YES;
 
 	[self.contentView addSubview:_iconImageView];
 	[self.contentView addSubview:_badgeImageView];

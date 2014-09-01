@@ -11,6 +11,7 @@
 #import "CQBouncerEditViewController.h"
 #import "CQConnectionEditViewController.h"
 #import "CQConnectionsNavigationController.h"
+#import "CQPreferencesViewController.h"
 
 #if ENABLE(FILE_TRANSFERS)
 #import "CQFileTransferController.h"
@@ -56,9 +57,12 @@ static BOOL showsChatIcons;
 	self.title = NSLocalizedString(@"Colloquies", @"Colloquies view title");
 
 	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:[CQChatController defaultController] action:@selector(showNewChatActionSheet:)];
-	self.navigationItem.leftBarButtonItem = addItem;
+	self.navigationItem.rightBarButtonItem = addItem;
+	self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"New chat.", @"Voiceover new chat label");
 
-	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"New chat.", @"Voiceover new chat label");
+	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showPreferences:)];
+	self.navigationItem.leftBarButtonItem = settingsItem;
+	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"Show Preferences.", @"Voiceover show preferences label");
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_addedChatViewController:) name:CQChatControllerAddedChatViewControllerNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_connectionRemoved:) name:CQConnectionsControllerRemovedConnectionNotification object:nil];
@@ -1242,5 +1246,14 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	[interactionController presentPreviewAnimated:[UIView areAnimationsEnabled]];
 #endif
+}
+
+#pragma mark -
+
+- (void) showPreferences:(id) sender {
+	CQPreferencesViewController *preferencesViewController = [[CQPreferencesViewController alloc] init];
+
+	[[CQColloquyApplication sharedApplication] presentModalViewController:preferencesViewController animated:[UIView areAnimationsEnabled]];
+
 }
 @end
