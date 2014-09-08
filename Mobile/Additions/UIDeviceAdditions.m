@@ -62,6 +62,19 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 	return result;
 }
 
+- (BOOL) isSystemEight {
+	static BOOL result;
+	static BOOL cached;
+
+	if (cached)
+		return result;
+
+	result = (self.systemVersion.doubleValue >= 8.);
+	cached = YES;
+
+	return result;
+}
+
 static BOOL isRetinaResultCached = NO;
 - (BOOL) isRetina {
 	static BOOL result;
