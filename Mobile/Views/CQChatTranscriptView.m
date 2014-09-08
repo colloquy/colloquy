@@ -508,7 +508,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 - (NSString *) _contentHTML {
 	NSString *templateString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
-	return [NSString stringWithFormat:templateString, _styleIdentifier, [self _variantStyleString], [UIDevice currentDevice].isSystemSeven ? @"topicSeven" : @"topicSix"];
+	return [NSString stringWithFormat:templateString, _styleIdentifier, [self _variantStyleString], YES /* is running iOS 7 or above */ ? @"topicSeven" : @"topicSix"];
 }
 
 - (void) _checkIfLoadingFinished {

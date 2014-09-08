@@ -23,18 +23,13 @@ static BOOL hardwareKeyboard;
 	CGRect frame = self.bounds;
 	frame.size.height += 1;
 
-	if ([UIDevice currentDevice].isSystemSeven) {
-		self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [UIColor clearColor];
 
-		_backgroundView = [[UIInputView alloc] initWithFrame:frame inputViewStyle:UIInputViewStyleKeyboard];
-		_backgroundView.tintColor = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
+	_backgroundView = [[UIInputView alloc] initWithFrame:frame inputViewStyle:UIInputViewStyleKeyboard];
+	_backgroundView.tintColor = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
 
-		_topLineView = [[UIView alloc] initWithFrame:CGRectZero];
-		_topLineView.backgroundColor = [UIColor colorWithWhite:(172. / 255.) alpha:1.];
-	} else {
-		_backgroundView = [[UIToolbar alloc] initWithFrame:frame];
-		_backgroundView.tintColor = [UIColor lightGrayColor];
-	}
+	_topLineView = [[UIView alloc] initWithFrame:CGRectZero];
+	_topLineView.backgroundColor = [UIColor colorWithWhite:(172. / 255.) alpha:1.];
 	_backgroundView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
 
 	[self addSubview:_backgroundView];
@@ -57,27 +52,13 @@ static BOOL hardwareKeyboard;
 	_inputView.textColor = [UIColor blackColor];
 	_inputView.scrollEnabled = NO;
 
-	if (![UIDevice currentDevice].isSystemSeven) {
-		_overlayBackgroundView = [[UIImageView alloc] initWithImage:nil];
-		_overlayBackgroundView.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth);
-		_overlayBackgroundView.userInteractionEnabled = YES;
-
-		_overlayBackgroundViewPiece = [[UIImageView alloc] initWithImage:nil];
-		_overlayBackgroundViewPiece.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth);
-
-		[_overlayBackgroundView addSubview:_inputView];
-
-		[self addSubview:_overlayBackgroundView];
-		[self addSubview:_overlayBackgroundViewPiece];
-	} else {
-		_inputView.layer.borderColor = [UIColor colorWithRed:(200. / 255.) green:(200. / 255.) blue:(205. / 255.) alpha:1.].CGColor;
-		if ([UIDevice currentDevice].isRetina)
-			_inputView.layer.borderWidth = .5;
-		else _inputView.layer.borderWidth = 1.;
-		_inputView.layer.backgroundColor = [UIColor colorWithWhite:(250. / 255.) alpha:1.].CGColor;
-		_inputView.layer.cornerRadius = 5.;
-		[self addSubview:_inputView];
-	}
+	_inputView.layer.borderColor = [UIColor colorWithRed:(200. / 255.) green:(200. / 255.) blue:(205. / 255.) alpha:1.].CGColor;
+	if ([UIDevice currentDevice].isRetina)
+		_inputView.layer.borderWidth = .5;
+	else _inputView.layer.borderWidth = 1.;
+	_inputView.layer.backgroundColor = [UIColor colorWithWhite:(250. / 255.) alpha:1.].CGColor;
+	_inputView.layer.cornerRadius = 5.;
+	[self addSubview:_inputView];
 
 	_autocomplete = YES;
 
@@ -133,22 +114,27 @@ static BOOL hardwareKeyboard;
 #pragma mark -
 
 - (BOOL) canBecomeFirstResponder {
+	[super canBecomeFirstResponder];
 	return [_inputView canBecomeFirstResponder];
 }
 
 - (BOOL) becomeFirstResponder {
+	[super becomeFirstResponder];
 	return [_inputView becomeFirstResponder];
 }
 
 - (BOOL) canResignFirstResponder {
+	[super canResignFirstResponder];
 	return [_inputView canResignFirstResponder];
 }
 
 - (BOOL) resignFirstResponder {
+	[super resignFirstResponder];
 	return [_inputView resignFirstResponder];
 }
 
 - (BOOL) isFirstResponder {
+	[super isFirstResponder];
 	return [_inputView isFirstResponder];
 }
 
@@ -212,8 +198,7 @@ static BOOL hardwareKeyboard;
 		[self layoutIfNeeded];
 
 		// Work around iOS 7 bug where the input view frame doesn't update right away after being set, causing text to be clipped.
-		if ([UIDevice currentDevice].isSystemSeven)
-			_inputView.frame = _inputView.frame;
+		_inputView.frame = _inputView.frame;
 		_inputView.contentSize = CGSizeMake(_inputView.contentSize.width, ((numberOfLines + 1) * self._lineHeight));
 	}
 }
@@ -224,36 +209,20 @@ static BOOL hardwareKeyboard;
 
 - (void) setTintColor:(UIColor *) color {
 	if (!color) {
-		if ([UIDevice currentDevice].isSystemSeven)
-			color = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
-		else color = [UIColor lightGrayColor];
-	} else if ([UIDevice currentDevice].isSystemSeven && [color isEqual:[UIColor blackColor]]) {
+		color = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
+	} else if ([color isEqual:[UIColor blackColor]]) {
 		color = [UIColor colorWithWhite:(43. / 255.) alpha:1.];
 	}
 
-	if (![UIDevice currentDevice].isSystemSeven) {
-		if ([color isEqual:[UIColor blackColor]] || [color isEqual:[UIColor colorWithWhite:(247. / 255.) alpha:1.]]) {
-			_inputView.keyboardAppearance = UIKeyboardAppearanceDark;
-			_overlayBackgroundView.image = [[UIImage imageNamed:@"textFieldDark.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 20, 22, 20)];
-			_overlayBackgroundViewPiece.image = [[UIImage imageNamed:@"textFieldDarkPiece.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(22., 1., 22., 1.)];
-		} else {
-			_inputView.keyboardAppearance = UIKeyboardAppearanceDefault;
-			_overlayBackgroundView.image = [[UIImage imageNamed:@"textField.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 20, 22, 20)];
-			_overlayBackgroundViewPiece.image = [[UIImage imageNamed:@"textFieldPiece.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(22., 1., 22., 1.)];
-		}
-
-		_backgroundView.tintColor = color;
+	if ([color isEqual:[UIColor blackColor]] || [color isEqual:[UIColor colorWithWhite:(43. / 255.) alpha:1.]]) {
+		_inputView.keyboardAppearance = UIKeyboardAppearanceDark;
+		_backgroundView.backgroundColor = [UIColor colorWithWhite:(43. / 255.) alpha:1.];
 	} else {
-		if ([color isEqual:[UIColor blackColor]] || [color isEqual:[UIColor colorWithWhite:(43. / 255.) alpha:1.]]) {
-			_inputView.keyboardAppearance = UIKeyboardAppearanceDark;
-			_backgroundView.backgroundColor = [UIColor colorWithWhite:(43. / 255.) alpha:1.];
-		} else {
-			_inputView.keyboardAppearance = UIKeyboardAppearanceLight;
-			_backgroundView.backgroundColor = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
-		}
-
-		self.backgroundColor = color;
+		_inputView.keyboardAppearance = UIKeyboardAppearanceLight;
+		_backgroundView.backgroundColor = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
 	}
+
+	self.backgroundColor = color;
 }
 
 - (UIFont *) font {

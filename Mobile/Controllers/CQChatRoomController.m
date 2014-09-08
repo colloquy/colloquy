@@ -231,11 +231,8 @@ static CQShowRoomTopic showRoomTopic;
 		if (!self.navigationController || _showingMembersInModalController)
 			return;
 
-		if (!_currentUserListNavigationController) {
+		if (!_currentUserListNavigationController)
 			_currentUserListNavigationController = [[UINavigationController alloc] initWithRootViewController:_currentUserListViewController];
-			if (![UIDevice currentDevice].isSystemSeven)
-				_currentUserListNavigationController.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
-		}
 
 		_showingMembersInModalController = YES;
 		[self.navigationController presentViewController:_currentUserListNavigationController animated:YES completion:NULL];
@@ -1241,8 +1238,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	if (self.available) {
         BOOL isPadModel = [[UIDevice currentDevice] isPadModel]; 
-		UIBarButtonItemStyle style = (isPadModel ? UIBarButtonItemStylePlain : UIBarButtonItemStyleBordered); 
-		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:isPadModel ? @"members-large.png" : @"members.png"] style:style target:self action:@selector(showMembers)]; 
+		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:isPadModel ? @"members-large.png" : @"members.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showMembers)];
 		item.accessibilityLabel = NSLocalizedString(@"Members List", @"Voiceover members list label"); 
 	} else {
 		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Join", "Join button title") style:UIBarButtonItemStyleDone target:self action:@selector(join)];	

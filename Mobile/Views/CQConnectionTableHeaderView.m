@@ -41,9 +41,7 @@
 	_nicknameLabel.highlightedTextColor = self.textLabel.highlightedTextColor;
 
 	_timeLabel.font = [UIFont systemFontOfSize:14.];
-	if ([UIDevice currentDevice].isSystemSeven)
-		_timeLabel.textColor = self.tintColor;
-	else _timeLabel.textColor = [UIColor colorWithRed:0.19607843 green:0.29803922 blue:0.84313725 alpha:1.];
+	_timeLabel.textColor = self.tintColor;
 	_timeLabel.highlightedTextColor = self.textLabel.highlightedTextColor;
 
 	return self;

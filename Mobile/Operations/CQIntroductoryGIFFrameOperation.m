@@ -118,7 +118,7 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 	[super main];
 
 	if (_url.isFileURL) {
-		_data = [NSData dataWithContentsOfURL:_url];
+		_data = [[NSData dataWithContentsOfURL:_url] mutableCopy];
 
 		[self _downloadingAnimatedGIF];
 		[self finish];

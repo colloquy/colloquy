@@ -76,9 +76,7 @@ enum {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshBanList:) name:MVChatRoomBannedUsersSyncedNotification object:_room];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_topicChanged:) name:MVChatRoomTopicChangedNotification object:_room];
 
-	if ([UIDevice currentDevice].isSystemSeven)
-		_segmentedControl.frame = CGRectInset(self.navigationController.toolbar.bounds, 20., 5.);
-	else _segmentedControl.frame = CGRectInset(self.navigationController.toolbar.bounds, 5., 5.);
+	_segmentedControl.frame = CGRectInset(self.navigationController.toolbar.bounds, 20., 5.);
 	_segmentedControl.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
 }
 

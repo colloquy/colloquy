@@ -206,7 +206,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 	}
 
 	UITableViewCell *helpCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0., 10., 320., 20.)];
+	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0., 10., CGRectGetWidth(tableView.frame), 20.)];
 
 	label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	label.font = [UIFont boldSystemFontOfSize:15.];

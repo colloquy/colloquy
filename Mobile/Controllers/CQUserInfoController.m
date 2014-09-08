@@ -22,9 +22,6 @@
 
 	UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(close:)];
 	_rootViewController.navigationItem.leftBarButtonItem = doneItem;
-
-	if (![UIDevice currentDevice].isSystemSeven)
-		self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 }
 
 #pragma mark -

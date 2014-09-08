@@ -36,19 +36,6 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 #endif
 }
 
-- (BOOL) isSystemSeven {
-	static BOOL result;
-	static BOOL cached;
-
-	if (cached)
-		return result;
-
-	result = ([self.systemVersion doubleValue] >= 7.);
-	cached = YES;
-
-	return result;
-}
-
 - (BOOL) isPhoneModel {
 	static BOOL result;
 	static BOOL cached;
@@ -57,19 +44,6 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 		return result;
 
 	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPhone) && [self.model hasCaseInsensitiveSubstring:@"Phone"];
-	cached = YES;
-
-	return result;
-}
-
-- (BOOL) isPodModel {
-	static BOOL result;
-	static BOOL cached;
-
-	if (cached)
-		return result;
-
-	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPhone) && [self.model hasCaseInsensitiveSubstring:@"Pod"];
 	cached = YES;
 
 	return result;

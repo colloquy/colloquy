@@ -12,9 +12,6 @@ NSString *const CQBookmarkingServiceSafariReadingList = @"CQBookmarkingServiceSa
 #pragma mark -
 
 + (void) bookmarkLink:(NSString *) link {
-	if (![UIDevice currentDevice].isSystemSeven)
-		return;
-
 	if (![link hasPrefix:@"http"])
 		link = [@"http://" stringByAppendingString:link];
 

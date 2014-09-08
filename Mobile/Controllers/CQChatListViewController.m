@@ -60,7 +60,7 @@ static BOOL showsChatIcons;
 	self.navigationItem.rightBarButtonItem = addItem;
 	self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"New chat.", @"Voiceover new chat label");
 
-	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showPreferences:)];
+	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showPreferences:)];
 	self.navigationItem.leftBarButtonItem = settingsItem;
 	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"Show Preferences.", @"Voiceover show preferences label");
 
@@ -752,12 +752,21 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	_active = NO;
 }
 
+- (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>) coordinator {
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
+}
+
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
 	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 
 	if ([[UIDevice currentDevice] isPadModel])
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
+#endif
 
 #pragma mark -
 

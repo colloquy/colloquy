@@ -553,6 +553,21 @@ static BOOL showingKeyboard;
 	_allowEditingToEnd = NO;
 }
 
+- (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
+	BOOL isShowingCompletionsBeforeRotation = chatInputBar.isShowingCompletions;
+
+//	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:toInterfaceOrientation]);
+
+	[coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {} completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
+		[transcriptView scrollToBottomAnimated:NO];
+
+		if (isShowingCompletionsBeforeRotation) {
+			[self _showChatCompletions];
+		}
+	}];
+}
+
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
 	_isShowingCompletionsBeforeRotation = chatInputBar.isShowingCompletions;
 
@@ -568,6 +583,7 @@ static BOOL showingKeyboard;
 		_isShowingCompletionsBeforeRotation = NO;
 	}
 }
+#endif
 
 - (void) didReceiveMemoryWarning {
 	// Do nothing for now, since calling super will release the view and
@@ -1706,8 +1722,8 @@ static BOOL showingKeyboard;
 	NSString *chatTranscriptFontSizeString = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFontSize"];
 	NSUInteger chatTranscriptFontSize = 0; // Default is 14px
 
-	if ([UIDevice currentDevice].isSystemSeven && [[CQSettingsController settingsController] boolForKey:@"CQUseDynamicType"]) {
-		chatTranscriptFontSize = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize;
+	if ([[CQSettingsController settingsController] boolForKey:@"CQUseDynamicType"]) {
+		chatTranscriptFontSize = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize - 2.0;
 	} else {
 		if ([[UIDevice currentDevice] isPadModel]) {
 			if (!chatTranscriptFontSizeString.length) {
@@ -1849,8 +1865,7 @@ static BOOL showingKeyboard;
 
 	if (self.connection.connected) {
         BOOL isPadModel = [[UIDevice currentDevice] isPadModel]; 
-		UIBarButtonItemStyle style = (isPadModel ? UIBarButtonItemStylePlain : UIBarButtonItemStyleBordered); 
-		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:isPadModel ? @"info-large.png" : @"info.png"] style:style target:self action:@selector(showUserInformation)]; 
+		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:isPadModel ? @"info-large.png" : @"info.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserInformation)];
 		item.accessibilityLabel = NSLocalizedString(@"User Information", @"Voiceover user information label"); 
 	} else {
 		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", "Connect button title") style:UIBarButtonItemStyleDone target:self.connection action:@selector(connect)];

@@ -26,18 +26,10 @@
 	UIView *view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	self.view = view;
 
-	view.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
 	view.clipsToBounds = YES;
 
-	if ([UIDevice currentDevice].isSystemSeven) {
-		_toolbar = [[CQNavigationToolbar alloc] initWithFrame:CGRectZero];
-		_toolbar.layer.shadowOpacity = 0.;
-	} else {
-		_toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
-		_toolbar.layer.shadowOpacity = 1.;
-		_toolbar.layer.shadowRadius = 3.;
-		_toolbar.layer.shadowOffset = CGSizeMake(0., 0.);
-	}
+	_toolbar = [[CQNavigationToolbar alloc] initWithFrame:CGRectZero];
+	_toolbar.layer.shadowOpacity = 0.;
 	_toolbar.items = _standardToolbarItems;
 	_toolbar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin);
 
@@ -46,9 +38,18 @@
 	[view addSubview:_toolbar];
 }
 
+- (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+
+	// 480. is an arbitrary value, this can be changed if a new value comes up that makes more sense
+	[self updateToolbarForInterfaceOrientation:size.width > 480. ? UIInterfaceOrientationLandscapeLeft : UIInterfaceOrientationPortrait animated:NO];
+}
+
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
 - (void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation duration:(NSTimeInterval) duration {
     [self updateToolbarForInterfaceOrientation:interfaceOrientation animated:NO];
 }
+#endif
 
 #pragma mark -
 
@@ -68,30 +69,24 @@
 		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.tag = 1000;
-		if ([UIDevice currentDevice].isSystemSeven) {
-			titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
-			titleLabel.textColor = [UIColor blackColor];
-		} else {
-			titleLabel.font = [UIFont boldSystemFontOfSize:20.];
-			titleLabel.textColor = [UIColor colorWithRed:(113. / 255.) green:(120. / 255.) blue:(128. / 255.) alpha:1.];
-			titleLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
-			titleLabel.shadowOffset = CGSizeMake(0., 1.);
-		}
+		titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
+		titleLabel.textColor = [UIColor blackColor];
 		titleLabel.text = title;
 
 		[titleLabel sizeToFit];
 
 		UIBarButtonItem *leftSpaceItem = nil;
+		// TODO: Update to calculate width correctly
 		// Only used a fixed space if there are 2 standard toolbar buttons. This means the sidebar is hidden
 		// and we should try to center the title to the device.
-		if (_standardToolbarItems.count == 2 && [[[NSLocale currentLocale] localeIdentifier] hasCaseInsensitivePrefix:@"en"]) {
+		/* if (_standardToolbarItems.count == 2 && [[[NSLocale currentLocale] localeIdentifier] hasCaseInsensitivePrefix:@"en"]) {
 			leftSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
 
 			// This calculation makes a big assumption about the width of the right side buttons.
 			// So this is only correct for English, and needs updated if the right buttons change in width.
 			CGFloat offset = UIDeviceOrientationIsPortrait(interfaceOrientation) ? 182. : 310.;
 			leftSpaceItem.width = offset - (titleLabel.frame.size.width / 2.);
-		} else leftSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+		} else */ leftSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 
 		UIBarButtonItem *titleItem = [[UIBarButtonItem alloc] initWithCustomView:titleLabel];
 		UIBarButtonItem *rightSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -142,13 +137,6 @@
 	UIView *view = _topChatViewController.view;
 
 	if (_topChatViewController) {
-		CGRect frame = self.view.bounds;
-		if (![UIDevice currentDevice].isSystemSeven) {
-			frame.origin.y += _toolbar.frame.size.height;
-			frame.size.height -= _toolbar.frame.size.height;
-		}
-		view.frame = frame;
-
 		[self _applyiOS7NavigationBarSizing];
 
 		[_topChatViewController viewWillAppear:NO];
@@ -178,15 +166,13 @@
 	frame.size.width = self.view.frame.size.width;
 
 	// If we are on iOS 7 or up, the statusbar is now part of the navigation bar, so, we need to fake its height
-	if ([UIDevice currentDevice].isSystemSeven) {
-		CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
-		// We can't do the following:
-		// CGFloat height = [[UIApplication sharedApplication].delegate.window convertRect:statusBarFrame toView:nil];
-		// because when the app first loads, it fails to convert the rect, and we are given {{0, 0}, {20, 1024}} as the
-		// statusBarFrame, even after self.view is added to its superview, is loaded, and self.view.window is set.
-		CGFloat statusBarHeight = fmin(statusBarFrame.size.height, statusBarFrame.size.width);
-		frame.size.height += statusBarHeight;
-	}
+	CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
+	// We can't do the following:
+	// CGFloat height = [[UIApplication sharedApplication].delegate.window convertRect:statusBarFrame toView:nil];
+	// because when the app first loads, it fails to convert the rect, and we are given {{0, 0}, {20, 1024}} as the
+	// statusBarFrame, even after self.view is added to its superview, is loaded, and self.view.window is set.
+	CGFloat statusBarHeight = fmin(statusBarFrame.size.height, statusBarFrame.size.width);
+	frame.size.height += statusBarHeight;
 	_toolbar.frame = frame;
 
 	_topChatViewController.scrollView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(_toolbar.frame), 0., 0., 0.);
