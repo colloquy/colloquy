@@ -1,7 +1,7 @@
 #import "NSDictionaryAdditions.h"
 
 @implementation NSDictionary (NSDictionaryAdditions)
-- (id) initWithKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary {
++ (NSDictionary *) dictionaryWithKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary {
 	return [[NSMutableDictionary alloc] initWithKeys:keys fromDictionary:dictionary];
 }
 
