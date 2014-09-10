@@ -366,7 +366,7 @@ static CQShowRoomTopic showRoomTopic;
 
 #pragma mark -
 
-- (void) transcriptView:(CQChatTranscriptView *) transcriptView handleNicknameTap:(NSString *) nickname atLocation:(CGPoint) location {
+- (void) transcriptView:(CQUIChatTranscriptView *) transcriptView handleNicknameTap:(NSString *) nickname atLocation:(CGPoint) location {
 	MVChatUser *user = [[self.connection chatUsersWithNickname:nickname] anyObject];
 	UIActionSheet *sheet = [UIActionSheet userActionSheetForUser:user inRoom:self.room showingUserInformation:YES];
 	sheet.title = nickname;

@@ -1,6 +1,7 @@
 #import "CQChatController.h"
 #import "CQChatInputBar.h"
-#import "CQChatTranscriptView.h"
+#import "CQUIChatTranscriptView.h"
+#import "CQWKChatTranscriptView.h"
 #import "CQImportantChatMessageViewController.h"
 #import "CQViewController.h"
 
@@ -12,7 +13,8 @@
 
 @class CQChatTableCell;
 @class CQChatInputBar;
-@class CQChatTranscriptView;
+@class CQUIChatTranscriptView;
+@class CQWKChatTranscriptView;
 @class MVChatUser;
 @class MVChatUserWatchRule;
 
@@ -22,7 +24,7 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 @interface CQDirectChatController : CQViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
 	@protected
 	IBOutlet CQChatInputBar *chatInputBar;
-	IBOutlet CQChatTranscriptView *transcriptView;
+	IBOutlet UIView <CQChatTranscriptView> *transcriptView;
 	IBOutlet UIView *containerView;
 
 	NSMutableArray *_pendingPreviousSessionComponents;

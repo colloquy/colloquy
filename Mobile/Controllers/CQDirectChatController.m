@@ -453,6 +453,17 @@ static BOOL showingKeyboard;
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
+//	if ([[UIDevice currentDevice] isSystemEight]) {
+//		CQWKChatTranscriptView *newChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
+//		newChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
+//		newChatTranscriptView.transcriptDelegate = self;
+//
+//		[self.view insertSubview:newChatTranscriptView belowSubview:transcriptView];
+//
+//		[transcriptView removeFromSuperview];
+//		transcriptView = newChatTranscriptView;
+//	}
+
 	[self _updateRightBarButtonItemAnimated:NO];
 
 	chatInputBar.accessibilityLabel = NSLocalizedString(@"Enter chat message.", @"Voiceover enter chat message label");
@@ -461,8 +472,6 @@ static BOOL showingKeyboard;
 	[self _userDefaultsChanged];
 
 	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
-	transcriptView.dataDetectorTypes = UIDataDetectorTypeNone;
-
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clear.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateNormal];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clearPressed.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateHighlighted];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButton.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
@@ -1388,7 +1397,7 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (void) transcriptView:(CQChatTranscriptView *) transcriptView receivedSwipeWithTouchCount:(NSUInteger) touchCount leftward:(BOOL) leftward {
+- (void) transcriptView:(id) transcriptView receivedSwipeWithTouchCount:(NSUInteger) touchCount leftward:(BOOL) leftward {
 	CQSwipeMeaning meaning = CQSwipeDisabled;
 	if (touchCount == 1)
 		meaning = (CQSwipeMeaning)singleSwipeGesture;
@@ -1416,7 +1425,7 @@ static BOOL showingKeyboard;
 		[[CQChatController defaultController] showChatController:nextViewController animated:NO];
 }
 
-- (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url {
+- (BOOL) transcriptView:(id) transcriptView handleOpenURL:(NSURL *) url {
 	if (![url.scheme isCaseInsensitiveEqualToString:@"irc"] && ![url.scheme isCaseInsensitiveEqualToString:@"ircs"])
 		return [self _openURL:url];
 
@@ -1433,11 +1442,11 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (void) transcriptView:(CQChatTranscriptView *) transcriptView handleNicknameTap:(NSString *) nickname atLocation:(CGPoint) location {
+- (void) transcriptView:(id) transcriptView handleNicknameTap:(NSString *) nickname atLocation:(CGPoint) location {
 	[self _showUserInfoControllerForUserNamed:nickname];
 }
 
-- (void) transcriptView:(CQChatTranscriptView *) transcriptView handleLongPressURL:(NSURL *) url atLocation:(CGPoint) location {
+- (void) transcriptView:(id) transcriptView handleLongPressURL:(NSURL *) url atLocation:(CGPoint) location {
 	UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
 	actionSheet.delegate = self;
 	actionSheet.tag = URLActionSheet;
@@ -1454,11 +1463,11 @@ static BOOL showingKeyboard;
 	[[CQColloquyApplication sharedApplication] showActionSheet:actionSheet fromPoint:location];
 }
 
-- (BOOL) transcriptViewShouldBecomeFirstResponder:(CQChatTranscriptView *) transcriptView {
+- (BOOL) transcriptViewShouldBecomeFirstResponder:(id) transcriptView {
 	return chatInputBar.isFirstResponder;
 }
 
-- (void) transcriptViewWasReset:(CQChatTranscriptView *) view {
+- (void) transcriptViewWasReset:(id) view {
 	if (_pendingPreviousSessionComponents.count) {
 		[view addPreviousSessionComponents:_pendingPreviousSessionComponents];
 
@@ -1484,7 +1493,7 @@ static BOOL showingKeyboard;
 }
 
 - (void) setScrollbackLength:(NSUInteger) scrollbackLength {
-	[transcriptView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setScrollbackLimit(%tu)", scrollbackLength]];
+	[transcriptView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setScrollbackLimit(%tu)", scrollbackLength] completionHandler:NULL];
 }
 
 #pragma mark -
@@ -1793,6 +1802,7 @@ static BOOL showingKeyboard;
 		}
 	}
 
+	CQUIChatTranscriptView *chatTranscriptView = (CQUIChatTranscriptView *)transcriptView;
 	transcriptView.styleIdentifier = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptStyle"];
 	transcriptView.fontFamily = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFont"];
 	transcriptView.fontSize = chatTranscriptFontSize;
