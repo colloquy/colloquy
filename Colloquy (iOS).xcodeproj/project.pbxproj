@@ -248,18 +248,7 @@
 		9261B6FC18419FCA001B14C3 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6FB18419FCA001B14C3 /* HockeySDK.framework */; };
 		9261B6FE1841A83C001B14C3 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9261B6FD1841A83C001B14C3 /* HockeySDKResources.bundle */; };
 		9261B7011841AEA1001B14C3 /* UIApplicationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261B7001841AEA1001B14C3 /* UIApplicationAdditions.m */; };
-		926CF29B18FBB77A00A81159 /* Icon-29.png in Resources */ = {isa = PBXBuildFile; fileRef = 926CF29518FBB77A00A81159 /* Icon-29.png */; };
-		926CF29C18FBB77A00A81159 /* Icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 926CF29618FBB77A00A81159 /* Icon-40.png */; };
-		926CF29D18FBB77A00A81159 /* Icon-57.png in Resources */ = {isa = PBXBuildFile; fileRef = 926CF29718FBB77A00A81159 /* Icon-57.png */; };
-		926CF29E18FBB77A00A81159 /* Icon-60.png in Resources */ = {isa = PBXBuildFile; fileRef = 926CF29818FBB77A00A81159 /* Icon-60.png */; };
-		926CF29F18FBB77A00A81159 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 926CF29918FBB77A00A81159 /* Icon-72.png */; };
-		926CF2A018FBB77A00A81159 /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 926CF29A18FBB77A00A81159 /* Icon-76.png */; };
-		926CF2A718FBB79D00A81159 /* Icon-29@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 926CF2A118FBB79D00A81159 /* Icon-29@2x.png */; };
-		926CF2A818FBB79D00A81159 /* Icon-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 926CF2A218FBB79D00A81159 /* Icon-40@2x.png */; };
-		926CF2A918FBB79D00A81159 /* Icon-57@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 926CF2A318FBB79D00A81159 /* Icon-57@2x.png */; };
-		926CF2AA18FBB79D00A81159 /* Icon-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 926CF2A418FBB79D00A81159 /* Icon-60@2x.png */; };
-		926CF2AB18FBB79D00A81159 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 926CF2A518FBB79D00A81159 /* Icon-72@2x.png */; };
-		926CF2AC18FBB79D00A81159 /* Icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 926CF2A618FBB79D00A81159 /* Icon-76@2x.png */; };
+		926678F619BFE22900CCE5BE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 926678F519BFE22900CCE5BE /* Images.xcassets */; };
 		9271923C16CFA831003380F0 /* CQChatOrderingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9271923B16CFA831003380F0 /* CQChatOrderingController.m */; };
 		9271928A16D211DD003380F0 /* textField.png in Resources */ = {isa = PBXBuildFile; fileRef = 9271928816D211DD003380F0 /* textField.png */; };
 		9271928B16D211DD003380F0 /* textFieldDark.png in Resources */ = {isa = PBXBuildFile; fileRef = 9271928916D211DD003380F0 /* textFieldDark.png */; };
@@ -660,19 +649,8 @@
 		9261B6FD1841A83C001B14C3 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = HockeySDKResources.bundle; path = Shared/Frameworks/HockeySDK.framework/Versions/A/Resources/HockeySDKResources.bundle; sourceTree = SOURCE_ROOT; };
 		9261B6FF1841AEA1001B14C3 /* UIApplicationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIApplicationAdditions.h; path = Mobile/Additions/UIApplicationAdditions.h; sourceTree = "<group>"; };
 		9261B7001841AEA1001B14C3 /* UIApplicationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIApplicationAdditions.m; path = Mobile/Additions/UIApplicationAdditions.m; sourceTree = "<group>"; };
+		926678F519BFE22900CCE5BE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		926CF29018FBB09100A81159 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = Mobile/Languages/it.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
-		926CF29518FBB77A00A81159 /* Icon-29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-29.png"; sourceTree = "<group>"; };
-		926CF29618FBB77A00A81159 /* Icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40.png"; sourceTree = "<group>"; };
-		926CF29718FBB77A00A81159 /* Icon-57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-57.png"; sourceTree = "<group>"; };
-		926CF29818FBB77A00A81159 /* Icon-60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60.png"; sourceTree = "<group>"; };
-		926CF29918FBB77A00A81159 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
-		926CF29A18FBB77A00A81159 /* Icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76.png"; sourceTree = "<group>"; };
-		926CF2A118FBB79D00A81159 /* Icon-29@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-29@2x.png"; sourceTree = "<group>"; };
-		926CF2A218FBB79D00A81159 /* Icon-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40@2x.png"; sourceTree = "<group>"; };
-		926CF2A318FBB79D00A81159 /* Icon-57@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-57@2x.png"; sourceTree = "<group>"; };
-		926CF2A418FBB79D00A81159 /* Icon-60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60@2x.png"; sourceTree = "<group>"; };
-		926CF2A518FBB79D00A81159 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
-		926CF2A618FBB79D00A81159 /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76@2x.png"; sourceTree = "<group>"; };
 		926CF2B818FBC5A300A81159 /* libcommonCrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcommonCrypto.dylib; path = usr/lib/system/libcommonCrypto.dylib; sourceTree = SDKROOT; };
 		9271923A16CFA831003380F0 /* CQChatOrderingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatOrderingController.h; sourceTree = "<group>"; };
 		9271923B16CFA831003380F0 /* CQChatOrderingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatOrderingController.m; sourceTree = "<group>"; };
@@ -1154,12 +1132,6 @@
 				1C0EB6780D8660E900B6F1BC /* errorBadgeDim.png */,
 				1CAE8BF40EE612DA00CE1AF8 /* gradientHighlight.png */,
 				1CA3DCE81027AEFF008B1AD2 /* help.png */,
-				926CF29518FBB77A00A81159 /* Icon-29.png */,
-				926CF29618FBB77A00A81159 /* Icon-40.png */,
-				926CF29718FBB77A00A81159 /* Icon-57.png */,
-				926CF29818FBB77A00A81159 /* Icon-60.png */,
-				926CF29918FBB77A00A81159 /* Icon-72.png */,
-				926CF29A18FBB77A00A81159 /* Icon-76.png */,
 				92B666FD17F7B46000BA3DD9 /* info.png */,
 				92B666F917F7AF1C00BA3DD9 /* infoButton.png */,
 				92B666FA17F7AF1C00BA3DD9 /* infoButtonPressed.png */,
@@ -1224,12 +1196,6 @@
 				1CA264E611C3488E00AB4E44 /* errorBadgeDim@2x.png */,
 				1CA2663711C4BA9200AB4E44 /* help@2x.png */,
 				92B666FF17F7B46900BA3DD9 /* info@2x.png */,
-				926CF2A118FBB79D00A81159 /* Icon-29@2x.png */,
-				926CF2A218FBB79D00A81159 /* Icon-40@2x.png */,
-				926CF2A318FBB79D00A81159 /* Icon-57@2x.png */,
-				926CF2A418FBB79D00A81159 /* Icon-60@2x.png */,
-				926CF2A518FBB79D00A81159 /* Icon-72@2x.png */,
-				926CF2A618FBB79D00A81159 /* Icon-76@2x.png */,
 				92B6670117F7B48000BA3DD9 /* infoButton@2x.png */,
 				92B6670217F7B48000BA3DD9 /* infoButtonPressed@2x.png */,
 				92AD960217EC265C0044B8B1 /* iTunesArtwork@2x */,
@@ -1365,6 +1331,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				926678F519BFE22900CCE5BE /* Images.xcassets */,
 				92B6661217ED7C5000BA3DD9 /* Fonts */,
 				1CA2652E11C35FB200AB4E44 /* Images */,
 				1CA2653111C35FB800AB4E44 /* Images (2x) */,
@@ -1536,20 +1503,15 @@
 				1CB318DF0D8644E4006A7513 /* server.png in Resources */,
 				92B6661D17EE441D00BA3DD9 /* Default-7-568h@2x.png in Resources */,
 				1CB318E00D8644E4006A7513 /* connectingBadgeDim.png in Resources */,
-				926CF2AC18FBB79D00A81159 /* Icon-76@2x.png in Resources */,
 				1C0EB67A0D8660E900B6F1BC /* errorBadgeDim.png in Resources */,
 				1CB33C9A0D882BB000EC4E38 /* connections.png in Resources */,
-				926CF29C18FBB77A00A81159 /* Icon-40.png in Resources */,
 				1CB33C9C0D882BB000EC4E38 /* colloquies.png in Resources */,
 				1CD949820D8E18DB00756ACD /* directChatIcon.png in Resources */,
 				1CD949830D8E18DB00756ACD /* roomIcon.png in Resources */,
 				1C61FEA10ED24BA40016F968 /* deleteButtonNormal.png in Resources */,
-				926CF2A018FBB77A00A81159 /* Icon-76.png in Resources */,
 				1C61FEA20ED24BA40016F968 /* deleteButtonPressed.png in Resources */,
-				926CF2AA18FBB79D00A81159 /* Icon-60@2x.png in Resources */,
 				1CF50F710EDA7BC600CBE5E3 /* roomIconSmall.png in Resources */,
 				92B6670317F7B48000BA3DD9 /* infoButton@2x.png in Resources */,
-				926CF29D18FBB77A00A81159 /* Icon-57.png in Resources */,
 				1CE69F820EE2F50100389442 /* ChatView.xib in Resources */,
 				1CAE8BF50EE612DA00CE1AF8 /* base.html in Resources */,
 				92B6670017F7B46900BA3DD9 /* info@2x.png in Resources */,
@@ -1568,7 +1530,6 @@
 				1C1253290F0D4FC1008F181B /* standard-dark.css in Resources */,
 				1C0F686B0F144DBE002BB855 /* bubbles.css in Resources */,
 				1C0F69080F1497BF002BB855 /* bubbleRight.png in Resources */,
-				926CF2AB18FBB79D00A81159 /* Icon-72@2x.png in Resources */,
 				1C0F69090F1497BF002BB855 /* bubbleLeft.png in Resources */,
 				1C0F69450F15033C002BB855 /* chromatic.css in Resources */,
 				1C0F694F0F15035D002BB855 /* chromatic-dark.css in Resources */,
@@ -1586,7 +1547,6 @@
 				1C4CE63C0FA03D7800215521 /* DJ Scratch.aiff in Resources */,
 				1C4CE63D0FA03D7800215521 /* Electronic Signal.aiff in Resources */,
 				1C4CE63E0FA03D7800215521 /* Explosion.aiff in Resources */,
-				926CF29E18FBB77A00A81159 /* Icon-60.png in Resources */,
 				1C4CE63F0FA03D7800215521 /* Kick.aiff in Resources */,
 				1C4CE6400FA03D7800215521 /* Laser.aiff in Resources */,
 				1C4CE6410FA03D7800215521 /* Pop.aiff in Resources */,
@@ -1604,14 +1564,12 @@
 				1C9C351C0FFFF2C500F79731 /* sectionHeaderHighlighted.png in Resources */,
 				92B6661417ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf in Resources */,
 				1CBEA7C7100318EF00546847 /* bouncer.png in Resources */,
-				926CF2A718FBB79D00A81159 /* Icon-29@2x.png in Resources */,
 				1C34A67010183ED900BAA714 /* personBlueSmall.png in Resources */,
 				1C34A6861018411B00BAA714 /* personWhiteSmall.png in Resources */,
 				1CB24E03101EBE4800217B50 /* verbs.plist in Resources */,
 				1CA3DCEA1027AEFF008B1AD2 /* help.png in Resources */,
 				1CA3DD5710287D5F008B1AD2 /* Help.plist in Resources */,
 				1CA3DEFD10291146008B1AD2 /* help-base.html in Resources */,
-				926CF29B18FBB77A00A81159 /* Icon-29.png in Resources */,
 				1CA3DF0110291176008B1AD2 /* help.css in Resources */,
 				1C79735B1029D0EF00649250 /* screencast.png in Resources */,
 				1C79735C1029D0EF00649250 /* screencastSelected.png in Resources */,
@@ -1628,6 +1586,7 @@
 				1C6F68AA113AF10E00514C0C /* Default-Landscape.png in Resources */,
 				1C6F68AB113AF10E00514C0C /* Default-Portrait.png in Resources */,
 				1CA9DFC211967186008149F9 /* members-large.png in Resources */,
+				926678F619BFE22900CCE5BE /* Images.xcassets in Resources */,
 				1CA264BB11C339BD00AB4E44 /* server@2x.png in Resources */,
 				1CA264D211C33A8000AB4E44 /* bouncer@2x.png in Resources */,
 				1CA264D511C345C700AB4E44 /* connectedBadgeDim.png in Resources */,
@@ -1646,7 +1605,6 @@
 				1CA2657211C455E500AB4E44 /* userAdmin@2x.png in Resources */,
 				1CA2657311C455E500AB4E44 /* userFounder@2x.png in Resources */,
 				1CA2657411C455E500AB4E44 /* userHalfOperator@2x.png in Resources */,
-				926CF2A818FBB79D00A81159 /* Icon-40@2x.png in Resources */,
 				1CA2657511C455E500AB4E44 /* userNormal@2x.png in Resources */,
 				1CA2657611C455E500AB4E44 /* userOperator@2x.png in Resources */,
 				1CA2657711C455E500AB4E44 /* userSuperOperator@2x.png in Resources */,
@@ -1663,7 +1621,6 @@
 				1CA265FB11C4AEF300AB4E44 /* chatBubble@2x.png in Resources */,
 				1CA265FC11C4AEF300AB4E44 /* chatBubbleSelected@2x.png in Resources */,
 				1CA265FF11C4AF0300AB4E44 /* screencast@2x.png in Resources */,
-				926CF2A918FBB79D00A81159 /* Icon-57@2x.png in Resources */,
 				1CA2660011C4AF0300AB4E44 /* screencastSelected@2x.png in Resources */,
 				92B6670417F7B48000BA3DD9 /* infoButtonPressed@2x.png in Resources */,
 				1CA2663811C4BA9200AB4E44 /* help@2x.png in Resources */,
@@ -1673,7 +1630,6 @@
 				1C1004F8162A4C30003090A9 /* members-large@2x.png in Resources */,
 				9290D7C21694F3A400ACF833 /* console.css in Resources */,
 				92FCEF83169A508100F1CE76 /* console.png in Resources */,
-				926CF29F18FBB77A00A81159 /* Icon-72.png in Resources */,
 				92FCEF86169A508C00F1CE76 /* console@2x.png in Resources */,
 				9290604516B27A3E0095EC03 /* playAudioAccessory-pressed.png in Resources */,
 				9290604616B27A3E0095EC03 /* playAudioAccessory.png in Resources */,
@@ -1901,6 +1857,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1942,6 +1900,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1982,6 +1942,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
