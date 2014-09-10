@@ -109,7 +109,7 @@ static CQSoundController *fileTransferSound;
 
 	_chatNavigationController = [[CQChatNavigationController alloc] init];
 
-	if ([[UIDevice currentDevice] isPadModel] || [[UIDevice currentDevice] isSystemEight])
+	if ([[UIDevice currentDevice] isPadModel])
 		_chatPresentationController = [[CQChatPresentationController alloc] init];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_joinedRoom:) name:MVChatRoomJoinedNotification object:nil];
@@ -537,8 +537,6 @@ static CQSoundController *fileTransferSound;
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
 	if (![UIDevice currentDevice].isPadModel) {
 		[[CQColloquyApplication sharedApplication] showColloquies:nil hidingTopViewController:NO];
-		if ([controller respondsToSelector:@selector(setHidesBottomBarWhenPushed:)])
-			((UIViewController *)controller).hidesBottomBarWhenPushed = YES;
 	}
 
 	if (_visibleChatController == controller)

@@ -1234,11 +1234,46 @@ static BOOL showingKeyboard;
 - (BOOL) handleSysinfoCommandWithArguments:(NSString *) arguments {
 	NSString *version = [[CQSettingsController settingsController] stringForKey:@"CQCurrentVersion"];
 	NSString *orientation = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? NSLocalizedString(@"landscape", @"landscape orientation") : NSLocalizedString(@"portrait", @"portrait orientation");
+	NSString *model = [UIDevice currentDevice].localizedModel;
+	NSString *systemVersion = [NSProcessInfo processInfo].operatingSystemVersionString;
+	NSString *systemUptime = humanReadableTimeInterval([NSProcessInfo processInfo].systemUptime, YES);
+	NSUInteger processorsInTotal = [NSProcessInfo processInfo].processorCount;
 
+	long long physicalMemory = [NSProcessInfo processInfo].physicalMemory;
+	NSUInteger loopCount = 0;
+	for ( ; physicalMemory > 1024; loopCount++)
+		physicalMemory /= 1024;
+
+	NSString *memoryUnit = nil;
+	switch (loopCount) {
+	case 0:
+		memoryUnit = @"B";
+		break;
+	case 1:
+		memoryUnit = @"KiB";
+		break;
+	case 2:
+		memoryUnit = @"MiB";
+		break;
+	case 3:
+		memoryUnit = @"GiB";
+		break;
+	case 4:
+		memoryUnit = @"TiB";
+		break;
+	default:
+		memoryUnit = @"Units";
+		break;
+	}
+	NSString *systemMemory = [NSString stringWithFormat:@"%zd %@", physicalMemory, memoryUnit];
+
+	BOOL batteryMonitoringEnabled = [UIDevice currentDevice].batteryMonitoringEnabled;
+	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
 	NSString *message = nil;
 	if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateUnplugged)
-		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %.0f%% battery life remaining.", @"System info message with battery level"), version, orientation, [UIDevice currentDevice].localizedModel, [UIDevice currentDevice].systemVersion, [UIDevice currentDevice].batteryLevel * 100.];
-	else message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@.", @"System info message"), version, orientation, [UIDevice currentDevice].localizedModel, [UIDevice currentDevice].systemVersion];
+		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %d processors, %@ RAM, %.0f%% battery life remaining and a system uptime of %@.", @"System info message with battery level"), version, orientation, model, systemVersion, processorsInTotal, systemMemory, [UIDevice currentDevice].batteryLevel * 100., systemUptime];
+	else message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %d processors, %@ RAM and a system uptime of %@.", @"System info message"), version, orientation, model, systemVersion, processorsInTotal, systemMemory, systemUptime];
+	[UIDevice currentDevice].batteryMonitoringEnabled = batteryMonitoringEnabled;
 
 	[self sendMessage:message asAction:YES];
 

@@ -39,6 +39,7 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 	NSTimeInterval _allowedBackgroundTime;
 	NSMutableSet *_automaticallySetConnectionAwayStatus;
 	BOOL _shouldLogRawMessagesToConsole;
+	NSMapTable *_activityTokens;
 }
 + (CQConnectionsController *) defaultController;
 

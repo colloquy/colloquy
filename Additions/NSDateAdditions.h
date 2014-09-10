@@ -8,3 +8,5 @@
 
 - (NSString *) localizedDescription;
 @end
+
+NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFormat);

@@ -329,7 +329,7 @@ static NSMutableArray *highlightWords;
 
 	[self userDefaultsChanged];
 
-	if ([[UIDevice currentDevice] isPadModel] || [[UIDevice currentDevice] isSystemEight]) {
+	if ([[UIDevice currentDevice] isPadModel]) {
 		[self reloadSplitViewController];
 	} else {
 		_mainViewController = [CQChatController defaultController].chatNavigationController;
@@ -423,7 +423,7 @@ static NSMutableArray *highlightWords;
 	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;
 	NSMutableArray *items = [chatPresentationController.standardToolbarItems mutableCopy];
 
-	if (items[0] == barButtonItem)
+	if (items.count && items[0] == barButtonItem)
 		return;
 
 	if (viewController == [CQChatController defaultController].chatNavigationController) {

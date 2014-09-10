@@ -75,6 +75,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	if ([UIDevice currentDevice].multitaskingSupported) {
 		_backgroundTask = UIBackgroundTaskInvalid;
+		_activityTokens = [NSMapTable strongToStrongObjectsMapTable];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -884,6 +885,9 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	MVChatConnection *connection = notification.object;
 	[connection removePersistentInformationObjectForKey:@"tryBouncerFirst"];
 
+	id <NSObject> activityToken = [[NSProcessInfo processInfo] beginActivityWithOptions:NSActivityUserInitiated reason:[NSString stringWithFormat:@"%@ is open and connected", connection.displayName]];
+	[_activityTokens setObject:activityToken forKey:connection];
+
 	if (!connection.directConnection)
 		connection.temporaryDirectConnection = NO;
 
@@ -901,6 +905,10 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	MVChatConnection *connection = notification.object;
 	[connection removePersistentInformationObjectForKey:@"tryBouncerFirst"];
+
+	id <NSObject> activityToken = [_activityTokens objectForKey:connection];
+	[[NSProcessInfo processInfo] endActivity:activityToken];
+	[_activityTokens removeObjectForKey:connection];
 
 	[self _possiblyEndBackgroundTaskSoon];
 }
@@ -1561,9 +1569,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	if (defaultNickname.length)
 		return defaultNickname;
 
-#if TARGET_IPHONE_SIMULATOR
-	return NSUserName();
-#else
 	static NSString *generatedNickname;
 	if (!generatedNickname) {
 		NSCharacterSet *badCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"] invertedSet];
@@ -1586,7 +1591,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		return generatedNickname;
 
 	return NSLocalizedString(@"ColloquyUser", @"Default nickname");
-#endif
 }
 
 + (NSString *) defaultRealName {
@@ -1594,9 +1598,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	if (defaultRealName.length)
 		return defaultRealName;
 
-#if TARGET_IPHONE_SIMULATOR
-	return NSFullUserName();
-#else
 	static NSString *generatedRealName;
 	if (!generatedRealName) {
 		// This might only work for English users, but it is fine for now.
@@ -1608,7 +1609,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	if (generatedRealName.length)
 		return generatedRealName;
-#endif
 
 	return NSLocalizedString(@"Colloquy User", @"Default real name");
 }
