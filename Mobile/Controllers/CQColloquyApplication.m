@@ -309,7 +309,7 @@ static NSMutableArray *highlightWords;
 	_mainWindow.rootViewController = _mainViewController;
 }
 
-- (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
+- (BOOL) application:(UIApplication *) application willFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
 	NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]];
 	[[CQSettingsController settingsController] registerDefaults:defaults];
 
@@ -320,12 +320,16 @@ static NSMutableArray *highlightWords;
 
 	_mainWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 
+	return YES;
+}
+
+- (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
 	if ([_mainWindow respondsToSelector:@selector(setTintColor:)])
 		_mainWindow.tintColor = [UIColor colorWithRed:0.427 green:0.086 blue:0.396 alpha:1];
 
 	[self userDefaultsChanged];
 
-	if ([[UIDevice currentDevice] isPadModel]) {
+	if ([[UIDevice currentDevice] isPadModel] || [[UIDevice currentDevice] isSystemEight]) {
 		[self reloadSplitViewController];
 	} else {
 		_mainViewController = [CQChatController defaultController].chatNavigationController;

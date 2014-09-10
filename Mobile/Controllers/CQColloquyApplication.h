@@ -20,6 +20,7 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 	BOOL _userDefaultsChanged;
 	BOOL _isPanningSplitView;
 }
+
 + (CQColloquyApplication *) sharedApplication;
 
 - (void) showHelp:(id) sender;

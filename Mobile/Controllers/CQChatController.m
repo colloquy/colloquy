@@ -109,7 +109,7 @@ static CQSoundController *fileTransferSound;
 
 	_chatNavigationController = [[CQChatNavigationController alloc] init];
 
-	if ([[UIDevice currentDevice] isPadModel])
+	if ([[UIDevice currentDevice] isPadModel] || [[UIDevice currentDevice] isSystemEight])
 		_chatPresentationController = [[CQChatPresentationController alloc] init];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_joinedRoom:) name:MVChatRoomJoinedNotification object:nil];
