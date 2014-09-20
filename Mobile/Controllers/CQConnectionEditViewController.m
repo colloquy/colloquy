@@ -578,7 +578,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	if (buttonIndex == alertView.cancelButtonIndex)
 		return;
 	[[CQConnectionsController defaultController] removeConnection:_connection];
-	[self.navigationController popViewControllerAnimated:YES];
+	[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 }
 
 #pragma mark -
@@ -587,6 +587,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 	[[CQConnectionsController defaultController] removeConnection:_connection];
-	[self.navigationController popViewControllerAnimated:YES];
+	[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 }
 @end

@@ -318,7 +318,7 @@ static BOOL pushAvailable = YES;
 	if (buttonIndex == alertView.cancelButtonIndex)
 		return;
 	[[CQConnectionsController defaultController] removeBouncerSettings:_settings];
-	[self.navigationController popViewControllerAnimated:YES];
+	[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 }
 
 #pragma mark -
@@ -327,6 +327,6 @@ static BOOL pushAvailable = YES;
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 	[[CQConnectionsController defaultController] removeBouncerSettings:_settings];
-	[self.navigationController popViewControllerAnimated:YES];
+	[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 }
 @end
