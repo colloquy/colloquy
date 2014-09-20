@@ -1,4 +1,5 @@
 @class MVChatConnection;
+@class CQBouncerSettings;
 
 typedef enum {
 	CQConnectionTableCellNotConnectedStatus,
@@ -19,6 +20,8 @@ typedef enum {
 	CQConnectionTableCellStatus _status;
 	UIButton *_disclosureButton;
 }
+
+- (void) takeValuesFromBouncerSettings:(CQBouncerSettings *) bouncerSettings;
 - (void) takeValuesFromConnection:(MVChatConnection *) connection;
 - (void) updateConnectTime;
 

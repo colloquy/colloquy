@@ -2,6 +2,8 @@
 
 #import "CQConnectionsController.h"
 
+#import "CQBouncerSettings.h"
+
 #import <ChatCore/MVChatConnection.h>
 
 @implementation CQConnectionTableHeaderView
@@ -53,6 +55,10 @@
 	if (!connection)
 		return;
 
+	if ([connection isKindOfClass:[CQBouncerSettings class]]) {
+		[self takeValuesFromBouncerSettings:connection];
+		return;
+	}
 	self.server = connection.displayName;
 	self.nickname = connection.nickname;
 
@@ -82,9 +88,14 @@
 		break;
 	}
 
-	if (connection.bouncerType == MVChatConnectionColloquyBouncer)
-		_iconImageView.image = [UIImage imageNamed:@"bouncer.png"];
-	else _iconImageView.image = [UIImage imageNamed:@"server.png"];
+	_iconImageView.image = [UIImage imageNamed:@"server.png"];
+}
+
+- (void) takeValuesFromBouncerSettings:(CQBouncerSettings *) bouncerSettings {
+	_iconImageView.image = [UIImage imageNamed:@"bouncer.png"];
+
+	self.nickname = bouncerSettings.displayName;
+	self.server = bouncerSettings.server;	
 }
 
 - (NSString *) server {

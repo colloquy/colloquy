@@ -827,16 +827,22 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (editing) {
 		NSMutableArray *rowsToInsert = [NSMutableArray array];
 
-		for (NSInteger i = 1; i < [self numberOfSectionsInTableView:self.tableView]; i++)
-			[rowsToInsert addObject:[NSIndexPath indexPathForRow:([self tableView:self.tableView numberOfRowsInSection:i] - 1) inSection:i]];
+		for (NSInteger i = 1; i < [self numberOfSectionsInTableView:self.tableView]; i++) {
+			id connection = [[CQChatOrderingController defaultController] connectionAtIndex:(i - 1)];
+			if ([connection isKindOfClass:[MVChatConnection class]])
+				[rowsToInsert addObject:[NSIndexPath indexPathForRow:([self tableView:self.tableView numberOfRowsInSection:i] - 1) inSection:i]];
+		}
 
 		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
 		[self.tableView insertRowsAtIndexPaths:rowsToInsert withRowAnimation:UITableViewRowAnimationBottom];
 	} else {
 		NSMutableArray *rowsToRemove = [NSMutableArray array];
 
-		for (NSInteger i = 1; i < self.tableView.numberOfSections; i++)
-			[rowsToRemove addObject:[NSIndexPath indexPathForRow:([self.tableView numberOfRowsInSection:i] - 1) inSection:i]];
+		for (NSInteger i = 1; i < self.tableView.numberOfSections; i++) {
+			id connection = [[CQChatOrderingController defaultController] connectionAtIndex:(i - 1)];
+			if ([connection isKindOfClass:[MVChatConnection class]])
+				[rowsToRemove addObject:[NSIndexPath indexPathForRow:([self.tableView numberOfRowsInSection:i] - 1) inSection:i]];
+		}
 
 		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
 		[self.tableView deleteRowsAtIndexPaths:rowsToRemove withRowAnimation:UITableViewRowAnimationBottom];
@@ -955,6 +961,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
 	NSInteger numberOfSections = [CQConnectionsController defaultController].connections.count;
+	numberOfSections += [CQConnectionsController defaultController].bouncers.count;
 	if (self.editing)
 		numberOfSections++;
 	return numberOfSections;
@@ -968,7 +975,10 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	}
 
 	@synchronized([CQChatOrderingController defaultController]) {
-		MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:section];
+		id connection = [[CQChatOrderingController defaultController] connectionAtIndex:section];
+		if ([connection isKindOfClass:[CQBouncerSettings class]])
+			return 0;
+
 		if (connection) {
 			NSInteger numberOfRowsInSection = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection].count;
 			if (self.editing)
