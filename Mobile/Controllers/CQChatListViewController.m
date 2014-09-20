@@ -139,61 +139,29 @@ static id <CQChatViewController> chatControllerForIndexPath(NSIndexPath *indexPa
 	if (!controllers.count)
 		return nil;
 
-	MVChatConnection *currentConnection = nil;
-	NSInteger sectionCount = 0;
-	NSInteger rowCount = 0;
+	MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:indexPath.section];
+	NSArray *chatViewControllersForConnection = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
 
-	for (id <CQChatViewController> chatViewController in controllers) {
-		if (![chatViewController conformsToProtocol:@protocol(CQChatViewController)])
-			continue;
-
-		if (chatViewController.connection != currentConnection) {
-			rowCount = 0;
-			if (currentConnection)
-				++sectionCount;
-			currentConnection = chatViewController.connection;
-		}
-
-		if (indexPath.section == sectionCount && indexPath.row == rowCount)
-			return chatViewController;
-
-		++rowCount;
-	}
-
-	return nil;
+	return chatViewControllersForConnection[indexPath.row];
 }
 
 static NSIndexPath *indexPathForChatController(id <CQChatViewController> controller) {
 	if (!controller)
 		return nil;
 
-	NSArray *controllers = [CQChatOrderingController defaultController].chatViewControllers;
-	if (!controllers.count)
-		return nil;
+	MVChatConnection *connection = controller.connection;
+	NSUInteger sectionIndex = [[CQChatOrderingController defaultController] sectionIndexForConnection:connection];
+	NSUInteger rowIndex = 0;
 
-	MVChatConnection *currentConnection = nil;
-	NSInteger sectionCount = 0;
-	NSInteger rowCount = 0;
-
-	for (id <CQChatViewController> chatViewController in controllers) {
-		if (![chatViewController conformsToProtocol:@protocol(CQChatViewController)])
-			continue;
-
-		if (chatViewController.connection != currentConnection) {
-			rowCount = 0;
-			if (currentConnection)
-				++sectionCount;
-
-			currentConnection = chatViewController.connection;
+	NSArray *chatViewControllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
+	for (NSUInteger i = 0; i < chatViewControllers.count; i++) {
+		if (chatViewControllers[i] == controller) {
+			rowIndex = i;
+			break;
 		}
-
-		if (chatViewController == controller)
-			return [NSIndexPath indexPathForRow:rowCount inSection:sectionCount];
-
-		++rowCount;
 	}
 
-	return nil;
+	return [NSIndexPath indexPathForRow:rowIndex inSection:sectionIndex];
 }
 
 #if ENABLE(FILE_TRANSFERS)
@@ -795,22 +763,21 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		NSIndexPath *changedIndexPath = indexPathForChatController(controller);
 		NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
 
+		[self.tableView beginUpdates];
 		if (selectedIndexPath && changedIndexPath.section == selectedIndexPath.section)
 			[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
 
-		if (controllers.count == 1) {
-			[self.tableView beginUpdates];
-			if ([CQChatOrderingController defaultController].chatViewControllers.count == 1)
-				[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+		[self.tableView reloadData];
+		if (controllers.count == 1)
 			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:changedIndexPath.section] withRowAnimation:UITableViewRowAnimationTop];
-			[self.tableView endUpdates];
-		} else [self.tableView insertRowsAtIndexPaths:@[changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
+		else [self.tableView insertRowsAtIndexPaths:@[changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
+		[self.tableView endUpdates];
 
-	//	if (selectedIndexPath && changedIndexPath.section == selectedIndexPath.section) {
-	//		if (changedIndexPath.row <= selectedIndexPath.row)
-	//			selectedIndexPath = [NSIndexPath indexPathForRow:selectedIndexPath.row + 1 inSection:selectedIndexPath.section];
-	//		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-	//	}
+		if (selectedIndexPath && changedIndexPath.section == selectedIndexPath.section) {
+			if (changedIndexPath.row <= selectedIndexPath.row)
+				selectedIndexPath = [NSIndexPath indexPathForRow:selectedIndexPath.row + 1 inSection:selectedIndexPath.section];
+			[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+		}
 
 		if ([[UIDevice currentDevice] isPadModel])
 			[self resizeForViewInPopoverUsingTableView:self.tableView];
