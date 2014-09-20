@@ -32,11 +32,11 @@ NSString *CQChatControllerChangedTotalImportantUnreadCountNotification = @"CQCha
 #define FileDownloadAlertTag 2
 #endif
 
-#define NewChatActionSheetTag 1
-#define NewConnectionActionSheetTag 2
+#define NewChatActionSheetTag 0
+#define NewConnectionActionSheetTag 1
 #if ENABLE(FILE_TRANSFERS)
-#define SendFileActionSheetTag 3
-#define FileTypeActionSheetTag 4
+#define SendFileActionSheetTag 2
+#define FileTypeActionSheetTag 3
 #endif
 
 static NSInteger alwaysShowNotices;
@@ -323,13 +323,9 @@ static CQSoundController *fileTransferSound;
 		return;
 	}
 
-	if (buttonIndex == 0) {
-		[[CQConnectionsController defaultController] showNewConnectionPrompt:[actionSheet associatedObjectForKey:@"userInfo"]];
-		return;
-	}
-
 	if (actionSheet.tag == NewChatActionSheetTag) {
 		CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
+		creationViewController.selectedConnection = [actionSheet associatedObjectForKey:@"userInfo"];
 
 		if (buttonIndex == 1)
 			creationViewController.roomTarget = YES;
@@ -477,13 +473,11 @@ static CQSoundController *fileTransferSound;
 
 #pragma mark -
 
-- (void) showNewChatActionSheet:(id) sender {
+- (void) showNewChatActionSheetForConnection:(MVChatConnection *) connection fromPoint:(CGPoint) point {
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 
-	[sheet associateObject:sender forKey:@"userInfo"];
-
-	[sheet addButtonWithTitle:NSLocalizedString(@"Add New Connection", @"Add New Connection button title")];
+	[sheet associateObject:connection forKey:@"userInfo"];
 
 	if ([CQConnectionsController defaultController].connections.count) {
 		sheet.tag = NewChatActionSheetTag;
@@ -498,7 +492,7 @@ static CQSoundController *fileTransferSound;
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet fromPoint:point];
 }
 
 #pragma mark -

@@ -58,7 +58,7 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 
 - (BOOL) handleOpenURL:(NSURL *) url;
 
-- (void) showNewConnectionPrompt:(id) sender;
+- (void) showNewConnectionPromptFromPoint:(CGPoint) point;
 - (void) showBouncerCreationView:(id) sender;
 - (void) showConnectionCreationView:(id) sender;
 - (void) showConnectionCreationViewForURL:(NSURL *) url;

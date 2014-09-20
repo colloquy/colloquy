@@ -43,7 +43,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 - (NSDictionary *) persistentStateForConnection:(MVChatConnection *) connection;
 - (void) restorePersistentState:(NSDictionary *) state forConnection:(MVChatConnection *) connection;
 
-- (void) showNewChatActionSheet:(id) sender;
+- (void) showNewChatActionSheetForConnection:(MVChatConnection *) connection fromPoint:(CGPoint) point;
 
 - (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) room andConnection:(MVChatConnection *) connection;
 - (void) showChatControllerForUserNicknamed:(NSString *) nickname andConnection:(MVChatConnection *) connection;

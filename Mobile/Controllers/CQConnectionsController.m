@@ -169,7 +169,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 #pragma mark -
 
-- (void) showNewConnectionPrompt:(id) sender {
+- (void) showNewConnectionPromptFromPoint:(CGPoint) point {
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.tag = 1;
@@ -179,7 +179,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet fromPoint:point];
 }
 
 - (void) showBouncerCreationView:(id) sender {

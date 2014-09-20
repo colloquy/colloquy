@@ -412,7 +412,10 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (gestureReconizer.state != UIGestureRecognizerStateBegan)
 		return;
 
-	CGPoint locationInView = [gestureReconizer locationInView:self.tableView];
+	if (self.editing) // do nothing, editing controls are already on screen
+		return;
+
+		CGPoint locationInView = [gestureReconizer locationInView:self.tableView];
 	NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:locationInView];
 	if (indexPath) {
 		UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
@@ -438,11 +441,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		// As of iOS 7, [self.tableView hitTest:locationInView withEvent:nil] gives us the subview ov the tableheader view, not the superview's container
 		if (CGRectContainsPoint(header.frame, locationInView)) {
 			MVChatConnection *connection = [_connectionsForHeaderViews objectForKey:header];
-			if (self.editing) {
-				if (indexPath.section == 0)
-					[[CQConnectionsController defaultController] showNewConnectionPrompt:nil];
-//				} else [[CQConnectionsController defaultController] editConnection:connection];
-			} else if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus) {
+			if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus) {
 				_currentConnectionActionSheet = [[UIActionSheet alloc] init];
 				_currentConnectionActionSheet.delegate = self;
 				_currentConnectionActionSheet.tag = DisconnectSheetTag;
@@ -1000,7 +999,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	id <CQChatViewController> chatViewController = chatControllerForIndexPath(indexPath);
 	if (self.editing && chatViewController == nil) {
 		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
-		cell.textLabel.text = @"Join Room";
+		cell.textLabel.text = NSLocalizedString(@"New Chat", @"New Chat");
 		return cell;
 	}
 #if ENABLE(FILE_TRANSFERS)
@@ -1092,17 +1091,20 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) tableView:(UITableView *) tableView commitEditingStyle:(UITableViewCellEditingStyle) editingStyle forRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (self.editing) {
-		if (indexPath.section == 0) {
-			[[CQConnectionsController defaultController] showConnectionCreationView:nil];
-			return;
-		}
+	CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
+	CGPoint midpointOfRect = CGPointMake(CGRectGetMidX(cellRect), CGRectGetMidY(cellRect));
 
-		indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section + 1)];
-
-		CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
-		[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
+	if (indexPath.section == 0) {
+		[[CQConnectionsController defaultController] showNewConnectionPromptFromPoint:midpointOfRect];
 		return;
+	}
+
+	indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - 1)];
+
+	if (editingStyle == UITableViewCellEditingStyleInsert) {
+		MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:indexPath.section];
+		NSLog(@"%@", connection);
+		[[CQChatController defaultController] showNewChatActionSheetForConnection:connection fromPoint:midpointOfRect];
 	}
 
 	if (editingStyle != UITableViewCellEditingStyleDelete)
