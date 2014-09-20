@@ -56,8 +56,6 @@
 	<array>
 		<string>OpenDyslexic-Regular.otf</string>
 	</array>
-	<key>UIBackgroundModes</key>
-	<array/>
 	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UIRequiresPersistentWiFi</key>
