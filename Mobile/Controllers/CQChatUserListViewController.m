@@ -451,9 +451,10 @@ static NSString *membersFilteredCountFormat;
 	@synchronized(self) {
 		MVChatUser *user = self.matchedUsers[indexPath.row];
 
+		__strong __typeof__((_chatUserDelegate)) chatUserDelegate = _chatUserDelegate;
 		BOOL shouldPresentInformation = YES;
-		if (_chatUserDelegate && [_chatUserDelegate respondsToSelector:@selector(chatUserListViewController:shouldPresentInformationForUser:)])
-			shouldPresentInformation = [_chatUserDelegate chatUserListViewController:self shouldPresentInformationForUser:user];
+		if (chatUserDelegate && [chatUserDelegate respondsToSelector:@selector(chatUserListViewController:shouldPresentInformationForUser:)])
+			shouldPresentInformation = [chatUserDelegate chatUserListViewController:self shouldPresentInformationForUser:user];
 
 		if (shouldPresentInformation) {
 			UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -468,8 +469,8 @@ static NSString *membersFilteredCountFormat;
 			[tableView deselectRowAtIndexPath:indexPath animated:NO];
 		}
 
-		if (_chatUserDelegate && [_chatUserDelegate respondsToSelector:@selector(chatUserListViewController:didSelectUser:)])
-			[_chatUserDelegate chatUserListViewController:self didSelectUser:user];
+		if (chatUserDelegate && [chatUserDelegate respondsToSelector:@selector(chatUserListViewController:didSelectUser:)])
+			[chatUserDelegate chatUserListViewController:self didSelectUser:user];
 	}
 }
 

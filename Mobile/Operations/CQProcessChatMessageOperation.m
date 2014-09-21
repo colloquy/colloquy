@@ -360,8 +360,8 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	if (highlighted)
 		_processedMessage[@"highlighted"] = @(YES);
 
-
-	if (_target && _action)
-		[_target performSelectorOnMainThread:_action withObject:self waitUntilDone:NO];
+	__strong __typeof__((_target)) strongTarget = _target;
+	if (strongTarget && _action)
+		[strongTarget performSelectorOnMainThread:_action withObject:self waitUntilDone:NO];
 }
 @end

@@ -65,8 +65,10 @@
 
 	_listItemText = [textView.text copy];
 
-	BOOL stringForFooterWithTextView = [_delegate respondsToSelector:@selector(stringForFooterWithTextView:)];
-	BOOL integerCountdown = [_delegate respondsToSelector:@selector(integerForCountdownInFooterWithTextView:)];
+	__strong __typeof__((_delegate)) delegate = _delegate;
+
+	BOOL stringForFooterWithTextView = [delegate respondsToSelector:@selector(stringForFooterWithTextView:)];
+	BOOL integerCountdown = [delegate respondsToSelector:@selector(integerForCountdownInFooterWithTextView:)];
 
 	if (!stringForFooterWithTextView && !integerCountdown) {
 		_footerLabel.frame = CGRectZero;
@@ -75,11 +77,11 @@
 
 	NSString *message = nil;
 	if (stringForFooterWithTextView)
-		message = [_delegate stringForFooterWithTextView:textView];
+		message = [delegate stringForFooterWithTextView:textView];
 
 	NSInteger charactersRemaining = 0;
 	if (integerCountdown)
-		charactersRemaining = [_delegate integerForCountdownInFooterWithTextView:textView];
+		charactersRemaining = [delegate integerForCountdownInFooterWithTextView:textView];
 
 	BOOL emptyFrame = CGRectEqualToRect(_footerLabel.frame, CGRectZero);
 

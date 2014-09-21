@@ -76,8 +76,9 @@
 - (void) socket:(GCDAsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16)port {
 	_error = nil;
 
-	if ([_delegate respondsToSelector:@selector(bouncerConnectionDidConnect:)])
-		[_delegate bouncerConnectionDidConnect:self];
+	__strong __typeof__((_delegate)) delegate = _delegate;
+	if ([delegate respondsToSelector:@selector(bouncerConnectionDidConnect:)])
+		[delegate bouncerConnectionDidConnect:self];
 
 	NSAssert(_settings.username.length, @"Bouncer username required");
 	NSAssert(_settings.password.length, @"Bouncer password required");
@@ -100,8 +101,9 @@
 - (void) socketDidDisconnect:(GCDAsyncSocket *) sock {
 	_socket = nil;
 
-	if ([_delegate respondsToSelector:@selector(bouncerConnectionDidDisconnect:withError:)])
-		[_delegate bouncerConnectionDidDisconnect:self withError:_error];
+	__strong __typeof__((_delegate)) delegate = _delegate;
+	if ([delegate respondsToSelector:@selector(bouncerConnectionDidDisconnect:withError:)])
+		[delegate bouncerConnectionDidDisconnect:self withError:_error];
 }
 
 - (void) socket:(GCDAsyncSocket *) sock didWriteDataWithTag:(long) tag {
@@ -276,7 +278,9 @@ end:
 }
 
 - (void) _handle810WithParameters:(NSArray *) parameters {
-	if ([_delegate respondsToSelector:@selector(bouncerConnection:didRecieveConnectionInfo:)]) {
+	__strong __typeof__((_delegate)) delegate = _delegate;
+
+	if ([delegate respondsToSelector:@selector(bouncerConnection:didRecieveConnectionInfo:)]) {
 		NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:10];
 
 		if (_connectionIdentifier.length)
@@ -304,15 +308,17 @@ end:
 		if (_encoding)
 			info[@"encoding"] = @(_encoding);
 
-		[_delegate bouncerConnection:self didRecieveConnectionInfo:info];
+		__strong __typeof__((_delegate)) delegate = _delegate;
+		[delegate bouncerConnection:self didRecieveConnectionInfo:info];
 	}
 
 	[self _resetState];
 }
 
 - (void) _handle811WithParameters:(NSArray *) parameters {
-	if ([_delegate respondsToSelector:@selector(bouncerConnectionDidFinishConnectionList:)])
-		[_delegate bouncerConnectionDidFinishConnectionList:self];
+	__strong __typeof__((_delegate)) delegate = _delegate;
+	if ([delegate respondsToSelector:@selector(bouncerConnectionDidFinishConnectionList:)])
+		[delegate bouncerConnectionDidFinishConnectionList:self];
 	[self disconnect];
 }
 

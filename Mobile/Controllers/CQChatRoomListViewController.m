@@ -263,8 +263,9 @@ static BOOL showFullRoomNames;
 
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 
-	if (!_target || [_target respondsToSelector:_action])
-		[[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil];
+	__strong __typeof__((_target)) strongTarget = _target;
+	if (!strongTarget || [strongTarget respondsToSelector:_action])
+		[[UIApplication sharedApplication] sendAction:_action to:strongTarget from:self forEvent:nil];
 }
 
 - (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {

@@ -105,8 +105,9 @@ static NSRegularExpression *numericRegularExpression;
 		_processedMessage[@"messagePlain"] = strippedMessage;
 	}
 
-	if (_target && _action)
-		[_target performSelectorOnMainThread:_action withObject:self waitUntilDone:NO];
+	__strong __typeof__((_target)) strongTarget = _target;
+	if (strongTarget && _action)
+		[strongTarget performSelectorOnMainThread:_action withObject:self waitUntilDone:NO];
 
 }
 @end

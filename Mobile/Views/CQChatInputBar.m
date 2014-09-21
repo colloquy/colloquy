@@ -187,9 +187,10 @@ static BOOL hardwareKeyboard;
 	if (height == CGRectGetHeight(self.frame))
 		return;
 
+	__strong __typeof__((_delegate)) strongDelegate = _delegate;
 	BOOL shouldSetHeight = YES;
-	if (_delegate && [_delegate respondsToSelector:@selector(chatInputBar:shouldChangeHeightBy:)])
-		shouldSetHeight = [_delegate chatInputBar:self shouldChangeHeightBy:(self.frame.size.height - height)];
+	if (strongDelegate && [strongDelegate respondsToSelector:@selector(chatInputBar:shouldChangeHeightBy:)])
+		shouldSetHeight = [strongDelegate chatInputBar:self shouldChangeHeightBy:(self.frame.size.height - height)];
 
 	if (shouldSetHeight) {
 		self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, height);
@@ -253,10 +254,11 @@ static BOOL hardwareKeyboard;
 }
 
 - (void) showCompletionsForText:(NSString *) text inRange:(NSRange) range {
-	if (![_delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)])
+	__strong __typeof__((_delegate)) strongDelegate = _delegate;
+	if (![strongDelegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)])
 		return;
 
-	NSArray *completions = [_delegate chatInputBar:self completionsForWordWithPrefix:text inRange:range];
+	NSArray *completions = [strongDelegate chatInputBar:self completionsForWordWithPrefix:text inRange:range];
 	if (completions.count)
 		[self showCompletions:completions forText:text inRange:range];
 	else [self hideCompletions];
@@ -360,8 +362,9 @@ retry:
 #pragma mark -
 
 - (void) accessoryButtonPressed:(id) sender {
-	if (_delegate && [_delegate respondsToSelector:@selector(chatInputBarAccessoryButtonPressed:)])
-		[_delegate chatInputBarAccessoryButtonPressed:self];
+	__strong __typeof__((_delegate)) strongDelegate = _delegate;
+	if (strongDelegate && [strongDelegate respondsToSelector:@selector(chatInputBarAccessoryButtonPressed:)])
+		[strongDelegate chatInputBarAccessoryButtonPressed:self];
 }
 
 #pragma mark -
@@ -389,25 +392,29 @@ retry:
 }
 
 - (BOOL) textViewShouldBeginEditing:(UITextView *) textView {
-	if ([_delegate respondsToSelector:@selector(chatInputBarShouldBeginEditing:)])
-		return [_delegate chatInputBarShouldBeginEditing:self];
+	__strong __typeof__((_delegate)) strongDelegate = _delegate;
+	if ([strongDelegate respondsToSelector:@selector(chatInputBarShouldBeginEditing:)])
+		return [strongDelegate chatInputBarShouldBeginEditing:self];
 	return YES;
 }
 
 - (void) textViewDidBeginEditing:(UITextView *) textView {
-	if ([_delegate respondsToSelector:@selector(chatInputBarDidBeginEditing:)])
-		[_delegate chatInputBarDidBeginEditing:self];
+	__strong __typeof__((_delegate)) strongDelegate = _delegate;
+	if ([strongDelegate respondsToSelector:@selector(chatInputBarDidBeginEditing:)])
+		[strongDelegate chatInputBarDidBeginEditing:self];
 }
 
 - (BOOL) textViewShouldEndEditing:(UITextView *) textView {
-	if ([_delegate respondsToSelector:@selector(chatInputBarShouldEndEditing:)])
-		return [_delegate chatInputBarShouldEndEditing:self];
+	__strong __typeof__((_delegate)) strongDelegate = _delegate;
+	if ([strongDelegate respondsToSelector:@selector(chatInputBarShouldEndEditing:)])
+		return [strongDelegate chatInputBarShouldEndEditing:self];
 	return YES;
 }
 
 - (void) textViewDidEndEditing:(UITextView *) textView {
-	if ([_delegate respondsToSelector:@selector(chatInputBarDidEndEditing:)])
-		[_delegate chatInputBarDidEndEditing:self];
+	__strong __typeof__((_delegate)) strongDelegate = _delegate;
+	if ([strongDelegate respondsToSelector:@selector(chatInputBarDidEndEditing:)])
+		[strongDelegate chatInputBarDidEndEditing:self];
 	[self hideCompletions];
 }
 
@@ -420,7 +427,8 @@ retry:
 		return YES;
 	}
 
-	if (![_delegate respondsToSelector:@selector(chatInputBar:sendText:)])
+	__strong __typeof__((_delegate)) strongDelegate = _delegate;
+	if (![strongDelegate respondsToSelector:@selector(chatInputBar:sendText:)])
 		return NO;
 
 	if (!_inputView.text.length)
@@ -434,6 +442,8 @@ retry:
 
 - (BOOL) textView:(UITextView *) textView shouldChangeTextInRange:(NSRange) range replacementText:(NSString *) string {
 	@synchronized(textView) {
+		__strong __typeof__((_delegate)) strongDelegate = _delegate;
+
 		if ([string isEqualToString:@"\n"]) {
 			[self textViewShouldReturn:textView];
 
@@ -443,7 +453,7 @@ retry:
 		if ([string isEqualToString:@"\t"]) {
 			hardwareKeyboard = YES;
 
-			if ([_delegate respondsToSelector:@selector(chatInputBarShouldIndent:)] && ![_delegate chatInputBarShouldIndent:self])
+			if ([strongDelegate respondsToSelector:@selector(chatInputBarShouldIndent:)] && ![strongDelegate chatInputBarShouldIndent:self])
 				return NO;
 		}
 
@@ -453,7 +463,7 @@ retry:
 			[self _updateTextTraits];
 		}
 
-		if (![_delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![_delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:)])
+		if (![strongDelegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![strongDelegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:)])
 			return YES;
 
 		if (_spaceCyclesCompletions && _completionCapturedKeyboard && self.showingCompletions && [string isEqualToString:@" "] && !_completionView.closeSelected) {
@@ -505,9 +515,9 @@ retry:
 			} else canShowCompletionForCurrentWord = YES; // if we are at the end of the line, we can show completions since there's nothing else after it
 		} else canShowCompletionForCurrentWord = YES; // if we don't have any text, we can maybe show completions although we probably won't (not enough context yet)
 
-		if (_autocomplete && canShowCompletionForCurrentWord && !_disableCompletionUntilNextWord && word.length && ![self _hasMarkedText] && [_delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
-			@synchronized(_delegate) {
-				completions = [_delegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
+		if (_autocomplete && canShowCompletionForCurrentWord && !_disableCompletionUntilNextWord && word.length && ![self _hasMarkedText] && [strongDelegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
+			@synchronized(strongDelegate) {
+				completions = [strongDelegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
 			}
 			if (completions.count)
 				[self showCompletions:completions forText:text inRange:wordRange];
@@ -517,7 +527,7 @@ retry:
 		word = [text substringWithRange:wordRange];
 
 		UITextAutocorrectionType newAutocorrectionType = UITextAutocorrectionTypeDefault;
-		if (!_autocorrect || completions.count || ([_delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![_delegate chatInputBar:self shouldAutocorrectWordWithPrefix:word]))
+		if (!_autocorrect || completions.count || ([strongDelegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![strongDelegate chatInputBar:self shouldAutocorrectWordWithPrefix:word]))
 			newAutocorrectionType = UITextAutocorrectionTypeNo;
 
 		if (newAutocorrectionType != _inputView.autocorrectionType) {
@@ -703,7 +713,8 @@ retry:
 		NSString *text = _inputView.text;
 		text = [text stringBySubstitutingEmojiForEmoticons];
 
-		if (![_delegate chatInputBar:self sendText:text])
+		__strong __typeof__((_delegate)) strongDelegate = _delegate;
+		if (![strongDelegate chatInputBar:self sendText:text])
 			return;
 
 		_disableCompletionUntilNextWord = NO;

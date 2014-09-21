@@ -252,13 +252,13 @@
 	if (_selectedCompletion == NSNotFound)
 		return;
 
-
+	__strong __typeof__((_delegate)) delegate = _delegate;
 	if (_selectedCompletion >= MaximumCompletions || _selectedCompletion >= _completions.count) {
-		if ([_delegate respondsToSelector:@selector(textCompletionViewDidClose:)])
-			[_delegate textCompletionViewDidClose:self];
+		if ([delegate respondsToSelector:@selector(textCompletionViewDidClose:)])
+			[delegate textCompletionViewDidClose:self];
 	} else {
-		if ([_delegate respondsToSelector:@selector(textCompletionView:didSelectCompletion:)])
-			[_delegate textCompletionView:self didSelectCompletion:_completions[_selectedCompletion]];
+		if ([delegate respondsToSelector:@selector(textCompletionView:didSelectCompletion:)])
+			[delegate textCompletionView:self didSelectCompletion:_completions[_selectedCompletion]];
 	}
 
 	self.selectedCompletion = NSNotFound;

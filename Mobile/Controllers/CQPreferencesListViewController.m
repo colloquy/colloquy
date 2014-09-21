@@ -83,8 +83,9 @@ enum {
 	if (_editingViewController || !_pendingChanges || (!_action && !self.preferencesListBlock))
 		return;
 
-	if (!_target || [_target respondsToSelector:_action])
-		if ([[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil])
+	__strong __typeof__((_target)) strongTarget = _target;
+	if (!strongTarget || [strongTarget respondsToSelector:_action])
+		if ([[UIApplication sharedApplication] sendAction:_action to:strongTarget from:self forEvent:nil])
 			_pendingChanges = NO;
 
 	if (self.preferencesListBlock) {
@@ -209,8 +210,9 @@ enum {
 		[self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.25];
 	}
 
-	if (!editing && _pendingChanges && _action && (!_target || [_target respondsToSelector:_action]))
-		if ([[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil])
+	__strong __typeof__((_target)) strongTarget = _target;
+	if (!editing && _pendingChanges && _action && (!strongTarget || [strongTarget respondsToSelector:_action]))
+		if ([[UIApplication sharedApplication] sendAction:_action to:strongTarget from:self forEvent:nil])
 			_pendingChanges = NO;
 
 	if (self.preferencesListBlock) {
