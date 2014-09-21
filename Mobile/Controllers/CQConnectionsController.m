@@ -683,8 +683,8 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 }
 
 - (void) _gotRawConnectionMessage:(NSNotification *) notification {
-//	if (!_shouldLogRawMessagesToConsole)
-//		return;
+	if (!_shouldLogRawMessagesToConsole)
+		return;
 
 	MVChatConnection *connection = notification.object;
 	NSString *message = [notification userInfo][@"message"];

@@ -57,9 +57,12 @@ static BOOL showsChatIcons;
 
 	self.title = NSLocalizedString(@"Colloquies", @"Colloquies view title");
 
-	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:[CQChatController defaultController] action:@selector(showNewChatActionSheet:)];
-	self.navigationItem.rightBarButtonItem = addItem;
-	self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"New chat.", @"Voiceover new chat label");
+	self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"Manage chats.", @"Voiceover manage chats label");
+
+	self.editButtonItem.possibleTitles = [NSSet setWithObjects:NSLocalizedString(@"Manage", @"Manage button title"), NSLocalizedString(@"Done", @"Done button title"), nil];
+	self.editButtonItem.title = NSLocalizedString(@"Manage", @"Manage button title");
+
+	[self.navigationItem setRightBarButtonItem:self.editButtonItem animated:[self isViewLoaded]];
 
 	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showPreferences:)];
 	self.navigationItem.leftBarButtonItem = settingsItem;
@@ -614,6 +617,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 - (void) connectionAdded:(MVChatConnection *) connection {
 	NSInteger sectionIndex = [[CQChatOrderingController defaultController] sectionIndexForConnection:connection];
+	if (self.editing)
+		sectionIndex++;
 
 	[self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
 }
@@ -650,18 +655,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	BOOL hasChatController = NO;
 	@synchronized([CQChatOrderingController defaultController]) {
-		for (MVChatConnection *connection in [CQConnectionsController defaultController].connections) {
-			hasChatController = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection].count;
-
-			if (hasChatController) {
-				[self.navigationItem setRightBarButtonItem:self.editButtonItem animated:YES];
-
-				break;
-			}
-		}
-
 		self.tableView.rowHeight = 62.;
 
 		if ([[UIDevice currentDevice] isPadModel]) {
@@ -680,6 +674,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) viewWillAppear:(BOOL) animated {
+#warning "TODO in progress: Bug where section headers for connections don't show up unless you have at least one room or private message"
+
 	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
 
 	[self _startUpdatingConnectTimes];
@@ -752,13 +748,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	}
 
 	@synchronized([CQChatOrderingController defaultController]) {
-		self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"Manage chats.", @"Voiceover manage chats label");
-
-		self.editButtonItem.possibleTitles = [NSSet setWithObjects:NSLocalizedString(@"Manage", @"Manage button title"), NSLocalizedString(@"Done", @"Done button title"), nil];
-		self.editButtonItem.title = NSLocalizedString(@"Manage", @"Manage button title");
-
-		[self.navigationItem setRightBarButtonItem:self.editButtonItem animated:[self isViewLoaded]];
-
 		NSArray *controllers = nil;
 		if ([controller conformsToProtocol:@protocol(CQChatViewController)])
 			controllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:((id <CQChatViewController>)controller).connection];
@@ -820,7 +809,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 	}
 
-	if (!editing)
+	if (!editing) // fix the button resets itself back to "Edit", despite the possibleTitle being set to "Manage"
 		self.editButtonItem.title = NSLocalizedString(@"Manage", @"Manage button title");
 
 	[self.tableView beginUpdates];
@@ -962,6 +951,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
 	NSInteger numberOfSections = [CQConnectionsController defaultController].connections.count;
 	numberOfSections += [CQConnectionsController defaultController].bouncers.count;
+
 	if (self.editing)
 		numberOfSections++;
 	return numberOfSections;
@@ -1113,7 +1103,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	if (editingStyle == UITableViewCellEditingStyleInsert) {
 		MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:indexPath.section];
-		NSLog(@"%@", connection);
 		[[CQChatController defaultController] showNewChatActionSheetForConnection:connection fromPoint:midpointOfRect];
 	}
 
@@ -1195,8 +1184,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 - (CGFloat) tableView:(UITableView *) tableView heightForHeaderInSection:(NSInteger) section {
 	@synchronized([CQChatOrderingController defaultController]) {
-		if (![CQChatOrderingController defaultController].chatViewControllers.count)
-			return 0.;
 		if (self.editing && section == 0)
 			return 0.;
 		return 44.;
