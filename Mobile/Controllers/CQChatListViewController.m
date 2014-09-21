@@ -1100,12 +1100,14 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
 	CGPoint midpointOfRect = CGPointMake(CGRectGetMidX(cellRect), CGRectGetMidY(cellRect));
 
-	if (indexPath.section == 0) {
-		[[CQConnectionsController defaultController] showNewConnectionPromptFromPoint:midpointOfRect];
-		return;
-	}
+	if (self.editing) {
+		if (indexPath.section == 0) {
+			[[CQConnectionsController defaultController] showNewConnectionPromptFromPoint:midpointOfRect];
+			return;
+		}
 
-	indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - 1)];
+		indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - 1)];
+	}
 
 	if (editingStyle == UITableViewCellEditingStyleInsert) {
 		MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:indexPath.section];
