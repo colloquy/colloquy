@@ -104,8 +104,6 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 	if (_started)
 		return;
 
-	[super start];
-
 	[self main];
 }
 

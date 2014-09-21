@@ -56,7 +56,7 @@
 		return;
 
 	if ([connection isKindOfClass:[CQBouncerSettings class]]) {
-		[self takeValuesFromBouncerSettings:connection];
+		[self takeValuesFromBouncerSettings:(CQBouncerSettings *)connection];
 		return;
 	}
 	self.server = connection.displayName;

@@ -222,7 +222,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	}
 
 	if (alertView.tag == CannotConnectToBouncerTag) {
-		CQBouncerSettings *settings = [alertView associatedObjectForKey:@"userInfo"];
+//		CQBouncerSettings *settings = [alertView associatedObjectForKey:@"userInfo"];
 //		[_connectionsNavigationController editBouncer:settings];
 		[[CQColloquyApplication sharedApplication] showConnections:nil];
 		return;
@@ -378,7 +378,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		[alert associateObject:connection.settings forKey:@"userInfo"];
 		[alert addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings alert button title")];
 
-		[alert show];
+//		[alert show];
 	}
 
 	connection.delegate = nil;

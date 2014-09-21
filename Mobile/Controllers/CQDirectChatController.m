@@ -594,11 +594,6 @@ static BOOL showingKeyboard;
 }
 #endif
 
-- (void) didReceiveMemoryWarning {
-	// Do nothing for now, since calling super will release the view and
-	// the transcript view with all the chat history.
-}
-
 #pragma mark -
 
 - (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) theChatInputBar {
@@ -1802,7 +1797,6 @@ static BOOL showingKeyboard;
 		}
 	}
 
-	CQUIChatTranscriptView *chatTranscriptView = (CQUIChatTranscriptView *)transcriptView;
 	transcriptView.styleIdentifier = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptStyle"];
 	transcriptView.fontFamily = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFont"];
 	transcriptView.fontSize = chatTranscriptFontSize;
