@@ -327,7 +327,7 @@ static CQSoundController *fileTransferSound;
 		CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
 		creationViewController.selectedConnection = [actionSheet associatedObjectForKey:@"userInfo"];
 
-		if (buttonIndex == 1)
+		if (buttonIndex == 0)
 			creationViewController.roomTarget = YES;
 
 		[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];

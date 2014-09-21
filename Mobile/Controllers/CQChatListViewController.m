@@ -223,23 +223,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		if (!hasChatController)
 			[self.navigationItem setRightBarButtonItem:nil animated:[self isViewLoaded]];
 
-		if (!(allViewControllers.count - viewControllersToClose.count) && [viewControllersToClose isEqualToArray:allViewControllers]) {
-			NSUInteger connectionSection = [[CQChatOrderingController defaultController] sectionIndexForConnection:connection];
-			if (connectionSection == NSNotFound)
-				return;
-
-			for (id <CQChatViewController> chatViewController in viewControllersToClose)
-				[[CQChatController defaultController] closeViewController:chatViewController];
-
-			[self.tableView beginUpdates];
-			[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:connectionSection] withRowAnimation:animation];
-			if (![CQChatOrderingController defaultController].chatViewControllers.count)
-				[self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-			[self.tableView endUpdates];
-
-			return;
-		}
-
 		NSMutableArray *rowsToDelete = [[NSMutableArray alloc] init];
 
 		for (id <CQChatViewController> chatViewController in viewControllersToClose) {
@@ -708,6 +691,23 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		self.navigationController.navigationBar.barTintColor = nil;
 }
 
+- (void) viewDidAppear:(BOOL) animated {
+	BOOL defaultToEditing = YES;
+
+	for (MVChatConnection *connection in [CQConnectionsController defaultController].connections) {
+		NSArray *chatViewControllersForConnection = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
+		if (chatViewControllersForConnection.count) {
+			defaultToEditing = NO;
+			break;
+		}
+	}
+
+	if (defaultToEditing)
+		[self setEditing:YES animated:YES];
+
+	[super viewDidAppear:animated];
+}
+
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
@@ -797,6 +797,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 #pragma mark -
 
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
+	if (editing == self.editing)
+		return;
+
 	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
 
 	[super setEditing:editing animated:animated];
@@ -823,7 +826,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		}
 
 		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
-		[self.tableView insertRowsAtIndexPaths:rowsToInsert withRowAnimation:UITableViewRowAnimationBottom];
+		[self.tableView insertRowsAtIndexPaths:rowsToInsert withRowAnimation:UITableViewRowAnimationMiddle];
 	} else {
 		NSMutableArray *rowsToRemove = [NSMutableArray array];
 
@@ -833,8 +836,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 				[rowsToRemove addObject:[NSIndexPath indexPathForRow:([self.tableView numberOfRowsInSection:i] - 1) inSection:i]];
 		}
 
-		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-		[self.tableView deleteRowsAtIndexPaths:rowsToRemove withRowAnimation:UITableViewRowAnimationBottom];
+		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationMiddle];
+		[self.tableView deleteRowsAtIndexPaths:rowsToRemove withRowAnimation:UITableViewRowAnimationMiddle];
 	}
 	[self.tableView endUpdates];
 }
@@ -1068,6 +1071,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *) indexPath {
+	if (self.editing)
+		indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - 1)];
+
 	id <CQChatViewController> chatViewController = chatControllerForIndexPath(indexPath);
 #if ENABLE(FILE_TRANSFERS)
 	if (chatViewController && ![chatViewController isKindOfClass:[CQFileTransferController class]]) {
@@ -1196,34 +1202,32 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			return nil;
 		section--;
 	}
-	@synchronized([CQChatOrderingController defaultController]) {
-		if (![CQChatOrderingController defaultController].chatViewControllers.count)
-			return nil;
 
+	@synchronized([CQChatOrderingController defaultController]) {
 		MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:section];
 		if (!connection)
 			return nil;
 
-		CQConnectionTableHeaderView *tableCell = [_headerViewsForConnections objectForKey:connection];
-		if (tableCell == nil) {
-			tableCell = [[CQConnectionTableHeaderView alloc] initWithReuseIdentifier:nil];
-			tableCell.tintColor = [CQColloquyApplication sharedApplication].window.tintColor;
+		CQConnectionTableHeaderView *tableHeaderView = [_headerViewsForConnections objectForKey:connection];
+		if (tableHeaderView == nil) {
+			tableHeaderView = [[CQConnectionTableHeaderView alloc] initWithReuseIdentifier:nil];
+			tableHeaderView.tintColor = [CQColloquyApplication sharedApplication].window.tintColor;
 
 			__weak __typeof__((self)) weakSelf = self;
 			__weak __typeof__((tableView)) weakTableView = tableView;
-			__weak __typeof__((tableCell)) weakTableCell = tableCell;
-			tableCell.selectedConnectionHeaderView = ^{
+			__weak __typeof__((tableHeaderView)) weakTableHeaderView = tableHeaderView;
+			tableHeaderView.selectedConnectionHeaderView = ^{
 				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 				__strong __typeof__((weakTableView)) strongTableView = weakTableView;
-				__strong __typeof__((weakTableCell)) strongTableCell = weakTableCell;
-				[strongSelf tableView:strongTableView didSelectHeader:strongTableCell forSectionAtIndex:section];
+				__strong __typeof__((weakTableHeaderView)) strongTableHeaderView = weakTableHeaderView;
+				[strongSelf tableView:strongTableView didSelectHeader:strongTableHeaderView forSectionAtIndex:section];
 			};
-			[_headerViewsForConnections setObject:tableCell forKey:connection];
-			[_connectionsForHeaderViews setObject:connection forKey:tableCell];
+			[_headerViewsForConnections setObject:tableHeaderView forKey:connection];
+			[_connectionsForHeaderViews setObject:connection forKey:tableHeaderView];
 		}
-		[tableCell takeValuesFromConnection:connection];
+		[tableHeaderView takeValuesFromConnection:connection];
 
-		return tableCell;
+		return tableHeaderView;
 	}
 }
 
