@@ -1443,6 +1443,7 @@
 					"$(SOURCE_ROOT)/Frameworks/libDER",
 				);
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1486,6 +1487,7 @@
 					"$(SOURCE_ROOT)/Frameworks/libDER",
 				);
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1529,6 +1531,7 @@
 					"$(SOURCE_ROOT)/Frameworks/libDER",
 				);
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
