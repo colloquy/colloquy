@@ -759,14 +759,11 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		NSIndexPath *changedIndexPath = indexPathForChatController(controller, self.editing);
 		NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
 
-		[self.tableView beginUpdates];
 		if (selectedIndexPath && changedIndexPath.section == selectedIndexPath.section)
 			[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
 
 		[self.tableView beginUpdates];
-		if (controllers.count == 1)
-			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:changedIndexPath.section] withRowAnimation:UITableViewRowAnimationTop];
-		else [self.tableView insertRowsAtIndexPaths:@[changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
+		[self.tableView insertRowsAtIndexPaths:@[changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
 		[self.tableView endUpdates];
 
 		if (selectedIndexPath && changedIndexPath.section == selectedIndexPath.section) {
