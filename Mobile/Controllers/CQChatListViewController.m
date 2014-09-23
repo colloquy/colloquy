@@ -116,6 +116,8 @@ static BOOL showsChatIcons;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_updateUnreadMessages:) name:CQChatViewControllerUnreadMessagesUpdatedNotification object:nil];
 	}
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_connectionDidConnect:) name:MVChatConnectionDidConnectNotification object:nil];
+
 	_needsUpdate = YES;
 	_headerViewsForConnections = [NSMapTable weakToStrongObjectsMapTable];
 	_connectionsForHeaderViews = [NSMapTable strongToWeakObjectsMapTable];
@@ -219,9 +221,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			if (hasChatController)
 				break;
 		}
-
-		if (!hasChatController)
-			[self.navigationItem setRightBarButtonItem:nil animated:[self isViewLoaded]];
 
 		NSMutableArray *rowsToDelete = [[NSMutableArray alloc] init];
 
@@ -558,6 +557,16 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	[self _refreshConnection:notification.userInfo[@"connection"]];
 }
 
+- (void) _connectionDidConnect:(NSNotification *) notification {
+	if (![self isViewLoaded])
+		return;
+
+	// Force UITableView to reload section headers. If we are in an editing state, this will make the tableview display the (i) button
+	// correctly, rather than showing the connection timer label.
+	[self.tableView beginUpdates];
+	[self.tableView endUpdates];
+}
+
 - (void) _connectionRemoved:(NSNotification *) notification {
 	if (!_active || _ignoreNotifications)
 		return;
@@ -571,6 +580,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			[self connectionRemovedAtSection:section];
 	}
 	[self.tableView endUpdates];
+
+	if ([self numberOfSectionsInTableView:self.tableView] == 1)
+		[self.tableView reloadData];
 }
 
 - (void) _connectionMoved:(NSNotification *) notification {
@@ -658,8 +670,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) viewWillAppear:(BOOL) animated {
-#warning "TODO in progress: Bug where section headers for connections don't show up unless you have at least one room or private message"
-
 	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
 
 	[self _startUpdatingConnectTimes];
