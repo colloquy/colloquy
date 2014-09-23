@@ -27,6 +27,7 @@
 #import "NSDateAdditions.h"
 #import "NSObjectAdditions.h"
 #import "NSStringAdditions.h"
+#import "UIView+Additions.h"
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
@@ -201,7 +202,7 @@ static BOOL showingKeyboard;
 }
 
 - (id) initWithTarget:(id) target {
-	if (!(self = [super initWithNibName:@"ChatView" bundle:nil]))
+	if (!(self = [super initWithNibName:@"CQUIChatView" bundle:nil]))
 		return nil;
 
 	_target = target;
@@ -453,15 +454,16 @@ static BOOL showingKeyboard;
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-//	if ([[UIDevice currentDevice] isSystemEight]) {
-//		CQWKChatTranscriptView *newChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
-//		newChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
-//		newChatTranscriptView.transcriptDelegate = self;
+	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
+//	if ([UIDevice currentDevice].isSystemEight) {
+//		CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:CGRectZero];
+//		webkitChatTranscriptView.transcriptDelegate = self;
 //
-//		[self.view insertSubview:newChatTranscriptView belowSubview:transcriptView];
+//		[self.view insertSubview:webkitChatTranscriptView belowSubview:transcriptView];
 //
-//		[transcriptView removeFromSuperview];
-//		transcriptView = newChatTranscriptView;
+//		[transcriptView cq_addMatchingConstraintsToView:webkitChatTranscriptView];
+//
+//		transcriptView = webkitChatTranscriptView;
 //	}
 
 	[self _updateRightBarButtonItemAnimated:NO];
