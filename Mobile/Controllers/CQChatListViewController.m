@@ -562,14 +562,15 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (!_active || _ignoreNotifications)
 		return;
 
-	MVChatConnection *connection = notification.userInfo[@"connection"];
-	[self _closeChatViewControllers:nil forConnection:connection withRowAnimation:UITableViewRowAnimationTop];
+	[self.tableView beginUpdates]; {
+		MVChatConnection *connection = notification.userInfo[@"connection"];
+		[self _closeChatViewControllers:nil forConnection:connection withRowAnimation:UITableViewRowAnimationTop];
 
-	NSUInteger section = [[CQChatOrderingController defaultController] sectionIndexForConnection:notification.userInfo[@"connection"]];
-	if (section == NSNotFound)
-		return;
-
-	[self connectionRemovedAtSection:section];
+		NSUInteger section = [[CQChatOrderingController defaultController] sectionIndexForConnection:notification.userInfo[@"connection"]];
+		if (section != NSNotFound)
+			[self connectionRemovedAtSection:section];
+	}
+	[self.tableView endUpdates];
 }
 
 - (void) _connectionMoved:(NSNotification *) notification {
