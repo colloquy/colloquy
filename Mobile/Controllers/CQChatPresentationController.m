@@ -17,6 +17,7 @@
 	_standardToolbarItems = @[];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applyiOS7NavigationBarSizing) name:UIApplicationWillChangeStatusBarFrameNotification object:nil];
+
 	return self;
 }
 
@@ -130,23 +131,30 @@
 
 	UIViewController <CQChatViewController> *oldViewController = _topChatViewController;
 
+	[oldViewController willMoveToParentViewController:nil];
 	[oldViewController viewWillDisappear:NO];
 
 	_topChatViewController = (UIViewController <CQChatViewController> *)chatViewController;
 
 	UIView *view = _topChatViewController.view;
+	CGRect frame = self.view.frame;
+	frame.origin = CGPointZero;
+	view.frame = frame;
 
 	if (_topChatViewController) {
 		[self _applyiOS7NavigationBarSizing];
 
+		[self addChildViewController:_topChatViewController];
 		[_topChatViewController viewWillAppear:NO];
 	}
 
 	if ([oldViewController respondsToSelector:@selector(dismissPopoversAnimated:)])
 		[oldViewController dismissPopoversAnimated:NO];
+
 	[oldViewController.view removeFromSuperview];
 	[oldViewController viewDidDisappear:NO];
-
+	[oldViewController removeFromParentViewController];
+	[oldViewController didMoveToParentViewController:nil];
 
 	[self updateToolbarAnimated:NO];
 
@@ -155,6 +163,7 @@
 
 	[self.view insertSubview:view belowSubview:_toolbar];
 	[_topChatViewController viewDidAppear:NO];
+	[_topChatViewController didMoveToParentViewController:self];
 }
 
 #pragma mark -
