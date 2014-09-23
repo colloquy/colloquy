@@ -206,18 +206,15 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 	}
 
 	UITableViewCell *helpCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0., 10., CGRectGetWidth(tableView.frame), 20.)];
+	helpCell.textLabel.font = [UIFont boldSystemFontOfSize:15.];
+	helpCell.textLabel.textColor = [UIColor colorWithRed:(85. / 255.) green:(102. / 255.) blue:(145. / 255.) alpha:1.];
+	helpCell.textLabel.highlightedTextColor = [UIColor whiteColor];
+	helpCell.textLabel.backgroundColor = [UIColor clearColor];
 
-	label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	label.font = [UIFont boldSystemFontOfSize:15.];
-	label.textColor = [UIColor colorWithRed:(85. / 255.) green:(102. / 255.) blue:(145. / 255.) alpha:1.];
-	label.highlightedTextColor = [UIColor whiteColor];
-	label.backgroundColor = [UIColor clearColor];
+	[helpCell.contentView addSubview:helpCell.textLabel];
 
-	[helpCell.contentView addSubview:label];
-
-	label.text = NSLocalizedString(@"Join Colloquy Support Room", @"Join Colloquy Support Room label");
-	label.textAlignment = NSTextAlignmentCenter;
+	helpCell.textLabel.text = NSLocalizedString(@"Join Colloquy Support Room", @"Join Colloquy Support Room label");
+	helpCell.textLabel.textAlignment = NSTextAlignmentCenter;
 
 	return helpCell;
 }
