@@ -18,7 +18,6 @@
 #import "CQFileTransferController.h"
 #import "CQFileTransferTableCell.h"
 #endif
-#import "CQTableViewSectionHeader.h"
 #import "CQConnectionTableHeaderView.h"
 
 #import <ChatCore/MVChatConnection.h>
@@ -904,43 +903,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 		return;
 	}
-
-	//	@synchronized([CQChatOrderingController defaultController]) {
-//		CQTableViewSectionHeader *header = [actionSheet associatedObjectForKey:@"userInfo"];
-//
-//		header.selected = NO;
-//
-//
-//		MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:header.section];
-//
-//		if (buttonIndex == 0) {
-//			if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus) {
-//				[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
-//			} else {
-//				[connection cancelPendingReconnectAttempts];
-//				[connection connectAppropriately];
-//			}
-//			return;
-//		}
-//
-//		NSMutableArray *viewsToClose = [[NSMutableArray alloc] init];
-//		Class classToClose = Nil;
-//
-//		if (buttonIndex == 1 && [[CQChatOrderingController defaultController] connectionHasAnyChatRooms:connection])
-//			classToClose = [MVChatRoom class];
-//		else classToClose = [MVChatUser class];
-//
-//		NSArray *viewControllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
-//
-//		for (id <CQChatViewController> chatViewController in viewControllers) {
-//			if (![chatViewController.target isKindOfClass:classToClose])
-//				continue;
-//
-//			[viewsToClose addObject:chatViewController];
-//		}
-//
-//		[self _closeChatViewControllers:viewsToClose forConnection:connection withRowAnimation:UITableViewRowAnimationTop];
-//	}
 }
 
 #pragma mark -
@@ -1162,41 +1124,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 #pragma mark -
-
-- (void) tableSectionHeaderSelected:(CQTableViewSectionHeader *) header {
-	NSUInteger section = header.section;
-
-	@synchronized([CQChatOrderingController defaultController]) {
-		MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:section];
-		if (!connection)
-			return;
-
-		header.selected = YES;
-
-		UIActionSheet *sheet = [[UIActionSheet alloc] init];
-		sheet.delegate = self;
-
-		[sheet associateObject:header forKey:@"userInfo"];
-
-		if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
-			sheet.title = connection.displayName;
-
-		if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus)
-			sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
-		else
-			[sheet addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
-
-		if ([[CQChatOrderingController defaultController] connectionHasAnyChatRooms:connection])
-			[sheet addButtonWithTitle:NSLocalizedString(@"Close All Chat Rooms", @"Close all rooms button title")];
-
-		if ([[CQChatOrderingController defaultController] connectionHasAnyPrivateChats:connection])
-			[sheet addButtonWithTitle:NSLocalizedString(@"Close All Private Chats", @"Close all private chats button title")];
-
-		sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
-
-		[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:header animated:YES];
-	}
-}
 
 - (CGFloat) tableView:(UITableView *) tableView heightForHeaderInSection:(NSInteger) section {
 	@synchronized([CQChatOrderingController defaultController]) {
