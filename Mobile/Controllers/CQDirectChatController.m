@@ -27,7 +27,6 @@
 #import "NSDateAdditions.h"
 #import "NSObjectAdditions.h"
 #import "NSStringAdditions.h"
-#import "UIView+Additions.h"
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
