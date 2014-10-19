@@ -455,12 +455,10 @@ static BOOL showingKeyboard;
 
 	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
 //	if ([UIDevice currentDevice].isSystemEight) {
-//		CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:CGRectZero];
+//		CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
 //		webkitChatTranscriptView.transcriptDelegate = self;
 //
 //		[self.view insertSubview:webkitChatTranscriptView belowSubview:transcriptView];
-//
-//		[transcriptView cq_addMatchingConstraintsToView:webkitChatTranscriptView];
 //
 //		transcriptView = webkitChatTranscriptView;
 //	}
@@ -571,9 +569,8 @@ static BOOL showingKeyboard;
 	[coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {} completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
 		[transcriptView scrollToBottomAnimated:NO];
 
-		if (isShowingCompletionsBeforeRotation) {
+		if (isShowingCompletionsBeforeRotation)
 			[self _showChatCompletions];
-		}
 	}];
 }
 
@@ -1500,16 +1497,13 @@ static BOOL showingKeyboard;
 	if (![self isViewLoaded] || !self.view.window)
 		return;
 
-	CGRect keyboardRect = CGRectZero;
-	[[notification userInfo][UIKeyboardFrameEndUserInfoKey] getValue:&keyboardRect];
-	keyboardRect = [self.view convertRect:[self.view.window convertRect:keyboardRect fromWindow:nil] fromView:nil];
+	CGRect keyboardRect = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
 
-	NSTimeInterval animationDuration = [[notification userInfo][UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-	NSUInteger animationCurve = [[notification userInfo][UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
-
-	[UIView animateWithDuration:(_active ? animationDuration : .0) delay:.0 options:(animationCurve << 16) animations:^{
+	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	NSUInteger animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+	[UIView animateWithDuration:(_active ? animationDuration : .0) delay:.0 options:animationCurve animations:^{
 		CGRect frame = containerView.frame;
-		frame.size.height = keyboardRect.origin.y;
+		frame.size.height = CGRectGetMinY(keyboardRect);
 		containerView.frame = frame;
 	} completion:NULL];
 
@@ -1525,8 +1519,8 @@ static BOOL showingKeyboard;
 	if (![self isViewLoaded])
 		return;
 
-	NSTimeInterval animationDuration = [[notification userInfo][UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-	NSUInteger animationCurve = [[notification userInfo][UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	NSUInteger animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 
 	[UIView animateWithDuration:((_active && self.view.window) ? animationDuration : .0) delay:.0 options:(animationCurve << 16) animations:^{
 		containerView.frame = self.view.bounds;
@@ -1830,6 +1824,9 @@ static BOOL showingKeyboard;
 		return;
 
 	[transcriptView noteNicknameChangedFrom:(notification.userInfo)[@"oldNickname"] to:user.nickname];
+
+	if (_target == user)
+		self.title = user.nickname;
 }
 
 - (void) _userNicknameDidChange:(NSNotification *) notification {
