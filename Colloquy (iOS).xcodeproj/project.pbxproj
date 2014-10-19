@@ -488,7 +488,6 @@
 		92AFF85116B0D25D00940E5D /* NSRegularExpressionAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSRegularExpressionAdditions.m; path = Additions/NSRegularExpressionAdditions.m; sourceTree = "<group>"; };
 		92B257C8174023B300F303B5 /* CQSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQSettingsController.h; sourceTree = "<group>"; };
 		92B257C9174023B300F303B5 /* CQSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQSettingsController.m; sourceTree = "<group>"; };
-		92B257D017403B2900F303B5 /* Colloquy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Colloquy.entitlements; path = ../../Colloquy.entitlements; sourceTree = "<group>"; };
 		92B6661317ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenDyslexic-Regular.otf"; sourceTree = "<group>"; };
 		92B6661517ED7E0D00BA3DD9 /* CQPreferencesTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesTextViewController.h; path = Controllers/CQPreferencesTextViewController.h; sourceTree = "<group>"; };
 		92B6661617ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesTextViewController.m; path = Controllers/CQPreferencesTextViewController.m; sourceTree = "<group>"; };
@@ -998,7 +997,6 @@
 				1C4CE6240FA03D7800215521 /* Sounds */,
 				1CA2653811C3600F00AB4E44 /* Transcript Styles */,
 				1C95B41C0FEC9BD900DAE9DF /* Entitlements.plist */,
-				92B257D017403B2900F303B5 /* Colloquy.entitlements */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				1CA718A90EF5F136006225CD /* Settings.bundle */,
 				9261B6FD1841A83C001B14C3 /* HockeySDKResources.bundle */,

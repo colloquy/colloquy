@@ -245,19 +245,20 @@
 - (void) touchesBegan:(NSSet *) touches withEvent:(UIEvent *) event {
 	[super touchesBegan:touches withEvent:event];
 
-	// background: darken
+	_originalBackgroundColor = [self.contentView.backgroundColor copy];
+	self.contentView.backgroundColor = [UIColor colorWithWhite:(208.0 / 255.0) alpha:1.0];
 }
 
 - (void) touchesCancelled:(NSSet *) touches withEvent:(UIEvent *) event {
 	[super touchesCancelled:touches withEvent:event];
 
-	// background: default
+	self.contentView.backgroundColor = _originalBackgroundColor;
 }
 
 - (void) touchesEnded:(NSSet *) touches withEvent:(UIEvent *) event {
 	[super touchesEnded:touches withEvent:event];
 
-	// background: default
+	self.contentView.backgroundColor = _originalBackgroundColor;
 
 	if (_selectedConnectionHeaderView)
 		_selectedConnectionHeaderView();

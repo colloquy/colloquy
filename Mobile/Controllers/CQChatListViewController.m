@@ -392,86 +392,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		[self performSelector:@selector(_scrollToRevealSeclectedRow) withObject:nil afterDelay:0.];
 }
 
-- (void) _tableWasLongPressed:(UILongPressGestureRecognizer *) gestureReconizer {
-	if (gestureReconizer.state != UIGestureRecognizerStateBegan)
-		return;
-
-	if (self.editing) // do nothing, editing controls are already on screen
-		return;
-
-		CGPoint locationInView = [gestureReconizer locationInView:self.tableView];
-	NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:locationInView];
-	if (indexPath) {
-		UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-		if (!cell)
-			return;
-
-		id <CQChatViewController> chatViewController = chatControllerForIndexPath(indexPath);
-		if (!chatViewController)
-			return;
-
-		if (![chatViewController respondsToSelector:@selector(actionSheet)])
-			return;
-
-		_currentChatViewActionSheet = [chatViewController actionSheet];
-
-		_currentChatViewActionSheetDelegate = _currentChatViewActionSheet.delegate;
-		_currentChatViewActionSheet.delegate = self;
-
-		[[CQColloquyApplication sharedApplication] showActionSheet:_currentChatViewActionSheet forSender:cell animated:YES];
-	}
-
-	for (CQConnectionTableHeaderView *header in _headerViewsForConnections.objectEnumerator.allObjects) {
-		// As of iOS 7, [self.tableView hitTest:locationInView withEvent:nil] gives us the subview ov the tableheader view, not the superview's container
-		if (CGRectContainsPoint(header.frame, locationInView)) {
-			MVChatConnection *connection = [_connectionsForHeaderViews objectForKey:header];
-			if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus) {
-				_currentConnectionActionSheet = [[UIActionSheet alloc] init];
-				_currentConnectionActionSheet.delegate = self;
-				_currentConnectionActionSheet.tag = DisconnectSheetTag;
-
-				_currentConnectionActionSheet.title = connection.displayName;
-
-				if (connection.directConnection) {
-					_currentConnectionActionSheet.destructiveButtonIndex = [_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
-				} else {
-					[_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
-					_currentConnectionActionSheet.destructiveButtonIndex = [_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Fully Disconnect", @"Fully Disconnect button title")];
-				}
-
-				[_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Show Console", @"Show Console")];
-
-				if (connection.connected) {
-					if (connection.awayStatusMessage)
-						[_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Remove Away Status", "Remove Away Status button title")];
-					else [_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Set Away Status…", "Set Away Status… button title")];
-				}
-			} else {
-				_currentConnectionActionSheet = [[UIActionSheet alloc] init];
-				_currentConnectionActionSheet.delegate = self;
-				_currentConnectionActionSheet.tag = ConnectSheetTag;
-
-				_currentConnectionActionSheet.title = connection.displayName;
-
-				[_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
-				[_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Show Console", @"Show Console")];
-
-				if (connection.temporaryDirectConnection || !connection.directConnection)
-					[_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Connect Directly", @"Connect Directly button title")];
-
-				if (connection.waitingToReconnect)
-					[_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Stop Connection Timer", @"Stop Connection Timer button title")];
-			}
-
-			[_currentConnectionActionSheet associateObject:connection forKey:@"connection"];
-
-			_currentConnectionActionSheet.cancelButtonIndex = [_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
-
-			[[CQColloquyApplication sharedApplication] showActionSheet:_currentConnectionActionSheet fromPoint:[gestureReconizer.view convertPoint:locationInView toView:nil]];
-		}
-	}
-}
-
 - (void) _willBecomeActive:(NSNotification *) notification {
 	[CQChatController defaultController].totalImportantUnreadCount = 0;
 	[self _startUpdatingConnectTimes];
@@ -660,13 +580,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			[self resizeForViewInPopoverUsingTableView:self.tableView];
 			self.tableView.allowsSelectionDuringEditing = YES;
 			self.clearsSelectionOnViewWillAppear = NO;
-		}
-
-		if (!_longPressGestureRecognizer) {
-			_longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_tableWasLongPressed:)];
-			_longPressGestureRecognizer.cancelsTouchesInView = NO;
-			_longPressGestureRecognizer.delaysTouchesBegan = YES;
-			[self.tableView addGestureRecognizer:_longPressGestureRecognizer];
 		}
 	}
 }
@@ -1164,26 +1077,89 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) tableView:(UITableView *) tableView didSelectHeader:(UITableViewHeaderFooterView *) headerView forSectionAtIndex:(NSInteger) section {
-	if (!self.editing)
+	if (self.editing)
+	{
+		id connection = [[CQChatOrderingController defaultController] connectionAtIndex:section];
+		UIViewController *editViewController = nil;
+		if ([connection isKindOfClass:[MVChatConnection class]]) {
+			CQConnectionEditViewController *connectionEditViewController = [[CQConnectionEditViewController alloc] init];
+			connectionEditViewController.connection = connection;
+
+			editViewController = connectionEditViewController;
+		} else {
+			CQBouncerEditViewController *bouncerEditViewController = [[CQBouncerEditViewController alloc] init];
+			bouncerEditViewController.settings = connection;
+
+			editViewController = bouncerEditViewController;
+		}
+
+		CQConnectionsNavigationController *navigationController = [[CQConnectionsNavigationController alloc] initWithRootViewController:editViewController];
+		[[CQColloquyApplication sharedApplication] presentModalViewController:navigationController animated:YES];
+
 		return;
-
-	id connection = [[CQChatOrderingController defaultController] connectionAtIndex:section];
-
-	UIViewController *editViewController = nil;
-	if ([connection isKindOfClass:[MVChatConnection class]]) {
-		CQConnectionEditViewController *connectionEditViewController = [[CQConnectionEditViewController alloc] init];
-		connectionEditViewController.connection = connection;
-
-		editViewController = connectionEditViewController;
-	} else {
-		CQBouncerEditViewController *bouncerEditViewController = [[CQBouncerEditViewController alloc] init];
-		bouncerEditViewController.settings = connection;
-
-		editViewController = bouncerEditViewController;
 	}
 
-	CQConnectionsNavigationController *navigationController = [[CQConnectionsNavigationController alloc] initWithRootViewController:editViewController];
-	[[CQColloquyApplication sharedApplication] presentModalViewController:navigationController animated:YES];
+	MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:section];
+	if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus) {
+		_currentConnectionActionSheet = [[UIActionSheet alloc] init];
+		_currentConnectionActionSheet.delegate = self;
+		_currentConnectionActionSheet.tag = DisconnectSheetTag;
+
+		_currentConnectionActionSheet.title = connection.displayName;
+
+		if (connection.directConnection) {
+			_currentConnectionActionSheet.destructiveButtonIndex = [_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
+		} else {
+			[_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
+			_currentConnectionActionSheet.destructiveButtonIndex = [_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Fully Disconnect", @"Fully Disconnect button title")];
+		}
+
+		[_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Show Console", @"Show Console")];
+
+		if (connection.connected) {
+			if (connection.awayStatusMessage)
+				[_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Remove Away Status", "Remove Away Status button title")];
+			else [_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Set Away Status…", "Set Away Status… button title")];
+		}
+	} else {
+		_currentConnectionActionSheet = [[UIActionSheet alloc] init];
+		_currentConnectionActionSheet.delegate = self;
+		_currentConnectionActionSheet.tag = ConnectSheetTag;
+
+		_currentConnectionActionSheet.title = connection.displayName;
+
+		[_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
+		[_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Show Console", @"Show Console")];
+
+		if (connection.temporaryDirectConnection || !connection.directConnection)
+			[_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Connect Directly", @"Connect Directly button title")];
+
+		if (connection.waitingToReconnect)
+			[_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Stop Connection Timer", @"Stop Connection Timer button title")];
+	}
+
+	[_currentConnectionActionSheet associateObject:connection forKey:@"connection"];
+
+	_currentConnectionActionSheet.cancelButtonIndex = [_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+
+	CGRect frame = [tableView rectForHeaderInSection:section];
+	[[CQColloquyApplication sharedApplication] showActionSheet:_currentConnectionActionSheet fromPoint:[headerView convertPoint:frame.origin toView:nil]];
+
+	//	UIViewController *editViewController = nil;
+//	if ([connection isKindOfClass:[MVChatConnection class]]) {
+//		CQConnectionEditViewController *connectionEditViewController = [[CQConnectionEditViewController alloc] init];
+//		connectionEditViewController.connection = connection;
+//
+//		editViewController = connectionEditViewController;
+//	} else {
+//		CQBouncerEditViewController *bouncerEditViewController = [[CQBouncerEditViewController alloc] init];
+//		bouncerEditViewController.settings = connection;
+//
+//		editViewController = bouncerEditViewController;
+//	}
+//
+//	CQConnectionsNavigationController *navigationController = [[CQConnectionsNavigationController alloc] initWithRootViewController:editViewController];
+//	[[CQColloquyApplication sharedApplication] presentModalViewController:navigationController animated:YES];
 }
 
 #pragma mark -

@@ -19,6 +19,8 @@ typedef enum {
 	NSDate *_connectDate;
 	CQConnectionTableCellStatus _status;
 	UIButton *_disclosureButton;
+
+	UIColor *_originalBackgroundColor;
 }
 
 - (void) takeValuesFromBouncerSettings:(CQBouncerSettings *) bouncerSettings;
