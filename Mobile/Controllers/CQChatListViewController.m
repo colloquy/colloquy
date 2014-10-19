@@ -562,8 +562,11 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	// Force UITableView to reload section headers. If we are in an editing state, this will make the tableview display the (i) button
 	// correctly, rather than showing the connection timer label.
-	[self.tableView beginUpdates];
-	[self.tableView endUpdates];
+	if (self.editing)
+	{
+		[self.tableView beginUpdates];
+		[self.tableView endUpdates];
+	}
 }
 
 - (void) _connectionRemoved:(NSNotification *) notification {
@@ -758,14 +761,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	}
 
 	@synchronized([CQChatOrderingController defaultController]) {
-		NSArray *controllers = nil;
-		if ([controller conformsToProtocol:@protocol(CQChatViewController)])
-			controllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:((id <CQChatViewController>)controller).connection];
-	#if ENABLE(FILE_TRANSFERS)
-		else if ([controller isKindOfClass:[CQFileTransferController class]])
-			controllers = [[CQChatController defaultController] chatViewControllersOfClass:[CQFileTransferController class]];
-	#endif
-
 		NSIndexPath *changedIndexPath = indexPathForChatController(controller, self.editing);
 		NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
 

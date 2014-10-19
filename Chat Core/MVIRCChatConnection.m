@@ -1238,7 +1238,7 @@ end:
 	static NSCharacterSet *backspaceCharacterSet = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		backspaceCharacterSet = [NSCharacterSet characterSetWithRange:NSMakeRange(8, 1)]; // 08 in ASCII is backspace, that OS X sometimes inserts if you shift + arrow and then delete text
+		backspaceCharacterSet = [[NSCharacterSet characterSetWithRange:NSMakeRange(8, 1)] copy]; // 08 in ASCII is backspace, that OS X sometimes inserts if you shift + arrow and then delete text
 	});
 	[message stringByReplacingCharactersInSet:backspaceCharacterSet withString:@""];
 	NSMutableData *msg = [[[self class] _flattenedIRCDataForMessage:message withEncoding:msgEncoding andChatFormat:[self outgoingChatFormat]] mutableCopy];
