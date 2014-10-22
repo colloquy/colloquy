@@ -366,7 +366,8 @@ retry:
 		NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 		paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
 
-		CGSize suggestedTextSize = [_inputView.text boundingRectWithSize:CGSizeMake((_inputView.contentSize.width - 2.0), 90000) options:(NSStringDrawingOptions)NSStringDrawingUsesLineFragmentOrigin attributes:@{
+		CGFloat availableWidth = _inputView.contentSize.width - 5.;
+		CGSize suggestedTextSize = [_inputView.text boundingRectWithSize:CGSizeMake(availableWidth, 90000) options:(NSStringDrawingOptions)NSStringDrawingUsesLineFragmentOrigin attributes:@{
 			NSFontAttributeName: _inputView.font,
 			NSParagraphStyleAttributeName: paragraphStyle
 		} context:nil].size;
@@ -415,12 +416,13 @@ retry:
 	[self setNeedsLayout];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-	scrollView.contentOffset = CGPointMake(0.0, scrollView.contentOffset.y);
+- (void) scrollViewDidScroll:(UIScrollView *) scrollView {
+	scrollView.contentOffset = CGPointMake(0.0, fmaxf(scrollView.contentInset.top, scrollView.contentOffset.y));
 }
 
 - (BOOL) textViewShouldBeginEditing:(UITextView *) textView {
+	textView.contentInset = UIEdgeInsetsMake(-6., 2., 5., 0.);
+
 	__strong __typeof__((_delegate)) strongDelegate = _delegate;
 	if ([strongDelegate respondsToSelector:@selector(chatInputBarShouldBeginEditing:)])
 		return [strongDelegate chatInputBarShouldBeginEditing:self];
@@ -441,6 +443,8 @@ retry:
 }
 
 - (void) textViewDidEndEditing:(UITextView *) textView {
+	textView.contentInset = UIEdgeInsetsMake(-6., 2., 5., 0.);
+
 	__strong __typeof__((_delegate)) strongDelegate = _delegate;
 	if ([strongDelegate respondsToSelector:@selector(chatInputBarDidEndEditing:)])
 		[strongDelegate chatInputBarDidEndEditing:self];
@@ -740,7 +744,6 @@ retry:
 - (void) _resetTextViewHeight {
 	[self setHeight:self._inactiveLineHeight numberOfLines:0];
 
-	_inputView.contentInset = UIEdgeInsetsMake(-6., 2., 5., 0.);
 	_inputView.scrollEnabled = NO;
 }
 
