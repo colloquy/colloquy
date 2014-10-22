@@ -487,6 +487,8 @@ static BOOL showingKeyboard;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 	}
 
+	[chatInputBar updateTextViewContentSize];
+
 	if (_showingKeyboard || hardwareKeyboard) {
 		[chatInputBar becomeFirstResponder];
 	}

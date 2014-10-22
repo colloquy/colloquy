@@ -49,6 +49,8 @@ typedef enum {
 - (void) showCompletionsForText:(NSString *) text inRange:(NSRange) range;
 - (void) hideCompletions;
 
+- (void) updateTextViewContentSize;
+
 - (void) setAccessoryImage:(UIImage *) image forResponderState:(CQChatInputBarResponderState) responderState controlState:(UIControlState) controlState;
 - (UIImage *) accessoryImageForResponderState:(CQChatInputBarResponderState) responderState controlState:(UIControlState) controlState;
 @end

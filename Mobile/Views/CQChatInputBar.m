@@ -79,8 +79,6 @@ static BOOL hardwareKeyboard;
 
 	[self addSubview:_accessoryButton];
 
-	[self _resetTextViewHeight];
-
 	_accessoryImages = [[NSMutableDictionary alloc] init];
 }
 
@@ -200,7 +198,7 @@ static BOOL hardwareKeyboard;
 
 		// Work around iOS 7 bug where the input view frame doesn't update right away after being set, causing text to be clipped.
 		_inputView.frame = _inputView.frame;
-		_inputView.contentSize = CGSizeMake(_inputView.contentSize.width, ((numberOfLines + 1) * self._lineHeight));
+		_inputView.contentSize = CGSizeMake(floorf((_inputView.frame.size.width - (_inputView.frame.origin.x * 2))), ((numberOfLines + 1) * self._lineHeight));
 	}
 }
 
@@ -361,6 +359,32 @@ retry:
 
 #pragma mark -
 
+- (void) updateTextViewContentSize {
+	if (_inputView.hasText && _inputView.text.length) {
+		CGSize lineSize = [@"a" sizeWithAttributes:@{ NSFontAttributeName: _inputView.font }];
+
+		NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+		paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+
+		CGSize suggestedTextSize = [_inputView.text boundingRectWithSize:CGSizeMake((_inputView.contentSize.width - 2.0), 90000) options:(NSStringDrawingOptions)NSStringDrawingUsesLineFragmentOrigin attributes:@{
+			NSFontAttributeName: _inputView.font,
+			NSParagraphStyleAttributeName: paragraphStyle
+		} context:nil].size;
+
+		CGFloat numberOfLines = roundf(suggestedTextSize.height / lineSize.height);
+		CGFloat contentHeight = fminf((self._inactiveLineHeight + ((numberOfLines - 1) * self._lineHeight)), self._maxLineHeight);
+
+		if (contentHeight < self._maxLineHeight)
+			_inputView.scrollEnabled = NO;
+		else _inputView.scrollEnabled = YES;
+		[self setHeight:contentHeight numberOfLines:(numberOfLines - 1)];
+	} else {
+		[self _resetTextViewHeight];
+	}
+}
+
+#pragma mark -
+
 - (void) accessoryButtonPressed:(id) sender {
 	__strong __typeof__((_delegate)) strongDelegate = _delegate;
 	if (strongDelegate && [strongDelegate respondsToSelector:@selector(chatInputBarAccessoryButtonPressed:)])
@@ -389,6 +413,11 @@ retry:
 	[self _updateImagesForResponderState];
 
 	[self setNeedsLayout];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+	scrollView.contentOffset = CGPointMake(0.0, scrollView.contentOffset.y);
 }
 
 - (BOOL) textViewShouldBeginEditing:(UITextView *) textView {
@@ -546,27 +575,7 @@ retry:
 }
 
 - (void) textViewDidChange:(UITextView *) textView {
-	if (textView.hasText && textView.text.length) {
-		CGSize lineSize = [@"a" sizeWithAttributes:@{ NSFontAttributeName: textView.font }];
-
-		NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-		paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-
-		CGSize suggestedTextSize = [textView.text boundingRectWithSize:CGSizeMake((textView.contentSize.width - 15.), 90000) options:(NSStringDrawingOptions)NSStringDrawingUsesLineFragmentOrigin attributes:@{
-			NSFontAttributeName: textView.font,
-			NSParagraphStyleAttributeName: paragraphStyle
-		} context:nil].size;
-
-		CGFloat numberOfLines = roundf(suggestedTextSize.height / lineSize.height);
-		CGFloat contentHeight = fminf((self._inactiveLineHeight + ((numberOfLines - 1) * self._lineHeight)), self._maxLineHeight);
-
-		if (contentHeight < self._maxLineHeight)
-			textView.scrollEnabled = NO;
-		else textView.scrollEnabled = YES;
-		[self setHeight:contentHeight numberOfLines:(numberOfLines - 1)];
-	} else {
-		[self _resetTextViewHeight];
-	}
+	[self updateTextViewContentSize];
 }
 
 - (void) textViewDidChangeSelection:(UITextView *) textView {
