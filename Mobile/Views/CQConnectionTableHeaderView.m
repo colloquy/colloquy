@@ -46,6 +46,8 @@
 	_timeLabel.textColor = self.tintColor;
 	_timeLabel.highlightedTextColor = self.textLabel.highlightedTextColor;
 
+	self.layer.borderColor = [UIColor colorWithWhite:(208. / 255.) alpha:1.].CGColor;
+
 	return self;
 }
 
@@ -190,6 +192,8 @@
 - (void) layoutSubviews {
 	[super layoutSubviews];
 
+	self.layer.borderWidth = (1. / (self.window.screen.scale ?: [UIScreen mainScreen].scale));
+
 	[self.textLabel removeFromSuperview];
 	[self.detailTextLabel removeFromSuperview];
 
@@ -198,7 +202,6 @@
 #define TEXT_RIGHT_MARGIN 7.
 
 	CGRect contentRect = self.contentView.frame;
-
 	CGRect frame = _iconImageView.frame;
 	frame.size = [_iconImageView sizeThatFits:_iconImageView.bounds.size];
 	frame.origin.x = ICON_LEFT_MARGIN;
@@ -246,7 +249,7 @@
 	[super touchesBegan:touches withEvent:event];
 
 	_originalBackgroundColor = [self.contentView.backgroundColor copy];
-	self.contentView.backgroundColor = [UIColor colorWithWhite:(208.0 / 255.0) alpha:1.0];
+	self.contentView.backgroundColor = [UIColor colorWithWhite:(208. / 255.) alpha:1.];
 }
 
 - (void) touchesCancelled:(NSSet *) touches withEvent:(UIEvent *) event {
