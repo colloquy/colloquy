@@ -2,17 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "playAudioAccessory-pressed.png"
-    },
-    {
-      "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "playAudioAccessory-pressed@2x.png"
-    },
-    {
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "playAudioAccessoryPressed.pdf"
     }
   ],
   "info" : {

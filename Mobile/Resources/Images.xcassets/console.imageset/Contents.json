@@ -2,17 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "console.png"
-    },
-    {
-      "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "console@2x.png"
-    },
-    {
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "console.pdf"
     }
   ],
   "info" : {
