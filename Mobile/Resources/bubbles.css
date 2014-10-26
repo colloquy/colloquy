@@ -6,15 +6,10 @@ body {
 	padding: 4px 0;
 }
 
-a {
-	pointer-events: auto;
-}
-
 .notice-wrapper, .message-wrapper {
 	text-align: left;
 	margin-top: 6px;
 	padding-bottom: 6px;
-	pointer-events: none;
 }
 
 .notice-wrapper:before {
@@ -80,7 +75,6 @@ a {
 }
 
 .nickname {
-	-webkit-touch-callout: none;
 	text-decoration: none;
 }
 
