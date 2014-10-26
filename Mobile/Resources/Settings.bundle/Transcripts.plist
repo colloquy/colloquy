@@ -111,10 +111,13 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 				<string>Helvetica</string>
 				<string>HelveticaNeue</string>
 				<string>HoeflerText-Regular</string>
+				<string>Iowan</string>
 				<string>MarkerFelt-Thin</string>
+				<string>Menlo</string>
 				<string>OpenDyslexic-Regular</string>
 				<string>Optima-Regular</string>
 				<string>Palatino-Roman</string>
+				<string>Superclarendon</string>
 				<string>Thonburi</string>
 				<string>TimesNewRomanPSMT</string>
 				<string>ZapfDingbatsITC</string>
@@ -138,10 +141,13 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 				<string>Helvetica</string>
 				<string>Helvetica Neue</string>
 				<string>Hoefler Text</string>
+				<string>Iowan</string>
 				<string>Marker Felt</string>
+				<string>Menlo</string>
 				<string>OpenDyslexic</string>
 				<string>Optima</string>
 				<string>Palatino</string>
+				<string>Superclarendon</string>
 				<string>Thonburi</string>
 				<string>Times New Roman</string>
 				<string>Zapf Dingbats</string>
@@ -188,7 +194,7 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 			<key>Key</key>
 			<string>CQUseDynamicType</string>
 			<key>DefaultValue</key>
-			<true/>
+			<false/>
 		</dict>
 	</array>
 </dict>
