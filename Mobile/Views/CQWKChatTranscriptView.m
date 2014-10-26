@@ -250,7 +250,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 - (void) webView:(WKWebView *) webView didFinishNavigation:(WKNavigation *) navigation {
 	[self performSelector:@selector(_checkIfLoadingFinished) withObject:nil afterDelay:0.];
 
-	[self stringByEvaluatingJavaScriptFromString:@"document.body.style.webkitTouchCallout='none';"];
+//	[self stringByEvaluatingJavaScriptFromString:@"document.body.style.webkitTouchCallout='none';"];
 
 	NSString *dynamicBodyFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].fontName;
 	BOOL isBold = [dynamicBodyFont hasCaseInsensitiveSubstring:@"Bold"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Italic"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Medium"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Black"];
@@ -379,14 +379,14 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[self stringByEvaluatingJavaScriptFromString:script completionHandler:NULL];
 }
 
-- (void) stringByEvaluatingJavaScriptFromString:(NSString *) script completionHandler:(void (^)(NSString *))completionHandler {
+- (void) stringByEvaluatingJavaScriptFromString:(NSString *) script completionHandler:(void (^)(NSString *)) completionHandler {
 	if (!script.length)
 		return;
 
 	[self evaluateJavaScript:script completionHandler:^(id result, NSError *error) {
 		if (!result && error)
 			NSLog(@"Error executing JavaScript: %@, %@", script, error);
-		else {
+		else if (result) {
 			if ([result isKindOfClass:[NSNumber class]])
 				result = [result stringValue];
 

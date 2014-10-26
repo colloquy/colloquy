@@ -247,7 +247,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 - (void) webViewDidFinishLoad:(UIWebView *) webView {
 	[self performSelector:@selector(_checkIfLoadingFinished) withObject:nil afterDelay:0.];
 
-	[super stringByEvaluatingJavaScriptFromString:@"document.body.style.webkitTouchCallout='none';"];
+//	[super stringByEvaluatingJavaScriptFromString:@"document.body.style.webkitTouchCallout='none';"];
 
 	NSString *dynamicBodyFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].fontName;
 	BOOL isBold = [dynamicBodyFont hasCaseInsensitiveSubstring:@"Bold"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Italic"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Medium"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Black"];
