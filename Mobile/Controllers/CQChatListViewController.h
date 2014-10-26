@@ -3,8 +3,11 @@
 
 @protocol CQChatViewController;
 
-@interface CQChatListViewController : CQTableViewController <UIActionSheetDelegate, UIDocumentInteractionControllerDelegate> {
+@interface CQChatListViewController : CQTableViewController <UIActionSheetDelegate, UIDocumentInteractionControllerDelegate, UISearchBarDelegate, UISearchDisplayDelegate> {
 	@protected
+	UISearchBar *_colloquiesSearchBar;
+	UISearchDisplayController *_colloquiesSearchDisplayController;
+
 	UIActionSheet *_currentConnectionActionSheet;
 	UIActionSheet *_currentChatViewActionSheet;
 	id <UIActionSheetDelegate> _currentChatViewActionSheetDelegate;
