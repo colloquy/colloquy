@@ -10,7 +10,6 @@
 		return nil;
 
 	self.title = NSLocalizedString(@"Colloquies", @"Colloquies tab title");
-	self.tabBarItem.image = [UIImage imageNamed:@"colloquies.png"];
 
 	return self;
 }
