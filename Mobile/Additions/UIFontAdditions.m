@@ -49,18 +49,18 @@ NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingStat
 + (void) cq_loadFontWithName:(NSString *) fontName withCompletionHandler:(CQRemoteFontCompletionHandler)completionHandler {
 	void (^postSuccessNotification)(NSString *, UIFont *) = ^(NSString *fontName, UIFont *font) {
 		dispatch_async(dispatch_get_main_queue(), ^{
-			[[NSNotificationCenter defaultCenter] postNotificationName:CQRemoteFontCourierFontLoadingDidSucceedNotification object:nil userInfo:@{
-				CQRemoteFontCourierFontLoadingFontNameKey: fontName,
-				CQRemoteFontCourierFontLoadingFontKey: font
-			}];
+			NSDictionary *userInfo = nil;
+			if (fontName && font) userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: fontName, CQRemoteFontCourierFontLoadingFontKey: font };
+			else if (fontName) userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: fontName };
+			else if (font) userInfo = @{ CQRemoteFontCourierFontLoadingFontKey: font };
+			[[NSNotificationCenter defaultCenter] postNotificationName:CQRemoteFontCourierFontLoadingDidSucceedNotification object:nil userInfo:userInfo];
 		});
 	};
 
 	void (^postFailureNotification)(NSString *) = ^(NSString *fontName) {
 		dispatch_async(dispatch_get_main_queue(), ^{
-			[[NSNotificationCenter defaultCenter] postNotificationName:CQRemoteFontCourierFontLoadingDidFailNotification object:nil userInfo:@{
-				CQRemoteFontCourierFontLoadingFontNameKey: fontName,
-			}];
+			NSDictionary *userInfo = fontName ? userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: fontName } : nil;
+			[[NSNotificationCenter defaultCenter] postNotificationName:CQRemoteFontCourierFontLoadingDidFailNotification object:nil userInfo:userInfo];
 		});
 	};
 
@@ -100,10 +100,6 @@ NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingStat
 						UIFont *font = [UIFont fontWithName:fontName size:12.];
 						completionHandler(fontName, font);
 
-						[[NSNotificationCenter defaultCenter] postNotificationName:CQRemoteFontCourierFontLoadingDidSucceedNotification object:nil userInfo:@{
-							CQRemoteFontCourierFontLoadingFontNameKey: fontName,
-							CQRemoteFontCourierFontLoadingFontKey: font
-						}];
 						postSuccessNotification(fontName, font);
 					}
 

@@ -308,7 +308,8 @@ enum {
 
 		if (self.listType == CQPreferencesListTypeFont) {
 			UIFont *font = [UIFont fontWithName:self.values[indexPath.row] size:12.];
-			if ((!font || [font.familyName hasCaseInsensitiveSubstring:@"Helvetica"]) && [[UIFont cq_availableRemoteFontNames] containsObject:self.values[indexPath.row]]) {
+			if ((!font || [font.familyName hasCaseInsensitiveSubstring:@"Helvetica"]) && [[UIFont cq_availableRemoteFontNames] containsObject:self.values[indexPath.row]])
+			{
 				__weak __typeof__((self)) weakSelf = self;
 				[UIFont cq_loadFontWithName:self.values[indexPath.row] withCompletionHandler:^(NSString *fontName, UIFont *font) {
 					__strong __typeof__((weakSelf)) strongSelf = weakSelf;

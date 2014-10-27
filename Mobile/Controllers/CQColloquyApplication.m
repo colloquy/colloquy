@@ -13,6 +13,7 @@
 #import "CQWelcomeController.h"
 
 #import "UIApplicationAdditions.h"
+#import "UIFontAdditions.h"
 
 #import <HockeySDK/HockeySDK.h>
 #import "RegexKitLite.h"
@@ -312,6 +313,11 @@ static NSMutableArray *highlightWords;
 - (BOOL) application:(UIApplication *) application willFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
 	NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]];
 	[[CQSettingsController settingsController] registerDefaults:defaults];
+
+	NSString *fontName = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptFont"];
+	UIFont *font = [UIFont fontWithName:fontName size:12.];
+	if ((!font || [font.familyName hasCaseInsensitiveSubstring:@"Helvetica"]) && [[UIFont cq_availableRemoteFontNames] containsObject:fontName])
+		[UIFont cq_loadFontWithName:fontName withCompletionHandler:NULL];
 
 	_deviceToken = [[CQSettingsController settingsController] stringForKey:@"CQPushDeviceToken"];
 
