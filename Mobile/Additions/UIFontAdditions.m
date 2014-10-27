@@ -65,7 +65,6 @@ NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingStat
 	};
 
 	UIFont *font = [UIFont fontWithName:fontName size:12.];
-
 	if (font && ([font.fontName compare:fontName] == NSOrderedSame || [font.familyName compare:fontName] == NSOrderedSame)) {
 		if (completionHandler)
 			completionHandler(fontName, font);
@@ -80,16 +79,18 @@ NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingStat
 	NSArray *descriptors = @[ (__bridge id)fontDescriptorRef ];
 
 	__block BOOL errorEncountered = NO;
-
-	bool didStartDownload = CTFontDescriptorMatchFontDescriptorsWithProgressHandler( (__bridge CFArrayRef)descriptors, NULL,  ^bool(CTFontDescriptorMatchingState state, CFDictionaryRef progressParameter) {
+	bool didStartDownload = CTFontDescriptorMatchFontDescriptorsWithProgressHandler((__bridge CFArrayRef)descriptors, NULL, ^bool(CTFontDescriptorMatchingState state, CFDictionaryRef progressParameter) {
 		NSLog(@"%@: { %@: { %@ } }", fontName,
 			CFAutorelease(CTFontDescriptorCopyAttribute(CFArrayGetValueAtIndex((__bridge CFArrayRef)descriptors, 0), kCTFontNameAttribute)),
 				NSStringFromCTFontDescriptorMatchingState(state)
 		);
 
 		if (state == kCTFontDescriptorMatchingDidFinish) {
+			if (errorEncountered)
+				return false;;
+
 			dispatch_async(dispatch_get_main_queue(), ^{
-				CTFontRef fontRef = CTFontCreateWithName((__bridge CFStringRef)fontName, 0., NULL);
+				CTFontRef fontRef = CFAutorelease(CTFontCreateWithName((__bridge CFStringRef)fontName, 0., NULL));
 				if (fontRef) {
 					CFURLRef fontURL = CFAutorelease(CTFontCopyAttribute(fontRef, kCTFontURLAttribute));
 
@@ -102,8 +103,6 @@ NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingStat
 
 						postSuccessNotification(fontName, font);
 					}
-
-				   CFRelease(fontRef);
 				}
 			});
 		} else if (state == kCTFontDescriptorMatchingDidFailWithError) {
