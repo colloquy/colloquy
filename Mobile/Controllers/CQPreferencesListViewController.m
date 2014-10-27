@@ -3,6 +3,8 @@
 #import "CQPreferencesListChannelEditViewController.h"
 #import "CQPreferencesTextViewController.h"
 
+#import "UIFontAdditions.h"
+
 #import <AVFoundation/AVFoundation.h>
 
 enum {
@@ -304,6 +306,18 @@ enum {
 		cell.accessoryView = [self accessoryViewForAccessoryType:accessoryType];
 		cell.textLabel.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 
+		if (self.listType == CQPreferencesListTypeFont) {
+			UIFont *font = [UIFont fontWithName:self.values[indexPath.row] size:12.];
+			if ((!font || [font.familyName hasCaseInsensitiveSubstring:@"Helvetica"]) && [[UIFont cq_availableRemoteFontNames] containsObject:self.values[indexPath.row]]) {
+				__weak __typeof__((self)) weakSelf = self;
+				[UIFont cq_loadFontWithName:self.values[indexPath.row] withCompletionHandler:^(NSString *fontName, UIFont *font) {
+					__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+					[strongSelf.tableView beginUpdates];
+					[strongSelf.tableView reloadRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationFade];
+					[strongSelf.tableView endUpdates];
+				}];
+			}
+		}
 		// If the accessory type isn't custom, the accessory view will refresh right away. Otherwise, we help it out a bit.
 		if (previouslySelectedAccessoryType < CQTableViewCellAccessoryPlay) {
 			[tableView beginUpdates];

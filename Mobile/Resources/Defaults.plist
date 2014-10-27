@@ -143,6 +143,6 @@
 	<key>CQShowRoomTopic</key>
 	<integer>0</integer>
 	<key>CQUseDynamicType</key>
-	<true/>
+	<false/>
 </dict>
 </plist>

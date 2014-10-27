@@ -56,6 +56,13 @@
 				<string></string>
 				<string></string>
 				<string></string>
+				<string></string>
+				<string></string>
+				<string></string>
+				<string></string>
+				<string></string>
+				<string></string>
+				<string></string>
 				<string>OpenDyslexic(open-dyslexic) by Abelardo Gonzalez is licensed under a Creative Commons Attribution 3.0 Unported License.
 Based on a work at dyslexicfonts.com.
 Permissions beyond the scope of this license may be available at [http://opendyslexic.org/legal/](http://opendyslexic.org/legal/).
@@ -84,6 +91,8 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 				<string></string>
 				<string></string>
 				<string></string>
+				<string></string>
+				<string></string>
 			</array>
 			<key>ListType</key>
 			<string>Font</string>
@@ -100,6 +109,8 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 				<string>Avenir-Medium</string>
 				<string>AvenirNext-Medium</string>
 				<string>Baskerville</string>
+				<string>BookAntiqua</string>
+				<string>ComicSansMS</string>
 				<string>Courier</string>
 				<string>CourierNewPSMT</string>
 				<string>Didot</string>
@@ -111,15 +122,20 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 				<string>Helvetica</string>
 				<string>HelveticaNeue</string>
 				<string>HoeflerText-Regular</string>
+				<string>Impact</string>
 				<string>Iowan</string>
+				<string>LucidaGrande</string>
 				<string>MarkerFelt-Thin</string>
 				<string>Menlo</string>
+				<string>MicrosoftSansSerif</string>
 				<string>OpenDyslexic-Regular</string>
 				<string>Optima-Regular</string>
 				<string>Palatino-Roman</string>
 				<string>Superclarendon</string>
+				<string>Tahoma</string>
 				<string>Thonburi</string>
 				<string>TimesNewRomanPSMT</string>
+				<string>TypeEmbellishmentsOneLetPlain</string>
 				<string>ZapfDingbatsITC</string>
 				<string>Zapfino</string>
 			</array>
@@ -130,6 +146,8 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 				<string>Avenir</string>
 				<string>Avenir Next</string>
 				<string>Baskerville</string>
+				<string>Book Antiqua</string>
+				<string>Comic Sans</string>
 				<string>Courier</string>
 				<string>Courier New</string>
 				<string>Didot</string>
@@ -141,17 +159,22 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 				<string>Helvetica</string>
 				<string>Helvetica Neue</string>
 				<string>Hoefler Text</string>
-				<string>Iowan</string>
+				<string>Impact</string>
+				<string>Iowan Old Style</string>
+				<string>Lucida Grande</string>
 				<string>Marker Felt</string>
 				<string>Menlo</string>
+				<string>Microsoft Sans Serif</string>
 				<string>OpenDyslexic</string>
 				<string>Optima</string>
 				<string>Palatino</string>
 				<string>Superclarendon</string>
+				<string>Tahoma</string>
 				<string>Thonburi</string>
 				<string>Times New Roman</string>
 				<string>Zapf Dingbats</string>
 				<string>Zapfino</string>
+				<string>Webdings</string>
 			</array>
 			<key>DefaultValue</key>
 			<string></string>
