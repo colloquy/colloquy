@@ -229,7 +229,8 @@ static BOOL hardwareKeyboard;
 }
 
 - (void) setFont:(UIFont *) font {
-	_inputView.font = font;
+	if (font.pointSize > .0)
+		_inputView.font = font;
 
 	[self _resetTextViewHeight];
 }
