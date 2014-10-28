@@ -1759,7 +1759,7 @@ static BOOL showingKeyboard;
 	NSUInteger chatTranscriptFontSize = 0; // Default is 14px
 
 	if ([[CQSettingsController settingsController] boolForKey:@"CQUseDynamicType"]) {
-		chatTranscriptFontSize = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize - 2.0;
+		chatTranscriptFontSize = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize;
 	} else {
 		if ([[UIDevice currentDevice] isPadModel]) {
 			if (!chatTranscriptFontSizeString.length) {
