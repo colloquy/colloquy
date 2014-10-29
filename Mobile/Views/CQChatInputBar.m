@@ -581,6 +581,7 @@ retry:
 
 - (void) textViewDidChange:(UITextView *) textView {
 	[self updateTextViewContentSize];
+	[self _updateImagesForResponderState];
 }
 
 - (void) textViewDidChangeSelection:(UITextView *) textView {
@@ -751,11 +752,17 @@ retry:
 #pragma mark -
 
 - (void) _updateImagesForResponderState {
-	UIImage *defaultImage = _accessoryImages[@(_responderState)][@(UIControlStateNormal)];
+	CQChatInputBarResponderState activeResponderState = _responderState;
+	if (!_inputView.hasText)
+	{
+		activeResponderState = CQChatInputBarNotResponder;
+	}
+
+	UIImage *defaultImage = _accessoryImages[@(activeResponderState)][@(UIControlStateNormal)];
 	if (defaultImage)
 		[_accessoryButton setImage:defaultImage forState:UIControlStateNormal];
 
-	UIImage *pressedImage = _accessoryImages[@(_responderState)][@(UIControlStateHighlighted)];
+	UIImage *pressedImage = _accessoryImages[@(activeResponderState)][@(UIControlStateHighlighted)];
 	if (pressedImage)
 		[_accessoryButton setImage:pressedImage forState:UIControlStateHighlighted];
 	else [_accessoryButton setImage:nil forState:UIControlStateHighlighted];
