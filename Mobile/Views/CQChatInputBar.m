@@ -688,6 +688,9 @@ retry:
 }
 
 - (void) _updateTextTraits {
+	if ([UIDevice currentDevice].isSystemEight)
+		return;
+
 #if ENABLE(SECRETS)
 	static Class keyboardClass;
 	if (!keyboardClass) keyboardClass = NSClassFromString(@"UIKeyboardImpl");
