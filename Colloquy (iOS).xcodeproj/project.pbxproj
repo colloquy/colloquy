@@ -158,7 +158,6 @@
 		9261B6F818419DEB001B14C3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6F718419DEB001B14C3 /* QuartzCore.framework */; };
 		9261B6FA18419DF0001B14C3 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6F918419DF0001B14C3 /* CoreText.framework */; };
 		9261B6FC18419FCA001B14C3 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6FB18419FCA001B14C3 /* HockeySDK.framework */; };
-		9261B6FE1841A83C001B14C3 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9261B6FD1841A83C001B14C3 /* HockeySDKResources.bundle */; };
 		9261B7011841AEA1001B14C3 /* UIApplicationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261B7001841AEA1001B14C3 /* UIApplicationAdditions.m */; };
 		926678F619BFE22900CCE5BE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 926678F519BFE22900CCE5BE /* Images.xcassets */; };
 		926678F919C03C8500CCE5BE /* CQWKChatTranscriptView.m in Sources */ = {isa = PBXBuildFile; fileRef = 926678F819C03C8500CCE5BE /* CQWKChatTranscriptView.m */; };
@@ -450,7 +449,6 @@
 		9261B6F718419DEB001B14C3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		9261B6F918419DF0001B14C3 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		9261B6FB18419FCA001B14C3 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Shared/Frameworks/HockeySDK.framework; sourceTree = "<group>"; };
-		9261B6FD1841A83C001B14C3 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = HockeySDKResources.bundle; path = Shared/Frameworks/HockeySDK.framework/Versions/A/Resources/HockeySDKResources.bundle; sourceTree = SOURCE_ROOT; };
 		9261B6FF1841AEA1001B14C3 /* UIApplicationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIApplicationAdditions.h; path = Mobile/Additions/UIApplicationAdditions.h; sourceTree = "<group>"; };
 		9261B7001841AEA1001B14C3 /* UIApplicationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIApplicationAdditions.m; path = Mobile/Additions/UIApplicationAdditions.m; sourceTree = "<group>"; };
 		926678F519BFE22900CCE5BE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -1004,7 +1002,6 @@
 				1C95B41C0FEC9BD900DAE9DF /* Entitlements.plist */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				1CA718A90EF5F136006225CD /* Settings.bundle */,
-				9261B6FD1841A83C001B14C3 /* HockeySDKResources.bundle */,
 				1CA3DF0010291176008B1AD2 /* help.css */,
 				1CA3DEFC10291146008B1AD2 /* help-base.html */,
 				1CD46801102A5EBB00A7A49E /* whats-new.html */,
@@ -1203,7 +1200,6 @@
 				1C4CE6440FA03D7800215521 /* Stoof.aiff in Resources */,
 				1C4CE6450FA03D7800215521 /* Switch.aiff in Resources */,
 				1C4CE6460FA03D7800215521 /* Whip.aiff in Resources */,
-				9261B6FE1841A83C001B14C3 /* HockeySDKResources.bundle in Resources */,
 				8900D7340FBFB2D900DE3E3B /* Servers.plist in Resources */,
 				92B6661417ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf in Resources */,
 				1CB24E03101EBE4800217B50 /* verbs.plist in Resources */,
