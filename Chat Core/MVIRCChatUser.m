@@ -40,7 +40,7 @@
 #pragma mark -
 
 - (NSString *) maskRepresentation {
-	return [NSString stringWithFormat:@"%@!%@@%@", self.nickname, self.username, self.address];
+	return [NSString stringWithFormat:@"%@!%@@%@", (self.nickname ?: @""), (self.username ?: @""), (self.address ?: @"")];
 }
 
 #pragma mark -
