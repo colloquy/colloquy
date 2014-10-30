@@ -1,7 +1,7 @@
 /*
  * Author: Andreas Linde <mail@andreaslinde.de>
  *
- * Copyright (c) 2012-2013 HockeyApp, Bit Stadium GmbH.
+ * Copyright (c) 2012-2014 HockeyApp, Bit Stadium GmbH.
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -55,6 +55,11 @@
 
 /**
  Sets the `BITFeedbackComposeViewControllerDelegate` delegate.
+
+ The delegate is automatically set by using `[BITHockeyManager setDelegate:]`. You
+ should not need to set this delegate individually.
+ 
+ @see `[BITHockeyManager setDelegate:`]
  */
 @property (nonatomic, weak) id<BITFeedbackComposeViewControllerDelegate> delegate;
 
@@ -70,8 +75,12 @@
  The follwoing data object classes are currently supported:
  - NSString
  - NSURL
+ - UIImage
+ - NSData
+ - `BITHockeyAttachment`
  
- These are automatically concatenated to one text string.
+ These are automatically concatenated to one text string, while any images and NSData
+ objects are added as attachments to the feedback.
  
  @param items Array of data objects to prefill the feedback text message.
  */

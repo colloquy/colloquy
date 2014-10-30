@@ -1,7 +1,7 @@
 /*
  * Author: Andreas Linde <mail@andreaslinde.de>
  *
- * Copyright (c) 2013 HockeyApp, Bit Stadium GmbH.
+ * Copyright (c) 2013-2014 HockeyApp, Bit Stadium GmbH.
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -78,18 +78,6 @@
 #ifndef HOCKEYSDK_FEATURE_UPDATES
 #    define HOCKEYSDK_FEATURE_UPDATES 1
 #endif /* HOCKEYSDK_FEATURE_UPDATES */
-
-
-/**
- * If true, include support for the Jira Mobile Connect SDK.
- *
- * @warning This requires Crash Reporting and Update Manager to be included!
- *
- * _Default_: Disabled
- */
-#ifndef HOCKEYSDK_FEATURE_JIRA_MOBILE_CONNECT
-#    define HOCKEYSDK_FEATURE_JIRA_MOBILE_CONNECT 0
-#endif /* HOCKEYSDK_FEATURE_JIRA_MOBILE_CONNECT */
 
 
 #endif /* HockeySDK_HockeySDKFeatureConfig_h */

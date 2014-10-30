@@ -1,7 +1,7 @@
 /*
  * Author: Stephan Diederich, Andreas Linde
  *
- * Copyright (c) 2013 HockeyApp, Bit Stadium GmbH.
+ * Copyright (c) 2013-2014 HockeyApp, Bit Stadium GmbH.
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -160,9 +160,9 @@ typedef NS_ENUM(NSUInteger, BITAuthenticatorAppRestrictionEnforcementFrequency) 
  * If enabled, the Authenticator checks depending on `restrictionEnforcementFrequency`
  * if the user is allowed to use this application.
  *
- * Enabling this property and setting `identificationType` to `BITAuthenticatorIdentificationTypeHockeyAppEmail`
- * or `BITAuthenticatorIdentificationTypeHockeyAppUser` also allows to remove access for users
- * by removing them from the app's users list on HockeyApp.
+ * Enabling this property and setting `identificationType` to `BITAuthenticatorIdentificationTypeHockeyAppEmail`,
+ * `BITAuthenticatorIdentificationTypeHockeyAppUser` or `BITAuthenticatorIdentificationTypeWebAuth` also allows
+ * to remove access for users by removing them from the app's users list on HockeyApp.
  *
  *  _Default_: `NO`
  *
@@ -197,14 +197,6 @@ typedef NS_ENUM(NSUInteger, BITAuthenticatorAppRestrictionEnforcementFrequency) 
  * @see identificationType
  */
 @property (nonatomic, copy) NSString *authenticationSecret;
-
-/**
- * Delegate that can be used to do any last minute configurations on the 
- * presented viewController.
- *
- * @see BITAuthenticatorDelegate
- */
-@property (nonatomic, weak) id<BITAuthenticatorDelegate> delegate;
 
 
 #pragma mark - Device based identification
