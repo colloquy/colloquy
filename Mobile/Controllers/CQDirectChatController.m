@@ -1904,7 +1904,7 @@ static BOOL showingKeyboard;
 
 	if (self.connection.connected) {
         BOOL isPadModel = [[UIDevice currentDevice] isPadModel]; 
-		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:isPadModel ? @"info-large.png" : @"info.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserInformation)];
+		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"infoButton.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserInformation)];
 		item.accessibilityLabel = NSLocalizedString(@"User Information", @"Voiceover user information label"); 
 	} else {
 		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", "Connect button title") style:UIBarButtonItemStyleDone target:self.connection action:@selector(connect)];
