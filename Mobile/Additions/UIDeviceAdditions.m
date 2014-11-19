@@ -43,7 +43,7 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 	if (cached)
 		return result;
 
-	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPhone) && [self.model hasCaseInsensitiveSubstring:@"Phone"];
+	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPhone) && [self.model hasCaseInsensitiveSubstring:@"Phone"] && ![UIDevice currentDevice].isSystemEight;
 	cached = YES;
 
 	return result;
@@ -56,7 +56,7 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 	if (cached)
 		return result;
 
-	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPad);
+	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPad) || [UIDevice currentDevice].isSystemEight;
 	cached = YES;
 
 	return result;

@@ -483,6 +483,10 @@ static NSMutableArray *highlightWords;
 	return NO;
 }
 
+- (BOOL) splitViewController:(UISplitViewController *) splitViewController collapseSecondaryViewController:(UIViewController *) secondaryViewController ontoPrimaryViewController:(UIViewController *) primaryViewController {
+	return YES;
+}
+
 #pragma mark -
 
 - (void) showActionSheet:(UIActionSheet *) sheet {

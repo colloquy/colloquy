@@ -533,8 +533,10 @@ static CQSoundController *fileTransferSound;
 		[[CQColloquyApplication sharedApplication] showColloquies:nil hidingTopViewController:NO];
 	}
 
-	if (_visibleChatController == controller)
+	if (_visibleChatController == controller) {
+		[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:controller sender:nil];
 		return;
+	}
 
 	_nextRoomConnection = nil;
 
@@ -543,6 +545,7 @@ static CQSoundController *fileTransferSound;
 	if ([[UIDevice currentDevice] isPadModel]) {
 		_chatPresentationController.topChatViewController = controller;
 		[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
+		[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:controller sender:nil];
 	} else {
 		if (_chatNavigationController.presentedViewController != nil) {
 			[_chatNavigationController popToRootViewControllerAnimated:NO];
