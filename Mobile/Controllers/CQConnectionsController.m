@@ -1138,7 +1138,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		connection.bouncerType = MVChatConnectionNoBouncer;
 
 	if ((!bouncerSettings || bouncerSettings.pushNotifications) && connection.pushNotifications)
-		[[CQColloquyApplication sharedApplication] registerForRemoteNotifications];
+		[[CQColloquyApplication sharedApplication] registerForPushNotifications];
 
 	return connection;
 }

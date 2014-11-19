@@ -1346,7 +1346,7 @@ static BOOL showingKeyboard;
 #if !TARGET_IPHONE_SIMULATOR
 	if (![CQColloquyApplication sharedApplication].deviceToken.length) {
 		_showDeviceTokenWhenRegistered = YES;
-		[[CQColloquyApplication sharedApplication] registerForRemoteNotifications];
+		[[CQColloquyApplication sharedApplication] registerForPushNotifications];
 		return YES;
 	}
 
@@ -1416,8 +1416,13 @@ static BOOL showingKeyboard;
 		else nextViewController = [[CQChatOrderingController defaultController] chatViewControllerPreceedingChatController:self requiringActivity:NO requiringHighlight:YES];
 	} else return;
 
-	if (nextViewController)
-		[[CQChatController defaultController] showChatController:nextViewController animated:NO];
+	if (nextViewController) {
+		NSMutableArray *viewStack = [self.navigationController.viewControllers mutableCopy];
+		[viewStack removeLastObject];
+		[viewStack addObject:nextViewController];
+
+		self.navigationController.viewControllers = viewStack;
+	}
 }
 
 - (BOOL) transcriptView:(id) transcriptView handleOpenURL:(NSURL *) url {
@@ -1903,7 +1908,6 @@ static BOOL showingKeyboard;
 	UIBarButtonItem *item = nil;
 
 	if (self.connection.connected) {
-        BOOL isPadModel = [[UIDevice currentDevice] isPadModel]; 
 		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"infoButton.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserInformation)];
 		item.accessibilityLabel = NSLocalizedString(@"User Information", @"Voiceover user information label"); 
 	} else {

@@ -12,6 +12,7 @@
 #import "CQPocketController.h"
 #import "CQWelcomeController.h"
 
+#import "NSNotificationAdditions.h"
 #import "UIApplicationAdditions.h"
 #import "UIFontAdditions.h"
 
@@ -372,6 +373,10 @@ static NSMutableArray *highlightWords;
 		self.applicationIconBadgeNumber = [apsInfo[@"badge"] integerValue];
 }
 
+- (void) application:(UIApplication *) application didRegisterUserNotificationSettings:(UIUserNotificationSettings *) notificationSettings {
+	[self registerForRemoteNotifications];
+}
+
 - (void) application:(UIApplication *) application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *) deviceToken {
 	if (!deviceToken.length) {
 		[[CQAnalyticsController defaultController] setObject:nil forKey:@"device-push-token"];
@@ -392,7 +397,7 @@ static NSMutableArray *highlightWords;
 
 	_deviceToken = deviceTokenString;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQColloquyApplicationDidRecieveDeviceTokenNotification object:self userInfo:@{@"deviceToken": deviceTokenString}];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:CQColloquyApplicationDidRecieveDeviceTokenNotification object:self userInfo:@{@"deviceToken": deviceTokenString}];
 }
 
 - (void) application:(UIApplication *) application didFailToRegisterForRemoteNotificationsWithError:(NSError *) error {
@@ -743,6 +748,36 @@ static NSMutableArray *highlightWords;
 
 #pragma mark -
 
+- (UIRemoteNotificationType) enabledRemoteNotificationTypes {
+	if (![UIDevice currentDevice].isSystemEight)
+		return [super enabledRemoteNotificationTypes];
+
+	if (!self.isRegisteredForRemoteNotifications)
+		return UIRemoteNotificationTypeNone;
+
+	UIUserNotificationSettings *currentUserNotificationSettings = self.currentUserNotificationSettings;
+	UIRemoteNotificationType enabledRemoteNotificationTypes = UIRemoteNotificationTypeNone;
+	if (currentUserNotificationSettings.types & UIUserNotificationTypeBadge) enabledRemoteNotificationTypes |= UIRemoteNotificationTypeBadge;
+	if (currentUserNotificationSettings.types & UIUserNotificationTypeSound) enabledRemoteNotificationTypes |= UIRemoteNotificationTypeSound;
+	if (currentUserNotificationSettings.types & UIUserNotificationTypeAlert) enabledRemoteNotificationTypes |= UIRemoteNotificationTypeAlert;
+	return enabledRemoteNotificationTypes;
+}
+
+- (void) registerForRemoteNotificationTypes:(UIRemoteNotificationType) types {
+	if (![UIDevice currentDevice].isSystemEight) {
+		[super registerForRemoteNotificationTypes:types];
+		return;
+	}
+
+	UIUserNotificationType enabledUserNotificationTypes = UIUserNotificationTypeNone;;
+	if (types & UIRemoteNotificationTypeBadge) enabledUserNotificationTypes |= UIUserNotificationTypeBadge;
+	if (types & UIRemoteNotificationTypeSound) enabledUserNotificationTypes |= UIUserNotificationTypeSound;
+	if (types & UIRemoteNotificationTypeAlert) enabledUserNotificationTypes |= UIUserNotificationTypeAlert;
+
+	UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:enabledUserNotificationTypes categories:nil];
+	[self registerUserNotificationSettings:settings];
+}
+
 - (BOOL) areNotificationBadgesAllowed {
 	return (!_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeBadge);
 }
@@ -765,7 +800,7 @@ static NSMutableArray *highlightWords;
 	[super presentLocalNotificationNow:notification];
 }
 
-- (void) registerForRemoteNotifications {
+- (void) registerForPushNotifications {
 #if !TARGET_IPHONE_SIMULATOR
 	static BOOL registeredForPush;
 	if (!registeredForPush) {

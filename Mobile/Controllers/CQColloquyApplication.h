@@ -49,7 +49,7 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 - (BOOL) areNotificationSoundsAllowed;
 - (BOOL) areNotificationAlertsAllowed;
 
-- (void) registerForRemoteNotifications;
+- (void) registerForPushNotifications;
 
 @property (nonatomic, readonly) NSDate *launchDate;
 @property (nonatomic, strong) NSDate *resumeDate;
