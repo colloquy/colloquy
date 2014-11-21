@@ -614,15 +614,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) showConnections:(id) sender {
-	if ([[UIDevice currentDevice] isPadModel]) {
-//		if (!_connectionsPopoverController)
-//			_connectionsPopoverController = [[UIPopoverController alloc] initWithContentViewController:[CQConnectionsController defaultController].connectionsNavigationController];
-
-//		if (!_connectionsPopoverController.popoverVisible) {
-//			[self dismissPopoversAnimated:NO];
-//			[_connectionsPopoverController presentPopoverFromBarButtonItem:_connectionsBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-//		}
-	} else {
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
 		[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
 		[self.navigationController popToRootViewControllerAnimated:NO];
 	}

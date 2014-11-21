@@ -216,7 +216,7 @@ static CQShowRoomTopic showRoomTopic;
 		_currentUserListViewController.room = self.room;
 	}
 
-	if ([[UIDevice currentDevice] isPadModel]) {
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
 		if (!_currentUserListPopoverController) {
 			_currentUserListPopoverController = [[UIPopoverController alloc] initWithContentViewController:_currentUserListViewController];
 			_currentUserListPopoverController.delegate = self;
@@ -1237,7 +1237,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	UIBarButtonItem *item = nil;
 
 	if (self.available) {
-        BOOL isPadModel = [[UIDevice currentDevice] isPadModel]; 
+		BOOL isPadModel = [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad;
 		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:isPadModel ? @"members-large.png" : @"members.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showMembers)];
 		item.accessibilityLabel = NSLocalizedString(@"Members List", @"Voiceover members list label"); 
 	} else {
