@@ -41,9 +41,7 @@ enum {
 	if (_messages.count) {
 		cell.textLabel.text = [_messages[indexPath.row][@"message"] stringByStrippingXMLTags];
 		if ([_messages[indexPath.row][@"action"] boolValue]) {
-			// action, set image
-		} else {
-			// not an action, set image
+			cell.textLabel.text = [NSString stringWithFormat:@"• %@", cell.textLabel.text];
 		}
 	} else {
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
