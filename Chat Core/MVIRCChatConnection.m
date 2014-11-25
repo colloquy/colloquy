@@ -1240,7 +1240,7 @@ end:
 	dispatch_once(&onceToken, ^{
 		backspaceCharacterSet = [[NSCharacterSet characterSetWithRange:NSMakeRange(8, 1)] copy]; // 08 in ASCII is backspace, that OS X sometimes inserts if you shift + arrow and then delete text
 	});
-	[message stringByReplacingCharactersInSet:backspaceCharacterSet withString:@""];
+	[message cq_stringByRemovingCharactersInSet:backspaceCharacterSet];
 	NSMutableData *msg = [[[self class] _flattenedIRCDataForMessage:message withEncoding:msgEncoding andChatFormat:[self outgoingChatFormat]] mutableCopy];
 
 #if ENABLE(PLUGINS)
@@ -2037,7 +2037,7 @@ end:
 
 #pragma mark -
 
-- (NSString *) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length {
+- (NSString *) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length NS_RETURNS_RETAINED {
 	if( bytes && length ) {
 		NSStringEncoding encoding = [self encoding];
 		if( encoding != NSUTF8StringEncoding && isValidUTF8( bytes, length ) )

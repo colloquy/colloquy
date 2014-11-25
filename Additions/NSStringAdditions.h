@@ -79,6 +79,8 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 - (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error;
 
 - (NSUInteger) levenshteinDistanceFromString:(NSString *) string;
+
+- (NSString *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set;
 @end
 
 @interface NSMutableString (NSMutableStringAdditions)

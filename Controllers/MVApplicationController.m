@@ -101,6 +101,8 @@ static BOOL applicationIsTerminating = NO;
 	if( [hidIdleTimeObj isKindOfClass:[NSData class]] ) [hidIdleTimeObj getBytes:&result];
 	else result = [hidIdleTimeObj longLongValue];
 
+	if (hidPropertiesRef)
+		CFRelease(hidPropertiesRef);
 
 	return ( result / 1000000000. );
 }

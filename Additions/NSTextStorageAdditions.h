@@ -25,4 +25,6 @@
 
 - (NSString *) XHTMLEnd;
 - (void) setXHTMLEnd:(NSString *) html;
+
+- (NSTextStorage *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set;
 @end

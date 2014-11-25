@@ -1233,6 +1233,17 @@ static NSCharacterSet *typicalEmoticonCharacters;
 - (NSUInteger) levenshteinDistanceFromString:(NSString *) string {
 	return levenshteinDistanceBetweenStrings((char *)[[self lowercaseString] UTF8String], (char *)[[string lowercaseString] UTF8String]);
 }
+
+- (NSString *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set {
+	NSTextStorage *mutableStorage = [self copy];
+	NSRange range = [[self string] rangeOfCharacterFromSet:set];
+	while (range.location != NSNotFound) {
+		[mutableStorage replaceCharactersInRange:range withString:@""];
+		range = [[self string] rangeOfCharacterFromSet:set];
+	}
+
+	return mutableStorage;
+}
 @end
 
 #pragma mark -

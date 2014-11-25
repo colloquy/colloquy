@@ -1,10 +1,20 @@
 #import "MVCrashCatcher.h"
 #import <sys/sysctl.h>
 
-static MVCrashCatcher *crashCatcher = nil;
+@interface MVCrashCatcher ()
+
+@property (atomic, copy) dispatch_block_t doneBlock;
+
+@end
+
 @implementation MVCrashCatcher
 + (void) check {
-	crashCatcher = [[MVCrashCatcher alloc] init]; // Released when the window is closed.
+	MVCrashCatcher *crashCatcher = [[MVCrashCatcher alloc] init]; // Released when the window is closed.
+	crashCatcher.doneBlock = ^{
+		__strong MVCrashCatcher *handle = crashCatcher; // intentional retain
+		crashCatcher.doneBlock = nil;
+		handle = nil;
+	};
 }
 
 #pragma mark -
@@ -12,8 +22,6 @@ static MVCrashCatcher *crashCatcher = nil;
 - (id) init {
 	if (!(self = [super init]))
 		return nil;
-
-	_self = self;
 
 	NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	NSString *logDirectory = [@"~/Library/Logs/DiagnosticReports/" stringByExpandingTildeInPath]; // files in CrashReporter/ are really symlinks to files in this dir in 10.6+
@@ -35,7 +43,8 @@ static MVCrashCatcher *crashCatcher = nil;
 - (void) dealloc {
 	[window close];
 
-	crashCatcher = nil;
+	if (self.doneBlock)
+		self.doneBlock();
 }
 
 - (void) awakeFromNib {
@@ -55,13 +64,11 @@ static MVCrashCatcher *crashCatcher = nil;
 
 - (void) connectionDidFinishLoading:(NSURLConnection *) connection {
 	[[NSFileManager defaultManager] removeItemAtPath:logPath error:nil];
-	_self = nil;
-	crashCatcher = nil;
+	self.doneBlock();
 }
 
 - (void) connection:(NSURLConnection *) connection didFailWithError:(NSError *) error {
-	_self = nil;
-	crashCatcher = nil;
+	self.doneBlock();
 }
 
 #pragma mark -
@@ -112,8 +119,7 @@ static MVCrashCatcher *crashCatcher = nil;
 	[[NSApplication sharedApplication] stopModal];
 	[window orderOut:nil];
 
-	_self = nil;
-	crashCatcher = nil;
+	self.doneBlock();
 }
 
 - (BOOL) windowShouldClose:(id) sender {

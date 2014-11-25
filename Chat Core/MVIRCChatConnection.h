@@ -84,7 +84,7 @@
 - (MVChatRoomMemberMode) _modeForNicknamePrefixCharacter:(unichar) character;
 - (MVChatRoomMemberMode) _stripModePrefixesFromNickname:(NSString **) nickname;
 
-- (NSString *) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length;
+- (NSString *) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length NS_RETURNS_RETAINED;
 - (NSString *) _stringFromPossibleData:(id) input;
 
 - (void) _cancelScheduledSendEndCapabilityCommand;

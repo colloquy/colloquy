@@ -11,4 +11,6 @@ extern NSString *NSChatCTCPTwoFormatType;
 
 - (NSString *) HTMLFormatWithOptions:(NSDictionary *) options;
 - (NSData *) chatFormatWithOptions:(NSDictionary *) options;
+
+- (NSAttributedString *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set;
 @end
