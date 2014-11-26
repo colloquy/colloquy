@@ -73,7 +73,7 @@
 
 	[editAutomatic setState:[[MVConnectionsController defaultController] autoConnectForConnection:_connection]];
 	[editShowConsoleOnConnect setState:[[MVConnectionsController defaultController] showConsoleOnConnectForConnection:_connection]];
-	[sslConnection setState:[_connection isSecure]];
+	[sslConnection setState:[_connection didConnectSecurely]];
 	[attemptSASLCheckbox setState:_connection.requestsSASL];
 	[roomsWaitForIdentificationCheckbox setState:_connection.roomsWaitForIdentification];
 	[editAddress setObjectValue:[_connection server]];

@@ -959,6 +959,8 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		case MVChatConnectionNickChangedByServicesError:
 			errorTitle = NSLocalizedString(@"Nickname Changed", "Nick changed by server alert title");
 			break;
+		case MVChatConnectionTLSError:
+			errorTitle = NSLocalizedString(@"TLS Error", @"TLS Error");
 	}
 
 	if (!errorTitle) return;
@@ -1027,6 +1029,9 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 			break;
 		case MVChatConnectionNickChangedByServicesError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Your nickname is being changed on \"%@\" because you didn't identify.", "Username was changed by server alert message"), connection.displayName];
+			break;
+		case MVChatConnectionTLSError:
+			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Unable to securely connect to \"%@\".", @"Unable to connect to server over TLS message"), connection.displayName];
 			break;
 	}
 

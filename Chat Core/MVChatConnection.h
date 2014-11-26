@@ -68,7 +68,8 @@ typedef NS_ENUM(NSInteger, MVChatConnectionError) {
 	MVChatConnectionIdentifyToJoinRoomError = -20,
 	MVChatConnectionRoomDoesNotSupportModesError = -21,
 	MVChatConnectionNickChangedByServicesError = -22,
-	MVChatConnectionServicesDownError = -23
+	MVChatConnectionServicesDownError = -23,
+	MVChatConnectionTLSError = -24
 };
 
 @class MVChatRoom;
@@ -76,8 +77,27 @@ typedef NS_ENUM(NSInteger, MVChatConnectionError) {
 @class MVChatUserWatchRule;
 @class MVUploadFileTransfer;
 
+// IRC3v1 Required
 extern NSString *MVChatConnectionSASLFeature;
 extern NSString *MVChatConnectionMultipleNicknamePrefixFeature;
+
+// IRC3v1 Optional
+extern NSString *MVChatConnectionAccountNotify;
+extern NSString *MVChatConnectionAwayNotify;
+extern NSString *MVChatConnectionExtendedJoin;
+extern NSString *MVChatConnectionTLS;
+
+// IRC3v2 Required
+extern NSString *MVChatConnectionMessageTags;
+extern NSString *MVChatConnectionMessageIntents;
+extern NSString *MVChatConnectionMetadata;
+extern NSString *MVChatConnectionMonitor;
+
+// IRC3v2 Optional
+extern NSString *MVChatConnectionServerTime;
+extern NSString *MVChatConnectionBatch;
+extern NSString *MVChatConnectionUserhostInNames;
+extern NSString *MVChatConnectionChghost;
 
 extern NSString *MVChatConnectionWillConnectNotification;
 extern NSString *MVChatConnectionDidConnectNotification;
@@ -154,6 +174,7 @@ extern NSString *MVChatConnectionErrorDomain;
 	unsigned short _bouncerServerPort;
 
 	BOOL _secure;
+	BOOL _connectedSecurely;
 	BOOL _requestsSASL;
 	BOOL _roomsWaitForIdentification;
 	BOOL _roomListDirty;
@@ -216,6 +237,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property MVChatMessageFormat outgoingChatFormat;
 
+@property(getter=didConnectSecurely) BOOL connectedSecurely; // IRCv3.1 + `tls` capability can indicate that the *next* connection will be secure, but not our current one 
 @property(getter=isSecure) BOOL secure;
 @property BOOL requestsSASL;
 @property BOOL roomsWaitForIdentification;

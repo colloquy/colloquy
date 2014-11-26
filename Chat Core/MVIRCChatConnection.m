@@ -943,12 +943,18 @@ static const NSStringEncoding supportedEncodings[] = {
 		secure = NO; // This should always be YES in the future when the bouncer supports secure connections.
 
 	if( secure ) {
+		[self sendRawMessageImmediatelyWithFormat:@"STARTTLS"];
+
+		self.connectedSecurely = YES;
+
 		NSMutableDictionary *settings = [NSMutableDictionary dictionary];
 		[settings setObject:(id)kCFBooleanTrue forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
 		[settings setObject:(id)kCFBooleanFalse forKey:(NSString *)kCFStreamSSLValidatesCertificateChain];
 		[settings setObject:(id)kCFStreamSocketSecurityLevelNegotiatedSSL forKey:(id)kCFStreamSSLLevel];
 
 		[sock startTLS:settings];
+	} else {
+		self.connectedSecurely = NO;
 	}
 
 	NSString *password = _password;
@@ -986,8 +992,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	[self _sendEndCapabilityCommandAfterTimeout];
 
 	if( _requestsSASL && self.nicknamePassword.length )
-		[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl multi-prefix"];
-	else [self sendRawMessageImmediatelyWithFormat:@"CAP REQ :multi-prefix"];
+		[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl multi-prefix tls away-notify"];
+	else [self sendRawMessageImmediatelyWithFormat:@"CAP REQ :multi-prefix tls away-notify"];
 
 	if( password.length ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self preferredNickname]];
@@ -2194,6 +2200,16 @@ end:
 						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :multi-prefix"];
 						furtherNegotiation = YES;
 					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"tls"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionTLS];
+					}
+
+					self.secure = YES;
+				} else if( [capability isCaseInsensitiveEqualToString:@"away-notify"]) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionAwayNotify];
+					}
 				}
 			}
 		}
@@ -2442,6 +2458,11 @@ end:
 			}
 		}
 	}
+}
+
+- (void) _handle691WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_STARTTLS
+	NSDictionary *userInfo = @{ NSLocalizedDescriptionKey: [parameters componentsJoinedByString:@" "] };
+	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionTLSError userInfo:userInfo]];
 }
 
 #pragma mark -

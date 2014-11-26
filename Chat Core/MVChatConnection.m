@@ -42,8 +42,27 @@
 
 #import "GCDAsyncSocket.h"
 
+// IRC3v1 Required
 NSString *MVChatConnectionSASLFeature = @"MVChatConnectionSASLFeature";
 NSString *MVChatConnectionMultipleNicknamePrefixFeature = @"MVChatConnectionMultipleNicknamePrefixFeature";
+
+// IRC3v1 Optional
+NSString *MVChatConnectionAccountNotify = @"MVChatConnectionAccountNotify";
+NSString *MVChatConnectionAwayNotify = @"MVChatConnectionAwayNotify";
+NSString *MVChatConnectionExtendedJoin = @"MVChatConnectionExtendedJoin";
+NSString *MVChatConnectionTLS = @"MVChatConnectionTLS";
+
+// IRC3v2 Required
+NSString *MVChatConnectionMessageTags = @"MVChatConnectionMessageTags";
+NSString *MVChatConnectionMessageIntents = @"MVChatConnectionMessageIntents";
+NSString *MVChatConnectionMetadata = @"MVChatConnectionMetadata";
+NSString *MVChatConnectionMonitor = @"MVChatConnectionMonitor";
+
+// IRC3v2 Optional
+NSString *MVChatConnectionServerTime = @"MVChatConnectionServerTime";
+NSString *MVChatConnectionBatch = @"MVChatConnectionBatch";
+NSString *MVChatConnectionUserhostInNames = @"MVChatConnectionUserhostInNames";
+NSString *MVChatConnectionChghost = @"MVChatConnectionChghost";
 
 NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
 NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectNotification";
@@ -581,6 +600,16 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (MVChatMessageFormat) outgoingChatFormat {
 	return _outgoingChatFormat;
+}
+
+#pragma mark -
+
+- (void) setConnectedSecurely:(BOOL) connectedSecurely {
+	_connectedSecurely = connectedSecurely;
+}
+
+- (BOOL) didConnectSecurely {
+	return _connectedSecurely;
 }
 
 #pragma mark -
