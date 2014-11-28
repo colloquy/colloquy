@@ -70,7 +70,7 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 		return result;
 
 	if ([[NSProcessInfo processInfo] respondsToSelector:@selector(operatingSystemVersion)])
-		result = [NSProcessInfo processInfo].operatingSystemVersion.majorVersion == 8;
+		result = [NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 8;
 
 	cached = YES;
 

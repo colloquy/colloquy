@@ -535,7 +535,7 @@ static CQSoundController *fileTransferSound;
 
 	if (_visibleChatController == controller) {
 		if ([UIDevice currentDevice].isSystemEight)
-			[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:controller sender:nil];
+			[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:(UIViewController *)controller sender:nil];
 		return;
 	}
 
@@ -547,7 +547,7 @@ static CQSoundController *fileTransferSound;
 		_chatPresentationController.topChatViewController = controller;
 		[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
 		if ([UIDevice currentDevice].isSystemEight)
-			[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:controller sender:nil];
+			[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:(UIViewController *)controller sender:nil];
 	} else {
 		if (_chatNavigationController.presentedViewController != nil) {
 			[_chatNavigationController popToRootViewControllerAnimated:NO];

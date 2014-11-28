@@ -30,7 +30,8 @@
 		self.delegate = self;
 	}
 
-	[[CQChatController defaultController] showPendingChatControllerAnimated:NO];
+	if (![UIDevice currentDevice].isSystemEight)
+		[[CQChatController defaultController] showPendingChatControllerAnimated:NO];
 }
 
 #pragma mark -

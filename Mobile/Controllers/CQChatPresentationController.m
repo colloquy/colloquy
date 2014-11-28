@@ -59,6 +59,9 @@
 }
 
 - (void) updateToolbarForInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation animated:(BOOL) animated {
+	if ([UIDevice currentDevice].userInterfaceIdiom != UIUserInterfaceIdiomPad)
+		return;
+
 	NSMutableArray *allItems = [_standardToolbarItems mutableCopy];
 
 	UIBarButtonItem *leftBarButtonItem = _topChatViewController.navigationItem.leftBarButtonItem;

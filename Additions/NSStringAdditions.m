@@ -1235,14 +1235,14 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (NSString *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set {
-	NSMutableString *mutableStorage = [self mutableCopy];
+	NSMutableString *mutableStorage = [[self mutableCopy] autorelease];
 	NSRange range = [mutableStorage rangeOfCharacterFromSet:set];
 	while (range.location != NSNotFound) {
 		[mutableStorage replaceCharactersInRange:range withString:@""];
 		range = [mutableStorage rangeOfCharacterFromSet:set];
 	}
 
-	return [mutableStorage copy];
+	return [[mutableStorage copy] autorelease];
 }
 @end
 
