@@ -177,6 +177,8 @@
 	CGRect frame = _toolbar.frame;
 	frame.size.width = self.view.frame.size.width;
 
+	BOOL isNotOS8 = ![UIDevice currentDevice].isSystemEight;
+
 	// If we are on iOS 7 or up, the statusbar is now part of the navigation bar, so, we need to fake its height
 	CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
 	// We can't do the following:
@@ -184,10 +186,11 @@
 	// because when the app first loads, it fails to convert the rect, and we are given {{0, 0}, {20, 1024}} as the
 	// statusBarFrame, even after self.view is added to its superview, is loaded, and self.view.window is set.
 	CGFloat statusBarHeight = fmin(statusBarFrame.size.height, statusBarFrame.size.width);
-	frame.size.height += statusBarHeight;
+	if (isNotOS8)
+		frame.size.height += statusBarHeight;
 	_toolbar.frame = frame;
 
-	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	if (isNotOS8 || UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation))
 		_topChatViewController.scrollView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(_toolbar.frame), 0., 0., 0.);
 }
 @end

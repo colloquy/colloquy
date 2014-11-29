@@ -534,8 +534,10 @@ static CQSoundController *fileTransferSound;
 	}
 
 	if (_visibleChatController == controller) {
-		if ([UIDevice currentDevice].isSystemEight)
-			[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:(UIViewController *)controller sender:nil];
+		if ([UIDevice currentDevice].isSystemEight) {
+			UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)controller];
+			[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:navigationController sender:nil];
+		}
 		return;
 	}
 
@@ -551,8 +553,10 @@ static CQSoundController *fileTransferSound;
 
 		[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
 
-		if ([UIDevice currentDevice].isSystemEight)
-			[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:(UIViewController *)controller sender:nil];
+		if ([UIDevice currentDevice].isSystemEight) {
+			UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)controller];
+			[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:navigationController sender:nil];
+		}
 	} else {
 		if (_chatNavigationController.presentedViewController != nil) {
 			[_chatNavigationController popToRootViewControllerAnimated:NO];
