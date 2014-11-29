@@ -3,6 +3,21 @@
     {
       "idiom" : "universal",
       "filename" : "userOperator.pdf"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "1x",
+      "filename" : "userOperator.png"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x",
+      "filename" : "userOperator@2x.png"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x",
+      "filename" : "userOperator@3x.png"
     }
   ],
   "info" : {

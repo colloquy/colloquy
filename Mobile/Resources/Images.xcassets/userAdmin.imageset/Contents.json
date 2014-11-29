@@ -3,6 +3,21 @@
     {
       "idiom" : "universal",
       "filename" : "userAdmin.pdf"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "1x",
+      "filename" : "userAdmin.png"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x",
+      "filename" : "userAdmin@2x.png"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x",
+      "filename" : "userAdmin@3x.png"
     }
   ],
   "info" : {
