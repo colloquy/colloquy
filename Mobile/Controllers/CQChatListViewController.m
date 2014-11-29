@@ -600,18 +600,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	[self _startUpdatingConnectTimes];
 
-	if (_needsUpdate) {
-		[self.tableView reloadData];
-		_needsUpdate = NO;
-
-//		if (selectedIndexPath)
-//			[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-	} else {
-		id <CQChatViewController> chatViewController = chatControllerForIndexPath(selectedIndexPath);
-		CQChatTableCell *cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:selectedIndexPath];
-		[self _refreshChatCell:cell withController:chatViewController animated:NO];	
-	}
-
 	_active = YES;
 
 	[CQChatController defaultController].totalImportantUnreadCount = 0;
@@ -1214,6 +1202,19 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	if (self.editing)
+	{
+		if (indexPath.section == 0) {
+			CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
+			CGPoint midpointOfRect = CGPointMake(CGRectGetMidX(cellRect), CGRectGetMidY(cellRect));
+
+			[[CQConnectionsController defaultController] showNewConnectionPromptFromPoint:midpointOfRect];
+			return;
+		}
+
+		indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - 1)];
+	}
+
 	id <CQChatViewController> chatViewController = chatControllerForIndexPath(indexPath);
 #if ENABLE(FILE_TRANSFERS)
 	if (chatViewController && ![chatViewController isKindOfClass:[CQFileTransferController class]]) {
