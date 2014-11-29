@@ -793,7 +793,9 @@ static NSMutableArray *highlightWords;
 		notification.soundName = nil;
 	if (![self areNotificationBadgesAllowed])
 		notification.applicationIconBadgeNumber = 0;
-	[super presentLocalNotificationNow:notification];
+
+	if (notification.alertBody.length || notification.soundName.length || notification.applicationIconBadgeNumber > 0)
+		[super presentLocalNotificationNow:notification];
 }
 
 - (void) registerForPushNotifications {
