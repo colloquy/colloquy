@@ -1219,10 +1219,18 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			CGPoint midpointOfRect = CGPointMake(CGRectGetMidX(cellRect), CGRectGetMidY(cellRect));
 
 			[[CQConnectionsController defaultController] showNewConnectionPromptFromPoint:midpointOfRect];
-			return;
-		}
+		} else {
+			NSIndexPath *connectionIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - 1)];
 
-		indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - 1)];
+			if (connectionIndexPath.row == [self tableView:tableView numberOfRowsInSection:connectionIndexPath.section]) {
+				CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
+				CGPoint midpointOfRect = CGPointMake(CGRectGetMidX(cellRect), CGRectGetMidY(cellRect));
+
+				MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:connectionIndexPath.section];
+				[[CQChatController defaultController] showNewChatActionSheetForConnection:connection fromPoint:midpointOfRect];
+			}
+		}
+		return;
 	}
 
 	id <CQChatViewController> chatViewController = chatControllerForIndexPath(indexPath);
