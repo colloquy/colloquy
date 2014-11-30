@@ -610,6 +610,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	_active = YES;
 
 	[CQChatController defaultController].totalImportantUnreadCount = 0;
+	[[CQChatController defaultController] visibleChatControllerWasHidden];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
