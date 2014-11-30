@@ -546,16 +546,16 @@ static CQSoundController *fileTransferSound;
 	_visibleChatController = controller;
 
 	if ([[UIDevice currentDevice] isPadModel]) {
-		_chatPresentationController.topChatViewController = controller;
-
-		if ([UIDevice currentDevice].isSystemEight && _chatNavigationController.presentedViewController != nil)
-			[_chatNavigationController dismissViewControllerAnimated:animated completion:NULL];
+		if ([UIDevice currentDevice].isSystemEight) {
+			if (_chatNavigationController.presentedViewController != nil)
+				[_chatNavigationController dismissViewControllerAnimated:animated completion:NULL];
+		} else _chatPresentationController.topChatViewController = controller;
 
 		[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
 
 		if ([UIDevice currentDevice].isSystemEight) {
-			UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)controller];
-			[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:navigationController sender:nil];
+			[_chatNavigationController popToRootViewControllerAnimated:NO];
+			[_chatNavigationController pushViewController:(UIViewController *)controller animated:NO];
 		}
 	} else {
 		if (_chatNavigationController.presentedViewController != nil) {

@@ -91,11 +91,9 @@
 		break;
 	}
 
-	if (connection.directConnection) {
+	if (connection.directConnection)
 		_iconImageView.image = [UIImage imageNamed:@"server.png"];
-	} else {
-		_iconImageView.image = [UIImage imageNamed:@"bouncer.png"];
-	}
+	else _iconImageView.image = [UIImage imageNamed:@"bouncer.png"];
 }
 
 - (void) takeValuesFromBouncerSettings:(CQBouncerSettings *) bouncerSettings {
