@@ -31,6 +31,8 @@
 	else {
 		NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:3];
 		if( name ) [info setObject:name forKey:@"name"];
+		else return;
+
 		if( object ) [info setObject:object forKey:@"object"];
 		if( userInfo ) [info setObject:userInfo forKey:@"userInfo"];
 

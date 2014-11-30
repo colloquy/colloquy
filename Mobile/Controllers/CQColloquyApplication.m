@@ -291,15 +291,11 @@ static NSMutableArray *highlightWords;
 #pragma mark -
 
 - (void) reloadSplitViewController {
-	[_connectionsPopoverController dismissPopoverAnimated:YES];
-	_connectionsPopoverController = nil;
-
 	[_colloquiesPopoverController dismissPopoverAnimated:YES];
 	_colloquiesPopoverController = nil;
 	_colloquiesBarButtonItem = nil;
 
 	UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
-	_connectionsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connections", @"Connections button title") style:UIBarButtonItemStylePlain target:self action:@selector(toggleConnections:)];
 
 	CQChatPresentationController *presentationController = [CQChatController defaultController].chatPresentationController;
 	[presentationController setStandardToolbarItems:@[] animated:NO];
@@ -608,9 +604,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) toggleConnections:(id) sender {
-	if (_connectionsPopoverController.popoverVisible)
-		[_connectionsPopoverController dismissPopoverAnimated:YES];
-	else [self showConnections:sender];
+	[self showConnections:sender];
 }
 
 - (void) showConnections:(id) sender {
@@ -643,7 +637,6 @@ static NSMutableArray *highlightWords;
 
 - (void) dismissPopoversAnimated:(BOOL) animated {
 	[_colloquiesPopoverController dismissPopoverAnimated:animated];
-	[_connectionsPopoverController dismissPopoverAnimated:animated];
 
 	id <CQChatViewController> controller = [CQChatController defaultController].visibleChatController;
 	if ([controller respondsToSelector:@selector(dismissPopoversAnimated:)])
