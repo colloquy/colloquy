@@ -267,7 +267,11 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 		return;
 	}
 
+#if !defined(CQ_GENERATING_SCREENSHOTS)
 	[self _addComponentsToTranscript:components fromPreviousSession:YES animated:NO];
+#else
+	[self _addComponentsToTranscript:components fromPreviousSession:NO animated:NO];
+#endif
 }
 
 - (void) addComponents:(NSArray *) components animated:(BOOL) animated {
@@ -540,7 +544,11 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 	_loading = NO;
 
+#if !defined(CQ_GENERATING_SCREENSHOTS)
 	[self _addComponentsToTranscript:_pendingPreviousSessionComponents fromPreviousSession:YES animated:NO];
+#else
+	[self _addComponentsToTranscript:_pendingPreviousSessionComponents fromPreviousSession:NO animated:NO];
+#endif
 
 	_pendingPreviousSessionComponents = nil;
 

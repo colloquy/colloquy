@@ -129,15 +129,16 @@
 	_iconImageView.frame = frame;
 
 	frame = _memberIconImageView.frame;
-	frame.size = [_memberIconImageView sizeThatFits:_memberIconImageView.bounds.size];
+	frame.size = _memberIconImageView.image.size; // [_memberIconImageView sizeThatFits:_memberIconImageView.bounds.size];
+	frame.size.height -= 4.0;
+	frame.size.width -= 4.0;
 	frame.origin.y = round((contentRect.size.height / 2.) - frame.size.height - 1.);
 
 	if (self.showingDeleteConfirmation || self.showsReorderControl)
 		frame.origin.x = self.bounds.size.width - contentRect.origin.x + frame.size.width;
 	else if (self.editing)
 		frame.origin.x = contentRect.size.width - frame.size.width;
-	else
-		frame.origin.x = contentRect.size.width - frame.size.width - TEXT_RIGHT_MARGIN;
+	else frame.origin.x = contentRect.size.width - frame.size.width - TEXT_RIGHT_MARGIN;
 
 	_memberIconImageView.frame = frame;
 

@@ -422,7 +422,7 @@ retry:
 }
 
 - (BOOL) textViewShouldBeginEditing:(UITextView *) textView {
-	textView.contentInset = UIEdgeInsetsMake(-6., 2., 5., 0.);
+	textView.contentInset = UIEdgeInsetsMake(-4., 2., 0., 0.);
 
 	__strong __typeof__((_delegate)) strongDelegate = _delegate;
 	if ([strongDelegate respondsToSelector:@selector(chatInputBarShouldBeginEditing:)])
@@ -444,7 +444,7 @@ retry:
 }
 
 - (void) textViewDidEndEditing:(UITextView *) textView {
-	textView.contentInset = UIEdgeInsetsMake(-6., 2., 5., 0.);
+	textView.contentInset = UIEdgeInsetsMake(-4., 2., 0., 0.);
 
 	__strong __typeof__((_delegate)) strongDelegate = _delegate;
 	if ([strongDelegate respondsToSelector:@selector(chatInputBarDidEndEditing:)])

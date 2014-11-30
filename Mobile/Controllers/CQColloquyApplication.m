@@ -731,7 +731,7 @@ static NSMutableArray *highlightWords;
 #pragma mark -
 
 - (UIColor *) tintColor {
-	if ([[UIDevice currentDevice] isPadModel])
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
 		return nil;
 
 	NSString *style = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptStyle"];

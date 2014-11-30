@@ -1227,7 +1227,11 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	_loadedConnections = YES;
 
+#if !defined(CQ_GENERATING_SCREENSHOTS)
 	NSArray *bouncers = [[CQSettingsController settingsController] arrayForKey:@"CQChatBouncers"];
+#else
+	NSArray *bouncers = nil; // don't show any bouncers in app store screenshots
+#endif
 	for (NSDictionary *info in bouncers) {
 		CQBouncerSettings *settings = [[CQBouncerSettings alloc] initWithDictionaryRepresentation:info];
 		if (!settings)
@@ -1252,7 +1256,12 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		}
 	}
 
+#if !defined(CQ_GENERATING_SCREENSHOTS)
 	NSArray *connections = [[CQSettingsController settingsController] arrayForKey:@"MVChatBookmarks"];
+#else
+	static NSString *const demoText = @"[{\"automatic\": 1,\"chatState\": {\"chatControllers\": [],},\"description\": \"Freenode\",\"encoding\": 4,\"multitasking\": true,\"nickname\": \"chatUser\",\"persistentInformation\": {\"tryBouncerFirst\": false,},\"port\": 6667,\"previousRooms\": [],\"proxy\": 1852796485,\"realName\": \"Colloquy User\",\"requestsSASL\": false,\"secure\": 0,\"server\": \"chat.freenode.net\",\"type\": \"irc\",\"uniqueIdentifier\": \"SNJNFA95N55\",\"username\": \"chatUser\",\"wasConnected\": true,},{\"automatic\": 1,\"chatState\": {\"chatControllers\": [{\"active\": true,\"class\": \"CQChatRoomController\",\"joined\": true,\"messages\": [{\"identifier\": \"7\",\"message\": \"Everyone: I'm doing this thing...\",\"type\": \"message\",\"user\": \"Someone\",},{\"identifier\": \"8\",\"message\": \"Someone: uh\",\"type\": \"message\",\"user\": \"Everyone\",},],\"room\": \"#chris\",},{\"active\": false,\"class\": \"CQChatRoomController\",\"joined\": false,\"messages\": [],\"room\": \"#theshed\",},],},\"description\": \"Freenode\",\"encoding\": 4,\"multitasking\": true,\"nickname\": \"chatUser\",\"persistentInformation\": {\"tryBouncerFirst\": false,},\"port\": 6667,\"previousRooms\": [\"#chris\",\"theshed\"],\"proxy\": 1852796485,\"realName\": \"Colloquy User\",\"requestsSASL\": false,\"secure\": 0,\"server\": \"localhost\",\"type\": \"irc\",\"uniqueIdentifier\": \"SNJNFA95N55\",\"username\": \"chatUser\",\"wasConnected\": true,}]";
+	NSArray *connections = [NSJSONSerialization JSONObjectWithData:[demoText dataUsingEncoding:4] options:0 error:nil];
+#endif
 	for (NSDictionary *info in connections) {
 		MVChatConnection *connection = [self _chatConnectionWithDictionaryRepresentation:info];
 		if (!connection)
