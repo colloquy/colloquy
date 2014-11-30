@@ -24,6 +24,7 @@
 #import <ChatCore/MVChatRoom.h>
 
 #import "UIApplicationAdditions.h"
+#import "NSNotificationAdditions.h"
 
 NSString *CQConnectionsControllerAddedConnectionNotification = @"CQConnectionsControllerAddedConnectionNotification";
 NSString *CQConnectionsControllerChangedConnectionNotification = @"CQConnectionsControllerChangedConnectionNotification";
@@ -336,8 +337,8 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	NSDictionary *notificationInfo = @{@"connection": chatConnection};
 	if (newConnection)
-		[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerAddedConnectionNotification object:self userInfo:notificationInfo];
-	else [[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerChangedConnectionNotification object:self userInfo:notificationInfo];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:CQConnectionsControllerAddedConnectionNotification object:self userInfo:notificationInfo];
+	else [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:CQConnectionsControllerChangedConnectionNotification object:self userInfo:notificationInfo];
 }
 
 - (void) bouncerConnectionDidFinishConnectionList:(CQBouncerConnection *) connection {

@@ -539,14 +539,21 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 - (void) connectionAdded:(MVChatConnection *) connection {
 	NSInteger sectionIndex = [[CQChatOrderingController defaultController] sectionIndexForConnection:connection];
+	if (sectionIndex == -1)
+		return;
+
 	if (self.editing)
 		sectionIndex++;
 
+	[self.tableView beginUpdates];
 	[self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+	[self.tableView endUpdates];
 }
 
 - (void) connectionRemovedAtSection:(NSInteger) section {
+	[self.tableView beginUpdates];
 	[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationTop];
+	[self.tableView endUpdates];
 }
 
 - (void) connectionMovedFromSection:(NSInteger) oldSection toSection:(NSInteger) newSection {
@@ -1099,8 +1106,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) tableView:(UITableView *) tableView didSelectHeader:(UITableViewHeaderFooterView *) headerView forSectionAtIndex:(NSInteger) section {
-	if (self.editing)
-	{
+	if (self.editing) {
 		id connection = [[CQChatOrderingController defaultController] connectionAtIndex:section];
 		UIViewController *editViewController = nil;
 		if ([connection isKindOfClass:[MVChatConnection class]]) {
@@ -1122,6 +1128,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	}
 
 	MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:section];
+	if ([connection isKindOfClass:[CQBouncerSettings class]])
+		 return;
+
 	if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus) {
 		_currentConnectionActionSheet = [[UIActionSheet alloc] init];
 		_currentConnectionActionSheet.delegate = self;

@@ -384,7 +384,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 - (NSUInteger) sectionIndexForConnection:(id) connection {
-	__block NSUInteger sectionIndex = 0;
+	__block NSUInteger sectionIndex = -1;
 	[self.orderedConnections enumerateObjectsUsingBlock:^(id object, NSUInteger objectIndex, BOOL *stop) {
 		if (object == connection) {
 			sectionIndex = objectIndex;
