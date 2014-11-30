@@ -6,6 +6,8 @@
 
 #import "CQConnectionsController.h"
 
+#import "CQBouncerSettings.h"
+
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatUser.h>
 
@@ -370,9 +372,14 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 - (NSArray *) orderedConnections {
 	NSArray *bouncers = [CQConnectionsController defaultController].bouncers;
-	NSArray *connections = [CQConnectionsController defaultController].directConnections;
-
 	NSMutableArray *allConnections = [bouncers mutableCopy];
+	for (CQBouncerSettings *settings in bouncers) {
+		NSArray *connections = [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:settings.identifier];
+		[allConnections addObjectsFromArray:connections];
+		NSLog(@"%@", connections);
+		
+	}
+	NSArray *connections = [CQConnectionsController defaultController].directConnections;
 	[allConnections addObjectsFromArray:connections];
 	return [allConnections copy];
 }

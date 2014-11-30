@@ -61,6 +61,7 @@
 		[self takeValuesFromBouncerSettings:(CQBouncerSettings *)connection];
 		return;
 	}
+
 	self.server = connection.displayName;
 	self.nickname = connection.nickname;
 
@@ -90,11 +91,15 @@
 		break;
 	}
 
-	_iconImageView.image = [UIImage imageNamed:@"server.png"];
+	if (connection.directConnection) {
+		_iconImageView.image = [UIImage imageNamed:@"server.png"];
+	} else {
+		_iconImageView.image = [UIImage imageNamed:@"bouncer.png"];
+	}
 }
 
 - (void) takeValuesFromBouncerSettings:(CQBouncerSettings *) bouncerSettings {
-	_iconImageView.image = [UIImage imageNamed:@"bouncer.png"];
+	_iconImageView.image = nil;
 
 	self.nickname = bouncerSettings.displayName;
 	self.server = bouncerSettings.server;	

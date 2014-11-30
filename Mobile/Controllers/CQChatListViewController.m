@@ -859,7 +859,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 #pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
-	NSInteger numberOfSections = [CQConnectionsController defaultController].directConnections.count;
+	NSInteger numberOfSections = [CQConnectionsController defaultController].connections.count;
 	numberOfSections += [CQConnectionsController defaultController].bouncers.count;
 
 	if (self.editing)
