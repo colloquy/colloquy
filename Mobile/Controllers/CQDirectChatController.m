@@ -597,7 +597,7 @@ static BOOL showingKeyboard;
 #pragma mark -
 
 - (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) theChatInputBar {
-	if ([theChatInputBar isFirstResponder]) {
+	if ([theChatInputBar isFirstResponder] && theChatInputBar.textView.hasText) {
 		theChatInputBar.textView.text = nil;
 
 		// Work around behavior where textViewDidChange: isn't called when you change the text programatically.
