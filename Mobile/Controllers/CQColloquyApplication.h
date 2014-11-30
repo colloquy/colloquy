@@ -6,8 +6,6 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 	@protected
 	UIWindow *_mainWindow;
 	UIViewController *_mainViewController;
-	UIPopoverController *_connectionsPopoverController;
-	UIBarButtonItem *_connectionsBarButtonItem;
 	UIPopoverController *_colloquiesPopoverController;
 	UIBarButtonItem *_colloquiesBarButtonItem;
 	UIToolbar *_toolbar;
@@ -18,7 +16,6 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 	UIActionSheet *_visibleActionSheet;
 	NSNumber *_oldSwipeOrientationValue;
 	BOOL _userDefaultsChanged;
-	BOOL _isPanningSplitView;
 }
 
 + (CQColloquyApplication *) sharedApplication;
