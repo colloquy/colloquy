@@ -16,6 +16,7 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 	UIActionSheet *_visibleActionSheet;
 	NSNumber *_oldSwipeOrientationValue;
 	BOOL _userDefaultsChanged;
+	UIAlertController *_alertController;
 }
 
 + (CQColloquyApplication *) sharedApplication;

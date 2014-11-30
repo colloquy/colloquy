@@ -520,12 +520,55 @@ static NSMutableArray *highlightWords;
 		return;
 	}
 
-	if (!CGPointEqualToPoint(point, CGPointZero)) {
-		[sheet showFromRect:(CGRect){ point, { 1., 1. } } inView:_mainViewController.view animated:animated];
-		return;
-	}
+	if ([UIDevice currentDevice].isSystemEight) {
+		_alertController = [UIAlertController alertControllerWithTitle:sheet.title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
-	[sheet showInView:_mainViewController.view];
+		// The overlapping view is needed to work around the following iOS 8(.1-only?) bug:
+		// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
+		// present an action sheet from a point on screen that results in the popover rect overlapping the main view,
+		// the z-index will be incorrect and the action sheet will be clipped by the main view.
+		UIViewController *overlappingViewController = [[UIViewController alloc] init];
+		overlappingViewController.view.frame = _mainWindow.frame;
+		overlappingViewController.view.backgroundColor = [UIColor clearColor];
+
+		for (NSInteger i = 0; i < sheet.numberOfButtons; i++) {
+			NSString *title = [sheet buttonTitleAtIndex:i];
+			UIAlertActionStyle style = UIAlertActionStyleDefault;
+			if (i == sheet.cancelButtonIndex) style = UIAlertActionStyleCancel;
+			else if (i == sheet.destructiveButtonIndex) style = UIAlertActionStyleDestructive;
+
+			__weak __typeof__((self)) weakSelf = self;
+
+			[_mainWindow addSubview:overlappingViewController.view];
+
+			[_alertController addAction:[UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *action) {
+				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+				strongSelf->_alertController = nil;
+
+				[overlappingViewController.view removeFromSuperview];
+				[sheet.delegate actionSheet:sheet clickedButtonAtIndex:i];
+			}]];
+		}
+
+		CGRect rect = CGRectZero;
+		rect.size = CGSizeMake(1., 1.);
+		if (CGPointEqualToPoint(point, CGPointZero))
+			rect.origin = CGPointMake(CGRectGetMidX(_mainWindow.frame), CGRectGetMidY(_mainWindow.frame));
+		else rect.origin = point;
+
+		_alertController.popoverPresentationController.sourceRect = (CGRect){ point, { 1., 1. } };
+		_alertController.popoverPresentationController.sourceView = self.splitViewController.view;
+		_alertController.popoverPresentationController.delegate = self;
+
+		[overlappingViewController presentViewController:_alertController animated:YES completion:nil];
+	} else {
+		if (!CGPointEqualToPoint(point, CGPointZero)) {
+			[sheet showFromRect:(CGRect){ point, { 1., 1. } } inView:_mainViewController.view animated:animated];
+			return;
+		}
+
+		[sheet showInView:_mainViewController.view];
+	}
 }
 
 #pragma mark -
