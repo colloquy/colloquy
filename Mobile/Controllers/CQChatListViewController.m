@@ -603,8 +603,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) viewWillAppear:(BOOL) animated {
-	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
-
 	[self _startUpdatingConnectTimes];
 
 	_active = YES;
@@ -1020,6 +1018,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (editingStyle == UITableViewCellEditingStyleInsert) {
 		MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:indexPath.section];
 		[[CQChatController defaultController] showNewChatActionSheetForConnection:connection fromPoint:midpointOfRect];
+		return;
 	}
 
 	if (editingStyle != UITableViewCellEditingStyleDelete)

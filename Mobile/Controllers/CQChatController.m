@@ -579,6 +579,15 @@ static CQSoundController *fileTransferSound;
 	_visibleChatController = controller;
 }
 
+- (void) setFirstChatController {
+	MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:0];
+	if (!connection)
+		return;
+
+	NSArray *chatViewControllersForConnection = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
+	_nextController = chatViewControllersForConnection.firstObject;
+}
+
 - (void) showPendingChatControllerAnimated:(BOOL) animated {
 	if (_nextController)
 		[self showChatController:_nextController animated:animated];

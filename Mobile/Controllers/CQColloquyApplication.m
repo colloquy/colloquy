@@ -327,6 +327,9 @@ static NSMutableArray *highlightWords;
 }
 
 - (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
+	if (![[CQChatController defaultController] hasPendingChatController] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+		[[CQChatController defaultController] setFirstChatController];
+
 	if ([_mainWindow respondsToSelector:@selector(setTintColor:)])
 		_mainWindow.tintColor = [UIColor colorWithRed:0.427 green:0.086 blue:0.396 alpha:1];
 
@@ -340,6 +343,9 @@ static NSMutableArray *highlightWords;
 	}
 
 	[_mainWindow makeKeyAndVisible];
+
+	if ([[CQChatController defaultController] hasPendingChatController])
+		[[CQChatController defaultController] showPendingChatControllerAnimated:NO];
 
 	[self handleNotificationWithUserInfo:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
 
@@ -558,7 +564,6 @@ static NSMutableArray *highlightWords;
 
 		_alertController.popoverPresentationController.sourceRect = (CGRect){ point, { 1., 1. } };
 		_alertController.popoverPresentationController.sourceView = self.splitViewController.view;
-		_alertController.popoverPresentationController.delegate = self;
 
 		[overlappingViewController presentViewController:_alertController animated:YES completion:nil];
 	} else {

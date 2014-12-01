@@ -49,6 +49,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 - (void) showChatControllerForUserNicknamed:(NSString *) nickname andConnection:(MVChatConnection *) connection;
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated;
 
+- (void) setFirstChatController;
 - (void) showPendingChatControllerAnimated:(BOOL) animated;
 - (BOOL) hasPendingChatController;
 
