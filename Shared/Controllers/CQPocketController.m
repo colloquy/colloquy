@@ -23,7 +23,7 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 }
 
 + (NSString *) _consumerKey {
-	if ([UIDevice currentDevice].isPhoneModel)
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
 		return @"Pocket_iPhone_Consumer_Key";
 	return @"Pocket_iPad_Consumer_Key";
 }

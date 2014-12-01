@@ -376,7 +376,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	for (CQBouncerSettings *settings in bouncers) {
 		NSArray *connections = [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:settings.identifier];
 		[allConnections addObjectsFromArray:connections];
-		NSLog(@"%@", connections);
 		
 	}
 	NSArray *connections = [CQConnectionsController defaultController].directConnections;
