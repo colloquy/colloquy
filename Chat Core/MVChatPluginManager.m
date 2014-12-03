@@ -35,7 +35,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	[paths addObject:[[NSBundle bundleForClass:[self class]] builtInPlugInsPath]];
 	if( ! [[NSBundle mainBundle] isEqual:[NSBundle bundleForClass:[self class]]] )
 		[paths addObject:[[NSBundle mainBundle] builtInPlugInsPath]];
-	return [paths autorelease];
+	return paths;
 }
 
 #pragma mark -
@@ -51,21 +51,6 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
 
 	return self;
-}
-
-- (void) finalize {
-	if( self == sharedInstance ) sharedInstance = nil;
-	[super finalize];
-}
-
-- (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	if( self == sharedInstance ) sharedInstance = nil;
-
-	[_plugins release];
-	[_invalidPlugins release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -112,7 +97,6 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 				if( [bundle load] && [[bundle principalClass] conformsToProtocol:@protocol( MVChatPlugin )] ) {
 					id plugin = [[[bundle principalClass] allocWithZone:nil] initWithManager:self];
 					if( plugin ) [self addPlugin:plugin];
-					[plugin release];
 				}
 			}
 		}
@@ -121,23 +105,21 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	if (invalidPluginList.count) [[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerDidFindInvalidPluginsNotification object:invalidPluginList];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerDidReloadPluginsNotification object:self];
 
-	[invalidPluginList release];
-
 	_reloadingPlugins = NO;
 }
 
-- (void) addPlugin:(id) plugin {
+- (void) addPlugin:(NSBundle *) plugin {
 	if( plugin ) {
 		[_plugins addObject:plugin];
 		if( [plugin respondsToSelector:@selector( load )] )
-			[plugin performSelector:@selector( load )];
+			[plugin load];
 	}
 }
 
-- (void) removePlugin:(id) plugin {
+- (void) removePlugin:(NSBundle *) plugin {
 	if( plugin ) {
 		if( [plugin respondsToSelector:@selector( unload )] )
-			[plugin performSelector:@selector( unload )];
+			[plugin unload];
 		[_plugins removeObject:plugin];
 	}
 }
@@ -163,7 +145,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 - (NSArray *) pluginsOfClass:(Class) class thatRespondToSelector:(SEL) selector {
 	NSParameterAssert( selector != NULL );
 
-	NSMutableArray *qualified = [[[NSMutableArray allocWithZone:nil] init] autorelease];
+	NSMutableArray *qualified = [[NSMutableArray allocWithZone:nil] init];
 
 	for( id plugin in _plugins )
 		if( ( ! class || ( class && [plugin isKindOfClass:class] ) ) && [plugin respondsToSelector:selector] )
@@ -190,7 +172,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 
 	if( ! plugins ) return nil;
 
-	NSMutableArray *results = [[[NSMutableArray allocWithZone:nil] init] autorelease];
+	NSMutableArray *results = [[NSMutableArray allocWithZone:nil] init];
 	NSMethodSignature *sig = [invocation methodSignature];
 
 	for ( id plugin in plugins ) {
@@ -203,7 +185,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 		}
 
 		if( ! strcmp( [sig methodReturnType], @encode( id ) ) ) {
-			id ret = nil;
+			__unsafe_unretained id ret = nil;
 			[invocation getReturnValue:&ret];
 			if( ret ) [results addObject:ret];
 			else [results addObject:[NSNull null]];

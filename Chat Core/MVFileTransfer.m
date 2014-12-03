@@ -51,19 +51,10 @@ static BOOL autoPortMapping = YES;
 - (id) initWithUser:(MVChatUser *) chatUser {
 	if( ( self = [super init] ) ) {
 		_status = MVFileTransferHoldingStatus;
-		_user = [chatUser retain];
+		_user = chatUser;
 	}
 
 	return self;
-}
-
-- (void) dealloc {
-	[_startDate release];
-	[_host release];
-	[_user release];
-	[_lastError release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -181,7 +172,6 @@ static BOOL autoPortMapping = YES;
 
 	NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:error, @"error", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferErrorOccurredNotification object:self userInfo:info];
-	[info release];
 }
 @end
 
@@ -201,14 +191,6 @@ static BOOL autoPortMapping = YES;
 	default:
 		return nil;
 	}
-}
-
-#pragma mark -
-
-- (void) dealloc {
-	[_source release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -235,15 +217,6 @@ static BOOL autoPortMapping = YES;
 #pragma mark -
 
 @implementation MVDownloadFileTransfer
-- (void) dealloc {
-	[_destination release];
-	[_originalFileName release];
-
-	[super dealloc];
-}
-
-#pragma mark -
-
 - (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) rename {
 	// subclass if needed, call super
 	MVSafeCopyAssign( _destination, [path stringByStandardizingPath] );

@@ -170,7 +170,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		_joinedRooms = [[NSMutableSet alloc] initWithCapacity:10];
 
 		CFDictionaryValueCallBacks valueCallbacks = { 0, NULL, NULL, kCFTypeDictionaryValueCallBacks.copyDescription, kCFTypeDictionaryValueCallBacks.equal };
-		_knownRooms = (NSMutableDictionary *)CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &valueCallbacks);
+		_knownRooms = (NSMutableDictionary *)CFBridgingRelease(CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &valueCallbacks));
 
 		_knownUsers = [[NSMutableDictionary alloc] initWithCapacity:300];
 
@@ -185,8 +185,6 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (id) initWithType:(MVChatConnectionType) connectionType {
-	[self release];
-
 	switch(connectionType) {
 #if ENABLE(ICB)
 	case MVChatConnectionICBType:
@@ -262,11 +260,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	return self;
 }
 
-- (void) finalize {
-	[self cancelPendingReconnectAttempts];
-	[super finalize];
-}
-
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
@@ -284,25 +277,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_joinedRooms makeObjectsPerformSelector:@selector(_connectionDestroyed)];
 	[_localUser _connectionDestroyed];
 
-	[_npassword release];
-	[_roomsCache release];
-	[_pendingRoomAdditions release];
-	[_pendingRoomUpdates release];
-	[_cachedDate release];
-	[_knownRooms release];
-	[_joinedRooms release];
-	[_chatUserWatchRules release];
-	[_localUser release];
-	[_lastConnectAttempt release];
-	[_awayMessage release];
-	[_persistentInformation release];
-	[_proxyServer release];
-	[_proxyUsername release];
-	[_proxyPassword release];
-	[_supportedFeatures release];
-	[_serverError release];
-
-	[super dealloc];
+	[self cancelPendingReconnectAttempts];
 }
 
 #pragma mark -
@@ -531,7 +506,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConnectionFlags flags, void *context ) {
-	MVChatConnection *connection = (MVChatConnection *)context;
+	MVChatConnection *connection = (__bridge MVChatConnection *)context;
 
 	BOOL reachable = ( flags & kSCNetworkFlagsReachable );
 	BOOL connectionRequired = ( flags & kSCNetworkFlagsConnectionRequired );
@@ -561,7 +536,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	if( ! server.length )
 		return;
 
-	SCNetworkReachabilityContext context = { 0, self, NULL, NULL, NULL };
+	SCNetworkReachabilityContext context = { 0, (__bridge void *)(self), NULL, NULL, NULL };
 	_reachability = SCNetworkReachabilityCreateWithName( NULL, [server UTF8String] );
 	if( ! _reachability )
 		return;
@@ -828,7 +803,6 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	va_end( ap );
 
 	[self sendRawMessage:command immediately:NO];
-	[command release];
 }
 
 - (void) sendRawMessageImmediatelyWithFormat:(NSString *) format, ... {
@@ -842,7 +816,6 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	va_end( ap );
 
 	[self sendRawMessage:command immediately:YES];
-	[command release];
 }
 
 - (void) sendRawMessageWithComponents:(id) firstComponent, ... {
@@ -864,12 +837,11 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 			NSData *stringData = [[object description] dataUsingEncoding:[self encoding] allowLossyConversion:YES];
 			[data appendData:stringData];
 		}
-	} while( ( object = va_arg( ap, void * ) ) );
+	} while( ( object = (__bridge id)(va_arg( ap, void * )) ) );
 
 	va_end( ap );
 
 	[self sendRawMessage:data immediately:NO];
-	[data release];
 }
 
 - (void) sendRawMessageImmediatelyWithComponents:(id) firstComponent, ... {
@@ -891,12 +863,11 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 			NSData *stringData = [[object description] dataUsingEncoding:[self encoding] allowLossyConversion:YES];
 			[data appendData:stringData];
 		}
-	} while( ( object = va_arg( ap, void * ) ) );
+	} while( ( object = (__bridge id)(va_arg( ap, void * )) ) );
 
 	va_end( ap );
 
 	[self sendRawMessage:data immediately:YES];
-	[data release];
 }
 
 #pragma mark -
@@ -947,7 +918,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
 	@synchronized( _joinedRooms ) {
 		MVChatRoom *room = [_knownRooms objectForKey:identifier];
-		return ([room isJoined] ? [[room retain] autorelease] : nil);
+		return ([room isJoined] ? room : nil);
 	}
 }
 
@@ -955,7 +926,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	@synchronized( _joinedRooms ) {
 		for( MVChatRoom *room in _joinedRooms )
 			if( [[room name] isEqualToString:name] )
-				return [[room retain] autorelease];
+				return room;
 	}
 
 	return nil;
@@ -965,7 +936,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
 	@synchronized( _knownRooms ) {
-		return [[[_knownRooms objectForKey:identifier] retain] autorelease];
+		return [_knownRooms objectForKey:identifier];
 	}
 }
 
@@ -974,7 +945,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 		for( id key in _knownRooms ) {
 			MVChatRoom *room = [_knownRooms objectForKey:key];
 			if( [[room name] isEqualToString:name] )
-				return [[room retain] autorelease];
+				return room;
 		}
 	}
 
@@ -1019,7 +990,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 		return [self localUser];
 
 	@synchronized( _knownUsers ) {
-		return [[[_knownUsers objectForKey:identifier] retain] autorelease];
+		return [_knownUsers objectForKey:identifier];
 	}
 }
 
@@ -1108,8 +1079,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	++_reconnectAttemptCount;
 
 	[_reconnectTimer invalidate];
-	[_reconnectTimer release];
-	_reconnectTimer = [[NSTimer scheduledTimerWithTimeInterval:(60. * _reconnectAttemptCount) target:self selector:@selector( attemptReconnect ) userInfo:nil repeats:NO] retain];
+	_reconnectTimer = [NSTimer scheduledTimerWithTimeInterval:(60. * _reconnectAttemptCount) target:self selector:@selector( attemptReconnect ) userInfo:nil repeats:NO];
 
 	[self connect];
 }
@@ -1117,7 +1087,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (void) scheduleReconnectAttempt {
 	if (_reconnectTimer)
 		return;
-	_reconnectTimer = [[NSTimer scheduledTimerWithTimeInterval:30. target:self selector:@selector( attemptReconnect ) userInfo:nil repeats:NO] retain];
+	_reconnectTimer = [NSTimer scheduledTimerWithTimeInterval:30. target:self selector:@selector( attemptReconnect ) userInfo:nil repeats:NO];
 }
 
 - (void) cancelPendingReconnectAttempts {
@@ -1126,7 +1096,6 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	_reconnectAttemptCount = 0;
 
 	[_reconnectTimer invalidate];
-	[_reconnectTimer release];
 	_reconnectTimer = nil;
 }
 
@@ -1143,9 +1112,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 }
 
 - (void) purgeCaches {
-	id old = _cachedDate;
 	_cachedDate = nil;
-	[old release];
 
 	[_roomsCache removeAllObjects];
 }
@@ -1200,8 +1167,9 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( MVChatConnection * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
+	__unsafe_unretained id me = self;
 	[invocation setSelector:@selector( connected: )];
-	[invocation setArgument:&self atIndex:2];
+	[invocation setArgument:&me atIndex:2];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 #endif
@@ -1226,8 +1194,9 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( MVChatConnection * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
+	__unsafe_unretained id me = self;
 	[invocation setSelector:@selector( disconnecting: )];
-	[invocation setArgument:&self atIndex:2];
+	[invocation setArgument:&me atIndex:2];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 #endif
@@ -1305,12 +1274,11 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 		NSMutableArray *removeList = [[NSMutableArray alloc] initWithCapacity:_knownUsers.count];
 
 		for( id key in _knownUsers ) {
-			id object = [_knownUsers objectForKey:key];
-			if( [object retainCount] == 1 ) [removeList addObject:key];
+			MVChatUser *user = [_knownUsers objectForKey:key];
+			if( [user roomCount] == 1 ) [removeList addObject:key];
 		}
 
 		[_knownUsers removeObjectsForKeys:removeList];
-		[removeList release];
 	}
 }
 
@@ -1369,7 +1337,8 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 		[user _setDateDisconnected:[NSDate date]];
 
 	if( [user status] != MVChatUserOfflineStatus ) {
-		[user retain]; // retain since removeMatchedUser might hold the last reference
+		// retain since removeMatchedUser might hold the last reference
+		__strong MVChatUser *strongUser = user;
 
 		@synchronized( _chatUserWatchRules ) {
 			for( MVChatUserWatchRule *rule in _chatUserWatchRules)
@@ -1378,7 +1347,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 		[user _setStatus:MVChatUserOfflineStatus];
 
-		[user release];
+		strongUser = nil;
 	}
 }
 @end
@@ -1433,7 +1402,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (NSTextStorage *) scriptTypedAwayMessage {
 #if USE(ATTRIBUTED_CHAT_STRING)
-	return [[[NSTextStorage alloc] initWithAttributedString:(NSAttributedString *)_awayMessage] autorelease];
+	return [[NSTextStorage alloc] initWithAttributedString:(NSAttributedString *)_awayMessage];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 	return [[[NSTextStorage alloc] initWithString:(NSString *)_awayMessage] autorelease];
 #endif
@@ -1653,7 +1622,6 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 			NSDictionary *options = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:realEncoding], @"StringEncoding", cformat, @"FormatType", nil];
 			NSData *msgData = [realMessage chatFormatWithOptions:options];
-			[options release];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 			NSData *msgData = [realMessage dataUsingEncoding:realEncoding];
 #endif
@@ -1661,7 +1629,6 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 			if( [target isKindOfClass:[MVChatRoom class]] ) {
 				NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:[[(MVChatRoom *)target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:realAction], @"action", nil];
 				[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:target userInfo:info];
-				[info release];
 			} // we can't really echo a private message with our current notifications
 		}
 	}

@@ -37,8 +37,6 @@
 		if( userInfo ) [info setObject:userInfo forKey:@"userInfo"];
 
 		[[self class] performSelectorOnMainThread:@selector( _postNotificationName: ) withObject:info waitUntilDone:wait];
-
-		[info release];
 	}
 }
 

@@ -80,14 +80,14 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	if( parts.count >= 2 )
 		ret -> _address = [[parts objectAtIndex:1] copy];
 
-	return [ret autorelease];
+	return ret;
 }
 
 + (id) wildcardUserWithFingerprint:(NSString *) fingerprint {
 	MVChatUser *ret = [[self alloc] init];
 	ret -> _type = MVChatWildcardUserType;
 	ret -> _fingerprint = [fingerprint copy];
-	return [ret autorelease];
+	return ret;
 }
 
 #pragma mark -
@@ -100,22 +100,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	}
 
 	return self;
-}
-
-- (void) dealloc {
-	[_uniqueIdentifier release];
-	[_nickname release];
-	[_realName release];
-	[_username release];
-	[_address release];
-	[_serverAddress release];
-	[_publicKey release];
-	[_fingerprint release];
-	[_dateConnected release];
-	[_dateDisconnected release];
-	[_attributes release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -388,7 +372,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 	NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:key, @"attribute", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserAttributeUpdatedNotification object:self userInfo:info];
-	[info release];
 }
 
 #pragma mark -
@@ -444,7 +427,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (void) _setUniqueIdentifier:(id) identifier {
-	MVSafeAdoptAssign( _uniqueIdentifier, ( [identifier conformsToProtocol:@protocol( NSCopying )] ? [identifier copy] : [identifier retain] ) );
+	MVSafeAdoptAssign( _uniqueIdentifier, ( [identifier conformsToProtocol:@protocol( NSCopying )] ? [identifier copy] : identifier ) );
 }
 
 - (void) _setNickname:(NSString *) name {
@@ -537,12 +520,12 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	if( self == [[self connection] localUser] ) {
 		id classDescription = [NSClassDescription classDescriptionForClass:[MVChatConnection class]];
 		NSScriptObjectSpecifier *container = [[self connection] objectSpecifier];
-		return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"localUser"] autorelease];
+		return [[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"localUser"];
 	}
 
 	id classDescription = [NSClassDescription classDescriptionForClass:[MVChatConnection class]];
 	NSScriptObjectSpecifier *container = [[self connection] objectSpecifier];
-	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"knownChatUsersArray" uniqueID:[self scriptUniqueIdentifier]] autorelease];
+	return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"knownChatUsersArray" uniqueID:[self scriptUniqueIdentifier]];
 }
 
 - (void) refreshInformationScriptCommand:(NSScriptCommand *) command {

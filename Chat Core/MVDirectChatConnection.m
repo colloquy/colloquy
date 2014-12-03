@@ -47,35 +47,16 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 		[ret initiate];
 	}
 
-	return [ret autorelease];
-}
-
-- (oneway void) release {
-	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
-		_releasing = YES;
-		[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
-	}
-
-	[super release];
+	return ret;
 }
 
 - (void) dealloc {
+	[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
+
 	[_directClientConnection disconnect];
 	[_directClientConnection setDelegate:nil];
-	[_directClientConnection release];
 
-	[_host release];
-	[_connectedHost release];
-	[_user release];
-	[_lastError release];
-
-	[super dealloc];
-}
-
-- (void) finalize {
 	[_directClientConnection disconnect];
-
-	[super finalize];
 }
 
 #pragma mark -
@@ -197,15 +178,11 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 		[newMsg appendBytes:"\001\x0D\x0A" length:3];
 
 		[self performSelector:@selector( _writeMessage: ) withObject:newMsg inThread:[_directClientConnection connectionThread]];
-
-		[newMsg release];
 	} else {
 		NSMutableData *newMsg = [msg mutableCopy];
 		[newMsg appendBytes:"\x0D\x0A" length:2];
 
 		[self performSelector:@selector( _writeMessage: ) withObject:newMsg inThread:[_directClientConnection connectionThread]];
-
-		[newMsg release];
 	}
 }
 
@@ -270,13 +247,9 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 			// special case ACTION and send it out like a message with the action flag
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionGotMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:arguments, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
 		}
-
-		[command release];
-		[arguments release];
 	} else {
 		NSData *msg = [[NSData alloc] initWithBytes:bytes length:(end - bytes)];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionGotMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msg, @"message", [NSString locallyUniqueString], @"identifier", nil]];
-		[msg release];
 	}
 
 	[self _readNextMessage];
@@ -291,7 +264,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 		_status = MVDirectChatConnectionWaitingStatus;
 		_encoding = NSUTF8StringEncoding;
 		_outgoingChatFormat = MVChatConnectionDefaultMessageFormat;
-		_user = [chatUser retain];
+		_user = chatUser;
 	}
 
 	return self;
@@ -350,6 +323,5 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 	NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:error, @"error", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionErrorOccurredNotification object:self userInfo:info];
-	[info release];
 }
 @end

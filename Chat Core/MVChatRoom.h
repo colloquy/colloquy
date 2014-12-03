@@ -80,34 +80,34 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 	NSUInteger _hash;
 	BOOL _releasing;
 }
-@property(readonly) MVChatConnection *connection;
+@property(strong, readonly) MVChatConnection *connection;
 
-@property(readonly) NSURL *url;
-@property(readonly) NSString *name;
-@property(readonly) NSString *displayName;
-@property(readonly) id uniqueIdentifier;
+@property(strong, readonly) NSURL *url;
+@property(strong, readonly) NSString *name;
+@property(strong, readonly) NSString *displayName;
+@property(strong, readonly) id uniqueIdentifier;
 
 @property(readonly, getter=isJoined) BOOL joined;
-@property(readonly) NSDate *dateJoined;
-@property(readonly) NSDate *dateParted;
+@property(strong, readonly) NSDate *dateJoined;
+@property(strong, readonly) NSDate *dateParted;
 
 @property NSStringEncoding encoding;
 
-@property(readonly) NSData *topic;
-@property(readonly) MVChatUser *topicAuthor;
-@property(readonly) NSDate *dateTopicChanged;
+@property(strong, readonly) NSData *topic;
+@property(strong, readonly) MVChatUser *topicAuthor;
+@property(strong, readonly) NSDate *dateTopicChanged;
 
-@property(readonly) NSSet *supportedAttributes;
-@property(readonly) NSDictionary *attributes;
+@property(strong, readonly) NSSet *supportedAttributes;
+@property(strong, readonly) NSDictionary *attributes;
 
 @property(readonly) NSUInteger supportedModes;
 @property(readonly) NSUInteger supportedMemberUserModes;
 @property(readonly) NSUInteger supportedMemberDisciplineModes;
 @property(readonly) NSUInteger modes;
 
-@property(readonly) MVChatUser *localMemberUser;
-@property(readonly) NSSet *memberUsers;
-@property(readonly) NSSet *bannedUsers;
+@property(strong, readonly) MVChatUser *localMemberUser;
+@property(strong, readonly) NSSet *memberUsers;
+@property(strong, readonly) NSSet *bannedUsers;
 
 - (BOOL) isEqual:(id) object;
 - (BOOL) isEqualToChatRoom:(MVChatRoom *) anotherUser;

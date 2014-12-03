@@ -63,7 +63,7 @@
 				else [results addObject:[NSNull null]];
 			}
 
-			return [results autorelease];
+			return results;
 		}
 
 		if( ! [subject respondsToSelector:selector] ) return nil;

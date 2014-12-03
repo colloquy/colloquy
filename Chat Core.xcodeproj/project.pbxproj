@@ -70,7 +70,7 @@
 		322F54D10B53F6730023AE39 /* ICBPacket.h in Headers */ = {isa = PBXBuildFile; fileRef = 322F54CF0B53F6730023AE39 /* ICBPacket.h */; };
 		322F54D20B53F6730023AE39 /* ICBPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 322F54D00B53F6730023AE39 /* ICBPacket.m */; };
 		325F167E0B39A22C008C627B /* MVICBChatConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 325F167C0B39A22C008C627B /* MVICBChatConnection.h */; };
-		325F167F0B39A22C008C627B /* MVICBChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 325F167D0B39A22C008C627B /* MVICBChatConnection.m */; };
+		325F167F0B39A22C008C627B /* MVICBChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 325F167D0B39A22C008C627B /* MVICBChatConnection.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3272C2C90B3DA84900DF650E /* MVICBChatRoom.h in Headers */ = {isa = PBXBuildFile; fileRef = 3272C2C70B3DA84900DF650E /* MVICBChatRoom.h */; };
 		3272C2CA0B3DA84900DF650E /* MVICBChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 3272C2C80B3DA84900DF650E /* MVICBChatRoom.m */; };
 		32C46E1A0B3AB37E00B96B27 /* MVICBChatUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 32C46E180B3AB37E00B96B27 /* MVICBChatUser.h */; };
@@ -948,6 +948,7 @@
 		1C041DDC08553AD200A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
@@ -1009,6 +1010,7 @@
 		1C7F2DB408553C1900D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;

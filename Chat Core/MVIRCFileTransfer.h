@@ -11,7 +11,6 @@
 	BOOL _fileNameQuoted;
 	BOOL _readData;
 	BOOL _doneSending;
-	BOOL _releasing;
 	long long _passiveId;
 }
 - (void) _setupAndStart;
@@ -31,7 +30,6 @@
 	NSFileHandle *_fileHandle;
 	BOOL _fileNameQuoted;
 	BOOL _turbo;
-	BOOL _releasing;
 	long long _passiveId;
 }
 - (void) _setupAndStart;

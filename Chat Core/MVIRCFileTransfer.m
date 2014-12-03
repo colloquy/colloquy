@@ -39,37 +39,20 @@
 		[ret _setupAndStart];
 	}
 
-	return [ret autorelease];
+	return ret;
 }
 
 #pragma mark -
 
-- (oneway void) release {
-	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
-		_releasing = YES;
-		[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
-	}
-
-	[super release];
-}
-
 - (void) dealloc {
+	[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
+
 	[_directClientConnection disconnect];
 	[_directClientConnection setDelegate:nil];
-	[_directClientConnection release];
 
 	[_fileHandle closeFile];
-	[_fileHandle release];
-
-	[super dealloc];
 }
 
-- (void) finalize {
-	[_directClientConnection disconnect];
-	[_fileHandle closeFile];
-
-	[super finalize];
-}
 
 #pragma mark -
 
@@ -81,7 +64,6 @@
 	id old = _fileHandle;
 	_fileHandle = nil;
 	[old closeFile];
-	[old release];
 
 	// do this last incase the connection is the last thing retaining us
 	[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
@@ -132,7 +114,6 @@
 	id old = _fileHandle;
 	_fileHandle = nil;
 	[old closeFile];
-	[old release];
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection didWriteDataWithTag:(long) tag {
@@ -223,34 +204,16 @@
 #pragma mark -
 
 @implementation MVIRCDownloadFileTransfer
-- (oneway void) release {
-	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
-		_releasing = YES;
-		[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
-	}
-
-	[super release];
-}
-
 - (void) dealloc {
+	[[[self user] connection] _removeDirectClientConnection:self];
+
 	[_directClientConnection disconnect];
 	[_directClientConnection setDelegate:nil];
-	[_directClientConnection release];
 
 	[_fileHandle synchronizeFile];
 	[_fileHandle closeFile];
-	[_fileHandle release];
-
-	[super dealloc];
 }
 
-- (void) finalize {
-	[_directClientConnection disconnect];
-	[_fileHandle synchronizeFile];
-	[_fileHandle closeFile];
-
-	[super finalize];
-}
 
 #pragma mark -
 
@@ -279,7 +242,6 @@
 	_fileHandle = nil;
 	[old synchronizeFile];
 	[old closeFile];
-	[old release];
 
 	// do this last incase the connection is the last thing retaining us
 	[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
@@ -344,7 +306,6 @@
 	_fileHandle = nil;
 	[old synchronizeFile];
 	[old closeFile];
-	[old release];
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection didReadData:(NSData *) data withTag:(long) tag {
@@ -359,7 +320,6 @@
 		unsigned long progressToSend = htonl( progress & 0xffffffff );
 		NSData *length = [[NSData alloc] initWithBytes:&progressToSend length:4];
 		[_directClientConnection writeData:length withTimeout:-1 withTag:0];
-		[length release];
 	}
 
 	if( progress == [self finalSize] ) {

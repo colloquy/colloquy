@@ -84,7 +84,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 + (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host;
 + (id) wildcardUserWithFingerprint:(NSString *) fingerprint;
 
-@property(readonly) MVChatConnection *connection;
+@property(strong, readonly) MVChatConnection *connection;
 @property(readonly) MVChatUserType type;
 
 @property(readonly, getter=isRemoteUser) BOOL remoteUser;
@@ -95,32 +95,34 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 @property(readonly, getter=isServerOperator) BOOL serverOperator;
 
 @property(readonly) MVChatUserStatus status;
-@property(readonly) NSData *awayStatusMessage;
+@property(strong, readonly) NSData *awayStatusMessage;
 
-@property(readonly) NSDate *dateConnected;
-@property(readonly) NSDate *dateDisconnected;
-@property(readonly) NSDate *dateUpdated;
+@property(strong, readonly) NSDate *dateConnected;
+@property(strong, readonly) NSDate *dateDisconnected;
+@property(strong, readonly) NSDate *dateUpdated;
 
 @property(readonly) NSTimeInterval idleTime;
 @property(readonly) NSTimeInterval lag;
 
-@property(readonly) NSString *displayName;
-@property(readonly) NSString *nickname;
-@property(readonly) NSString *realName;
-@property(readonly) NSString *username;
-@property(readonly) NSString *address;
-@property(readonly) NSString *serverAddress;
-@property(readonly) NSString *maskRepresentation;
+@property(strong, readonly) NSString *displayName;
+@property(strong, readonly) NSString *nickname;
+@property(strong, readonly) NSString *realName;
+@property(strong, readonly) NSString *username;
+@property(strong, readonly) NSString *address;
+@property(strong, readonly) NSString *serverAddress;
+@property(strong, readonly) NSString *maskRepresentation;
 
-@property(readonly) id uniqueIdentifier;
-@property(readonly) NSData *publicKey;
-@property(readonly) NSString *fingerprint;
+@property(strong, readonly) id uniqueIdentifier;
+@property(strong, readonly) NSData *publicKey;
+@property(strong, readonly) NSString *fingerprint;
 
 @property(readonly) NSUInteger supportedModes;
 @property(readonly) NSUInteger modes;
 
-@property(readonly) NSSet *supportedAttributes;
-@property(readonly) NSDictionary *attributes;
+@property(strong, readonly) NSSet *supportedAttributes;
+@property(strong, readonly) NSDictionary *attributes;
+
+@property NSUInteger roomCount;
 
 - (BOOL) isEqual:(id) object;
 - (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser;

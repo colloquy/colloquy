@@ -113,8 +113,6 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 	NSString *render = [[NSString allocWithZone:nil] initWithFormat:@"<span style=\"color: #01FE02\">%@</span>", fragment];
 	NSMutableAttributedString *result = [[NSMutableAttributedString allocWithZone:nil] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] options:options documentAttributes:NULL];
-	[render release];
-	[options release];
 
 	NSRange limitRange, effectiveRange;
 	limitRange = NSMakeRange( 0, result.length );
@@ -126,9 +124,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	}
 
 	NSAttributedString *ret = [[self allocWithZone:nil] initWithAttributedString:result];
-	[result release];
 
-	return [ret autorelease];
+	return ret;
 }
 
 - (NSString *) HTMLFormatWithOptions:(NSDictionary *) options {
@@ -227,7 +224,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 #pragma mark -
 
 + (id) attributedStringWithChatFormat:(NSData *) data options:(NSDictionary *) options {
-	return [[[self allocWithZone:nil] initWithChatFormat:data options:options] autorelease];
+	return [[self allocWithZone:nil] initWithChatFormat:data options:options];
 }
 
 - (id) initWithChatFormat:(NSData *) data options:(NSDictionary *) options {
@@ -292,22 +289,18 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 					}
 				}
 
-				[encodingStr release];
-
 				if( newEncoding && newEncoding != currentEncoding ) {
 					if( ( end - start ) > 0 ) {
 						NSData *subData = nil;
 						if( currentEncoding != NSUTF8StringEncoding ) {
 							NSString *tempStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + start ) length:( end - start ) encoding:currentEncoding];
 							NSData *utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
-							if( utf8Data ) subData = [utf8Data retain];
-							[tempStr release];
+							if( utf8Data ) subData = utf8Data;
 						} else {
 							subData = [[NSData allocWithZone:nil] initWithBytesNoCopy:(void *)( bytes + start ) length:( end - start )];
 						}
 
 						if( subData ) [newData appendData:subData];
-						[subData release];
 					}
 
 					currentEncoding = newEncoding;
@@ -323,14 +316,12 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			if( currentEncoding != NSUTF8StringEncoding ) {
 				NSString *tempStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + start ) length:( length - start ) encoding:currentEncoding];
 				NSData *utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
-				if( utf8Data ) subData = [utf8Data retain];
-				[tempStr release];
+				if( utf8Data ) subData = utf8Data;
 			} else {
 				subData = [[NSData allocWithZone:nil] initWithBytesNoCopy:(void *)( bytes + start ) length:( length - start )];
 			}
 
 			if( subData ) [newData appendData:subData];
-			[subData release];
 		}
 
 		encoding = NSUTF8StringEncoding;
@@ -340,9 +331,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	if( encoding != NSUTF8StringEncoding && isValidUTF8( [data bytes], data.length ) )
 		encoding = NSUTF8StringEncoding;
 
-	NSString *message = [[[NSString allocWithZone:nil] initWithBytes:[data bytes] length:data.length encoding:encoding] autorelease];
+	NSString *message = [[NSString allocWithZone:nil] initWithBytes:[data bytes] length:data.length encoding:encoding];
 	if( ! message ) {
-		[self release];
 		return nil;
 	}
 
@@ -357,7 +347,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	if( [message rangeOfCharacterFromSet:formatCharacters].location == NSNotFound )
 		return [self initWithString:message attributes:attributes];
 
-	NSMutableAttributedString *ret = [[[NSMutableAttributedString allocWithZone:nil] init] autorelease];
+	NSMutableAttributedString *ret = [[NSMutableAttributedString allocWithZone:nil] init];
 	NSScanner *scanner = [NSScanner scannerWithString:message];
 	[scanner setCharactersToBeSkipped:nil]; // don't skip leading whitespace!
 
@@ -426,7 +416,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				}
 				break;
 			}
-			case '\006': // ctcp 2 formatting (http://www.lag.net/~robey/ctcp/ctcp2.2.txt)
+			case '\006': { // ctcp 2 formatting (http://www.lag.net/~robey/ctcp/ctcp2.2.txt)
 				if( ! [scanner isAtEnd] ) {
 					BOOL off = NO;
 
@@ -575,6 +565,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 					[scanner scanString:@"\006" intoString:NULL];
 				}
 			}
+			}
 		}
 
 		NSString *text = nil;
@@ -582,7 +573,6 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		if( text.length ) {
 			id new = [[[self class] allocWithZone:nil] initWithString:text attributes:attributes];
 			[ret appendAttributedString:new];
-			[new release];
 		}
 	}
 
@@ -667,7 +657,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	if( [[options objectForKey:@"NullTerminatedReturn"] boolValue] )
 		[ret appendBytes:"\0" length:1];
 
-	return [ret autorelease];
+	return ret;
 }
 
 - (NSData *) _CTCP2FormatWithOptions:(NSDictionary *) options {
@@ -842,7 +832,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	if( [[options objectForKey:@"NullTerminatedReturn"] boolValue] )
 		[ret appendBytes:"\0" length:1];
 
-	return [ret autorelease];
+	return ret;
 }
 
 - (NSData *) chatFormatWithOptions:(NSDictionary *) options {

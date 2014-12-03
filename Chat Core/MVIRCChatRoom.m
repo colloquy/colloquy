@@ -9,7 +9,7 @@
 	if( ( self = [self init] ) ) {
 		_connection = roomConnection; // prevent circular retain
 		_name = [roomName copy];
-		_uniqueIdentifier = [[roomName lowercaseString] retain];
+		_uniqueIdentifier = [roomName lowercaseString];
 		[_connection _addKnownRoom:self];
 	}
 
@@ -43,7 +43,6 @@
 		NSData *reasonData = [MVIRCChatConnection _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
 		NSString *prefix = [[NSString alloc] initWithFormat:@"PART %@ :", [self name]];
 		[[self connection] sendRawMessageWithComponents:prefix, reasonData, nil];
-		[prefix release];
 	} else [[self connection] sendRawMessageImmediatelyWithFormat:@"PART %@", [self name]];
 }
 
@@ -54,7 +53,6 @@
 	NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:newTopic withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
 	NSString *prefix = [[NSString alloc] initWithFormat:@"TOPIC %@ :", [self name]];
 	[[self connection] sendRawMessageWithComponents:prefix, msg, nil];
-	[prefix release];
 }
 
 #pragma mark -
@@ -76,7 +74,6 @@
 	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
 		NSString *prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@ :\001%@ ", [self name], command];
 		[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
-		[prefix release];
 	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
 		[[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@ %@\001", [self name], command, arguments];
 	} else [[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@\001", [self name], command];
@@ -87,7 +84,6 @@
 	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
 		NSString *prefix = [[NSString alloc] initWithFormat:@"NOTICE %@ :\001%@ ", [self name], command];
 		[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
-		[prefix release];
 	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
 		[[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@ %@\001", [self name], command, arguments];
 	} else [[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@\001", [self name], command];
@@ -264,7 +260,6 @@
 		NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
 		NSString *prefix = [[NSString alloc] initWithFormat:@"KICK %@ %@ :", [self name], [user nickname]];
 		[[self connection] sendRawMessageImmediatelyWithComponents:prefix, msg, nil];
-		[prefix release];
 	} else [[self connection] sendRawMessageImmediatelyWithFormat:@"KICK %@ %@", [self name], [user nickname]];
 }
 

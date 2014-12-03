@@ -19,8 +19,6 @@
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -70,7 +68,6 @@
 	[jabberMsg setType:@"chat"];
 	[jabberMsg addComposingRequest];
 	[[(MVXMPPChatConnection *)_connection _chatSession] sendElement:jabberMsg];
-	[jabberMsg release];
 }
 @end
 

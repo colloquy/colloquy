@@ -17,7 +17,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:3.];
 	NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL];
 	if( result.length >= 6 && result.length <= 40 ) // should be a valid IPv4 or IPv6 address
-		address = [[[NSString alloc] initWithData:result encoding:NSASCIIStringEncoding] autorelease];
+		address = [[NSString alloc] initWithData:result encoding:NSASCIIStringEncoding];
 	if( address && [address rangeOfString:@"."].location != NSNotFound )
 		return [NSString stringWithFormat:@"%d", ntohl( inet_addr( [address UTF8String] ) )];
 	return address;
@@ -38,25 +38,6 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 #pragma mark -
 
 @implementation MVDirectClientConnection
-- (void) finalize {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	_done = YES;
-
-	[_acceptConnection disconnect];
-	[_connection disconnect];
-
-#if ENABLE(AUTO_PORT_MAPPING)
-	if (_portMapping) {
-		[[TCMPortMapper sharedInstance] removePortMapping:_portMapping];
-		if (![[[TCMPortMapper sharedInstance] portMappings] count])
-			[[TCMPortMapper sharedInstance] stop];
-	}
-#endif
-
-	[super finalize];
-}
-
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
@@ -64,13 +45,10 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 	[_acceptConnection disconnect];
 	[_acceptConnection setDelegate:nil];
-	[_acceptConnection release];
 
 	[_connection disconnect];
 	[_connection setDelegate:nil];
-	[_connection release];
 
-	[_threadWaitLock release];
 
 #if ENABLE(AUTO_PORT_MAPPING)
 	if (_portMapping) {
@@ -79,13 +57,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 			[[TCMPortMapper sharedInstance] stop];
 	}
 
-	[_portMapping release];
 #endif
-
-	if (_connectionDelegateQueue)
-		dispatch_release(_connectionDelegateQueue);
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -99,7 +71,6 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 	NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithUnsignedShort:port], @"port", host, @"host", nil];
 	[self performSelector:@selector( _connect: ) withObject:info inThread:_connectionThread];
-	[info release];
 }
 
 - (void) acceptConnectionOnFirstPortInRange:(NSRange) ports {
@@ -162,14 +133,12 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 #pragma mark -
 
 - (void) socket:(GCDAsyncSocket *) sock didAcceptNewSocket:(GCDAsyncSocket *) newSocket {
-	if( ! _connection ) _connection = [newSocket retain];
+	if( ! _connection ) _connection = newSocket;
 	else [newSocket disconnect];
 
-	id old = _acceptConnection;
+	[_acceptConnection setDelegate:nil];
+	[_acceptConnection disconnect];
 	_acceptConnection = nil;
-	[old setDelegate:nil];
-	[old disconnect];
-	[old release];
 }
 
 - (void) socket:(GCDAsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
@@ -238,7 +207,6 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 	[_threadWaitLock lockWhenCondition:1];
 	[_threadWaitLock unlockWithCondition:0];
-	[_threadWaitLock release];
 	_threadWaitLock = nil;
 }
 
@@ -291,7 +259,6 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 			[[NSNotificationCenter defaultCenter] removeObserver:self name:TCMPortMappingDidChangeMappingStatusNotification object:_portMapping];
 
-			[_portMapping release];
 			_portMapping = nil;
 		}
 
@@ -327,30 +294,23 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:TCMPortMappingDidChangeMappingStatusNotification object:_portMapping];
 
-		[_portMapping release];
 		_portMapping = nil;
 	}
 #endif
 
-	id old = _acceptConnection;
+	[_acceptConnection setDelegate:nil];
+	[_acceptConnection disconnect];
 	_acceptConnection = nil;
-	[old setDelegate:nil];
-	[old disconnect];
-	[old release];
 
-	old = _connection;
+	[_connection setDelegate:nil];
+	[_connection disconnect];
 	_connection = nil;
-	[old setDelegate:nil];
-	[old disconnect];
-	[old release];
 
 	_done = YES;
 }
 
 - (oneway void) _dccRunloop {
 	@autoreleasepool {
-		[self retain];
-
 		[_threadWaitLock lockWhenCondition:0];
 
 		NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
@@ -368,7 +328,6 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 		@autoreleasepool {
 			NSDate *timeout = [[NSDate alloc] initWithTimeIntervalSinceNow:5.];
 			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeout];
-			[timeout release];
 		}
 	}
 
@@ -380,7 +339,6 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 			_connectionThread = nil;
 
 		[self _finish];
-		[self release];
 	}
 }
 @end

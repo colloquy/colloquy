@@ -203,14 +203,14 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property(copy) NSString *uniqueIdentifier;
 
-@property(readonly) NSSet *supportedFeatures;
+@property(strong, readonly) NSSet *supportedFeatures;
 @property(readonly) const NSStringEncoding *supportedStringEncodings;
 
-@property(readonly) NSError *lastError;
-@property(readonly) NSError *serverError;
+@property(strong, readonly) NSError *lastError;
+@property(strong, readonly) NSError *serverError;
 
-@property(readonly) NSString *urlScheme;
-@property(readonly) NSURL *url;
+@property(strong, readonly) NSString *urlScheme;
+@property(strong, readonly) NSURL *url;
 
 @property NSStringEncoding encoding;
 
@@ -220,12 +220,12 @@ extern NSString *MVChatConnectionErrorDomain;
 @property(copy) NSString *preferredNickname;
 
 @property(copy) NSArray *alternateNicknames;
-@property(readonly) NSString *nextAlternateNickname;
+@property(strong, readonly) NSString *nextAlternateNickname;
 
 @property(copy) NSString *nicknamePassword;
 
-@property(readonly) NSString *certificateServiceName;
-@property(readonly) NSString *certificatePassword;
+@property(strong, readonly) NSString *certificateServiceName;
+@property(strong, readonly) NSString *certificatePassword;
 
 @property(copy) NSString *password;
 
@@ -258,20 +258,20 @@ extern NSString *MVChatConnectionErrorDomain;
 @property(copy) NSString *bouncerDeviceIdentifier;
 @property(copy) NSString *bouncerConnectionIdentifier;
 
-@property(readonly) NSSet *knownChatRooms;
-@property(readonly) NSSet *joinedChatRooms;
-@property(readonly) NSCharacterSet *chatRoomNamePrefixes;
+@property(strong, readonly) NSSet *knownChatRooms;
+@property(strong, readonly) NSSet *joinedChatRooms;
+@property(strong, readonly) NSCharacterSet *chatRoomNamePrefixes;
 
-@property(readonly) NSSet *knownChatUsers;
-@property(readonly) MVChatUser *localUser;
+@property(strong, readonly) NSSet *knownChatUsers;
+@property(strong, readonly) MVChatUser *localUser;
 
-@property(readonly) NSSet *chatUserWatchRules;
+@property(strong, readonly) NSSet *chatUserWatchRules;
 
 @property(copy) MVChatString *awayStatusMessage;
 
 @property(readonly, getter=isConnected) BOOL connected;
-@property(readonly) NSDate *connectedDate;
-@property(readonly) NSDate *nextReconnectAttemptDate;
+@property(strong, readonly) NSDate *connectedDate;
+@property(strong, readonly) NSDate *nextReconnectAttemptDate;
 @property(readonly, getter=isWaitingToReconnect) BOOL waitingToReconnect;
 @property(readonly) unsigned short reconnectAttemptCount;
 @property(readonly) MVChatConnectionStatus status;

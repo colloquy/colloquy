@@ -98,7 +98,7 @@
 		}
 	} else if (section == 1) {
 		 if (row == 0) { // Class
-			cell.textLabel.text = NSLocalizedString(@"class", "Class user info label");
+			cell.textLabel.text = NSLocalizedString(@"Class", "Class user info label");
 
 			NSString *value = nil;
 			if (_user.status == MVChatUserOfflineStatus)

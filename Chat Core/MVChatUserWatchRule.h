@@ -27,7 +27,7 @@ extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
 - (void) removeMatchedUser:(MVChatUser *) user;
 - (void) removeMatchedUsersForConnection:(MVChatConnection *) connection;
 
-@property(readonly) NSSet *matchedChatUsers;
+@property(strong, readonly) NSSet *matchedChatUsers;
 
 @property(copy) NSString *nickname;
 @property(readonly) BOOL nicknameIsRegularExpression;

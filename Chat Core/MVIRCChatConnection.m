@@ -318,32 +318,6 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) dealloc {
 	[_chatConnection setDelegate:nil];
-
-	[_chatConnection release];
-	[_directClientConnections release];
-	[_server release];
-	[_realServer release];
-	[_currentNickname release];
-	[_nickname release];
-	[_username release];
-	[_password release];
-	[_realName release];
-	[_lastSentIsonNicknames release];
-	[_sendQueue release];
-	[_queueWait release];
-	[_lastCommand release];
-	[_pendingJoinRoomNames release];
-	[_pendingWhoisUsers release];
-	[_roomPrefixes release];
-	[_serverInformation release];
-	[_uniqueIdentifier release];
-	[_umichNoIdentdCaptcha release];
-	[_failedNickname release];
-
-	if (_connectionQueue)
-		dispatch_release(_connectionQueue);
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -568,7 +542,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	NSMutableArray *roomList = [[NSMutableArray alloc] initWithCapacity:rooms.count];
 
-	for( NSString *room in rooms ) {
+	for( __strong NSString *room in rooms ) {
 		room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 
 		if( !room.length )
@@ -612,8 +586,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	}
 
 	if( roomList.count ) [self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
-
-	[roomList release];
 }
 
 - (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase {
@@ -664,7 +636,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
 	MVChatRoom *room = [super chatRoomWithUniqueIdentifier:[identifier lowercaseString]];
-	if( ! room ) room = [[[MVIRCChatRoom alloc] initWithName:identifier andConnection:self] autorelease];
+	if( ! room ) room = [[MVIRCChatRoom alloc] initWithName:identifier andConnection:self];
 	return room;
 }
 
@@ -677,7 +649,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (NSCharacterSet *) chatRoomNamePrefixes {
 	static NSCharacterSet *defaultPrefixes = nil;
 	if( ! _roomPrefixes && ! defaultPrefixes )
-		defaultPrefixes = [[NSCharacterSet characterSetWithCharactersInString:@"#&+!~"] retain];
+		defaultPrefixes = [NSCharacterSet characterSetWithCharactersInString:@"#&+!~"];
 	if( ! _roomPrefixes ) return defaultPrefixes;
 	return _roomPrefixes;
 }
@@ -706,7 +678,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
 	MVChatUser *user = [super chatUserWithUniqueIdentifier:[identifier lowercaseString]];
-	if( ! user ) user = [[[MVIRCChatUser alloc] initWithNickname:identifier andConnection:self] autorelease];
+	if( ! user ) user = [[MVIRCChatUser alloc] initWithNickname:identifier andConnection:self];
 	return user;
 }
 
@@ -799,7 +771,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionQueue socketQueue:_connectionQueue];
 	[old setDelegate:nil];
 	[old disconnect];
-	[old release];
 
 	_pendingIdentificationAttempt = NO;
 	_sentEndCapabilityCommand = NO;
@@ -834,7 +805,6 @@ static const NSStringEncoding supportedEncodings[] = {
 		[self scheduleReconnectAttempt];
 	}
 
-	[_failedNickname release];
 	_failedNickname = nil;
 	_failedNicknameCount = 1;
 	_nicknameShortened = NO;
@@ -847,14 +817,13 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) socketDidDisconnect:(GCDAsyncSocket *) sock withError:(NSError *) error {
 	if( sock != _chatConnection ) return;
 
-	MVSafeRetainAssign( _lastError, error );
+	__strong id me = self;
 
-	[self retain];
+	MVSafeRetainAssign( _lastError, error );
 
 	GCDAsyncSocket *oldChatConnection = _chatConnection;
 	_chatConnection = nil;
 	[oldChatConnection setDelegate:nil];
-	[oldChatConnection release];
 
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self _stopSendQueue];
@@ -900,7 +869,7 @@ static const NSStringEncoding supportedEncodings[] = {
 			[rule removeMatchedUsersForConnection:self];
 	}
 
-	[self release];
+	me = nil;
 }
 
 - (void) socket:(GCDAsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
@@ -1111,7 +1080,6 @@ static const NSStringEncoding supportedEncodings[] = {
 			}
 
 			if( param ) [parameters addObject:param];
-			[param release];
 
 			consumeWhitespace();
 		}
@@ -1131,10 +1099,6 @@ end:
 		NSString *selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
 		SEL selector = NSSelectorFromString( selectorString );
 
-		[selectorString release];
-		[commandString release];
-		[senderString release];
-
 		if( [self respondsToSelector:selector] ) {
 			MVChatUser *chatUser = nil;
 			// if user is not null that shows it was a user not a server sender.
@@ -1144,34 +1108,32 @@ end:
 				if( ! [chatUser address] && host && hostLength ) {
 					NSString *hostString = [self _newStringWithBytes:host length:hostLength];
 					[chatUser _setAddress:hostString];
-					[hostString release];
 				}
 
 				if( ! [chatUser username] ) {
 					NSString *userString = [self _newStringWithBytes:user length:userLength];
 					[chatUser _setUsername:userString];
-					[userString release];
 				}
 			}
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 			[self performSelector:selector withObject:parameters withObject:( chatUser ? (id) chatUser : (id) senderString )];
+#pragma clang diagnostic pop
 		}
 
 		[self _pingServerAfterInterval];
 	}
-
-	[rawString release];
-	[parameters release];
 }
 
 #pragma mark -
 
 - (void) _writeDataToServer:(id) raw {
 	NSMutableData *data = nil;
-	NSString *string = [[self _stringFromPossibleData:raw] retain];
+	NSString *string = [self _stringFromPossibleData:raw];
 
 	if( [raw isKindOfClass:[NSMutableData class]] ) {
-		data = [raw retain];
+		data = raw;
 	} else if( [raw isKindOfClass:[NSData class]] ) {
 		data = [raw mutableCopy];
 	} else if( [raw isKindOfClass:[NSString class]] ) {
@@ -1199,9 +1161,6 @@ end:
 	NSString *stringWithPasswordsHidden = [string stringByReplacingOccurrencesOfRegex:@"(^PASS |^AUTHENTICATE (?!\\+$|PLAIN$)|IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:NSRegularExpressionCaseInsensitive range:NSMakeRange(0, string.length) error:NULL];
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:stringWithPasswordsHidden, @"message", data, @"messageData", [NSNumber numberWithBool:YES], @"outbound", nil]];
-
-	[string release];
-	[data release];
 }
 
 - (void) _readNextMessageFromServer {
@@ -1248,20 +1207,24 @@ end:
 	});
 	[message cq_stringByRemovingCharactersInSet:backspaceCharacterSet];
 	NSMutableData *msg = [[[self class] _flattenedIRCDataForMessage:message withEncoding:msgEncoding andChatFormat:[self outgoingChatFormat]] mutableCopy];
-
 #if ENABLE(PLUGINS)
+	__unsafe_unretained NSMutableData *unsafeMsg = msg;
+	__unsafe_unretained id unsafeTarget = target;
+	__unsafe_unretained NSDictionary *unsafeAttributes = attributes;
+
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( id ), @encode( NSDictionary * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processOutgoingMessageAsData:to:attributes: )];
-	[invocation setArgument:&msg atIndex:2];
-	[invocation setArgument:&target atIndex:3];
-	[invocation setArgument:&attributes atIndex:4];
+	[invocation setArgument:&unsafeMsg atIndex:2];
+	[invocation setArgument:&unsafeTarget atIndex:3];
+	[invocation setArgument:&unsafeAttributes atIndex:4];
+
+	msg = nil;
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 #endif
 
 	if( ! msg.length ) {
-		[msg release];
 		return;
 	}
 
@@ -1285,18 +1248,13 @@ end:
 
 		if ( msg.length > bytesLeft ) [self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
 		else [self sendRawMessageWithComponents:prefix, msg, @"\001", nil];
-		[prefix release];
 	} else {
 		NSString *prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@%@ :", targetPrefix, targetName];
 		NSUInteger bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
 
 		if ( msg.length > bytesLeft )	[self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
 		else [self sendRawMessageWithComponents:prefix, msg, nil];
-
-		[prefix release];
 	}
-
-	[msg release];
 }
 
 - (void) sendBrokenDownMessage:(NSMutableData *) msg withPrefix:(NSString *) prefix withEncoding:(NSStringEncoding) msgEncoding withMaximumBytes:(NSUInteger) bytesLeft {
@@ -1310,7 +1268,6 @@ end:
 			if ( ! msgCutDown.length ) {
 				hasWhitespaceInString = NO;
 				bytesRemainingForMessage = bytesLeft;
-				[msgCutDown release];
 				msgCutDown = [[msg subdataWithRange:NSMakeRange( 0, bytesRemainingForMessage )] mutableCopy];
 			}
 			else if ( msg.length < bytesLeft ) break;
@@ -1320,8 +1277,6 @@ end:
 		if ( [prefix hasCaseInsensitiveSubstring:@"\001ACTION"]	) [self sendRawMessageWithComponents:prefix, msgCutDown, @"\001", nil];
 		else [self sendRawMessageWithComponents:prefix, msgCutDown, nil];
 		[msg replaceBytesInRange:NSMakeRange(0, bytesRemainingForMessage) withBytes:NULL length:0];
-
-		[msgCutDown release];
 
 		if ( msg.length >= bytesRemainingForMessage ) bytesRemainingForMessage = bytesLeft;
 		else bytesRemainingForMessage = msg.length;
@@ -1366,14 +1321,15 @@ end:
 	if( isRoom ) {
 		MVChatRoom *room = (MVChatRoom *)target;
 		if( [command isCaseInsensitiveEqualToString:@"cycle"] || [command isCaseInsensitiveEqualToString:@"hop"] ) {
-			[room retain];
+			__strong MVChatRoom *strongRoom = room;
 			[room part];
 
 			[room _setDateParted:[NSDate date]];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomPartedNotification object:room];
 
-			[room join];
-			[room release];
+			[room performSelector:@selector(join) withObject:nil afterDelay:.5];
+
+			strongRoom = nil;
 			return;
 		} else if( [command isCaseInsensitiveEqualToString:@"invite"] ) {
 			NSString *nick = nil;
@@ -1531,7 +1487,7 @@ end:
 		} else if( [command isCaseInsensitiveEqualToString:@"ban"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
-			for( NSString *userString in users ) {
+			for( __strong NSString *userString in users ) {
 				if( userString.length ) {
 					MVChatUser *user = nil;
 					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] ) {
@@ -1549,7 +1505,7 @@ end:
 		} else if( [command isCaseInsensitiveEqualToString:@"unban"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
-			for( NSString *userString in users ) {
+			for( __strong NSString *userString in users ) {
 				if( userString.length ) {
 					MVChatUser *user = nil;
 					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] ) {
@@ -1619,7 +1575,7 @@ end:
 		NSArray *roomStrings = [roomsString componentsSeparatedByString:@","];
 		NSMutableArray *roomsToJoin = [[NSMutableArray alloc] initWithCapacity:roomStrings.count];
 
-		for( NSString *room in roomStrings ) {
+		for( __strong NSString *room in roomStrings ) {
 			room = [room stringByTrimmingCharactersInSet:whitespaceCharacters];
 			if( room.length )
 				[roomsToJoin addObject:room];
@@ -1629,8 +1585,6 @@ end:
 			[self joinChatRoomsNamed:roomsToJoin];
 		else if( isRoom )
 			[target join];
-
-		[roomsToJoin release];
 
 		return;
 	} else if( [command isCaseInsensitiveEqualToString:@"part"] || [command isCaseInsensitiveEqualToString:@"leave"] ) {
@@ -1723,12 +1677,12 @@ end:
 
 - (void) _updateKnownUser:(MVChatUser *) user withNewNickname:(NSString *) newNickname {
 	@synchronized( _knownUsers ) {
-		[user retain];
+		__strong MVChatUser *strongUser = user;
 		[_knownUsers removeObjectForKey:[user uniqueIdentifier]];
 		[user _setUniqueIdentifier:[newNickname lowercaseString]];
 		[user _setNickname:newNickname];
 		[_knownUsers setObject:user forKey:[user uniqueIdentifier]];
-		[user release];
+		strongUser = nil;
 	}
 }
 
@@ -1881,7 +1835,7 @@ end:
 
 	NSData *data = nil;
 	@synchronized( _sendQueue ) {
-		data = [[_sendQueue objectAtIndex:0] retain];
+		data = [_sendQueue objectAtIndex:0];
 		[_sendQueue removeObjectAtIndex:0];
 
 		if( _sendQueue.count )
@@ -1892,7 +1846,6 @@ end:
 	dispatch_async(_connectionQueue, ^{
 		[self _writeDataToServer:data];
 	});
-	[data release];
 
 	MVSafeAdoptAssign( _lastCommand, [[NSDate alloc] init] );
 }
@@ -1983,7 +1936,6 @@ end:
 
 	_isonSentCount = 0;
 
-	[_lastSentIsonNicknames release];
 	_lastSentIsonNicknames = [[NSMutableSet alloc] initWithCapacity:( _chatUserWatchRules.count * 5 )];
 
 	for( MVChatUser *user in matchedUsers ) {
@@ -1996,7 +1948,6 @@ end:
 		if( nick.length && ! [_lastSentIsonNicknames containsObject:nickLower] ) {
 			if( ( nick.length + request.length ) > JVMaximumISONCommandLength ) {
 				[self sendRawMessage:request];
-				[request release];
 				_isonSentCount++;
 
 				request = [[NSMutableString alloc] initWithCapacity:JVMaximumISONCommandLength];
@@ -2018,7 +1969,6 @@ end:
 			if( nick.length && ! [rule nicknameIsRegularExpression] && ! [_lastSentIsonNicknames containsObject:nickLower] ) {
 				if( ( nick.length + request.length ) > JVMaximumISONCommandLength ) {
 					[self sendRawMessage:request];
-					[request release];
 					_isonSentCount++;
 
 					request = [[NSMutableString alloc] initWithCapacity:JVMaximumISONCommandLength];
@@ -2037,8 +1987,6 @@ end:
 		[self sendRawMessage:request];
 		_isonSentCount++;
 	}
-
-	[request release];
 }
 
 #pragma mark -
@@ -2060,7 +2008,7 @@ end:
 
 - (NSString *) _stringFromPossibleData:(id) input {
 	if( [input isKindOfClass:[NSData class]] )
-		return [[self _newStringWithBytes:[input bytes] length:[input length]] autorelease];
+		return [self _newStringWithBytes:[input bytes] length:[input length]];
 	return input;
 }
 
@@ -2072,7 +2020,7 @@ end:
 
 	static NSCharacterSet *defaultPrefixes = nil;
 	if( !defaultPrefixes )
-		defaultPrefixes = [[NSCharacterSet characterSetWithCharactersInString:@"@+"] retain];
+		defaultPrefixes = [NSCharacterSet characterSetWithCharactersInString:@"@+"];
 	return defaultPrefixes;
 }
 
@@ -2232,8 +2180,6 @@ end:
 		[authenticateData appendData:[self.nicknamePassword dataUsingEncoding:self.encoding allowLossyConversion:YES]];
 
 		NSString *authString = [authenticateData base64EncodingWithLineLength:400];
-		[authenticateData release];
-
 		NSArray *authStrings = [authString componentsSeparatedByString:@"\n"];
 		for( NSString *string in authStrings )
 			[self sendRawMessageImmediatelyWithComponents:@"AUTHENTICATE ", string, nil];
@@ -2329,7 +2275,6 @@ end:
 					if( nick && ! [rule nicknameIsRegularExpression] ) {
 						if( ( nick.length + request.length + 1 ) > JVMaximumWatchCommandLength ) {
 							[self sendRawMessage:request];
-							[request release];
 
 							request = [[NSMutableString alloc] initWithCapacity:JVMaximumWatchCommandLength];
 							[request setString:@"WATCH "];
@@ -2342,8 +2287,6 @@ end:
 
 			if( ! [request isEqualToString:@"WATCH "] )
 				[self sendRawMessage:request];
-
-			[request release];
 
 //			dispatch_async(dispatch_get_main_queue(), ^{
 //				[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
@@ -2386,7 +2329,6 @@ end:
 						if( mode != MVChatRoomMemberNoModes ) {
 							NSString *key = [[NSString alloc] initWithFormat:@"%c", [modes characterAtIndex:i]];
 							[modesTable setObject:[NSNumber numberWithUnsignedLong:mode] forKey:key];
-							[key release];
 
 							if( modeFeature ) {
 								@synchronized( _supportedFeatures ) {
@@ -2398,7 +2340,6 @@ end:
 
 					if( modesTable.count ) [_serverInformation setObject:modesTable forKey:@"roomMemberModeTable"];
 					[_serverInformation setObject:[NSCharacterSet characterSetWithCharactersInString:modes] forKey:@"roomMemberModes"];
-					[modesTable release];
 				}
 
 				NSString *prefixes = [feature substringFromIndex:[scanner scanLocation]];
@@ -2411,13 +2352,11 @@ end:
 						if( mode != MVChatRoomMemberNoModes ) {
 							NSString *key = [[NSString alloc] initWithFormat:@"%c", [prefixes characterAtIndex:i]];
 							[prefixTable setObject:[NSNumber numberWithUnsignedLong:mode] forKey:key];
-							[key release];
 						}
 					}
 
 					if( prefixTable.count ) [_serverInformation setObject:prefixTable forKey:@"roomMemberPrefixTable"];
 					[_serverInformation setObject:[NSCharacterSet characterSetWithCharactersInString:prefixes] forKey:@"roomMemberPrefixes"];
-					[prefixTable release];
 				}
 			}
 		}
@@ -2518,11 +2457,6 @@ end:
 			break;
 	}
 
-	[allPrefixesCharacterSet release];
-	[ambiguousPrefixesCharacterSet release];
-	[roomPrefixesCharacterSet release];
-	[nickPrefixesCharacterSet release];
-
 	return room;
 }
 
@@ -2537,18 +2471,19 @@ end:
 #else
 #endif
 
-	MVChatRoom *room = [privmsgInfo objectForKey:@"room"];
-	MVChatUser *sender = [privmsgInfo objectForKey:@"user"];
-	NSMutableData *message = [privmsgInfo objectForKey:@"message"];
-
+	__unsafe_unretained MVChatRoom *room = [privmsgInfo objectForKey:@"room"];
+	__unsafe_unretained MVChatUser *sender = [privmsgInfo objectForKey:@"user"];
+	__unsafe_unretained NSMutableData *message = [privmsgInfo objectForKey:@"message"];
 #if ENABLE(PLUGINS)
+	__unsafe_unretained NSMutableDictionary *unsafePrivmsgInfo = privmsgInfo;
+
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatUser * ), @encode( id ), @encode( NSMutableDictionary * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processIncomingMessageAsData:from:to:attributes: )];
 	[invocation setArgument:&message atIndex:2];
 	[invocation setArgument:&sender atIndex:3];
 	[invocation setArgument:&room atIndex:4];
-	[invocation setArgument:&privmsgInfo atIndex:5];
+	[invocation setArgument:&unsafePrivmsgInfo atIndex:5];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 #endif
@@ -2602,7 +2537,6 @@ end:
 		} else {
 			NSMutableDictionary *privmsgInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", target, @"target", room, @"room", nil];
 			[self _handlePrivmsg:privmsgInfo];
-			[privmsgInfo release];
 		}
 	}
 }
@@ -2618,18 +2552,19 @@ end:
 #endif
 
 	id target = [noticeInfo objectForKey:@"target"];
-	MVChatRoom *room = [noticeInfo objectForKey:@"room"];
-	MVChatUser *sender = [noticeInfo objectForKey:@"user"];
-	NSMutableData *message = [noticeInfo objectForKey:@"message"];
-
+	__unsafe_unretained MVChatRoom *room = [noticeInfo objectForKey:@"room"];
+	__unsafe_unretained MVChatUser *sender = [noticeInfo objectForKey:@"user"];
+	__unsafe_unretained NSMutableData *message = [noticeInfo objectForKey:@"message"];
 #if ENABLE(PLUGINS)
+	__unsafe_unretained NSMutableDictionary *unsafeNoticeInfo = noticeInfo;
+
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatUser * ), @encode( id ), @encode( NSMutableDictionary * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processIncomingMessageAsData:from:to:attributes: )];
 	[invocation setArgument:&message atIndex:2];
 	[invocation setArgument:&sender atIndex:3];
 	[invocation setArgument:&room atIndex:4];
-	[invocation setArgument:&noticeInfo atIndex:5];
+	[invocation setArgument:&unsafeNoticeInfo atIndex:5];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 #endif
@@ -2688,8 +2623,6 @@ end:
 
 			if( handled ) [noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
-			[msg release];
-
 		} else if( ![self isConnected] && [[sender nickname] isCaseInsensitiveEqualToString:@"Welcome"] ) {
 			// Workaround for psybnc bouncers which are configured to combine multiple networks in one bouncer connection. These bouncers don't send a 001 command on connect...
 			// Catch ":Welcome!psyBNC@lam3rz.de NOTICE * :psyBNC2.3.2-7" on these connections instead:
@@ -2697,8 +2630,6 @@ end:
 			if( [msg hasCaseInsensitiveSubstring:@"psyBNC"] ) {
 				[self _handleConnect];
 			}
-			[msg release];
-
 		} else if ( [sender.nickname isEqualToString:@"Global"] && [sender.username isEqualToString:@"Global"] && [sender.address isEqualToString:@"Services.GameSurge.net"] && [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) {
 			// GameSurge's Global bot sends a 'message of the day' via multiple notices after connecting:
 			/*
@@ -2723,8 +2654,6 @@ end:
 				if ( [msg isEqualToString:@"---------- END OF MESSAGE(S) OF THE DAY ----------"] )
 					_gamesurgeGlobalBotMOTD = NO;
 			}
-
-			[msg release];
 
 		} else if( [[sender nickname] isEqualToString:@"NickServ"] || [[sender nickname] isEqualToString:@"ChanServ"] ||
 		   ( [[sender nickname] isEqualToString:@"Q"] && [[self server] hasCaseInsensitiveSubstring:@"quakenet"] ) ||
@@ -2807,8 +2736,6 @@ end:
 					[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 				}
 			}
-
-			[msg release];
 		}
 
 		if( target == room || ( [target isKindOfClass:[MVChatUser class]] && [target isLocalUser] ) )
@@ -2848,7 +2775,6 @@ end:
 		} else {
 			NSMutableDictionary *noticeInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", target, @"target", room, @"room", nil];
 			[self _handleNotice:noticeInfo];
-			[noticeInfo release];
 		}
 	}
 }
@@ -2888,26 +2814,30 @@ end:
 
 		[self _handlePrivmsg:msgInfo]; // No need to explicitly call this on a different thread, as we are already in it.
 
-		[command release];
-		[arguments release];
 		return;
 	}
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:( request ? MVChatConnectionSubcodeRequestNotification : MVChatConnectionSubcodeReplyNotification ) object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
 
 #if ENABLE(PLUGINS)
+	__unsafe_unretained NSString *unsafeCommand = command;
+	__unsafe_unretained NSMutableData *unsafeArguments = arguments;
+	__unsafe_unretained MVChatUser *unsafeSender = sender;
+
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatUser * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	if( request ) [invocation setSelector:@selector( processSubcodeRequest:withArguments:fromUser: )];
 	else [invocation setSelector:@selector( processSubcodeReply:withArguments:fromUser: )];
-	[invocation setArgument:&command atIndex:2];
-	[invocation setArgument:&arguments atIndex:3];
-	[invocation setArgument:&sender atIndex:4];
+	[invocation setArgument:&unsafeCommand atIndex:2];
+	[invocation setArgument:&unsafeArguments atIndex:3];
+	[invocation setArgument:&unsafeSender atIndex:4];
+
+	command = nil;
+	arguments = nil;
+	sender = nil;
 
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 	if( [[results lastObject] boolValue] ) {
-		[command release];
-		[arguments release];
 		return;
 	}
 #endif
@@ -2930,9 +2860,6 @@ end:
 
 			NSString *reply = [[NSString alloc] initWithFormat:@"%@ %@ (%@) - %@ %@ (%@) - %@", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [clientVersion objectForKey:@"CFBundleVersion"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductVersion"], processor, [clientVersion objectForKey:@"MVChatCoreCTCPVersionReplyInfo"]];
 			[sender sendSubcodeReply:command withArguments:reply];
-
-			[reply release];
-			[systemVersion release];
 		} else if( [command isCaseInsensitiveEqualToString:@"TIME"] ) {
 			[sender sendSubcodeReply:command withArguments:[[NSDate date] localizedDescription]];
 		} else if( [command isCaseInsensitiveEqualToString:@"PING"] ) {
@@ -3018,8 +2945,6 @@ end:
 					[self _addDirectClientConnection:transfer];
 
 					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDownloadFileTransferOfferNotification object:transfer];
-
-					[transfer release];
 				}
 			} else if( [subCommand isCaseInsensitiveEqualToString:@"ACCEPT"] ) {
 				BOOL passive = NO;
@@ -3144,13 +3069,9 @@ end:
 						[self _addDirectClientConnection:directChatConnection];
 
 						[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionOfferNotification object:directChatConnection userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
-
-						[directChatConnection release];
 					}
 				}
 			}
-
-			[msg release];
 		} else if( [command isCaseInsensitiveEqualToString:@"CLIENTINFO"] ) {
 			// make this extensible later with a plugin registration method
 			[sender sendSubcodeReply:command withArguments:@"VERSION TIME PING DCC CLIENTINFO"];
@@ -3193,7 +3114,7 @@ end:
 					port %= 65536; // some clients use ports greater than 65535, mod with 65536 to get the real port
 
 					@synchronized( _directClientConnections ) {
-						for( MVIRCUploadFileTransfer *transfer in [[_directClientConnections copy] autorelease] ) {
+						for( MVIRCUploadFileTransfer *transfer in [_directClientConnections copy] ) {
 							if( ! [transfer isUpload] )
 								continue;
 							if( [transfer isPassive] != passive )
@@ -3214,13 +3135,9 @@ end:
 					}
 				}
 			}
-
-			[msg release];
 		}
 	}
 
-	[command release];
-	[arguments release];
 }
 
 - (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender toTarget:(id) target forRoom:(MVChatRoom *) room {
@@ -3232,7 +3149,6 @@ end:
 	if( room ) [info setObject:room forKey:@"room"];
 	[info setObject:[NSNumber numberWithBool:request] forKey:@"request"];
 	[self _handleCTCP:info];
-	[info release];
 }
 
 #pragma mark -
@@ -3299,8 +3215,6 @@ end:
 			[room _removeMemberUser:sender];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification object:room userInfo:info];
 		}
-
-		[info release];
 	}
 }
 
@@ -3336,17 +3250,21 @@ end:
 	MVAssertMainThreadRequired();
 #endif
 
-	MVChatRoom *room = [topicInfo objectForKey:@"room"];
-	MVChatUser *author = [topicInfo objectForKey:@"author"];
+	__unsafe_unretained MVChatRoom *room = [topicInfo objectForKey:@"room"];
+	__unsafe_unretained MVChatUser *author = [topicInfo objectForKey:@"author"];
 	NSMutableData *topic = [[topicInfo objectForKey:@"topic"] mutableCopy];
 
 #if ENABLE(PLUGINS)
+	__unsafe_unretained NSMutableData *unsafeTopic = topic;
+
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatRoom * ), @encode( MVChatUser * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processTopicAsData:inRoom:author: )];
-	[invocation setArgument:&topic atIndex:2];
+	[invocation setArgument:&unsafeTopic atIndex:2];
 	[invocation setArgument:&room atIndex:3];
 	[invocation setArgument:&author atIndex:4];
+
+	topic = nil;
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 #endif
@@ -3356,8 +3274,6 @@ end:
 	[room _setTopicDate:[NSDate date]];
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
-
-	[topic release];
 }
 
 - (void) _handleTopicWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
@@ -3515,10 +3431,9 @@ end:
 #undef banExcludeMode
 #undef inviteExcludeMode
 
-	[argsNeeded release];
 
 	NSUInteger changedModes = ( oldModes ^ [room modes] ) | argModes;
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:changedModes], @"changedModes", sender, @"by", [[unsupportedModes copy] autorelease], @"unsupportedModes", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:changedModes], @"changedModes", sender, @"by", [unsupportedModes copy], @"unsupportedModes", nil]];
 }
 
 - (void) _handleModeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
@@ -3582,8 +3497,8 @@ end:
 - (void) _handleNickWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	if( parameters.count == 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *nick = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
-		NSString *oldNickname = [[sender nickname] retain];
-		NSString *oldIdentifier = [[sender uniqueIdentifier] retain];
+		NSString *oldNickname = [sender nickname];
+		NSString *oldIdentifier = [sender uniqueIdentifier];
 
 		[sender _setIdleTime:0.];
 		[self _markUserAsOnline:sender];
@@ -3605,9 +3520,6 @@ end:
 		}
 
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-
-		[oldNickname release];
-		[oldIdentifier release];
 	}
 }
 
@@ -3639,7 +3551,6 @@ end:
 				[self _markUserAsOffline:user];
 			}
 
-			[_lastSentIsonNicknames release];
 			_lastSentIsonNicknames = nil;
 		}
 	} else if( parameters.count == 2 ) {
@@ -3699,9 +3610,10 @@ end:
 				NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
 				NSArray *members = [names componentsSeparatedByString:@" "];
 
-				for( NSString *memberName in members ) {
-					if( ! memberName.length ) break;
+				for( NSString *aMemberName in members ) {
+					if( ! aMemberName.length ) break;
 
+					NSString *memberName = aMemberName;
 					MVChatRoomMemberMode modes = [self _stripModePrefixesFromNickname:&memberName];
 					MVChatUser *member = [self chatUserWithUniqueIdentifier:memberName];
 					[room _addMemberUser:member];
@@ -3784,7 +3696,6 @@ end:
 
 		NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:users], @"users", [NSDate date], @"cached", room, @"room", topic, @"topic", nil];
 		[self performSelectorOnMainThread:@selector( _addRoomToCache: ) withObject:info waitUntilDone:NO];
-		[info release];
 	}
 }
 
@@ -3918,7 +3829,7 @@ end:
 		NSMutableArray *results = [[NSMutableArray alloc] initWithCapacity:chanArray.count];
 
 		NSCharacterSet *nicknamePrefixes = [self _nicknamePrefixes];
-		for( NSString *room in chanArray ) {
+		for( __strong NSString *room in chanArray ) {
 			NSRange prefixRange = [room rangeOfCharacterFromSet:nicknamePrefixes options:NSAnchoredSearch];
 			if( prefixRange.location != NSNotFound )
 				room = [room substringFromIndex:( prefixRange.location + prefixRange.length )];
@@ -3930,8 +3841,6 @@ end:
 			MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 			[user setAttribute:results forKey:MVChatUserKnownRoomsAttribute];
 		}
-
-		[results release];
 	}
 }
 
@@ -4070,7 +3979,6 @@ end:
 
 	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionErroneusNicknameError userInfo:userInfo]];
 
-	[userInfo release];
 }
 
 - (void) _handle435WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BANONCHAN Bahamut (also ERR_SERVICECONFUSED on Unreal, not implemented here)
@@ -4087,7 +3995,6 @@ end:
 
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeNickError userInfo:userInfo]];
 
-			[userInfo release];
 		}
 	}
 }
@@ -4109,15 +4016,12 @@ end:
 
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeNickError userInfo:userInfo]];
 
-			[userInfo release];
 		} else {
 			NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:2];
 			[userInfo setObject:self forKey:@"connection"];
 			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Unable to change your nickname to \"%@\" on \"%@\".", "cant change nick because of server error" ), identifier, [self server]] forKey:NSLocalizedDescriptionKey];
 
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeNickError userInfo:userInfo]];
-
-			[userInfo release];
 		}
 	}
 }
@@ -4138,8 +4042,6 @@ end:
 		} else [userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"You changed your nickname too fast on \"%@\", please wait and try again.", "cant change nick too fast error" ), [self server]] forKey:NSLocalizedDescriptionKey];
 
 		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeNickError userInfo:userInfo]];
-
-		[userInfo release];
 	}
 }
 
@@ -4264,9 +4166,7 @@ end:
 
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotErrorNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:message, @"message", nil]];
 
-		id old = _serverError;
-		_serverError = [[NSError errorWithDomain:MVChatConnectionErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:message, NSLocalizedDescriptionKey, nil]] retain];
-		[old release];
+		_serverError = [NSError errorWithDomain:MVChatConnectionErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:message, NSLocalizedDescriptionKey, nil]];
 
 		[self disconnect];
 	}
@@ -4288,8 +4188,6 @@ end:
 		[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Can't send to room \"%@\" on \"%@\".", "cant send to room error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
 
 		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantSendToRoomError userInfo:userInfo]];
-
-		[userInfo release];
 	}
 }
 
@@ -4323,7 +4221,6 @@ end:
 
 		NSMutableString *parameterString = [[self _stringFromPossibleData:[parameters objectAtIndex:1]] mutableCopy];
 		[_umichNoIdentdCaptcha addObject:parameterString];
-		[parameterString release];
 
 		if( _umichNoIdentdCaptcha.count == 7 ) {
 			NSDictionary *captchaAlphabet = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -4371,7 +4268,6 @@ end:
 			}
 			[self sendRawMessageImmediatelyWithFormat:@"PONG :%@", captchaReply];
 
-			[_umichNoIdentdCaptcha release];
 			_umichNoIdentdCaptcha = nil;
 		}
 	}

@@ -8,9 +8,6 @@
 		_type = MVChatLocalUserType;
 
 		// this info will be pulled live from the connection
-		[_nickname release];
-		[_realName release];
-		[_username release];
 
 		_nickname = nil;
 		_realName = nil;
@@ -36,7 +33,7 @@
 - (void) updateWithClientEntry:(SilcClientEntry) clientEntry {
 	SilcLock( [[self connection] _silcClient] );
 
-	[self retain];
+	__strong id me = self;
 
 	if( _uniqueIdentifier )
 		[_connection _removeKnownUser:self];
@@ -78,7 +75,7 @@
 
 	[_connection _addKnownUser:self];
 
-	[self release];
+	me = nil;
 
 	SilcUnlock( [[self connection] _silcClient] );
 }

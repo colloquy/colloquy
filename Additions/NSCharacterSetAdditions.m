@@ -15,6 +15,6 @@
 		illegalSet = [illegalSet copy];
 	}
 
-	return [[illegalSet copy] autorelease];
+	return [illegalSet copy];
 }
 @end

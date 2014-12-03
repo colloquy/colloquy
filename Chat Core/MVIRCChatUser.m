@@ -33,8 +33,6 @@
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -70,7 +68,6 @@
 	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
 		NSString *prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@ :\001%@ ", [self nickname], command];
 		[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
-		[prefix release];
 	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
 		[[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@ %@\001", [self nickname], command, arguments];
 	} else [[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@\001", [self nickname], command];
@@ -82,7 +79,6 @@
 		if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
 			NSString *prefix = [[NSString alloc] initWithFormat:@"NOTICE %@ :\001%@ ", [self nickname], command];
 			[[self connection] sendRawMessageImmediatelyWithComponents:prefix, arguments, @"\001", nil];
-			[prefix release];
 		} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
 			[[self connection] sendRawMessageImmediatelyWithFormat:@"NOTICE %@ :\001%@ %@\001", [self nickname], command, arguments];
 		} else [[self connection] sendRawMessageImmediatelyWithFormat:@"NOTICE %@ :\001%@\001", [self nickname], command];
@@ -90,7 +86,6 @@
 		if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
 			NSString *prefix = [[NSString alloc] initWithFormat:@"NOTICE %@ :\001%@ ", [self nickname], command];
 			[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
-			[prefix release];
 		} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
 			[[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@ %@\001", [self nickname], command, arguments];
 		} else [[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@\001", [self nickname], command];
@@ -136,7 +131,6 @@
 	} else if( [command isCaseInsensitiveEqualToString:@"VERSION"] ) {
 		NSString *info = [[NSString alloc] initWithData:arguments encoding:[[self connection] encoding]];
 		[self setAttribute:info forKey:MVChatUserClientInfoAttribute];
-		[info release];
 	} else if( [command isCaseInsensitiveEqualToString:@"TIME"] ) {
 		NSString *date = [[NSString alloc] initWithData:arguments encoding:[[self connection] encoding]];
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
@@ -145,7 +139,6 @@
 		NSCalendarDate *localThere = [NSCalendarDate dateWithNaturalLanguageString:date];
 		[self setAttribute:localThere forKey:MVChatUserLocalTimeAttribute];
 #endif
-		[date release];
 	}
 }
 @end

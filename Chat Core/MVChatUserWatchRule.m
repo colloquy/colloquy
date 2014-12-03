@@ -26,18 +26,6 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	return self;
 }
 
-- (void) dealloc {
-	[_matchedChatUsers release];
-	[_nickname release];
-	[_realName release];
-	[_username release];
-	[_address release];
-	[_publicKey release];
-	[_applicableServerDomains release];
-
-	[super dealloc];
-}
-
 - (id) copyWithZone:(NSZone *) zone {
 	MVChatUserWatchRule *copy = [[MVChatUserWatchRule alloc] init];
 
@@ -66,7 +54,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	if( _publicKey ) [dictionary setObject:_publicKey forKey:@"publicKey"];
 	if( _interim ) [dictionary setObject:[NSNumber numberWithBool:_interim] forKey:@"interim"];
 	if( _applicableServerDomains ) [dictionary setObject:_applicableServerDomains forKey:@"applicableServerDomains"];
-	return [dictionary autorelease];
+	return dictionary;
 }
 
 - (BOOL) isEqual:(id) object {
@@ -160,22 +148,18 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 - (void) removeMatchedUser:(MVChatUser *) user {
 	@synchronized( _matchedChatUsers ) {
 		if( [_matchedChatUsers containsObject:user] ) {
-			[user retain];
 			[_matchedChatUsers removeObject:user];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserWatchRuleRemovedMatchedUserNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
-			[user release];
 		}
 	}
 }
 
 - (void) removeMatchedUsersForConnection:(MVChatConnection *) connection {
 	@synchronized( _matchedChatUsers ) {
-		for( MVChatUser *user in [[_matchedChatUsers copy] autorelease] ) {
+		for( MVChatUser *user in [_matchedChatUsers copy] ) {
 			if( [[user connection] isEqual:connection] ) {
-				[user retain];
 				[_matchedChatUsers removeObject:user];
 				[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserWatchRuleRemovedMatchedUserNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
-				[user release];
 			}
 		}
 	}

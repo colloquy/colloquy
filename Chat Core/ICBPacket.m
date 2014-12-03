@@ -97,7 +97,6 @@
 											length:i - last
 											encoding:NSISOLatin1StringEncoding];
 					[_fields addObject:f];
-					[f release];
 					last = i + 1;
 				} else if( data[i] == '\x01' ) {
 					NSAssert( last == i, @"invalid invariant" );
@@ -109,16 +108,9 @@
 									length:length - last
 									encoding:NSISOLatin1StringEncoding];
 			[_fields addObject:f];
-			[f release];
 		}
 	}
 	return self;
-}
-
-- (void) dealloc {
-	[_fields release];
-
-	[super dealloc];
 }
 
 #pragma mark Accessors

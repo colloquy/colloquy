@@ -544,7 +544,7 @@ static CQSoundController *fileTransferSound;
 		if (navigationController == nil) {
 			navigationController = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)controller];
 			[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:navigationController sender:nil];
-		} else navigationController.viewControllers = @[ controller ];
+		} else if (controller) navigationController.viewControllers = @[ controller ];
 	} else {
 		if (showingVisibleController)
 			return;

@@ -456,7 +456,7 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 
 	#undef baseConvert
 
-	return [uniqueId autorelease];
+	return uniqueId;
 }
 
 #if ENABLE(SCRIPTING)
@@ -578,7 +578,6 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 		for (const struct EmojiEmoticonPair *entry = emojiToEmoticonList; entry && entry->emoticon; ++entry) {
 			NSString *emojiString = [[NSString alloc] initWithCharacters:&entry->emoji length:1];
 			[knownEmoji addObject:emojiString];
-			[emojiString release];
 		}
 	}
 
@@ -649,22 +648,18 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 					}
 				}
 
-				[encodingStr release];
-
 				if( newEncoding && newEncoding != currentEncoding ) {
 					if( ( end - start ) > 0 ) {
 						NSData *subData = nil;
 						if( currentEncoding != NSUTF8StringEncoding ) {
 							NSString *tempStr = [[NSString alloc] initWithBytes:( bytes + start ) length:( end - start ) encoding:currentEncoding];
 							NSData *utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
-							if( utf8Data ) subData = [utf8Data retain];
-							[tempStr release];
+							if( utf8Data ) subData = utf8Data;
 						} else {
-							subData = [[NSData alloc] initWithBytesNoCopy:(void *)( bytes + start ) length:( end - start )];
+							subData = [[NSData alloc] initWithBytesNoCopy:(void *)( bytes + start ) length:( end - start ) freeWhenDone:NO];
 						}
 
 						if( subData ) [newData appendData:subData];
-						[subData release];
 					}
 
 					currentEncoding = newEncoding;
@@ -680,14 +675,12 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 			if( currentEncoding != NSUTF8StringEncoding ) {
 				NSString *tempStr = [[NSString alloc] initWithBytes:( bytes + start ) length:( length - start ) encoding:currentEncoding];
 				NSData *utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
-				if( utf8Data ) subData = [utf8Data retain];
-				[tempStr release];
+				if( utf8Data ) subData = utf8Data;
 			} else {
-				subData = [[NSData alloc] initWithBytesNoCopy:(void *)( bytes + start ) length:( length - start )];
+				subData = [[NSData alloc] initWithBytesNoCopy:(void *)( bytes + start ) length:( length - start ) freeWhenDone:NO];
 			}
 
 			if( subData ) [newData appendData:subData];
-			[subData release];
 		}
 
 		encoding = NSUTF8StringEncoding;
@@ -699,7 +692,6 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 
 	NSString *message = [[NSString alloc] initWithData:data encoding:encoding];
 	if( ! message ) {
-		[self release];
 		return nil;
 	}
 
@@ -708,7 +700,6 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 	// if the message dosen't have any formatting chars just init as a plain string and return quickly
 	if( [message rangeOfCharacterFromSet:formatCharacters].location == NSNotFound ) {
 		self = [self initWithString:[message stringByEncodingXMLSpecialCharactersAsEntities]];
-		[message release];
 		return self;
 	}
 
@@ -940,8 +931,6 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 			[ret appendString:[text stringByEncodingXMLSpecialCharactersAsEntities]];
 	}
 
-	[message release];
-
 	return [self initWithString:ret];
 }
 
@@ -971,7 +960,7 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 	for (NSInteger index = normalString.length - 1; index >= 0; index--)
 		[reversedString appendString:[normalString substringWithRange:NSMakeRange(index, 1)]];
 
-	return [reversedString autorelease];
+	return reversedString;
 }
 
 #pragma mark -
@@ -984,7 +973,7 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 
 	NSMutableString *result = [self mutableCopy];
 	[result encodeXMLSpecialCharactersAsEntities];
-	return [result autorelease];
+	return result;
 }
 
 - (NSString *) stringByDecodingXMLSpecialCharacterEntities {
@@ -994,7 +983,7 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 
 	NSMutableString *result = [self mutableCopy];
 	[result decodeXMLSpecialCharacterEntities];
-	return [result autorelease];
+	return result;
 }
 
 #pragma mark -
@@ -1006,7 +995,7 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 
 	NSMutableString *result = [self mutableCopy];
 	[result escapeCharactersInSet:set];
-	return [result autorelease];
+	return result;
 }
 
 - (NSString *) stringByReplacingCharactersInSet:(NSCharacterSet *) set withString:(NSString *) string {
@@ -1016,17 +1005,17 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 
 	NSMutableString *result = [self mutableCopy];
 	[result replaceCharactersInSet:set withString:string];
-	return [result autorelease];
+	return result;
 }
 
 #pragma mark -
 
 - (NSString *) stringByEncodingIllegalURLCharacters {
-	return [(NSString *)CFURLCreateStringByAddingPercentEscapes( NULL, (CFStringRef)self, NULL, CFSTR( ",;:/?@&$=|^~`\{}[]" ), kCFStringEncodingUTF8 ) autorelease];
+	return (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes( NULL, (CFStringRef)self, NULL, CFSTR( ",;:/?@&$=|^~`\{}[]" ), kCFStringEncodingUTF8 ));
 }
 
 - (NSString *) stringByDecodingIllegalURLCharacters {
-	return [(NSString *)CFURLCreateStringByReplacingPercentEscapes( NULL, (CFStringRef)self, CFSTR( "" ) ) autorelease];
+	return (NSString *)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapes( NULL, (CFStringRef)self, CFSTR( "" ) ));
 }
 
 #pragma mark -
@@ -1039,7 +1028,7 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 
 	NSMutableString *result = [self mutableCopy];
 	[result stripIllegalXMLCharacters];
-	return [result autorelease];
+	return result;
 }
 
 - (NSString *) stringByStrippingXMLTags {
@@ -1048,7 +1037,7 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 
 	NSMutableString *result = [self mutableCopy];
 	[result stripXMLTags];
-	return [result autorelease];
+	return result;
 }
 
 #pragma mark -
@@ -1127,13 +1116,13 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 - (NSRange) rangeOfEmojiCharactersInRange:(NSRange) range {
 	if (!emojiCharacters)
-		emojiCharacters = [[NSCharacterSet characterSetWithRange:NSMakeRange(0xe001, (0xe53e - 0xe001))] retain];
+		emojiCharacters = [NSCharacterSet characterSetWithRange:NSMakeRange(0xe001, (0xe53e - 0xe001))];
 	return [self rangeOfCharacterFromSet:emojiCharacters options:NSLiteralSearch range:range];
 }
 
 - (BOOL) containsTypicalEmoticonCharacters {
 	if (!typicalEmoticonCharacters)
-		typicalEmoticonCharacters = [[NSCharacterSet characterSetWithCharactersInString:@";:=-()^><_."] retain];
+		typicalEmoticonCharacters = [NSCharacterSet characterSetWithCharactersInString:@";:=-()^><_."];
 	return ([self rangeOfCharacterFromSet:typicalEmoticonCharacters options:NSLiteralSearch].location != NSNotFound || [self hasCaseInsensitiveSubstring:@"XD"]);
 }
 
@@ -1142,7 +1131,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 		return self;
 	NSMutableString *result = [self mutableCopy];
 	[result substituteEmojiForEmoticons];
-	return [result autorelease];
+	return result;
 }
 
 - (NSString *) stringBySubstitutingEmoticonsForEmoji {
@@ -1150,7 +1139,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 		return self;
 	NSMutableString *result = [self mutableCopy];
 	[result substituteEmoticonsForEmoji];
-	return [result autorelease];
+	return result;
 }
 
 #pragma mark -
@@ -1207,7 +1196,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	for (NSUInteger i = 1; i < (result.numberOfRanges - 1); i++)
 		[results addObject:[self substringWithRange:[result rangeAtIndex:i]]];
 
-	return [[results copy] autorelease];
+	return [results copy];
 }
 
 - (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement {
@@ -1225,7 +1214,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 		[replacementString replaceCharactersInRange:result.range withString:replacement];
 	}
 
-	return [replacementString autorelease];
+	return replacementString;
 }
 
 #pragma mark -
@@ -1235,14 +1224,14 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (NSString *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set {
-	NSMutableString *mutableStorage = [[self mutableCopy] autorelease];
+	NSMutableString *mutableStorage = [self mutableCopy];
 	NSRange range = [mutableStorage rangeOfCharacterFromSet:set];
 	while (range.location != NSNotFound) {
 		[mutableStorage replaceCharactersInRange:range withString:@""];
 		range = [mutableStorage rangeOfCharacterFromSet:set];
 	}
 
-	return [[mutableStorage copy] autorelease];
+	return [mutableStorage copy];
 }
 @end
 
@@ -1292,7 +1281,6 @@ static NSCharacterSet *typicalEmoticonCharacters;
 		}
 	}
 
-	[scanner release];
 }
 
 - (void) replaceCharactersInSet:(NSCharacterSet *) set withString:(NSString *) string {
@@ -1363,7 +1351,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 	static NSCharacterSet *escapedCharacters = nil;
 	if (!escapedCharacters)
-		escapedCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"] retain];
+		escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 
 	for (const struct EmojiEmoticonPair *entry = emoticonToEmojiList; entry && entry->emoticon; ++entry) {
 		NSString *searchEmoticon = objc_unretainedObject(entry->emoticon);
@@ -1388,10 +1376,6 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 			matchedRange = [self rangeOfRegex:searchRegex inRange:matchRange];
 		}
-
-		[emoticon release];
-		[searchRegex release];
-		[emojiString release];
 
 		// Check for the typical characters again, if none are found then there are no more emoticons to replace.
 		if ([self rangeOfCharacterFromSet:typicalEmoticonCharacters].location == NSNotFound)
@@ -1419,11 +1403,11 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 				NSString *replacement = nil;
 				if (emojiRange.location == 0 && (emojiRange.location + 1) == self.length)
-					replacement = [emoticon retain];
+					replacement = emoticon;
 				else if (emojiRange.location > 0 && (emojiRange.location + 1) == self.length && [self characterAtIndex:(emojiRange.location - 1)] == ' ')
-					replacement = [emoticon retain];
+					replacement = emoticon;
 				else if ([self characterAtIndex:(emojiRange.location - 1)] == ' ' || ((emojiRange.location + 1) < self.length && [self characterAtIndex:(emojiRange.location + 1)] == ' '))
-					replacement = [emoticon retain];
+					replacement = emoticon;
 				else if (emojiRange.location == 0 || [self characterAtIndex:(emojiRange.location - 1)] == ' ')
 					replacement = [[NSString alloc] initWithFormat:@"%@ ", emoticon];
 				else if ((emojiRange.location + 1) == self.length || [self characterAtIndex:(emojiRange.location + 1)] == ' ')
@@ -1434,7 +1418,6 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 				range->length += (replacement.length - 1);
 
-				[replacement release];
 				break;
 			}
 		}
