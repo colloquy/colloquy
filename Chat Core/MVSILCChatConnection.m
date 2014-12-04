@@ -888,7 +888,7 @@ static SilcClientOperations silcClientOps = {
 		memset( &_silcClientParams, 0, sizeof( _silcClientParams ) );
 		_silcClientParams.dont_register_crypto_library = TRUE;
 
-		_silcClient = silc_client_alloc( &silcClientOps, &_silcClientParams, (__bridge_transfer void *)(self), NULL );
+		_silcClient = silc_client_alloc( &silcClientOps, &_silcClientParams, CFBridgingRetain(self), NULL );
 		if( ! _silcClient) {
 			// we need some error handling here.. silc connection CAN'T work without silc client
 			return nil;
@@ -983,7 +983,7 @@ static SilcClientOperations silcClientOps = {
 	params.detach_data_len = ( detachInfo ? detachInfo.length : 0 );
 
 	SilcLock( [self _silcClient] );
-	if( silc_client_connect_to_server( [self _silcClient], &params, [self serverPort], (char *) [[self server] UTF8String], (__bridge_transfer void *)(self) ) == -1 )
+	if( silc_client_connect_to_server( [self _silcClient], &params, [self serverPort], (char *) [[self server] UTF8String], CFBridgingRetain(self) ) == -1 )
 		errorOnConnect = YES;
 	SilcUnlock( [self _silcClient] );
 
@@ -1246,7 +1246,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	if( ! [self _silcConn] ) return nil;
 
 	SilcLock( [self _silcClient] );
-	silc_client_get_clients_whois( [self _silcClient], [self _silcConn], [findNickname UTF8String], NULL, NULL, usersFoundCallback, (__bridge_transfer void *)(self) );
+	silc_client_get_clients_whois( [self _silcClient], [self _silcConn], [findNickname UTF8String], NULL, NULL, usersFoundCallback, CFBridgingRetain(self) );
 	silc_schedule_wakeup( [self _silcClient] -> schedule );
 	SilcUnlock( [self _silcClient] );
 

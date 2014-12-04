@@ -21,7 +21,7 @@
 
 	SilcLock( [roomConnection _silcClient] );
 
-	__id MVSILCChatRoom *me = self;
+	__strong MVSILCChatRoom *me = self;
 
 	if( _uniqueIdentifier )
 		[_connection _removeKnownRoom:self];

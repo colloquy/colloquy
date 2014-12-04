@@ -486,7 +486,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 							[attributes removeObjectForKey:NSStrikethroughStyleAttributeName];
 						}
 						break;
-					case 'C': // color
+					case 'C': { // color
 						if( [message characterAtIndex:[scanner scanLocation]] == '\006' ) { // reset colors
 							[attributes removeObjectForKey:NSForegroundColorAttributeName];
 							[attributes removeObjectForKey:NSBackgroundColorAttributeName];
@@ -542,6 +542,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 							[attributes removeObjectForKey:NSForegroundColorAttributeName];
 							[attributes removeObjectForKey:NSBackgroundColorAttributeName];
 						}
+					}
 					case 'F': // font size
 					case 'E': // encoding
 						// We actually handle this above, but there could be some encoding tags
