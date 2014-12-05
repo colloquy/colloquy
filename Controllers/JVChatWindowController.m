@@ -856,7 +856,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	if( [org size].width > maxSideSize || [org size].height > maxSideSize ) {
 		NSImage *ret = [[item icon] copyWithZone:nil];
-		[ret setScalesWhenResized:YES];
 		[ret setSize:NSMakeSize( maxSideSize, maxSideSize )];
 		org = ret;
 	}

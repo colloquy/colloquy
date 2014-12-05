@@ -312,7 +312,6 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	if( [[column identifier] isEqual:@"file"] ) {
 		NSString *path = [[self _infoForTransferAtIndex:row] objectForKey:@"path"];
 		NSImage *fileIcon = [[NSWorkspace sharedWorkspace] iconForFileType:[path pathExtension]];
-		[fileIcon setScalesWhenResized:YES];
 		[fileIcon setSize:NSMakeSize( 16., 16. )];
 		return fileIcon;
 	} else if( [[column identifier] isEqual:@"size"] ) {

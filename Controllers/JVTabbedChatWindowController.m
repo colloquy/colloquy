@@ -350,7 +350,6 @@
 
 - (id) outlineView:(NSOutlineView *) outlineView objectValueForTableColumn:(NSTableColumn *) tableColumn byItem:(id) item {
 	NSImage *ret = [[item icon] copy];
-	[ret setScalesWhenResized:YES];
 	[ret setSize:NSMakeSize( 16., 16. )];
 	return ret;
 }

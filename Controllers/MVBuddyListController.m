@@ -562,7 +562,6 @@ static MVBuddyListController *sharedInstance = nil;
 			NSImage *ret = [buddy picture];
 			if( ! ret ) ret = [[NSImage imageNamed:@"largePerson"] copy];
 			if( [ret size].width > 32 || [ret size].height > 32 ) {
-				[ret setScalesWhenResized:YES];
 				[ret setSize:NSMakeSize( 32., 32. )];
 			}
 

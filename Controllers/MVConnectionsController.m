@@ -81,7 +81,6 @@ static NSMenu *favoritesMenu = nil;
 	}
 
 	NSImage *icon = [[NSImage imageNamed:@"room"] copy];
-	[icon setScalesWhenResized:YES];
 	[icon setSize:NSMakeSize( 16., 16. )];
 
 	for( NSDictionary *item in favorites ) {
