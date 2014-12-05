@@ -141,7 +141,10 @@ static void removeMessagePortForThread(NSThread *thread) {
 
 MVInline void performSelector(SEL selector, id receiver, id object, NSThread *thread, BOOL wait) {
 	if( ! thread || [thread isEqual:[NSThread currentThread]] ) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 		[receiver performSelector:selector withObject:object];
+#pragma clang diagnostic pop
 		return;
 	}
 
