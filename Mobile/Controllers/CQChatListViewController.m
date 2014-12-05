@@ -1173,24 +1173,12 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	_currentConnectionActionSheet.cancelButtonIndex = [_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	CGRect frame = [tableView rectForHeaderInSection:section];
-	[[CQColloquyApplication sharedApplication] showActionSheet:_currentConnectionActionSheet fromPoint:[headerView convertPoint:frame.origin toView:nil]];
+	CGRect converted = [tableView.superview convertRect:[tableView rectForHeaderInSection:section] fromView:tableView];
+	CGPoint presentationPoint = CGPointZero;
+	presentationPoint.x = CGRectGetMidX(converted);
+	presentationPoint.y = CGRectGetMidY(converted);
 
-	//	UIViewController *editViewController = nil;
-//	if ([connection isKindOfClass:[MVChatConnection class]]) {
-//		CQConnectionEditViewController *connectionEditViewController = [[CQConnectionEditViewController alloc] init];
-//		connectionEditViewController.connection = connection;
-//
-//		editViewController = connectionEditViewController;
-//	} else {
-//		CQBouncerEditViewController *bouncerEditViewController = [[CQBouncerEditViewController alloc] init];
-//		bouncerEditViewController.settings = connection;
-//
-//		editViewController = bouncerEditViewController;
-//	}
-//
-//	CQConnectionsNavigationController *navigationController = [[CQConnectionsNavigationController alloc] initWithRootViewController:editViewController];
-//	[[CQColloquyApplication sharedApplication] presentModalViewController:navigationController animated:YES];
+	[[CQColloquyApplication sharedApplication] showActionSheet:_currentConnectionActionSheet fromPoint:presentationPoint];
 }
 
 #pragma mark -

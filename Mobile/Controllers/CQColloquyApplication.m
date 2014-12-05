@@ -161,7 +161,7 @@ static NSMutableArray *highlightWords;
 				_userDefaultsChanged = YES;
 			else [self reloadSplitViewController];
 
-			BOOL disableSingleSwipe = [self splitViewController:nil shouldHideViewController:nil inOrientation:UIInterfaceOrientationLandscapeLeft] || [self splitViewController:nil shouldHideViewController:nil inOrientation:UIInterfaceOrientationPortrait];
+			BOOL disableSingleSwipe = [self splitViewController:self.splitViewController shouldHideViewController:nil inOrientation:UIInterfaceOrientationLandscapeLeft] || [self splitViewController:self.splitViewController shouldHideViewController:nil inOrientation:UIInterfaceOrientationPortrait];
 			if (disableSingleSwipe)
 				[[CQSettingsController settingsController] setInteger:0 forKey:@"CQSingleFingerSwipe"];
 		}
@@ -527,15 +527,26 @@ static NSMutableArray *highlightWords;
 	}
 
 	if ([UIDevice currentDevice].isSystemEight) {
-		_alertController = [UIAlertController alertControllerWithTitle:sheet.title message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-
-		// The overlapping view is needed to work around the following iOS 8(.1-only?) bug:
+		// The overlapping view is needed to work around the following iOS 8(.1-only?) bug on iPad:
 		// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
 		// present an action sheet from a point on screen that results in the popover rect overlapping the main view,
 		// the z-index will be incorrect and the action sheet will be clipped by the main view.
-		UIViewController *overlappingViewController = [[UIViewController alloc] init];
-		overlappingViewController.view.frame = _mainWindow.frame;
-		overlappingViewController.view.backgroundColor = [UIColor clearColor];
+		UIViewController *overlappingPresentationViewController = [[UIViewController alloc] init];
+		overlappingPresentationViewController.view.frame = _mainWindow.frame;
+		overlappingPresentationViewController.view.backgroundColor = [UIColor clearColor];
+
+		[_mainWindow addSubview:overlappingPresentationViewController.view];
+
+		_alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+
+		CGRect rect = CGRectZero;
+		rect.size = CGSizeMake(1., 1.);
+		if (!CGPointEqualToPoint(point, CGPointZero)) {
+			rect.origin = point;
+			_alertController.popoverPresentationController.sourceRect = rect;
+		} else {
+			rect.origin = _mainWindow.center;
+		}
 
 		for (NSInteger i = 0; i < sheet.numberOfButtons; i++) {
 			NSString *title = [sheet buttonTitleAtIndex:i];
@@ -545,27 +556,18 @@ static NSMutableArray *highlightWords;
 
 			__weak __typeof__((self)) weakSelf = self;
 
-			[_mainWindow addSubview:overlappingViewController.view];
-
 			[_alertController addAction:[UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *action) {
 				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 				strongSelf->_alertController = nil;
 
-				[overlappingViewController.view removeFromSuperview];
+				[overlappingPresentationViewController.view removeFromSuperview];
 				[sheet.delegate actionSheet:sheet clickedButtonAtIndex:i];
 			}]];
 		}
 
-		CGRect rect = CGRectZero;
-		rect.size = CGSizeMake(1., 1.);
-		if (CGPointEqualToPoint(point, CGPointZero))
-			rect.origin = CGPointMake(CGRectGetMidX(_mainWindow.frame), CGRectGetMidY(_mainWindow.frame));
-		else rect.origin = point;
 
-		_alertController.popoverPresentationController.sourceRect = (CGRect){ point, { 1., 1. } };
-		_alertController.popoverPresentationController.sourceView = self.splitViewController.view;
-
-		[overlappingViewController presentViewController:_alertController animated:YES completion:nil];
+		_alertController.popoverPresentationController.sourceView = overlappingPresentationViewController.view;
+		[overlappingPresentationViewController presentViewController:_alertController animated:YES completion:nil];
 	} else {
 		if (!CGPointEqualToPoint(point, CGPointZero)) {
 			[sheet showFromRect:(CGRect){ point, { 1., 1. } } inView:_mainViewController.view animated:animated];
