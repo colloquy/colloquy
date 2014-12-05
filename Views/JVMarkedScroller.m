@@ -43,7 +43,7 @@
 	[super drawRect:rect];
 
 	NSAffineTransform *transform = [NSAffineTransform transform];
-	float width = [[self class] scrollerWidthForControlSize:[self controlSize]];
+	float width = [[self class] scrollerWidthForControlSize:[self controlSize] scrollerStyle:NSScrollerStyleOverlay];
 
 	float scale = [self scaleToContentView];
 	[transform scaleXBy:( sFlags.isHoriz ? scale : 1. ) yBy:( sFlags.isHoriz ? 1. : scale )];

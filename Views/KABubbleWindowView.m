@@ -74,7 +74,7 @@ static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat
 		[_icon unlockFocus];
 	}
 
-	[_icon compositeToPoint:NSMakePoint( 15., 20. ) operation:NSCompositeSourceAtop fraction:1.];
+	[_icon drawAtPoint:NSMakePoint( 15., 20. ) fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1.];
 
 	[[self window] invalidateShadow];
 }
