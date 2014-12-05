@@ -505,7 +505,6 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Style", "choose style toolbar item menu representation title" ) action:NULL keyEquivalent:@""];
 		NSImage *icon = [[NSImage imageNamed:@"chooseStyle"] copy];
-		[icon setScalesWhenResized:YES];
 		[icon setSize:NSMakeSize( 16., 16. )];
 		[menuItem setImage:icon];
 		[menuItem setSubmenu:_styleMenu];
@@ -534,7 +533,6 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 			NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item menu representation title" ) action:NULL keyEquivalent:@""];
 			NSImage *icon = [image copy];
-			[icon setScalesWhenResized:YES];
 			[icon setSize:NSMakeSize( 16., 16. )];
 			[menuItem setImage:icon];
 			[menuItem setSubmenu:_emoticonMenu];

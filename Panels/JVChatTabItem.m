@@ -29,7 +29,6 @@
 
 	if( [active size].width > 16. || [active size].height > 16. ) {
 		NSImage *ret = [active copy];
-		[ret setScalesWhenResized:YES];
 		[ret setSize:NSMakeSize( 16., 16. )];
 		active = ret;
 	}
