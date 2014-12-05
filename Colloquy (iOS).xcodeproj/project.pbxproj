@@ -1457,6 +1457,7 @@
 					"$(SDKROOT)/usr/lib/system",
 				);
 				PRODUCT_NAME = Colloquy;
+				PROVISIONING_PROFILE = "df6f6b91-55c0-4c60-b88a-229137d57125";
 			};
 			name = Distribution;
 		};
