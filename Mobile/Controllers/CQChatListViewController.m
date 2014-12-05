@@ -1003,7 +1003,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) tableView:(UITableView *) tableView commitEditingStyle:(UITableViewCellEditingStyle) editingStyle forRowAtIndexPath:(NSIndexPath *) indexPath {
-	CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
+	CGRect cellRect = [tableView.superview convertRect:[self.tableView rectForRowAtIndexPath:indexPath] fromView:tableView];
 	CGPoint midpointOfRect = CGPointMake(CGRectGetMidX(cellRect), CGRectGetMidY(cellRect));
 
 	if (self.editing) {
@@ -1176,7 +1176,13 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	CGRect converted = [tableView.superview convertRect:[tableView rectForHeaderInSection:section] fromView:tableView];
 	CGPoint presentationPoint = CGPointZero;
 	presentationPoint.x = CGRectGetMidX(converted);
-	presentationPoint.y = CGRectGetMidY(converted);
+
+	// Work around a bug on iOS 8(.1?) (on iPad?) where the tableview thinks the section header at the top of the screen
+	// is scrolled because the tableview has been scrolled to the point where there are rows behind it
+	NSIndexPath *firstVisibleRowIndexPath = tableView.indexPathsForVisibleRows.firstObject;
+	if (section == firstVisibleRowIndexPath.section && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+		presentationPoint.y = 86.;
+	else presentationPoint.y = CGRectGetMidY(converted);
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:_currentConnectionActionSheet fromPoint:presentationPoint];
 }
@@ -1199,10 +1205,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (self.editing)
-	{
+	if (self.editing) {
 		if (indexPath.section == 0) {
-			CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
+			CGRect cellRect = [tableView.superview convertRect:[self.tableView rectForRowAtIndexPath:indexPath] fromView:tableView];
 			CGPoint midpointOfRect = CGPointMake(CGRectGetMidX(cellRect), CGRectGetMidY(cellRect));
 
 			[[CQConnectionsController defaultController] showNewConnectionPromptFromPoint:midpointOfRect];
@@ -1210,7 +1215,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			NSIndexPath *connectionIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - 1)];
 
 			if (indexPath.row == ([self tableView:tableView numberOfRowsInSection:indexPath.section] - 1)) {
-				CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
+				CGRect cellRect = [tableView.superview convertRect:[self.tableView rectForRowAtIndexPath:indexPath] fromView:tableView];
 				CGPoint midpointOfRect = CGPointMake(CGRectGetMidX(cellRect), CGRectGetMidY(cellRect));
 
 				MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:connectionIndexPath.section];
