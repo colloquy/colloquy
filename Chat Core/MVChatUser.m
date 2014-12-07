@@ -276,6 +276,8 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (NSString *) account {
+	if (_type == MVChatLocalUserType)
+		return _username;
 	return _account;
 }
 
@@ -447,7 +449,8 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (void) _setAccount:(NSString *) account {
-	MVSafeCopyAssign( _account, account );
+	if (_type != MVChatLocalUserType)
+		MVSafeCopyAssign( _account, account );
 }
 
 - (void) _setAddress:(NSString *) newAddress {

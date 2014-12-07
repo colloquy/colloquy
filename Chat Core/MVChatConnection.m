@@ -62,8 +62,11 @@ NSString *MVChatConnectionMonitor = @"MVChatConnectionMonitor";
 NSString *MVChatConnectionServerTime = @"MVChatConnectionServerTime";
 NSString *MVChatConnectionBatch = @"MVChatConnectionBatch";
 NSString *MVChatConnectionUserhostInNames = @"MVChatConnectionUserhostInNames";
+NSString *MVChatConnectionAccountTag = @"MVChatConnectionAccountTag";
 NSString *MVChatConnectionChghost = @"MVChatConnectionChghost";
 NSString *MVChatConnectionCapNotify = @"MVChatConnectionCapNotify";
+NSString *MVChatConnectionInvite = @"MVChatConnectionInvite";
+NSString *MVChatConnectionSelfMessage = @"MVChatConnectionSelfMessage";
 
 NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
 NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectNotification";

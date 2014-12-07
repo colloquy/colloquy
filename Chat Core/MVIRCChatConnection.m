@@ -966,8 +966,8 @@ static const NSStringEncoding supportedEncodings[] = {
 		else IRCv31Required = @[ @"multi-prefix" ];
 
 		NSArray *IRCv31Optional = @[ @"tls", @"away-notify", @"extended-join", @"account-notify" ];
-		NSArray *IRCv32Required = @[];
-		NSArray *IRCv32Optional = @[];
+		NSArray *IRCv32Required = @[ @"account-tag", @"intent" ];
+		NSArray *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite" ];
 
 		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
 		NSMutableString *rawMessage = [@"CAP REQ : " mutableCopy];
@@ -1026,10 +1026,13 @@ static const NSStringEncoding supportedEncodings[] = {
 	NSUInteger hostLength = 0;
 	const char *command = NULL;
 	NSUInteger commandLength = 0;
+	const char *intentOrTags = NULL;
+	NSUInteger intentOrTagsLength = 0;
 
 	NSMutableArray *parameters = [[NSMutableArray alloc] initWithCapacity:15];
 
 	// Parsing as defined in 2.3.1 at http://www.irchelp.org/irchelp/rfc/rfc2812.txt
+	// With support for IRCv3.2 extensions
 
 	if( len <= 2 )
 		goto end; // bad message
@@ -1040,7 +1043,16 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	BOOL done = NO;
 	if( notEndOfLine() ) {
-		if( *line == ':' ) {
+		if( *line == '@' ) {
+			// IRCv3.2
+			// @intent=ACTION;aaa=bbb;ccc;example.com/ddd=eee
+			while( notEndOfLine() && *line != ' ' ) line++;
+			intentOrTagsLength = (line - sender);
+			checkAndMarkIfDone();
+			consumeWhitespace();
+		}
+
+		if( notEndOfLine() && *line == ':' ) {
 			// prefix: ':' <sender> [ '!' <user> ] [ '@' <host> ] ' ' { ' ' }
 			sender = ++line;
 			while( notEndOfLine() && *line != ' ' && *line != '!' && *line != '@' ) line++;
@@ -1109,10 +1121,27 @@ end:
 		NSString *senderString = [self _newStringWithBytes:sender length:senderLength];
 		NSString *commandString = ((command && commandLength) ? [[NSString alloc] initWithBytes:command length:commandLength encoding:NSASCIIStringEncoding] : nil);
 
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", data, @"messageData", (senderString ? senderString : @""), @"sender", (commandString ? commandString : @""), @"command", parameters, @"parameters", [NSNumber numberWithBool:NO], @"outbound", [NSNumber numberWithBool:fromServer], @"fromServer", nil]];
+		NSString *intentOrTagsString = [self _newStringWithBytes:intentOrTags length:intentOrTagsLength];
+		NSMutableDictionary *intentOrTagsDictionary = [NSMutableDictionary dictionary];
+		for( NSString *anIntentOrTag in [intentOrTagsString componentsSeparatedByString:@";"] ) {
+			NSArray *intentOrTagPair = [anIntentOrTag componentsSeparatedByString:@"="];
+			if (intentOrTagPair.count != 2) continue;
+			intentOrTagsDictionary[intentOrTagPair[0]] = intentOrTagPair[1];
+		}
 
-		NSString *selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
-		SEL selector = NSSelectorFromString( selectorString );
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", data, @"messageData", (senderString ?: @""), @"sender", (commandString ?: @""), @"command", parameters, @"parameters", @(NO), @"outbound", @(fromServer), @"fromServer", intentOrTagsDictionary, @"message-tags", nil]];
+
+		BOOL hasTagsToSend = !!intentOrTagsDictionary.allKeys.count;
+		NSString *selectorString = nil;
+		SEL selector = NULL;
+		if( hasTagsToSend ) {
+			selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:tags:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
+			selector = NSSelectorFromString(selectorString);
+		}
+		if( selector == NULL || ![self respondsToSelector:selector] ) {
+			selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
+			selector = NSSelectorFromString(selectorString);
+		}
 
 		if( [self respondsToSelector:selector] ) {
 			MVChatUser *chatUser = nil;
@@ -1131,9 +1160,16 @@ end:
 				}
 			}
 
+			id sender = ( chatUser ? (id) chatUser : (id) senderString );
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-			[self performSelector:selector withObject:parameters withObject:( chatUser ? (id) chatUser : (id) senderString )];
+			if( hasTagsToSend ) {
+				IMP imp = [self methodForSelector:selector];
+				imp(self, selector, parameters, intentOrTagsDictionary, sender);
+			} else {
+				[self performSelector:selector withObject:parameters withObject:sender];
+			}
 #pragma clang diagnostic pop
 		}
 
@@ -1257,15 +1293,35 @@ end:
 	if( !targetPrefix )
 		targetPrefix = @"";
 
+	BOOL usingIntentTags = ( [self.supportedFeatures containsObject:MVChatConnectionMessageIntents] );
 	if( [[attributes objectForKey:@"action"] boolValue] ) {
-		NSString *prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@%@ :\001ACTION ", targetPrefix, targetName];
+		NSString *prefix = nil;
+		NSUInteger messageTagLength = 0;
+
+		if( usingIntentTags ) {
+			NSString *messageTags = @"@intent=ACTION";
+			if (self.localUser.account)
+				messageTags = [messageTags stringByAppendingString:[NSString stringWithFormat:@";account=%@", self.localUser.account]];
+			messageTagLength = messageTags.length + 1; // space is not in the prefix formatter (due to \001 being sent if not using @intent)
+			prefix = [[NSString alloc] initWithFormat:@"%@ PRIVMSG %@%@ :", messageTags, targetPrefix, targetName];
+		} else {
+			prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@%@ :\001ACTION ", targetPrefix, targetName];
+		}
 		NSUInteger bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
+		bytesLeft += messageTagLength; // IRCv3.2 specifically excludes message-tag from the message length limit
 
 		if ( msg.length > bytesLeft ) [self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
-		else [self sendRawMessageWithComponents:prefix, msg, @"\001", nil];
+		else [self sendRawMessageWithComponents:prefix, msg, (usingIntentTags ? nil : @"\001"), nil]; // exclude trailing \001 byte if we are using intent tags
 	} else {
-		NSString *prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@%@ :", targetPrefix, targetName];
+		NSString *messageTags = @"";
+		NSUInteger messageTagLength = 0;
+		if (self.localUser.account)
+			messageTags = [NSString stringWithFormat:@"@account=%@ ", self.localUser.account];
+		messageTagLength = messageTags.length; // space is in the tag substring since we don't have to worry about \001 for regular PRIVMSGs
+
+		NSString *prefix = [[NSString alloc] initWithFormat:@"%@PRIVMSG %@%@ :", messageTags, targetPrefix, targetName];
 		NSUInteger bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
+		bytesLeft += messageTagLength;
 
 		if ( msg.length > bytesLeft )	[self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
 		else [self sendRawMessageWithComponents:prefix, msg, nil];
@@ -2170,6 +2226,7 @@ end:
 						furtherNegotiation = YES;
 					}
 				}
+
 				// IRCv3.1 Optional
 				else if( [capability isCaseInsensitiveEqualToString:@"tls"] ) {
 					@synchronized( _supportedFeatures ) {
@@ -2192,10 +2249,33 @@ end:
 					}
 				}
 
+				// IRCv3.2 Required
+				else if( [capability isCaseInsensitiveEqualToString:@"account-tag"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionAccountTag];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"intents"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionMessageIntents];
+					}
+				}
+
 				// IRCv3.2 Optional
 				else if( [capability isCaseInsensitiveEqualToString:@"cap-notify"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionCapNotify];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionSelfMessage];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"chghost"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionChghost];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"invite"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionInvite];
 					}
 				}
 			}
@@ -2234,7 +2314,28 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVChatConnectionAccountNotify];
 					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionSelfMessage];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"chghost"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionChghost];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"invite"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionInvite];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"account-tag"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionAccountTag];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"intents"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionMessageIntents];
+					}
 				}
+
 			}
 		}
 	}
@@ -2573,7 +2674,7 @@ end:
 	}
 }
 
-- (void) _handlePrivmsgWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+- (void) _handlePrivmsgWithParameters:(NSArray *) parameters tags:(NSDictionary *) tags fromSender:(MVChatUser *) sender {
 	// if the sender is a server lets make a user for the server name
 	// this is not ideal but the notifications need user objects
 	if( [sender isKindOfClass:[NSString class]] )
@@ -2612,9 +2713,16 @@ end:
 			[self _handleCTCP:msgData asRequest:YES fromSender:sender toTarget:target forRoom:room];
 		} else {
 			NSMutableDictionary *privmsgInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", target, @"target", room, @"room", nil];
+			[privmsgInfo addEntriesFromDictionary:tags];
+			if( [privmsgInfo[@"intent"] isCaseInsensitiveEqualToString:@"ACTION"] )
+				privmsgInfo[@"action"] = @YES;
 			[self _handlePrivmsg:privmsgInfo];
 		}
 	}
+}
+
+- (void) _handlePrivmsgWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	[self _handlePrivmsgWithParameters:parameters tags:nil fromSender:sender];
 }
 
 - (void) _handleNotice:(NSMutableDictionary *) noticeInfo {
@@ -2747,6 +2855,9 @@ end:
 			   [msg hasCaseInsensitiveSubstring:@"i recognize you"] ) {					// AuthServ/gamesurge
 
 				_pendingIdentificationAttempt = NO;
+
+				if( [self.supportedFeatures containsObject:MVChatConnectionAccountNotify] )
+					[self sendRawMessageImmediatelyWithFormat:@"ACCOUNT %@", self.localUser.account];
 
 				if( ![[self localUser] isIdentified] )
 					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidIdentifyWithServicesNotification object:self userInfo:noticeInfo];
@@ -3571,11 +3682,16 @@ end:
 
 		[self _markUserAsOnline:sender];
 
-		if( [[sender nickname] isEqualToString:@"ChanServ"] ) {
-			// Auto-accept invites from ChanServ since the user initiated the invite.
-			[self joinChatRoomNamed:roomName];
+		// get target, and make sure the target is ourselves
+		if( NO ) { // differetnt target
+
 		} else {
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomInvitedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", roomName, @"room", nil]];
+			if( [[sender nickname] isEqualToString:@"ChanServ"] ) {
+				// Auto-accept invites from ChanServ since the user initiated the invite.
+				[self joinChatRoomNamed:roomName];
+			} else {
+				[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomInvitedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", roomName, @"room", nil]];
+			}
 		}
 	}
 }
@@ -3606,6 +3722,22 @@ end:
 		}
 
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+	}
+}
+
+- (void) _handleChghostWithParameters:(NSArray *) parameters fromSender:(id) sender {
+	if (parameters.count == 2) {
+		NSString *newUser = [self _stringFromPossibleData:parameters[0]];
+		NSString *newHost = [self _stringFromPossibleData:parameters[1]];
+
+		MVChatUser *user = (MVChatUser *)sender;
+		NSString *oldUser = user.username;
+		NSString *oldHost = user.address;
+
+		[user _setUsername:newUser];
+		[user _setAddress:newHost];
+
+		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatUserInformationUpdatedNotification object:sender userInfo:@{ @"oldUsername": oldUser, @"oldAddress": oldHost }];
 	}
 }
 

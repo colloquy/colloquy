@@ -97,8 +97,11 @@ extern NSString *MVChatConnectionMonitor;
 extern NSString *MVChatConnectionServerTime;
 extern NSString *MVChatConnectionBatch;
 extern NSString *MVChatConnectionUserhostInNames;
+extern NSString *MVChatConnectionAccountTag;
 extern NSString *MVChatConnectionChghost;
 extern NSString *MVChatConnectionCapNotify;
+extern NSString *MVChatConnectionInvite;
+extern NSString *MVChatConnectionSelfMessage;
 
 extern NSString *MVChatConnectionWillConnectNotification;
 extern NSString *MVChatConnectionDidConnectNotification;
