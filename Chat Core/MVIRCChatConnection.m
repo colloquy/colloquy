@@ -957,12 +957,28 @@ static const NSStringEncoding supportedEncodings[] = {
 		}
 	}
 
-	// Schedule an end to the capability negotiation in case it stalls the connection.
-	[self _sendEndCapabilityCommandAfterTimeout];
+	{ // schedule an end to the capability negotiation in case it stalls the connection
+		[self _sendEndCapabilityCommandAfterTimeout];
 
-	if( _requestsSASL && self.nicknamePassword.length )
-		[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl multi-prefix tls away-notify extended-join account-notify"];
-	else [self sendRawMessageImmediatelyWithFormat:@"CAP REQ :multi-prefix tls away-notify extended-join account-notify"];
+		BOOL shouldSupportSSL = ;
+		NSArray *IRCv31Required = nil;
+		 ( _requestsSASL && self.nicknamePassword.length )
+			IRCv31Required = @[ @"sasl", @"multi-prefix" ];
+		else IRCv31Required = @[ @"multi-prefix" ];
+
+		NSArray *IRCv31Optional = @[ @"tls", @"away-notify", @"extended-join", @"account-notify" ];
+		NSArray *IRCv32Required = @[];
+		NSArray *IRCv32Optional = @[];
+
+		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
+		NSMutableString *rawMessage = [@"CAP REQ : " mutableCopy];
+		[rawMessage appendString:[IRCv31Required componentsJoinedByString:@" "]];
+		[rawMessage appendString:[IRCv31Optional componentsJoinedByString:@" "]];
+		[rawMessage appendString:[IRCv32Required componentsJoinedByString:@" "]];
+		[rawMessage appendString:[IRCv32Optional componentsJoinedByString:@" "]];
+	}
+
+	[self sendRawMessageImmediatelyWithFormat:[rawMessage copy]];
 
 	if( password.length ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self preferredNickname]];
@@ -2119,11 +2135,15 @@ end:
 
 	if( parameters.count >= 3 ) {
 		NSString *subCommand = [parameters objectAtIndex:1];
-		if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"ACK"] ) {
+		if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"ACK"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
 			NSString *capabilitiesString = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
+
+			// IRCv3.2 says that multiline CAP replies will prefix capabilities with a * for all but the last line
+			if( [capabilitiesString isCaseInsensitiveEqualToString:@"*"] && parameters.count >= 4 )
+				capabilitiesString = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
+
 			NSArray *capabilities = [capabilitiesString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-			NSLog(@"capabilities: %@", capabilities);
-			for( NSString *capability in capabilities ) {
+			for( __strong NSString *capability in capabilities ) {
 				// IRCv3.1 Required
 				if( [capability isCaseInsensitiveEqualToString:@"sasl"] ) {
 					@synchronized( _supportedFeatures ) {
@@ -2158,14 +2178,63 @@ end:
 					}
 
 					self.secure = YES;
+					self.serverPort = 6697; // Charybdis defaults to 6697 for SSL connections
 				} else if( [capability isCaseInsensitiveEqualToString:@"away-notify"]) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionAwayNotify];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"extended-join"] ) {
-					[_supportedFeatures addObject:MVChatConnectionExtendedJoin];
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionExtendedJoin];
+					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"account-notify"] ) {
-					[_supportedFeatures addObject:MVChatConnectionAccountNotify];
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionAccountNotify];
+					}
+				}
+
+				// IRCv3.2 Optional
+				else if( [capability isCaseInsensitiveEqualToString:@"cap-notify"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionCapNotify];
+					}
+				}
+			}
+		} else if( [subCommand isCaseInsensitiveEqualToString:@"DEL"] ) {
+			NSString *capabilitiesString = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
+			NSArray *capabilities = [capabilitiesString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+
+			for( NSString *capability in capabilities ) {
+				if( [capability isCaseInsensitiveEqualToString:@"sasl"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionSASLFeature];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"multi-prefix"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionMultipleNicknamePrefixFeature];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"tls"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionTLS];
+					}
+					self.secure = NO;
+					self.serverPort = 6667; // reset back to default
+				} else if( [capability isCaseInsensitiveEqualToString:@"away-notify"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionAwayNotify];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"extended-join"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionExtendedJoin];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"account-notify"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionAccountNotify];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"cap-notify"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionAccountNotify];
+					}
 				}
 			}
 		}
@@ -3181,7 +3250,7 @@ end:
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserJoinedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
 		}
 
-		if( [self.supportedFeatures containsObject:MVChatConnectionExtendedJoin] && parameters.count >= 3 ) {
+		if( parameters.count >= 3 ) {
 			NSString *accountName = parameters[1];
 			NSString *realName = [self _stringFromPossibleData:parameters[2]];
 
