@@ -960,9 +960,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	{ // schedule an end to the capability negotiation in case it stalls the connection
 		[self _sendEndCapabilityCommandAfterTimeout];
 
-		BOOL shouldSupportSSL = ;
 		NSArray *IRCv31Required = nil;
-		 ( _requestsSASL && self.nicknamePassword.length )
+		if ( _requestsSASL && self.nicknamePassword.length )
 			IRCv31Required = @[ @"sasl", @"multi-prefix" ];
 		else IRCv31Required = @[ @"multi-prefix" ];
 
@@ -976,9 +975,9 @@ static const NSStringEncoding supportedEncodings[] = {
 		[rawMessage appendString:[IRCv31Optional componentsJoinedByString:@" "]];
 		[rawMessage appendString:[IRCv32Required componentsJoinedByString:@" "]];
 		[rawMessage appendString:[IRCv32Optional componentsJoinedByString:@" "]];
-	}
 
-	[self sendRawMessageImmediatelyWithFormat:[rawMessage copy]];
+		[self sendRawMessageImmediatelyWithFormat:[rawMessage copy]];
+	}
 
 	if( password.length ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self preferredNickname]];
