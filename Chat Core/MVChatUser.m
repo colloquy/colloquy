@@ -275,6 +275,10 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	return _realName;
 }
 
+- (NSString *) account {
+	return _account;
+}
+
 - (NSString *) username {
 	if( _type == MVChatLocalUserType )
 		return [[self connection] username];
@@ -440,6 +444,10 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (void) _setUsername:(NSString *) name {
 	MVSafeCopyAssign( _username, name );
+}
+
+- (void) _setAccount:(NSString *) account {
+	MVSafeCopyAssign( _account, account );
 }
 
 - (void) _setAddress:(NSString *) newAddress {

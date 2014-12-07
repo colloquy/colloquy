@@ -961,8 +961,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	[self _sendEndCapabilityCommandAfterTimeout];
 
 	if( _requestsSASL && self.nicknamePassword.length )
-		[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl multi-prefix tls away-notify"];
-	else [self sendRawMessageImmediatelyWithFormat:@"CAP REQ :multi-prefix tls away-notify"];
+		[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl multi-prefix tls away-notify extended-join account-notify"];
+	else [self sendRawMessageImmediatelyWithFormat:@"CAP REQ :multi-prefix tls away-notify extended-join account-notify"];
 
 	if( password.length ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self preferredNickname]];
@@ -2122,7 +2122,9 @@ end:
 		if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"ACK"] ) {
 			NSString *capabilitiesString = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 			NSArray *capabilities = [capabilitiesString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+			NSLog(@"capabilities: %@", capabilities);
 			for( NSString *capability in capabilities ) {
+				// IRCv3.1 Required
 				if( [capability isCaseInsensitiveEqualToString:@"sasl"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionSASLFeature];
@@ -2148,7 +2150,9 @@ end:
 						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :multi-prefix"];
 						furtherNegotiation = YES;
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"tls"] ) {
+				}
+				// IRCv3.1 Optional
+				else if( [capability isCaseInsensitiveEqualToString:@"tls"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionTLS];
 					}
@@ -2158,6 +2162,10 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionAwayNotify];
 					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"extended-join"] ) {
+					[_supportedFeatures addObject:MVChatConnectionExtendedJoin];
+				} else if( [capability isCaseInsensitiveEqualToString:@"account-notify"] ) {
+					[_supportedFeatures addObject:MVChatConnectionAccountNotify];
 				}
 			}
 		}
@@ -3172,6 +3180,16 @@ end:
 			[room _addMemberUser:sender];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserJoinedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
 		}
+
+		if( [self.supportedFeatures containsObject:MVChatConnectionExtendedJoin] && parameters.count >= 3 ) {
+			NSString *accountName = parameters[1];
+			NSString *realName = [self _stringFromPossibleData:parameters[2]];
+
+			[sender _setRealName:realName];
+			if( [accountName isEqualToString:@"*"] )
+				[sender _setAccount:nil];
+			else [sender _setAccount:accountName];
+		}
 	}
 }
 
@@ -3521,6 +3539,14 @@ end:
 
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 	}
+}
+
+- (void) _handleAccountWithParameters:(NSArray *) parameters fromSender:(id) sender {
+	NSString *accountName = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
+
+	if( [accountName isEqualToString:@"*"] )
+		[sender _setAccount:nil];
+	else [sender _setAccount:accountName];
 }
 
 - (void) _handle303WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ISON
