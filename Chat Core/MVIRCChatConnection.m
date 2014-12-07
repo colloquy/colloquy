@@ -967,7 +967,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		NSArray *IRCv31Optional = @[ @"tls", @"away-notify", @"extended-join", @"account-notify" ];
 		NSArray *IRCv32Required = @[ @"account-tag", @"intent" ];
-		NSArray *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite" ];
+		NSArray *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify" ];
 
 		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
 		NSMutableString *rawMessage = [@"CAP REQ : " mutableCopy];
@@ -2273,7 +2273,7 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionChghost];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"invite"] ) {
+				} else if( [capability isCaseInsensitiveEqualToString:@"invite-notify"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionInvite];
 					}
@@ -2322,7 +2322,7 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVChatConnectionChghost];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"invite"] ) {
+				} else if( [capability isCaseInsensitiveEqualToString:@"invite-notify"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVChatConnectionInvite];
 					}
@@ -3683,8 +3683,9 @@ end:
 		[self _markUserAsOnline:sender];
 
 		// get target, and make sure the target is ourselves
-		if( NO ) { // differetnt target
-
+		MVChatUser *user = [MVChatUser wildcardUserFromString:parameters[0]];
+		if( ![self.localUser isEqualToChatUser:user] ) { // different target being invited, we are seeing the echo of it
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomInvitedNotification object:self userInfo:@{ @"user": sender, @"room": roomName, @"target": user }];
 		} else {
 			if( [[sender nickname] isEqualToString:@"ChanServ"] ) {
 				// Auto-accept invites from ChanServ since the user initiated the invite.

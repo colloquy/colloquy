@@ -241,6 +241,16 @@ static CQSoundController *fileTransferSound;
 - (void) _invitedToRoom:(NSNotification *) notification {
 	NSString *roomName = notification.userInfo[@"room"];
 	MVChatConnection *connection = [notification object];
+	MVChatUser *invitedUser = notification.userInfo[@"target"];
+	MVChatUser *user = notification.userInfo[@"user"];
+	MVChatRoom *room = [connection chatRoomWithName:roomName];
+
+	if (invitedUser) {
+		NSString *message = [NSString stringWithFormat:NSLocalizedString(@"%@ invited %@ to \"%@\" on \"%@\".", "User invited to join room alert message"), user.displayName, invitedUser.displayName,  room.displayName, connection.displayName];
+		CQDirectChatController *chatController = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:NO];
+		[chatController addEventMessage:message withIdentifier:@""];
+		return;
+	}
 
 	if ([chatRoomInviteAction isEqualToString:@"Auto-Join"]) {
 		[connection joinChatRoomNamed:roomName];
@@ -249,8 +259,6 @@ static CQSoundController *fileTransferSound;
 		return;
 	}
 
-	MVChatUser *user = notification.userInfo[@"user"];
-	MVChatRoom *room = [connection chatRoomWithName:roomName];
 
 	NSString *message = [NSString stringWithFormat:NSLocalizedString(@"You are invited to \"%@\" by \"%@\" on \"%@\".", "Invited to join room alert message"), room.displayName, user.displayName, connection.displayName];
 

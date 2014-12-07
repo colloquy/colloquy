@@ -468,6 +468,15 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	if( ! [[MVConnectionsController defaultController] managesConnection:connection] ) return;
 
+	MVChatUser *invitedUser = notification.userInfo[@"target"];
+	if (invitedUser) {
+		NSString *message = [NSString stringWithFormat:NSLocalizedString(@"%@ invited %@ to \"%@\" on \"%@\".", "User invited to join room alert message"), user.displayName, invitedUser.displayName,  room.displayName, connection.displayName];
+		MVChatRoom *room = [connection chatRoomWithName:roomName];
+		JVChatRoomPanel *chatRoomPanel = [self chatViewControllerForRoom:room ifExists:NO];
+		[chatRoomPanel addEventMessageToDisplay:message withName:@"invite" andAttributes:nil];
+		return;
+	}
+
 	NSString *title = NSLocalizedString( @"Chat Room Invite", "member invited to room title" );
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", "you were invited to join a chat room status message" ), room, [user nickname]];
 
