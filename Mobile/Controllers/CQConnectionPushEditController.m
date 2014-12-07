@@ -61,11 +61,19 @@
 
 #pragma mark -
 
+- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+	[self.tableView beginUpdates];
+	[self.tableView reloadRowsAtIndexPaths:self.tableView.indexPathsForVisibleRows withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self.tableView endUpdates];
+}
+
+#pragma mark -
+
 - (void) pushEnabled:(CQPreferencesSwitchCell *) sender {
 	if (_connection.connected)
 		_connection.pushNotifications = sender.on;
 	else {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Connection Required" message:nil delegate:nil cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay button title") otherButtonTitles:nil];
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Connection Required" message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay button title") otherButtonTitles:nil];
 		if (_connection.pushNotifications)
 			alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to disable push notifications for %@. Please connect and try again." , @"Unable to turn push notifications off message"), _connection.displayName];
 		else alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to enable push notifications for %@. Please connect and try again." , @"Unable to turn push notifications off message"), _connection.displayName];
