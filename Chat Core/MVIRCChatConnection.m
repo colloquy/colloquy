@@ -3010,7 +3010,7 @@ end:
 	}
 }
 
-- (void) _handleNoticeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+- (void) _handleNoticeWithParameters:(NSArray *) parameters tags:(NSDictionary *) tags fromSender:(MVChatUser *) sender {
 	// if the sender is a server lets make a user for the server name
 	// this is not ideal but the notifications need user objects
 	if( [sender isKindOfClass:[NSString class]] )
@@ -3041,9 +3041,14 @@ end:
 			[self _handleCTCP:msgData asRequest:NO fromSender:sender toTarget:target forRoom:room];
 		} else {
 			NSMutableDictionary *noticeInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", target, @"target", room, @"room", nil];
+			[noticeInfo addEntriesFromDictionary:tags];
 			[self _handleNotice:noticeInfo];
 		}
 	}
+}
+
+- (void) _handleNoticeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	[self _handleNoticeWithParameters:parameters tags:nil fromSender:sender];
 }
 
 - (void) _handleCTCP:(NSDictionary *) ctcpInfo {

@@ -22,19 +22,19 @@ extern NSString *MVMetadataKeyForAttributeName(NSString *attributeName) {
 }
 
 extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
-	if ([attributeName isCaseInsensitiveEqualToString:@"server.certfp"]) return MVChatUserSSLCertFingerprintAttribute;
-	if ([attributeName isCaseInsensitiveEqualToString:@"user.email"]) return MVChatUserEmailAttribute;
-	if ([attributeName isCaseInsensitiveEqualToString:@"user.phone"]) return MVChatUserPhoneAttribute;
-	if ([attributeName isCaseInsensitiveEqualToString:@"user.website"]) return MVChatUserWebsiteAttribute;
-	if ([attributeName isCaseInsensitiveEqualToString:@"user.playing"]) return MVChatUserCurrentlyPlayingAttribute;
-	if ([attributeName isCaseInsensitiveEqualToString:@"user.status"]) return MVChatUserStatusAttribute;
-	if ([attributeName isCaseInsensitiveEqualToString:@"client.name"]) return MVChatUserClientNameAttribute;
-	if ([attributeName isCaseInsensitiveEqualToString:@"client.version"]) return MVChatUserClientVersionAttribute;
-	if ([attributeName hasCaseInsensitivePrefix:@"server.im."]) {
-		NSString *serviceName = [attributeName stringByReplacingOccurrencesOfString:@"server.im." withString:@""];
+	if ([metadataKey isCaseInsensitiveEqualToString:@"server.certfp"]) return MVChatUserSSLCertFingerprintAttribute;
+	if ([metadataKey isCaseInsensitiveEqualToString:@"user.email"]) return MVChatUserEmailAttribute;
+	if ([metadataKey isCaseInsensitiveEqualToString:@"user.phone"]) return MVChatUserPhoneAttribute;
+	if ([metadataKey isCaseInsensitiveEqualToString:@"user.website"]) return MVChatUserWebsiteAttribute;
+	if ([metadataKey isCaseInsensitiveEqualToString:@"user.playing"]) return MVChatUserCurrentlyPlayingAttribute;
+	if ([metadataKey isCaseInsensitiveEqualToString:@"user.status"]) return MVChatUserStatusAttribute;
+	if ([metadataKey isCaseInsensitiveEqualToString:@"client.name"]) return MVChatUserClientNameAttribute;
+	if ([metadataKey isCaseInsensitiveEqualToString:@"client.version"]) return MVChatUserClientVersionAttribute;
+	if ([metadataKey hasCaseInsensitivePrefix:@"server.im."]) {
+		NSString *serviceName = [metadataKey stringByReplacingOccurrencesOfString:@"server.im." withString:@""];
 		return [NSString stringWithFormat:@"MVChatUserIMServiceAttribute.%@", serviceName];
 	}
-	return attributeName;
+	return metadataKey;
 }
 
 @implementation MVIRCChatUser
@@ -153,7 +153,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 		[self refreshInformation];
 	} else {
 		if( [[[self connection] supportedFeatures] containsObject:MVChatConnectionMetadata] )
-			[[self connection] sendRawMessageWithFormat:@"METADATA %@ LIST :%@", [self nickname], metadataKeyForAttributeName(key)];
+			[[self connection] sendRawMessageWithFormat:@"METADATA %@ LIST :%@", [self nickname], MVMetadataKeyForAttributeName(key)];
 	}
 }
 
