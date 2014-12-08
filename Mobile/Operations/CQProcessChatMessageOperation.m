@@ -344,9 +344,10 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 		_processedMessage[@"message"] = messageString;
 	if (timestampEveryMessage) {
 		NSString *timestamp = nil;
+		NSDate *time = _message[@"time"] ?: [NSDate date];
 		if (timestampFormat.length)
-			timestamp = [NSDate formattedStringWithDate:[NSDate date] dateFormat:timestampFormat];
-		else timestamp = [NSDate formattedShortTimeStringForDate:[NSDate date]];
+			timestamp = [NSDate formattedStringWithDate:time dateFormat:timestampFormat];
+		else timestamp = [NSDate formattedShortTimeStringForDate:time];
 		timestamp = [timestamp stringByEncodingXMLSpecialCharactersAsEntities];
 
 		_processedMessage[@"timestamp"] = timestamp;
