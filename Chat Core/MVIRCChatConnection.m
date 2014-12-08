@@ -992,7 +992,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		NSArray *IRCv31Optional = @[ @"tls", @"away-notify", @"extended-join", @"account-notify" ];
 		NSArray *IRCv32Required = @[ @"account-tag", @"intent" ];
-		NSArray *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify" ];
+		NSArray *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time" ];
 
 		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
 		NSMutableString *rawMessage = [@"CAP REQ : " mutableCopy];
@@ -1162,6 +1162,22 @@ end:
 		if( hasTagsToSend ) {
 			selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:tags:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
 			selector = NSSelectorFromString(selectorString);
+
+			NSString *timestampString = intentOrTagsDictionary[@"time"];
+			if (timestampString.length) {
+				// threadsafe as of iOS 7
+				NSDateFormatter *dateFormatter = [NSThread currentThread].threadDictionary[@"IRCv32ServerTimeDateFormatter"];
+				if (!dateFormatter) {
+					dateFormatter = [[NSDateFormatter alloc] init];
+					dateFormatter.dateFormat = @"YYYY-MM-DDThh:mm:ss.sssZ";
+
+					[NSThread currentThread].threadDictionary[@"IRCv32ServerTimeDateFormatter"] = dateFormatter;
+				}
+
+				NSDate *timestamp = [dateFormatter dateFromString:timestampString];
+				if (timestamp)
+					intentOrTagsDictionary[@"time"] = timestamp;
+			}
 		}
 		if( selector == NULL || ![self respondsToSelector:selector] ) {
 			selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
@@ -2338,6 +2354,10 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionInvite];
 					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"server-time"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionServerTime];
+					}
 				}
 			}
 		} else if( [subCommand isCaseInsensitiveEqualToString:@"DEL"] ) {
@@ -2395,8 +2415,11 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVChatConnectionMessageIntents];
 					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"server-time"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionServerTime];
+					}
 				}
-
 			}
 		}
 	}
@@ -2579,8 +2602,6 @@ end:
 		}
 	}
 
-	NSString *userObservationPrefix = nil;
-	NSString *appendFormat = nil;
 	if( [_supportedFeatures containsObject:MVChatConnectionMonitor] ) {
 		[self sendRawMessage:@"MONITOR L"];
 		_fetchingMonitorList = YES;
@@ -2767,6 +2788,7 @@ end:
 			[privmsgInfo addEntriesFromDictionary:tags];
 			if( [privmsgInfo[@"intent"] isCaseInsensitiveEqualToString:@"ACTION"] )
 				privmsgInfo[@"action"] = @YES;
+
 			[self _handlePrivmsg:privmsgInfo];
 		}
 	}
@@ -3392,7 +3414,7 @@ end:
 #pragma mark -
 #pragma mark Room Replies
 
-- (void) _handleJoinWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+- (void) _handleJoinWithParameters:(NSArray *) parameters tags:(NSDictionary *) tags fromSender:(MVChatUser *) sender {
 	if( parameters.count >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *name = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		MVChatRoom *room = [self chatRoomWithName:name];
@@ -3408,7 +3430,12 @@ end:
 			[sender _setIdleTime:0.];
 			[self _markUserAsOnline:sender];
 			[room _addMemberUser:sender];
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserJoinedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
+
+			NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+			[userInfo addEntriesFromDictionary:tags];
+
+			userInfo[@"user"] = sender;
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserJoinedNotification object:room userInfo:userInfo];
 		}
 
 		if( parameters.count >= 3 ) {
@@ -3423,7 +3450,11 @@ end:
 	}
 }
 
-- (void) _handlePartWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+- (void) _handleJoinWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	[self _handleJoinWithParameters:parameters tags:nil fromSender:sender];
+}
+
+- (void) _handlePartWithParameters:(NSArray *) parameters tags:(NSDictionary *) tags fromSender:(MVChatUser *) sender {
 	if( parameters.count >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *roomName = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:roomName];
@@ -3434,13 +3465,27 @@ end:
 		NSData *reason = ( parameters.count >= 2 ? [parameters objectAtIndex:1] : nil );
 		if( ! [reason isKindOfClass:[NSData class]] ) reason = nil;
 
+		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+		[userInfo addEntriesFromDictionary:tags];
+
 		if( [sender isLocalUser] ) {
 			[room _setDateParted:[NSDate date]];
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:reason, @"reason", nil]];
+
+			if (reason)
+				userInfo[@"reason"] = reason;
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomPartedNotification object:room userInfo:userInfo];
 		} else {
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", reason, @"reason", nil]];
+			if (reason)
+				userInfo[@"reason"] = reason;
+			if (sender)
+				userInfo[@"user"] = sender;
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification object:room userInfo:userInfo];
 		}
 	}
+}
+
+- (void) _handlePartWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	[self _handlePartWithParameters:parameters tags:nil fromSender:sender];
 }
 
 - (void) _handleQuitWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
