@@ -941,15 +941,8 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		self.connectedSecurely = YES;
 
-		NSMutableDictionary *settings = [NSMutableDictionary dictionary];
-		[settings setObject:(id)kCFBooleanTrue forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
-		[settings setObject:(id)kCFBooleanFalse forKey:(NSString *)kCFStreamSSLValidatesCertificateChain];
-		[settings setObject:(id)kCFStreamSocketSecurityLevelNegotiatedSSL forKey:(id)kCFStreamSSLLevel];
-
-		[sock startTLS:settings];
-	} else {
-		self.connectedSecurely = NO;
-	}
+		[self _startTLS];
+	} else self.connectedSecurely = NO;
 
 	NSString *password = _password;
 	NSString *username = ( _username.length ? _username : @"anonymous" );
@@ -1820,6 +1813,15 @@ end:
 
 #pragma mark -
 
+- (void) _startTLS {
+	NSMutableDictionary *settings = [NSMutableDictionary dictionary];
+	[settings setObject:(id)kCFBooleanTrue forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
+	[settings setObject:(id)kCFBooleanFalse forKey:(NSString *)kCFStreamSSLValidatesCertificateChain];
+	[settings setObject:(id)kCFStreamSocketSecurityLevelNegotiatedSSL forKey:(id)kCFStreamSSLLevel];
+
+	[_chatConnection startTLS:settings];
+}
+
 - (void) _handleConnect {
 	MVSafeRetainAssign( _queueWait, [NSDate dateWithTimeIntervalSinceNow:0.5] );
 	dispatch_async(dispatch_get_main_queue(), ^{
@@ -2311,7 +2313,7 @@ end:
 					}
 
 					self.secure = YES;
-					self.serverPort = 6697; // Charybdis defaults to 6697 for SSL connections
+					self.serverPort = 6697; // Charybdis defaults to 6697 for SSL connections. Theoretically, STARTTLS support makes this a non-issue, but, this seems safer.
 				} else if( [capability isCaseInsensitiveEqualToString:@"away-notify"]) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionAwayNotify];
@@ -2524,7 +2526,9 @@ end:
 		_serverInformation = [[NSMutableDictionary alloc] initWithCapacity:5];
 
 	for( NSString *feature in parameters ) {
-		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"WATCH"] ) {
+		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"STARTTLS"] ) {
+
+		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"WATCH"] ) {
 			@synchronized(_supportedFeatures) {
 				[_supportedFeatures addObject:MVChatConnectionWatchFeature];
 			}
@@ -2646,6 +2650,12 @@ end:
 			}
 		}
 	}
+}
+
+- (void) _handle670WithParameters:(NSArray *) parameters fromSender:(id) sender {
+	[self _startTLS];
+
+	self.connectedSecurely = YES;
 }
 
 - (void) _handle691WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_STARTTLS
