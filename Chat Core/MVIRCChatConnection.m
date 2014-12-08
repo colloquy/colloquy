@@ -985,7 +985,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		NSArray *IRCv31Optional = @[ @"tls", @"away-notify", @"extended-join", @"account-notify" ];
 		NSArray *IRCv32Required = @[ @"account-tag", @"intent" ];
-		NSArray *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time" ];
+		NSArray *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time", @"userhost-in-names" ];
 
 		// In theory, IRCv3.2 isn't finalized yet and may change, so ZNC prefixes their capabilities. In practice,
 		// the official spec is pretty stable, and their behavior matches the official spec at this time.
@@ -2350,7 +2350,7 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionCapNotify];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] ) {
+				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] || [capability isCaseInsensitiveEqualToString:@"znc.in/self-message"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionSelfMessage];
 					}
@@ -2362,9 +2362,13 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionInvite];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"server-time"] ) {
+				} else if( [capability isCaseInsensitiveEqualToString:@"server-time"] || [capability isCaseInsensitiveEqualToString:@"znc.in/server-time-iso"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionServerTime];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"userhost-in-names"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionUserhostInNames];
 					}
 				}
 			}
@@ -2403,7 +2407,7 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVChatConnectionAccountNotify];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] ) {
+				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] || [capability isCaseInsensitiveEqualToString:@"znc.in/self-message"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVChatConnectionSelfMessage];
 					}
@@ -2423,9 +2427,13 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVChatConnectionMessageIntents];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"server-time"] ) {
+				} else if( [capability isCaseInsensitiveEqualToString:@"server-time"] || [capability isCaseInsensitiveEqualToString:@"znc.in/server-time-iso"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVChatConnectionServerTime];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"userhost-in-names"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionUserhostInNames];
 					}
 				}
 			}
@@ -3956,15 +3964,33 @@ end:
 				NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
 				NSArray *members = [names componentsSeparatedByString:@" "];
 
-				for( NSString *aMemberName in members ) {
-					if( ! aMemberName.length ) break;
+				for( NSString *aMember in members ) {
+					if( ! aMember.length ) break;
 
-					NSString *memberName = aMemberName;
+					// IRCv3.2 provides support for user and host to be provided in NAMES reply
+					NSString *memberName = nil;
+					NSString *memberUser = nil;
+					NSString *memberHost = nil;
+					NSArray *nickUserhostComponents = [aMember componentsSeparatedByString:@"!"];
+					if (nickUserhostComponents.count == 2) {
+						memberName = nickUserhostComponents[0];
+
+						NSArray *userHostComponents = [nickUserhostComponents[1] componentsSeparatedByString:@"@"];
+						if (userHostComponents.count == 2) {
+							memberUser = userHostComponents[0];
+							memberHost = userHostComponents[1];
+						}
+					} else memberName = aMember;
+
 					MVChatRoomMemberMode modes = [self _stripModePrefixesFromNickname:&memberName];
 					MVChatUser *member = [self chatUserWithUniqueIdentifier:memberName];
 					[room _addMemberUser:member];
 					[room _setModes:modes forMemberUser:member];
 
+					if (memberUser.length)
+						[member _setUsername:memberUser];
+					if (memberHost.length)
+						[member _setAddress:memberHost];
 					[self _markUserAsOnline:member];
 				}
 			}
