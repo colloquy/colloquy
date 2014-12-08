@@ -2552,6 +2552,10 @@ end:
 			@synchronized(_supportedFeatures) {
 				[_supportedFeatures addObject:MVChatConnectionMonitor];
 			}
+		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"UHNAMES"] ) {
+			@synchronized(_supportedFeatures) {
+				[_supportedFeatures addObject:MVChatConnectionUserhostInNames];
+			}
 		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"CHANTYPES="] ) {
 			NSString *types = [feature substringFromIndex:10]; // length of "CHANTYPES="
 			if( types.length )
