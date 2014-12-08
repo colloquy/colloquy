@@ -27,7 +27,6 @@
 	NSCharacterSet *_roomPrefixes;
 	unsigned short _serverPort;
 	unsigned short _isonSentCount;
-	BOOL _watchCommandSupported;
 	BOOL _sendQueueProcessing;
 	BOOL _sentEndCapabilityCommand;
 	NSTimeInterval _sendEndCapabilityCommandAtTime;
@@ -37,6 +36,9 @@
 	NSString *_failedNickname;
 	short _failedNicknameCount;
 	BOOL _nicknameShortened;
+	NSMutableArray *_pendingMonitorList;
+	BOOL _fetchingMonitorList;
+	BOOL _monitorListFull;
 }
 + (NSArray *) defaultServerPorts;
 @end

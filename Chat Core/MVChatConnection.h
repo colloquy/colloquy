@@ -77,6 +77,8 @@ typedef NS_ENUM(NSInteger, MVChatConnectionError) {
 @class MVChatUserWatchRule;
 @class MVUploadFileTransfer;
 
+NSString *MVChatConnectionWatchFeature;
+
 // IRC3v1 Required
 extern NSString *MVChatConnectionSASLFeature;
 extern NSString *MVChatConnectionMultipleNicknamePrefixFeature;

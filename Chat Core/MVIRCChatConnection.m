@@ -695,7 +695,11 @@ static const NSStringEncoding supportedEncodings[] = {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[rule nickname]];
 		[rule matchChatUser:user];
 		if( [self isConnected] ) {
-			if( _watchCommandSupported ) [self sendRawMessageWithFormat:@"WATCH +%@", [rule nickname]];
+			if( [self.supportedFeatures containsObject:MVChatConnectionMonitor] && !_monitorListFull ) {
+				if( !_fetchingMonitorList ) [self sendRawMessageWithFormat:@"MONITOR + %@", [rule nickname]];
+				else [_pendingMonitorList addObject:[rule nickname]];
+			}
+			else if( [self.supportedFeatures containsObject:MVChatConnectionWatchFeature] ) [self sendRawMessageWithFormat:@"WATCH +%@", [rule nickname]];
 			else [self sendRawMessageWithFormat:@"ISON %@", [rule nickname]];
 		}
 	} else {
@@ -711,8 +715,29 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) removeChatUserWatchRule:(MVChatUserWatchRule *) rule {
 	[super removeChatUserWatchRule:rule];
 
-	if( [self isConnected] && _watchCommandSupported && [rule nickname] && ! [rule nicknameIsRegularExpression] )
-		[self sendRawMessageWithFormat:@"WATCH -%@", [rule nickname]];
+	if( [self isConnected] && [rule nickname] && ! [rule nicknameIsRegularExpression] ) {
+		if( [self.supportedFeatures containsObject:MVChatConnectionMonitor] )
+			[self sendRawMessageWithFormat:@"MONITOR - %@", [rule nickname]];
+		if( [self.supportedFeatures containsObject:MVChatConnectionWatchFeature] )
+			[self sendRawMessageWithFormat:@"WATCH -%@", [rule nickname]];
+	}
+
+	if( _monitorListFull ) {
+		NSString *nicknameToMonitor = _pendingMonitorList.firstObject;
+		[_pendingMonitorList removeObjectAtIndex:0];
+
+		MVChatUserWatchRule *watchRule = [[MVChatUserWatchRule alloc] init];
+		watchRule.nickname = nicknameToMonitor;
+
+		// remove the watch user from our local cache, and re-add it with a remote MONITOR instead of ISON
+		[super removeChatUserWatchRule:watchRule];
+		[self addChatUserWatchRule:watchRule];
+
+		if( _pendingMonitorList.count == 0 ) {
+			_monitorListFull = NO;
+			_pendingMonitorList = nil;
+		}
+	}
 }
 
 #pragma mark -
@@ -1988,7 +2013,7 @@ end:
 
 - (void) _checkWatchedUsers {
 	MVAssertMainThreadRequired();
-	if( _watchCommandSupported ) return; // we don't need to call this anymore, return before we reschedule
+	if( [self.supportedFeatures containsObject:MVChatConnectionWatchFeature] ) return; // we don't need to call this anymore, return before we reschedule
 
 	[self performSelector:@selector( _checkWatchedUsers ) withObject:nil afterDelay:JVWatchedUserISONDelay];
 
@@ -2176,6 +2201,42 @@ end:
 	_sentEndCapabilityCommand = YES;
 
 	[self sendRawMessageImmediatelyWithFormat:@"CAP END"];
+}
+
+#pragma mark -
+
+- (void) _requestServerNotificationsOfUserConnectedState {
+	NSString *userObservationPrefix = nil;
+	NSString *appendFormat = nil;
+	if( [_supportedFeatures containsObject:MVChatConnectionMonitor] ) {
+		userObservationPrefix = @"MONITOR + ";
+		appendFormat = @"%@,";
+	} else if( [_supportedFeatures containsObject:MVChatConnectionWatchFeature] ) {
+		userObservationPrefix = @"WATCH ";
+		appendFormat = @"+%@ ";
+	} else return;
+
+	NSMutableString *request = [[NSMutableString alloc] initWithCapacity:JVMaximumWatchCommandLength];
+	[request setString:userObservationPrefix];
+
+	@synchronized( _chatUserWatchRules ) {
+		for( MVChatUserWatchRule *rule in _chatUserWatchRules ) {
+			NSString *nick = [rule nickname];
+			if( nick && ! [rule nicknameIsRegularExpression] ) {
+				if( ( nick.length + request.length + 1 ) > JVMaximumWatchCommandLength ) {
+					[self sendRawMessage:request];
+
+					request = [[NSMutableString alloc] initWithCapacity:JVMaximumWatchCommandLength];
+					[request setString:userObservationPrefix];
+				}
+
+				[request appendFormat:appendFormat, nick];
+			}
+		}
+	}
+
+	if( ! [request isEqualToString:userObservationPrefix] )
+		[self sendRawMessage:request];
 }
 @end
 
@@ -2441,34 +2502,13 @@ end:
 
 	for( NSString *feature in parameters ) {
 		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"WATCH"] ) {
-			_watchCommandSupported = YES;
-
-			NSMutableString *request = [[NSMutableString alloc] initWithCapacity:JVMaximumWatchCommandLength];
-			[request setString:@"WATCH "];
-
-			@synchronized( _chatUserWatchRules ) {
-				for( MVChatUserWatchRule *rule in _chatUserWatchRules ) {
-					NSString *nick = [rule nickname];
-					if( nick && ! [rule nicknameIsRegularExpression] ) {
-						if( ( nick.length + request.length + 1 ) > JVMaximumWatchCommandLength ) {
-							[self sendRawMessage:request];
-
-							request = [[NSMutableString alloc] initWithCapacity:JVMaximumWatchCommandLength];
-							[request setString:@"WATCH "];
-						}
-
-						[request appendFormat:@"+%@ ", nick];
-					}
-				}
+			@synchronized(_supportedFeatures) {
+				[_supportedFeatures addObject:MVChatConnectionWatchFeature];
 			}
-
-			if( ! [request isEqualToString:@"WATCH "] )
-				[self sendRawMessage:request];
-
-//			dispatch_async(dispatch_get_main_queue(), ^{
-//				[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
-//			});
-
+		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"MONITOR"] ) {
+			@synchronized(_supportedFeatures) {
+				[_supportedFeatures addObject:MVChatConnectionMonitor];
+			}
 		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"CHANTYPES="] ) {
 			NSString *types = [feature substringFromIndex:10]; // length of "CHANTYPES="
 			if( types.length )
@@ -2538,6 +2578,17 @@ end:
 			}
 		}
 	}
+
+	NSString *userObservationPrefix = nil;
+	NSString *appendFormat = nil;
+	if( [_supportedFeatures containsObject:MVChatConnectionMonitor] ) {
+		[self sendRawMessage:@"MONITOR L"];
+		_fetchingMonitorList = YES;
+		_pendingMonitorList = [NSMutableArray array];
+		return;
+	}
+	if( [_supportedFeatures containsObject:MVChatConnectionWatchFeature] )
+		[self _requestServerNotificationsOfUserConnectedState];
 }
 
 - (void) _handle433WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NICKNAMEINUSE
@@ -4437,6 +4488,78 @@ end:
 - (void) _handle600WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_LOGON_BAHAMUT_UNREAL
 	if( parameters.count >= 4 )
 		[self _handle604WithParameters:parameters fromSender:sender]; // do everything we do above
+}
+
+- (void) _handle730WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_MONONLINE
+	// <nick> :target[,target2]*
+
+	for( __strong NSString *nickname in [parameters[1] componentsSeparatedByString:@","] ) {
+		if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
+		if( !nickname.length ) continue;
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:nickname];
+
+		[self _markUserAsOnline:user];
+	}
+}
+
+- (void) _handle731WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_MONOFFLINE
+	// <nick> :target[,target2]*
+
+	for( __strong NSString *nickname in [parameters[1] componentsSeparatedByString:@","] ) {
+		if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
+		if( !nickname.length ) continue;
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:nickname];
+
+		[self _markUserAsOffline:user];
+	}
+}
+
+- (void) _handle732WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_MONLIST
+	// <nick> :target[,target2]*
+
+	for( __strong NSString *nickname in [parameters[1] componentsSeparatedByString:@","] ) {
+		if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
+		if( !nickname.length ) continue;
+		MVChatUserWatchRule *watchRule = [[MVChatUserWatchRule alloc] init];
+		watchRule.nickname = nickname;
+
+		[super addChatUserWatchRule:watchRule];
+	}
+}
+
+- (void) _handle733WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ENDOFMONLIST
+	// <nick> :End of MONITOR list
+
+	_fetchingMonitorList = NO;
+
+	for( NSString *nickname in _pendingMonitorList ) {
+		MVChatUserWatchRule *watchRule = [[MVChatUserWatchRule alloc] init];
+		watchRule.nickname = nickname;
+
+		[self addChatUserWatchRule:watchRule];
+	}
+
+	_pendingMonitorList = nil;
+}
+
+- (void) _handle734WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_MONOFFLINE
+	// <nick> <limit> <targets> :Monitor list is full.
+
+	_monitorListFull = YES;
+
+	if (!_pendingMonitorList) _pendingMonitorList = [NSMutableArray array];
+	[_pendingMonitorList addObject:parameters.firstObject];
+
+	// move over to WATCH or ISON instead
+	for( __strong NSString *nickname in [parameters[2] componentsSeparatedByString:@","] ) {
+		if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
+		if( !nickname.length ) continue;
+		MVChatUserWatchRule *watchRule = [[MVChatUserWatchRule alloc] init];
+		watchRule.nickname = nickname;
+
+		[super removeChatUserWatchRule:watchRule]; // remove watch rule that isn't doing anything server-side
+		[self addChatUserWatchRule:watchRule]; // re-add it with _monitorListFull = YES to skip MONITOR
+	}
 }
 
 #pragma mark -

@@ -42,6 +42,8 @@
 
 #import "GCDAsyncSocket.h"
 
+NSString *MVChatConnectionWatchFeature = @"MVChatConnectionWatchFeature";
+
 // IRC3v1 Required
 NSString *MVChatConnectionSASLFeature = @"MVChatConnectionSASLFeature";
 NSString *MVChatConnectionMultipleNicknamePrefixFeature = @"MVChatConnectionMultipleNicknamePrefixFeature";
