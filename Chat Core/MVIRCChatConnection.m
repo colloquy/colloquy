@@ -2617,6 +2617,12 @@ end:
 	}
 	if( [_supportedFeatures containsObject:MVChatConnectionWatchFeature] )
 		[self _requestServerNotificationsOfUserConnectedState];
+
+	if( [_supportedFeatures containsObject:MVChatConnectionMetadata] ) {
+		NSBundle *bundle = [NSBundle mainBundle];
+		[self sendRawMessageWithFormat:@"METADATA SET client.name :%@", bundle.infoDictionary[(__bridge id)kCFBundleIdentifierKey]];
+		[self sendRawMessageWithFormat:@"METADATA SET client.version :%@ (%@)", bundle.infoDictionary[@"CFBundleShortVersionString"], bundle.infoDictionary[@"CFBundleVersion"]];
+	}
 }
 
 - (void) _handle433WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NICKNAMEINUSE
