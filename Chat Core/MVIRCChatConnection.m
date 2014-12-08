@@ -987,6 +987,10 @@ static const NSStringEncoding supportedEncodings[] = {
 		NSArray *IRCv32Required = @[ @"account-tag", @"intent" ];
 		NSArray *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time" ];
 
+		// In theory, IRCv3.2 isn't finalized yet and may change, so ZNC prefixes their capabilities. In practice,
+		// the official spec is pretty stable, and their behavior matches the official spec at this time.
+		NSArray *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message" ]; // @"znc.in/batch",
+
 		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
 
 		NSMutableString *rawMessage = [@"CAP REQ : " mutableCopy];
@@ -994,6 +998,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		[rawMessage appendString:[IRCv31Optional componentsJoinedByString:@" "]];
 		[rawMessage appendString:[IRCv32Required componentsJoinedByString:@" "]];
 		[rawMessage appendString:[IRCv32Optional componentsJoinedByString:@" "]];
+		[rawMessage appendString:[ZNCPrefixedIRCv32Optional componentsJoinedByString:@" "]];
 
 		[self sendRawMessageImmediatelyWithFormat:[rawMessage copy]];
 	}
@@ -2455,7 +2460,7 @@ end:
 	} else [self _sendEndCapabilityCommandForcefully:YES];
 }
 
-- (void) _handle900WithParameters:(NSArray *) parameters fromSender:(id) sender {
+- (void) _handle900WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_LOGGEDIN
 	if( parameters.count >= 4 ) {
 		NSString *message = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
 		if( [message hasCaseInsensitiveSubstring:@"You are now logged in as "] ) {
