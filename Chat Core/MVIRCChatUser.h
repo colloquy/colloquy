@@ -3,6 +3,9 @@
 
 @class MVIRCChatConnection;
 
+extern NSString *MVMetadataKeyForAttributeName(NSString *attributeName);
+extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey);
+
 @interface MVIRCChatUser : MVChatUser {
 @private
 	BOOL _hasPendingRefreshInformationRequest;

@@ -988,6 +988,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		NSArray *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time" ];
 
 		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
+
 		NSMutableString *rawMessage = [@"CAP REQ : " mutableCopy];
 		[rawMessage appendString:[IRCv31Required componentsJoinedByString:@" "]];
 		[rawMessage appendString:[IRCv31Optional componentsJoinedByString:@" "]];
@@ -2654,12 +2655,6 @@ end:
 	}
 }
 
-- (void) _handle670WithParameters:(NSArray *) parameters fromSender:(id) sender {
-	[self _startTLS];
-
-	self.connectedSecurely = YES;
-}
-
 - (void) _handle691WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_STARTTLS
 	NSDictionary *userInfo = @{ NSLocalizedDescriptionKey: [parameters componentsJoinedByString:@" "] };
 	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionTLSError userInfo:userInfo]];
@@ -4192,15 +4187,19 @@ end:
 #pragma mark -
 #pragma mark Metadata Replies
 
-- (void) _handle670WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISKEYVALUE, <target> <key> :<value
-	if (parameters.count != 3) return;
+- (void) _handle670WithParameters:(NSArray *) parameters fromSender:(id) sender {
+	if( parameters.count == 2) { // STARTTLS start TLS session. nickname :STARTTLS successful, go ahead with TLS handshake
+		[self _startTLS];
 
-	NSString *nickname = parameters[0];
-	if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
-	if( !nickname.length ) return;
+		self.connectedSecurely = YES;
+	} else if (parameters.count == 3) { // IRCv3.2 RPL_WHOISKEYVALUE, <target> <key> :<value
+		NSString *nickname = parameters[0];
+		if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
+		if( !nickname.length ) return;
 
-	MVChatUser *user = [self chatUserWithUniqueIdentifier:nickname];
-	[user setAttribute:parameters[2] forKey:parameters[1]];
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:nickname];
+		[user setAttribute:parameters[2] forKey:parameters[1]];
+	}
 }
 
 - (void) _handle671WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_KEYVALUE, <target> <key> [:<value>]
