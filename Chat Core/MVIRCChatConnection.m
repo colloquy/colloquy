@@ -2527,7 +2527,9 @@ end:
 
 	for( NSString *feature in parameters ) {
 		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"STARTTLS"] ) {
-
+			[_supportedFeatures addObject:MVChatConnectionTLS];
+		} else if ( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"METADATA"] ) {
+			[_supportedFeatures addObject:MVChatConnectionMetadata];
 		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"WATCH"] ) {
 			@synchronized(_supportedFeatures) {
 				[_supportedFeatures addObject:MVChatConnectionWatchFeature];
@@ -4188,6 +4190,65 @@ end:
 }
 
 #pragma mark -
+#pragma mark Metadata Replies
+
+- (void) _handle670WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISKEYVALUE, <target> <key> :<value
+	if (parameters.count != 3) return;
+
+	NSString *nickname = parameters[0];
+	if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
+	if( !nickname.length ) return;
+
+	MVChatUser *user = [self chatUserWithUniqueIdentifier:nickname];
+	[user setAttribute:parameters[2] forKey:parameters[1]];
+}
+
+- (void) _handle671WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_KEYVALUE, <target> <key> [:<value>]
+	if (2 > parameters.count) return;
+
+	NSString *nickname = parameters[0];
+	if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
+	if( !nickname.length ) return;
+
+	MVChatUser *user = [self chatUserWithUniqueIdentifier:nickname];
+	id attribute = ((parameters.count >= 3) ? parameters[2] : nil);
+	[user setAttribute:attribute forKey:parameters[1]];
+}
+
+- (void) _handle672WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_METADATAEND, :end of metadata
+	// nothing to do
+}
+
+- (void) _handle675WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_TARGETINVALID, <target> :invalid metadata target
+	// nothing to do
+}
+
+- (void) _handle676WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOMATCHINGKEYS, <string> :no matching keys
+	// nothing to do
+}
+
+- (void) _handle677WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_KEYINVALID, <key> :invalid metadata key
+	if (1 > parameters.count) return;
+
+	[self.localUser setAttribute:nil forKey:parameters[0]];
+}
+
+- (void) _handle678WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_KEYNOTSET, <target> <key> :key not set
+	if (parameters.count != 2) return;
+
+	NSString *nickname = parameters[0];
+	if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
+	if( !nickname.length ) return;
+
+	MVChatUser *user = [self chatUserWithUniqueIdentifier:nickname];
+	[user setAttribute:nil forKey:parameters[1]];
+}
+
+- (void) _handle679WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_KEYNOPERMISSION
+	// <Target> <key> :permission denied
+}
+
+#pragma mark -
 #pragma mark Error Replies
 
 - (void) _handle401WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOSUCHNICK
@@ -4544,6 +4605,9 @@ end:
 	if( parameters.count >= 4 )
 		[self _handle604WithParameters:parameters fromSender:sender]; // do everything we do above
 }
+
+#pragma mark -
+#pragma mark Monitor Replies
 
 - (void) _handle730WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_MONONLINE
 	// <nick> :target[,target2]*

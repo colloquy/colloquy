@@ -42,6 +42,16 @@ extern NSString *MVChatUserServerDigitalSignatureAttribute;
 extern NSString *MVChatUserBanServerAttribute;
 extern NSString *MVChatUserBanAuthorAttribute;
 extern NSString *MVChatUserBanDateAttribute;
+extern NSString *MVChatUserSSLCertFingerprintAttribute;
+extern NSString *MVChatUserEmailAttribute;
+extern NSString *MVChatUserPhoneAttribute;
+extern NSString *MVChatUserWebsiteAttribute;
+extern NSString *MVChatUserIMServiceAttribute;
+extern NSString *MVChatUserCurrentlyPlayingAttribute;
+extern NSString *MVChatUserStatusAttribute;
+extern NSString *MVChatUserClientNameAttribute;
+extern NSString *MVChatUserClientVersionAttribute;
+extern NSString *MVChatUserClientUnknownAttributes;
 
 extern NSString *MVChatUserNicknameChangedNotification;
 extern NSString *MVChatUserStatusChangedNotification;

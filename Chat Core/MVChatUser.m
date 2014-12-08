@@ -28,6 +28,16 @@ NSString *MVChatUserServerDigitalSignatureAttribute = @"MVChatUserServerDigitalS
 NSString *MVChatUserBanServerAttribute = @"MVChatUserBanServerAttribute";
 NSString *MVChatUserBanAuthorAttribute = @"MVChatUserBanAuthorAttribute";
 NSString *MVChatUserBanDateAttribute = @"MVChatUserBanDateAttribute";
+NSString *MVChatUserSSLCertFingerprintAttribute = @"MVChatUserSSLCertFingerprintAttribute";
+NSString *MVChatUserEmailAttribute = @"MVChatUserEmailAttribute";
+NSString *MVChatUserPhoneAttribute = @"MVChatUserPhoneAttribute";
+NSString *MVChatUserWebsiteAttribute = @"MVChatUserWebsiteAttribute";
+NSString *MVChatUserIMServiceAttribute = @"MVChatUserWebsiteAttribute";
+NSString *MVChatUserCurrentlyPlayingAttribute = @"MVChatUserCurrentlyPlayingAttribute";
+NSString *MVChatUserStatusAttribute = @"MVChatUserStatusAttribute";
+NSString *MVChatUserClientNameAttribute = @"MVChatUserClientNameAttribute";
+NSString *MVChatUserClientVersionAttribute = @"MVChatUserClientVersionAttribute";
+NSString *MVChatUserClientUnknownAttributes = @"MVChatUserClientUnknownAttributes";
 
 NSString *MVChatUserNicknameChangedNotification = @"MVChatUserNicknameChangedNotification";
 NSString *MVChatUserStatusChangedNotification = @"MVChatUserStatusChangedNotification";

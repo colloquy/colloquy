@@ -5,6 +5,22 @@
 #import "MVUtilities.h"
 #import "MVChatString.h"
 
+static NSString *metadataKeyForAttributeName(NSString *attributeName) {
+	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserSSLCertFingerprintAttribute]) return @"server.certfp";
+	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserEmailAttribute]) return @"user.email";
+	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserPhoneAttribute]) return @"user.phone";
+	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserWebsiteAttribute]) return @"user.website";
+	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserCurrentlyPlayingAttribute]) return @"user.playing";
+	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserStatusAttribute]) return @"user.status";
+	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserClientNameAttribute]) return @"client.name";
+	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserClientVersionAttribute]) return @"client.version";
+	if ([attributeName hasCaseInsensitivePrefix:MVChatUserIMServiceAttribute]) {
+		NSString *serviceName = [attributeName stringByReplacingOccurrencesOfString:MVChatUserIMServiceAttribute withString:@""];
+		return [NSString stringWithFormat:@"server.im.%@", serviceName];
+	}
+	return attributeName;
+}
+
 @implementation MVIRCChatUser
 - (id) initLocalUserWithConnection:(MVIRCChatConnection *) userConnection {
 	if( ( self = [self initWithNickname:nil andConnection:userConnection] ) ) {
@@ -48,7 +64,7 @@
 }
 
 - (NSSet *) supportedAttributes {
-	return [NSSet setWithObjects:MVChatUserPingAttribute, MVChatUserKnownRoomsAttribute, MVChatUserLocalTimeAttribute, MVChatUserClientInfoAttribute, nil];
+	return [NSSet setWithObjects:MVChatUserPingAttribute, MVChatUserKnownRoomsAttribute, MVChatUserLocalTimeAttribute, MVChatUserClientInfoAttribute, MVChatUserSSLCertFingerprintAttribute, MVChatUserEmailAttribute, MVChatUserPhoneAttribute, MVChatUserWebsiteAttribute, MVChatUserIMServiceAttribute, MVChatUserCurrentlyPlayingAttribute, MVChatUserStatusAttribute, MVChatUserClientNameAttribute, MVChatUserClientVersionAttribute, nil];
 }
 
 #pragma mark -
@@ -98,6 +114,8 @@
 	if( _hasPendingRefreshInformationRequest ) return;
 	_hasPendingRefreshInformationRequest = YES;
 	[[self connection] sendRawMessageWithFormat:@"WHOIS %@ %1$@", [self nickname]];
+	if( [[[self connection] supportedFeatures] containsObject:MVChatConnectionMetadata] )
+		[[self connection] sendRawMessageWithFormat:@"METADATA %@ LIST", [self nickname]];
 }
 
 - (void) _setDateUpdated:(NSDate *) date {
@@ -116,6 +134,9 @@
 		[self sendSubcodeRequest:@"VERSION" withArguments:nil];
 	} else if( [key isEqualToString:MVChatUserKnownRoomsAttribute] ) {
 		[self refreshInformation];
+	} else {
+		if( [[[self connection] supportedFeatures] containsObject:MVChatConnectionMetadata] )
+			[[self connection] sendRawMessageWithFormat:@"METADATA %@ LIST :%@", [self nickname], metadataKeyForAttributeName(key)];
 	}
 }
 
