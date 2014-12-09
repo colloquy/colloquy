@@ -88,6 +88,8 @@ NSString *MVChatConnectionGotInformationalMessageNotification = @"MVChatConnecti
 NSString *MVChatConnectionGotRawMessageNotification = @"MVChatConnectionGotRawMessageNotification";
 NSString *MVChatConnectionGotPrivateMessageNotification = @"MVChatConnectionGotPrivateMessageNotification";
 NSString *MVChatConnectionChatRoomListUpdatedNotification = @"MVChatConnectionChatRoomListUpdatedNotification";
+NSString *MVChatConnectionBatchUpdatesWillBeginNotification = @"MVChatConnectionBatchUpdatesWillBeginNotification";
+NSString *MVChatConnectionBatchUpdatesDidEndNotification = @"MVChatConnectionBatchUpdatesDidEndNotification";
 
 NSString *MVChatConnectionSelfAwayStatusChangedNotification = @"MVChatConnectionSelfAwayStatusChangedNotification";
 

@@ -105,6 +105,7 @@ extern NSString *MVChatConnectionCapNotify;
 extern NSString *MVChatConnectionInvite;
 extern NSString *MVChatConnectionSelfMessage;
 
+// Notifications
 extern NSString *MVChatConnectionWillConnectNotification;
 extern NSString *MVChatConnectionDidConnectNotification;
 extern NSString *MVChatConnectionDidNotConnectNotification;
@@ -123,6 +124,8 @@ extern NSString *MVChatConnectionGotInformationalMessageNotification;
 extern NSString *MVChatConnectionGotRawMessageNotification;
 extern NSString *MVChatConnectionGotPrivateMessageNotification;
 extern NSString *MVChatConnectionChatRoomListUpdatedNotification;
+extern NSString *MVChatConnectionBatchUpdatesWillBeginNotification;
+extern NSString *MVChatConnectionBatchUpdatesDidEndNotification;
 
 extern NSString *MVChatConnectionSelfAwayStatusChangedNotification;
 

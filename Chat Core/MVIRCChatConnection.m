@@ -2739,6 +2739,30 @@ end:
 	return room;
 }
 
+- (void) _handleBatchWithParameters:(NSArray *) parameters tags:(NSDictionary *) tags fromSender:(MVChatUser *) sender {
+	if( 2 > parameters.count )
+		return;
+
+	NSString *batchIdentifier = parameters[0];
+	if (2 > batchIdentifier.length) // "+1" is the minimum we need; +/- and an identifier
+		return;
+
+	BOOL isStartingBatch = ( [batchIdentifier characterAtIndex:0] == '+' );
+	BOOL isEndingBatch = ( [batchIdentifier characterAtIndex:0] == '-' );
+
+	if ( !isStartingBatch && !isEndingBatch )
+		return;
+
+	batchIdentifier = [batchIdentifier substringFromIndex:1];
+
+	NSDictionary *userInfo = @{
+		@"identifier": batchIdentifier,
+		@"type": parameters[1]
+	};
+	if( isStartingBatch )
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionBatchUpdatesWillBeginNotification object:self userInfo:userInfo];
+	else [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionBatchUpdatesDidEndNotification object:self userInfo:userInfo];
+}
 
 - (void) _handlePrivmsg:(NSMutableDictionary *) privmsgInfo {
 #if ENABLE(PLUGINS)

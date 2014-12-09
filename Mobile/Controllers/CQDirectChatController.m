@@ -47,12 +47,12 @@
 #define CantSendMessageAlertView 100
 #define BookmarkLogInAlertView 101
 
-typedef enum {
+typedef NS_ENUM(NSInteger, CQSwipeMeaning) {
 	CQSwipeDisabled,
 	CQSwipeNextRoom,
 	CQSwipeNextActiveRoom,
 	CQSwipeNextHighlight
-} CQSwipeMeaning;
+};
 
 NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewControllerRecentMessagesUpdatedNotification";
 NSString *CQChatViewControllerUnreadMessagesUpdatedNotification = @"CQChatViewControllerUnreadMessagesUpdatedNotification";
@@ -239,6 +239,8 @@ static BOOL showingKeyboard;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollbackLengthDidChange:) name:CQScrollbackLengthDidChangeNotification object:nil];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batchUpdatesWillBegin:) name:MVChatConnectionBatchUpdatesWillBeginNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batchUpdatesDidEnd:) name:MVChatConnectionBatchUpdatesDidEndNotification object:nil];
 
 	[self setScrollbackLength:scrollbackLength];
 
@@ -1568,6 +1570,7 @@ static BOOL showingKeyboard;
 }
 
 - (void) addEventMessageAsHTML:(NSString *) messageString withIdentifier:(NSString *) identifier announceWithVoiceOver:(BOOL) announce {
+	if (!identifier.length) identifier = @"";
 	NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
 
 	message[@"type"] = @"event";
@@ -1967,6 +1970,14 @@ static BOOL showingKeyboard;
 
 	[[CQDirectChatController chatMessageProcessingQueue] addOperation:operation];
 
+}
+
+- (void) _batchUpdatesWillBegin:(NSNotification *) notification {
+	// maybe do stuff
+}
+
+- (void) _batchUpdatesDidEnd:(NSNotification *) notification {
+	// maybe do more stuff
 }
 
 - (void) _addPendingComponent:(id) component {

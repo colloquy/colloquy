@@ -21,6 +21,12 @@
 extern NSString *CQChatViewControllerRecentMessagesUpdatedNotification;
 extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 
+typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
+	CQBatchTypeUnknown = -1,
+	CQBatchTypeBuffer = 0
+};
+
+
 @interface CQDirectChatController : CQViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
 	@protected
 	IBOutlet CQChatInputBar *chatInputBar;
@@ -52,6 +58,9 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
 	BOOL _isShowingCompletionsBeforeRotation;
 #endif
+
+	NSInteger _batchType;
+	NSMutableDictionary *_batchStorage;
 }
 - (id) initWithTarget:(id) target;
 

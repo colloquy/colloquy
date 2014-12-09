@@ -31,6 +31,8 @@ static CQShowRoomTopic showRoomTopic;
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _didDisconnect:(NSNotification *) notification;
 - (void) _userDefaultsChanged;
+- (void) _batchUpdatesWillBegin:(NSNotification *) notification;
+- (void) _batchUpdatesDidEnd:(NSNotification *) notification;
 @end
 
 #pragma mark -
@@ -1180,6 +1182,18 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	if ([message[@"action"] boolValue])
 		return [NSString stringWithFormat:@"%@\n%@ %@", self.room.displayName, user.displayName, messageText];
 	return [NSString stringWithFormat:@"%@ \u2014 %@\n%@", self.room.displayName, user.displayName, messageText];
+}
+
+- (void) _batchUpdatesWillBegin:(NSNotification *) notification {
+	[super _batchUpdatesWillBegin:notification];
+
+	// do stuff
+}
+
+- (void) _batchUpdatesDidEnd:(NSNotification *) notification {
+	[super _batchUpdatesDidEnd:notification];
+
+	// do more stuff
 }
 
 #pragma mark -

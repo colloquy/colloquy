@@ -2,6 +2,11 @@
 
 @class CQChatUserListViewController;
 
+typedef NS_ENUM(NSInteger, CQChatRoomBatchType) {
+	CQBatchTypeJoins = CQBatchTypeBuffer + 1,
+	CQBatchTypeParts
+};
+
 @interface CQChatRoomController : CQDirectChatController <UIPopoverControllerDelegate> {
 	@protected
 	NSMutableArray *_orderedMembers;
