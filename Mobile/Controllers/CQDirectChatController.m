@@ -245,6 +245,8 @@ static BOOL showingKeyboard;
 	[self setScrollbackLength:scrollbackLength];
 
 	_sentMessages = [[NSMutableArray alloc] init];
+	_batchStorage = [NSMutableDictionary dictionary];
+	_batchTypeAssociation = [NSMutableDictionary dictionary];
 
 	return self;
 }
@@ -1580,7 +1582,7 @@ static BOOL showingKeyboard;
 
 	[self _addPendingComponent:message];
 
-	if (announce && [self _canAnnounceWithVoiceOverAndMessageIsImportant:NO]) {
+	if (announce && [self canAnnounceWithVoiceOverAndMessageIsImportant:NO]) {
 		NSString *voiceOverAnnouncement = nil;
 		NSString *plainMessage = [messageString stringByStrippingXMLTags];
 		plainMessage = [plainMessage stringByDecodingXMLSpecialCharacterEntities];
@@ -1973,11 +1975,35 @@ static BOOL showingKeyboard;
 }
 
 - (void) _batchUpdatesWillBegin:(NSNotification *) notification {
-	// maybe do stuff
+	NSString *type = notification.userInfo[@"type"];
+	NSString *identifier = notification.userInfo[@"identifier"];
+
+	if ([type isCaseInsensitiveEqualToString:@"znc.in/playback"] || [type hasCaseInsensitiveSubstring:@"playback"]) {
+		_coalescePendingUpdates = YES;
+
+		NSString *identifier = notification.userInfo[@"identifier"];
+		NSMutableArray *associatedBatches = _batchTypeAssociation[@(CQBatchTypeBuffer)];
+		if (!associatedBatches)
+			_batchTypeAssociation[@(CQBatchTypeBuffer)] = [NSMutableArray array];
+		[associatedBatches addObject:identifier];
+
+	} // don't do anything on unknown batch types
 }
 
 - (void) _batchUpdatesDidEnd:(NSNotification *) notification {
-	// maybe do more stuff
+	NSString *type = notification.userInfo[@"type"];
+	NSString *identifier = notification.userInfo[@"identifier"];
+
+	if ([type isCaseInsensitiveEqualToString:@"znc.in/playback"] || [type hasCaseInsensitiveSubstring:@"playback"]) {
+		NSMutableArray *associatedBatches = _batchTypeAssociation[@(CQBatchTypeBuffer)];
+		[associatedBatches removeObject:identifier];
+		if (associatedBatches.count == 0) {
+			[_batchTypeAssociation removeObjectForKey:@(CQBatchTypeBuffer)];
+			_coalescePendingUpdates = NO;
+
+			[self _addPendingComponentsAnimated:YES];
+		}
+	} // don't do anything on unknown batch types
 }
 
 - (void) _addPendingComponent:(id) component {
@@ -1988,13 +2014,13 @@ static BOOL showingKeyboard;
 
 	[_pendingComponents addObject:component];
 
-	while (_pendingComponents.count > 300)
+	while (_pendingComponents.count > scrollbackLength)
 		[_pendingComponents removeObjectAtIndex:0];
 
 	BOOL active = _active;
 	active &= ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
 
-	if (!transcriptView || !active)
+	if (!transcriptView || !active || _coalescePendingUpdates)
 		return;
 
 	if (!hadPendingComponents) {
@@ -2009,7 +2035,7 @@ static BOOL showingKeyboard;
 }
 
 - (void) _addPendingComponentsAnimated:(BOOL) animated {
-	if (!_pendingComponents.count)
+	if (!_pendingComponents.count || _coalescePendingUpdates)
 		return;
 
 	[transcriptView addComponents:_pendingComponents animated:animated];
@@ -2017,7 +2043,7 @@ static BOOL showingKeyboard;
 	[_pendingComponents removeAllObjects];
 }
 
-- (BOOL) _canAnnounceWithVoiceOverAndMessageIsImportant:(BOOL) important {
+- (BOOL) canAnnounceWithVoiceOverAndMessageIsImportant:(BOOL) important {
 	id visibleChatController = [CQChatController defaultController].visibleChatController;
 	if (!important && visibleChatController && visibleChatController != self)
 		return NO;
@@ -2083,7 +2109,7 @@ static BOOL showingKeyboard;
 			[self _showLocalNotificationForMessage:message withSoundName:highlightSound.soundName];
 	}
 
-	if (!user.localUser && [self _canAnnounceWithVoiceOverAndMessageIsImportant:(directChat || highlighted)]) {
+	if (!user.localUser && [self canAnnounceWithVoiceOverAndMessageIsImportant:(directChat || highlighted)]) {
 		NSString *voiceOverAnnouncement = nil;
 
 		if (action) {

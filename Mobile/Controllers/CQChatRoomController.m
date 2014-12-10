@@ -1062,14 +1062,19 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		return;
 
 	if (showJoinEvents) {
-		NSString *eventMessageFormat = [NSLocalizedString(@"%@ joined the room.", "User has join the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		NSString *userInformation = nil;
-		
-		if (showHostmasksOnJoin)
-			userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForMemberUser:user], user.username, user.address];
-		else userInformation = [self _markupForMemberUser:user];
+		NSString *batchIdentifier = notification.userInfo[@"batch"];
+		if (batchIdentifier.length) {
+			[_batchStorage[batchIdentifier] addObject:user];
+		} else {
+			NSString *eventMessageFormat = [NSLocalizedString(@"%@ joined the room.", "User has join the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			NSString *userInformation = nil;
 
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:@"memberJoined" announceWithVoiceOver:YES];
+			if (showHostmasksOnJoin)
+				userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForMemberUser:user], user.username, user.address];
+			else userInformation = [self _markupForMemberUser:user];
+
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:@"memberJoined" announceWithVoiceOver:YES];
+		}
 	}
 
 	[_orderedMembers addObject:user];
@@ -1107,8 +1112,13 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	MVChatUser *user = notification.userInfo[@"user"];
 
 	if (showLeaveEvents) {
-		NSData *reasonData = notification.userInfo[@"reason"];
-		[self _processMessageData:reasonData target:self action:@selector(_displayProcessedMemberPartReason:) userInfo:notification.userInfo];
+		NSString *batchIdentifier = notification.userInfo[@"batch"];
+		if (batchIdentifier.length) {
+			[_batchStorage[batchIdentifier] addObject:user];
+		} else {
+			NSData *reasonData = notification.userInfo[@"reason"];
+			[self _processMessageData:reasonData target:self action:@selector(_displayProcessedMemberPartReason:) userInfo:notification.userInfo];
+		}
 	}
 
 	NSUInteger index = [_orderedMembers indexOfObjectIdenticalTo:user];
@@ -1187,13 +1197,85 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 - (void) _batchUpdatesWillBegin:(NSNotification *) notification {
 	[super _batchUpdatesWillBegin:notification];
 
-	// do stuff
+	NSInteger batchType = CQBatchTypeUnknown;
+	NSString *type = notification.userInfo[@"type"];
+	if ([type isCaseInsensitiveEqualToString:@"NETSPLIT"]) {
+		batchType = CQBatchTypeParts;
+	} else if ([type isCaseInsensitiveEqualToString:@"NETJOIN"]) {
+		batchType = CQBatchTypeJoins;
+	} else {
+		[super _batchUpdatesWillBegin:notification];
+		return;
+	}
+
+	NSString *identifier = notification.userInfo[@"identifier"];
+	NSMutableArray *associatedBatches = _batchTypeAssociation[@(batchType)];
+	if (!associatedBatches)
+		_batchTypeAssociation[@(batchType)] = [NSMutableArray array];
+	[associatedBatches addObject:identifier];
+
+	_batchStorage[identifier] = [NSMutableArray array];
 }
 
 - (void) _batchUpdatesDidEnd:(NSNotification *) notification {
-	[super _batchUpdatesDidEnd:notification];
+	NSString *type = notification.userInfo[@"type"];
+	NSString *identifier = notification.userInfo[@"identifier"];
 
-	// do more stuff
+	NSArray *batchStorage = _batchStorage[identifier];
+	NSInteger batchType = CQBatchTypeUnknown;
+
+	BOOL showHostmasks = NO;
+	NSString *singularEventMessageFormat = nil;
+	NSString *manyEventMessageFormat = nil;
+	NSString *voiceoverMessage = nil;
+	NSString *eventIdentifier = nil;
+	if ([type isCaseInsensitiveEqualToString:@"NETSPLIT"]) {
+		batchType = CQBatchTypeParts;
+
+		showHostmasks = showHostmasksOnPart;
+		singularEventMessageFormat = [NSLocalizedString(@"%@ left the room due to a netsplit.", "User has left the room after a netsplit event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		manyEventMessageFormat = [NSLocalizedString(@"%@ have left the room due to a netsplit.", "Users have left the room after a netsplit event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		voiceoverMessage = NSLocalizedString(@"%tu have left the room due to a netsplit.", "Count of users have left the room after a netsplit voiceover message");
+		eventIdentifier = @"memberParted";
+	} else if ([type isCaseInsensitiveEqualToString:@"NETJOIN"]) {
+		batchType = CQBatchTypeJoins;
+
+		showHostmasks = showHostmasksOnJoin;
+		singularEventMessageFormat = [NSLocalizedString(@"%@ rejoined the room after a netsplit.", "User has join the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		manyEventMessageFormat = singularEventMessageFormat;
+		voiceoverMessage = NSLocalizedString(@"%tu people have rejoined the room after to a netsplit.", "Count of users have joined the room after a netsplit voiceover message");
+		eventIdentifier = @"memberJoined";
+	} else {
+		[super _batchUpdatesDidEnd:notification];
+		return;
+	}
+
+	if (batchStorage.count == 1) {
+		MVChatUser *user = batchStorage.firstObject;
+		NSString *userInformation = nil;
+		if (showHostmasks)
+			userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForUser:user], user.username, user.address];
+		else userInformation = [self _markupForUser:user];
+
+		NSString *eventMessageFormat = singularEventMessageFormat;
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:eventIdentifier announceWithVoiceOver:YES];
+	} else if (batchStorage.count) {
+		NSString *groupingSeparator = [[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator];
+		NSString *usersParted = [batchStorage componentsJoinedByString:[NSString stringWithFormat:@"%@ ", groupingSeparator]];
+		NSString *eventMessageFormat = manyEventMessageFormat;
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, usersParted] withIdentifier:eventIdentifier announceWithVoiceOver:NO];
+
+		NSString *fullVoiceoverMessage = [NSString stringWithFormat:voiceoverMessage, batchStorage.count];
+		if ([self canAnnounceWithVoiceOverAndMessageIsImportant:YES])
+			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, fullVoiceoverMessage);
+	}
+
+	NSMutableArray *associatedBatches = _batchTypeAssociation[@(batchType)];
+	[associatedBatches removeObject:identifier];
+
+	if (associatedBatches.count == 0)
+		[_batchTypeAssociation removeObjectForKey:@(batchType)];
+	[_batchStorage removeObjectForKey:identifier];
 }
 
 #pragma mark -

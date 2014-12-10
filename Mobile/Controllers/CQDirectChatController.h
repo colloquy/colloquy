@@ -33,6 +33,7 @@ typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
 	IBOutlet UIView <CQChatTranscriptView> *transcriptView;
 	IBOutlet UIView *containerView;
 
+	BOOL _coalescePendingUpdates;
 	NSMutableArray *_pendingPreviousSessionComponents;
 	NSMutableArray *_pendingComponents;
 	NSMutableArray *_recentMessages;
@@ -59,8 +60,8 @@ typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
 	BOOL _isShowingCompletionsBeforeRotation;
 #endif
 
-	NSInteger _batchType;
-	NSMutableDictionary *_batchStorage;
+	NSMutableDictionary *_batchStorage; // { "batchIdentifier": any associated data }
+	NSMutableDictionary *_batchTypeAssociation; // { @(batchType): [ "batchIdentifier", "otherBatchIdentifier" ] }
 }
 - (id) initWithTarget:(id) target;
 
@@ -84,4 +85,6 @@ typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
 
 - (void) addEventMessageAsHTML:(NSString *) message withIdentifier:(NSString *) identifier;
 - (void) addEventMessageAsHTML:(NSString *) message withIdentifier:(NSString *) identifier announceWithVoiceOver:(BOOL) announce;
+
+- (BOOL) canAnnounceWithVoiceOverAndMessageIsImportant:(BOOL) important;
 @end
