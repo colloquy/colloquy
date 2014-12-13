@@ -510,8 +510,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	}
 
 	if( now ) {
-		MVSafeAdoptAssign( _lastCommand, [[NSDate alloc] init] );
 		dispatch_async(_connectionQueue, ^{
+			MVSafeAdoptAssign( _lastCommand, [[NSDate alloc] init] );
 			[self _writeDataToServer:raw];
 		});
 	} else {
@@ -1964,10 +1964,9 @@ end:
 	}
 
 	dispatch_async(_connectionQueue, ^{
+		MVSafeAdoptAssign( _lastCommand, [[NSDate alloc] init] );
 		[self _writeDataToServer:data];
 	});
-
-	MVSafeAdoptAssign( _lastCommand, [[NSDate alloc] init] );
 }
 
 #pragma mark -
