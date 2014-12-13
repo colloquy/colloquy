@@ -54,6 +54,7 @@ typedef NS_ENUM(NSInteger, CQSwipeMeaning) {
 	CQSwipeNextHighlight
 };
 
+NSString *CQChatViewControllerHandledMessageNotification = @"CQChatViewControllerHandledMessageNotification";
 NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewControllerRecentMessagesUpdatedNotification";
 NSString *CQChatViewControllerUnreadMessagesUpdatedNotification = @"CQChatViewControllerUnreadMessagesUpdatedNotification";
 
@@ -1500,6 +1501,16 @@ static BOOL showingKeyboard;
 	[transcriptView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setScrollbackLimit(%tu)", scrollbackLength] completionHandler:NULL];
 }
 
+- (void) setMostRecentIncomingMessageTimestamp:(NSDate *) date {
+	if( !_mostRecentIncomingMessageTimestamp || [date laterDate:_mostRecentIncomingMessageTimestamp] == date)
+		MVSafeCopyAssign( _mostRecentIncomingMessageTimestamp, date );
+}
+
+- (void) setMostRecentOutgoingMessageTimestamp:(NSDate *) date {
+	if( !_mostRecentOutgoingMessageTimestamp || [date laterDate:_mostRecentOutgoingMessageTimestamp] == date)
+		MVSafeCopyAssign( _mostRecentOutgoingMessageTimestamp, date );
+}
+
 #pragma mark -
 
 - (void) keyboardWillShow:(NSNotification *) notification {
@@ -1981,7 +1992,6 @@ static BOOL showingKeyboard;
 	if ([type isCaseInsensitiveEqualToString:@"znc.in/playback"] || [type hasCaseInsensitiveSubstring:@"playback"]) {
 		_coalescePendingUpdates = YES;
 
-		NSString *identifier = notification.userInfo[@"identifier"];
 		NSMutableArray *associatedBatches = _batchTypeAssociation[@(CQBatchTypeBuffer)];
 		if (!associatedBatches)
 			_batchTypeAssociation[@(CQBatchTypeBuffer)] = [NSMutableArray array];
@@ -2071,6 +2081,12 @@ static BOOL showingKeyboard;
 			++[CQChatController defaultController].totalImportantUnreadCount;
 	}
 
+	if (user.isLocalUser)
+		self.mostRecentOutgoingMessageTimestamp = message[@"time"] ?: [NSDate date];
+	else self.mostRecentIncomingMessageTimestamp = message[@"time"] ?: [NSDate date];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerHandledMessageNotification object:self];
+
 	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
 
 	BOOL directChat = [self isMemberOfClass:[CQDirectChatController class]];
@@ -2147,17 +2163,15 @@ static BOOL showingKeyboard;
 	if (!user.localUser)
 		[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
 
-	[operation.processedMessageInfo[CQInlineGIFImageKey] enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
-		CQIntroductoryGIFFrameOperation *GIFOperation = [[CQIntroductoryGIFFrameOperation alloc] initWithURL:object];
-		GIFOperation.userInfo = @{ @"id": key };
-		GIFOperation.target = self;
-		GIFOperation.action = @selector(_GIFProcessed:);
-
-		[[CQDirectChatController chatMessageProcessingQueue] addOperation:GIFOperation];
-	}];
+//	[operation.processedMessageInfo[CQInlineGIFImageKey] enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
+//		CQIntroductoryGIFFrameOperation *GIFOperation = [[CQIntroductoryGIFFrameOperation alloc] initWithURL:object];
+//		GIFOperation.userInfo = @{ @"id": key };
+//		GIFOperation.target = self;
+//		GIFOperation.action = @selector(_GIFProcessed:);
+//
+//		[[CQDirectChatController chatMessageProcessingQueue] addOperation:GIFOperation];
+//	}];
 }
-
-
 
 - (void) _GIFProcessed:(CQIntroductoryGIFFrameOperation *) operation {
 	NSString *base64Encoding = operation.introductoryFrameImageData.base64Encoding;

@@ -84,6 +84,8 @@
 	<true/>
 	<key>CQShowLocalNotificationOnPrivateMessage</key>
 	<true/>
+	<key>CQChatRoomSortOrder</key>
+	<string>alphabetic</string>
 	<key>JVQuitMessage</key>
 	<string>Colloquy for iPhone - http://colloquy.mobi</string>
 	<key>CQAwayStatus</key>

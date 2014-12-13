@@ -18,6 +18,7 @@
 @class MVChatUser;
 @class MVChatUserWatchRule;
 
+extern NSString *CQChatViewControllerHandledMessageNotification;
 extern NSString *CQChatViewControllerRecentMessagesUpdatedNotification;
 extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 
@@ -68,6 +69,9 @@ typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
 @property (nonatomic, readonly) MVChatUser *user;
 
 @property (nonatomic, readonly) NSArray *recentMessages;
+
+@property (nonatomic, copy) NSDate *mostRecentIncomingMessageTimestamp;
+@property (nonatomic, copy) NSDate *mostRecentOutgoingMessageTimestamp;
 
 - (void) clearController;
 

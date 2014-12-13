@@ -116,10 +116,11 @@ static BOOL showsChatIcons;
 	}
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_connectionDidConnect:) name:MVChatConnectionDidConnectNotification object:nil];
-
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_chatOrderingControllerDidChangeOrdering:) name:CQChatOrderingControllerDidChangeOrderingNotification object:nil];
 	_needsUpdate = YES;
 	_headerViewsForConnections = [NSMapTable weakToStrongObjectsMapTable];
 	_connectionsForHeaderViews = [NSMapTable strongToWeakObjectsMapTable];
+	_indexPathsForChatControllers = [NSMapTable strongToStrongObjectsMapTable];
 
 	_colloquiesSearchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
 	_colloquiesSearchBar.delegate = self;
@@ -253,6 +254,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		[self.tableView beginUpdates];
 		[self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:animation];
 		[self.tableView endUpdates];
+
+		[self _refreshIndexPathForChatControllersCache];
 	}
 }
 
@@ -299,8 +302,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	CQDirectChatController *chatController = notification.object;
 	CQChatTableCell *cell = [self _chatTableCellForController:chatController];
 
-	cell.unreadCount = chatController.unreadCount;
-	cell.importantUnreadCount = chatController.importantUnreadCount;
+	[cell takeValuesFromChatViewController:chatController];
 
 	[self _addMessagePreview:chatController.recentMessages.lastObject withEncoding:chatController.encoding toChatTableCell:cell animated:YES];
 }
@@ -314,8 +316,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	CQDirectChatController *chatController = notification.object;
 	CQChatTableCell *cell = [self _chatTableCellForController:chatController];
 
-	cell.unreadCount = chatController.unreadCount;
-	cell.importantUnreadCount = chatController.importantUnreadCount;
+	[cell takeValuesFromChatViewController:chatController];
 }
 
 - (void) _refreshChatCell:(CQChatTableCell *) cell withController:(id <CQChatViewController>) chatViewController animated:(BOOL) animated {
@@ -466,6 +467,78 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		[self _refreshConnection:notification.object];
 }
 
+- (void) _chatOrderingControllerDidChangeOrdering:(NSNotification *) notification {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reorderChatControllers) object:nil];
+	[self performSelector:@selector(_reorderChatControllers) withObject:nil afterDelay:0.];
+}
+
+- (void) _reorderChatControllers {
+	if (!_active)
+		return;
+
+	if (_isReordering) {
+		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
+		[self performSelector:_cmd withObject:nil afterDelay:0.];
+		return;
+	}
+
+	_isReordering = YES;
+
+	NSMapTable *existingIndexPathsForChatControllers = [_indexPathsForChatControllers copy];
+
+	[self _refreshIndexPathForChatControllersCache];
+
+	NSMutableArray *indexPathPairs = [NSMutableArray array];
+
+	for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
+		NSIndexPath *lookupIndexPath = indexPath;
+		if (self.editing) {
+			if (lookupIndexPath.section == 0)
+				continue;
+			lookupIndexPath = [NSIndexPath indexPathForRow:lookupIndexPath.row inSection:(lookupIndexPath.section - 1)];
+		}
+
+		id currentChatControllerForIndexPath = chatControllerForIndexPath(lookupIndexPath);
+		if (!currentChatControllerForIndexPath)
+			continue;
+
+		NSIndexPath *savedIndexPathForChatController = [existingIndexPathsForChatControllers objectForKey:currentChatControllerForIndexPath];
+		if (savedIndexPathForChatController && ![indexPath isEqual:savedIndexPathForChatController]) {
+			[indexPathPairs addObject:@[ indexPath, savedIndexPathForChatController ]];
+		}
+	}
+
+	if (indexPathPairs.count) {
+		[self.tableView beginUpdates];
+		for (NSArray *indexPathPair in indexPathPairs.reverseObjectEnumerator.allObjects)
+			[self.tableView moveRowAtIndexPath:indexPathPair[1] toIndexPath:indexPathPair[0]];
+		[self.tableView endUpdates];
+	}
+
+	_isReordering = NO;
+}
+
+- (void) _refreshIndexPathForChatControllersCache {
+	@synchronized(self) {
+		_indexPathsForChatControllers = [NSMapTable strongToStrongObjectsMapTable];
+
+		for (NSInteger section = 0; section < self.tableView.numberOfSections; section++) {
+			if (self.editing && section == 0)
+				continue;
+
+			for (NSInteger row = 0; row < [self.tableView numberOfRowsInSection:section]; row++) {
+				NSIndexPath *fetchIndexPath = nil;
+				if (self.editing)
+					fetchIndexPath = [NSIndexPath indexPathForRow:row inSection:(section - 1)];
+				else fetchIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
+
+				id chatViewController = chatControllerForIndexPath(fetchIndexPath);
+				[_indexPathsForChatControllers setObject:[NSIndexPath indexPathForRow:row inSection:section] forKey:chatViewController];
+			}
+		}
+	}
+}
+
 - (void) _connectionAdded:(NSNotification *) notification {
 	if (!_active || _ignoreNotifications)
 		return;
@@ -548,12 +621,16 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	[self.tableView beginUpdates];
 	[self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
 	[self.tableView endUpdates];
+
+	[self _refreshIndexPathForChatControllersCache];
 }
 
 - (void) connectionRemovedAtSection:(NSInteger) section {
 	[self.tableView beginUpdates];
 	[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationTop];
 	[self.tableView endUpdates];
+
+	[self _refreshIndexPathForChatControllersCache];
 }
 
 - (void) connectionMovedFromSection:(NSInteger) oldSection toSection:(NSInteger) newSection {
@@ -561,6 +638,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:oldSection] withRowAnimation:(newSection > oldSection ? UITableViewRowAnimationBottom : UITableViewRowAnimationTop)];
 	[self.tableView insertSections:[NSIndexSet indexSetWithIndex:newSection] withRowAnimation:(newSection > oldSection ? UITableViewRowAnimationTop : UITableViewRowAnimationBottom)];
 	[self.tableView endUpdates];
+
+	[self _refreshIndexPathForChatControllersCache];
 }
 
 #pragma mark -
@@ -568,6 +647,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (void) bouncerSettingsAdded:(CQBouncerSettings *) bouncer {
 	NSUInteger section = [[CQChatOrderingController defaultController] sectionIndexForConnection:bouncer];
 	[self.tableView insertSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationTop];
+
+	[self _refreshIndexPathForChatControllersCache];
 }
 
 - (void) bouncerSettingsRemovedAtIndex:(NSUInteger) index {
@@ -577,6 +658,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	NSUInteger section = index + 1;
 	[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationTop];
+
+	[self _refreshIndexPathForChatControllersCache];
 }
 
 #pragma mark -
@@ -606,6 +689,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	[self _startUpdatingConnectTimes];
 
 	_active = YES;
+
+	[self _refreshIndexPathForChatControllersCache];
 
 	[CQChatController defaultController].totalImportantUnreadCount = 0;
 	[[CQChatController defaultController] visibleChatControllerWasHidden];
@@ -698,6 +783,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		if ([[UIDevice currentDevice] isPadModel])
 			[self resizeForViewInPopoverUsingTableView:self.tableView];
 	}
+
+	[self _refreshIndexPathForChatControllersCache];
 }
 
 - (void) selectChatViewController:(id) controller animatedSelection:(BOOL) animatedSelection animatedScroll:(BOOL) animatedScroll {

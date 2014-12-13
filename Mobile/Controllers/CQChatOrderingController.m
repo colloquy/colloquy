@@ -11,13 +11,49 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatUser.h>
 
+static NSString *roomOrdering;
+NSString *const CQChatOrderingControllerDidChangeOrderingNotification = @"CQChatOrderingControllerDidChangeOrderingNotification";
+
 typedef BOOL (^CQMatchingResult)(id <CQChatViewController> chatViewController);
 
 static NSComparisonResult sortControllersAscending(id controller1, id controller2, void *context) {
 	if ([controller1 isKindOfClass:[CQDirectChatController class]] && [controller2 isKindOfClass:[CQDirectChatController class]]) {
 		CQDirectChatController *chatController1 = controller1;
 		CQDirectChatController *chatController2 = controller2;
-		NSComparisonResult result = [chatController1.connection.displayName caseInsensitiveCompare:chatController2.connection.displayName];
+
+		NSDate *(^mostRecentActivityTimestampForChatController)(CQDirectChatController *) = ^NSDate *(CQDirectChatController *chatController) {
+			if (chatController.mostRecentOutgoingMessageTimestamp && chatController1.mostRecentIncomingMessageTimestamp)
+				return [chatController.mostRecentOutgoingMessageTimestamp laterDate:chatController.mostRecentIncomingMessageTimestamp];
+			else if (chatController.mostRecentOutgoingMessageTimestamp) return chatController.mostRecentOutgoingMessageTimestamp;
+			else if (chatController.mostRecentIncomingMessageTimestamp) return chatController.mostRecentIncomingMessageTimestamp;
+			return nil;
+		};
+
+		NSComparisonResult (^comparisonResultForChatControllerDates)(NSDate *, NSDate *) = ^NSComparisonResult(NSDate *date1, NSDate *date2) {
+			if (date1 && date2) {
+				NSComparisonResult result = [date1 compare:date2];
+				if (result == NSOrderedAscending) return NSOrderedDescending;
+				if (result == NSOrderedDescending) return NSOrderedAscending;
+				return NSOrderedSame;
+			}
+			if (date1) return NSOrderedDescending;
+			if (date2) return NSOrderedAscending;
+			return NSOrderedSame;
+		};
+
+		NSComparisonResult result = NSOrderedSame;
+		if (YES || [roomOrdering isEqualToString:@"recent-activity"]) {
+			NSDate *mostRecentActivityTimestampForChatController1 = mostRecentActivityTimestampForChatController(chatController1);
+			NSDate *mostRecentActivityTimestampForChatController2 = mostRecentActivityTimestampForChatController(chatController2);
+			result = comparisonResultForChatControllerDates(mostRecentActivityTimestampForChatController1, mostRecentActivityTimestampForChatController2);
+		} else if ([roomOrdering isEqualToString:@"recent-incoming-activity"])
+			result = comparisonResultForChatControllerDates(chatController1.mostRecentIncomingMessageTimestamp, chatController1.mostRecentOutgoingMessageTimestamp);
+		else if ([roomOrdering isEqualToString:@"recent-outgoing-activity"])
+			result = comparisonResultForChatControllerDates(chatController1.mostRecentOutgoingMessageTimestamp, chatController1.mostRecentOutgoingMessageTimestamp);
+
+		if (result == NSOrderedSame) // [roomOrdering isEqualToString:@"alphabetic"]
+			result = [chatController1.connection.displayName caseInsensitiveCompare:chatController2.connection.displayName];
+
 		if (result != NSOrderedSame)
 			return result;
 
@@ -54,6 +90,13 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 @implementation CQChatOrderingController
 @synthesize chatViewControllers = _chatControllers;
 
++ (void) userDefaultsChanged {
+	if (![NSThread isMainThread])
+		return;
+
+	roomOrdering = [[CQSettingsController settingsController] objectForKey:@"CQChatRoomSortOrder"];
+}
+
 + (CQChatOrderingController *) defaultController {
 	static BOOL creatingSharedInstance = NO;
 	static CQChatOrderingController *sharedInstance = nil;
@@ -72,13 +115,21 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	_chatControllers = [[NSMutableArray alloc] init];
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_asyncSortChatControllers) name:CQChatViewControllerHandledMessageNotification object:nil];
+
 	return self;
 }
 
 #pragma mark -
 
+- (void) _asyncSortChatControllers {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_sortChatControllers) object:nil];
+	[self performSelector:@selector(_sortChatControllers) withObject:nil afterDelay:0.];
+}
+
 - (void) _sortChatControllers {
 	[_chatControllers sortUsingFunction:sortControllersAscending context:NULL];
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatOrderingControllerDidChangeOrderingNotification object:nil];
 }
 
 - (NSUInteger) indexOfViewController:(id <CQChatViewController>) controller {
@@ -88,8 +139,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 - (void) _addViewController:(id <CQChatViewController>) controller resortingRightAway:(BOOL) resortingRightAway {
 	[_chatControllers addObject:controller];
 
-	if (resortingRightAway)
-		[self _sortChatControllers];
+	// sorting is handled async now when rooms add messages (such as join events)
 
 	NSDictionary *notificationInfo = @{@"controller": controller};
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerAddedChatViewControllerNotification object:self userInfo:notificationInfo];
@@ -104,7 +154,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		NSAssert([controller conformsToProtocol:@protocol(CQChatViewController)], @"Cannot add chat view controller that does not conform to CQChatViewController");
 		[self _addViewController:controller resortingRightAway:NO];
 	}
-	[self _sortChatControllers];
+	// sorting is handled async now when rooms add messages (such as join events)
 }
 
 - (void) removeViewController:(id <CQChatViewController>) controller {
