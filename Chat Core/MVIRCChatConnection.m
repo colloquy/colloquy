@@ -2969,7 +2969,7 @@ end:
 					_gamesurgeGlobalBotMOTD = NO;
 			}
 
-		} else if( [[MVIRCChatUser servicesNicknames] containsObject:[[sender nickname] lowercaseString] ) {
+		} else if( [[MVIRCChatUser servicesNicknames] containsObject:[[sender nickname] lowercaseString]] ) {
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:message.length];
 
 			if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ||				// Nickserv/*
