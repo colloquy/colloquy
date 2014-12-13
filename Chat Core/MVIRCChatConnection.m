@@ -685,7 +685,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) addChatUserWatchRule:(MVChatUserWatchRule *) rule {
-	if( !rule.nicknameIsRegularExpression && rule.nickname.length && [[MVIRCChatUser servicesNicknames] containsObject:rule.nickname] ) {
+	if( !rule.nicknameIsRegularExpression && rule.nickname.length && [[MVIRCChatUser servicesNicknames] containsObject:rule.nickname.lowercaseString] ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[rule nickname]];
 		[self _markUserAsOnline:user];
 		return;
@@ -2969,7 +2969,7 @@ end:
 					_gamesurgeGlobalBotMOTD = NO;
 			}
 
-		} else if( [[MVIRCChatUser servicesNicknames] containsObject:[sender nickname]] ) {
+		} else if( [[MVIRCChatUser servicesNicknames] containsObject:[[sender nickname] lowercaseString] ) {
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:message.length];
 
 			if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ||				// Nickserv/*

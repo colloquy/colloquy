@@ -10,6 +10,9 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey);
 @private
 	BOOL _hasPendingRefreshInformationRequest;
 }
+
++ (NSArray *) servicesNicknames;
+
 - (id) initLocalUserWithConnection:(MVIRCChatConnection *) connection;
 - (id) initWithNickname:(NSString *) nickname andConnection:(MVIRCChatConnection *) connection;
 @end

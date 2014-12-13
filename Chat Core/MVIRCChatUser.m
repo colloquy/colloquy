@@ -38,6 +38,14 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 }
 
 @implementation MVIRCChatUser
++ (NSArray *) servicesNicknames {
+	return @[
+		@"nickserv", @"chanserv", @"memoserv", @"operserv", @"botserv", // common services
+		@"q", @"quakenet", @"x", @"undernet", @"authserv", @"gamesurge", // network-specific services
+		@"*status", @"*colloquy" // bouncer-specific services
+	];
+}
+
 - (id) initLocalUserWithConnection:(MVIRCChatConnection *) userConnection {
 	if( ( self = [self initWithNickname:nil andConnection:userConnection] ) ) {
 		_type = MVChatLocalUserType;
