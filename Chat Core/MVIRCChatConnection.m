@@ -685,6 +685,12 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) addChatUserWatchRule:(MVChatUserWatchRule *) rule {
+	if( !rule.nicknameIsRegularExpression && rule.nickname.length && [[MVIRCChatUser servicesNicknames] containsObject:rule.nickname] ) {
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[rule nickname]];
+		[self _markUserAsOnline:user];
+		return;
+	}
+
 	@synchronized( _chatUserWatchRules ) {
 		if( [_chatUserWatchRules containsObject:rule] ) return;
 	}
@@ -704,10 +710,9 @@ static const NSStringEncoding supportedEncodings[] = {
 		}
 	} else {
 		@synchronized( _knownUsers ) {
-			for( id key in _knownUsers ) {
-				MVChatUser *user = [_knownUsers objectForKey:key];
+			[_knownUsers enumerateKeysAndObjectsUsingBlock:^(id key, MVChatUser *user, BOOL *stop) {
 				[rule matchChatUser:user];
-			}
+			}];
 		}
 	}
 }
@@ -883,10 +888,9 @@ static const NSStringEncoding supportedEncodings[] = {
 	}
 
 	@synchronized( _knownUsers ) {
-		for( id key in _knownUsers ) {
-			MVChatUser *user = [_knownUsers objectForKey:key];
+		[_knownUsers enumerateKeysAndObjectsUsingBlock:^(id key, MVChatUser *user, BOOL *stop) {
 			[user _setStatus:MVChatUserUnknownStatus];
-		}
+		}];
 	}
 
 	@synchronized( _chatUserWatchRules ) {
@@ -2965,10 +2969,7 @@ end:
 					_gamesurgeGlobalBotMOTD = NO;
 			}
 
-		} else if( [[sender nickname] isEqualToString:@"NickServ"] || [[sender nickname] isEqualToString:@"ChanServ"] ||
-		   ( [[sender nickname] isEqualToString:@"Q"] && [[self server] hasCaseInsensitiveSubstring:@"quakenet"] ) ||
-		   ( [[sender nickname] isEqualToString:@"X"] && [[self server] hasCaseInsensitiveSubstring:@"undernet"] ) ||
-		   ( [[sender nickname] isEqualToString:@"AuthServ"] && [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) ) {
+		} else if( [[MVIRCChatUser servicesNicknames] containsObject:[sender nickname]] ) {
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:message.length];
 
 			if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ||				// Nickserv/*
