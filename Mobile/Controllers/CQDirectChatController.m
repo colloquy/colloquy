@@ -1628,7 +1628,7 @@ static BOOL showingKeyboard;
 - (void) addMessage:(NSData *) messageData fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier {
 	NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
 
-	if (message) message[@"message"] = messageData;
+	if (messageData) message[@"message"] = messageData;
 	if (user) message[@"user"] = user;
 	if (identifier) message[@"identifier"] = identifier;
 	message[@"action"] = @(action);
