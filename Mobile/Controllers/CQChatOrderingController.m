@@ -42,7 +42,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		};
 
 		NSComparisonResult result = NSOrderedSame;
-		if (YES || [roomOrdering isEqualToString:@"recent-activity"]) {
+		if ([roomOrdering isEqualToString:@"recent-activity"]) {
 			NSDate *mostRecentActivityTimestampForChatController1 = mostRecentActivityTimestampForChatController(chatController1);
 			NSDate *mostRecentActivityTimestampForChatController2 = mostRecentActivityTimestampForChatController(chatController2);
 			result = comparisonResultForChatControllerDates(mostRecentActivityTimestampForChatController1, mostRecentActivityTimestampForChatController2);
