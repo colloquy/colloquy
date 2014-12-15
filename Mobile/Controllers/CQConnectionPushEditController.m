@@ -70,7 +70,7 @@
 #pragma mark -
 
 - (void) pushEnabled:(CQPreferencesSwitchCell *) sender {
-	if (_connection.connected)
+	if (_connection.connected || self.newConnection)
 		_connection.pushNotifications = sender.on;
 	else {
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Connection Required" message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay button title") otherButtonTitles:nil];

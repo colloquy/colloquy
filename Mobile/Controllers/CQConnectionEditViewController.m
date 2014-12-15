@@ -189,6 +189,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (pushAvailable && indexPath.section == PushTableSection && indexPath.row == 0) {
 		CQConnectionPushEditController *pushEditViewController = [[CQConnectionPushEditController alloc] init];
+		pushEditViewController.newConnection = self.newConnection;
 
 		pushEditViewController.navigationItem.prompt = self.navigationItem.prompt;
 		pushEditViewController.connection = _connection;
