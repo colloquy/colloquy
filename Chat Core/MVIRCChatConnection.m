@@ -941,7 +941,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		secure = NO; // This should always be YES in the future when the bouncer supports secure connections.
 
 	if( secure ) {
-		[self sendRawMessageImmediatelyWithFormat:@"STARTTLS"];
+//		[self sendRawMessageImmediatelyWithFormat:@"STARTTLS"];
 
 		self.connectedSecurely = YES;
 
@@ -988,21 +988,21 @@ static const NSStringEncoding supportedEncodings[] = {
 		else IRCv31Required = @[ @"multi-prefix" ];
 
 		NSArray *IRCv31Optional = @[ /* @"tls" */ @"away-notify", @"extended-join", @"account-notify" ];
-		NSArray *IRCv32Required = @[ @"account-tag", @"intent" ];
-		NSArray *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time", @"userhost-in-names", @"batch" ];
+//		NSArray *IRCv32Required = @[ @"account-tag", @"intent" ];
+		NSArray *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", /* @"server-time", */ @"userhost-in-names" /*, @"batch" */ ];
 
 		// In theory, IRCv3.2 isn't finalized yet and may change, so ZNC prefixes their capabilities. In practice,
 		// the official spec is pretty stable, and their behavior matches the official spec at this time.
-		NSArray *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message", @"znc.in/batch" ];
+		NSArray *ZNCPrefixedIRCv32Optional = @[ /*@"znc.in/server-time-iso", */ @"znc.in/self-message", /* @"znc.in/batch" */ ];
 
 		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
 
 		NSMutableString *rawMessage = [@"CAP REQ : " mutableCopy];
 		[rawMessage appendString:[IRCv31Required componentsJoinedByString:@" "]];
-//		[rawMessage appendString:[IRCv31Optional componentsJoinedByString:@" "]];
+		[rawMessage appendString:[IRCv31Optional componentsJoinedByString:@" "]];
 //		[rawMessage appendString:[IRCv32Required componentsJoinedByString:@" "]];
-//		[rawMessage appendString:[IRCv32Optional componentsJoinedByString:@" "]];
-//		[rawMessage appendString:[ZNCPrefixedIRCv32Optional componentsJoinedByString:@" "]];
+		[rawMessage appendString:[IRCv32Optional componentsJoinedByString:@" "]];
+		[rawMessage appendString:[ZNCPrefixedIRCv32Optional componentsJoinedByString:@" "]];
 
 		[self sendRawMessageImmediatelyWithFormat:[rawMessage copy]];
 	}
