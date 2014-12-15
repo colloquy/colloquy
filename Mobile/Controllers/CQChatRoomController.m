@@ -324,7 +324,7 @@ static CQShowRoomTopic showRoomTopic;
 	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		actionSheet.title = self.user.displayName;
 
-	[actionSheet addButtonWithTitle:NSLocalizedString(@"Recent Messages", @"Recent Messages button title")];
+	[actionSheet addButtonWithTitle:NSLocalizedString(@"Recently Sent Messages", @"Recently Sent Messages button title")];
 	[actionSheet addButtonWithTitle:NSLocalizedString(@"Room Info", @"Room Info button title")];
 
 	actionSheet.cancelButtonIndex = [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
