@@ -169,7 +169,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	NSUInteger sectionIndex = [[CQChatOrderingController defaultController] sectionIndexForConnection:connection];
 	if (isEditing)
 		sectionIndex++;
-	NSUInteger rowIndex = 0;
+	NSInteger rowIndex = -1;
 
 	NSArray *chatViewControllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
 	for (NSUInteger i = 0; i < chatViewControllers.count; i++) {
@@ -179,6 +179,8 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		}
 	}
 
+	if (rowIndex == -1)
+		return nil;
 	return [NSIndexPath indexPathForRow:rowIndex inSection:sectionIndex];
 }
 
@@ -301,6 +303,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	CQDirectChatController *chatController = notification.object;
 	CQChatTableCell *cell = [self _chatTableCellForController:chatController];
+	if (!cell)
+		return;
 
 	[cell takeValuesFromChatViewController:chatController];
 
