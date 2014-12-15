@@ -5,9 +5,6 @@
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
 
-	// Workaround the font showing up larger in edit vs new. Not sure why...
-	self.textLabel.font = [UIFont systemFontOfSize:17.];
-
 	self.selectionStyle = UITableViewCellSelectionStyleNone;
 
 	_switchControl = [[UISwitch alloc] initWithFrame:CGRectZero];
