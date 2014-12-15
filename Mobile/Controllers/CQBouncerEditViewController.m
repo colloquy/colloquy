@@ -200,17 +200,14 @@ static BOOL pushAvailable = YES;
 		return cell;
 	} else if (indexPath.section == UpdateTableSection && indexPath.row == 0) {
 		UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0., 10., CGRectGetWidth(tableView.frame), 20.)];
+		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0., 0., CGRectGetWidth(tableView.frame), 0.)];
 
-		label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		label.font = [UIFont boldSystemFontOfSize:15.];
-		label.textColor = [UIColor colorWithRed:(85. / 255.) green:(102. / 255.) blue:(145. / 255.) alpha:1.];
-		label.highlightedTextColor = [UIColor whiteColor];
+		cell.textLabel.font = [UIFont boldSystemFontOfSize:15.];
+		cell.textLabel.textColor = [UIColor colorWithRed:(85. / 255.) green:(102. / 255.) blue:(145. / 255.) alpha:1.];
+		cell.textLabel.highlightedTextColor = [UIColor whiteColor];
 
-		[cell.contentView addSubview:label];
-
-		label.text = NSLocalizedString(@"Update Connection List", @"Update Connection List button label");
-		label.textAlignment = NSTextAlignmentCenter;
+		cell.textLabel.text = NSLocalizedString(@"Update Connection List", @"Update Connection List button label");
+		cell.textLabel.textAlignment = NSTextAlignmentCenter;
 
 		return cell;
 	} else if (indexPath.section == DeleteTableSection && indexPath.row == 0) {
