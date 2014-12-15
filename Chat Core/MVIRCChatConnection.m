@@ -987,7 +987,7 @@ static const NSStringEncoding supportedEncodings[] = {
 			IRCv31Required = @[ @"sasl", @"multi-prefix" ];
 		else IRCv31Required = @[ @"multi-prefix" ];
 
-		NSArray *IRCv31Optional = @[ @"tls", @"away-notify", @"extended-join", @"account-notify" ];
+		NSArray *IRCv31Optional = @[ /* @"tls" */ @"away-notify", @"extended-join", @"account-notify" ];
 		NSArray *IRCv32Required = @[ @"account-tag", @"intent" ];
 		NSArray *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time", @"userhost-in-names", @"batch" ];
 
@@ -999,10 +999,10 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		NSMutableString *rawMessage = [@"CAP REQ : " mutableCopy];
 		[rawMessage appendString:[IRCv31Required componentsJoinedByString:@" "]];
-		[rawMessage appendString:[IRCv31Optional componentsJoinedByString:@" "]];
-		[rawMessage appendString:[IRCv32Required componentsJoinedByString:@" "]];
-		[rawMessage appendString:[IRCv32Optional componentsJoinedByString:@" "]];
-		[rawMessage appendString:[ZNCPrefixedIRCv32Optional componentsJoinedByString:@" "]];
+//		[rawMessage appendString:[IRCv31Optional componentsJoinedByString:@" "]];
+//		[rawMessage appendString:[IRCv32Required componentsJoinedByString:@" "]];
+//		[rawMessage appendString:[IRCv32Optional componentsJoinedByString:@" "]];
+//		[rawMessage appendString:[ZNCPrefixedIRCv32Optional componentsJoinedByString:@" "]];
 
 		[self sendRawMessageImmediatelyWithFormat:[rawMessage copy]];
 	}
