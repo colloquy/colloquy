@@ -200,7 +200,6 @@ static BOOL pushAvailable = YES;
 		return cell;
 	} else if (indexPath.section == UpdateTableSection && indexPath.row == 0) {
 		UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0., 0., CGRectGetWidth(tableView.frame), 0.)];
 
 		cell.textLabel.font = [UIFont boldSystemFontOfSize:15.];
 		cell.textLabel.textColor = [UIColor colorWithRed:(85. / 255.) green:(102. / 255.) blue:(145. / 255.) alpha:1.];
