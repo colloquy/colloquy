@@ -983,7 +983,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (self.editing) {
 		if (indexPath.section == 0) {
 			UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
-			cell.textLabel.text = NSLocalizedString(@"New Connection", @"New Connection");
+			cell.textLabel.text = NSLocalizedString(@"Add New Connection", @"Add New Connection");
 
 			return cell;
 		}
@@ -995,7 +995,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	id <CQChatViewController> chatViewController = chatControllerForIndexPath(indexPath);
 	if (self.editing && chatViewController == nil) {
 		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
-		cell.textLabel.text = NSLocalizedString(@"New Chat", @"New Chat");
+		cell.textLabel.text = NSLocalizedString(@"Add New Chat", @"Add New Chat");
 		return cell;
 	}
 #if ENABLE(FILE_TRANSFERS)
@@ -1298,6 +1298,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			CGPoint midpointOfRect = CGPointMake(CGRectGetMidX(cellRect), CGRectGetMidY(cellRect));
 
 			[[CQConnectionsController defaultController] showNewConnectionPromptFromPoint:midpointOfRect];
+
+			return;
 		} else {
 			NSIndexPath *connectionIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - 1)];
 
