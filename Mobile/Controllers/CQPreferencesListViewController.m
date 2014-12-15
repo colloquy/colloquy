@@ -409,7 +409,7 @@ enum {
 
 - (void) _previewAudioAlertAtIndex:(NSUInteger) index {
 	NSString *item = _items[index];
-	NSString *path = [[NSBundle mainBundle] pathForResource:item ofType:@"aiff"];
+	NSString *path = [[NSBundle mainBundle] pathForResource:[item description] ofType:@"aiff"];
 	if (!path)
 		return;
 
