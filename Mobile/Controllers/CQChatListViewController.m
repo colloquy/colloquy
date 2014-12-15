@@ -571,21 +571,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) _connectionRemoved:(NSNotification *) notification {
-	if (!_active || _ignoreNotifications)
-		return;
-
-	[self.tableView beginUpdates]; {
-		MVChatConnection *connection = notification.userInfo[@"connection"];
-		[self _closeChatViewControllers:nil forConnection:connection withRowAnimation:UITableViewRowAnimationTop];
-
-		NSUInteger section = [[CQChatOrderingController defaultController] sectionIndexForConnection:notification.userInfo[@"connection"]];
-		if (section != NSNotFound)
-			[self connectionRemovedAtSection:section];
-	}
+	[self.tableView reloadData];
+	[self.tableView beginUpdates];
 	[self.tableView endUpdates];
-
-	if ([self numberOfSectionsInTableView:self.tableView] == 1)
-		[self.tableView reloadData];
 }
 
 - (void) _connectionMoved:(NSNotification *) notification {
@@ -1185,7 +1173,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 				__strong __typeof__((weakTableView)) strongTableView = weakTableView;
 				__strong __typeof__((weakTableHeaderView)) strongTableHeaderView = weakTableHeaderView;
-				[strongSelf tableView:strongTableView didSelectHeader:strongTableHeaderView forSectionAtIndex:section];
+				NSDictionary *userInfo = @{ @"connection": connection, @"section": @(section) };
+				[strongSelf tableView:strongTableView didSelectHeader:strongTableHeaderView withUserInfo:userInfo];
 			};
 			[_headerViewsForConnections setObject:tableHeaderView forKey:connection];
 			[_connectionsForHeaderViews setObject:connection forKey:tableHeaderView];
@@ -1196,9 +1185,10 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	}
 }
 
-- (void) tableView:(UITableView *) tableView didSelectHeader:(UITableViewHeaderFooterView *) headerView forSectionAtIndex:(NSInteger) section {
+- (void) tableView:(UITableView *) tableView didSelectHeader:(UITableViewHeaderFooterView *) headerView withUserInfo:(NSDictionary *) userInfo {
+	NSInteger section = [userInfo[@"section"] integerValue];
 	if (self.editing) {
-		id connection = [[CQChatOrderingController defaultController] connectionAtIndex:section];
+		id connection = userInfo[@"connection"];
 		UIViewController *editViewController = nil;
 		if ([connection isKindOfClass:[MVChatConnection class]]) {
 			CQConnectionEditViewController *connectionEditViewController = [[CQConnectionEditViewController alloc] init];
@@ -1218,7 +1208,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		return;
 	}
 
-	MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:section];
+	MVChatConnection *connection = userInfo[@"connection"];
 	if ([connection isKindOfClass:[CQBouncerSettings class]])
 		 return;
 
