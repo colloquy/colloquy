@@ -1801,7 +1801,9 @@ static BOOL showingKeyboard;
 
 	if ([[UIDevice currentDevice] isPadModel]) {
 		if (!chatTranscriptFontSizeString.length) {
-			chatTranscriptFontSize = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize - 1.;
+			chatTranscriptFontSize = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize;
+			if (chatTranscriptFontSize == 17.)
+				chatTranscriptFontSize = 16.;
 		} else if ([chatTranscriptFontSizeString isEqualToString:@"smallest"])
 			chatTranscriptFontSize = 8;
 		else if ([chatTranscriptFontSizeString isEqualToString:@"smaller"])
@@ -1816,7 +1818,9 @@ static BOOL showingKeyboard;
 			chatTranscriptFontSize = 20;
 	} else {
 		if (!chatTranscriptFontSizeString.length) {
-			chatTranscriptFontSize = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize - 1.;
+			chatTranscriptFontSize = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize;
+			if (chatTranscriptFontSize == 17.)
+				chatTranscriptFontSize = 16.;
 		} else if ([chatTranscriptFontSizeString isEqualToString:@"smallest"])
 			chatTranscriptFontSize = 11;
 		else if ([chatTranscriptFontSizeString isEqualToString:@"smaller"])
