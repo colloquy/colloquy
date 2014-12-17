@@ -211,9 +211,9 @@ static NSString *membersFilteredCountFormat;
 - (void) insertUser:(MVChatUser *) user atIndex:(NSUInteger) index {
 	BOOL searchBarFocused = [_searchController isActive];
 
-	[self.tableView beginUpdates];
+//	[self.tableView beginUpdates];
 	[self _insertUser:user atIndex:index withAnimation:UITableViewRowAnimationLeft];
-	[self.tableView endUpdates];
+//	[self.tableView endUpdates];
 
 	if (searchBarFocused)
 		[_searchController setActive:YES animated:YES];
@@ -237,7 +237,7 @@ static NSString *membersFilteredCountFormat;
 		if (newMatchesIndex > oldMatchesIndex)
 			--newMatchesIndex;
 
-		[self.tableView beginUpdates];
+//		[self.tableView beginUpdates];
 
 		if (oldMatchesIndex == newMatchesIndex) {
 			[self _moveUser:user atIndex:oldIndex toIndex:newIndex withAnimation:UITableViewRowAnimationFade];
@@ -245,7 +245,7 @@ static NSString *membersFilteredCountFormat;
 			[self _moveUser:user atIndex:oldIndex toIndex:newIndex withAnimation:(newIndex > oldIndex ? UITableViewRowAnimationBottom : UITableViewRowAnimationTop)];
 		}
 
-		[self.tableView endUpdates];
+//		[self.tableView endUpdates];
 
 		if (searchBarFocused)
 			[_searchController setActive:YES animated:YES];
@@ -255,9 +255,9 @@ static NSString *membersFilteredCountFormat;
 - (void) removeUserAtIndex:(NSUInteger) index {
 	BOOL searchBarFocused = [_searchController isActive];
 
-	[self.tableView beginUpdates];
+//	[self.tableView beginUpdates];
 	[self _removeUserAtIndex:index withAnimation:UITableViewRowAnimationRight];
-	[self.tableView endUpdates];
+//	[self.tableView endUpdates];
 
 	if (searchBarFocused)
 		[_searchController setActive:YES animated:YES];
