@@ -2630,7 +2630,7 @@ end:
 		}
 	}
 
-	if( [_supportedFeatures containsObject:MVChatConnectionMonitor] ) {
+	if( !_fetchingMonitorList && [_supportedFeatures containsObject:MVChatConnectionMonitor] ) {
 		[self sendRawMessage:@"MONITOR L"];
 		_fetchingMonitorList = YES;
 		_pendingMonitorList = [NSMutableArray array];
