@@ -195,7 +195,7 @@ static CQSoundController *fileTransferSound;
 	NSString *file = transfer.originalFileName;
 	NSString *user = transfer.user.displayName;
 
-	UIAlertView *alert = [[UIAlertView alloc] init];
+	UIAlertView *alert = [[CQAlertView alloc] init];
 	alert.tag = FileDownloadAlertTag;
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"File Download", "File Download alert title");

@@ -152,13 +152,13 @@ static BOOL showingKeyboard;
 			[alertView show];
 		}
 	} else if (error.code == CQBookmarkingErrorServer) {
-		UIAlertView *alertView = [[UIAlertView alloc] init];
+		UIAlertView *alertView = [[CQAlertView alloc] init];
 		alertView.title = NSLocalizedString(@"Server Error", @"Server Error");
 		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@ due to a server error.", @"Unable to bookmark link server error message"), notification.object, [activeService serviceName]];
 		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
 		[alertView show];
 	} else {
-		UIAlertView *alertView = [[UIAlertView alloc] init];
+		UIAlertView *alertView = [[CQAlertView alloc] init];
 		alertView.title = NSLocalizedString(@"Unknown Error", @"Unknown Error");
 		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@.", @"Unable to bookmark link message"), notification.object, [activeService serviceName]];
 		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
@@ -726,6 +726,13 @@ static BOOL showingKeyboard;
 	if (!_target)
 		return YES;
 
+	BOOL didSendText = NO;
+	for (NSString *line in [text componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]])
+		didSendText = didSendText || [self _sendLineOfText:line];
+	return didSendText;
+}
+
+- (BOOL ) _sendLineOfText:(NSString *) text {
 	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"] && text.length > 1) {
 		static NSSet *commandsNotRequiringConnection;
 		if (!commandsNotRequiringConnection)
@@ -1765,7 +1772,7 @@ static BOOL showingKeyboard;
 }
 
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
-	UIAlertView *alert = [[UIAlertView alloc] init];
+	UIAlertView *alert = [[CQAlertView alloc] init];
 	alert.delegate = self;
 	alert.tag = CantSendMessageAlertView;
 

@@ -1,5 +1,6 @@
 #import "CQConnectionEditViewController.h"
 
+#import "CQAlertView.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionAdvancedEditController.h"
 #import "CQConnectionPushEditController.h"
@@ -536,7 +537,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	if (sender.on && ![[CQSettingsController settingsController] doubleForKey:@"CQMultitaskingTimeout"]) {
 		[[CQSettingsController settingsController] setDouble:300 forKey:@"CQMultitaskingTimeout"];
 
-		UIAlertView *alert = [[UIAlertView alloc] init];
+		UIAlertView *alert = [[CQAlertView alloc] init];
 
 		alert.title = NSLocalizedString(@"Multitasking Enabled", @"Multitasking enabled alert title");
 		alert.message = NSLocalizedString(@"Multitasking was disabled for Colloquy, but has been enabled again with a timeout of 5 minutes.", @"Multitasking enabled alert message");
@@ -551,7 +552,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 - (void) deleteConnection:(id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
-		UIAlertView *alert = [[UIAlertView alloc] init];
+		UIAlertView *alert = [[CQAlertView alloc] init];
 		alert.delegate = self;
 
 		alert.title = NSLocalizedString(@"Delete Connection", @"Delete Connection alert title");

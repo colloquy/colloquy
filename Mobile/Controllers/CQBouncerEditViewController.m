@@ -1,5 +1,6 @@
 #import "CQBouncerEditViewController.h"
 
+#import "CQAlertView.h"
 #import "CQBouncerSettings.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
@@ -286,7 +287,7 @@ static BOOL pushAvailable = YES;
 
 - (void) deleteBouncer:(id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
-		UIAlertView *alert = [[UIAlertView alloc] init];
+		UIAlertView *alert = [[CQAlertView alloc] init];
 		alert.delegate = self;
 
 		alert.title = NSLocalizedString(@"Delete Bouncer", @"Delete Bouncer alert title");

@@ -367,7 +367,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	NSMutableArray *connections = _bouncerChatConnections[connection.settings.identifier];
 
 	if (error && (!connections.count || [connection.userInfo isEqual:@"manual-refresh"])) {
-		UIAlertView *alert = [[UIAlertView alloc] init];
+		UIAlertView *alert = [[CQAlertView alloc] init];
 
 		alert.tag = CannotConnectToBouncerTag;
 		alert.delegate = self;
@@ -432,7 +432,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	if (self._anyConnectedOrConnectingConnections) {
 		if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-			UIAlertView *alertView = [[UIAlertView alloc] init];
+			UIAlertView *alertView = [[CQAlertView alloc] init];
 			alertView.title = NSLocalizedString(@"Disconnected", @"Disconnected alert title");
 			alertView.message = NSLocalizedString(@"You have been disconnected due to the loss of network connectivity", @"Disconnected due to network alert message");
 			alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
@@ -705,7 +705,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 - (void) _gotConnectionError:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
 
-	UIAlertView *alertView = [[UIAlertView alloc] init];
+	UIAlertView *alertView = [[CQAlertView alloc] init];
 	alertView.title = connection.displayName;
 	alertView.message = notification.userInfo[@"message"];
 	alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button title")];

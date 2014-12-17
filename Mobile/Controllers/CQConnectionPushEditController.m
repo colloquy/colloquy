@@ -1,5 +1,6 @@
 #import "CQConnectionPushEditController.h"
 
+#import "CQAlertView.h"
 #import "CQConnectionsController.h"
 #import "CQPreferencesSwitchCell.h"
 
@@ -73,7 +74,7 @@
 	if (_connection.connected || self.newConnection)
 		_connection.pushNotifications = sender.on;
 	else {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Connection Required" message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay button title") otherButtonTitles:nil];
+		UIAlertView *alertView = [[CQAlertView alloc] initWithTitle:@"Connection Required" message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay button title") otherButtonTitles:nil];
 		if (_connection.pushNotifications)
 			alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to disable push notifications for %@. Please connect and try again." , @"Unable to turn push notifications off message"), _connection.displayName];
 		else alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to enable push notifications for %@. Please connect and try again." , @"Unable to turn push notifications off message"), _connection.displayName];

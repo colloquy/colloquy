@@ -1,5 +1,6 @@
 #import "CQChatRoomController.h"
 
+#import "CQAlertView.h"
 #import "CQChatController.h"
 #import "CQChatPresentationController.h"
 #import "CQChatUserListViewController.h"
@@ -529,7 +530,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		return;
 	}
 
-	UIAlertView *alert = [[UIAlertView alloc] init];
+	UIAlertView *alert = [[CQAlertView alloc] init];
 	alert.tag = RejoinRoomAlertTag;
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"Kicked from Room", "Kicked from room alert title");
@@ -1348,7 +1349,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 }
 
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
-	UIAlertView *alert = [[UIAlertView alloc] init];
+	UIAlertView *alert = [[CQAlertView alloc] init];
 	alert.delegate = self;
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
