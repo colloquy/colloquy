@@ -4681,7 +4681,7 @@ end:
 - (void) _handle730WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_MONONLINE
 	// <nick> :target[,target2]*
 
-	for( __strong NSString *nickname in [parameters[1] componentsSeparatedByString:@","] ) {
+	for( __strong NSString *nickname in [[self _stringFromPossibleData:parameters[1]] componentsSeparatedByString:@","] ) {
 		if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
 		if( !nickname.length ) continue;
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:nickname];
@@ -4693,7 +4693,7 @@ end:
 - (void) _handle731WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_MONOFFLINE
 	// <nick> :target[,target2]*
 
-	for( __strong NSString *nickname in [parameters[1] componentsSeparatedByString:@","] ) {
+	for( __strong NSString *nickname in [[self _stringFromPossibleData:parameters[1]] componentsSeparatedByString:@","] ) {
 		if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
 		if( !nickname.length ) continue;
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:nickname];
@@ -4705,7 +4705,7 @@ end:
 - (void) _handle732WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_MONLIST
 	// <nick> :target[,target2]*
 
-	for( __strong NSString *nickname in [parameters[1] componentsSeparatedByString:@","] ) {
+	for( __strong NSString *nickname in [[self _stringFromPossibleData:parameters[1]] componentsSeparatedByString:@","] ) {
 		if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
 		if( !nickname.length ) continue;
 		MVChatUserWatchRule *watchRule = [[MVChatUserWatchRule alloc] init];
@@ -4739,7 +4739,7 @@ end:
 	[_pendingMonitorList addObject:parameters.firstObject];
 
 	// move over to WATCH or ISON instead
-	for( __strong NSString *nickname in [parameters[2] componentsSeparatedByString:@","] ) {
+	for( __strong NSString *nickname in [[self _stringFromPossibleData:parameters[2]] componentsSeparatedByString:@","] ) {
 		if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
 		if( !nickname.length ) continue;
 		MVChatUserWatchRule *watchRule = [[MVChatUserWatchRule alloc] init];
