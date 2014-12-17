@@ -804,6 +804,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	[super setEditing:editing animated:animated];
 	[self.tableView setEditing:editing animated:animated];
 
+	[self _refreshIndexPathForChatControllersCache];
+
 	if ([[UIDevice currentDevice] isPadModel]) {
 		if (editing)
 			selectedIndexPath = [NSIndexPath indexPathForRow:selectedIndexPath.row inSection:selectedIndexPath.section + 1];
