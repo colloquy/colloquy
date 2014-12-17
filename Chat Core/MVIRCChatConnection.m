@@ -516,7 +516,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		});
 	} else {
 		if( ! _sendQueue )
-			_sendQueue = [[NSMutableArray alloc] initWithCapacity:20];
+			_sendQueue = [[NSMutableArray alloc] init];
 
 		@synchronized( _sendQueue ) {
 			[_sendQueue addObject:raw];
@@ -984,16 +984,16 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		NSArray *IRCv31Required = nil;
 		if ( _requestsSASL && self.nicknamePassword.length )
-			IRCv31Required = @[ @"sasl", @"multi-prefix" ];
-		else IRCv31Required = @[ @"multi-prefix" ];
+			IRCv31Required = @[ @"sasl", @"multi-prefix", @" " ];
+		else IRCv31Required = @[ @"multi-prefix", @" " ];
 
-		NSArray *IRCv31Optional = @[ @"tls", @"away-notify", @"extended-join", @"account-notify" ];
-		NSArray *IRCv32Required = @[ @"account-tag", @"intent" ];
-		NSArray *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time", @"userhost-in-names", @"batch" ];
+		NSArray *IRCv31Optional = @[ @"tls", @"away-notify", @"extended-join", @"account-notify", @" " ];
+		NSArray *IRCv32Required = @[ @"account-tag", @"intent", @" " ];
+		NSArray *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time", @"userhost-in-names", @"batch", @" " ];
 
 		// In theory, IRCv3.2 isn't finalized yet and may change, so ZNC prefixes their capabilities. In practice,
 		// the official spec is pretty stable, and their behavior matches the official spec at this time.
-		NSArray *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message", @"znc.in/batch" ];
+		NSArray *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message", @"znc.in/batch", @" " ];
 
 		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
 
@@ -2041,6 +2041,7 @@ end:
 - (void) _checkWatchedUsers {
 	MVAssertMainThreadRequired();
 	if( [self.supportedFeatures containsObject:MVChatConnectionWatchFeature] ) return; // we don't need to call this anymore, return before we reschedule
+	if( [self.supportedFeatures containsObject:MVChatConnectionMonitor] ) return; // we don't need to call this anymore, return before we reschedule
 
 	[self performSelector:@selector( _checkWatchedUsers ) withObject:nil afterDelay:JVWatchedUserISONDelay];
 
