@@ -94,6 +94,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	_bouncerConnections = [[NSMutableSet alloc] initWithCapacity:2];
 	_bouncerChatConnections = [[NSMutableDictionary alloc] initWithCapacity:2];
 	_ignoreControllers = [[NSMutableDictionary alloc] initWithCapacity:2];
+	_connectionToErrorToAlertMap = [NSMapTable strongToStrongObjectsMapTable];
 
 	[self _loadConnectionList];
 
@@ -213,6 +214,9 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 #pragma mark -
 
 - (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+	NSMapTable *errorToAlertMappingsForConnection = [_connectionToErrorToAlertMap objectForKey:[alertView associatedObjectForKey:@"connection"]];
+	[errorToAlertMappingsForConnection removeObjectForKey:[alertView associatedObjectForKey:@"error-code"]];
+
 	if (buttonIndex == alertView.cancelButtonIndex)
 		return;
 
@@ -1041,11 +1045,24 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	if (!errorMessage) return;
 
-	CQAlertView *alert = [[CQAlertView alloc] init];
+	NSMapTable *errorToAlertMappingsForConnection = [_connectionToErrorToAlertMap objectForKey:connection];
+	if (!errorToAlertMappingsForConnection) {
+		errorToAlertMappingsForConnection = [NSMapTable strongToStrongObjectsMapTable];
+		[_connectionToErrorToAlertMap setObject:errorToAlertMappingsForConnection forKey:connection];
+	}
+
+	CQAlertView *alert = [errorToAlertMappingsForConnection objectForKey:@(error.code)];
+	if (alert) return;
+
+	alert = [[CQAlertView alloc] init];
+
+	[errorToAlertMappingsForConnection setObject:alert forKey:@(error.code)];
 	alert.tag = tag;
 	alert.delegate = self;
 	alert.title = errorTitle;
 	alert.message = errorMessage;
+	[alert associateObject:@(error.code) forKey:@"error-code"];
+	[alert associateObject:connection forKey:@"connection"];
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 

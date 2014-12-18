@@ -24,6 +24,7 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 
 @interface CQConnectionsController : NSObject <UIActionSheetDelegate, UIAlertViewDelegate, CQBouncerConnectionDelegate> {
 	@protected
+	NSMapTable *_connectionToErrorToAlertMap;
 	CQConnectionsNavigationController *_connectionsNavigationController;
 	NSMutableSet *_connections;
 	NSMutableArray *_directConnections;

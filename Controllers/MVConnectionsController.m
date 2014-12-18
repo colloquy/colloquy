@@ -163,6 +163,7 @@ static NSMenu *favoritesMenu = nil;
 		_bookmarks = nil;
 		_passConnection = nil;
 
+		_connectionToErrorToAlertMap = [NSMapTable strongToStrongObjectsMapTable];
 		_joinRooms = [[NSMutableArray allocWithZone:nil] init];
 		_publicKeyRequestQueue = [[NSMutableSet allocWithZone:nil] init];
 
@@ -1501,7 +1502,8 @@ static NSMenu *favoritesMenu = nil;
 - (void) _errorOccurred:(NSNotification *) notification {
 	NSString *errorTitle = nil;
 
-	switch ( [(NSError *)[[notification userInfo] objectForKey:@"error"] code] ) {
+	NSError *error = notification.userInfo[@"error"];
+	switch ( error.code ) {
 		case MVChatConnectionCantSendToRoomError:
 			errorTitle = NSLocalizedString( @"Can't Send to Room", "cannot send to room error title" );
 			break;
@@ -1539,15 +1541,27 @@ static NSMenu *favoritesMenu = nil;
 	[context setObject:[[[notification userInfo] objectForKey:@"error"] localizedDescription] forKey:@"description"];
 	[[JVNotificationController defaultController] performNotification:@"JVChatError" withContextInfo:context];
 
-	NSAlert *chatErrorAlert = [[NSAlert alloc] init];
+	NSMapTable *errorToAlertMappingsForConnection = [_connectionToErrorToAlertMap objectForKey:notification.object];
+	if (!errorToAlertMappingsForConnection) {
+		errorToAlertMappingsForConnection = [NSMapTable strongToStrongObjectsMapTable];
+		[_connectionToErrorToAlertMap setObject:errorToAlertMappingsForConnection forKey:notification.object];
+	}
+
+	NSAlert *chatErrorAlert = [errorToAlertMappingsForConnection objectForKey:@(error.code)];
+	if (chatErrorAlert) return;
+
+	chatErrorAlert = [[NSAlert alloc] init];
+
+	[errorToAlertMappingsForConnection setObject:chatErrorAlert forKey:@(error.code)];
+
 	[chatErrorAlert setMessageText:errorTitle];
-	if( [[[[notification userInfo] objectForKey:@"error"] userInfo] objectForKey:@"errorLiteralReason"] )
+	if( error.userInfo[@"errorLiteralReason"] )
 		[chatErrorAlert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"%@\n\nServer Details:\n%@", "error alert informative text with literal reason"), [[[notification userInfo] objectForKey:@"error"] localizedDescription], [[[[notification userInfo] objectForKey:@"error"] userInfo] objectForKey:@"errorLiteralReason"]]];
 	else [chatErrorAlert setInformativeText:[[[notification userInfo] objectForKey:@"error"] localizedDescription]];
 
 	[chatErrorAlert setAlertStyle:NSInformationalAlertStyle];
 
-	if ( [(NSError *)[[notification userInfo] objectForKey:@"error"] code] == MVChatConnectionServicesDownError ) {
+	if ( error.code == MVChatConnectionServicesDownError ) {
 		// ask the user if we want to continue auto joining rooms without identification (== no hostmask cloaking) now that we know services are down
 		// add "Continue Auto Join Sequence without identification?" to InformativeText
 		[chatErrorAlert addButtonWithTitle:NSLocalizedString( @"Join", "join button" )];
@@ -1555,7 +1569,7 @@ static NSMenu *favoritesMenu = nil;
 		if ( [chatErrorAlert runModal] == NSAlertFirstButtonReturn ) {
 			[self _didIdentify:[NSNotification notificationWithName:@"continueConnectWithoutIdentification" object:[notification object]]];
 		}
-	} else if ( [(NSError *)[[notification userInfo] objectForKey:@"error"] code] == MVChatConnectionRoomPasswordIncorrectError && floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4) {
+	} else if ( error.code == MVChatConnectionRoomPasswordIncorrectError && floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4) {
 		// in case of incorrect password we can simplytry again with the correct one. leopard only for now, because NSAlert's setAccessoryView is 10.5+ only, 10.4 would need a new NIB for this feature:
 		[chatErrorAlert addButtonWithTitle:NSLocalizedString( @"Join", "join button" )];
 		[chatErrorAlert addButtonWithTitle:NSLocalizedString( @"Cancel", "cancel button" )];
@@ -1571,6 +1585,8 @@ static NSMenu *favoritesMenu = nil;
 	} else {
 		[chatErrorAlert runModal];
 	}
+
+	[errorToAlertMappingsForConnection removeObjectForKey:@(error.code)];
 
 /*	MVChatConnection *connection = [notification object];
 	MVChatError error = (MVChatError) [[[notification userInfo] objectForKey:@"error"] intValue];

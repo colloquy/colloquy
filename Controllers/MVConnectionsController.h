@@ -55,6 +55,7 @@
 	IBOutlet NSTableView *userSelectionTable;
 	NSArray *_userSelectionPossibleUsers;
 
+	NSMapTable *_connectionToErrorToAlertMap;
 	NSMutableArray *_bookmarks;
 	NSMutableArray *_joinRooms;
 	MVChatConnection *_passConnection;
