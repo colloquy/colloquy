@@ -495,7 +495,7 @@ static BOOL showingKeyboard;
 
 	[chatInputBar updateTextViewContentSize];
 
-	if (_showingKeyboard || hardwareKeyboard) {
+	if (_showingKeyboard || showingKeyboard || hardwareKeyboard) {
 		[chatInputBar becomeFirstResponder];
 	}
 
@@ -1547,6 +1547,18 @@ static BOOL showingKeyboard;
 		return;
 
 	CGRect keyboardRect = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+	if (UIDeviceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+		// orient the rect
+		if (![UIDevice currentDevice].isSystemEight) {
+			CGFloat temp = keyboardRect.origin.x;
+			keyboardRect.origin.x = keyboardRect.origin.y;
+			keyboardRect.origin.y = temp;
+
+			temp = keyboardRect.size.height;
+			keyboardRect.size.height = keyboardRect.size.width;
+			keyboardRect.size.width = keyboardRect.size.height;
+		}
+	}
 
 	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
