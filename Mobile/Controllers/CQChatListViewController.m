@@ -302,8 +302,11 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	}
 
 	CQDirectChatController *chatController = notification.object;
+	if (!chatController)
+		return;
+
 	CQChatTableCell *cell = [self _chatTableCellForController:chatController];
-	if (!cell)
+	if (!cell || ![cell respondsToSelector:@selector(takeValuesFromChatViewController:)])
 		return;
 
 	[cell takeValuesFromChatViewController:chatController];
@@ -318,7 +321,12 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	}
 
 	CQDirectChatController *chatController = notification.object;
+	if (!chatController)
+		return;
+
 	CQChatTableCell *cell = [self _chatTableCellForController:chatController];
+	if (!cell || ![cell respondsToSelector:@selector(takeValuesFromChatViewController:)])
+		return;
 
 	[cell takeValuesFromChatViewController:chatController];
 }

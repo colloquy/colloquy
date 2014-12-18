@@ -493,8 +493,6 @@ static BOOL showingKeyboard;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 	}
 
-	[chatInputBar updateTextViewContentSize];
-
 	if (_showingKeyboard || showingKeyboard || hardwareKeyboard) {
 		[chatInputBar becomeFirstResponder];
 	}
@@ -567,6 +565,12 @@ static BOOL showingKeyboard;
 		[chatInputBar resignFirstResponder];
 
 	_allowEditingToEnd = NO;
+}
+
+- (void) viewWillLayoutSubviews {
+	[super viewWillLayoutSubviews];
+
+	[chatInputBar updateTextViewContentSize];
 }
 
 - (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
