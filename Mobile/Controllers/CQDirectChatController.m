@@ -1547,18 +1547,7 @@ static BOOL showingKeyboard;
 		return;
 
 	CGRect keyboardRect = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-	if (UIDeviceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-		// orient the rect
-		if (![UIDevice currentDevice].isSystemEight) {
-			CGFloat temp = keyboardRect.origin.x;
-			keyboardRect.origin.x = keyboardRect.origin.y;
-			keyboardRect.origin.y = temp;
-
-			temp = keyboardRect.size.height;
-			keyboardRect.size.height = keyboardRect.size.width;
-			keyboardRect.size.width = keyboardRect.size.height;
-		}
-	}
+	keyboardRect = [self.view.window convertRect:keyboardRect toView:self.view];
 
 	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
