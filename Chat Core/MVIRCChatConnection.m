@@ -2301,7 +2301,7 @@ end:
 					}
 
 					if( self.nicknamePassword.length ) {
-						if( [subCommand isCaseInsensitiveEqualToString:@"LS"] ) {
+						if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
 							[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl"];
 							furtherNegotiation = YES;
 						} else if( [subCommand isCaseInsensitiveEqualToString:@"ACK"] ) {
@@ -2316,8 +2316,8 @@ end:
 						[_supportedFeatures addObject:MVChatConnectionMultipleNicknamePrefixFeature];
 					}
 
-					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :multi-prefix"];
+					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
+						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
 						furtherNegotiation = YES;
 					}
 				}
@@ -2328,19 +2328,40 @@ end:
 						[_supportedFeatures addObject:MVChatConnectionTLS];
 					}
 
+					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
+						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
+						furtherNegotiation = YES;
+					}
+
 					self.secure = YES;
 					self.serverPort = 6697; // Charybdis defaults to 6697 for SSL connections. Theoretically, STARTTLS support makes this a non-issue, but, this seems safer.
 				} else if( [capability isCaseInsensitiveEqualToString:@"away-notify"]) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionAwayNotify];
 					}
+
+					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
+						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
+						furtherNegotiation = YES;
+					}
+
 				} else if( [capability isCaseInsensitiveEqualToString:@"extended-join"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionExtendedJoin];
 					}
+
+					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
+						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
+						furtherNegotiation = YES;
+					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"account-notify"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionAccountNotify];
+					}
+
+					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
+						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
+						furtherNegotiation = YES;
 					}
 				}
 
@@ -2348,6 +2369,11 @@ end:
 				else if( [capability isCaseInsensitiveEqualToString:@"account-tag"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionAccountTag];
+					}
+
+					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
+						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
+						furtherNegotiation = YES;
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"intents"] ) {
 					@synchronized( _supportedFeatures ) {
@@ -2360,25 +2386,55 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionCapNotify];
 					}
+
+					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
+						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
+						furtherNegotiation = YES;
+					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] || [capability isCaseInsensitiveEqualToString:@"znc.in/self-message"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionSelfMessage];
+					}
+
+					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
+						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
+						furtherNegotiation = YES;
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"chghost"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionChghost];
 					}
+
+					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
+						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
+						furtherNegotiation = YES;
+					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"invite-notify"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionInvite];
+					}
+
+					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
+						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
+						furtherNegotiation = YES;
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"server-time"] || [capability isCaseInsensitiveEqualToString:@"znc.in/server-time-iso"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionServerTime];
 					}
+
+					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
+						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
+						furtherNegotiation = YES;
+					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"userhost-in-names"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionUserhostInNames];
+					}
+
+					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
+						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
+						furtherNegotiation = YES;
 					}
 				}
 			}
@@ -2449,6 +2505,8 @@ end:
 			}
 		}
 	}
+
+	NSLog(@"%@", _supportedFeatures);
 
 	if( furtherNegotiation )
 		[self _sendEndCapabilityCommandAfterTimeout];
