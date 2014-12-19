@@ -5,6 +5,7 @@
 #import "CQChatOrderingController.h"
 #import "CQChatCreationViewController.h"
 #import "CQChatInputBar.h"
+#import "CQChatInputStyleViewController.h"
 #import "CQChatPresentationController.h"
 #import "CQChatRoomController.h"
 #import "CQChatTableCell.h"
@@ -731,8 +732,11 @@ static BOOL showingKeyboard;
 		return YES;
 
 	BOOL didSendText = NO;
-	for (NSString *line in [text componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]])
-		didSendText = didSendText || [self _sendLineOfText:line];
+	for (__strong NSString *line in [text componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]) {
+		line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+		if (line.length)
+			didSendText = [self _sendLineOfText:line] || didSendText; // send text first to not short-circuit and stop
+	}
 	return didSendText;
 }
 
