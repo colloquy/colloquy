@@ -1072,10 +1072,11 @@ static const NSStringEncoding supportedEncodings[] = {
 	BOOL done = NO;
 	if( notEndOfLine() ) {
 		if( *line == '@' ) {
+			intentOrTags = ++line;
 			// IRCv3.2
 			// @intent=ACTION;aaa=bbb;ccc;example.com/ddd=eee
 			while( notEndOfLine() && *line != ' ' ) line++;
-			intentOrTagsLength = (line - sender);
+			intentOrTagsLength = (line - intentOrTags);
 			checkAndMarkIfDone();
 			consumeWhitespace();
 		}
@@ -1172,7 +1173,8 @@ end:
 				NSDateFormatter *dateFormatter = [NSThread currentThread].threadDictionary[@"IRCv32ServerTimeDateFormatter"];
 				if (!dateFormatter) {
 					dateFormatter = [[NSDateFormatter alloc] init];
-					dateFormatter.dateFormat = @"YYYY-MM-DDThh:mm:ss.sssZ";
+					dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+					dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
 					[NSThread currentThread].threadDictionary[@"IRCv32ServerTimeDateFormatter"] = dateFormatter;
 				}
@@ -1180,11 +1182,13 @@ end:
 				NSDate *timestamp = [dateFormatter dateFromString:timestampString];
 				if (timestamp)
 					intentOrTagsDictionary[@"time"] = timestamp;
+				else [intentOrTagsDictionary removeObjectForKey:@"time"]; // failed to convert string to date, drop any invalid data
 			}
 		}
 		if( selector == NULL || ![self respondsToSelector:selector] ) {
 			selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
 			selector = NSSelectorFromString(selectorString);
+			hasTagsToSend = NO; // if we don't support sending tags to the command or numeric, pretend we don't have tags to send
 		}
 
 		if( [self respondsToSelector:selector] ) {
@@ -2294,6 +2298,8 @@ end:
 
 			NSArray *capabilities = [capabilitiesString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 			for( __strong NSString *capability in capabilities ) {
+				BOOL sendCapReqForFeature = YES;
+
 				// IRCv3.1 Required
 				if( [capability isCaseInsensitiveEqualToString:@"sasl"] ) {
 					@synchronized( _supportedFeatures ) {
@@ -2301,24 +2307,18 @@ end:
 					}
 
 					if( self.nicknamePassword.length ) {
-						if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
-							[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl"];
-							furtherNegotiation = YES;
-						} else if( [subCommand isCaseInsensitiveEqualToString:@"ACK"] ) {
+						if( [subCommand isCaseInsensitiveEqualToString:@"ACK"] ) {
 							[self sendRawMessageImmediatelyWithFormat:@"AUTHENTICATE PLAIN"];
 							furtherNegotiation = YES;
+							sendCapReqForFeature = NO;
 						}
 					} else {
 						[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+						sendCapReqForFeature = NO;
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"multi-prefix"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionMultipleNicknamePrefixFeature];
-					}
-
-					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
-						furtherNegotiation = YES;
 					}
 				}
 
@@ -2328,11 +2328,6 @@ end:
 						[_supportedFeatures addObject:MVChatConnectionTLS];
 					}
 
-					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
-						furtherNegotiation = YES;
-					}
-
 					self.secure = YES;
 					self.serverPort = 6697; // Charybdis defaults to 6697 for SSL connections. Theoretically, STARTTLS support makes this a non-issue, but, this seems safer.
 				} else if( [capability isCaseInsensitiveEqualToString:@"away-notify"]) {
@@ -2340,28 +2335,13 @@ end:
 						[_supportedFeatures addObject:MVChatConnectionAwayNotify];
 					}
 
-					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
-						furtherNegotiation = YES;
-					}
-
 				} else if( [capability isCaseInsensitiveEqualToString:@"extended-join"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionExtendedJoin];
 					}
-
-					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
-						furtherNegotiation = YES;
-					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"account-notify"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionAccountNotify];
-					}
-
-					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
-						furtherNegotiation = YES;
 					}
 				}
 
@@ -2370,11 +2350,6 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionAccountTag];
 					}
-
-					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
-						furtherNegotiation = YES;
-					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"intents"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionMessageIntents];
@@ -2382,57 +2357,42 @@ end:
 				}
 
 				// IRCv3.2 Optional
-				else if( [capability isCaseInsensitiveEqualToString:@"cap-notify"] ) {
-					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionCapNotify];
-					}
-
-					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
-						furtherNegotiation = YES;
-					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] || [capability isCaseInsensitiveEqualToString:@"znc.in/self-message"] ) {
-					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionSelfMessage];
-					}
-
-					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
-						furtherNegotiation = YES;
-					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"chghost"] ) {
+				else if( [capability isCaseInsensitiveEqualToString:@"chghost"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionChghost];
 					}
-
-					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
-						furtherNegotiation = YES;
-					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"invite-notify"] ) {
-					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionInvite];
-					}
-
-					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
-						furtherNegotiation = YES;
-					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"server-time"] || [capability isCaseInsensitiveEqualToString:@"znc.in/server-time-iso"] ) {
+				}  else if( [capability isCaseInsensitiveEqualToString:@"server-time"] || [capability isCaseInsensitiveEqualToString:@"znc.in/server-time-iso"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionServerTime];
-					}
-
-					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
-						furtherNegotiation = YES;
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"userhost-in-names"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionUserhostInNames];
 					}
+				}
 
-					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
+				// IRCv3.2 Proposed
+				else if( [capability isCaseInsensitiveEqualToString:@"cap-notify"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionCapNotify];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] || [capability isCaseInsensitiveEqualToString:@"znc.in/self-message"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionSelfMessage];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"invite-notify"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionInvite];
+					}
+				}
+
+				// Unknown / future capabilities
+				else {
+					sendCapReqForFeature = NO;
+				}
+
+				if (sendCapReqForFeature) {
+					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] ) {
 						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
 						furtherNegotiation = YES;
 					}
@@ -2505,8 +2465,6 @@ end:
 			}
 		}
 	}
-
-	NSLog(@"%@", _supportedFeatures);
 
 	if( furtherNegotiation )
 		[self _sendEndCapabilityCommandAfterTimeout];
