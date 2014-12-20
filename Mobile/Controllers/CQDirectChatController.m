@@ -1822,42 +1822,42 @@ static BOOL showingKeyboard;
 		_encoding = [[CQSettingsController settingsController] integerForKey:@"CQDirectChatEncoding"];
 
 	NSString *chatTranscriptFontSizeString = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFontSize"];
-	NSUInteger chatTranscriptFontSize = 0; // Default is 14px
+	NSUInteger chatTranscriptFontSize = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize;
 
-	if ([[UIDevice currentDevice] isPadModel]) {
-		if (!chatTranscriptFontSizeString.length) {
-			chatTranscriptFontSize = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize;
-			if (chatTranscriptFontSize == 17.)
-				chatTranscriptFontSize = 16.;
-		} else if ([chatTranscriptFontSizeString isEqualToString:@"smallest"])
-			chatTranscriptFontSize = 8;
-		else if ([chatTranscriptFontSizeString isEqualToString:@"smaller"])
-			chatTranscriptFontSize = 10;
-		else if ([chatTranscriptFontSizeString isEqualToString:@"small"])
-			chatTranscriptFontSize = 12;
-		else if ([chatTranscriptFontSizeString isEqualToString:@"large"])
-			chatTranscriptFontSize = 16;
-		else if ([chatTranscriptFontSizeString isEqualToString:@"larger"])
-			chatTranscriptFontSize = 18;
-		else if ([chatTranscriptFontSizeString isEqualToString:@"largest"])
-			chatTranscriptFontSize = 20;
-	} else {
-		if (!chatTranscriptFontSizeString.length) {
-			chatTranscriptFontSize = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize;
-			if (chatTranscriptFontSize == 17.)
-				chatTranscriptFontSize = 16.;
-		} else if ([chatTranscriptFontSizeString isEqualToString:@"smallest"])
-			chatTranscriptFontSize = 11;
-		else if ([chatTranscriptFontSizeString isEqualToString:@"smaller"])
-			chatTranscriptFontSize = 12;
-		else if ([chatTranscriptFontSizeString isEqualToString:@"small"])
-			chatTranscriptFontSize = 13;
-		else if ([chatTranscriptFontSizeString isEqualToString:@"large"])
-			chatTranscriptFontSize = 15;
-		else if ([chatTranscriptFontSizeString isEqualToString:@"larger"])
-			chatTranscriptFontSize = 16;
-		else if ([chatTranscriptFontSizeString isEqualToString:@"largest"])
-			chatTranscriptFontSize = 17;
+	const float CQDefaultDynamicTypeFontSize = 17.;
+
+	if (chatTranscriptFontSize != CQDefaultDynamicTypeFontSize) {
+		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+			if (!chatTranscriptFontSizeString.length) {
+				chatTranscriptFontSize = 14; // default
+			} else if ([chatTranscriptFontSizeString isEqualToString:@"smallest"])
+				chatTranscriptFontSize = 8;
+			else if ([chatTranscriptFontSizeString isEqualToString:@"smaller"])
+				chatTranscriptFontSize = 10;
+			else if ([chatTranscriptFontSizeString isEqualToString:@"small"])
+				chatTranscriptFontSize = 12;
+			else if ([chatTranscriptFontSizeString isEqualToString:@"large"])
+				chatTranscriptFontSize = 16;
+			else if ([chatTranscriptFontSizeString isEqualToString:@"larger"])
+				chatTranscriptFontSize = 18;
+			else if ([chatTranscriptFontSizeString isEqualToString:@"largest"])
+				chatTranscriptFontSize = 20;
+		} else {
+			if (!chatTranscriptFontSizeString.length) {
+				chatTranscriptFontSize = 14; // default
+			} else if ([chatTranscriptFontSizeString isEqualToString:@"smallest"])
+				chatTranscriptFontSize = 11;
+			else if ([chatTranscriptFontSizeString isEqualToString:@"smaller"])
+				chatTranscriptFontSize = 12;
+			else if ([chatTranscriptFontSizeString isEqualToString:@"small"])
+				chatTranscriptFontSize = 13;
+			else if ([chatTranscriptFontSizeString isEqualToString:@"large"])
+				chatTranscriptFontSize = 15;
+			else if ([chatTranscriptFontSizeString isEqualToString:@"larger"])
+				chatTranscriptFontSize = 16;
+			else if ([chatTranscriptFontSizeString isEqualToString:@"largest"])
+				chatTranscriptFontSize = 17;
+		}
 	}
 
 	transcriptView.styleIdentifier = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptStyle"];
