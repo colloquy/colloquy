@@ -171,10 +171,11 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	for (int x = point.x - TappedPointOffset, i = 0; i < 3 && !tappedURL.length; x += TappedPointOffset, i++)
 		for (int y = point.y - TappedPointOffset, j = 0; j < 3 && !tappedURL.length; y += TappedPointOffset, j++) {
 			[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"urlUnderTapAtPoint(%d, %d)", x, y] completionHandler:^(NSString *result) {
-				if (tappedURL.length)
+				if (tappedURL.length) // if a different execution found a URL already, don't call the delegate again
 					return;
 
 				tappedURL = [result copy];
+#undef TappedPointOffset
 
 				if (!tappedURL.length)
 					return;
@@ -183,7 +184,6 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 					[transcriptDelegate transcriptView:self handleLongPressURL:[NSURL URLWithString:tappedURL] atLocation:_lastTouchLocation];
 			}];
 		}
-#undef TappedPointOffset
 }
 
 - (void) swipeGestureRecognized:(UISwipeGestureRecognizer *) swipeGestureRecognizer {
@@ -203,8 +203,6 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 #pragma mark -
 
 - (void) webView:(WKWebView *) webView decidePolicyForNavigationAction:(WKNavigationAction *) navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy)) decisionHandler {
-	__strong __typeof__((_transcriptDelegate)) transcriptDelegate = _transcriptDelegate;
-
 	if (navigationAction.navigationType == WKNavigationTypeOther) {
 		decisionHandler(WKNavigationActionPolicyAllow);
 		return;
@@ -215,6 +213,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 		return;
 	}
 
+	__strong __typeof__((_transcriptDelegate)) transcriptDelegate = _transcriptDelegate;
 	if ([navigationAction.request.URL.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
 		if ([transcriptDelegate respondsToSelector:@selector(transcriptView:handleNicknameTap:atLocation:)]) {
 			NSRange endOfSchemeRange = [navigationAction.request.URL.absoluteString rangeOfString:@"://"];
@@ -266,7 +265,11 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 		return;
 	}
 
+#if !defined(CQ_GENERATING_SCREENSHOTS)
 	[self _addComponentsToTranscript:components fromPreviousSession:YES animated:NO];
+#else
+	[self _addComponentsToTranscript:components fromPreviousSession:NO animated:NO];
+#endif
 }
 
 - (void) addComponents:(NSArray *) components animated:(BOOL) animated {
@@ -370,6 +373,10 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 }
 
 #pragma mark -
+
+- (void) evaluateJavaScript:(NSString *) javaScriptString completionHandler:(void (^)(id, NSError *)) completionHandler {
+	NSLog(@"Refusing to evaluate %@\n%@", script, [NSThread callStackSymbols]);
+}
 
 - (void) stringByEvaluatingJavaScriptFromString:(NSString *) script {
 	[self stringByEvaluatingJavaScriptFromString:script completionHandler:NULL];
