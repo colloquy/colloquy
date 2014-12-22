@@ -41,10 +41,6 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 #pragma mark -
 
-- (void) setDelegate:(id <UIWebViewDelegate>) delegate {
-	NSAssert(NO, @"Should not be called. Use _transcriptDelegate instead.");
-}
-
 - (void) setAllowSingleSwipeGesture:(BOOL) allowSingleSwipeGesture {
 	if (allowSingleSwipeGesture == _allowSingleSwipeGesture)
 		return;
@@ -543,7 +539,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 - (void) _checkIfLoadingFinished {
 	[self stringByEvaluatingJavaScriptFromString:@"isDocumentReady()" completionHandler:^(NSString *result) {
-		if (![result isEqualToString:@"true"]) {
+		if (![result boolValue]) {
 			[self performSelector:_cmd withObject:nil afterDelay:0.05];
 			return;
 		}
