@@ -463,10 +463,12 @@ static BOOL showingKeyboard;
 	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
 	if ([UIDevice currentDevice].isSystemEight) {
 		CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
+		webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
 		webkitChatTranscriptView.transcriptDelegate = self;
 
-		[self.view insertSubview:webkitChatTranscriptView belowSubview:transcriptView];
+		[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
 
+		[transcriptView removeFromSuperview];
 		transcriptView = webkitChatTranscriptView;
 	}
 

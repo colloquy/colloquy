@@ -386,7 +386,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	if (!script.length)
 		return;
 
-	[self evaluateJavaScript:script completionHandler:^(id result, NSError *error) {
+	[super evaluateJavaScript:script completionHandler:^(id result, NSError *error) {
 		if (!result && error)
 			NSLog(@"Error executing JavaScript: %@, %@", script, error);
 		else if (result) {
