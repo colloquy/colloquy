@@ -495,7 +495,7 @@ static BOOL showingKeyboard;
 	}
 
 	if (_showingKeyboard || showingKeyboard || hardwareKeyboard) {
-		[chatInputBar becomeFirstResponder];
+		_revealKeyboard = YES;
 	}
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didNotBookmarkLink:) name:CQBookmarkingDidNotSaveLinkNotification object:nil];
@@ -538,6 +538,7 @@ static BOOL showingKeyboard;
 	[super viewWillDisappear:animated];
 
 	hardwareKeyboard = (!_showingKeyboard && [chatInputBar isFirstResponder]);
+	[chatInputBar resignFirstResponder];
 
 	[chatInputBar hideCompletions];
 
@@ -1826,7 +1827,7 @@ static BOOL showingKeyboard;
 
 	const float CQDefaultDynamicTypeFontSize = 17.;
 
-	if (chatTranscriptFontSize != CQDefaultDynamicTypeFontSize) {
+	if (chatTranscriptFontSize == CQDefaultDynamicTypeFontSize) {
 		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
 			if (!chatTranscriptFontSizeString.length) {
 				chatTranscriptFontSize = 14; // default
