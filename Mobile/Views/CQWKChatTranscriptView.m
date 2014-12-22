@@ -374,7 +374,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 #pragma mark -
 
-- (void) evaluateJavaScript:(NSString *) javaScriptString completionHandler:(void (^)(id, NSError *)) completionHandler {
+- (void) evaluateJavaScript:(NSString *) script completionHandler:(void (^)(id, NSError *)) completionHandler {
 	NSLog(@"Refusing to evaluate %@\n%@", script, [NSThread callStackSymbols]);
 }
 
