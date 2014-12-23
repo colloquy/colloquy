@@ -323,8 +323,9 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 	if (shouldHideTopic) {
 		[self _hideRoomTopic];
-	} else if (_topicIsHidden && !shouldHideTopic) {
+	} else if (_topicIsHidden && !shouldHideTopic && !_addedMessage) {
 		_topicIsHidden = NO;
+		_addedMessage = YES;
 
 		[self stringByEvaluatingJavaScriptFromString:@"showTopic()"];
 		[self stringByEvaluatingJavaScriptFromString:@"addOffsetForTopicToFirstElement()"];
@@ -392,6 +393,8 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 		else if (result) {
 			if ([result isKindOfClass:[NSNumber class]])
 				result = [result stringValue];
+			else if ([result isKindOfClass:[NSNull class]])
+				result = @"null";
 
 			if (completionHandler)
 				completionHandler(result);
@@ -448,8 +451,10 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[command appendFormat:@"],%@,false,%@)", (previousSession ? @"true" : @"false"), (animated ? @"false" : @"true")];
 
 	[self stringByEvaluatingJavaScriptFromString:command];
-	if (_showRoomTopic)
+	if (_showRoomTopic && !_addedMessage) {
+		_addedMessage = YES;
 		[self stringByEvaluatingJavaScriptFromString:@"addOffsetForTopicToFirstElement()"];
+	}
 }
 
 - (void) _commonInitialization {
@@ -500,6 +505,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[self addGestureRecognizer:longPressGestureRecognizer];
 
 	_showRoomTopic = (CQShowRoomTopic)[[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
+	_addedMessage = NO;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged:) name:CQSettingsDidChangeNotification object:nil];
 }
@@ -510,6 +516,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 		return;
 
 	_showRoomTopic = shouldShowRoomTopic;
+	_addedMessage = NO;
 
 	[self noteTopicChangeTo:_roomTopic by:_roomTopicSetter];
 }
