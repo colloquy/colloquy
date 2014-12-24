@@ -13,7 +13,11 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 
+#import <SecurityInterface/SFCertificateTrustPanel.h>
+
 static MVConnectionsController *sharedInstance = nil;
+
+static NSString *const connectionInvalidSSLCertAction = nil;
 
 static NSString *MVToolbarConnectToggleItemIdentifier = @"MVToolbarConnectToggleItem";
 static NSString *MVToolbarEditItemIdentifier = @"MVToolbarEditItem";
@@ -193,6 +197,7 @@ static NSMenu *favoritesMenu = nil;
 			if ([favorites writeToFile:[@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath] atomically:YES])
 				[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVFavoritesMigrated"];
 		}
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_peerTrustFeedbackNotification:) name:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:nil];
 	}
 
 	return self;
@@ -409,6 +414,31 @@ static NSMenu *favoritesMenu = nil;
 
 - (IBAction) openNetworkPreferences:(id) sender {
 	[[NSWorkspace sharedWorkspace] openFile:@"/System/Library/PreferencePanes/Network.prefPane"];
+}
+
+- (void) _peerTrustFeedbackNotification:(NSNotification *) notification {
+	void (^completionHandler)(BOOL shouldTrustPeer) = notification.userInfo[@"completionHandler"];
+	if ([connectionInvalidSSLCertAction isEqualToString:@"Deny"]) {
+		completionHandler(NO);
+		return;
+	}
+
+	if ([connectionInvalidSSLCertAction isEqualToString:@"Allow"]) {
+		completionHandler(YES);
+		return;
+	}
+
+	// Ask people what to do
+	SFCertificateTrustPanel *panel = [SFCertificateTrustPanel sharedCertificateTrustPanel];
+	panel.showsHelp = YES;
+
+	[panel setDefaultButtonTitle:NSLocalizedString(@"Continue", @"Continue button")];
+	[panel setAlternateButtonTitle:NSLocalizedString(@"Cancel", @"Cancel button")];
+
+	SecTrustRef trust = (__bridge SecTrustRef)notification.userInfo[@"trust"];
+	NSInteger shouldTrust = [panel runModalForTrust:trust showGroup:YES];
+
+	completionHandler(shouldTrust == NSOKButton);
 }
 
 - (IBAction) connectNewConnection:(id) sender {

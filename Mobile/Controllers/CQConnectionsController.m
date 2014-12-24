@@ -23,6 +23,10 @@
 #import <ChatCore/MVChatConnectionPrivate.h>
 #import <ChatCore/MVChatRoom.h>
 
+#if SYSTEM(MAC)
+#import <SecurityInterface/SFCertificatePanel.h>
+#endif
+
 #import "UIApplicationAdditions.h"
 #import "NSNotificationAdditions.h"
 
@@ -40,6 +44,9 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 #define IncorrectRoomPasswordTag 5
 #define NotIdentifiedWithServicesTag 6
 #define NoServerTag 7
+#define PeerTrustFeedbackTag 8
+
+static NSString *const connectionInvalidSSLCertAction = nil;
 
 @implementation CQConnectionsController
 + (CQConnectionsController *) defaultController {
@@ -72,6 +79,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_deviceTokenRecieved:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batteryStateChanged) name:UIDeviceBatteryStateDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_peerTrustFeedbackNotification:) name:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:nil];
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotConnectionError:) name:MVChatConnectionGotErrorNotification object:nil];
 
 	if ([UIDevice currentDevice].multitaskingSupported) {
@@ -278,10 +286,75 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 		[connection cancelPendingReconnectAttempts];
 		[connection connect];
+
+		return;
+	}
+
+	if (alertView.tag == PeerTrustFeedbackTag) {
+		void (^completionHandler)(BOOL shouldTrustPeer) = [alertView associatedObjectForKey:@"completionHandler"];
+
+		if (buttonIndex == 0) {
+			completionHandler(NO);
+		} else if (buttonIndex == 2) {
+			completionHandler(YES);
+		} else {
+			// details screen
+		}
 	}
 }
 
 #pragma mark -
+
+- (void) _peerTrustFeedbackNotification:(NSNotification *) notification {
+	void (^completionHandler)(BOOL shouldTrustPeer) = notification.userInfo[@"completionHandler"];
+	if (!completionHandler) {
+		return;
+	}
+
+	if ([connectionInvalidSSLCertAction isEqualToString:@"Deny"]) {
+		completionHandler(NO);
+	} else if ([connectionInvalidSSLCertAction isEqualToString:@"Allow"]) {
+		completionHandler(YES);
+	} else { // Ask people what to do
+#if SYSTEM(IOS)
+		NSString *certificateSubject = nil;
+		SecTrustRef trust = (__bridge SecTrustRef)notification.userInfo[@"trust"];
+		CFIndex certificateCount = SecTrustGetCertificateCount(trust);
+		if (certificateCount == 0) {
+			certificateSubject = @"Unknown";
+		} else {
+			certificateSubject = (__bridge_transfer NSString *)SecCertificateCopySubjectSummary(SecTrustGetCertificateAtIndex(trust, 0));
+		}
+
+		CQAlertView *alertView = [[CQAlertView alloc] init];
+		alertView.delegate = self;
+		alertView.tag = PeerTrustFeedbackTag;
+		alertView.title = NSLocalizedString(@"Cannot Verify Server Identity" , @"Cannot Verify Server Identity alert title");
+		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"The identity of \"%@\" cannot be verified by Colloquy. Please decide how to continue.", @"Identity cannot be verified message"), certificateSubject];
+		[alertView addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel alert button")];
+		[alertView addButtonWithTitle:NSLocalizedString(@"Details", @"Details alert button")];
+		[alertView addButtonWithTitle:NSLocalizedString(@"Continue", @"Continue alert button")];
+
+		[alertView associateObject:completionHandler forKey:@"completionHandler"];
+
+		[alertView show];
+#elif SYSTEM(MAC)
+		// Ask people what to do
+		SFCertificateTrustPanel *panel = [SFCertificateTrustPanel sharedCertificateTrustPanel];
+		panel.showsHelp = YES;
+
+		[panel setDefaultButtonTitle:NSLocalizedString(@"Continue", @"Continue button")];
+		[panel setAlternateButtonTitle:NSLocalizedString(@"Cancel", @"Cancel button")];
+
+		SecTrustRef trust = (__bridge SecTrustRef)notification.userInfo[@"trust"];
+		NSInteger shouldTrust = [panel runModalForTrust:trust showGroup:YES];
+
+		completionHandler(shouldTrust == NSOKButton);
+#else
+		completionHandler(NO);
+#endif
+	}
+}
 
 - (void) bouncerConnection:(CQBouncerConnection *) connection didRecieveConnectionInfo:(NSDictionary *) info {
 	NSMutableArray *connections = _bouncerChatConnections[connection.settings.identifier];
@@ -305,7 +378,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	BOOL newConnection = NO;
 	if (!chatConnection) {
 		chatConnection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
-
 		chatConnection.bouncerIdentifier = connection.settings.identifier;
 		chatConnection.bouncerConnectionIdentifier = connectionIdentifier;
 
