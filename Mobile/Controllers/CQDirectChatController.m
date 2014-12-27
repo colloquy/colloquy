@@ -428,9 +428,9 @@ static BOOL showingKeyboard;
 - (void) style:(id) sender {
 	CQChatInputStyleViewController *styleViewController = [[CQChatInputStyleViewController alloc] init];
 	styleViewController.delegate = self;
-	styleViewController.view.frame = CGRectMake(30., 30., CGRectGetWidth(self.view.frame) - 60., CGRectGetHeight(transcriptView.frame) - 320.);
 
 	_stylePresentationViewController = [CQModalViewControllerPresentationViewController viewControllerPresentationViewControllerForViewController:styleViewController];
+	_stylePresentationViewController.edgeInsets = UIEdgeInsetsMake(25., 25., CGRectGetHeight(transcriptView.frame) - 210., 25.); // TODO: don't hardcode these numbers
 
 	[self _updateAttributesForStyleViewController];
 
@@ -830,7 +830,7 @@ static BOOL showingKeyboard;
 		} else return;
 
 		UIFontDescriptor *fontDescriptor = [font.fontDescriptor fontDescriptorWithSymbolicTraits:symbolicTraits];
-		newAttributes = @{ NSFontAttributeName: [UIFont fontWithDescriptor:fontDescriptor size:-1.] };
+		newAttributes = @{ NSFontAttributeName: [UIFont fontWithDescriptor:fontDescriptor size:-1.] }; // -1 means use the currenet font descriptor's font
 	}
 
 	[[attributedString copy] enumerateAttributesInRange:selectedRange options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:^(NSDictionary *rangeAttributes, NSRange range, BOOL *stop) {
@@ -1082,7 +1082,7 @@ static BOOL showingKeyboard;
 	if ([arguments.string hasPrefix:@"@"])
 		return [self handleNoticeCommandWithArguments:arguments];
 
-	NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"@" attributes:nil];
+	NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"@"];
 	[attributedString appendAttributedString:arguments];
 	return [self handleNoticeCommandWithArguments:attributedString];
 }
@@ -1133,7 +1133,7 @@ static BOOL showingKeyboard;
 		message = NSLocalizedString(@"is not currently listening to music.", @"Not listening to music message");
 	}
 
-	[self sendMessage:[[NSAttributedString alloc] initWithString:message attributes:nil] asAction:YES];
+	[self sendMessage:[[NSAttributedString alloc] initWithString:message] asAction:YES];
 
 	return YES;
 }
@@ -1339,13 +1339,13 @@ static BOOL showingKeyboard;
 	else message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %d processors, %@ RAM and a system uptime of %@.", @"System info message"), version, orientation, model, systemVersion, processorsInTotal, systemMemory, systemUptime];
 	[UIDevice currentDevice].batteryMonitoringEnabled = batteryMonitoringEnabled;
 
-	[self sendMessage:[[NSAttributedString alloc] initWithString:message attributes:nil] asAction:YES];
+	[self sendMessage:[[NSAttributedString alloc] initWithString:message] asAction:YES];
 
 	return YES;
 }
 
 - (void) handleZncCommandWithArguments:(MVChatString *) arguments {
-	NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"*status " attributes:nil];
+	NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"*status "];
 	[attributedString appendAttributedString:arguments];
 	[self handleMsgCommandWithArguments:attributedString];
 }

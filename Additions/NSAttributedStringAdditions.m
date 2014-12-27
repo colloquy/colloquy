@@ -944,7 +944,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 	NSUInteger startIndexToRemove = 0;
 	for ( ; startIndexToRemove < string.length && [characterSet characterIsMember:[string characterAtIndex:startIndexToRemove]]; startIndexToRemove++) ;
-	if (startIndexToRemove == string.length) return [[NSAttributedString alloc] initWithString:@"" attributes:nil];
+	if (startIndexToRemove == string.length) return [[NSAttributedString alloc] initWithString:@""];
 
 	NSUInteger endIndexToRemove = (string.length - 1);
 	for ( ; endIndexToRemove > 0 && [characterSet characterIsMember:[string characterAtIndex:endIndexToRemove]]; endIndexToRemove++) ;

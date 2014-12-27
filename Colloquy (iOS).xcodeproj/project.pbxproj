@@ -140,6 +140,7 @@
 		92196CA316C918D10020FE35 /* CQChatRoomInfoDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92196CA016C918D10020FE35 /* CQChatRoomInfoDisplayViewController.m */; };
 		92196CA416C918D10020FE35 /* CQChatRoomInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92196CA216C918D10020FE35 /* CQChatRoomInfoViewController.m */; };
 		92196CA616CA345D0020FE35 /* common.css in Resources */ = {isa = PBXBuildFile; fileRef = 92196CA516CA345D0020FE35 /* common.css */; };
+		922AF5DE1A42BD4B00B2A966 /* CQColorPickerTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 922AF5DD1A42BD4B00B2A966 /* CQColorPickerTableCell.m */; };
 		922B1FE116926749002ECDFD /* MVDelegateLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FE016926749002ECDFD /* MVDelegateLogger.m */; };
 		922B20011692F19C002ECDFD /* CQPreferencesIgnoreEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B20001692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.m */; };
 		922C1630163BDBCE00B01C3D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C162F163BDBCE00B01C3D /* NSDateAdditions.m */; };
@@ -148,6 +149,8 @@
 		922C767616D9C0E900AEFCB4 /* CQInstapaperController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C767016D9C0E900AEFCB4 /* CQInstapaperController.m */; };
 		922C767716D9C0E900AEFCB4 /* CQPinboardController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C767216D9C0E900AEFCB4 /* CQPinboardController.m */; };
 		922C767816D9C0E900AEFCB4 /* CQPocketController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C767416D9C0E900AEFCB4 /* CQPocketController.m */; };
+		922F1CAA1A4EBAF0000CBACE /* NSAttributedStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 922F1CA91A4EBAF0000CBACE /* NSAttributedStringAdditions.m */; };
+		922F1CAD1A4ECC6E000CBACE /* CQModalViewControllerPresentationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922F1CAC1A4ECC6E000CBACE /* CQModalViewControllerPresentationViewController.m */; };
 		924108D615A5605A001F7681 /* NSFileManagerMoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 924108D515A5605A001F7681 /* NSFileManagerMoreAdditions.m */; };
 		9247414316119CCC009132B5 /* chromatic-redux.css in Resources */ = {isa = PBXBuildFile; fileRef = 9247414116119CCC009132B5 /* chromatic-redux.css */; };
 		924B823A116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 924B8239116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m */; };
@@ -189,6 +192,7 @@
 		92F1C9E3161D936D0035A9AF /* UIActionSheetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F1C9E2161D936D0035A9AF /* UIActionSheetAdditions.m */; };
 		92F3BE5011716FE700A4F554 /* CQPreferencesTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F3BE4F11716FE700A4F554 /* CQPreferencesTextViewCell.m */; };
 		92F3BF80117186AF00A4F554 /* CQTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F3BF7F117186AF00A4F554 /* CQTextView.m */; };
+		92F77F641A3ECAE7005667FE /* CQChatInputStyleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F77F631A3ECAE7005667FE /* CQChatInputStyleViewController.m */; };
 		92F99FB819D14034004A7A22 /* UIViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F99FB719D14034004A7A22 /* UIViewAdditions.m */; };
 		9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
 /* End PBXBuildFile section */
@@ -416,6 +420,8 @@
 		92196CA116C918D10020FE35 /* CQChatRoomInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatRoomInfoViewController.h; sourceTree = "<group>"; };
 		92196CA216C918D10020FE35 /* CQChatRoomInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatRoomInfoViewController.m; sourceTree = "<group>"; };
 		92196CA516CA345D0020FE35 /* common.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = common.css; sourceTree = "<group>"; };
+		922AF5DC1A42BD4B00B2A966 /* CQColorPickerTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQColorPickerTableCell.h; sourceTree = "<group>"; };
+		922AF5DD1A42BD4B00B2A966 /* CQColorPickerTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQColorPickerTableCell.m; sourceTree = "<group>"; };
 		922B1FDF16926749002ECDFD /* MVDelegateLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDelegateLogger.h; path = Logging/MVDelegateLogger.h; sourceTree = "<group>"; };
 		922B1FE016926749002ECDFD /* MVDelegateLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDelegateLogger.m; path = Logging/MVDelegateLogger.m; sourceTree = "<group>"; };
 		922B1FFF1692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPreferencesIgnoreEditViewController.h; sourceTree = "<group>"; };
@@ -432,6 +438,10 @@
 		922C767216D9C0E900AEFCB4 /* CQPinboardController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPinboardController.m; path = Shared/Controllers/CQPinboardController.m; sourceTree = "<group>"; };
 		922C767316D9C0E900AEFCB4 /* CQPocketController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPocketController.h; path = Shared/Controllers/CQPocketController.h; sourceTree = "<group>"; };
 		922C767416D9C0E900AEFCB4 /* CQPocketController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPocketController.m; path = Shared/Controllers/CQPocketController.m; sourceTree = "<group>"; };
+		922F1CA81A4EBAF0000CBACE /* NSAttributedStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSAttributedStringAdditions.h; path = Additions/NSAttributedStringAdditions.h; sourceTree = "<group>"; };
+		922F1CA91A4EBAF0000CBACE /* NSAttributedStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSAttributedStringAdditions.m; path = Additions/NSAttributedStringAdditions.m; sourceTree = "<group>"; };
+		922F1CAB1A4ECC6E000CBACE /* CQModalViewControllerPresentationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQModalViewControllerPresentationViewController.h; path = Mobile/Controllers/CQModalViewControllerPresentationViewController.h; sourceTree = "<group>"; };
+		922F1CAC1A4ECC6E000CBACE /* CQModalViewControllerPresentationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQModalViewControllerPresentationViewController.m; path = Mobile/Controllers/CQModalViewControllerPresentationViewController.m; sourceTree = "<group>"; };
 		924108D415A5605A001F7681 /* NSFileManagerMoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerMoreAdditions.h; path = Additions/NSFileManagerMoreAdditions.h; sourceTree = "<group>"; };
 		924108D515A5605A001F7681 /* NSFileManagerMoreAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSFileManagerMoreAdditions.m; path = Additions/NSFileManagerMoreAdditions.m; sourceTree = "<group>"; };
 		9247414116119CCC009132B5 /* chromatic-redux.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "chromatic-redux.css"; sourceTree = "<group>"; };
@@ -505,6 +515,8 @@
 		92F3BE4F11716FE700A4F554 /* CQPreferencesTextViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesTextViewCell.m; sourceTree = "<group>"; };
 		92F3BF7E117186AF00A4F554 /* CQTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQTextView.h; sourceTree = "<group>"; };
 		92F3BF7F117186AF00A4F554 /* CQTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQTextView.m; sourceTree = "<group>"; };
+		92F77F621A3ECAE7005667FE /* CQChatInputStyleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatInputStyleViewController.h; sourceTree = "<group>"; };
+		92F77F631A3ECAE7005667FE /* CQChatInputStyleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatInputStyleViewController.m; sourceTree = "<group>"; };
 		92F99FB619D14034004A7A22 /* UIViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIViewAdditions.h; path = Mobile/Additions/UIViewAdditions.h; sourceTree = "<group>"; };
 		92F99FB719D14034004A7A22 /* UIViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIViewAdditions.m; path = Mobile/Additions/UIViewAdditions.m; sourceTree = "<group>"; };
 		9703B2190F2C0D0E00E623DF /* CQFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQFileTransferController.h; sourceTree = "<group>"; };
@@ -680,6 +692,8 @@
 				1C1254A20F0D8D7F008F181B /* CQChatCreationViewController.h */,
 				1C1255660F0EAA69008F181B /* CQChatEditViewController.m */,
 				1C1255650F0EAA69008F181B /* CQChatEditViewController.h */,
+				92F77F631A3ECAE7005667FE /* CQChatInputStyleViewController.m */,
+				92F77F621A3ECAE7005667FE /* CQChatInputStyleViewController.h */,
 				92196CA016C918D10020FE35 /* CQChatRoomInfoDisplayViewController.m */,
 				92196C9F16C918D10020FE35 /* CQChatRoomInfoDisplayViewController.h */,
 				92196CA216C918D10020FE35 /* CQChatRoomInfoViewController.m */,
@@ -717,6 +731,8 @@
 				1CA3DEBA10290B0E008B1AD2 /* CQHelpTopicViewController.h */,
 				925C594B1177CB63001995E0 /* CQModalNavigationController.m */,
 				925C594A1177CB63001995E0 /* CQModalNavigationController.h */,
+				922F1CAC1A4ECC6E000CBACE /* CQModalViewControllerPresentationViewController.m */,
+				922F1CAB1A4ECC6E000CBACE /* CQModalViewControllerPresentationViewController.h */,
 				9290603516B261830095EC03 /* CQPreferencesViewController.m */,
 				9290603416B261830095EC03 /* CQPreferencesViewController.h */,
 				9292E92F16A956E300F22070 /* CQPreferencesDisplayViewController.m */,
@@ -862,6 +878,8 @@
 				1CAE8BC60EE6111900CE1AF8 /* CQUIChatTranscriptView.h */,
 				926678F819C03C8500CCE5BE /* CQWKChatTranscriptView.m */,
 				926678F719C03C8500CCE5BE /* CQWKChatTranscriptView.h */,
+				922AF5DD1A42BD4B00B2A966 /* CQColorPickerTableCell.m */,
+				922AF5DC1A42BD4B00B2A966 /* CQColorPickerTableCell.h */,
 				1C82C1A20D83D133009ABD9F /* CQConnectionTableHeaderView.m */,
 				1C82C1A10D83D133009ABD9F /* CQConnectionTableHeaderView.h */,
 				97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */,
@@ -959,6 +977,8 @@
 				92F99FB619D14034004A7A22 /* UIViewAdditions.h */,
 				92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */,
 				92D30F2A116D2B020060EE33 /* UIViewControllerAdditions.h */,
+				922F1CA91A4EBAF0000CBACE /* NSAttributedStringAdditions.m */,
+				922F1CA81A4EBAF0000CBACE /* NSAttributedStringAdditions.h */,
 				891E84D3123F0C8C00EC3C0F /* NSCharacterSetAdditions.m */,
 				891E84D2123F0C8C00EC3C0F /* NSCharacterSetAdditions.h */,
 				1C0932670D80CA4800A2705D /* NSDataAdditions.m */,
@@ -1262,6 +1282,7 @@
 				1C0932830D80CA4800A2705D /* NSScannerAdditions.m in Sources */,
 				1C0932850D80CA4800A2705D /* NSStringAdditions.m in Sources */,
 				1C0937820D8116FC00A2705D /* CQChatController.m in Sources */,
+				922F1CAD1A4ECC6E000CBACE /* CQModalViewControllerPresentationViewController.m in Sources */,
 				1C0938950D813A6B00A2705D /* CQDirectChatController.m in Sources */,
 				1C0938960D813A6C00A2705D /* CQChatRoomController.m in Sources */,
 				1C82C1970D83CF1D009ABD9F /* CQChatTableCell.m in Sources */,
@@ -1283,6 +1304,7 @@
 				1CE69FD90EE317F200389442 /* CQChatInputBar.m in Sources */,
 				1CAE8BC80EE6111900CE1AF8 /* CQUIChatTranscriptView.m in Sources */,
 				1CC64B2D0EE97F8B00DE91D0 /* CQChatUserListViewController.m in Sources */,
+				922AF5DE1A42BD4B00B2A966 /* CQColorPickerTableCell.m in Sources */,
 				1CA7151A0EF47D6F006225CD /* CQUnreadCountView.m in Sources */,
 				1C20BE820EFEDF26005AD8A5 /* NSDictionaryAdditions.m in Sources */,
 				1CBCFF2D0F04632900EEBCFB /* CQTextCompletionView.m in Sources */,
@@ -1332,6 +1354,7 @@
 				1C716EDC13100F220088C737 /* MVIRCChatRoom.m in Sources */,
 				1C716EDD13100F220088C737 /* MVIRCChatUser.m in Sources */,
 				1C716EDE13100F220088C737 /* MVIRCFileTransfer.m in Sources */,
+				922F1CAA1A4EBAF0000CBACE /* NSAttributedStringAdditions.m in Sources */,
 				1C716EE013100F220088C737 /* InterThreadMessaging.m in Sources */,
 				1C716EE113100F220088C737 /* RegexKitLite.m in Sources */,
 				926678F919C03C8500CCE5BE /* CQWKChatTranscriptView.m in Sources */,
@@ -1358,6 +1381,7 @@
 				9251306719FDCEAA00847018 /* UIFontAdditions.m in Sources */,
 				9292E93016A956E300F22070 /* CQPreferencesDisplayViewController.m in Sources */,
 				92AFF85216B0D25D00940E5D /* NSRegularExpressionAdditions.m in Sources */,
+				92F77F641A3ECAE7005667FE /* CQChatInputStyleViewController.m in Sources */,
 				9290603616B261840095EC03 /* CQPreferencesViewController.m in Sources */,
 				92F99FB819D14034004A7A22 /* UIViewAdditions.m in Sources */,
 				92196CA316C918D10020FE35 /* CQChatRoomInfoDisplayViewController.m in Sources */,
@@ -1434,6 +1458,7 @@
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 					ENABLE_SECRETS,
 					USE_HTML_CHAT_STRING,
+					USE_ATTRIBUTED_CHAT_STRING,
 					"ENABLE_AUTO_PORT_MAPPING=0",
 					"ENABLE_SCRIPTING=0",
 					"ENABLE_PLUGINS=0",
@@ -1482,7 +1507,7 @@
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 					ENABLE_SECRETS,
 					USE_HTML_CHAT_STRING,
-					"ENABLE_AUTO_PORT_MAPPING=0",
+					USE_ATTRIBUTED_CHAT_STRING,
 					"ENABLE_SCRIPTING=0",
 					"ENABLE_PLUGINS=0",
 					"ENABLE_SILC=0",
@@ -1527,6 +1552,7 @@
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 					ENABLE_SECRETS,
 					USE_HTML_CHAT_STRING,
+					USE_ATTRIBUTED_CHAT_STRING,
 					"ENABLE_AUTO_PORT_MAPPING=0",
 					"ENABLE_SCRIPTING=0",
 					"ENABLE_PLUGINS=0",
