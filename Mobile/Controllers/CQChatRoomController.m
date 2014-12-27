@@ -1,5 +1,7 @@
 #import "CQChatRoomController.h"
 
+#import "CQChatInputStyleViewController.h"
+
 #import "CQAlertView.h"
 #import "CQChatController.h"
 #import "CQChatPresentationController.h"

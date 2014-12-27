@@ -588,6 +588,10 @@ retry:
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 
 	[self performSelector:@selector(hideCompletions) withObject:nil afterDelay:0.5];
+
+	__strong __typeof__((_delegate)) strongDelegate = _delegate;
+	if ([strongDelegate respondsToSelector:@selector(chatInputBarDidChangeSelection:)])
+		[strongDelegate chatInputBarDidChangeSelection:self];
 }
 
 #pragma mark -
@@ -728,8 +732,9 @@ retry:
 		[_inputView resignFirstResponder];
 		[_inputView becomeFirstResponder];
 
-		NSString *text = _inputView.text;
-		text = [text stringBySubstitutingEmojiForEmoticons];
+		MVChatString *text = _inputView.attributedText;
+		if (!text) text = [[NSAttributedString alloc] initWithString:_inputView.text attributes:@{ NSFontAttributeName: _inputView.font }];
+//		text = [text stringBySubstitutingEmojiForEmoticons];
 
 		__strong __typeof__((_delegate)) strongDelegate = _delegate;
 		if (![strongDelegate chatInputBar:self sendText:text])

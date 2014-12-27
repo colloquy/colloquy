@@ -1,4 +1,5 @@
 #import "CQTextCompletionView.h"
+#import "MVChatString.h"
 
 @protocol CQChatInputBarDelegate;
 @class CQTextCompletionView;
@@ -62,7 +63,8 @@ typedef enum {
 - (BOOL) chatInputBarShouldEndEditing:(CQChatInputBar *) chatInputBar;
 - (void) chatInputBarDidEndEditing:(CQChatInputBar *) chatInputBar;
 - (BOOL) chatInputBarShouldIndent:(CQChatInputBar *) chatInputBar;
-- (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text;
+- (void) chatInputBarDidChangeSelection:(CQChatInputBar *) chatInputBar;
+- (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(MVChatString *) text;
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar shouldAutocorrectWordWithPrefix:(NSString *) word;
 - (NSArray *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range;
 - (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) chatInputBar;

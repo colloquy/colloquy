@@ -5,6 +5,8 @@
 #import "CQImportantChatMessageViewController.h"
 #import "CQViewController.h"
 
+#import "MVChatString.h"
+
 #define ReconnectAlertTag 1
 #define RejoinRoomAlertTag 2
 
@@ -13,6 +15,7 @@
 
 @class CQChatTableCell;
 @class CQChatInputBar;
+@class CQModalViewControllerPresentationViewController;
 @class CQUIChatTranscriptView;
 @class CQWKChatTranscriptView;
 @class MVChatUser;
@@ -57,6 +60,8 @@ typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
 	NSTimeInterval _lastTimestampTime;
 	NSTimeInterval _lastMessageTime;
 
+	CQModalViewControllerPresentationViewController *_stylePresentationViewController;
+
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
 	BOOL _isShowingCompletionsBeforeRotation;
 #endif
@@ -79,7 +84,7 @@ typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
 
 - (void) showRecentlySentMessages;
 
-- (void) sendMessage:(NSString *) message asAction:(BOOL) action;
+- (void) sendMessage:(MVChatString *) message asAction:(BOOL) action;
 
 - (void) addMessage:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier;
 - (void) addMessage:(NSDictionary *) message;

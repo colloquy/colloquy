@@ -24,6 +24,7 @@ static const unsigned char mIRCColors[][3] = {
 	{ 0xd6, 0xd6, 0xd6 }   /* 15) light gray */
 };
 
+#if SYSTEM(MAC)
 static const unsigned char CTCPColors[][3] = {
 	{ 0x00, 0x00, 0x00 },  /* 0) black */
 	{ 0x00, 0x00, 0x7f },  /* 1) blue */
@@ -42,6 +43,7 @@ static const unsigned char CTCPColors[][3] = {
 	{ 0xff, 0xff, 0x00 },  /* E) yellow */
 	{ 0xff, 0xff, 0xff }   /* F) white */
 };
+#endif
 
 static unsigned short colorRGBToMIRCColor( unsigned char red, unsigned char green, unsigned char blue ) {
 	unsigned short color = 1;
@@ -58,6 +60,7 @@ static unsigned short colorRGBToMIRCColor( unsigned char red, unsigned char gree
 	return color;
 }
 
+#if SYSTEM(MAC)
 static BOOL scanOneOrTwoDigits( NSScanner *scanner, NSUInteger *number ) {
 	NSCharacterSet *characterSet = [NSCharacterSet decimalDigitCharacterSet];
 	NSString *chars = nil;
@@ -95,6 +98,7 @@ static void removeItalicOrObliqueFont( NSMutableDictionary *attrs ) {
 
 	[attrs removeObjectForKey:NSObliquenessAttributeName];
 }
+#endif
 
 NSString *NSChatWindowsIRCFormatType = @"NSChatWindowsIRCFormatType";
 NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
@@ -102,6 +106,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 #pragma mark -
 
 @implementation NSAttributedString (NSAttributedStringHTMLAdditions)
+#if SYSTEM(MAC)
 + (id) attributedStringWithHTMLFragment:(NSString *) fragment baseURL:(NSURL *) url {
 	NSParameterAssert( fragment != nil );
 
@@ -220,13 +225,22 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 	return ret;
 }
+#else
+
+- (NSString *) HTMLFormatWithOptions:(NSDictionary *) options {
+	return nil;
+}
+#endif
 
 #pragma mark -
 
+#if SYSTEM(MAC)
 + (id) attributedStringWithChatFormat:(NSData *) data options:(NSDictionary *) options {
 	return [[self allocWithZone:nil] initWithChatFormat:data options:options];
 }
+#endif
 
+#if SYSTEM(MAC)
 - (id) initWithChatFormat:(NSData *) data options:(NSDictionary *) options {
 	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedLongValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
@@ -579,6 +593,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 	return [self initWithAttributedString:ret];
 }
+#endif
 
 - (NSData *) _mIRCFormatWithOptions:(NSDictionary *) options {
 	NSRange limitRange, effectiveRange;
@@ -591,25 +606,41 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		NSDictionary *dict = [self attributesAtIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
 
 		id link = [dict objectForKey:NSLinkAttributeName];
+		BOOL bold = NO, italic = NO, underline = NO;
+#if SYSTEM(MAC)
 		NSFont *currentFont = [dict objectForKey:NSFontAttributeName];
 		NSColor *foregroundColor = [dict objectForKey:NSForegroundColorAttributeName];
 		NSColor *backgroundColor = [dict objectForKey:NSBackgroundColorAttributeName];
-		BOOL bold = NO, italic = NO, underline = NO;
-
+#else
+		UIFont *currentFont = [dict objectForKey:NSFontAttributeName];
+		UIColor *foregroundColor = [dict objectForKey:NSForegroundColorAttributeName];
+		UIColor *backgroundColor = [dict objectForKey:NSBackgroundColorAttributeName];
+#endif
 		if( ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
+#if SYSTEM(MAC)
 			NSFontTraitMask traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
 			if( traits & NSBoldFontMask ) bold = YES;
 			if( traits & NSItalicFontMask ) italic = YES;
+#else
+			UIFontDescriptor *descriptor = currentFont.fontDescriptor;
+			bold = (descriptor.symbolicTraits & UIFontDescriptorTraitBold) == UIFontDescriptorTraitBold;
+			italic = (descriptor.symbolicTraits & UIFontDescriptorTraitItalic) == UIFontDescriptorTraitItalic;
+#endif
 			NSNumber *oblique = [dict objectForKey:NSObliquenessAttributeName];
 			if( oblique && [oblique floatValue] > 0. ) italic = YES;
 			if( [[dict objectForKey:NSUnderlineStyleAttributeName] intValue] ) underline = YES;
 		}
 
+#if SYSTEM(MAC)
 		if( backgroundColor && ! foregroundColor )
 			foregroundColor = [NSColor colorWithCalibratedRed:0. green:0. blue:0. alpha:1.];
 
 		if( ! [[foregroundColor colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && ! [[foregroundColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace] )
 			foregroundColor = [foregroundColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace]; // we need to convert to RGB space
+#else
+		if( backgroundColor && ! foregroundColor )
+			foregroundColor = [UIColor colorWithRed:0. green:0. blue:0. alpha:1.];
+#endif
 
 		if( foregroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
 			char buffer[6];
@@ -621,8 +652,10 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			snprintf( buffer, 6, "\003%d", ircColor );
 			[ret appendBytes:buffer length:strlen( buffer )];
 
+#if SYSTEM(MAC)
 			if( ! [[backgroundColor colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && ! [[backgroundColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace] )
 				backgroundColor = [backgroundColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace]; // we need to convert to RGB space
+#endif
 
 			if( backgroundColor ) {
 				[backgroundColor getRed:&red green:&green blue:&blue alpha:NULL];
@@ -661,6 +694,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	return ret;
 }
 
+#if SYSTEM(MAC)
 - (NSData *) _CTCP2FormatWithOptions:(NSDictionary *) options {
 	NSRange limitRange, effectiveRange;
 	NSMutableData *ret = [[NSMutableData allocWithZone:nil] initWithCapacity:( self.length + 40 )];
@@ -835,12 +869,17 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 	return ret;
 }
+#endif
 
 - (NSData *) chatFormatWithOptions:(NSDictionary *) options {
 	NSString *format = [options objectForKey:@"FormatType"];
 
+#if SYSTEM(MAC)
 	if( [format isEqualToString:NSChatCTCPTwoFormatType] ) return [self _CTCP2FormatWithOptions:options];
 	else if( [format isEqualToString:NSChatWindowsIRCFormatType] ) return [self _mIRCFormatWithOptions:options];
+#else
+	if( [format isEqualToString:NSChatWindowsIRCFormatType] ) return [self _mIRCFormatWithOptions:options];
+#endif
 
 	// No formatting.
 	NSMutableData *ret = [NSMutableData data];
@@ -856,6 +895,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	return ret;
 }
 
+#if SYSTEM(MAC)
 - (NSAttributedString *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set {
 	NSTextStorage *mutableStorage = [self copy];
 	NSRange range = [[self string] rangeOfCharacterFromSet:set];
@@ -865,5 +905,50 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	}
 
 	return mutableStorage;
+}
+#endif
+
+- (NSString *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set {
+	NSMutableAttributedString *mutableStorage = [self mutableCopy];
+	NSRange range = [mutableStorage.string rangeOfCharacterFromSet:set];
+	while (range.location != NSNotFound) {
+		[mutableStorage replaceCharactersInRange:range withString:@""];
+		range = [mutableStorage.string rangeOfCharacterFromSet:set];
+	}
+
+	return [mutableStorage copy];
+}
+
+- (NSAttributedString *) attributedSubstringFromIndex:(NSUInteger) index {
+	NSUInteger length = self.string.length;
+	if (length == 0) return [self copy];
+	return [self attributedSubstringFromRange:NSMakeRange(index, length - index)];
+}
+
+- (NSArray *) cq_componentsSeparatedByCharactersInSet:(NSCharacterSet *) characterSet {
+	NSParameterAssert(characterSet);
+
+	NSArray *stringComponentsSeparatedByCharactersInSet = [self.string componentsSeparatedByCharactersInSet:characterSet];
+	NSMutableArray *componentsSeparatedByCharactersInSet = [NSMutableArray array];
+	NSUInteger currentIndex = 0;
+	for (NSString *string in stringComponentsSeparatedByCharactersInSet) {
+		[componentsSeparatedByCharactersInSet addObject:[self attributedSubstringFromRange:NSMakeRange(currentIndex, string.length)]];
+		currentIndex += string.length;
+	}
+
+	return [componentsSeparatedByCharactersInSet copy];
+}
+
+- (NSAttributedString *) cq_stringByTrimmingCharactersInSet:(NSCharacterSet *) characterSet {
+	NSString *string = self.string;
+
+	NSUInteger startIndexToRemove = 0;
+	for ( ; startIndexToRemove < string.length && [characterSet characterIsMember:[string characterAtIndex:startIndexToRemove]]; startIndexToRemove++) ;
+	if (startIndexToRemove == string.length) return [[NSAttributedString alloc] initWithString:@"" attributes:nil];
+
+	NSUInteger endIndexToRemove = (string.length - 1);
+	for ( ; endIndexToRemove > 0 && [characterSet characterIsMember:[string characterAtIndex:endIndexToRemove]]; endIndexToRemove++) ;
+
+	return [self attributedSubstringFromRange:NSMakeRange(startIndexToRemove, string.length - startIndexToRemove - (string.length - endIndexToRemove))];
 }
 @end

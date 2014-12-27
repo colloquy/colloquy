@@ -297,8 +297,11 @@ enum {
 		[textView resignFirstResponder];
 
 		NSString *currentTopic = [[NSString alloc] initWithData:_room.topic encoding:_room.encoding];;
-		if (![currentTopic isEqualToString:textView.text])
-			[_room changeTopic:textView.text];
+		if (![currentTopic isEqualToString:textView.text]) {
+			NSAttributedString *attributedText = textView.attributedText;
+			if (!attributedText) attributedText = [[NSAttributedString alloc] initWithString:textView.text attributes:@{ NSFontAttributeName: textView.font }];
+			[_room changeTopic:attributedText];
+		}
 
 		return NO;
 	}

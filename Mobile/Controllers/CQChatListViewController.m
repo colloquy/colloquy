@@ -882,11 +882,13 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 				[connection connectDirectly];
 		} else if (actionSheet.tag == DisconnectSheetTag) {
 			if (buttonIndex == actionSheet.destructiveButtonIndex) {
-				if (connection.directConnection)
-					[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
-				else [connection sendRawMessageImmediatelyWithComponents:@"SQUIT :", [MVChatConnection defaultQuitMessage], nil];
+				if (connection.directConnection) {
+					NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:[MVChatConnection defaultQuitMessage]];
+					[connection disconnectWithReason:quitMessageString];
+				} else [connection sendRawMessageImmediatelyWithComponents:@"SQUIT :", [MVChatConnection defaultQuitMessage], nil];
 			} else if (!connection.directConnection && buttonIndex == 0) {
-				[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+				NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:[MVChatConnection defaultQuitMessage]];
+				[connection disconnectWithReason:quitMessageString];
 			} else if (buttonIndex == 1) {
 				[[CQChatController defaultController] showConsoleForConnection:connection];
 			} else if (connection.connected) {

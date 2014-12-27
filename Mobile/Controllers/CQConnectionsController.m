@@ -480,8 +480,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 - (void) _applicationWillTerminate {
 	[self saveConnections];
 
-	for (MVChatConnection *connection in _connections)
-		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+	for (MVChatConnection *connection in _connections) {
+		NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:[MVChatConnection defaultQuitMessage]];
+		[connection disconnectWithReason:quitMessageString];
+	}
 }
 
 - (void) _applicationNetworkStatusDidChange:(NSNotification *) notification {
@@ -763,13 +765,13 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	if (!_shouldLogRawMessagesToConsole)
 		return;
 
-	MVChatConnection *connection = notification.object;
-	NSString *message = [notification userInfo][@"message"];
-	BOOL outbound = [[notification userInfo][@"outbound"] boolValue];
+//	MVChatConnection *connection = notification.object;
+//	NSString *message = [notification userInfo][@"message"];
+//	BOOL outbound = [[notification userInfo][@"outbound"] boolValue];
 
-	if (connection.bouncerType == MVChatConnectionColloquyBouncer)
-		NSLog(@"%@ (via %@): %@ %@", connection.server, connection.bouncerServer, (outbound ? @"<<" : @">>"), message);
-	else NSLog(@"%@: %@ %@", connection.server, (outbound ? @"<<" : @">>"), message);
+//	if (connection.bouncerType == MVChatConnectionColloquyBouncer)
+//		NSLog(@"%@ (via %@): %@ %@", connection.server, connection.bouncerServer, (outbound ? @"<<" : @">>"), message);
+//	else NSLog(@"%@: %@ %@", connection.server, (outbound ? @"<<" : @">>"), message);
 }
 
 - (BOOL) _shouldDisableIdleTimer {
