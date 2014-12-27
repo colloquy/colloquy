@@ -78,6 +78,7 @@ NSString *MVChatConnectionDidDisconnectNotification = @"MVChatConnectionDidDisco
 NSString *MVChatConnectionGotErrorNotification = @"MVChatConnectionGotErrorNotification";
 NSString *MVChatConnectionErrorNotification = @"MVChatConnectionErrorNotification";
 
+NSString *MVChatConnectionNeedTLSPeerTrustFeedbackNotification = @"MVChatConnectionNeedTLSPeerTrustFeedbackNotification";
 NSString *MVChatConnectionNeedNicknamePasswordNotification = @"MVChatConnectionNeedNicknamePasswordNotification";
 NSString *MVChatConnectionNeedCertificatePasswordNotification = @"MVChatConnectionNeedCertificatePasswordNotification";
 NSString *MVChatConnectionNeedPublicKeyVerificationNotification = @"MVChatConnectionNeedPublicKeyVerificationNotification";

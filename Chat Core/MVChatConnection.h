@@ -72,6 +72,8 @@ typedef NS_ENUM(NSInteger, MVChatConnectionError) {
 	MVChatConnectionTLSError = -24
 };
 
+typedef BOOL (^MVPeerTrustHandler)(SecTrustRef);
+
 @class MVChatRoom;
 @class MVChatUser;
 @class MVChatUserWatchRule;
@@ -115,6 +117,7 @@ extern NSString *MVChatConnectionDidDisconnectNotification;
 extern NSString *MVChatConnectionGotErrorNotification;
 extern NSString *MVChatConnectionErrorNotification;
 
+extern NSString *MVChatConnectionNeedTLSPeerTrustFeedbackNotification; // used when connecting
 extern NSString *MVChatConnectionNeedNicknamePasswordNotification;
 extern NSString *MVChatConnectionNeedCertificatePasswordNotification;
 extern NSString *MVChatConnectionNeedPublicKeyVerificationNotification;
@@ -247,7 +250,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property MVChatMessageFormat outgoingChatFormat;
 
-@property(getter=didConnectSecurely) BOOL connectedSecurely; // IRCv3.1 + `tls` capability can indicate that the *next* connection will be secure, but not our current one 
+@property(getter=didConnectSecurely) BOOL connectedSecurely; // IRCv3.1 + `tls` capability can indicate that the *next* connection will be secure, but not our current one
 @property(getter=isSecure) BOOL secure;
 @property BOOL requestsSASL;
 @property BOOL roomsWaitForIdentification;

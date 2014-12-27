@@ -799,6 +799,8 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) _connect {
 	id old = _chatConnection;
 	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionQueue socketQueue:_connectionQueue];
+	_chatConnection.IPv6Enabled = YES;
+	_chatConnection.IPv4PreferredOverIPv6 = YES;
 	[old setDelegate:nil];
 	[old disconnect];
 
@@ -843,6 +845,23 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 #pragma mark -
+
+- (void) socket:(GCDAsyncSocket *) socket didReceiveTrust:(SecTrustRef) trust completionHandler:(void (^)(BOOL shouldTrustPeer))completionHandler {
+	if (!trust || !completionHandler)
+		return;
+
+	SecTrustEvaluateAsync(trust, dispatch_get_main_queue(), ^(SecTrustRef trustRef, SecTrustResultType result) {
+		if (result == kSecTrustResultProceed) {
+			completionHandler(YES);
+			return;
+		}
+
+		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:self userInfo:@{
+			@"completionHandler": completionHandler,
+			@"trust": (__bridge id)trust
+		}];
+	});
+}
 
 - (void) socketDidDisconnect:(GCDAsyncSocket *) sock withError:(NSError *) error {
 	if( sock != _chatConnection ) return;
@@ -1835,9 +1854,9 @@ end:
 
 - (void) _startTLS {
 	NSMutableDictionary *settings = [NSMutableDictionary dictionary];
-	[settings setObject:(id)kCFBooleanTrue forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
-	[settings setObject:(id)kCFBooleanFalse forKey:(NSString *)kCFStreamSSLValidatesCertificateChain];
-	[settings setObject:(id)kCFStreamSocketSecurityLevelNegotiatedSSL forKey:(id)kCFStreamSSLLevel];
+	[settings setObject:@(0) forKey:GCDAsyncSocketSSLSessionOptionSendOneByteRecord];
+	[settings setObject:@(0) forKey:GCDAsyncSocketSSLSessionOptionFalseStart];
+	[settings setObject:@(1) forKey:GCDAsyncSocketManuallyEvaluateTrust];
 
 	[_chatConnection startTLS:settings];
 }
