@@ -851,7 +851,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		return;
 
 	SecTrustEvaluateAsync(trust, dispatch_get_main_queue(), ^(SecTrustRef trustRef, SecTrustResultType result) {
-		if (result == kSecTrustResultProceed) {
+		if (result == kSecTrustResultProceed || result == kSecTrustResultUnspecified) {
 			completionHandler(YES);
 			return;
 		}
