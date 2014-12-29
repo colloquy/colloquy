@@ -293,12 +293,36 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	if (alertView.tag == PeerTrustFeedbackTag) {
 		void (^completionHandler)(BOOL shouldTrustPeer) = [alertView associatedObjectForKey:@"completionHandler"];
 
-		if (buttonIndex == 0) {
+		if (buttonIndex == 0) { // cancel
 			completionHandler(NO);
-		} else if (buttonIndex == 2) {
+		} else if (buttonIndex == 1) { // continue
 			completionHandler(YES);
-		} else {
-			// details screen
+		} else { // always continue
+			completionHandler(YES);
+
+			SecTrustRef trust = (__bridge SecTrustRef)[alertView associatedObjectForKey:@"trust"];
+
+			// • The correct way to handle this is by creating an exception with SecTrustSetExceptions().
+			// This doesn't seem to work on iOS 8; the trust result isn't the same for across multiple SecTrustRef's.
+			// (That is:
+			//		Connect -> Evaluate Trust and get initial state -> Add Exception. Evaluate Trust and get .Proceed.
+			//		Reconnect -> Evaluate Trust and get the initial state again.)
+			// But, it doesn't hurt to try setting an exception, anyway.
+			SecTrustSetExceptions(trust, SecTrustCopyExceptions(trust));
+
+			// • To work around this, copy the certificate data to the keychain (along with the current trust
+			// result. If it changes in the future, we will force a re-evaluation of trust on the next connection.
+			// • If we do not have any certificate data, we will force a re-evaluation of trust on the next connection.
+			CFIndex certificateCount = SecTrustGetCertificateCount(trust);
+			if (certificateCount == 0)
+				return;
+
+			SecCertificateRef certificate = SecTrustGetCertificateAtIndex(trust, 0);
+			NSString *certificateSubject = (__bridge_transfer NSString *)SecCertificateCopySubjectSummary(certificate);
+			NSData *certificateData = (__bridge_transfer NSData *)SecCertificateCopyData(certificate);
+
+			[[CQKeychain standardKeychain] setData:certificateData forServer:certificateSubject area:@"Certificate"];
+			[[CQKeychain standardKeychain] setPassword:[alertView associatedObjectForKey:@"result"] forServer:certificateSubject area:@"Trust"];
 		}
 	}
 }
@@ -317,13 +341,34 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		completionHandler(YES);
 	} else { // Ask people what to do
 #if SYSTEM(IOS)
-		NSString *certificateSubject = nil;
 		SecTrustRef trust = (__bridge SecTrustRef)notification.userInfo[@"trust"];
-		CFIndex certificateCount = SecTrustGetCertificateCount(trust);
-		if (certificateCount == 0) {
+		SecCertificateRef certificate;
+		NSString *certificateSubject = nil;
+		if (SecTrustGetCertificateCount(trust) == 0)
 			certificateSubject = @"Unknown";
-		} else {
+		else {
+			// In the event that SecTrustAddException() starts working, we will have different results, but, it won't matter
+			// because the initial trust evaluation will succeed and we will not get to this point.
+			certificate = SecTrustGetCertificateAtIndex(trust, 0);
 			certificateSubject = (__bridge_transfer NSString *)SecCertificateCopySubjectSummary(SecTrustGetCertificateAtIndex(trust, 0));
+			SecTrustResultType result = [notification.userInfo[@"result"] intValue];
+			SecTrustResultType existingResult = [[[CQKeychain standardKeychain] passwordForServer:certificateSubject area:@"Trust"] intValue];
+			BOOL isSameResult = (result == existingResult);
+			BOOL isSameData = NO;
+
+			if (isSameResult) {
+				NSData *certificateData = (__bridge_transfer NSData *)SecCertificateCopyData(certificate);
+				NSData *savedCertificateData = [[CQKeychain standardKeychain] dataForServer:certificateSubject area:@"Certificate"];
+				isSameData = [certificateData isEqualToData:savedCertificateData];
+			}
+
+			if (isSameResult && isSameData) {
+				completionHandler(YES);
+				return;
+			} else {
+				[[CQKeychain standardKeychain] removeDataForServer:certificateSubject area:@"Certificate"];
+				[[CQKeychain standardKeychain] removePasswordForServer:certificateSubject area:@"Trust"];
+			}
 		}
 
 		CQAlertView *alertView = [[CQAlertView alloc] init];
@@ -332,10 +377,12 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		alertView.title = NSLocalizedString(@"Cannot Verify Server Identity" , @"Cannot Verify Server Identity alert title");
 		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"The identity of \"%@\" cannot be verified by Colloquy. Please decide how to continue.", @"Identity cannot be verified message"), certificateSubject];
 		[alertView addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel alert button")];
-		[alertView addButtonWithTitle:NSLocalizedString(@"Details", @"Details alert button")];
 		[alertView addButtonWithTitle:NSLocalizedString(@"Continue", @"Continue alert button")];
+		[alertView addButtonWithTitle:NSLocalizedString(@"Always Continue", @"Always Continue alert button")];
 
 		[alertView associateObject:completionHandler forKey:@"completionHandler"];
+		[alertView associateObject:notification.userInfo[@"trust"] forKey:@"trust"];
+		[alertView associateObject:notification.userInfo[@"result"] forKey:@"result"];
 
 		[alertView show];
 #elif SYSTEM(MAC)

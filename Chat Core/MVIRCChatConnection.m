@@ -858,7 +858,8 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:self userInfo:@{
 			@"completionHandler": completionHandler,
-			@"trust": (__bridge id)trust
+			@"trust": (__bridge id)trust,
+			@"result": [NSString stringWithFormat:@"%d", result]
 		}];
 	});
 }
