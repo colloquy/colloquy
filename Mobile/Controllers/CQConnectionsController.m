@@ -669,7 +669,8 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 			continue;
 
 		BOOL wasConnected = connection.connected || connection.status == MVChatConnectionConnectingStatus;
-		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+		NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:[MVChatConnection defaultQuitMessage]];
+		[connection disconnectWithReason:attributedString];
 		if (wasConnected)
 			[connection _setStatus:MVChatConnectionSuspendedStatus];
 	}
@@ -689,7 +690,8 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 	for (MVChatConnection *connection in _connections) {
 		BOOL wasConnected = connection.connected || connection.status == MVChatConnectionConnectingStatus;
-		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+		NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:[MVChatConnection defaultQuitMessage]];
+		[connection disconnectWithReason:attributedString];
 		if (wasConnected)
 			[connection _setStatus:MVChatConnectionSuspendedStatus];
 	}
@@ -727,7 +729,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	if ([[CQSettingsController settingsController] boolForKey:@"CQAutoAwayWhenMultitasking"] && defaultAwayMessage.length) {
 		for (MVChatConnection *connection in _connections) {
 			if (!connection.awayStatusMessage.length) {
-				connection.awayStatusMessage = defaultAwayMessage;
+				connection.awayStatusMessage = [[NSAttributedString alloc] initWithString:defaultAwayMessage];
 				[_automaticallySetConnectionAwayStatus addObject:connection];
 			}
 		}
@@ -765,13 +767,13 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	if (!_shouldLogRawMessagesToConsole)
 		return;
 
-//	MVChatConnection *connection = notification.object;
-//	NSString *message = [notification userInfo][@"message"];
-//	BOOL outbound = [[notification userInfo][@"outbound"] boolValue];
+	MVChatConnection *connection = notification.object;
+	NSString *message = [notification userInfo][@"message"];
+	BOOL outbound = [[notification userInfo][@"outbound"] boolValue];
 
-//	if (connection.bouncerType == MVChatConnectionColloquyBouncer)
-//		NSLog(@"%@ (via %@): %@ %@", connection.server, connection.bouncerServer, (outbound ? @"<<" : @">>"), message);
-//	else NSLog(@"%@: %@ %@", connection.server, (outbound ? @"<<" : @">>"), message);
+	if (connection.bouncerType == MVChatConnectionColloquyBouncer)
+		NSLog(@"%@ (via %@): %@ %@", connection.server, connection.bouncerServer, (outbound ? @"<<" : @">>"), message);
+	else NSLog(@"%@: %@ %@", connection.server, (outbound ? @"<<" : @">>"), message);
 }
 
 - (BOOL) _shouldDisableIdleTimer {
@@ -865,7 +867,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		arguments = [fullCommand substringFromIndex:scanner.scanLocation];
 		arguments = [arguments stringByReplacingOccurrencesOfString:@"%@" withString:connection.preferredNickname];
 
-		[connection sendCommand:command withArguments:arguments];
+		[connection sendCommand:command withArguments:[[NSAttributedString alloc] initWithString:arguments]];
 	}
 
     for (NSUInteger i = 0; i < rooms.count; i++) {
@@ -1562,7 +1564,8 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	MVChatConnection *connection = _directConnections[index];
 	if (!connection) return;
 
-	[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:[MVChatConnection defaultQuitMessage]];
+	[connection disconnectWithReason:quitMessageString];
 
 	[_directConnections removeObjectAtIndex:index];
 	[_connections removeObject:connection];
@@ -1650,8 +1653,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	CQBouncerSettings *bouncer = _bouncers[index];
 
 	NSArray *connections = [self bouncerChatConnectionsForIdentifier:bouncer.identifier];
-	for (MVChatConnection *connection in connections)
-		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+	for (MVChatConnection *connection in connections) {
+		NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:[MVChatConnection defaultQuitMessage]];
+		[connection disconnectWithReason:quitMessageString];
+	}
 
 	[_bouncers removeObjectAtIndex:index];
 	[_bouncerChatConnections removeObjectForKey:bouncer.identifier];
