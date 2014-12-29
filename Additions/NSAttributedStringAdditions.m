@@ -895,19 +895,6 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	return ret;
 }
 
-#if SYSTEM(MAC)
-- (NSAttributedString *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set {
-	NSTextStorage *mutableStorage = [self copy];
-	NSRange range = [[self string] rangeOfCharacterFromSet:set];
-	while (range.location != NSNotFound) {
-		[mutableStorage replaceCharactersInRange:range withString:@""];
-		range = [[self string] rangeOfCharacterFromSet:set];
-	}
-
-	return mutableStorage;
-}
-#endif
-
 - (NSString *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set {
 	NSMutableAttributedString *mutableStorage = [self mutableCopy];
 	NSRange range = [mutableStorage.string rangeOfCharacterFromSet:set];
