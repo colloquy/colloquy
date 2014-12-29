@@ -604,7 +604,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		[self _incrementalWriteToLog:root continuation:( parent ? YES : NO )];
 
 		if( _logFile ) {
-			NSString *lastDateString = [[message date] description];
+			NSString *lastDateString = [[message date] localizedDescription];
 			fsetxattr( [_logFile fileDescriptor], "lastMessageDate", [lastDateString UTF8String], [lastDateString length], 0, 0 );
 		}
 
@@ -1102,8 +1102,8 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	[[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] ofItemAtPath:path error:nil];
 
 	if( _logFile ) {
-		NSString *beganDateString = [[self dateBegan] description];
-		NSString *lastDateString = [[[self lastMessage] date] description];
+		NSString *beganDateString = [[self dateBegan] localizedDescription];
+		NSString *lastDateString = [[[self lastMessage] date] localizedDescription];
 		NSString *target = [[self source] path];
 		if( [target length] > 1 ) target = [target substringFromIndex:1];
 

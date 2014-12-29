@@ -106,8 +106,6 @@
 }
 
 - (void) dealloc {
-
-
 	_node = NULL;
 	_transcript = nil;
 	_messageIdentifier = nil;

@@ -769,6 +769,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	}
 
 	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:messageString sender:user];
+	if (msgAttributes[@"time"]) [cmessage setDate:msgAttributes[@"time"]];
 	[cmessage setMessageIdentifier:identifier];
 	[cmessage setAttributes:msgAttributes];
 	[cmessage setAction:[[msgAttributes objectForKey:@"action"] boolValue]];
@@ -827,7 +828,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 				[cmessage setHighlighted:YES];
 			}
 		}
-
 	}
 
 	[self processIncomingMessage:cmessage];
@@ -866,7 +866,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[[self transcript] setElementLimit:( [display scrollbackLimit] * 2 )];
 
 	JVChatMessage *newMessage = [[self transcript] appendMessage:cmessage];
-
 	if( [display appendChatMessage:newMessage] ) {
 		if( [cmessage isHighlighted] ) [display markScrollbarForMessage:newMessage];
 		[self quickSearchMatchMessage:newMessage];

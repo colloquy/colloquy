@@ -54,7 +54,7 @@
 #pragma mark -
 
 - (NSString *) localizedDescription {
-	return [NSDate formattedStringWithDate:[NSDate date] dateFormat:@"yyyy-MM-dd HH:mm:ss ZZZ"];
+	return [NSDate formattedStringWithDate:self dateFormat:@"yyyy-MM-dd HH:mm:ss ZZZ"];
 }
 @end
 

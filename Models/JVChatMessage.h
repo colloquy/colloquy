@@ -12,7 +12,7 @@ typedef enum _JVChatMessageType {
 	/* xmlDoc */ void *_doc;
 	NSString *_messageIdentifier;
 	NSScriptObjectSpecifier *_objectSpecifier;
-	JVChatTranscript *_transcript;
+	__weak JVChatTranscript *_transcript;
 
 	id _senderIdentifier;
 	NSString *_senderName;
