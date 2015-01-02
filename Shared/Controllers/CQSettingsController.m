@@ -97,8 +97,15 @@ NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotificat
 		}
 	}
 
-	if (changedLocation == _settingsLocation)
-		[[NSNotificationCenter defaultCenter] postNotificationName:CQSettingsDidChangeNotification object:nil userInfo:nil];
+	if (changedLocation == _settingsLocation) {
+		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_notifyObserversSettingsChanged) object:nil];
+		[self performSelector:@selector(_notifyObserversSettingsChanged) withObject:nil afterDelay:0.];
+	}
+}
+
+- (void) _notifyObserversSettingsChanged {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_notifyObserversSettingsChanged) object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQSettingsDidChangeNotification object:nil userInfo:nil];
 }
 
 - (id) _defaultLocation {

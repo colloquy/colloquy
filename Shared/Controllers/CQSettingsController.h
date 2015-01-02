@@ -33,7 +33,7 @@ extern NSString *const CQSettingsDidChangeNotification;
 - (BOOL) synchronize;
 @end
 
-@interface CQSettingsController : NSProxy <CQSettings> {
+@interface CQSettingsController : NSObject <CQSettings> {
 	CQSettingsLocation _settingsLocation;
 	BOOL _mirroringEnabled;
 }

@@ -173,21 +173,17 @@ static BOOL showingKeyboard;
 }
 
 + (void) initialize {
-	static BOOL userDefaultsInitialized;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
-	if (userDefaultsInitialized)
-		return;
+		[self userDefaultsChanged];
 
-	userDefaultsInitialized = YES;
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
-
-	[self userDefaultsChanged];
-
-	if ([[UIDevice currentDevice] isPadModel]) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide) name:UIKeyboardWillHideNotification object:nil];
-	}
+		if ([[UIDevice currentDevice] isPadModel]) {
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide) name:UIKeyboardWillHideNotification object:nil];
+		}
+	});
 }
 
 + (void) keyboardWillShow {
@@ -605,7 +601,9 @@ static BOOL showingKeyboard;
 
 //	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:toInterfaceOrientation]);
 
-	[coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {} completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
+	[_stylePresentationViewController viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+
+	[coordinator animateAlongsideTransition:NULL completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
 		[transcriptView scrollToBottomAnimated:NO];
 
 		if (isShowingCompletionsBeforeRotation)

@@ -6,6 +6,12 @@
 	<array>
 		<dict>
 			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Transcript View</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
 			<string>Style</string>
@@ -203,6 +209,142 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 				<string>Large</string>
 				<string>Larger</string>
 				<string>Largest</string>
+			</array>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Outgoing Messages</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Bold Text</string>
+			<key>Key</key>
+			<string>CQChatStyleBoldText</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Underline Text</string>
+			<key>Key</key>
+			<string>CQChatStyleUnderlineText</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Italic Text</string>
+			<key>Key</key>
+			<string>CQChatStyleItalicText</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Text Color</string>
+			<key>Key</key>
+			<string>CQChatStyleForegroundTextColor</string>
+			<key>Values</key>
+			<array>
+				<string></string>
+				<string>white</string>
+				<string>black</string>
+				<string>navy</string>
+				<string>forest</string>
+				<string>red</string>
+				<string>maroon</string>
+				<string>purple</string>
+				<string>orange</string>
+				<string>yellow</string>
+				<string>green</string>
+				<string>teal</string>
+				<string>cyan</string>
+				<string>blue</string>
+				<string>magenta</string>
+				<string>grey</string>
+				<string>ash</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>None</string>
+				<string>White</string>
+				<string>Black</string>
+				<string>Navy</string>
+				<string>Forest</string>
+				<string>Red</string>
+				<string>Maroon</string>
+				<string>Purple</string>
+				<string>Orange</string>
+				<string>Yellow</string>
+				<string>Green</string>
+				<string>Teal</string>
+				<string>Cyan</string>
+				<string>Blue</string>
+				<string>Magenta</string>
+				<string>Grey</string>
+				<string>Ash</string>
+			</array>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Text Background Color</string>
+			<key>Key</key>
+			<string>CQChatStyleBackgroundTextColor</string>
+			<key>Values</key>
+			<array>
+				<string></string>
+				<string>white</string>
+				<string>black</string>
+				<string>navy</string>
+				<string>forest</string>
+				<string>red</string>
+				<string>maroon</string>
+				<string>purple</string>
+				<string>orange</string>
+				<string>yellow</string>
+				<string>green</string>
+				<string>teal</string>
+				<string>cyan</string>
+				<string>blue</string>
+				<string>magenta</string>
+				<string>grey</string>
+				<string>ash</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>None</string>
+				<string>White</string>
+				<string>Black</string>
+				<string>Navy</string>
+				<string>Forest</string>
+				<string>Red</string>
+				<string>Maroon</string>
+				<string>Purple</string>
+				<string>Orange</string>
+				<string>Yellow</string>
+				<string>Green</string>
+				<string>Teal</string>
+				<string>Cyan</string>
+				<string>Blue</string>
+				<string>Magenta</string>
+				<string>Grey</string>
+				<string>Ash</string>
 			</array>
 			<key>DefaultValue</key>
 			<string></string>

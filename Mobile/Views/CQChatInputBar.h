@@ -22,6 +22,7 @@ typedef enum {
 	BOOL _spaceCyclesCompletions;
 	BOOL _autocorrect;
 	BOOL _autocapitalizeNextLetter;
+	BOOL _textNeedsClearing;
 	UITextAutocapitalizationType _defaultAutocapitalizationType;
 	UIViewAnimationCurve _animationCurve;
 	NSTimeInterval _animationDuration;

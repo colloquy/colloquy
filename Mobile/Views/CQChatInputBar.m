@@ -2,9 +2,17 @@
 
 #import "CQTextCompletionView.h"
 
+#import "UIColorAdditions.h"
+
 #define CompletionsCaptureKeyboardDelay 0.5
 
 static BOOL hardwareKeyboard;
+static BOOL boldText;
+static BOOL underlineText;
+static BOOL italicText;
+static UIColor *foregroundColor;
+static UIColor *backgroundColor;
+static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsChanged";
 
 #pragma mark -
 
@@ -19,7 +27,28 @@ static BOOL hardwareKeyboard;
 @implementation CQChatInputBar
 @synthesize delegate = _delegate;
 
++ (void) initialize {
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+
+		[self userDefaultsChanged];
+	});
+}
+
++ (void) userDefaultsChanged {
+	boldText = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQChatStyleBoldText"];
+	underlineText = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQChatStyleUnderlineText"];
+	italicText = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQChatStyleItalicText"];
+
+	foregroundColor = [UIColor colorFromName:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQChatStyleForegroundTextColor"]];
+	backgroundColor = [UIColor colorFromName:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQChatStyleBackgroundTextColor"]];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatInputBarDefaultsChanged object:nil];
+}
+
 - (void) _commonInitialization {
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_resetTextAttributes) name:CQChatInputBarDefaultsChanged object:nil];
 	CGRect frame = self.bounds;
 	frame.size.height += 1;
 
@@ -40,6 +69,7 @@ static BOOL hardwareKeyboard;
 	else frame = CGRectMake(6., 7., frame.size.width - 12., frame.size.height - 12.);
 
 	_inputView = [[UITextView alloc] initWithFrame:frame];
+	_inputView.allowsEditingTextAttributes = YES;
 	_inputView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
 	_inputView.contentSize = CGSizeMake(230., self._lineHeight);
 	_inputView.dataDetectorTypes = UIDataDetectorTypeNone;
@@ -59,6 +89,8 @@ static BOOL hardwareKeyboard;
 	_inputView.layer.backgroundColor = [UIColor colorWithWhite:(250. / 255.) alpha:1.].CGColor;
 	_inputView.layer.cornerRadius = 5.;
 	[self addSubview:_inputView];
+
+	[self _resetTextAttributes];
 
 	_autocomplete = YES;
 
@@ -229,8 +261,17 @@ static BOOL hardwareKeyboard;
 }
 
 - (void) setFont:(UIFont *) font {
-	if (font.pointSize > .0)
-		_inputView.font = font;
+	if (font.pointSize > .0) {
+		UIFontDescriptorSymbolicTraits symbolicTraits = font.fontDescriptor.symbolicTraits;
+		if (italicText) symbolicTraits |= UIFontDescriptorTraitItalic;
+		else symbolicTraits ^= UIFontDescriptorTraitItalic;
+
+		if (boldText) symbolicTraits |= UIFontDescriptorTraitBold;
+		else symbolicTraits ^= UIFontDescriptorTraitBold;
+
+		UIFontDescriptor *fontDescriptor = [font.fontDescriptor fontDescriptorWithSymbolicTraits:symbolicTraits];
+		_inputView.font = [UIFont fontWithDescriptor:fontDescriptor size:-1];
+	}
 
 	[self _resetTextViewHeight];
 }
@@ -582,6 +623,9 @@ retry:
 - (void) textViewDidChange:(UITextView *) textView {
 	[self updateTextViewContentSize];
 	[self _updateImagesForResponderState];
+
+	if (!textView.text.length)
+		[self _resetTextAttributes];
 }
 
 - (void) textViewDidChangeSelection:(UITextView *) textView {
@@ -748,6 +792,7 @@ retry:
 
 		[self hideCompletions];
 		[self _resetTextViewHeight];
+		[self _resetTextAttributes];
 	}
 }
 
@@ -755,6 +800,35 @@ retry:
 	[self setHeight:self._inactiveLineHeight numberOfLines:0];
 
 	_inputView.scrollEnabled = NO;
+}
+
+- (void) _resetTextAttributes {
+	if (_textNeedsClearing) {
+		_textNeedsClearing = NO;
+		return;
+	}
+
+	self.font = self.font; // recalculate bold/italic settings
+
+	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+	attributes[NSFontAttributeName] = self.font;
+	attributes[NSUnderlineStyleAttributeName] = (underlineText ? @(NSUnderlineStyleSingle) : @(NSUnderlineStyleNone));
+	if (foregroundColor) attributes[NSForegroundColorAttributeName] = foregroundColor;
+	if (backgroundColor) attributes[NSBackgroundColorAttributeName] = backgroundColor;
+
+	NSMutableAttributedString *attributedString = [_inputView.attributedText mutableCopy];
+	_textNeedsClearing = NO;
+	if (!attributedString.length) {
+		_textNeedsClearing = YES;
+		attributedString = [[NSMutableAttributedString alloc] initWithString:(_inputView.text.length ? _inputView.text : @" ")];
+	}
+
+	[attributedString setAttributes:attributes range:NSMakeRange(0, attributedString.length)];
+
+	_inputView.attributedText = attributedString;
+
+	if (_textNeedsClearing)
+		_inputView.text = @"";
 }
 
 #pragma mark -
