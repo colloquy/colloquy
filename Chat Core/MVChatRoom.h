@@ -66,6 +66,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 	NSString *_name;
 	NSDate *_dateJoined;
 	NSDate *_dateParted;
+	NSDate *_mostRecentCommunication;
 	NSData *_topic;
 	MVChatUser *_topicAuthor;
 	NSDate *_dateTopicChanged;
@@ -90,6 +91,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 @property(readonly, getter=isJoined) BOOL joined;
 @property(strong, readonly) NSDate *dateJoined;
 @property(strong, readonly) NSDate *dateParted;
+@property(strong, readonly) NSDate *mostRecentCommunication;
 
 @property NSStringEncoding encoding;
 

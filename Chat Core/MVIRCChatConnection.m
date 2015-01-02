@@ -28,6 +28,7 @@
 #import <CFNetwork/CFNetwork.h>
 #endif
 
+
 #define JVQueueWaitBeforeConnected 120.
 #define JVPingServerInterval 120.
 #define JVPeriodicEventsInterval 600.
@@ -111,6 +112,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	0
 };
 
+NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnectionZNCPluginPlaybackFeature";
 
 @interface MVIRCChatConnection (MVIRCChatConnectionProtocolHandlers)
 
@@ -310,6 +312,11 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		_localUser = [[MVIRCChatUser alloc] initLocalUserWithConnection:self];
 
+#if (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) || (defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR)
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_persistRecentCommunicationsDates) name:UIApplicationWillTerminateNotification object:nil];
+#elif defined(TARGET_OS_MAC) && TARGET_OS_MAC
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_persistRecentCommunicationsDates) name:NSApplicationWillTerminateNotification object:nil];
+#endif
 		[self _resetSupportedFeatures];
 	}
 
@@ -1013,7 +1020,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		// In theory, IRCv3.2 isn't finalized yet and may change, so ZNC prefixes their capabilities. In practice,
 		// the official spec is pretty stable, and their behavior matches the official spec at this time.
-		NSArray *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message", @"znc.in/batch", @" " ];
+		NSArray *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message", @"znc.in/batch", @"znc.in/playback", @" " ];
 
 		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
 
@@ -1908,6 +1915,40 @@ end:
 	[super _markUserAsOffline:user];
 }
 
+- (void) _requestServerNotificationsOfUserConnectedState {
+	NSString *userObservationPrefix = nil;
+	NSString *appendFormat = nil;
+	if( [_supportedFeatures containsObject:MVChatConnectionMonitor] ) {
+		userObservationPrefix = @"MONITOR + ";
+		appendFormat = @"%@,";
+	} else if( [_supportedFeatures containsObject:MVChatConnectionWatchFeature] ) {
+		userObservationPrefix = @"WATCH ";
+		appendFormat = @"+%@ ";
+	} else return;
+
+	NSMutableString *request = [[NSMutableString alloc] initWithCapacity:JVMaximumWatchCommandLength];
+	[request setString:userObservationPrefix];
+
+	@synchronized( _chatUserWatchRules ) {
+		for( MVChatUserWatchRule *rule in _chatUserWatchRules ) {
+			NSString *nick = [rule nickname];
+			if( nick && ! [rule nicknameIsRegularExpression] ) {
+				if( ( nick.length + request.length + 1 ) > JVMaximumWatchCommandLength ) {
+					[self sendRawMessage:request];
+
+					request = [[NSMutableString alloc] initWithCapacity:JVMaximumWatchCommandLength];
+					[request setString:userObservationPrefix];
+				}
+
+				[request appendFormat:appendFormat, nick];
+			}
+		}
+	}
+
+	if( ! [request isEqualToString:userObservationPrefix] )
+		[self sendRawMessage:request];
+}
+
 #pragma mark -
 
 - (void) _periodicEvents {
@@ -2263,38 +2304,8 @@ end:
 
 #pragma mark -
 
-- (void) _requestServerNotificationsOfUserConnectedState {
-	NSString *userObservationPrefix = nil;
-	NSString *appendFormat = nil;
-	if( [_supportedFeatures containsObject:MVChatConnectionMonitor] ) {
-		userObservationPrefix = @"MONITOR + ";
-		appendFormat = @"%@,";
-	} else if( [_supportedFeatures containsObject:MVChatConnectionWatchFeature] ) {
-		userObservationPrefix = @"WATCH ";
-		appendFormat = @"+%@ ";
-	} else return;
-
-	NSMutableString *request = [[NSMutableString alloc] initWithCapacity:JVMaximumWatchCommandLength];
-	[request setString:userObservationPrefix];
-
-	@synchronized( _chatUserWatchRules ) {
-		for( MVChatUserWatchRule *rule in _chatUserWatchRules ) {
-			NSString *nick = [rule nickname];
-			if( nick && ! [rule nicknameIsRegularExpression] ) {
-				if( ( nick.length + request.length + 1 ) > JVMaximumWatchCommandLength ) {
-					[self sendRawMessage:request];
-
-					request = [[NSMutableString alloc] initWithCapacity:JVMaximumWatchCommandLength];
-					[request setString:userObservationPrefix];
-				}
-
-				[request appendFormat:appendFormat, nick];
-			}
-		}
-	}
-
-	if( ! [request isEqualToString:userObservationPrefix] )
-		[self sendRawMessage:request];
+- (void) _persistRecentCommunicationsDates {
+	[[self joinedChatRooms] makeObjectsPerformSelector:@selector(_persistLastCommunicationDate)];
 }
 @end
 
@@ -2406,6 +2417,13 @@ end:
 					}
 				}
 
+				// ZNC plugins
+				else if( [capability isCaseInsensitiveEqualToString:@"znc.in/playback"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVIRCChatConnectionZNCPluginPlaybackFeature];
+					}
+				}
+
 				// Unknown / future capabilities
 				else {
 					sendCapReqForFeature = NO;
@@ -2481,7 +2499,12 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVChatConnectionUserhostInNames];
 					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"znc.in/playback"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVIRCChatConnectionZNCPluginPlaybackFeature];
+					}
 				}
+
 			}
 		}
 	}
@@ -3528,6 +3551,9 @@ end:
 			[room _setDateParted:nil];
 			[room _clearMemberUsers];
 			[room _clearBannedUsers];
+
+			if( [self.supportedFeatures containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] )
+				[self sendRawMessageWithFormat:@"/msg *playback PLAY %@ %tu", room.name, llrint([room.mostRecentCommunication timeIntervalSince1970])];
 		} else {
 			[sender _setIdleTime:0.];
 			[self _markUserAsOnline:sender];
@@ -3595,6 +3621,7 @@ end:
 		if( [sender isLocalUser] ) {
 			_userDisconnected = YES;
 			[[self _chatConnection] disconnect];
+			[[self joinedChatRooms] makeObjectsPerformSelector:@selector(_persistLastCommunicationDate)];
 			return;
 		}
 

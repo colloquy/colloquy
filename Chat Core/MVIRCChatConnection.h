@@ -6,6 +6,8 @@
 @class MVChatUser;
 @class MVFileTransfer;
 
+extern NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature;
+
 @interface MVIRCChatConnection : MVChatConnection {
 @private
 	GCDAsyncSocket *_chatConnection;

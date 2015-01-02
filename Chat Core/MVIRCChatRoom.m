@@ -11,6 +11,9 @@
 		_name = [roomName copy];
 		_uniqueIdentifier = [roomName lowercaseString];
 		[_connection _addKnownRoom:self];
+
+		NSString *recentCommunicationsDateKey = [NSString stringWithFormat:@"%@-%@", self.connection.uniqueIdentifier, self.uniqueIdentifier];
+		_mostRecentCommunication = [[NSUserDefaults standardUserDefaults] objectForKey:recentCommunicationsDateKey];
 	}
 
 	return self;
@@ -44,6 +47,8 @@
 		NSString *prefix = [[NSString alloc] initWithFormat:@"PART %@ :", [self name]];
 		[[self connection] sendRawMessageWithComponents:prefix, reasonData, nil];
 	} else [[self connection] sendRawMessageImmediatelyWithFormat:@"PART %@", [self name]];
+
+	[self _persistLastCommunicationDate];
 }
 
 #pragma mark -
@@ -60,11 +65,15 @@
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) msgEncoding withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( message != nil );
 	[[self connection] _sendMessage:message withEncoding:msgEncoding toTarget:self withTargetPrefix:nil withAttributes:attributes localEcho:NO];
+
+	_mostRecentCommunication = [NSDate date];
 }
 
 - (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments withEncoding:(NSStringEncoding) encoding {
 	NSParameterAssert( command != nil );
 	[[self connection] _sendCommand:command withArguments:arguments withEncoding:encoding toTarget:self];
+
+	_mostRecentCommunication = [NSDate date];
 }
 
 #pragma mark -
@@ -334,6 +343,13 @@
 #pragma mark -
 
 @implementation MVIRCChatRoom (MVIRCChatRoomPrivate)
+- (void) _persistLastCommunicationDate {
+	if( [[[self connection] supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] ) {
+		NSString *recentCommunicationsDateKey = [NSString stringWithFormat:@"%@-%@", self.connection.uniqueIdentifier, self.uniqueIdentifier];
+		[[NSUserDefaults standardUserDefaults] setObject:_mostRecentCommunication forKey:recentCommunicationsDateKey];
+	}
+}
+
 - (BOOL) _namesSynced {
 	return _namesSynced;
 }

@@ -171,6 +171,10 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return _dateParted;
 }
 
+- (NSDate *) mostRecentCommunication {
+	return _mostRecentCommunication;
+}
+
 #pragma mark -
 
 - (NSStringEncoding) encoding {
