@@ -57,6 +57,8 @@
 }
 
 - (void) hide {
+	__weak __typeof__((self)) weakSelf = self;
+
 	[UIView animateWithDuration:.2 animations:^{
 		[self.viewControllerToPresent willMoveToParentViewController:nil]; {
 			CGRect frame = self.viewControllerToPresent.view.frame;
@@ -66,6 +68,11 @@
 	} completion:^(BOOL finished) {
 		[UIView animateWithDuration:.1 animations:^{
 			self.view.alpha = 0.;
+		} completion:^(BOOL finished) {
+			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+			__strong __typeof__((strongSelf.delegate)) strongDelegate = strongSelf.delegate;
+
+			[strongDelegate modalViewControllerPresentationDidCloseViewController:strongSelf];
 		}];
 	}];
 }

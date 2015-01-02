@@ -30,17 +30,18 @@
 	self.tableView.layer.borderWidth = 1. / scale;
 	self.tableView.layer.borderColor = [UIApplication sharedApplication].keyWindow.tintColor.CGColor;
 	self.tableView.scrollEnabled = NO;
+	self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	self.tableView.showsVerticalScrollIndicator = NO;
 }
 
 #pragma mark -
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
-	return 3;
+	return 4;
 }
 
 - (CGFloat) tableView:(UITableView *) tableView heightForRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (indexPath.section == 0 && indexPath.row == 1)
+	if (indexPath.section == 0 && indexPath.row == 2)
 		return 160.;
 	return 35.;
 }
@@ -61,9 +62,25 @@
 	if (indexPath.section == 0) {
 		if (indexPath.row == 0) {
 			CQMultiButtonTableCell *multiButtonCell = [CQMultiButtonTableCell reusableTableViewCellInTableView:tableView];
+			multiButtonCell.expands = YES;
 			multiButtonCell.contentView.layer.cornerRadius = 6.;
 			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
-				__strong __typeof__((self)) strongSelf = weakSelf;
+				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+
+				[button addTarget:strongSelf action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
+				[button setTitle:NSLocalizedString(@"Close", @"Close Switch Cell Title") forState:UIControlStateNormal];
+				button.titleLabel.font = [UIFont boldSystemFontOfSize:15.];
+				button.titleLabel.textAlignment = NSTextAlignmentRight;
+			}];
+
+			return multiButtonCell;
+		}
+
+		if (indexPath.row == 1) {
+			CQMultiButtonTableCell *multiButtonCell = [CQMultiButtonTableCell reusableTableViewCellInTableView:tableView];
+			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
+				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+
 				[button addTarget:strongSelf action:@selector(toggleBoldface:) forControlEvents:UIControlEventTouchUpInside];
 				[button setTitle:NSLocalizedString(@"Bold", @"Bold Switch Cell Title") forState:UIControlStateNormal];
 				button.titleLabel.font = [UIFont boldSystemFontOfSize:15.];
@@ -72,7 +89,8 @@
 			}];
 
 			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
-				__strong __typeof__((self)) strongSelf = weakSelf;
+				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+
 				[button addTarget:strongSelf action:@selector(toggleItalics:) forControlEvents:UIControlEventTouchUpInside];
 				[button setTitle:NSLocalizedString(@"Italic", @"Italic Switch Cell Title") forState:UIControlStateNormal];
 				button.titleLabel.font = [UIFont italicSystemFontOfSize:15.];
@@ -81,7 +99,8 @@
 			}];
 
 			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
-				__strong __typeof__((self)) strongSelf = weakSelf;
+				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+
 				[button addTarget:strongSelf action:@selector(toggleUnderline:) forControlEvents:UIControlEventTouchUpInside];
 				[button setAttributedTitle:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Underline", @"Underline Switch Cell Title") attributes:@{
 					NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle),
@@ -94,7 +113,8 @@
 
 			return multiButtonCell;
 		}
-		if (indexPath.row == 1) {
+
+		if (indexPath.row == 2) {
 			CQColorPickerTableCell *cell = [CQColorPickerTableCell reusableTableViewCellInTableView:tableView];
 			cell.colors = @[
 				[UIColor colorFromName:@"white"], [UIColor colorFromName:@"ash"], [UIColor colorFromName:@"grey"], [UIColor colorFromName:@"black"],
@@ -104,23 +124,23 @@
 			];
 
 			cell.colorSelectedBlock = ^(UIColor *color) {
-				__strong __typeof__((self)) strongSelf = weakSelf;
+				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 				__strong __typeof__((strongSelf.delegate)) strongDelegate = strongSelf.delegate;
 
-				if (strongSelf.affectingForeground) {
+				if (strongSelf.affectingForeground)
 					[strongDelegate chatInputStyleView:strongSelf didSelectColor:color forColorPosition:CQColorPositionForeground];
-				} else {
-					[strongDelegate chatInputStyleView:strongSelf didSelectColor:color forColorPosition:CQColorPositionBackground];
-				}
+				else [strongDelegate chatInputStyleView:strongSelf didSelectColor:color forColorPosition:CQColorPositionBackground];
 			};
 
 			return cell;
 		}
-		if (indexPath.row == 2) {
+
+		if (indexPath.row == 3) {
 			CQMultiButtonTableCell *multiButtonCell = [CQMultiButtonTableCell reusableTableViewCellInTableView:tableView];
 			multiButtonCell.contentView.layer.cornerRadius = 6.;
 			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
-				__strong __typeof__((self)) strongSelf = weakSelf;
+				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+
 				[button addTarget:strongSelf action:@selector(startAffectingForeground:) forControlEvents:UIControlEventTouchUpInside];
 				[button setTitle:NSLocalizedString(@"Foreground", @"Foreground Cell Button Title") forState:UIControlStateNormal];
 
@@ -129,6 +149,7 @@
 
 			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
 				__strong __typeof__((self)) strongSelf = weakSelf;
+
 				[button addTarget:strongSelf action:@selector(startAffectingBackground:) forControlEvents:UIControlEventTouchUpInside];
 				[button setTitle:NSLocalizedString(@"Background", @"Background Cell Button Title") forState:UIControlStateNormal];
 
@@ -140,6 +161,13 @@
 	}
 
 	return nil;
+}
+
+#pragma mark -
+
+- (void) close:(id) sender {
+	__strong __typeof__((self.delegate)) strongDelegate = self.delegate;
+	[strongDelegate chatInputStyleViewShouldClose:self];
 }
 
 #pragma mark -
@@ -165,7 +193,7 @@
 	[strongDelegate chatInputStyleView:self didChangeTextTrait:CQTextTraitBold toState:self.bold];
 
 	[self.tableView beginUpdates];
-	[self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:0] ] withRowAnimation:UITableViewRowAnimationNone];
+	[self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:1 inSection:0] ] withRowAnimation:UITableViewRowAnimationNone];
 	[self.tableView endUpdates];
 }
 
@@ -175,7 +203,7 @@
 	[strongDelegate chatInputStyleView:self didChangeTextTrait:CQTextTraitItalic toState:self.italicized];
 
 	[self.tableView beginUpdates];
-	[self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:0] ] withRowAnimation:UITableViewRowAnimationNone];
+	[self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:1 inSection:0] ] withRowAnimation:UITableViewRowAnimationNone];
 	[self.tableView endUpdates];
 }
 
@@ -185,7 +213,7 @@
 	[strongDelegate chatInputStyleView:self didChangeTextTrait:CQTextTraitUnderline toState:self.underlined];
 
 	[self.tableView beginUpdates];
-	[self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:0] ] withRowAnimation:UITableViewRowAnimationNone];
+	[self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:1 inSection:0] ] withRowAnimation:UITableViewRowAnimationNone];
 	[self.tableView endUpdates];
 }
 
@@ -202,7 +230,7 @@
 - (void) _toggleAffectingForegroundToState:(BOOL) affectingForeground {
 	self.affectingForeground = affectingForeground;
 	[self.tableView beginUpdates];
-	[self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:2 inSection:0] ] withRowAnimation:UITableViewRowAnimationNone];
+	[self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:3 inSection:0] ] withRowAnimation:UITableViewRowAnimationNone];
 	[self.tableView endUpdates];
 }
 

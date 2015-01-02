@@ -92,7 +92,7 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-@interface CQDirectChatController () <CQChatInputStyleDelegate>
+@interface CQDirectChatController () <CQChatInputStyleDelegate, CQModalViewControllerPresentationViewControllerDelegate>
 @end
 
 @implementation CQDirectChatController
@@ -426,6 +426,8 @@ static BOOL showingKeyboard;
 	styleViewController.delegate = self;
 
 	_stylePresentationViewController = [CQModalViewControllerPresentationViewController viewControllerPresentationViewControllerForViewController:styleViewController];
+	_stylePresentationViewController.delegate = self;
+
 	[self _updateStylePresentationViewControllerEdgeInsetsForSize:transcriptView.frame.size];
 
 	[self _updateAttributesForStyleViewController];
@@ -783,16 +785,11 @@ static BOOL showingKeyboard;
 #pragma mark -
 
 - (void) _updateStylePresentationViewControllerEdgeInsetsForSize:(CGSize) size {
-	CGFloat width = size.width - 270.;
-	CGFloat height = size.height - 205.;
-	CGFloat top = CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
-	if (top == 0) {
-		top = 8.;
-		height += 12.;
-	}
-
-	UIEdgeInsets newEdgeInsets = UIEdgeInsetsMake(top, (width / 2.), height, (width / 2.));
-	_stylePresentationViewController.edgeInsets = newEdgeInsets;
+	CGFloat side = (size.width - 270.) / 2.;
+	CGFloat top = CGRectGetHeight([UIApplication sharedApplication].statusBarFrame) ?: 8.;
+	CGFloat bottom = size.height - (top + 230.);
+	NSLog(@"%f - (%f + 230.)", size.height, top);
+	_stylePresentationViewController.edgeInsets = UIEdgeInsetsMake(top, side, bottom, side);
 }
 
 #pragma mark -
@@ -874,6 +871,14 @@ static BOOL showingKeyboard;
 
 	chatInputBar.textView.attributedText = attributedString;
 	chatInputBar.textView.selectedRange = selectedRange;
+}
+
+- (void) chatInputStyleViewShouldClose:(CQChatInputStyleViewController *) chatInputStyleView {
+	[_stylePresentationViewController hide];
+}
+
+- (void) modalViewControllerPresentationDidCloseViewController:(CQModalViewControllerPresentationViewController *) modalViewControllerPresentationViewController {
+	_stylePresentationViewController = nil;
 }
 
 #pragma mark -

@@ -15,6 +15,7 @@ typedef NS_ENUM(NSInteger, CQColorPosition) {
 
 @protocol CQChatInputStyleDelegate <NSObject>
 @required
+- (void) chatInputStyleViewShouldClose:(CQChatInputStyleViewController *) chatInputStyleView;
 - (void) chatInputStyleView:(CQChatInputStyleViewController *) chatInputStyleView didChangeTextTrait:(CQTextTrait) trait toState:(BOOL) state;
 - (void) chatInputStyleView:(CQChatInputStyleViewController *) chatInputStyleView didSelectColor:(UIColor *) color forColorPosition:(CQColorPosition) position;
 @end
