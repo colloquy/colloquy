@@ -1097,17 +1097,18 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	CGRect cellRect = [tableView.superview convertRect:[self.tableView rectForRowAtIndexPath:indexPath] fromView:tableView];
 	CGPoint midpointOfRect = CGPointMake(CGRectGetMidX(cellRect), CGRectGetMidY(cellRect));
 
+	NSIndexPath *chatIndexPath = nil;
 	if (self.editing) {
 		if (indexPath.section == 0) {
 			[[CQConnectionsController defaultController] showNewConnectionPromptFromPoint:midpointOfRect];
 			return;
 		}
 
-		indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - 1)];
-	}
+		chatIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - 1)];
+	} else chatIndexPath = indexPath;
 
 	if (editingStyle == UITableViewCellEditingStyleInsert) {
-		MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:indexPath.section];
+		MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:chatIndexPath.section];
 		[[CQChatController defaultController] showNewChatActionSheetForConnection:connection fromPoint:midpointOfRect];
 		return;
 	}
@@ -1115,7 +1116,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (editingStyle != UITableViewCellEditingStyleDelete)
 		return;
 
-	id <CQChatViewController> chatViewController = chatControllerForIndexPath(indexPath);
+	id <CQChatViewController> chatViewController = chatControllerForIndexPath(chatIndexPath);
 	if (!chatViewController)
 		return;
 
