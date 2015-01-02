@@ -63,21 +63,6 @@
 	[self updateFrameForEdgeInsets];
 }
 
-- (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
-	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-
-	[coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {
-		CGRect frame = self.view.frame;
-		frame.size = size;
-
-		frame.origin.x = self.edgeInsets.left;
-		frame.size.width = CGRectGetWidth(frame) - (self.edgeInsets.left + self.edgeInsets.right);
-		frame.origin.y = self.edgeInsets.top;
-		frame.size.height = CGRectGetHeight(frame) - (self.edgeInsets.top + self.edgeInsets.bottom);
-		self.viewControllerToPresent.view.frame = frame;
-	} completion:NULL];
-}
-
 #pragma mark -
 
 - (void) tapGestureRecognizerTapped:(UITapGestureRecognizer *) tapGestureRecognizer {

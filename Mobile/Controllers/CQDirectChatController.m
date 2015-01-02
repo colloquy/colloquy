@@ -426,7 +426,7 @@ static BOOL showingKeyboard;
 	styleViewController.delegate = self;
 
 	_stylePresentationViewController = [CQModalViewControllerPresentationViewController viewControllerPresentationViewControllerForViewController:styleViewController];
-	_stylePresentationViewController.edgeInsets = UIEdgeInsetsMake(25., 25., CGRectGetHeight(transcriptView.frame) - 210., 25.); // TODO: don't hardcode these numbers
+	[self _updateStylePresentationViewControllerEdgeInsetsForSize:transcriptView.frame.size];
 
 	[self _updateAttributesForStyleViewController];
 
@@ -601,9 +601,9 @@ static BOOL showingKeyboard;
 
 //	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:toInterfaceOrientation]);
 
-	[_stylePresentationViewController viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-
-	[coordinator animateAlongsideTransition:NULL completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
+	[coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {
+		[self _updateStylePresentationViewControllerEdgeInsetsForSize:transcriptView.frame.size];
+	} completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
 		[transcriptView scrollToBottomAnimated:NO];
 
 		if (isShowingCompletionsBeforeRotation)
@@ -782,6 +782,21 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
+- (void) _updateStylePresentationViewControllerEdgeInsetsForSize:(CGSize) size {
+	CGFloat width = size.width - 270.;
+	CGFloat height = size.height - 205.;
+	CGFloat top = CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
+	if (top == 0) {
+		top = 8.;
+		height += 12.;
+	}
+
+	UIEdgeInsets newEdgeInsets = UIEdgeInsetsMake(top, (width / 2.), height, (width / 2.));
+	_stylePresentationViewController.edgeInsets = newEdgeInsets;
+}
+
+#pragma mark -
+
 - (NSMutableAttributedString *) _selectedChatInputBarAttributedString {
 	NSMutableAttributedString *attributedString = [chatInputBar.textView.attributedText mutableCopy];
 	if (!attributedString) {
@@ -811,9 +826,9 @@ static BOOL showingKeyboard;
 
 	NSMutableAttributedString *attributedString = self._selectedChatInputBarAttributedString;
 	NSDictionary *newAttributes = nil;
-	if (trait == CQTextTraitUnderline)
+	if (trait == CQTextTraitUnderline) {
 		newAttributes = @{ NSUnderlineStyleAttributeName: (state ? @(NSUnderlineStyleSingle) : @(NSUnderlineStyleNone)) };
-	else {
+	} else {
 		UIFont *font = [attributedString attribute:NSFontAttributeName atIndex:0 longestEffectiveRange:NULL inRange:NSMakeRange(0, attributedString.length)];
 		if (!font)
 			font = chatInputBar.textView.font;
