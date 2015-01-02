@@ -181,6 +181,7 @@
 		92A24DA7114C918300897373 /* CQPreferencesListChannelEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */; };
 		92A54AA515AD1DDD00F21FC5 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */; };
 		92AD95A517E2F1780044B8B1 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92AD95A417E2F1780044B8B1 /* Social.framework */; };
+		92AF958D1A520D6A006E3152 /* UIColorAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AF958C1A520D6A006E3152 /* UIColorAdditions.m */; };
 		92AFF84A16B0CE4700940E5D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92AFF84916B0CE4700940E5D /* AVFoundation.framework */; };
 		92AFF85216B0D25D00940E5D /* NSRegularExpressionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AFF85116B0D25D00940E5D /* NSRegularExpressionAdditions.m */; };
 		92B257CA174023B300F303B5 /* CQSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B257C9174023B300F303B5 /* CQSettingsController.m */; };
@@ -494,6 +495,8 @@
 		92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListChannelEditViewController.m; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.m; sourceTree = "<group>"; };
 		92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		92AD95A417E2F1780044B8B1 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		92AF958B1A520D6A006E3152 /* UIColorAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIColorAdditions.h; path = Mobile/Additions/UIColorAdditions.h; sourceTree = "<group>"; };
+		92AF958C1A520D6A006E3152 /* UIColorAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIColorAdditions.m; path = Mobile/Additions/UIColorAdditions.m; sourceTree = "<group>"; };
 		92AFF84916B0CE4700940E5D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		92AFF85016B0D25D00940E5D /* NSRegularExpressionAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSRegularExpressionAdditions.h; path = Additions/NSRegularExpressionAdditions.h; sourceTree = "<group>"; };
 		92AFF85116B0D25D00940E5D /* NSRegularExpressionAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSRegularExpressionAdditions.m; path = Additions/NSRegularExpressionAdditions.m; sourceTree = "<group>"; };
@@ -963,6 +966,8 @@
 				92F1C9E1161D936D0035A9AF /* UIActionSheetAdditions.h */,
 				9261B7001841AEA1001B14C3 /* UIApplicationAdditions.m */,
 				9261B6FF1841AEA1001B14C3 /* UIApplicationAdditions.h */,
+				92AF958C1A520D6A006E3152 /* UIColorAdditions.m */,
+				92AF958B1A520D6A006E3152 /* UIColorAdditions.h */,
 				1C3CD7951112357100FE29AA /* UIDeviceAdditions.m */,
 				1C3CD7941112357100FE29AA /* UIDeviceAdditions.h */,
 				9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */,
@@ -1376,6 +1381,7 @@
 				92823D3516911677000EC36E /* CQConsoleController.m in Sources */,
 				92823D4A169123FD000EC36E /* DDLog.m in Sources */,
 				92823D551691390E000EC36E /* CQProcessConsoleMessageOperation.m in Sources */,
+				92AF958D1A520D6A006E3152 /* UIColorAdditions.m in Sources */,
 				922B1FE116926749002ECDFD /* MVDelegateLogger.m in Sources */,
 				922B20011692F19C002ECDFD /* CQPreferencesIgnoreEditViewController.m in Sources */,
 				9251306719FDCEAA00847018 /* UIFontAdditions.m in Sources */,

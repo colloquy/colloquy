@@ -3,6 +3,8 @@
 #import "CQPreferencesSwitchCell.h"
 #import "CQColorPickerTableCell.h"
 
+#import "UIColorAdditions.h"
+
 @interface CQChatInputStyleViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (atomic, assign) BOOL bold;
 @property (atomic, assign) BOOL italicized;
@@ -95,10 +97,10 @@
 		if (indexPath.row == 1) {
 			CQColorPickerTableCell *cell = [CQColorPickerTableCell reusableTableViewCellInTableView:tableView];
 			cell.colors = @[
-				[UIColor whiteColor], [UIColor colorWithRed:(214. / 255.) green:(214. / 255.) blue:(214. / 255.) alpha:1.], [UIColor colorWithRed:(121. / 255.) green:(121. / 255.) blue:(121. / 255.) alpha:1.], [UIColor blackColor],
-				[UIColor colorWithRed:0. green:(252. / 255.) blue:1. alpha:1.], [UIColor colorWithRed:0. green:(168. / 255.) blue:(170. / 255.) alpha:1.], [UIColor colorWithRed:(4. / 255.) green:(51. / 255.) blue:1. alpha:1.], [UIColor colorWithRed:0. green:(19. / 255.) blue:(121. / 255.) alpha:1.],
-				[UIColor colorWithRed:(254. / 255.) green:(251. / 255.) blue:0. alpha:1.], [UIColor colorWithRed:1. green:(124. / 255.) blue:0. alpha:1.], [UIColor colorWithRed:0. green:(247. / 255.) blue:0. alpha:1.], [UIColor colorWithRed:0. green:(166. / 255.) blue:0. alpha:1.],
-				[UIColor colorWithRed:1. green:(38. / 255.) blue:0. alpha:1.], [UIColor colorWithRed:(122. / 255.) green:(12. / 255.) blue:0. alpha:1.], [UIColor colorWithRed:1. green:(64. / 255.) blue:1. alpha:1.], [UIColor colorWithRed:(172. / 255.) green:(39. / 255.) blue:(169. / 255.) alpha:1.],
+				[UIColor colorFromName:@"white"], [UIColor colorFromName:@"ash"], [UIColor colorFromName:@"grey"], [UIColor colorFromName:@"black"],
+				[UIColor colorFromName:@"cyan"], [UIColor colorFromName:@"teal"], [UIColor colorFromName:@"blue"], [UIColor colorFromName:@"navy"],
+				[UIColor colorFromName:@"yellow"], [UIColor colorFromName:@"orange"], [UIColor colorFromName:@"green"], [UIColor colorFromName:@"forest"],
+				[UIColor colorFromName:@"red"], [UIColor colorFromName:@"maroon"], [UIColor colorFromName:@"magenta"], [UIColor colorFromName:@"purple"]
 			];
 
 			cell.colorSelectedBlock = ^(UIColor *color) {
