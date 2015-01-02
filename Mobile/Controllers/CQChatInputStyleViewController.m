@@ -29,7 +29,7 @@
 	self.tableView.layer.cornerRadius = (scale > 1. ? 4.5 : 5.);
 	self.tableView.layer.borderWidth = 1. / scale;
 	self.tableView.layer.borderColor = [UIApplication sharedApplication].keyWindow.tintColor.CGColor;
-	self.tableView.backgroundColor = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
+	self.tableView.scrollEnabled = NO;
 	self.tableView.showsVerticalScrollIndicator = NO;
 }
 

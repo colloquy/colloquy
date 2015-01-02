@@ -26,31 +26,47 @@
 	if (self.viewControllerToPresent.view.window) // if we're already showing, don't re-show
 		return;
 
-	CGRect frame = viewController.view.frame;
-	UIView *view = [[UIView alloc] initWithFrame:frame];
+	UIView *view = [[UIView alloc] initWithFrame:viewController.view.frame];
 	view.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin);
 	view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.3];
 
 	[self.view addSubview:view];
 
-	[self addChildViewController:self.viewControllerToPresent]; {
-		[self updateFrameForEdgeInsets];
+	self.view.alpha = 0.;
+	[viewController.view.window addSubview:self.view];
 
-		[self.view addSubview:self.viewControllerToPresent.view];
-	} [self.viewControllerToPresent didMoveToParentViewController:self];
+	[UIView animateWithDuration:.1 animations:^{
+		self.view.alpha = 1.0;
+	} completion:^(BOOL finished) {
+		[self addChildViewController:self.viewControllerToPresent]; {
+			[self updateFrameForEdgeInsets];
 
-	[UIView animateWithDuration:.2 animations:^{
-		[viewController.view.window addSubview:self.view];
+			CGRect frame = self.viewControllerToPresent.view.frame;
+			frame.origin.y -= frame.size.height;
+			self.viewControllerToPresent.view.frame = frame;
+
+			[self.view addSubview:self.viewControllerToPresent.view];
+
+			[UIView animateWithDuration:.2 animations:^{
+				CGRect frame = self.viewControllerToPresent.view.frame;
+				frame.origin.y += frame.size.height;
+				self.viewControllerToPresent.view.frame = frame;
+			}];
+		} [self.viewControllerToPresent didMoveToParentViewController:self];
 	}];
 }
 
 - (void) hide {
 	[UIView animateWithDuration:.2 animations:^{
 		[self.viewControllerToPresent willMoveToParentViewController:nil]; {
-			[self.viewControllerToPresent.view removeFromSuperview];
+			CGRect frame = self.viewControllerToPresent.view.frame;
+			frame.origin.y -= frame.size.height;
+			self.viewControllerToPresent.view.frame = frame;
 		} [self.viewControllerToPresent removeFromParentViewController];
-
-		[self.view removeFromSuperview];
+	} completion:^(BOOL finished) {
+		[UIView animateWithDuration:.1 animations:^{
+			self.view.alpha = 0.;
+		}];
 	}];
 }
 
