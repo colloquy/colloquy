@@ -41,7 +41,7 @@
 }
 
 - (CGFloat) tableView:(UITableView *) tableView heightForRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (indexPath.section == 0 && indexPath.row == 2)
+	if (indexPath.section == 0 && indexPath.row == 1)
 		return 160.;
 	return 35.;
 }
@@ -62,22 +62,8 @@
 	if (indexPath.section == 0) {
 		if (indexPath.row == 0) {
 			CQMultiButtonTableCell *multiButtonCell = [CQMultiButtonTableCell reusableTableViewCellInTableView:tableView];
-			multiButtonCell.expands = YES;
 			multiButtonCell.contentView.layer.cornerRadius = 6.;
-			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
-				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 
-				[button addTarget:strongSelf action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
-				[button setTitle:NSLocalizedString(@"Close", @"Close Switch Cell Title") forState:UIControlStateNormal];
-				button.titleLabel.font = [UIFont boldSystemFontOfSize:15.];
-				button.titleLabel.textAlignment = NSTextAlignmentRight;
-			}];
-
-			return multiButtonCell;
-		}
-
-		if (indexPath.row == 1) {
-			CQMultiButtonTableCell *multiButtonCell = [CQMultiButtonTableCell reusableTableViewCellInTableView:tableView];
 			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
 				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 
@@ -114,7 +100,7 @@
 			return multiButtonCell;
 		}
 
-		if (indexPath.row == 2) {
+		if (indexPath.row == 1) {
 			CQColorPickerTableCell *cell = [CQColorPickerTableCell reusableTableViewCellInTableView:tableView];
 			cell.colors = @[
 				[UIColor colorFromName:@"white"], [UIColor colorFromName:@"ash"], [UIColor colorFromName:@"grey"], [UIColor colorFromName:@"black"],
@@ -135,9 +121,9 @@
 			return cell;
 		}
 
-		if (indexPath.row == 3) {
+		if (indexPath.row == 2) {
 			CQMultiButtonTableCell *multiButtonCell = [CQMultiButtonTableCell reusableTableViewCellInTableView:tableView];
-			multiButtonCell.contentView.layer.cornerRadius = 6.;
+			multiButtonCell.expands = YES;
 			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
 				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 
@@ -154,6 +140,20 @@
 				[button setTitle:NSLocalizedString(@"Background", @"Background Cell Button Title") forState:UIControlStateNormal];
 
 				updateButtonBackgroundAndTitleColorForState(button, !self.affectingForeground);
+			}];
+
+			return multiButtonCell;
+		}
+		if (indexPath.row == 3) {
+			CQMultiButtonTableCell *multiButtonCell = [CQMultiButtonTableCell reusableTableViewCellInTableView:tableView];
+			multiButtonCell.contentView.layer.cornerRadius = 6.;
+			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
+				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+
+				[button addTarget:strongSelf action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
+				[button setTitle:NSLocalizedString(@"Close", @"Close Switch Cell Title") forState:UIControlStateNormal];
+				button.titleLabel.font = [UIFont boldSystemFontOfSize:15.];
+				button.titleLabel.textAlignment = NSTextAlignmentRight;
 			}];
 
 			return multiButtonCell;

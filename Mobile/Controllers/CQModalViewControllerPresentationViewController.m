@@ -1,6 +1,7 @@
 #import "CQModalViewControllerPresentationViewController.h"
 
 @interface CQModalViewControllerPresentationViewController ()
+@property (atomic, strong) UIWindow *presentingWindow;
 @property (atomic, strong, readwrite) UIViewController *viewControllerToPresent;
 @end
 
@@ -23,8 +24,14 @@
 }
 
 - (void) showAboveViewController:(UIViewController *) viewController {
-	if (self.viewControllerToPresent.view.window) // if we're already showing, don't re-show
+	if (self.presentingWindow) // if we're already showing, don't re-show
 		return;
+
+	self.presentingWindow = [[UIWindow alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.frame];
+	self.presentingWindow.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin);
+	self.presentingWindow.hidden = NO;
+	self.presentingWindow.windowLevel = UIWindowLevelAlert + 10;
+	self.presentingWindow.transform = [UIApplication sharedApplication].keyWindow.transform;
 
 	UIView *view = [[UIView alloc] initWithFrame:viewController.view.frame];
 	view.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin);
@@ -33,7 +40,7 @@
 	[self.view addSubview:view];
 
 	self.view.alpha = 0.;
-	[viewController.view.window addSubview:self.view];
+	[self.presentingWindow addSubview:self.view];
 
 	[UIView animateWithDuration:.1 animations:^{
 		self.view.alpha = 1.0;
@@ -60,18 +67,23 @@
 	__weak __typeof__((self)) weakSelf = self;
 
 	[UIView animateWithDuration:.2 animations:^{
-		[self.viewControllerToPresent willMoveToParentViewController:nil]; {
-			CGRect frame = self.viewControllerToPresent.view.frame;
+		__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+		[strongSelf.viewControllerToPresent willMoveToParentViewController:nil]; {
+			CGRect frame = strongSelf.viewControllerToPresent.view.frame;
 			frame.origin.y -= frame.size.height;
-			self.viewControllerToPresent.view.frame = frame;
-		} [self.viewControllerToPresent removeFromParentViewController];
+			strongSelf.viewControllerToPresent.view.frame = frame;
+		} [strongSelf.viewControllerToPresent removeFromParentViewController];
 	} completion:^(BOOL finished) {
 		[UIView animateWithDuration:.1 animations:^{
-			self.view.alpha = 0.;
+			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+			strongSelf.view.alpha = 0.;
 		} completion:^(BOOL finished) {
 			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-			__strong __typeof__((strongSelf.delegate)) strongDelegate = strongSelf.delegate;
+			strongSelf.presentingWindow.hidden = YES;
+			[strongSelf.presentingWindow removeFromSuperview];
+			strongSelf.presentingWindow = nil;
 
+			__strong __typeof__((strongSelf.delegate)) strongDelegate = strongSelf.delegate;
 			[strongDelegate modalViewControllerPresentationDidCloseViewController:strongSelf];
 		}];
 	}];
