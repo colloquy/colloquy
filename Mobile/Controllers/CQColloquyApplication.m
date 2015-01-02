@@ -371,8 +371,7 @@ static NSMutableArray *highlightWords;
 	if (!apsInfo.count)
 		return;
 
-	if ([self areNotificationBadgesAllowed])
-		self.applicationIconBadgeNumber = [apsInfo[@"badge"] integerValue];
+	self.applicationIconBadgeNumber = [apsInfo[@"badge"] integerValue];
 }
 
 - (void) application:(UIApplication *) application didRegisterUserNotificationSettings:(UIUserNotificationSettings *) notificationSettings {
@@ -818,15 +817,20 @@ static NSMutableArray *highlightWords;
 }
 
 - (BOOL) areNotificationBadgesAllowed {
-	return (!_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeBadge);
+	return (_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeBadge);
 }
 
 - (BOOL) areNotificationSoundsAllowed {
-	return (!_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeSound);
+	return (_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeSound);
 }
 
 - (BOOL) areNotificationAlertsAllowed {
-	return (!_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeAlert);
+	return (_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeAlert);
+}
+
+- (void) setApplicationIconBadgeNumber:(NSInteger) applicationIconBadgeNumber {
+	if (self.areNotificationBadgesAllowed)
+		[super setApplicationIconBadgeNumber:applicationIconBadgeNumber];
 }
 
 - (void) presentLocalNotificationNow:(UILocalNotification *) notification {
