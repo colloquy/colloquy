@@ -637,9 +637,6 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 		if( ! [[foregroundColor colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && ! [[foregroundColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace] )
 			foregroundColor = [foregroundColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace]; // we need to convert to RGB space
-#else
-		if( backgroundColor && ! foregroundColor )
-			foregroundColor = [UIColor colorWithRed:0. green:0. blue:0. alpha:1.];
 #endif
 
 		if( foregroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
