@@ -224,6 +224,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 - (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
 	NSMapTable *errorToAlertMappingsForConnection = [_connectionToErrorToAlertMap objectForKey:[alertView associatedObjectForKey:@"connection"]];
 	[errorToAlertMappingsForConnection removeObjectForKey:[alertView associatedObjectForKey:@"error-code"]];
+	[errorToAlertMappingsForConnection removeObjectForKey:@"peerTrust"];
 
 	if (buttonIndex == alertView.cancelButtonIndex)
 		return;
@@ -335,6 +336,8 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		return;
 	}
 
+	// Intentionally not implemented due to the lack of any secure settings; if a device is compromised, it
+	// could be set to "deny" without someone knowing.
 	if ([connectionInvalidSSLCertAction isEqualToString:@"Deny"]) {
 		completionHandler(NO);
 	} else if ([connectionInvalidSSLCertAction isEqualToString:@"Allow"]) {
@@ -376,13 +379,26 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		alertView.tag = PeerTrustFeedbackTag;
 		alertView.title = NSLocalizedString(@"Cannot Verify Server Identity" , @"Cannot Verify Server Identity alert title");
 		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"The identity of \"%@\" cannot be verified by Colloquy. Please decide how to continue.", @"Identity cannot be verified message"), certificateSubject];
-		[alertView addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel alert button")];
+		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel alert button")];
 		[alertView addButtonWithTitle:NSLocalizedString(@"Continue", @"Continue alert button")];
 		[alertView addButtonWithTitle:NSLocalizedString(@"Always Continue", @"Always Continue alert button")];
 
 		[alertView associateObject:completionHandler forKey:@"completionHandler"];
 		[alertView associateObject:notification.userInfo[@"trust"] forKey:@"trust"];
 		[alertView associateObject:notification.userInfo[@"result"] forKey:@"result"];
+		[alertView associateObject:notification.object forKey:@"connection"];
+
+		NSMapTable *errorToAlertMappingsForConnection = [_connectionToErrorToAlertMap objectForKey:notification.object];
+		if (!errorToAlertMappingsForConnection) {
+			errorToAlertMappingsForConnection = [NSMapTable strongToStrongObjectsMapTable];
+			[_connectionToErrorToAlertMap setObject:errorToAlertMappingsForConnection forKey:notification.object];
+		}
+
+		CQAlertView *previousAlert = [errorToAlertMappingsForConnection objectForKey:@"peerTrust"];
+		if (previousAlert) {
+			[previousAlert dismissWithClickedButtonIndex:previousAlert.cancelButtonIndex animated:NO];
+		}
+		[errorToAlertMappingsForConnection setObject:alertView forKey:@"peerTrust"];
 
 		[alertView show];
 #elif SYSTEM(MAC)
