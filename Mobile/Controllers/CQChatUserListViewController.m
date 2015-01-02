@@ -204,12 +204,11 @@ static NSString *membersFilteredCountFormat;
 			NSArray *indexPaths = @[[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
 			[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 		}
-*/
 		if (self.users.count == self.matchedUsers.count)
 			self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
 		else self.title = [NSString stringWithFormat:membersFilteredCountFormat, self.matchedUsers.count, self.users.count];
 	}
-
+ */
 }
 
 #pragma mark -
