@@ -134,76 +134,82 @@ static NSString *membersFilteredCountFormat;
 
 - (void) _moveUser:(MVChatUser *) user atIndex:(NSUInteger) fromIndex toIndex:(NSUInteger) toIndex withAnimation:(UITableViewRowAnimation) animation {
 	[self.tableView reloadData];
-//	@synchronized(self) {
-//		NSParameterAssert(user != nil);
-//		NSParameterAssert(fromIndex <= self.users.count);
-//		NSParameterAssert(toIndex <= self.users.count);
-//
-//		[self.users removeObjectAtIndex:fromIndex];
-//		[self.users insertObject:user atIndex:toIndex];
-//
-//		if (toIndex > fromIndex)
-//			--toIndex;
-//
-//		if (!_currentSearchString.length || [user.nickname hasCaseInsensitiveSubstring:_currentSearchString]) {
-//			NSInteger insertionMatchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:fromIndex];
-//			NSInteger removalMatchesIndex = [self _indexForRemovedMatchUser:user];
-//
-//			if (insertionMatchesIndex > removalMatchesIndex)
-//				--insertionMatchesIndex;
-//
-//			[self.matchedUsers removeObjectAtIndex:removalMatchesIndex];
-//			[self.matchedUsers insertObject:user atIndex:insertionMatchesIndex];
-//
-//			[self.tableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:removalMatchesIndex inSection:0] toIndexPath:[NSIndexPath indexPathForRow:insertionMatchesIndex inSection:0]];
-//		}
-//	}
+/*
+	@synchronized(self) {
+		NSParameterAssert(user != nil);
+		NSParameterAssert(fromIndex <= self.users.count);
+		NSParameterAssert(toIndex <= self.users.count);
+
+		[self.users removeObjectAtIndex:fromIndex];
+		[self.users insertObject:user atIndex:toIndex];
+
+		if (toIndex > fromIndex)
+			--toIndex;
+
+		if (!_currentSearchString.length || [user.nickname hasCaseInsensitiveSubstring:_currentSearchString]) {
+			NSInteger insertionMatchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:fromIndex];
+			NSInteger removalMatchesIndex = [self _indexForRemovedMatchUser:user];
+
+			if (insertionMatchesIndex > removalMatchesIndex)
+				--insertionMatchesIndex;
+
+			[self.matchedUsers removeObjectAtIndex:removalMatchesIndex];
+			[self.matchedUsers insertObject:user atIndex:insertionMatchesIndex];
+
+			[self.tableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:removalMatchesIndex inSection:0] toIndexPath:[NSIndexPath indexPathForRow:insertionMatchesIndex inSection:0]];
+		}
+	}
+*/
 }
 
 - (void) _insertUser:(MVChatUser *) user atIndex:(NSUInteger) index withAnimation:(UITableViewRowAnimation) animation {
 	[self.tableView reloadData];
-//	@synchronized(self) {
-//		NSParameterAssert(user != nil);
-//		NSParameterAssert(index <= self.users.count);
-//
-//		[self.users insertObject:user atIndex:index];
-//
-//		if (!_currentSearchString.length || [user.nickname hasCaseInsensitiveSubstring:_currentSearchString]) {
-//			NSInteger matchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:index];
-//
-//			[self.matchedUsers insertObject:user atIndex:matchesIndex];
-//
-//			NSArray *indexPaths = @[[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
-//			[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:animation];
-//		}
+/*
+	@synchronized(self) {
+		NSParameterAssert(user != nil);
+		NSParameterAssert(index <= self.users.count);
+
+		[self.users insertObject:user atIndex:index];
+
+		if (!_currentSearchString.length || [user.nickname hasCaseInsensitiveSubstring:_currentSearchString]) {
+			NSInteger matchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:index];
+
+			[self.matchedUsers insertObject:user atIndex:matchesIndex];
+
+			NSArray *indexPaths = @[[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
+			[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:animation];
+		}
 
 		if (self.users.count == self.matchedUsers.count)
 			self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
 		else self.title = [NSString stringWithFormat:membersFilteredCountFormat, self.matchedUsers.count, self.users.count];
-//	}
+	}
+*/
 }
 
 - (void) _removeUserAtIndex:(NSUInteger) index withAnimation:(UITableViewRowAnimation) animation {
 	[self.tableView reloadData];
-//	@synchronized(self) {
-//		NSParameterAssert(index <= self.users.count);
-//
-//		MVChatUser *user = self.users[index];
-//
-//		[self.users removeObjectAtIndex:index];
-//
-//		NSUInteger matchesIndex = [self _indexForRemovedMatchUser:user];
-//		if (matchesIndex != NSNotFound) {
-//			[self.matchedUsers removeObjectAtIndex:matchesIndex];
-//
-//			NSArray *indexPaths = @[[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
-//			[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
-//		}
+/*
+	@synchronized(self) {
+		NSParameterAssert(index <= self.users.count);
 
+		MVChatUser *user = self.users[index];
+
+		[self.users removeObjectAtIndex:index];
+
+		NSUInteger matchesIndex = [self _indexForRemovedMatchUser:user];
+		if (matchesIndex != NSNotFound) {
+			[self.matchedUsers removeObjectAtIndex:matchesIndex];
+
+			NSArray *indexPaths = @[[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
+			[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
+		}
+*/
 		if (self.users.count == self.matchedUsers.count)
 			self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
 		else self.title = [NSString stringWithFormat:membersFilteredCountFormat, self.matchedUsers.count, self.users.count];
-//	}
+	}
+
 }
 
 #pragma mark -
@@ -223,6 +229,8 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (void) moveUserAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex {
+	[self.tableView reloadData];
+/*
 	if (oldIndex == newIndex)
 		return;
 
@@ -237,7 +245,7 @@ static NSString *membersFilteredCountFormat;
 		if (newMatchesIndex > oldMatchesIndex)
 			--newMatchesIndex;
 
-//		[self.tableView beginUpdates];
+		[self.tableView beginUpdates];
 
 		if (oldMatchesIndex == newMatchesIndex) {
 			[self _moveUser:user atIndex:oldIndex toIndex:newIndex withAnimation:UITableViewRowAnimationFade];
@@ -245,11 +253,12 @@ static NSString *membersFilteredCountFormat;
 			[self _moveUser:user atIndex:oldIndex toIndex:newIndex withAnimation:(newIndex > oldIndex ? UITableViewRowAnimationBottom : UITableViewRowAnimationTop)];
 		}
 
-//		[self.tableView endUpdates];
+		[self.tableView endUpdates];
 
 		if (searchBarFocused)
 			[_searchController setActive:YES animated:YES];
 	}
+ */
 }
 
 - (void) removeUserAtIndex:(NSUInteger) index {
@@ -267,6 +276,8 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (void) updateUserAtIndex:(NSUInteger) index {
+	[self.tableView reloadData];
+/*
 	@synchronized(self) {
 		NSParameterAssert(index <= self.users.count);
 
@@ -277,14 +288,14 @@ static NSString *membersFilteredCountFormat;
 
 		BOOL searchBarFocused = [_searchController isActive];
 
-		[self.tableView reloadData];
-//		[self.tableView beginUpdates];
-//		[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:matchesIndex inSection:0] withAnimation:UITableViewRowAnimationFade];
-//		[self.tableView endUpdates];
+		[self.tableView beginUpdates];
+		[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:matchesIndex inSection:0] withAnimation:UITableViewRowAnimationFade];
+		[self.tableView endUpdates];
 
 		if (searchBarFocused)
 			[_searchController setActive:YES animated:YES];
 	}
+ */
 }
 
 #pragma mark -
