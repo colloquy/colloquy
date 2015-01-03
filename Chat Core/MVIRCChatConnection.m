@@ -1212,6 +1212,7 @@ end:
 				else [intentOrTagsDictionary removeObjectForKey:@"time"]; // failed to convert string to date, drop any invalid data
 			}
 		}
+
 		if( selector == NULL || ![self respondsToSelector:selector] ) {
 			selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
 			selector = NSSelectorFromString(selectorString);
@@ -1237,15 +1238,20 @@ end:
 
 			id sender = ( chatUser ? (id) chatUser : (id) senderString );
 
+			if( hasTagsToSend ) {
+				NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:selector]];
+				invocation.target = self;
+				invocation.selector = selector;
+				[invocation setArgument:&parameters atIndex:2];
+				[invocation setArgument:&intentOrTagsDictionary atIndex:3];
+				[invocation setArgument:&sender atIndex:4];
+				[invocation invoke];
+			} else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-			if( hasTagsToSend ) {
-				IMP imp = [self methodForSelector:selector];
-				imp(self, selector, parameters, intentOrTagsDictionary, sender);
-			} else {
 				[self performSelector:selector withObject:parameters withObject:sender];
-			}
 #pragma clang diagnostic pop
+			}
 		}
 
 		[self _pingServerAfterInterval];
