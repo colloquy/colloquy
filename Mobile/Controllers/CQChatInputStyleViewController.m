@@ -62,7 +62,52 @@
 	if (indexPath.section == 0) {
 		if (indexPath.row == 0) {
 			CQMultiButtonTableCell *multiButtonCell = [CQMultiButtonTableCell reusableTableViewCellInTableView:tableView];
+			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
+				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+
+				[button addTarget:strongSelf action:@selector(startAffectingForeground:) forControlEvents:UIControlEventTouchUpInside];
+				[button setTitle:NSLocalizedString(@"Foreground", @"Foreground Cell Button Title") forState:UIControlStateNormal];
+
+				updateButtonBackgroundAndTitleColorForState(button, self.affectingForeground);
+			}];
+
+			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
+				__strong __typeof__((self)) strongSelf = weakSelf;
+
+				[button addTarget:strongSelf action:@selector(startAffectingBackground:) forControlEvents:UIControlEventTouchUpInside];
+				[button setTitle:NSLocalizedString(@"Background", @"Background Cell Button Title") forState:UIControlStateNormal];
+
+				updateButtonBackgroundAndTitleColorForState(button, !self.affectingForeground);
+			}];
+
+			return multiButtonCell;
+		}
+
+		if (indexPath.row == 1) {
+			CQColorPickerTableCell *cell = [CQColorPickerTableCell reusableTableViewCellInTableView:tableView];
+			cell.colors = @[
+				[UIColor colorFromName:@"white"], [UIColor colorFromName:@"ash"], [UIColor colorFromName:@"grey"], [UIColor colorFromName:@"black"],
+				[UIColor colorFromName:@"cyan"], [UIColor colorFromName:@"teal"], [UIColor colorFromName:@"blue"], [UIColor colorFromName:@"navy"],
+				[UIColor colorFromName:@"yellow"], [UIColor colorFromName:@"orange"], [UIColor colorFromName:@"green"], [UIColor colorFromName:@"forest"],
+				[UIColor colorFromName:@"red"], [UIColor colorFromName:@"maroon"], [UIColor colorFromName:@"magenta"], [UIColor colorFromName:@"purple"]
+			];
+
+			cell.colorSelectedBlock = ^(UIColor *color) {
+				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+				__strong __typeof__((strongSelf.delegate)) strongDelegate = strongSelf.delegate;
+
+				if (strongSelf.affectingForeground)
+					[strongDelegate chatInputStyleView:strongSelf didSelectColor:color forColorPosition:CQColorPositionForeground];
+				else [strongDelegate chatInputStyleView:strongSelf didSelectColor:color forColorPosition:CQColorPositionBackground];
+			};
+
+			return cell;
+		}
+
+		if (indexPath.row == 2) {
+			CQMultiButtonTableCell *multiButtonCell = [CQMultiButtonTableCell reusableTableViewCellInTableView:tableView];
 			multiButtonCell.contentView.layer.cornerRadius = 6.;
+			multiButtonCell.expands = YES;
 
 			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
 				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
@@ -100,50 +145,6 @@
 			return multiButtonCell;
 		}
 
-		if (indexPath.row == 1) {
-			CQColorPickerTableCell *cell = [CQColorPickerTableCell reusableTableViewCellInTableView:tableView];
-			cell.colors = @[
-				[UIColor colorFromName:@"white"], [UIColor colorFromName:@"ash"], [UIColor colorFromName:@"grey"], [UIColor colorFromName:@"black"],
-				[UIColor colorFromName:@"cyan"], [UIColor colorFromName:@"teal"], [UIColor colorFromName:@"blue"], [UIColor colorFromName:@"navy"],
-				[UIColor colorFromName:@"yellow"], [UIColor colorFromName:@"orange"], [UIColor colorFromName:@"green"], [UIColor colorFromName:@"forest"],
-				[UIColor colorFromName:@"red"], [UIColor colorFromName:@"maroon"], [UIColor colorFromName:@"magenta"], [UIColor colorFromName:@"purple"]
-			];
-
-			cell.colorSelectedBlock = ^(UIColor *color) {
-				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-				__strong __typeof__((strongSelf.delegate)) strongDelegate = strongSelf.delegate;
-
-				if (strongSelf.affectingForeground)
-					[strongDelegate chatInputStyleView:strongSelf didSelectColor:color forColorPosition:CQColorPositionForeground];
-				else [strongDelegate chatInputStyleView:strongSelf didSelectColor:color forColorPosition:CQColorPositionBackground];
-			};
-
-			return cell;
-		}
-
-		if (indexPath.row == 2) {
-			CQMultiButtonTableCell *multiButtonCell = [CQMultiButtonTableCell reusableTableViewCellInTableView:tableView];
-			multiButtonCell.expands = YES;
-			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
-				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-
-				[button addTarget:strongSelf action:@selector(startAffectingForeground:) forControlEvents:UIControlEventTouchUpInside];
-				[button setTitle:NSLocalizedString(@"Foreground", @"Foreground Cell Button Title") forState:UIControlStateNormal];
-
-				updateButtonBackgroundAndTitleColorForState(button, self.affectingForeground);
-			}];
-
-			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
-				__strong __typeof__((self)) strongSelf = weakSelf;
-
-				[button addTarget:strongSelf action:@selector(startAffectingBackground:) forControlEvents:UIControlEventTouchUpInside];
-				[button setTitle:NSLocalizedString(@"Background", @"Background Cell Button Title") forState:UIControlStateNormal];
-
-				updateButtonBackgroundAndTitleColorForState(button, !self.affectingForeground);
-			}];
-
-			return multiButtonCell;
-		}
 		if (indexPath.row == 3) {
 			CQMultiButtonTableCell *multiButtonCell = [CQMultiButtonTableCell reusableTableViewCellInTableView:tableView];
 			multiButtonCell.contentView.layer.cornerRadius = 6.;
@@ -152,8 +153,10 @@
 
 				[button addTarget:strongSelf action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
 				[button setTitle:NSLocalizedString(@"Close", @"Close Switch Cell Title") forState:UIControlStateNormal];
-				button.titleLabel.font = [UIFont boldSystemFontOfSize:15.];
+				button.titleLabel.font = [UIFont systemFontOfSize:15.];
 				button.titleLabel.textAlignment = NSTextAlignmentRight;
+
+				updateButtonBackgroundAndTitleColorForState(button, NO);
 			}];
 
 			return multiButtonCell;

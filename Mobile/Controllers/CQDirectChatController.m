@@ -428,7 +428,7 @@ static BOOL showingKeyboard;
 	_stylePresentationViewController = [CQModalViewControllerPresentationViewController viewControllerPresentationViewControllerForViewController:styleViewController];
 	_stylePresentationViewController.delegate = self;
 
-	[self _updateStylePresentationViewControllerEdgeInsetsForSize:transcriptView.frame.size];
+	[self _updateStylePresentationViewControllerEdgeInsetsForSize:self.view.frame.size];
 
 	[self _updateAttributesForStyleViewController];
 
@@ -604,7 +604,7 @@ static BOOL showingKeyboard;
 //	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:toInterfaceOrientation]);
 
 	[coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {
-		[self _updateStylePresentationViewControllerEdgeInsetsForSize:transcriptView.frame.size];
+		[self _updateStylePresentationViewControllerEdgeInsetsForSize:self.view.frame.size];
 	} completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
 		[transcriptView scrollToBottomAnimated:NO];
 
@@ -786,9 +786,8 @@ static BOOL showingKeyboard;
 
 - (void) _updateStylePresentationViewControllerEdgeInsetsForSize:(CGSize) size {
 	CGFloat side = (size.width - 270.) / 2.;
-	CGFloat top = CGRectGetHeight([UIApplication sharedApplication].statusBarFrame) ?: 8.;
-	CGFloat bottom = size.height - (top + 230.);
-	NSLog(@"%f - (%f + 230.)", size.height, top);
+	CGFloat top = 8.;
+	CGFloat bottom = size.height - (top + 265.);
 	_stylePresentationViewController.edgeInsets = UIEdgeInsetsMake(top, side, bottom, side);
 }
 

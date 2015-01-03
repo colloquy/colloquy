@@ -23,15 +23,18 @@
 	[self.view addGestureRecognizer:tapGestureRecognizer];
 }
 
+#pragma mark -
+
 - (void) showAboveViewController:(UIViewController *) viewController {
 	if (self.presentingWindow) // if we're already showing, don't re-show
 		return;
 
 	self.presentingWindow = [[UIWindow alloc] initWithFrame:[UIApplication sharedApplication].keyWindow.frame];
+	self.presentingWindow.backgroundColor = [UIColor clearColor];
 	self.presentingWindow.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin);
 	self.presentingWindow.hidden = NO;
+	self.presentingWindow.rootViewController = self;
 	self.presentingWindow.windowLevel = UIWindowLevelAlert + 10;
-	self.presentingWindow.transform = [UIApplication sharedApplication].keyWindow.transform;
 
 	UIView *view = [[UIView alloc] initWithFrame:viewController.view.frame];
 	view.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin);
@@ -65,7 +68,6 @@
 
 - (void) hide {
 	__weak __typeof__((self)) weakSelf = self;
-
 	[UIView animateWithDuration:.2 animations:^{
 		__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 		[strongSelf.viewControllerToPresent willMoveToParentViewController:nil]; {
@@ -88,6 +90,8 @@
 		}];
 	}];
 }
+
+#pragma mark -
 
 - (void) setEdgeInsets:(UIEdgeInsets) edgeInsets {
 	_edgeInsets = edgeInsets;
