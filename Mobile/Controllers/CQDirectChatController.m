@@ -478,16 +478,16 @@ static BOOL showingKeyboard;
 	[super viewDidLoad];
 
 	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
-	if ([UIDevice currentDevice].isSystemEight) {
-		CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
-		webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
-		webkitChatTranscriptView.transcriptDelegate = self;
-
-		[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
-
-		[transcriptView removeFromSuperview];
-		transcriptView = webkitChatTranscriptView;
-	}
+//	if ([UIDevice currentDevice].isSystemEight) {
+//		CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
+//		webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
+//		webkitChatTranscriptView.transcriptDelegate = self;
+//
+//		[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
+//
+//		[transcriptView removeFromSuperview];
+//		transcriptView = webkitChatTranscriptView;
+//	}
 
 	[self _updateRightBarButtonItemAnimated:NO];
 
