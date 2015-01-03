@@ -263,10 +263,10 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 	if (font.pointSize > .0) {
 		UIFontDescriptorSymbolicTraits symbolicTraits = font.fontDescriptor.symbolicTraits;
 		if (italicText) symbolicTraits |= UIFontDescriptorTraitItalic;
-		else symbolicTraits ^= UIFontDescriptorTraitItalic;
+		else if (symbolicTraits & UIFontDescriptorTraitItalic) symbolicTraits ^= UIFontDescriptorTraitItalic;
 
 		if (boldText) symbolicTraits |= UIFontDescriptorTraitBold;
-		else symbolicTraits ^= UIFontDescriptorTraitBold;
+		else if (symbolicTraits & UIFontDescriptorTraitBold) symbolicTraits ^= UIFontDescriptorTraitBold;
 
 		UIFontDescriptor *fontDescriptor = [font.fontDescriptor fontDescriptorWithSymbolicTraits:symbolicTraits];
 		_inputView.font = [UIFont fontWithDescriptor:fontDescriptor size:-1];

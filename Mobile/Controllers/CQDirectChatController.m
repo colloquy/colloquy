@@ -848,10 +848,10 @@ static BOOL showingKeyboard;
 		UIFontDescriptorSymbolicTraits symbolicTraits = font.fontDescriptor.symbolicTraits;
 		if (trait == CQTextTraitItalic) {
 			if (state) symbolicTraits |= UIFontDescriptorTraitItalic;
-			else symbolicTraits ^= UIFontDescriptorTraitItalic;
+			else if (symbolicTraits & UIFontDescriptorTraitItalic) symbolicTraits ^= UIFontDescriptorTraitItalic;
 		} else if (trait == CQTextTraitBold) {
 			if (state) symbolicTraits |= UIFontDescriptorTraitBold;
-			else symbolicTraits ^= UIFontDescriptorTraitBold;
+			else if (symbolicTraits & UIFontDescriptorTraitBold) symbolicTraits ^= UIFontDescriptorTraitBold;
 		} else return;
 
 		UIFontDescriptor *fontDescriptor = [font.fontDescriptor fontDescriptorWithSymbolicTraits:symbolicTraits];
