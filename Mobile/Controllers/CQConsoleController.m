@@ -2,6 +2,8 @@
 
 #import "CQProcessConsoleMessageOperation.h"
 
+#import "NSAttributedStringAdditions.h"
+
 #import "MVIRCChatConnection.h"
 
 #import "DDLog.h"
@@ -152,10 +154,15 @@ static BOOL verbose;
 
 #pragma mark -
 
-- (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text {
+- (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(MVChatString *) text {
 	[_connection sendRawMessage:text];
 
-	NSData *data = [text dataUsingEncoding:_connection.encoding];
+	NSData *data = nil;
+	if ([text respondsToSelector:@selector(dataUsingEncoding:)])
+		data = [text dataUsingEncoding:_connection.encoding];
+	else if ([text respondsToSelector:@selector(string)])
+		data = [text.string dataUsingEncoding:_connection.encoding];
+
 	if (!data)
 		return YES;
 
