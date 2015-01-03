@@ -4,10 +4,6 @@
 }
 
 .timestamp {
-	position: relative;
-	top: 50%;
-	-webkit-transform: translateY(-50%);
-
 	display: inline;
 	font-size: smaller;
 	opacity: 0.7;
