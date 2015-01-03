@@ -39,9 +39,12 @@ enum {
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 
 	if (_messages.count) {
-		cell.textLabel.text = [_messages[indexPath.row][@"message"] stringByStrippingXMLTags];
+		cell.textLabel.attributedText = _messages[indexPath.row][@"message"];;
 		if ([_messages[indexPath.row][@"action"] boolValue]) {
-			cell.textLabel.text = [NSString stringWithFormat:@"• %@", cell.textLabel.text];
+			NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@" • "];
+			[attributedString appendAttributedString:cell.textLabel.attributedText];
+
+			cell.textLabel.attributedText = attributedString;
 		}
 	} else {
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;

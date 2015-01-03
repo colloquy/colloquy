@@ -33,6 +33,9 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 }
 
 - (void) dealloc {
+	self.scrollView.delegate = nil;
+	self.navigationDelegate = nil;
+
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:CQRoomTopicChangedNotification object:nil];
