@@ -159,7 +159,7 @@ static BOOL verbose;
 
 	NSData *data = nil;
 	if ([text respondsToSelector:@selector(dataUsingEncoding:)])
-		data = [text dataUsingEncoding:_connection.encoding];
+		data = [text performPrivateSelector:@"dataUsingEncoding" withUnsignedInteger:_connection.encoding];
 	else if ([text respondsToSelector:@selector(string)])
 		data = [text.string dataUsingEncoding:_connection.encoding];
 
