@@ -506,8 +506,6 @@ static BOOL showingKeyboard;
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 
-	[UIMenuController sharedMenuController].menuItems = @[ [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Style", @"Style text menu item") action:@selector(style:)] ];
-
 	[self _addPendingComponentsAnimated:NO];
 
 	if (![[UIDevice currentDevice] isPadModel]) {
@@ -640,6 +638,16 @@ static BOOL showingKeyboard;
 }
 
 #pragma mark -
+
+- (void) chatInputBarTextDidChange:(CQChatInputBar *) theChatInputBar {
+	if (chatInputBar.textView.text.length || chatInputBar.textView.attributedText.length) {
+		chatInputBar.textView.allowsEditingTextAttributes = YES;
+		[UIMenuController sharedMenuController].menuItems = @[ [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Style", @"Style text menu item") action:@selector(style:)] ];
+	} else {
+		chatInputBar.textView.allowsEditingTextAttributes = NO;
+		[UIMenuController sharedMenuController].menuItems = nil;
+	}
+}
 
 - (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) theChatInputBar {
 	if ([theChatInputBar isFirstResponder] && theChatInputBar.textView.hasText) {
