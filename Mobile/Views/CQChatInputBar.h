@@ -59,6 +59,7 @@ typedef enum {
 
 @protocol CQChatInputBarDelegate <NSObject>
 @optional
+- (void) chatInputBarTextDidChange:(CQChatInputBar *) chatInputBar;
 - (BOOL) chatInputBarShouldBeginEditing:(CQChatInputBar *) chatInputBar;
 - (void) chatInputBarDidBeginEditing:(CQChatInputBar *) chatInputBar;
 - (BOOL) chatInputBarShouldEndEditing:(CQChatInputBar *) chatInputBar;

@@ -18,6 +18,13 @@
 	return self;
 }
 
+- (void) setActiveColor:(UIColor *) activeColor {
+	_activeColor = [activeColor copy];
+
+	[self setNeedsLayout];
+	[self layoutIfNeeded];
+}
+
 - (void) setColors:(NSArray *) colors {
 	[self.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
@@ -32,9 +39,6 @@
 
 		[button addTarget:self action:@selector(colorSelected:) forControlEvents:UIControlEventTouchUpInside];
 		[button addTarget:self action:@selector(colorSelectionStarted:) forControlEvents:UIControlEventTouchDown];
-
-		[button setBackgroundImage:[UIImage patternImageWithColor:color] forState:UIControlStateNormal];
-		[button setBackgroundImage:[UIImage patternImageWithColor:[color colorWithAlphaComponent:.5]] forState:(UIControlStateSelected | UIControlStateHighlighted)];
 
 		CGFloat hue, saturation, brightness, alpha = 0.;
 		[color getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
@@ -79,9 +83,12 @@
 		else buttonRect.origin.x = (buttonMargin * (column + 1)) + (buttonWidth * column);
 		button.frame = buttonRect;
 
-		if (self.activeColor == object) {
+		if ([self.activeColor isEqual:object]) {
 			[button setBackgroundImage:[UIImage patternImageWithColor:[object colorWithAlphaComponent:.5]] forState:UIControlStateNormal];
 			[button setBackgroundImage:[UIImage patternImageWithColor:object] forState:(UIControlStateSelected | UIControlStateHighlighted)];
+		} else {
+			[button setBackgroundImage:[UIImage patternImageWithColor:[object colorWithAlphaComponent:.5]] forState:(UIControlStateSelected | UIControlStateHighlighted)];
+			[button setBackgroundImage:[UIImage patternImageWithColor:object] forState:UIControlStateNormal];
 		}
 
 		column++;
@@ -93,11 +100,14 @@
 }
 
 - (void) colorSelected:(id) sender {
+	UIColor *newColor = [self.buttonToColorMap objectForKey:sender];
+	self.activeColor = (newColor == self.activeColor ? nil : newColor);
+
 	UIButton *button = (UIButton *)sender;
 	button.layer.borderColor = [[UIColor colorWithCGColor:button.layer.borderColor] colorWithAlphaComponent:1.].CGColor;
 
 	if (self.colorSelectedBlock)
-		self.colorSelectedBlock([self.buttonToColorMap objectForKey:sender]);
+		self.colorSelectedBlock(self.activeColor);
 }
 
 - (void) colorSelectionStarted:(id) sender {

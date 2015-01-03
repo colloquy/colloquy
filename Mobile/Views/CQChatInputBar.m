@@ -69,7 +69,6 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 	else frame = CGRectMake(6., 7., frame.size.width - 12., frame.size.height - 12.);
 
 	_inputView = [[UITextView alloc] initWithFrame:frame];
-	_inputView.allowsEditingTextAttributes = YES;
 	_inputView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
 	_inputView.contentSize = CGSizeMake(230., self._lineHeight);
 	_inputView.dataDetectorTypes = UIDataDetectorTypeNone;
@@ -626,6 +625,10 @@ retry:
 
 	if (!textView.text.length)
 		[self _resetTextAttributes];
+
+	__strong __typeof__((_delegate)) strongDelegate = _delegate;
+	if ([strongDelegate respondsToSelector:@selector(chatInputBarTextDidChange:)])
+		[strongDelegate chatInputBarTextDidChange:self];
 }
 
 - (void) textViewDidChangeSelection:(UITextView *) textView {
