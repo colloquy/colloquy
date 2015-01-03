@@ -119,6 +119,25 @@
 	[self.contentView addSubview:button];
 }
 
+- (void) setExpands:(BOOL) expands {
+	if (_expands == expands)
+		return;
+
+	_expands = expands;
+
+	if (_expands) {
+		CGRect frame = self.frame;
+		frame.size.height += 1.;
+		[super setFrame:frame];
+	}
+}
+
+- (void) setFrame:(CGRect) frame {
+	if (self.expands)
+		frame.size.height += 1.;
+	[super setFrame:frame];
+}
+
 - (void) layoutSubviews {
 	[super layoutSubviews];
 

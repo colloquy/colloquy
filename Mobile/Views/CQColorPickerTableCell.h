@@ -8,4 +8,6 @@ typedef void (^CQColorSelected)(UIColor *);
 
 @interface CQMultiButtonTableCell : UITableViewCell
 - (void) addButtonWithConfigurationHandler:(void (^)(UIButton *button)) configurationHandler;
+
+@property (nonatomic, assign) BOOL expands;
 @end
