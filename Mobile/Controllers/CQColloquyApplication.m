@@ -423,7 +423,7 @@ static NSMutableArray *highlightWords;
 
 #pragma mark -
 
-- (void)splitViewController:(UISplitViewController *) splitViewController popoverController:(UIPopoverController *) popoverController willPresentViewController:(UIViewController *) viewController {
+- (void) splitViewController:(UISplitViewController *) splitViewController popoverController:(UIPopoverController *) popoverController willPresentViewController:(UIViewController *) viewController {
 	if (![viewController isKindOfClass:[CQChatNavigationController class]])
 		return;
 
@@ -485,7 +485,16 @@ static NSMutableArray *highlightWords;
 }
 
 - (BOOL) splitViewController:(UISplitViewController *) splitViewController collapseSecondaryViewController:(UIViewController *) secondaryViewController ontoPrimaryViewController:(UIViewController *) primaryViewController {
-	return YES;
+	if (!secondaryViewController)
+		return YES;
+
+	if ([secondaryViewController isKindOfClass:[CQChatPresentationController class]]) {
+		CQChatPresentationController *presentationController = (CQChatPresentationController *)secondaryViewController;
+		if (!presentationController.topChatViewController)
+			return YES;
+	}
+
+	return [secondaryViewController isFirstResponder];
 }
 
 #pragma mark -

@@ -631,6 +631,14 @@ static BOOL showingKeyboard;
 }
 #endif
 
+- (BOOL) isFirstResponder {
+	return [chatInputBar isFirstResponder];
+}
+
+- (BOOL) resignFirstResponder {
+	return [chatInputBar resignFirstResponder];
+}
+
 #pragma mark -
 
 - (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) theChatInputBar {
