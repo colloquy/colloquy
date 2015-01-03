@@ -930,9 +930,9 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	for ( ; startIndexToRemove < string.length && [characterSet characterIsMember:[string characterAtIndex:startIndexToRemove]]; startIndexToRemove++) ;
 	if (startIndexToRemove == string.length) return [[NSAttributedString alloc] initWithString:@""];
 
-	NSUInteger endIndexToRemove = (string.length - 1);
-	for ( ; endIndexToRemove > 0 && [characterSet characterIsMember:[string characterAtIndex:endIndexToRemove]]; endIndexToRemove++) ;
+	NSUInteger endIndexToRemove = string.length - 1;
+	for ( ; endIndexToRemove > 0 && [characterSet characterIsMember:[string characterAtIndex:endIndexToRemove]]; endIndexToRemove--) ;
 
-	return [self attributedSubstringFromRange:NSMakeRange(startIndexToRemove, string.length - startIndexToRemove - (string.length - endIndexToRemove))];
+	return [self attributedSubstringFromRange:NSMakeRange(startIndexToRemove, string.length - startIndexToRemove - (string.length - (endIndexToRemove + 1)))];
 }
 @end
