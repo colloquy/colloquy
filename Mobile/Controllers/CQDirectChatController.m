@@ -428,11 +428,11 @@ static BOOL showingKeyboard;
 	_stylePresentationViewController = [CQModalViewControllerPresentationViewController viewControllerPresentationViewControllerForViewController:styleViewController];
 	_stylePresentationViewController.delegate = self;
 
-	[self _updateStylePresentationViewControllerEdgeInsetsForSize:self.view.frame.size];
+	[self _updateStylePresentationViewControllerEdgeInsetsForSize:self.view.window.frame.size];
 
 	[self _updateAttributesForStyleViewController];
 
-	[_stylePresentationViewController showAboveViewController:self];
+	[_stylePresentationViewController show];
 }
 
 #pragma mark -
@@ -604,7 +604,7 @@ static BOOL showingKeyboard;
 //	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:toInterfaceOrientation]);
 
 	[coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {
-		[self _updateStylePresentationViewControllerEdgeInsetsForSize:self.view.frame.size];
+		[self _updateStylePresentationViewControllerEdgeInsetsForSize:self.view.window.frame.size];
 	} completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
 		[transcriptView scrollToBottomAnimated:NO];
 
@@ -866,13 +866,14 @@ static BOOL showingKeyboard;
 		return;
 
 	NSMutableAttributedString *attributedString = self._selectedChatInputBarAttributedString;
-	NSDictionary *newAttributes = @{
-		(position == CQColorPositionForeground ? NSForegroundColorAttributeName : NSBackgroundColorAttributeName): color
-	};
+	NSString *key = (position == CQColorPositionForeground ? NSForegroundColorAttributeName : NSBackgroundColorAttributeName);
+	NSDictionary *newAttributes = color ? @{ key: color } : nil;
 
 	[[attributedString copy] enumerateAttributesInRange:selectedRange options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:^(NSDictionary *rangeAttributes, NSRange range, BOOL *stop) {
 		NSMutableDictionary *attributes = [rangeAttributes mutableCopy];
-		[attributes addEntriesFromDictionary:newAttributes];
+		if (newAttributes)
+			[attributes addEntriesFromDictionary:newAttributes];
+		else [attributes removeObjectForKey:key];
 		[attributedString setAttributes:attributes range:range];
 	}];
 

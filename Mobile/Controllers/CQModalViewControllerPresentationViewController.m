@@ -25,7 +25,7 @@
 
 #pragma mark -
 
-- (void) showAboveViewController:(UIViewController *) viewController {
+- (void) show {
 	if (self.presentingWindow) // if we're already showing, don't re-show
 		return;
 
@@ -36,7 +36,7 @@
 	self.presentingWindow.rootViewController = self;
 	self.presentingWindow.windowLevel = UIWindowLevelAlert + 10;
 
-	UIView *view = [[UIView alloc] initWithFrame:viewController.view.frame];
+	UIView *view = [[UIView alloc] initWithFrame:self.view.frame];
 	view.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin);
 	view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.3];
 
