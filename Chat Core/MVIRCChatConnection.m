@@ -2609,6 +2609,7 @@ end:
 		_serverInformation = [[NSMutableDictionary alloc] initWithCapacity:5];
 
 	for( NSString *feature in parameters ) {
+		// IRCv3.x
 		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"STARTTLS"] ) {
 			[_supportedFeatures addObject:MVChatConnectionTLS];
 		} else if ( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"METADATA"] ) {
@@ -2625,7 +2626,17 @@ end:
 			@synchronized(_supportedFeatures) {
 				[_supportedFeatures addObject:MVChatConnectionUserhostInNames];
 			}
-		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"CHANTYPES="] ) {
+		}
+
+		// InspIRCd
+		else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"NAMESX"] ) {
+			@synchronized(_supportedFeatures) {
+				[_supportedFeatures addObject:MVChatConnectionNamesx];
+			}
+		}
+
+		// Standard 005's
+		else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"CHANTYPES="] ) {
 			NSString *types = [feature substringFromIndex:10]; // length of "CHANTYPES="
 			if( types.length )
 				MVSafeRetainAssign( _roomPrefixes, [NSCharacterSet characterSetWithCharactersInString:types] );
@@ -2708,6 +2719,10 @@ end:
 		NSBundle *bundle = [NSBundle mainBundle];
 		[self sendRawMessageWithFormat:@"METADATA SET client.name :%@", bundle.infoDictionary[(__bridge id)kCFBundleIdentifierKey]];
 		[self sendRawMessageWithFormat:@"METADATA SET client.version :%@ (%@)", bundle.infoDictionary[@"CFBundleShortVersionString"], bundle.infoDictionary[@"CFBundleVersion"]];
+	}
+
+	if( [_supportedFeatures containsObject:MVChatConnectionNamesx] ) {
+		[self sendRawMessage:@"PROTOCTL NAMESX"];
 	}
 }
 

@@ -70,6 +70,9 @@ NSString *MVChatConnectionCapNotify = @"MVChatConnectionCapNotify";
 NSString *MVChatConnectionInvite = @"MVChatConnectionInvite";
 NSString *MVChatConnectionSelfMessage = @"MVChatConnectionSelfMessage";
 
+// InspIRCd Enhancements
+NSString *MVChatConnectionNamesx = @"MVChatConnectionNamesx";
+
 NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
 NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectNotification";
 NSString *MVChatConnectionDidNotConnectNotification = @"MVChatConnectionDidNotConnectNotification";

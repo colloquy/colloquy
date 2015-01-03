@@ -108,6 +108,9 @@ extern NSString *MVChatConnectionCapNotify;
 extern NSString *MVChatConnectionInvite;
 extern NSString *MVChatConnectionSelfMessage;
 
+// InspIRCd Enhancements
+extern NSString *MVChatConnectionNamesx;
+
 // Notifications
 extern NSString *MVChatConnectionWillConnectNotification;
 extern NSString *MVChatConnectionDidConnectNotification;
