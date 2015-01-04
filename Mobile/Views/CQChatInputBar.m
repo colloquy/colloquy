@@ -44,7 +44,9 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 	foregroundColor = [UIColor colorFromName:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQChatStyleForegroundTextColor"]];
 	backgroundColor = [UIColor colorFromName:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQChatStyleBackgroundTextColor"]];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatInputBarDefaultsChanged object:nil];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[[NSNotificationCenter defaultCenter] postNotificationName:CQChatInputBarDefaultsChanged object:nil];
+	});
 }
 
 - (void) _commonInitialization {

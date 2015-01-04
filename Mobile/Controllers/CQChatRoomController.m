@@ -270,8 +270,8 @@ static CQShowRoomTopic showRoomTopic;
 
 #pragma mark -
 
-- (BOOL) handleTopicCommandWithArguments:(NSString *) arguments {
-	if (![arguments stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
+- (BOOL) handleTopicCommandWithArguments:(MVChatString *) arguments {
+	if (![arguments.string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
 		[self _displayCurrentTopicOnlyIfSet:NO];
 		return YES;
 	}
@@ -279,13 +279,13 @@ static CQShowRoomTopic showRoomTopic;
 	return NO;
 }
 
-- (BOOL) handleNamesCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleNamesCommandWithArguments:(MVChatString *) arguments {
 	[self showMembers];
 	return YES;
 }
 
-- (BOOL) handleInviteCommandWithArguments:(NSString *) arguments {
-	NSArray *nicknames = [arguments componentsSeparatedByString:@" "];
+- (BOOL) handleInviteCommandWithArguments:(MVChatString *) arguments {
+	NSArray *nicknames = [arguments.string componentsSeparatedByString:@" "];
 	if (nicknames.count == 0)
 		return NO;
 
