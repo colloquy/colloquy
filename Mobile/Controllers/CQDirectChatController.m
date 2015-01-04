@@ -463,8 +463,17 @@ static BOOL showingKeyboard;
 		UIKeyCommand *optCmdUpKeyCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputUpArrow modifierFlags:(UIKeyModifierCommand | UIKeyModifierAlternate) action:@selector(_handleKeyCommand:)];
 		UIKeyCommand *optCmdDownKeyCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputDownArrow modifierFlags:(UIKeyModifierCommand | UIKeyModifierAlternate) action:@selector(_handleKeyCommand:)];
 
-		keyCommands = @[altTabKeyCommand, shiftAltTabKeyCommand, cmdUpKeyCommand, cmdDownKeyCommand, optCmdUpKeyCommand, optCmdDownKeyCommand];
+		UIKeyCommand *cmdShiftCKeyCommand = [UIKeyCommand keyCommandWithInput:@"c" modifierFlags:(UIKeyModifierCommand | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *cmdShiftKKeyCommand = [UIKeyCommand keyCommandWithInput:@"k" modifierFlags:(UIKeyModifierCommand | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *cmdNKeyCommand = [UIKeyCommand keyCommandWithInput:@"n" modifierFlags:(UIKeyModifierCommand) action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *cmdJKeyCommand = [UIKeyCommand keyCommandWithInput:@"j" modifierFlags:(UIKeyModifierCommand) action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *cmdShiftNKeyCommand = [UIKeyCommand keyCommandWithInput:@"n" modifierFlags:(UIKeyModifierCommand | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *escCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputEscape modifierFlags:0 action:@selector(_handleKeyCommand:)];
+
+		keyCommands = @[ altTabKeyCommand, shiftAltTabKeyCommand, cmdUpKeyCommand, cmdDownKeyCommand, optCmdUpKeyCommand, optCmdDownKeyCommand,
+						 cmdShiftCKeyCommand, cmdNKeyCommand, cmdShiftKKeyCommand, cmdJKeyCommand, cmdShiftNKeyCommand, escCommand ];
 	}
+
 	return keyCommands;
 }
 
@@ -1473,7 +1482,20 @@ static BOOL showingKeyboard;
 	BOOL shiftKeyPressed = (command.modifierFlags & UIKeyModifierShift) == UIKeyModifierShift;
 	BOOL commandKeyPressed = (command.modifierFlags & UIKeyModifierCommand) == UIKeyModifierCommand;
 
-	if ([command.input isEqualToString:@"\t"]) {
+	if ([command.input isEqualToString:@"c"]) {
+		if (commandKeyPressed && shiftKeyPressed)
+			[self style:nil];
+	} else if ([command.input isEqualToString:@"j"]) {
+		if (commandKeyPressed)
+			[self handleJoinCommandWithArguments:nil];
+	} else if ([command.input isEqualToString:@"k"]) {
+		if (commandKeyPressed && shiftKeyPressed)
+			[self clearController];
+	} else if ([command.input isEqualToString:@"n"]) {
+		if (commandKeyPressed && !shiftKeyPressed)
+			[[CQConnectionsController defaultController] showConnectionCreationView:nil];
+		else [self handleJoinCommandWithArguments:nil];
+	} else if ([command.input isEqualToString:@"\t"]) {
 		if (optKeyPressed) {
 			if (shiftKeyPressed)
 				nextViewController = [[CQChatOrderingController defaultController] chatViewControllerPreceedingChatController:self requiringActivity:NO requiringHighlight:NO];
@@ -1485,6 +1507,9 @@ static BOOL showingKeyboard;
 	} else if ([command.input isEqualToString:UIKeyInputDownArrow]) {
 		if (commandKeyPressed)
 			nextViewController = [[CQChatOrderingController defaultController] chatViewControllerFollowingChatController:self requiringActivity:optKeyPressed requiringHighlight:NO];
+	} else if ([command.input isEqualToString:UIKeyInputEscape]) {
+		[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
+		[[CQColloquyApplication sharedApplication] dismissPopoversAnimated:YES];
 	}
 
 	if (nextViewController)
