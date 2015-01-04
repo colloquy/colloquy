@@ -1067,19 +1067,15 @@ static BOOL showingKeyboard;
 	NSString *targetName = nil;
 	[argumentsScanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&targetName];
 
-	BOOL hasMessageAfterCommand = !([argumentsScanner isAtEnd] || arguments.length <= argumentsScanner.scanLocation + 1);
 	if (targetName.length > 1 && [[self.connection chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]]) {
 		MVChatRoom *room = [self.connection chatRoomWithUniqueIdentifier:targetName];
-		CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:NO];
-		[[CQChatController defaultController] showChatController:controller animated:YES];
-		if (hasMessageAfterCommand) [controller _sendText:[arguments attributedSubstringFromIndex:argumentsScanner.scanLocation + 1]];
-		return YES;
+		CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:YES];
+		if (controller) [[CQChatController defaultController] showChatController:controller animated:YES];
 	} else {
 		MVChatUser *user = [[self.connection chatUsersWithNickname:targetName] anyObject];
-		CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:NO];
+		CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:YES];
 		[[CQChatController defaultController] showChatController:controller animated:YES];
-		if (hasMessageAfterCommand) [controller _sendText:[arguments attributedSubstringFromIndex:argumentsScanner.scanLocation + 1]];
-		return YES;
+		if (controller) [[CQChatController defaultController] showChatController:controller animated:YES];
 	}
 
 	// Return NO so the command is handled in ChatCore.

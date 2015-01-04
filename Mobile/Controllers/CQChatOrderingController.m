@@ -261,7 +261,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	NSParameterAssert(user != nil);
 
 	for (id <CQChatViewController> controller in _chatControllers)
-		if ([controller isMemberOfClass:[CQDirectChatController class]] && controller.target == user)
+		if ([controller isMemberOfClass:[CQDirectChatController class]] && [controller.target isEqual:user])
 			return (CQDirectChatController *)controller;
 
 	CQDirectChatController *controller = nil;
