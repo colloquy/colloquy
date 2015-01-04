@@ -7,7 +7,7 @@
 	NSIndexPath *_selectedIndexPath;
 }
 
-- (id) initWithRootPlist;
+- (instancetype) initWithRootPlist;
 
-- (id) initWithPlistNamed:(NSString *) plist;
+- (instancetype) initWithPlistNamed:(NSString *) plist NS_DESIGNATED_INITIALIZER;
 @end

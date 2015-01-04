@@ -1,7 +1,7 @@
 #import "CQAlertView.h"
 
 @implementation CQAlertView
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
 
@@ -54,7 +54,7 @@
 
 	if (placeholder.length)
 		textFieldInformation[@"placeholder"] = placeholder;
-	textFieldInformation[@"secure"] = @YES;
+	textFieldInformation[@"secure"] = @(YES);
 
 	[_textFieldInformation addObject:textFieldInformation];
 

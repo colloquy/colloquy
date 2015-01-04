@@ -48,7 +48,7 @@ static BOOL autoPortMapping = YES;
 
 #pragma mark -
 
-- (id) initWithUser:(MVChatUser *) chatUser {
+- (instancetype) initWithUser:(MVChatUser *) chatUser {
 	if( ( self = [super init] ) ) {
 		_status = MVFileTransferHoldingStatus;
 		_user = chatUser;
@@ -170,7 +170,7 @@ static BOOL autoPortMapping = YES;
 
 	MVSafeRetainAssign( _lastError, error );
 
-	NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:error, @"error", nil];
+	NSDictionary *info = @{ @"error": error };
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferErrorOccurredNotification object:self userInfo:info];
 }
 @end
@@ -178,7 +178,7 @@ static BOOL autoPortMapping = YES;
 #pragma mark -
 
 @implementation MVUploadFileTransfer
-+ (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
++ (instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	switch([[user connection] type]) {
 #if ENABLE(IRC)
 	case MVChatConnectionIRCType:

@@ -68,9 +68,9 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 + (id) wildcardUserFromString:(NSString *) mask {
 	NSArray *parts = [mask componentsSeparatedByString:@"!"];
 	if( parts.count == 1 )
-		return [self wildcardUserWithNicknameMask:[parts objectAtIndex:0] andHostMask:nil];
+		return [self wildcardUserWithNicknameMask:parts[0] andHostMask:nil];
 	if( parts.count >= 2 )
-		return [self wildcardUserWithNicknameMask:[parts objectAtIndex:0] andHostMask:[parts objectAtIndex:1]];
+		return [self wildcardUserWithNicknameMask:parts[0] andHostMask:parts[1]];
 	return [self wildcardUserWithNicknameMask:mask andHostMask:nil];
 }
 
@@ -80,15 +80,15 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 	NSArray *parts = [nickname componentsSeparatedByString:@"@"];
 	if( parts.count >= 1 )
-		ret -> _nickname = [[parts objectAtIndex:0] copy];
+		ret -> _nickname = [parts[0] copy];
 	if( parts.count >= 2 )
-		ret -> _serverAddress = [[parts objectAtIndex:1] copy];
+		ret -> _serverAddress = [parts[1] copy];
 
 	parts = [host componentsSeparatedByString:@"@"];
 	if( parts.count >= 1 )
-		ret -> _username = [[parts objectAtIndex:0] copy];
+		ret -> _username = [parts[0] copy];
 	if( parts.count >= 2 )
-		ret -> _address = [[parts objectAtIndex:1] copy];
+		ret -> _address = [parts[1] copy];
 
 	return ret;
 }
@@ -102,7 +102,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_attributes = [[NSMutableDictionary alloc] initWithCapacity:5];
 		_type = MVChatRemoteUserType;
@@ -369,31 +369,31 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (BOOL) hasAttributeForKey:(NSString *) key {
 	@synchronized( _attributes ) {
-		return ( [_attributes objectForKey:key] ? YES : NO );
+		return ( _attributes[key] ? YES : NO );
 	}
 }
 
 - (id) attributeForKey:(NSString *) key {
 	@synchronized( _attributes ) {
-		return [_attributes objectForKey:key];
+		return _attributes[key];
 	}
 }
 
 - (void) setAttribute:(id) attribute forKey:(id) key {
 	NSParameterAssert( key != nil );
 	@synchronized( _attributes ) {
-		if( attribute ) [_attributes setObject:attribute forKey:key];
+		if( attribute ) _attributes[key] = attribute;
 		else [_attributes removeObjectForKey:key];
 	}
 
-	NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:key, @"attribute", nil];
+	NSDictionary *info = @{ @"attribute": key };
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserAttributeUpdatedNotification object:self userInfo:info];
 }
 
 #pragma mark -
 
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
-	[self sendMessage:message withEncoding:encoding withAttributes:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:action] forKey:@"action"]];
+	[self sendMessage:message withEncoding:encoding withAttributes:@{@"action": @(action)}];
 }
 
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {

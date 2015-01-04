@@ -7,7 +7,8 @@
 #import "MVUtilities.h"
 
 #if ENABLE(AUTO_PORT_MAPPING)
-#import <TCMPortMapper/TCMPortMapper.h>
+#undef ENABLE_AUTO_PORT_MAPPING
+//#import <TCMPortMapper/TCMPortMapper.h>
 #endif
 
 #import <arpa/inet.h>
@@ -69,7 +70,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 	if( ! _connectionThread ) return;
 
-	NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithUnsignedShort:port], @"port", host, @"host", nil];
+	NSDictionary *info = @{ @"port": @(port), @"host": host };
 	[self performSelector:@selector( _connect: ) withObject:info inThread:_connectionThread];
 }
 
@@ -215,8 +216,8 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 	_connection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue socketQueue:_connectionDelegateQueue];
 
-	NSString *host = [info objectForKey:@"host"];
-	NSNumber *port = [info objectForKey:@"port"];
+	NSString *host = info[@"host"];
+	NSNumber *port = info[@"port"];
 
 	if( ! [_connection connectToHost:host onPort:[port unsignedShortValue] error:NULL] ) {
 		NSLog(@"can't connect to DCC %@ on port %d", host, [port unsignedShortValue] );

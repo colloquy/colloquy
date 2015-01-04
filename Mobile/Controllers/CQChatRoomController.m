@@ -64,7 +64,7 @@ static CQShowRoomTopic showRoomTopic;
 	[self userDefaultsChanged];
 }
 
-- (id) initWithTarget:(id) target {
+- (instancetype) initWithTarget:(id) target {
 	if (!(self = [super initWithTarget:target]))
 		return nil;
 
@@ -91,7 +91,7 @@ static CQShowRoomTopic showRoomTopic;
 	return self;
 }
 
-- (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
+- (instancetype) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
 	NSString *roomName = state[@"room"];
 	if (!roomName) {
 		return nil;
@@ -167,7 +167,7 @@ static CQShowRoomTopic showRoomTopic;
 	if (self.room)
 		state[@"room"] = self.room.name;
 	if (_joined)
-		state[@"joined"] = @YES;
+		state[@"joined"] = @(YES);
 
 	return state;
 }

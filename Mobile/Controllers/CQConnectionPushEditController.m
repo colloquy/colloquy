@@ -7,7 +7,7 @@
 #define PushEnabledTableSection 0
 
 @implementation CQConnectionPushEditController
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 

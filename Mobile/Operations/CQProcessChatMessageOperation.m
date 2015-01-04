@@ -9,11 +9,11 @@
 
 #import <ChatCore/MVChatUser.h>
 
-typedef enum {
+typedef NS_ENUM(NSInteger, CQMentionLinkService) {
 	CQMentionLinkServiceNone,
 	CQMentionLinkServiceTwitter,
 	CQMentionLinkServiceAppDotNet
-} CQMentionLinkService;
+};
 
 NSString *const CQInlineGIFImageKey = @"CQInlineGIFImageKey";
 
@@ -73,13 +73,13 @@ static NSString *timestampFormat;
 	[self userDefaultsChanged];
 }
 
-- (id) initWithMessageData:(NSData *) messageData {
+- (instancetype) initWithMessageData:(NSData *) messageData {
 	if (messageData)
 		return [self initWithMessageInfo:@{@"message": messageData}];
 	return [self initWithMessageInfo:@{}];
 }
 
-- (id) initWithMessageInfo:(NSDictionary *) messageInfo {
+- (instancetype) initWithMessageInfo:(NSDictionary *) messageInfo {
 	NSParameterAssert(messageInfo != nil);
 
 	if (!(self = [self init]))

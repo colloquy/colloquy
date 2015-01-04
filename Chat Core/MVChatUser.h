@@ -1,24 +1,24 @@
 #import "MVAvailability.h"
 #import "MVChatString.h"
 
-typedef enum {
+typedef NS_ENUM(NSInteger, MVChatUserType) {
 	MVChatRemoteUserType = 'remT',
 	MVChatLocalUserType = 'locL',
 	MVChatWildcardUserType = 'wilD'
-} MVChatUserType;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, MVChatUserStatus) {
 	MVChatUserUnknownStatus = 'uKnw',
 	MVChatUserOfflineStatus = 'oflN',
 	MVChatUserDetachedStatus = 'detA',
 	MVChatUserAvailableStatus = 'avaL',
 	MVChatUserAwayStatus = 'awaY'
-} MVChatUserStatus;
+};
 
-typedef enum {
+typedef NS_OPTIONS(NSUInteger, MVChatUserMode) {
 	MVChatUserNoModes = 0,
 	MVChatUserInvisibleMode = 1 << 0
-} MVChatUserMode;
+};
 
 extern NSString *MVChatUserKnownRoomsAttribute;
 extern NSString *MVChatUserPictureAttribute;

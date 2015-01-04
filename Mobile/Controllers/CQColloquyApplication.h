@@ -43,9 +43,9 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 - (void) presentModalViewController:(UIViewController *) modalViewController animated:(BOOL) animated singly:(BOOL) singly;
 - (void) dismissModalViewControllerAnimated:(BOOL) animated;
 
-- (BOOL) areNotificationBadgesAllowed;
-- (BOOL) areNotificationSoundsAllowed;
-- (BOOL) areNotificationAlertsAllowed;
+@property (readonly) BOOL areNotificationBadgesAllowed;
+@property (readonly) BOOL areNotificationSoundsAllowed;
+@property (readonly) BOOL areNotificationAlertsAllowed;
 
 - (void) registerForPushNotifications;
 
@@ -59,5 +59,5 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 @property (nonatomic, readonly) NSArray *highlightWords;
 @property (nonatomic, readonly) UIColor *tintColor;
 
-- (UISplitViewController *) splitViewController;
+@property (readonly, strong) UISplitViewController *splitViewController;
 @end

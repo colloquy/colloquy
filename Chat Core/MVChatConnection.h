@@ -209,9 +209,9 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-- (id) initWithType:(MVChatConnectionType) type;
-- (id) initWithURL:(NSURL *) url;
-- (id) initWithServer:(NSString *) server type:(MVChatConnectionType) type port:(unsigned short) port user:(NSString *) nickname;
+- (instancetype) initWithType:(MVChatConnectionType) type;
+- (instancetype) initWithURL:(NSURL *) url;
+- (instancetype) initWithServer:(NSString *) server type:(MVChatConnectionType) type port:(unsigned short) port user:(NSString *) nickname;
 
 #pragma mark -
 
@@ -377,7 +377,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 - (void) fetchChatRoomList;
 - (void) stopFetchingChatRoomList;
-- (NSMutableDictionary *) chatRoomListResults;
+@property (readonly, copy) NSMutableDictionary *chatRoomListResults;
 
 #pragma mark -
 

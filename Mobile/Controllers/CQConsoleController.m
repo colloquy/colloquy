@@ -60,7 +60,7 @@ static BOOL verbose;
 	});
 }
 
-- (id) initWithTarget:(id) target {
+- (instancetype) initWithTarget:(id) target {
 	if (!(self = [super initWithTarget:nil]))
 		return self;
 

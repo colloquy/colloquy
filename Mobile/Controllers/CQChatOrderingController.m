@@ -109,7 +109,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return sharedInstance;
 }
 
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
 

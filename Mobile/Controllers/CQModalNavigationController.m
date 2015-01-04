@@ -3,7 +3,7 @@
 #import "CQColloquyApplication.h"
 
 @implementation CQModalNavigationController
-- (id) initWithRootViewController:(UIViewController *) rootViewController {
+- (instancetype) initWithRootViewController:(UIViewController *) rootViewController {
 	if (!(self = [self init]))
 		return nil;
 
@@ -12,7 +12,7 @@
 	return self;
 }
 
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
 

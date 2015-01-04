@@ -1,7 +1,7 @@
 #import "MVDelegateLogger.h"
 
 @implementation MVDelegateLogger
-- (id) initWithDelegate:(id <MVLoggingDelegate>) delegate {
+- (instancetype) initWithDelegate:(id <MVLoggingDelegate>) delegate {
 	if (!(self = [super init]))
 		return nil;
 

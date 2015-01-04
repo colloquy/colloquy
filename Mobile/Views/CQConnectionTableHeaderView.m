@@ -7,7 +7,7 @@
 #import <ChatCore/MVChatConnection.h>
 
 @implementation CQConnectionTableHeaderView
-- (id) initWithReuseIdentifier:(NSString *) reuseIdentifier {
+- (instancetype) initWithReuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithReuseIdentifier:reuseIdentifier]))
 		return nil;
 

@@ -14,14 +14,14 @@
 #define DCCPacketSize 4096
 
 @implementation MVIRCUploadFileTransfer
-+ (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
++ (instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	static long long passiveId = 0;
 
 	MVIRCUploadFileTransfer *ret = [(MVIRCUploadFileTransfer *)[MVIRCUploadFileTransfer alloc] initWithUser:user];
 	[ret _setSource:path];
 	[ret _setPassive:passive];
 
-	NSNumber *size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[ret source] error:NULL] objectForKey:NSFileSize];
+	NSNumber *size = [[NSFileManager defaultManager] attributesOfItemAtPath:[ret source] error:NULL][NSFileSize];
 	[ret _setFinalSize:[size unsignedLongLongValue]];
 
 	NSString *fileName = [[ret source] lastPathComponent];
@@ -249,7 +249,7 @@
 
 - (void) acceptByResumingIfPossible:(BOOL) resume {
 	if( resume ) {
-		NSNumber *size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[self destination] error:NULL] objectForKey:NSFileSize];
+		NSNumber *size = [[NSFileManager defaultManager] attributesOfItemAtPath:[self destination] error:NULL][NSFileSize];
 		BOOL fileExists = [[NSFileManager defaultManager] isWritableFileAtPath:[self destination]];
 
 		if( fileExists && [size unsignedLongLongValue] < [self finalSize] ) {

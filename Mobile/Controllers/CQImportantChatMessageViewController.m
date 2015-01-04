@@ -5,7 +5,7 @@ enum {
 };
 
 @implementation CQImportantChatMessageViewController
-- (id) initWithMessages:(NSArray *) messages delegate:(id <CQImportantChatMessageDelegate>) delegate {
+- (instancetype) initWithMessages:(NSArray *) messages delegate:(id <CQImportantChatMessageDelegate>) delegate {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 

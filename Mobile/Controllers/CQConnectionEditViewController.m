@@ -68,7 +68,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	}
 }
 
-- (id) init {
+- (instancetype) init {
 	return (self = [super initWithStyle:UITableViewStyleGrouped]);
 }
 

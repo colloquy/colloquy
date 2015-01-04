@@ -203,7 +203,7 @@ static BOOL showingKeyboard;
 	return chatMessageProcessingQueue;
 }
 
-- (id) initWithTarget:(id) target {
+- (instancetype) initWithTarget:(id) target {
 	if (!(self = [super initWithNibName:@"CQUIChatView" bundle:nil]))
 		return nil;
 
@@ -255,7 +255,7 @@ static BOOL showingKeyboard;
 	return self;
 }
 
-- (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
+- (instancetype) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
 	MVChatUser *user = nil;
 
 	NSString *nickname = state[@"user"];
@@ -362,7 +362,7 @@ static BOOL showingKeyboard;
 	state[@"class"] = NSStringFromClass([self class]);
 
 	if ([CQChatController defaultController].visibleChatController == self)
-		state[@"active"] = @YES;
+		state[@"active"] = @(YES);
 
 	if (self.user)
 		state[@"user"] = self.user.nickname;
@@ -381,7 +381,7 @@ static BOOL showingKeyboard;
 
 		MVChatUser *user = message[@"user"];
 		if (user && !user.localUser) newMessage[@"user"] = user.nickname;
-		else if (user.localUser) newMessage[@"localUser"] = @YES;
+		else if (user.localUser) newMessage[@"localUser"] = @(YES);
 
 		[messages addObject:newMessage];
 	}

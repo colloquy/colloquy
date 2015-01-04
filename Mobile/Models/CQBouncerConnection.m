@@ -6,7 +6,7 @@
 #import <objc/message.h>
 
 @implementation CQBouncerConnection
-- (id) initWithBouncerSettings:(CQBouncerSettings *) settings {
+- (instancetype) initWithBouncerSettings:(CQBouncerSettings *) settings {
 	if (!(self = [super init]))
 		return nil;
 

@@ -21,7 +21,7 @@ typedef NS_ENUM(NSInteger, CQChatRoomBatchType) {
 	UIPopoverController *_currentUserListPopoverController;
 	NSDictionary *_topicInformation;
 }
-- (MVChatRoom *) room;
+@property (readonly, strong) MVChatRoom *room;
 
 - (void) join;
 - (void) part;

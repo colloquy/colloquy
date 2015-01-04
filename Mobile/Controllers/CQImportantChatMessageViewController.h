@@ -15,5 +15,5 @@
 	id <CQImportantChatMessageDelegate> _delegate;
 }
 
-- (id) initWithMessages:(NSArray *) messages delegate:(id <CQImportantChatMessageDelegate>) delegate;
+- (instancetype) initWithMessages:(NSArray *) messages delegate:(id <CQImportantChatMessageDelegate>) delegate NS_DESIGNATED_INITIALIZER;
 @end

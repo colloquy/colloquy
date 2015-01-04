@@ -16,7 +16,7 @@ static char encodingTable[64] = {
 	return [[NSData alloc] initWithBase64EncodedString:string];
 }
 
-- (id) initWithBase64EncodedString:(NSString *) string {
+- (instancetype) initWithBase64EncodedString:(NSString *) string {
 	NSMutableData *mutableData = nil;
 
 	if( string ) {

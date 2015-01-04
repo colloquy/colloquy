@@ -24,7 +24,7 @@ static BOOL pushAvailable = YES;
 #pragma mark -
 
 @implementation CQBouncerEditViewController
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 

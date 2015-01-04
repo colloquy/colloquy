@@ -5,7 +5,7 @@
 #import "NSStringAdditions.h"
 
 @implementation MVIRCChatRoom
-- (id) initWithName:(NSString *) roomName andConnection:(MVIRCChatConnection *) roomConnection {
+- (instancetype) initWithName:(NSString *) roomName andConnection:(MVIRCChatConnection *) roomConnection {
 	if( ( self = [self init] ) ) {
 		_connection = roomConnection; // prevent circular retain
 		_name = [roomName copy];

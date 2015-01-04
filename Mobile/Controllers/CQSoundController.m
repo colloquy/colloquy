@@ -13,7 +13,7 @@
 	AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 }
 
-- (id) initWithSoundNamed:(NSString *) soundName {
+- (instancetype) initWithSoundNamed:(NSString *) soundName {
 	NSParameterAssert(soundName);
 
 	if (!(self = [super init]))

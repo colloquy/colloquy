@@ -1,7 +1,7 @@
 #import <ChatCore/MVAvailability.h>
 #import <ChatCore/MVChatString.h>
 
-typedef enum {
+typedef NS_OPTIONS(NSUInteger, MVChatRoomMode) {
 	MVChatRoomNoModes = 0,
 	MVChatRoomPrivateMode = 1 << 0,
 	MVChatRoomSecretMode = 1 << 1,
@@ -12,21 +12,21 @@ typedef enum {
 	MVChatRoomNoOutsideMessagesMode = 1 << 6,
 	MVChatRoomPassphraseToJoinMode = 1 << 7,
 	MVChatRoomLimitNumberOfMembersMode = 1 << 8
-} MVChatRoomMode;
+};
 
-typedef enum {
+typedef NS_OPTIONS(NSUInteger, MVChatRoomMemberMode) {
 	MVChatRoomMemberNoModes = 0,
 	MVChatRoomMemberVoicedMode = 1 << 0,
 	MVChatRoomMemberHalfOperatorMode = 1 << 1,
 	MVChatRoomMemberOperatorMode = 1 << 2,
 	MVChatRoomMemberAdministratorMode = 1 << 3,
 	MVChatRoomMemberFounderMode = 1 << 4
-} MVChatRoomMemberMode;
+};
 
-typedef enum {
+typedef NS_OPTIONS(NSUInteger, MVChatRoomMemberDisciplineMode) {
 	MVChatRoomMemberNoDisciplineModes = 0,
 	MVChatRoomMemberDisciplineQuietedMode = 1 << 0
-} MVChatRoomMemberDisciplineMode;
+};
 
 extern NSString *MVChatRoomMemberQuietedFeature;
 extern NSString *MVChatRoomMemberVoicedFeature;

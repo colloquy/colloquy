@@ -11,7 +11,7 @@
 #import "NSDateAdditions.h"
 
 @implementation CQUserInfoViewController
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 

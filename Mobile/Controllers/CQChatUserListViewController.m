@@ -28,7 +28,7 @@ static NSString *membersFilteredCountFormat;
 	membersFilteredCountFormat = NSLocalizedString(@"Members (%u of %u)", @"Members with filtered count view title");
 }
 
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStylePlain]))
 		return nil;
 

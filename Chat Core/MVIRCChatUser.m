@@ -46,7 +46,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	];
 }
 
-- (id) initLocalUserWithConnection:(MVIRCChatConnection *) userConnection {
+- (instancetype) initLocalUserWithConnection:(MVIRCChatConnection *) userConnection {
 	if( ( self = [self initWithNickname:nil andConnection:userConnection] ) ) {
 		_type = MVChatLocalUserType;
 		MVSafeCopyAssign( _uniqueIdentifier, [[self nickname] lowercaseString] );
@@ -55,7 +55,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	return self;
 }
 
-- (id) initWithNickname:(NSString *) userNickname andConnection:(MVIRCChatConnection *) userConnection {
+- (instancetype) initWithNickname:(NSString *) userNickname andConnection:(MVIRCChatConnection *) userConnection {
 	if( ( self = [self init] ) ) {
 		_type = MVChatRemoteUserType;
 		_connection = userConnection; // prevent retain cycles
@@ -172,11 +172,11 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 #pragma mark -
 
 - (void) ctcpReplyNotification:(NSNotification *) notification {
-	NSString *command = [[notification userInfo] objectForKey:@"command"];
-	NSData *arguments = [[notification userInfo] objectForKey:@"arguments"];
+	NSString *command = [notification userInfo][@"command"];
+	NSData *arguments = [notification userInfo][@"arguments"];
 	if( [command isCaseInsensitiveEqualToString:@"PING"] ) {
 		NSTimeInterval diff = [[NSDate date] timeIntervalSinceDate:[self attributeForKey:@"MVChatUserPingSendDateAttribute"]];
-		[self setAttribute:[NSNumber numberWithDouble:diff] forKey:MVChatUserPingAttribute];
+		[self setAttribute:@(diff) forKey:MVChatUserPingAttribute];
 		[self setAttribute:nil forKey:@"MVChatUserPingSendDateAttribute"];
 	} else if( [command isCaseInsensitiveEqualToString:@"VERSION"] ) {
 		NSString *info = [[NSString alloc] initWithData:arguments encoding:[[self connection] encoding]];

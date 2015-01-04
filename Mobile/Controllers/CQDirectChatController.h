@@ -69,7 +69,7 @@ typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
 	NSMutableDictionary *_batchStorage; // { "batchIdentifier": any associated data }
 	NSMutableDictionary *_batchTypeAssociation; // { @(batchType): [ "batchIdentifier", "otherBatchIdentifier" ] }
 }
-- (id) initWithTarget:(id) target;
+- (instancetype) initWithTarget:(id) target NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, readonly) MVChatUser *user;
 

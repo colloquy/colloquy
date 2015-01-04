@@ -2,7 +2,18 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "topicToggleDown.pdf"
+      "scale" : "1x",
+      "filename" : "topicToggleDown.png"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x",
+      "filename" : "topicToggleDown@2x.png"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x",
+      "filename" : "topicToggleDown@3x.png"
     }
   ],
   "info" : {

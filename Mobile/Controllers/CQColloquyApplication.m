@@ -19,12 +19,12 @@
 #import <HockeySDK/HockeySDK.h>
 #import "RegexKitLite.h"
 
-typedef enum {
+typedef NS_ENUM(NSInteger, CQSidebarOrientation) {
 	CQSidebarOrientationNone,
 	CQSidebarOrientationPortrait,
 	CQSidebarOrientationLandscape,
 	CQSidebarOrientationAll
-} CQSidebarOrientation;
+};
 
 NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyApplicationDidRecieveDeviceTokenNotification";
 
@@ -40,7 +40,7 @@ static NSMutableArray *highlightWords;
 	return (CQColloquyApplication *)[UIApplication sharedApplication];
 }
 
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
 

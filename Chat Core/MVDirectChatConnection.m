@@ -28,7 +28,7 @@ NSString *MVDirectChatConnectionGotMessageNotification = @"";
 NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomain";
 
 @implementation MVDirectChatConnection
-+ (id) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive {
++ (instancetype) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive {
 	static long long passiveId = 0;
 
 	MVDirectChatConnection *ret = [(MVDirectChatConnection *)[MVDirectChatConnection alloc] initWithUser:user];
@@ -140,7 +140,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 }
 
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
-	[self sendMessage:message withEncoding:encoding withAttributes:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:action] forKey:@"action"]];
+	[self sendMessage:message withEncoding:encoding withAttributes:@{@"action": @(action)}];
 }
 
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *)attributes {
@@ -165,13 +165,13 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 		cformat = nil;
 	}
 
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:@(encoding), @"StringEncoding", cformat, @"FormatType", nil];
+	NSDictionary *options = @{ @"StringEncoding": @(encoding), @"FormatType": cformat };
 	NSData *msg = [message chatFormatWithOptions:options];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 	NSData *msg = [message dataUsingEncoding:encoding allowLossyConversion:YES];
 #endif
 
-	if( [[attributes objectForKey:@"action"] boolValue] ) {
+	if( [attributes[@"action"] boolValue] ) {
 		NSMutableData *newMsg = [[NSMutableData alloc] initWithCapacity:msg.length + 11];
 		[newMsg appendBytes:"\001ACTION " length:8];
 		[newMsg appendData:msg];
@@ -245,11 +245,11 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 		if( [command isCaseInsensitiveEqualToString:@"ACTION"] && arguments ) {
 			// special case ACTION and send it out like a message with the action flag
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionGotMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:arguments, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionGotMessageNotification object:self userInfo:@{ @"message": arguments, @"identifier": [NSString locallyUniqueString], @"action": @(YES) }];
 		}
 	} else {
 		NSData *msg = [[NSData alloc] initWithBytes:bytes length:(end - bytes)];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionGotMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msg, @"message", [NSString locallyUniqueString], @"identifier", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionGotMessageNotification object:self userInfo:@{ @"message": msg, @"identifier": [NSString locallyUniqueString] }];
 	}
 
 	[self _readNextMessage];
@@ -259,7 +259,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 #pragma mark -
 
 @implementation MVDirectChatConnection (MVDirectChatConnectionPrivate)
-- (id) initWithUser:(MVChatUser *) chatUser {
+- (instancetype) initWithUser:(MVChatUser *) chatUser {
 	if( ( self = [super init] ) ) {
 		_status = MVDirectChatConnectionWaitingStatus;
 		_encoding = NSUTF8StringEncoding;
@@ -321,7 +321,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 	MVSafeRetainAssign( _lastError, error );
 
-	NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:error, @"error", nil];
+	NSDictionary *info = @{@"error": error};
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionErrorOccurredNotification object:self userInfo:info];
 }
 @end

@@ -13,8 +13,8 @@ extern NSString *const CQInlineGIFImageKey;
 	SEL _action;
 	id _userInfo;
 }
-- (id) initWithMessageData:(NSData *) messageData;
-- (id) initWithMessageInfo:(NSDictionary *) messageInfo;
+- (instancetype) initWithMessageData:(NSData *) messageData;
+- (instancetype) initWithMessageInfo:(NSDictionary *) messageInfo;
 
 @property (copy) NSString *highlightNickname;
 @property (strong) CQIgnoreRulesController *ignoreController;

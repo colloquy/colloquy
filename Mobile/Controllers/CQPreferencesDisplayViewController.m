@@ -59,11 +59,11 @@ static NSString *const CQPSListTypeFont = @"Font";
 	BOOL _active;
 }
 
-- (id) initWithRootPlist {
+- (instancetype) initWithRootPlist {
 	return [self initWithPlistNamed:@"Root"];
 }
 
-- (id) initWithPlistNamed:(NSString *) plist {
+- (instancetype) initWithPlistNamed:(NSString *) plist {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 

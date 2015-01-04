@@ -9,7 +9,7 @@
 @implementation CQTextCompletionView
 @synthesize delegate = _delegate;
 
-- (id) initWithFrame:(CGRect) frame {
+- (instancetype) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
 		return nil;
 	self.opaque = NO;

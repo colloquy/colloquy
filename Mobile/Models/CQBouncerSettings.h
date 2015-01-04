@@ -10,7 +10,7 @@
 	BOOL _pushNotifications;
 	MVChatConnectionBouncer _type;
 }
-- (id) initWithDictionaryRepresentation:(NSDictionary *) info;
+- (instancetype) initWithDictionaryRepresentation:(NSDictionary *) info NS_DESIGNATED_INITIALIZER;
 
 - (NSMutableDictionary *) dictionaryRepresentation;
 

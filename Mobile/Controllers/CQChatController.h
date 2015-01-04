@@ -51,7 +51,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 
 - (void) setFirstChatController;
 - (void) showPendingChatControllerAnimated:(BOOL) animated;
-- (BOOL) hasPendingChatController;
+@property (readonly) BOOL hasPendingChatController;
 
 #if ENABLE(FILE_TRANSFERS)
 - (void) showFilePickerWithUser:(MVChatUser *) user;
@@ -79,7 +79,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 @property (nonatomic, readonly) NSStringEncoding encoding;
 
 @optional
-- (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection;
+- (instancetype) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection;
 - (void) restorePersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection;
 - (void) close;
 

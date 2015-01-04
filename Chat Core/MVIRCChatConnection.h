@@ -48,7 +48,7 @@ extern NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature;
 #pragma mark -
 
 @interface MVChatConnection (MVIRCChatConnectionPrivate)
-- (GCDAsyncSocket *) _chatConnection;
+@property (readonly, strong) GCDAsyncSocket *_chatConnection;
 - (void) _connect;
 
 - (void) _readNextMessageFromServer;
@@ -84,7 +84,7 @@ extern NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature;
 
 - (void) _resetSupportedFeatures;
 
-- (NSCharacterSet *) _nicknamePrefixes;
+@property (readonly, copy) NSCharacterSet *_nicknamePrefixes;
 - (MVChatRoomMemberMode) _modeForNicknamePrefixCharacter:(unichar) character;
 - (MVChatRoomMemberMode) _stripModePrefixesFromNickname:(NSString **) nickname;
 

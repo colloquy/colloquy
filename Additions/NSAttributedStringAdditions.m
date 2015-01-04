@@ -598,25 +598,25 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 - (NSData *) _mIRCFormatWithOptions:(NSDictionary *) options {
 	NSRange limitRange, effectiveRange;
 	NSMutableData *ret = [[NSMutableData allocWithZone:nil] initWithCapacity:( self.length + 20 )];
-	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedLongValue];
+	NSStringEncoding encoding = [options[@"StringEncoding"] unsignedLongValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
 	limitRange = NSMakeRange( 0, self.length );
 	while( limitRange.length > 0 ) {
 		NSDictionary *dict = [self attributesAtIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
 
-		id link = [dict objectForKey:NSLinkAttributeName];
+		id link = dict[NSLinkAttributeName];
 		BOOL bold = NO, italic = NO, underline = NO;
 #if SYSTEM(MAC)
 		NSFont *currentFont = [dict objectForKey:NSFontAttributeName];
 		NSColor *foregroundColor = [dict objectForKey:NSForegroundColorAttributeName];
 		NSColor *backgroundColor = [dict objectForKey:NSBackgroundColorAttributeName];
 #else
-		UIFont *currentFont = [dict objectForKey:NSFontAttributeName];
-		UIColor *foregroundColor = [dict objectForKey:NSForegroundColorAttributeName];
-		UIColor *backgroundColor = [dict objectForKey:NSBackgroundColorAttributeName];
+		UIFont *currentFont = dict[NSFontAttributeName];
+		UIColor *foregroundColor = dict[NSForegroundColorAttributeName];
+		UIColor *backgroundColor = dict[NSBackgroundColorAttributeName];
 #endif
-		if( ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
+		if( ! [options[@"IgnoreFontTraits"] boolValue] ) {
 #if SYSTEM(MAC)
 			NSFontTraitMask traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
 			if( traits & NSBoldFontMask ) bold = YES;
@@ -626,9 +626,9 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			bold = (descriptor.symbolicTraits & UIFontDescriptorTraitBold) == UIFontDescriptorTraitBold;
 			italic = (descriptor.symbolicTraits & UIFontDescriptorTraitItalic) == UIFontDescriptorTraitItalic;
 #endif
-			NSNumber *oblique = [dict objectForKey:NSObliquenessAttributeName];
+			NSNumber *oblique = dict[NSObliquenessAttributeName];
 			if( oblique && [oblique floatValue] > 0. ) italic = YES;
-			if( [[dict objectForKey:NSUnderlineStyleAttributeName] intValue] ) underline = YES;
+			if( [dict[NSUnderlineStyleAttributeName] intValue] ) underline = YES;
 		}
 
 #if SYSTEM(MAC)
@@ -639,7 +639,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			foregroundColor = [foregroundColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace]; // we need to convert to RGB space
 #endif
 
-		if( foregroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
+		if( foregroundColor && ! [options[@"IgnoreFontColors"] boolValue] ) {
 			char buffer[6];
 			CGFloat red = 0., green = 0., blue = 0.;
 			[foregroundColor getRed:&red green:&green blue:&blue alpha:NULL];
@@ -685,7 +685,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
 
-	if( [[options objectForKey:@"NullTerminatedReturn"] boolValue] )
+	if( [options[@"NullTerminatedReturn"] boolValue] )
 		[ret appendBytes:"\0" length:1];
 
 	return ret;
@@ -869,7 +869,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 #endif
 
 - (NSData *) chatFormatWithOptions:(NSDictionary *) options {
-	NSString *format = [options objectForKey:@"FormatType"];
+	NSString *format = options[@"FormatType"];
 
 #if SYSTEM(MAC)
 	if( [format isEqualToString:NSChatCTCPTwoFormatType] ) return [self _CTCP2FormatWithOptions:options];
@@ -880,13 +880,13 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 	// No formatting.
 	NSMutableData *ret = [NSMutableData data];
-	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedLongValue];
+	NSStringEncoding encoding = [options[@"StringEncoding"] unsignedLongValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
 	NSData *data = [[self string] dataUsingEncoding:encoding allowLossyConversion:YES];
 	if( data ) [ret appendData:data];
 
-	if( [[options objectForKey:@"NullTerminatedReturn"] boolValue] )
+	if( [options[@"NullTerminatedReturn"] boolValue] )
 		[ret appendBytes:"\0" length:1];
 
 	return ret;

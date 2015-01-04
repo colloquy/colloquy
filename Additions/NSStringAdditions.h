@@ -24,45 +24,45 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 + (NSArray *) knownEmoticons;
 + (NSSet *) knownEmojiWithEmoticons;
 
-- (id) initWithChatData:(NSData *) data encoding:(NSStringEncoding) encoding;
+- (instancetype) initWithChatData:(NSData *) data encoding:(NSStringEncoding) encoding;
 
 - (BOOL) isCaseInsensitiveEqualToString:(NSString *) string;
 - (BOOL) hasCaseInsensitivePrefix:(NSString *) prefix;
 - (BOOL) hasCaseInsensitiveSuffix:(NSString *) suffix;
 - (BOOL) hasCaseInsensitiveSubstring:(NSString *) substring;
 
-- (NSString *) stringByEncodingXMLSpecialCharactersAsEntities;
-- (NSString *) stringByDecodingXMLSpecialCharacterEntities;
+@property (readonly, copy) NSString *stringByEncodingXMLSpecialCharactersAsEntities;
+@property (readonly, copy) NSString *stringByDecodingXMLSpecialCharacterEntities;
 
 - (NSString *) stringByEscapingCharactersInSet:(NSCharacterSet *) set;
 - (NSString *) stringByReplacingCharactersInSet:(NSCharacterSet *) set withString:(NSString *) string;
 
-- (NSString *) stringByEncodingIllegalURLCharacters;
-- (NSString *) stringByDecodingIllegalURLCharacters;
+@property (readonly, copy) NSString *stringByEncodingIllegalURLCharacters;
+@property (readonly, copy) NSString *stringByDecodingIllegalURLCharacters;
 
-- (NSString *) stringByStrippingIllegalXMLCharacters;
-- (NSString *) stringByStrippingXMLTags;
+@property (readonly, copy) NSString *stringByStrippingIllegalXMLCharacters;
+@property (readonly, copy) NSString *stringByStrippingXMLTags;
 
 + (NSString *) stringByReversingString:(NSString *) normalString;
 
-- (NSString *) stringWithDomainNameSegmentOfAddress;
+@property (readonly, copy) NSString *stringWithDomainNameSegmentOfAddress;
 
-- (NSString *) fileName;
+@property (readonly, copy) NSString *fileName;
 
-- (BOOL) isValidIRCMask;
-- (NSString *) IRCNickname;
-- (NSString *) IRCUsername;
-- (NSString *) IRCHostname;
-- (NSString *) IRCRealname;
+@property (getter=isValidIRCMask, readonly) BOOL validIRCMask;
+@property (readonly, copy) NSString *IRCNickname;
+@property (readonly, copy) NSString *IRCUsername;
+@property (readonly, copy) NSString *IRCHostname;
+@property (readonly, copy) NSString *IRCRealname;
 
-- (BOOL) containsEmojiCharacters;
+@property (readonly) BOOL containsEmojiCharacters;
 - (BOOL) containsEmojiCharactersInRange:(NSRange) range;
 - (NSRange) rangeOfEmojiCharactersInRange:(NSRange) range;
 
-- (BOOL) containsTypicalEmoticonCharacters;
+@property (readonly) BOOL containsTypicalEmoticonCharacters;
 
-- (NSString *) stringBySubstitutingEmojiForEmoticons;
-- (NSString *) stringBySubstitutingEmoticonsForEmoji;
+@property (readonly, copy) NSString *stringBySubstitutingEmojiForEmoticons;
+@property (readonly, copy) NSString *stringBySubstitutingEmoticonsForEmoji;
 
 - (BOOL) isMatchedByRegex:(NSString *) regex;
 - (BOOL) isMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range error:(NSError **) error;

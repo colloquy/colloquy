@@ -13,6 +13,6 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey);
 
 + (NSArray *) servicesNicknames;
 
-- (id) initLocalUserWithConnection:(MVIRCChatConnection *) connection;
-- (id) initWithNickname:(NSString *) nickname andConnection:(MVIRCChatConnection *) connection;
+- (instancetype) initLocalUserWithConnection:(MVIRCChatConnection *) connection;
+- (instancetype) initWithNickname:(NSString *) nickname andConnection:(MVIRCChatConnection *) connection;
 @end

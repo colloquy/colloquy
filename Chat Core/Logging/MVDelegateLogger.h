@@ -11,5 +11,5 @@
 	__weak id <MVLoggingDelegate> _delegate;
 }
 
-- (id) initWithDelegate:(id <MVLoggingDelegate>) delegate;
+- (instancetype) initWithDelegate:(id <MVLoggingDelegate>) delegate NS_DESIGNATED_INITIALIZER;
 @end

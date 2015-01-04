@@ -63,7 +63,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
 
@@ -459,7 +459,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		[_connections addObject:chatConnection];
 	}
 
-	[chatConnection setPersistentInformationObject:@YES forKey:@"stillExistsOnBouncer"];
+	[chatConnection setPersistentInformationObject:@(YES) forKey:@"stillExistsOnBouncer"];
 
 	chatConnection.server = info[@"serverAddress"];
 	chatConnection.serverPort = [info[@"serverPort"] unsignedShortValue];
@@ -1245,7 +1245,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		persistentInformation[@"automatic"] = info[@"automatic"];
 	if (info[@"multitasking"])
 		persistentInformation[@"multitasking"] = info[@"multitasking"];
-	else persistentInformation[@"multitasking"] = @YES;
+	else persistentInformation[@"multitasking"] = @(YES);
 	if (info[@"push"])
 		persistentInformation[@"push"] = info[@"push"];
 	if (info[@"rooms"])

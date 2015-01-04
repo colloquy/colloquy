@@ -19,7 +19,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 @synthesize fontSize = _fontSize;
 @synthesize styleIdentifier = _styleIdentifier;
 
-- (id) initWithFrame:(CGRect) frame {
+- (instancetype) initWithFrame:(CGRect) frame {
 	WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
 	configuration.allowsInlineMediaPlayback = YES;
 	configuration.processPool = [[WKProcessPool alloc] init];

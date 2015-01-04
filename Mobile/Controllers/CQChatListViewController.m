@@ -50,7 +50,7 @@ static BOOL showsChatIcons;
 	[self userDefaultsChanged];
 }
 
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStylePlain]))
 		return nil;
 

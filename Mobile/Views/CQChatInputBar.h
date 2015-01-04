@@ -4,10 +4,10 @@
 @protocol CQChatInputBarDelegate;
 @class CQTextCompletionView;
 
-typedef enum {
+typedef NS_ENUM(NSInteger, CQChatInputBarResponderState) {
 	CQChatInputBarNotResponder,
 	CQChatInputBarResponder
-} CQChatInputBarResponderState;
+};
 
 @interface CQChatInputBar : UIView <UITextViewDelegate, CQTextCompletionViewDelegate> {
 	@protected

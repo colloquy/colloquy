@@ -5,7 +5,7 @@
 #import "CQColloquyApplication.h"
 
 @implementation CQChatNavigationController
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
 

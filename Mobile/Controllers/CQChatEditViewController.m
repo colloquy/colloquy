@@ -12,7 +12,7 @@
 static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 
 @implementation CQChatEditViewController
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 	return self;

@@ -7,7 +7,7 @@
 }
 + (void) vibrate;
 
-- (id) initWithSoundNamed:(NSString *) soundName;
+- (instancetype) initWithSoundNamed:(NSString *) soundName NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, readonly) NSString *soundName;
 

@@ -155,7 +155,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_alternateNicks = nil;
 		_npassword = nil;
@@ -196,7 +196,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	return self;
 }
 
-- (id) initWithType:(MVChatConnectionType) connectionType {
+- (instancetype) initWithType:(MVChatConnectionType) connectionType {
 	switch(connectionType) {
 #if ENABLE(ICB)
 	case MVChatConnectionICBType:
@@ -227,7 +227,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	return self;
 }
 
-- (id) initWithURL:(NSURL *) serverURL {
+- (instancetype) initWithURL:(NSURL *) serverURL {
 	NSParameterAssert( [MVChatConnection supportsURLScheme:[serverURL scheme]] );
 
 	MVChatConnectionType connectionType = 0;
@@ -262,7 +262,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	return self;
 }
 
-- (id) initWithServer:(NSString *) serverAddress type:(MVChatConnectionType) serverType port:(unsigned short) port user:(NSString *) localNickname {
+- (instancetype) initWithServer:(NSString *) serverAddress type:(MVChatConnectionType) serverType port:(unsigned short) port user:(NSString *) localNickname {
 	if( ( self = [self initWithType:serverType] ) ) {
 		if( localNickname.length ) [self setNickname:localNickname];
 		if( serverAddress.length ) [self setServer:serverAddress];
@@ -462,7 +462,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (NSString *) nextAlternateNickname {
 	if( [[self alternateNicknames] count] && _nextAltNickIndex < [[self alternateNicknames] count] )
-		return [[self alternateNicknames] objectAtIndex:_nextAltNickIndex++];
+		return [self alternateNicknames][_nextAltNickIndex++];
 	return nil;
 }
 
@@ -764,7 +764,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (id) persistentInformationObjectForKey:(id) key {
 	@synchronized( _persistentInformation ) {
-		return [_persistentInformation objectForKey:key];
+		return _persistentInformation[key];
 	}
 }
 
@@ -776,7 +776,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (void) setPersistentInformationObject:(id) object forKey:(id) key {
 	@synchronized( _persistentInformation ) {
-		[_persistentInformation setObject:object forKey:key];
+		_persistentInformation[key] = object;
 	}
 }
 
@@ -929,7 +929,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
 	@synchronized( _joinedRooms ) {
-		MVChatRoom *room = [_knownRooms objectForKey:identifier];
+		MVChatRoom *room = _knownRooms[identifier];
 		return ([room isJoined] ? room : nil);
 	}
 }
@@ -948,14 +948,14 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
 	@synchronized( _knownRooms ) {
-		return [_knownRooms objectForKey:identifier];
+		return _knownRooms[identifier];
 	}
 }
 
 - (MVChatRoom *) chatRoomWithName:(NSString *) name {
 	@synchronized( _knownRooms ) {
 		for( id key in _knownRooms ) {
-			MVChatRoom *room = [_knownRooms objectForKey:key];
+			MVChatRoom *room = _knownRooms[key];
 			if( [[room name] isEqualToString:name] )
 				return room;
 		}
@@ -1002,7 +1002,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 		return [self localUser];
 
 	@synchronized( _knownUsers ) {
-		return [_knownUsers objectForKey:identifier];
+		return _knownUsers[identifier];
 	}
 }
 
@@ -1194,7 +1194,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 		[self scheduleReconnectAttempt];
 	else [self cancelPendingReconnectAttempts];
 
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidNotConnectNotification object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:_userDisconnected] forKey:@"userDisconnected"]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidNotConnectNotification object:self userInfo:@{ @"userDisconnected": @(_userDisconnected) }];
 
 	_userDisconnected = NO;
 }
@@ -1237,7 +1237,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (void) _postError:(NSError *) error {
 	MVSafeCopyAssign( _lastError, error );
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObject:_lastError forKey:@"error"]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionErrorNotification object:self userInfo:@{ @"error": _lastError }];
 }
 
 - (void) _setStatus:(MVChatConnectionStatus) newStatus {
@@ -1247,11 +1247,11 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #pragma mark -
 
 - (void) _addRoomToCache:(NSMutableDictionary *) info {
-	NSString *room = [info objectForKey:@"room"];
-	if (![_roomsCache objectForKey:room])
+	NSString *room = info[@"room"];
+	if (!_roomsCache[room])
 		[_pendingRoomAdditions addObject:room];
 	else [_pendingRoomUpdates addObject:room];
-	[_roomsCache setObject:info forKey:room];
+	_roomsCache[room] = info;
 	[info removeObjectForKey:@"room"];
 
 	if( _roomListDirty ) return; // already queued to send notification
@@ -1262,7 +1262,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (void) _sendRoomListUpdatedNotification {
 	_roomListDirty = NO;
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionChatRoomListUpdatedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSSet setWithSet:_pendingRoomAdditions], @"added", [NSSet setWithSet:_pendingRoomUpdates], @"updated", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionChatRoomListUpdatedNotification object:self userInfo:@{ @"added": [NSSet setWithSet:_pendingRoomAdditions], @"updated": [NSSet setWithSet:_pendingRoomUpdates] }];
 	[_pendingRoomAdditions removeAllObjects];
 	[_pendingRoomUpdates removeAllObjects];
 }
@@ -1271,7 +1271,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (void) _addKnownUser:(MVChatUser *) user {
 	@synchronized( _knownUsers ) {
-		if( [user uniqueIdentifier] ) [_knownUsers setObject:user forKey:[user uniqueIdentifier]];
+		if( [user uniqueIdentifier] ) _knownUsers[[user uniqueIdentifier]] = user;
 	}
 }
 
@@ -1286,7 +1286,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 		NSMutableArray *removeList = [[NSMutableArray alloc] initWithCapacity:_knownUsers.count];
 
 		for( id key in _knownUsers ) {
-			MVChatUser *user = [_knownUsers objectForKey:key];
+			MVChatUser *user = _knownUsers[key];
 			if( [user roomCount] == 1 ) [removeList addObject:key];
 		}
 
@@ -1296,7 +1296,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (void) _addKnownRoom:(MVChatRoom *) room {
 	@synchronized( _knownRooms ) {
-		if( [room uniqueIdentifier] ) [_knownRooms setObject:room forKey:[room uniqueIdentifier]];
+		if( [room uniqueIdentifier] ) _knownRooms[[room uniqueIdentifier]] = room;
 	}
 }
 

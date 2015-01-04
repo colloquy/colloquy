@@ -3,7 +3,7 @@
 #import "CQPreferencesTextCell.h"
 
 @implementation CQPreferencesListEditViewController
-- (id) init {
+- (instancetype) init {
 	return (self = [super initWithStyle:UITableViewStyleGrouped]);
 }
 

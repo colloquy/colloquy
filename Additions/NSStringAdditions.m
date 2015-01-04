@@ -559,7 +559,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
-- (id) initWithChatData:(NSData *) data encoding:(NSStringEncoding) encoding {
+- (instancetype) initWithChatData:(NSData *) data encoding:(NSStringEncoding) encoding {
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
 	// Search for CTCP/2 encoding tags and act on them
@@ -1024,7 +1024,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 		NSArray *parts = [self componentsSeparatedByString:@"."];
 		NSUInteger count = parts.count;
 		if( count > 2 )
-			ret = [NSString stringWithFormat:@"%@.%@", [parts objectAtIndex:(count - 2)], [parts objectAtIndex:(count - 1)]];
+			ret = [NSString stringWithFormat:@"%@.%@", parts[(count - 2)], parts[(count - 1)]];
 	}
 
 	return ret;
@@ -1056,21 +1056,21 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 }
 
 - (NSString *) IRCNickname {
-	return [self._IRCComponents objectAtIndex:0];
+	return self._IRCComponents[0];
 }
 
 - (NSString *) IRCUsername {
-	return [self._IRCComponents objectAtIndex:1];
+	return self._IRCComponents[1];
 }
 
 - (NSString *) IRCHostname {
-	return [self._IRCComponents objectAtIndex:2];
+	return self._IRCComponents[2];
 }
 
 - (NSString *) IRCRealname {
 	NSArray *components = self._IRCComponents;
 	if (components.count == 4)
-		return [components objectAtIndex:3];
+		return components[3];
 	return nil;
 }
 

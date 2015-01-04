@@ -3,19 +3,11 @@
 #import "CQKeychain.h"
 
 @implementation CQBouncerSettings
-- (id) init {
-	if (!(self = [super init]))
-		return nil;
-
-	_identifier = [[NSString locallyUniqueString] copy];
-	_type = MVChatConnectionColloquyBouncer;
-	_pushNotifications = YES;
-	_serverPort = 6667;
-
-	return self;
+- (instancetype) init {
+	return [self initWithDictionaryRepresentation:@{ @"pushNotifications": @(YES), @"serverPort": @(6667) }];
 }
 
-- (id) initWithDictionaryRepresentation:(NSDictionary *) info {
+- (instancetype) initWithDictionaryRepresentation:(NSDictionary *) info {
 	if (!(self = [super init]))
 		return nil;
 

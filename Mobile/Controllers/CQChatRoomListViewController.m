@@ -31,7 +31,7 @@ static BOOL showFullRoomNames;
 	[self userDefaultsChanged];
 }
 
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 

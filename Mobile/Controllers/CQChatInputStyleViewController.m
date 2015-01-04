@@ -18,7 +18,7 @@
 #pragma mark -
 
 @implementation CQChatInputStyleViewController
-- (id) init {
+- (instancetype) init {
 	return (self = [super initWithStyle:UITableViewStylePlain]);
 }
 

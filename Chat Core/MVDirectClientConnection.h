@@ -24,7 +24,7 @@ NSString *MVDCCFriendlyAddress( NSString *address );
 - (void) disconnect;
 - (void) disconnectAfterWriting;
 
-- (NSThread *) connectionThread;
+@property (readonly, strong) NSThread *connectionThread;
 
 - (void) readDataToLength:(size_t) length withTimeout:(NSTimeInterval) timeout withTag:(long) tag;
 - (void) readDataToData:(NSData *) data withTimeout:(NSTimeInterval) timeout withTag:(long) tag;
@@ -32,8 +32,7 @@ NSString *MVDCCFriendlyAddress( NSString *address );
 
 - (void) writeData:(NSData *) data withTimeout:(NSTimeInterval) timeout withTag:(long) tag;
 
-- (void) setDelegate:(id) delegate;
-- (id) delegate;
+@property (weak) id delegate;
 @end
 
 @interface NSObject (MVDirectClientConnectionDelegate)

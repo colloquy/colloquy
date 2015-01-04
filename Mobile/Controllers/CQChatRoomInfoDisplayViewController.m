@@ -35,7 +35,7 @@ enum {
 @end
 
 @implementation CQChatRoomInfoDisplayViewController
-- (id) initWithRoom:(MVChatRoom *) room {
+- (instancetype) initWithRoom:(MVChatRoom *) room {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 

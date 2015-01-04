@@ -9,22 +9,22 @@ extern NSString *MVFileTransferErrorOccurredNotification;
 
 extern NSString *MVFileTransferErrorDomain;
 
-typedef enum {
+typedef NS_ENUM(NSInteger, MVFileTransferStatus) {
 	MVFileTransferDoneStatus = 'trDn',
 	MVFileTransferNormalStatus = 'trNo',
 	MVFileTransferHoldingStatus = 'trHo',
 	MVFileTransferStoppedStatus = 'trSt',
 	MVFileTransferErrorStatus = 'trEr'
-} MVFileTransferStatus;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, MVFileTransferError) {
 	MVFileTransferConnectionError = -1,
 	MVFileTransferFileCreationError = -2,
 	MVFileTransferFileOpenError = -3,
 	MVFileTransferAlreadyExistsError = -4,
 	MVFileTransferUnexpectedlyEndedError = -5,
 	MVFileTransferKeyAgreementError = -6
-} MVFileTransferError;
+};
 
 static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus status);
 static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus status) {
@@ -58,7 +58,7 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 + (void) setAutoPortMappingEnabled:(BOOL) enable;
 + (BOOL) isAutoPortMappingEnabled;
 
-- (id) initWithUser:(MVChatUser *) user;
+- (instancetype) initWithUser:(MVChatUser *) user NS_DESIGNATED_INITIALIZER;
 
 @property(readonly, getter=isUpload) BOOL upload;
 @property(readonly, getter=isDownload) BOOL download;
@@ -86,7 +86,7 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 @protected
 	NSString *_source;
 }
-+ (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive;
++ (instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive;
 
 @property(strong, readonly) NSString *source;
 @end
