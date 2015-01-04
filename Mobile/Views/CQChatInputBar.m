@@ -713,18 +713,21 @@ retry:
 		frame.origin.y = (self.frame.size.height - frame.size.height) / 2.;
 		_inputView.frame = frame;
 
-		frame = _accessoryButton.frame;
-		if ([UIDevice currentDevice].isRetina)
-			frame.origin.x = CGRectGetMaxX(_inputView.frame) + ButtonMargin;
-		else frame.origin.x = CGRectGetMaxX(_inputView.frame) + floorf(ButtonMargin);
-		frame.origin.y = (ButtonMargin * 2);
-		frame.size.width = ButtonWidth;
-		frame.size.height = ButtonWidth;
+		[UIView performWithoutAnimation:^{
+			frame = _accessoryButton.frame;
+			if ([UIDevice currentDevice].isRetina)
+				frame.origin.x = CGRectGetMaxX(_inputView.frame) + ButtonMargin;
+			else frame.origin.x = CGRectGetMaxX(_inputView.frame) + floorf(ButtonMargin);
+			frame.origin.y = (ButtonMargin * 2);
+			frame.size.width = ButtonWidth;
+			frame.size.height = ButtonWidth;
 
-		_accessoryButton.frame = frame;
+			_accessoryButton.frame = frame;
+		}];
+	} completion:NULL];
+
 #undef ButtonWidth
 #undef ButtonMargin
-	} completion:NULL];
 
 	_animationDuration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
 }
