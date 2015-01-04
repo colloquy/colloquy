@@ -25,6 +25,8 @@
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
+	self.affectingForeground = YES;
+
 	CGFloat scale = self.tableView.window ? self.tableView.window.screen.scale : [UIScreen mainScreen].scale;
 	self.tableView.layer.cornerRadius = (scale > 1. ? 4.5 : 5.);
 	self.tableView.layer.borderWidth = 1. / scale;
