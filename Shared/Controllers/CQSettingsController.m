@@ -14,7 +14,7 @@ NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotificat
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	_mirroringEnabled = YES;
 
 	self.settingsLocation = CQSettingsLocationDevice;

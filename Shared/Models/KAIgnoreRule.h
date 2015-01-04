@@ -5,11 +5,11 @@
 @protocol JVChatViewController;
 #endif
 
-typedef enum {
+typedef NS_ENUM(NSInteger, JVIgnoreMatchResult) {
 	JVUserIgnored = 'usIg',
 	JVMessageIgnored = 'msIg',
 	JVNotIgnored = 'noIg'
-} JVIgnoreMatchResult;
+};
 
 @interface KAIgnoreRule : NSObject {
 	NSRegularExpression *_userRegex;
@@ -17,11 +17,11 @@ typedef enum {
 	NSRegularExpression *_messageRegex;
 }
 
-+ (id) ruleForUser:(NSString *) user mask:(NSString *) mask message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
-- (id) initForUser:(NSString *) user mask:(NSString *) mask message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
++ (instancetype) ruleForUser:(NSString *) user mask:(NSString *) mask message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
+- (instancetype) initForUser:(NSString *) user mask:(NSString *) mask message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName NS_DESIGNATED_INITIALIZER;
 
 + (KAIgnoreRule *) ruleForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
-- (id) initForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
+- (instancetype) initForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
 
 #if SYSTEM(MAC)
 - (JVIgnoreMatchResult) matchUser:(MVChatUser *) user message:(NSString *) message inView:(id <JVChatViewController>) view;

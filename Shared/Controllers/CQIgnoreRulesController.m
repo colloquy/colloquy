@@ -12,7 +12,7 @@
 NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotification";
 
 @implementation CQIgnoreRulesController
-- (id) initWithConnection:(MVChatConnection *) connection {
+- (instancetype) initWithConnection:(MVChatConnection *) connection {
 	if (!(self = [super init]))
 		return nil;
 

@@ -1,13 +1,13 @@
-typedef enum {
+typedef NS_OPTIONS(NSUInteger, CQSettingsLocation) {
 	CQSettingsLocationDevice = (1 << 0) ,
 	CQSettingsLocationCloud = (1 << 1) ,
-} CQSettingsLocation;
+};
 
 extern NSString *const CQSettingsDidChangeNotification;
 
 @protocol CQSettings <NSObject>
 @optional
-- (id) init;
+- (instancetype) init;
 
 - (id) objectForKey:(NSString *) defaultName;
 - (void) setObject:(id) value forKey:(NSString *) defaultName;
