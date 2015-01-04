@@ -62,6 +62,6 @@ enum {
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if ([_delegate respondsToSelector:@selector(importantChatMessageViewController:didSelectMessage:isAction:)])
-		[_delegate importantChatMessageViewController:self didSelectMessage:[_messages[indexPath.row][@"message"] stringByStrippingXMLTags] isAction:[_messages[indexPath.row][@"action"] boolValue]];
+		[_delegate importantChatMessageViewController:self didSelectMessage:_messages[indexPath.row][@"message"] isAction:[_messages[indexPath.row][@"action"] boolValue]];
 }
 @end

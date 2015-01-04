@@ -899,12 +899,16 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (void) importantChatMessageViewController:(CQImportantChatMessageViewController *) importantChatMessageViewController didSelectMessage:(NSString *) message isAction:(BOOL) isAction {
+- (void) importantChatMessageViewController:(CQImportantChatMessageViewController *) importantChatMessageViewController didSelectMessage:(MVChatString *) message isAction:(BOOL) isAction {
 	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:[UIView areAnimationsEnabled]];
 
-	if (isAction)
-		chatInputBar.textView.text = [@"/me " stringByAppendingString:message];
-	else chatInputBar.textView.text = message;
+	if (isAction) {
+		NSDictionary *attributes = [message attributesAtIndex:0 effectiveRange:NULL];
+		NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"/me" attributes:attributes];
+		[attributedString appendAttributedString:message];
+
+		chatInputBar.textView.attributedText = message;
+	} else chatInputBar.textView.attributedText = message;
 
 	[chatInputBar becomeFirstResponder];
 }

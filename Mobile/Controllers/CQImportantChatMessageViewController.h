@@ -1,10 +1,12 @@
 #import "CQTableViewController.h"
 
+#import "MVChatString.h"
+
 @class CQImportantChatMessageViewController;
 
 @protocol CQImportantChatMessageDelegate <NSObject>
 @optional
-- (void) importantChatMessageViewController:(CQImportantChatMessageViewController *) importantChatMessageViewController didSelectMessage:(NSString *) message isAction:(BOOL) isAction;
+- (void) importantChatMessageViewController:(CQImportantChatMessageViewController *) importantChatMessageViewController didSelectMessage:(MVChatString *) message isAction:(BOOL) isAction;
 @end
 
 @interface CQImportantChatMessageViewController : CQTableViewController {
