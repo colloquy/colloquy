@@ -2614,6 +2614,7 @@ end:
 	if( ! _serverInformation )
 		_serverInformation = [[NSMutableDictionary alloc] initWithCapacity:5];
 
+	BOOL foundNAMESXCommand = NO;
 	for( NSString *feature in parameters ) {
 		// IRCv3.x
 		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"STARTTLS"] ) {
@@ -2639,6 +2640,8 @@ end:
 			@synchronized(_supportedFeatures) {
 				[_supportedFeatures addObject:MVChatConnectionNamesx];
 			}
+
+			foundNAMESXCommand = YES;
 		}
 
 		// Standard 005's
@@ -2727,7 +2730,7 @@ end:
 		[self sendRawMessageWithFormat:@"METADATA SET client.version :%@ (%@)", bundle.infoDictionary[@"CFBundleShortVersionString"], bundle.infoDictionary[@"CFBundleVersion"]];
 	}
 
-	if( [_supportedFeatures containsObject:MVChatConnectionNamesx] ) {
+	if( foundNAMESXCommand && [_supportedFeatures containsObject:MVChatConnectionNamesx] ) {
 		[self sendRawMessage:@"PROTOCTL NAMESX"];
 	}
 }
