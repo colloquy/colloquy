@@ -1270,6 +1270,8 @@ end:
 		data = [raw mutableCopy];
 	} else if( [raw isKindOfClass:[NSString class]] ) {
 		data = [[raw dataUsingEncoding:[self encoding] allowLossyConversion:YES] mutableCopy];
+	} else {
+		NSAssert(NO, @"%@ is of the wrong class (type %@)", raw, NSStringFromClass([raw class]));
 	}
 
 	// IRC messages are always lines of characters terminated with a CR-LF
