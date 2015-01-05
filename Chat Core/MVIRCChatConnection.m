@@ -152,7 +152,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 - (void) _handleNoticeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender;
 
 - (void) _handleCTCP:(NSDictionary *) ctcpInfo;
-- (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender toTarget:(id) target forRoom:(MVChatRoom *) room;
+- (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender toTarget:(id) target forRoom:(MVChatRoom *) room withTags:(NSDictionary *) tags;
 
 #pragma mark Room Replies
 
@@ -2933,7 +2933,7 @@ end:
 		BOOL ctcp = ( *bytes == '\001' && [msgData length] > 2 );
 
 		if( ctcp ) {
-			[self _handleCTCP:msgData asRequest:YES fromSender:sender toTarget:target forRoom:room];
+			[self _handleCTCP:msgData asRequest:YES fromSender:sender toTarget:target forRoom:room withTags:tags];
 		} else {
 			NSMutableDictionary *privmsgInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", target, @"target", room, @"room", nil];
 			[privmsgInfo addEntriesFromDictionary:tags];
@@ -3179,7 +3179,7 @@ end:
 		BOOL ctcp = ( *bytes == '\001' && msgData.length > 2 );
 
 		if( ctcp ) {
-			[self _handleCTCP:msgData asRequest:NO fromSender:sender toTarget:target forRoom:room];
+			[self _handleCTCP:msgData asRequest:NO fromSender:sender toTarget:target forRoom:room withTags:tags];
 		} else {
 			NSMutableDictionary *noticeInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", @(YES), @"notice", target, @"target", room, @"room", nil];
 			[noticeInfo addEntriesFromDictionary:tags];
@@ -3223,7 +3223,14 @@ end:
 
 	if( [command isCaseInsensitiveEqualToString:@"ACTION"] && arguments ) {
 		// special case ACTION and send it out like a message with the action flag
-		NSMutableDictionary *msgInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:arguments, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", @(YES), @"action", target, @"target", room, @"room", nil];
+		NSMutableDictionary *msgInfo = [NSMutableDictionary dictionary];
+		[msgInfo addEntriesFromDictionary:ctcpInfo];
+		msgInfo[@"message"] = arguments;
+		msgInfo[@"user"] = sender;
+		msgInfo[@"identifier"] = [NSString locallyUniqueString];
+		msgInfo[@"action"] = @(YES);
+		msgInfo[@"target"] = target;
+		msgInfo[@"room"] = room;
 
 		[self _handlePrivmsg:msgInfo]; // No need to explicitly call this on a different thread, as we are already in it.
 
@@ -3553,9 +3560,10 @@ end:
 
 }
 
-- (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender toTarget:(id) target forRoom:(MVChatRoom *) room {
+- (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender toTarget:(id) target forRoom:(MVChatRoom *) room withTags:(NSDictionary *) tags {
 	NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:4];
 
+	if( tags )[info addEntriesFromDictionary:tags];
 	if( data ) info[@"data"] = data;
 	if( sender ) info[@"sender"] = sender;
 	if( target ) info[@"target"] = target;
