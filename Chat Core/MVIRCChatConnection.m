@@ -289,6 +289,10 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 /** irc.umich.edu (efnet) uses this code to show a captcha to users without identd which we have to reply to automatically. */
 - (void) _handle998WithParameters:(NSArray *) parameters fromSender:(id) sender;
 
+#pragma mark - ZNC
+
+- (void) _persistRecentCommunicationsDates;
+
 @end
 
 

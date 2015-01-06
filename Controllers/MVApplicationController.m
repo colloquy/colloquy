@@ -23,6 +23,7 @@
 #import "JVDirectChatPanel.h"
 #import "JVAnalyticsController.h"
 //#import "JVChatTranscriptBrowserPanel.h"
+#import "MVKeyChain.h"
 
 #import "PFMoveApplicationController.h"
 
@@ -458,6 +459,10 @@ static BOOL applicationIsTerminating = NO;
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVRemoveTransferedItems"];
 	}
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
+
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"MVAskOnInvalidCertificates"] || [[[MVKeyChain defaultKeyChain] genericPasswordForService:@"MVAskOnInvalidCertificates" account:@"MVSecurePrefs"] boolValue])
+		[[MVKeyChain defaultKeyChain] setGenericPassword:@"1" forService:@"MVAskOnInvalidCertificates" account:@"MVSecurePrefs"];
+
 #ifdef DEBUG
 //	NSDebugEnabled = YES;
 //	NSZombieEnabled = YES;

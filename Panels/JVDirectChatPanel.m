@@ -1090,25 +1090,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 					if ([actionVerbs containsObject:word])
 						action = YES;
-
-					if (!action) {
-						const NSLinguisticTaggerOptions linguisticTaggerOptions = ~NSLinguisticTaggerOmitWords;
-						NSLinguisticTagger *linguisticTagger = [NSThread currentThread].threadDictionary[@"info.colloquy.verb.NSLinguisticTagger"];
-						if (!linguisticTagger) {
-							linguisticTagger = [[NSLinguisticTagger alloc] initWithTagSchemes:@[ NSLinguisticTagSchemeLexicalClass ] options:linguisticTaggerOptions];
-							[NSThread currentThread].threadDictionary[@"info.colloquy.verb.NSLinguisticTagger"] = linguisticTagger;
-						}
-
-						linguisticTagger.string = [subMsg string];
-
-						[linguisticTagger enumerateTagsInRange:NSMakeRange(0, [subMsg string].length) scheme:NSLinguisticTagSchemeLexicalClass options:linguisticTaggerOptions usingBlock:^(NSString *tag, NSRange tokenRange, NSRange sentenceRange, BOOL *stop) {
-							if (tag == NSLinguisticTagVerb) {
-								action = YES;
-							}
-							
-							*stop = YES;
-						}];
-					}
 				}
 
 				if( [subMsg length] ) {

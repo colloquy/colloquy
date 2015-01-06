@@ -951,8 +951,6 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 }
 
 - (void) _selfNicknameChanged:(NSNotification *) notification {
-	JVChatRoomMember *member = [self chatRoomMemberForUser:[[notification object] localUser]];
-
 	[self resortMembers];
 	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as <span class=\"member\">%@</span>.", "you changed nicknames" ), [[[self connection] nickname] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"newNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[self localChatRoomMember], @"who", nil]];
 }
