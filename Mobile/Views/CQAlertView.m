@@ -1,6 +1,7 @@
 #import "CQAlertView.h"
 
 @interface CQAlertView ()
+@property (atomic, strong) UIViewController *overlappingPresentationViewController;
 @property (atomic, strong) UIAlertController *alertController;
 @property (atomic, strong) id me;
 
@@ -85,11 +86,11 @@
 	// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
 	// present an action sheet from a point on screen that results in the popover rect overlapping the main view,
 	// the z-index will be incorrect and the action sheet will be clipped by the main view.
-	UIViewController *overlappingPresentationViewController = [[UIViewController alloc] init];
-	overlappingPresentationViewController.view.frame = [UIApplication sharedApplication].keyWindow.frame;
-	overlappingPresentationViewController.view.backgroundColor = [UIColor clearColor];
+	self.overlappingPresentationViewController = [[UIViewController alloc] init];
+	self.overlappingPresentationViewController.view.frame = [UIApplication sharedApplication].keyWindow.frame;
+	self.overlappingPresentationViewController.view.backgroundColor = [UIColor clearColor];
 
-	[[UIApplication sharedApplication].keyWindow addSubview:overlappingPresentationViewController.view];
+	[[UIApplication sharedApplication].keyWindow addSubview:self.overlappingPresentationViewController.view];
 
 	self.alertController = [UIAlertController alertControllerWithTitle:self.title message:self.message preferredStyle:UIAlertControllerStyleAlert];
 
@@ -109,7 +110,7 @@
 		__weak __typeof__((self)) weakSelf = self;
 		[self.alertController addAction:[UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *action) {
 			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-			[overlappingPresentationViewController.view removeFromSuperview];
+			[strongSelf.overlappingPresentationViewController.view removeFromSuperview];
 			[strongSelf.delegate alertView:strongSelf clickedButtonAtIndex:i];
 
 			strongSelf.alertController = nil;
@@ -120,15 +121,20 @@
 	CGRect rect = CGRectZero;
 	rect.size = CGSizeMake(1., 1.);
 	rect.origin = [UIApplication sharedApplication].keyWindow.center;
-	_alertController.popoverPresentationController.sourceRect = rect;
-	_alertController.popoverPresentationController.sourceView = overlappingPresentationViewController.view;
-	[overlappingPresentationViewController presentViewController:_alertController animated:YES completion:nil];
+	self.alertController.popoverPresentationController.sourceRect = rect;
+	self.alertController.popoverPresentationController.sourceView = self.overlappingPresentationViewController.view;
+
+	[self.overlappingPresentationViewController presentViewController:self.alertController animated:YES completion:nil];
 }
 
 - (void) dismissWithClickedButtonIndex:(NSInteger) buttonIndex animated:(BOOL) animated {
 	if (![UIDevice currentDevice].isSystemEight)
 		[super dismissWithClickedButtonIndex:buttonIndex animated:animated];
-	else [_alertController dismissViewControllerAnimated:YES completion:nil];
-	self.me = nil;
+	else {
+		[self.overlappingPresentationViewController.view removeFromSuperview];
+		[self.alertController dismissViewControllerAnimated:YES completion:nil];
+		self.alertController = nil;
+		self.me = nil;
+	}
 }
 @end
