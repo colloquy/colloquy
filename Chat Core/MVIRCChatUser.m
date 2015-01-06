@@ -64,7 +64,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 		MVSafeCopyAssign( _uniqueIdentifier, [userNickname lowercaseString] );
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( ctcpReplyNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( metadataUpdatedNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
+//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( metadataUpdatedNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
 
 		[_connection _addKnownUser:self];
 	}
