@@ -25,4 +25,8 @@
 
 	return regularExpression;
 }
+
+- (NSArray *) cq_matchesInString:(NSString *) string {
+	return [self matchesInString:string options:NSMatchingCompleted range:NSMakeRange(0, string.length)];
+}
 @end
