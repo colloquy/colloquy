@@ -27,6 +27,6 @@
 }
 
 - (NSArray *) cq_matchesInString:(NSString *) string {
-	return [self matchesInString:string options:NSMatchingCompleted range:NSMakeRange(0, string.length)];
+	return [self matchesInString:string options:NSMatchingReportCompletion range:NSMakeRange(0, string.length)];
 }
 @end
