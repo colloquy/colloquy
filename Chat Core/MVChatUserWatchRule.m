@@ -132,7 +132,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	@synchronized( _matchedChatUsers ) {
 		if( ! [_matchedChatUsers containsObject:user] ) {
 			[_matchedChatUsers addObject:user];
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserWatchRuleMatchedNotification object:self userInfo:@{ @"user": user }];
+			[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserWatchRuleMatchedNotification object:self userInfo:@{ @"user": user }];
 		}
 	}
 
@@ -149,7 +149,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	@synchronized( _matchedChatUsers ) {
 		if( [_matchedChatUsers containsObject:user] ) {
 			[_matchedChatUsers removeObject:user];
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserWatchRuleRemovedMatchedUserNotification object:self userInfo:@{ @"user": user }];
+			[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserWatchRuleRemovedMatchedUserNotification object:self userInfo:@{ @"user": user }];
 		}
 	}
 }
@@ -159,7 +159,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 		for( MVChatUser *user in [_matchedChatUsers copy] ) {
 			if( [[user connection] isEqual:connection] ) {
 				[_matchedChatUsers removeObject:user];
-				[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserWatchRuleRemovedMatchedUserNotification object:self userInfo:@{ @"user": user }];
+				[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserWatchRuleRemovedMatchedUserNotification object:self userInfo:@{ @"user": user }];
 			}
 		}
 	}

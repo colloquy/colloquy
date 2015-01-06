@@ -18,7 +18,7 @@
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 
 	[identifiersTable setDataSource:nil];
 	[identifiersTable setDelegate:nil];

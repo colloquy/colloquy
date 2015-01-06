@@ -28,6 +28,7 @@
 
 #import "NSAttributedStringAdditions.h"
 #import "NSDateAdditions.h"
+#import "NSNotificationAdditions.h"
 #import "NSObjectAdditions.h"
 #import "NSStringAdditions.h"
 
@@ -124,7 +125,7 @@ static BOOL showingKeyboard;
 	if (newScrollbackLength != scrollbackLength) {
 		scrollbackLength = newScrollbackLength;
 
-		[[NSNotificationCenter defaultCenter] postNotificationName:CQScrollbackLengthDidChangeNotification object:nil];
+		[[NSNotificationCenter chatCenter] postNotificationName:CQScrollbackLengthDidChangeNotification object:nil];
 	}
 
 	NSString *soundName = [[CQSettingsController settingsController] stringForKey:@"CQSoundOnPrivateMessage"];
@@ -175,7 +176,7 @@ static BOOL showingKeyboard;
 + (void) initialize {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 		[self userDefaultsChanged];
 
@@ -209,13 +210,13 @@ static BOOL showingKeyboard;
 
 	_target = target;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_awayStatusChanged:) name:MVChatConnectionSelfAwayStatusChangedNotification object:self.connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:self.connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:self.connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didRecieveDeviceToken:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_awayStatusChanged:) name:MVChatConnectionSelfAwayStatusChangedNotification object:self.connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:self.connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:self.connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_didRecieveDeviceToken:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:UIContentSizeCategoryDidChangeNotification object:nil];
 
 	if ([[UIDevice currentDevice] isPadModel]) {
@@ -225,10 +226,10 @@ static BOOL showingKeyboard;
 		_showingKeyboard = showingKeyboard;
 	}
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_nicknameDidChange:) name:MVChatUserNicknameChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_nicknameDidChange:) name:MVChatUserNicknameChangedNotification object:nil];
 
 	if (self.user) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:self.user];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:self.user];
 
 		_encoding = [[CQSettingsController settingsController] integerForKey:@"CQDirectChatEncoding"];
 
@@ -240,11 +241,11 @@ static BOOL showingKeyboard;
 		_revealKeyboard = YES;
 	}
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollbackLengthDidChange:) name:CQScrollbackLengthDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(scrollbackLengthDidChange:) name:CQScrollbackLengthDidChangeNotification object:nil];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batchUpdatesWillBegin:) name:MVChatConnectionBatchUpdatesWillBeginNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batchUpdatesDidEnd:) name:MVChatConnectionBatchUpdatesDidEndNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_batchUpdatesWillBegin:) name:MVChatConnectionBatchUpdatesWillBeginNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_batchUpdatesDidEnd:) name:MVChatConnectionBatchUpdatesDidEndNotification object:nil];
 
 	[self setScrollbackLength:scrollbackLength];
 
@@ -310,6 +311,7 @@ static BOOL showingKeyboard;
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	if (_watchRule)
@@ -526,7 +528,7 @@ static BOOL showingKeyboard;
 		_revealKeyboard = YES;
 	}
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didNotBookmarkLink:) name:CQBookmarkingDidNotSaveLinkNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(didNotBookmarkLink:) name:CQBookmarkingDidNotSaveLinkNotification object:nil];
 
 	if ([transcriptView.styleIdentifier hasCaseInsensitiveSuffix:@"-dark"])
 		if ([self.navigationController.navigationBar respondsToSelector:@selector(setBarTintColor:)])
@@ -554,7 +556,7 @@ static BOOL showingKeyboard;
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 
 	if (_revealKeyboard) {
 		_revealKeyboard = NO;
@@ -577,7 +579,7 @@ static BOOL showingKeyboard;
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:CQBookmarkingDidNotSaveLinkNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:CQBookmarkingDidNotSaveLinkNotification object:nil];
 
 	if (![[UIDevice currentDevice] isPadModel]) {
 		[self.view endEditing:YES];
@@ -939,7 +941,7 @@ static BOOL showingKeyboard;
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 
 	[transcriptView reset];
 }
@@ -2092,7 +2094,7 @@ static BOOL showingKeyboard;
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 }
 
 - (void) _willConnect:(NSNotification *) notification {
@@ -2284,7 +2286,7 @@ static BOOL showingKeyboard;
 		if (highlighted) ++_unreadHighlightedMessages;
 		else ++_unreadMessages;
 
-		[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 
 		if (self.user || highlighted)
 			++[CQChatController defaultController].totalImportantUnreadCount;
@@ -2294,7 +2296,7 @@ static BOOL showingKeyboard;
 		self.mostRecentOutgoingMessageTimestamp = message[@"time"] ?: [NSDate date];
 	else self.mostRecentIncomingMessageTimestamp = message[@"time"] ?: [NSDate date];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerHandledMessageNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerHandledMessageNotification object:self];
 
 	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
 
@@ -2370,7 +2372,7 @@ static BOOL showingKeyboard;
 	[self _addPendingComponent:message];
 
 	if (!user.localUser)
-		[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
 
 //	[operation.processedMessageInfo[CQInlineGIFImageKey] enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
 //		CQIntroductoryGIFFrameOperation *GIFOperation = [[CQIntroductoryGIFFrameOperation alloc] initWithURL:object];

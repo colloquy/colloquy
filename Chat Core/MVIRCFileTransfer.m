@@ -75,7 +75,7 @@
 	[self _setStatus:MVFileTransferNormalStatus];
 	[self _setStartDate:[NSDate date]];
 
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:self];
 
 	[self _sendNextPacket];
 
@@ -105,7 +105,7 @@
 - (void) directClientConnectionDidDisconnect:(MVDirectClientConnection *) connection {
 	if( [self status] != MVFileTransferDoneStatus && [self transferred] == [self finalSize] && _doneSending ) {
 		[self _setStatus:MVFileTransferDoneStatus];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
 	}
 
 	if( [self status] != MVFileTransferDoneStatus && [self status] != MVFileTransferStoppedStatus )
@@ -135,12 +135,12 @@
 
 	if( _doneSending && bytes == ( [self finalSize] & 0xffffffff ) ) {
 		[self _setStatus:MVFileTransferDoneStatus];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
 		[_directClientConnection disconnectAfterWriting];
 	} else {
 		// not finished, read for the next bytes received acknowledgment packet
 		[_directClientConnection readDataToLength:4 withTimeout:-1. withTag:0];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferDataTransferredNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferDataTransferredNotification object:self];
 	}
 }
 
@@ -274,7 +274,7 @@
 	[self _setStatus:MVFileTransferNormalStatus];
 	[self _setStartDate:[NSDate date]];
 
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:self];
 
 	[_directClientConnection readDataWithTimeout:-1. withTag:0];
 
@@ -324,11 +324,11 @@
 
 	if( progress == [self finalSize] ) {
 		[self _setStatus:MVFileTransferDoneStatus];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
 		[_directClientConnection disconnectAfterWriting];
 	} else {
 		[_directClientConnection readDataWithTimeout:-1. withTag:0];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferDataTransferredNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferDataTransferredNotification object:self];
 	}
 }
 

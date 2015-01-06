@@ -11,7 +11,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	for( JVColorWellCell *cell in colorWellCells ) {
 		if( [cell isActive] ) {
 			[cell setColor:[panel color]];
-			[[NSNotificationCenter defaultCenter] postNotificationName:JVColorWellCellColorDidChangeNotification object:cell userInfo:nil];
+			[[NSNotificationCenter chatCenter] postNotificationName:JVColorWellCellColorDidChangeNotification object:cell userInfo:nil];
 		}
 	}
 }

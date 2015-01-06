@@ -5,6 +5,7 @@
 #import "MVChatConnectionPrivate.h"
 #import "MVFileTransfer.h"
 #import "MVUtilities.h"
+#import "NSNotificationAdditions.h"
 
 #if ENABLE(AUTO_PORT_MAPPING)
 #undef ENABLE_AUTO_PORT_MAPPING
@@ -40,7 +41,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 @implementation MVDirectClientConnection
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 
 	_done = YES;
 
@@ -258,14 +259,14 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 			if (![[[TCMPortMapper sharedInstance] portMappings] count])
 				[[TCMPortMapper sharedInstance] stop];
 
-			[[NSNotificationCenter defaultCenter] removeObserver:self name:TCMPortMappingDidChangeMappingStatusNotification object:_portMapping];
+			[[NSNotificationCenter chatCenter] removeObserver:self name:TCMPortMappingDidChangeMappingStatusNotification object:_portMapping];
 
 			_portMapping = nil;
 		}
 
 		_portMapping = [[TCMPortMapping alloc] initWithLocalPort:port desiredExternalPort:port transportProtocol:TCMPortMappingTransportProtocolTCP userInfo:nil];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_portMappingStatusChanged:) name:TCMPortMappingDidChangeMappingStatusNotification object:_portMapping];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_portMappingStatusChanged:) name:TCMPortMappingDidChangeMappingStatusNotification object:_portMapping];
 
 		[[TCMPortMapper sharedInstance] addPortMapping:_portMapping];
 		[[TCMPortMapper sharedInstance] start];
@@ -293,7 +294,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 		if (![[[TCMPortMapper sharedInstance] portMappings] count])
 			[[TCMPortMapper sharedInstance] stop];
 
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:TCMPortMappingDidChangeMappingStatusNotification object:_portMapping];
+		[[NSNotificationCenter chatCenter] removeObserver:self name:TCMPortMappingDidChangeMappingStatusNotification object:_portMapping];
 
 		_portMapping = nil;
 	}

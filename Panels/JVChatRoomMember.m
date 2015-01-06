@@ -37,10 +37,10 @@
 		_room = room; // prevent circular retain
 		_user = user;
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserInformationUpdatedNotification object:user];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserStatusChangedNotification object:user];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserAwayStatusMessageChangedNotification object:user];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserIdleTimeUpdatedNotification object:user];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserInformationUpdatedNotification object:user];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserStatusChangedNotification object:user];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserAwayStatusMessageChangedNotification object:user];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserIdleTimeUpdatedNotification object:user];
 	}
 
 	return self;
@@ -696,10 +696,10 @@
 
 @implementation JVChatRoomMember (JVChatMemberPrivate)
 - (void) _detach {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserInformationUpdatedNotification object:_user];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserStatusChangedNotification object:_user];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserAwayStatusMessageChangedNotification object:_user];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserIdleTimeUpdatedNotification object:_user];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserInformationUpdatedNotification object:_user];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserStatusChangedNotification object:_user];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserAwayStatusMessageChangedNotification object:_user];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserIdleTimeUpdatedNotification object:_user];
 
 	_room = nil;
 }

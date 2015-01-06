@@ -171,7 +171,7 @@ static BOOL autoPortMapping = YES;
 	MVSafeRetainAssign( _lastError, error );
 
 	NSDictionary *info = @{ @"error": error };
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferErrorOccurredNotification object:self userInfo:info];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferErrorOccurredNotification object:self userInfo:info];
 }
 @end
 

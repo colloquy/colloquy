@@ -59,7 +59,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 	[allStyles intersectSet:styles];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVStylesScannedNotification object:allStyles];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVStylesScannedNotification object:allStyles];
 }
 
 + (NSSet *) styles {
@@ -111,7 +111,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	else [[NSUserDefaults standardUserDefaults] setObject:[style identifier] forKey:@"JVChatDefaultStyle"];
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[self defaultStyle], @"default", nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVStyleVariantChangedNotification object:oldDefault userInfo:info];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVStyleVariantChangedNotification object:oldDefault userInfo:info];
 }
 
 #pragma mark -
@@ -124,7 +124,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 		[allStyles addObject:self];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _clearVariantCache ) name:JVNewStyleVariantAddedNotification object:self];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _clearVariantCache ) name:JVNewStyleVariantAddedNotification object:self];
 
 		_bundle = nil;
 		_XSLStyle = NULL;
@@ -140,7 +140,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 
 	_parameters = nil;
 
@@ -153,7 +153,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 - (void) unlink {
 	[allStyles removeObject:self];
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVStylesScannedNotification object:allStyles];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVStylesScannedNotification object:allStyles];
 }
 
 - (void) reload {
@@ -365,7 +365,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	}
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[self defaultVariantName], @"variant", nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVDefaultStyleVariantChangedNotification object:self userInfo:info];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVDefaultStyleVariantChangedNotification object:self userInfo:info];
 }
 
 #pragma mark -

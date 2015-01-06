@@ -274,7 +274,8 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 
 #if (!defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE) && (!defined(COMMAND_LINE_UTILITY) || !COMMAND_LINE_UTILITY)
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
@@ -1161,7 +1162,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 	[[self localUser] _setIdentified:NO];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionWillConnectNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionWillConnectNotification object:self];
 }
 
 - (void) _didConnect {
@@ -1174,7 +1175,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	MVSafeAdoptAssign(_connectedDate, [[NSDate alloc] init]);
 
 	_status = MVChatConnectionConnectedStatus;
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidConnectNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidConnectNotification object:self];
 
 #if ENABLE(PLUGINS)
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( MVChatConnection * ), nil];
@@ -1195,13 +1196,13 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 		[self scheduleReconnectAttempt];
 	else [self cancelPendingReconnectAttempts];
 
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidNotConnectNotification object:self userInfo:@{ @"userDisconnected": @(_userDisconnected) }];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidNotConnectNotification object:self userInfo:@{ @"userDisconnected": @(_userDisconnected) }];
 
 	_userDisconnected = NO;
 }
 
 - (void) _willDisconnect {
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWillDisconnectNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionWillDisconnectNotification object:self];
 
 #if ENABLE(PLUGINS)
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( MVChatConnection * ), nil];
@@ -1231,14 +1232,14 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 		[room _setDateParted:[NSDate date]];
 	}
 
-	if( wasConnected ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidDisconnectNotification object:self];
+	if( wasConnected ) [[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidDisconnectNotification object:self];
 
 	[self _pruneKnownUsers];
 }
 
 - (void) _postError:(NSError *) error {
 	MVSafeCopyAssign( _lastError, error );
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionErrorNotification object:self userInfo:@{ @"error": _lastError }];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionErrorNotification object:self userInfo:@{ @"error": _lastError }];
 }
 
 - (void) _setStatus:(MVChatConnectionStatus) newStatus {
@@ -1263,7 +1264,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (void) _sendRoomListUpdatedNotification {
 	_roomListDirty = NO;
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionChatRoomListUpdatedNotification object:self userInfo:@{ @"added": [NSSet setWithSet:_pendingRoomAdditions], @"updated": [NSSet setWithSet:_pendingRoomUpdates] }];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionChatRoomListUpdatedNotification object:self userInfo:@{ @"added": [NSSet setWithSet:_pendingRoomAdditions], @"updated": [NSSet setWithSet:_pendingRoomUpdates] }];
 	[_pendingRoomAdditions removeAllObjects];
 	[_pendingRoomUpdates removeAllObjects];
 }
@@ -1641,7 +1642,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 			if( [target isKindOfClass:[MVChatRoom class]] ) {
 				NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:[[(MVChatRoom *)target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:realAction], @"action", nil];
-				[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:target userInfo:info];
+				[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomGotMessageNotification object:target userInfo:info];
 			} // we can't really echo a private message with our current notifications
 		}
 	}

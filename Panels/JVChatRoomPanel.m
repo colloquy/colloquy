@@ -54,19 +54,19 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		_banListSynced = NO;
 		_joinCount = 0;
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _partedRoom: ) name:MVChatRoomPartedNotification object:target];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _kicked: ) name:MVChatRoomKickedNotification object:target];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberJoined: ) name:MVChatRoomUserJoinedNotification object:target];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberParted: ) name:MVChatRoomUserPartedNotification object:target];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberKicked: ) name:MVChatRoomUserKickedNotification object:target];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _roomModeChanged: ) name:MVChatRoomModesChangedNotification object:target];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberModeChanged: ) name:MVChatRoomUserModeChangedNotification object:target];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberBanned: ) name:MVChatRoomUserBannedNotification object:target];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberBanRemoved: ) name:MVChatRoomUserBanRemovedNotification object:target];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _membersSynced: ) name:MVChatRoomMemberUsersSyncedNotification object:target];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _bannedMembersSynced: ) name:MVChatRoomBannedUsersSyncedNotification object:target];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberNicknameChanged: ) name:MVChatUserNicknameChangedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _userBricked: ) name:MVChatRoomUserBrickedNotification object:target];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _partedRoom: ) name:MVChatRoomPartedNotification object:target];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _kicked: ) name:MVChatRoomKickedNotification object:target];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _memberJoined: ) name:MVChatRoomUserJoinedNotification object:target];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _memberParted: ) name:MVChatRoomUserPartedNotification object:target];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _memberKicked: ) name:MVChatRoomUserKickedNotification object:target];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _roomModeChanged: ) name:MVChatRoomModesChangedNotification object:target];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _memberModeChanged: ) name:MVChatRoomUserModeChangedNotification object:target];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _memberBanned: ) name:MVChatRoomUserBannedNotification object:target];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _memberBanRemoved: ) name:MVChatRoomUserBanRemovedNotification object:target];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _membersSynced: ) name:MVChatRoomMemberUsersSyncedNotification object:target];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _bannedMembersSynced: ) name:MVChatRoomBannedUsersSyncedNotification object:target];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _memberNicknameChanged: ) name:MVChatUserNicknameChangedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _userBricked: ) name:MVChatRoomUserBrickedNotification object:target];
 	}
 
 	return self;
@@ -75,7 +75,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 - (void) awakeFromNib {
 	[super awakeFromNib];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didClearDisplay: ) name:JVStyleViewDidClearNotification object:display];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _didClearDisplay: ) name:JVStyleViewDidClearNotification object:display];
 
 	[display setBodyTemplate:@"chatRoom"];
 	[display addBanner:@"roomTopicBanner"];
@@ -85,7 +85,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	[self partChat:nil];
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 
 	[_sortedMembers makeObjectsPerformSelector:@selector( _detach )];
 	[_nextMessageAlertMembers makeObjectsPerformSelector:@selector( _detach )];
@@ -306,7 +306,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	[MVConnectionsController refreshFavoritesMenu];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVFavoritesListDidUpdateNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:MVFavoritesListDidUpdateNotification object:self];
 }
 
 - (IBAction) toggleAutoJoin:(id) sender {
@@ -455,11 +455,11 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _selfNicknameChanged: ) name:MVChatConnectionNicknameAcceptedNotification object:[self connection]];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _topicChanged: ) name:MVChatRoomTopicChangedNotification object:[self target]];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _selfNicknameChanged: ) name:MVChatConnectionNicknameAcceptedNotification object:[self connection]];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _topicChanged: ) name:MVChatRoomTopicChangedNotification object:[self target]];
 
 	[self _topicChanged:nil];
 
@@ -479,8 +479,8 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 		[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
+		[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
+		[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
 	}
 }
 
@@ -752,8 +752,8 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	[super _didDisconnect:notification];
 	[_windowController reloadListItem:self andChildren:YES];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
 }
 
 - (void) _partedRoom:(NSNotification *) notification {

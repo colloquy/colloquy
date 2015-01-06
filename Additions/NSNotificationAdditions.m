@@ -2,6 +2,14 @@
 #import <pthread.h>
 
 @implementation NSNotificationCenter (NSNotificationCenterAdditions)
++ (NSNotificationCenter *) chatCenter {
+	static NSNotificationCenter *chatCenter = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		chatCenter = [[NSNotificationCenter alloc] init];
+	});
+	return chatCenter;
+}
 - (void) postNotificationOnMainThread:(NSNotification *) notification {
 	if( pthread_main_np() ) [self postNotification:notification];
 	else [self postNotificationOnMainThread:notification waitUntilDone:NO];

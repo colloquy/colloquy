@@ -11,6 +11,8 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatUser.h>
 
+#import "NSNotificationAdditions.h"
+
 static NSString *roomOrdering;
 NSString *const CQChatOrderingControllerDidChangeOrderingNotification = @"CQChatOrderingControllerDidChangeOrderingNotification";
 
@@ -115,7 +117,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	_chatControllers = [[NSMutableArray alloc] init];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_asyncSortChatControllers) name:CQChatViewControllerHandledMessageNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_asyncSortChatControllers) name:CQChatViewControllerHandledMessageNotification object:nil];
 
 	return self;
 }
@@ -129,7 +131,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 - (void) _sortChatControllers {
 	[_chatControllers sortUsingFunction:sortControllersAscending context:NULL];
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatOrderingControllerDidChangeOrderingNotification object:nil];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQChatOrderingControllerDidChangeOrderingNotification object:nil];
 }
 
 - (NSUInteger) indexOfViewController:(id <CQChatViewController>) controller {
@@ -142,7 +144,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	// sorting is handled async now when rooms add messages (such as join events)
 
 	NSDictionary *notificationInfo = @{@"controller": controller};
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerAddedChatViewControllerNotification object:self userInfo:notificationInfo];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQChatControllerAddedChatViewControllerNotification object:self userInfo:notificationInfo];
 }
 
 - (void) addViewController:(id <CQChatViewController>) controller {

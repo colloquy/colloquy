@@ -36,7 +36,7 @@
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 
 
 	_localTimeUpdated = nil;
@@ -66,9 +66,9 @@
 }
 
 - (void) willLoad {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( infoUpdated: ) name:MVChatUserInformationUpdatedNotification object:_user];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( attributeUpdated: ) name:MVChatUserAttributeUpdatedNotification object:_user];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( errorOccurred: ) name:MVChatConnectionErrorNotification object:[_user connection]];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( infoUpdated: ) name:MVChatUserInformationUpdatedNotification object:_user];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( attributeUpdated: ) name:MVChatUserAttributeUpdatedNotification object:_user];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( errorOccurred: ) name:MVChatConnectionErrorNotification object:[_user connection]];
 
 	_addressResolved = NO;
 	[progress startAnimation:nil];

@@ -242,7 +242,7 @@ static NSMutableArray *highlightWords;
 
 	[self updateAnalytics];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 }
 
 - (void) handleNotificationWithUserInfo:(NSDictionary *) userInfo {
@@ -395,7 +395,7 @@ static NSMutableArray *highlightWords;
 
 	_deviceToken = deviceTokenString;
 
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:CQColloquyApplicationDidRecieveDeviceTokenNotification object:self userInfo:@{@"deviceToken": deviceTokenString}];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQColloquyApplicationDidRecieveDeviceTokenNotification object:self userInfo:@{@"deviceToken": deviceTokenString}];
 }
 
 - (void) application:(UIApplication *) application didFailToRegisterForRemoteNotificationsWithError:(NSError *) error {
@@ -404,7 +404,7 @@ static NSMutableArray *highlightWords;
 
 - (BOOL) application:(UIApplication *) application handleOpenURL:(NSURL *) url {
 	if ([url.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"CQPocketShouldConvertTokenFromTokenNotification" object:nil];
+		[[NSNotificationCenter chatCenter] postNotificationName:@"CQPocketShouldConvertTokenFromTokenNotification" object:nil];
 
 		return YES;
 	}

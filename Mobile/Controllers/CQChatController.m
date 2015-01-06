@@ -23,6 +23,8 @@
 #import <ChatCore/MVFileTransfer.h>
 #endif
 
+#import "NSNotificationAdditions.h"
+
 NSString *CQChatControllerAddedChatViewControllerNotification = @"CQChatControllerAddedChatViewControllerNotification";
 NSString *CQChatControllerRemovedChatViewControllerNotification = @"CQChatControllerRemovedChatViewControllerNotification";
 NSString *CQChatControllerChangedTotalImportantUnreadCountNotification = @"CQChatControllerChangedTotalImportantUnreadCountNotification";
@@ -84,7 +86,7 @@ static CQSoundController *fileTransferSound;
 
 	userDefaultsInitialized = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	[self userDefaultsChanged];
 }
@@ -112,21 +114,21 @@ static CQSoundController *fileTransferSound;
 	if ([[UIDevice currentDevice] isPadModel])
 		_chatPresentationController = [[CQChatPresentationController alloc] init];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_joinedRoom:) name:MVChatRoomJoinedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRoomMessage:) name:MVChatRoomGotMessageNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotPrivateMessage:) name:MVChatConnectionGotPrivateMessageNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotDirectChatMessage:) name:MVDirectChatConnectionGotMessageNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_invitedToRoom:) name:MVChatRoomInvitedNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_joinedRoom:) name:MVChatRoomJoinedNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotRoomMessage:) name:MVChatRoomGotMessageNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotPrivateMessage:) name:MVChatConnectionGotPrivateMessageNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotDirectChatMessage:) name:MVDirectChatConnectionGotMessageNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_invitedToRoom:) name:MVChatRoomInvitedNotification object:nil];
 #if ENABLE(FILE_TRANSFERS)
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotFileDownloadOffer:) name:MVDownloadFileTransferOfferNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotFileDownloadOffer:) name:MVDownloadFileTransferOfferNotification object:nil];
 #endif
 
 	return self;
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[[NSNotificationCenter defaultCenter] removeObserver:_chatPresentationController];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:_chatPresentationController];
 }
 
 #pragma mark -
@@ -427,7 +429,7 @@ static CQSoundController *fileTransferSound;
 	if ([CQColloquyApplication sharedApplication].areNotificationBadgesAllowed)
 		[UIApplication sharedApplication].applicationIconBadgeNumber = count;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerChangedTotalImportantUnreadCountNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQChatControllerChangedTotalImportantUnreadCountNotification object:self];
 }
 
 #pragma mark -
@@ -687,7 +689,7 @@ static CQSoundController *fileTransferSound;
 	[[CQChatOrderingController defaultController] removeViewController:controller];
 
 	NSDictionary *notificationInfo = @{@"controller": controller};
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerRemovedChatViewControllerNotification object:self userInfo:notificationInfo];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQChatControllerRemovedChatViewControllerNotification object:self userInfo:notificationInfo];
 
 	if ([[UIDevice currentDevice] isPadModel] && _visibleChatController == controller) {
 		if ([CQChatOrderingController defaultController].chatViewControllers.count) {

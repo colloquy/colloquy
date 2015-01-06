@@ -26,13 +26,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		_verbose = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatVerboseConsoleMessages"];
 		_ignorePRIVMSG = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatConsolePanelIgnoreUserChatMessages"];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotImportantMessage: ) name:MVChatConnectionGotImportantMessageNotification object:connection];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotInformationalMessage: ) name:MVChatConnectionGotInformationalMessageNotification object:connection];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotRawMessage: ) name:MVChatConnectionGotRawMessageNotification object:connection];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( clearConsole: ) name:MVChatConnectionWillConnectNotification object:connection];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _gotImportantMessage: ) name:MVChatConnectionGotImportantMessageNotification object:connection];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _gotInformationalMessage: ) name:MVChatConnectionGotInformationalMessageNotification object:connection];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _gotRawMessage: ) name:MVChatConnectionGotRawMessageNotification object:connection];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( clearConsole: ) name:MVChatConnectionWillConnectNotification object:connection];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidConnectNotification object:connection];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidDisconnectNotification object:connection];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidConnectNotification object:connection];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidDisconnectNotification object:connection];
 	}
 	return self;
 }
@@ -61,7 +61,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 
 	contents = nil;
 	_connection = nil;

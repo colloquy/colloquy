@@ -5,6 +5,7 @@
 #import "CQNavigationToolbar.h"
 
 #import "UIDeviceAdditions.h"
+#import "NSNotificationAdditions.h"
 
 @interface CQChatPresentationController ()
 @end
@@ -19,6 +20,11 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applyiOS7NavigationBarSizing) name:UIApplicationWillChangeStatusBarFrameNotification object:nil];
 
 	return self;
+}
+
+- (void) dealloc {
+	[[NSNotificationCenter chatCenter] removeObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark -

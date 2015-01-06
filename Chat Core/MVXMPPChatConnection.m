@@ -6,6 +6,7 @@
 #import "MVUtilities.h"
 #import "MVChatPluginManager.h"
 #import "NSMethodSignatureAdditions.h"
+#import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
 #import "MVChatString.h"
 
@@ -271,12 +272,12 @@
 
 - (void) outgoingPacket:(NSNotification *) notification {
 	NSString *string = [[NSString alloc] initWithData:[notification object] encoding:NSUTF8StringEncoding];
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
+	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 }
 
 - (void) incomingPacket:(NSNotification *) notification {
 	NSString *string = [[NSString alloc] initWithData:[notification object] encoding:NSUTF8StringEncoding];
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
+	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
 }
 
 - (void) incomingMessage:(NSNotification *) notification {
@@ -326,9 +327,9 @@
 		if( ! msgData.length ) return;
 
 		if( room ) {
-			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:msgAttributes];
+			[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:msgAttributes];
 		} else {
-			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:msgAttributes];
+			[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:msgAttributes];
 		}
 
 		break;
@@ -361,7 +362,7 @@
 
 	if ([[presence getAttribute:@"type"] isCaseInsensitiveEqualToString:@"unavailable"]) {
 		[room _removeMemberUser:user];
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
+		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
 		return;
 	}
 
@@ -370,7 +371,7 @@
 
 	if( ! [room isJoined] ) {
 		[room _setDateJoined:[NSDate date]];
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomJoinedNotification object:room];
+		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomJoinedNotification object:room];
 		 // balance the alloc or retain in joinChatRoomNamed:
 	}
 
@@ -380,7 +381,7 @@
 		[self _markUserAsOnline:user];
 
 		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSArray arrayWithObject:user] forKey:@"added"];
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomMemberUsersSyncedNotification object:room userInfo:userInfo];
+		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomMemberUsersSyncedNotification object:room userInfo:userInfo];
 	}
 
 	me = nil;

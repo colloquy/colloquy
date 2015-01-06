@@ -285,7 +285,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	}
 
 	NSDictionary *info = @{ @"attribute": key };
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomAttributeUpdatedNotification object:self userInfo:info];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomAttributeUpdatedNotification object:self userInfo:info];
 }
 
 #pragma mark -

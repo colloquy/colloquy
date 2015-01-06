@@ -59,8 +59,8 @@ static NSMenu *favoritesMenu = nil;
 		sharedInstance = [sharedInstance initWithWindowNibName:nil];
 	}
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFavoritesMenu) name:MVChatRoomJoinedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFavoritesMenu) name:MVChatRoomPartedNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_refreshFavoritesMenu) name:MVChatRoomJoinedNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_refreshFavoritesMenu) name:MVChatRoomPartedNotification object:nil];
 
 	return sharedInstance;
 }
@@ -197,7 +197,7 @@ static NSMenu *favoritesMenu = nil;
 			if ([favorites writeToFile:[@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath] atomically:YES])
 				[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVFavoritesMigrated"];
 		}
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_peerTrustFeedbackNotification:) name:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_peerTrustFeedbackNotification:) name:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:nil];
 	}
 
 	return self;
@@ -215,6 +215,7 @@ static NSMenu *favoritesMenu = nil;
 	[userSelectionTable setDelegate:nil];
 	[userSelectionTable setDataSource:nil];
 
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
@@ -633,7 +634,7 @@ static NSMenu *favoritesMenu = nil;
 
 		if( note ) {
 			[_publicKeyRequestQueue removeObject:note];
-			[[NSNotificationCenter defaultCenter] postNotification:note];
+			[[NSNotificationCenter chatCenter] postNotification:note];
 		}
 	}
 }
@@ -1479,42 +1480,42 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _registerNotificationsForConnection:(MVChatConnection *) connection {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionWillConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidNotConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidDisconnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionNicknameAcceptedNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionWillConnectNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidConnectNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidNotConnectNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionDidDisconnectNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refresh: ) name:MVChatConnectionNicknameAcceptedNotification object:connection];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _willConnect: ) name:MVChatConnectionWillConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred : ) name:MVChatConnectionErrorNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _willConnect: ) name:MVChatConnectionWillConnectNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _errorOccurred : ) name:MVChatConnectionErrorNotification object:connection];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedNicknamePasswordNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestCertificatePassword: ) name:MVChatConnectionNeedCertificatePasswordNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPublicKeyVerification: ) name:MVChatConnectionNeedPublicKeyVerificationNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didIdentify: ) name:MVChatConnectionDidIdentifyWithServicesNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _machineDidBecomeIdle: ) name:JVMachineBecameIdleNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _machineDidStopIdling: ) name:JVMachineStoppedIdlingNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotConnectionError: ) name:MVChatConnectionGotErrorNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedNicknamePasswordNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _requestCertificatePassword: ) name:MVChatConnectionNeedCertificatePasswordNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _requestPublicKeyVerification: ) name:MVChatConnectionNeedPublicKeyVerificationNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _didIdentify: ) name:MVChatConnectionDidIdentifyWithServicesNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _machineDidBecomeIdle: ) name:JVMachineBecameIdleNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _machineDidStopIdling: ) name:JVMachineStoppedIdlingNotification object:connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _gotConnectionError: ) name:MVChatConnectionGotErrorNotification object:connection];
 }
 
 - (void) _deregisterNotificationsForConnection:(MVChatConnection *) connection {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionWillConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidNotConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidDisconnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:connection];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionWillConnectNotification object:connection];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionDidConnectNotification object:connection];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionDidNotConnectNotification object:connection];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionDidDisconnectNotification object:connection];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:connection];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionWillConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidDisconnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionErrorNotification object:connection];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionWillConnectNotification object:connection];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionDidConnectNotification object:connection];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionDidDisconnectNotification object:connection];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionErrorNotification object:connection];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNeedNicknamePasswordNotification object:connection];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNeedCertificatePasswordNotification object:connection];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNeedPublicKeyVerificationNotification object:connection];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidIdentifyWithServicesNotification object:connection];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionNeedNicknamePasswordNotification object:connection];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionNeedCertificatePasswordNotification object:connection];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionNeedPublicKeyVerificationNotification object:connection];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionDidIdentifyWithServicesNotification object:connection];
 }
 
 - (void) _refresh:(NSNotification *) notification {

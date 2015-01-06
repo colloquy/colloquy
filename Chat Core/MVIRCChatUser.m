@@ -4,6 +4,7 @@
 #import "NSStringAdditions.h"
 #import "MVUtilities.h"
 #import "MVChatString.h"
+#import "NSNotificationAdditions.h"
 
 extern NSString *MVMetadataKeyForAttributeName(NSString *attributeName) {
 	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserSSLCertFingerprintAttribute]) return @"server.certfp";
@@ -63,8 +64,8 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 		MVSafeCopyAssign( _nickname, userNickname );
 		MVSafeCopyAssign( _uniqueIdentifier, [userNickname lowercaseString] );
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( ctcpReplyNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
-//		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( metadataUpdatedNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( ctcpReplyNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
+//		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( metadataUpdatedNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
 
 		[_connection _addKnownUser:self];
 	}
@@ -73,7 +74,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 }
 
 #pragma mark -

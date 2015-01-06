@@ -1,5 +1,7 @@
 #import "CQSettingsController.h"
 
+#import "NSNotificationAdditions.h"
+
 NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotification";
 
 @implementation CQSettingsController
@@ -105,7 +107,7 @@ NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotificat
 
 - (void) _notifyObserversSettingsChanged {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_notifyObserversSettingsChanged) object:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQSettingsDidChangeNotification object:nil userInfo:nil];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQSettingsDidChangeNotification object:nil userInfo:nil];
 }
 
 - (id) _defaultLocation {

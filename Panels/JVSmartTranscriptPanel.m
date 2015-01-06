@@ -36,7 +36,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 		_operation = [[settings objectForKey:@"operation"] intValue];
 		_ignoreCase = [[settings objectForKey:@"ignoreCase"] boolValue];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _messageDisplayed: ) name:JVChatMessageWasProcessedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _messageDisplayed: ) name:JVChatMessageWasProcessedNotification object:nil];
 	}
 
 	return self;
@@ -64,7 +64,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 
 	[subviewTableView setDataSource:nil];
 	[subviewTableView setDelegate:nil];

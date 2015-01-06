@@ -2,6 +2,8 @@
 
 #import <CoreText/CoreText.h>
 
+#import "NSNotificationAdditions.h"
+
 NSString *CQRemoteFontCourierFontLoadingDidSucceedNotification = @"CQRemoteFontCourierFontLoadingDidSucceedNotification";
 NSString *CQRemoteFontCourierFontLoadingDidFailNotification = @"CQRemoteFontCourierFontLoadingDidFailNotification";
 
@@ -53,14 +55,14 @@ NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingStat
 			if (fontName && font) userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: fontName, CQRemoteFontCourierFontLoadingFontKey: font };
 			else if (fontName) userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: fontName };
 			else if (font) userInfo = @{ CQRemoteFontCourierFontLoadingFontKey: font };
-			[[NSNotificationCenter defaultCenter] postNotificationName:CQRemoteFontCourierFontLoadingDidSucceedNotification object:nil userInfo:userInfo];
+			[[NSNotificationCenter chatCenter] postNotificationName:CQRemoteFontCourierFontLoadingDidSucceedNotification object:nil userInfo:userInfo];
 		});
 	};
 
 	void (^postFailureNotification)(NSString *) = ^(NSString *fontName) {
 		dispatch_async(dispatch_get_main_queue(), ^{
 			NSDictionary *userInfo = fontName ? userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: fontName } : nil;
-			[[NSNotificationCenter defaultCenter] postNotificationName:CQRemoteFontCourierFontLoadingDidFailNotification object:nil userInfo:userInfo];
+			[[NSNotificationCenter chatCenter] postNotificationName:CQRemoteFontCourierFontLoadingDidFailNotification object:nil userInfo:userInfo];
 		});
 	};
 

@@ -16,7 +16,7 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 		case SILC_CLIENT_FILE_MONITOR_KEY_AGREEMENT:
 			[transfer _setStatus:MVFileTransferNormalStatus];
 
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:transfer];
+			[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:transfer];
 
 			[transfer _setStartDate:[NSDate date]];
 			break;
@@ -28,7 +28,7 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 
 			if( filesize == offset ) {
 				 [transfer _setStatus:MVFileTransferDoneStatus];
-				 [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:transfer];
+				 [[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:transfer];
 			}
 
 			break;
@@ -42,7 +42,7 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 
 		case SILC_CLIENT_FILE_MONITOR_GET:
 		case SILC_CLIENT_FILE_MONITOR_PUT:
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferDataTransferredNotification object:transfer];
+			[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferDataTransferredNotification object:transfer];
 			break;
 	}
 }

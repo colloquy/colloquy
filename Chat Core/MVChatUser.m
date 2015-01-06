@@ -387,7 +387,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	}
 
 	NSDictionary *info = @{ @"attribute": key };
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserAttributeUpdatedNotification object:self userInfo:info];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserAttributeUpdatedNotification object:self userInfo:info];
 }
 
 #pragma mark -
@@ -489,13 +489,13 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (void) _setIdleTime:(NSTimeInterval) time {
 	_idleTime = time;
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserIdleTimeUpdatedNotification object:self userInfo:nil];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserIdleTimeUpdatedNotification object:self userInfo:nil];
 }
 
 - (void) _setStatus:(MVChatUserStatus) newStatus {
 	if( _status == newStatus ) return;
 	_status = newStatus;
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserStatusChangedNotification object:self userInfo:nil];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserStatusChangedNotification object:self userInfo:nil];
 }
 
 - (void) _setDateConnected:(NSDate *) date {

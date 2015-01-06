@@ -460,7 +460,7 @@
 
 	if( ! path.length )
 		[user sendFile:nil];
-	else [[NSNotificationCenter defaultCenter] postNotificationName:MVFileTransferStartedNotification object:[user sendFile:path passively:passive]];
+	else [[NSNotificationCenter chatCenter] postNotificationName:MVFileTransferStartedNotification object:[user sendFile:path passively:passive]];
 
 	return YES;
 }

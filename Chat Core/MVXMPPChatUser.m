@@ -4,6 +4,7 @@
 #import "MVXMPPChatConnection.h"
 #import "MVUtilities.h"
 #import "MVChatString.h"
+#import "NSNotificationAdditions.h"
 
 @implementation MVXMPPChatUser
 - (id) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) userConnection {
@@ -18,7 +19,7 @@
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 }
 
 #pragma mark -

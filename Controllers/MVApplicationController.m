@@ -116,7 +116,7 @@ static BOOL applicationIsTerminating = NO;
 			// no longer idle
 
 			_isIdle = NO;
-			[[NSNotificationCenter defaultCenter] postNotificationName:JVMachineStoppedIdlingNotification object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithDouble:idle] forKey:@"idleTime"]];
+			[[NSNotificationCenter chatCenter] postNotificationName:JVMachineStoppedIdlingNotification object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithDouble:idle] forKey:@"idleTime"]];
 
 			// reschedule the timer, to check for idle every 10 seconds
 			[_idleCheck invalidate];
@@ -128,7 +128,7 @@ static BOOL applicationIsTerminating = NO;
 			// we're now idle
 
 			_isIdle = YES;
-			[[NSNotificationCenter defaultCenter] postNotificationName:JVMachineBecameIdleNotification object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithDouble:idle] forKey:@"idleTime"]];
+			[[NSNotificationCenter chatCenter] postNotificationName:JVMachineBecameIdleNotification object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithDouble:idle] forKey:@"idleTime"]];
 
 			// reschedule the timer, we will check every 2 seconds to catch the user's return quickly
 			[_idleCheck invalidate];
@@ -350,7 +350,7 @@ static BOOL applicationIsTerminating = NO;
 			NSBundle *bundle = [NSBundle bundleWithPath:newPath];
 			JVStyle *style = [JVStyle newWithBundle:bundle];
 
-			[[NSNotificationCenter defaultCenter] postNotificationName:JVChatStyleInstalledNotification object:style];
+			[[NSNotificationCenter chatCenter] postNotificationName:JVChatStyleInstalledNotification object:style];
 
 			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"%@ Successfully Installed", "style installed title" ), [style displayName]], [NSString stringWithFormat:NSLocalizedString( @"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?", "would you like to view the style in the Appearance Preferences" ), [style displayName], [style displayName]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil) == NSOKButton ) {
 				[self setupPreferences];
@@ -375,7 +375,7 @@ static BOOL applicationIsTerminating = NO;
 
 		if( [[NSFileManager defaultManager] moveItemAtPath:filename toPath:newPath error:nil] ) {
 			NSBundle *emoticon = [NSBundle bundleWithPath:newPath];
-			[[NSNotificationCenter defaultCenter] postNotificationName:JVChatEmoticonSetInstalledNotification object:emoticon];
+			[[NSNotificationCenter chatCenter] postNotificationName:JVChatEmoticonSetInstalledNotification object:emoticon];
 
 			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"%@ Successfully Installed", "emoticon installed title" ), [emoticon displayName]], [NSString stringWithFormat:NSLocalizedString( @"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?", "would you like to view the emoticons in the Appearance Preferences" ), [emoticon displayName], [emoticon displayName]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil ) == NSOKButton ) {
 				[self setupPreferences];
@@ -489,7 +489,7 @@ static BOOL applicationIsTerminating = NO;
 		[webCacheClass setDisabled:YES];
 	}
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( invalidPluginsFound: ) name:MVChatPluginManagerDidFindInvalidPluginsNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( invalidPluginsFound: ) name:MVChatPluginManagerDidFindInvalidPluginsNotification object:nil];
 
 	[MVConnectionsController defaultController];
 	[JVChatController defaultController];

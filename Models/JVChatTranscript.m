@@ -901,7 +901,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 	[self _changeFileAttributesAtPath:path];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVChatTranscriptUpdatedNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVChatTranscriptUpdatedNotification object:self];
 
 	return ret;
 }
@@ -921,7 +921,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 		if( [url isFileURL] ) {
 			[self _changeFileAttributesAtPath:[url path]];
-			[[NSNotificationCenter defaultCenter] postNotificationName:JVChatTranscriptUpdatedNotification object:self];
+			[[NSNotificationCenter chatCenter] postNotificationName:JVChatTranscriptUpdatedNotification object:self];
 		}
 	}
 
@@ -1093,7 +1093,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	if( format ) [_logFile writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
 	[_logFile writeData:[@"</log>" dataUsingEncoding:NSUTF8StringEncoding]];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVChatTranscriptUpdatedNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVChatTranscriptUpdatedNotification object:self];
 
 	xmlBufferFree( buf );
 }

@@ -11,6 +11,8 @@
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
+#import "NSNotificationAdditions.h"
+
 enum {
 	CQChatRoomInfoModes,
 	CQChatRoomInfoTopic,
@@ -56,6 +58,11 @@ enum {
 	return self;
 }
 
+- (void) dealloc {
+	[[NSNotificationCenter chatCenter] removeObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 #pragma mark -
 
 - (void) viewDidLoad {
@@ -71,10 +78,10 @@ enum {
 	[self _refreshBanList:nil];
 	[self _segmentSelected:_segmentedControl];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberModeChanged:) name:MVChatRoomUserModeChangedNotification object:_room];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_roomModesChanged:) name:MVChatRoomModesChangedNotification object:_room];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshBanList:) name:MVChatRoomBannedUsersSyncedNotification object:_room];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_topicChanged:) name:MVChatRoomTopicChangedNotification object:_room];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberModeChanged:) name:MVChatRoomUserModeChangedNotification object:_room];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_roomModesChanged:) name:MVChatRoomModesChangedNotification object:_room];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_refreshBanList:) name:MVChatRoomBannedUsersSyncedNotification object:_room];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_topicChanged:) name:MVChatRoomTopicChangedNotification object:_room];
 
 	_segmentedControl.frame = CGRectInset(self.navigationController.toolbar.bounds, 20., 5.);
 	_segmentedControl.autoresizingMask = (UIViewAutoresizingFlexibleWidth);

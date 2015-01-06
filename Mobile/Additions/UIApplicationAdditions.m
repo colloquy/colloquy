@@ -1,5 +1,6 @@
 #import "UIApplicationAdditions.h"
 
+#import "NSNotificationAdditions.h"
 #import "NSObjectAdditions.h"
 
 #import <arpa/inet.h>
@@ -45,7 +46,7 @@ static void reachabilityStatusChangedCallback(SCNetworkReachabilityRef target, S
 	[self associateObject:@(reachabilityState) forKey:@"reachabilityState"];
 	[self didChangeValueForKey:@"cq_reachabilityState"];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:CQReachabilityStateDidChangeNotification object:self userInfo:@{
+    [[NSNotificationCenter chatCenter] postNotificationName:CQReachabilityStateDidChangeNotification object:self userInfo:@{
 		CQReachabilityNewStateKey: @(reachabilityState),
 		CQReachabilityOldStateKey: @(oldState)
 	}];

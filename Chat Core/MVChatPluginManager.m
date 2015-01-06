@@ -1,6 +1,7 @@
 #import "MVChatPluginManager.h"
 #import "NSFileManagerAdditions.h"
 #import "NSMethodSignatureAdditions.h"
+#import "NSNotificationAdditions.h"
 #import "NSNumberAdditions.h"
 #import "NSStringAdditions.h"
 
@@ -59,7 +60,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	if( _reloadingPlugins ) return;
 	_reloadingPlugins = YES;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerWillReloadPluginsNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:MVChatPluginManagerWillReloadPluginsNotification object:self];
 
 	if( _plugins.count ) {
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), nil];
@@ -102,8 +103,8 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 		}
 	}
 
-	if (invalidPluginList.count) [[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerDidFindInvalidPluginsNotification object:invalidPluginList];
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerDidReloadPluginsNotification object:self];
+	if (invalidPluginList.count) [[NSNotificationCenter chatCenter] postNotificationName:MVChatPluginManagerDidFindInvalidPluginsNotification object:invalidPluginList];
+	[[NSNotificationCenter chatCenter] postNotificationName:MVChatPluginManagerDidReloadPluginsNotification object:self];
 
 	_reloadingPlugins = NO;
 }

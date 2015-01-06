@@ -3,6 +3,7 @@
 #import "CQTextCompletionView.h"
 
 #import "UIColorAdditions.h"
+#import "NSNotificationAdditions.h"
 
 #define CompletionsCaptureKeyboardDelay 0.5
 
@@ -31,7 +32,7 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 + (void) initialize {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 		[self userDefaultsChanged];
 	});
@@ -46,12 +47,12 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 	backgroundColor = [UIColor colorFromName:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQChatStyleBackgroundTextColor"]];
 
 	dispatch_async(dispatch_get_main_queue(), ^{
-		[[NSNotificationCenter defaultCenter] postNotificationName:CQChatInputBarDefaultsChanged object:nil];
+		[[NSNotificationCenter chatCenter] postNotificationName:CQChatInputBarDefaultsChanged object:nil];
 	});
 }
 
 - (void) _commonInitialization {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_resetTextAttributes) name:CQChatInputBarDefaultsChanged object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_resetTextAttributes) name:CQChatInputBarDefaultsChanged object:nil];
 	CGRect frame = self.bounds;
 	frame.size.height += 1;
 
@@ -137,6 +138,7 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	_inputView.delegate = nil;

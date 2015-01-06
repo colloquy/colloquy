@@ -30,8 +30,8 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		_users = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
 		_uniqueIdentifier = [NSString locallyUniqueString];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _registerWithConnection: ) name:MVChatConnectionDidConnectNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _disconnected: ) name:MVChatConnectionDidDisconnectNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _registerWithConnection: ) name:MVChatConnectionDidConnectNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _disconnected: ) name:MVChatConnectionDidDisconnectNotification object:nil];
 	}
 
 	return self;
@@ -88,7 +88,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 - (void) dealloc {
 	[self unregisterWithConnections];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 
 
 	_person = nil;
@@ -211,7 +211,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 	_activeUser = user;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyActiveUserChangedNotification object:self userInfo:nil];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVBuddyActiveUserChangedNotification object:self userInfo:nil];
 }
 
 #pragma mark -
@@ -278,15 +278,15 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 - (void) addWatchRule:(MVChatUserWatchRule *) rule {
 	if( [_rules containsObject:rule] ) return;
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _ruleMatched: ) name:MVChatUserWatchRuleMatchedNotification object:rule];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _ruleUserRemoved: ) name:MVChatUserWatchRuleRemovedMatchedUserNotification object:rule];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _ruleMatched: ) name:MVChatUserWatchRuleMatchedNotification object:rule];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _ruleUserRemoved: ) name:MVChatUserWatchRuleRemovedMatchedUserNotification object:rule];
 	[_rules addObject:rule];
 }
 
 - (void) removeWatchRule:(MVChatUserWatchRule *) rule {
 	if( ! [_rules containsObject:rule] ) return;
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserWatchRuleMatchedNotification object:rule];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserWatchRuleRemovedMatchedUserNotification object:rule];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserWatchRuleMatchedNotification object:rule];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserWatchRuleRemovedMatchedUserNotification object:rule];
 	[_rules removeObject:rule];
 }
 
@@ -501,10 +501,10 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( [self status] != MVChatUserAvailableStatus && [self status] != MVChatUserAwayStatus )
 		[self setActiveUser:user];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyUserCameOnlineNotification object:self userInfo:[NSDictionary dictionaryWithObject:user forKey:@"user"]];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVBuddyUserCameOnlineNotification object:self userInfo:[NSDictionary dictionaryWithObject:user forKey:@"user"]];
 
 	if( cameOnline )
-		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyCameOnlineNotification object:self userInfo:nil];
+		[[NSNotificationCenter chatCenter] postNotificationName:JVBuddyCameOnlineNotification object:self userInfo:nil];
 }
 
 - (void) _removeUser:(MVChatUser *) user {
@@ -516,10 +516,10 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( [[self activeUser] isEqualToChatUser:user] )
 		[self setActiveUser:[_users anyObject]];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyUserWentOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObject:user forKey:@"user"]];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVBuddyUserWentOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObject:user forKey:@"user"]];
 
 	if( ! [_users count] )
-		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
+		[[NSNotificationCenter chatCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
 }
 
 - (void) _buddyIdleUpdate:(NSNotification *) notification {
@@ -542,7 +542,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		default: break;
 	}
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyUserStatusChangedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVBuddyUserStatusChangedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
 }
 
 - (void) _registerWithConnection:(NSNotification *) notification {
@@ -563,15 +563,15 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( [user status] == MVChatUserAvailableStatus || [user status] == MVChatUserAwayStatus )
 		[self _addUser:user];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyIdleUpdate: ) name:MVChatUserIdleTimeUpdatedNotification object:user];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyStatusChanged: ) name:MVChatUserStatusChangedNotification object:user];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyIdleUpdate: ) name:MVChatUserIdleTimeUpdatedNotification object:user];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyStatusChanged: ) name:MVChatUserStatusChangedNotification object:user];
 }
 
 - (void) _ruleUserRemoved:(NSNotification *) notification {
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserIdleTimeUpdatedNotification object:user];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserStatusChangedNotification object:user];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserIdleTimeUpdatedNotification object:user];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserStatusChangedNotification object:user];
 
 	[self _removeUser:user];
 }

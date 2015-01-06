@@ -4,6 +4,7 @@
 #import "CQIgnoreRulesController.h"
 
 #import "NSDateAdditions.h"
+#import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
 #import "RegexKitLite.h"
 
@@ -68,7 +69,7 @@ static NSString *timestampFormat;
 
 	userDefaultsInitialized = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	[self userDefaultsChanged];
 }

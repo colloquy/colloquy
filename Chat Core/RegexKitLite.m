@@ -631,7 +631,7 @@ __attribute__((constructor)) static void rkl_RegisterForLowMemoryNotifications(v
   while((rkl_HaveRegisteredForLowMemoryNotifications == 0) && ((didSwap = OSAtomicCompareAndSwapIntBarrier(0, 1, &rkl_HaveRegisteredForLowMemoryNotifications)) == false)) { /* Allows for spurious CAS failures. */ }
   if(didSwap == true) {
     if((memoryWarningNotification = (void **)dlsym(RTLD_DEFAULT, "UIApplicationDidReceiveMemoryWarningNotification")) != NULL) {
-      [[NSNotificationCenter defaultCenter] addObserver:[RKLLowMemoryWarningObserver class] selector:@selector(lowMemoryWarning:) name:(NSString *)*memoryWarningNotification object:NULL];
+      [[NSNotificationCenter chatCenter] addObserver:[RKLLowMemoryWarningObserver class] selector:@selector(lowMemoryWarning:) name:(NSString *)*memoryWarningNotification object:NULL];
     }
   }
 }

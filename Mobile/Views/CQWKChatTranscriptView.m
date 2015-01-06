@@ -2,6 +2,8 @@
 
 #import <ChatCore/MVChatUser.h>
 
+#import "NSNotificationAdditions.h"
+
 #define DefaultFontSize 14
 #define HideRoomTopicDelay 30.
 
@@ -38,8 +40,8 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:CQRoomTopicChangedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:CQRoomTopicChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:CQSettingsDidChangeNotification object:nil];
 }
 
 #pragma mark -
@@ -510,7 +512,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	_showRoomTopic = (CQShowRoomTopic)[[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
 	_addedMessage = NO;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged:) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged:) name:CQSettingsDidChangeNotification object:nil];
 }
 
 - (void) _userDefaultsChanged:(NSNotification *) notification {

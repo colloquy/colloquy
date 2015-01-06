@@ -132,9 +132,9 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 		_selectedTag = 1;
 		_nibLoaded = NO;
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( beginIndexing: ) name:JVMachineBecameIdleNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( stopIndexing: ) name:JVMachineStoppedIdlingNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( markDirty: ) name:JVChatTranscriptUpdatedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( beginIndexing: ) name:JVMachineBecameIdleNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( stopIndexing: ) name:JVMachineStoppedIdlingNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( markDirty: ) name:JVChatTranscriptUpdatedNotification object:nil];
 
 		if( [_dirtyLogs count] ) [self performSelector:@selector( beginIndexing: ) withObject:nil afterDelay:0.];
 
@@ -146,7 +146,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 
 - (void) dealloc {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 
 	_shouldIndex = NO;
 	[NSKeyedArchiver archiveRootObject:_dirtyLogs toFile:[self dirtyPath]];

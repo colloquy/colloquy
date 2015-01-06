@@ -245,11 +245,11 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 		if( [command isCaseInsensitiveEqualToString:@"ACTION"] && arguments ) {
 			// special case ACTION and send it out like a message with the action flag
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionGotMessageNotification object:self userInfo:@{ @"message": arguments, @"identifier": [NSString locallyUniqueString], @"action": @(YES) }];
+			[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionGotMessageNotification object:self userInfo:@{ @"message": arguments, @"identifier": [NSString locallyUniqueString], @"action": @(YES) }];
 		}
 	} else {
 		NSData *msg = [[NSData alloc] initWithBytes:bytes length:(end - bytes)];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionGotMessageNotification object:self userInfo:@{ @"message": msg, @"identifier": [NSString locallyUniqueString] }];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionGotMessageNotification object:self userInfo:@{ @"message": msg, @"identifier": [NSString locallyUniqueString] }];
 	}
 
 	[self _readNextMessage];
@@ -287,9 +287,9 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 		return;
 
 	if( newStatus == MVDirectChatConnectionConnectedStatus )
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionDidConnectNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionDidConnectNotification object:self];
 	else if( newStatus == MVDirectChatConnectionDisconnectedStatus )
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionDidDisconnectNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionDidDisconnectNotification object:self];
 }
 
 - (void) _setHost:(NSString *) newHost {
@@ -322,6 +322,6 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 	MVSafeRetainAssign( _lastError, error );
 
 	NSDictionary *info = @{@"error": error};
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionErrorOccurredNotification object:self userInfo:info];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionErrorOccurredNotification object:self userInfo:info];
 }
 @end

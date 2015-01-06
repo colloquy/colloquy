@@ -71,19 +71,19 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidReceiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillResignActive) name:UIApplicationWillResignActiveNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationNetworkStatusDidChange:) name:CQReachabilityStateDidChangeNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didNotConnect:) name:MVChatConnectionDidNotConnectNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_errorOccurred:) name:MVChatConnectionErrorNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_deviceTokenRecieved:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_applicationNetworkStatusDidChange:) name:CQReachabilityStateDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_didNotConnect:) name:MVChatConnectionDidNotConnectNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_errorOccurred:) name:MVChatConnectionErrorNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_deviceTokenRecieved:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batteryStateChanged) name:UIDeviceBatteryStateDidChangeNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_peerTrustFeedbackNotification:) name:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_nicknamePasswordRequested:) name:MVChatConnectionNeedNicknamePasswordNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_serverPasswordRequested:) name:MVChatConnectionNeedServerPasswordNotification object:nil];
-//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotConnectionError:) name:MVChatConnectionGotErrorNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_peerTrustFeedbackNotification:) name:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_nicknamePasswordRequested:) name:MVChatConnectionNeedNicknamePasswordNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_serverPasswordRequested:) name:MVChatConnectionNeedServerPasswordNotification object:nil];
+//	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotConnectionError:) name:MVChatConnectionGotErrorNotification object:nil];
 
 	if ([UIDevice currentDevice].multitaskingSupported) {
 		_backgroundTask = UIBackgroundTaskInvalid;
@@ -93,7 +93,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
 	}
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
 
 	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
 
@@ -119,6 +119,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -506,8 +507,8 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 	NSDictionary *notificationInfo = @{@"connection": chatConnection};
 	if (newConnection)
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:CQConnectionsControllerAddedConnectionNotification object:self userInfo:notificationInfo];
-	else [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:CQConnectionsControllerChangedConnectionNotification object:self userInfo:notificationInfo];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQConnectionsControllerAddedConnectionNotification object:self userInfo:notificationInfo];
+	else [[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQConnectionsControllerChangedConnectionNotification object:self userInfo:notificationInfo];
 }
 
 - (void) bouncerConnectionDidFinishConnectionList:(CQBouncerConnection *) connection {
@@ -528,7 +529,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		[connections removeObjectAtIndex:index];
 
 		NSDictionary *notificationInfo = @{@"connection": chatConnection, @"index": @(index)};
-		[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerRemovedConnectionNotification object:self userInfo:notificationInfo];
+		[[NSNotificationCenter chatCenter] postNotificationName:CQConnectionsControllerRemovedConnectionNotification object:self userInfo:notificationInfo];
 	}
 }
 
@@ -1675,7 +1676,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	[_connections addObject:connection];
 
 	NSDictionary *notificationInfo = @{@"connection": connection};
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerAddedConnectionNotification object:self userInfo:notificationInfo];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQConnectionsControllerAddedConnectionNotification object:self userInfo:notificationInfo];
 
 	[self saveConnections];
 }
@@ -1687,7 +1688,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	[_directConnections insertObject:connection atIndex:newIndex];
 
 	NSDictionary *notificationInfo = @{@"connection": connection, @"index": @(newIndex), @"oldIndex": @(oldIndex)};
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerMovedConnectionNotification object:self userInfo:notificationInfo];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQConnectionsControllerMovedConnectionNotification object:self userInfo:notificationInfo];
 																																																																																																																																																																																																																																																	
 	[self saveConnections];
 }
@@ -1709,7 +1710,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	[_connections removeObject:connection];
 
 	NSDictionary *notificationInfo = @{@"connection": connection, @"index": @(index)};
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerRemovedConnectionNotification object:self userInfo:notificationInfo];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQConnectionsControllerRemovedConnectionNotification object:self userInfo:notificationInfo];
 
 	[self saveConnections];
 }
@@ -1724,7 +1725,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	[connections insertObject:connection atIndex:newIndex];
 
 	NSDictionary *notificationInfo = @{@"connection": connection, @"index": @(newIndex)};
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerMovedConnectionNotification object:self userInfo:notificationInfo];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQConnectionsControllerMovedConnectionNotification object:self userInfo:notificationInfo];
 
 	[self saveConnections];
 }
@@ -1778,7 +1779,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	[_bouncers addObject:bouncer];
 
 	NSDictionary *notificationInfo = @{@"bouncerSettings": bouncer};
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerAddedBouncerSettingsNotification object:self userInfo:notificationInfo];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQConnectionsControllerAddedBouncerSettingsNotification object:self userInfo:notificationInfo];
 
 	[self refreshBouncerConnectionsWithBouncerSettings:bouncer];
 }
@@ -1800,12 +1801,12 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	[_bouncerChatConnections removeObjectForKey:bouncer.identifier];
 
 	NSDictionary *notificationInfo = @{@"bouncerSettings": bouncer, @"index": @(index)};
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerRemovedBouncerSettingsNotification object:self userInfo:notificationInfo];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQConnectionsControllerRemovedBouncerSettingsNotification object:self userInfo:notificationInfo];
 
 	for (NSInteger i = (connections.count - 1); i >= 0; --i) {
 		MVChatConnection *connection = connections[i];
 		NSDictionary *notificationInfo = @{@"connection": connection, @"index": @(i)};
-		[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerRemovedConnectionNotification object:self userInfo:notificationInfo];
+		[[NSNotificationCenter chatCenter] postNotificationName:CQConnectionsControllerRemovedConnectionNotification object:self userInfo:notificationInfo];
 	}
 }
 @end

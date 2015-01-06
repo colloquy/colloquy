@@ -118,12 +118,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	[self _refreshList];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_favoritesListDidUpdate:) name:MVFavoritesListDidUpdateNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_favoritesListDidUpdate:) name:MVFavoritesListDidUpdateNotification object:nil];
 }
 
 - (void) dealloc {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 
 	if( [self isWindowLoaded] ) {
 		[[self window] setDelegate:nil];

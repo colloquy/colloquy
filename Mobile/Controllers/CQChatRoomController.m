@@ -18,6 +18,8 @@
 
 #import "UIActionSheetAdditions.h"
 
+#import "NSNotificationAdditions.h"
+
 #define NicknameActionSheet 1
 #define JoinActionSheet 2
 #define ActionsActionSheet 3
@@ -59,7 +61,7 @@ static CQShowRoomTopic showRoomTopic;
 
 	userDefaultsInitialized = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	[self userDefaultsChanged];
 }
@@ -74,19 +76,19 @@ static CQShowRoomTopic showRoomTopic;
 
 	self.room.encoding = self.encoding;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_partedRoom:) name:MVChatRoomPartedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_kicked:) name:MVChatRoomKickedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_partedRoom:) name:MVChatRoomPartedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_kicked:) name:MVChatRoomKickedNotification object:target];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberNicknameChanged:) name:MVChatUserNicknameChangedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberModeChanged:) name:MVChatRoomUserModeChangedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_roomModesChanged:) name:MVChatRoomModesChangedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberBanned:) name:MVChatRoomUserBannedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberBanRemoved:) name:MVChatRoomUserBanRemovedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_bannedMembersSynced:) name:MVChatRoomBannedUsersSyncedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_membersSynced:) name:MVChatRoomMemberUsersSyncedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberJoined:) name:MVChatRoomUserJoinedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberParted:) name:MVChatRoomUserPartedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberKicked:) name:MVChatRoomUserKickedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberNicknameChanged:) name:MVChatUserNicknameChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberModeChanged:) name:MVChatRoomUserModeChangedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_roomModesChanged:) name:MVChatRoomModesChangedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberBanned:) name:MVChatRoomUserBannedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberBanRemoved:) name:MVChatRoomUserBanRemovedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_bannedMembersSynced:) name:MVChatRoomBannedUsersSyncedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_membersSynced:) name:MVChatRoomMemberUsersSyncedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberJoined:) name:MVChatRoomUserJoinedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberParted:) name:MVChatRoomUserPartedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberKicked:) name:MVChatRoomUserKickedNotification object:target];
 
 	return self;
 }
@@ -114,7 +116,7 @@ static CQShowRoomTopic showRoomTopic;
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 }
 
 #pragma mark -
@@ -206,8 +208,8 @@ static CQShowRoomTopic showRoomTopic;
 	_banListSynced = NO;
 	_membersNeedSorted = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_nicknameChanged:) name:MVChatConnectionNicknameAcceptedNotification object:self.connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_topicChanged:) name:MVChatRoomTopicChangedNotification object:self.room];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_nicknameChanged:) name:MVChatConnectionNicknameAcceptedNotification object:self.connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_topicChanged:) name:MVChatRoomTopicChangedNotification object:self.room];
 }
 
 - (void) showMembers {
@@ -481,8 +483,8 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	_parting = NO;
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
 
 	[self _updateRightBarButtonItemAnimated:YES];
 }
@@ -490,8 +492,8 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 - (void) _partedRoom:(NSNotification *) notification {
 	[self addEventMessage:NSLocalizedString(@"You left the room.", "Left room event message") withIdentifier:@"parted" announceWithVoiceOver:YES];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
 
 	[self _updateRightBarButtonItemAnimated:YES];
 
@@ -523,8 +525,8 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	[self _processMessageData:reasonData target:self action:@selector(_displayProcessedKickReason:) userInfo:notification.userInfo];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
 
 	if ([[CQSettingsController settingsController] boolForKey:@"JVAutoRejoinRoomsOnKick"]) {
 		[self performSelector:@selector(join) withObject:nil afterDelay:5.];

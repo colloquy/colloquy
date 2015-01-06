@@ -84,14 +84,14 @@ static NSMenu *smartTranscriptMenu = nil;
 			if( object ) [_chatControllers addObject:object];
 		}
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _joinedRoom: ) name:MVChatRoomJoinedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _invitedToRoom: ) name:MVChatRoomInvitedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _invitedToDirectChat: ) name:MVDirectChatConnectionOfferNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotBeep: ) name:MVChatConnectionGotBeepNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotPrivateMessage: ) name:MVChatConnectionGotPrivateMessageNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotRoomMessage: ) name:MVChatRoomGotMessageNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotDirectChatMessage: ) name:MVDirectChatConnectionGotMessageNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred: ) name:MVChatConnectionErrorNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _joinedRoom: ) name:MVChatRoomJoinedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _invitedToRoom: ) name:MVChatRoomInvitedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _invitedToDirectChat: ) name:MVDirectChatConnectionOfferNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _gotBeep: ) name:MVChatConnectionGotBeepNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _gotPrivateMessage: ) name:MVChatConnectionGotPrivateMessageNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _gotRoomMessage: ) name:MVChatRoomGotMessageNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _gotDirectChatMessage: ) name:MVDirectChatConnectionGotMessageNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _errorOccurred: ) name:MVChatConnectionErrorNotification object:nil];
 
 		[[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeyPath:@"values.JVChatWindowRuleSets" options:NSKeyValueObservingOptionNew context:NULL];
 	}
@@ -101,7 +101,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (void) dealloc {
 	[[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeyPath:@"values.JVChatWindowRuleSets"];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
 

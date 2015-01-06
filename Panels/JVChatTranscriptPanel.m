@@ -61,9 +61,9 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		id specifier = [[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"transcript"];
 		[_transcript setObjectSpecifier:specifier];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateStylesMenu ) name:JVStylesScannedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateStylesMenu ) name:JVNewStyleVariantAddedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateEmoticonsMenu ) name:JVEmoticonSetsScannedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _updateStylesMenu ) name:JVStylesScannedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _updateStylesMenu ) name:JVNewStyleVariantAddedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _updateEmoticonsMenu ) name:JVEmoticonSetsScannedNotification object:nil];
 	}
 
 	return self;
@@ -96,7 +96,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	[display setScrollbackLimit:1000];
 	[display setBodyTemplate:@"transcript"];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didSwitchStyles: ) name:JVStyleViewDidChangeStylesNotification object:display];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _didSwitchStyles: ) name:JVStyleViewDidChangeStylesNotification object:display];
 
 	if( ! [self style] ) {
 		JVStyle *style = [JVStyle defaultStyle];
@@ -110,7 +110,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 - (void) dealloc {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 
 	[display setUIDelegate:nil];
 	[display setResourceLoadDelegate:nil];

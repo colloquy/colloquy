@@ -56,7 +56,7 @@ NSString* STREAM_ROOT = @"<stream:stream xmlns='jabber:client' xmlns:stream='htt
 -(id) init
 {
 	if (!(self = [super init])) return nil;
-    _ncenter     = [NSNotificationCenter defaultCenter];
+    _ncenter     = [NSNotificationCenter chatCenter];
     _curr_id = (intptr_t)self;
     _expressions = [[NSMutableDictionary alloc] init];
     _observerMap = CFDictionaryCreateMutable( NULL, 0, NULL, &kCFTypeDictionaryValueCallBacks );

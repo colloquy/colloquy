@@ -41,7 +41,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 	[allEmoticonSets intersectSet:styles];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVEmoticonSetsScannedNotification object:allEmoticonSets];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVEmoticonSetsScannedNotification object:allEmoticonSets];
 }
 
 + (NSSet *) emoticonSets {
@@ -107,7 +107,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 	[self _setBundle:nil]; // this will dealloc all other dependant objects
 	[self unlink];
 }
@@ -116,7 +116,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 - (void) unlink {
 	[allEmoticonSets removeObject:self];
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVEmoticonSetsScannedNotification object:allEmoticonSets];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVEmoticonSetsScannedNotification object:allEmoticonSets];
 }
 
 - (BOOL) isCompliant {

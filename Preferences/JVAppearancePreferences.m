@@ -19,9 +19,9 @@
 @implementation JVAppearancePreferences
 - (id) init {
 	if( ( self = [super init] ) ) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( colorWellDidChangeColor: ) name:JVColorWellCellColorDidChangeNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateChatStylesMenu ) name:JVStylesScannedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateEmoticonsMenu ) name:JVEmoticonSetsScannedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( colorWellDidChangeColor: ) name:JVColorWellCellColorDidChangeNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( updateChatStylesMenu ) name:JVStylesScannedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( updateEmoticonsMenu ) name:JVEmoticonSetsScannedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( reloadStyles: ) name:NSApplicationDidBecomeActiveNotification object:[NSApplication sharedApplication]];
 
 		_style = nil;
@@ -32,6 +32,7 @@
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[optionsTable setDataSource:nil];
@@ -94,8 +95,8 @@
 	[preview setEmoticons:[_style defaultEmoticonSet]];
 	[preview setStyle:_style];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateVariant ) name:JVStyleVariantChangedNotification object:_style];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( updateVariant ) name:JVStyleVariantChangedNotification object:_style];
 }
 
 #pragma mark -
@@ -744,7 +745,7 @@
 
 	[_style setDefaultVariantName:name];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVNewStyleVariantAddedNotification object:_style];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVNewStyleVariantAddedNotification object:_style];
 
 	[self updateChatStylesMenu];
 	[self updateVariant];

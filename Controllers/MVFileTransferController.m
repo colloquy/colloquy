@@ -99,10 +99,10 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		_transferStorage = [[NSMutableArray allocWithZone:nil] init];
 		_calculationItems = [[NSMutableArray allocWithZone:nil] init];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _incomingFile: ) name:MVDownloadFileTransferOfferNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _fileTransferStarted: ) name:MVFileTransferStartedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _fileTransferFinished: ) name:MVFileTransferFinishedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _fileTransferError: ) name:MVFileTransferErrorOccurredNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _incomingFile: ) name:MVDownloadFileTransferOfferNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _fileTransferStarted: ) name:MVFileTransferStartedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _fileTransferFinished: ) name:MVFileTransferFinishedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _fileTransferError: ) name:MVFileTransferErrorOccurredNotification object:nil];
 
 		NSRange range = NSRangeFromString( [[NSUserDefaults standardUserDefaults] stringForKey:@"JVFileTransferPortRange"] );
 		[MVFileTransfer setFileTransferPortRange:range];
@@ -118,7 +118,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 	if( self == sharedInstance ) {
 		sharedInstance = nil;
 		[_updateTimer invalidate];

@@ -2,6 +2,8 @@
 
 #import "CQKeychain.h"
 
+#import "NSNotificationAdditions.h"
+
 NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 
 @implementation CQPocketController
@@ -32,18 +34,18 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 
 + (void) _postServerErrorNotification {
 	NSError *error = [NSError errorWithDomain:CQBookmarkingErrorDomain code:CQBookmarkingErrorServer userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:nil userInfo:@{ @"error": error }];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:nil userInfo:@{ @"error": error }];
 }
 
 + (void) _postAuthenticationErrorNotificationForLink:(NSString *) link {
 	NSError *error = [NSError errorWithDomain:CQBookmarkingErrorDomain code:CQBookmarkingErrorAuthorization userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:link userInfo:@{ @"error": error }];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:link userInfo:@{ @"error": error }];
 }
 
 + (void) _shouldConvertTokenFromTokenNotification:(NSNotification *) notification {
 	NSString *activeCode = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQBookmarkingActivePocketCode"];
 	[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"CQBookmarkingActivePocketCode"];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"CQPocketShouldConvertTokenFromTokenNotification" object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:@"CQPocketShouldConvertTokenFromTokenNotification" object:nil];
 
 	NSMutableURLRequest *request = [self _postRequestWithURL:@"https://getpocket.com/v3/oauth/authorize"];
 	request.HTTPBody = @{ @"consumer_key": [self _consumerKey], @"code": activeCode }.postDataRepresentation;
@@ -75,7 +77,7 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 				URLBase = @"pocket-oauth-v1:///authorize?";
 			else URLBase = @"https://getpocket.com/auth/authorize?";
 
-			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_shouldConvertTokenFromTokenNotification:) name:@"CQPocketShouldConvertTokenFromTokenNotification" object:nil];
+			[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_shouldConvertTokenFromTokenNotification:) name:@"CQPocketShouldConvertTokenFromTokenNotification" object:nil];
 			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[URLBase stringByAppendingFormat:@"request_token=%@&redirect_uri=%@", responseDictionary[@"code"], @"colloquy://redirect"]]];
 		} else if ((HTTPResponse.statusCode / 100) == 5)
 			[self _postServerErrorNotification];
