@@ -3166,11 +3166,6 @@ end:
 		NSString *targetName = parameters[0];
 		if( ! targetName.length ) return;
 
-		if( [targetName isCaseInsensitiveEqualToString:@"AUTH"] ) {
-			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedServerPasswordNotification object:self];
-			return;
-		}
-
 		[sender _setIdleTime:0.];
 		[self _markUserAsOnline:sender];
 
@@ -4647,7 +4642,17 @@ end:
 }
 
 - (void) _handle464WithParameters:(NSArray *) parameters fromSender:(id) sender { // ZNC INVALID PASSWORD
-//	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionServerPasswordIncorrectError userInfo:nil]];
+	// Possible responses:
+	// :irc.znc.in 464 username :Password required // in the event that we do not send a PASS
+	// :irc.znc.in 464 username :Invalid Password // in the event that we send the wrong PASS
+	if( parameters.count >= 2 ) {
+		NSString *message = [self _stringFromPossibleData:parameters[1]];
+
+		if( [message hasCaseInsensitiveSubstring:@"Password Required"] )
+			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedServerPasswordNotification object:self];
+		else if( [message hasCaseInsensitiveSubstring:@"Invalid Password"] )
+			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionServerPasswordIncorrectError userInfo:nil]];
+	}
 }
 
 - (void) _handle471WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_CHANNELISFULL
