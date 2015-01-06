@@ -83,6 +83,7 @@ NSString *MVChatConnectionErrorNotification = @"MVChatConnectionErrorNotificatio
 
 NSString *MVChatConnectionNeedTLSPeerTrustFeedbackNotification = @"MVChatConnectionNeedTLSPeerTrustFeedbackNotification";
 NSString *MVChatConnectionNeedNicknamePasswordNotification = @"MVChatConnectionNeedNicknamePasswordNotification";
+NSString *MVChatConnectionNeedServerPasswordNotification = @"MVChatConnectionNeedServerPasswordNotification";
 NSString *MVChatConnectionNeedCertificatePasswordNotification = @"MVChatConnectionNeedCertificatePasswordNotification";
 NSString *MVChatConnectionNeedPublicKeyVerificationNotification = @"MVChatConnectionNeedPublicKeyVerificationNotification";
 

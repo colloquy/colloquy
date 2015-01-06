@@ -1,5 +1,11 @@
 #import "CQAlertView.h"
 
+@interface CQAlertView ()
+@property (atomic, strong) UIAlertController *alertController;
+@property (atomic, strong) id me;
+
+@end
+
 @implementation CQAlertView
 - (instancetype) init {
 	if (!(self = [super init]))
@@ -61,11 +67,19 @@
 	[self _updateTextFieldsForDisplay];
 }
 
+- (UITextField *) textFieldAtIndex:(NSInteger) textFieldIndex {
+	if (![UIDevice currentDevice].isSystemEight)
+		return [super textFieldAtIndex:textFieldIndex];
+	return self.alertController.textFields[textFieldIndex];
+}
+
 - (void) show {
 	if (![UIDevice currentDevice].isSystemEight) {
 		[super show];
 		return;
 	}
+
+	self.me = self;
 
 	// The overlapping view is needed to work around the following iOS 8(.1-only?) bug on iPad:
 	// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
@@ -77,10 +91,10 @@
 
 	[[UIApplication sharedApplication].keyWindow addSubview:overlappingPresentationViewController.view];
 
-	_alertController = [UIAlertController alertControllerWithTitle:self.title message:self.message preferredStyle:UIAlertControllerStyleAlert];
+	self.alertController = [UIAlertController alertControllerWithTitle:self.title message:self.message preferredStyle:UIAlertControllerStyleAlert];
 
 	for (NSDictionary *textFieldInformation in _textFieldInformation) {
-		[_alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+		[self.alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
 			textField.text = textFieldInformation[@"text"];
 			textField.placeholder = textFieldInformation[@"placeholder"];
 			textField.secureTextEntry = !!textFieldInformation[@"secure"];
@@ -93,12 +107,13 @@
 		if (i == self.cancelButtonIndex) style = UIAlertActionStyleCancel;
 
 		__weak __typeof__((self)) weakSelf = self;
-		[_alertController addAction:[UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *action) {
+		[self.alertController addAction:[UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *action) {
 			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-			strongSelf->_alertController = nil;
-
 			[overlappingPresentationViewController.view removeFromSuperview];
-			[self.delegate alertView:self clickedButtonAtIndex:i];
+			[strongSelf.delegate alertView:strongSelf clickedButtonAtIndex:i];
+
+			strongSelf.alertController = nil;
+			strongSelf.me = nil;
 		}]];
 	}
 
@@ -108,5 +123,12 @@
 	_alertController.popoverPresentationController.sourceRect = rect;
 	_alertController.popoverPresentationController.sourceView = overlappingPresentationViewController.view;
 	[overlappingPresentationViewController presentViewController:_alertController animated:YES completion:nil];
+}
+
+- (void) dismissWithClickedButtonIndex:(NSInteger) buttonIndex animated:(BOOL) animated {
+	if (![UIDevice currentDevice].isSystemEight)
+		[super dismissWithClickedButtonIndex:buttonIndex animated:animated];
+	else [_alertController dismissViewControllerAnimated:YES completion:nil];
+	self.me = nil;
 }
 @end

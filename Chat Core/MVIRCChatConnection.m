@@ -907,7 +907,8 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	});
 
 	if( _status == MVChatConnectionConnectingStatus ) {
-		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
+		if( !_lastError )
+			[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
 	} else {
 		if( _lastError && !_userDisconnected )
 			_status = MVChatConnectionServerDisconnectedStatus;
@@ -929,6 +930,8 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 }
 
 - (void) socket:(GCDAsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
+	MVSafeRetainAssign( _lastError, nil );
+
 	//	if( [[self proxyServer] length] && [self proxyServerPort] ) {
 	//		if( _proxy == MVChatConnectionHTTPSProxy || _proxy == MVChatConnectionHTTPProxy ) {
 	//			NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
@@ -3163,6 +3166,11 @@ end:
 		NSString *targetName = parameters[0];
 		if( ! targetName.length ) return;
 
+		if( [targetName isCaseInsensitiveEqualToString:@"AUTH"] ) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedServerPasswordNotification object:self];
+			return;
+		}
+
 		[sender _setIdleTime:0.];
 		[self _markUserAsOnline:sender];
 
@@ -4636,6 +4644,10 @@ end:
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidIdentifyWithServicesNotification object:self userInfo:@{@"user": @"Ustream", @"target": [self nickname]}];
 		[[self localUser] _setIdentified:YES];
 	}
+}
+
+- (void) _handle464WithParameters:(NSArray *) parameters fromSender:(id) sender { // ZNC INVALID PASSWORD
+	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionServerPasswordIncorrectError userInfo:nil]];
 }
 
 - (void) _handle471WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_CHANNELISFULL

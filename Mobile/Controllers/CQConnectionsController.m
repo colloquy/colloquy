@@ -45,6 +45,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 #define NotIdentifiedWithServicesTag 6
 #define NoServerTag 7
 #define PeerTrustFeedbackTag 8
+#define ServerPasswordRequiredTag 9
 
 static NSString *const connectionInvalidSSLCertAction = nil;
 
@@ -80,6 +81,8 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batteryStateChanged) name:UIDeviceBatteryStateDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_peerTrustFeedbackNotification:) name:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_nicknamePasswordRequested:) name:MVChatConnectionNeedNicknamePasswordNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_serverPasswordRequested:) name:MVChatConnectionNeedServerPasswordNotification object:nil];
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotConnectionError:) name:MVChatConnectionGotErrorNotification object:nil];
 
 	if ([UIDevice currentDevice].multitaskingSupported) {
@@ -276,6 +279,30 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		if (roomPassword.length)
 			[connection joinChatRoomNamed:room withPassphrase:roomPassword];
 		else [connection joinChatRoomNamed:room];
+
+		return;
+	}
+
+	if (alertView.tag == ServerPasswordRequiredTag) {
+		UITextField *passwordField = [alertView textFieldAtIndex:1];
+		NSString *password = passwordField.text;
+		if (!password.length)
+			return;
+
+		NSNotification *notification = [alertView associatedObjectForKey:@"userInfo"];
+		MVChatConnection *connection = notification.object;
+		connection.password = password;
+
+		UITextField *usernameField = [alertView textFieldAtIndex:0];
+		NSString *usernameFromAlertView = usernameField.text;
+		NSString *usernameFromConnection = connection.username;
+
+		BOOL shouldSendUserInPass = usernameFromAlertView.length && usernameFromConnection.length && ![usernameFromConnection isEqualToString:usernameFromAlertView];
+		if (shouldSendUserInPass) {
+			connection.username = usernameFromAlertView;
+
+			[connection sendRawMessageImmediatelyWithFormat:@"PASS %@:%@", usernameFromAlertView, password];
+		} else [connection sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
 
 		return;
 	}
@@ -1073,6 +1100,45 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		[connection sendPushNotificationCommands]; 
 }
 
+- (void) _nicknamePasswordRequested:(NSNotification *) notification {
+	MVChatConnection *connection = notification.object;
+
+	CQAlertView *alertView = [[CQAlertView alloc] init];
+	alertView.tag = NotIdentifiedWithServicesTag;
+	alertView.delegate = self;
+	alertView.title = NSLocalizedString(@"Serivces Password", @"Serivces Password alert title");
+	alertView.message = connection.displayName;
+
+	alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+
+	[alertView associateObject:notification	forKey:@"userInfo"];
+	[alertView addButtonWithTitle:NSLocalizedString(@"Identify", @"Identify button title")];
+
+	[alertView addSecureTextFieldWithPlaceholder:NSLocalizedString(@"Password", @"Password placeholder")];
+
+	[alertView show];
+}
+
+- (void) _serverPasswordRequested:(NSNotification *) notification {
+	MVChatConnection *connection = notification.object;
+
+	CQAlertView *alertView = [[CQAlertView alloc] init];
+	alertView.tag = ServerPasswordRequiredTag;
+	alertView.delegate = self;
+	alertView.title = NSLocalizedString(@"Serivces Password", @"Serivces Password alert title");
+	alertView.message = connection.displayName;
+
+	alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+
+	[alertView associateObject:notification	forKey:@"userInfo"];
+	[alertView addButtonWithTitle:NSLocalizedString(@"Identify", @"Identify button title")];
+
+	[alertView addTextFieldWithPlaceholder:NSLocalizedString(@"Username", @"Username connection setting label") andText:connection.username];
+	[alertView addSecureTextFieldWithPlaceholder:NSLocalizedString(@"Password", @"Password placeholder")];
+
+	[alertView show];
+}
+
 - (void) _errorOccurred:(NSNotification *) notification {
 	NSError *error = notification.userInfo[@"error"];
 
@@ -1105,6 +1171,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 			break;
 		case MVChatConnectionTLSError:
 			errorTitle = NSLocalizedString(@"TLS Error", @"TLS Error");
+			break;
+		case MVChatConnectionServerPasswordIncorrectError:
+			errorTitle = NSLocalizedString(@"Server Password", @"Server Password alert title");
 	}
 
 	if (!errorTitle) return;
@@ -1176,6 +1245,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 			break;
 		case MVChatConnectionTLSError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Unable to securely connect to \"%@\".", @"Unable to connect to server over TLS message"), connection.displayName];
+			break;
+		case MVChatConnectionServerPasswordIncorrectError:
+			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Invalid password for \"%@\".", "Invalid password for server alert message"), connection.displayName];
 			break;
 	}
 

@@ -122,6 +122,7 @@ extern NSString *MVChatConnectionErrorNotification;
 
 extern NSString *MVChatConnectionNeedTLSPeerTrustFeedbackNotification; // used when connecting
 extern NSString *MVChatConnectionNeedNicknamePasswordNotification;
+extern NSString *MVChatConnectionNeedServerPasswordNotification;
 extern NSString *MVChatConnectionNeedCertificatePasswordNotification;
 extern NSString *MVChatConnectionNeedPublicKeyVerificationNotification;
 
