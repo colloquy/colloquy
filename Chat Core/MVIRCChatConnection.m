@@ -4647,7 +4647,7 @@ end:
 }
 
 - (void) _handle464WithParameters:(NSArray *) parameters fromSender:(id) sender { // ZNC INVALID PASSWORD
-	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionServerPasswordIncorrectError userInfo:nil]];
+//	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionServerPasswordIncorrectError userInfo:nil]];
 }
 
 - (void) _handle471WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_CHANNELISFULL

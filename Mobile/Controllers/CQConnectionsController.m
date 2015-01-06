@@ -304,6 +304,8 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 			[connection sendRawMessageImmediatelyWithFormat:@"PASS %@:%@", usernameFromAlertView, password];
 		} else [connection sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
 
+		[connection savePasswordsToKeychain];
+
 		return;
 	}
 
