@@ -338,14 +338,15 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 			//		Connect -> Evaluate Trust and get initial state -> Add Exception. Evaluate Trust and get .Proceed.
 			//		Reconnect -> Evaluate Trust and get the initial state again.)
 			// But, it doesn't hurt to try setting an exception, anyway.
-			SecTrustSetExceptions(trust, SecTrustCopyExceptions(trust));
+			SecTrustSetExceptions(trust, CFAutorelease(SecTrustCopyExceptions(trust)));
 
 			// • To work around this, copy the certificate data to the keychain (along with the current trust
 			// result. If it changes in the future, we will force a re-evaluation of trust on the next connection.
 			// • If we do not have any certificate data, we will force a re-evaluation of trust on the next connection.
 			CFIndex certificateCount = SecTrustGetCertificateCount(trust);
-			if (certificateCount == 0)
+			if (certificateCount == 0) {
 				return;
+			}
 
 			SecCertificateRef certificate = SecTrustGetCertificateAtIndex(trust, 0);
 			NSString *certificateSubject = (__bridge_transfer NSString *)SecCertificateCopySubjectSummary(certificate);
