@@ -428,17 +428,23 @@ static NSMenu *favoritesMenu = nil;
 		return;
 	}
 
-	// Ask people what to do
-	SFCertificateTrustPanel *panel = [SFCertificateTrustPanel sharedCertificateTrustPanel];
-	panel.showsHelp = YES;
+	// Ask people what to do, if its ever been turned on
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"MVAskOnInvalidCertificates"] || [[[MVKeyChain defaultKeyChain] genericPasswordForService:@"MVAskOnInvalidCertificates" account:@"MVSecurePrefs"] boolValue]) {
+		[[MVKeyChain defaultKeyChain] setGenericPassword:@"1" forService:@"MVAskOnInvalidCertificates" account:@"MVSecurePrefs"];
 
-	[panel setDefaultButtonTitle:NSLocalizedString(@"Continue", @"Continue button")];
-	[panel setAlternateButtonTitle:NSLocalizedString(@"Cancel", @"Cancel button")];
+		SFCertificateTrustPanel *panel = [SFCertificateTrustPanel sharedCertificateTrustPanel];
+		panel.showsHelp = YES;
 
-	SecTrustRef trust = (__bridge SecTrustRef)notification.userInfo[@"trust"];
-	NSInteger shouldTrust = [panel runModalForTrust:trust showGroup:YES];
+		[panel setDefaultButtonTitle:NSLocalizedString(@"Continue", @"Continue button")];
+		[panel setAlternateButtonTitle:NSLocalizedString(@"Cancel", @"Cancel button")];
 
-	completionHandler(shouldTrust == NSOKButton);
+		SecTrustRef trust = (__bridge SecTrustRef)notification.userInfo[@"trust"];
+		NSInteger shouldTrust = [panel runModalForTrust:trust showGroup:YES];
+
+		completionHandler(shouldTrust == NSOKButton);
+	} else {
+		completionHandler(YES);
+	}
 }
 
 - (IBAction) connectNewConnection:(id) sender {
