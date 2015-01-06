@@ -156,6 +156,9 @@ static id <CQChatViewController> chatControllerForIndexPath(NSIndexPath *indexPa
 		return nil;
 
 	MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:indexPath.section];
+	if (!connection)
+		return nil;
+
 	NSArray *chatViewControllersForConnection = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
 
 	if ((NSInteger)chatViewControllersForConnection.count > indexPath.row)
@@ -343,8 +346,11 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 #endif
 
 	// final sanity check
-	if (![cell respondsToSelector:@selector(takeValuesFromChatViewController:)])
+	if (![cell respondsToSelector:@selector(takeValuesFromChatViewController:)]) {
+		[NSObject cancelPreviousPerformRequestsWithTarget:self.tableView selector:@selector(reloadData) object:nil];
+		[self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.];
 		return;
+	}
 
 	[UIView animateWithDuration:(animated ? .3 : .0) animations:^{
 		[cell takeValuesFromChatViewController:chatViewController];
@@ -1074,8 +1080,11 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (self.editing)
+	if (self.editing) {
+		if (indexPath.section == 0)
+			return nil;
 		indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - 1)];
+	}
 
 	id <CQChatViewController> chatViewController = chatControllerForIndexPath(indexPath);
 #if ENABLE(FILE_TRANSFERS)
