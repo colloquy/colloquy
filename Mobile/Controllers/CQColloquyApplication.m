@@ -117,9 +117,6 @@ static NSMutableArray *highlightWords;
 	information = ([[CQSettingsController settingsController] boolForKey:@"CQDisableLandscape"] ? @"0" : @"1");
 	[analyticsController setObject:information forKey:@"landscape"];
 
-	information = ([[CQSettingsController settingsController] boolForKey:@"CQDisableBuiltInBrowser"] ? @"0" : @"1");
-	[analyticsController setObject:information forKey:@"browser"];
-
 	information = [[NSLocale autoupdatingCurrentLocale] localeIdentifier];
 	[analyticsController setObject:information forKey:@"locale"];
 
