@@ -342,6 +342,10 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		return;
 #endif
 
+	// final sanity check
+	if (![cell respondsToSelector:@selector(takeValuesFromChatViewController:)])
+		return;
+
 	[UIView animateWithDuration:(animated ? .3 : .0) animations:^{
 		[cell takeValuesFromChatViewController:chatViewController];
 

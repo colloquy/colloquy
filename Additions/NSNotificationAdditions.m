@@ -3,12 +3,16 @@
 
 @implementation NSNotificationCenter (NSNotificationCenterAdditions)
 + (NSNotificationCenter *) chatCenter {
+#if ENABLE(CHAT_CENTER)
 	static NSNotificationCenter *chatCenter = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		chatCenter = [[NSNotificationCenter alloc] init];
 	});
 	return chatCenter;
+#else
+	return [NSNotificationCenter defaultCenter];
+#endif
 }
 - (void) postNotificationOnMainThread:(NSNotification *) notification {
 	if( pthread_main_np() ) [self postNotification:notification];
