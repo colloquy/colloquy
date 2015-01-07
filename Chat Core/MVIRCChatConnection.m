@@ -289,10 +289,6 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 /** irc.umich.edu (efnet) uses this code to show a captcha to users without identd which we have to reply to automatically. */
 - (void) _handle998WithParameters:(NSArray *) parameters fromSender:(id) sender;
 
-#pragma mark - ZNC
-
-- (void) _persistRecentCommunicationsDates;
-
 @end
 
 
@@ -777,7 +773,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		MVSafeCopyAssign( _awayMessage, message );
 
 		NSData *msg = [[self class] _flattenedIRCDataForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
-		[self sendRawMessageImmediatelyWithComponents:@"AWAY :", msg, nil];
+		[self sendRawMessageImmediatelyWithComponents:@"AWAY :", [message string], nil];
 
 		[[self localUser] _setAwayStatusMessage:msg];
 		[[self localUser] _setStatus:MVChatUserAwayStatus];
@@ -851,6 +847,8 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	_failedNickname = nil;
 	_failedNicknameCount = 1;
 	_nicknameShortened = NO;
+
+	[self _persistRecentCommunicationsDates];
 
 	[super _didDisconnect];
 }
@@ -1301,7 +1299,7 @@ end:
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
 
-	NSString *stringWithPasswordsHidden = [string stringByReplacingOccurrencesOfRegex:@"(^PASS |^AUTHENTICATE (?!\\+$|PLAIN$)|IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:NSRegularExpressionCaseInsensitive range:NSMakeRange(0, string.length) error:NULL];
+	NSString *stringWithPasswordsHidden = [[[string copy] stringByReplacingOccurrencesOfRegex:@"(^PASS |^AUTHENTICATE (?!\\+$|PLAIN$)|IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:NSRegularExpressionCaseInsensitive range:NSMakeRange(0, string.length) error:NULL] copy];
 
 	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{ @"message": stringWithPasswordsHidden, @"messageData": data, @"outbound": @(YES) }];
 }
@@ -2322,7 +2320,7 @@ end:
 #pragma mark -
 
 - (void) _persistRecentCommunicationsDates {
-	[[self joinedChatRooms] makeObjectsPerformSelector:@selector(_persistLastCommunicationDate)];
+	[[self knownChatRooms] makeObjectsPerformSelector:@selector(_persistLastCommunicationDate)];
 }
 @end
 
@@ -3596,7 +3594,7 @@ end:
 			[room _clearBannedUsers];
 
 			if( [self.supportedFeatures containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] )
-				[self sendRawMessageWithFormat:@"/msg *playback PLAY %@ %tu", room.name, llrint([room.mostRecentCommunication timeIntervalSince1970])];
+				[self sendRawMessageWithFormat:@"PRIVMSG *playback PLAY %@ %tu", room.name, llrint([room.mostRecentCommunication timeIntervalSince1970])];
 		} else {
 			[sender _setIdleTime:0.];
 			[self _markUserAsOnline:sender];
@@ -3664,7 +3662,7 @@ end:
 		if( [sender isLocalUser] ) {
 			_userDisconnected = YES;
 			[[self _chatConnection] disconnect];
-			[[self joinedChatRooms] makeObjectsPerformSelector:@selector(_persistLastCommunicationDate)];
+			[self _persistRecentCommunicationsDates];
 			return;
 		}
 

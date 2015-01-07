@@ -66,14 +66,14 @@
 	NSParameterAssert( message != nil );
 	[[self connection] _sendMessage:message withEncoding:msgEncoding toTarget:self withTargetPrefix:nil withAttributes:attributes localEcho:NO];
 
-	_mostRecentCommunication = [NSDate date];
+	[self _persistLastCommunicationDate];
 }
 
 - (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments withEncoding:(NSStringEncoding) encoding {
 	NSParameterAssert( command != nil );
 	[[self connection] _sendCommand:command withArguments:arguments withEncoding:encoding toTarget:self];
 
-	_mostRecentCommunication = [NSDate date];
+	[self _persistLastCommunicationDate];
 }
 
 #pragma mark -
@@ -344,7 +344,9 @@
 
 @implementation MVIRCChatRoom (MVIRCChatRoomPrivate)
 - (void) _persistLastCommunicationDate {
-	if( [[[self connection] supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] ) {
+	_mostRecentCommunication = [NSDate date]; // this is only called on disconnect or app quit, so, save the current time
+
+	if ( [[[self connection] supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] ) {
 		NSString *recentCommunicationsDateKey = [NSString stringWithFormat:@"%@-%@", self.connection.uniqueIdentifier, self.uniqueIdentifier];
 		[[NSUserDefaults standardUserDefaults] setObject:_mostRecentCommunication forKey:recentCommunicationsDateKey];
 	}
