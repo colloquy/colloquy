@@ -1142,7 +1142,7 @@ static BOOL showingKeyboard;
 }
 
 - (BOOL) handleMusicCommandWithArguments:(MVChatString *) arguments {
-	MPMusicPlayerController *musicController = [MPMusicPlayerController iPodMusicPlayer];
+	MPMusicPlayerController *musicController = [MPMusicPlayerController systemMusicPlayer];
 	MPMediaItem *nowPlayingItem = musicController.nowPlayingItem;
 
 	NSString *argumentsString = arguments.string;
