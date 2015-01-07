@@ -137,20 +137,6 @@ static unsigned long userStatus(MVChatUser *user, MVChatRoom *room) {
 	}
 
 	return matchedUsers.count;
-
-	NSUInteger matchesIndex = [self.matchedUsers indexOfObject:user inSortedRange:NSMakeRange(0, self.matchedUsers.count - 1) options:NSBinarySearchingInsertionIndex usingComparator:^NSComparisonResult(id one, id two) {
-		unsigned long user1Status = userStatus(one, _room);
-		unsigned long user2Status = userStatus(two, _room);
-
-		if (user1Status > user2Status)
-			return NSOrderedAscending;
-		if (user1Status < user2Status)
-			return NSOrderedDescending;
-
-		return [[one displayName] caseInsensitiveCompare:[two displayName]];
-	}];
-
-	return matchesIndex;
 }
 
 - (NSUInteger) _indexForRemovedMatchUser:(MVChatUser *) user {

@@ -276,7 +276,6 @@ static unsigned int numProcessors;
         tag:(id)tag
      format:(NSString *)format, ...
 {
-	return;
 	va_list args;
 	if (format)
 	{
