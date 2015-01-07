@@ -3594,7 +3594,7 @@ end:
 			[room _clearBannedUsers];
 
 			if( [self.supportedFeatures containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] )
-				[self sendRawMessageWithFormat:@"PRIVMSG *playback PLAY %@ %tu", room.name, llrint([room.mostRecentCommunication timeIntervalSince1970])];
+				[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %tu", room.name, llrint([room.mostRecentCommunication timeIntervalSince1970])];
 		} else {
 			[sender _setIdleTime:0.];
 			[self _markUserAsOnline:sender];
