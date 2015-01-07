@@ -242,7 +242,6 @@ static BOOL showingKeyboard;
 	}
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(scrollbackLengthDidChange:) name:CQScrollbackLengthDidChangeNotification object:nil];
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_batchUpdatesWillBegin:) name:MVChatConnectionBatchUpdatesWillBeginNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_batchUpdatesDidEnd:) name:MVChatConnectionBatchUpdatesDidEndNotification object:nil];
@@ -2122,7 +2121,7 @@ static BOOL showingKeyboard;
 - (void) _awayStatusChanged:(NSNotification *) notification {
 	if (self.connection.awayStatusMessage.length) {
 		NSString *eventMessageFormat = [NSLocalizedString(@"You have set yourself as away with the message \"%@\".", "Marked as away event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, self.connection.awayStatusMessage] withIdentifier:@"awaySet"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, self.connection.awayStatusMessage.string] withIdentifier:@"awaySet"];
 	} else {
 		[self addEventMessage:NSLocalizedString(@"You have returned from being away.", "Returned from being away event message") withIdentifier:@"awayRemoved"];
 	}
