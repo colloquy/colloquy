@@ -381,7 +381,7 @@
 
 - (void) requestRecentActivity {
 	if( [[[self connection] supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] )
-		[[self connection] sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %tu", self.name, llrint([self.mostRecentUserActivity timeIntervalSince1970])];
+		[[self connection] sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %.3f", self.name, [self.mostRecentUserActivity timeIntervalSince1970]];
 }
 
 - (void) persistLastActivityDate {
