@@ -64,7 +64,6 @@
 		1C2391C30677E8F2000E89A7 /* aquaTabCloseRollover.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C2391BB0677E8F1000E89A7 /* aquaTabCloseRollover.png */; };
 		1C23927306795020000E89A7 /* aquaTabCloseBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C23927206795020000E89A7 /* aquaTabCloseBack.png */; };
 		1C2462A505F9205900505752 /* JVStyleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2462A305F9205900505752 /* JVStyleView.m */; };
-		1C2E98C406207AD0000715D8 /* half-op.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C2E98C306207AD0000715D8 /* half-op.png */; };
 		1C386FAA1032471F00660864 /* TCMPortMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C386FA91032471F00660864 /* TCMPortMapper.framework */; };
 		1C386FB61032474D00660864 /* TCMPortMapper.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C386FA91032471F00660864 /* TCMPortMapper.framework */; };
 		1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C397368082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib */; };
@@ -91,7 +90,6 @@
 		1C6E43C40955EFD7002D22E7 /* serverWindow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6E43C30955EFD7002D22E7 /* serverWindow.png */; };
 		1C6EA23E05A735D6006A559F /* JVChatRoomBrowser.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C6EA23C05A735D6006A559F /* JVChatRoomBrowser.nib */; };
 		1C6EA24405A738DD006A559F /* JVChatRoomBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6EA24205A738DD006A559F /* JVChatRoomBrowser.m */; };
-		1C6EA66205A76038006A559F /* personHeader.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6EA66105A76038006A559F /* personHeader.png */; };
 		1C70377F07E49F25005CEA40 /* JVSmartTranscriptPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C70377D07E49F25005CEA40 /* JVSmartTranscriptPanel.m */; };
 		1C703EF507E4B956005CEA40 /* JVSmartTranscriptFilterSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C703EF307E4B956005CEA40 /* JVSmartTranscriptFilterSheet.nib */; };
 		1C710A0209F23730007B4515 /* JVSidebarChatWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C710A0009F23730007B4515 /* JVSidebarChatWindowController.m */; };
@@ -111,7 +109,6 @@
 		1C77822908FA4104006AD8E5 /* topicBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77822808FA4101006AD8E5 /* topicBackground.png */; };
 		1C77831208FA4EA2006AD8E5 /* topicToggleDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */; };
 		1C77831308FA4EA2006AD8E5 /* topicToggleUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */; };
-		1C7EF54006B341890037F173 /* roomTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF53D06B341890037F173 /* roomTab.png */; };
 		1C7EF54106B341890037F173 /* roomTabNewHighlightMessage.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF53E06B341890037F173 /* roomTabNewHighlightMessage.png */; };
 		1C7EF54206B341890037F173 /* roomTabNewMessage.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF53F06B341890037F173 /* roomTabNewMessage.png */; };
 		1C7EF5C206B346E50037F173 /* privateChatTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF5C006B346E50037F173 /* privateChatTab.png */; };
@@ -140,9 +137,6 @@
 		1CABF8780656414100801C15 /* NSBundleAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CABF8760656414100801C15 /* NSBundleAdditions.m */; };
 		1CABFCB20657F10900801C15 /* JVSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CABFCB00657F10900801C15 /* JVSplitView.m */; };
 		1CABFD0F0658629200801C15 /* JVStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CABFD0D0658629200801C15 /* JVStyle.m */; };
-		1CB2CD11052DDC560094AAA4 /* op.png in Resources */ = {isa = PBXBuildFile; fileRef = F54499A0018E46CB01EE70DE /* op.png */; };
-		1CB2CD12052DDC560094AAA4 /* person.png in Resources */ = {isa = PBXBuildFile; fileRef = F544999E018E46CB01EE70DE /* person.png */; };
-		1CB2CD13052DDC560094AAA4 /* voice.png in Resources */ = {isa = PBXBuildFile; fileRef = F544999F018E46CB01EE70DE /* voice.png */; };
 		1CB2CD17052DDC560094AAA4 /* encoding.png in Resources */ = {isa = PBXBuildFile; fileRef = F5D04C03019489B801A35792 /* encoding.png */; };
 		1CB2CD18052DDC560094AAA4 /* info.colloquy.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5BC17DD019655DC01A35792 /* info.colloquy.plist */; };
 		1CB2CD19052DDC560094AAA4 /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = F5BC17DF019656E901A35792 /* info.png */; };
@@ -156,7 +150,6 @@
 		1CB2CD21052DDC560094AAA4 /* reveal.png in Resources */ = {isa = PBXBuildFile; fileRef = F56539F601C5B6C301A35792 /* reveal.png */; };
 		1CB2CD22052DDC560094AAA4 /* stopped.png in Resources */ = {isa = PBXBuildFile; fileRef = F5765F9501C6669D01A35792 /* stopped.png */; };
 		1CB2CD24052DDC560094AAA4 /* verbs.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5675B8601DB767601EE70DE /* verbs.plist */; };
-		1CB2CD28052DDC560094AAA4 /* admin.png in Resources */ = {isa = PBXBuildFile; fileRef = F5BEC20D01F1EF1901EE70DE /* admin.png */; };
 		1CB2CD2A052DDC560094AAA4 /* Colloquy.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5394BEB0378E23701A35792 /* Colloquy.nib */; };
 		1CB2CD2B052DDC560094AAA4 /* MVCrashCatcher.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5394BEF0378E23701A35792 /* MVCrashCatcher.nib */; };
 		1CB2CD2C052DDC560094AAA4 /* MVSoftwareUpdate.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5394BF10378E23701A35792 /* MVSoftwareUpdate.nib */; };
@@ -174,18 +167,14 @@
 		1CB2CD3A052DDC560094AAA4 /* autoHeader.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E253710387690301000102 /* autoHeader.png */; };
 		1CB2CD3B052DDC560094AAA4 /* connect.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E2537C038809A201000102 /* connect.png */; };
 		1CB2CD3C052DDC560094AAA4 /* disconnect.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E2537D038809A201000102 /* disconnect.png */; };
-		1CB2CD3D052DDC560094AAA4 /* console.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E253800388194701000102 /* console.png */; };
 		1CB2CD3F052DDC560094AAA4 /* joinRoom.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E06408038D6DEB01000102 /* joinRoom.png */; };
-		1CB2CD40052DDC560094AAA4 /* messageUser.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E0640A038D703901000102 /* messageUser.png */; };
 		1CB2CD43052DDC560094AAA4 /* addWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = F5C3D42303973E7B01000102 /* addWidget.png */; };
 		1CB2CD44052DDC560094AAA4 /* addWidgetSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = F5C3D42403973E7B01000102 /* addWidgetSelected.png */; };
 		1CB2CD45052DDC560094AAA4 /* removeWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = F5C3D42503973E7B01000102 /* removeWidget.png */; };
 		1CB2CD46052DDC560094AAA4 /* removeWidgetSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = F5C3D42603973E7B01000102 /* removeWidgetSelected.png */; };
-		1CB2CD47052DDC560094AAA4 /* largePerson.png in Resources */ = {isa = PBXBuildFile; fileRef = F5C3D46A0398B5B401000102 /* largePerson.png */; };
 		1CB2CD4A052DDC560094AAA4 /* actionWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBB23CD04EFE233000001C8 /* actionWidget.png */; };
 		1CB2CD4B052DDC560094AAA4 /* actionWidgetPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBB23CE04EFE233000001C8 /* actionWidgetPressed.png */; };
 		1CB2CD4E052DDC560094AAA4 /* viewAlert.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBB23D504EFE24C000001C8 /* viewAlert.png */; };
-		1CB2CD4F052DDC560094AAA4 /* room.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF9BB9A04FBE96D00A8FE6E /* room.png */; };
 		1CB2CD50052DDC560094AAA4 /* template.html in Resources */ = {isa = PBXBuildFile; fileRef = 1C3C116005029DE1000001C8 /* template.html */; };
 		1CB2CD52052DDC560094AAA4 /* Generic.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1C5959010507803F000001C8 /* Generic.icns */; };
 		1CB2CD53052DDC560094AAA4 /* showdrawer.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBECD660508C61B000001C8 /* showdrawer.png */; };
@@ -232,8 +221,6 @@
 		1CBC630C05489484009E59E1 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */; };
 		1CBC63190548975E009E59E1 /* GeneralPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBC63180548975E009E59E1 /* GeneralPreferences.png */; };
 		1CBC634905489BEE009E59E1 /* JVGeneralPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CBC634705489BEE009E59E1 /* JVGeneralPreferences.nib */; };
-		1CC1B76F0A2D70DF0000A797 /* super-op.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC1B76D0A2D70DF0000A797 /* super-op.png */; };
-		1CC1B77D0A2D70FB0000A797 /* founder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC1B77B0A2D70FB0000A797 /* founder.png */; };
 		1CC5650708F0CFEE00B8E333 /* Colloquy.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */; };
 		1CC6FC530549FCD80075807C /* JVAppearancePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */; };
 		1CC6FC570549FDD70075807C /* JVBehaviorPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FC550549FDD70075807C /* JVBehaviorPreferences.m */; };
@@ -312,6 +299,17 @@
 		928FB03613EE64C700A0DF4B /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 928FB03513EE64C700A0DF4B /* libicucore.dylib */; };
 		9295C85D1675E227009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
 		92A711951A4A5166009E80F0 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A711941A4A5166009E80F0 /* SecurityInterface.framework */; };
+		92C70D091A5E87CF00080E45 /* room.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D081A5E87CF00080E45 /* room.pdf */; };
+		92C70D121A5E88CE00080E45 /* half-op.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D0A1A5E88CE00080E45 /* half-op.pdf */; };
+		92C70D131A5E88CE00080E45 /* person.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D0B1A5E88CE00080E45 /* person.pdf */; };
+		92C70D141A5E88CE00080E45 /* admin.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D0C1A5E88CE00080E45 /* admin.pdf */; };
+		92C70D151A5E88CE00080E45 /* op.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D0D1A5E88CE00080E45 /* op.pdf */; };
+		92C70D161A5E88CE00080E45 /* room.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D0E1A5E88CE00080E45 /* room.pdf */; };
+		92C70D171A5E88CE00080E45 /* founder.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D0F1A5E88CE00080E45 /* founder.pdf */; };
+		92C70D181A5E88CE00080E45 /* voice.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D101A5E88CE00080E45 /* voice.pdf */; };
+		92C70D191A5E88CE00080E45 /* super-op.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D111A5E88CE00080E45 /* super-op.pdf */; };
+		92C70D1B1A5E898100080E45 /* console.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D1A1A5E898100080E45 /* console.pdf */; };
+		92C70D1D1A5E89A000080E45 /* messageUser.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D1C1A5E89A000080E45 /* messageUser.pdf */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
 		CBF6855D08201B7300F498FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CBF6852D0820190D00F498FB /* InfoPlist.strings */; };
@@ -552,7 +550,6 @@
 		1C2462A205F9205900505752 /* JVStyleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVStyleView.h; path = Views/JVStyleView.h; sourceTree = "<group>"; };
 		1C2462A305F9205900505752 /* JVStyleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVStyleView.m; path = Views/JVStyleView.m; sourceTree = "<group>"; };
 		1C258E55050B9656000001C8 /* Emoticons */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = Emoticons; path = Resources/Emoticons; sourceTree = SOURCE_ROOT; };
-		1C2E98C306207AD0000715D8 /* half-op.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "half-op.png"; path = "Resources/half-op.png"; sourceTree = "<group>"; };
 		1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatPluginManager.h; path = "Chat Core/MVChatPluginManager.h"; sourceTree = "<group>"; };
 		1C386FA91032471F00660864 /* TCMPortMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TCMPortMapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C3972DB082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatTranscriptBrowserPanel.h; path = Panels/JVChatTranscriptBrowserPanel.h; sourceTree = "<group>"; };
@@ -608,7 +605,6 @@
 		1C6EA23D05A735D6006A559F /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVChatRoomBrowser.nib; sourceTree = "<group>"; };
 		1C6EA24105A738DD006A559F /* JVChatRoomBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatRoomBrowser.h; path = Controllers/JVChatRoomBrowser.h; sourceTree = "<group>"; };
 		1C6EA24205A738DD006A559F /* JVChatRoomBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatRoomBrowser.m; path = Controllers/JVChatRoomBrowser.m; sourceTree = "<group>"; };
-		1C6EA66105A76038006A559F /* personHeader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = personHeader.png; path = Resources/personHeader.png; sourceTree = "<group>"; };
 		1C70377C07E49F25005CEA40 /* JVSmartTranscriptPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVSmartTranscriptPanel.h; path = Panels/JVSmartTranscriptPanel.h; sourceTree = "<group>"; };
 		1C70377D07E49F25005CEA40 /* JVSmartTranscriptPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVSmartTranscriptPanel.m; path = Panels/JVSmartTranscriptPanel.m; sourceTree = "<group>"; };
 		1C703EF407E4B956005CEA40 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
@@ -643,7 +639,6 @@
 		1C7C76E807DBA1C100FB5F83 /* NSTextSuite.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = NSTextSuite.scriptTerminology; path = Resources/NSTextSuite.scriptTerminology; sourceTree = "<group>"; };
 		1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; name = ColloquyScripting.r; path = Resources/ColloquyScripting.r; sourceTree = "<group>"; };
 		1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; name = Colloquy.r; path = Resources/Colloquy.r; sourceTree = "<group>"; };
-		1C7EF53D06B341890037F173 /* roomTab.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = roomTab.png; path = Resources/roomTab.png; sourceTree = "<group>"; };
 		1C7EF53E06B341890037F173 /* roomTabNewHighlightMessage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = roomTabNewHighlightMessage.png; path = Resources/roomTabNewHighlightMessage.png; sourceTree = "<group>"; };
 		1C7EF53F06B341890037F173 /* roomTabNewMessage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = roomTabNewMessage.png; path = Resources/roomTabNewMessage.png; sourceTree = "<group>"; };
 		1C7EF5C006B346E50037F173 /* privateChatTab.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = privateChatTab.png; path = Resources/privateChatTab.png; sourceTree = "<group>"; };
@@ -757,8 +752,6 @@
 		1CBECE390508D58F000001C8 /* JVChatWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVChatWindow.nib; path = Resources/JVChatWindow.nib; sourceTree = SOURCE_ROOT; };
 		1CBECE3A0508D58F000001C8 /* JVDirectChat.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVDirectChat.nib; path = Resources/JVDirectChat.nib; sourceTree = SOURCE_ROOT; };
 		1CBECE5D050A8D21000001C8 /* chooseStyle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = chooseStyle.png; path = "Resources/Toolbar Icons/chooseStyle.png"; sourceTree = SOURCE_ROOT; };
-		1CC1B76D0A2D70DF0000A797 /* super-op.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "super-op.png"; path = "Resources/super-op.png"; sourceTree = "<group>"; };
-		1CC1B77B0A2D70FB0000A797 /* founder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = founder.png; path = Resources/founder.png; sourceTree = "<group>"; };
 		1CC6FC500549FCD70075807C /* JVAppearancePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVAppearancePreferences.h; path = Preferences/JVAppearancePreferences.h; sourceTree = "<group>"; };
 		1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVAppearancePreferences.m; path = Preferences/JVAppearancePreferences.m; sourceTree = "<group>"; };
 		1CC6FC540549FDD70075807C /* JVBehaviorPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVBehaviorPreferences.h; path = Preferences/JVBehaviorPreferences.h; sourceTree = "<group>"; };
@@ -869,7 +862,6 @@
 		1CF79CBD07AC77E600696918 /* JVChatTranscript.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatTranscript.m; path = Models/JVChatTranscript.m; sourceTree = "<group>"; };
 		1CF8030C070C893500C9B54C /* libsilc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilc.framework; path = Frameworks/libsilc.framework; sourceTree = SOURCE_ROOT; };
 		1CF8030D070C893500C9B54C /* libsilcclient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilcclient.framework; path = Frameworks/libsilcclient.framework; sourceTree = SOURCE_ROOT; };
-		1CF9BB9A04FBE96D00A8FE6E /* room.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = room.png; path = Resources/room.png; sourceTree = SOURCE_ROOT; };
 		891E8465123F0AEF00EC3C0F /* NSCharacterSetAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSCharacterSetAdditions.h; path = Additions/NSCharacterSetAdditions.h; sourceTree = "<group>"; };
 		891E8466123F0AEF00EC3C0F /* NSCharacterSetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSCharacterSetAdditions.m; path = Additions/NSCharacterSetAdditions.m; sourceTree = "<group>"; };
 		891EF3D0106426CB00CCEA35 /* PFMoveApplicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFMoveApplicationController.m; path = Controllers/PFMoveApplicationController.m; sourceTree = "<group>"; };
@@ -898,6 +890,17 @@
 		928FB03513EE64C700A0DF4B /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		9295C84E1675E10A009F9014 /* Colloquy.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = Colloquy.exp; sourceTree = "<group>"; };
 		92A711941A4A5166009E80F0 /* SecurityInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityInterface.framework; path = System/Library/Frameworks/SecurityInterface.framework; sourceTree = SDKROOT; };
+		92C70D081A5E87CF00080E45 /* room.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = room.pdf; path = Resources/room.pdf; sourceTree = "<group>"; };
+		92C70D0A1A5E88CE00080E45 /* half-op.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = "half-op.pdf"; path = "Resources/half-op.pdf"; sourceTree = "<group>"; };
+		92C70D0B1A5E88CE00080E45 /* person.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = person.pdf; path = Resources/person.pdf; sourceTree = "<group>"; };
+		92C70D0C1A5E88CE00080E45 /* admin.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = admin.pdf; path = Resources/admin.pdf; sourceTree = "<group>"; };
+		92C70D0D1A5E88CE00080E45 /* op.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = op.pdf; path = Resources/op.pdf; sourceTree = "<group>"; };
+		92C70D0E1A5E88CE00080E45 /* room.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = room.pdf; path = Resources/room.pdf; sourceTree = "<group>"; };
+		92C70D0F1A5E88CE00080E45 /* founder.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = founder.pdf; path = Resources/founder.pdf; sourceTree = "<group>"; };
+		92C70D101A5E88CE00080E45 /* voice.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = voice.pdf; path = Resources/voice.pdf; sourceTree = "<group>"; };
+		92C70D111A5E88CE00080E45 /* super-op.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = "super-op.pdf"; path = "Resources/super-op.pdf"; sourceTree = "<group>"; };
+		92C70D1A1A5E898100080E45 /* console.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = console.pdf; path = "Resources/Toolbar Icons/console.pdf"; sourceTree = "<group>"; };
+		92C70D1C1A5E89A000080E45 /* messageUser.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = messageUser.pdf; path = "Resources/Toolbar Icons/messageUser.pdf"; sourceTree = "<group>"; };
 		A1429C720901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Languages/Italian.lproj/Colloquy.nib; sourceTree = "<group>"; };
 		A1429C730901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Languages/Italian.lproj/JVAppearancePreferences.nib; sourceTree = "<group>"; };
 		A1429C740901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Languages/Italian.lproj/JVBehaviorPreferences.nib; sourceTree = "<group>"; };
@@ -1057,9 +1060,6 @@
 		F5394BF00378E23701A35792 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/MVCrashCatcher.nib; sourceTree = "<group>"; };
 		F5394BF20378E23701A35792 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/MVSoftwareUpdate.nib; sourceTree = "<group>"; };
 		F5394C0C0378E44D01A35792 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = Languages/English.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F544999E018E46CB01EE70DE /* person.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = person.png; path = Resources/person.png; sourceTree = "<group>"; };
-		F544999F018E46CB01EE70DE /* voice.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = voice.png; path = Resources/voice.png; sourceTree = "<group>"; };
-		F54499A0018E46CB01EE70DE /* op.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = op.png; path = Resources/op.png; sourceTree = "<group>"; };
 		F551EE490209FB3301EE70DE /* MVKeyChain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVKeyChain.m; path = Models/MVKeyChain.m; sourceTree = "<group>"; };
 		F551EE4A0209FB3301EE70DE /* MVKeyChain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVKeyChain.h; path = Models/MVKeyChain.h; sourceTree = "<group>"; };
 		F555208701F0DC2B01EE70DE /* MVCrashCatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVCrashCatcher.m; path = Controllers/MVCrashCatcher.m; sourceTree = "<group>"; };
@@ -1076,19 +1076,16 @@
 		F599994A01890E4601EE70DE /* MVTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVTextView.h; path = Views/MVTextView.h; sourceTree = "<group>"; };
 		F5BC17DD019655DC01A35792 /* info.colloquy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = info.colloquy.plist; path = Resources/info.colloquy.plist; sourceTree = "<group>"; };
 		F5BC17DF019656E901A35792 /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = info.png; path = Resources/info.png; sourceTree = "<group>"; };
-		F5BEC20D01F1EF1901EE70DE /* admin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = admin.png; path = Resources/admin.png; sourceTree = "<group>"; };
 		F5C3D42303973E7B01000102 /* addWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addWidget.png; sourceTree = "<group>"; };
 		F5C3D42403973E7B01000102 /* addWidgetSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addWidgetSelected.png; sourceTree = "<group>"; };
 		F5C3D42503973E7B01000102 /* removeWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = removeWidget.png; sourceTree = "<group>"; };
 		F5C3D42603973E7B01000102 /* removeWidgetSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = removeWidgetSelected.png; sourceTree = "<group>"; };
-		F5C3D46A0398B5B401000102 /* largePerson.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = largePerson.png; path = Resources/largePerson.png; sourceTree = SOURCE_ROOT; };
 		F5C497740385713801000102 /* MVConnectionsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVConnectionsController.h; path = Controllers/MVConnectionsController.h; sourceTree = "<group>"; };
 		F5C497750385713801000102 /* MVConnectionsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVConnectionsController.m; path = Controllers/MVConnectionsController.m; sourceTree = "<group>"; };
 		F5C4977C0385785401000102 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/MVConnections.nib; sourceTree = "<group>"; };
 		F5D04C03019489B801A35792 /* encoding.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = encoding.png; path = "Resources/Toolbar Icons/encoding.png"; sourceTree = "<group>"; };
 		F5DD34730382E5E501000102 /* Colloquy.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Colloquy.icns; path = Resources/Colloquy.icns; sourceTree = SOURCE_ROOT; };
 		F5E06408038D6DEB01000102 /* joinRoom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = joinRoom.png; path = "Resources/Toolbar Icons/joinRoom.png"; sourceTree = SOURCE_ROOT; };
-		F5E0640A038D703901000102 /* messageUser.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = messageUser.png; path = "Resources/Toolbar Icons/messageUser.png"; sourceTree = SOURCE_ROOT; };
 		F5E2536603874B5601000102 /* statusHeader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = statusHeader.png; path = Resources/statusHeader.png; sourceTree = "<group>"; };
 		F5E253690387618E01000102 /* connected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = connected.png; path = Resources/connected.png; sourceTree = SOURCE_ROOT; };
 		F5E2536A0387618E01000102 /* connectedSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = connectedSelected.png; path = Resources/connectedSelected.png; sourceTree = SOURCE_ROOT; };
@@ -1097,7 +1094,6 @@
 		F5E253710387690301000102 /* autoHeader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = autoHeader.png; path = Resources/autoHeader.png; sourceTree = SOURCE_ROOT; };
 		F5E2537C038809A201000102 /* connect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = connect.png; path = "Resources/Toolbar Icons/connect.png"; sourceTree = SOURCE_ROOT; };
 		F5E2537D038809A201000102 /* disconnect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = disconnect.png; path = "Resources/Toolbar Icons/disconnect.png"; sourceTree = SOURCE_ROOT; };
-		F5E253800388194701000102 /* console.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = console.png; path = "Resources/Toolbar Icons/console.png"; sourceTree = SOURCE_ROOT; };
 		F5E2538403882A8501000102 /* MVColorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVColorPanel.h; path = Views/MVColorPanel.h; sourceTree = "<group>"; };
 		F5E2538503882A8501000102 /* MVColorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVColorPanel.m; path = Views/MVColorPanel.m; sourceTree = "<group>"; };
 		F5E98623018B412B01EE70DE /* NSAttributedStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSAttributedStringAdditions.h; path = Additions/NSAttributedStringAdditions.h; sourceTree = "<group>"; };
@@ -1284,7 +1280,6 @@
 				1C23927206795020000E89A7 /* aquaTabCloseBack.png */,
 				1C2391BA0677E8F1000E89A7 /* aquaTabClosePressed.png */,
 				1C2391BB0677E8F1000E89A7 /* aquaTabCloseRollover.png */,
-				1C7EF53D06B341890037F173 /* roomTab.png */,
 				1C7EF53E06B341890037F173 /* roomTabNewHighlightMessage.png */,
 				1C7EF53F06B341890037F173 /* roomTabNewMessage.png */,
 				1C7EF5C006B346E50037F173 /* privateChatTab.png */,
@@ -1786,6 +1781,7 @@
 		F52955590181EB5901EE70DE /* Misc. Icons */ = {
 			isa = PBXGroup;
 			children = (
+				92C70D081A5E87CF00080E45 /* room.pdf */,
 				1C9982AC0604BA1F006C6417 /* sound.png */,
 				1CA7CA6305FEC88500887614 /* activity.png */,
 				1CA7CA6405FEC88500887614 /* activityNew.png */,
@@ -1795,15 +1791,12 @@
 				CB66DEA10631F8160034F76E /* Stickies.png */,
 				1C6075E005138ED600A8FE6E /* colloquy-alpha.png */,
 				1CF4D38807E54C0C00DB421A /* smartTranscript.png */,
-				1CF9BB9A04FBE96D00A8FE6E /* room.png */,
 				1C705701051A830200A8FE6E /* newMessage.png */,
 				1CA95D28051B413E00A8FE10 /* newHighlightMessage.png */,
 				1CBB23D504EFE24C000001C8 /* viewAlert.png */,
 				1CBB23D604EFE24C000001C8 /* viewAlertSelected.png */,
-				1C6EA66105A76038006A559F /* personHeader.png */,
 				F5E253710387690301000102 /* autoHeader.png */,
 				F5E2536603874B5601000102 /* statusHeader.png */,
-				F5C3D46A0398B5B401000102 /* largePerson.png */,
 				F5E2536D0387657C01000102 /* connecting.png */,
 				F5E2536E0387657C01000102 /* connectingSelected.png */,
 				F5E253690387618E01000102 /* connected.png */,
@@ -1855,13 +1848,14 @@
 		F544999D018E46A501EE70DE /* Room Member Icons */ = {
 			isa = PBXGroup;
 			children = (
-				F5BEC20D01F1EF1901EE70DE /* admin.png */,
-				1CC1B76D0A2D70DF0000A797 /* super-op.png */,
-				1CC1B77B0A2D70FB0000A797 /* founder.png */,
-				F544999E018E46CB01EE70DE /* person.png */,
-				F544999F018E46CB01EE70DE /* voice.png */,
-				F54499A0018E46CB01EE70DE /* op.png */,
-				1C2E98C306207AD0000715D8 /* half-op.png */,
+				92C70D0A1A5E88CE00080E45 /* half-op.pdf */,
+				92C70D0B1A5E88CE00080E45 /* person.pdf */,
+				92C70D0C1A5E88CE00080E45 /* admin.pdf */,
+				92C70D0D1A5E88CE00080E45 /* op.pdf */,
+				92C70D0E1A5E88CE00080E45 /* room.pdf */,
+				92C70D0F1A5E88CE00080E45 /* founder.pdf */,
+				92C70D101A5E88CE00080E45 /* voice.pdf */,
+				92C70D111A5E88CE00080E45 /* super-op.pdf */,
 			);
 			name = "Room Member Icons";
 			sourceTree = "<group>";
@@ -1903,10 +1897,10 @@
 			children = (
 				1C05F4550828727D006FCB72 /* markDisplay.png */,
 				1CBECE5D050A8D21000001C8 /* chooseStyle.png */,
-				F5E0640A038D703901000102 /* messageUser.png */,
+				92C70D1C1A5E89A000080E45 /* messageUser.pdf */,
 				F5E06408038D6DEB01000102 /* joinRoom.png */,
-				F5E253800388194701000102 /* console.png */,
 				F5E2537C038809A201000102 /* connect.png */,
+				92C70D1A1A5E898100080E45 /* console.pdf */,
 				F5E2537D038809A201000102 /* disconnect.png */,
 				F5BC17DF019656E901A35792 /* info.png */,
 				1CE95885063F3BF90071C9C3 /* inspector.png */,
@@ -2122,9 +2116,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C1AFE8E09C3D92E00BF3E2A /* roomTopicBanner.js in Resources */,
-				1CB2CD11052DDC560094AAA4 /* op.png in Resources */,
-				1CB2CD12052DDC560094AAA4 /* person.png in Resources */,
-				1CB2CD13052DDC560094AAA4 /* voice.png in Resources */,
 				1CB2CD17052DDC560094AAA4 /* encoding.png in Resources */,
 				1CB2CD18052DDC560094AAA4 /* info.colloquy.plist in Resources */,
 				1CB2CD19052DDC560094AAA4 /* info.png in Resources */,
@@ -2136,9 +2127,9 @@
 				1CB2CD1F052DDC560094AAA4 /* stop.png in Resources */,
 				1CB2CD20052DDC560094AAA4 /* clear.png in Resources */,
 				1CB2CD21052DDC560094AAA4 /* reveal.png in Resources */,
+				92C70D171A5E88CE00080E45 /* founder.pdf in Resources */,
 				1CB2CD22052DDC560094AAA4 /* stopped.png in Resources */,
 				1CB2CD24052DDC560094AAA4 /* verbs.plist in Resources */,
-				1CB2CD28052DDC560094AAA4 /* admin.png in Resources */,
 				1CB2CD2A052DDC560094AAA4 /* Colloquy.nib in Resources */,
 				1CB2CD2B052DDC560094AAA4 /* MVCrashCatcher.nib in Resources */,
 				1CB2CD2C052DDC560094AAA4 /* MVSoftwareUpdate.nib in Resources */,
@@ -2156,18 +2147,15 @@
 				1CB2CD3A052DDC560094AAA4 /* autoHeader.png in Resources */,
 				1CB2CD3B052DDC560094AAA4 /* connect.png in Resources */,
 				1CB2CD3C052DDC560094AAA4 /* disconnect.png in Resources */,
-				1CB2CD3D052DDC560094AAA4 /* console.png in Resources */,
 				1CB2CD3F052DDC560094AAA4 /* joinRoom.png in Resources */,
-				1CB2CD40052DDC560094AAA4 /* messageUser.png in Resources */,
 				1CB2CD43052DDC560094AAA4 /* addWidget.png in Resources */,
 				1CB2CD44052DDC560094AAA4 /* addWidgetSelected.png in Resources */,
 				1CB2CD45052DDC560094AAA4 /* removeWidget.png in Resources */,
 				1CB2CD46052DDC560094AAA4 /* removeWidgetSelected.png in Resources */,
-				1CB2CD47052DDC560094AAA4 /* largePerson.png in Resources */,
 				1CB2CD4A052DDC560094AAA4 /* actionWidget.png in Resources */,
 				1CB2CD4B052DDC560094AAA4 /* actionWidgetPressed.png in Resources */,
+				92C70D161A5E88CE00080E45 /* room.pdf in Resources */,
 				1CB2CD4E052DDC560094AAA4 /* viewAlert.png in Resources */,
-				1CB2CD4F052DDC560094AAA4 /* room.png in Resources */,
 				1CB2CD50052DDC560094AAA4 /* template.html in Resources */,
 				1CB2CD52052DDC560094AAA4 /* Generic.icns in Resources */,
 				1CB2CD53052DDC560094AAA4 /* showdrawer.png in Resources */,
@@ -2177,10 +2165,13 @@
 				1CB2CD58052DDC560094AAA4 /* chooseStyle.png in Resources */,
 				1CB2CD59052DDC560094AAA4 /* Emoticons in Resources */,
 				1CB2CD5A052DDC560094AAA4 /* emoticons.plist in Resources */,
+				92C70D091A5E87CF00080E45 /* room.pdf in Resources */,
 				1CB2CD5B052DDC560094AAA4 /* colloquy-alpha.png in Resources */,
 				1CB2CD5C052DDC560094AAA4 /* newMessage.png in Resources */,
 				1CB2CD5D052DDC560094AAA4 /* newHighlightMessage.png in Resources */,
 				1CB2CD5E052DDC560094AAA4 /* JVChatTranscript.nib in Resources */,
+				92C70D121A5E88CE00080E45 /* half-op.pdf in Resources */,
+				92C70D191A5E88CE00080E45 /* super-op.pdf in Resources */,
 				1CB2CD60052DDC560094AAA4 /* JVChatConsole.nib in Resources */,
 				1C1AD00B053487ED00F71D4E /* JVConnectionInspector.nib in Resources */,
 				1CB4DCAB053627C00080D36F /* JVRoomInspector.nib in Resources */,
@@ -2189,11 +2180,15 @@
 				1CBC634905489BEE009E59E1 /* JVGeneralPreferences.nib in Resources */,
 				1CC6FC67054A003C0075807C /* JVAppearancePreferences.nib in Resources */,
 				1CC6FC68054A003C0075807C /* JVFileTransferPreferences.nib in Resources */,
+				92C70D1B1A5E898100080E45 /* console.pdf in Resources */,
 				1CC6FC70054A02F70075807C /* BehaviorPreferences.png in Resources */,
 				1CC6FCD3054A25050075807C /* FileTransferPreferences.png in Resources */,
 				1CC6FCD5054A2BF80075807C /* AppearancePreferences.png in Resources */,
 				1CC6FD39054AF1940075807C /* preview.colloquyTranscript in Resources */,
+				92C70D141A5E88CE00080E45 /* admin.pdf in Resources */,
+				92C70D131A5E88CE00080E45 /* person.pdf in Resources */,
 				1CD02008057588CD000F93B4 /* buddyMessageBlue.png in Resources */,
+				92C70D1D1A5E89A000080E45 /* messageUser.pdf in Resources */,
 				1CD02009057588CE000F93B4 /* buddyMessage.png in Resources */,
 				1CD0200A057588CF000F93B4 /* buddyInfo.png in Resources */,
 				1CD0200B057588D0000F93B4 /* buddyInfoBlue.png in Resources */,
@@ -2210,7 +2205,6 @@
 				1CDEE8C505878D30000B9075 /* InterfacePreferences.png in Resources */,
 				1CBA56ED058D202200257832 /* emoticon.png in Resources */,
 				1C6EA23E05A735D6006A559F /* JVChatRoomBrowser.nib in Resources */,
-				1C6EA66205A76038006A559F /* personHeader.png in Resources */,
 				1CD4BD9D05AA773800F72EE6 /* favorites.png in Resources */,
 				1CD4BD9E05AA773800F72EE6 /* favoritesPressed.png in Resources */,
 				1CA7CA6605FEC88500887614 /* activity.png in Resources */,
@@ -2220,7 +2214,6 @@
 				1C9982AA0604B979006C6417 /* Sounds in Resources */,
 				1C9982AE0604BA1F006C6417 /* sound.png in Resources */,
 				1C9982B00604BEAA006C6417 /* notifications.plist in Resources */,
-				1C2E98C406207AD0000715D8 /* half-op.png in Resources */,
 				1CBA4E66062CCDA90082D1BF /* infoWidget.png in Resources */,
 				1CBA4E67062CCDA90082D1BF /* infoWidgetPressed.png in Resources */,
 				CB66DEA20631F8160034F76E /* Keychain.png in Resources */,
@@ -2232,6 +2225,7 @@
 				1C2391BC0677E8F1000E89A7 /* aquaTabBackground.png in Resources */,
 				1C2391BD0677E8F1000E89A7 /* aquaTabClose.png in Resources */,
 				1C2391BE0677E8F1000E89A7 /* aquaTabDivider.png in Resources */,
+				92C70D151A5E88CE00080E45 /* op.pdf in Resources */,
 				1C2391BF0677E8F1000E89A7 /* aquaTabLeft.png in Resources */,
 				1C2391C00677E8F1000E89A7 /* aquaTabMiddle.png in Resources */,
 				1C2391C10677E8F1000E89A7 /* aquaTabRight.png in Resources */,
@@ -2242,10 +2236,10 @@
 				1CECE26006A37BEC00350564 /* JVBehaviorPreferences.nib in Resources */,
 				1C96E93306AAD81B0013B0A9 /* JVTranscriptPreferences.nib in Resources */,
 				1C96E95906AAEC280013B0A9 /* TranscriptPreferences.png in Resources */,
-				1C7EF54006B341890037F173 /* roomTab.png in Resources */,
 				1C7EF54106B341890037F173 /* roomTabNewHighlightMessage.png in Resources */,
 				1C7EF54206B341890037F173 /* roomTabNewMessage.png in Resources */,
 				1C7EF5C206B346E50037F173 /* privateChatTab.png in Resources */,
+				92C70D181A5E88CE00080E45 /* voice.pdf in Resources */,
 				1C7EF5C306B346E50037F173 /* privateChatTabNewMessage.png in Resources */,
 				1CF627CB07558F79005DFCFA /* fileSend.png in Resources */,
 				1C0A4C9C0799BDB00093B702 /* JVFind.nib in Resources */,
@@ -2296,8 +2290,6 @@
 				1C710C4F09F323F8007B4515 /* splitviewDimple.png in Resources */,
 				1C710C5009F323F8007B4515 /* splitviewDividerBackground.png in Resources */,
 				1CEC004F0A20EF99004C2B86 /* transcriptSchema.sql in Resources */,
-				1CC1B76F0A2D70DF0000A797 /* super-op.png in Resources */,
-				1CC1B77D0A2D70FB0000A797 /* founder.png in Resources */,
 				1C6268E5103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem in Resources */,
 				9200338D13D92515005B69BA /* MVFileTransfer.nib in Resources */,
 				1C043B4B13DC8B7200B8FD9E /* Credits.rtf in Resources */,
