@@ -160,9 +160,6 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 #pragma mark -
 
 - (NSImage *) icon {
-	BOOL smallIcons = [[[self windowController] preferenceForKey:@"small drawer icons"] boolValue];
-	if( smallIcons || [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] )
-		return [NSImage imageNamed:@"roomTab"];
 	return [NSImage imageNamed:@"room"];
 }
 
@@ -356,7 +353,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		[context setObject:[[self windowTitle] stringByAppendingString:@"JVChatRoomActivity"] forKey:@"coalesceKey"];
 		[context setObject:self forKey:@"target"];
 		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-		[context setObject:[NSString stringWithFormat:@"%@: %@", self.target, [message bodyAsPlainText]] forKey:@"subtitle"];
+		[context setObject:[NSString stringWithFormat:@"%@ — %@: %@", [member displayName], self.target, [message bodyAsPlainText]] forKey:@"subtitle"];
 		[self performNotification:@"JVChatRoomActivity" withContextInfo:context];
 	}
 
