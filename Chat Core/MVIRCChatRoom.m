@@ -12,8 +12,8 @@
 		_uniqueIdentifier = [roomName lowercaseString];
 		[_connection _addKnownRoom:self];
 
-		NSString *recentCommunicationsDateKey = [NSString stringWithFormat:@"%@-%@", self.connection.uniqueIdentifier, self.uniqueIdentifier];
-		_mostRecentCommunication = [[NSUserDefaults standardUserDefaults] objectForKey:recentCommunicationsDateKey];
+		NSString *recentActivityDateKey = [NSString stringWithFormat:@"%@-%@", self.connection.uniqueIdentifier, self.uniqueIdentifier];
+		_mostRecentUserActivity = [[NSUserDefaults standardUserDefaults] objectForKey:recentActivityDateKey];
 	}
 
 	return self;
@@ -48,7 +48,8 @@
 		[[self connection] sendRawMessageWithComponents:prefix, reasonData, nil];
 	} else [[self connection] sendRawMessageImmediatelyWithFormat:@"PART %@", [self name]];
 
-	[self _persistLastCommunicationDate];
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 #pragma mark -
@@ -58,6 +59,9 @@
 	NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:newTopic withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
 	NSString *prefix = [[NSString alloc] initWithFormat:@"TOPIC %@ :", [self name]];
 	[[self connection] sendRawMessageWithComponents:prefix, msg, nil];
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 #pragma mark -
@@ -66,14 +70,16 @@
 	NSParameterAssert( message != nil );
 	[[self connection] _sendMessage:message withEncoding:msgEncoding toTarget:self withTargetPrefix:nil withAttributes:attributes localEcho:NO];
 
-	[self _persistLastCommunicationDate];
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 - (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments withEncoding:(NSStringEncoding) encoding {
 	NSParameterAssert( command != nil );
 	[[self connection] _sendCommand:command withArguments:arguments withEncoding:encoding toTarget:self];
 
-	[self _persistLastCommunicationDate];
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 #pragma mark -
@@ -86,6 +92,9 @@
 	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
 		[[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@ %@\001", [self name], command, arguments];
 	} else [[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@\001", [self name], command];
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 - (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments {
@@ -96,6 +105,9 @@
 	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
 		[[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@ %@\001", [self name], command, arguments];
 	} else [[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@\001", [self name], command];
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 #pragma mark -
@@ -130,6 +142,9 @@
 	default:
 		break;
 	}
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 - (void) removeMode:(MVChatRoomMode) mode {
@@ -162,6 +177,9 @@
 	default:
 		break;
 	}
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 #pragma mark -
@@ -188,6 +206,9 @@
 	default:
 		break;
 	}
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 - (void) removeMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user {
@@ -212,6 +233,9 @@
 	default:
 		break;
 	}
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 - (void) setDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user {
@@ -224,6 +248,9 @@
 	default:
 		break;
 	}
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 - (void) removeDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user {
@@ -236,6 +263,9 @@
 	default:
 		break;
 	}
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 #pragma mark -
@@ -270,6 +300,9 @@
 		NSString *prefix = [[NSString alloc] initWithFormat:@"KICK %@ %@ :", [self name], [user nickname]];
 		[[self connection] sendRawMessageImmediatelyWithComponents:prefix, msg, nil];
 	} else [[self connection] sendRawMessageImmediatelyWithFormat:@"KICK %@ %@", [self name], [user nickname]];
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 - (void) addBanForUser:(MVChatUser *) user {
@@ -286,6 +319,9 @@
 		[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ +b *!*%@*@%@", [self name], [user username], addressToBan ];
 	}
 	[super addBanForUser:user];
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 - (void) removeBanForUser:(MVChatUser *) user {
@@ -302,6 +338,9 @@
 		[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ -b *!*%@*@%@", [self name], [user username], addressToBan ];
 	}
 	[super removeBanForUser:user];
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 - (NSString *) modifyAddressForBan:(MVChatUser *) user {
@@ -338,20 +377,24 @@
 	return addressMask;
 }
 
+#pragma mark -
+
+- (void) requestRecentActivity {
+	if( [[[self connection] supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] )
+		[[self connection] sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %tu", self.name, llrint([self.mostRecentUserActivity timeIntervalSince1970])];
+}
+
+- (void) persistLastActivityDate {
+	if ( _mostRecentUserActivity && [[[self connection] supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] ) {
+		NSString *recentActivityDateKey = [NSString stringWithFormat:@"%@-%@", self.connection.uniqueIdentifier, self.uniqueIdentifier];
+		[[NSUserDefaults standardUserDefaults] setObject:_mostRecentUserActivity forKey:recentActivityDateKey];
+	}
+}
 @end
 
 #pragma mark -
 
 @implementation MVIRCChatRoom (MVIRCChatRoomPrivate)
-- (void) _persistLastCommunicationDate {
-	_mostRecentCommunication = [NSDate date]; // this is only called on disconnect or app quit, so, save the current time
-
-	if ( [[[self connection] supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] ) {
-		NSString *recentCommunicationsDateKey = [NSString stringWithFormat:@"%@-%@", self.connection.uniqueIdentifier, self.uniqueIdentifier];
-		[[NSUserDefaults standardUserDefaults] setObject:_mostRecentCommunication forKey:recentCommunicationsDateKey];
-	}
-}
-
 - (BOOL) _namesSynced {
 	return _namesSynced;
 }

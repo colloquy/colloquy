@@ -43,7 +43,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	return @[
 		@"nickserv", @"chanserv", @"memoserv", @"operserv", @"botserv", // common services
 		@"q", @"quakenet", @"x", @"undernet", @"authserv", @"gamesurge", // network-specific services
-		@"*status", @"*colloquy" // bouncer-specific services
+		@"*status", @"*playback", @"*colloquy" // bouncer-specific services
 	];
 }
 
@@ -98,11 +98,17 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( message != nil );
 	[[self connection] _sendMessage:message withEncoding:encoding toTarget:self withTargetPrefix:nil withAttributes:attributes localEcho:NO];
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 - (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments withEncoding:(NSStringEncoding) encoding {
 	NSParameterAssert( command != nil );
 	[[self connection] _sendCommand:command withArguments:arguments withEncoding:encoding toTarget:self];
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 - (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments {
@@ -113,6 +119,9 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
 		[[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@ %@\001", [self nickname], command, arguments];
 	} else [[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@\001", [self nickname], command];
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 - (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments {
@@ -132,6 +141,9 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 			[[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@ %@\001", [self nickname], command, arguments];
 		} else [[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@\001", [self nickname], command];
 	}
+
+	_mostRecentUserActivity = [NSDate date];
+	[self persistLastActivityDate];
 }
 
 #pragma mark -
@@ -190,6 +202,18 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 		NSCalendarDate *localThere = [NSCalendarDate dateWithNaturalLanguageString:date];
 		[self setAttribute:localThere forKey:MVChatUserLocalTimeAttribute];
 #endif
+	}
+}
+
+- (void) requestRecentActivity {
+	if( [[[self connection] supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] )
+		[[self connection] sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %tu", self.nickname, llrint([self.mostRecentUserActivity timeIntervalSince1970])];
+}
+
+- (void) persistLastActivityDate {
+	if ( _mostRecentUserActivity && [[[self connection] supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] ) {
+		NSString *recentActivityDateKey = [NSString stringWithFormat:@"%@-%@", self.connection.uniqueIdentifier, self.uniqueIdentifier];
+		[[NSUserDefaults standardUserDefaults] setObject:_mostRecentUserActivity forKey:recentActivityDateKey];
 	}
 }
 @end

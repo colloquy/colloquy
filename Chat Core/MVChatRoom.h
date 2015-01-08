@@ -66,7 +66,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 	NSString *_name;
 	NSDate *_dateJoined;
 	NSDate *_dateParted;
-	NSDate *_mostRecentCommunication;
+	NSDate *_mostRecentUserActivity;
 	NSData *_topic;
 	MVChatUser *_topicAuthor;
 	NSDate *_dateTopicChanged;
@@ -91,7 +91,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 @property(readonly, getter=isJoined) BOOL joined;
 @property(strong, readonly) NSDate *dateJoined;
 @property(strong, readonly) NSDate *dateParted;
-@property(strong, readonly) NSDate *mostRecentCommunication;
+@property(nonatomic, copy) NSDate *mostRecentUserActivity;
 
 @property NSStringEncoding encoding;
 
@@ -168,6 +168,9 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 
 - (void) setDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user;
 - (void) removeDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user;
+
+- (void) requestRecentActivity;
+- (void) persistLastActivityDate;
 @end
 
 #pragma mark -

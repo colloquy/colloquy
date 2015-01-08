@@ -15,7 +15,6 @@
 #pragma mark -
 
 @interface MVChatRoom (MVIRCChatRoomPrivate)
-- (void) _persistLastCommunicationDate;
 - (BOOL) _namesSynced;
 - (void) _setNamesSynced:(BOOL) synced;
 - (BOOL) _bansSynced;

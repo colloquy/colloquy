@@ -180,7 +180,7 @@ static BOOL showingKeyboard;
 
 		[self userDefaultsChanged];
 
-		if ([[UIDevice currentDevice] isPadModel]) {
+		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide) name:UIKeyboardWillHideNotification object:nil];
 		}
@@ -219,7 +219,7 @@ static BOOL showingKeyboard;
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:UIContentSizeCategoryDidChangeNotification object:nil];
 
-	if ([[UIDevice currentDevice] isPadModel]) {
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
@@ -243,6 +243,8 @@ static BOOL showingKeyboard;
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(scrollbackLengthDidChange:) name:CQScrollbackLengthDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willTerminate) name:UIApplicationWillTerminateNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_resignActive) name:UIApplicationWillResignActiveNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_batchUpdatesWillBegin:) name:MVChatConnectionBatchUpdatesWillBeginNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_batchUpdatesDidEnd:) name:MVChatConnectionBatchUpdatesDidEndNotification object:nil];
 
@@ -400,7 +402,7 @@ static BOOL showingKeyboard;
 	sheet.delegate = self;
 	sheet.tag = InfoActionSheet;
 
-	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+	if (!([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		sheet.title = self.user.displayName;
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
@@ -518,7 +520,10 @@ static BOOL showingKeyboard;
 
 	[self _addPendingComponentsAnimated:NO];
 
-	if (![[UIDevice currentDevice] isPadModel]) {
+	if (self.connection.connected)
+		[_target setMostRecentUserActivity:[NSDate date]];
+
+	if (![UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 	}
@@ -566,6 +571,9 @@ static BOOL showingKeyboard;
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
+	if (self.connection.connected)
+		[_target setMostRecentUserActivity:[NSDate date]];
+
 	hardwareKeyboard = (!_showingKeyboard && [chatInputBar isFirstResponder]);
 	[chatInputBar resignFirstResponder];
 
@@ -575,12 +583,11 @@ static BOOL showingKeyboard;
 	_allowEditingToEnd = YES;
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 
 	[[NSNotificationCenter chatCenter] removeObserver:self name:CQBookmarkingDidNotSaveLinkNotification object:nil];
 
-	if (![[UIDevice currentDevice] isPadModel]) {
+	if (![UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
 		[self.view endEditing:YES];
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
@@ -594,7 +601,7 @@ static BOOL showingKeyboard;
 
 	[UIMenuController sharedMenuController].menuItems = nil;
 
-	if (![[UIDevice currentDevice] isPadModel])
+	if (![UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
 		[chatInputBar resignFirstResponder];
 
 	_allowEditingToEnd = NO;
@@ -676,7 +683,7 @@ static BOOL showingKeyboard;
 	actionSheet.delegate = self;
 	actionSheet.tag = ActionsActionSheet;
 
-	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+	if (!([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		actionSheet.title = self.user.displayName;
 
 	[actionSheet addButtonWithTitle:NSLocalizedString(@"Recently Sent Messages", @"Recently Sent Messages")];
@@ -2073,6 +2080,14 @@ static BOOL showingKeyboard;
 	[self.connection addChatUserWatchRule:_watchRule];
 }
 
+- (void) _willTerminate {
+	[_target persistLastActivityDate];
+}
+
+- (void) _resignActive {
+	[_target persistLastActivityDate];
+}
+
 - (void) _didEnterBackground {
 	[self markScrollback];
 }
@@ -2102,6 +2117,11 @@ static BOOL showingKeyboard;
 }
 
 - (void) _didConnect:(NSNotification *) notification {
+	// Chat rooms automatically request recent activity in MVIRCChatConnection on JOIN
+	// Since there's no equivalent command when starting private messages, we request any recent activity when
+	// we connect.
+	[_target requestRecentActivity];
+
 	[self addEventMessage:NSLocalizedString(@"Connected to the server.", "Connected to server event message") withIdentifier:@"reconnected"];
 
 	[self _updateRightBarButtonItemAnimated:YES];
@@ -2111,6 +2131,9 @@ static BOOL showingKeyboard;
 	[self addEventMessage:NSLocalizedString(@"Disconnected from the server.", "Disconnect from the server event message") withIdentifier:@"disconnected"];
 
 	[self _updateRightBarButtonItemAnimated:YES];
+
+	if (_active)
+		[_target setMostRecentUserActivity:[NSDate date]];
 }
 
 - (void) _didRecieveDeviceToken:(NSNotification *) notification {
@@ -2143,7 +2166,7 @@ static BOOL showingKeyboard;
 
 	[self.navigationItem setRightBarButtonItem:item animated:animated];
 
-	if (_active && [[UIDevice currentDevice] isPadModel])
+	if (_active && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
 		[[CQChatController defaultController].chatPresentationController updateToolbarAnimated:YES];
 
 }

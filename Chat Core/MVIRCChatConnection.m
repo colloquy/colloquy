@@ -312,11 +312,6 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 		_localUser = [[MVIRCChatUser alloc] initLocalUserWithConnection:self];
 
-#if (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) || (defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR)
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_persistRecentCommunicationsDates) name:UIApplicationWillTerminateNotification object:nil];
-#elif defined(TARGET_OS_MAC) && TARGET_OS_MAC
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_persistRecentCommunicationsDates) name:NSApplicationWillTerminateNotification object:nil];
-#endif
 		[self _resetSupportedFeatures];
 	}
 
@@ -847,8 +842,6 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	_failedNickname = nil;
 	_failedNicknameCount = 1;
 	_nicknameShortened = NO;
-
-	[self _persistRecentCommunicationsDates];
 
 	[super _didDisconnect];
 }
@@ -2316,12 +2309,6 @@ end:
 
 	[self sendRawMessageImmediatelyWithFormat:@"CAP END"];
 }
-
-#pragma mark -
-
-- (void) _persistRecentCommunicationsDates {
-	[[self knownChatRooms] makeObjectsPerformSelector:@selector(_persistLastCommunicationDate)];
-}
 @end
 
 #pragma mark -
@@ -3593,8 +3580,7 @@ end:
 			[room _clearMemberUsers];
 			[room _clearBannedUsers];
 
-			if( [self.supportedFeatures containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] )
-				[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %tu", room.name, llrint([room.mostRecentCommunication timeIntervalSince1970])];
+			[room requestRecentActivity];
 		} else {
 			[sender _setIdleTime:0.];
 			[self _markUserAsOnline:sender];
@@ -3662,7 +3648,6 @@ end:
 		if( [sender isLocalUser] ) {
 			_userDisconnected = YES;
 			[[self _chatConnection] disconnect];
-			[self _persistRecentCommunicationsDates];
 			return;
 		}
 

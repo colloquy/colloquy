@@ -255,6 +255,18 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	return _dateUpdated;
 }
 
+- (NSDate *) mostRecentUserActivity {
+	return _mostRecentUserActivity;
+}
+
+- (void) requestRecentActivity {
+	// subclass this method, don't call super
+}
+
+- (void) persistLastActivityDate {
+	// subclass this method, don't call super
+}
+
 #pragma mark -
 
 - (NSTimeInterval) idleTime {

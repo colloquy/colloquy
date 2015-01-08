@@ -16,3 +16,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey);
 - (instancetype) initLocalUserWithConnection:(MVIRCChatConnection *) connection;
 - (instancetype) initWithNickname:(NSString *) nickname andConnection:(MVIRCChatConnection *) connection;
 @end
+
+@interface MVIRCChatUser (MVIRCChatUserPrivate)
+- (void) persistLastActivityDate;
+@end

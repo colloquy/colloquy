@@ -171,8 +171,16 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return _dateParted;
 }
 
-- (NSDate *) mostRecentCommunication {
-	return _mostRecentCommunication;
+- (NSDate *) mostRecentUserActivity {
+	return _mostRecentUserActivity;
+}
+
+- (void) requestRecentActivity {
+	// subclass this method, don't call super
+}
+
+- (void) persistLastActivityDate {
+	// subclass this method, don't call super
 }
 
 #pragma mark -

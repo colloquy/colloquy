@@ -80,6 +80,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 	NSDate *_dateDisconnected;
 	NSDate *_dateUpdated;
 	NSData *_awayStatusMessage;
+	NSDate *_mostRecentUserActivity;
 	NSMutableDictionary *_attributes;
 	MVChatUserType _type;
 	MVChatUserStatus _status;
@@ -111,6 +112,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 @property(strong, readonly) NSDate *dateConnected;
 @property(strong, readonly) NSDate *dateDisconnected;
 @property(strong, readonly) NSDate *dateUpdated;
+@property(nonatomic, copy) NSDate *mostRecentUserActivity;
 
 @property(readonly) NSTimeInterval idleTime;
 @property(readonly) NSTimeInterval lag;
@@ -164,6 +166,9 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 
 - (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments;
 - (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments;
+
+- (void) requestRecentActivity;
+- (void) persistLastActivityDate;
 @end
 
 #pragma mark -
