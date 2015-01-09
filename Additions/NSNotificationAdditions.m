@@ -1,4 +1,5 @@
 #import "NSNotificationAdditions.h"
+#import "MVAvailability.h"
 #import <pthread.h>
 
 @implementation NSNotificationCenter (NSNotificationCenterAdditions)
@@ -47,6 +48,7 @@
 
 		if( object ) info[@"object"] = object;
 		if( userInfo ) info[@"userInfo"] = userInfo;
+		info[@"center"] = self;
 
 		[[self class] performSelectorOnMainThread:@selector( _postNotificationName: ) withObject:info waitUntilDone:wait];
 	}
@@ -57,6 +59,6 @@
 	id object = info[@"object"];
 	NSDictionary *userInfo = info[@"userInfo"];
 
-	[[self defaultCenter] postNotificationName:name object:object userInfo:userInfo];
+	[info[@"center"] postNotificationName:name object:object userInfo:userInfo];
 }
 @end
