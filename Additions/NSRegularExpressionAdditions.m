@@ -8,7 +8,11 @@
 		dangerousCache = [[NSMutableDictionary alloc] init];
 	});
 
-	NSString *patternKey = [NSRegularExpression escapedPatternForString:pattern];
+	NSString *patternKey = dangerousCache[pattern];
+	if (!patternKey) {
+		patternKey = [NSRegularExpression escapedPatternForString:pattern];
+		dangerousCache[pattern] = patternKey;
+	}
 #if SYSTEM(MAC)
 	NSString *key = [NSString stringWithFormat:@"%ld-%@", options, patternKey];
 #else
