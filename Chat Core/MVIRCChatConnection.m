@@ -42,6 +42,14 @@
 #define JVFirstViableTimestamp 631138520
 #define JVFallbackEncoding NSISOLatin1StringEncoding
 
+#ifndef LIKELY
+#define LIKELY(x) __builtin_expect((x) ? 1 : 0, 1)
+#endif
+
+#ifndef UNLIKELY
+#define UNLIKELY(x) __builtin_expect((x) ? 1 : 0, 0)
+#endif
+
 static const NSStringEncoding supportedEncodings[] = {
 	/* Universal */
 	NSUTF8StringEncoding,
@@ -1352,8 +1360,6 @@ end:
 	[invocation setArgument:&unsafeMsg atIndex:2];
 	[invocation setArgument:&unsafeTarget atIndex:3];
 	[invocation setArgument:&unsafeAttributes atIndex:4];
-
-	msg = nil;
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 #endif
@@ -2715,7 +2721,7 @@ end:
 	}
 
 	if( !_fetchingMonitorList && [_supportedFeatures containsObject:MVChatConnectionMonitor] ) {
-		[self sendRawMessage:@"MONITOR L"];
+		[self sendRawMessageImmediatelyWithFormat:@"MONITOR L"];
 		_fetchingMonitorList = YES;
 		_pendingMonitorList = [NSMutableArray array];
 		return;
@@ -2725,12 +2731,12 @@ end:
 
 	if( [_supportedFeatures containsObject:MVChatConnectionMetadata] ) {
 		NSBundle *bundle = [NSBundle mainBundle];
-		[self sendRawMessageWithFormat:@"METADATA SET client.name :%@", bundle.infoDictionary[(__bridge id)kCFBundleIdentifierKey]];
-		[self sendRawMessageWithFormat:@"METADATA SET client.version :%@ (%@)", bundle.infoDictionary[@"CFBundleShortVersionString"], bundle.infoDictionary[@"CFBundleVersion"]];
+		[self sendRawMessageImmediatelyWithFormat:@"METADATA SET client.name :%@", bundle.infoDictionary[(__bridge id)kCFBundleIdentifierKey]];
+		[self sendRawMessageImmediatelyWithFormat:@"METADATA SET client.version :%@ (%@)", bundle.infoDictionary[@"CFBundleShortVersionString"], bundle.infoDictionary[@"CFBundleVersion"]];
 	}
 
 	if( foundNAMESXCommand && [_supportedFeatures containsObject:MVChatConnectionNamesx] ) {
-		[self sendRawMessage:@"PROTOCTL NAMESX"];
+		[self sendRawMessageImmediatelyWithFormat:@"PROTOCTL NAMESX"];
 	}
 }
 
