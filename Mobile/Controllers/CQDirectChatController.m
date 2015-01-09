@@ -489,6 +489,8 @@ static BOOL showingKeyboard;
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
+	self.scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
+
 	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
 //	if ([UIDevice currentDevice].isSystemEight) {
 //		CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
@@ -2117,11 +2119,6 @@ static BOOL showingKeyboard;
 }
 
 - (void) _didConnect:(NSNotification *) notification {
-	// Chat rooms automatically request recent activity in MVIRCChatConnection on JOIN
-	// Since there's no equivalent command when starting private messages, we request any recent activity when
-	// we connect.
-	[_target requestRecentActivity];
-
 	[self addEventMessage:NSLocalizedString(@"Connected to the server.", "Connected to server event message") withIdentifier:@"reconnected"];
 
 	[self _updateRightBarButtonItemAnimated:YES];

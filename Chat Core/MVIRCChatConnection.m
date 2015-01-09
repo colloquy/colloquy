@@ -2424,6 +2424,9 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVIRCChatConnectionZNCPluginPlaybackFeature];
 					}
+
+					_hasRequestedPlaybackList = YES;
+					[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback LIST"];
 				}
 
 				// Unknown / future capabilities
@@ -2898,6 +2901,39 @@ end:
 		sender = [self chatUserWithUniqueIdentifier:[self server]];
 
 	if( parameters.count == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
+		// TODO: If/when mobile supports plugins, move this out of Chat Core and into a separate module.
+		// TODO: Option make this infinitely-scrollable and request x amount of data when near/at the beginning of chat.
+		//		 How does this interact with chat scrollback limits?
+		if( UNLIKELY(_hasRequestedPlaybackList) && UNLIKELY([_supportedFeatures containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature]) && UNLIKELY([sender.nickname isEqualToString:@"*playback"]) ) {
+			// << PRIVMSG *playback LIST
+			// >> *playback PRIVMSG #example 1420604714.26 1420623254.90 // *sender cmd room earliest_msg latest_msg
+			// parameters[0] = sender. parameters[1] = message data.
+			// components[0] = buffer chat room/person name. components[1] = earliest timestamp. components[2] = latest timestamp
+
+			if (parameters.count == 2) {
+				NSArray *components = [parameters[1] componentsSeparatedByString:@" "];
+				if (components.count == 3) {
+					// 1. Find out if we have a channel or a query item. If we have a channel, we can stop doing any work,
+					// because we make a *playback PLAY request for channels in response to JOINs.
+					BOOL isChannel = [_roomPrefixes characterIsMember:[components[0] characterAtIndex:0]];
+					if( isChannel )
+						return;
+
+					// 2. Look up the most recent activity we have saved locally for the query buffer.
+					NSString *recentActivityDateKey = [NSString stringWithFormat:@"%@-%@", self.uniqueIdentifier, [components[0] lowercaseString]];
+					NSDate *mostRecentActivity = [[NSUserDefaults standardUserDefaults] objectForKey:recentActivityDateKey];
+
+					// 3. If we have any recent activity saved, request anything from the last timestamp we have saved. Otherwise,
+					// we have to assume everything is new and request everything.
+					if (mostRecentActivity)
+						[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %.3f %@", components[0], [mostRecentActivity timeIntervalSince1970], components[2]];
+					else [self sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %@ %@", components[1], components[2]];
+				}
+			}
+
+			return;
+		}
+
 		NSString *targetName = parameters[0];
 		if( ! targetName.length ) return;
 

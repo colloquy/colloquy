@@ -41,6 +41,7 @@ extern NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature;
 	NSMutableArray *_pendingMonitorList;
 	BOOL _fetchingMonitorList;
 	BOOL _monitorListFull;
+	BOOL _hasRequestedPlaybackList;
 }
 + (NSArray *) defaultServerPorts;
 @end
