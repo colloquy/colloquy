@@ -1054,9 +1054,11 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 }
 
 - (void) socket:(GCDAsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
-	[self _processIncomingMessage:data fromServer:YES];
+	@autoreleasepool {
+		[self _processIncomingMessage:data fromServer:YES];
 
-	[self _readNextMessageFromServer];
+		[self _readNextMessageFromServer];
+	}
 }
 
 #pragma mark -
@@ -1244,19 +1246,23 @@ end:
 
 			id sender = ( chatUser ? (id) chatUser : (id) senderString );
 
-			if( hasTagsToSend ) {
-				NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:selector]];
-				invocation.target = self;
-				invocation.selector = selector;
-				[invocation setArgument:&parameters atIndex:2];
-				[invocation setArgument:&intentOrTagsDictionary atIndex:3];
-				[invocation setArgument:&sender atIndex:4];
-				[invocation invoke];
-			} else {
+			@try {
+				if( hasTagsToSend ) {
+					NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:selector]];
+					invocation.target = self;
+					invocation.selector = selector;
+					[invocation setArgument:&parameters atIndex:2];
+					[invocation setArgument:&intentOrTagsDictionary atIndex:3];
+					[invocation setArgument:&sender atIndex:4];
+					[invocation invoke];
+				} else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-				[self performSelector:selector withObject:parameters withObject:sender];
+					[self performSelector:selector withObject:parameters withObject:sender];
 #pragma clang diagnostic pop
+				}
+			} @catch (NSException *e) {
+				NSLog(@"Exception handling command %@: %@", NSStringFromSelector(selector), e);
 			}
 		}
 
@@ -3258,20 +3264,24 @@ end:
 	if( [command isCaseInsensitiveEqualToString:@"ACTION"] && arguments ) {
 		// special case ACTION and send it out like a message with the action flag
 		NSMutableDictionary *msgInfo = [NSMutableDictionary dictionary];
-		[msgInfo addEntriesFromDictionary:ctcpInfo];
-		msgInfo[@"message"] = arguments;
-		msgInfo[@"user"] = sender;
+		if (ctcpInfo) [msgInfo addEntriesFromDictionary:ctcpInfo];
+		if (arguments) msgInfo[@"message"] = arguments;
+		if (sender) msgInfo[@"user"] = sender;
 		msgInfo[@"identifier"] = [NSString locallyUniqueString];
 		msgInfo[@"action"] = @(YES);
-		msgInfo[@"target"] = target;
-		msgInfo[@"room"] = room;
+		if (target) msgInfo[@"target"] = target;
+		if (room) msgInfo[@"room"] = room;
 
 		[self _handlePrivmsg:msgInfo]; // No need to explicitly call this on a different thread, as we are already in it.
 
 		return;
 	}
 
-	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:( request ? MVChatConnectionSubcodeRequestNotification : MVChatConnectionSubcodeReplyNotification ) object:sender userInfo:@{ @"command": command, @"arguments": arguments }];
+	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+	if (command) userInfo[@"command"] = command;
+	if (arguments) userInfo[@"arguments"] = arguments;
+
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:( request ? MVChatConnectionSubcodeRequestNotification : MVChatConnectionSubcodeReplyNotification ) object:sender userInfo:userInfo];
 
 #if ENABLE(PLUGINS)
 	__unsafe_unretained NSString *unsafeCommand = command;
