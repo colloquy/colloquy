@@ -1305,6 +1305,7 @@ end:
 	}
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
+	NSLog(@">>> %@", [[NSString alloc] initWithData:data encoding:_encoding]);
 
 	NSString *stringWithPasswordsHidden = [[[string copy] stringByReplacingOccurrencesOfRegex:@"(^PASS |^AUTHENTICATE (?!\\+$|PLAIN$)|IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:NSRegularExpressionCaseInsensitive range:NSMakeRange(0, string.length) error:NULL] copy];
 
@@ -2437,8 +2438,10 @@ end:
 						[_supportedFeatures addObject:MVIRCChatConnectionZNCPluginPlaybackFeature];
 					}
 
-					_hasRequestedPlaybackList = YES;
-					[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback LIST"];
+					if (!_hasRequestedPlaybackList) {
+						_hasRequestedPlaybackList = YES;
+						[self sendRawMessage:@"PRIVMSG *playback LIST" immediately:NO];
+					}
 				}
 
 				// Unknown / future capabilities
@@ -2916,14 +2919,14 @@ end:
 		// TODO: If/when mobile supports plugins, move this out of Chat Core and into a separate module.
 		// TODO: Option make this infinitely-scrollable and request x amount of data when near/at the beginning of chat.
 		//		 How does this interact with chat scrollback limits?
-		if( UNLIKELY(_hasRequestedPlaybackList) && UNLIKELY([_supportedFeatures containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature]) && UNLIKELY([sender.nickname isEqualToString:@"*playback"]) ) {
+		if( UNLIKELY(_hasRequestedPlaybackList) && UNLIKELY([_supportedFeatures containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature]) && UNLIKELY([sender.nickname isCaseInsensitiveEqualToString:@"*playback"]) ) {
 			// << PRIVMSG *playback LIST
 			// >> *playback PRIVMSG #example 1420604714.26 1420623254.90 // *sender cmd room earliest_msg latest_msg
 			// parameters[0] = sender. parameters[1] = message data.
 			// components[0] = buffer chat room/person name. components[1] = earliest timestamp. components[2] = latest timestamp
 
 			if (parameters.count == 2) {
-				NSArray *components = [parameters[1] componentsSeparatedByString:@" "];
+				NSArray *components = [[self _stringFromPossibleData:parameters[1]] componentsSeparatedByString:@" "];
 				if (components.count == 3) {
 					// 1. Find out if we have a channel or a query item. If we have a channel, we can stop doing any work,
 					// because we make a *playback PLAY request for channels in response to JOINs.
@@ -2939,7 +2942,7 @@ end:
 					// we have to assume everything is new and request everything.
 					if (mostRecentActivity)
 						[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %.3f %@", components[0], [mostRecentActivity timeIntervalSince1970], components[2]];
-					else [self sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %@ %@", components[1], components[2]];
+					else [self sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ 0", [components[0] copy]];
 				}
 			}
 
