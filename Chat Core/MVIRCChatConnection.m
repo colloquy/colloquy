@@ -1305,7 +1305,6 @@ end:
 	}
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
-	NSLog(@">>> %@", [[NSString alloc] initWithData:data encoding:_encoding]);
 
 	NSString *stringWithPasswordsHidden = [[[string copy] stringByReplacingOccurrencesOfRegex:@"(^PASS |^AUTHENTICATE (?!\\+$|PLAIN$)|IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:NSRegularExpressionCaseInsensitive range:NSMakeRange(0, string.length) error:NULL] copy];
 
