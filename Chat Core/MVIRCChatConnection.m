@@ -3904,15 +3904,22 @@ end:
 						MVChatUser *member = [self chatUserWithUniqueIdentifier:param];
 						if( enabled ) [room _setMode:mode forMemberUser:member];
 						else [room _removeMode:mode forMemberUser:member];
-						[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomUserModeChangedNotification object:room userInfo:@{ @"who": member, @"enabled": @(enabled), @"mode": @(mode), @"by": sender }];
+						NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+						if (member) userInfo[@"who"] = member;
+						if (sender) userInfo[@"by"] = sender;
+						[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomUserModeChangedNotification object:room userInfo:userInfo];
 					} else if( mode == banMode ) {
 						MVChatUser *user = [MVChatUser wildcardUserFromString:param];
+						NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+						if (user) userInfo[@"user"] = user;
+						if (sender) userInfo[@"byUser"] = sender;
 						if( enabled ) {
 							[room _addBanForUser:user];
-							[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomUserBannedNotification object:room userInfo:@{ @"user": user, @"byUser": sender }];
+							[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomUserBannedNotification object:room userInfo:userInfo];
 						} else {
 							[room _removeBanForUser:user];
-							[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomUserBanRemovedNotification object:room userInfo:@{ @"user": user, @"byUser": sender }];
+							NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+							[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomUserBanRemovedNotification object:room userInfo:userInfo];
 						}
 					} else if( mode == MVChatRoomLimitNumberOfMembersMode && enabled ) {
 						argModes |= MVChatRoomLimitNumberOfMembersMode;
