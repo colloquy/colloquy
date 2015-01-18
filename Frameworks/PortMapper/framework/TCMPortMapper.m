@@ -6,15 +6,26 @@
 #import "NSNotificationCenterThreadingAdditions.h"
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <SystemConfiguration/SCSchemaDefinitions.h>
-#import <CommonCrypto/CommonDigest.h>
 #import <sys/sysctl.h> 
-#import <err.h>
 #import <netinet/in.h>
 #import <arpa/inet.h>
 #import <net/route.h>
 #import <netinet/if_ether.h>
 #import <net/if_dl.h>
+
+// openssl is deprecated on OS X 10.7+
+#ifdef USE_OPENSSL
 #import <openssl/md5.h>
+#else
+#import <CommonCrypto/CommonDigest.h>
+#endif
+
+#import <err.h>
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-align"
+
+void CopySerialNumber(CFStringRef *serialNumber);
 
 // update port mappings all 30 minutes as a default
 #define UPNP_REFRESH_INTERVAL (30.*60.)
@@ -157,6 +168,8 @@ enum {
 
 @implementation TCMPortMapper
 
+@synthesize appIdentifier = _appIdentifier;
+
 + (TCMPortMapper *)sharedInstance
 {
     if (!S_sharedInstance) {
@@ -183,7 +196,16 @@ enum {
         _removeMappingQueue = [NSMutableSet new];
         _upnpPortMappingsToRemove = [NSMutableSet new];
         
-        [self hashUserID:NSUserName()];
+        // use the machine serial number to increase uniqueness in situations where usernames may be reused,
+        // such as in labs, educational and development environments
+        NSString *userName = NSUserName();
+        CFStringRef serialNumber;
+        CopySerialNumber(&serialNumber);
+        if (serialNumber) {
+            userName = [NSString stringWithFormat:@"%@@%@", userName, serialNumber];
+            CFRelease(serialNumber);
+        }
+        [self hashUserID:userName];
         
         S_sharedInstance = self;
 
@@ -199,8 +221,8 @@ enum {
         [center addObserver:self selector:@selector(decreaseWorkCount:) 
                 name:TCMNATPMPPortMapperDidEndWorkingNotification    object:_NATPMPPortMapper];
         
-//        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(didWake:) name:NSWorkspaceDidWakeNotification object:nil];
-//        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(willSleep:) name:NSWorkspaceWillSleepNotification object:nil];
+        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(didWake:) name:NSWorkspaceDidWakeNotification object:nil];
+        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(willSleep:) name:NSWorkspaceWillSleepNotification object:nil];
     }
     return self;
 }
@@ -216,14 +238,30 @@ enum {
     [super dealloc];
 }
 
+- (NSString *)appIdentifier
+{
+    if (_appIdentifier) {
+        return _appIdentifier;
+    } else {
+        return [[[[NSBundle mainBundle] bundlePath] lastPathComponent] stringByDeletingPathExtension];
+    }
+}
 - (BOOL)networkReachable {
-    Boolean success; 
-    BOOL okay; 
-    SCNetworkConnectionFlags status;
-	SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL, "www.apple.com");
-	success = SCNetworkReachabilityGetFlags(reachability, &status);
-	CFRelease(reachability);
-    okay = success && (status & kSCNetworkFlagsReachable) && !(status & kSCNetworkFlagsConnectionRequired);
+    Boolean success = 0;
+    BOOL okay = NO;
+    SCNetworkConnectionFlags status = 0;
+    const char *name = "www.apple.com";
+    
+#if MAC_OS_X_VERSION_MIN_REQUIRED == MAC_OS_X_VERSION_10_2
+    success = SCNetworkCheckReachabilityByName(name, &status);
+#else
+    SCNetworkReachabilityRef target = SCNetworkReachabilityCreateWithName(NULL, name);
+    success = SCNetworkReachabilityGetFlags(target, &status);
+    CFRelease(target);
+#endif
+    
+    okay = success && (status & kSCNetworkFlagsReachable) && !(status & kSCNetworkFlagsConnectionRequired); 
+    
     return okay;
 }
 
@@ -266,7 +304,7 @@ enum {
 //    NSLog(@"%s addresses:%@ masks:%@",__FUNCTION__,IPAddresses, subNetMasks);
     if (routerAddress) {
         NSString *ipAddress = nil;
-        NSUInteger i;
+        int i;
         for (i=0;i<[IPAddresses count];i++) {
             ipAddress = (NSString *) [IPAddresses objectAtIndex:i];
             NSString *subNetMask = (NSString *) [subNetMasks objectAtIndex:i];
@@ -314,7 +352,13 @@ enum {
     char hashstring[16*2+1];
     int i;
     NSData *dataToHash = [inString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:NO];
-	CC_MD5([dataToHash bytes],[dataToHash length],digest);
+
+#ifdef USE_OPENSSL
+    MD5([dataToHash bytes],[dataToHash length],digest);
+#else
+    CC_MD5([dataToHash bytes], [dataToHash length], digest);
+#endif
+    
     for(i=0;i<16;i++) sprintf(hashstring+i*2,"%02x",digest[i]);
     hashstring[i*2]=0;
     
@@ -829,3 +873,29 @@ enum {
 
 @end
 
+// Returns the serial number as a CFString.
+// It is the caller's responsibility to release the returned CFString when done with it.
+void CopySerialNumber(CFStringRef *serialNumber)
+{
+    
+	if (serialNumber != NULL) {
+		*serialNumber = NULL;
+		
+		io_service_t    platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault,
+																	 IOServiceMatching("IOPlatformExpertDevice"));
+		
+		if (platformExpert) {
+			CFTypeRef serialNumberAsCFString =
+			IORegistryEntryCreateCFProperty(platformExpert,
+											CFSTR(kIOPlatformSerialNumberKey),
+											kCFAllocatorDefault, 0);
+			if (serialNumberAsCFString) {
+				*serialNumber = serialNumberAsCFString;
+			}
+			
+			IOObjectRelease(platformExpert);
+		}
+	}
+}
+
+#pragma clang diagnostic pop

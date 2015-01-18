@@ -40,7 +40,9 @@ static void readData (
     
     // IPv6 Addresses are "FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF" at max, which is 40 bytes (0-terminated)
     // IPv4 Addresses are "255.255.255.255" at max which is smaller
-    
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-align"
     char stringBuffer[MAX(INET6_ADDRSTRLEN,INET_ADDRSTRLEN)];
     NSString *addressAsString = nil;
     if (socketAddress->sa_family == AF_INET) {
@@ -70,7 +72,8 @@ static void readData (
     } else {
         addressAsString = @"neither IPv6 nor IPv4";
     }
-    
+#pragma clang diagnostic pop
+
     return [[addressAsString copy] autorelease];
 }
 @end
@@ -270,13 +273,13 @@ Standardablauf:
         if ((i == protocol)||(protocol == TCMPortMappingTransportProtocolBoth)) {
             r = sendnewportmappingrequest(aNatPMPt, (i==TCMPortMappingTransportProtocolUDP)?NATPMP_PROTOCOL_UDP:NATPMP_PROTOCOL_TCP, [aPortMapping localPort],[aPortMapping desiredExternalPort], shouldRemove?0:3600);
         
-            while(r==NATPMP_TRYAGAIN) {
+            do {
                 FD_ZERO(&fds);
                 FD_SET(aNatPMPt->s, &fds);
                 getnatpmprequesttimeout(aNatPMPt, &timeout);
                 select(FD_SETSIZE, &fds, NULL, NULL, &timeout);
                 r = readnatpmpresponseorretry(aNatPMPt, &response);
-            }
+            } while(r==NATPMP_TRYAGAIN);
     
             if (r<0) {
                [aPortMapping setMappingStatus:TCMPortMappingStatusUnmapped];
@@ -559,7 +562,10 @@ static void readData (
         unsigned char *bytes = (unsigned char *)[data bytes];
         inet_ntop(AF_INET, &(bytes[8]), buffer, INET_ADDRSTRLEN);
         NSString *newIPAddress = [NSString stringWithUTF8String:buffer];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-align"
         int secondsSinceEpoch = ntohl(*((int32_t *)&(bytes[4])));
+#pragma clang diagnostic pop
 #ifndef NDEBUG
         NSLog(@"%s sender:%@ new:%@ seconds:%d",__FUNCTION__,senderAddressAndPort, newIPAddress, secondsSinceEpoch);
 #endif

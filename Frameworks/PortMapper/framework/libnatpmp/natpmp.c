@@ -34,6 +34,9 @@
 #include "natpmp.h"
 #include "getgateway.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-align"
+
 int initnatpmp(natpmp_t * p)
 {
 #ifdef WIN32
@@ -79,7 +82,7 @@ int closenatpmp(natpmp_t * p)
 	return 0;
 }
 
-static int sendpendingrequest(natpmp_t * p)
+int sendpendingrequest(natpmp_t * p)
 {
 	int r;
 /*	struct sockaddr_in addr;*/
@@ -95,7 +98,7 @@ static int sendpendingrequest(natpmp_t * p)
 	return (r<0) ? NATPMP_ERR_SENDERR : r;
 }
 
-static int sendnatpmprequest(natpmp_t * p)
+int sendnatpmprequest(natpmp_t * p)
 {
 	int n;
 	if(!p)
@@ -160,7 +163,7 @@ int sendnewportmappingrequest(natpmp_t * p, int protocol,
 	return sendnatpmprequest(p);
 }
 
-static int readnatpmpresponse(natpmp_t * p, natpmpresp_t * response)
+int readnatpmpresponse(natpmp_t * p, natpmpresp_t * response)
 {
 	unsigned char buf[16];
 	struct sockaddr_in addr;
@@ -337,3 +340,4 @@ const char * strnatpmperr(int r)
 }
 #endif
 
+#pragma clang diagnostic pop

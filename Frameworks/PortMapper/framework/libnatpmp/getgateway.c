@@ -149,6 +149,8 @@ int getdefaultgateway(in_addr_t * addr)
 			free(buf);
 			return FAILED;
 		}
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-align"
 		for(p=buf; p<buf+l; p+=rt->rtm_msglen) {
 			rt = (struct rt_msghdr *)p;
 			sa = (struct sockaddr *)(rt + 1);
@@ -169,6 +171,7 @@ int getdefaultgateway(in_addr_t * addr)
 				}
 			}
 		}
+#pragma clang diagnostic pop
 		free(buf);
 	}
 	return r;

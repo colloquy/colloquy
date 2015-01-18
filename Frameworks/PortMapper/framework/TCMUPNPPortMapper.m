@@ -83,7 +83,7 @@ NSString * const TCMUPNPPortMapperDidEndWorkingNotification   =@"TCMUPNPPortMapp
     if (!description) {
     	NSString *prefix = @"cPM";
         NSMutableArray *descriptionComponents=[NSMutableArray array];
-        NSString *component = [[[[NSBundle mainBundle] bundlePath] lastPathComponent] stringByDeletingPathExtension];
+        NSString *component = [[TCMPortMapper sharedInstance] appIdentifier];
         NSString *userID = [[TCMPortMapper sharedInstance] userID];
         if (component) {
         	// make sure _ and . are the only non alphanumeric characters in the name so we don't run into problems with routers which change the description (eg. avm routers)
@@ -100,7 +100,7 @@ NSString * const TCMUPNPPortMapperDidEndWorkingNotification   =@"TCMUPNPPortMapp
 		[descriptionComponents removeAllObjects];
 		// there seems to be a hard limit of 40 characters at in the vigor routers - so length is of essence
 		// however since there seems to be a hard limit of 11 at at least one other router we need to take further action
-		NSUInteger maxLength = 40;
+		int maxLength = 40;
 		maxLength -= [prefix length];
 		maxLength -= [userID length];
 		maxLength -= 2;
@@ -171,10 +171,18 @@ NSString * const TCMUPNPPortMapperDidEndWorkingNotification   =@"TCMUPNPPortMapp
             NSMutableSet *triedURLSet = [NSMutableSet set];
             for(device = devlist; device && !foundIDGDevice; device = device->pNext) {
                 NSURL *descURL = [NSURL URLWithString:[NSString stringWithUTF8String:device->descURL]];
-                SCNetworkConnectionFlags status;
-				SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL, [[descURL host] UTF8String]);
-				Boolean success = SCNetworkReachabilityGetFlags(reachability, &status);
-				CFRelease(reachability);
+                SCNetworkConnectionFlags status = 0;
+                Boolean success = 0;
+                const char *name = [[descURL host] UTF8String];
+                
+#if MAC_OS_X_VERSION_MIN_REQUIRED == MAC_OS_X_VERSION_10_2
+                success = SCNetworkCheckReachabilityByName(name, &status);
+#else
+                SCNetworkReachabilityRef target = SCNetworkReachabilityCreateWithName(NULL, name);
+                success = SCNetworkReachabilityGetFlags(target, &status);
+                CFRelease(target);
+#endif
+                
 #ifndef NDEBUG
                 NSLog(@"UPnP: %@ %c%c%c%c%c%c%c host:%s st:%s",
                     success ? @"YES" : @" NO",

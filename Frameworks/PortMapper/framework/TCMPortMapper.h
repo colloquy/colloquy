@@ -88,6 +88,7 @@ typedef enum {
     NSTimer *_upnpPortMapperTimer;
     BOOL _ignoreNetworkChanges;
     BOOL _refreshIsScheduled;
+    NSString *_appIdentifier;
 }
 
 + (TCMPortMapper *)sharedInstance;
@@ -105,6 +106,8 @@ typedef enum {
 - (void)start;
 - (void)stop;
 - (void)stopBlocking;
+
+@property (nonatomic, copy) NSString *appIdentifier;
 
 // will request the complete UPNPMappingTable and deliver it using a TCMPortMapperDidReceiveUPNPMappingTableNotification with "mappingTable" in the userInfo Dictionary (if current router is a UPNP router)
 - (void)requestUPNPMappingTable;
@@ -131,7 +134,5 @@ typedef enum {
 // private accessors
 - (NSMutableSet *)_upnpPortMappingsToRemove;
 
-- (void)didWake:(id) sender;
-- (void)willSleep:(id) sender;
 
 @end
