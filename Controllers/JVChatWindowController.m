@@ -887,8 +887,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	[[JVInspectorController sharedInspector] inspectObject:[self objectToInspect]];
 
-	if( [item conformsToProtocol:@protocol( JVChatViewController )] && item != (id) _activeViewController )
-		[self _refreshWindow];
+	if( [item conformsToProtocol:@protocol( JVChatViewController )] && item != (id) _activeViewController ) {
+		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_refreshWindow) object:nil];
+		[self performSelector:@selector(_refreshWindow) withObject:nil afterDelay:0.];
+	}
 
 	[self _deferRefreshSelectionMenu];
 }

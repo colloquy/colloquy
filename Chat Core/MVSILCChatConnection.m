@@ -716,7 +716,7 @@ static void silc_get_auth_method_callback( SilcClient client, SilcClientConnecti
 
 static void silc_get_auth_method( SilcClient client, SilcClientConnection conn, char *hostname, SilcUInt16 port, SilcGetAuthMeth completion, void *context ) {
 	// The dictionary is released in silc_get_auth_method_callback.
-	NSDictionary *dict = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32( completion )], @"completion", [NSNumber numberWithUnsignedInt:SILC_PTR_TO_32( context )], @"context", nil];
+	NSDictionary *dict = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:@(SILC_PTR_TO_32( completion )), @"completion", @(SILC_PTR_TO_32( context )), @"context", nil];
 	silc_client_request_authentication_method( client, conn, silc_get_auth_method_callback, (__bridge void *)dict );
 }
 
@@ -793,12 +793,12 @@ static void silc_verify_public_key( SilcClient client, SilcClientConnection conn
 		[dict setObject:@"unknown user" forKey:@"name"];
 	}
 
-	[dict setObject:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(completion)] forKey:@"completition"];
-	[dict setObject:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(context)] forKey:@"completitionContext"];
+	[dict setObject:@(SILC_PTR_TO_32(completion)) forKey:@"completition"];
+	[dict setObject:@(SILC_PTR_TO_32(context)) forKey:@"completitionContext"];
 	[dict setObject:self forKey:@"connection"];
 	[dict setObject:[NSData dataWithBytes:pk length:pk_len] forKey:@"pk"];
-	[dict setObject:[NSNumber numberWithUnsignedInt:conn_type] forKey:@"connType"];
-	[dict setObject:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(conn)] forKey:@"silcConn"];
+	[dict setObject:@(conn_type) forKey:@"connType"];
+	[dict setObject:@(SILC_PTR_TO_32(conn)) forKey:@"silcConn"];
 
 	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedPublicKeyVerificationNotification object:self userInfo:dict];
 }
@@ -862,6 +862,10 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
+@interface MVSILCChatConnection (Private)
+- (void) _silcRunloop;
+@end
+
 @implementation MVSILCChatConnection
 + (void) initialize {
 	[super initialize];
@@ -888,7 +892,7 @@ static SilcClientOperations silcClientOps = {
 		memset( &_silcClientParams, 0, sizeof( _silcClientParams ) );
 		_silcClientParams.dont_register_crypto_library = TRUE;
 
-		_silcClient = silc_client_alloc( &silcClientOps, &_silcClientParams, CFBridgingRetain(self), NULL );
+		_silcClient = silc_client_alloc( &silcClientOps, &_silcClientParams, (void *)CFBridgingRetain(self), NULL );
 		if( ! _silcClient) {
 			// we need some error handling here.. silc connection CAN'T work without silc client
 			return nil;
@@ -983,7 +987,7 @@ static SilcClientOperations silcClientOps = {
 	params.detach_data_len = ( detachInfo ? detachInfo.length : 0 );
 
 	SilcLock( [self _silcClient] );
-	if( silc_client_connect_to_server( [self _silcClient], &params, [self serverPort], (char *) [[self server] UTF8String], CFBridgingRetain(self) ) == -1 )
+	if( silc_client_connect_to_server( [self _silcClient], &params, [self serverPort], (char *) [[self server] UTF8String], (void *)CFBridgingRetain(self) ) == -1 )
 		errorOnConnect = YES;
 	SilcUnlock( [self _silcClient] );
 
@@ -1148,7 +1152,7 @@ static SilcClientOperations silcClientOps = {
 
 	if( alwaysAccept ) {
 		NSData *pk = [dictionary objectForKey:@"pk"];
-		NSString *filename = [self _publicKeyFilename:[[dictionary objectForKey:@"connType"] unsignedLongValue] andPublicKey:(unsigned char *)[pk bytes] withLen:pk.length usingSilcConn:conn];
+		NSString *filename = [self _publicKeyFilename:[dictionary[@"connType"] unsignedLongValue] andPublicKey:(unsigned char *)[pk bytes] withLen:pk.length usingSilcConn:conn];
 		silc_pkcs_save_public_key_data( [filename fileSystemRepresentation], (unsigned char *)[pk bytes], pk.length, SILC_PKCS_FILE_PEM);
 	}
 }
@@ -1246,7 +1250,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	if( ! [self _silcConn] ) return nil;
 
 	SilcLock( [self _silcClient] );
-	silc_client_get_clients_whois( [self _silcClient], [self _silcConn], [findNickname UTF8String], NULL, NULL, usersFoundCallback, CFBridgingRetain(self) );
+	silc_client_get_clients_whois( [self _silcClient], [self _silcConn], [findNickname UTF8String], NULL, NULL, usersFoundCallback, (void *)CFBridgingRetain(self) );
 	silc_schedule_wakeup( [self _silcClient] -> schedule );
 	SilcUnlock( [self _silcClient] );
 

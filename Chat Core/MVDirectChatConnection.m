@@ -162,7 +162,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 		break;
 	default:
 	case MVChatNoMessageFormat:
-		cformat = nil;
+		cformat = @"";
 	}
 
 	NSDictionary *options = @{ @"StringEncoding": @(encoding), @"FormatType": cformat };

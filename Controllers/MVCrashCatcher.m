@@ -9,11 +9,11 @@
 
 @implementation MVCrashCatcher
 + (void) check {
-	MVCrashCatcher *crashCatcher = [[MVCrashCatcher alloc] init]; // Released when the window is closed.
+	static MVCrashCatcher *crashCatcher = nil;
+	crashCatcher = [[MVCrashCatcher alloc] init]; // Released when the window is closed.
 	crashCatcher.doneBlock = ^{
-		__strong MVCrashCatcher *handle = crashCatcher; // intentional retain
 		crashCatcher.doneBlock = nil;
-		handle = nil;
+		crashCatcher = nil;
 	};
 }
 

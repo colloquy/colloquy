@@ -22,11 +22,11 @@
 
 - (void) postNotificationOnMainThread:(NSNotification *) notification waitUntilDone:(BOOL) wait {
 	if( pthread_main_np() ) [self postNotification:notification];
-	else [[self class] performSelectorOnMainThread:@selector( _postNotification: ) withObject:notification waitUntilDone:wait];
+	else [[self class] performSelectorOnMainThread:@selector( _postNotification: ) withObject:@{ @"notification": notification, @"center": self } waitUntilDone:wait];
 }
 
-+ (void) _postNotification:(NSNotification *) notification {
-	[[self defaultCenter] postNotification:notification];
++ (void) _postNotification:(NSDictionary *) info {
+	[info[@"center"] postNotification:info[@"notification"]];
 }
 
 - (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id) object {

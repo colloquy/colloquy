@@ -52,6 +52,8 @@
 		id subject = [subjectSpecifier objectsByEvaluatingSpecifier];
 		if( ! subject ) return nil;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 		// a list of recievers
 		if( [subject isKindOfClass:[NSArray class]] ) {
 			NSMutableArray *results = [[NSMutableArray allocWithZone:nil] initWithCapacity:[subject count]];
@@ -70,6 +72,7 @@
 
 		// a single reciever
 		return [subject performSelector:selector withObject:self];
+#pragma clang diagnostic pop
 	}
 
 	return nil;

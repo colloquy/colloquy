@@ -1286,6 +1286,7 @@ end:
 		data = [[[raw string] dataUsingEncoding:[self encoding] allowLossyConversion:YES] mutableCopy];
 	} else {
 		NSAssert(NO, @"%@ is of the wrong class (type %@)", raw, NSStringFromClass([raw class]));
+		return;
 	}
 
 	// IRC messages are always lines of characters terminated with a CR-LF
@@ -1332,7 +1333,7 @@ end:
 		break;
 	default:
 	case MVChatNoMessageFormat:
-		cformat = nil;
+		cformat = @"";
 	}
 
 	NSDictionary *options = @{ @"StringEncoding": @(enc), @"FormatType": cformat };
@@ -3709,7 +3710,7 @@ end:
 		[_pendingWhoisUsers removeObject:sender];
 
 		NSData *reason = parameters[0];
-		if( ! [reason isKindOfClass:[NSData class]] ) reason = nil;
+		if( ! [reason isKindOfClass:[NSData class]] ) reason = [NSData data];
 		NSDictionary *info = @{ @"user": sender, @"reason": reason };
 
 		for( MVChatRoom *room in [self joinedChatRooms] ) {
@@ -3787,7 +3788,7 @@ end:
 	if( parameters.count == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:parameters[0]];
 		NSData *topic = parameters[1];
-		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
+		if( ! [topic isKindOfClass:[NSData class]] ) topic = [NSData data];
 
 		NSDictionary *info = @{@"room": room, @"author": sender, @"topic": topic};
 		[self _handleTopic:info];
