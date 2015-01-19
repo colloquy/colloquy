@@ -8,8 +8,7 @@
 #import "NSNotificationAdditions.h"
 
 #if ENABLE(AUTO_PORT_MAPPING)
-#undef ENABLE_AUTO_PORT_MAPPING
-//#import <TCMPortMapper/TCMPortMapper.h>
+#import <TCMPortMapper/TCMPortMapper.h>
 #endif
 
 #import <arpa/inet.h>
