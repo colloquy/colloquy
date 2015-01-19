@@ -3912,6 +3912,8 @@ end:
 						NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 						if (member) userInfo[@"who"] = member;
 						if (sender) userInfo[@"by"] = sender;
+						userInfo[@"enabled"] = @(enabled);
+						userInfo[@"mode"] = @(mode);
 						[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomUserModeChangedNotification object:room userInfo:userInfo];
 					} else if( mode == banMode ) {
 						MVChatUser *user = [MVChatUser wildcardUserFromString:param];
