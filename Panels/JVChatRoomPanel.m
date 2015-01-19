@@ -370,30 +370,15 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		[_nextMessageAlertMembers removeObject:[message sender]];
 	}
 
-	static NSCharacterSet *escapeSet = nil;
-	if (!escapeSet)
-		escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 
-	for( member in _sortedMembers ) {
-		NSString *plainText = [message bodyAsPlainText];
-
-		// if the message is shorter than the nickname, it can't be a match. stop sooner
-		if( [[member nickname] length] > [plainText length] )
-			continue;
-
-		NSMutableString *escapedName = [[member nickname] mutableCopy];
-		[escapedName escapeCharactersInSet:escapeSet];
-		NSString *pattern = [[NSString alloc] initWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", escapedName];
-		NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
-
-		for( NSTextCheckingResult *match in [regex cq_matchesInString:plainText] ) {
-			NSRange foundRange = [match range];
-			// don't highlight nicks in the middle of a link
-			if( ! [[message body] attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL] ) {
-				NSMutableSet *classes = [NSMutableSet setWithSet:[[message body] attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL]];
-				[classes addObject:@"member"];
-				[[message body] addAttribute:@"CSSClasses" value:[NSSet setWithSet:classes] range:foundRange];
-			}
+	NSString *plainText = [message bodyAsPlainText];
+	for( NSTextCheckingResult *match in [_membersRegex cq_matchesInString:plainText] ) {
+		NSRange foundRange = [match range];
+		// don't highlight nicks in the middle of a link
+		if( ! [[message body] attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL] ) {
+			NSMutableSet *classes = [NSMutableSet setWithSet:[[message body] attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL]];
+			[classes addObject:@"member"];
+			[[message body] addAttribute:@"CSSClasses" value:[NSSet setWithSet:classes] range:foundRange];
 		}
 	}
 
@@ -560,6 +545,23 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] ) {
 		[_sortedMembers sortUsingSelector:@selector( compareUsingStatus: )];
 	} else [_sortedMembers sortUsingSelector:@selector( compare: )];
+
+	static NSCharacterSet *escapeSet = nil;
+	if (!escapeSet)
+		escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
+
+	NSMutableString *regexEscapedNicknames = [NSMutableString string];
+	for( MVChatUser *member in _sortedMembers ) {
+		NSMutableString *escapedName = [[member nickname] mutableCopy];
+		[escapedName escapeCharactersInSet:escapeSet];
+		[regexEscapedNicknames appendFormat:@"%@|", escapedName];
+	}
+
+	if( regexEscapedNicknames.length )
+		[regexEscapedNicknames deleteCharactersInRange:NSMakeRange(regexEscapedNicknames.length - 1, 1)];
+
+	NSString *pattern = [[NSString alloc] initWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", regexEscapedNicknames];
+	_membersRegex = [NSRegularExpression regularExpressionWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
 
 	[_windowController reloadListItem:self andChildren:YES];
 }

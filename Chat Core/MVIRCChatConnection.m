@@ -1244,7 +1244,7 @@ end:
 				}
 			}
 
-			id sender = ( chatUser ? (id) chatUser : (id) senderString );
+			id chatSender = ( chatUser ? (id) chatUser : (id) senderString );
 
 			@try {
 				if( hasTagsToSend ) {
@@ -1253,12 +1253,12 @@ end:
 					invocation.selector = selector;
 					[invocation setArgument:&parameters atIndex:2];
 					[invocation setArgument:&intentOrTagsDictionary atIndex:3];
-					[invocation setArgument:&sender atIndex:4];
+					[invocation setArgument:&chatSender atIndex:4];
 					[invocation invoke];
 				} else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-					[self performSelector:selector withObject:parameters withObject:sender];
+					[self performSelector:selector withObject:parameters withObject:chatSender];
 #pragma clang diagnostic pop
 				}
 			} @catch (NSException *e) {
@@ -1379,9 +1379,9 @@ end:
 		MVChatRoom *room = ([target isKindOfClass:[MVChatRoom class]] ? target : nil);
 		NSNumber *action = ([attributes[@"action"] boolValue] ? attributes[@"action"] : @(NO));
 		NSMutableDictionary *privmsgInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:msg, @"message", [self localUser], @"user", [NSString locallyUniqueString], @"identifier", action, @"action", target, @"target", room, @"room", nil];
-		dispatch_async(_connectionQueue, ^{
+		dispatch_async(_connectionQueue, ^{ @autoreleasepool {
 			[self performSelector:@selector(_handlePrivmsg:) withObject:privmsgInfo];
-		});
+		}});
 	}
 
 	NSString *targetName = [target isKindOfClass:[MVChatRoom class]] ? [target name] : [target nickname];
@@ -2983,7 +2983,9 @@ end:
 			if( [privmsgInfo[@"intent"] isCaseInsensitiveEqualToString:@"ACTION"] )
 				privmsgInfo[@"action"] = @(YES);
 
-			[self _handlePrivmsg:privmsgInfo];
+			@autoreleasepool {
+				[self _handlePrivmsg:privmsgInfo];
+			}
 		}
 	}
 }
@@ -3275,7 +3277,9 @@ end:
 		if (target) msgInfo[@"target"] = target;
 		if (room) msgInfo[@"room"] = room;
 
-		[self _handlePrivmsg:msgInfo]; // No need to explicitly call this on a different thread, as we are already in it.
+		@autoreleasepool {
+			[self _handlePrivmsg:msgInfo]; // No need to explicitly call this on a different thread, as we are already in it.
+		}
 
 		return;
 	}
@@ -3919,7 +3923,6 @@ end:
 							[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomUserBannedNotification object:room userInfo:userInfo];
 						} else {
 							[room _removeBanForUser:user];
-							NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 							[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomUserBanRemovedNotification object:room userInfo:userInfo];
 						}
 					} else if( mode == MVChatRoomLimitNumberOfMembersMode && enabled ) {

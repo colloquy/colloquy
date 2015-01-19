@@ -31,7 +31,7 @@
 				sourceRect.size.height -= ( destRect.origin.y + destRect.size.height ) - top;
 
 			// Draw and shift
-			[self compositeToPoint:destRect.origin fromRect:sourceRect operation:NSCompositeSourceOver];
+			[self drawInRect:sourceRect fromRect:sourceRect operation:NSCompositeSourceOver fraction:1.];
 			destRect.origin.x += destRect.size.width;
 		}
 

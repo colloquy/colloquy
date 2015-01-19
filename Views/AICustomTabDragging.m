@@ -117,7 +117,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	[tabDragWindow setDisplayingFullWindow:sourceWindowWillHide animate:NO];
 
 	//Position the drag window
-	startPoint = [[inEvent window] convertBaseToScreen:[inEvent locationInWindow]];
+	startPoint = [[inEvent window] convertRectToScreen:NSMakeRect([inEvent locationInWindow].x, [inEvent locationInWindow].y, 0., 0.)].origin;
 	startPoint = NSMakePoint(startPoint.x + dragOffset.width, startPoint.y + dragOffset.height);
 	[tabDragWindow moveToPoint:startPoint];
 

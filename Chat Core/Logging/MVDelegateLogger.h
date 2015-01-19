@@ -4,7 +4,7 @@
 
 @protocol MVLoggingDelegate <NSObject>
 @required
-- (void) delegateLogger:(MVDelegateLogger *) delegateLogger socketTrafficDidOccur:(NSString *) socketTraffic context:(void *) context;
+- (void) delegateLogger:(MVDelegateLogger *) delegateLogger socketTrafficDidOccur:(NSString *) socketTraffic context:(int) context;
 @end
 
 @interface MVDelegateLogger : DDAbstractLogger {

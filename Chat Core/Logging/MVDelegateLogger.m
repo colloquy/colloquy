@@ -12,7 +12,7 @@
 
 - (void) logMessage:(DDLogMessage *) logMessage {
 	__strong __typeof__((_delegate)) delegate = _delegate;
-	[delegate delegateLogger:self socketTrafficDidOccur:logMessage->logMsg context:(uintptr_t)logMessage->logContext];
+	[delegate delegateLogger:self socketTrafficDidOccur:logMessage->logMsg context:(int)logMessage->logContext];
 }
 
 - (NSString *) loggerName {
