@@ -130,11 +130,11 @@
         [customTabsView drawBackgroundInRect:[customTabsView frame] withFrame:[customTabsView frame] selectedTabRect:NSMakeRect(0,0,0,0)];
         insertPoint = [customTabsView frame].origin;
         insertPoint.x += CUSTOM_TABS_INDENT; //Line the tab up a bit more realistically
-		[tabImage drawAtPoint:insertPoint fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.];
+		[tabImage compositeToPoint:insertPoint operation:NSCompositeCopy];
 
         //Draw the content
 		NSPoint	frameOrigin = [[[tabCell tabViewItem] tabView] frame].origin;
-		[contentImage drawAtPoint:NSMakePoint(frameOrigin.x + CONTENT_OFFSET_X, frameOrigin.y) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.];
+		[contentImage compositeToPoint:NSMakePoint(frameOrigin.x + CONTENT_OFFSET_X, frameOrigin.y) operation:NSCompositeCopy];
 
         [dragWindowImage unlockFocus];
     }

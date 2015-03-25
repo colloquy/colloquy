@@ -227,7 +227,7 @@ static NSSize		rightCapSize;
     //Background
     if(selected && !ignoreSelection){
         //Draw the left cap
-		[tabFrontLeft drawAtPoint:NSMakePoint(rect.origin.x, rect.origin.y) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+		[tabFrontLeft compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y) operation:NSCompositeSourceOver];
 
         //Draw the middle
         sourceRect = NSMakeRect(0, 0, [tabFrontMiddle size].width, [tabFrontMiddle size].height);
@@ -237,12 +237,12 @@ static NSSize		rightCapSize;
             if((destRect.origin.x + destRect.size.width) > middleRightEdge){
                 sourceRect.size.width -= (destRect.origin.x + destRect.size.width) - middleRightEdge;
             }
-			[tabFrontMiddle drawAtPoint:destRect.origin fromRect:sourceRect operation:NSCompositeSourceOver fraction:1.0];
+			[tabFrontMiddle compositeToPoint:destRect.origin fromRect:sourceRect operation:NSCompositeSourceOver];
             destRect.origin.x += destRect.size.width;
         }
 
         //Draw the right cap
-		[tabFrontRight drawAtPoint:NSMakePoint(middleRightEdge, rect.origin.y) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+		[tabFrontRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y) operation:NSCompositeSourceOver];
     }else if(highlighted){
         [[NSColor colorWithCalibratedWhite:0.0 alpha:0.1] set];
         [NSBezierPath fillRect:NSMakeRect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height)];
@@ -261,7 +261,7 @@ static NSSize		rightCapSize;
 	}else{
 		destPoint = [self _tabIconRect].origin;
 	}
-	[leftIcon drawAtPoint:destPoint fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:( hoveringClose || [tabViewItem isEnabled] ? 1. : 0.5 )];
+	[leftIcon compositeToPoint:destPoint operation:NSCompositeSourceOver fraction:( hoveringClose || [tabViewItem isEnabled] ? 1. : 0.5 )];
 
 	//Move over for label drawing.  We always move based on the tab icon and not on the close button.  This prevents
 	//tab text from jumping when hovered if the tab icons are a different size from the close button

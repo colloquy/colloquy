@@ -348,7 +348,7 @@ static  NSImage			*tabDivider = nil;
 		AICustomTabCell		*tabCell;
 
 		//Create a new tab cell
-		tabCell = [AICustomTabCell customTabForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)tabViewItem customTabsView:self];
+		 tabCell = [AICustomTabCell customTabForTabViewItem:tabViewItem customTabsView:self];
 		[tabCell setSelected:(tabViewItem == [tabView selectedTabViewItem])];
 		[tabCell setAllowsInactiveTabClosing:allowsInactiveTabClosing];
 
@@ -553,7 +553,7 @@ static  NSImage			*tabDivider = nil;
 				if((ignoreSelection ||
 					(tabCell != selectedCustomTabCell && (!nextTabCell || nextTabCell != selectedCustomTabCell)))
 				   && [tabCellArray indexOfObject:tabCell] != tabGapIndex - 1){
-					[tabDivider drawAtPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.];
+					[tabDivider compositeToPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y) operation:NSCompositeSourceOver];
 				}
 			}
 		}
@@ -843,8 +843,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 
 		if(outIndex) *outIndex = hoverIndex;
 
-		NSPoint point = [self convertPoint:NSMakePoint(lastLocation,0) toView:nil];
-		return  [[self window] convertRectToScreen:NSMakeRect(point.x, point.y, 0., 0.)].origin;
+		return([[self window] convertBaseToScreen:[self convertPoint:NSMakePoint(lastLocation,0) toView:nil]]);
 	}else{
 		NSTabViewItem		*tabViewItem = [[AICustomTabDragging sharedInstance] draggedTabViewItem];
 		int					hover;
@@ -861,8 +860,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		}else{
 			hover = NSMaxX([[tabCellArray objectAtIndex:desiredIndex-1] frame]) + CUSTOM_TABS_GAP;
 		}
-		NSPoint point = [self convertPoint:NSMakePoint(hover,0) toView:nil];
-		return  [[self window] convertRectToScreen:NSMakeRect(point.x, point.y, 0., 0.)].origin;
+		return([[self window] convertBaseToScreen:[self convertPoint:NSMakePoint(hover,0) toView:nil]]);
 	}
 }
 
@@ -886,8 +884,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
         NSPoint			localPoint;
 
         //Local mouse location
-		localPoint = [[self window] convertRectToScreen:NSMakeRect([NSEvent mouseLocation].x, [NSEvent mouseLocation].y, 0., 0.)].origin;
-        localPoint = [self convertPoint:localPoint fromView:nil];
+		localPoint = [[self window] convertScreenToBase:[NSEvent mouseLocation]];
 
         //Install tracking rects for each tab
         enumerator = [tabCellArray objectEnumerator];
