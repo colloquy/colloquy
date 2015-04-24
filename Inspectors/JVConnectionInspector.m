@@ -1,6 +1,6 @@
+#import "CQKeychain.h"
 #import "JVConnectionInspector.h"
 #import "MVConnectionsController.h"
-#import "MVKeyChain.h"
 #import "KAIgnoreRule.h"
 
 @implementation MVChatConnection (MVChatConnectionInspection)
@@ -81,8 +81,8 @@
 	[editPort setIntValue:[_connection serverPort]];
 	[editNickname setObjectValue:[_connection preferredNickname]];
 	[editAltNicknames setObjectValue:[[_connection alternateNicknames] componentsJoinedByString:@" "]];
-	[editPassword setObjectValue:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[_connection server] securityDomain:[_connection server] account:[_connection preferredNickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-	[editServerPassword setObjectValue:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[_connection server] securityDomain:[_connection server] account:nil path:nil port:[_connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+	[editPassword setObjectValue:[[CQKeychain standardKeychain] passwordForServer:_connection.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", _connection.preferredNickname]]];
+	[editServerPassword setObjectValue:[[CQKeychain standardKeychain] passwordForServer:_connection.uniqueIdentifier area:@"Server"]];
 	[editRealName setObjectValue:[_connection realName]];
 	[editUsername setObjectValue:[_connection username]];
 
@@ -168,20 +168,20 @@
 
 - (IBAction) editText:(id) sender {
 	if( sender == editNickname ) {
-		NSString *password = [[MVKeyChain defaultKeyChain] internetPasswordForServer:[editAddress stringValue] securityDomain:[editAddress stringValue] account:[sender stringValue] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+		NSString *password = [[CQKeychain standardKeychain] passwordForServer:_connection.uniqueIdentifier area:@"Server"];
 		if( password ) [editPassword setObjectValue:password];
 		else [editPassword setObjectValue:@""];
 		[_connection setPreferredNickname:[sender stringValue]];
 	} else if( sender == editAltNicknames ) {
 		[_connection setAlternateNicknames:[[sender stringValue] componentsSeparatedByString:@" "]];
 	} else if( sender == editPassword ) {
-		[_connection setNicknamePassword:nil];
-		[[MVKeyChain defaultKeyChain] setInternetPassword:[sender stringValue] forServer:[editAddress stringValue] securityDomain:[editAddress stringValue] account:[editNickname stringValue] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+		_connection.nicknamePassword = nil;
+		[[CQKeychain standardKeychain] setPassword:[sender stringValue] forServer:_connection.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", _connection.preferredNickname] displayValue:_connection.server];
 	} else if( sender == editServerPassword ) {
-		[_connection setPassword:[sender stringValue]];
-		[[MVKeyChain defaultKeyChain] setInternetPassword:[sender stringValue] forServer:[editAddress stringValue] securityDomain:[editAddress stringValue] account:nil path:nil port:(unsigned short)[editPort intValue] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+		_connection.password = [sender stringValue];
+		[[CQKeychain standardKeychain] setPassword:[sender stringValue] forServer:_connection.uniqueIdentifier area:@"Server" displayValue:_connection.server];
 	} else if( sender == editAddress ) {
-		NSString *password = [[MVKeyChain defaultKeyChain] internetPasswordForServer:[sender stringValue] securityDomain:[sender stringValue] account:[editNickname stringValue] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+		NSString *password = [[CQKeychain standardKeychain] passwordForServer:_connection.uniqueIdentifier area:@"Server"];
 		if( password ) [editPassword setObjectValue:password];
 		else [editPassword setObjectValue:@""];
 		[_connection setServer:[sender stringValue]];

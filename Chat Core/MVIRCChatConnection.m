@@ -3740,10 +3740,12 @@ end:
 		if( ! [reason isKindOfClass:[NSData class]] ) reason = nil;
 		if( [user isLocalUser] ) {
 			[room _setDateParted:[NSDate date]];
-			[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomKickedNotification object:room userInfo:@{@"byUser": sender, @"reason": reason}];
+			NSDictionary *userInfo = reason ? @{ @"byUser": sender, @"reason": reason } : @{ @"byUser": sender };
+			[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomKickedNotification object:room userInfo:userInfo];
 		} else {
 			[room _removeMemberUser:user];
-			[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomUserKickedNotification object:room userInfo:@{@"user": user, @"byUser": sender, @"reason": reason}];
+			NSDictionary *userInfo = reason ? @{ @"user": user, @"byUser": sender, @"reason": reason } : @{ @"user": user, @"byUser": sender };
+			[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomUserKickedNotification object:room userInfo:userInfo];
 		}
 	}
 }

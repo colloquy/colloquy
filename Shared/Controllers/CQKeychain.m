@@ -22,6 +22,10 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 }
 
 - (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *) area {
+	[self setPassword:password forServer:server area:area displayValue:nil];
+}
+
+- (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *) area displayValue:(NSString *)displayValue {
 	if (!password.length) {
 		[self removePasswordForServer:server area:area];
 		return;
@@ -33,6 +37,10 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 }
 
 - (void) setData:(NSData *) passwordData forServer:(NSString *) server area:(NSString *) area {
+	[self setData:passwordData forServer:server area:area displayValue:nil];
+}
+
+- (void) setData:(NSData *) passwordData forServer:(NSString *) server area:(NSString *) area displayValue:(NSString *)displayValue {
 	NSParameterAssert(server);
 
 	if (!passwordData.length) {
@@ -43,6 +51,7 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	NSMutableDictionary *passwordEntry = createBaseDictionary(server, area);
 
 	passwordEntry[(__bridge id)kSecValueData] = passwordData;
+	if (displayValue) passwordEntry[(__bridge id)kSecAttrLabel] = displayValue;
 
 	OSStatus status = SecItemAdd((__bridge CFDictionaryRef)passwordEntry, NULL);
 	if (status == errSecDuplicateItem) {
