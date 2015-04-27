@@ -16,6 +16,8 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+.DS_Store
+xcuserdata/
 
 # CocoaPods
 #
@@ -27,4 +29,5 @@ DerivedData
 
 
 # Colloquy specific
-Frameworks/
+# We're going to have our own ignore file in there.
+# Frameworks/
