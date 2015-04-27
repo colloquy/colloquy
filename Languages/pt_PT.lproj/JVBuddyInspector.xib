@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" promptedForUpgradeToXcode5="NO">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
+        <deployment identifier="macosx"/>
         <development version="5100" identifier="xcode"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
     </dependencies>
@@ -31,7 +32,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="51" userLabel="View">
             <rect key="frame" x="0.0" y="0.0" width="325" height="353"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -68,7 +69,7 @@
                 <button toolTip="Delete identifier" id="210">
                     <rect key="frame" x="69" y="44" width="23" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="deleteWidget" imagePosition="only" alignment="center" alternateImage="deleteWidgetPressed" enabled="NO" inset="2" id="348">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="348">
                         <behavior key="behavior" lightByContents="YES"/>
                         <font key="font" metaFont="label"/>
                     </buttonCell>
@@ -79,7 +80,7 @@
                 <button toolTip="Edit identifier" id="209">
                     <rect key="frame" x="69" y="68" width="23" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="editWidget" imagePosition="only" alignment="center" alternateImage="editWidgetPressed" enabled="NO" inset="2" id="347">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="347">
                         <behavior key="behavior" lightByContents="YES"/>
                         <font key="font" metaFont="label"/>
                     </buttonCell>
@@ -90,7 +91,7 @@
                 <button toolTip="Add identifier" id="208">
                     <rect key="frame" x="69" y="20" width="23" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="addSquareWidget" imagePosition="only" alignment="center" alternateImage="addSquareWidgetPressed" inset="2" id="346">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="346">
                         <behavior key="behavior" lightByContents="YES"/>
                         <font key="font" metaFont="label"/>
                         <string key="keyEquivalent">+</string>
@@ -246,10 +247,10 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <clipView key="contentView" id="Ano-ju-cw7">
                         <rect key="frame" x="1" y="1" width="198" height="97"/>
-                        <autoresizingMask key="autoresizingMask"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" id="72">
-                                <rect key="frame" x="0.0" y="0.0" width="198" height="97"/>
+                                <rect key="frame" x="0.0" y="0.0" width="198" height="16"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -425,7 +426,7 @@
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" id="284">
-                                    <rect key="frame" x="0.0" y="0.0" width="198" height="97"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="198" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -520,11 +521,12 @@ Gw
         </window>
     </objects>
     <resources>
+        <image name="NSActionTemplate" width="14" height="14"/>
+        <image name="NSAddTemplate" width="11" height="11"/>
+        <image name="NSRemoveTemplate" width="11" height="11"/>
         <image name="addSquareWidget" width="22" height="22"/>
         <image name="addSquareWidgetPressed" width="22" height="22"/>
         <image name="deleteWidget" width="22" height="22"/>
         <image name="deleteWidgetPressed" width="22" height="22"/>
-        <image name="editWidget" width="22" height="22"/>
-        <image name="editWidgetPressed" width="22" height="22"/>
     </resources>
 </document>
