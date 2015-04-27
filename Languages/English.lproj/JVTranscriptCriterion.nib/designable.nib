@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">101000</int>
-		<string key="IBDocument.SystemVersion">14A388a</string>
-		<string key="IBDocument.InterfaceBuilderVersion">6250</string>
-		<string key="IBDocument.AppKitVersion">1343.14</string>
-		<string key="IBDocument.HIToolboxVersion">755.00</string>
+		<int key="IBDocument.SystemTarget">1070</int>
+		<string key="IBDocument.SystemVersion">14D136</string>
+		<string key="IBDocument.InterfaceBuilderVersion">7702</string>
+		<string key="IBDocument.AppKitVersion">1347.57</string>
+		<string key="IBDocument.HIToolboxVersion">758.70</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">6250</string>
+			<string key="NS.object.0">7702</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>NSCustomObject</string>
@@ -436,9 +436,9 @@
 															<string key="NSString">0</string>
 															<reference key="NSAttributes" ref="568485822"/>
 														</object>
-														<string key="decimalSeparator">,</string>
+														<string key="decimalSeparator">.</string>
 														<integer value="1000" key="formatterBehavior"/>
-														<string key="groupingSeparator">.</string>
+														<string key="groupingSeparator">,</string>
 														<string key="negativeFormat">#,##0</string>
 														<string key="positiveFormat">#,##0</string>
 														<boolean value="YES" key="usesGroupingSeparator"/>
@@ -460,8 +460,8 @@
 													</object>
 													<reference key="NS.max" ref="388256989"/>
 													<nil key="NS.rounding"/>
-													<string key="NS.decimal">,</string>
-													<string key="NS.thousand">.</string>
+													<string key="NS.decimal">.</string>
+													<string key="NS.thousand">,</string>
 													<bool key="NS.hasthousands">YES</bool>
 													<bool key="NS.localized">YES</bool>
 													<bool key="NS.allowsfloats">YES</bool>
@@ -2850,10 +2850,6 @@
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<bool key="IBDocument.previouslyAttemptedUpgradeToXcode5">YES</bool>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
-			<integer value="101000" key="NS.object.0"/>
-		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.InterfaceBuilder3</string>
 			<integer value="4600" key="NS.object.0"/>
