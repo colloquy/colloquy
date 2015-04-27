@@ -1,2519 +1,496 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
-	<data>
-		<int key="IBDocument.SystemTarget">101000</int>
-		<string key="IBDocument.SystemVersion">14D136</string>
-		<string key="IBDocument.InterfaceBuilderVersion">7702</string>
-		<string key="IBDocument.AppKitVersion">1347.57</string>
-		<string key="IBDocument.HIToolboxVersion">758.70</string>
-		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">7702</string>
-		</object>
-		<array key="IBDocument.IntegratedClassDependencies">
-			<string>NSCustomObject</string>
-			<string>NSMenu</string>
-			<string>NSMenuItem</string>
-		</array>
-		<array key="IBDocument.PluginDependencies">
-			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-		</array>
-		<dictionary class="NSMutableDictionary" key="IBDocument.Metadata"/>
-		<array class="NSMutableArray" key="IBDocument.RootObjects" id="741074245">
-			<object class="NSCustomObject" id="168930904">
-				<object class="NSMutableString" key="NSClassName">
-					<characters key="NS.bytes">NSApplication</characters>
-				</object>
-			</object>
-			<object class="NSCustomObject" id="440734658">
-				<string key="NSClassName">FirstResponder</string>
-			</object>
-			<object class="NSCustomObject" id="260257092">
-				<string key="NSClassName">NSApplication</string>
-			</object>
-			<object class="NSMenu" id="372443182">
-				<string key="NSTitle">Massinova</string>
-				<array class="NSMutableArray" key="NSMenuItems">
-					<object class="NSMenuItem" id="777760109">
-						<reference key="NSMenu" ref="372443182"/>
-						<string key="NSTitle">Colloquy</string>
-						<string key="NSKeyEquiv"/>
-						<int key="NSKeyEquivModMask">1048576</int>
-						<int key="NSMnemonicLoc">2147483647</int>
-						<object class="NSCustomResource" key="NSOnImage" id="122971344">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">NSMenuCheckmark</string>
-						</object>
-						<object class="NSCustomResource" key="NSMixedImage" id="769937101">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">NSMenuMixedState</string>
-						</object>
-						<string key="NSAction">submenuAction:</string>
-						<reference key="NSTarget" ref="309708273"/>
-						<object class="NSMenu" key="NSSubmenu" id="309708273">
-							<string key="NSTitle">Colloquy</string>
-							<array class="NSMutableArray" key="NSMenuItems">
-								<object class="NSMenuItem" id="363166628">
-									<reference key="NSMenu" ref="309708273"/>
-									<string key="NSTitle">Sobre o Colloquy</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="165895382">
-									<reference key="NSMenu" ref="309708273"/>
-									<string key="NSTitle">Verificar se há actualizações…</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-									<object class="NSAttributedString" key="NSAttributedTitle">
-										<string key="NSString">Verificar se há actualizações…</string>
-										<array class="NSMutableArray" key="NSAttributes">
-											<dictionary>
-												<object class="NSFont" key="NSFont" id="100887786">
-													<string key="NSName">LucidaGrande</string>
-													<double key="NSSize">14</double>
-													<int key="NSfFlags">16</int>
-												</object>
-												<reference key="NSOriginalFont" ref="100887786"/>
-												<object class="NSParagraphStyle" key="NSParagraphStyle" id="1021115245">
-													<int key="NSAlignment">4</int>
-													<nil key="NSTabStops"/>
-												</object>
-											</dictionary>
-											<dictionary>
-												<reference key="NSFont" ref="100887786"/>
-												<reference key="NSParagraphStyle" ref="1021115245"/>
-											</dictionary>
-										</array>
-										<object class="NSMutableData" key="NSAttributeInfo">
-											<bytes key="NS.bytes">HQABAQ</bytes>
-										</object>
-									</object>
-								</object>
-								<object class="NSMenuItem" id="23484772">
-									<reference key="NSMenu" ref="309708273"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="310613350">
-									<reference key="NSMenu" ref="309708273"/>
-									<string key="NSTitle">Preferências…</string>
-									<string key="NSKeyEquiv">,</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="279232705">
-									<reference key="NSMenu" ref="309708273"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="872995007">
-									<reference key="NSMenu" ref="309708273"/>
-									<string key="NSTitle">Serviços</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-									<string key="NSAction">submenuAction:</string>
-									<reference key="NSTarget" ref="969849962"/>
-									<object class="NSMenu" key="NSSubmenu" id="969849962">
-										<string key="NSTitle">Serviços</string>
-										<array class="NSMutableArray" key="NSMenuItems"/>
-										<string key="NSName">_NSServicesMenu</string>
-									</object>
-								</object>
-								<object class="NSMenuItem" id="197871045">
-									<reference key="NSMenu" ref="309708273"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="91685284">
-									<reference key="NSMenu" ref="309708273"/>
-									<string key="NSTitle">Ocultar o Colloquy</string>
-									<string key="NSKeyEquiv">h</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="543213499">
-									<reference key="NSMenu" ref="309708273"/>
-									<string key="NSTitle">Ocultar os outros</string>
-									<string key="NSKeyEquiv">h</string>
-									<int key="NSKeyEquivModMask">1572864</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="1064891421">
-									<reference key="NSMenu" ref="309708273"/>
-									<string key="NSTitle">Show All</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="897660511">
-									<reference key="NSMenu" ref="309708273"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="204397144">
-									<reference key="NSMenu" ref="309708273"/>
-									<string key="NSTitle">Sair do Colloquy…</string>
-									<string key="NSKeyEquiv">q</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="908591918">
-									<reference key="NSMenu" ref="309708273"/>
-									<bool key="NSIsAlternate">YES</bool>
-									<string key="NSTitle">Sair do Colloquy</string>
-									<string key="NSKeyEquiv">q</string>
-									<int key="NSKeyEquivModMask">1572864</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-							</array>
-							<string key="NSName">_NSAppleMenu</string>
-						</object>
-					</object>
-					<object class="NSMenuItem" id="792912454">
-						<reference key="NSMenu" ref="372443182"/>
-						<string key="NSTitle">Ficheiro</string>
-						<string key="NSKeyEquiv"/>
-						<int key="NSKeyEquivModMask">1048576</int>
-						<int key="NSMnemonicLoc">2147483647</int>
-						<reference key="NSOnImage" ref="122971344"/>
-						<reference key="NSMixedImage" ref="769937101"/>
-						<string key="NSAction">submenuAction:</string>
-						<int key="NSTag">1</int>
-						<reference key="NSTarget" ref="269470660"/>
-						<object class="NSMenu" key="NSSubmenu" id="269470660">
-							<string key="NSTitle">Ficheiro</string>
-							<array class="NSMutableArray" key="NSMenuItems">
-								<object class="NSMenuItem" id="395456235">
-									<reference key="NSMenu" ref="269470660"/>
-									<string key="NSTitle">Nova ligação…</string>
-									<string key="NSKeyEquiv">n</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="36686864">
-									<reference key="NSMenu" ref="269470660"/>
-									<string key="NSTitle">Juntar-se a uma sala de conversa…</string>
-									<string key="NSKeyEquiv">j</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="271287941">
-									<reference key="NSMenu" ref="269470660"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="889620613">
-									<reference key="NSMenu" ref="269470660"/>
-									<string key="NSTitle">Transcrições inteligentes</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-									<string key="NSAction">submenuAction:</string>
-									<int key="NSTag">30</int>
-									<reference key="NSTarget" ref="566564685"/>
-									<object class="NSMenu" key="NSSubmenu" id="566564685">
-										<string key="NSTitle">Transcrições inteligentes</string>
-										<array class="NSMutableArray" key="NSMenuItems"/>
-									</object>
-								</object>
-								<object class="NSMenuItem" id="586445008">
-									<reference key="NSMenu" ref="269470660"/>
-									<string key="NSTitle">Favoritos</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-									<string key="NSAction">submenuAction:</string>
-									<int key="NSTag">20</int>
-									<reference key="NSTarget" ref="804440806"/>
-									<object class="NSMenu" key="NSSubmenu" id="804440806">
-										<string key="NSTitle">Favoritos</string>
-										<array class="NSMutableArray" key="NSMenuItems"/>
-									</object>
-								</object>
-								<object class="NSMenuItem" id="310161224">
-									<reference key="NSMenu" ref="269470660"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="23795591">
-									<reference key="NSMenu" ref="269470660"/>
-									<string key="NSTitle">Abrir transcrição…</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="1054772518">
-									<reference key="NSMenu" ref="269470660"/>
-									<string key="NSTitle">Abrir recente</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-									<string key="NSAction">submenuAction:</string>
-									<reference key="NSTarget" ref="879221961"/>
-									<object class="NSMenu" key="NSSubmenu" id="879221961">
-										<string key="NSTitle">Abrir recente</string>
-										<array class="NSMutableArray" key="NSMenuItems">
-											<object class="NSMenuItem" id="23016051">
-												<reference key="NSMenu" ref="879221961"/>
-												<string key="NSTitle">Apagar menu</string>
-												<string key="NSKeyEquiv"/>
-												<int key="NSKeyEquivModMask">1048576</int>
-												<int key="NSMnemonicLoc">2147483647</int>
-												<reference key="NSOnImage" ref="122971344"/>
-												<reference key="NSMixedImage" ref="769937101"/>
-											</object>
-										</array>
-										<string key="NSName">_NSRecentDocumentsMenu</string>
-									</object>
-								</object>
-								<object class="NSMenuItem" id="130697345">
-									<reference key="NSMenu" ref="269470660"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="739428876">
-									<reference key="NSMenu" ref="269470660"/>
-									<string key="NSTitle">Desprender painel</string>
-									<string key="NSKeyEquiv">d</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="214375665">
-									<reference key="NSMenu" ref="269470660"/>
-									<string key="NSTitle">Fechar janela</string>
-									<string key="NSKeyEquiv">w</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-									<int key="NSTag">1</int>
-								</object>
-								<object class="NSMenuItem" id="349509380">
-									<reference key="NSMenu" ref="269470660"/>
-									<string key="NSTitle">Fechar o painel actual</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-									<int key="NSTag">2</int>
-								</object>
-								<object class="NSMenuItem" id="157113007">
-									<reference key="NSMenu" ref="269470660"/>
-									<string key="NSTitle">Guardar como…</string>
-									<string key="NSKeyEquiv">s</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-							</array>
-						</object>
-					</object>
-					<object class="NSMenuItem" id="461350619">
-						<reference key="NSMenu" ref="372443182"/>
-						<string key="NSTitle">Editar</string>
-						<string key="NSKeyEquiv"/>
-						<int key="NSKeyEquivModMask">1048576</int>
-						<int key="NSMnemonicLoc">2147483647</int>
-						<reference key="NSOnImage" ref="122971344"/>
-						<reference key="NSMixedImage" ref="769937101"/>
-						<string key="NSAction">submenuAction:</string>
-						<int key="NSTag">2</int>
-						<reference key="NSTarget" ref="310176645"/>
-						<object class="NSMenu" key="NSSubmenu" id="310176645">
-							<string key="NSTitle">Editar</string>
-							<array class="NSMutableArray" key="NSMenuItems">
-								<object class="NSMenuItem" id="817995890">
-									<reference key="NSMenu" ref="310176645"/>
-									<string key="NSTitle">Desfazer</string>
-									<string key="NSKeyEquiv">z</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="210910554">
-									<reference key="NSMenu" ref="310176645"/>
-									<string key="NSTitle">Refazer</string>
-									<string key="NSKeyEquiv">Z</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="719663863">
-									<reference key="NSMenu" ref="310176645"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="720648469">
-									<reference key="NSMenu" ref="310176645"/>
-									<string key="NSTitle">Cortar</string>
-									<string key="NSKeyEquiv">x</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="867234039">
-									<reference key="NSMenu" ref="310176645"/>
-									<string key="NSTitle">Copiar</string>
-									<string key="NSKeyEquiv">c</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="1068936979">
-									<reference key="NSMenu" ref="310176645"/>
-									<string key="NSTitle">Colar</string>
-									<string key="NSKeyEquiv">v</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="1060086575">
-									<reference key="NSMenu" ref="310176645"/>
-									<string key="NSTitle">Colar como Rich Text</string>
-									<string key="NSKeyEquiv">V</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="790243038">
-									<reference key="NSMenu" ref="310176645"/>
-									<string key="NSTitle">Apagar</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="748194089">
-									<reference key="NSMenu" ref="310176645"/>
-									<string key="NSTitle">Seleccionar tudo</string>
-									<string key="NSKeyEquiv">a</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="1007963414">
-									<reference key="NSMenu" ref="310176645"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="536049864">
-									<reference key="NSMenu" ref="310176645"/>
-									<string key="NSTitle">Encontrar</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-									<string key="NSAction">submenuAction:</string>
-									<reference key="NSTarget" ref="804470726"/>
-									<object class="NSMenu" key="NSSubmenu" id="804470726">
-										<string key="NSTitle">Encontrar</string>
-										<array class="NSMutableArray" key="NSMenuItems">
-											<object class="NSMenuItem" id="792195458">
-												<reference key="NSMenu" ref="804470726"/>
-												<string key="NSTitle">Encontrar…</string>
-												<string key="NSKeyEquiv">f</string>
-												<int key="NSKeyEquivModMask">1048576</int>
-												<int key="NSMnemonicLoc">2147483647</int>
-												<reference key="NSOnImage" ref="122971344"/>
-												<reference key="NSMixedImage" ref="769937101"/>
-												<int key="NSTag">1</int>
-											</object>
-											<object class="NSMenuItem" id="771402237">
-												<reference key="NSMenu" ref="804470726"/>
-												<string key="NSTitle">Encontrar seguinte</string>
-												<string key="NSKeyEquiv">g</string>
-												<int key="NSKeyEquivModMask">1048576</int>
-												<int key="NSMnemonicLoc">2147483647</int>
-												<reference key="NSOnImage" ref="122971344"/>
-												<reference key="NSMixedImage" ref="769937101"/>
-												<int key="NSTag">2</int>
-											</object>
-											<object class="NSMenuItem" id="532658360">
-												<reference key="NSMenu" ref="804470726"/>
-												<string key="NSTitle">Encontrar anterior</string>
-												<string key="NSKeyEquiv">G</string>
-												<int key="NSKeyEquivModMask">1048576</int>
-												<int key="NSMnemonicLoc">2147483647</int>
-												<reference key="NSOnImage" ref="122971344"/>
-												<reference key="NSMixedImage" ref="769937101"/>
-												<int key="NSTag">3</int>
-											</object>
-											<object class="NSMenuItem" id="713946252">
-												<reference key="NSMenu" ref="804470726"/>
-												<string key="NSTitle">Usar a selecção para encontrar</string>
-												<string key="NSKeyEquiv">e</string>
-												<int key="NSKeyEquivModMask">1048576</int>
-												<int key="NSMnemonicLoc">2147483647</int>
-												<reference key="NSOnImage" ref="122971344"/>
-												<reference key="NSMixedImage" ref="769937101"/>
-												<int key="NSTag">7</int>
-											</object>
-										</array>
-									</object>
-								</object>
-								<object class="NSMenuItem" id="157721476">
-									<reference key="NSMenu" ref="310176645"/>
-									<string key="NSTitle">Ortografia</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-									<string key="NSAction">submenuAction:</string>
-									<reference key="NSTarget" ref="619037404"/>
-									<object class="NSMenu" key="NSSubmenu" id="619037404">
-										<string key="NSTitle">Ortografia</string>
-										<array class="NSMutableArray" key="NSMenuItems">
-											<object class="NSMenuItem" id="232251737">
-												<reference key="NSMenu" ref="619037404"/>
-												<string key="NSTitle">Ortografia...</string>
-												<string key="NSKeyEquiv">:</string>
-												<int key="NSKeyEquivModMask">1048576</int>
-												<int key="NSMnemonicLoc">2147483647</int>
-												<reference key="NSOnImage" ref="122971344"/>
-												<reference key="NSMixedImage" ref="769937101"/>
-											</object>
-											<object class="NSMenuItem" id="326967367">
-												<reference key="NSMenu" ref="619037404"/>
-												<string key="NSTitle">Verificar ortografia</string>
-												<string key="NSKeyEquiv">;</string>
-												<int key="NSKeyEquivModMask">1048576</int>
-												<int key="NSMnemonicLoc">2147483647</int>
-												<reference key="NSOnImage" ref="122971344"/>
-												<reference key="NSMixedImage" ref="769937101"/>
-											</object>
-											<object class="NSMenuItem" id="751481909">
-												<reference key="NSMenu" ref="619037404"/>
-												<string key="NSTitle">Verificar ortografia enquanto escreve</string>
-												<string key="NSKeyEquiv"/>
-												<int key="NSKeyEquivModMask">1048576</int>
-												<int key="NSMnemonicLoc">2147483647</int>
-												<reference key="NSOnImage" ref="122971344"/>
-												<reference key="NSMixedImage" ref="769937101"/>
-											</object>
-										</array>
-									</object>
-								</object>
-							</array>
-						</object>
-					</object>
-					<object class="NSMenuItem" id="920915099">
-						<reference key="NSMenu" ref="372443182"/>
-						<string key="NSTitle">Ver</string>
-						<string key="NSKeyEquiv"/>
-						<int key="NSKeyEquivModMask">1048576</int>
-						<int key="NSMnemonicLoc">2147483647</int>
-						<reference key="NSOnImage" ref="122971344"/>
-						<reference key="NSMixedImage" ref="769937101"/>
-						<string key="NSAction">submenuAction:</string>
-						<int key="NSTag">3</int>
-						<reference key="NSTarget" ref="205769704"/>
-						<object class="NSMenu" key="NSSubmenu" id="205769704">
-							<string key="NSTitle">Ver</string>
-							<array class="NSMutableArray" key="NSMenuItems">
-								<object class="NSMenuItem" id="771442959">
-									<reference key="NSMenu" ref="205769704"/>
-									<string key="NSTitle">Mostrar gaveta</string>
-									<string key="NSKeyEquiv">D</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="24668501">
-									<reference key="NSMenu" ref="205769704"/>
-									<string key="NSTitle">Mostrar barra de telhas</string>
-									<string key="NSKeyEquiv">T</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="464386280">
-									<reference key="NSMenu" ref="205769704"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="585745153">
-									<reference key="NSMenu" ref="205769704"/>
-									<bool key="NSIsAlternate">YES</bool>
-									<string key="NSTitle">Obter informações</string>
-									<string key="NSKeyEquiv">I</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="920060099">
-									<reference key="NSMenu" ref="205769704"/>
-									<bool key="NSIsAlternate">YES</bool>
-									<string key="NSTitle">Mostrar inspector</string>
-									<string key="NSKeyEquiv">I</string>
-									<int key="NSKeyEquivModMask">1572864</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="701944246">
-									<reference key="NSMenu" ref="205769704"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="928608510">
-									<reference key="NSMenu" ref="205769704"/>
-									<string key="NSTitle">Mostrar barra de ferramentas</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="226619014">
-									<reference key="NSMenu" ref="205769704"/>
-									<string key="NSTitle">Personalizar a barra de ferramentas…</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="131716702">
-									<reference key="NSMenu" ref="205769704"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="834997947">
-									<reference key="NSMenu" ref="205769704"/>
-									<string key="NSTitle">Usar ícones pequenos na gaveta</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="980573248">
-									<reference key="NSMenu" ref="205769704"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="813258089">
-									<reference key="NSMenu" ref="205769704"/>
-									<string key="NSTitle">Apagar história</string>
-									<string key="NSKeyEquiv">k</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="1006570123">
-									<reference key="NSMenu" ref="205769704"/>
-									<string key="NSTitle">Marcar histórico</string>
-									<string key="NSKeyEquiv">M</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="903787072">
-									<reference key="NSMenu" ref="205769704"/>
-									<bool key="NSIsAlternate">YES</bool>
-									<string key="NSTitle">Marcar tudo</string>
-									<string key="NSKeyEquiv">M</string>
-									<int key="NSKeyEquivModMask">1572864</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="720317156">
-									<reference key="NSMenu" ref="205769704"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="132445505">
-									<reference key="NSMenu" ref="205769704"/>
-									<string key="NSTitle">Saltar para o elemento destacado anterior</string>
-									<string key="NSKeyEquiv">[</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="1061498475">
-									<reference key="NSMenu" ref="205769704"/>
-									<string key="NSTitle">Saltar para o próximo elemento destacado</string>
-									<string key="NSKeyEquiv">]</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="57499705">
-									<reference key="NSMenu" ref="205769704"/>
-									<string key="NSTitle">Saltar para a próxima marca</string>
-									<string key="NSKeyEquiv">J</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-							</array>
-						</object>
-					</object>
-					<object class="NSMenuItem" id="830621188">
-						<reference key="NSMenu" ref="372443182"/>
-						<string key="NSTitle">Tipo de letra</string>
-						<string key="NSKeyEquiv"/>
-						<int key="NSKeyEquivModMask">1048576</int>
-						<int key="NSMnemonicLoc">2147483647</int>
-						<reference key="NSOnImage" ref="122971344"/>
-						<reference key="NSMixedImage" ref="769937101"/>
-						<string key="NSAction">submenuAction:</string>
-						<int key="NSTag">4</int>
-						<reference key="NSTarget" ref="405687148"/>
-						<object class="NSMenu" key="NSSubmenu" id="405687148">
-							<string key="NSTitle">Tipo de letra</string>
-							<array class="NSMutableArray" key="NSMenuItems">
-								<object class="NSMenuItem" id="792057454">
-									<reference key="NSMenu" ref="405687148"/>
-									<string key="NSTitle">Bold</string>
-									<string key="NSKeyEquiv">b</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-									<int key="NSTag">2</int>
-								</object>
-								<object class="NSMenuItem" id="899520132">
-									<reference key="NSMenu" ref="405687148"/>
-									<string key="NSTitle">Itálico</string>
-									<string key="NSKeyEquiv">i</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-									<int key="NSTag">1</int>
-								</object>
-								<object class="NSMenuItem" id="542425384">
-									<reference key="NSMenu" ref="405687148"/>
-									<string key="NSTitle">Sublinhado</string>
-									<string key="NSKeyEquiv">u</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="909475812">
-									<reference key="NSMenu" ref="405687148"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="669089108">
-									<reference key="NSMenu" ref="405687148"/>
-									<string key="NSTitle">Mostrar cores</string>
-									<string key="NSKeyEquiv">C</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="584339842">
-									<reference key="NSMenu" ref="405687148"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="128003645">
-									<reference key="NSMenu" ref="405687148"/>
-									<string key="NSTitle">Copiar estilo</string>
-									<string key="NSKeyEquiv">c</string>
-									<int key="NSKeyEquivModMask">1572864</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="91649513">
-									<reference key="NSMenu" ref="405687148"/>
-									<string key="NSTitle">Colar estilo</string>
-									<string key="NSKeyEquiv">v</string>
-									<int key="NSKeyEquivModMask">1572864</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-							</array>
-							<string key="NSName">_NSFontMenu</string>
-						</object>
-					</object>
-					<object class="NSMenuItem" id="956137420">
-						<reference key="NSMenu" ref="372443182"/>
-						<string key="NSTitle">Janela</string>
-						<string key="NSKeyEquiv"/>
-						<int key="NSKeyEquivModMask">1048576</int>
-						<int key="NSMnemonicLoc">2147483647</int>
-						<reference key="NSOnImage" ref="122971344"/>
-						<reference key="NSMixedImage" ref="769937101"/>
-						<string key="NSAction">submenuAction:</string>
-						<int key="NSTag">5</int>
-						<reference key="NSTarget" ref="317458067"/>
-						<object class="NSMenu" key="NSSubmenu" id="317458067">
-							<string key="NSTitle">Janela</string>
-							<array class="NSMutableArray" key="NSMenuItems">
-								<object class="NSMenuItem" id="757334333">
-									<reference key="NSMenu" ref="317458067"/>
-									<string key="NSTitle">Minimizar</string>
-									<string key="NSKeyEquiv">m</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="101553048">
-									<reference key="NSMenu" ref="317458067"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="775549755">
-									<reference key="NSMenu" ref="317458067"/>
-									<string key="NSTitle">Seleccionar o painel anterior</string>
-									<string key="NSKeyEquiv"></string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="1030355742">
-									<reference key="NSMenu" ref="317458067"/>
-									<bool key="NSIsAlternate">YES</bool>
-									<string key="NSTitle">Seleccionar o painel activo anterior</string>
-									<string key="NSKeyEquiv"></string>
-									<int key="NSKeyEquivModMask">1572864</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="522922362">
-									<reference key="NSMenu" ref="317458067"/>
-									<string key="NSTitle">Seleccionar o painel seguinte</string>
-									<string key="NSKeyEquiv"></string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="228191736">
-									<reference key="NSMenu" ref="317458067"/>
-									<bool key="NSIsAlternate">YES</bool>
-									<string key="NSTitle">Seleccionar o próximo painel activo</string>
-									<string key="NSKeyEquiv"></string>
-									<int key="NSKeyEquivModMask">1572864</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="1057239203">
-									<reference key="NSMenu" ref="317458067"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="286677451">
-									<reference key="NSMenu" ref="317458067"/>
-									<string key="NSTitle">Ligações</string>
-									<string key="NSKeyEquiv">1</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="530166689">
-									<reference key="NSMenu" ref="317458067"/>
-									<string key="NSTitle">Transferências de ficheiros</string>
-									<string key="NSKeyEquiv">2</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="736676472">
-									<reference key="NSMenu" ref="317458067"/>
-									<string key="NSTitle">Lista de amigos</string>
-									<string key="NSKeyEquiv">3</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="767231375">
-									<reference key="NSMenu" ref="317458067"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="134970501">
-									<reference key="NSMenu" ref="317458067"/>
-									<string key="NSTitle">Trazer todos para a frente</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-							</array>
-							<string key="NSName">_NSWindowsMenu</string>
-						</object>
-					</object>
-					<object class="NSMenuItem" id="695651687">
-						<reference key="NSMenu" ref="372443182"/>
-						<string key="NSTitle">Ajuda</string>
-						<string key="NSKeyEquiv"/>
-						<int key="NSKeyEquivModMask">1048576</int>
-						<int key="NSMnemonicLoc">2147483647</int>
-						<reference key="NSOnImage" ref="122971344"/>
-						<reference key="NSMixedImage" ref="769937101"/>
-						<string key="NSAction">submenuAction:</string>
-						<int key="NSTag">6</int>
-						<reference key="NSTarget" ref="27356666"/>
-						<object class="NSMenu" key="NSSubmenu" id="27356666">
-							<string key="NSTitle">Ajuda</string>
-							<array class="NSMutableArray" key="NSMenuItems">
-								<object class="NSMenuItem" id="890129824">
-									<reference key="NSMenu" ref="27356666"/>
-									<string key="NSTitle">Ajuda do Colloquy</string>
-									<string key="NSKeyEquiv">?</string>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="897057358">
-									<reference key="NSMenu" ref="27356666"/>
-									<bool key="NSIsDisabled">YES</bool>
-									<bool key="NSIsSeparator">YES</bool>
-									<string key="NSTitle"/>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="334407941">
-									<reference key="NSMenu" ref="27356666"/>
-									<string key="NSTitle">Sala de conversa do Colloquy</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="1034870540">
-									<reference key="NSMenu" ref="27356666"/>
-									<string key="NSTitle">Dar a sua opinião sobre o Colloquy</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="455748662">
-									<reference key="NSMenu" ref="27356666"/>
-									<string key="NSTitle">Colloquy Bug Report</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-								<object class="NSMenuItem" id="562596679">
-									<reference key="NSMenu" ref="27356666"/>
-									<string key="NSTitle">Informações sobre o Colloquy</string>
-									<string key="NSKeyEquiv"/>
-									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="122971344"/>
-									<reference key="NSMixedImage" ref="769937101"/>
-								</object>
-							</array>
-						</object>
-					</object>
-				</array>
-				<string key="NSName">_NSMainMenu</string>
-			</object>
-			<object class="NSCustomObject" id="417420338">
-				<string key="NSClassName">MVApplicationController</string>
-			</object>
-			<object class="NSCustomObject" id="699741879">
-				<string key="NSClassName">NSFontManager</string>
-			</object>
-		</array>
-		<object class="IBObjectContainer" key="IBDocument.Objects">
-			<array key="connectionRecords">
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">unhideAllApplications:</string>
-						<reference key="source" ref="168930904"/>
-						<reference key="destination" ref="1064891421"/>
-					</object>
-					<int key="connectionID">153</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">hide:</string>
-						<reference key="source" ref="168930904"/>
-						<reference key="destination" ref="91685284"/>
-					</object>
-					<int key="connectionID">152</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">terminate:</string>
-						<reference key="source" ref="168930904"/>
-						<reference key="destination" ref="204397144"/>
-					</object>
-					<int key="connectionID">139</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">orderFrontStandardAboutPanel:</string>
-						<reference key="source" ref="168930904"/>
-						<reference key="destination" ref="363166628"/>
-					</object>
-					<int key="connectionID">142</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">delegate</string>
-						<reference key="source" ref="168930904"/>
-						<reference key="destination" ref="417420338"/>
-					</object>
-					<int key="connectionID">263</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">hideOtherApplications:</string>
-						<reference key="source" ref="168930904"/>
-						<reference key="destination" ref="543213499"/>
-					</object>
-					<int key="connectionID">146</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">italic:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="899520132"/>
-					</object>
-					<int key="connectionID">748</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">toggleSmallDrawerIcons:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="834997947"/>
-					</object>
-					<int key="connectionID">868</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">clearRecentDocuments:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="23016051"/>
-					</object>
-					<int key="connectionID">807</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">cut:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="720648469"/>
-					</object>
-					<int key="connectionID">228</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">orderFrontColorPanel:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="669089108"/>
-					</object>
-					<int key="connectionID">734</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">newConnection:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="395456235"/>
-					</object>
-					<int key="connectionID">779</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">selectPreviousActivePanel:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="1030355742"/>
-					</object>
-					<int key="connectionID">913</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">bold:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="792057454"/>
-					</object>
-					<int key="connectionID">747</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">pasteFont:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="91649513"/>
-					</object>
-					<int key="connectionID">741</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">jumpToMark:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="57499705"/>
-					</object>
-					<int key="connectionID">970</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">detachCurrentPanel:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="739428876"/>
-					</object>
-					<int key="connectionID">920</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">jumpToNextHighlight:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="1061498475"/>
-					</object>
-					<int key="connectionID">930</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">checkSpelling:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="326967367"/>
-					</object>
-					<int key="connectionID">225</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">showGuessPanel:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="232251737"/>
-					</object>
-					<int key="connectionID">230</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">orderFrontFindPanel:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="792195458"/>
-					</object>
-					<int key="connectionID">957</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">jumpToPreviousHighlight:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="132445505"/>
-					</object>
-					<int key="connectionID">929</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">underline:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="542425384"/>
-					</object>
-					<int key="connectionID">742</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">selectNextPanel:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="522922362"/>
-					</object>
-					<int key="connectionID">802</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">toggleContinuousSpellChecking:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="751481909"/>
-					</object>
-					<int key="connectionID">222</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">selectAll:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="748194089"/>
-					</object>
-					<int key="connectionID">232</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">toggleToolbarShown:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="928608510"/>
-					</object>
-					<int key="connectionID">396</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">pasteAsPlainText:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="1068936979"/>
-					</object>
-					<int key="connectionID">905</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">selectPreviousPanel:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="775549755"/>
-					</object>
-					<int key="connectionID">803</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">openDocument:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="23795591"/>
-					</object>
-					<int key="connectionID">975</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">pasteAsRichText:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="1060086575"/>
-					</object>
-					<int key="connectionID">904</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">copy:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="867234039"/>
-					</object>
-					<int key="connectionID">979</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">selectNextActivePanel:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="228191736"/>
-					</object>
-					<int key="connectionID">914</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">closeCurrentPanel:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="349509380"/>
-					</object>
-					<int key="connectionID">798</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">redo:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="210910554"/>
-					</object>
-					<int key="connectionID">231</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">findNext:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="771402237"/>
-					</object>
-					<int key="connectionID">958</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">clear:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="790243038"/>
-					</object>
-					<int key="connectionID">229</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">joinRoom:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="36686864"/>
-					</object>
-					<int key="connectionID">882</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">findPrevious:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="532658360"/>
-					</object>
-					<int key="connectionID">959</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">clearDisplay:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="813258089"/>
-					</object>
-					<int key="connectionID">931</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">performMiniaturize:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="757334333"/>
-					</object>
-					<int key="connectionID">37</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">copyFont:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="128003645"/>
-					</object>
-					<int key="connectionID">738</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">arrangeInFront:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="134970501"/>
-					</object>
-					<int key="connectionID">39</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">copySelectionToFindPboard:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="713946252"/>
-					</object>
-					<int key="connectionID">985</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">showInspector:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="920060099"/>
-					</object>
-					<int key="connectionID">907</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">runToolbarCustomizationPalette:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="226619014"/>
-					</object>
-					<int key="connectionID">397</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">toggleViewsDrawer:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="771442959"/>
-					</object>
-					<int key="connectionID">865</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">getInfo:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="585745153"/>
-					</object>
-					<int key="connectionID">909</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">performClose:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="214375665"/>
-					</object>
-					<int key="connectionID">892</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">toggleTabBarVisible:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="24668501"/>
-					</object>
-					<int key="connectionID">917</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">undo:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="817995890"/>
-					</object>
-					<int key="connectionID">223</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">markDisplay:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="1006570123"/>
-					</object>
-					<int key="connectionID">965</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">saveDocumentTo:</string>
-						<reference key="source" ref="440734658"/>
-						<reference key="destination" ref="157113007"/>
-					</object>
-					<int key="connectionID">808</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">showConnectionManager:</string>
-						<reference key="source" ref="417420338"/>
-						<reference key="destination" ref="286677451"/>
-					</object>
-					<int key="connectionID">774</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">bugReportWebsite:</string>
-						<reference key="source" ref="417420338"/>
-						<reference key="destination" ref="455748662"/>
-					</object>
-					<int key="connectionID">981</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">terminateWithoutConfirm:</string>
-						<reference key="source" ref="417420338"/>
-						<reference key="destination" ref="908591918"/>
-					</object>
-					<int key="connectionID">978</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">emailDeveloper:</string>
-						<reference key="source" ref="417420338"/>
-						<reference key="destination" ref="1034870540"/>
-					</object>
-					<int key="connectionID">777</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">showPreferences:</string>
-						<reference key="source" ref="417420338"/>
-						<reference key="destination" ref="310613350"/>
-					</object>
-					<int key="connectionID">877</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">markAllDisplays:</string>
-						<reference key="source" ref="417420338"/>
-						<reference key="destination" ref="903787072"/>
-					</object>
-					<int key="connectionID">968</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">showBuddyList:</string>
-						<reference key="source" ref="417420338"/>
-						<reference key="destination" ref="736676472"/>
-					</object>
-					<int key="connectionID">879</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">connectToSupportRoom:</string>
-						<reference key="source" ref="417420338"/>
-						<reference key="destination" ref="334407941"/>
-					</object>
-					<int key="connectionID">771</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">helpWebsite:</string>
-						<reference key="source" ref="417420338"/>
-						<reference key="destination" ref="890129824"/>
-					</object>
-					<int key="connectionID">984</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">showTransferManager:</string>
-						<reference key="source" ref="417420338"/>
-						<reference key="destination" ref="530166689"/>
-					</object>
-					<int key="connectionID">775</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">productWebsite:</string>
-						<reference key="source" ref="417420338"/>
-						<reference key="destination" ref="562596679"/>
-					</object>
-					<int key="connectionID">983</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">checkForUpdate:</string>
-						<reference key="source" ref="417420338"/>
-						<reference key="destination" ref="165895382"/>
-					</object>
-					<int key="connectionID">697</int>
-				</object>
-			</array>
-			<object class="IBMutableOrderedSet" key="objectRecords">
-				<array key="orderedObjects">
-					<object class="IBObjectRecord">
-						<int key="objectID">0</int>
-						<array key="object" id="0"/>
-						<reference key="children" ref="741074245"/>
-						<nil key="parent"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">-2</int>
-						<reference key="object" ref="168930904"/>
-						<reference key="parent" ref="0"/>
-						<string key="objectName">File's Owner</string>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">-1</int>
-						<reference key="object" ref="440734658"/>
-						<reference key="parent" ref="0"/>
-						<string key="objectName">First Responder</string>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">-3</int>
-						<reference key="object" ref="260257092"/>
-						<reference key="parent" ref="0"/>
-						<string key="objectName">Application</string>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">29</int>
-						<reference key="object" ref="372443182"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="956137420"/>
-							<reference ref="777760109"/>
-							<reference ref="792912454"/>
-							<reference ref="695651687"/>
-							<reference ref="461350619"/>
-							<reference ref="920915099"/>
-							<reference ref="830621188"/>
-						</array>
-						<reference key="parent" ref="0"/>
-						<string key="objectName">MainMenu</string>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">19</int>
-						<reference key="object" ref="956137420"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="317458067"/>
-						</array>
-						<reference key="parent" ref="372443182"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">24</int>
-						<reference key="object" ref="317458067"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="134970501"/>
-							<reference ref="757334333"/>
-							<reference ref="101553048"/>
-							<reference ref="767231375"/>
-							<reference ref="530166689"/>
-							<reference ref="286677451"/>
-							<reference ref="522922362"/>
-							<reference ref="775549755"/>
-							<reference ref="1057239203"/>
-							<reference ref="736676472"/>
-							<reference ref="1030355742"/>
-							<reference ref="228191736"/>
-						</array>
-						<reference key="parent" ref="956137420"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">5</int>
-						<reference key="object" ref="134970501"/>
-						<reference key="parent" ref="317458067"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">23</int>
-						<reference key="object" ref="757334333"/>
-						<reference key="parent" ref="317458067"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">92</int>
-						<reference key="object" ref="101553048"/>
-						<reference key="parent" ref="317458067"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">657</int>
-						<reference key="object" ref="767231375"/>
-						<reference key="parent" ref="317458067"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">658</int>
-						<reference key="object" ref="530166689"/>
-						<reference key="parent" ref="317458067"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">751</int>
-						<reference key="object" ref="286677451"/>
-						<reference key="parent" ref="317458067"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">793</int>
-						<reference key="object" ref="522922362"/>
-						<reference key="parent" ref="317458067"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">794</int>
-						<reference key="object" ref="775549755"/>
-						<reference key="parent" ref="317458067"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">795</int>
-						<reference key="object" ref="1057239203"/>
-						<reference key="parent" ref="317458067"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">878</int>
-						<reference key="object" ref="736676472"/>
-						<reference key="parent" ref="317458067"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">910</int>
-						<reference key="object" ref="1030355742"/>
-						<reference key="parent" ref="317458067"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">911</int>
-						<reference key="object" ref="228191736"/>
-						<reference key="parent" ref="317458067"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">56</int>
-						<reference key="object" ref="777760109"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="309708273"/>
-						</array>
-						<reference key="parent" ref="372443182"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">57</int>
-						<reference key="object" ref="309708273"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="363166628"/>
-							<reference ref="310613350"/>
-							<reference ref="872995007"/>
-							<reference ref="91685284"/>
-							<reference ref="204397144"/>
-							<reference ref="279232705"/>
-							<reference ref="197871045"/>
-							<reference ref="543213499"/>
-							<reference ref="897660511"/>
-							<reference ref="1064891421"/>
-							<reference ref="165895382"/>
-							<reference ref="908591918"/>
-							<reference ref="23484772"/>
-						</array>
-						<reference key="parent" ref="777760109"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">58</int>
-						<reference key="object" ref="363166628"/>
-						<reference key="parent" ref="309708273"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">129</int>
-						<reference key="object" ref="310613350"/>
-						<reference key="parent" ref="309708273"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">131</int>
-						<reference key="object" ref="872995007"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="969849962"/>
-						</array>
-						<reference key="parent" ref="309708273"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">130</int>
-						<reference key="object" ref="969849962"/>
-						<reference key="parent" ref="872995007"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">134</int>
-						<reference key="object" ref="91685284"/>
-						<reference key="parent" ref="309708273"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">136</int>
-						<reference key="object" ref="204397144"/>
-						<reference key="parent" ref="309708273"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">143</int>
-						<reference key="object" ref="279232705"/>
-						<reference key="parent" ref="309708273"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">144</int>
-						<reference key="object" ref="197871045"/>
-						<reference key="parent" ref="309708273"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">145</int>
-						<reference key="object" ref="543213499"/>
-						<reference key="parent" ref="309708273"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">149</int>
-						<reference key="object" ref="897660511"/>
-						<reference key="parent" ref="309708273"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">150</int>
-						<reference key="object" ref="1064891421"/>
-						<reference key="parent" ref="309708273"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">696</int>
-						<reference key="object" ref="165895382"/>
-						<reference key="parent" ref="309708273"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">977</int>
-						<reference key="object" ref="908591918"/>
-						<reference key="parent" ref="309708273"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">982</int>
-						<reference key="object" ref="23484772"/>
-						<reference key="parent" ref="309708273"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">83</int>
-						<reference key="object" ref="792912454"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="269470660"/>
-						</array>
-						<reference key="parent" ref="372443182"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">81</int>
-						<reference key="object" ref="269470660"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="214375665"/>
-							<reference ref="395456235"/>
-							<reference ref="130697345"/>
-							<reference ref="157113007"/>
-							<reference ref="349509380"/>
-							<reference ref="1054772518"/>
-							<reference ref="36686864"/>
-							<reference ref="310161224"/>
-							<reference ref="586445008"/>
-							<reference ref="739428876"/>
-							<reference ref="889620613"/>
-							<reference ref="271287941"/>
-							<reference ref="23795591"/>
-						</array>
-						<reference key="parent" ref="792912454"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">73</int>
-						<reference key="object" ref="214375665"/>
-						<reference key="parent" ref="269470660"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">749</int>
-						<reference key="object" ref="395456235"/>
-						<reference key="parent" ref="269470660"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">754</int>
-						<reference key="object" ref="130697345"/>
-						<reference key="parent" ref="269470660"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">780</int>
-						<reference key="object" ref="157113007"/>
-						<reference key="parent" ref="269470660"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">789</int>
-						<reference key="object" ref="349509380"/>
-						<reference key="parent" ref="269470660"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">804</int>
-						<reference key="object" ref="1054772518"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="879221961"/>
-						</array>
-						<reference key="parent" ref="269470660"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">805</int>
-						<reference key="object" ref="879221961"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="23016051"/>
-						</array>
-						<reference key="parent" ref="1054772518"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">806</int>
-						<reference key="object" ref="23016051"/>
-						<reference key="parent" ref="879221961"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">880</int>
-						<reference key="object" ref="36686864"/>
-						<reference key="parent" ref="269470660"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">883</int>
-						<reference key="object" ref="310161224"/>
-						<reference key="parent" ref="269470660"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">890</int>
-						<reference key="object" ref="586445008"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="804440806"/>
-						</array>
-						<reference key="parent" ref="269470660"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">888</int>
-						<reference key="object" ref="804440806"/>
-						<reference key="parent" ref="586445008"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">919</int>
-						<reference key="object" ref="739428876"/>
-						<reference key="parent" ref="269470660"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">960</int>
-						<reference key="object" ref="889620613"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="566564685"/>
-						</array>
-						<reference key="parent" ref="269470660"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">961</int>
-						<reference key="object" ref="566564685"/>
-						<reference key="parent" ref="889620613"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">962</int>
-						<reference key="object" ref="271287941"/>
-						<reference key="parent" ref="269470660"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">974</int>
-						<reference key="object" ref="23795591"/>
-						<reference key="parent" ref="269470660"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">103</int>
-						<reference key="object" ref="695651687"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="27356666"/>
-						</array>
-						<reference key="parent" ref="372443182"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">106</int>
-						<reference key="object" ref="27356666"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="890129824"/>
-							<reference ref="334407941"/>
-							<reference ref="897057358"/>
-							<reference ref="1034870540"/>
-							<reference ref="455748662"/>
-							<reference ref="562596679"/>
-						</array>
-						<reference key="parent" ref="695651687"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">111</int>
-						<reference key="object" ref="890129824"/>
-						<reference key="parent" ref="27356666"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">756</int>
-						<reference key="object" ref="334407941"/>
-						<reference key="parent" ref="27356666"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">757</int>
-						<reference key="object" ref="897057358"/>
-						<reference key="parent" ref="27356666"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">776</int>
-						<reference key="object" ref="1034870540"/>
-						<reference key="parent" ref="27356666"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">786</int>
-						<reference key="object" ref="455748662"/>
-						<reference key="parent" ref="27356666"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">980</int>
-						<reference key="object" ref="562596679"/>
-						<reference key="parent" ref="27356666"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">217</int>
-						<reference key="object" ref="461350619"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="310176645"/>
-						</array>
-						<reference key="parent" ref="372443182"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">205</int>
-						<reference key="object" ref="310176645"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="867234039"/>
-							<reference ref="748194089"/>
-							<reference ref="720648469"/>
-							<reference ref="790243038"/>
-							<reference ref="719663863"/>
-							<reference ref="817995890"/>
-							<reference ref="1007963414"/>
-							<reference ref="210910554"/>
-							<reference ref="157721476"/>
-							<reference ref="1068936979"/>
-							<reference ref="1060086575"/>
-							<reference ref="536049864"/>
-						</array>
-						<reference key="parent" ref="461350619"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">197</int>
-						<reference key="object" ref="867234039"/>
-						<reference key="parent" ref="310176645"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">198</int>
-						<reference key="object" ref="748194089"/>
-						<reference key="parent" ref="310176645"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">199</int>
-						<reference key="object" ref="720648469"/>
-						<reference key="parent" ref="310176645"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">202</int>
-						<reference key="object" ref="790243038"/>
-						<reference key="parent" ref="310176645"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">206</int>
-						<reference key="object" ref="719663863"/>
-						<reference key="parent" ref="310176645"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">207</int>
-						<reference key="object" ref="817995890"/>
-						<reference key="parent" ref="310176645"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">214</int>
-						<reference key="object" ref="1007963414"/>
-						<reference key="parent" ref="310176645"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">215</int>
-						<reference key="object" ref="210910554"/>
-						<reference key="parent" ref="310176645"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">216</int>
-						<reference key="object" ref="157721476"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="619037404"/>
-						</array>
-						<reference key="parent" ref="310176645"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">200</int>
-						<reference key="object" ref="619037404"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="326967367"/>
-							<reference ref="232251737"/>
-							<reference ref="751481909"/>
-						</array>
-						<reference key="parent" ref="157721476"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">201</int>
-						<reference key="object" ref="326967367"/>
-						<reference key="parent" ref="619037404"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">204</int>
-						<reference key="object" ref="232251737"/>
-						<reference key="parent" ref="619037404"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">219</int>
-						<reference key="object" ref="751481909"/>
-						<reference key="parent" ref="619037404"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">900</int>
-						<reference key="object" ref="1068936979"/>
-						<reference key="parent" ref="310176645"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">901</int>
-						<reference key="object" ref="1060086575"/>
-						<reference key="parent" ref="310176645"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">948</int>
-						<reference key="object" ref="536049864"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="804470726"/>
-						</array>
-						<reference key="parent" ref="310176645"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">949</int>
-						<reference key="object" ref="804470726"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="792195458"/>
-							<reference ref="713946252"/>
-							<reference ref="532658360"/>
-							<reference ref="771402237"/>
-						</array>
-						<reference key="parent" ref="536049864"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">944</int>
-						<reference key="object" ref="792195458"/>
-						<reference key="parent" ref="804470726"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">945</int>
-						<reference key="object" ref="713946252"/>
-						<reference key="parent" ref="804470726"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">946</int>
-						<reference key="object" ref="532658360"/>
-						<reference key="parent" ref="804470726"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">950</int>
-						<reference key="object" ref="771402237"/>
-						<reference key="parent" ref="804470726"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">391</int>
-						<reference key="object" ref="920915099"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="205769704"/>
-						</array>
-						<reference key="parent" ref="372443182"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">392</int>
-						<reference key="object" ref="205769704"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="226619014"/>
-							<reference ref="928608510"/>
-							<reference ref="771442959"/>
-							<reference ref="464386280"/>
-							<reference ref="720317156"/>
-							<reference ref="834997947"/>
-							<reference ref="920060099"/>
-							<reference ref="585745153"/>
-							<reference ref="24668501"/>
-							<reference ref="701944246"/>
-							<reference ref="131716702"/>
-							<reference ref="813258089"/>
-							<reference ref="132445505"/>
-							<reference ref="1061498475"/>
-							<reference ref="980573248"/>
-							<reference ref="1006570123"/>
-							<reference ref="903787072"/>
-							<reference ref="57499705"/>
-						</array>
-						<reference key="parent" ref="920915099"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">393</int>
-						<reference key="object" ref="226619014"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">395</int>
-						<reference key="object" ref="928608510"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">863</int>
-						<reference key="object" ref="771442959"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">864</int>
-						<reference key="object" ref="464386280"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">866</int>
-						<reference key="object" ref="720317156"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">867</int>
-						<reference key="object" ref="834997947"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">906</int>
-						<reference key="object" ref="920060099"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">908</int>
-						<reference key="object" ref="585745153"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">915</int>
-						<reference key="object" ref="24668501"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">918</int>
-						<reference key="object" ref="701944246"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">921</int>
-						<reference key="object" ref="131716702"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">922</int>
-						<reference key="object" ref="813258089"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">924</int>
-						<reference key="object" ref="132445505"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">926</int>
-						<reference key="object" ref="1061498475"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">928</int>
-						<reference key="object" ref="980573248"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">964</int>
-						<reference key="object" ref="1006570123"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">966</int>
-						<reference key="object" ref="903787072"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">969</int>
-						<reference key="object" ref="57499705"/>
-						<reference key="parent" ref="205769704"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">720</int>
-						<reference key="object" ref="830621188"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="405687148"/>
-						</array>
-						<reference key="parent" ref="372443182"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">710</int>
-						<reference key="object" ref="405687148"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="542425384"/>
-							<reference ref="91649513"/>
-							<reference ref="899520132"/>
-							<reference ref="669089108"/>
-							<reference ref="584339842"/>
-							<reference ref="792057454"/>
-							<reference ref="128003645"/>
-							<reference ref="909475812"/>
-						</array>
-						<reference key="parent" ref="830621188"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">701</int>
-						<reference key="object" ref="542425384"/>
-						<reference key="parent" ref="405687148"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">709</int>
-						<reference key="object" ref="91649513"/>
-						<reference key="parent" ref="405687148"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">711</int>
-						<reference key="object" ref="899520132"/>
-						<reference key="parent" ref="405687148"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">715</int>
-						<reference key="object" ref="669089108"/>
-						<reference key="parent" ref="405687148"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">717</int>
-						<reference key="object" ref="584339842"/>
-						<reference key="parent" ref="405687148"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">719</int>
-						<reference key="object" ref="792057454"/>
-						<reference key="parent" ref="405687148"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">723</int>
-						<reference key="object" ref="128003645"/>
-						<reference key="parent" ref="405687148"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">727</int>
-						<reference key="object" ref="909475812"/>
-						<reference key="parent" ref="405687148"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">254</int>
-						<reference key="object" ref="417420338"/>
-						<reference key="parent" ref="0"/>
-						<string key="objectName">MVApplicationController</string>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">453</int>
-						<reference key="object" ref="699741879"/>
-						<reference key="parent" ref="0"/>
-						<string key="objectName">Font Manager</string>
-					</object>
-				</array>
-			</object>
-			<dictionary class="NSMutableDictionary" key="flattenedProperties">
-				<string key="-1.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="-3.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="103.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="106.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="111.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="129.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="130.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="131.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="134.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="136.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="143.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="144.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="145.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="149.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="150.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="19.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="197.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="198.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="199.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="200.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="201.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="202.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="204.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="205.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="206.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="207.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="214.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="215.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="216.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="217.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="219.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="23.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="24.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="254.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="29.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="391.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="392.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="393.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="395.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="453.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="56.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="57.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="58.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="657.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="658.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="696.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="701.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="709.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="710.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="711.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="715.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="717.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="719.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="720.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="723.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="727.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="73.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="749.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="751.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="754.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="756.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="757.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="776.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="780.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="786.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="789.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="793.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="794.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="795.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="804.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="805.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="806.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="81.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="83.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="863.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="864.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="866.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="867.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="878.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="880.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="883.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="888.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="890.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="900.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="901.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="906.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="908.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="910.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="911.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="915.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="918.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="919.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="92.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="921.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="922.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="924.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="926.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="928.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="944.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="945.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="946.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="948.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="949.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="950.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="960.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="961.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="962.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="964.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="966.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="969.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="974.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="977.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="980.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="982.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			</dictionary>
-			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
-			<nil key="activeLocalization"/>
-			<dictionary class="NSMutableDictionary" key="localizations"/>
-			<nil key="sourceID"/>
-			<int key="maxID">986</int>
-		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
-		<int key="IBDocument.localizationMode">0</int>
-		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
-		<bool key="IBDocument.previouslyAttemptedUpgradeToXcode5">YES</bool>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.InterfaceBuilder3</string>
-			<integer value="4600" key="NS.object.0"/>
-		</object>
-		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
-		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="NSMenuCheckmark">{12, 12}</string>
-			<string key="NSMenuMixedState">{10, 2}</string>
-		</dictionary>
-	</data>
-</archive>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <development version="5100" identifier="xcode"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
+            <connections>
+                <outlet property="delegate" destination="254" id="263"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application"/>
+        <menu title="Massinova" systemMenu="main" id="29" userLabel="MainMenu">
+            <items>
+                <menuItem title="Colloquy" id="56">
+                    <menu key="submenu" title="Colloquy" systemMenu="apple" id="57">
+                        <items>
+                            <menuItem title="Sobre o Colloquy" id="58">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Verificar se há actualizações…" id="696">
+                                <attributedString key="attributedTitle">
+                                    <fragment content="Verificar se há actualizações">
+                                        <attributes>
+                                            <font key="NSFont" size="14" name="LucidaGrande"/>
+                                            <font key="NSOriginalFont" size="14" name="LucidaGrande"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment content="…">
+                                        <attributes>
+                                            <font key="NSFont" size="14" name="LucidaGrande"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <connections>
+                                    <action selector="checkForUpdate:" target="254" id="697"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="982">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Preferências…" keyEquivalent="," id="129">
+                                <connections>
+                                    <action selector="showPreferences:" target="254" id="877"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="143">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Serviços" id="131">
+                                <menu key="submenu" title="Serviços" systemMenu="services" id="130"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="144">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Ocultar o Colloquy" keyEquivalent="h" id="134">
+                                <connections>
+                                    <action selector="hide:" target="-2" id="152"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Ocultar os outros" keyEquivalent="h" id="145">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="hideOtherApplications:" target="-2" id="146"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Show All" id="150">
+                                <connections>
+                                    <action selector="unhideAllApplications:" target="-2" id="153"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="149">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Sair do Colloquy…" keyEquivalent="q" id="136">
+                                <connections>
+                                    <action selector="terminate:" target="-2" id="139"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Sair do Colloquy" alternate="YES" keyEquivalent="q" id="977">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="terminateWithoutConfirm:" target="254" id="978"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Ficheiro" tag="1" id="83">
+                    <menu key="submenu" title="Ficheiro" id="81">
+                        <items>
+                            <menuItem title="Nova ligação…" keyEquivalent="n" id="749">
+                                <connections>
+                                    <action selector="newConnection:" target="-1" id="779"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Juntar-se a uma sala de conversa…" keyEquivalent="j" id="880">
+                                <connections>
+                                    <action selector="joinRoom:" target="-1" id="882"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="962">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Transcrições inteligentes" tag="30" id="960">
+                                <menu key="submenu" title="Transcrições inteligentes" id="961"/>
+                            </menuItem>
+                            <menuItem title="Favoritos" tag="20" id="890">
+                                <menu key="submenu" title="Favoritos" id="888"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="883">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Abrir transcrição…" id="974">
+                                <connections>
+                                    <action selector="openDocument:" target="-1" id="975"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Abrir recente" id="804">
+                                <menu key="submenu" title="Abrir recente" systemMenu="recentDocuments" id="805">
+                                    <items>
+                                        <menuItem title="Apagar menu" id="806">
+                                            <connections>
+                                                <action selector="clearRecentDocuments:" target="-1" id="807"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="754">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Desprender painel" keyEquivalent="d" id="919">
+                                <connections>
+                                    <action selector="detachCurrentPanel:" target="-1" id="920"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Fechar janela" tag="1" keyEquivalent="w" id="73">
+                                <connections>
+                                    <action selector="performClose:" target="-1" id="892"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Fechar o painel actual" tag="2" id="789">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="closeCurrentPanel:" target="-1" id="798"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Guardar como…" keyEquivalent="s" id="780">
+                                <connections>
+                                    <action selector="saveDocumentTo:" target="-1" id="808"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Editar" tag="2" id="217">
+                    <menu key="submenu" title="Editar" id="205">
+                        <items>
+                            <menuItem title="Desfazer" keyEquivalent="z" id="207">
+                                <connections>
+                                    <action selector="undo:" target="-1" id="223"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Refazer" keyEquivalent="Z" id="215">
+                                <connections>
+                                    <action selector="redo:" target="-1" id="231"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="206">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Cortar" keyEquivalent="x" id="199">
+                                <connections>
+                                    <action selector="cut:" target="-1" id="228"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Copiar" keyEquivalent="c" id="197">
+                                <connections>
+                                    <action selector="copy:" target="-1" id="979"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Colar" keyEquivalent="v" id="900">
+                                <connections>
+                                    <action selector="pasteAsPlainText:" target="-1" id="905"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Colar como Rich Text" keyEquivalent="V" id="901">
+                                <connections>
+                                    <action selector="pasteAsRichText:" target="-1" id="904"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Apagar" id="202">
+                                <connections>
+                                    <action selector="clear:" target="-1" id="229"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Seleccionar tudo" keyEquivalent="a" id="198">
+                                <connections>
+                                    <action selector="selectAll:" target="-1" id="232"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="214">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Encontrar" id="948">
+                                <menu key="submenu" title="Encontrar" id="949">
+                                    <items>
+                                        <menuItem title="Encontrar…" tag="1" keyEquivalent="f" id="944">
+                                            <connections>
+                                                <action selector="orderFrontFindPanel:" target="-1" id="957"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Encontrar seguinte" tag="2" keyEquivalent="g" id="950">
+                                            <connections>
+                                                <action selector="findNext:" target="-1" id="958"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Encontrar anterior" tag="3" keyEquivalent="G" id="946">
+                                            <connections>
+                                                <action selector="findPrevious:" target="-1" id="959"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Usar a selecção para encontrar" tag="7" keyEquivalent="e" id="945">
+                                            <connections>
+                                                <action selector="copySelectionToFindPboard:" target="-1" id="985"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Ortografia" id="216">
+                                <menu key="submenu" title="Ortografia" id="200">
+                                    <items>
+                                        <menuItem title="Ortografia..." keyEquivalent=":" id="204">
+                                            <connections>
+                                                <action selector="showGuessPanel:" target="-1" id="230"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Verificar ortografia" keyEquivalent=";" id="201">
+                                            <connections>
+                                                <action selector="checkSpelling:" target="-1" id="225"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Verificar ortografia enquanto escreve" id="219">
+                                            <connections>
+                                                <action selector="toggleContinuousSpellChecking:" target="-1" id="222"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Ver" tag="3" id="391">
+                    <menu key="submenu" title="Ver" id="392">
+                        <items>
+                            <menuItem title="Mostrar gaveta" keyEquivalent="D" id="863">
+                                <connections>
+                                    <action selector="toggleViewsDrawer:" target="-1" id="865"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Mostrar barra de telhas" keyEquivalent="T" id="915">
+                                <connections>
+                                    <action selector="toggleTabBarVisible:" target="-1" id="917"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="864">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Obter informações" alternate="YES" keyEquivalent="I" id="908">
+                                <connections>
+                                    <action selector="getInfo:" target="-1" id="909"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Mostrar inspector" alternate="YES" keyEquivalent="I" id="906">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showInspector:" target="-1" id="907"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="918">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Mostrar barra de ferramentas" id="395">
+                                <connections>
+                                    <action selector="toggleToolbarShown:" target="-1" id="396"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Personalizar a barra de ferramentas…" id="393">
+                                <connections>
+                                    <action selector="runToolbarCustomizationPalette:" target="-1" id="397"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="921">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Usar ícones pequenos na gaveta" id="867">
+                                <connections>
+                                    <action selector="toggleSmallDrawerIcons:" target="-1" id="868"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="928">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Apagar história" keyEquivalent="k" id="922">
+                                <connections>
+                                    <action selector="clearDisplay:" target="-1" id="931"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Marcar histórico" keyEquivalent="M" id="964">
+                                <connections>
+                                    <action selector="markDisplay:" target="-1" id="965"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Marcar tudo" alternate="YES" keyEquivalent="M" id="966">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="markAllDisplays:" target="254" id="968"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="866">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Saltar para o elemento destacado anterior" keyEquivalent="[" id="924">
+                                <connections>
+                                    <action selector="jumpToPreviousHighlight:" target="-1" id="929"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Saltar para o próximo elemento destacado" keyEquivalent="]" id="926">
+                                <connections>
+                                    <action selector="jumpToNextHighlight:" target="-1" id="930"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Saltar para a próxima marca" keyEquivalent="J" id="969">
+                                <connections>
+                                    <action selector="jumpToMark:" target="-1" id="970"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Tipo de letra" tag="4" id="720">
+                    <menu key="submenu" title="Tipo de letra" systemMenu="font" id="710">
+                        <items>
+                            <menuItem title="Bold" tag="2" keyEquivalent="b" id="719">
+                                <connections>
+                                    <action selector="bold:" target="-1" id="747"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Itálico" tag="1" keyEquivalent="i" id="711">
+                                <connections>
+                                    <action selector="italic:" target="-1" id="748"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Sublinhado" keyEquivalent="u" id="701">
+                                <connections>
+                                    <action selector="underline:" target="-1" id="742"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="727">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Mostrar cores" keyEquivalent="C" id="715">
+                                <connections>
+                                    <action selector="orderFrontColorPanel:" target="-1" id="734"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="717">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Copiar estilo" keyEquivalent="c" id="723">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="copyFont:" target="-1" id="738"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Colar estilo" keyEquivalent="v" id="709">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="pasteFont:" target="-1" id="741"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Janela" tag="5" id="19">
+                    <menu key="submenu" title="Janela" systemMenu="window" id="24">
+                        <items>
+                            <menuItem title="Minimizar" keyEquivalent="m" id="23">
+                                <connections>
+                                    <action selector="performMiniaturize:" target="-1" id="37"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="92">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Seleccionar o painel anterior" keyEquivalent="" id="794">
+                                <connections>
+                                    <action selector="selectPreviousPanel:" target="-1" id="803"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Seleccionar o painel activo anterior" alternate="YES" keyEquivalent="" id="910">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selectPreviousActivePanel:" target="-1" id="913"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Seleccionar o painel seguinte" keyEquivalent="" id="793">
+                                <connections>
+                                    <action selector="selectNextPanel:" target="-1" id="802"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Seleccionar o próximo painel activo" alternate="YES" keyEquivalent="" id="911">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selectNextActivePanel:" target="-1" id="914"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="795">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Ligações" keyEquivalent="1" id="751">
+                                <connections>
+                                    <action selector="showConnectionManager:" target="254" id="774"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Transferências de ficheiros" keyEquivalent="2" id="658">
+                                <connections>
+                                    <action selector="showTransferManager:" target="254" id="775"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Lista de amigos" keyEquivalent="3" id="878">
+                                <connections>
+                                    <action selector="showBuddyList:" target="254" id="879"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="657">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Trazer todos para a frente" id="5">
+                                <connections>
+                                    <action selector="arrangeInFront:" target="-1" id="39"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Ajuda" tag="6" id="103">
+                    <menu key="submenu" title="Ajuda" id="106">
+                        <items>
+                            <menuItem title="Ajuda do Colloquy" keyEquivalent="?" id="111">
+                                <connections>
+                                    <action selector="helpWebsite:" target="254" id="984"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="757">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Sala de conversa do Colloquy" id="756">
+                                <connections>
+                                    <action selector="connectToSupportRoom:" target="254" id="771"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Dar a sua opinião sobre o Colloquy" id="776">
+                                <connections>
+                                    <action selector="emailDeveloper:" target="254" id="777"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Colloquy Bug Report" id="786">
+                                <connections>
+                                    <action selector="bugReportWebsite:" target="254" id="981"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Informações sobre o Colloquy" id="980">
+                                <connections>
+                                    <action selector="productWebsite:" target="254" id="983"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+            </items>
+        </menu>
+        <customObject id="254" userLabel="MVApplicationController" customClass="MVApplicationController"/>
+        <customObject id="453" userLabel="Font Manager" customClass="NSFontManager"/>
+    </objects>
+</document>
