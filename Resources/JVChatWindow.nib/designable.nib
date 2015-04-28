@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">101000</int>
-		<string key="IBDocument.SystemVersion">14A388a</string>
-		<string key="IBDocument.InterfaceBuilderVersion">6250</string>
-		<string key="IBDocument.AppKitVersion">1343.14</string>
-		<string key="IBDocument.HIToolboxVersion">755.00</string>
+		<int key="IBDocument.SystemTarget">1090</int>
+		<string key="IBDocument.SystemVersion">14C1514</string>
+		<string key="IBDocument.InterfaceBuilderVersion">7528.3</string>
+		<string key="IBDocument.AppKitVersion">1344.72</string>
+		<string key="IBDocument.HIToolboxVersion">757.30</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">6250</string>
+			<string key="NS.object.0">7528.3</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>NSButton</string>
@@ -49,14 +49,15 @@
 					<characters key="NS.bytes">View</characters>
 				</object>
 				<nil key="NSUserInterfaceItemIdentifier"/>
+				<string key="NSWindowContentMinSize">{213, 107}</string>
 				<object class="NSView" key="NSWindowView" id="959977716">
 					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<string key="NSFrameSize">{480, 381}</string>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1920, 1057}}</string>
 				<string key="NSMinSize">{213, 129}</string>
-				<string key="NSMaxSize">{3.4028200000000001e+38, 3.4028200000000001e+38}</string>
+				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 			<object class="NSDrawer" id="485651519">
@@ -87,6 +88,7 @@
 										<int key="NSvFlags">256</int>
 										<string key="NSFrameSize">{188, 93}</string>
 										<reference key="NSSuperview" ref="479782516"/>
+										<reference key="NSNextKeyView" ref="349885458"/>
 										<bool key="NSEnabled">YES</bool>
 										<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 										<bool key="NSControlAllowsExpansionToolTips">YES</bool>
@@ -132,7 +134,7 @@
 														<int key="NSfFlags">1044</int>
 													</object>
 													<reference key="NSControlView" ref="1068622780"/>
-													<object class="NSColor" key="NSBackgroundColor" id="83271623">
+													<object class="NSColor" key="NSBackgroundColor">
 														<int key="NSColorSpace">3</int>
 														<bytes key="NSWhite">MQA</bytes>
 													</object>
@@ -151,7 +153,15 @@
 										</array>
 										<double key="NSIntercellSpacingWidth">3</double>
 										<double key="NSIntercellSpacingHeight">2</double>
-										<reference key="NSBackgroundColor" ref="83271623"/>
+										<object class="NSColor" key="NSBackgroundColor" id="51230542">
+											<int key="NSColorSpace">6</int>
+											<string key="NSCatalogName">System</string>
+											<string key="NSColorName">controlBackgroundColor</string>
+											<object class="NSColor" key="NSColor">
+												<int key="NSColorSpace">3</int>
+												<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
+											</object>
+										</object>
 										<object class="NSColor" key="NSGridColor">
 											<int key="NSColorSpace">6</int>
 											<string key="NSCatalogName">System</string>
@@ -177,15 +187,7 @@
 								<reference key="NSSuperview" ref="568867199"/>
 								<reference key="NSNextKeyView" ref="1068622780"/>
 								<reference key="NSDocView" ref="1068622780"/>
-								<object class="NSColor" key="NSBGColor">
-									<int key="NSColorSpace">6</int>
-									<string key="NSCatalogName">System</string>
-									<string key="NSColorName">controlBackgroundColor</string>
-									<object class="NSColor" key="NSColor">
-										<int key="NSColorSpace">3</int>
-										<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
-									</object>
-								</object>
+								<reference key="NSBGColor" ref="51230542"/>
 								<int key="NScvFlags">4</int>
 								<bool key="NSAutomaticallyAdjustsContentInsets">YES</bool>
 							</object>
@@ -194,6 +196,7 @@
 								<int key="NSvFlags">-2147483392</int>
 								<string key="NSFrame">{{-30, 1}, {15, 93}}</string>
 								<reference key="NSSuperview" ref="568867199"/>
+								<reference key="NSNextKeyView" ref="479782516"/>
 								<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 								<string key="NSControlAction">_doScroller:</string>
 								<reference key="NSControlTarget" ref="568867199"/>
@@ -206,6 +209,7 @@
 								<int key="NSvFlags">-2147483392</int>
 								<string key="NSFrame">{{-100, -100}, {173, 15}}</string>
 								<reference key="NSSuperview" ref="568867199"/>
+								<reference key="NSNextKeyView" ref="887716095"/>
 								<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 								<string key="NSControlAction">_doScroller:</string>
 								<reference key="NSControlTarget" ref="568867199"/>
@@ -217,7 +221,7 @@
 						</array>
 						<string key="NSFrame">{{0, 25}, {190, 95}}</string>
 						<reference key="NSSuperview" ref="683481125"/>
-						<reference key="NSNextKeyView" ref="479782516"/>
+						<reference key="NSNextKeyView" ref="973554037"/>
 						<int key="NSsFlags">133650</int>
 						<reference key="NSVScroller" ref="887716095"/>
 						<reference key="NSHScroller" ref="973554037"/>
@@ -232,10 +236,11 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{1, -1}, {28, 22}}</string>
 						<reference key="NSSuperview" ref="683481125"/>
+						<reference key="NSNextKeyView" ref="523034683"/>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSButtonCell" key="NSCell" id="497056467">
 							<int key="NSCellFlags">67108864</int>
-							<int key="NSCellFlags2">0</int>
+							<int key="NSCellFlags2">268435456</int>
 							<string key="NSContents"/>
 							<object class="NSFont" key="NSSupport" id="61359030">
 								<bool key="IBIsSystemFont">YES</bool>
@@ -267,10 +272,11 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{32, -1}, {28, 22}}</string>
 						<reference key="NSSuperview" ref="683481125"/>
+						<reference key="NSNextKeyView" ref="897250091"/>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSButtonCell" key="NSCell" id="772024413">
 							<int key="NSCellFlags">67108864</int>
-							<int key="NSCellFlags2">0</int>
+							<int key="NSCellFlags2">268435456</int>
 							<string key="NSContents"/>
 							<reference key="NSSupport" ref="61359030"/>
 							<reference key="NSControlView" ref="523034683"/>
@@ -301,7 +307,7 @@
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSButtonCell" key="NSCell" id="780727868">
 							<int key="NSCellFlags">67108864</int>
-							<int key="NSCellFlags2">0</int>
+							<int key="NSCellFlags2">268435456</int>
 							<string key="NSContents"/>
 							<reference key="NSSupport" ref="61359030"/>
 							<reference key="NSControlView" ref="897250091"/>
@@ -326,6 +332,7 @@
 					</object>
 				</array>
 				<string key="NSFrameSize">{190, 120}</string>
+				<reference key="NSNextKeyView" ref="568867199"/>
 				<object class="NSMutableString" key="NSClassName">
 					<characters key="NS.bytes">NSView</characters>
 				</object>
@@ -580,7 +587,6 @@
 				<string key="233.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="234.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="240.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="241.CustomClassName">ASExtendedOutlineView</string>
 				<string key="241.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="242.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="289.CustomClassName">MVMenuButton</string>
@@ -605,10 +611,6 @@
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<bool key="IBDocument.previouslyAttemptedUpgradeToXcode5">YES</bool>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
-			<integer value="101000" key="NS.object.0"/>
-		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.InterfaceBuilder3</string>
 			<integer value="4600" key="NS.object.0"/>

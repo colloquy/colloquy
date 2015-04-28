@@ -1552,26 +1552,26 @@ Yield:        TRUE when range returned; FALSE when no more
 static BOOL
 get_othercase_range(int *cptr, int d, int *ocptr, int *odptr)
 {
-int c, othercase, next;
-
-for (c = *cptr; c <= d; c++)
-  { if ((othercase = _pcre_ucp_othercase(c)) >= 0) break; }
-
-if (c > d) return FALSE;
-
-*ocptr = othercase;
-next = othercase + 1;
-
-for (++c; c <= d; c++)
-  {
-  if (_pcre_ucp_othercase(c) != next) break;
-  next++;
-  }
-
-*odptr = next - 1;
-*cptr = c;
-
-return TRUE;
+	int c, othercase = 0, next;
+	
+	for (c = *cptr; c <= d; c++)
+	{ if ((othercase = _pcre_ucp_othercase(c)) >= 0) break; }
+	
+	if (c > d) return FALSE;
+	
+	*ocptr = othercase;
+	next = othercase + 1;
+	
+	for (++c; c <= d; c++)
+	{
+		if (_pcre_ucp_othercase(c) != next) break;
+		next++;
+	}
+	
+	*odptr = next - 1;
+	*cptr = c;
+	
+	return TRUE;
 }
 #endif  /* SUPPORT_UCP */
 
@@ -3443,8 +3443,8 @@ for (;; ptr++)
 #ifdef SUPPORT_UCP
       else if (-c == ESC_P || -c == ESC_p)
         {
-        BOOL negated;
-        int pdata;
+        BOOL negated = FALSE;
+        int pdata = 0;
         int ptype = get_ucp(&ptr, &negated, &pdata, errorcodeptr);
         previous = code;
         *code++ = ((-c == ESC_p) != negated)? OP_PROP : OP_NOTPROP;

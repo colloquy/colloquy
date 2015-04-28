@@ -6,7 +6,7 @@
 + (NSString *) formattedShortDateAndTimeStringForDate:(NSDate *) date;
 + (NSString *) formattedShortTimeStringForDate:(NSDate *) date;
 
-- (NSString *) localizedDescription;
+@property (readonly, copy) NSString *localizedDescription;
 @end
 
 NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFormat);

@@ -1,5 +1,7 @@
 #import "CQSettingsController.h"
 
+#import "NSNotificationAdditions.h"
+
 NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotification";
 
 @implementation CQSettingsController
@@ -14,7 +16,7 @@ NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotificat
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	_mirroringEnabled = YES;
 
 	self.settingsLocation = CQSettingsLocationDevice;
@@ -97,8 +99,15 @@ NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotificat
 		}
 	}
 
-	if (changedLocation == _settingsLocation)
-		[[NSNotificationCenter defaultCenter] postNotificationName:CQSettingsDidChangeNotification object:nil userInfo:nil];
+	if (changedLocation == _settingsLocation) {
+		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_notifyObserversSettingsChanged) object:nil];
+		[self performSelector:@selector(_notifyObserversSettingsChanged) withObject:nil afterDelay:0.];
+	}
+}
+
+- (void) _notifyObserversSettingsChanged {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_notifyObserversSettingsChanged) object:nil];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQSettingsDidChangeNotification object:nil userInfo:nil];
 }
 
 - (id) _defaultLocation {

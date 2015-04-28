@@ -9,7 +9,7 @@
 #define HelpTableSection 2
 
 @implementation CQWelcomeViewController
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 

@@ -22,17 +22,36 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 }
 
 - (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *) area {
-	NSParameterAssert(server);
+	[self setPassword:password forServer:server area:area displayValue:nil];
+}
 
+- (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *) area displayValue:(NSString *)displayValue {
 	if (!password.length) {
 		[self removePasswordForServer:server area:area];
 		return;
 	}
 
+	NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
+
+	[self setData:passwordData forServer:server area:area];
+}
+
+- (void) setData:(NSData *) passwordData forServer:(NSString *) server area:(NSString *) area {
+	[self setData:passwordData forServer:server area:area displayValue:nil];
+}
+
+- (void) setData:(NSData *) passwordData forServer:(NSString *) server area:(NSString *) area displayValue:(NSString *)displayValue {
+	NSParameterAssert(server);
+
+	if (!passwordData.length) {
+		[self removeDataForServer:server area:area];
+		return;
+	}
+
 	NSMutableDictionary *passwordEntry = createBaseDictionary(server, area);
 
-	NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
 	passwordEntry[(__bridge id)kSecValueData] = passwordData;
+	if (displayValue) passwordEntry[(__bridge id)kSecAttrLabel] = displayValue;
 
 	OSStatus status = SecItemAdd((__bridge CFDictionaryRef)passwordEntry, NULL);
 	if (status == errSecDuplicateItem) {
@@ -45,9 +64,13 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 }
 
 - (NSString *) passwordForServer:(NSString *) server area:(NSString *) area {
-	NSParameterAssert(server);
+	NSData *data = [self dataForServer:server area:area];
+	return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
-	NSString *string = nil;
+}
+
+- (NSData *) dataForServer:(NSString *) server area:(NSString *) area {
+	NSParameterAssert(server);
 
 	NSMutableDictionary *passwordQuery = createBaseDictionary(server, area);
 
@@ -56,15 +79,17 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 
 	CFTypeRef resultDataRef;
 	OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)passwordQuery, &resultDataRef);
-	if (status == noErr && resultDataRef) {
-		string = [[NSString alloc] initWithData:(__bridge NSData *)resultDataRef encoding:NSUTF8StringEncoding];
-		CFRelease(resultDataRef);
-	}
+	if (status == noErr && resultDataRef)
+		return CFBridgingRelease(resultDataRef);
 
-	return string;
+	return nil;
 }
 
 - (void) removePasswordForServer:(NSString *) server area:(NSString *) area {
+	[self removeDataForServer:server area:area];
+}
+
+- (void) removeDataForServer:(NSString *) server area:(NSString *) area {
 	NSParameterAssert(server);
 
 	NSMutableDictionary *passwordQuery = createBaseDictionary(server, area);

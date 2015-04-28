@@ -1,3 +1,10 @@
+#include <openssl/bn.h>
+#include <openssl/lhash.h>
+#include <openssl/ssl.h>
+#include <sys/types.h>
+#include <string.h>
+#include <assert.h>
+
 #ifdef __OBJC__
 #import <Foundation/Foundation.h>
 #endif

@@ -2,6 +2,8 @@
 
 #import <ChatCore/MVChatUser.h>
 
+#import "NSNotificationAdditions.h"
+
 #define DefaultFontSize 14
 #define HideRoomTopicDelay 30.
 
@@ -19,7 +21,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 @synthesize fontSize = _fontSize;
 @synthesize styleIdentifier = _styleIdentifier;
 
-- (id) initWithFrame:(CGRect) frame {
+- (instancetype) initWithFrame:(CGRect) frame {
 	WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
 	configuration.allowsInlineMediaPlayback = YES;
 	configuration.processPool = [[WKProcessPool alloc] init];
@@ -33,17 +35,16 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 }
 
 - (void) dealloc {
+	self.scrollView.delegate = nil;
+	self.navigationDelegate = nil;
+
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:CQRoomTopicChangedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:CQRoomTopicChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:CQSettingsDidChangeNotification object:nil];
 }
 
 #pragma mark -
-
-- (void) setDelegate:(id <UIWebViewDelegate>) delegate {
-	NSAssert(NO, @"Should not be called. Use _transcriptDelegate instead.");
-}
 
 - (void) setAllowSingleSwipeGesture:(BOOL) allowSingleSwipeGesture {
 	if (allowSingleSwipeGesture == _allowSingleSwipeGesture)
@@ -175,10 +176,11 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	for (int x = point.x - TappedPointOffset, i = 0; i < 3 && !tappedURL.length; x += TappedPointOffset, i++)
 		for (int y = point.y - TappedPointOffset, j = 0; j < 3 && !tappedURL.length; y += TappedPointOffset, j++) {
 			[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"urlUnderTapAtPoint(%d, %d)", x, y] completionHandler:^(NSString *result) {
-				if (tappedURL.length)
+				if (tappedURL.length) // if a different execution found a URL already, don't call the delegate again
 					return;
 
 				tappedURL = [result copy];
+#undef TappedPointOffset
 
 				if (!tappedURL.length)
 					return;
@@ -187,7 +189,6 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 					[transcriptDelegate transcriptView:self handleLongPressURL:[NSURL URLWithString:tappedURL] atLocation:_lastTouchLocation];
 			}];
 		}
-#undef TappedPointOffset
 }
 
 - (void) swipeGestureRecognized:(UISwipeGestureRecognizer *) swipeGestureRecognizer {
@@ -207,8 +208,6 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 #pragma mark -
 
 - (void) webView:(WKWebView *) webView decidePolicyForNavigationAction:(WKNavigationAction *) navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy)) decisionHandler {
-	__strong __typeof__((_transcriptDelegate)) transcriptDelegate = _transcriptDelegate;
-
 	if (navigationAction.navigationType == WKNavigationTypeOther) {
 		decisionHandler(WKNavigationActionPolicyAllow);
 		return;
@@ -219,6 +218,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 		return;
 	}
 
+	__strong __typeof__((_transcriptDelegate)) transcriptDelegate = _transcriptDelegate;
 	if ([navigationAction.request.URL.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
 		if ([transcriptDelegate respondsToSelector:@selector(transcriptView:handleNicknameTap:atLocation:)]) {
 			NSRange endOfSchemeRange = [navigationAction.request.URL.absoluteString rangeOfString:@"://"];
@@ -250,7 +250,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 - (void) webView:(WKWebView *) webView didFinishNavigation:(WKNavigation *) navigation {
 	[self performSelector:@selector(_checkIfLoadingFinished) withObject:nil afterDelay:0.];
 
-	[self stringByEvaluatingJavaScriptFromString:@"document.body.style.webkitTouchCallout='none';"];
+//	[self stringByEvaluatingJavaScriptFromString:@"document.body.style.webkitTouchCallout='none';"];
 
 	NSString *dynamicBodyFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].fontName;
 	BOOL isBold = [dynamicBodyFont hasCaseInsensitiveSubstring:@"Bold"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Italic"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Medium"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Black"];
@@ -270,7 +270,11 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 		return;
 	}
 
+#if !defined(CQ_GENERATING_SCREENSHOTS)
 	[self _addComponentsToTranscript:components fromPreviousSession:YES animated:NO];
+#else
+	[self _addComponentsToTranscript:components fromPreviousSession:NO animated:NO];
+#endif
 }
 
 - (void) addComponents:(NSArray *) components animated:(BOOL) animated {
@@ -324,8 +328,9 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 	if (shouldHideTopic) {
 		[self _hideRoomTopic];
-	} else if (_topicIsHidden && !shouldHideTopic) {
+	} else if (_topicIsHidden && !shouldHideTopic && !_addedMessage) {
 		_topicIsHidden = NO;
+		_addedMessage = YES;
 
 		[self stringByEvaluatingJavaScriptFromString:@"showTopic()"];
 		[self stringByEvaluatingJavaScriptFromString:@"addOffsetForTopicToFirstElement()"];
@@ -375,20 +380,26 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 #pragma mark -
 
+- (void) evaluateJavaScript:(NSString *) script completionHandler:(void (^)(id, NSError *)) completionHandler {
+	NSLog(@"Refusing to evaluate %@\n%@", script, [NSThread callStackSymbols]);
+}
+
 - (void) stringByEvaluatingJavaScriptFromString:(NSString *) script {
 	[self stringByEvaluatingJavaScriptFromString:script completionHandler:NULL];
 }
 
-- (void) stringByEvaluatingJavaScriptFromString:(NSString *) script completionHandler:(void (^)(NSString *))completionHandler {
+- (void) stringByEvaluatingJavaScriptFromString:(NSString *) script completionHandler:(void (^)(NSString *)) completionHandler {
 	if (!script.length)
 		return;
 
-	[self evaluateJavaScript:script completionHandler:^(id result, NSError *error) {
+	[super evaluateJavaScript:script completionHandler:^(id result, NSError *error) {
 		if (!result && error)
 			NSLog(@"Error executing JavaScript: %@, %@", script, error);
-		else {
+		else if (result) {
 			if ([result isKindOfClass:[NSNumber class]])
 				result = [result stringValue];
+			else if ([result isKindOfClass:[NSNull class]])
+				result = @"null";
 
 			if (completionHandler)
 				completionHandler(result);
@@ -445,8 +456,10 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[command appendFormat:@"],%@,false,%@)", (previousSession ? @"true" : @"false"), (animated ? @"false" : @"true")];
 
 	[self stringByEvaluatingJavaScriptFromString:command];
-	if (_showRoomTopic)
+	if (_showRoomTopic && !_addedMessage) {
+		_addedMessage = YES;
 		[self stringByEvaluatingJavaScriptFromString:@"addOffsetForTopicToFirstElement()"];
+	}
 }
 
 - (void) _commonInitialization {
@@ -497,8 +510,9 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[self addGestureRecognizer:longPressGestureRecognizer];
 
 	_showRoomTopic = (CQShowRoomTopic)[[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
+	_addedMessage = NO;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged:) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged:) name:CQSettingsDidChangeNotification object:nil];
 }
 
 - (void) _userDefaultsChanged:(NSNotification *) notification {
@@ -507,6 +521,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 		return;
 
 	_showRoomTopic = shouldShowRoomTopic;
+	_addedMessage = NO;
 
 	[self noteTopicChangeTo:_roomTopic by:_roomTopicSetter];
 }
@@ -543,7 +558,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 - (void) _checkIfLoadingFinished {
 	[self stringByEvaluatingJavaScriptFromString:@"isDocumentReady()" completionHandler:^(NSString *result) {
-		if (![result isEqualToString:@"true"]) {
+		if (![result boolValue]) {
 			[self performSelector:_cmd withObject:nil afterDelay:0.05];
 			return;
 		}

@@ -7,12 +7,14 @@
 #import "MVChatUser.h"
 #import "MVIRCChatConnection.h"
 
+#import "NSNotificationAdditions.h"
+
 @interface CQPreferencesListViewController (Private)
 - (void) editItemAtIndex:(NSUInteger) index;
 @end
 
 @implementation CQAwayStatusViewController
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
 
@@ -66,13 +68,13 @@
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self.tableView selector:@selector(reloadData) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self.tableView selector:@selector(reloadData) name:CQSettingsDidChangeNotification object:nil];
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self.tableView name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self.tableView name:CQSettingsDidChangeNotification object:nil];
 }
 
 #pragma mark -

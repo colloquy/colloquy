@@ -1,4 +1,4 @@
-#import <libxml/tree.h>
+#include <libxml/tree.h>
 
 #import "JVChatMessage.h"
 #import "JVBuddy.h"
@@ -8,16 +8,41 @@
 #import "JVChatRoomMember.h"
 #import "NSAttributedStringMoreAdditions.h"
 #import "NSDateAdditions.h"
-
-@interface JVChatTranscript (JVChatTranscriptPrivate)
-- (void) _loadMessage:(JVChatMessage *) message;
-- (void) _loadSenderForMessage:(JVChatMessage *) message;
-- (void) _loadBodyForMessage:(JVChatMessage *) message;
-@end
+#import "JVChatMessage_Private.h"
+#import "JVChatTranscript_Private.h"
 
 #pragma mark -
 
-@implementation JVChatMessage
+@implementation JVChatMessage {
+@public
+	xmlNode *_node;
+	xmlDoc *_doc;
+	NSString *_messageIdentifier;
+	NSScriptObjectSpecifier *_objectSpecifier;
+	__weak JVChatTranscript *_transcript;
+	
+	id _senderIdentifier;
+	NSString *_senderName;
+	NSString *_senderNickname;
+	NSString *_senderHostmask;
+	NSString *_senderClass;
+	NSString *_senderBuddyIdentifier;
+	
+	NSTextStorage *_attributedMessage;
+	NSDate *_date;
+	NSURL *_source;
+	JVIgnoreMatchResult _ignoreStatus;
+	JVChatMessageType _type;
+	NSUInteger _consecutiveOffset;
+	BOOL _senderIsLocalUser;
+	BOOL _action;
+	BOOL _highlighted;
+	BOOL _loaded;
+	BOOL _bodyLoaded;
+	BOOL _senderLoaded;
+	NSMutableDictionary *_attributes;
+}
+
 + (void) initialize {
 	[super initialize];
 	static BOOL tooLate = NO;
@@ -65,7 +90,7 @@
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_ignoreStatus = JVNotIgnored;
 		_type = JVChatMessageNormalType;
@@ -106,33 +131,17 @@
 }
 
 - (void) dealloc {
-
-
 	_node = NULL;
-	_transcript = nil;
-	_messageIdentifier = nil;
-	_attributedMessage = nil;
-	_date = nil;
-	_source = nil;
-	_objectSpecifier = nil;
-
-	_senderIdentifier = nil;
-	_senderName = nil;
-	_senderNickname = nil;
-	_senderHostmask = nil;
-	_senderClass = nil;
-	_senderBuddyIdentifier = nil;
 
 	if( _doc ) xmlFreeDoc( _doc );
 	_doc = NULL;
-
 }
 
 #pragma mark -
 
 - (void *) node {
 	if( ! _node ) {
-		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+		NSDictionary *options = @{@"IgnoreFonts": @YES, @"IgnoreFontSizes": @YES};
 		NSString *htmlMessage = ( [self body] ? [[self body] HTMLFormatWithOptions:options] : @"" );
 		const char *msgStr = [[NSString stringWithFormat:@"<message>%@</message>", [htmlMessage stringByStrippingIllegalXMLCharacters]] UTF8String];
 
@@ -160,7 +169,7 @@
 			const char *sendDesc = [(NSString *)[sender performSelector:@selector( xmlDescriptionWithTagName: ) withObject:@"sender"] UTF8String];
 
 			if( sendDesc ) {
-				xmlDocPtr tempDoc = xmlParseMemory( sendDesc, strlen( sendDesc ) );
+				xmlDocPtr tempDoc = xmlParseMemory( sendDesc, (int)strlen( sendDesc ) );
 				if( ! tempDoc ) return NULL; // somthing bad with the message contents
 
 				child = xmlDocCopyNode( xmlDocGetRootElement( tempDoc ), _doc, 1 );
@@ -182,7 +191,7 @@
 				xmlSetProp( child, (xmlChar *) "buddy", (xmlChar *) [[self senderBuddyIdentifier] UTF8String] );
 		}
 
-		xmlDocPtr msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
+		xmlDocPtr msgDoc = xmlParseMemory( msgStr, (int)strlen( msgStr ) );
 		if( ! msgDoc ) return NULL; // somthing bad with the message contents
 
 		_node = child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), _doc, 1 );
@@ -273,7 +282,7 @@
 }
 
 - (NSString *) bodyAsHTML {
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	NSDictionary *options = @{@"IgnoreFonts": @YES, @"IgnoreFontSizes": @YES};
 	return [[self body] HTMLFormatWithOptions:options];
 }
 
@@ -330,13 +339,13 @@
 	// Add important attributes which are set via normal setters, and therefore don't exist normally in the attributes-dict.
 	if( ! _attributes )
 		_attributes = [[NSMutableDictionary alloc] init];
-	[_attributes setObject:[NSNumber numberWithBool:_action] forKey:@"action"];
+	_attributes[@"action"] = @(_action);
 
 	return _attributes;
 }
 
 - (id) attributeForKey:(id) key {
-	return [_attributes objectForKey:key];
+	return _attributes[key];
 }
 
 #pragma mark -
@@ -371,11 +380,146 @@
 
 	[super setValue:value forUndefinedKey:key];
 }
+
+#pragma mark - Private functions
+
+- (instancetype) initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
+	if( ( self = [self init] ) ) {
+		_node = node;
+		_transcript = transcript; // weak reference
+		
+		if( ! _node || node -> type != XML_ELEMENT_NODE ) {
+			return nil;
+		}
+		
+		@synchronized( _transcript ) {
+			xmlChar *idStr = xmlGetProp( (xmlNode *) _node, (xmlChar *) "id" );
+			_messageIdentifier = ( idStr ? @((char *) idStr) : nil );
+			xmlFree( idStr );
+		}
+	}
+	
+	return self;
+}
+
+- (void) _loadFromXML {
+	if( _loaded || ! _node ) return;
+	
+	@synchronized( _transcript ) {
+		xmlChar *prop = xmlGetProp( _node, (xmlChar *) "received" );
+		_date = ( prop ? [[NSDate allocWithZone:nil] initWithString:@((char *) prop)] : nil );
+		xmlFree( prop );
+		
+		prop = xmlGetProp( _node, (xmlChar *) "action" );
+		_action = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? YES : NO );
+		xmlFree( prop );
+		
+		prop = xmlGetProp( _node, (xmlChar *) "highlight" );
+		_highlighted = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? YES : NO );
+		xmlFree( prop );
+		
+		prop = xmlGetProp( _node, (xmlChar *) "ignored" );
+		_ignoreStatus = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? JVMessageIgnored : _ignoreStatus );
+		xmlFree( prop );
+		
+		prop = xmlGetProp( _node, (xmlChar *) "type" );
+		_type = ( ( prop && ! strcmp( (char *) prop, "notice" ) ) ? JVChatMessageNoticeType : JVChatMessageNormalType );
+		xmlFree( prop );
+		
+		xmlNode *envelope = ((xmlNode *) _node) -> parent;
+		
+		prop = xmlGetProp( envelope, (xmlChar *) "ignored" );
+		_ignoreStatus = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? JVUserIgnored : _ignoreStatus );
+		xmlFree( prop );
+		
+		prop = xmlGetProp( envelope, (xmlChar *) "source" );
+		_source = ( prop ? [[NSURL allocWithZone:nil] initWithString:@((char *) prop)] : nil );
+		xmlFree( prop );
+		
+		xmlNode *node = envelope -> children;
+		
+		do {
+			if( node && node -> type == XML_ELEMENT_NODE && ! strcmp( "message", (char *) node -> name ) ) {
+				if( node == _node ) break;
+				_consecutiveOffset++;
+			}
+		} while( node && ( node = node -> next ) );
+	}
+	
+	_loaded = YES;
+}
+
+- (void) _loadSenderFromXML {
+	if( _senderLoaded || ! _node ) return;
+	
+	@synchronized( _transcript ) {
+		xmlNode *subNode = ((xmlNode *) _node) -> parent -> children;
+		
+		do {
+			if( subNode -> type == XML_ELEMENT_NODE && ! strcmp( "sender", (char *) subNode -> name ) ) {
+				xmlChar *prop = xmlNodeGetContent( subNode );
+				if( prop ) _senderName = @((char *) prop);
+				else _senderName = nil;
+				xmlFree( prop );
+				
+				prop = xmlGetProp( subNode, (xmlChar *) "nickname" );
+				if( prop ) _senderNickname = @((char *) prop);
+				else _senderNickname = nil;
+				xmlFree( prop );
+				
+				prop = xmlGetProp( subNode, (xmlChar *) "identifier" );
+				if( prop ) _senderIdentifier = @((char *) prop);
+				else _senderIdentifier = nil;
+				xmlFree( prop );
+				
+				prop = xmlGetProp( subNode, (xmlChar *) "hostmask" );
+				if( prop ) _senderHostmask = @((char *) prop);
+				else _senderHostmask = nil;
+				xmlFree( prop );
+				
+				prop = xmlGetProp( subNode, (xmlChar *) "class" );
+				if( prop ) _senderClass = @((char *) prop);
+				else _senderClass = nil;
+				xmlFree( prop );
+				
+				prop = xmlGetProp( subNode, (xmlChar *) "self" );
+				if( prop && ! strcmp( (char *) prop, "yes" ) ) _senderIsLocalUser = YES;
+				else _senderIsLocalUser = NO;
+				xmlFree( prop );
+				
+				break;
+			}
+		} while( ( subNode = subNode -> next ) );
+	}
+	
+	_senderLoaded = YES;
+}
+
+- (void) _loadBodyFromXML {
+	if( _bodyLoaded || ! _node ) return;
+	
+	@synchronized( _transcript ) {
+		_attributedMessage = [[NSTextStorage allocWithZone:nil] initWithXHTMLTree:_node baseURL:nil defaultAttributes:nil];
+	}
+	
+	_bodyLoaded = YES;
+}
+
 @end
 
 #pragma mark -
 
 @implementation JVMutableChatMessage
+@dynamic action;
+@dynamic highlighted;
+@dynamic ignoreStatus;
+@dynamic type;
+@dynamic date;
+@dynamic bodyAsPlainText;
+@dynamic bodyAsHTML;
+@dynamic source;
+@dynamic messageIdentifier;
+
 + (void) initialize {
 	[super initialize];
 	static BOOL tooLate = NO;
@@ -388,36 +532,31 @@
 	}
 }
 
-+ (id) messageWithText:(id) body sender:(id) sender {
++ (instancetype) messageWithText:(id) body sender:(id) sender {
 	return [[self allocWithZone:nil] initWithText:body sender:sender];
 }
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_loaded = YES;
 		_bodyLoaded = YES;
 		_senderLoaded = YES;
-		[self setDate:[NSDate date]];
-		[self setMessageIdentifier:[NSString locallyUniqueString]];
+		self.date = [NSDate date];
+		self.messageIdentifier = [NSString locallyUniqueString];
 	}
 
 	return self;
 }
 
-- (id) initWithText:(id) body sender:(id) sender {
+- (instancetype) initWithText:(id) body sender:(id) sender {
 	if( ( self = [self init] ) ) {
 		[self setBody:body];
-		[self setSender:sender];
+		self.sender = sender;
 	}
 
 	return self;
-}
-
-- (void) dealloc {
-	_sender = nil;
-
 }
 
 #pragma mark -
@@ -571,7 +710,7 @@
 - (void) setAttribute:(id) object forKey:(id) key {
 	if( ! _attributes )
 		_attributes = [[NSMutableDictionary alloc] init];
-	[_attributes setObject:object forKey:key];
+	_attributes[key] = object;
 }
 
 #pragma mark -

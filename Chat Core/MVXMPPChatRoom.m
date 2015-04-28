@@ -18,11 +18,6 @@
 	return self;
 }
 
-- (void) dealloc {
-	[_localMemberUser release];
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (NSUInteger) supportedModes {
@@ -67,7 +62,6 @@
 	JabberMessage *jabberMsg = [[JabberMessage alloc] initWithRecipient:_uniqueIdentifier andBody:[message string]];
 	[jabberMsg setType:@"groupchat"];
 	[[(MVXMPPChatConnection *)_connection _chatSession] sendElement:jabberMsg];
-	[jabberMsg release];
 }
 
 #pragma mark -

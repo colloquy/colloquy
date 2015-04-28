@@ -1,4 +1,6 @@
-extern NSString *JVEmoticonSetsScannedNotification;
+#import <Foundation/Foundation.h>
+
+extern NSString * __nonnull JVEmoticonSetsScannedNotification;
 
 @interface JVEmoticonSet : NSObject {
 	NSBundle *_bundle;
@@ -6,30 +8,30 @@ extern NSString *JVEmoticonSetsScannedNotification;
 	NSArray *_emoticonMenu;
 }
 + (void) scanForEmoticonSets;
-+ (NSSet *) emoticonSets;
-+ (id) emoticonSetWithIdentifier:(NSString *) identifier;
-+ (id) newWithBundle:(NSBundle *) bundle;
++ (nonnull NSSet *) emoticonSets;
++ (nullable instancetype) emoticonSetWithIdentifier:(nonnull NSString *) identifier;
++ (nullable instancetype) newWithBundle:(nonnull NSBundle *) bundle;
 
-+ (id) textOnlyEmoticonSet;
++ (nonnull instancetype) textOnlyEmoticonSet;
 
-- (id) initWithBundle:(NSBundle *) bundle;
+- (nullable instancetype) initWithBundle:(nonnull NSBundle *) bundle;
 
 - (void) unlink;
-- (BOOL) isCompliant;
+@property (readonly, getter=isCompliant) BOOL compliant;
 
-- (void) performEmoticonSubstitution:(NSMutableAttributedString *) string;
+- (void) performEmoticonSubstitution:(nonnull NSMutableAttributedString *) string;
 
-- (NSBundle *) bundle;
-- (NSString *) identifier;
+@property (readonly, strong, nonatomic, null_resettable) NSBundle *bundle;
+@property (readonly, copy, nonnull) NSString *identifier;
 
-- (NSComparisonResult) compare:(JVEmoticonSet *) style;
-- (NSString *) displayName;
+- (NSComparisonResult) compare:(nonnull JVEmoticonSet *) style;
+@property (readonly, copy, nonnull) NSString *displayName;
 
-- (NSDictionary *) emoticonMappings;
-- (NSArray *) emoticonMenuItems;
+@property (readonly, copy, nonnull) NSDictionary *emoticonMappings;
+@property (readonly, copy, nonnull) NSArray *emoticonMenuItems;
 
-- (NSURL *) baseLocation;
-- (NSURL *) styleSheetLocation;
+@property (readonly, copy, nullable) NSURL *baseLocation;
+@property (readonly, copy, nullable) NSURL *styleSheetLocation;
 
-- (NSString *) contentsOfStyleSheet;
+@property (readonly, copy, nonnull) NSString *contentsOfStyleSheet;
 @end

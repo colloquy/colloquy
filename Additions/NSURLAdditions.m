@@ -1,7 +1,7 @@
 #import "NSURLAdditions.h"
 
 @implementation NSURL (NSURLAdditions)
-+ (id) URLWithInternetLocationFile:(NSString *) path {
++ (instancetype) URLWithInternetLocationFile:(NSString *) path {
 	const char *fileSystemPath = [[NSFileManager defaultManager] fileSystemRepresentationWithPath:path];
 
 	FSRef ref;
@@ -20,8 +20,9 @@
 	}
 
 	Handle res = Get1IndResource( 'url ', 1 );
-	NSString *urlString = [[[NSString alloc] initWithBytes:*res length:GetHandleSize( res ) encoding:NSUTF8StringEncoding] autorelease];
+	NSString *urlString = [[NSString alloc] initWithBytes:*res length:GetHandleSize( res ) encoding:NSUTF8StringEncoding];
 	NSURL *url = [NSURL URLWithString:urlString];
+	[urlString release];
 	ReleaseResource( res );
 	CloseResFile( fileRefNum );
 

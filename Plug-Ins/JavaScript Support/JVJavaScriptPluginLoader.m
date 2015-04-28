@@ -9,7 +9,7 @@
 @end
 
 @implementation JVJavaScriptPluginLoader
-- (id) initWithManager:(MVChatPluginManager *) manager {
+- (instancetype) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [super init] ) ) {
 		[WebCoreStatistics setShouldPrintExceptions:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableJavaScriptDebugging"]];
 		_manager = manager;
@@ -27,7 +27,7 @@
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
 	if( ! [command caseInsensitiveCompare:@"javascript"] || ! [command caseInsensitiveCompare:@"js"] ) {
 		NSArray *args = [[[arguments string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
-		NSString *subcmd = ( [args count] ? [args objectAtIndex:0] : nil );
+		NSString *subcmd = ( [args count] ? args[0] : nil );
 		/* if( [args count] == 1 ) {
 			if( view && ! [subcmd caseInsensitiveCompare:@"console"] ) {
 				JVJavaScriptConsolePanel *console = [[[JVJavaScriptConsolePanel alloc] init] autorelease];
@@ -35,7 +35,7 @@
 				[[view windowController] performSelector:@selector( showChatViewController: ) withObject:console afterDelay:0];
 			}
 		} else */ if( [args count] == 2 && ( ! [subcmd caseInsensitiveCompare:@"exceptions"] || ! [subcmd caseInsensitiveCompare:@"debugging"] || ! [subcmd caseInsensitiveCompare:@"debug"] ) ) {
-			NSString *state = [args objectAtIndex:1];
+			NSString *state = args[1];
 			if( ! [state caseInsensitiveCompare:@"on"] || ! [state caseInsensitiveCompare:@"yes"] || ! [state caseInsensitiveCompare:@"true"] || ! [state caseInsensitiveCompare:@"1"] ) {
 				[WebCoreStatistics setShouldPrintExceptions:YES];
 				[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVEnableJavaScriptDebugging"];
@@ -62,7 +62,7 @@
 					} else if( ! [subcmd caseInsensitiveCompare:@"create"] ) {
 						path = [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"js"];
 						if( ! [path isAbsolutePath] )
-							path = [[[[_manager class] pluginSearchPaths] objectAtIndex:0] stringByAppendingPathComponent:path];
+							path = [[[_manager class] pluginSearchPaths][0] stringByAppendingPathComponent:path];
 						if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] ) {
 							if( [[NSFileManager defaultManager] createFileAtPath:path contents:[NSData data] attributes:nil] )
 								[[NSWorkspace sharedWorkspace] openFile:path];

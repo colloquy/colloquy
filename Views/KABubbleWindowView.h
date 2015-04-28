@@ -10,9 +10,7 @@
 - (void) setAttributedText:(NSAttributedString *) text;
 - (void) setText:(NSString *) text;
 
-- (id) target;
-- (void) setTarget:(id) object;
+@property (assign) id target;
 
-- (SEL) action;
-- (void) setAction:(SEL) selector;
+@property SEL action;
 @end

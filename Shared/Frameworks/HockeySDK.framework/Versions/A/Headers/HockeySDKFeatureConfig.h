@@ -1,7 +1,7 @@
 /*
  * Author: Andreas Linde <mail@andreaslinde.de>
  *
- * Copyright (c) 2013 HockeyApp, Bit Stadium GmbH.
+ * Copyright (c) 2013-2014 HockeyApp, Bit Stadium GmbH.
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -26,6 +26,13 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/*
+ * This file is only used by the binary framework target when building
+ * and creating the crash reporting only framework
+ *
+ * Attention: Do not include this into your projects yourself!
+ */
+ 
 #ifndef HockeySDK_HockeySDKFeatureConfig_h
 #define HockeySDK_HockeySDKFeatureConfig_h
 
@@ -46,7 +53,7 @@
  * _Default_: Enabled
  */
 #ifndef HOCKEYSDK_FEATURE_FEEDBACK
-#    define HOCKEYSDK_FEATURE_FEEDBACK 1
+#    define HOCKEYSDK_FEATURE_FEEDBACK 0
 #endif /* HOCKEYSDK_FEATURE_FEEDBACK */
 
 
@@ -56,7 +63,7 @@
  * _Default_: Enabled
  */
 #ifndef HOCKEYSDK_FEATURE_STORE_UPDATES
-#    define HOCKEYSDK_FEATURE_STORE_UPDATES 1
+#    define HOCKEYSDK_FEATURE_STORE_UPDATES 0
 #endif /* HOCKEYSDK_FEATURE_STORE_UPDATES */
 
 
@@ -66,7 +73,7 @@
  * _Default_: Enabled
  */
 #ifndef HOCKEYSDK_FEATURE_AUTHENTICATOR
-#    define HOCKEYSDK_FEATURE_AUTHENTICATOR 1
+#    define HOCKEYSDK_FEATURE_AUTHENTICATOR 0
 #endif /* HOCKEYSDK_FEATURE_AUTHENTICATOR */
 
 
@@ -76,20 +83,8 @@
  * _Default_: Enabled
  */
 #ifndef HOCKEYSDK_FEATURE_UPDATES
-#    define HOCKEYSDK_FEATURE_UPDATES 1
+#    define HOCKEYSDK_FEATURE_UPDATES 0
 #endif /* HOCKEYSDK_FEATURE_UPDATES */
-
-
-/**
- * If true, include support for the Jira Mobile Connect SDK.
- *
- * @warning This requires Crash Reporting and Update Manager to be included!
- *
- * _Default_: Disabled
- */
-#ifndef HOCKEYSDK_FEATURE_JIRA_MOBILE_CONNECT
-#    define HOCKEYSDK_FEATURE_JIRA_MOBILE_CONNECT 0
-#endif /* HOCKEYSDK_FEATURE_JIRA_MOBILE_CONNECT */
 
 
 #endif /* HockeySDK_HockeySDKFeatureConfig_h */

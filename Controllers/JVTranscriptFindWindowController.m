@@ -23,7 +23,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 
 #pragma mark -
 
-- (id) initWithWindowNibName:(NSString *) windowNibName {
+- (instancetype) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:@"JVFind"] ) ) {
 		_rules = nil;
 		_results = nil;
@@ -40,15 +40,11 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 - (void) dealloc {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	if( self == sharedInstance ) sharedInstance = nil;
+	//This will never get called:
+	//if( self == sharedInstance ) sharedInstance = nil;
 
 	[subviewTableView setDataSource:nil];
 	[subviewTableView setDelegate:nil];
-
-
-	_rules = nil;
-	_results = nil;
-
 }
 
 - (void) windowDidLoad {
@@ -205,7 +201,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 
 	if( _lastMessageIndex < ( [[self results] count] - 1 ) && ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] ) {
 		_lastMessageIndex++;
-		foundMessage = [[self results] objectAtIndex:_lastMessageIndex];
+		foundMessage = [self results][_lastMessageIndex];
 		goto end;
 	}
 
@@ -313,7 +309,7 @@ end:
 
 	if( [[self results] count] && _lastMessageIndex > 0 && ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] ) {
 		_lastMessageIndex--;
-		foundMessage = [[self results] objectAtIndex:_lastMessageIndex];
+		foundMessage = [self results][_lastMessageIndex];
 
 		[self endFindWithFoundMessage:foundMessage];
 		return;
@@ -329,7 +325,7 @@ end:
 	NSRange range;
 
 	if( ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] && [[self results] count] ) {
-		NSUInteger index = [allMessages indexOfObjectIdenticalTo:[[self results] objectAtIndex:0]];
+		NSUInteger index = [allMessages indexOfObjectIdenticalTo:[self results][0]];
 		if( index != NSNotFound && index > 1 ) {
 			range = NSMakeRange( 0, index );
 		} else {
@@ -451,14 +447,14 @@ end:
 
 - (void) tableView:(NSTableView *) tableView willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) tableColumn row:(NSInteger) row {
 	if( [[tableColumn identifier] isEqualToString:@"criteria"] ) {
-		[(JVViewCell *)cell setView:[(JVTranscriptCriterionController *)[[self criterionControllers] objectAtIndex:row] view]];
+		[(JVViewCell *)cell setView:[(JVTranscriptCriterionController *)[self criterionControllers][row] view]];
 	} else if( [[tableColumn identifier] isEqualToString:@"remove"] ) {
 		[cell setEnabled:( [self numberOfRowsInTableView:tableView] > 1 )];
 	}
 }
 
 - (id) tableView:(NSTableView *) tableView objectValueForTableColumn:(NSTableColumn *) tableColumn row:(NSInteger) row {
-	return [[self criterionControllers] objectAtIndex:row];
+	return [self criterionControllers][row];
 }
 
 #pragma mark -
@@ -498,7 +494,7 @@ end:
 	if( ! findString || ! [findString isKindOfClass:[NSString class]] ) return;
 
 	NSPasteboard *pasteboard = [NSPasteboard pasteboardWithName:NSFindPboard];
-	[pasteboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+	[pasteboard declareTypes:@[NSStringPboardType] owner:nil];
 	[pasteboard setString:findString forType:NSStringPboardType];
 }
 

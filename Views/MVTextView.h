@@ -4,7 +4,6 @@
     NSDictionary *defaultTypingAttributes;
 	NSSize lastPostedSize;
 	NSSize _desiredSizeCached;
-	BOOL _usesSystemCompleteOnTab;
 	BOOL _tabCompletting;
 	BOOL _ignoreSelectionChanges;
 	BOOL _complettingWithSuffix;
@@ -15,15 +14,14 @@
 
 - (void) setBaseFont:(NSFont *) font;
 
-- (void) reset:(id) sender;
+- (IBAction) reset:(id) sender;
 
-- (NSSize) minimumSizeForContent;
+@property (readonly) NSSize minimumSizeForContent;
 
-- (void) bold:(id) sender;
-- (void) italic:(id) sender;
+- (IBAction) bold:(id) sender;
+- (IBAction) italic:(id) sender;
 
-- (void) setUsesSystemCompleteOnTab:(BOOL) use;
-- (BOOL) usesSystemCompleteOnTab;
+@property BOOL usesSystemCompleteOnTab;
 
 - (BOOL) autocompleteWithSuffix:(BOOL) suffix;
 

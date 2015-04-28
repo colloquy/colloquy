@@ -6,13 +6,13 @@
 #import "JVChatConsolePanel.h"
 
 @implementation JVChatViewCriterionController
-+ (id) controller {
++ (instancetype) controller {
 	return [[self alloc] init];
 }
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_query = @"";
 		_changed = NO;
@@ -23,7 +23,7 @@
 	return self;
 }
 
-- (id) initWithCoder:(NSCoder *) coder {
+- (instancetype) initWithCoder:(NSCoder *) coder {
 	if( [coder allowsKeyedCoding] ) {
 		self = [self init];
 		[self setKind:[coder decodeIntForKey:@"kind"]];
@@ -57,18 +57,10 @@
 	return [self copyWithZone:zone];
 }
 
-- (void) dealloc {
-
-	subview = nil;
-	kindMenu = nil;
-	_query = nil;
-
-}
-
 #pragma mark -
 
 - (void) awakeFromNib {
-	[tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%d", [self format]]];
+	[tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%ld", (long)[self format]]];
 
 	if( [self format] == JVChatViewTextCriterionFormat ) {
 		[textKindButton selectItemAtIndex:[textKindButton indexOfItemWithTag:[self kind]]];
@@ -107,7 +99,7 @@
 	if( format != _format ) {
 		_format = format;
 
-		[tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%d", format]];
+		[tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%ld", (long)format]];
 
 		if( [self format] == JVChatViewTextCriterionFormat ) {
 			[textKindButton selectItemAtIndex:[textKindButton indexOfItemWithTag:[self kind]]];
@@ -219,7 +211,7 @@
 	} else if( [self format] == JVChatViewListCriterionFormat ) {
 		NSMenuItem *mitem = [listQuery selectedItem];
 		if( [mitem representedObject] ) [self setQuery:[mitem representedObject]];
-		else [self setQuery:[NSNumber numberWithLong:[mitem tag]]];
+		else [self setQuery:@([mitem tag])];
 	}
 }
 

@@ -1,13 +1,13 @@
 @class MVChatConnection;
 @class CQBouncerSettings;
 
-typedef enum {
+typedef NS_ENUM(NSInteger, CQConnectionTableCellStatus) {
 	CQConnectionTableCellNotConnectedStatus,
 	CQConnectionTableCellServerDisconnectedStatus,
 	CQConnectionTableCellReconnectingStatus,
 	CQConnectionTableCellConnectingStatus,
 	CQConnectionTableCellConnectedStatus
-} CQConnectionTableCellStatus;
+};
 
 @interface CQConnectionTableHeaderView : UITableViewHeaderFooterView {
 	@protected

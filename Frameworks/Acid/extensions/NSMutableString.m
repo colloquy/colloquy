@@ -24,7 +24,7 @@
 
 @implementation NSMutableString(_ACID_EXT)
 
--(NSString*) nextTokenDelimitedBy:(NSString*)tokens searchFromIndex:(int)index
+-(NSString*) nextTokenDelimitedBy:(NSString*)tokens searchFromIndex:(NSInteger)index
 {
     NSString* result;
     NSCharacterSet* cset = [NSCharacterSet characterSetWithCharactersInString:tokens];
@@ -50,7 +50,7 @@
     return [self nextTokenDelimitedBy:tokens searchFromIndex:0];
 }
 
--(void) deleteCharactersFromIndex:(int)start toIndex:(int)end
+-(void) deleteCharactersFromIndex:(NSInteger)start toIndex:(NSInteger)end
 {
     NSRange r = {start, end - start};
     [self deleteCharactersInRange:r];

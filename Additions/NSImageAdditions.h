@@ -3,6 +3,6 @@
 - (void) tileInRect:(NSRect) rect;
 
 + (NSImage *) imageWithBase64EncodedString:(NSString *) base64String;
-- (id) initWithBase64EncodedString:(NSString *) base64String;
+- (instancetype) initWithBase64EncodedString:(NSString *) base64String;
 - (NSString *) base64EncodingWithFileType:(NSBitmapImageFileType) fileType;
 @end

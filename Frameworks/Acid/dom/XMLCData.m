@@ -49,14 +49,14 @@
 }
 
  
--(id) initWithCharPtr:(const char*)cptr ofLength:(unsigned)clen  // Assumes unescaped data
+-(id) initWithCharPtr:(const char*)cptr ofLength:(NSUInteger)clen  // Assumes unescaped data
 {
 	if (!(self = [self init])) return nil;
     _text = [[NSMutableString alloc] initWithUTF8String:cptr length:clen];
     return self;
 }
 
--(id) initWithEscapedCharPtr:(const char*)cptr ofLength:(unsigned)clen
+-(id) initWithEscapedCharPtr:(const char*)cptr ofLength:(NSUInteger)clen
 {
 	if (!(self = [self init])) return nil;
     _text = [XMLCData unescape:cptr ofLength:clen];
@@ -66,7 +66,7 @@
 
 
 // Modify text using data that is _not_ escaped
--(void) setText:(const char*)text ofLength:(unsigned)textlen
+-(void) setText:(const char*)text ofLength:(NSUInteger)textlen
 {
     [_text release];
     if (textlen == 0)
@@ -81,7 +81,7 @@
     _text = [[NSMutableString alloc] initWithString:text];
 }
 
--(void) appendText:(const char*)text ofLength:(unsigned)textlen
+-(void) appendText:(const char*)text ofLength:(NSUInteger)textlen
 {
     NSString* s = [[NSString alloc] initWithUTF8StringNoCopy:(char*)text length:textlen
                                              freeWhenDone:NO];
@@ -95,14 +95,14 @@
 }
 
 // Modify text using data that is escaped
--(void) setEscapedText:(const char*)text ofLength:(unsigned)textlen
+-(void) setEscapedText:(const char*)text ofLength:(NSUInteger)textlen
 {
     [_text release];
     _text = [XMLCData unescape:text ofLength:textlen];
     [_text retain];
 }
 
--(void) appendEscapedText:(const char*)text ofLength:(unsigned)textlen
+-(void) appendEscapedText:(const char*)text ofLength:(NSUInteger)textlen
 {
     [_text appendString: [XMLCData unescape:text ofLength:textlen]];
 }
@@ -140,9 +140,9 @@
     [acc addCData:self];
 }
 
-+(NSString*) escape:(const char*)data ofLength:(int)datasz
++(NSString*) escape:(const char*)data ofLength:(NSInteger)datasz
 {
-    int i, j, newlen;
+    NSInteger i, j, newlen;
     char* temp;
     NSString* result;
 
@@ -223,7 +223,7 @@
 
 +(NSString*) escape:(NSString*)data
 {
-    unsigned int i, j, newlen, oldlen;
+    NSUInteger i, j, newlen, oldlen;
     char *temp;
     const char *cdata;
     NSString* result;
@@ -303,9 +303,9 @@
     return result;
 }
 
-+(NSMutableString*) unescape:(const char*)data ofLength:(int)datasz
++(NSMutableString*) unescape:(const char*)data ofLength:(NSInteger)datasz
 {
-    int i,j=0;
+    NSInteger i,j=0;
     char *temp;
     NSMutableString* result;
 

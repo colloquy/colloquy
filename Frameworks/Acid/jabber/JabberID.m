@@ -30,6 +30,11 @@
 static NSMutableDictionary* G_cache;
 
 @implementation JabberID
+@synthesize hash = _hash_value;
+@synthesize hostname = _hostname;
+@synthesize username = _username;
+@synthesize resource = _resource;
+@synthesize completeID = _complete;
 
 -(id) copyWithZone:(NSZone*)zone
 {
@@ -67,7 +72,7 @@ static NSMutableDictionary* G_cache;
             free(rawdata);
             return NO;
         }
-        *resource = [NSString stringWithUTF8String:buf];
+        *resource = @(buf);
     }
 
     /* Edge case -- the original string was a single character
@@ -92,7 +97,7 @@ static NSMutableDictionary* G_cache;
             return NO;
         }
 
-        *hostname = [NSString stringWithUTF8String:buf];
+        *hostname = @(buf);
 
         // Only process the username if it's there...
         if ((rawdata != nil) && strlen(rawdata) > 0)
@@ -106,7 +111,7 @@ static NSMutableDictionary* G_cache;
                 free(rawdata);
                 return NO;
             }
-            *username = [NSString stringWithUTF8String:buf];            
+            *username = @(buf);            
         }
     }
     else
@@ -119,7 +124,7 @@ static NSMutableDictionary* G_cache;
             free(rawdata);
             return NO;
         }
-        *hostname = [NSString stringWithUTF8String:buf];
+        *hostname = @(buf);
     }
 
     free(rawdata);
@@ -150,7 +155,10 @@ static NSMutableDictionary* G_cache;
 
 +(void) initialize
 {
-    G_cache = [[NSMutableDictionary alloc] initWithCapacity:111];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        G_cache = [[NSMutableDictionary alloc] initWithCapacity:111];
+    });
 }
 
 -(id) initWithFormat:(NSString*)fmt, ...
@@ -178,7 +186,7 @@ static NSMutableDictionary* G_cache;
     }
 
     // Check for this particular jid string in the cache
-    JabberID* result = [G_cache objectForKey:jidstring];
+    JabberID* result = G_cache[jidstring];
     if (result != nil)
     {
         [self release];
@@ -208,12 +216,12 @@ static NSMutableDictionary* G_cache;
     [_complete retain];
 
     // Check the cache for the JID again...
-    result = [G_cache objectForKey:_complete];
+    result = G_cache[_complete];
     if (result != nil)
     {
         // Associate the provided jid string as another
         // key for this JID
-        [G_cache setObject:result forKey:jidstring];
+        G_cache[jidstring] = result;
 
         // Cleanup and return the object we found
         [self release];
@@ -234,7 +242,7 @@ static NSMutableDictionary* G_cache;
         else
             key = _hostname;
 
-        JabberID* uhjid = [G_cache objectForKey:key];
+        JabberID* uhjid = G_cache[key];
         if (uhjid == nil)
         {
             // No userhost jid found -- make it
@@ -245,7 +253,7 @@ static NSMutableDictionary* G_cache;
             uhjid->_hash_value = [key hash];
             
             // Store it in the cache
-            [G_cache setObject:uhjid forKey:key];
+            G_cache[key] = uhjid;
 
             // Release this jid -- we'll retain it in just a sec...
             [uhjid release];
@@ -258,8 +266,8 @@ static NSMutableDictionary* G_cache;
     // Save the result in the cache -- save it once with the 
     // original string, and once with the proper string prep'd
     // version
-    [G_cache setObject:self forKey:_complete];
-    [G_cache setObject:self forKey:jidstring];
+    G_cache[_complete] = self;
+    G_cache[jidstring] = self;
 
     return self;
 }
@@ -326,37 +334,12 @@ static NSMutableDictionary* G_cache;
     [super dealloc];
 }
 
--(unsigned) hash
-{
-    return _hash_value;
-}
-
--(NSString*) hostname
-{
-    return _hostname;
-}
-
--(NSString*) username
-{
-    return _username;
-}
-
 -(NSString*) userhost
 {
     if (_userhost_jid != nil)
         return _userhost_jid->_complete;
     else
         return _complete;
-}
-
--(NSString*) resource
-{
-    return _resource;
-}
-
--(NSString*) completeID
-{
-    return _complete;
 }
 
 -(NSString*) escapedCompleteID
@@ -415,7 +398,7 @@ static NSMutableDictionary* G_cache;
     return [self compareUserhost:other] == NSOrderedSame;
 }
 
--(id) initWithCoder:(NSCoder*) coder
+-(instancetype) initWithCoder:(NSCoder*) coder
 {
     return [self initWithString:[coder decodeObject]];
 }

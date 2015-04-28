@@ -1,24 +1,31 @@
 #import "JVChatEvent.h"
 #import "NSAttributedStringMoreAdditions.h"
 #import "NSDateAdditions.h"
+#import "JVChatRoomMember.h"
+#import "JVChatEvent_Private.h"
 
-#import <libxml/tree.h>
+#include <libxml/tree.h>
 
-@implementation JVChatEvent
+@implementation JVChatEvent {
+@protected
+	xmlNode *_node;
+	xmlDoc *_doc;
+	NSString *_eventIdentifier;
+	NSScriptObjectSpecifier *_objectSpecifier;
+	__weak JVChatTranscript *_transcript;
+	NSDate *_date;
+	NSString *_name;
+	NSTextStorage *_message;
+	NSDictionary *_attributes;
+	BOOL _loadedMessage;
+	BOOL _loadedAttributes;
+	BOOL _loadedSmall;
+}
 - (void) dealloc {
-
-	_eventIdentifier = nil;
-	_date = nil;
-	_name = nil;
-	_message = nil;
-	_attributes = nil;
-
-	_transcript = nil; // weak reference
 	_node = NULL;
 
 	if( _doc ) xmlFreeDoc( _doc );
 	_doc = NULL;
-
 }
 
 #pragma mark -
@@ -28,11 +35,11 @@
 
 	@synchronized( _transcript ) {
 		xmlChar *prop = xmlGetProp( (xmlNode *) _node, (xmlChar *) "name" );
-		_name = ( prop ? [[NSString allocWithZone:nil] initWithUTF8String:(char *) prop] : nil );
+		_name = ( prop ? @((char *) prop) : nil );
 		xmlFree( prop );
 
 		prop = xmlGetProp( (xmlNode *) _node, (xmlChar *) "occurred" );
-		_date = ( prop ? [[NSDate allocWithZone:nil] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
+		_date = ( prop ? [[NSDate allocWithZone:nil] initWithString:@((char *) prop)] : nil );
 		xmlFree( prop );
 	}
 
@@ -70,7 +77,7 @@
 				for( prop = subNode -> properties; prop; prop = prop -> next ) {
 					xmlChar *value = xmlGetProp( subNode, prop -> name );
 					if( value ) {
-						[properties setObject:[NSString stringWithUTF8String:(char *) value] forKey:[NSString stringWithUTF8String:(char *) prop -> name]];
+						properties[@((char *) prop -> name)] = @((char *) value);
 						xmlFree( value );
 					}
 				}
@@ -87,15 +94,15 @@
 					value = [NSTextStorage attributedStringWithXHTMLTree:subNode baseURL:nil defaultAttributes:nil];
 				} else {
 					xmlChar *content = xmlNodeGetContent( subNode );
-					value = [NSString stringWithUTF8String:(char *) content];
+					value = @((char *) content);
 					xmlFree( content );
 				}
 
 				if( [properties count] ) {
-					[properties setObject:value forKey:@"value"];
-					[attributes setObject:properties forKey:[NSString stringWithUTF8String:(char *) subNode -> name]];
+					properties[@"value"] = value;
+					attributes[@((char *) subNode -> name)] = properties;
 				} else {
-					[attributes setObject:value forKey:[NSString stringWithUTF8String:(char *) subNode -> name]];
+					attributes[@((char *) subNode -> name)] = value;
 				}
 			}
 		} while( ( subNode = subNode -> next ) );
@@ -122,25 +129,25 @@
 		const char *msgStr = NULL;
 
 		if( [self message] ) {
-			NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+			NSDictionary *options = @{@"IgnoreFonts": @YES, @"IgnoreFontSizes": @YES};
 			NSString *msgValue = [[self message] HTMLFormatWithOptions:options];
 			msgValue = [msgValue stringByStrippingIllegalXMLCharacters];
 
 			msgStr = [[NSString stringWithFormat:@"<message>%@</message>", msgValue] UTF8String];
 
-			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
+			msgDoc = xmlParseMemory( msgStr, (int)strlen( msgStr ) );
 			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), _doc, 1 );
 			xmlAddChild( root, child );
 			xmlFreeDoc( msgDoc );
 		}
 
 		for( NSString *key in [self attributes] ) {
-			id value = [[self attributes] objectForKey:key];
+			id value = [self attributes][key];
 
 			if( [value respondsToSelector:@selector( xmlDescriptionWithTagName: )] ) {
 				msgStr = [(NSString *)[value performSelector:@selector( xmlDescriptionWithTagName: ) withObject:key] UTF8String];
 			} else if( [value isKindOfClass:[NSAttributedString class]] ) {
-				NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+				NSDictionary *options = @{@"IgnoreFonts": @YES, @"IgnoreFontSizes": @YES};
 				value = [value HTMLFormatWithOptions:options];
 				value = [value stringByStrippingIllegalXMLCharacters];
 				if( [(NSString *)value length] )
@@ -158,7 +165,7 @@
 
 			if( ! msgStr ) msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];
 
-			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
+			msgDoc = xmlParseMemory( msgStr, (int)strlen( msgStr ) );
 			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), _doc, 1 );
 			xmlAddChild( root, child );
 			xmlFreeDoc( msgDoc );
@@ -177,16 +184,6 @@
 	}
 
 	_node = node;
-}
-
-#pragma mark -
-
-- (JVChatTranscript *) transcript {
-	return _transcript;
-}
-
-- (NSString *) eventIdentifier {
-	return _eventIdentifier;
 }
 
 #pragma mark -
@@ -213,7 +210,7 @@
 }
 
 - (NSString *) messageAsHTML {
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	NSDictionary *options = @{@"IgnoreFonts": @YES, @"IgnoreFontSizes": @YES};
 	return [[self message] HTMLFormatWithOptions:options];
 }
 
@@ -223,18 +220,47 @@
 	[self loadAttributes];
 	return _attributes;
 }
+
+#pragma mark - private
+
+- (instancetype) initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
+	if( ( self = [self init] ) ) {
+		_node = node;
+		_transcript = transcript; // weak reference
+		
+		if( ! _node || node -> type != XML_ELEMENT_NODE ) {
+			return nil;
+		}
+		
+		@synchronized( _transcript ) {
+			xmlChar *prop = xmlGetProp( (xmlNode *) _node, (xmlChar *) "id" );
+			_eventIdentifier = ( prop ? @((char *) prop) : nil );
+			xmlFree( prop );
+		}
+	}
+	
+	return self;
+}
+
 @end
 
 #pragma mark -
 
 @implementation JVMutableChatEvent
-+ (id) chatEventWithName:(NSString *) name andMessage:(id) message {
+@dynamic attributes;
+@dynamic eventIdentifier;
+@dynamic date;
+@dynamic name;
+@dynamic messageAsHTML;
+@dynamic messageAsPlainText;
+
++ (instancetype) chatEventWithName:(NSString *) name andMessage:(id) message {
 	return [[self alloc] initWithName:name andMessage:message];
 }
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_loadedMessage = YES;
 		_loadedAttributes = YES;
@@ -246,7 +272,7 @@
 	return self;
 }
 
-- (id) initWithName:(NSString *) name andMessage:(id) message {
+- (instancetype) initWithName:(NSString *) name andMessage:(id) message {
 	if( ( self = [self init] ) ) {
 		[self setName:name];
 		[self setMessage:message];

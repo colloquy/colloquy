@@ -56,7 +56,7 @@
 
 - (void) setUnderlineState:(BOOL) underline {
 	if( ! underline ) [self removeAttribute:NSUnderlineStyleAttributeName range:NSMakeRange( 0, [self length] )];
-	else [self addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithBool:1] range:NSMakeRange( 0, [self length] )];
+	else [self addAttribute:NSUnderlineStyleAttributeName value:@YES range:NSMakeRange( 0, [self length] )];
 }
 
 - (NSArray *) styleClasses {
@@ -93,5 +93,16 @@
 - (void) setXHTMLEnd:(NSString *) html {
 	if( ! [html isKindOfClass:[NSString class]] ) [self removeAttribute:@"XHTMLEnd" range:NSMakeRange( 0, [self length] )];
 	else [self addAttribute:@"XHTMLEnd" value:html range:NSMakeRange( 0, [self length] )];
+}
+
+- (NSTextStorage *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set {
+	NSTextStorage *mutableStorage = [self copy];
+	NSRange range = [[self string] rangeOfCharacterFromSet:set];
+	while (range.location != NSNotFound) {
+		[mutableStorage replaceCharactersInRange:range withString:@""];
+		range = [[self string] rangeOfCharacterFromSet:set];
+	}
+
+	return mutableStorage;
 }
 @end

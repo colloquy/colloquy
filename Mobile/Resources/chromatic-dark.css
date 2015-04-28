@@ -7,7 +7,6 @@ body {
 
 a {
 	color: rgb(139, 189, 223);
-	pointer-events: auto;
 }
 
 .notice-wrapper, .message-wrapper {

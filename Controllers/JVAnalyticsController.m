@@ -135,7 +135,7 @@ static void generateUniqueMachineIdentifier() {
 	[[NSUserDefaults standardUserDefaults] setObject:uniqueMachineIdentifier forKey:@"JVUniqueMachineIdentifier"];
 }
 
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
 
@@ -146,24 +146,24 @@ static void generateUniqueMachineIdentifier() {
 
 	_data = [[NSMutableDictionary alloc] initWithCapacity:10];
 
-	[_data setObject:hardwareInfoAsString("hw.model") forKey:@"machine-model"];
+	_data[@"machine-model"] = hardwareInfoAsString("hw.model");
 
 #if __ppc__
-	[_data setObject:@"ppc" forKey:@"machine-class"];
+	_data[@"machine-class"] = @"ppc";
 #elif __i386__ || __x86_64__
-	[_data setObject:@"i386" forKey:@"machine-class"];
+	_data[@"machine-class"] = @"i386";
 #elif __arm__
-	[_data setObject:@"arm" forKey:@"machine-class"];
+	_data[@"machine-class"] = @"arm";
 #else
-	[_data setObject:@"unknown" forKey:@"machine-class"];
+	_data[@"machine-class"] = @"unknown";
 #endif
 
-	[_data setObject:[NSNumber numberWithUnsignedInt:hardwareInfoAsNumber("hw.ncpu")] forKey:@"machine-cpu-count"];
-	[_data setObject:[NSNumber numberWithUnsignedInt:hardwareInfoAsLargeNumber("hw.cpufrequency") / 1000000] forKey:@"machine-cpu-frequency"];
-	[_data setObject:[NSNumber numberWithUnsignedLongLong:hardwareInfoAsLargeNumber("hw.memsize") / 1024 / 1024] forKey:@"machine-memory"];
-	[_data setObject:(hardwareInfoAsNumber("hw.cpu64bit_capable") ? @"yes" : @"no") forKey:@"machine-cpu-64bit"];
-	[_data setObject:[systemVersion objectForKey:@"ProductName"] forKey:@"machine-system-name"];
-	[_data setObject:[systemVersion objectForKey:@"ProductVersion"] forKey:@"machine-system-version"];
+	_data[@"machine-cpu-count"] = @(hardwareInfoAsNumber("hw.ncpu"));
+	_data[@"machine-cpu-frequency"] = @(hardwareInfoAsLargeNumber("hw.cpufrequency") / 1000000);
+	_data[@"machine-memory"] = @(hardwareInfoAsLargeNumber("hw.memsize") / 1024 / 1024);
+	_data[@"machine-cpu-64bit"] = (hardwareInfoAsNumber("hw.cpu64bit_capable") ? @"yes" : @"no");
+	_data[@"machine-system-name"] = systemVersion[@"ProductName"];
+	_data[@"machine-system-version"] = systemVersion[@"ProductVersion"];
 
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:NSApplicationWillTerminateNotification object:nil];
@@ -173,19 +173,17 @@ static void generateUniqueMachineIdentifier() {
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-
 }
 
 #pragma mark -
 
 - (id) objectForKey:(NSString *) key {
-	return [_data objectForKey:key];
+	return _data[key];
 }
 
 - (void) setObject:(id) object forKey:(NSString *) key {
 	if (object) {
-		[_data setObject:object forKey:key];
+		_data[key] = object;
 		[self synchronizeSoon];
 	} else [_data removeObjectForKey:key];
 }
@@ -196,7 +194,7 @@ static void generateUniqueMachineIdentifier() {
 	NSMutableString *resultString = [[NSMutableString alloc] initWithCapacity:1024];
 
 	for( __strong NSString *key in _data ) {
-		NSString *value = [[_data objectForKey:key] description];
+		NSString *value = [_data[key] description];
 
 		key = [key stringByEncodingIllegalURLCharacters];
 		value = [value stringByEncodingIllegalURLCharacters];
@@ -237,7 +235,7 @@ static void generateUniqueMachineIdentifier() {
 	_pendingSynchronize = NO;
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
 
-	[_data setObject:uniqueMachineIdentifier forKey:@"machine-identifier"];
+	_data[@"machine-identifier"] = uniqueMachineIdentifier;
 
 	[NSURLConnection connectionWithRequest:[self _urlRequest] delegate:nil];
 
@@ -251,7 +249,7 @@ static void generateUniqueMachineIdentifier() {
 	_pendingSynchronize = NO;
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
 
-	[_data setObject:uniqueMachineIdentifier forKey:@"machine-identifier"];
+	_data[@"machine-identifier"] = uniqueMachineIdentifier;
 
 	NSMutableURLRequest *request = [self _urlRequest];
 	[request setTimeoutInterval:15.];

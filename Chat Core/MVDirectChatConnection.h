@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 #import "MVChatConnection.h"
 
 extern NSString *MVDirectChatConnectionOfferNotification;
@@ -10,12 +11,12 @@ extern NSString *MVDirectChatConnectionGotMessageNotification;
 
 extern NSString *MVDirectChatConnectionErrorDomain;
 
-typedef enum {
+typedef NS_ENUM(OSType, MVDirectChatConnectionStatus) {
 	MVDirectChatConnectionConnectedStatus = 'dcCo',
 	MVDirectChatConnectionWaitingStatus = 'dcWa',
 	MVDirectChatConnectionDisconnectedStatus = 'dcDs',
 	MVDirectChatConnectionErrorStatus = 'dcEr'
-} MVDirectChatConnectionStatus;
+};
 
 @class MVDirectClientConnection;
 @class MVChatUser;
@@ -34,26 +35,23 @@ typedef enum {
 	MVChatUser *_user;
 	MVDirectChatConnectionStatus _status;
 	NSError *_lastError;
-	BOOL _releasing;
 }
-+ (id) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive;
++ (instancetype) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive;
 
-- (BOOL) isPassive;
-- (MVDirectChatConnectionStatus) status;
+@property (getter=isPassive, readonly) BOOL passive;
+@property (readonly) MVDirectChatConnectionStatus status;
 
-- (MVChatUser *) user;
-- (NSString *) host;
-- (NSString *) connectedHost;
-- (unsigned short) port;
+@property (readonly, strong) MVChatUser *user;
+@property (readonly, copy) NSString *host;
+@property (readonly, copy) NSString *connectedHost;
+@property (readonly) unsigned short port;
 
 - (void) initiate;
 - (void) disconnect;
 
-- (void) setEncoding:(NSStringEncoding) encoding;
-- (NSStringEncoding) encoding;
+@property NSStringEncoding encoding;
 
-- (void) setOutgoingChatFormat:(MVChatMessageFormat) format;
-- (MVChatMessageFormat) outgoingChatFormat;
+@property MVChatMessageFormat outgoingChatFormat;
 
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *)attributes;

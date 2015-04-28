@@ -1,12 +1,13 @@
 #import "CQTextCompletionView.h"
+#import "MVChatString.h"
 
 @protocol CQChatInputBarDelegate;
 @class CQTextCompletionView;
 
-typedef enum {
+typedef NS_ENUM(NSInteger, CQChatInputBarResponderState) {
 	CQChatInputBarNotResponder,
 	CQChatInputBarResponder
-} CQChatInputBarResponderState;
+};
 
 @interface CQChatInputBar : UIView <UITextViewDelegate, CQTextCompletionViewDelegate> {
 	@protected
@@ -21,6 +22,7 @@ typedef enum {
 	BOOL _spaceCyclesCompletions;
 	BOOL _autocorrect;
 	BOOL _autocapitalizeNextLetter;
+	BOOL _textNeedsClearing;
 	UITextAutocapitalizationType _defaultAutocapitalizationType;
 	UIViewAnimationCurve _animationCurve;
 	NSTimeInterval _animationDuration;
@@ -57,12 +59,14 @@ typedef enum {
 
 @protocol CQChatInputBarDelegate <NSObject>
 @optional
+- (void) chatInputBarTextDidChange:(CQChatInputBar *) chatInputBar;
 - (BOOL) chatInputBarShouldBeginEditing:(CQChatInputBar *) chatInputBar;
 - (void) chatInputBarDidBeginEditing:(CQChatInputBar *) chatInputBar;
 - (BOOL) chatInputBarShouldEndEditing:(CQChatInputBar *) chatInputBar;
 - (void) chatInputBarDidEndEditing:(CQChatInputBar *) chatInputBar;
 - (BOOL) chatInputBarShouldIndent:(CQChatInputBar *) chatInputBar;
-- (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text;
+- (void) chatInputBarDidChangeSelection:(CQChatInputBar *) chatInputBar;
+- (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(MVChatString *) text;
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar shouldAutocorrectWordWithPrefix:(NSString *) word;
 - (NSArray *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range;
 - (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) chatInputBar;

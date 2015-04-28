@@ -26,6 +26,10 @@
 #import <objc/objc-runtime.h>
 #import <expat.h>
 
+@interface NSObject (private)
++(instancetype) constructElement:(XMLQName*)qname withAttributes:(NSMutableDictionary*)atts withDefaultURI:(NSString*)default_uri NS_RETURNS_RETAINED;
+@end
+
 @interface BufferParser : NSObject <XMLElementStreamListener>
 {
     BOOL _finished;
@@ -45,8 +49,10 @@
 @implementation BufferParser
 -(id) init
 {
-	if (!(self = [super init])) return nil;
-    _stream = [[XMLElementStream alloc] initWithListener:self];
+    if (self = [super init])
+	{
+		_stream = [[XMLElementStream alloc] initWithListener:self];
+	}
     return self;
 }
 
@@ -120,6 +126,12 @@ static void _handleExitNamespace(void* data, const XML_Char* prefix)
     [parser exitNamespace:prefix];
 }
 
+@interface XMLElementStream ()
++(XMLElement*) factoryCreateElement:(XMLQName*)qname withAttributes:(NSMutableDictionary*)atts
+					 withDefaultURI:(NSString*)defaultURI NS_RETURNS_RETAINED;
+
+@end
+
 @implementation XMLElementStream
 
 static NSMutableArray* G_FACTORY;
@@ -169,7 +181,7 @@ static NSMutableArray* G_FACTORY;
 {
     if (prefix == NULL)
     {
-        NSString* uristr = [NSString stringWithUTF8String:uri];
+        NSString* uristr = @(uri);
         [_default_uri_stack addObject:uristr];
     }
 }
@@ -187,12 +199,8 @@ static NSMutableArray* G_FACTORY;
 {
     // Walk all registered element handlers asking each one to take a peek and see if they want
     // to instantiate this element; only one gets the opportunity
-    Class cur;
-    NSEnumerator* e = [G_FACTORY objectEnumerator];
-    while ((cur = [e nextObject]))
-    {
-        XMLElement* result = objc_msgSend(cur, @selector(constructElement:withAttributes:withDefaultURI:),
-                                          qname, atts, defaultURI);
+	for (Class cur in G_FACTORY) {
+		XMLElement* result = [cur constructElement:qname withAttributes:atts withDefaultURI:defaultURI];
         if (result != nil)
             return result;
     }
@@ -217,7 +225,7 @@ static NSMutableArray* G_FACTORY;
     {
         XMLQName* key = [XMLQName construct:atts[i] withDefaultURI:default_uri];
         NSString* value = [[NSString alloc] initWithUTF8String:atts[i+1]];
-        [new_element_attribs setObject:value forKey:key];
+        new_element_attribs[key] = value;
         [value release];
         i += 2;
     }
@@ -277,7 +285,7 @@ static NSMutableArray* G_FACTORY;
     }
 }
 
--(void) storeCData: (char*) cdata ofLength:(int) len
+-(void) storeCData: (char*) cdata ofLength:(NSInteger) len
 {
     if (_current_element)
         [_current_element addCData:cdata ofLength:len];
@@ -289,10 +297,10 @@ static NSMutableArray* G_FACTORY;
     }
 }
 
--(void) pushData: (const char*)data ofSize:(unsigned int)datasz
+-(void) pushData: (const char*)data ofSize:(NSUInteger)datasz
 {
     assert(_document_ended != TRUE);
-    if (!XML_Parse(_parser, data, datasz, 0))
+    if (!XML_Parse(_parser, data, (int)datasz, 0))
     {
         NSLog(@"Parser Error: %s", XML_ErrorString(XML_GetErrorCode(_parser)));
     }
@@ -330,7 +338,7 @@ static NSMutableArray* G_FACTORY;
     BufferParser* p = [[BufferParser alloc] init];
     e = [[p process:buffer] retain];
     [p release];
-    return e;
+    return [e autorelease];
 }
 
 -(NSString*) currentNamespaceURI

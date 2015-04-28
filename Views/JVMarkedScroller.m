@@ -19,7 +19,7 @@
 @end
 
 @implementation JVMarkedScroller
-- (id) initWithFrame:(NSRect) frame {
+- (instancetype) initWithFrame:(NSRect) frame {
 	if( ( self = [super initWithFrame:frame] ) ) {
 		_marks = [NSMutableSet set];
 		_shades = [NSMutableArray array];
@@ -30,20 +30,13 @@
 	return self;
 }
 
-- (void) dealloc {
-
-	_marks = nil;
-	_shades = nil;
-
-}
-
 #pragma mark -
 
 - (void) drawRect:(NSRect) rect {
 	[super drawRect:rect];
 
 	NSAffineTransform *transform = [NSAffineTransform transform];
-	float width = [[self class] scrollerWidthForControlSize:[self controlSize]];
+	float width = [[self class] scrollerWidthForControlSize:[self controlSize] scrollerStyle:NSScrollerStyleOverlay];
 
 	float scale = [self scaleToContentView];
 	[transform scaleXBy:( sFlags.isHoriz ? scale : 1. ) yBy:( sFlags.isHoriz ? 1. : scale )];
@@ -351,11 +344,11 @@
 		if( stop ) {
 			unsigned long long shiftedStop = [stop unsignedLongLongValue];
 			if( ! ( negative && shiftedStart < unsignedDisplacement ) && ! ( negative && shiftedStop < unsignedDisplacement ) ) {
-				[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStart + unsignedDisplacement )]];
-				[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStop + unsignedDisplacement )]];
+				[shiftedShades addObject:@( shiftedStart + unsignedDisplacement )];
+				[shiftedShades addObject:@( shiftedStop + unsignedDisplacement )];
 			}
 		} else if( ! ( negative && shiftedStart < unsignedDisplacement ) ) {
-			[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStart + unsignedDisplacement )]];
+			[shiftedShades addObject:@( shiftedStart + unsignedDisplacement )];
 		}
 	}
 
@@ -462,14 +455,14 @@
 
 - (void) startShadedAreaAt:(unsigned long long) location {
 	if( ! [_shades count] || ! ( [_shades count] % 2 ) ) {
-		[_shades addObject:[NSNumber numberWithUnsignedLongLong:location]];
+		[_shades addObject:@(location)];
 		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 	}
 }
 
 - (void) stopShadedAreaAt:(unsigned long long) location {
 	if( [_shades count] && ( [_shades count] % 2 ) == 1 ) {
-		[_shades addObject:[NSNumber numberWithUnsignedLongLong:location]];
+		[_shades addObject:@(location)];
 		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 	}
 }

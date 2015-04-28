@@ -1,7 +1,7 @@
 #import <ChatCore/MVAvailability.h>
 #import <ChatCore/MVChatString.h>
 
-typedef enum {
+typedef NS_OPTIONS(NSUInteger, MVChatRoomMode) {
 	MVChatRoomNoModes = 0,
 	MVChatRoomPrivateMode = 1 << 0,
 	MVChatRoomSecretMode = 1 << 1,
@@ -12,21 +12,21 @@ typedef enum {
 	MVChatRoomNoOutsideMessagesMode = 1 << 6,
 	MVChatRoomPassphraseToJoinMode = 1 << 7,
 	MVChatRoomLimitNumberOfMembersMode = 1 << 8
-} MVChatRoomMode;
+};
 
-typedef enum {
+typedef NS_OPTIONS(NSUInteger, MVChatRoomMemberMode) {
 	MVChatRoomMemberNoModes = 0,
 	MVChatRoomMemberVoicedMode = 1 << 0,
 	MVChatRoomMemberHalfOperatorMode = 1 << 1,
 	MVChatRoomMemberOperatorMode = 1 << 2,
 	MVChatRoomMemberAdministratorMode = 1 << 3,
 	MVChatRoomMemberFounderMode = 1 << 4
-} MVChatRoomMemberMode;
+};
 
-typedef enum {
+typedef NS_OPTIONS(NSUInteger, MVChatRoomMemberDisciplineMode) {
 	MVChatRoomMemberNoDisciplineModes = 0,
 	MVChatRoomMemberDisciplineQuietedMode = 1 << 0
-} MVChatRoomMemberDisciplineMode;
+};
 
 extern NSString *MVChatRoomMemberQuietedFeature;
 extern NSString *MVChatRoomMemberVoicedFeature;
@@ -66,6 +66,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 	NSString *_name;
 	NSDate *_dateJoined;
 	NSDate *_dateParted;
+	NSDate *_mostRecentUserActivity;
 	NSData *_topic;
 	MVChatUser *_topicAuthor;
 	NSDate *_dateTopicChanged;
@@ -80,34 +81,35 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 	NSUInteger _hash;
 	BOOL _releasing;
 }
-@property(readonly) MVChatConnection *connection;
+@property(strong, readonly) MVChatConnection *connection;
 
-@property(readonly) NSURL *url;
-@property(readonly) NSString *name;
-@property(readonly) NSString *displayName;
-@property(readonly) id uniqueIdentifier;
+@property(strong, readonly) NSURL *url;
+@property(strong, readonly) NSString *name;
+@property(strong, readonly) NSString *displayName;
+@property(strong, readonly) id uniqueIdentifier;
 
 @property(readonly, getter=isJoined) BOOL joined;
-@property(readonly) NSDate *dateJoined;
-@property(readonly) NSDate *dateParted;
+@property(strong, readonly) NSDate *dateJoined;
+@property(strong, readonly) NSDate *dateParted;
+@property(nonatomic, copy) NSDate *mostRecentUserActivity;
 
 @property NSStringEncoding encoding;
 
-@property(readonly) NSData *topic;
-@property(readonly) MVChatUser *topicAuthor;
-@property(readonly) NSDate *dateTopicChanged;
+@property(strong, readonly) NSData *topic;
+@property(strong, readonly) MVChatUser *topicAuthor;
+@property(strong, readonly) NSDate *dateTopicChanged;
 
-@property(readonly) NSSet *supportedAttributes;
-@property(readonly) NSDictionary *attributes;
+@property(strong, readonly) NSSet *supportedAttributes;
+@property(strong, readonly) NSDictionary *attributes;
 
 @property(readonly) NSUInteger supportedModes;
 @property(readonly) NSUInteger supportedMemberUserModes;
 @property(readonly) NSUInteger supportedMemberDisciplineModes;
 @property(readonly) NSUInteger modes;
 
-@property(readonly) MVChatUser *localMemberUser;
-@property(readonly) NSSet *memberUsers;
-@property(readonly) NSSet *bannedUsers;
+@property(strong, readonly) MVChatUser *localMemberUser;
+@property(strong, readonly) NSSet *memberUsers;
+@property(strong, readonly) NSSet *bannedUsers;
 
 - (BOOL) isEqual:(id) object;
 - (BOOL) isEqualToChatRoom:(MVChatRoom *) anotherUser;
@@ -166,6 +168,9 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 
 - (void) setDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user;
 - (void) removeDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user;
+
+- (void) requestRecentActivity;
+- (void) persistLastActivityDate;
 @end
 
 #pragma mark -

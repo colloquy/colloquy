@@ -4,10 +4,10 @@
 @class MVChatUser;
 @class MVChatRoom;
 
-typedef enum {
+typedef NS_ENUM(NSInteger, QChatUserListMode) {
 	CQChatUserListModeRoom,
 	CQChatUserListModeBan
-} QChatUserListMode;
+};
 
 @protocol CQChatUserListViewDelegate <NSObject>
 @optional

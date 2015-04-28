@@ -1,3 +1,3 @@
 @interface NSMethodSignature (NSMethodSignatureAdditions)
-+ (id) methodSignatureWithReturnAndArgumentTypes:(const char *) retType, ...;
++ (instancetype) methodSignatureWithReturnAndArgumentTypes:(const char *) retType, ...;
 @end

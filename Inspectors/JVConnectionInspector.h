@@ -2,11 +2,11 @@
 #import "JVChatConsolePanel.h"
 
 @interface MVChatConnection (MVChatConnectionInspection) <JVInspection>
-- (id <JVInspector>) inspector;
+@property (readonly, strong) id<JVInspector> inspector;
 @end
 
 @interface JVChatConsolePanel (JVChatConsolePanelInspection) <JVInspection>
-- (id <JVInspector>) inspector;
+@property (readonly, strong) id<JVInspector> inspector;
 @end
 
 @interface JVConnectionInspector : NSObject <JVInspector> {
@@ -58,7 +58,7 @@
 	BOOL _ignoreRuleIsNew;
 	NSMutableArray *_ignoreRules;
 }
-- (id) initWithConnection:(MVChatConnection *) connection;
+- (instancetype) initWithConnection:(MVChatConnection *) connection;
 
 - (void) selectTabWithIdentifier:(NSString *) identifier;
 

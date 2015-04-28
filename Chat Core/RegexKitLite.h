@@ -104,28 +104,26 @@ typedef unsigned int   NSUInteger;
 #define   RKLREGEXOPTIONS_DEFINED
 
 // These must be identical to their ICU regex counterparts. See http://www.icu-project.org/userguide/regexp.html
-enum {
+typedef NS_OPTIONS(uint32_t, RKLRegexOptions) {
   RKLNoOptions             = 0,
   RKLCaseless              = 2,
   RKLComments              = 4,
   RKLDotAll                = 32,
   RKLMultiline             = 8,
   RKLUnicodeWordBoundaries = 256
-};
-typedef uint32_t RKLRegexOptions; // This must be identical to the ICU 'flags' argument type.
+}; // This must be identical to the ICU 'flags' argument type.
 
 #endif // RKLREGEXOPTIONS_DEFINED
 
 #ifndef   RKLREGEXENUMERATIONOPTIONS_DEFINED
 #define   RKLREGEXENUMERATIONOPTIONS_DEFINED
 
-enum {
+typedef NS_OPTIONS(NSUInteger, RKLRegexEnumerationOptions) {
   RKLRegexEnumerationNoOptions                               = 0UL,
   RKLRegexEnumerationCapturedStringsNotRequired              = 1UL << 9,
   RKLRegexEnumerationReleaseStringReturnedByReplacementBlock = 1UL << 10,
   RKLRegexEnumerationFastCapturedStringsXXX                  = 1UL << 11,
 };
-typedef NSUInteger RKLRegexEnumerationOptions;
   
 #endif // RKLREGEXENUMERATIONOPTIONS_DEFINED
 

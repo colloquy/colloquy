@@ -1,6 +1,6 @@
 #import <Security/Security.h>
 
-enum {
+typedef NS_ENUM(SecAuthenticationType, MVKeyChainAuthenticationType) {
 	MVKeyChainAuthenticationTypeAny = 0,
 	MVKeyChainAuthenticationTypeNTLM = kSecAuthenticationTypeNTLM,
 	MVKeyChainAuthenticationTypeMSN = kSecAuthenticationTypeMSN,
@@ -10,9 +10,7 @@ enum {
 	MVKeyChainAuthenticationTypeDefault = kSecAuthenticationTypeDefault
 };
 
-typedef SecAuthenticationType MVKeyChainAuthenticationType;
-
-enum {
+typedef NS_ENUM(SecProtocolType, MVKeyChainProtocol) {
 	MVKeyChainProtocolAny = 0,
 	MVKeyChainProtocolFTP = kSecProtocolTypeFTP,
 	MVKeyChainProtocolFTPAccount = kSecProtocolTypeFTPAccount,
@@ -30,11 +28,8 @@ enum {
 	MVKeyChainProtocolSSH = kSecProtocolTypeSSH
 };
 
-typedef SecProtocolType MVKeyChainProtocol;
 
-
-@interface MVKeyChain : NSObject {
-}
+@interface MVKeyChain : NSObject
 + (MVKeyChain *) defaultKeyChain;
 
 - (void) setGenericPassword:(NSString *) password forService:(NSString*) service account:(NSString *) account;

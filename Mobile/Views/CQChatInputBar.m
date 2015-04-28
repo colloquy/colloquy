@@ -2,15 +2,25 @@
 
 #import "CQTextCompletionView.h"
 
+#import "UIColorAdditions.h"
+#import "NSNotificationAdditions.h"
+
 #define CompletionsCaptureKeyboardDelay 0.5
 
 static BOOL hardwareKeyboard;
+static BOOL boldText;
+static BOOL underlineText;
+static BOOL italicText;
+static UIColor *foregroundColor;
+static UIColor *backgroundColor;
+static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsChanged";
 
 #pragma mark -
 
 @interface CQChatInputBar (CQChatInputBarPrivate)
+@property (readonly) BOOL _hasMarkedText;
+
 - (void) _moveCaretToOffset:(NSUInteger) offset;
-- (BOOL) _hasMarkedText;
 - (void) _updateTextTraits;
 @end
 
@@ -19,7 +29,30 @@ static BOOL hardwareKeyboard;
 @implementation CQChatInputBar
 @synthesize delegate = _delegate;
 
++ (void) initialize {
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+
+		[self userDefaultsChanged];
+	});
+}
+
++ (void) userDefaultsChanged {
+	boldText = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQChatStyleBoldText"];
+	underlineText = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQChatStyleUnderlineText"];
+	italicText = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQChatStyleItalicText"];
+
+	foregroundColor = [UIColor colorFromName:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQChatStyleForegroundTextColor"]];
+	backgroundColor = [UIColor colorFromName:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQChatStyleBackgroundTextColor"]];
+
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[[NSNotificationCenter chatCenter] postNotificationName:CQChatInputBarDefaultsChanged object:nil];
+	});
+}
+
 - (void) _commonInitialization {
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_resetTextAttributes) name:CQChatInputBarDefaultsChanged object:nil];
 	CGRect frame = self.bounds;
 	frame.size.height += 1;
 
@@ -60,6 +93,8 @@ static BOOL hardwareKeyboard;
 	_inputView.layer.cornerRadius = 5.;
 	[self addSubview:_inputView];
 
+	[self _resetTextAttributes];
+
 	_autocomplete = YES;
 
 #if ENABLE(SECRETS)
@@ -84,7 +119,7 @@ static BOOL hardwareKeyboard;
 
 #pragma mark -
 
-- (id) initWithFrame:(CGRect) frame {
+- (instancetype) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
 		return nil;
 
@@ -93,7 +128,7 @@ static BOOL hardwareKeyboard;
 	return self;
 }
 
-- (id) initWithCoder:(NSCoder *) coder {
+- (instancetype) initWithCoder:(NSCoder *) coder {
 	if (!(self = [super initWithCoder:coder]))
 		return nil;
 
@@ -103,6 +138,7 @@ static BOOL hardwareKeyboard;
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	_inputView.delegate = nil;
@@ -229,7 +265,17 @@ static BOOL hardwareKeyboard;
 }
 
 - (void) setFont:(UIFont *) font {
-	_inputView.font = font;
+	if (font.pointSize > .0) {
+		UIFontDescriptorSymbolicTraits symbolicTraits = font.fontDescriptor.symbolicTraits;
+		if (italicText) symbolicTraits |= UIFontDescriptorTraitItalic;
+		else if (symbolicTraits & UIFontDescriptorTraitItalic) symbolicTraits ^= UIFontDescriptorTraitItalic;
+
+		if (boldText) symbolicTraits |= UIFontDescriptorTraitBold;
+		else if (symbolicTraits & UIFontDescriptorTraitBold) symbolicTraits ^= UIFontDescriptorTraitBold;
+
+		UIFontDescriptor *fontDescriptor = [font.fontDescriptor fontDescriptorWithSymbolicTraits:symbolicTraits];
+		_inputView.font = [UIFont fontWithDescriptor:fontDescriptor size:-1];
+	}
 
 	[self _resetTextViewHeight];
 }
@@ -421,7 +467,7 @@ retry:
 }
 
 - (BOOL) textViewShouldBeginEditing:(UITextView *) textView {
-	textView.contentInset = UIEdgeInsetsMake(-6., 2., 5., 0.);
+	textView.contentInset = UIEdgeInsetsMake(-4., 2., 0., 0.);
 
 	__strong __typeof__((_delegate)) strongDelegate = _delegate;
 	if ([strongDelegate respondsToSelector:@selector(chatInputBarShouldBeginEditing:)])
@@ -443,7 +489,7 @@ retry:
 }
 
 - (void) textViewDidEndEditing:(UITextView *) textView {
-	textView.contentInset = UIEdgeInsetsMake(-6., 2., 5., 0.);
+	textView.contentInset = UIEdgeInsetsMake(-4., 2., 0., 0.);
 
 	__strong __typeof__((_delegate)) strongDelegate = _delegate;
 	if ([strongDelegate respondsToSelector:@selector(chatInputBarDidEndEditing:)])
@@ -580,12 +626,24 @@ retry:
 
 - (void) textViewDidChange:(UITextView *) textView {
 	[self updateTextViewContentSize];
+	[self _updateImagesForResponderState];
+
+	if (!textView.text.length)
+		[self _resetTextAttributes];
+
+	__strong __typeof__((_delegate)) strongDelegate = _delegate;
+	if ([strongDelegate respondsToSelector:@selector(chatInputBarTextDidChange:)])
+		[strongDelegate chatInputBarTextDidChange:self];
 }
 
 - (void) textViewDidChangeSelection:(UITextView *) textView {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 
 	[self performSelector:@selector(hideCompletions) withObject:nil afterDelay:0.5];
+
+	__strong __typeof__((_delegate)) strongDelegate = _delegate;
+	if ([strongDelegate respondsToSelector:@selector(chatInputBarDidChangeSelection:)])
+		[strongDelegate chatInputBarDidChangeSelection:self];
 }
 
 #pragma mark -
@@ -657,18 +715,21 @@ retry:
 		frame.origin.y = (self.frame.size.height - frame.size.height) / 2.;
 		_inputView.frame = frame;
 
-		frame = _accessoryButton.frame;
-		if ([UIDevice currentDevice].isRetina)
-			frame.origin.x = CGRectGetMaxX(_inputView.frame) + ButtonMargin;
-		else frame.origin.x = CGRectGetMaxX(_inputView.frame) + floorf(ButtonMargin);
-		frame.origin.y = (ButtonMargin * 2);
-		frame.size.width = ButtonWidth;
-		frame.size.height = ButtonWidth;
+		[UIView performWithoutAnimation:^{
+			frame = _accessoryButton.frame;
+			if ([UIDevice currentDevice].isRetina)
+				frame.origin.x = CGRectGetMaxX(_inputView.frame) + ButtonMargin;
+			else frame.origin.x = CGRectGetMaxX(_inputView.frame) + floorf(ButtonMargin);
+			frame.origin.y = (ButtonMargin * 2);
+			frame.size.width = ButtonWidth;
+			frame.size.height = ButtonWidth;
 
-		_accessoryButton.frame = frame;
+			_accessoryButton.frame = frame;
+		}];
+	} completion:NULL];
+
 #undef ButtonWidth
 #undef ButtonMargin
-	} completion:NULL];
 
 	_animationDuration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
 }
@@ -686,6 +747,9 @@ retry:
 }
 
 - (void) _updateTextTraits {
+	if ([UIDevice currentDevice].isSystemEight)
+		return;
+
 #if ENABLE(SECRETS)
 	static Class keyboardClass;
 	if (!keyboardClass) keyboardClass = NSClassFromString(@"UIKeyboardImpl");
@@ -723,8 +787,9 @@ retry:
 		[_inputView resignFirstResponder];
 		[_inputView becomeFirstResponder];
 
-		NSString *text = _inputView.text;
-		text = [text stringBySubstitutingEmojiForEmoticons];
+		MVChatString *text = _inputView.attributedText;
+		if (!text) text = [[NSAttributedString alloc] initWithString:_inputView.text attributes:@{ NSFontAttributeName: _inputView.font }];
+//		text = [text stringBySubstitutingEmojiForEmoticons];
 
 		__strong __typeof__((_delegate)) strongDelegate = _delegate;
 		if (![strongDelegate chatInputBar:self sendText:text])
@@ -738,6 +803,7 @@ retry:
 
 		[self hideCompletions];
 		[self _resetTextViewHeight];
+		[self _resetTextAttributes];
 	}
 }
 
@@ -747,14 +813,49 @@ retry:
 	_inputView.scrollEnabled = NO;
 }
 
+- (void) _resetTextAttributes {
+	if (_textNeedsClearing) {
+		_textNeedsClearing = NO;
+		return;
+	}
+
+	self.font = self.font; // recalculate bold/italic settings
+
+	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+	attributes[NSFontAttributeName] = self.font;
+	attributes[NSUnderlineStyleAttributeName] = (underlineText ? @(NSUnderlineStyleSingle) : @(NSUnderlineStyleNone));
+	if (foregroundColor) attributes[NSForegroundColorAttributeName] = foregroundColor;
+	if (backgroundColor) attributes[NSBackgroundColorAttributeName] = backgroundColor;
+
+	NSMutableAttributedString *attributedString = [_inputView.attributedText mutableCopy];
+	_textNeedsClearing = NO;
+	if (!attributedString.length) {
+		_textNeedsClearing = YES;
+		attributedString = [[NSMutableAttributedString alloc] initWithString:(_inputView.text.length ? _inputView.text : @" ")];
+	}
+
+	[attributedString setAttributes:attributes range:NSMakeRange(0, attributedString.length)];
+
+	_inputView.attributedText = attributedString;
+
+	if (_textNeedsClearing)
+		_inputView.text = @"";
+}
+
 #pragma mark -
 
 - (void) _updateImagesForResponderState {
-	UIImage *defaultImage = _accessoryImages[@(_responderState)][@(UIControlStateNormal)];
+	CQChatInputBarResponderState activeResponderState = _responderState;
+	if (!_inputView.hasText)
+	{
+		activeResponderState = CQChatInputBarNotResponder;
+	}
+
+	UIImage *defaultImage = _accessoryImages[@(activeResponderState)][@(UIControlStateNormal)];
 	if (defaultImage)
 		[_accessoryButton setImage:defaultImage forState:UIControlStateNormal];
 
-	UIImage *pressedImage = _accessoryImages[@(_responderState)][@(UIControlStateHighlighted)];
+	UIImage *pressedImage = _accessoryImages[@(activeResponderState)][@(UIControlStateHighlighted)];
 	if (pressedImage)
 		[_accessoryButton setImage:pressedImage forState:UIControlStateHighlighted];
 	else [_accessoryButton setImage:nil forState:UIControlStateHighlighted];

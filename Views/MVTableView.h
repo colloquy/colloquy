@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 @interface MVTableView : NSTableView {
 	NSUInteger autosaveTableColumnHighlight:1;
 	NSUInteger dataSourceDragImageForRows:1;
@@ -9,19 +11,18 @@
 + (NSImage *) ascendingSortIndicator;
 + (NSImage *) descendingSortIndicator;
 
-- (BOOL) autosaveTableColumnHighlight;
-- (void) setAutosaveTableColumnHighlight:(BOOL) flag;
+@property BOOL autosaveTableColumnHighlight;
 
-- (NSRect) originalRectOfRow:(int) row;
+- (NSRect) originalRectOfRow:(NSInteger) row;
 @end
 
-@interface NSObject (MVTableViewDataSource)
-- (NSMenu *) tableView:(MVTableView *) view menuForTableColumn:(NSTableColumn *) column row:(int) row;
-- (NSString *) tableView:(MVTableView *) view toolTipForTableColumn:(NSTableColumn *) column row:(int) row;
+@protocol MVTableViewDataSource
+- (NSMenu *) tableView:(NSTableView *) view menuForTableColumn:(NSTableColumn *) column row:(NSInteger) row;
+- (NSString *) tableView:(MVTableView *) view toolTipForTableColumn:(NSTableColumn *) column row:(NSInteger) row;
 @end
 
-@interface NSObject (MVTableViewDelegate)
+@protocol MVTableViewDelegate
 - (void) clear:(id) sender;
-- (NSRect) tableView:(MVTableView *) tableView rectOfRow:(int) row defaultRect:(NSRect) defaultRect;
+- (NSRect) tableView:(MVTableView *) tableView rectOfRow:(NSInteger) row defaultRect:(NSRect) defaultRect;
 - (NSRange) tableView:(MVTableView *) tableView rowsInRect:(NSRect) rect defaultRange:(NSRange) defaultRange;
 @end

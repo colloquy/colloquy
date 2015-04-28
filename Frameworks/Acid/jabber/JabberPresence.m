@@ -29,13 +29,17 @@ XPathQuery* QRY_SHOW;
 XPathQuery* QRY_STATUS;
 XPathQuery* QRY_SIGN;
 
+@interface JabberPresence ()
++(instancetype) constructElement:(XMLQName*)qname withAttributes:(NSMutableDictionary*)atts withDefaultURI:(NSString*)default_uri NS_RETURNS_RETAINED;
+@end
+
 @implementation JabberPresence
 
-+(id) constructElement:(XMLQName*)qname withAttributes:(NSMutableDictionary*)atts withDefaultURI:(NSString*)default_uri
++(instancetype) constructElement:(XMLQName*)qname withAttributes:(NSMutableDictionary*)atts withDefaultURI:(NSString*)default_uri
 {
     if ([qname isEqual:JABBER_PRESENCE_QN])
     {
-        NSString* type = [atts objectForKey:JABBER_TYPE_ATTRIB_QN];
+        NSString* type = atts[JABBER_TYPE_ATTRIB_QN];
         if ((type == nil) || ([type isEqual:@"unavailable"]))
             return [[JabberPresence alloc] initWithQName:qname withAttributes:atts withDefaultURI:default_uri];
             return nil;

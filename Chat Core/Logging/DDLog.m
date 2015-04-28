@@ -1,10 +1,10 @@
 #import "DDLog.h"
 
-#import <pthread.h>
+#include <pthread.h>
 #import <objc/runtime.h>
-#import <mach/mach_host.h>
-#import <mach/host_info.h>
-#import <libkern/OSAtomic.h>
+#include <mach/mach_host.h>
+#include <mach/host_info.h>
+#include <libkern/OSAtomic.h>
 
 
 /**
@@ -895,7 +895,7 @@ static char *dd_str_copy(const char *str)
 	if (function == NULL)
 		return nil;
 	else
-		return [[NSString alloc] initWithUTF8String:function];
+		return @(function);
 }
 
 - (void)dealloc

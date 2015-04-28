@@ -1,6 +1,7 @@
 #import "MVChatPluginManager.h"
 #import "NSFileManagerAdditions.h"
 #import "NSMethodSignatureAdditions.h"
+#import "NSNotificationAdditions.h"
 #import "NSNumberAdditions.h"
 #import "NSStringAdditions.h"
 
@@ -35,12 +36,12 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	[paths addObject:[[NSBundle bundleForClass:[self class]] builtInPlugInsPath]];
 	if( ! [[NSBundle mainBundle] isEqual:[NSBundle bundleForClass:[self class]]] )
 		[paths addObject:[[NSBundle mainBundle] builtInPlugInsPath]];
-	return [paths autorelease];
+	return paths;
 }
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if( ! ( self = [super init] ) )
 		return nil;
 
@@ -53,28 +54,13 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	return self;
 }
 
-- (void) finalize {
-	if( self == sharedInstance ) sharedInstance = nil;
-	[super finalize];
-}
-
-- (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	if( self == sharedInstance ) sharedInstance = nil;
-
-	[_plugins release];
-	[_invalidPlugins release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (void) reloadPlugins {
 	if( _reloadingPlugins ) return;
 	_reloadingPlugins = YES;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerWillReloadPluginsNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:MVChatPluginManagerWillReloadPluginsNotification object:self];
 
 	if( _plugins.count ) {
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), nil];
@@ -91,9 +77,9 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			if( [[file pathExtension] isEqualToString:@"bundle"] || [[file pathExtension] isEqualToString:@"plugin"] ) {
 				NSBundle *bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]];
-				NSString *bundleIdentifier = [[bundle infoDictionary] objectForKey:@"CFBundleIdentifier"];
-				NSString *previousPluginVersion = [_invalidPlugins objectForKey:bundleIdentifier];
-				NSString *pluginVersion = [[bundle infoDictionary] objectForKey:@"CFBundleVersion"];
+				NSString *bundleIdentifier = [bundle infoDictionary][@"CFBundleIdentifier"];
+				NSString *previousPluginVersion = _invalidPlugins[bundleIdentifier];
+				NSString *pluginVersion = [bundle infoDictionary][@"CFBundleVersion"];
 
 				if( pluginVersion.length ) {
 					if( [previousPluginVersion isCaseInsensitiveEqualToString:pluginVersion] )
@@ -104,7 +90,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 				if( ![[NSFileManager defaultManager] canExecutePluginAtPath:bundle.executablePath] ) {
 					[invalidPluginList addObject:[NSString stringWithFormat:@"%@/%@", path, file]];
 
-					[_invalidPlugins setObject:pluginVersion forKey:bundleIdentifier];
+					_invalidPlugins[bundleIdentifier] = pluginVersion;
 
 					continue;
 				}
@@ -112,32 +98,29 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 				if( [bundle load] && [[bundle principalClass] conformsToProtocol:@protocol( MVChatPlugin )] ) {
 					id plugin = [[[bundle principalClass] allocWithZone:nil] initWithManager:self];
 					if( plugin ) [self addPlugin:plugin];
-					[plugin release];
 				}
 			}
 		}
 	}
 
-	if (invalidPluginList.count) [[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerDidFindInvalidPluginsNotification object:invalidPluginList];
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerDidReloadPluginsNotification object:self];
-
-	[invalidPluginList release];
+	if (invalidPluginList.count) [[NSNotificationCenter chatCenter] postNotificationName:MVChatPluginManagerDidFindInvalidPluginsNotification object:invalidPluginList];
+	[[NSNotificationCenter chatCenter] postNotificationName:MVChatPluginManagerDidReloadPluginsNotification object:self];
 
 	_reloadingPlugins = NO;
 }
 
-- (void) addPlugin:(id) plugin {
+- (void) addPlugin:(NSBundle *) plugin {
 	if( plugin ) {
 		[_plugins addObject:plugin];
 		if( [plugin respondsToSelector:@selector( load )] )
-			[plugin performSelector:@selector( load )];
+			[plugin load];
 	}
 }
 
-- (void) removePlugin:(id) plugin {
+- (void) removePlugin:(NSBundle *) plugin {
 	if( plugin ) {
 		if( [plugin respondsToSelector:@selector( unload )] )
-			[plugin performSelector:@selector( unload )];
+			[plugin unload];
 		[_plugins removeObject:plugin];
 	}
 }
@@ -163,7 +146,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 - (NSArray *) pluginsOfClass:(Class) class thatRespondToSelector:(SEL) selector {
 	NSParameterAssert( selector != NULL );
 
-	NSMutableArray *qualified = [[[NSMutableArray allocWithZone:nil] init] autorelease];
+	NSMutableArray *qualified = [[NSMutableArray allocWithZone:nil] init];
 
 	for( id plugin in _plugins )
 		if( ( ! class || ( class && [plugin isKindOfClass:class] ) ) && [plugin respondsToSelector:selector] )
@@ -190,7 +173,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 
 	if( ! plugins ) return nil;
 
-	NSMutableArray *results = [[[NSMutableArray allocWithZone:nil] init] autorelease];
+	NSMutableArray *results = [[NSMutableArray allocWithZone:nil] init];
 	NSMethodSignature *sig = [invocation methodSignature];
 
 	for ( id plugin in plugins ) {
@@ -203,7 +186,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 		}
 
 		if( ! strcmp( [sig methodReturnType], @encode( id ) ) ) {
-			id ret = nil;
+			__unsafe_unretained id ret = nil;
 			[invocation getReturnValue:&ret];
 			if( ret ) [results addObject:ret];
 			else [results addObject:[NSNull null]];

@@ -6,7 +6,7 @@
 #import "MVChatConnection.h"
 
 @implementation JVAppleScriptPluginLoader
-- (id) initWithManager:(MVChatPluginManager *) manager {
+- (instancetype) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [super init] ) )
 		_manager = manager;
 	return self;

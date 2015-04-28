@@ -215,14 +215,14 @@ static AGRegex *backrefPattern;
 	// while limit is not reached and there are more matches to replace
 	for (i = 0; (lim < 1 || i < lim) && i < allCount; i++) {
 		// get the the next match
-		match = [allMatches objectAtIndex:i];
+		match = allMatches[i];
 		// build the replacement string
 		repBuffer = [NSMutableString string];
 		backrefRemainRange = NSMakeRange(0, repLength);
 		caseModIdx = 0;
 		for (j = 0; j < allBackrefsCount; j++) {
 			// get the next backref
-			backref = [allBackrefs objectAtIndex:j];
+			backref = allBackrefs[j];
 			backrefMatchRange = [backref range];
 			// append the part before the backref
 			[repBuffer appendString:[rep substringWithRange:NSMakeRange(backrefRemainRange.location, backrefMatchRange.location - backrefRemainRange.location)]];
@@ -332,7 +332,7 @@ static AGRegex *backrefPattern;
 	// while limit is not reached and there are more matches
 	for (i = 0; (lim < 1 || i < lim) && i < allCount; i++) {
 		// get next match
-		match = [allMatches objectAtIndex:i];
+		match = allMatches[i];
 		matchRange = [match range];
 		// add substring from last split to this split
 		[result addObject:[str substringWithRange:NSMakeRange(remainRange.location, matchRange.location - remainRange.location)]];

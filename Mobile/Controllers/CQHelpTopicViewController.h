@@ -4,5 +4,5 @@
 	UIWebView *_webView;
 	NSURL *_urlToHandle;
 }
-- (id) initWithHTMLContent:(NSString *) content;
+- (instancetype) initWithHTMLContent:(NSString *) content;
 @end

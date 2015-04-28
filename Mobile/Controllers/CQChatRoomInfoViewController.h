@@ -8,5 +8,5 @@
 
 }
 
-- (id) initWithRoom:(MVChatRoom *) room;
+- (instancetype) initWithRoom:(MVChatRoom *) room NS_DESIGNATED_INITIALIZER;
 @end

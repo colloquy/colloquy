@@ -33,7 +33,7 @@ extern NSString *JVMachineStoppedIdlingNotification;
 
 + (BOOL) isTerminating;
 
-- (NSTimeInterval) idleTime;
+@property (readonly) NSTimeInterval idleTime;
 
 - (IBAction) terminateWithoutConfirm:(id) sender;
 
@@ -42,7 +42,8 @@ extern NSString *JVMachineStoppedIdlingNotification;
 
 @protocol JVChatViewController;
 
-@interface NSObject (MVChatPluginContextualMenuSupport)
+@protocol MVChatPluginContextualMenuSupport <NSObject>
+@optional
 - (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view;
 - (void) setupPreferencesWithController:(JVPreferencesController *) controller;
 @end

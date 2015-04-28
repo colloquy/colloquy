@@ -14,14 +14,14 @@
 #define DCCPacketSize 4096
 
 @implementation MVIRCUploadFileTransfer
-+ (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
++ (instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	static long long passiveId = 0;
 
 	MVIRCUploadFileTransfer *ret = [(MVIRCUploadFileTransfer *)[MVIRCUploadFileTransfer alloc] initWithUser:user];
 	[ret _setSource:path];
 	[ret _setPassive:passive];
 
-	NSNumber *size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[ret source] error:NULL] objectForKey:NSFileSize];
+	NSNumber *size = [[NSFileManager defaultManager] attributesOfItemAtPath:[ret source] error:NULL][NSFileSize];
 	[ret _setFinalSize:[size unsignedLongLongValue]];
 
 	NSString *fileName = [[ret source] lastPathComponent];
@@ -39,37 +39,20 @@
 		[ret _setupAndStart];
 	}
 
-	return [ret autorelease];
+	return ret;
 }
 
 #pragma mark -
 
-- (oneway void) release {
-	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
-		_releasing = YES;
-		[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
-	}
-
-	[super release];
-}
-
 - (void) dealloc {
+	[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
+
 	[_directClientConnection disconnect];
 	[_directClientConnection setDelegate:nil];
-	[_directClientConnection release];
 
 	[_fileHandle closeFile];
-	[_fileHandle release];
-
-	[super dealloc];
 }
 
-- (void) finalize {
-	[_directClientConnection disconnect];
-	[_fileHandle closeFile];
-
-	[super finalize];
-}
 
 #pragma mark -
 
@@ -81,7 +64,6 @@
 	id old = _fileHandle;
 	_fileHandle = nil;
 	[old closeFile];
-	[old release];
 
 	// do this last incase the connection is the last thing retaining us
 	[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
@@ -93,7 +75,7 @@
 	[self _setStatus:MVFileTransferNormalStatus];
 	[self _setStartDate:[NSDate date]];
 
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:self];
 
 	[self _sendNextPacket];
 
@@ -123,7 +105,7 @@
 - (void) directClientConnectionDidDisconnect:(MVDirectClientConnection *) connection {
 	if( [self status] != MVFileTransferDoneStatus && [self transferred] == [self finalSize] && _doneSending ) {
 		[self _setStatus:MVFileTransferDoneStatus];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
 	}
 
 	if( [self status] != MVFileTransferDoneStatus && [self status] != MVFileTransferStoppedStatus )
@@ -132,7 +114,6 @@
 	id old = _fileHandle;
 	_fileHandle = nil;
 	[old closeFile];
-	[old release];
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection didWriteDataWithTag:(long) tag {
@@ -154,12 +135,12 @@
 
 	if( _doneSending && bytes == ( [self finalSize] & 0xffffffff ) ) {
 		[self _setStatus:MVFileTransferDoneStatus];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
 		[_directClientConnection disconnectAfterWriting];
 	} else {
 		// not finished, read for the next bytes received acknowledgment packet
 		[_directClientConnection readDataToLength:4 withTimeout:-1. withTag:0];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferDataTransferredNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferDataTransferredNotification object:self];
 	}
 }
 
@@ -223,34 +204,16 @@
 #pragma mark -
 
 @implementation MVIRCDownloadFileTransfer
-- (oneway void) release {
-	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
-		_releasing = YES;
-		[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
-	}
-
-	[super release];
-}
-
 - (void) dealloc {
+	[[[self user] connection] _removeDirectClientConnection:self];
+
 	[_directClientConnection disconnect];
 	[_directClientConnection setDelegate:nil];
-	[_directClientConnection release];
 
 	[_fileHandle synchronizeFile];
 	[_fileHandle closeFile];
-	[_fileHandle release];
-
-	[super dealloc];
 }
 
-- (void) finalize {
-	[_directClientConnection disconnect];
-	[_fileHandle synchronizeFile];
-	[_fileHandle closeFile];
-
-	[super finalize];
-}
 
 #pragma mark -
 
@@ -279,7 +242,6 @@
 	_fileHandle = nil;
 	[old synchronizeFile];
 	[old closeFile];
-	[old release];
 
 	// do this last incase the connection is the last thing retaining us
 	[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
@@ -287,7 +249,7 @@
 
 - (void) acceptByResumingIfPossible:(BOOL) resume {
 	if( resume ) {
-		NSNumber *size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[self destination] error:NULL] objectForKey:NSFileSize];
+		NSNumber *size = [[NSFileManager defaultManager] attributesOfItemAtPath:[self destination] error:NULL][NSFileSize];
 		BOOL fileExists = [[NSFileManager defaultManager] isWritableFileAtPath:[self destination]];
 
 		if( fileExists && [size unsignedLongLongValue] < [self finalSize] ) {
@@ -312,7 +274,7 @@
 	[self _setStatus:MVFileTransferNormalStatus];
 	[self _setStartDate:[NSDate date]];
 
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:self];
 
 	[_directClientConnection readDataWithTimeout:-1. withTag:0];
 
@@ -344,7 +306,6 @@
 	_fileHandle = nil;
 	[old synchronizeFile];
 	[old closeFile];
-	[old release];
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection didReadData:(NSData *) data withTag:(long) tag {
@@ -359,16 +320,15 @@
 		unsigned long progressToSend = htonl( progress & 0xffffffff );
 		NSData *length = [[NSData alloc] initWithBytes:&progressToSend length:4];
 		[_directClientConnection writeData:length withTimeout:-1 withTag:0];
-		[length release];
 	}
 
 	if( progress == [self finalSize] ) {
 		[self _setStatus:MVFileTransferDoneStatus];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
 		[_directClientConnection disconnectAfterWriting];
 	} else {
 		[_directClientConnection readDataWithTimeout:-1. withTag:0];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferDataTransferredNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferDataTransferredNotification object:self];
 	}
 }
 

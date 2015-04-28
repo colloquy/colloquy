@@ -5,6 +5,7 @@
 #import "JVStyle.h"
 #import "JVEmoticonSet.h"
 #import "NSDateAdditions.h"
+#import "RunOnMainThread.h"
 
 #import <objc/objc-runtime.h>
 
@@ -42,26 +43,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
-@interface DOMNode (DOMNodeLeopard)
-- (DOMNode *) insertBefore:(DOMNode *) newChild refChild:(DOMNode *) refChild;
-@end
-
-#pragma mark -
-
-@interface DOMElement (DOMElementLeopard)
-- (void) setAttribute:(NSString *) name value:(NSString *) value;
-@end
-
-#pragma mark -
-
-@interface DOMHTMLElement (DOMHTMLElementLeopard)
-- (int) offsetTop;
-- (int) offsetHeight;
-- (int) scrollHeight;
-@end
-
-#pragma mark -
-
 @interface NSScrollView (NSScrollViewWebKitPrivate)
 - (void) setAllowsHorizontalScrolling:(BOOL) allow;
 @end
@@ -69,7 +50,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 @interface DOMHTMLElement (DOMHTMLElementExtras)
-- (NSUInteger) childElementLength;
+@property (readonly) NSUInteger childElementLength;
 - (DOMNode *) childElementAtIndex:(NSUInteger) index;
 - (NSInteger) integerForDOMProperty:(NSString *) property;
 - (void) setInteger:(NSInteger) value forDOMProperty:(NSString *) property;
@@ -108,16 +89,16 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		return ((int(*)(id, SEL))objc_msgSend)(self, selector);
 	NSNumber *value = [self valueForKey:property];
 	if( [value isKindOfClass:[NSNumber class]] )
-		return [value intValue];
+		return [value integerValue];
 	return 0;
 }
 
 - (void) setInteger:(NSInteger) value forDOMProperty:(NSString *) property {
 	SEL selector = NSSelectorFromString( [@"set" stringByAppendingString:[property capitalizedString]] );
 	if( [self respondsToSelector:selector] ) {
-		((void(*)(id, SEL, int))objc_msgSend)(self, selector, value);
+		((void(*)(id, SEL, NSInteger))objc_msgSend)(self, selector, value);
 	} else {
-		NSNumber *number = [NSNumber numberWithLong:value];
+		NSNumber *number = @(value);
 		[self setValue:number forKey:property];
 	}
 }
@@ -125,15 +106,15 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
-@interface JVStyleView (JVStyleViewPrivate)
+@interface JVStyleView ()
 - (void) _resetDisplay;
 - (void) _switchStyle;
 - (void) _appendMessage:(NSString *) message;
 - (void) _prependMessages:(NSString *) messages;
 - (void) _styleError;
 - (NSString *) _contentHTMLWithBody:(NSString *) html;
-- (NSURL *) _baseURL;
-- (NSUInteger) _visibleMessageCount;
+@property (readonly, copy) NSURL *_baseURL;
+@property (readonly) NSUInteger _visibleMessageCount;
 - (NSUInteger) _locationOfMessage:(JVChatMessage *) message;
 - (NSUInteger) _locationOfElementAtIndex:(NSUInteger) index;
 - (void) _setupMarkedScroller;
@@ -155,7 +136,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
-- (id) initWithCoder:(NSCoder *) coder {
+- (instancetype) initWithCoder:(NSCoder *) coder {
 	if( ( self = [super initWithCoder:coder] ) ) {
 		_switchingStyles = NO;
 		_forwarding = NO;
@@ -182,24 +163,14 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[self setFrameLoadDelegate:self];
 	if( [self respondsToSelector:@selector(setProhibitsMainFrameScrolling:)] )
 		[self setProhibitsMainFrameScrolling:YES];
-	[self performSelector:@selector( _reallyAwakeFromNib ) withObject:nil afterDelay:0.];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self _reallyAwakeFromNib];
+	});
 }
 
 - (void) dealloc {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
-
-	nextTextView = nil;
-	_transcript = nil;
-	_style = nil;
-	_styleVariant = nil;
-	_styleParameters = nil;
-	_emoticons = nil;
-	_mainDocument = nil;
-	_domDocument = nil;
-	_body = nil;
-	_bodyTemplate = nil;
-	_messagesToAppend = nil;
+	[[NSNotificationCenter chatCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
 }
 
 #pragma mark -
@@ -271,14 +242,14 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	_styleVariant = [variant copyWithZone:nil];
 
 	// add single-quotes so that these are not interpreted as XPath expressions
-	[_styleParameters setObject:@"'/tmp/'" forKey:@"buddyIconDirectory"];
-	[_styleParameters setObject:@"'.tif'" forKey:@"buddyIconExtension"];
+	_styleParameters[@"buddyIconDirectory"] = @"'/tmp/'";
+	_styleParameters[@"buddyIconExtension"] = @"'.tif'";
 
 	NSString *timeFormatParameter = [NSString stringWithFormat:@"'%@'", [NSDate formattedShortTimeStringForDate:[NSDate date]]];
-	[_styleParameters setObject:timeFormatParameter forKey:@"timeFormat"];
+	_styleParameters[@"timeFormat"] = timeFormatParameter;
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _styleVariantChanged: ) name:JVStyleVariantChangedNotification object:style];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _styleVariantChanged: ) name:JVStyleVariantChangedNotification object:style];
 
 	_switchingStyles = YES;
 	_requiresFullMessage = YES;
@@ -466,15 +437,15 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		if( replaceElement ) _requiresFullMessage = NO; // a full message was assumed, but we can do a consecutive one
 	}
 
-	unsigned consecutiveOffset = [message consecutiveOffset];
+	NSUInteger consecutiveOffset = [message consecutiveOffset];
 	NSString *result = nil;
 
 	if( _requiresFullMessage && consecutiveOffset > 0 ) {
-		NSArray *elements = [[NSArray allocWithZone:nil] initWithObjects:message, nil];
+		NSArray *elements = @[message];
 		result = [[self style] transformChatTranscriptElements:elements withParameters:_styleParameters];
 	} else {
 		if( ! _requiresFullMessage && consecutiveOffset > 0 )
-			[_styleParameters setObject:@"'yes'" forKey:@"consecutiveMessage"];
+			_styleParameters[@"consecutiveMessage"] = @"'yes'";
 		result = [[self style] transformChatMessage:message withParameters:_styleParameters];
 		[_styleParameters removeObjectForKey:@"consecutiveMessage"];
 	}
@@ -541,15 +512,15 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) highlightString:(NSString *) string inMessage:(JVChatMessage *) message {
-	[[self windowScriptObject] callWebScriptMethod:@"searchHighlight" withArguments:[NSArray arrayWithObjects:[message messageIdentifier], string, nil]];
+	[[self windowScriptObject] callWebScriptMethod:@"searchHighlight" withArguments:@[[message messageIdentifier], string]];
 }
 
 - (void) clearStringHighlightsForMessage:(JVChatMessage *) message {
-	[[self windowScriptObject] callWebScriptMethod:@"resetSearchHighlight" withArguments:[NSArray arrayWithObject:[message messageIdentifier]]];
+	[[self windowScriptObject] callWebScriptMethod:@"resetSearchHighlight" withArguments:@[[message messageIdentifier]]];
 }
 
 - (void) clearAllStringHighlights {
-	[[self windowScriptObject] callWebScriptMethod:@"resetSearchHighlight" withArguments:[NSArray arrayWithObject:[NSNull null]]];
+	[[self windowScriptObject] callWebScriptMethod:@"resetSearchHighlight" withArguments:@[[NSNull null]]];
 }
 
 #pragma mark -
@@ -630,7 +601,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	if( [selectedString length] ) {
 		NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSFindPboard];
-		[pboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+		[pboard declareTypes:@[NSStringPboardType] owner:nil];
 		[pboard setString:selectedString forType:NSStringPboardType];
 	}
 }
@@ -727,11 +698,9 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) scrollToEndOfDocument:(id) sender {
 	[self scrollToBottom];
 }
-@end
 
 #pragma mark -
 
-@implementation JVStyleView (JVStyleViewPrivate)
 - (void) _checkForTransparantStyle {
 	DOMCSSStyleDeclaration *style = [self computedStyleForElement:_body pseudoElement:nil];
 	DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
@@ -770,7 +739,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[[self window] enableFlushWindow];
 
 	_contentFrameReady = YES;
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVStyleViewDidClearNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVStyleViewDidClearNotification object:self];
 	if( _switchingStyles )
 		[NSThread detachNewThreadSelector:@selector( _switchStyle ) toTarget:self withObject:nil];
 }
@@ -818,7 +787,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		NSMutableDictionary *parameters = [[NSMutableDictionary allocWithZone:nil] initWithDictionary:_styleParameters copyItems:NO];
 		unsigned long elementCount = [transcript elementCount];
 
-		[parameters setObject:@"'yes'" forKey:@"bulkTransform"];
+		parameters[@"bulkTransform"] = @"'yes'";
 
 		for( unsigned long i = elementCount; i > ( elementCount - MIN( [self scrollbackLimit], elementCount ) ); i -= MIN( 25u, i ) ) {
 			NSArray *elements = [transcript elementsInRange:NSMakeRange( i - MIN( 25u, i ), MIN( 25u, i ) )];
@@ -831,18 +800,26 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 			if( [self style] != style ) goto quickEnd;
 			if( result ) {
-				[self performSelectorOnMainThread:@selector( _prependMessages: ) withObject:result waitUntilDone:YES];
+				RunOnMainThreadSync(^{
+					[self _prependMessages:result];
+				});
 			}
 		}
 
 		_switchingStyles = NO;
-		[self performSelectorOnMainThread:@selector( markScrollbarForMessages: ) withObject:highlightedMsgs waitUntilDone:YES];
+		{
+		RunOnMainThreadSync(^{
+			[self markScrollbarForMessages:highlightedMsgs];
+		});
+		}
 
 quickEnd:
-		[self performSelectorOnMainThread:@selector( _switchingStyleFinished: ) withObject:nil waitUntilDone:YES];
+		RunOnMainThreadSync(^{
+			[self _switchingStyleFinished:nil];
+		});
 
 		NSNotification *note = [NSNotification notificationWithName:JVStyleViewDidChangeStylesNotification object:self userInfo:nil];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThread:note];
 	}
 }
 
@@ -858,8 +835,8 @@ quickEnd:
 - (void) _appendMessage:(NSString *) message {
 	if( ! _body ) return;
 
-	unsigned messageCount = [self _visibleMessageCount] + 1;
-	unsigned scrollbackLimit = [self scrollbackLimit];
+	NSUInteger messageCount = [self _visibleMessageCount] + 1;
+	NSUInteger scrollbackLimit = [self scrollbackLimit];
 	JVMarkedScroller *scroller = [self verticalMarkedScroller];
 	BOOL consecutive = ( [message rangeOfString:@"<?message type=\"consecutive\"?>"].location != NSNotFound );
 	if( ! consecutive ) consecutive = ( [message rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
@@ -945,7 +922,7 @@ quickEnd:
 }
 
 - (void) _styleVariantChanged:(NSNotification *) notification {
-	NSString *variant = [[notification userInfo] objectForKey:@"variant"];
+	NSString *variant = [notification userInfo][@"variant"];
 	if( [variant isEqualToString:[self styleVariant]] )
 		[self setStyleVariant:variant];
 }

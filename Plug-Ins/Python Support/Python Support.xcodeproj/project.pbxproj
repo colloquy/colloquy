@@ -3,41 +3,48 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0A61C80407E05F7200C326B4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0A61C80307E05F7200C326B4 /* Localizable.strings */; };
 		1C0A13F508B0374800324E25 /* JVPythonChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0A13F408B0374800324E25 /* JVPythonChatPlugin.m */; };
 		1C4FD36807C6BC25000EA451 /* JVPythonPluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FD36607C6BC25000EA451 /* JVPythonPluginLoader.m */; };
+		5533815E1AD229CF00ED8E1B /* libpython2.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5533815D1AD229CF00ED8E1B /* libpython2.7.dylib */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		9295C9821678302E009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9295C9811678302E009F9014 /* ChatCore.framework */; };
-		C2EC59E9185E11F9008797B7 /* libpython2.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C2EC59E8185E11F9008797B7 /* libpython2.7.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		92823D2916900FDA000EC36E /* PBXContainerItemProxy */ = {
+		5560647718C96A82002F72FC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 1CB2CD8C052DDC570094AAA4;
 			remoteInfo = "Colloquy (Application)";
 		};
-		92823D2B16900FDA000EC36E /* PBXContainerItemProxy */ = {
+		5560647918C96A82002F72FC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 1C51B4CD052DE14B00BB459B;
 			remoteInfo = "Standard Commands (Plug-In)";
 		};
-		92823D2D16900FDA000EC36E /* PBXContainerItemProxy */ = {
+		5560647B18C96A82002F72FC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = CBF685150820186F00F498FB;
 			remoteInfo = "Colloquy (Metadata Importer)";
 		};
-		92823D2F16900FDE000EC36E /* PBXContainerItemProxy */ = {
+		5560647D18C96A82002F72FC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55C8A2D0180735D100A7BB42;
+			remoteInfo = "Colloquy Tests";
+		};
+		55B0FD8118C9966F0052D450 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 1;
@@ -47,10 +54,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
-		0A61C7FF07E05F6000C326B4 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
-		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		0A61C7FF07E05F6000C326B4 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		1C0A13F308B0374800324E25 /* JVPythonChatPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVPythonChatPlugin.h; sourceTree = "<group>"; };
 		1C0A13F408B0374800324E25 /* JVPythonChatPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVPythonChatPlugin.m; sourceTree = "<group>"; };
 		1C0A141508B0380800324E25 /* pyobjc-api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "pyobjc-api.h"; sourceTree = "<group>"; };
@@ -58,12 +65,12 @@
 		1C4FD36507C6BC25000EA451 /* JVPythonPluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVPythonPluginLoader.h; sourceTree = SOURCE_ROOT; };
 		1C4FD36607C6BC25000EA451 /* JVPythonPluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVPythonPluginLoader.m; sourceTree = SOURCE_ROOT; };
 		1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
+		5533815D1AD229CF00ED8E1B /* libpython2.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.7.dylib; path = usr/lib/libpython2.7.dylib; sourceTree = SDKROOT; };
 		8D5B49B6048680CD000E48DA /* Python Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Python Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Colloquy (Old).xcodeproj"; path = "../../Colloquy (Old).xcodeproj"; sourceTree = "<group>"; };
 		9295C9811678302E009F9014 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChatCore.framework; path = ../../build/Development/ChatCore.framework; sourceTree = "<group>"; };
-		A1F6108B0957E4BB001B65CD /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
-		C2EC59E8185E11F9008797B7 /* libpython2.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.7.dylib; path = /System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config/libpython2.7.dylib; sourceTree = "<absolute>"; };
+		A1F6108B0957E4BB001B65CD /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C2EC59EC185E1570008797B7 /* pyobjc-compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pyobjc-compat.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,8 +79,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5533815E1AD229CF00ED8E1B /* libpython2.7.dylib in Frameworks */,
 				9295C9821678302E009F9014 /* ChatCore.framework in Frameworks */,
-				C2EC59E9185E11F9008797B7 /* libpython2.7.dylib in Frameworks */,
 				8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,25 +92,27 @@
 			isa = PBXGroup;
 			children = (
 				92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */,
-				9295C9811678302E009F9014 /* ChatCore.framework */,
 				1C415F690B35122700239EB3 /* Template.py */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				32C88E010371C26100C91783 /* Other Sources */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				1C9AE940086A59CF008ED7AD /* Configurations */,
-				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
+				089C1671FE841209C02AAC07 /* Frameworks */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
 			);
 			name = "FScript Plugin";
 			sourceTree = "<group>";
 		};
-		089C1671FE841209C02AAC07 /* Frameworks and Libraries */ = {
+		089C1671FE841209C02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
-				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
+				5533815D1AD229CF00ED8E1B /* libpython2.7.dylib */,
+				9295C9811678302E009F9014 /* ChatCore.framework */,
+				089C1672FE841209C02AAC07 /* Foundation.framework */,
+				089C167FFE841241C02AAC07 /* AppKit.framework */,
+				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
 			);
-			name = "Frameworks and Libraries";
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		089C167CFE841241C02AAC07 /* Resources */ = {
@@ -131,24 +140,6 @@
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 1;
-		};
-		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				C2EC59E8185E11F9008797B7 /* libpython2.7.dylib */,
-				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
-			);
-			name = "Linked Frameworks";
-			sourceTree = "<group>";
-		};
-		1058C7AEFEA557BF11CA2CBB /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				089C1672FE841209C02AAC07 /* Foundation.framework */,
-				089C167FFE841241C02AAC07 /* AppKit.framework */,
-			);
-			name = "Other Frameworks";
-			sourceTree = "<group>";
 		};
 		19C28FB8FE9D52D311CA2CBB /* Products */ = {
 			isa = PBXGroup;
@@ -181,12 +172,13 @@
 			tabWidth = 4;
 			usesTabs = 1;
 		};
-		92823D2316900FDA000EC36E /* Products */ = {
+		5560647018C96A80002F72FC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				92823D2A16900FDA000EC36E /* Colloquy.app */,
-				92823D2C16900FDA000EC36E /* Standard Commands.plugin */,
-				92823D2E16900FDA000EC36E /* Colloquy.mdimporter */,
+				5560647818C96A82002F72FC /* Colloquy.app */,
+				5560647A18C96A82002F72FC /* Standard Commands.plugin */,
+				5560647C18C96A82002F72FC /* Colloquy.mdimporter */,
+				5560647E18C96A82002F72FC /* Colloquy Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -205,7 +197,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				92823D3016900FDE000EC36E /* PBXTargetDependency */,
+				55B0FD8218C9966F0052D450 /* PBXTargetDependency */,
 			);
 			name = "Python Support Plugin";
 			productInstallPath = "$(HOME)/Library/Bundles";
@@ -219,9 +211,10 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastUpgradeCheck = 0630;
 			};
 			buildConfigurationList = 1C7F306F0855489300D41FB0 /* Build configuration list for PBXProject "Python Support" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -235,7 +228,7 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 92823D2316900FDA000EC36E /* Products */;
+					ProductGroup = 5560647018C96A80002F72FC /* Products */;
 					ProjectRef = 92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */;
 				},
 			);
@@ -247,25 +240,32 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		92823D2A16900FDA000EC36E /* Colloquy.app */ = {
+		5560647818C96A82002F72FC /* Colloquy.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = Colloquy.app;
-			remoteRef = 92823D2916900FDA000EC36E /* PBXContainerItemProxy */;
+			remoteRef = 5560647718C96A82002F72FC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		92823D2C16900FDA000EC36E /* Standard Commands.plugin */ = {
+		5560647A18C96A82002F72FC /* Standard Commands.plugin */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "Standard Commands.plugin";
-			remoteRef = 92823D2B16900FDA000EC36E /* PBXContainerItemProxy */;
+			remoteRef = 5560647918C96A82002F72FC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		92823D2E16900FDA000EC36E /* Colloquy.mdimporter */ = {
+		5560647C18C96A82002F72FC /* Colloquy.mdimporter */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = Colloquy.mdimporter;
-			remoteRef = 92823D2D16900FDA000EC36E /* PBXContainerItemProxy */;
+			remoteRef = 5560647B18C96A82002F72FC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5560647E18C96A82002F72FC /* Colloquy Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Colloquy Tests.xctest";
+			remoteRef = 5560647D18C96A82002F72FC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -294,10 +294,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		92823D3016900FDE000EC36E /* PBXTargetDependency */ = {
+		55B0FD8218C9966F0052D450 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Colloquy (Application)";
-			targetProxy = 92823D2F16900FDE000EC36E /* PBXContainerItemProxy */;
+			targetProxy = 55B0FD8118C9966F0052D450 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -314,10 +314,11 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		1C7F306C0855489300D41FB0 /* Development */ = {
+		1C7F306C0855489300D41FB0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
+				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(BUILT_PRODUCTS_DIR)",
@@ -341,12 +342,13 @@
 				PRODUCT_NAME = "Python Support";
 				WRAPPER_EXTENSION = plugin;
 			};
-			name = Development;
+			name = Debug;
 		};
 		1C7F306E0855489300D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
+				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(BUILT_PRODUCTS_DIR)",
@@ -372,20 +374,44 @@
 			};
 			name = Release;
 		};
-		1C7F30700855489300D41FB0 /* Development */ = {
+		1C7F30700855489300D41FB0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
 				SYMROOT = ../../build;
 			};
-			name = Development;
+			name = Debug;
 		};
 		1C7F30720855489300D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				SDKROOT = macosx;
 				SYMROOT = ../../build;
 			};
 			name = Release;
@@ -396,20 +422,20 @@
 		1C7F306B0855489300D41FB0 /* Build configuration list for PBXNativeTarget "Python Support Plugin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1C7F306C0855489300D41FB0 /* Development */,
+				1C7F306C0855489300D41FB0 /* Debug */,
 				1C7F306E0855489300D41FB0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Release;
 		};
 		1C7F306F0855489300D41FB0 /* Build configuration list for PBXProject "Python Support" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1C7F30700855489300D41FB0 /* Development */,
+				1C7F30700855489300D41FB0 /* Debug */,
 				1C7F30720855489300D41FB0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

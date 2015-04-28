@@ -11,14 +11,9 @@ body {
 	border-top: 1px solid rgba(20, 20, 200, 0.1);
 }
 
-a {
-	pointer-events: auto;
-}
-
 .notice-wrapper, .message-wrapper {
 	padding: 1px 8px 1px 30px;
 	border-bottom: 1px solid rgba(20, 20, 200, 0.1);
-	pointer-events: none;
 }
 
 .previous-session {
@@ -49,7 +44,6 @@ a {
 }
 
 .nickname {
-	-webkit-touch-callout: none;
 	text-decoration: none;
 }
 

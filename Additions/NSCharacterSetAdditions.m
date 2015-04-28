@@ -11,10 +11,8 @@
 		[illegalSet addCharactersInRange:NSMakeRange( 0x7f, 1 )];
 		[illegalSet addCharactersInRange:NSMakeRange( 0xfffe, 1 )];
 		[illegalSet addCharactersInRange:NSMakeRange( 0xffff, 1 )];
-
-		illegalSet = [illegalSet copy];
 	}
 
-	return [[illegalSet copy] autorelease];
+	return [illegalSet copy];
 }
 @end

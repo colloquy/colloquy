@@ -7,4 +7,5 @@
 	MVChatConnection *_connection;
 }
 @property (nonatomic, strong) MVChatConnection *connection;
+@property (nonatomic, assign) BOOL newConnection;
 @end

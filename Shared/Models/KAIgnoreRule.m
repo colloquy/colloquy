@@ -16,13 +16,13 @@
 @synthesize message = _ignoredMessage;
 @synthesize user = _ignoredUser;
 
-+ (id) ruleForUser:(NSString *) user mask:(NSString *) mask message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
++ (instancetype) ruleForUser:(NSString *) user mask:(NSString *) mask message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
 	KAIgnoreRule *ignoreRule = [[KAIgnoreRule alloc] initForUser:user mask:mask message:message inRooms:rooms isPermanent:permanent friendlyName:friendlyName];
 
 	MVAutoreleasedReturn(ignoreRule);
 }
 
-- (id) initForUser:(NSString *) user mask:(NSString *) mask message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
+- (instancetype) initForUser:(NSString *) user mask:(NSString *) mask message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
 	if (!(self = [super init]))
 		return nil;
 
@@ -41,13 +41,13 @@
 	return [self ruleForUser:user mask:nil message:message inRooms:rooms isPermanent:permanent friendlyName:friendlyName];
 }
 
-- (id) initForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
+- (instancetype) initForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
 	return [self initForUser:user mask:nil message:message inRooms:rooms isPermanent:permanent friendlyName:friendlyName];
 }
 
 #pragma mark -
 
-- (id) initWithCoder:(NSCoder *) coder {
+- (instancetype) initWithCoder:(NSCoder *) coder {
 	if ([coder allowsKeyedCoding])
 		return [self initForUser:[coder decodeObjectForKey:@"KAIgnoreUser"] mask:[coder decodeObjectForKey:@"KAIgnoreMask"] message:[coder decodeObjectForKey:@"KAIgnoreMessage"] inRooms:[coder decodeObjectForKey:@"KAIgnoreRooms"] isPermanent:[coder decodeBoolForKey:@"KAIgnorePermanent"] friendlyName:[coder decodeObjectForKey:@"KAIgnoreFriendlyName"]];
 

@@ -9,6 +9,8 @@
 @class MVChatConnection;
 @class MVDirectChatConnection;
 
+extern NSString *const CQChatOrderingControllerDidChangeOrderingNotification;
+
 @interface CQChatOrderingController : NSObject {
 	@private
 	NSMutableArray *_chatControllers;

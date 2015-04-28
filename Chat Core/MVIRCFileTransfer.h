@@ -11,17 +11,16 @@
 	BOOL _fileNameQuoted;
 	BOOL _readData;
 	BOOL _doneSending;
-	BOOL _releasing;
 	long long _passiveId;
 }
 - (void) _setupAndStart;
 - (void) _sendNextPacket;
 
 - (void) _setPassiveIdentifier:(long long) identifier;
-- (long long) _passiveIdentifier;
+@property (readonly) long long _passiveIdentifier;
 
 - (void) _setFileNameQuoted:(BOOL) quoted;
-- (BOOL) _fileNameQuoted;
+@property (readonly) BOOL _fileNameQuoted;
 @end
 
 #pragma mark -
@@ -31,17 +30,16 @@
 	NSFileHandle *_fileHandle;
 	BOOL _fileNameQuoted;
 	BOOL _turbo;
-	BOOL _releasing;
 	long long _passiveId;
 }
 - (void) _setupAndStart;
 
 - (void) _setTurbo:(BOOL) turbo;
-- (BOOL) _turbo;
+@property (readonly) BOOL _turbo;
 
 - (void) _setPassiveIdentifier:(long long) identifier;
-- (long long) _passiveIdentifier;
+@property (readonly) long long _passiveIdentifier;
 
 - (void) _setFileNameQuoted:(BOOL) quoted;
-- (BOOL) _fileNameQuoted;
+@property (readonly) BOOL _fileNameQuoted;
 @end

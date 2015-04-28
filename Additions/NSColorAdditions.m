@@ -1,3 +1,4 @@
+#if SYSTEM(MAC)
 #import "NSColorAdditions.h"
 
 @interface NSAEDescriptorTranslator : NSObject // Private Foundation Class
@@ -160,3 +161,4 @@
 	return [NSAEDescriptorTranslator _descriptorByTranslatingColor:self ofType:nil inSuite:nil];
 }
 @end
+#endif

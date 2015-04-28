@@ -39,7 +39,7 @@ NSString* QUERY_PATH = @"/iq[@id='%@']";
                                                                   withURI:namespace]
                                        withDefaultURI:namespace];
 
-    return result;
+    return [result autorelease];
 }
 
 +(id) constructIQSet:(NSString*)namespace withSession:(JabberSession*)s
@@ -53,7 +53,7 @@ NSString* QUERY_PATH = @"/iq[@id='%@']";
                                                                   withURI:namespace]
                                        withDefaultURI:namespace];
 
-    return result;
+    return [result autorelease];
 }
 
 -(id) initWithSession:(JabberSession*)s 

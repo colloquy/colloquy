@@ -10,18 +10,17 @@
 #import <objc/objc-runtime.h>
 
 @interface WebView (WebViewPrivate) // WebKit 1.3 pending public API
-- (void) setDrawsBackground:(BOOL) draws;
-- (BOOL) drawsBackground;
+@property BOOL drawsBackground;
 @end
 
 #pragma mark -
 
 @implementation JVAppearancePreferences
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( colorWellDidChangeColor: ) name:JVColorWellCellColorDidChangeNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateChatStylesMenu ) name:JVStylesScannedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateEmoticonsMenu ) name:JVEmoticonSetsScannedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( colorWellDidChangeColor: ) name:JVColorWellCellColorDidChangeNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( updateChatStylesMenu ) name:JVStylesScannedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( updateEmoticonsMenu ) name:JVEmoticonSetsScannedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( reloadStyles: ) name:NSApplicationDidBecomeActiveNotification object:[NSApplication sharedApplication]];
 
 		_style = nil;
@@ -32,6 +31,7 @@
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[optionsTable setDataSource:nil];
@@ -44,9 +44,6 @@
 	[preview setDownloadDelegate:nil];
 	[preview setFrameLoadDelegate:nil];
 	[preview setPolicyDelegate:nil];
-
-	_style = nil;
-
 }
 
 - (NSString *) preferencesNibName {
@@ -94,8 +91,8 @@
 	[preview setEmoticons:[_style defaultEmoticonSet]];
 	[preview setStyle:_style];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( updateVariant ) name:JVStyleVariantChangedNotification object:_style];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( updateVariant ) name:JVStyleVariantChangedNotification object:_style];
 }
 
 #pragma mark -
@@ -119,21 +116,21 @@
 
 - (IBAction) changeBaseFontSize:(id) sender {
 	NSInteger size = [sender intValue];
-	[baseFontSize setIntValue:size];
-	[baseFontSizeStepper setIntValue:size];
-	[[preview preferences] setDefaultFontSize:size];
+	[baseFontSize setIntegerValue:size];
+	[baseFontSizeStepper setIntegerValue:size];
+	[[preview preferences] setDefaultFontSize:(int)size];
 }
 
 - (IBAction) changeMinimumFontSize:(id) sender {
 	NSInteger size = [sender intValue];
-	[minimumFontSize setIntValue:size];
-	[minimumFontSizeStepper setIntValue:size];
-	[[preview preferences] setMinimumFontSize:size];
+	[minimumFontSize setIntegerValue:size];
+	[minimumFontSizeStepper setIntegerValue:size];
+	[[preview preferences] setMinimumFontSize:(int)size];
 }
 
 - (IBAction) changeDefaultChatStyle:(id) sender {
-	JVStyle *style = [[sender representedObject] objectForKey:@"style"];
-	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
+	JVStyle *style = [sender representedObject][@"style"];
+	NSString *variant = [sender representedObject][@"variant"];
 
 	if( style == _style ) {
 		[_style setDefaultVariantName:variant];
@@ -202,7 +199,7 @@
 	for( JVStyle *style in [[[JVStyle styles] allObjects] sortedArrayUsingSelector:@selector( compare: )] ) {
 		menuItem = [[NSMenuItem alloc] initWithTitle:[style displayName] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""];
 		[menuItem setTarget:self];
-		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", nil]];
+		[menuItem setRepresentedObject:@{@"style": style}];
 		if( [_style isEqualTo:style] ) [menuItem setState:NSOnState];
 		[menu addItem:menuItem];
 
@@ -214,14 +211,14 @@
 
 			subMenuItem = [[NSMenuItem alloc] initWithTitle:[style mainVariantDisplayName] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""];
 			[subMenuItem setTarget:self];
-			[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", nil]];
+			[subMenuItem setRepresentedObject:@{@"style": style}];
 			if( [_style isEqualTo:style] && ! variant ) [subMenuItem setState:NSOnState];
 			[subMenu addItem:subMenuItem];
 
 			for( item in variants ) {
 				subMenuItem = [[NSMenuItem alloc] initWithTitle:item action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""];
 				[subMenuItem setTarget:self];
-				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
+				[subMenuItem setRepresentedObject:@{@"style": style, @"variant": item}];
 				if( [_style isEqualTo:style] && [variant isEqualToString:item] )
 					[subMenuItem setState:NSOnState];
 				[subMenu addItem:subMenuItem];
@@ -232,7 +229,7 @@
 			for( item in userVariants ) {
 				subMenuItem = [[NSMenuItem alloc] initWithTitle:item action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""];
 				[subMenuItem setTarget:self];
-				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
+				[subMenuItem setRepresentedObject:@{@"style": style, @"variant": item}];
 				if( [_style isEqualTo:style] && [variant isEqualToString:item] )
 					[subMenuItem setState:NSOnState];
 				[subMenu addItem:subMenuItem];
@@ -294,7 +291,7 @@
 }
 
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
-	NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
+	NSURL *url = actionInformation[WebActionOriginalURLKey];
 
 	if( [[url scheme] isEqualToString:@"about"] ) {
 		if( [[[url standardizedURL] path] length] ) [listener ignore];
@@ -315,7 +312,7 @@
 	[menuItem setRepresentedObject:@"none"];
 	[menu addItem:menuItem];
 
-	NSArray *files = [[_style bundle] pathsForResourcesOfType:nil inDirectory:[options objectForKey:@"folder"]];
+	NSArray *files = [[_style bundle] pathsForResourcesOfType:nil inDirectory:options[@"folder"]];
 	NSString *resourcePath = [[_style bundle] resourcePath];
 	BOOL matched = NO;
 
@@ -337,15 +334,15 @@
 		[menuItem setTag:5];
 		[menu addItem:menuItem];
 
-		NSString *fullPath = ( [[options objectForKey:@"path"] isAbsolutePath] ? [options objectForKey:@"path"] : [resourcePath stringByAppendingPathComponent:[options objectForKey:@"path"]] );
+		NSString *fullPath = ( [options[@"path"] isAbsolutePath] ? options[@"path"] : [resourcePath stringByAppendingPathComponent:options[@"path"]] );
 		if( [path isEqualToString:fullPath] ) {
 			NSInteger index = [menu indexOfItemWithRepresentedObject:path];
-			[options setObject:[NSNumber numberWithLong:index] forKey:@"value"];
+			options[@"value"] = @(index);
 			matched = YES;
 		}
 	}
 
-	NSString *path = [options objectForKey:@"path"];
+	NSString *path = options[@"path"];
 	if( ! matched && [path length] ) {
 		[menu addItem:[NSMenuItem separatorItem]];
 
@@ -366,7 +363,7 @@
 		[menu addItem:menuItem];
 
 		NSInteger index = [menu indexOfItemWithRepresentedObject:path];
-		[options setObject:[NSNumber numberWithLong:index] forKey:@"value"];
+		options[@"value"] = @(index);
 	}
 
 	[menu addItem:[NSMenuItem separatorItem]];
@@ -404,10 +401,10 @@
 	for( NSMutableDictionary *info in _styleOptions ) {
 		NSMutableArray *styleLayouts = [NSMutableArray array];
 		NSArray *sarray = nil;
-		if( ! [info objectForKey:@"style"] ) continue;
-		if( [[info objectForKey:@"style"] isKindOfClass:[NSArray class]] && [[info objectForKey:@"type"] isEqualToString:@"list"] )
-			sarray = [info objectForKey:@"style"];
-		else sarray = [NSArray arrayWithObject:[info objectForKey:@"style"]];
+		if( ! info[@"style"] ) continue;
+		if( [info[@"style"] isKindOfClass:[NSArray class]] && [info[@"type"] isEqualToString:@"list"] )
+			sarray = info[@"style"];
+		else sarray = @[info[@"style"]];
 
 		[info removeObjectForKey:@"value"]; // Clear any old values, we will get the new value later on.
 
@@ -432,24 +429,24 @@
 					NSString *s = [selector groupAtIndex:1];
 					NSString *v = [property groupAtIndex:2];
 
-					[propertyInfo setObject:s forKey:@"selector"];
-					[propertyInfo setObject:p forKey:@"property"];
-					[propertyInfo setObject:v forKey:@"value"];
+					propertyInfo[@"selector"] = s;
+					propertyInfo[@"property"] = p;
+					propertyInfo[@"value"] = v;
 					[styleLayout addObject:propertyInfo];
 
 					// Get the current value of this selector/property from the Variant CSS and the Main CSS to compare.
 					NSString *value = [self valueOfProperty:p forSelector:s inStyle:css];
-					if( [[info objectForKey:@"type"] isEqualToString:@"list"] ) {
+					if( [info[@"type"] isEqualToString:@"list"] ) {
 						// Strip the "!important" flag to compare correctly.
 						regex = [AGRegex regexWithPattern:@"\\s*!\\s*important\\s*$" options:AGRegexCaseInsensitive];
 						NSString *compare = [regex replaceWithString:@"" inString:v];
 
 						// Try to pick which option the list needs to select.
 						if( ! [value isEqualToString:compare] ) { // Didn't match.
-							NSNumber *value = [info objectForKey:@"value"];
+							NSNumber *value = info[@"value"];
 							if( [value unsignedLongValue] == count ) [info removeObjectForKey:@"value"];
-						} else [info setObject:[NSNumber numberWithUnsignedLong:count] forKey:@"value"]; // Matched for now.
-					} else if( [[info objectForKey:@"type"] isEqualToString:@"color"] ) {
+						} else info[@"value"] = @(count); // Matched for now.
+					} else if( [info[@"type"] isEqualToString:@"color"] ) {
 						if( value && [v rangeOfString:@"%@"].location != NSNotFound ) {
 							// Strip the "!important" flag to compare correctly.
 							regex = [AGRegex regexWithPattern:@"\\s*!\\s*important\\s*$" options:AGRegexCaseInsensitive];
@@ -462,15 +459,15 @@
 							// Store the color value if we found one.
 							regex = [AGRegex regexWithPattern:expression options:AGRegexCaseInsensitive];
 							AGRegexMatch *vmatch = [regex findInString:value];
-							if( [vmatch count] ) [info setObject:[vmatch groupAtIndex:1] forKey:@"value"];
+							if( [vmatch count] ) info[@"value"] = [vmatch groupAtIndex:1];
 						}
-					} else if( [[info objectForKey:@"type"] isEqualToString:@"file"] ) {
+					} else if( [info[@"type"] isEqualToString:@"file"] ) {
 						if( value && [v rangeOfString:@"%@"].location != NSNotFound ) {
 							// Strip the "!important" flag to compare correctly.
 							regex = [AGRegex regexWithPattern:@"\\s*!\\s*important\\s*$" options:AGRegexCaseInsensitive];
 
-							[info setObject:[NSNumber numberWithUnsignedLong:0] forKey:@"value"];
-							[info setObject:[NSNumber numberWithUnsignedLong:0] forKey:@"default"];
+							info[@"value"] = @0UL;
+							info[@"default"] = @0UL;
 
 							// Replace %@ with (.*) so we can pull the path value out.
 							NSString *expression = [regex replaceWithString:@"" inString:v];
@@ -482,10 +479,10 @@
 							AGRegexMatch *vmatch = [regex findInString:value];
 							if( [vmatch count] ) {
 								if( ! [[vmatch groupAtIndex:1] isEqualToString:@"none"] )
-									[info setObject:[vmatch groupAtIndex:1] forKey:@"path"];
+									info[@"path"] = [vmatch groupAtIndex:1];
 								else [info removeObjectForKey:@"path"];
-								if( [info objectForKey:@"cell"] )
-									[self buildFileMenuForCell:[info objectForKey:@"cell"] andOptions:info];
+								if( info[@"cell"] )
+									[self buildFileMenuForCell:info[@"cell"] andOptions:info];
 							}
 						}
 					}
@@ -495,7 +492,7 @@
 			count++;
 		}
 
-		[info setObject:styleLayouts forKey:@"layouts"];
+		info[@"layouts"] = styleLayouts;
 	}
 
 	[optionsTable reloadData];
@@ -544,7 +541,7 @@
 
 	[_userStyle writeToURL:[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
 
-	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[_style defaultVariantName], @"variant", nil];
+	NSDictionary *info = @{@"variant": [_style defaultVariantName]};
 	NSNotification *notification = [NSNotification notificationWithName:JVStyleVariantChangedNotification object:_style userInfo:info];
 	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
 }
@@ -574,12 +571,12 @@
 
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( [[column identifier] isEqualToString:@"key"] ) {
-		return NSLocalizedString( [[_styleOptions objectAtIndex:row] objectForKey:@"description"], "description of style options, appearance preferences" );
+		return NSLocalizedString( _styleOptions[row][@"description"], "description of style options, appearance preferences" );
 	} else if( [[column identifier] isEqualToString:@"value"] ) {
-		NSDictionary *info = [_styleOptions objectAtIndex:row];
-		id value = [info objectForKey:@"value"];
+		NSDictionary *info = _styleOptions[row];
+		id value = info[@"value"];
 		if( value ) return value;
-		return [info objectForKey:@"default"];
+		return info[@"default"];
 	}
 	return nil;
 }
@@ -588,25 +585,25 @@
 	if( _variantLocked ) return;
 
 	if( [[column identifier] isEqualToString:@"value"] ) {
-		NSMutableDictionary *info = [_styleOptions objectAtIndex:row];
-		if( [[info objectForKey:@"type"] isEqualToString:@"list"] ) {
-			[info setObject:object forKey:@"value"];
+		NSMutableDictionary *info = _styleOptions[row];
+		if( [info[@"type"] isEqualToString:@"list"] ) {
+			info[@"value"] = object;
 
-			for( NSDictionary *styleInfo in [[info objectForKey:@"layouts"] objectAtIndex:[object intValue]] )
-				[self setStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:[styleInfo objectForKey:@"value"]];
+			for( NSDictionary *styleInfo in info[@"layouts"][[object intValue]] )
+				[self setStyleProperty:styleInfo[@"property"] forSelector:styleInfo[@"selector"] toValue:styleInfo[@"value"]];
 
 			[self saveStyleOptions];
-		} else if( [[info objectForKey:@"type"] isEqualToString:@"file"] ) {
+		} else if( [info[@"type"] isEqualToString:@"file"] ) {
 			if( [object intValue] == -1 ) return;
 
-			NSString *path = [[(NSPopUpButtonCell *)[info objectForKey:@"cell"] itemAtIndex:[object intValue]] representedObject];
+			NSString *path = [[(NSPopUpButtonCell *)info[@"cell"] itemAtIndex:[object intValue]] representedObject];
 			if( ! path ) return;
 
-			[info setObject:object forKey:@"value"];
+			info[@"value"] = object;
 
-			for( NSDictionary *styleInfo in [[info objectForKey:@"layouts"] objectAtIndex:0] ) {
-				NSString *setting = [NSString stringWithFormat:[styleInfo objectForKey:@"value"], path];
-				[self setStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:setting];
+			for( NSDictionary *styleInfo in info[@"layouts"][0] ) {
+				NSString *setting = [NSString stringWithFormat:styleInfo[@"value"], path];
+				[self setStyleProperty:styleInfo[@"property"] forSelector:styleInfo[@"selector"] toValue:setting];
 			}
 
 			[self saveStyleOptions];
@@ -622,16 +619,16 @@
 	if( ! [[cell representedObject] isKindOfClass:[NSNumber class]] ) return;
 	NSInteger row = [[cell representedObject] intValue];
 
-	NSMutableDictionary *info = [_styleOptions objectAtIndex:row];
-	[info setObject:[cell color] forKey:@"value"];
+	NSMutableDictionary *info = _styleOptions[row];
+	info[@"value"] = [cell color];
 
-	NSArray *style = [[info objectForKey:@"layouts"] objectAtIndex:0];
+	NSArray *style = info[@"layouts"][0];
 	NSString *value = [[cell color] CSSAttributeValue];
 	NSString *setting = nil;
 
 	for( NSDictionary *styleInfo in style ) {
-		setting = [NSString stringWithFormat:[styleInfo objectForKey:@"value"], value];
-		[self setStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:setting];
+		setting = [NSString stringWithFormat:styleInfo[@"value"], value];
+		[self setStyleProperty:styleInfo[@"property"] forSelector:styleInfo[@"selector"] toValue:setting];
 	}
 
 	[self saveStyleOptions];
@@ -640,13 +637,13 @@
 - (IBAction) selectImageFile:(id) sender {
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	NSInteger index = [optionsTable selectedRow];
-	NSMutableDictionary *info = [_styleOptions objectAtIndex:index];
+	NSMutableDictionary *info = _styleOptions[index];
 
 	[openPanel setAllowsMultipleSelection:NO];
 	[openPanel setTreatsFilePackagesAsDirectories:NO];
 	[openPanel setCanChooseDirectories:NO];
 
-	NSArray *types = [NSArray arrayWithObjects:@"jpg", @"tif", @"tiff", @"jpeg", @"gif", @"png", @"pdf", nil];
+	NSArray *types = @[@"jpg", @"tif", @"tiff", @"jpeg", @"gif", @"png", @"pdf"];
 	NSString *value = [sender representedObject];
 
 	[openPanel setDirectoryURL:[NSURL fileURLWithPath:value isDirectory:NO]];
@@ -656,19 +653,19 @@
 		return;
 
 	value = [[openPanel URL] path];
-	[info setObject:value forKey:@"path"];
+	info[@"path"] = value;
 
-	NSArray *style = [[info objectForKey:@"layouts"] objectAtIndex:0];
+	NSArray *style = info[@"layouts"][0];
 
 	for( NSDictionary *styleInfo in style ) {
-		NSString *setting = [NSString stringWithFormat:[styleInfo objectForKey:@"value"], value];
-		[self setStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:setting];
+		NSString *setting = [NSString stringWithFormat:styleInfo[@"value"], value];
+		[self setStyleProperty:styleInfo[@"property"] forSelector:styleInfo[@"selector"] toValue:setting];
 	}
 
 	[self saveStyleOptions];
 
-	NSMutableDictionary *options = [_styleOptions objectAtIndex:index];
-	[self buildFileMenuForCell:[options objectForKey:@"cell"] andOptions:options];
+	NSMutableDictionary *options = _styleOptions[index];
+	[self buildFileMenuForCell:options[@"cell"] andOptions:options];
 }
 
 - (BOOL) tableView:(NSTableView *) view shouldSelectRow:(NSInteger) row {
@@ -683,31 +680,31 @@
 
 - (id) tableView:(NSTableView *) view dataCellForRow:(NSInteger) row tableColumn:(NSTableColumn *) column {
 	if( [[column identifier] isEqualToString:@"value"] ) {
-		NSMutableDictionary *options = [_styleOptions objectAtIndex:row];
-		if( [options objectForKey:@"cell"] ) {
-			return [options objectForKey:@"cell"];
-		} else if( [[options objectForKey:@"type"] isEqualToString:@"color"] ) {
+		NSMutableDictionary *options = _styleOptions[row];
+		if( options[@"cell"] ) {
+			return options[@"cell"];
+		} else if( [options[@"type"] isEqualToString:@"color"] ) {
 			id cell = [JVColorWellCell new];
-			[cell setRepresentedObject:[NSNumber numberWithLong:row]];
-			[options setObject:cell forKey:@"cell"];
+			[cell setRepresentedObject:@(row)];
+			options[@"cell"] = cell;
 			return cell;
-		} else if( [[options objectForKey:@"type"] isEqualToString:@"list"] ) {
+		} else if( [options[@"type"] isEqualToString:@"list"] ) {
 			NSPopUpButtonCell *cell = [NSPopUpButtonCell new];
 			NSMutableArray *localizedOptions = [NSMutableArray array];
 
-			for( NSString *optionTitle in [options objectForKey:@"options"] )
+			for( NSString *optionTitle in options[@"options"] )
 				[localizedOptions addObject:NSLocalizedString( optionTitle, "title of style option value" )];
 			[cell setControlSize:NSSmallControlSize];
 			[cell setFont:[NSFont menuFontOfSize:[NSFont smallSystemFontSize]]];
 			[cell addItemsWithTitles:localizedOptions];
-			[options setObject:cell forKey:@"cell"];
+			options[@"cell"] = cell;
 			return cell;
-        } else if( [[options objectForKey:@"type"] isEqualToString:@"file"] ) {
+        } else if( [options[@"type"] isEqualToString:@"file"] ) {
 			NSPopUpButtonCell *cell = [NSPopUpButtonCell new];
 			[cell setControlSize:NSSmallControlSize];
 			[cell setFont:[NSFont menuFontOfSize:[NSFont smallSystemFontSize]]];
 			[self buildFileMenuForCell:cell andOptions:options];
-			[options setObject:cell forKey:@"cell"];
+			options[@"cell"] = cell;
 			return cell;
 		}
 	}
@@ -744,7 +741,7 @@
 
 	[_style setDefaultVariantName:name];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVNewStyleVariantAddedNotification object:_style];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVNewStyleVariantAddedNotification object:_style];
 
 	[self updateChatStylesMenu];
 	[self updateVariant];

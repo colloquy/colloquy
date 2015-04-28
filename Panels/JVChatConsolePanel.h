@@ -21,11 +21,11 @@
 	JVChatWindowController *_windowController;
 	MVChatConnection *_connection;
 }
-- (id) initWithConnection:(MVChatConnection *) connection;
+- (instancetype) initWithConnection:(MVChatConnection *) connection;
 
 - (void) pause;
 - (void) resume;
-- (BOOL) isPaused;
+@property (getter=isPaused, readonly) BOOL paused;
 
 - (void) addMessageToDisplay:(NSString *) message asOutboundMessage:(BOOL) outbound;
 - (IBAction) send:(id) sender;

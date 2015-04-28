@@ -25,11 +25,12 @@
 #import "acid.h"
 #import "GCDAsyncSocket.h"
 
-@interface JabberSocket (PRIVATE)
+@interface JabberSocket ()
 -(void) onKeepAliveTick:(NSTimer*)t;
 @end
 
 @implementation JabberSocket
+@synthesize useSSL = _useSSL;
 
 -(id) initWithJabberSession:(JabberSession*)session
 {
@@ -107,8 +108,8 @@
 {
 	if (_useSSL) {
 		NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
-		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
-		[settings setObject:(id)kCFStreamSocketSecurityLevelNegotiatedSSL forKey:(id)kCFStreamPropertySocketSecurityLevel];
+		settings[(NSString *)kCFStreamSSLAllowsAnyRoot] = @YES;
+		settings[(id)kCFStreamPropertySocketSecurityLevel] = (id)kCFStreamSocketSecurityLevelNegotiatedSSL;
 
 		[_socket startTLS:settings];
 		[settings release];

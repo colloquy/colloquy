@@ -6,6 +6,12 @@
 	<array>
 		<dict>
 			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Transcript View</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
 			<string>Style</string>
@@ -56,6 +62,13 @@
 				<string></string>
 				<string></string>
 				<string></string>
+				<string></string>
+				<string></string>
+				<string></string>
+				<string></string>
+				<string></string>
+				<string></string>
+				<string></string>
 				<string>OpenDyslexic(open-dyslexic) by Abelardo Gonzalez is licensed under a Creative Commons Attribution 3.0 Unported License.
 Based on a work at dyslexicfonts.com.
 Permissions beyond the scope of this license may be available at [http://opendyslexic.org/legal/](http://opendyslexic.org/legal/).
@@ -84,6 +97,8 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 				<string></string>
 				<string></string>
 				<string></string>
+				<string></string>
+				<string></string>
 			</array>
 			<key>ListType</key>
 			<string>Font</string>
@@ -100,6 +115,8 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 				<string>Avenir-Medium</string>
 				<string>AvenirNext-Medium</string>
 				<string>Baskerville</string>
+				<string>BookAntiqua</string>
+				<string>ComicSansMS</string>
 				<string>Courier</string>
 				<string>CourierNewPSMT</string>
 				<string>Didot</string>
@@ -111,10 +128,17 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 				<string>Helvetica</string>
 				<string>HelveticaNeue</string>
 				<string>HoeflerText-Regular</string>
+				<string>Impact</string>
+				<string>Iowan</string>
+				<string>LucidaGrande</string>
 				<string>MarkerFelt-Thin</string>
+				<string>Menlo</string>
+				<string>MicrosoftSansSerif</string>
 				<string>OpenDyslexic-Regular</string>
 				<string>Optima-Regular</string>
 				<string>Palatino-Roman</string>
+				<string>Superclarendon</string>
+				<string>Tahoma</string>
 				<string>Thonburi</string>
 				<string>TimesNewRomanPSMT</string>
 				<string>ZapfDingbatsITC</string>
@@ -127,6 +151,8 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 				<string>Avenir</string>
 				<string>Avenir Next</string>
 				<string>Baskerville</string>
+				<string>Book Antiqua</string>
+				<string>Comic Sans</string>
 				<string>Courier</string>
 				<string>Courier New</string>
 				<string>Didot</string>
@@ -138,10 +164,17 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 				<string>Helvetica</string>
 				<string>Helvetica Neue</string>
 				<string>Hoefler Text</string>
+				<string>Impact</string>
+				<string>Iowan Old Style</string>
+				<string>Lucida Grande</string>
 				<string>Marker Felt</string>
+				<string>Menlo</string>
+				<string>Microsoft Sans Serif</string>
 				<string>OpenDyslexic</string>
 				<string>Optima</string>
 				<string>Palatino</string>
+				<string>Superclarendon</string>
+				<string>Tahoma</string>
 				<string>Thonburi</string>
 				<string>Times New Roman</string>
 				<string>Zapf Dingbats</string>
@@ -182,13 +215,139 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Outgoing Messages</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Dynamic Type</string>
+			<string>Bold Text</string>
 			<key>Key</key>
-			<string>CQUseDynamicType</string>
+			<string>CQChatStyleBoldText</string>
 			<key>DefaultValue</key>
-			<true/>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Underline Text</string>
+			<key>Key</key>
+			<string>CQChatStyleUnderlineText</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Italic Text</string>
+			<key>Key</key>
+			<string>CQChatStyleItalicText</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Text Color</string>
+			<key>Key</key>
+			<string>CQChatStyleForegroundTextColor</string>
+			<key>Values</key>
+			<array>
+				<string></string>
+				<string>white</string>
+				<string>black</string>
+				<string>navy</string>
+				<string>forest</string>
+				<string>red</string>
+				<string>maroon</string>
+				<string>purple</string>
+				<string>orange</string>
+				<string>yellow</string>
+				<string>green</string>
+				<string>teal</string>
+				<string>cyan</string>
+				<string>blue</string>
+				<string>magenta</string>
+				<string>grey</string>
+				<string>ash</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>None</string>
+				<string>White</string>
+				<string>Black</string>
+				<string>Navy</string>
+				<string>Forest</string>
+				<string>Red</string>
+				<string>Maroon</string>
+				<string>Purple</string>
+				<string>Orange</string>
+				<string>Yellow</string>
+				<string>Green</string>
+				<string>Teal</string>
+				<string>Cyan</string>
+				<string>Blue</string>
+				<string>Magenta</string>
+				<string>Grey</string>
+				<string>Ash</string>
+			</array>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Text Background Color</string>
+			<key>Key</key>
+			<string>CQChatStyleBackgroundTextColor</string>
+			<key>Values</key>
+			<array>
+				<string></string>
+				<string>white</string>
+				<string>black</string>
+				<string>navy</string>
+				<string>forest</string>
+				<string>red</string>
+				<string>maroon</string>
+				<string>purple</string>
+				<string>orange</string>
+				<string>yellow</string>
+				<string>green</string>
+				<string>teal</string>
+				<string>cyan</string>
+				<string>blue</string>
+				<string>magenta</string>
+				<string>grey</string>
+				<string>ash</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>None</string>
+				<string>White</string>
+				<string>Black</string>
+				<string>Navy</string>
+				<string>Forest</string>
+				<string>Red</string>
+				<string>Maroon</string>
+				<string>Purple</string>
+				<string>Orange</string>
+				<string>Yellow</string>
+				<string>Green</string>
+				<string>Teal</string>
+				<string>Cyan</string>
+				<string>Blue</string>
+				<string>Magenta</string>
+				<string>Grey</string>
+				<string>Ash</string>
+			</array>
+			<key>DefaultValue</key>
+			<string></string>
 		</dict>
 	</array>
 </dict>

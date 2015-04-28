@@ -21,15 +21,13 @@
 
 	SilcLock( [roomConnection _silcClient] );
 
-	[self retain];
+	__strong MVSILCChatRoom *me = self;
 
 	if( _uniqueIdentifier )
 		[_connection _removeKnownRoom:self];
 
-	[_name release];
-	_name = [[NSString allocWithZone:nil] initWithUTF8String:channelEntry -> channel_name];
+	_name = @(channelEntry -> channel_name);
 
-	[_uniqueIdentifier release];
 	unsigned char *identifier = silc_id_id2str( channelEntry -> id, SILC_ID_CHANNEL );
 	unsigned len = silc_id_get_len( channelEntry -> id, SILC_ID_CHANNEL );
 	_uniqueIdentifier = [[NSData allocWithZone:nil] initWithBytes:identifier length:len];
@@ -38,7 +36,7 @@
 
 	[_connection _addKnownRoom:self];
 
-	[self release];
+	me = nil;
 
 	SilcUnlock( [roomConnection _silcClient] );
 }
@@ -82,7 +80,7 @@
 	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:message andChatFormat:[[self connection] outgoingChatFormat]];
 	SilcMessageFlags flags = SILC_MESSAGE_FLAG_UTF8;
 
-	if( [[attributes objectForKey:@"action"] boolValue] ) flags |= SILC_MESSAGE_FLAG_ACTION;
+	if( [attributes[@"action"] boolValue] ) flags |= SILC_MESSAGE_FLAG_ACTION;
 
 	SilcLock( [[self connection] _silcClient] );
 

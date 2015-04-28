@@ -2,6 +2,9 @@
 
 #import "CQProcessConsoleMessageOperation.h"
 
+#import "NSAttributedStringAdditions.h"
+#import "NSNotificationAdditions.h"
+
 #import "MVIRCChatConnection.h"
 
 #import "DDLog.h"
@@ -54,11 +57,11 @@ static BOOL verbose;
 	dispatch_once(&pred, ^{
 		[self userDefaultsChanged];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 	});
 }
 
-- (id) initWithTarget:(id) target {
+- (instancetype) initWithTarget:(id) target {
 	if (!(self = [super initWithTarget:nil]))
 		return self;
 
@@ -68,8 +71,8 @@ static BOOL verbose;
 
 	[DDLog addLogger:_delegateLogger];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawMessage:) name:MVChatConnectionGotRawMessageNotification object:_connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_connectionWillConnect:) name:MVChatConnectionWillConnectNotification object:_connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotRawMessage:) name:MVChatConnectionGotRawMessageNotification object:_connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_connectionWillConnect:) name:MVChatConnectionWillConnectNotification object:_connection];
 
 	return self;
 }
@@ -77,7 +80,7 @@ static BOOL verbose;
 - (void) dealloc {
 	[DDLog removeLogger:_delegateLogger];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionGotRawMessageNotification object:_connection];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionGotRawMessageNotification object:_connection];
 
 
 }
@@ -152,10 +155,15 @@ static BOOL verbose;
 
 #pragma mark -
 
-- (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text {
+- (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(MVChatString *) text {
 	[_connection sendRawMessage:text];
 
-	NSData *data = [text dataUsingEncoding:_connection.encoding];
+	NSData *data = nil;
+	if ([text respondsToSelector:@selector(dataUsingEncoding:)])
+		data = [text performPrivateSelector:@"dataUsingEncoding" withUnsignedInteger:_connection.encoding];
+	else if ([text respondsToSelector:@selector(string)])
+		data = [text.string dataUsingEncoding:_connection.encoding];
+
 	if (!data)
 		return YES;
 
@@ -221,7 +229,7 @@ static BOOL verbose;
 
 	[self _addPendingComponent:operation.processedMessageInfo];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
 }
 
 #pragma mark -

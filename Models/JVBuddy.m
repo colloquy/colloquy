@@ -1,6 +1,8 @@
 #import "JVBuddy.h"
 #import "MVConnectionsController.h"
 
+#import <AddressBook/AddressBook.h>
+
 NSString *JVBuddyCameOnlineNotification = @"JVBuddyCameOnlineNotification";
 NSString *JVBuddyWentOfflineNotification = @"JVBuddyWentOfflineNotification";
 
@@ -13,7 +15,11 @@ NSString *JVBuddyActiveUserChangedNotification = @"JVBuddyActiveUserChangedNotif
 
 static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
-@implementation JVBuddy
+@implementation JVBuddy {
+	NSMutableArray *_rules;
+	NSMutableSet *_users;
+}
+
 + (JVBuddyName) preferredName {
 	return _mainPreferredName;
 }
@@ -24,46 +30,46 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_rules = [[NSMutableArray allocWithZone:nil] initWithCapacity:5];
 		_users = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
 		_uniqueIdentifier = [NSString locallyUniqueString];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _registerWithConnection: ) name:MVChatConnectionDidConnectNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _disconnected: ) name:MVChatConnectionDidDisconnectNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _registerWithConnection: ) name:MVChatConnectionDidConnectNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _disconnected: ) name:MVChatConnectionDidDisconnectNotification object:nil];
 	}
 
 	return self;
 }
 
-- (id) initWithDictionaryRepresentation:(NSDictionary *) dictionary {
+- (instancetype) initWithDictionaryRepresentation:(NSDictionary *) dictionary {
 	if( ( self = [self init] ) ) {
-		NSData *data = [dictionary objectForKey:@"picture"];
+		NSData *data = dictionary[@"picture"];
 		if( [data isKindOfClass:[NSData class]] && [data length] )
 			_picture = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 
-		NSString *string = [dictionary objectForKey:@"firstName"];
+		NSString *string = dictionary[@"firstName"];
 		if( [string isKindOfClass:[NSString class]] )
 			_firstName = [string copyWithZone:nil];
 
-		string = [dictionary objectForKey:@"lastName"];
+		string = dictionary[@"lastName"];
 		if( [string isKindOfClass:[NSString class]] )
 			_lastName = [string copyWithZone:nil];
 
-		string = [dictionary objectForKey:@"primaryEmail"];
+		string = dictionary[@"primaryEmail"];
 		if( [string isKindOfClass:[NSString class]] )
 			_primaryEmail = [string copyWithZone:nil];
 
-		string = [dictionary objectForKey:@"givenNickname"];
+		string = dictionary[@"givenNickname"];
 		if( [string isKindOfClass:[NSString class]] )
 			_givenNickname = [string copyWithZone:nil];
 
-		string = [dictionary objectForKey:@"speechVoice"];
+		string = dictionary[@"speechVoice"];
 		if( [string isKindOfClass:[NSString class]] )
 			_speechVoice = [string copyWithZone:nil];
 
-		string = [dictionary objectForKey:@"uniqueIdentifier"];
+		string = dictionary[@"uniqueIdentifier"];
 		if( [string isKindOfClass:[NSString class]] ) {
 			_uniqueIdentifier = [string copyWithZone:nil];
 		}
@@ -72,11 +78,11 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 			_uniqueIdentifier = [NSString locallyUniqueString];
 		}
 
-		string = [dictionary objectForKey:@"addressBookPersonRecord"];
+		string = dictionary[@"addressBookPersonRecord"];
 		if( [string isKindOfClass:[NSString class]] )
 			_person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:string];
 
-		for( NSDictionary *ruleDictionary in [dictionary objectForKey:@"rules"] ) {
+		for( NSDictionary *ruleDictionary in dictionary[@"rules"] ) {
 			MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:nil] initWithDictionaryRepresentation:ruleDictionary];
 			if( rule ) [self addWatchRule:rule];
 		}
@@ -88,21 +94,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 - (void) dealloc {
 	[self unregisterWithConnections];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-
-	_person = nil;
-	_users = nil;
-	_rules = nil;
-	_activeUser = nil;
-	_picture = nil;
-	_firstName = nil;
-	_lastName = nil;
-	_primaryEmail = nil;
-	_givenNickname = nil;
-	_speechVoice = nil;
-	_uniqueIdentifier = nil;
-
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 }
 
 #pragma mark -
@@ -117,33 +109,33 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		if( dictRep ) [rules addObject:dictRep];
 	}
 
-	[dictionary setObject:rules forKey:@"rules"];
+	dictionary[@"rules"] = rules;
 
 	if( _picture ) {
 		NSData *imageData = [NSKeyedArchiver archivedDataWithRootObject:_picture];
-		if( imageData ) [dictionary setObject:imageData forKey:@"picture"];
+		if( imageData ) dictionary[@"picture"] = imageData;
 	}
 
 	if( _firstName )
-		[dictionary setObject:_firstName forKey:@"firstName"];
+		dictionary[@"firstName"] = _firstName;
 
 	if( _lastName )
-		[dictionary setObject:_lastName forKey:@"lastName"];
+		dictionary[@"lastName"] = _lastName;
 
 	if( _primaryEmail )
-		[dictionary setObject:_primaryEmail forKey:@"primaryEmail"];
+		dictionary[@"primaryEmail"] = _primaryEmail;
 
 	if( _givenNickname )
-		[dictionary setObject:_givenNickname forKey:@"givenNickname"];
+		dictionary[@"givenNickname"] = _givenNickname;
 
 	if( _speechVoice )
-		[dictionary setObject:_speechVoice forKey:@"speechVoice"];
+		dictionary[@"speechVoice"] = _speechVoice;
 
 	if( _uniqueIdentifier )
-		[dictionary setObject:_uniqueIdentifier forKey:@"uniqueIdentifier"];
+		dictionary[@"uniqueIdentifier"] = _uniqueIdentifier;
 
 	if( _person && [_person uniqueId] )
-		[dictionary setObject:[_person uniqueId] forKey:@"addressBookPersonRecord"];
+		dictionary[@"addressBookPersonRecord"] = [_person uniqueId];
 
 	return dictionary;
 }
@@ -201,17 +193,13 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 #pragma mark -
 
-- (MVChatUser *) activeUser {
-	return _activeUser;
-}
-
 - (void) setActiveUser:(MVChatUser *) user {
 	if( [_activeUser isEqual:user] )
 		return;
 
 	_activeUser = user;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyActiveUserChangedNotification object:self userInfo:nil];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVBuddyActiveUserChangedNotification object:self userInfo:nil];
 }
 
 #pragma mark -
@@ -278,15 +266,15 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 - (void) addWatchRule:(MVChatUserWatchRule *) rule {
 	if( [_rules containsObject:rule] ) return;
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _ruleMatched: ) name:MVChatUserWatchRuleMatchedNotification object:rule];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _ruleUserRemoved: ) name:MVChatUserWatchRuleRemovedMatchedUserNotification object:rule];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _ruleMatched: ) name:MVChatUserWatchRuleMatchedNotification object:rule];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _ruleUserRemoved: ) name:MVChatUserWatchRuleRemovedMatchedUserNotification object:rule];
 	[_rules addObject:rule];
 }
 
 - (void) removeWatchRule:(MVChatUserWatchRule *) rule {
 	if( ! [_rules containsObject:rule] ) return;
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserWatchRuleMatchedNotification object:rule];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserWatchRuleRemovedMatchedUserNotification object:rule];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserWatchRuleMatchedNotification object:rule];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserWatchRuleRemovedMatchedUserNotification object:rule];
 	[_rules removeObject:rule];
 }
 
@@ -298,10 +286,6 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( _person )
 		return [[NSImage alloc] initWithData:[_person imageData]];
 	return nil;
-}
-
-- (void) setPicture:(NSImage *) picture {
-	_picture = [picture copyWithZone:nil];
 }
 
 #pragma mark -
@@ -353,45 +337,9 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	return nil;
 }
 
-- (NSString *) speechVoice {
-	return _speechVoice;
-}
-
-- (NSString *) uniqueIdentifier {
-	return _uniqueIdentifier;
-}
-
 #pragma mark -
 
-- (void) setFirstName:(NSString *) name {
-	_firstName = [name copyWithZone:nil];
-}
-
-- (void) setLastName:(NSString *) name {
-	_lastName = [name copyWithZone:nil];
-}
-
-- (void) setPrimaryEmail:(NSString *) email {
-	_primaryEmail = [email copyWithZone:nil];
-}
-
-- (void) setGivenNickname:(NSString *) name {
-	_givenNickname = [name copyWithZone:nil];
-}
-
-- (void) setSpeechVoice:(NSString *) voice {
-	_speechVoice = [voice copyWithZone:nil];
-}
-
-#pragma mark -
-
-- (ABPerson *) addressBookPersonRecord {
-	return _person;
-}
-
-- (void) setAddressBookPersonRecord:(ABPerson *) record {
-	_person = record;
-}
+@synthesize addressBookPersonRecord = _person;
 
 - (void) editInAddressBook {
 	if( ! _person ) return;
@@ -486,11 +434,9 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	NSString *name2 = [[buddy activeUser] nickname];
 	return [name1 caseInsensitiveCompare:name2];
 }
-@end
 
 #pragma mark -
 
-@implementation JVBuddy (JVBuddyPrivate)
 - (void) _addUser:(MVChatUser *) user {
 	if( [_users containsObject:user] )
 		return;
@@ -501,10 +447,10 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( [self status] != MVChatUserAvailableStatus && [self status] != MVChatUserAwayStatus )
 		[self setActiveUser:user];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyUserCameOnlineNotification object:self userInfo:[NSDictionary dictionaryWithObject:user forKey:@"user"]];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVBuddyUserCameOnlineNotification object:self userInfo:@{@"user": user}];
 
 	if( cameOnline )
-		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyCameOnlineNotification object:self userInfo:nil];
+		[[NSNotificationCenter chatCenter] postNotificationName:JVBuddyCameOnlineNotification object:self userInfo:nil];
 }
 
 - (void) _removeUser:(MVChatUser *) user {
@@ -516,15 +462,15 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( [[self activeUser] isEqualToChatUser:user] )
 		[self setActiveUser:[_users anyObject]];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyUserWentOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObject:user forKey:@"user"]];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVBuddyUserWentOfflineNotification object:self userInfo:@{@"user": user}];
 
 	if( ! [_users count] )
-		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
+		[[NSNotificationCenter chatCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
 }
 
 - (void) _buddyIdleUpdate:(NSNotification *) notification {
 	MVChatUser *user = [notification object];
-	NSNotification *note = [NSNotification notificationWithName:JVBuddyUserIdleTimeUpdatedNotification object:self userInfo:[NSDictionary dictionaryWithObject:user forKey:@"user"]];
+	NSNotification *note = [NSNotification notificationWithName:JVBuddyUserIdleTimeUpdatedNotification object:self userInfo:@{@"user": user}];
 	[[NSNotificationQueue defaultQueue] enqueueNotification:note postingStyle:NSPostASAP coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
 }
 
@@ -542,7 +488,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		default: break;
 	}
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyUserStatusChangedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVBuddyUserStatusChangedNotification object:self userInfo:@{@"user": user}];
 }
 
 - (void) _registerWithConnection:(NSNotification *) notification {
@@ -558,20 +504,20 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 - (void) _ruleMatched:(NSNotification *) notification {
-	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
+	MVChatUser *user = [notification userInfo][@"user"];
 
 	if( [user status] == MVChatUserAvailableStatus || [user status] == MVChatUserAwayStatus )
 		[self _addUser:user];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyIdleUpdate: ) name:MVChatUserIdleTimeUpdatedNotification object:user];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyStatusChanged: ) name:MVChatUserStatusChangedNotification object:user];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyIdleUpdate: ) name:MVChatUserIdleTimeUpdatedNotification object:user];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyStatusChanged: ) name:MVChatUserStatusChangedNotification object:user];
 }
 
 - (void) _ruleUserRemoved:(NSNotification *) notification {
-	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
+	MVChatUser *user = [notification userInfo][@"user"];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserIdleTimeUpdatedNotification object:user];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserStatusChangedNotification object:user];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserIdleTimeUpdatedNotification object:user];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserStatusChangedNotification object:user];
 
 	[self _removeUser:user];
 }

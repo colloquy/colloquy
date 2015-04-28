@@ -1,6 +1,6 @@
+#import "CQKeychain.h"
 #import "JVConnectionInspector.h"
 #import "MVConnectionsController.h"
-#import "MVKeyChain.h"
 #import "KAIgnoreRule.h"
 
 @implementation MVChatConnection (MVChatConnectionInspection)
@@ -20,7 +20,7 @@
 #pragma mark -
 
 @implementation JVConnectionInspector
-- (id) initWithConnection:(MVChatConnection *) connection {
+- (instancetype) initWithConnection:(MVChatConnection *) connection {
 	if( ( self = [self init] ) )
 		_connection = connection;
 	return self;
@@ -35,9 +35,6 @@
 
 	[editRuleRooms setDataSource:nil];
 	[editRuleRooms setDelegate:nil];
-
-	_connection = nil;
-	_editingRooms = nil;
 }
 
 #pragma mark -
@@ -73,7 +70,7 @@
 
 	[editAutomatic setState:[[MVConnectionsController defaultController] autoConnectForConnection:_connection]];
 	[editShowConsoleOnConnect setState:[[MVConnectionsController defaultController] showConsoleOnConnectForConnection:_connection]];
-	[sslConnection setState:[_connection isSecure]];
+	[sslConnection setState:[_connection didConnectSecurely]];
 	[attemptSASLCheckbox setState:_connection.requestsSASL];
 	[roomsWaitForIdentificationCheckbox setState:_connection.roomsWaitForIdentification];
 	[editAddress setObjectValue:[_connection server]];
@@ -81,8 +78,8 @@
 	[editPort setIntValue:[_connection serverPort]];
 	[editNickname setObjectValue:[_connection preferredNickname]];
 	[editAltNicknames setObjectValue:[[_connection alternateNicknames] componentsJoinedByString:@" "]];
-	[editPassword setObjectValue:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[_connection server] securityDomain:[_connection server] account:[_connection preferredNickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-	[editServerPassword setObjectValue:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[_connection server] securityDomain:[_connection server] account:nil path:nil port:[_connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+	[editPassword setObjectValue:[[CQKeychain standardKeychain] passwordForServer:_connection.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", _connection.preferredNickname]]];
+	[editServerPassword setObjectValue:[[CQKeychain standardKeychain] passwordForServer:_connection.uniqueIdentifier area:@"Server"]];
 	[editRealName setObjectValue:[_connection realName]];
 	[editUsername setObjectValue:[_connection username]];
 
@@ -168,20 +165,20 @@
 
 - (IBAction) editText:(id) sender {
 	if( sender == editNickname ) {
-		NSString *password = [[MVKeyChain defaultKeyChain] internetPasswordForServer:[editAddress stringValue] securityDomain:[editAddress stringValue] account:[sender stringValue] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+		NSString *password = [[CQKeychain standardKeychain] passwordForServer:_connection.uniqueIdentifier area:@"Server"];
 		if( password ) [editPassword setObjectValue:password];
 		else [editPassword setObjectValue:@""];
 		[_connection setPreferredNickname:[sender stringValue]];
 	} else if( sender == editAltNicknames ) {
 		[_connection setAlternateNicknames:[[sender stringValue] componentsSeparatedByString:@" "]];
 	} else if( sender == editPassword ) {
-		[_connection setNicknamePassword:nil];
-		[[MVKeyChain defaultKeyChain] setInternetPassword:[sender stringValue] forServer:[editAddress stringValue] securityDomain:[editAddress stringValue] account:[editNickname stringValue] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+		_connection.nicknamePassword = nil;
+		[[CQKeychain standardKeychain] setPassword:[sender stringValue] forServer:_connection.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", _connection.preferredNickname] displayValue:_connection.server];
 	} else if( sender == editServerPassword ) {
-		[_connection setPassword:[sender stringValue]];
-		[[MVKeyChain defaultKeyChain] setInternetPassword:[sender stringValue] forServer:[editAddress stringValue] securityDomain:[editAddress stringValue] account:nil path:nil port:(unsigned short)[editPort intValue] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+		_connection.password = [sender stringValue];
+		[[CQKeychain standardKeychain] setPassword:[sender stringValue] forServer:_connection.uniqueIdentifier area:@"Server" displayValue:_connection.server];
 	} else if( sender == editAddress ) {
-		NSString *password = [[MVKeyChain defaultKeyChain] internetPasswordForServer:[sender stringValue] securityDomain:[sender stringValue] account:[editNickname stringValue] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+		NSString *password = [[CQKeychain standardKeychain] passwordForServer:_connection.uniqueIdentifier area:@"Server"];
 		if( password ) [editPassword setObjectValue:password];
 		else [editPassword setObjectValue:@""];
 		[_connection setServer:[sender stringValue]];
@@ -222,7 +219,7 @@
 }
 
 - (IBAction) changeProxy:(id) sender {
-	[_connection setProxyType:[[editProxy selectedItem] tag]];
+	[_connection setProxyType:(OSType)[[editProxy selectedItem] tag]];
 }
 
 - (IBAction) addRoom:(id) sender {
@@ -276,7 +273,7 @@
 }
 
 - (IBAction) configureRule:(id) sender {
-	KAIgnoreRule *rule = [_ignoreRules objectAtIndex:[editRules selectedRow]];
+	KAIgnoreRule *rule = _ignoreRules[[editRules selectedRow]];
 
 	_editingRuleRooms = [[rule rooms] mutableCopy];
 
@@ -352,7 +349,7 @@
 			[_ignoreRules addObject:rule];
 			[editRules noteNumberOfRowsChanged];
 		} else {
-			KAIgnoreRule *rule = [_ignoreRules objectAtIndex:[editRules selectedRow]];
+			KAIgnoreRule *rule = _ignoreRules[[editRules selectedRow]];
 			if ( [message isValidIRCMask] ) {
 				[rule setMask:user];
 				[rule setUser:nil];
@@ -379,24 +376,24 @@
 }
 
 - (id) tableView:(NSTableView *) tableView objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
-	if( tableView == editRooms ) return [_editingRooms objectAtIndex:row];
+	if( tableView == editRooms ) return _editingRooms[row];
 	else if( tableView == editRules ) {
-		KAIgnoreRule *rule = [_ignoreRules objectAtIndex:row];
+		KAIgnoreRule *rule = _ignoreRules[row];
 		if( [[column identifier] isEqualToString:@"icon"] ) {
 			if( [rule user] && [rule message] ) return [NSImage imageNamed:@"privateChatTab"];
 			else if( [rule user] ) return [NSImage imageNamed:@"person"];
 			else return [NSImage imageNamed:@"roomTabNewMessage"];
 		} else {
-			if( ! [rule isPermanent] ) return [[NSAttributedString alloc] initWithString:[rule friendlyName] attributes:[NSDictionary dictionaryWithObject:[[NSColor blackColor] colorWithAlphaComponent:0.67] forKey:NSForegroundColorAttributeName]];
+			if( ! [rule isPermanent] ) return [[NSAttributedString alloc] initWithString:[rule friendlyName] attributes:@{NSForegroundColorAttributeName: [[NSColor blackColor] colorWithAlphaComponent:0.67]}];
 			else return [rule friendlyName];
 		}
-	} else if( tableView == editRuleRooms ) return [_editingRuleRooms objectAtIndex:row];
+	} else if( tableView == editRuleRooms ) return _editingRuleRooms[row];
 	else return nil;
 }
 
 - (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
-	if( tableView == editRooms ) [_editingRooms replaceObjectAtIndex:row withObject:object];
-	else if( tableView == editRuleRooms ) [_editingRuleRooms replaceObjectAtIndex:row withObject:object];
+	if( tableView == editRooms ) _editingRooms[row] = object;
+	else if( tableView == editRuleRooms ) _editingRuleRooms[row] = object;
 }
 
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
@@ -417,7 +414,7 @@
 }
 
 - (id) comboBox:(NSComboBox *) comboBox objectValueForItemAtIndex:(NSInteger) index {
-	return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] objectAtIndex:index];
+	return [[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"][index];
 }
 
 - (NSUInteger) comboBox:(NSComboBox *) comboBox indexOfItemWithStringValue:(NSString *) string {

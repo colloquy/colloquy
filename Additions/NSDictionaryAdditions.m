@@ -27,7 +27,7 @@
 @end
 
 @implementation NSMutableDictionary (NSDictionaryAdditions)
-- (id) initWithKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary {
+- (instancetype) initWithKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary {
 	if (!(self = [self init]))
 		return nil;
 
@@ -38,8 +38,8 @@
 
 - (void) setObjectsForKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary {
 	for (id key in keys) {
-		id value = [dictionary objectForKey:key];
-		if (value) [self setObject:value forKey:key];
+		id value = dictionary[key];
+		if (value) self[key] = value;
 	}
 }
 @end

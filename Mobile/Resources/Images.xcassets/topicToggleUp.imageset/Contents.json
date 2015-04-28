@@ -2,16 +2,22 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "topicToggleUp.pdf"
+    },
+    {
+      "idiom" : "universal",
       "scale" : "1x",
       "filename" : "topicToggleUp.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x"
+      "scale" : "2x",
+      "filename" : "topicToggleUp@2x.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x"
+      "scale" : "3x",
+      "filename" : "topicToggleUp@3x.png"
     }
   ],
   "info" : {

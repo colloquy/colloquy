@@ -4,7 +4,7 @@
 #import <ChatCore/MVChatRoom.h>
 
 @implementation CQChatRoomInfoViewController
-- (id) initWithRoom:(MVChatRoom *) room {
+- (instancetype) initWithRoom:(MVChatRoom *) room {
 	if (!(self = [super init]))
 		return nil;
 

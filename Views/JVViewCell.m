@@ -5,18 +5,6 @@
 #import "JVViewCell.h"
 
 @implementation JVViewCell
-- (void) dealloc {
-    _view = nil;
-}
-
-- (void) setView:(NSView *) view {
-    _view = view;
-}
-
-- (NSView *) view {
-    return _view;
-}
-
 - (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView {
     [super drawWithFrame:cellFrame inView:controlView];
 

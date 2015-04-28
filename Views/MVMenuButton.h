@@ -8,7 +8,7 @@
 	BOOL _retina;
 }
 
-@property (nonatomic) NSControlSize controlSize;
+@property NSControlSize controlSize;
 @property (nonatomic, copy) NSImage *smallImage;
 @property (nonatomic, assign) NSToolbarItem *toolbarItem;
 @property (nonatomic) BOOL drawsArrow;

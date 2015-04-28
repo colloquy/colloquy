@@ -7,7 +7,7 @@
 #pragma mark -
 
 @implementation JVPreferencesController
-- (id) init {
+- (instancetype) init {
 	_preferenceTitles = [NSMutableArray array];
 	_preferenceModules = [NSMutableArray array];
 	_currentSessionPreferenceViews = [NSMutableDictionary dictionary];

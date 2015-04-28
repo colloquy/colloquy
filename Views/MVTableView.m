@@ -1,5 +1,12 @@
 #import "MVTableView.h"
 
+@interface NSTableView (PrivHiddenWhut)
+
++ (NSImage *)_defaultTableHeaderSortImage;
++ (NSImage *)_defaultTableHeaderReverseSortImage;
+
+@end
+
 @implementation MVTableView
 + (NSImage *) ascendingSortIndicator {
 	NSImage *result = [NSImage imageNamed:@"NSAscendingSortIndicator"];
@@ -55,7 +62,7 @@
 
 	if( row >= 0 ) {
 		NSTableColumn *column = nil;
-		if( col >= 0 ) column = [_tableColumns objectAtIndex:col];
+		if( col >= 0 ) column = _tableColumns[col];
 
 		if( _tvFlags.delegateShouldSelectRow ) {
 			if( [_delegate tableView:self shouldSelectRow:row] )
@@ -89,7 +96,7 @@
 	return defaultRect;
 }
 
-- (NSRect) originalRectOfRow:(int) row {
+- (NSRect) originalRectOfRow:(NSInteger) row {
 	return [super rectOfRow:row];
 }
 
@@ -130,7 +137,7 @@
 	NSInteger column = [self columnAtPoint:point];
 
 	NSTableColumn *tcolumn = nil;
-	if( column >= 0 ) tcolumn = [_tableColumns objectAtIndex:column];
+	if( column >= 0 ) tcolumn = _tableColumns[column];
 
 	if( row >= 0 && [_dataSource respondsToSelector:@selector( tableView:toolTipForTableColumn:row: )] )
 		return [_dataSource tableView:self toolTipForTableColumn:tcolumn row:row];

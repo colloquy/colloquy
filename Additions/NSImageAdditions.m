@@ -43,7 +43,7 @@
 	return [[NSImage alloc] initWithBase64EncodedString:base64String];
 }
 
-- (id) initWithBase64EncodedString:(NSString *) base64String {
+- (instancetype) initWithBase64EncodedString:(NSString *) base64String {
 	if( [base64String length] ) {
 		NSSize tempSize = { 100, 100 };
 		NSData *data = nil;
@@ -89,7 +89,7 @@
 
 	if( imageRep ) {
 		NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
-		[dict setObject:[NSNumber numberWithBool:NO] forKey:NSImageInterlaced];
+		dict[NSImageInterlaced] = @NO;
 		imageData = [imageRep representationUsingType:fileType properties:dict];
 	}
 

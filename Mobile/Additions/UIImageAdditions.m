@@ -1,6 +1,18 @@
 #import "UIImageAdditions.h"
 
 @implementation UIImage (UIImageAdditions)
++ (UIImage *) patternImageWithColor:(UIColor *) color {
+	UIImage *image = nil;
+	UIGraphicsBeginImageContext(CGSizeMake(3., 3.)); {
+		CGContextRef contextRef = UIGraphicsGetCurrentContext();
+		CGContextSetFillColorWithColor(contextRef, color.CGColor);
+		CGContextFillRect(contextRef, CGRectMake(0., 0., 3., 3.));
+		image = UIGraphicsGetImageFromCurrentImageContext();
+	} UIGraphicsEndImageContext();
+
+	return [image resizableImageWithCapInsets:UIEdgeInsetsMake(1., 1., 1., 1.)];
+}
+
 - (UIImage *) resizeToSize:(CGSize) size {
 	CGFloat scale = [UIScreen mainScreen].scale;
 	size.width *= scale;

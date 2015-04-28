@@ -1,7 +1,7 @@
 #import "CQTableViewController.h"
 
 @implementation CQTableViewController
-- (id) initWithStyle:(UITableViewStyle) style {
+- (instancetype) initWithStyle:(UITableViewStyle) style {
 	return (self = [super initWithStyle:style]);
 }
 

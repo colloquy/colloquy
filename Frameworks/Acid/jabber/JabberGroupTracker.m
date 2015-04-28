@@ -28,25 +28,24 @@
 
 @interface JRGroup : NSObject <JabberGroup>
 {
-    unsigned        _index;
     NSString*       _name;
     NSMutableArray* _items;
 }
-+(id) groupWithName: (NSString*) name;
++(instancetype) groupWithName: (NSString*) name;
 
--(void) setIndex: (unsigned) i;
--(unsigned) index;
+@property NSUInteger index;
 
--(NSString*) displayName;
+@property (nonatomic, readonly, copy) NSString *displayName;
 
 -(BOOL) addItem: (id) item;
 -(BOOL) removeItem: (id) item;
 
--(id) itemAtIndex: (unsigned) index;
--(unsigned) count;
+-(id) itemAtIndex: (NSUInteger) index;
+@property (readonly) NSUInteger count;
 @end
 
 @implementation JRGroup
+@synthesize displayName = _name;
 
 +(id) groupWithName: (NSString*) name
 {
@@ -70,22 +69,7 @@
     [super dealloc];
 }
 
--(void) setIndex: (unsigned) i
-{
-    _index = i;
-}
-
--(unsigned) index
-{
-    return _index;
-}
-
--(NSString*) displayName
-{
-    return _name;
-}
-
--(unsigned) count
+-(NSUInteger) count
 {
     return [_items count];
 }
@@ -110,14 +94,14 @@
     }
 }
 
--(id) itemAtIndex: (unsigned) index
+-(id) itemAtIndex: (NSUInteger) index
 {
-    return [_items objectAtIndex: index];
+    return _items[index];
 }
 @end
 
 @implementation JabberGroupTracker
-- (unsigned) count
+- (NSUInteger) count
 {
     return [_groupArray count];
 }
@@ -127,9 +111,9 @@
     return [_groupArray objectEnumerator];
 }
 
-- (id) groupAtIndex: (unsigned) i
+- (id) groupAtIndex: (NSUInteger) i
 {
-    return [_groupArray objectAtIndex: i];
+    return _groupArray[i];
 }
 
 -(BOOL) onAddedItem: (id)item
@@ -217,13 +201,13 @@
 
 -(BOOL) item: (id) item addedToGroup: (NSString*) groupName
 {
-    JRGroup* group = [_groups objectForKey: groupName];
+    JRGroup* group = _groups[groupName];
     if (group == nil)
     {
-        unsigned int i;
-        int index;
+        NSUInteger i;
+        NSInteger index;
         group = [JRGroup groupWithName: groupName];
-        [_groups setObject:group forKey:groupName];
+        _groups[groupName] = group;
         index = [_groupArray addObject: group
                     sortStringSelector: @selector(displayName)];
         assert (index != -1);
@@ -231,7 +215,7 @@
         // now update all group indices
         for (i = index + 1; i < [_groupArray count]; i++)
         {
-            JRGroup* cur_group = [_groupArray objectAtIndex: i];
+            JRGroup* cur_group = _groupArray[i];
             [cur_group setIndex: i];
         }
     }
@@ -241,20 +225,25 @@
 -(BOOL) item: (id) item removedFromGroup: (NSString*) groupName
 {
     BOOL retval;
-    JRGroup* group = [_groups objectForKey:groupName];
+    JRGroup* group = _groups[groupName];
     assert(group != nil);
     retval = [group removeItem: item];
     if ([group count] == 0)
     {
-        unsigned int index;
+        NSUInteger index;
         [_groupArray removeObjectAtIndex: [group index]];
         for (index = [group index]; index < [_groupArray count]; index++)
         {
-            JRGroup* cur_group = [_groupArray objectAtIndex: index];
+            JRGroup* cur_group = _groupArray[index];
             [cur_group setIndex: index];
         }
         [_groups removeObjectForKey: groupName];
     }
     return retval;
+}
+
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(id __unsafe_unretained [])buffer count:(NSUInteger)len
+{
+    return [_groupArray countByEnumeratingWithState:state objects:buffer count:len];
 }
 @end

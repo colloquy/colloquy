@@ -29,10 +29,11 @@
 
 -(id) init:(NSMutableString*)data 
 {
-    if (!(self = [super init])) return nil;
-    _prefixes = [[NSMutableDictionary alloc] init];
-    _overrides = [[NSMutableDictionary alloc] init];
-    _data = [data retain];
+    if(self = [super init]){
+		_prefixes = [[NSMutableDictionary alloc] init];
+		_overrides = [[NSMutableDictionary alloc] init];
+		_data = [data retain];
+	}
     return self;
 }
 
@@ -46,17 +47,17 @@
 
 -(void) addOverridePrefix:(NSString*)prefix forURI:(NSString*)uri 
 {
-    [_overrides setObject:prefix forKey:uri];
+    _overrides[uri] = prefix;
 }
 
 -(NSString*) generatePrefix:(NSString*)uri
 {
     // Lookup the URI
-    NSString* prefix = [_prefixes objectForKey:uri];
+    NSString* prefix = _prefixes[uri];
     if (!prefix)
     {
         prefix = [[NSString alloc] initWithFormat:@"xn%d", _prefix_counter++];
-        [_prefixes setObject:prefix forKey:uri];
+        _prefixes[uri] = prefix;
         [prefix autorelease];
     }
     return prefix;
@@ -64,7 +65,7 @@
 
 -(NSString*) lookupURI:(NSString*)uri
 {
-    return [_overrides objectForKey:uri];
+    return _overrides[uri];
 }
 
 -(void) openElement:(XMLElement*)elem
@@ -199,17 +200,17 @@
 
 +(NSString*) process:(XMLElement*)element
 {
-    // Create a pool to catch any temps which might be generated
-    NSAutoreleasePool* workpool = [[NSAutoreleasePool alloc] init];
-    
-    // Setup result data holder and accumulator
-    NSMutableString* result = [[NSMutableString alloc] initWithCapacity:512];    
-    XMLAccumulator* acc = [[XMLAccumulator alloc] init:result];
-    [element description:acc];
-    [acc release];
-    
-    // Let go of the autorelease pool
-    [workpool release];
+    NSMutableString* result = nil;
+	// Create a pool to catch any temps which might be generated
+	@autoreleasepool {
+		// Setup result data holder and accumulator
+		NSMutableString* result = [[NSMutableString alloc] initWithCapacity:512];
+		XMLAccumulator* acc = [[XMLAccumulator alloc] init:result];
+		[element description:acc];
+		[acc release];
+		
+		// Let go of the autorelease pool
+	}
     // Now autorelase the result string
     [result autorelease];
     return result;

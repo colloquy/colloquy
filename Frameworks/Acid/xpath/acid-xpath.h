@@ -49,12 +49,12 @@
   @param tokens  string holding nondelimited characters to be used as tokens
   @param substring, or an empty string on failure
 */
--(NSString*) nextTokenDelimitedBy:(NSString*)tokens searchFromIndex:(int)index;
+-(NSString*) nextTokenDelimitedBy:(NSString*)tokens searchFromIndex:(NSInteger)index;
 /*!
   @method deleteCharactersFromIndex:toIndex
   @abstract remove a range of characters from within the string
 */
--(void) deleteCharactersFromIndex:(int)start toIndex:(int)end;
+-(void) deleteCharactersFromIndex:(NSInteger)start toIndex:(NSInteger)end;
 /*!
   @method clear
   @abstract reset to an empty string
@@ -76,7 +76,7 @@
     NSString*       _attributeName;
 }
 
-+(id) createWithPath:(NSString*)path;
++(instancetype) createWithPath:(NSString*)path;
 
 -(BOOL) checkPredicates:(XMLElement*)elem;
 
@@ -100,10 +100,9 @@
     id               _expression;
 }
 
--(id) initWithPath:(NSString*)path;
--(void) dealloc;
+-(instancetype) initWithPath:(NSString*)path;
 
--(NSString*) path;
+@property (readonly, copy) NSString *path;
 
 -(BOOL)       matches:(XMLElement*)elem;
 -(NSString*)  queryForString:(XMLElement*)elem;

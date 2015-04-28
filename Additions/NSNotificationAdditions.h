@@ -1,4 +1,6 @@
 @interface NSNotificationCenter (NSNotificationCenterAdditions)
++ (NSNotificationCenter *) chatCenter;
+
 - (void) postNotificationOnMainThread:(NSNotification *) notification;
 - (void) postNotificationOnMainThread:(NSNotification *) notification waitUntilDone:(BOOL) wait;
 

@@ -5,9 +5,8 @@
 - (NSSize) minSize;
 - (NSString *) title;
 - (NSString *) type;
-@end
 
-@interface NSObject (JVInspectorOptional)
+@optional
 - (void) willLoad;
 - (void) didLoad;
 
@@ -17,9 +16,8 @@
 
 @protocol JVInspection <NSObject>
 - (id <JVInspector>) inspector;
-@end
 
-@interface NSObject (JVInspectionOptional)
+@optional
 - (void) willBeInspected;
 @end
 
@@ -37,15 +35,16 @@
 }
 + (JVInspectorController *) sharedInspector;
 + (void /*IBAction*/) showInspector:(id) sender; // only works because this is already wired up
+- (IBAction) showInspector:(id) sender;
 + (JVInspectorController *) inspectorOfObject:(id <JVInspection>) object NS_RETURNS_NOT_RETAINED;
 
-- (id) initWithObject:(id <JVInspection>) object lockedOn:(BOOL) locked;
+- (instancetype) initWithObject:(id <JVInspection>) object lockedOn:(BOOL) locked;
 
 - (IBAction) show:(id) sender;
-- (BOOL) locked;
+@property (readonly) BOOL locked;
 
 - (void) inspectObject:(id <JVInspection>) object;
 
-- (id <JVInspection>) inspectedObject;
-- (id <JVInspector>) inspector;
+@property (readonly, strong) id<JVInspection> inspectedObject;
+@property (readonly, strong) id<JVInspector> inspector;
 @end

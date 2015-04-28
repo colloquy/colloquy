@@ -5,6 +5,7 @@
 #import "CQChatOrderingController.h"
 #import "CQChatCreationViewController.h"
 #import "CQChatInputBar.h"
+#import "CQChatInputStyleViewController.h"
 #import "CQChatPresentationController.h"
 #import "CQChatRoomController.h"
 #import "CQChatTableCell.h"
@@ -12,6 +13,7 @@
 #import "CQConnectionsController.h"
 #import "CQIgnoreRulesController.h"
 #import "CQIntroductoryGIFFrameOperation.h"
+#import "CQModalViewControllerPresentationViewController.h"
 #import "CQPreferencesListViewController.h"
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
@@ -24,7 +26,9 @@
 
 #import "KAIgnoreRule.h"
 
+#import "NSAttributedStringAdditions.h"
 #import "NSDateAdditions.h"
+#import "NSNotificationAdditions.h"
 #import "NSObjectAdditions.h"
 #import "NSStringAdditions.h"
 
@@ -47,13 +51,14 @@
 #define CantSendMessageAlertView 100
 #define BookmarkLogInAlertView 101
 
-typedef enum {
+typedef NS_ENUM(NSInteger, CQSwipeMeaning) {
 	CQSwipeDisabled,
 	CQSwipeNextRoom,
 	CQSwipeNextActiveRoom,
 	CQSwipeNextHighlight
-} CQSwipeMeaning;
+};
 
+NSString *CQChatViewControllerHandledMessageNotification = @"CQChatViewControllerHandledMessageNotification";
 NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewControllerRecentMessagesUpdatedNotification";
 NSString *CQChatViewControllerUnreadMessagesUpdatedNotification = @"CQChatViewControllerUnreadMessagesUpdatedNotification";
 
@@ -88,6 +93,9 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
+@interface CQDirectChatController () <CQChatInputStyleDelegate, CQModalViewControllerPresentationViewControllerDelegate>
+@end
+
 @implementation CQDirectChatController
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
@@ -117,7 +125,7 @@ static BOOL showingKeyboard;
 	if (newScrollbackLength != scrollbackLength) {
 		scrollbackLength = newScrollbackLength;
 
-		[[NSNotificationCenter defaultCenter] postNotificationName:CQScrollbackLengthDidChangeNotification object:nil];
+		[[NSNotificationCenter chatCenter] postNotificationName:CQScrollbackLengthDidChangeNotification object:nil];
 	}
 
 	NSString *soundName = [[CQSettingsController settingsController] stringForKey:@"CQSoundOnPrivateMessage"];
@@ -151,13 +159,13 @@ static BOOL showingKeyboard;
 			[alertView show];
 		}
 	} else if (error.code == CQBookmarkingErrorServer) {
-		UIAlertView *alertView = [[UIAlertView alloc] init];
+		UIAlertView *alertView = [[CQAlertView alloc] init];
 		alertView.title = NSLocalizedString(@"Server Error", @"Server Error");
 		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@ due to a server error.", @"Unable to bookmark link server error message"), notification.object, [activeService serviceName]];
 		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
 		[alertView show];
 	} else {
-		UIAlertView *alertView = [[UIAlertView alloc] init];
+		UIAlertView *alertView = [[CQAlertView alloc] init];
 		alertView.title = NSLocalizedString(@"Unknown Error", @"Unknown Error");
 		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@.", @"Unable to bookmark link message"), notification.object, [activeService serviceName]];
 		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
@@ -166,21 +174,17 @@ static BOOL showingKeyboard;
 }
 
 + (void) initialize {
-	static BOOL userDefaultsInitialized;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
-	if (userDefaultsInitialized)
-		return;
+		[self userDefaultsChanged];
 
-	userDefaultsInitialized = YES;
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
-
-	[self userDefaultsChanged];
-
-	if ([[UIDevice currentDevice] isPadModel]) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide) name:UIKeyboardWillHideNotification object:nil];
-	}
+		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide) name:UIKeyboardWillHideNotification object:nil];
+		}
+	});
 }
 
 + (void) keyboardWillShow {
@@ -200,31 +204,32 @@ static BOOL showingKeyboard;
 	return chatMessageProcessingQueue;
 }
 
-- (id) initWithTarget:(id) target {
+- (instancetype) initWithTarget:(id) target {
 	if (!(self = [super initWithNibName:@"CQUIChatView" bundle:nil]))
 		return nil;
 
 	_target = target;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_awayStatusChanged:) name:MVChatConnectionSelfAwayStatusChangedNotification object:self.connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:self.connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:self.connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didRecieveDeviceToken:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_awayStatusChanged:) name:MVChatConnectionSelfAwayStatusChangedNotification object:self.connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:self.connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:self.connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_didRecieveDeviceToken:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:UIContentSizeCategoryDidChangeNotification object:nil];
 
-	if ([[UIDevice currentDevice] isPadModel]) {
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
 		_showingKeyboard = showingKeyboard;
 	}
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_nicknameDidChange:) name:MVChatUserNicknameChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_nicknameDidChange:) name:MVChatUserNicknameChangedNotification object:nil];
 
 	if (self.user) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:self.user];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:self.user];
 
 		_encoding = [[CQSettingsController settingsController] integerForKey:@"CQDirectChatEncoding"];
 
@@ -236,18 +241,23 @@ static BOOL showingKeyboard;
 		_revealKeyboard = YES;
 	}
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollbackLengthDidChange:) name:CQScrollbackLengthDidChangeNotification object:nil];
-
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(scrollbackLengthDidChange:) name:CQScrollbackLengthDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willTerminate) name:UIApplicationWillTerminateNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_resignActive) name:UIApplicationWillResignActiveNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_batchUpdatesWillBegin:) name:MVChatConnectionBatchUpdatesWillBeginNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_batchUpdatesDidEnd:) name:MVChatConnectionBatchUpdatesDidEndNotification object:nil];
 
 	[self setScrollbackLength:scrollbackLength];
 
 	_sentMessages = [[NSMutableArray alloc] init];
+	_batchStorage = [NSMutableDictionary dictionary];
+	_batchTypeAssociation = [NSMutableDictionary dictionary];
 
 	return self;
 }
 
-- (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
+- (instancetype) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
 	MVChatUser *user = nil;
 
 	NSString *nickname = state[@"user"];
@@ -302,6 +312,7 @@ static BOOL showingKeyboard;
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	if (_watchRule)
@@ -354,7 +365,7 @@ static BOOL showingKeyboard;
 	state[@"class"] = NSStringFromClass([self class]);
 
 	if ([CQChatController defaultController].visibleChatController == self)
-		state[@"active"] = @YES;
+		state[@"active"] = @(YES);
 
 	if (self.user)
 		state[@"user"] = self.user.nickname;
@@ -373,7 +384,7 @@ static BOOL showingKeyboard;
 
 		MVChatUser *user = message[@"user"];
 		if (user && !user.localUser) newMessage[@"user"] = user.nickname;
-		else if (user.localUser) newMessage[@"localUser"] = @YES;
+		else if (user.localUser) newMessage[@"localUser"] = @(YES);
 
 		[messages addObject:newMessage];
 	}
@@ -391,7 +402,7 @@ static BOOL showingKeyboard;
 	sheet.delegate = self;
 	sheet.tag = InfoActionSheet;
 
-	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+	if (!([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		sheet.title = self.user.displayName;
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
@@ -413,8 +424,24 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
+- (void) style:(id) sender {
+	CQChatInputStyleViewController *styleViewController = [[CQChatInputStyleViewController alloc] init];
+	styleViewController.delegate = self;
+
+	_stylePresentationViewController = [CQModalViewControllerPresentationViewController viewControllerPresentationViewControllerForViewController:styleViewController];
+	_stylePresentationViewController.delegate = self;
+
+	[self _updateStylePresentationViewControllerEdgeInsetsForSize:self.view.window.frame.size];
+
+	[self _updateAttributesForStyleViewController];
+
+	[_stylePresentationViewController show];
+}
+
+#pragma mark -
+
 - (void) showRecentlySentMessages {
-	CQImportantChatMessageViewController *listViewController = [[CQImportantChatMessageViewController alloc] initWithMessages:_recentMessages delegate:self];
+	CQImportantChatMessageViewController *listViewController = [[CQImportantChatMessageViewController alloc] initWithMessages:_sentMessages delegate:self];
 	CQModalNavigationController *modalNavigationController = [[CQModalNavigationController alloc] initWithRootViewController:listViewController];
 
 	[[CQColloquyApplication sharedApplication] presentModalViewController:modalNavigationController animated:[UIView areAnimationsEnabled]];
@@ -439,8 +466,17 @@ static BOOL showingKeyboard;
 		UIKeyCommand *optCmdUpKeyCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputUpArrow modifierFlags:(UIKeyModifierCommand | UIKeyModifierAlternate) action:@selector(_handleKeyCommand:)];
 		UIKeyCommand *optCmdDownKeyCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputDownArrow modifierFlags:(UIKeyModifierCommand | UIKeyModifierAlternate) action:@selector(_handleKeyCommand:)];
 
-		keyCommands = @[altTabKeyCommand, shiftAltTabKeyCommand, cmdUpKeyCommand, cmdDownKeyCommand, optCmdUpKeyCommand, optCmdDownKeyCommand];
+		UIKeyCommand *cmdShiftCKeyCommand = [UIKeyCommand keyCommandWithInput:@"c" modifierFlags:(UIKeyModifierCommand | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *cmdShiftKKeyCommand = [UIKeyCommand keyCommandWithInput:@"k" modifierFlags:(UIKeyModifierCommand | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *cmdNKeyCommand = [UIKeyCommand keyCommandWithInput:@"n" modifierFlags:(UIKeyModifierCommand) action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *cmdJKeyCommand = [UIKeyCommand keyCommandWithInput:@"j" modifierFlags:(UIKeyModifierCommand) action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *cmdShiftNKeyCommand = [UIKeyCommand keyCommandWithInput:@"n" modifierFlags:(UIKeyModifierCommand | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *escCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputEscape modifierFlags:0 action:@selector(_handleKeyCommand:)];
+
+		keyCommands = @[ altTabKeyCommand, shiftAltTabKeyCommand, cmdUpKeyCommand, cmdDownKeyCommand, optCmdUpKeyCommand, optCmdDownKeyCommand,
+						 cmdShiftCKeyCommand, cmdNKeyCommand, cmdShiftKKeyCommand, cmdJKeyCommand, cmdShiftNKeyCommand, escCommand ];
 	}
+
 	return keyCommands;
 }
 
@@ -453,13 +489,17 @@ static BOOL showingKeyboard;
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
+	self.scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
+
 	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
 //	if ([UIDevice currentDevice].isSystemEight) {
 //		CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
+//		webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
 //		webkitChatTranscriptView.transcriptDelegate = self;
 //
-//		[self.view insertSubview:webkitChatTranscriptView belowSubview:transcriptView];
+//		[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
 //
+//		[transcriptView removeFromSuperview];
 //		transcriptView = webkitChatTranscriptView;
 //	}
 
@@ -482,18 +522,19 @@ static BOOL showingKeyboard;
 
 	[self _addPendingComponentsAnimated:NO];
 
-	if (![[UIDevice currentDevice] isPadModel]) {
+	if (self.connection.connected)
+		[_target setMostRecentUserActivity:[NSDate date]];
+
+	if (![UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 	}
 
-	[chatInputBar updateTextViewContentSize];
-
-	if (_showingKeyboard || hardwareKeyboard) {
-		[chatInputBar becomeFirstResponder];
+	if (_showingKeyboard || showingKeyboard || hardwareKeyboard) {
+		_revealKeyboard = YES;
 	}
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didNotBookmarkLink:) name:CQBookmarkingDidNotSaveLinkNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(didNotBookmarkLink:) name:CQBookmarkingDidNotSaveLinkNotification object:nil];
 
 	if ([transcriptView.styleIdentifier hasCaseInsensitiveSuffix:@"-dark"])
 		if ([self.navigationController.navigationBar respondsToSelector:@selector(setBarTintColor:)])
@@ -521,7 +562,7 @@ static BOOL showingKeyboard;
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 
 	if (_revealKeyboard) {
 		_revealKeyboard = NO;
@@ -532,7 +573,11 @@ static BOOL showingKeyboard;
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
+	if (self.connection.connected)
+		[_target setMostRecentUserActivity:[NSDate date]];
+
 	hardwareKeyboard = (!_showingKeyboard && [chatInputBar isFirstResponder]);
+	[chatInputBar resignFirstResponder];
 
 	[chatInputBar hideCompletions];
 
@@ -540,12 +585,11 @@ static BOOL showingKeyboard;
 	_allowEditingToEnd = YES;
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:CQBookmarkingDidNotSaveLinkNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:CQBookmarkingDidNotSaveLinkNotification object:nil];
 
-	if (![[UIDevice currentDevice] isPadModel]) {
+	if (![UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
 		[self.view endEditing:YES];
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
@@ -557,10 +601,18 @@ static BOOL showingKeyboard;
 - (void) viewDidDisappear:(BOOL) animated {
 	[super viewDidDisappear:animated];
 
-	if (![[UIDevice currentDevice] isPadModel])
+	[UIMenuController sharedMenuController].menuItems = nil;
+
+	if (![UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
 		[chatInputBar resignFirstResponder];
 
 	_allowEditingToEnd = NO;
+}
+
+- (void) viewWillLayoutSubviews {
+	[super viewWillLayoutSubviews];
+
+	[chatInputBar updateTextViewContentSize];
 }
 
 - (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
@@ -568,7 +620,9 @@ static BOOL showingKeyboard;
 
 //	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:toInterfaceOrientation]);
 
-	[coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {} completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
+	[coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {
+		[self _updateStylePresentationViewControllerEdgeInsetsForSize:self.view.window.frame.size];
+	} completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
 		[transcriptView scrollToBottomAnimated:NO];
 
 		if (isShowingCompletionsBeforeRotation)
@@ -594,10 +648,28 @@ static BOOL showingKeyboard;
 }
 #endif
 
+- (BOOL) isFirstResponder {
+	return [chatInputBar isFirstResponder];
+}
+
+- (BOOL) resignFirstResponder {
+	return [chatInputBar resignFirstResponder];
+}
+
 #pragma mark -
 
+- (void) chatInputBarTextDidChange:(CQChatInputBar *) theChatInputBar {
+	if (chatInputBar.textView.text.length || chatInputBar.textView.attributedText.length) {
+		chatInputBar.textView.allowsEditingTextAttributes = YES;
+		[UIMenuController sharedMenuController].menuItems = @[ [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Style", @"Style text menu item") action:@selector(style:)] ];
+	} else {
+		chatInputBar.textView.allowsEditingTextAttributes = NO;
+		[UIMenuController sharedMenuController].menuItems = nil;
+	}
+}
+
 - (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) theChatInputBar {
-	if ([theChatInputBar isFirstResponder]) {
+	if ([theChatInputBar isFirstResponder] && theChatInputBar.textView.hasText) {
 		theChatInputBar.textView.text = nil;
 
 		// Work around behavior where textViewDidChange: isn't called when you change the text programatically.
@@ -613,10 +685,10 @@ static BOOL showingKeyboard;
 	actionSheet.delegate = self;
 	actionSheet.tag = ActionsActionSheet;
 
-	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+	if (!([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		actionSheet.title = self.user.displayName;
 
-	[actionSheet addButtonWithTitle:NSLocalizedString(@"Recent Messages", @"Recent Messages")];
+	[actionSheet addButtonWithTitle:NSLocalizedString(@"Recently Sent Messages", @"Recently Sent Messages")];
 
 	actionSheet.cancelButtonIndex = [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
@@ -711,7 +783,7 @@ static BOOL showingKeyboard;
 	return completions;
 }
 
-- (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text {
+- (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(MVChatString *) text {
 	_didSendRecently = YES;
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetDidSendRecently) object:nil];
@@ -720,76 +792,7 @@ static BOOL showingKeyboard;
 	if (!_target)
 		return YES;
 
-	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"] && text.length > 1) {
-		static NSSet *commandsNotRequiringConnection;
-		if (!commandsNotRequiringConnection)
-			commandsNotRequiringConnection = [[NSSet alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"safari", @"browser", @"url", @"clear", @"help", @"faq", @"search", @"list", @"join", @"welcome", @"token", @"resetbadge", @"tweet", @"aquit", @"anick", @"aaway", nil];
-
-		// Send as a command.
-		NSScanner *scanner = [NSScanner scannerWithString:text];
-		[scanner setCharactersToBeSkipped:nil];
-
-		NSString *command = nil;
-		NSString *arguments = nil;
-
-		scanner.scanLocation = 1; // Skip the "/" prefix.
-
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&command];
-		if (!self.available && ([command isCaseInsensitiveEqualToString:@"me"] || [command isCaseInsensitiveEqualToString:@"msg"] || [command isCaseInsensitiveEqualToString:@"say"])) {
-			[self _showCantSendMessagesWarningForCommand:NO];
-			return NO;
-		}
-
-		if (!self.connection.connected && ![commandsNotRequiringConnection containsObject:[command lowercaseString]]) {
-			[self _showCantSendMessagesWarningForCommand:YES];
-			return NO;
-		}
-
-		[scanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] maxLength:1 intoString:NULL];
-
-		arguments = [text substringFromIndex:scanner.scanLocation];
-
-		NSString *commandSelectorString = [NSString stringWithFormat:@"handle%@CommandWithArguments:", [command capitalizedString]];
-		SEL commandSelector = NSSelectorFromString(commandSelectorString);
-
-		BOOL handled = NO;
-		if ([self respondsToSelector:commandSelector])
-			handled = ((BOOL (*)(id, SEL, NSString *))objc_msgSend)(self, commandSelector, arguments);
-
-		if (!handled) [_target sendCommand:command withArguments:arguments withEncoding:self.encoding];
-	} else {
-		if (!self.available) {
-			[self _showCantSendMessagesWarningForCommand:NO];
-			return NO;
-		}
-
-		// Send as a message, strip the first forward slash if it exists.
-		if ([text hasPrefix:@"/"] && text.length > 1)
-			text = [text substringFromIndex:1];
-
-		BOOL action = NO;
-
-		if (naturalChatActions && !action) {
-			static NSSet *actionVerbs;
-			if (!actionVerbs) {
-				NSArray *verbs = [[NSArray alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]];
-				actionVerbs = [[NSSet alloc] initWithArray:verbs];
-			}
-
-			NSScanner *scanner = [[NSScanner alloc] initWithString:text];
-			scanner.charactersToBeSkipped = nil;
-
-			NSString *word = nil;
-			[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&word];
-
-			if ([actionVerbs containsObject:word])
-				action = YES;
-		}
-
-		[self sendMessage:text asAction:action];
-	}
-
-	return YES;
+	return [self _sendText:text];
 }
 
 - (BOOL) chatInputBar:(CQChatInputBar *) theChatInputBar shouldChangeHeightBy:(CGFloat) difference {
@@ -810,14 +813,121 @@ static BOOL showingKeyboard;
 	return NO;
 }
 
+- (void) chatInputBarDidChangeSelection:(CQChatInputBar *) chatInputBar {
+	[self _updateAttributesForStyleViewController];
+}
+
 #pragma mark -
 
-- (void) importantChatMessageViewController:(CQImportantChatMessageViewController *) importantChatMessageViewController didSelectMessage:(NSString *) message isAction:(BOOL) isAction {
+- (void) _updateStylePresentationViewControllerEdgeInsetsForSize:(CGSize) size {
+	CGFloat side = (size.width - 270.) / 2.;
+	CGFloat top = 8.;
+	CGFloat bottom = size.height - (top + 265.);
+	_stylePresentationViewController.edgeInsets = UIEdgeInsetsMake(top, side, bottom, side);
+}
+
+#pragma mark -
+
+- (NSMutableAttributedString *) _selectedChatInputBarAttributedString {
+	NSMutableAttributedString *attributedString = [chatInputBar.textView.attributedText mutableCopy];
+	if (!attributedString) {
+		attributedString = [[NSMutableAttributedString alloc] initWithString:(chatInputBar.textView.text ?: @"") attributes:@{
+			NSFontAttributeName: chatInputBar.textView.font,
+		}];
+	}
+
+	return attributedString;
+}
+
+- (void) _updateAttributesForStyleViewController {
+	NSRange selectedRange = chatInputBar.textView.selectedRange;
+	if (selectedRange.length == 0) {
+		return;
+	}
+
+	NSMutableAttributedString *attributedString = self._selectedChatInputBarAttributedString;
+	CQChatInputStyleViewController *styleViewController = (CQChatInputStyleViewController *)_stylePresentationViewController.viewControllerToPresent;
+	styleViewController.attributes = [attributedString attributesAtIndex:selectedRange.location longestEffectiveRange:NULL inRange:selectedRange];
+}
+
+- (void) chatInputStyleView:(CQChatInputStyleViewController *) chatInputStyleView didChangeTextTrait:(CQTextTrait) trait toState:(BOOL) state {
+	NSRange selectedRange = chatInputBar.textView.selectedRange;
+	if (selectedRange.length == 0)
+		return;
+
+	NSMutableAttributedString *attributedString = self._selectedChatInputBarAttributedString;
+	NSDictionary *newAttributes = nil;
+	if (trait == CQTextTraitUnderline) {
+		newAttributes = @{ NSUnderlineStyleAttributeName: (state ? @(NSUnderlineStyleSingle) : @(NSUnderlineStyleNone)) };
+	} else {
+		UIFont *font = [attributedString attribute:NSFontAttributeName atIndex:0 longestEffectiveRange:NULL inRange:NSMakeRange(0, attributedString.length)];
+		if (!font)
+			font = chatInputBar.textView.font;
+
+		UIFontDescriptorSymbolicTraits symbolicTraits = font.fontDescriptor.symbolicTraits;
+		if (trait == CQTextTraitItalic) {
+			if (state) symbolicTraits |= UIFontDescriptorTraitItalic;
+			else if (symbolicTraits & UIFontDescriptorTraitItalic) symbolicTraits ^= UIFontDescriptorTraitItalic;
+		} else if (trait == CQTextTraitBold) {
+			if (state) symbolicTraits |= UIFontDescriptorTraitBold;
+			else if (symbolicTraits & UIFontDescriptorTraitBold) symbolicTraits ^= UIFontDescriptorTraitBold;
+		} else return;
+
+		UIFontDescriptor *fontDescriptor = [font.fontDescriptor fontDescriptorWithSymbolicTraits:symbolicTraits];
+		newAttributes = @{ NSFontAttributeName: [UIFont fontWithDescriptor:fontDescriptor size:-1.] }; // -1 means use the currenet font descriptor's font
+	}
+
+	[[attributedString copy] enumerateAttributesInRange:selectedRange options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:^(NSDictionary *rangeAttributes, NSRange range, BOOL *stop) {
+		NSMutableDictionary *attributes = [rangeAttributes mutableCopy];
+		[attributes addEntriesFromDictionary:newAttributes];
+		[attributedString setAttributes:attributes range:range];
+	}];
+
+	chatInputBar.textView.attributedText = attributedString;
+	chatInputBar.textView.selectedRange = selectedRange;
+}
+
+- (void) chatInputStyleView:(CQChatInputStyleViewController *) chatInputStyleView didSelectColor:(UIColor *) color forColorPosition:(CQColorPosition) position {
+	NSRange selectedRange = chatInputBar.textView.selectedRange;
+	if (selectedRange.length == 0)
+		return;
+
+	NSMutableAttributedString *attributedString = self._selectedChatInputBarAttributedString;
+	NSString *key = (position == CQColorPositionForeground ? NSForegroundColorAttributeName : NSBackgroundColorAttributeName);
+	NSDictionary *newAttributes = color ? @{ key: color } : nil;
+
+	[[attributedString copy] enumerateAttributesInRange:selectedRange options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:^(NSDictionary *rangeAttributes, NSRange range, BOOL *stop) {
+		NSMutableDictionary *attributes = [rangeAttributes mutableCopy];
+		if (newAttributes)
+			[attributes addEntriesFromDictionary:newAttributes];
+		else [attributes removeObjectForKey:key];
+		[attributedString setAttributes:attributes range:range];
+	}];
+
+	chatInputBar.textView.attributedText = attributedString;
+	chatInputBar.textView.selectedRange = selectedRange;
+}
+
+- (void) chatInputStyleViewShouldClose:(CQChatInputStyleViewController *) chatInputStyleView {
+	[_stylePresentationViewController hide];
+}
+
+- (void) modalViewControllerPresentationDidCloseViewController:(CQModalViewControllerPresentationViewController *) modalViewControllerPresentationViewController {
+	_stylePresentationViewController = nil;
+}
+
+#pragma mark -
+
+- (void) importantChatMessageViewController:(CQImportantChatMessageViewController *) importantChatMessageViewController didSelectMessage:(MVChatString *) message isAction:(BOOL) isAction {
 	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:[UIView areAnimationsEnabled]];
 
-	if (isAction)
-		chatInputBar.textView.text = [@"/me " stringByAppendingString:message];
-	else chatInputBar.textView.text = message;
+	if (isAction) {
+		NSDictionary *attributes = [message attributesAtIndex:0 effectiveRange:NULL];
+		NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"/me" attributes:attributes];
+		[attributedString appendAttributedString:message];
+
+		chatInputBar.textView.attributedText = message;
+	} else chatInputBar.textView.attributedText = message;
 
 	[chatInputBar becomeFirstResponder];
 }
@@ -839,7 +949,7 @@ static BOOL showingKeyboard;
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 
 	[transcriptView reset];
 }
@@ -861,8 +971,8 @@ static BOOL showingKeyboard;
 	return [[CQColloquyApplication sharedApplication] openURL:url];
 }
 
-- (BOOL) _handleURLCommandWithArguments:(NSString *) arguments {
-	NSScanner *scanner = [NSScanner scannerWithString:arguments];
+- (BOOL) _handleURLCommandWithArguments:(MVChatString *) arguments {
+	NSScanner *scanner = [NSScanner scannerWithString:arguments.string];
 	NSString *urlString = nil;
 
 	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&urlString];
@@ -870,7 +980,7 @@ static BOOL showingKeyboard;
 	if (!urlString.length)
 		return NO;
 
-	if ([arguments isCaseInsensitiveEqualToString:@"last"])
+	if ([arguments.string isCaseInsensitiveEqualToString:@"last"])
 		urlString = @"about:last";
 
 	NSURL *url = (urlString ? [NSURL URLWithString:urlString] : nil);
@@ -881,45 +991,44 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (BOOL) handleConsoleCommandWithArguments:(NSString *) arguments {
-	if (arguments.length)
-		[CQConnectionsController defaultController].shouldLogRawMessagesToConsole = [arguments isCaseInsensitiveEqualToString:@"on"];
-	else [[CQChatController defaultController] showConsoleForConnection:self.connection];
+- (BOOL) handleConsoleCommandWithArguments:(MVChatString *) arguments {
+	[[CQChatController defaultController] showConsoleForConnection:self.connection];
 
 	return YES;
 }
 
-- (BOOL) handleBrowserCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleBrowserCommandWithArguments:(MVChatString *) arguments {
 	return [self _handleURLCommandWithArguments:arguments];
 }
 
-- (BOOL) handleSafariCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleSafariCommandWithArguments:(MVChatString *) arguments {
 	return [self _handleURLCommandWithArguments:arguments];
 }
 
-- (BOOL) handleUrlCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleUrlCommandWithArguments:(MVChatString *) arguments {
 	return [self handleSafariCommandWithArguments:arguments];
 }
 
-- (BOOL) handleAquitCommandWithArguments:(NSString *) arguments {
-	for (MVChatConnection *connection in [CQConnectionsController defaultController].connectedConnections)
+- (BOOL) handleAquitCommandWithArguments:(MVChatString *) arguments {
+	for (MVChatConnection *connection in [CQConnectionsController defaultController].connectedConnections) {
 		[connection disconnectWithReason:arguments];
+	}
 	return YES;
 }
 
-- (BOOL) handleAawayCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleAawayCommandWithArguments:(MVChatString *) arguments {
 	for (MVChatConnection *connection in [CQConnectionsController defaultController].connectedConnections)
 		connection.awayStatusMessage = arguments;
 	return YES;
 }
 
-- (BOOL) handleAnickCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleAnickCommandWithArguments:(MVChatString *) arguments {
 	for (MVChatConnection *connection in [CQConnectionsController defaultController].connectedConnections)
-		connection.nickname = arguments;
+		connection.nickname = arguments.string;
 	return YES;
 }
 
-- (BOOL) handleAmsgCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleAmsgCommandWithArguments:(MVChatString *) arguments {
 	NSArray *rooms = [[CQChatOrderingController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
 	for (CQChatRoomController *controller in rooms) {
 		if (!controller.connection.connected)
@@ -930,7 +1039,7 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (BOOL) handleAmeCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleAmeCommandWithArguments:(MVChatString *) arguments {
 	NSArray *rooms = [[CQChatOrderingController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
 	for (CQChatRoomController *controller in rooms) {
 		if (!controller.connection.connected)
@@ -941,8 +1050,8 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (BOOL) handleJoinCommandWithArguments:(NSString *) arguments {
-	if (![arguments stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
+- (BOOL) handleJoinCommandWithArguments:(MVChatString *) arguments {
+	if (![arguments.string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
 		CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
 		creationViewController.roomTarget = YES;
 		creationViewController.selectedConnection = self.connection;
@@ -956,7 +1065,7 @@ static BOOL showingKeyboard;
 
 	[self.connection connectAppropriately];
 
-	NSArray *rooms = [arguments componentsSeparatedByString:@","];
+	NSArray *rooms = [arguments.string componentsSeparatedByString:@","];
 	if (rooms.count == 1 && ((NSString *)rooms[0]).length)
 		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:rooms[0] andConnection:self.connection];
 	else if (rooms.count > 1)
@@ -966,37 +1075,34 @@ static BOOL showingKeyboard;
 	return NO;
 }
 
-- (BOOL) handleJCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleJCommandWithArguments:(MVChatString *) arguments {
 	return [self handleJoinCommandWithArguments:arguments];
 }
 
-- (BOOL) handleMsgCommandWithArguments:(NSString *) arguments {
-	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments];
+- (BOOL) handleMsgCommandWithArguments:(MVChatString *) arguments {
+	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments.string];
 	[argumentsScanner setCharactersToBeSkipped:nil];
 
 	NSString *targetName = nil;
 	[argumentsScanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&targetName];
 
-	if ([argumentsScanner isAtEnd] || arguments.length <= argumentsScanner.scanLocation + 1) {
-		if (targetName.length > 1 && [[self.connection chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]]) {
-			MVChatRoom *room = [self.connection chatRoomWithUniqueIdentifier:targetName];
-			CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:NO];
-			[[CQChatController defaultController] showChatController:controller animated:YES];
-			return YES;
-		} else {
-			MVChatUser *user = [[self.connection chatUsersWithNickname:targetName] anyObject];
-			CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:NO];
-			[[CQChatController defaultController] showChatController:controller animated:YES];
-			return YES;
-		}
+	if (targetName.length > 1 && [[self.connection chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]]) {
+		MVChatRoom *room = [self.connection chatRoomWithUniqueIdentifier:targetName];
+		CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:YES];
+		if (controller) [[CQChatController defaultController] showChatController:controller animated:YES];
+	} else {
+		MVChatUser *user = [[self.connection chatUsersWithNickname:targetName] anyObject];
+		CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:YES];
+		[[CQChatController defaultController] showChatController:controller animated:YES];
+		if (controller) [[CQChatController defaultController] showChatController:controller animated:YES];
 	}
 
 	// Return NO so the command is handled in ChatCore.
 	return NO;
 }
 
-- (BOOL) handleNoticeCommandWithArguments:(NSString *) arguments {
-	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments];
+- (BOOL) handleNoticeCommandWithArguments:(MVChatString *) arguments {
+	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments.string];
 	argumentsScanner.charactersToBeSkipped = nil;
 
 	NSString *target = nil;
@@ -1012,8 +1118,11 @@ static BOOL showingKeyboard;
 		if (!room)
 			return NO;
 
-		NSString *message = [arguments substringFromIndex:argumentsScanner.scanLocation];
-		NSData *messageData = [message dataUsingEncoding:self.connection.encoding];
+		NSAttributedString *message = [arguments attributedSubstringFromIndex:argumentsScanner.scanLocation];
+		NSData *messageData = [message chatFormatWithOptions:@{
+			@"FormatType": NSChatWindowsIRCFormatType,
+			@"StringEncoding": @(_encoding),
+		}];
 		CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:YES];
 		[controller addMessage:@{ @"message": messageData, @"type": @"message", @"notice": @(YES), @"user": self.connection.localUser }];
 	}
@@ -1022,33 +1131,37 @@ static BOOL showingKeyboard;
 	return NO;
 }
 
-- (BOOL) handleOnoticeCommandWithArguments:(NSString *) arguments {
-	if ([arguments hasPrefix:@"@"])
+- (BOOL) handleOnoticeCommandWithArguments:(MVChatString *) arguments {
+	if ([arguments.string hasPrefix:@"@"])
 		return [self handleNoticeCommandWithArguments:arguments];
-	return [self handleNoticeCommandWithArguments:[@"@" stringByAppendingString:arguments]];
+
+	NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"@"];
+	[attributedString appendAttributedString:arguments];
+	return [self handleNoticeCommandWithArguments:attributedString];
 }
 
-- (BOOL) handleQueryCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleQueryCommandWithArguments:(MVChatString *) arguments {
 	return [self handleMsgCommandWithArguments:arguments];
 }
 
-- (BOOL) handleClearCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleClearCommandWithArguments:(MVChatString *) arguments {
 	[self clearController];
 
 	return YES;
 }
 
-- (BOOL) handleMusicCommandWithArguments:(NSString *) arguments {
-	MPMusicPlayerController *musicController = [MPMusicPlayerController iPodMusicPlayer];
+- (BOOL) handleMusicCommandWithArguments:(MVChatString *) arguments {
+	MPMusicPlayerController *musicController = [MPMusicPlayerController systemMusicPlayer];
 	MPMediaItem *nowPlayingItem = musicController.nowPlayingItem;
 
-	if ([arguments isCaseInsensitiveEqualToString:@"next"] || [arguments isCaseInsensitiveEqualToString:@"skip"] || [arguments isCaseInsensitiveEqualToString:@"forward"]) 
+	NSString *argumentsString = arguments.string;
+	if ([argumentsString isCaseInsensitiveEqualToString:@"next"] || [argumentsString isCaseInsensitiveEqualToString:@"skip"] || [argumentsString isCaseInsensitiveEqualToString:@"forward"])
 		[musicController skipToNextItem];
-	else if ([arguments isCaseInsensitiveEqualToString:@"previous"] || [arguments isCaseInsensitiveEqualToString:@"back"]) 
+	else if ([argumentsString isCaseInsensitiveEqualToString:@"previous"] || [argumentsString isCaseInsensitiveEqualToString:@"back"])
 		[musicController skipToPreviousItem];
-	else if ([arguments isCaseInsensitiveEqualToString:@"stop"] || [arguments isCaseInsensitiveEqualToString:@"pause"])
+	else if ([argumentsString isCaseInsensitiveEqualToString:@"stop"] || [argumentsString isCaseInsensitiveEqualToString:@"pause"])
 		[musicController stop];
-	else if ([arguments isCaseInsensitiveEqualToString:@"play"] || [arguments isCaseInsensitiveEqualToString:@"resume"])
+	else if ([argumentsString isCaseInsensitiveEqualToString:@"play"] || [argumentsString isCaseInsensitiveEqualToString:@"resume"])
 		[musicController play];
 
 	if (arguments.length)
@@ -1073,24 +1186,24 @@ static BOOL showingKeyboard;
 		message = NSLocalizedString(@"is not currently listening to music.", @"Not listening to music message");
 	}
 
-	[self sendMessage:message asAction:YES];
+	[self sendMessage:[[NSAttributedString alloc] initWithString:message] asAction:YES];
 
 	return YES;
 }
 
-- (BOOL) handleIpodCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleIpodCommandWithArguments:(MVChatString *) arguments {
 	return [self handleMusicCommandWithArguments:arguments];
 }
 
-- (BOOL) handleItunesCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleItunesCommandWithArguments:(MVChatString *) arguments {
 	return [self handleMusicCommandWithArguments:arguments];
 }
 
-- (BOOL) handleNpCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleNpCommandWithArguments:(MVChatString *) arguments {
 	return [self handleMusicCommandWithArguments:arguments];
 }
 
-- (BOOL) handleSquitCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleSquitCommandWithArguments:(MVChatString *) arguments {
 	if (self.connection.directConnection)
 		return NO;
 
@@ -1099,12 +1212,12 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (BOOL) handleListCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleListCommandWithArguments:(MVChatString *) arguments {
 	CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
 	creationViewController.roomTarget = YES;
 	creationViewController.selectedConnection = self.connection;
 
-	[creationViewController showRoomListFilteredWithSearchString:arguments];
+	[creationViewController showRoomListFilteredWithSearchString:arguments.string];
 
 	[self _forceRegsignKeyboard];
 
@@ -1115,8 +1228,8 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (id) _findLocaleForQueryWithArguments:(NSString *) arguments {
-	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments];
+- (id) _findLocaleForQueryWithArguments:(MVChatString *) arguments {
+	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments.string];
 	[argumentsScanner setCharactersToBeSkipped:nil];
 
 	NSString *languageCode = nil;
@@ -1134,8 +1247,8 @@ static BOOL showingKeyboard;
 
 	NSString *query = nil;
 	if (arguments.length >= (argumentsScanner.scanLocation + 1))
-		query = [arguments substringWithRange:NSMakeRange(argumentsScanner.scanLocation + 1, (arguments.length - argumentsScanner.scanLocation - 1))];
-	else query = arguments;
+		query = [arguments.string substringWithRange:NSMakeRange(argumentsScanner.scanLocation + 1, (arguments.length - argumentsScanner.scanLocation - 1))];
+	else query = arguments.string;
 
 	[results addObject:languageCode];
 	[results addObject:query];
@@ -1155,7 +1268,7 @@ static BOOL showingKeyboard;
 	[self _openURL:url];
 }
 
-- (BOOL) handleGoogleCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleGoogleCommandWithArguments:(MVChatString *) arguments {
 	NSMutableArray *results = [self _findLocaleForQueryWithArguments:arguments];
 	NSString *languageCode = results[0];
 	NSString *query = results[1];
@@ -1165,7 +1278,7 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (BOOL) handleWikipediaCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleWikipediaCommandWithArguments:(MVChatString *) arguments {
 	NSArray *results = [self _findLocaleForQueryWithArguments:arguments];
 	NSString *languageCode = results[0];
 	NSString *query = results[1];
@@ -1175,7 +1288,7 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (BOOL) handleAmazonCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleAmazonCommandWithArguments:(MVChatString *) arguments {
 	NSArray *results = [self _findLocaleForQueryWithArguments:arguments];
 	NSString *languageCode = results[0];
 	NSString *query = results[1];
@@ -1197,7 +1310,7 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (BOOL) handleHelpCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleHelpCommandWithArguments:(MVChatString *) arguments {
 	[self _forceRegsignKeyboard];
 
 	[[CQColloquyApplication sharedApplication] showHelp:nil];
@@ -1205,13 +1318,13 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (BOOL) handleFaqCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleFaqCommandWithArguments:(MVChatString *) arguments {
 	[self handleHelpCommandWithArguments:arguments];
 
 	return YES;
 }
 
-- (BOOL) handleWelcomeCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleWelcomeCommandWithArguments:(MVChatString *) arguments {
 	[self _forceRegsignKeyboard];
 
 	[[CQColloquyApplication sharedApplication] showWelcome:nil];
@@ -1219,15 +1332,15 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (BOOL) handleSearchCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleSearchCommandWithArguments:(MVChatString *) arguments {
 	NSString *urlString = @"http://searchirc.com/search.php?F=partial&I=%@&T=both&N=all&M=min&C=5&PER=20";
 
-	[self _handleSearchForURL:urlString withQuery:arguments];
+	[self _handleSearchForURL:urlString withQuery:arguments.string];
 
 	return YES;
 }
 
-- (BOOL) handleTweetCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleTweetCommandWithArguments:(MVChatString *) arguments {
 	SLComposeViewController *composeViewController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
 	composeViewController.completionHandler = ^(SLComposeViewControllerResult result) { /* do nothing */ };
 	[self.navigationController presentViewController:composeViewController animated:YES completion:NULL];
@@ -1235,7 +1348,7 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (BOOL) handleSysinfoCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleSysinfoCommandWithArguments:(MVChatString *) arguments {
 	NSString *version = [[CQSettingsController settingsController] stringForKey:@"CQCurrentVersion"];
 	NSString *orientation = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? NSLocalizedString(@"landscape", @"landscape orientation") : NSLocalizedString(@"portrait", @"portrait orientation");
 	NSString *model = [UIDevice currentDevice].localizedModel;
@@ -1279,16 +1392,22 @@ static BOOL showingKeyboard;
 	else message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %d processors, %@ RAM and a system uptime of %@.", @"System info message"), version, orientation, model, systemVersion, processorsInTotal, systemMemory, systemUptime];
 	[UIDevice currentDevice].batteryMonitoringEnabled = batteryMonitoringEnabled;
 
-	[self sendMessage:message asAction:YES];
+	[self sendMessage:[[NSAttributedString alloc] initWithString:message] asAction:YES];
 
 	return YES;
 }
 
+- (void) handleZncCommandWithArguments:(MVChatString *) arguments {
+	NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"*status "];
+	[attributedString appendAttributedString:arguments];
+	[self handleMsgCommandWithArguments:attributedString];
+}
+
 #pragma mark -
 
-- (BOOL) handleWhoisCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleWhoisCommandWithArguments:(MVChatString *) arguments {
 	if (arguments.length) {
-		NSString *nick = [arguments componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]][0];
+		NSString *nick = [arguments.string componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]][0];
 		[self _showUserInfoControllerForUserNamed:nick];
 	} else if (self.user) {
 		[self _showUserInfoControllerForUser:self.user];
@@ -1299,16 +1418,16 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (BOOL) handleWiCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleWiCommandWithArguments:(MVChatString *) arguments {
 	return [self handleWhoisCommandWithArguments:arguments];
 }
 
-- (BOOL) handleWiiCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleWiiCommandWithArguments:(MVChatString *) arguments {
 	return [self handleWhoisCommandWithArguments:arguments];
 }
 
 #if ENABLE(FILE_TRANSFERS)
-- (BOOL) handleDccCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleDccCommandWithArguments:(MVChatString *) arguments {
 	if (!arguments.length)
 		return NO;
 
@@ -1322,31 +1441,32 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (BOOL) handleIgnoreCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleIgnoreCommandWithArguments:(MVChatString *) arguments {
 	KAIgnoreRule *ignoreRule = nil;
 
-	if (arguments.isValidIRCMask)
-		ignoreRule = [KAIgnoreRule ruleForUser:nil mask:arguments message:nil inRooms:nil isPermanent:YES friendlyName:nil];
-	else ignoreRule = [KAIgnoreRule ruleForUser:arguments mask:nil message:nil inRooms:nil isPermanent:YES friendlyName:nil];
+	NSString *argumentsString = arguments.string;
+	if (argumentsString.isValidIRCMask)
+		ignoreRule = [KAIgnoreRule ruleForUser:nil mask:argumentsString message:nil inRooms:nil isPermanent:YES friendlyName:nil];
+	else ignoreRule = [KAIgnoreRule ruleForUser:argumentsString mask:nil message:nil inRooms:nil isPermanent:YES friendlyName:nil];
 
 	[self.connection.ignoreController addIgnoreRule:ignoreRule];
 
 	return YES;
 }
 
-- (BOOL) handleUnignoreCommandWithArguments:(NSString *) arguments {
-	[self.connection.ignoreController removeIgnoreRuleFromString:arguments];
+- (BOOL) handleUnignoreCommandWithArguments:(MVChatString *) arguments {
+	[self.connection.ignoreController removeIgnoreRuleFromString:arguments.string];
 
 	return YES;
 }
 
 #pragma mark -
 
-- (BOOL) handleTokenCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleTokenCommandWithArguments:(MVChatString *) arguments {
 #if !TARGET_IPHONE_SIMULATOR
 	if (![CQColloquyApplication sharedApplication].deviceToken.length) {
 		_showDeviceTokenWhenRegistered = YES;
-		[[CQColloquyApplication sharedApplication] registerForRemoteNotifications];
+		[[CQColloquyApplication sharedApplication] registerForPushNotifications];
 		return YES;
 	}
 
@@ -1359,7 +1479,7 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (void) handleResetbadgeCommandWithArguments:(NSString *) arguments {
+- (void) handleResetbadgeCommandWithArguments:(MVChatString *) arguments {
 	[CQColloquyApplication sharedApplication].applicationIconBadgeNumber = 0;
 }
 
@@ -1372,7 +1492,20 @@ static BOOL showingKeyboard;
 	BOOL shiftKeyPressed = (command.modifierFlags & UIKeyModifierShift) == UIKeyModifierShift;
 	BOOL commandKeyPressed = (command.modifierFlags & UIKeyModifierCommand) == UIKeyModifierCommand;
 
-	if ([command.input isEqualToString:@"\t"]) {
+	if ([command.input isEqualToString:@"c"]) {
+		if (commandKeyPressed && shiftKeyPressed)
+			[self style:nil];
+	} else if ([command.input isEqualToString:@"j"]) {
+		if (commandKeyPressed)
+			[self handleJoinCommandWithArguments:nil];
+	} else if ([command.input isEqualToString:@"k"]) {
+		if (commandKeyPressed && shiftKeyPressed)
+			[self clearController];
+	} else if ([command.input isEqualToString:@"n"]) {
+		if (commandKeyPressed && !shiftKeyPressed)
+			[[CQConnectionsController defaultController] showConnectionCreationView:nil];
+		else [self handleJoinCommandWithArguments:nil];
+	} else if ([command.input isEqualToString:@"\t"]) {
 		if (optKeyPressed) {
 			if (shiftKeyPressed)
 				nextViewController = [[CQChatOrderingController defaultController] chatViewControllerPreceedingChatController:self requiringActivity:NO requiringHighlight:NO];
@@ -1384,6 +1517,9 @@ static BOOL showingKeyboard;
 	} else if ([command.input isEqualToString:UIKeyInputDownArrow]) {
 		if (commandKeyPressed)
 			nextViewController = [[CQChatOrderingController defaultController] chatViewControllerFollowingChatController:self requiringActivity:optKeyPressed requiringHighlight:NO];
+	} else if ([command.input isEqualToString:UIKeyInputEscape]) {
+		[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
+		[[CQColloquyApplication sharedApplication] dismissPopoversAnimated:YES];
 	}
 
 	if (nextViewController)
@@ -1416,8 +1552,13 @@ static BOOL showingKeyboard;
 		else nextViewController = [[CQChatOrderingController defaultController] chatViewControllerPreceedingChatController:self requiringActivity:NO requiringHighlight:YES];
 	} else return;
 
-	if (nextViewController)
-		[[CQChatController defaultController] showChatController:nextViewController animated:NO];
+	if (nextViewController) {
+		NSMutableArray *viewStack = [self.navigationController.viewControllers mutableCopy];
+		[viewStack removeLastObject];
+		[viewStack addObject:nextViewController];
+
+		self.navigationController.viewControllers = viewStack;
+	}
 }
 
 - (BOOL) transcriptView:(id) transcriptView handleOpenURL:(NSURL *) url {
@@ -1491,6 +1632,16 @@ static BOOL showingKeyboard;
 	[transcriptView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setScrollbackLimit(%tu)", scrollbackLength] completionHandler:NULL];
 }
 
+- (void) setMostRecentIncomingMessageTimestamp:(NSDate *) date {
+	if( !_mostRecentIncomingMessageTimestamp || [date laterDate:_mostRecentIncomingMessageTimestamp] == date)
+		MVSafeCopyAssign( _mostRecentIncomingMessageTimestamp, date );
+}
+
+- (void) setMostRecentOutgoingMessageTimestamp:(NSDate *) date {
+	if( !_mostRecentOutgoingMessageTimestamp || [date laterDate:_mostRecentOutgoingMessageTimestamp] == date)
+		MVSafeCopyAssign( _mostRecentOutgoingMessageTimestamp, date );
+}
+
 #pragma mark -
 
 - (void) keyboardWillShow:(NSNotification *) notification {
@@ -1500,6 +1651,7 @@ static BOOL showingKeyboard;
 		return;
 
 	CGRect keyboardRect = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+	keyboardRect = [self.view.window convertRect:keyboardRect toView:self.view];
 
 	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
@@ -1537,15 +1689,102 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (void) sendMessage:(NSString *) message asAction:(BOOL) action {
+- (void) sendMessage:(MVChatString *) message asAction:(BOOL) action {
 	[_target sendMessage:message withEncoding:self.encoding asAction:action];
 
 	[_sentMessages addObject:@{ @"message": message, @"action": @(action) }];
 	while (_sentMessages.count > 10)
 		[_sentMessages removeObjectAtIndex:0];
 
-	NSData *messageData = [message dataUsingEncoding:self.encoding allowLossyConversion:YES];
+	NSData *messageData = [message chatFormatWithOptions:@{
+		@"FormatType": NSChatWindowsIRCFormatType,
+		@"StringEncoding": @(_encoding),
+	}];
 	[self addMessage:messageData fromUser:self.connection.localUser asAction:action withIdentifier:[NSString locallyUniqueString]];
+}
+
+- (BOOL) _sendText:(MVChatString *) text {
+	BOOL didSendText = NO;
+	for (__strong NSAttributedString *line in [text cq_componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]) {
+		line = [line cq_stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+		if (line.length)
+			didSendText = [self _sendLineOfText:line] || didSendText; // send text first to not short-circuit and stop
+	}
+	return didSendText;
+}
+
+- (BOOL ) _sendLineOfText:(MVChatString *) text {
+	NSString *argumentString = text.string;
+	if ([argumentString hasPrefix:@"/"] && ![argumentString hasPrefix:@"//"] && argumentString.length > 1) {
+		static NSSet *commandsNotRequiringConnection;
+		if (!commandsNotRequiringConnection)
+			commandsNotRequiringConnection = [[NSSet alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"safari", @"browser", @"url", @"clear", @"help", @"faq", @"search", @"list", @"join", @"welcome", @"token", @"resetbadge", @"tweet", @"aquit", @"anick", @"aaway", nil];
+
+		// Send as a command.
+		NSScanner *scanner = [NSScanner scannerWithString:argumentString];
+		[scanner setCharactersToBeSkipped:nil];
+
+		NSString *command = nil;
+		NSAttributedString *arguments = nil;
+
+		scanner.scanLocation = 1; // Skip the "/" prefix.
+
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&command];
+		if (!self.available && ([command isCaseInsensitiveEqualToString:@"me"] || [command isCaseInsensitiveEqualToString:@"msg"] || [command isCaseInsensitiveEqualToString:@"say"])) {
+			[self _showCantSendMessagesWarningForCommand:NO];
+			return NO;
+		}
+
+		if (!self.connection.connected && ![commandsNotRequiringConnection containsObject:[command lowercaseString]]) {
+			[self _showCantSendMessagesWarningForCommand:YES];
+			return NO;
+		}
+
+		[scanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] maxLength:1 intoString:NULL];
+
+		arguments = [text attributedSubstringFromIndex:scanner.scanLocation];
+
+		NSString *commandSelectorString = [NSString stringWithFormat:@"handle%@CommandWithArguments:", [command capitalizedString]];
+		SEL commandSelector = NSSelectorFromString(commandSelectorString);
+
+		BOOL handled = NO;
+		if ([self respondsToSelector:commandSelector])
+			handled = ((BOOL (*)(id, SEL, NSAttributedString *))objc_msgSend)(self, commandSelector, arguments);
+
+		if (!handled) [_target sendCommand:command withArguments:arguments withEncoding:self.encoding];
+	} else {
+		if (!self.available) {
+			[self _showCantSendMessagesWarningForCommand:NO];
+			return NO;
+		}
+
+		// Send as a message, strip the first forward slash if it exists.
+		if ([argumentString hasPrefix:@"/"] && argumentString.length > 1)
+			text = [text attributedSubstringFromIndex:1];
+
+		__block BOOL action = NO;
+
+		if (naturalChatActions && !action) {
+			static NSSet *actionVerbs;
+			if (!actionVerbs) {
+				NSArray *verbs = [[NSArray alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]];
+				actionVerbs = [[NSSet alloc] initWithArray:verbs];
+			}
+
+			NSScanner *scanner = [[NSScanner alloc] initWithString:argumentString];
+			scanner.charactersToBeSkipped = nil;
+
+			NSString *word = nil;
+			[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&word];
+
+			if ([actionVerbs containsObject:word])
+				action = YES;
+		}
+
+		[self sendMessage:text asAction:action];
+	}
+	
+	return YES;
 }
 
 #pragma mark -
@@ -1563,6 +1802,7 @@ static BOOL showingKeyboard;
 }
 
 - (void) addEventMessageAsHTML:(NSString *) messageString withIdentifier:(NSString *) identifier announceWithVoiceOver:(BOOL) announce {
+	if (!identifier.length) identifier = @"";
 	NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
 
 	message[@"type"] = @"event";
@@ -1572,7 +1812,7 @@ static BOOL showingKeyboard;
 
 	[self _addPendingComponent:message];
 
-	if (announce && [self _canAnnounceWithVoiceOverAndMessageIsImportant:NO]) {
+	if (announce && [self canAnnounceWithVoiceOverAndMessageIsImportant:NO]) {
 		NSString *voiceOverAnnouncement = nil;
 		NSString *plainMessage = [messageString stringByStrippingXMLTags];
 		plainMessage = [plainMessage stringByDecodingXMLSpecialCharacterEntities];
@@ -1588,7 +1828,7 @@ static BOOL showingKeyboard;
 - (void) addMessage:(NSData *) messageData fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier {
 	NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
 
-	if (message) message[@"message"] = messageData;
+	if (messageData) message[@"message"] = messageData;
 	if (user) message[@"user"] = user;
 	if (identifier) message[@"identifier"] = identifier;
 	message[@"action"] = @(action);
@@ -1724,7 +1964,7 @@ static BOOL showingKeyboard;
 }
 
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
-	UIAlertView *alert = [[UIAlertView alloc] init];
+	UIAlertView *alert = [[CQAlertView alloc] init];
 	alert.delegate = self;
 	alert.tag = CantSendMessageAlertView;
 
@@ -1756,14 +1996,14 @@ static BOOL showingKeyboard;
 		_encoding = [[CQSettingsController settingsController] integerForKey:@"CQDirectChatEncoding"];
 
 	NSString *chatTranscriptFontSizeString = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFontSize"];
-	NSUInteger chatTranscriptFontSize = 0; // Default is 14px
+	NSUInteger chatTranscriptFontSize = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize;
 
-	if ([[CQSettingsController settingsController] boolForKey:@"CQUseDynamicType"]) {
-		chatTranscriptFontSize = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize - 2.0;
-	} else {
-		if ([[UIDevice currentDevice] isPadModel]) {
+	const float CQDefaultDynamicTypeFontSize = 17.;
+
+	if (chatTranscriptFontSize == CQDefaultDynamicTypeFontSize) {
+		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
 			if (!chatTranscriptFontSizeString.length) {
-				// Default size, do nothing
+				chatTranscriptFontSize = 14; // default
 			} else if ([chatTranscriptFontSizeString isEqualToString:@"smallest"])
 				chatTranscriptFontSize = 8;
 			else if ([chatTranscriptFontSizeString isEqualToString:@"smaller"])
@@ -1778,7 +2018,7 @@ static BOOL showingKeyboard;
 				chatTranscriptFontSize = 20;
 		} else {
 			if (!chatTranscriptFontSizeString.length) {
-				// Default size, do nothing
+				chatTranscriptFontSize = 14; // default
 			} else if ([chatTranscriptFontSizeString isEqualToString:@"smallest"])
 				chatTranscriptFontSize = 11;
 			else if ([chatTranscriptFontSizeString isEqualToString:@"smaller"])
@@ -1842,6 +2082,14 @@ static BOOL showingKeyboard;
 	[self.connection addChatUserWatchRule:_watchRule];
 }
 
+- (void) _willTerminate {
+	[_target persistLastActivityDate];
+}
+
+- (void) _resignActive {
+	[_target persistLastActivityDate];
+}
+
 - (void) _didEnterBackground {
 	[self markScrollback];
 }
@@ -1862,7 +2110,7 @@ static BOOL showingKeyboard;
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 }
 
 - (void) _willConnect:(NSNotification *) notification {
@@ -1880,6 +2128,9 @@ static BOOL showingKeyboard;
 	[self addEventMessage:NSLocalizedString(@"Disconnected from the server.", "Disconnect from the server event message") withIdentifier:@"disconnected"];
 
 	[self _updateRightBarButtonItemAnimated:YES];
+
+	if (_active)
+		[_target setMostRecentUserActivity:[NSDate date]];
 }
 
 - (void) _didRecieveDeviceToken:(NSNotification *) notification {
@@ -1890,7 +2141,7 @@ static BOOL showingKeyboard;
 - (void) _awayStatusChanged:(NSNotification *) notification {
 	if (self.connection.awayStatusMessage.length) {
 		NSString *eventMessageFormat = [NSLocalizedString(@"You have set yourself as away with the message \"%@\".", "Marked as away event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, self.connection.awayStatusMessage] withIdentifier:@"awaySet"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, self.connection.awayStatusMessage.string] withIdentifier:@"awaySet"];
 	} else {
 		[self addEventMessage:NSLocalizedString(@"You have returned from being away.", "Returned from being away event message") withIdentifier:@"awayRemoved"];
 	}
@@ -1903,8 +2154,7 @@ static BOOL showingKeyboard;
 	UIBarButtonItem *item = nil;
 
 	if (self.connection.connected) {
-        BOOL isPadModel = [[UIDevice currentDevice] isPadModel]; 
-		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:isPadModel ? @"info-large.png" : @"info.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserInformation)];
+		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"infoButton.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserInformation)];
 		item.accessibilityLabel = NSLocalizedString(@"User Information", @"Voiceover user information label"); 
 	} else {
 		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", "Connect button title") style:UIBarButtonItemStyleDone target:self.connection action:@selector(connect)];
@@ -1913,7 +2163,7 @@ static BOOL showingKeyboard;
 
 	[self.navigationItem setRightBarButtonItem:item animated:animated];
 
-	if (_active && [[UIDevice currentDevice] isPadModel])
+	if (_active && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
 		[[CQChatController defaultController].chatPresentationController updateToolbarAnimated:YES];
 
 }
@@ -1965,6 +2215,37 @@ static BOOL showingKeyboard;
 
 }
 
+- (void) _batchUpdatesWillBegin:(NSNotification *) notification {
+	NSString *type = notification.userInfo[@"type"];
+	NSString *identifier = notification.userInfo[@"identifier"];
+
+	if ([type isCaseInsensitiveEqualToString:@"znc.in/playback"] || [type hasCaseInsensitiveSubstring:@"playback"]) {
+		_coalescePendingUpdates = YES;
+
+		NSMutableArray *associatedBatches = _batchTypeAssociation[@(CQBatchTypeBuffer)];
+		if (!associatedBatches)
+			_batchTypeAssociation[@(CQBatchTypeBuffer)] = [NSMutableArray array];
+		[associatedBatches addObject:identifier];
+
+	} // don't do anything on unknown batch types
+}
+
+- (void) _batchUpdatesDidEnd:(NSNotification *) notification {
+	NSString *type = notification.userInfo[@"type"];
+	NSString *identifier = notification.userInfo[@"identifier"];
+
+	if ([type isCaseInsensitiveEqualToString:@"znc.in/playback"] || [type hasCaseInsensitiveSubstring:@"playback"]) {
+		NSMutableArray *associatedBatches = _batchTypeAssociation[@(CQBatchTypeBuffer)];
+		[associatedBatches removeObject:identifier];
+		if (associatedBatches.count == 0) {
+			[_batchTypeAssociation removeObjectForKey:@(CQBatchTypeBuffer)];
+			_coalescePendingUpdates = NO;
+
+			[self _addPendingComponentsAnimated:YES];
+		}
+	} // don't do anything on unknown batch types
+}
+
 - (void) _addPendingComponent:(id) component {
 	if (!_pendingComponents)
 		_pendingComponents = [[NSMutableArray alloc] init];
@@ -1973,13 +2254,13 @@ static BOOL showingKeyboard;
 
 	[_pendingComponents addObject:component];
 
-	while (_pendingComponents.count > 300)
+	while (_pendingComponents.count > scrollbackLength)
 		[_pendingComponents removeObjectAtIndex:0];
 
 	BOOL active = _active;
 	active &= ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
 
-	if (!transcriptView || !active)
+	if (!transcriptView || !active || _coalescePendingUpdates)
 		return;
 
 	if (!hadPendingComponents) {
@@ -1994,7 +2275,7 @@ static BOOL showingKeyboard;
 }
 
 - (void) _addPendingComponentsAnimated:(BOOL) animated {
-	if (!_pendingComponents.count)
+	if (!_pendingComponents.count || _coalescePendingUpdates)
 		return;
 
 	[transcriptView addComponents:_pendingComponents animated:animated];
@@ -2002,7 +2283,7 @@ static BOOL showingKeyboard;
 	[_pendingComponents removeAllObjects];
 }
 
-- (BOOL) _canAnnounceWithVoiceOverAndMessageIsImportant:(BOOL) important {
+- (BOOL) canAnnounceWithVoiceOverAndMessageIsImportant:(BOOL) important {
 	id visibleChatController = [CQChatController defaultController].visibleChatController;
 	if (!important && visibleChatController && visibleChatController != self)
 		return NO;
@@ -2024,11 +2305,17 @@ static BOOL showingKeyboard;
 		if (highlighted) ++_unreadHighlightedMessages;
 		else ++_unreadMessages;
 
-		[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 
 		if (self.user || highlighted)
 			++[CQChatController defaultController].totalImportantUnreadCount;
 	}
+
+	if (user.isLocalUser)
+		self.mostRecentOutgoingMessageTimestamp = message[@"time"] ?: [NSDate date];
+	else self.mostRecentIncomingMessageTimestamp = message[@"time"] ?: [NSDate date];
+
+	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerHandledMessageNotification object:self];
 
 	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
 
@@ -2068,7 +2355,7 @@ static BOOL showingKeyboard;
 			[self _showLocalNotificationForMessage:message withSoundName:highlightSound.soundName];
 	}
 
-	if (!user.localUser && [self _canAnnounceWithVoiceOverAndMessageIsImportant:(directChat || highlighted)]) {
+	if (!user.localUser && [self canAnnounceWithVoiceOverAndMessageIsImportant:(directChat || highlighted)]) {
 		NSString *voiceOverAnnouncement = nil;
 
 		if (action) {
@@ -2104,19 +2391,17 @@ static BOOL showingKeyboard;
 	[self _addPendingComponent:message];
 
 	if (!user.localUser)
-		[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
+		[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
 
-	[operation.processedMessageInfo[CQInlineGIFImageKey] enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
-		CQIntroductoryGIFFrameOperation *GIFOperation = [[CQIntroductoryGIFFrameOperation alloc] initWithURL:object];
-		GIFOperation.userInfo = @{ @"id": key };
-		GIFOperation.target = self;
-		GIFOperation.action = @selector(_GIFProcessed:);
-
-		[[CQDirectChatController chatMessageProcessingQueue] addOperation:GIFOperation];
-	}];
+//	[operation.processedMessageInfo[CQInlineGIFImageKey] enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
+//		CQIntroductoryGIFFrameOperation *GIFOperation = [[CQIntroductoryGIFFrameOperation alloc] initWithURL:object];
+//		GIFOperation.userInfo = @{ @"id": key };
+//		GIFOperation.target = self;
+//		GIFOperation.action = @selector(_GIFProcessed:);
+//
+//		[[CQDirectChatController chatMessageProcessingQueue] addOperation:GIFOperation];
+//	}];
 }
-
-
 
 - (void) _GIFProcessed:(CQIntroductoryGIFFrameOperation *) operation {
 	NSString *base64Encoding = operation.introductoryFrameImageData.base64Encoding;

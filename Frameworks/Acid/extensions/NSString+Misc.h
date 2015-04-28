@@ -25,7 +25,7 @@
 #import <Foundation/NSString.h>
 
 @interface NSString (AcidExtensions)
-- (id)initWithUTF8String:(const char *)bytes length:(unsigned)length;
-- (id)initWithUTF8StringNoCopy:(char*)bytes length:(unsigned)length
+- (id)initWithUTF8String:(const char *)bytes length:(NSUInteger)length;
+- (id)initWithUTF8StringNoCopy:(char*)bytes length:(NSUInteger)length
     freeWhenDone:(BOOL)free;
 @end

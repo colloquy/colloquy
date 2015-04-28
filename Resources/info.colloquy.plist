@@ -326,27 +326,27 @@
 	<key>cc.javelin.colloquy.style.standardWebKitDefaultFontSize</key>
 	<integer>11</integer>
 	<key>cc.javelin.colloquy.style.standardWebKitFixedFont</key>
-	<string>Lucida Grande</string>
+	<string>Helvetica Neue</string>
 	<key>cc.javelin.colloquy.style.standardWebKitMinimumFontSize</key>
 	<integer>9</integer>
 	<key>cc.javelin.colloquy.style.standardWebKitSansSerifFont</key>
-	<string>Lucida Grande</string>
+	<string>Helvetica Neue</string>
 	<key>cc.javelin.colloquy.style.standardWebKitSerifFont</key>
-	<string>Lucida Grande</string>
+	<string>Helvetica Neue</string>
 	<key>cc.javelin.colloquy.style.standardWebKitStandardFont</key>
-	<string>Lucida Grande</string>
+	<string>Helvetica Neue</string>
 	<key>WebKitDefaultFontSize</key>
 	<integer>11</integer>
 	<key>WebKitFixedFont</key>
-	<string>Lucida Grande</string>
+	<string>Helvetica Neue</string>
 	<key>WebKitMinimumFontSize</key>
 	<integer>9</integer>
 	<key>WebKitSansSerifFont</key>
-	<string>Lucida Grande</string>
+	<string>Helvetica Neue</string>
 	<key>WebKitSerifFont</key>
-	<string>Lucida Grande</string>
+	<string>Helvetica Neue</string>
 	<key>WebKitStandardFont</key>
-	<string>Lucida Grande</string>
+	<string>Helvetica Neue</string>
 	<key>WebKitJavaScriptEnabled</key>
 	<true/>
 	<key>NSColorPanelMode</key>

@@ -40,7 +40,7 @@ static inline void markArchitectureAsActiveForCPUType(MVArchitectures *architect
 }
 }
 
-static inline void swapIntsInHeader(uint8_t *bytes, ssize_t length) {
+static inline void swapIntsInHeader(uint32_t *bytes, ssize_t length) {
 	for (ssize_t i = 0; i < length; i += 4)
 		*(uint32_t *)(bytes + i) = OSSwapInt32(*(uint32_t *)(bytes + i));
 }
@@ -61,7 +61,7 @@ static inline void swapIntsInHeader(uint8_t *bytes, ssize_t length) {
 	}
 
 	if (data.length >= sizeof(struct mach_header_64)) {
-		uint8_t *bytes = (void *)[data bytes];
+		uint32_t *bytes = (void *)[data bytes];
 		uint32_t magic = *(uint32_t *)bytes;
 
 		if (magic == MH_MAGIC || magic == MH_CIGAM) { // 32-bit, thin

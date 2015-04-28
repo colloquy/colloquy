@@ -11,7 +11,7 @@
 #endif
 
 @implementation JVFScriptPluginLoader
-- (id) initWithManager:(MVChatPluginManager *) manager {
+- (instancetype) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [super init] ) ) {
 		_manager = manager;
 		_fscriptInstalled = ( NSClassFromString( @"FSInterpreter" ) ? YES : NO );
@@ -38,7 +38,7 @@
 		}
 
 		NSArray *args = [[[arguments string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
-		NSString *subcmd = ( [args count] ? [args objectAtIndex:0] : nil );
+		NSString *subcmd = ( [args count] ? args[0] : nil );
 		if( [args count] == 1 ) {
 			if( view && ! [subcmd caseInsensitiveCompare:@"console"] ) {
 				JVFScriptConsolePanel *console = [[[JVFScriptConsolePanel alloc] init] autorelease];
@@ -75,7 +75,7 @@
 						} else if( ! [subcmd caseInsensitiveCompare:@"create"] ) {
 							path = [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"fscript"];
 							if( ! [path isAbsolutePath] )
-								path = [[[[_manager class] pluginSearchPaths] objectAtIndex:0] stringByAppendingPathComponent:path];
+								path = [[[_manager class] pluginSearchPaths][0] stringByAppendingPathComponent:path];
 							if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] ) {
 								if( [[NSFileManager defaultManager] createFileAtPath:path contents:[NSData data] attributes:nil] )
 									[[NSWorkspace sharedWorkspace] openFile:path];

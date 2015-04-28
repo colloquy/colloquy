@@ -10,7 +10,7 @@
 
 @interface NSAlert (NSAlertLeopard)
 - (void) setShowsSuppressionButton:(BOOL) flag;
-- (NSButton *) suppressionButton;
+@property (readonly, strong) NSButton *suppressionButton;
 @end
 
 @interface NSFileManager (NSFileManagerLeopard)
@@ -75,7 +75,7 @@ void PFMoveToApplicationsFolderIfNecessary(void)
 			if (![[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
 															  source:applicationsDirectory
 														 destination:@""
-															   files:[NSArray arrayWithObject:appBundleName]
+															   files:@[appBundleName]
 																 tag:NULL]) {
 				NSLog(@"ERROR -- Could not trash '%@'", destinationPath);
 				showFailureAlert();
@@ -94,7 +94,7 @@ void PFMoveToApplicationsFolderIfNecessary(void)
 		if (![[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
 														  source:[path stringByDeletingLastPathComponent]
 													 destination:@""
-														   files:[NSArray arrayWithObject:appBundleName]
+														   files:@[appBundleName]
 															 tag:NULL]) {
 			NSLog(@"ERROR -- Could not trash '%@'", path);
 			showFailureAlert();
@@ -106,9 +106,8 @@ void PFMoveToApplicationsFolderIfNecessary(void)
 		NSString *relaunchPath = [destinationPath stringByAppendingPathComponent:[NSString stringWithFormat:@"Contents/MacOS/%@", executableName]];
 		
 		[NSTask launchedTaskWithLaunchPath:relaunchPath
-								 arguments:[NSArray arrayWithObjects:destinationPath,
-											[NSString stringWithFormat:@"%d", [[NSProcessInfo processInfo] processIdentifier]],
-											nil]]; // The %d is not a 64-bit bug. The call to processIdentifier returns an int
+								 arguments:@[destinationPath,
+											[NSString stringWithFormat:@"%d", [[NSProcessInfo processInfo] processIdentifier]]]]; // The %d is not a 64-bit bug. The call to processIdentifier returns an int
 		[NSApp terminate:nil];
 	}
 	else {

@@ -30,13 +30,17 @@ NSString* JXML_SUB_GRANTED = @"/presence[@type='subscribed']";        // subscri
 NSString* JXML_SUB_CANCELED = @"/presence[@type='unsubscribed']";       // unsubscribed
 NSString* JXML_SUB_CANCEL_REQUEST = @"/presence[@type='unsubscribe']"; // unsubscribe
 
+@interface JabberSubscriptionRequest ()
++(instancetype) constructElement:(XMLQName*)qname withAttributes:(NSMutableDictionary*)atts withDefaultURI:(NSString*)default_uri NS_RETURNS_RETAINED;
+@end
+
 @implementation JabberSubscriptionRequest
 
-+(id) constructElement:(XMLQName*)qname withAttributes:(NSMutableDictionary*)atts withDefaultURI:(NSString*)default_uri
++(instancetype) constructElement:(XMLQName*)qname withAttributes:(NSMutableDictionary*)atts withDefaultURI:(NSString*)default_uri
 {
     if ([qname isEqual:JABBER_PRESENCE_QN])
     {
-        NSString* type = [atts objectForKey:JABBER_TYPE_ATTRIB_QN];
+        NSString* type = atts[JABBER_TYPE_ATTRIB_QN];
         if ([type isEqual:@"subscribe"] || [type isEqual:@"subscribed"] ||
             [type isEqual:@"unsubscribe"] || [type isEqual:@"unsubscribed"])
             return [[JabberSubscriptionRequest alloc] initWithQName:qname withAttributes:atts
@@ -48,7 +52,7 @@ NSString* JXML_SUB_CANCEL_REQUEST = @"/presence[@type='unsubscribe']"; // unsubs
         return nil;
 }
 
--(id) initWithRecipient:(JabberID*)jid
+-(instancetype) initWithRecipient:(JabberID*)jid
 {
     if (!(self = [super initWithQName:JABBER_PRESENCE_QN])) return nil;
 
@@ -73,10 +77,10 @@ NSString* JXML_SUB_CANCEL_REQUEST = @"/presence[@type='unsubscribe']"; // unsubs
 
     if(!PRESSUBTYPE) {
         PRESSUBTYPE = [[NSDictionary alloc] initWithObjectsAndKeys:
-            [NSNumber numberWithLong:JSUBSCRIBE], @"subscribe",
-            [NSNumber numberWithLong:JSUBSCRIBED], @"subscribed",
-            [NSNumber numberWithLong:JUNSUBSCRIBE], @"unsubscribed",
-            [NSNumber numberWithLong:JUNSUBSCRIBED], @"unsubscribed", nil];
+            @(JSUBSCRIBE), @"subscribe",
+            @(JSUBSCRIBED), @"subscribed",
+            @(JUNSUBSCRIBE), @"unsubscribed",
+            @(JUNSUBSCRIBED), @"unsubscribed", nil];
     }
 
     [_to release];
@@ -85,29 +89,9 @@ NSString* JXML_SUB_CANCEL_REQUEST = @"/presence[@type='unsubscribe']"; // unsubs
     _from    = [[JabberID alloc] initWithString:[self getAttribute:@"from"]];
     [_message release];
     _message = [[QRY_MESSAGE queryForString:self] retain];
-    _type    = [[PRESSUBTYPE objectForKey:[self getAttribute:@"type"]] longValue];
+    _type    = [PRESSUBTYPE[[self getAttribute:@"type"]] longValue];
 }
 
-
--(JabberSubscriptionType) type
-{
-    return _type;
-}
-
--(NSString*) message
-{
-    return _message;
-}
-
--(JabberID*) to
-{
-    return _to;
-}
-
--(JabberID*) from
-{
-    return _from;
-}
 
 -(JabberSubscriptionRequest*) grant
 {

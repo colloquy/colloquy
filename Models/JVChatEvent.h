@@ -1,47 +1,33 @@
 #import "JVChatTranscript.h"
 
-@interface JVChatEvent : NSObject <JVChatTranscriptElement> {
-	@protected
-	/* xmlNode */ void *_node;
-	/* xmlDoc */ void *_doc;
-	NSString *_eventIdentifier;
-	NSScriptObjectSpecifier *_objectSpecifier;
-	JVChatTranscript *_transcript;
-	NSDate *_date;
-	NSString *_name;
-	NSTextStorage *_message;
-	NSDictionary *_attributes;
-	BOOL _loadedMessage;
-	BOOL _loadedAttributes;
-	BOOL _loadedSmall;
-}
+@interface JVChatEvent : NSObject <JVChatTranscriptElement> 
 - (/* xmlNode */ void *) node;
 
-- (JVChatTranscript *) transcript;
-- (NSString *) eventIdentifier;
+@property (readonly, weak) JVChatTranscript *transcript;
+@property (readonly, copy) NSString *eventIdentifier;
 
-- (NSDate *) date;
-- (NSString *) name;
+@property (readonly, strong) NSDate *date;
+@property (readonly, copy) NSString *name;
 
 - (NSTextStorage *) message;
-- (NSString *) messageAsPlainText;
-- (NSString *) messageAsHTML;
+@property (readonly, copy) NSString *messageAsPlainText;
+@property (readonly, copy) NSString *messageAsHTML;
 
-- (NSDictionary *) attributes;
+@property (readonly, copy) NSDictionary *attributes;
 @end
 
 @interface JVMutableChatEvent : JVChatEvent
-+ (id) chatEventWithName:(NSString *) name andMessage:(id) message;
-- (id) initWithName:(NSString *) name andMessage:(id) message;
++ (instancetype) chatEventWithName:(NSString *) name andMessage:(id) message;
+- (instancetype) initWithName:(NSString *) name andMessage:(id) message;
 
-- (void) setDate:(NSDate *) date;
-- (void) setName:(NSString *) name;
+@property (readwrite, strong) NSDate *date;
+@property (readwrite, copy) NSString *name;
 
 - (void) setMessage:(id) message;
-- (void) setMessageAsPlainText:(NSString *) message;
-- (void) setMessageAsHTML:(NSString *) message;
+@property (readwrite, copy) NSString *messageAsPlainText;
+@property (readwrite, copy) NSString *messageAsHTML;
 
-- (void) setAttributes:(NSDictionary *) attributes;
+@property (readwrite, copy) NSDictionary *attributes;
 
-- (void) setEventIdentifier:(NSString *) identifier;
+@property (readwrite, copy) NSString *eventIdentifier;
 @end

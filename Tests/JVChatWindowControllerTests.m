@@ -1,12 +1,13 @@
 #import <Cocoa/Cocoa.h>
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import <AGRegex/AGRegex.h>
 #import <ChatCore/ChatCore.h>
 
 #import "JVChatWindowController.h"
 #import "JVDirectChatPanel.h"
 
-@interface JVTestChatViewController : NSObject <JVChatViewController> {
+@interface JVTestChatViewController : NSObject <JVChatViewController>
+{
 	JVChatWindowController *_windowController;
 	NSUInteger _newMessages;
 }
@@ -26,7 +27,7 @@
 }
 
 - (NSView *) view {
-	return [[[NSView alloc] init] autorelease];
+	return [[NSView alloc] init];
 }
 
 - (NSResponder *) firstResponder {
@@ -50,7 +51,7 @@
 }
 
 - (NSImage *) icon {
-	[NSImage imageNamed:@"room"];
+	return [NSImage imageNamed:@"roomIcon"];
 }
 
 - (NSString *) title {
@@ -64,9 +65,14 @@
 - (void) setNewMessagesWaiting:(NSUInteger) new {
 	_newMessages = new;
 }
+
+- (NSString *) toolbarIdentifier {
+	return @"It's a test";	
+}
 @end
 
-@interface JVChatWindowControllerTests : SenTestCase {
+@interface JVChatWindowControllerTests : XCTestCase
+{
 	JVChatWindowController *windowController;
 }
 @end
@@ -74,268 +80,254 @@
 @implementation JVChatWindowControllerTests
 - (void) setUp {
 	windowController = [[JVChatWindowController alloc] init];
-	STAssertNotNil( windowController, nil );
+	XCTAssertNotNil( windowController);
 }
 
 - (void) tearDown {
-	[windowController release];
 	windowController = nil;
 }
 
 - (void) testAddChatViewController {
 	id panel = [[JVTestChatViewController alloc] init];
-	STAssertNotNil( panel, nil );
+	XCTAssertNotNil( panel);
 
 	id panelTwo = [[JVTestChatViewController alloc] init];
-	STAssertNotNil( panelTwo, nil );
+	XCTAssertNotNil( panelTwo);
 
 	// there should no active panel
-	STAssertNil( [windowController activeChatViewController], nil );
-	STAssertNil( [windowController selectedListItem], nil );
+	XCTAssertNil( [windowController activeChatViewController]);
+	XCTAssertNil( [windowController selectedListItem]);
 
 	[windowController showWindow:nil];
 
 	// there should still be no active panel
-	STAssertNil( [windowController activeChatViewController], nil );
-	STAssertNil( [windowController selectedListItem], nil );
+	XCTAssertNil( [windowController activeChatViewController]);
+	XCTAssertNil( [windowController selectedListItem]);
 
 	[windowController addChatViewController:panel];
 
 	// panel should be the active panel
-	STAssertTrue( [panel isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panel isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 1, nil );
+	XCTAssertTrue( [panel isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panel isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 1);
 
 	[windowController addChatViewController:panelTwo];
 
 	// panel should still be the active panel after adding panelTwo
-	STAssertTrue( [panel isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panel isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 2, nil );
+	XCTAssertTrue( [panel isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panel isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 2);
 
 	// check duplicate add
-	STAssertThrows( [windowController addChatViewController:panelTwo], nil );
+	XCTAssertThrows( [windowController addChatViewController:panelTwo]);
 
 	// nothing should have changed
-	STAssertTrue( [panel isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panel isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 2, nil );
+	XCTAssertTrue( [panel isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panel isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 2);
 
 	// check nil add
-	STAssertThrows( [windowController addChatViewController:nil], nil );
+	XCTAssertThrows( [windowController addChatViewController:nil]);
 
 	// nothing should have changed
-	STAssertTrue( [panel isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panel isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 2, nil );
+	XCTAssertTrue( [panel isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panel isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 2);
 
-	[panel release];
-	[panelTwo release];
 }
 
 - (void) testInsertChatViewController {
 	[windowController showWindow:nil];
 
 	id panel = [[JVTestChatViewController alloc] init];
-	STAssertNotNil( panel, nil );
+	XCTAssertNotNil( panel);
 
 	id panelTwo = [[JVTestChatViewController alloc] init];
-	STAssertNotNil( panelTwo, nil );
+	XCTAssertNotNil( panelTwo);
 
 	id panelThree = [[JVTestChatViewController alloc] init];
-	STAssertNotNil( panelThree, nil );
+	XCTAssertNotNil( panelThree);
 
 	id panelFour = [[JVTestChatViewController alloc] init];
-	STAssertNotNil( panelFour, nil );
+	XCTAssertNotNil( panelFour);
 
 	[windowController insertChatViewController:panel atIndex:0];
 
 	// panel should be the active panel
-	STAssertTrue( [panel isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panel isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 1, nil );
+	XCTAssertTrue( [panel isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panel isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 1);
 
 	[windowController insertChatViewController:panelTwo atIndex:1];
 
 	// panel should still be the active panel
-	STAssertTrue( [panel isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panel isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 2, nil );
+	XCTAssertTrue( [panel isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panel isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 2);
 
 	[windowController insertChatViewController:panelThree atIndex:0];
 
 	// panel should still be the active panel
-	STAssertTrue( [panel isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panel isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 3, nil );
+	XCTAssertTrue( [panel isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panel isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 3);
 
 	// check index out of bounds
-	STAssertThrows( [windowController insertChatViewController:panelFour atIndex:4], nil );
+	XCTAssertThrows( [windowController insertChatViewController:panelFour atIndex:4]);
 
 	// nothing should have changed
-	STAssertTrue( [panel isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panel isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 3, nil );
+	XCTAssertTrue( [panel isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panel isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 3);
 
 	// check duplicate insert
-	STAssertThrows( [windowController insertChatViewController:panelThree atIndex:0], nil );
+	XCTAssertThrows( [windowController insertChatViewController:panelThree atIndex:0]);
 
 	// nothing should have changed
-	STAssertTrue( [panel isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panel isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 3, nil );
+	XCTAssertTrue( [panel isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panel isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 3);
 
 	// check nil insert
-	STAssertThrows( [windowController insertChatViewController:nil atIndex:0], nil );
+	XCTAssertThrows( [windowController insertChatViewController:nil atIndex:0]);
 
 	// nothing should have changed
-	STAssertTrue( [panel isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panel isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 3, nil );
+	XCTAssertTrue( [panel isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panel isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 3);
 
-	[panel release];
-	[panelTwo release];
-	[panelThree release];
-	[panelFour release];
 }
 
 - (void) testRemoveChatViewController {
 	[windowController showWindow:nil];
 
 	id panel = [[JVTestChatViewController alloc] init];
-	STAssertNotNil( panel, nil );
+	XCTAssertNotNil( panel);
 
 	id panelTwo = [[JVTestChatViewController alloc] init];
-	STAssertNotNil( panelTwo, nil );
+	XCTAssertNotNil( panelTwo);
 
 	id panelThree = [[JVTestChatViewController alloc] init];
-	STAssertNotNil( panelThree, nil );
+	XCTAssertNotNil( panelThree);
 
 	[windowController insertChatViewController:panel atIndex:0];
 	[windowController insertChatViewController:panelTwo atIndex:1];
 	[windowController insertChatViewController:panelThree atIndex:2];
 
 	// panel should be the active panel
-	STAssertTrue( [panel isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panel isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 3, nil );
+	XCTAssertTrue( [panel isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panel isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 3);
 
 	[windowController removeChatViewController:panel];
 
 	// panelTwo should now be the active panel
-	STAssertTrue( [panelTwo isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panelTwo isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 2, nil );
+	XCTAssertTrue( [panelTwo isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panelTwo isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 2);
 
 	[windowController removeChatViewController:panelThree];
 
 	// panelTwo should still be the active panel
-	STAssertTrue( [panelTwo isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panelTwo isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 1, nil );
+	XCTAssertTrue( [panelTwo isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panelTwo isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 1);
 
 	// check nil remove
-	STAssertThrows( [windowController removeChatViewController:nil], nil );
+	XCTAssertThrows( [windowController removeChatViewController:nil]);
 
 	// nothing should have changed
-	STAssertTrue( [panelTwo isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panelTwo isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 1, nil );
+	XCTAssertTrue( [panelTwo isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panelTwo isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 1);
 
 	// check duplicate remove
-	STAssertThrows( [windowController removeChatViewController:panelThree], nil );
+	XCTAssertThrows( [windowController removeChatViewController:panelThree]);
 
 	// nothing should have changed
-	STAssertTrue( [panelTwo isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panelTwo isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 1, nil );
+	XCTAssertTrue( [panelTwo isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panelTwo isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 1);
 
 	[windowController removeAllChatViewControllers];
 
 	// there should be no active panel
-	STAssertNil( [windowController activeChatViewController], nil );
-	STAssertNil( [windowController activeChatViewController], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 0, nil );
-
-	[panel release];
-	[panelTwo release];
-	[panelThree release];
+	XCTAssertNil( [windowController activeChatViewController]);
+	XCTAssertNil( [windowController activeChatViewController]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 0);
 }
 
 - (void) testSelectChatViewController {
 	[windowController showWindow:nil];
 
 	id panel = [[JVTestChatViewController alloc] init];
-	STAssertNotNil( panel, nil );
+	XCTAssertNotNil( panel);
 
 	id panelTwo = [[JVTestChatViewController alloc] init];
-	STAssertNotNil( panelTwo, nil );
+	XCTAssertNotNil( panelTwo);
 
 	id panelThree = [[JVTestChatViewController alloc] init];
-	STAssertNotNil( panelThree, nil );
+	XCTAssertNotNil( panelThree);
 
 	[windowController insertChatViewController:panel atIndex:0];
 	[windowController insertChatViewController:panelTwo atIndex:1];
 	[windowController insertChatViewController:panelThree atIndex:2];
 
 	// panel should be the active panel
-	STAssertTrue( [panel isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panel isEqual:[windowController selectedListItem]], nil );
-	STAssertTrue( [[windowController allChatViewControllers] count] == 3, nil );
+	XCTAssertTrue( [panel isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panel isEqual:[windowController selectedListItem]]);
+	XCTAssertTrue( [[windowController allChatViewControllers] count] == 3);
 
 	[windowController showChatViewController:panelTwo];
 
 	// panelTwo should now be the active panel
-	STAssertTrue( [panelTwo isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panelTwo isEqual:[windowController selectedListItem]], nil );
+	XCTAssertTrue( [panelTwo isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panelTwo isEqual:[windowController selectedListItem]]);
 
 	[windowController selectNextPanel:nil];
 
 	// panelThree should now be the active panel
-	STAssertTrue( [panelThree isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panelThree isEqual:[windowController selectedListItem]], nil );
+	XCTAssertTrue( [panelThree isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panelThree isEqual:[windowController selectedListItem]]);
 
 	[windowController selectPreviousPanel:nil];
 
 	// panelTwo should now be the active panel
-	STAssertTrue( [panelTwo isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panelTwo isEqual:[windowController selectedListItem]], nil );
+	XCTAssertTrue( [panelTwo isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panelTwo isEqual:[windowController selectedListItem]]);
 
 	[windowController showChatViewController:panel];
 
 	// panel should now be the active panel
-	STAssertTrue( [panel isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panel isEqual:[windowController selectedListItem]], nil );
+	XCTAssertTrue( [panel isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panel isEqual:[windowController selectedListItem]]);
 
 	[windowController selectPreviousPanel:nil];
 
 	// panelThree should now be the active panel (it should loop to the end)
-	STAssertTrue( [panelThree isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panelThree isEqual:[windowController selectedListItem]], nil );
+	XCTAssertTrue( [panelThree isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panelThree isEqual:[windowController selectedListItem]]);
 
 	[windowController selectNextPanel:nil];
 
 	// panel should now be the active panel (it should loop to the beginning)
-	STAssertTrue( [panel isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panel isEqual:[windowController selectedListItem]], nil );
+	XCTAssertTrue( [panel isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panel isEqual:[windowController selectedListItem]]);
 
 	[panelThree setNewMessagesWaiting:1];
 	[windowController selectNextActivePanel:nil];
 
 	// panelThree should now be the active panel
-	STAssertTrue( [panelThree isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panelThree isEqual:[windowController selectedListItem]], nil );
+	XCTAssertTrue( [panelThree isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panelThree isEqual:[windowController selectedListItem]]);
 
 	[panelThree setNewMessagesWaiting:0];
 	[panelTwo setNewMessagesWaiting:2];
 	[windowController selectPreviousActivePanel:nil];
 
 	// panelTwo should now be the active panel
-	STAssertTrue( [panelTwo isEqual:[windowController activeChatViewController]], nil );
-	STAssertTrue( [panelTwo isEqual:[windowController selectedListItem]], nil );
-
-	[panel release];
-	[panelTwo release];
-	[panelThree release];
+	XCTAssertTrue( [panelTwo isEqual:[windowController activeChatViewController]]);
+	XCTAssertTrue( [panelTwo isEqual:[windowController selectedListItem]]);
 }
+
 @end

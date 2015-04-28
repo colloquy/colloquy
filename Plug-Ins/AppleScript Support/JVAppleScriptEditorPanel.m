@@ -42,6 +42,9 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 #pragma mark -
 
 @implementation JVAppleScriptEditorPanel
+@synthesize contents;
+@synthesize editor;
+
 + (NSDictionary *) uncompiledScriptAttributes {
 	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 	NSFont *font = [NSFont fontWithName:@"Courier" size:12.];
@@ -211,7 +214,7 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 	if( returnCode == NSOKButton && [self compile:nil] ) {
 		[[[self plugin] script] saveToFile:[sheet filename]];
 		[[self plugin] setScriptFilePath:[sheet filename]];
-		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:[sheet isExtensionHidden]], NSFileExtensionHidden, nil] atPath:[sheet filename]];
+		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:@([sheet isExtensionHidden]), NSFileExtensionHidden, nil] atPath:[sheet filename]];
 	}
 }
 

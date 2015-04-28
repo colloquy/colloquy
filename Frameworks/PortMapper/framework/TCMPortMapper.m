@@ -6,15 +6,26 @@
 #import "NSNotificationCenterThreadingAdditions.h"
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <SystemConfiguration/SCSchemaDefinitions.h>
-#import <CommonCrypto/CommonDigest.h>
-#import <sys/sysctl.h> 
-#import <err.h>
-#import <netinet/in.h>
-#import <arpa/inet.h>
-#import <net/route.h>
-#import <netinet/if_ether.h>
-#import <net/if_dl.h>
-#import <openssl/md5.h>
+#include <sys/sysctl.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <net/route.h>
+#include <netinet/if_ether.h>
+#include <net/if_dl.h>
+
+// openssl is deprecated on OS X 10.7+
+#ifdef USE_OPENSSL
+#include <openssl/md5.h>
+#else
+#include <CommonCrypto/CommonDigest.h>
+#endif
+
+#include <err.h>
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-align"
+
+void CopySerialNumber(CFStringRef *serialNumber);
 
 // update port mappings all 30 minutes as a default
 #define UPNP_REFRESH_INTERVAL (30.*60.)
@@ -141,7 +152,7 @@ enum {
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"%@ privatePort:%u desiredPublicPort:%u publicPort:%u mappingStatus:%@ transportProtocol:%d",[super description], _localPort, _desiredExternalPort, _externalPort, _mappingStatus == TCMPortMappingStatusUnmapped ? @"unmapped" : (_mappingStatus == TCMPortMappingStatusMapped ? @"mapped" : @"trying"),_transportProtocol];
+    return [NSString stringWithFormat:@"%@ privatePort:%u desiredPublicPort:%u publicPort:%u mappingStatus:%@ transportProtocol:%ld",[super description], _localPort, _desiredExternalPort, _externalPort, _mappingStatus == TCMPortMappingStatusUnmapped ? @"unmapped" : (_mappingStatus == TCMPortMappingStatusMapped ? @"mapped" : @"trying"),(long)_transportProtocol];
 }
 
 @end
@@ -156,6 +167,8 @@ enum {
 @end
 
 @implementation TCMPortMapper
+
+@synthesize appIdentifier = _appIdentifier;
 
 + (TCMPortMapper *)sharedInstance
 {
@@ -173,7 +186,7 @@ enum {
     if ((self=[super init])) {
         _systemConfigNotificationManager = [IXSCNotificationManager new];
         // since we are only interested in this specific key, let us configure it so.
-        [_systemConfigNotificationManager setObservedKeys:[NSArray arrayWithObject:@"State:/Network/Global/IPv4"] regExes:nil];
+        [_systemConfigNotificationManager setObservedKeys:@[@"State:/Network/Global/IPv4"] regExes:nil];
         _isRunning = NO;
         _ignoreNetworkChanges = NO;
         _refreshIsScheduled = NO;
@@ -183,7 +196,16 @@ enum {
         _removeMappingQueue = [NSMutableSet new];
         _upnpPortMappingsToRemove = [NSMutableSet new];
         
-        [self hashUserID:NSUserName()];
+        // use the machine serial number to increase uniqueness in situations where usernames may be reused,
+        // such as in labs, educational and development environments
+        NSString *userName = NSUserName();
+        CFStringRef serialNumber;
+        CopySerialNumber(&serialNumber);
+        if (serialNumber) {
+            userName = [NSString stringWithFormat:@"%@@%@", userName, serialNumber];
+            CFRelease(serialNumber);
+        }
+        [self hashUserID:userName];
         
         S_sharedInstance = self;
 
@@ -199,8 +221,8 @@ enum {
         [center addObserver:self selector:@selector(decreaseWorkCount:) 
                 name:TCMNATPMPPortMapperDidEndWorkingNotification    object:_NATPMPPortMapper];
         
-//        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(didWake:) name:NSWorkspaceDidWakeNotification object:nil];
-//        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(willSleep:) name:NSWorkspaceWillSleepNotification object:nil];
+        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(didWake:) name:NSWorkspaceDidWakeNotification object:nil];
+        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(willSleep:) name:NSWorkspaceWillSleepNotification object:nil];
     }
     return self;
 }
@@ -216,14 +238,30 @@ enum {
     [super dealloc];
 }
 
+- (NSString *)appIdentifier
+{
+    if (_appIdentifier) {
+        return _appIdentifier;
+    } else {
+        return [[[[NSBundle mainBundle] bundlePath] lastPathComponent] stringByDeletingPathExtension];
+    }
+}
 - (BOOL)networkReachable {
-    Boolean success; 
-    BOOL okay; 
-    SCNetworkConnectionFlags status;
-	SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL, "www.apple.com");
-	success = SCNetworkReachabilityGetFlags(reachability, &status);
-	CFRelease(reachability);
-    okay = success && (status & kSCNetworkFlagsReachable) && !(status & kSCNetworkFlagsConnectionRequired);
+    Boolean success = 0;
+    BOOL okay = NO;
+    SCNetworkConnectionFlags status = 0;
+    const char *name = "www.apple.com";
+    
+#if MAC_OS_X_VERSION_MIN_REQUIRED == MAC_OS_X_VERSION_10_2
+    success = SCNetworkCheckReachabilityByName(name, &status);
+#else
+    SCNetworkReachabilityRef target = SCNetworkReachabilityCreateWithName(NULL, name);
+    success = SCNetworkReachabilityGetFlags(target, &status);
+    CFRelease(target);
+#endif
+    
+    okay = success && (status & kSCNetworkFlagsReachable) && !(status & kSCNetworkFlagsConnectionRequired); 
+    
     return okay;
 }
 
@@ -252,7 +290,7 @@ enum {
     SCDynamicStoreRef dynRef = SCDynamicStoreCreate(kCFAllocatorSystemDefault, (CFStringRef)@"TCMPortMapper", NULL, NULL); 
     NSDictionary *scobjects = (NSDictionary *)SCDynamicStoreCopyValue(dynRef,(CFStringRef)@"State:/Network/Global/IPv4" ); 
     
-    NSString *ipv4Key = [NSString stringWithFormat:@"State:/Network/Interface/%@/IPv4", [scobjects objectForKey:(NSString *)kSCDynamicStorePropNetPrimaryInterface]];
+    NSString *ipv4Key = [NSString stringWithFormat:@"State:/Network/Interface/%@/IPv4", scobjects[(NSString *)kSCDynamicStorePropNetPrimaryInterface]];
     
     CFRelease(dynRef);
     [scobjects release];
@@ -261,15 +299,15 @@ enum {
     scobjects = (NSDictionary *)SCDynamicStoreCopyValue(dynRef,(CFStringRef)ipv4Key); 
     
 //        NSLog(@"%s scobjects:%@",__FUNCTION__,scobjects);
-    NSArray *IPAddresses = (NSArray *)[scobjects objectForKey:(NSString *)kSCPropNetIPv4Addresses];
-    NSArray *subNetMasks = (NSArray *)[scobjects objectForKey:(NSString *)kSCPropNetIPv4SubnetMasks];
+    NSArray *IPAddresses = (NSArray *)scobjects[(NSString *)kSCPropNetIPv4Addresses];
+    NSArray *subNetMasks = (NSArray *)scobjects[(NSString *)kSCPropNetIPv4SubnetMasks];
 //    NSLog(@"%s addresses:%@ masks:%@",__FUNCTION__,IPAddresses, subNetMasks);
     if (routerAddress) {
         NSString *ipAddress = nil;
-        NSUInteger i;
+        int i;
         for (i=0;i<[IPAddresses count];i++) {
-            ipAddress = (NSString *) [IPAddresses objectAtIndex:i];
-            NSString *subNetMask = (NSString *) [subNetMasks objectAtIndex:i];
+            ipAddress = (NSString *) IPAddresses[i];
+            NSString *subNetMask = (NSString *) subNetMasks[i];
  //           NSLog(@"%s ipAddress:%@ subNetMask:%@",__FUNCTION__, ipAddress, subNetMask);
             // Check if local to Host
             if (ipAddress && subNetMask) {
@@ -314,11 +352,17 @@ enum {
     char hashstring[16*2+1];
     int i;
     NSData *dataToHash = [inString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:NO];
-	CC_MD5([dataToHash bytes],[dataToHash length],digest);
+
+#ifdef USE_OPENSSL
+    MD5([dataToHash bytes],[dataToHash length],digest);
+#else
+    CC_MD5([dataToHash bytes], (CC_LONG)[dataToHash length], digest);
+#endif
+    
     for(i=0;i<16;i++) sprintf(hashstring+i*2,"%02x",digest[i]);
     hashstring[i*2]=0;
     
-    return [NSString stringWithUTF8String:hashstring];
+    return @(hashstring);
 }
 
 - (void)hashUserID:(NSString *)aUserIDToHash {
@@ -515,6 +559,7 @@ enum {
           return nil;
         }
     }
+	free(buf);
     return nil;
 }
 
@@ -529,7 +574,7 @@ enum {
         }
     }
     if ([aMACAddress length]<8) return nil;
-	NSString *result = [hardwareManufacturerDictionary objectForKey:[[aMACAddress substringToIndex:8] uppercaseString]];
+	NSString *result = hardwareManufacturerDictionary[[[aMACAddress substringToIndex:8] uppercaseString]];
     return result;
 }
 
@@ -583,7 +628,7 @@ enum {
         [self setMappingProtocol:TCMNATPMPPortMapProtocol];
         shouldNotify = YES;
     }
-    [self setExternalIPAddress:[[aNotification userInfo] objectForKey:@"externalIPAddress"]];
+    [self setExternalIPAddress:[aNotification userInfo][@"externalIPAddress"]];
     if (shouldNotify) {
         [[NSNotificationCenter defaultCenter] postNotificationName:TCMPortMapperDidFinishSearchForRouterNotification object:self];
     }
@@ -612,11 +657,11 @@ enum {
             _NATPMPStatus =TCMPortMapProtocolFailed;
         }
     }
-    NSString *routerName = [[aNotification userInfo] objectForKey:@"routerName"];
+    NSString *routerName = [aNotification userInfo][@"routerName"];
     if (routerName) {
         [self setRouterName:routerName];
     }
-    [self setExternalIPAddress:[[aNotification userInfo] objectForKey:@"externalIPAddress"]];
+    [self setExternalIPAddress:[aNotification userInfo][@"externalIPAddress"]];
     if (shouldNotify) {
         [[NSNotificationCenter defaultCenter] postNotificationName:TCMPortMapperDidFinishSearchForRouterNotification object:self];
     }
@@ -738,7 +783,7 @@ enum {
     SCDynamicStoreRef dynRef = SCDynamicStoreCreate(kCFAllocatorSystemDefault, (CFStringRef)@"TCMPortMapper", NULL, NULL); 
     NSDictionary *scobjects = (NSDictionary *)SCDynamicStoreCopyValue(dynRef,(CFStringRef)@"State:/Network/Global/IPv4" );
     
-    NSString *routerIPAddress = (NSString *)[scobjects objectForKey:(NSString *)kSCPropNetIPv4Router];
+    NSString *routerIPAddress = (NSString *)scobjects[(NSString *)kSCPropNetIPv4Router];
     routerIPAddress = [[routerIPAddress copy] autorelease];
     
     CFRelease(dynRef);
@@ -773,7 +818,7 @@ enum {
     _workCount--;
     if (_workCount == 0) {
         if (_UPNPStatus == TCMPortMapProtocolWorks && _sendUPNPMappingTableNotification) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:TCMPortMapperDidReceiveUPNPMappingTableNotification object:self userInfo:[NSDictionary dictionaryWithObject:[_UPNPPortMapper latestUPNPPortMappingsList] forKey:@"mappingTable"]];
+            [[NSNotificationCenter defaultCenter] postNotificationName:TCMPortMapperDidReceiveUPNPMappingTableNotification object:self userInfo:@{@"mappingTable": [_UPNPPortMapper latestUPNPPortMappingsList]}];
             _sendUPNPMappingTableNotification = NO;
         }
     
@@ -814,10 +859,10 @@ enum {
     if (_isRunning) {
         NSDictionary *userInfo = [aNotification userInfo];
         // senderAddress is of the format <ipv4address>:<port>
-        NSString *senderIPAddress = [userInfo objectForKey:@"senderAddress"];
+        NSString *senderIPAddress = userInfo[@"senderAddress"];
         // we have to check if the sender is actually our router - if not disregard
         if ([senderIPAddress isEqualToString:[self routerIPAddress]]) {
-            if (![[self externalIPAddress] isEqualToString:[userInfo objectForKey:@"externalIPAddress"]]) {
+            if (![[self externalIPAddress] isEqualToString:userInfo[@"externalIPAddress"]]) {
 //                NSLog(@"Refreshing because of  NAT-PMP-Device external IP broadcast:%@",userInfo);
                 [self refresh];
             }
@@ -829,3 +874,29 @@ enum {
 
 @end
 
+// Returns the serial number as a CFString.
+// It is the caller's responsibility to release the returned CFString when done with it.
+void CopySerialNumber(CFStringRef *serialNumber)
+{
+    
+	if (serialNumber != NULL) {
+		*serialNumber = NULL;
+		
+		io_service_t    platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault,
+																	 IOServiceMatching("IOPlatformExpertDevice"));
+		
+		if (platformExpert) {
+			CFTypeRef serialNumberAsCFString =
+			IORegistryEntryCreateCFProperty(platformExpert,
+											CFSTR(kIOPlatformSerialNumberKey),
+											kCFAllocatorDefault, 0);
+			if (serialNumberAsCFString) {
+				*serialNumber = serialNumberAsCFString;
+			}
+			
+			IOObjectRelease(platformExpert);
+		}
+	}
+}
+
+#pragma clang diagnostic pop

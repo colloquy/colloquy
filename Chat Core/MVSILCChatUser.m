@@ -8,9 +8,6 @@
 		_type = MVChatLocalUserType;
 
 		// this info will be pulled live from the connection
-		[_nickname release];
-		[_realName release];
-		[_username release];
 
 		_nickname = nil;
 		_realName = nil;
@@ -36,29 +33,29 @@
 - (void) updateWithClientEntry:(SilcClientEntry) clientEntry {
 	SilcLock( [[self connection] _silcClient] );
 
-	[self retain];
+	__strong id me = self;
 
 	if( _uniqueIdentifier )
 		[_connection _removeKnownUser:self];
 
 	if( clientEntry -> nickname )
-		[self _setNickname:[NSString stringWithUTF8String:clientEntry -> nickname]];
+		[self _setNickname:@(clientEntry->nickname)];
 
 	if( clientEntry -> username )
-		[self _setUsername:[NSString stringWithUTF8String:clientEntry -> username]];
+		[self _setUsername:@(clientEntry->username)];
 
 	if( clientEntry -> hostname )
-		[self _setAddress:[NSString stringWithUTF8String:clientEntry -> hostname]];
+		[self _setAddress:@(clientEntry->hostname)];
 
 	if( clientEntry -> server )
-		[self _setServerAddress:[NSString stringWithUTF8String:clientEntry -> server]];
+		[self _setServerAddress:@(clientEntry->server)];
 
 	if( clientEntry -> realname )
-		[self _setRealName:[NSString stringWithUTF8String:clientEntry -> realname]];
+		[self _setRealName:@(clientEntry->realname)];
 
 	if( clientEntry -> fingerprint ) {
 		char *tmp = silc_fingerprint( clientEntry -> fingerprint, clientEntry -> fingerprint_len);
-		[self _setFingerprint:[NSString stringWithUTF8String:tmp]];
+		[self _setFingerprint:@(tmp)];
 		silc_free( tmp );
 	}
 
@@ -71,14 +68,14 @@
 	[self _setServerOperator:( clientEntry -> mode & SILC_UMODE_SERVER_OPERATOR || clientEntry -> mode & SILC_UMODE_ROUTER_OPERATOR )];
 
 	unsigned char *identifier = silc_id_id2str( clientEntry -> id, SILC_ID_CLIENT );
-	unsigned len = silc_id_get_len( clientEntry -> id, SILC_ID_CLIENT );
+	size_t len = silc_id_get_len( clientEntry -> id, SILC_ID_CLIENT );
 	[self _setUniqueIdentifier:[NSData dataWithBytes:identifier length:len]];
 
 	_clientEntry = clientEntry;
 
 	[_connection _addKnownUser:self];
 
-	[self release];
+	me = nil;
 
 	SilcUnlock( [[self connection] _silcClient] );
 }
@@ -112,7 +109,7 @@
 	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:message andChatFormat:[[self connection] outgoingChatFormat]];
 	SilcMessageFlags flags = SILC_MESSAGE_FLAG_UTF8;
 
-	if( [[attributes objectForKey:@"action"] boolValue]) flags |= SILC_MESSAGE_FLAG_ACTION;
+	if( [attributes[@"action"] boolValue]) flags |= SILC_MESSAGE_FLAG_ACTION;
 
 	// unpack the identifier here for now
 	// we might want to keep a duplicate of the SilcClientID struct as a instance variable

@@ -23,7 +23,8 @@
 //============================================================================
 
 #import "acid.h"
-#import "sha1.h"
+#include <CommonCrypto/CommonCrypto.h>
+#include <CommonCrypto/CommonDigest.h>
 
 NSString* DFMT = @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x";
 
@@ -79,14 +80,14 @@ NSString* DFMT = @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%
 
 static NSString* generateDigest(NSString* password)
 {
-    SHA1_CTX ctx;
-    unsigned char digest[20];
+    CC_SHA1_CTX ctx;
+    unsigned char digest[CC_SHA1_DIGEST_LENGTH];
 
     NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
 
-    SHA1Init(&ctx);
-    SHA1Update(&ctx, [passwordData bytes], [passwordData length]);
-    SHA1Final(digest, &ctx);
+    CC_SHA1_Init(&ctx);
+    CC_SHA1_Update(&ctx, [passwordData bytes], (CC_LONG)[passwordData length]);
+    CC_SHA1_Final(digest, &ctx);
 
     return [NSString stringWithFormat:DFMT,
         digest[0], digest[1], digest[2], digest[3],

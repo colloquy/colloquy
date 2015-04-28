@@ -3,10 +3,20 @@
 
 @class MVIRCChatConnection;
 
+extern NSString *MVMetadataKeyForAttributeName(NSString *attributeName);
+extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey);
+
 @interface MVIRCChatUser : MVChatUser {
 @private
 	BOOL _hasPendingRefreshInformationRequest;
 }
-- (id) initLocalUserWithConnection:(MVIRCChatConnection *) connection;
-- (id) initWithNickname:(NSString *) nickname andConnection:(MVIRCChatConnection *) connection;
+
++ (NSArray *) servicesNicknames;
+
+- (instancetype) initLocalUserWithConnection:(MVIRCChatConnection *) connection;
+- (instancetype) initWithNickname:(NSString *) nickname andConnection:(MVIRCChatConnection *) connection;
+@end
+
+@interface MVIRCChatUser (MVIRCChatUserPrivate)
+- (void) persistLastActivityDate;
 @end

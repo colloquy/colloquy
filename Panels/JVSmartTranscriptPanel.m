@@ -12,7 +12,7 @@
 static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsItem";
 
 @implementation JVSmartTranscriptPanel
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_operation = 1;
 		_newMessages = 0;
@@ -27,28 +27,28 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	return self;
 }
 
-- (id) initWithSettings:(NSDictionary *) settings {
+- (instancetype) initWithSettings:(NSDictionary *) settings {
 	if( ( self = [self init] ) ) {
 		_settingsNibLoaded = [NSBundle loadNibNamed:@"JVSmartTranscriptFilterSheet" owner:self];
 
-		_rules = [[settings objectForKey:@"rules"] mutableCopyWithZone:nil];
-		_title = [[settings objectForKey:@"title"] copyWithZone:nil];
-		_operation = [[settings objectForKey:@"operation"] intValue];
-		_ignoreCase = [[settings objectForKey:@"ignoreCase"] boolValue];
+		_rules = [settings[@"rules"] mutableCopyWithZone:nil];
+		_title = [settings[@"title"] copyWithZone:nil];
+		_operation = [settings[@"operation"] intValue];
+		_ignoreCase = [settings[@"ignoreCase"] boolValue];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _messageDisplayed: ) name:JVChatMessageWasProcessedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _messageDisplayed: ) name:JVChatMessageWasProcessedNotification object:nil];
 	}
 
 	return self;
 }
 
-- (id) initWithCoder:(NSCoder *) coder {
+- (instancetype) initWithCoder:(NSCoder *) coder {
 	if( [coder allowsKeyedCoding] ) {
 		NSMutableDictionary *settings = [NSMutableDictionary dictionary];
-		[settings setObject:[coder decodeObjectForKey:@"rules"] forKey:@"rules"];
-		[settings setObject:[coder decodeObjectForKey:@"title"] forKey:@"title"];
-		[settings setObject:[NSNumber numberWithBool:[coder decodeBoolForKey:@"ignoreCase"]] forKey:@"ignoreCase"];
-		[settings setObject:[NSNumber numberWithInt:[coder decodeIntForKey:@"operation"]] forKey:@"operation"];
+		settings[@"rules"] = [coder decodeObjectForKey:@"rules"];
+		settings[@"title"] = [coder decodeObjectForKey:@"title"];
+		settings[@"ignoreCase"] = @([coder decodeBoolForKey:@"ignoreCase"]);
+		settings[@"operation"] = @([coder decodeIntegerForKey:@"operation"]);
 		return [self initWithSettings:settings];
 	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 	return nil;
@@ -58,22 +58,16 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	if( [coder allowsKeyedCoding] ) {
 		[coder encodeObject:[self rules] forKey:@"rules"];
 		[coder encodeObject:[self title] forKey:@"title"];
-		[coder encodeInt:_operation forKey:@"operation"];
+		[coder encodeInteger:_operation forKey:@"operation"];
 		[coder encodeBool:_ignoreCase forKey:@"ignoreCase"];
 	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 
 	[subviewTableView setDataSource:nil];
 	[subviewTableView setDelegate:nil];
-
-
-	_rules = nil;
-	_editingRules = nil;
-	_title = nil;
-
 }
 
 - (void) awakeFromNib {
@@ -387,7 +381,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 - (void) tableView:(NSTableView *) tableView willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) tableColumn row:(NSInteger) row {
 	if( [[tableColumn identifier] isEqualToString:@"criteria"] ) {
-		[(JVViewCell *)cell setView:[(JVTranscriptCriterionController *)[[self editingRules] objectAtIndex:row] view]];
+		[(JVViewCell *)cell setView:[(JVTranscriptCriterionController *)[self editingRules][row] view]];
 	} else if( [[tableColumn identifier] isEqualToString:@"remove"] ) {
 		[cell setEnabled:( [self numberOfRowsInTableView:tableView] > 1 )];
 	}
@@ -445,13 +439,11 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	[list addObject:JVToolbarClearScrollbackItemIdentifier];
 	return list;
 }
-@end
 
 #pragma mark -
 
-@implementation JVSmartTranscriptPanel (JVSmartTranscriptPanelPrivate)
 - (void) _messageDisplayed:(NSNotification *) notification {
-	JVChatMessage *origMessage = [[notification userInfo] objectForKey:@"message"];
+	JVChatMessage *origMessage = [notification userInfo][@"message"];
 	[self matchMessage:origMessage fromView:[notification object]];
 }
 @end

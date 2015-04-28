@@ -3,7 +3,7 @@
 #import "CQColloquyApplication.h"
 
 @implementation CQHelpTopicViewController
-- (id) initWithHTMLContent:(NSString *) content {
+- (instancetype) initWithHTMLContent:(NSString *) content {
 	if (!(self = [self init]))
 		return nil;
 

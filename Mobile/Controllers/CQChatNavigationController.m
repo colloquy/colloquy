@@ -5,12 +5,11 @@
 #import "CQColloquyApplication.h"
 
 @implementation CQChatNavigationController
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
 
 	self.title = NSLocalizedString(@"Colloquies", @"Colloquies tab title");
-	self.tabBarItem.image = [UIImage imageNamed:@"colloquies.png"];
 
 	return self;
 }
@@ -31,7 +30,8 @@
 		self.delegate = self;
 	}
 
-	[[CQChatController defaultController] showPendingChatControllerAnimated:NO];
+	if (![UIDevice currentDevice].isSystemEight)
+		[[CQChatController defaultController] showPendingChatControllerAnimated:NO];
 }
 
 #pragma mark -
