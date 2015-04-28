@@ -136,7 +136,6 @@
 		1CA75A270652537A000141D5 /* styleOptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1CA75A260652537A000141D5 /* styleOptions.plist */; };
 		1CA7CA6605FEC88500887614 /* activity.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA7CA6305FEC88500887614 /* activity.png */; };
 		1CA7CA6805FEC88600887614 /* activityNewImportant.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA7CA6505FEC88500887614 /* activityNewImportant.png */; };
-		1CABF5E20655A59E00801C15 /* AlertCautionIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1CABF5E10655A59E00801C15 /* AlertCautionIcon.icns */; };
 		1CABF8780656414100801C15 /* NSBundleAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CABF8760656414100801C15 /* NSBundleAdditions.m */; };
 		1CABFCB20657F10900801C15 /* JVSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CABFCB00657F10900801C15 /* JVSplitView.m */; };
 		1CABFD0F0658629200801C15 /* JVStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CABFD0D0658629200801C15 /* JVStyle.m */; };
@@ -721,7 +720,6 @@
 		1CA7D0F006015DBA00887614 /* JVNotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVNotificationController.h; path = Controllers/JVNotificationController.h; sourceTree = "<group>"; };
 		1CA7D0F106015DBA00887614 /* JVNotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVNotificationController.m; path = Controllers/JVNotificationController.m; sourceTree = "<group>"; };
 		1CA95D28051B413E00A8FE10 /* newHighlightMessage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = newHighlightMessage.png; path = Resources/newHighlightMessage.png; sourceTree = "<group>"; };
-		1CABF5E10655A59E00801C15 /* AlertCautionIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AlertCautionIcon.icns; path = Resources/AlertCautionIcon.icns; sourceTree = "<group>"; };
 		1CABF8750656414100801C15 /* NSBundleAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSBundleAdditions.h; path = Additions/NSBundleAdditions.h; sourceTree = "<group>"; };
 		1CABF8760656414100801C15 /* NSBundleAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSBundleAdditions.m; path = Additions/NSBundleAdditions.m; sourceTree = "<group>"; };
 		1CABFCAF0657F10900801C15 /* JVSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVSplitView.h; path = Views/JVSplitView.h; sourceTree = "<group>"; };
@@ -1786,7 +1784,6 @@
 				1CA7CA6305FEC88500887614 /* activity.png */,
 				1CA7CA6405FEC88500887614 /* activityNew.png */,
 				1CA7CA6505FEC88500887614 /* activityNewImportant.png */,
-				1CABF5E10655A59E00801C15 /* AlertCautionIcon.icns */,
 				CB66DEA00631F8160034F76E /* Keychain.png */,
 				CB66DEA10631F8160034F76E /* Stickies.png */,
 				1C6075E005138ED600A8FE6E /* colloquy-alpha.png */,
@@ -2223,7 +2220,6 @@
 				CB66DEA30631F8160034F76E /* Stickies.png in Resources */,
 				1CE95886063F3BF90071C9C3 /* inspector.png in Resources */,
 				1CA75A270652537A000141D5 /* styleOptions.plist in Resources */,
-				1CABF5E20655A59E00801C15 /* AlertCautionIcon.icns in Resources */,
 				1C238F050677B5E5000E89A7 /* JVTabbedChatWindow.nib in Resources */,
 				1C2391BC0677E8F1000E89A7 /* aquaTabBackground.png in Resources */,
 				1C2391BD0677E8F1000E89A7 /* aquaTabClose.png in Resources */,
