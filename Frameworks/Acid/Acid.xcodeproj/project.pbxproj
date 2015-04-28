@@ -30,7 +30,7 @@
 		DD8ADFEF0BD1741A009AB74D /* JabberPresenceTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF990BD1741A009AB74D /* JabberPresenceTracker.m */; };
 		DD8ADFF00BD1741A009AB74D /* JabberRoster.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF9A0BD1741A009AB74D /* JabberRoster.m */; };
 		DD8ADFF10BD1741A009AB74D /* JabberSession.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF9B0BD1741A009AB74D /* JabberSession.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		DD8ADFF20BD1741A009AB74D /* JabberSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF9C0BD1741A009AB74D /* JabberSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		DD8ADFF20BD1741A009AB74D /* JabberSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF9C0BD1741A009AB74D /* JabberSocket.m */; };
 		DD8ADFF30BD1741A009AB74D /* JabberStdAuthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF9D0BD1741A009AB74D /* JabberStdAuthManager.m */; };
 		DD8ADFF40BD1741A009AB74D /* JabberSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF9E0BD1741A009AB74D /* JabberSubscriptionRequest.m */; };
 		DD8AE0030BD1741A009AB74D /* nfkc.c in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADFB00BD1741A009AB74D /* nfkc.c */; };

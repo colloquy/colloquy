@@ -55,7 +55,6 @@
 {
     [_timer invalidate];
     _session = nil;
-	dispatch_release(_connectionDelegateQueue);
 }
 
 -(void) onKeepAliveTick:(NSTimer*)t
