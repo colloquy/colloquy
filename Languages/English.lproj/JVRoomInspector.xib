@@ -34,7 +34,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="263" userLabel="View">
             <rect key="frame" x="0.0" y="0.0" width="315" height="361"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -198,10 +198,10 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <size key="minSize" width="283" height="207"/>
-                                                    <size key="maxSize" width="283" height="10000000"/>
+                                                    <size key="maxSize" width="285" height="10000000"/>
                                                     <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <size key="minSize" width="283" height="207"/>
-                                                    <size key="maxSize" width="283" height="10000000"/>
+                                                    <size key="maxSize" width="285" height="10000000"/>
                                                     <connections>
                                                         <outlet property="delegate" destination="-2" id="394"/>
                                                     </connections>
@@ -260,7 +260,7 @@ DQ
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnReordering="NO" autosaveColumns="NO" id="335">
-                                                    <rect key="frame" x="0.0" y="0.0" width="286" height="206"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="286" height="19"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>

@@ -24,7 +24,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="5" userLabel="View">
             <rect key="frame" x="0.0" y="0.0" width="425" height="28"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -37,7 +37,7 @@
                         <tabViewItem identifier="1" id="10">
                             <view key="view" id="9">
                                 <rect key="frame" x="0.0" y="0.0" width="425" height="28"/>
-                                <autoresizingMask key="autoresizingMask"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <popUpButton verticalHuggingPriority="750" id="33">
                                         <rect key="frame" x="2" y="2" width="132" height="22"/>

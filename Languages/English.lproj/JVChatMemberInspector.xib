@@ -31,7 +31,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="5" userLabel="View">
             <rect key="frame" x="0.0" y="0.0" width="266" height="359"/>
             <autoresizingMask key="autoresizingMask"/>
@@ -225,7 +225,7 @@
                 <imageView id="17">
                     <rect key="frame" x="45" y="312" width="32" height="32"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="largePerson" id="75"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="userNormal" id="75"/>
                 </imageView>
                 <textField verticalHuggingPriority="750" id="16">
                     <rect key="frame" x="82" y="209" width="172" height="14"/>
@@ -326,6 +326,6 @@
     </objects>
     <resources>
         <image name="NSRefreshFreestandingTemplate" width="14" height="14"/>
-        <image name="largePerson" width="32" height="32"/>
+        <image name="userNormal" width="29" height="27"/>
     </resources>
 </document>
