@@ -16,6 +16,8 @@
 
 #include <sys/socket.h> // AF_INET, AF_INET6
 
+@protocol GCDAsyncSocketDelegate;
+
 @class GCDAsyncReadPacket;
 @class GCDAsyncWritePacket;
 @class GCDAsyncSocketPreBuffer;
@@ -46,7 +48,7 @@ extern NSString *const GCDAsyncSocketSSLDiffieHellmanParameters;
 #define GCDAsyncSocketLoggingContext 65535
 
 
-enum GCDAsyncSocketError
+typedef NS_ENUM(NSInteger, GCDAsyncSocketError)
 {
 	GCDAsyncSocketNoError = 0,           // Never used
 	GCDAsyncSocketBadConfigError,        // Invalid configuration
@@ -58,7 +60,6 @@ enum GCDAsyncSocketError
 	GCDAsyncSocketClosedError,           // The remote peer closed the connection
 	GCDAsyncSocketOtherError,            // Description provided in userInfo
 };
-typedef enum GCDAsyncSocketError GCDAsyncSocketError;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -82,10 +83,10 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * 
  * The delegate queue and socket queue can optionally be the same.
 **/
-- (id)init;
-- (id)initWithSocketQueue:(dispatch_queue_t)sq;
-- (id)initWithDelegate:(id)aDelegate delegateQueue:(dispatch_queue_t)dq;
-- (id)initWithDelegate:(id)aDelegate delegateQueue:(dispatch_queue_t)dq socketQueue:(dispatch_queue_t)sq;
+- (instancetype)init;
+- (instancetype)initWithSocketQueue:(dispatch_queue_t)sq;
+- (instancetype)initWithDelegate:(id)aDelegate delegateQueue:(dispatch_queue_t)dq;
+- (instancetype)initWithDelegate:(id)aDelegate delegateQueue:(dispatch_queue_t)dq socketQueue:(dispatch_queue_t)sq;
 
 #pragma mark Configuration
 
@@ -329,8 +330,8 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * 
  * If a socket is in the process of connecting, it may be neither disconnected nor connected.
 **/
-@property (atomic, readonly) BOOL isDisconnected;
-@property (atomic, readonly) BOOL isConnected;
+@property (atomic, readonly, getter=isDisconnected) BOOL disconnected;
+@property (atomic, readonly, getter=isConnected) BOOL connected;
 
 /**
  * Returns the local or remote host and port to which this socket is connected, or nil and 0 if not connected.
@@ -358,15 +359,15 @@ typedef enum GCDAsyncSocketError GCDAsyncSocketError;
  * Returns whether the socket is IPv4 or IPv6.
  * An accepting socket may be both.
 **/
-@property (atomic, readonly) BOOL isIPv4;
-@property (atomic, readonly) BOOL isIPv6;
+@property (atomic, readonly, getter=isIPv4) BOOL IPv4;
+@property (atomic, readonly, getter=isIPv6) BOOL IPv6;
 
 /**
  * Returns whether or not the socket has been secured via SSL/TLS.
  * 
  * See also the startTLS method.
 **/
-@property (atomic, readonly) BOOL isSecure;
+@property (atomic, readonly, getter=isSecure) BOOL secure;
 
 #pragma mark Reading
 
