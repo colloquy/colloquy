@@ -100,7 +100,7 @@
                         <tabViewItem identifier="2" id="14">
                             <view key="view" id="15">
                                 <rect key="frame" x="0.0" y="0.0" width="425" height="28"/>
-                                <autoresizingMask key="autoresizingMask"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <popUpButton verticalHuggingPriority="750" id="66">
                                         <rect key="frame" x="2" y="2" width="219" height="22"/>

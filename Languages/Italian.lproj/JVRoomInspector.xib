@@ -64,7 +64,7 @@
                         <imageView id="377">
                             <rect key="frame" x="0.0" y="2" width="32" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="room" id="448"/>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="roomIcon" id="448"/>
                         </imageView>
                     </subviews>
                 </customView>
@@ -75,7 +75,7 @@
                         <tabViewItem label="Modi" identifier="modes" id="318">
                             <view key="view" id="319">
                                 <rect key="frame" x="10" y="25" width="315" height="264"/>
-                                <autoresizingMask key="autoresizingMask"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <customView id="372">
                                         <rect key="frame" x="26" y="12" width="263" height="252"/>
@@ -478,6 +478,6 @@ DQ
         <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="room" width="128" height="128"/>
+        <image name="roomIcon" width="55" height="55"/>
     </resources>
 </document>
