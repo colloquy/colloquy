@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <development version="5100" identifier="xcode"/>
@@ -20,15 +20,14 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="104" y="300" width="533" height="303"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="832"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="500" height="300"/>
             <view key="contentView" id="8">
                 <rect key="frame" x="0.0" y="0.0" width="533" height="303"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button verticalHuggingPriority="750" id="5">
-                        <rect key="frame" x="302" y="12" width="222" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5">
+                        <rect key="frame" x="361" y="13" width="158" height="32"/>
                         <buttonCell key="cell" type="push" title="Send Crash Report" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="25">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -40,9 +39,8 @@ DQ
                             <action selector="sendCrashLog:" target="-2" id="16"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" id="7">
-                        <rect key="frame" x="14" y="11" width="222" height="33"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7">
+                        <rect key="frame" x="14" y="13" width="202" height="32"/>
                         <buttonCell key="cell" type="push" title="Continue Without Sending" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="27">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -54,14 +52,16 @@ Gw
                             <action selector="dontSend:" target="-2" id="17"/>
                         </connections>
                     </button>
-                    <imageView id="12">
-                        <rect key="frame" x="20" y="223" width="64" height="64"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <imageView translatesAutoresizingMaskIntoConstraints="NO" id="12">
+                        <rect key="frame" x="20" y="219" width="64" height="64"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="64" id="2y0-fQ-E3F"/>
+                            <constraint firstAttribute="width" constant="64" id="cLi-wp-3YR"/>
+                        </constraints>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSApplicationIcon" id="28"/>
                     </imageView>
-                    <textField verticalHuggingPriority="750" id="6">
-                        <rect key="frame" x="89" y="224" width="432" height="64"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6">
+                        <rect key="frame" x="90" y="227" width="425" height="56"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="26">
                             <font key="font" metaFont="smallSystem"/>
                             <string key="title">%@ encountered an unrecoverable error during a previous session. Please enter any details you may recall about what you were doing when the application crashed. This will help us to improve future releases of %@.
@@ -70,12 +70,11 @@ Gw
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <splitView id="15">
-                        <rect key="frame" x="20" y="60" width="498" height="155"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <splitView translatesAutoresizingMaskIntoConstraints="NO" id="15">
+                        <rect key="frame" x="20" y="61" width="493" height="150"/>
                         <subviews>
-                            <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="11">
-                                <rect key="frame" x="0.0" y="0.0" width="498" height="146"/>
+                            <scrollView fixedFrame="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="11">
+                                <rect key="frame" x="0.0" y="0.0" width="493" height="141"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" id="mRu-gG-hnf">
                                     <rect key="frame" x="1" y="1" width="496" height="144"/>
@@ -85,10 +84,10 @@ Gw
                                             <rect key="frame" x="0.0" y="0.0" width="495" height="144"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <size key="minSize" width="496" height="144"/>
+                                            <size key="minSize" width="491" height="139"/>
                                             <size key="maxSize" width="623" height="10000000"/>
                                             <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="496" height="144"/>
+                                            <size key="minSize" width="491" height="139"/>
                                             <size key="maxSize" width="623" height="10000000"/>
                                         </textView>
                                     </subviews>
@@ -103,8 +102,8 @@ Gw
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="13">
-                                <rect key="frame" x="0.0" y="155" width="498" height="0.0"/>
+                            <scrollView fixedFrame="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="13">
+                                <rect key="frame" x="0.0" y="150" width="493" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <clipView key="contentView" id="4y1-2K-5Ce">
                                     <rect key="frame" x="1" y="1" width="496" height="1"/>
@@ -114,10 +113,10 @@ Gw
                                             <rect key="frame" x="0.0" y="-3" width="495" height="14"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <size key="minSize" width="496" height="1"/>
+                                            <size key="minSize" width="491" height="1"/>
                                             <size key="maxSize" width="623" height="10000000"/>
                                             <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="496" height="1"/>
+                                            <size key="minSize" width="491" height="1"/>
                                             <size key="maxSize" width="623" height="10000000"/>
                                         </textView>
                                     </subviews>
@@ -139,6 +138,22 @@ Gw
                         </holdingPriorities>
                     </splitView>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="7" firstAttribute="top" secondItem="15" secondAttribute="bottom" constant="20" symbolic="YES" id="1fV-J9-99H"/>
+                    <constraint firstAttribute="bottom" secondItem="7" secondAttribute="bottom" constant="20" symbolic="YES" id="2gW-PH-Rc2"/>
+                    <constraint firstItem="6" firstAttribute="leading" secondItem="12" secondAttribute="trailing" constant="8" symbolic="YES" id="2kr-YH-J1f"/>
+                    <constraint firstItem="5" firstAttribute="baseline" secondItem="7" secondAttribute="baseline" id="Gja-dQ-Ocu"/>
+                    <constraint firstAttribute="bottom" secondItem="5" secondAttribute="bottom" constant="20" symbolic="YES" id="QKS-XT-6Nz"/>
+                    <constraint firstAttribute="trailing" secondItem="6" secondAttribute="trailing" constant="20" symbolic="YES" id="Zpv-aZ-3h6"/>
+                    <constraint firstItem="15" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="20" symbolic="YES" id="bIG-g0-9fF"/>
+                    <constraint firstItem="7" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="20" symbolic="YES" id="cBd-Ik-uvx"/>
+                    <constraint firstAttribute="trailing" secondItem="15" secondAttribute="trailing" constant="20" symbolic="YES" id="fwY-GS-1Z7"/>
+                    <constraint firstItem="12" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="20" symbolic="YES" id="gcT-et-oPY"/>
+                    <constraint firstItem="6" firstAttribute="top" secondItem="8" secondAttribute="top" constant="20" symbolic="YES" id="o1D-eM-hqh"/>
+                    <constraint firstItem="15" firstAttribute="top" secondItem="12" secondAttribute="bottom" constant="8" symbolic="YES" id="rF7-JY-B1I"/>
+                    <constraint firstItem="12" firstAttribute="top" secondItem="8" secondAttribute="top" constant="20" symbolic="YES" id="uPf-gi-ghY"/>
+                    <constraint firstAttribute="trailing" secondItem="5" secondAttribute="trailing" constant="20" symbolic="YES" id="vnR-H9-M57"/>
+                </constraints>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="22"/>
