@@ -48,7 +48,7 @@
                 <button id="296">
                     <rect key="frame" x="63" y="-1" width="22" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="infoWidget" imagePosition="only" alignment="left" alternateImage="infoWidgetPressed" id="301">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="CQInfoTemplate" imagePosition="only" alignment="left" borderStyle="border" imageScaling="proportionallyDown" id="301">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="label"/>
                     </buttonCell>
@@ -59,7 +59,7 @@
                 <button id="291" customClass="MVMenuButton">
                     <rect key="frame" x="32" y="-1" width="28" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="favorites" imagePosition="only" alignment="left" alternateImage="favoritesPressed" id="300">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="CQFavoritesTemplate" imagePosition="only" alignment="left" borderStyle="border" imageScaling="proportionallyDown" id="300">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="label"/>
                     </buttonCell>
@@ -67,7 +67,7 @@
                 <button id="289" customClass="MVMenuButton">
                     <rect key="frame" x="1" y="-1" width="28" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="actionWidget" imagePosition="only" alignment="left" alternateImage="actionWidgetPressed" id="299">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="CQActionTemplate" imagePosition="only" alignment="left" borderStyle="border" imageScaling="proportionallyDown" id="299">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="label"/>
                     </buttonCell>
@@ -121,11 +121,8 @@
         </customView>
     </objects>
     <resources>
-        <image name="actionWidget" width="28" height="22"/>
-        <image name="actionWidgetPressed" width="28" height="22"/>
-        <image name="favorites" width="28" height="22"/>
-        <image name="favoritesPressed" width="28" height="22"/>
-        <image name="infoWidget" width="22" height="22"/>
-        <image name="infoWidgetPressed" width="22" height="22"/>
+        <image name="CQActionTemplate" width="20" height="12"/>
+        <image name="CQFavoritesTemplate" width="20" height="11"/>
+        <image name="CQInfoTemplate" width="12" height="12"/>
     </resources>
 </document>
