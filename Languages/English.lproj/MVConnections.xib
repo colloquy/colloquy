@@ -69,7 +69,7 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" headerView="100869" id="114" customClass="MVTableView">
-                                    <rect key="frame" x="0.0" y="0.0" width="350" height="174"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="350" height="20"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -115,7 +115,7 @@
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </tableColumn>
-                                        <tableColumn identifier="nickname" width="131.16799926757812" minWidth="56.667999267578125" maxWidth="1000" id="356">
+                                        <tableColumn identifier="nickname" width="115.16799926757812" minWidth="56.667999267578125" maxWidth="1000" id="356">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Nickname">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>

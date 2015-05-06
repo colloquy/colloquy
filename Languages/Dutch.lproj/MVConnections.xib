@@ -69,7 +69,7 @@
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" headerView="100869" id="114" customClass="MVTableView">
-                                    <rect key="frame" x="0.0" y="0.0" width="335" height="20"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="334" height="20"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -186,7 +186,7 @@
                             <tabViewItem identifier="0" id="657">
                                 <view key="view" id="656">
                                     <rect key="frame" x="0.0" y="0.0" width="351" height="242"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                             </tabViewItem>
                             <tabViewItem identifier="1" id="655">
@@ -504,7 +504,7 @@ DQ
                     <button id="636">
                         <rect key="frame" x="26" y="291" width="27" height="24"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" title="Knop" bezelStyle="shadowlessSquare" image="4048D893-CF53-47A8-A57A-55E2A6D10008" imagePosition="only" alignment="left" state="on" borderStyle="border" inset="2" id="100804">
+                        <buttonCell key="cell" type="square" title="Knop" bezelStyle="shadowlessSquare" imagePosition="only" alignment="left" state="on" borderStyle="border" inset="2" id="100804">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -1084,24 +1084,6 @@ Gw
         </window>
     </objects>
     <resources>
-        <image name="4048D893-CF53-47A8-A57A-55E2A6D10008" width="1" height="1">
-            <mutableData key="keyedArchiveRepresentation">
-YnBsaXN0MDDUAQIDBAUGPj9YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
-GR4fIyQsLzI4O1UkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
-c1dOU0NvbG9ygAKADRIgwwAAgAOAC1Z7MSwgMX3SFQoWGFpOUy5vYmplY3RzoReABIAK0hUKGh2iGxyA
-BYAGgAkQANIgCiEiXxAUTlNUSUZGUmVwcmVzZW50YXRpb26AB4AITxCsTU0AKgAAAAoAAAANAQAAAwAA
-AAEAAQAAAQEAAwAAAAEAAQAAAQIAAwAAAAIACAAIAQMAAwAAAAEAAQAAAQYAAwAAAAEAAQAAAREABAAA
-AAEAAAAIARIAAwAAAAEAAQAAARUAAwAAAAEAAgAAARYAAwAAAAEAAQAAARcABAAAAAEAAAACARwAAwAA
-AAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAANIlJicoWiRjbGFzc25hbWVYJGNsYXNzZXNf
-EBBOU0JpdG1hcEltYWdlUmVwoykqK18QEE5TQml0bWFwSW1hZ2VSZXBaTlNJbWFnZVJlcFhOU09iamVj
-dNIlJi0uV05TQXJyYXmiLSvSJSYwMV5OU011dGFibGVBcnJheaMwLSvTMzQKNTY3V05TV2hpdGVcTlND
-b2xvclNwYWNlRDAgMAAQA4AM0iUmOTpXTlNDb2xvcqI5K9IlJjw9V05TSW1hZ2WiPCtfEA9OU0tleWVk
-QXJjaGl2ZXLRQEFUcm9vdIABAAgAEQAaACMALQAyADcARgBMAFcAXgBlAHIAeQCBAIMAhQCKAIwAjgCV
-AJoApQCnAKkAqwCwALMAtQC3ALkAuwDAANcA2QDbAYoBjwGaAaMBtgG6Ac0B2AHhAeYB7gHxAfYCBQIJ
-AhACGAIlAioCLAIuAjMCOwI+AkMCSwJOAmACYwJoAAAAAAAAAgEAAAAAAAAAQgAAAAAAAAAAAAAAAAAA
-Amo
-</mutableData>
-        </image>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSApplicationIcon" width="128" height="128"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>

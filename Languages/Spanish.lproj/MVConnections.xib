@@ -69,7 +69,7 @@
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" headerView="873" id="114" customClass="MVTableView">
-                                    <rect key="frame" x="0.0" y="0.0" width="335" height="20"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="334" height="20"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -186,7 +186,7 @@
                             <tabViewItem identifier="0" id="657">
                                 <view key="view" id="656">
                                     <rect key="frame" x="0.0" y="0.0" width="351" height="213"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                             </tabViewItem>
                             <tabViewItem identifier="1" id="655">
@@ -504,7 +504,7 @@ DQ
                     <button id="636">
                         <rect key="frame" x="75" y="291" width="27" height="24"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" title="Button" bezelStyle="shadowlessSquare" image="DE24028D-5B36-4DF7-82E9-83037EFADAE0" imagePosition="only" alignment="left" state="on" borderStyle="border" inset="2" id="808">
+                        <buttonCell key="cell" type="square" title="Button" bezelStyle="shadowlessSquare" imagePosition="only" alignment="left" state="on" borderStyle="border" inset="2" id="808">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -1083,79 +1083,6 @@ Gw
         </window>
     </objects>
     <resources>
-        <image name="DE24028D-5B36-4DF7-82E9-83037EFADAE0" width="1" height="1">
-            <mutableData key="keyedArchiveRepresentation">
-YnBsaXN0MDDUAQIDBAUGPj9YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
-GR4fIyQsLzI4O1UkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
-c1dOU0NvbG9ygAKADRIgwAAAgAOAC1Z7MSwgMX3SFQoWGFpOUy5vYmplY3RzoReABIAK0hUKGh2iGxyA
-BYAGgAkQANIgCiEiXxAUTlNUSUZGUmVwcmVzZW50YXRpb26AB4AITxENlk1NACoAAAAMAAAAAAAOAQAA
-AwAAAAEAAQAAAQEAAwAAAAEAAQAAAQIAAwAAAAQAAAC6AQMAAwAAAAEAAQAAAQYAAwAAAAEAAgAAAREA
-BAAAAAEAAAAIARIAAwAAAAEAAQAAARUAAwAAAAEABAAAARYAAwAAAAEAAQAAARcABAAAAAEAAAAEARwA
-AwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAQAAADCh3MABwAADMwAAADKAAAAAAAIAAgACAAIAAEA
-AQABAAEAAAzMYXBwbAIQAABtbnRyUkdCIFhZWiAH3wABAAgAEQA7ADVhY3NwQVBQTAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAA9tYAAQAAAADTLWFwcGwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAABFkZXNjAAABUAAAAGJkc2NtAAABtAAAAbJjcHJ0AAADaAAAACN3dHB0AAAD
-jAAAABRyWFlaAAADoAAAABRnWFlaAAADtAAAABRiWFlaAAADyAAAABRyVFJDAAAD3AAACAxhYXJnAAAL
-6AAAACB2Y2d0AAAMCAAAADBuZGluAAAMOAAAAD5jaGFkAAAMeAAAACxtbW9kAAAMpAAAAChiVFJDAAAD
-3AAACAxnVFJDAAAD3AAACAxhYWJnAAAL6AAAACBhYWdnAAAL6AAAACBkZXNjAAAAAAAAAAhEaXNwbGF5
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAbWx1YwAAAAAAAAAiAAAADGhySFIAAAAKAAABqGtvS1IAAAAKAAAB
-qG5iTk8AAAAKAAABqGlkAAAAAAAKAAABqGh1SFUAAAAKAAABqGNzQ1oAAAAKAAABqGRhREsAAAAKAAAB
-qHVrVUEAAAAKAAABqGFyAAAAAAAKAAABqGl0SVQAAAAKAAABqHJvUk8AAAAKAAABqGVzRVMAAAAKAAAB
-qGhlSUwAAAAKAAABqG5sTkwAAAAKAAABqGZpRkkAAAAKAAABqHpoVFcAAAAKAAABqHZpVk4AAAAKAAAB
-qHNrU0sAAAAKAAABqHpoQ04AAAAKAAABqHJ1UlUAAAAKAAABqGZyRlIAAAAKAAABqG1zAAAAAAAKAAAB
-qGNhRVMAAAAKAAABqHRoVEgAAAAKAAABqGVzWEwAAAAKAAABqGRlREUAAAAKAAABqGVuVVMAAAAKAAAB
-qHB0QlIAAAAKAAABqHBsUEwAAAAKAAABqGVsR1IAAAAKAAABqHN2U0UAAAAKAAABqHRyVFIAAAAKAAAB
-qGphSlAAAAAKAAABqHB0UFQAAAAKAAABqAAyADIANAAzAFcAAHRleHQAAAAAQ29weXJpZ2h0IEFwcGxl
-IEluYy4sIDIwMTUAAFhZWiAAAAAAAADz2AABAAAAARYIWFlaIAAAAAAAAH4GAABBIQAAAZpYWVogAAAA
-AAAAVloAAKw1AAAaolhZWiAAAAAAAAAidQAAEqsAALbwY3VydgAAAAAAAAQAAAAABQAKAA8AFAAZAB4A
-IwAoAC0AMgA2ADsAQABFAEoATwBUAFkAXgBjAGgAbQByAHcAfACBAIYAiwCQAJUAmgCfAKMAqACtALIA
-twC8AMEAxgDLANAA1QDbAOAA5QDrAPAA9gD7AQEBBwENARMBGQEfASUBKwEyATgBPgFFAUwBUgFZAWAB
-ZwFuAXUBfAGDAYsBkgGaAaEBqQGxAbkBwQHJAdEB2QHhAekB8gH6AgMCDAIUAh0CJgIvAjgCQQJLAlQC
-XQJnAnECegKEAo4CmAKiAqwCtgLBAssC1QLgAusC9QMAAwsDFgMhAy0DOANDA08DWgNmA3IDfgOKA5YD
-ogOuA7oDxwPTA+AD7AP5BAYEEwQgBC0EOwRIBFUEYwRxBH4EjASaBKgEtgTEBNME4QTwBP4FDQUcBSsF
-OgVJBVgFZwV3BYYFlgWmBbUFxQXVBeUF9gYGBhYGJwY3BkgGWQZqBnsGjAadBq8GwAbRBuMG9QcHBxkH
-Kwc9B08HYQd0B4YHmQesB78H0gflB/gICwgfCDIIRghaCG4IggiWCKoIvgjSCOcI+wkQCSUJOglPCWQJ
-eQmPCaQJugnPCeUJ+woRCicKPQpUCmoKgQqYCq4KxQrcCvMLCwsiCzkLUQtpC4ALmAuwC8gL4Qv5DBIM
-KgxDDFwMdQyODKcMwAzZDPMNDQ0mDUANWg10DY4NqQ3DDd4N+A4TDi4OSQ5kDn8Omw62DtIO7g8JDyUP
-QQ9eD3oPlg+zD88P7BAJECYQQxBhEH4QmxC5ENcQ9RETETERTxFtEYwRqhHJEegSBxImEkUSZBKEEqMS
-wxLjEwMTIxNDE2MTgxOkE8UT5RQGFCcUSRRqFIsUrRTOFPAVEhU0FVYVeBWbFb0V4BYDFiYWSRZsFo8W
-shbWFvoXHRdBF2UXiReuF9IX9xgbGEAYZRiKGK8Y1Rj6GSAZRRlrGZEZtxndGgQaKhpRGncanhrFGuwb
-FBs7G2MbihuyG9ocAhwqHFIcexyjHMwc9R0eHUcdcB2ZHcMd7B4WHkAeah6UHr4e6R8THz4faR+UH78f
-6iAVIEEgbCCYIMQg8CEcIUghdSGhIc4h+yInIlUigiKvIt0jCiM4I2YjlCPCI/AkHyRNJHwkqyTaJQkl
-OCVoJZclxyX3JicmVyaHJrcm6CcYJ0kneierJ9woDSg/KHEooijUKQYpOClrKZ0p0CoCKjUqaCqbKs8r
-Ais2K2krnSvRLAUsOSxuLKIs1y0MLUEtdi2rLeEuFi5MLoIuty7uLyQvWi+RL8cv/jA1MGwwpDDbMRIx
-SjGCMbox8jIqMmMymzLUMw0zRjN/M7gz8TQrNGU0njTYNRM1TTWHNcI1/TY3NnI2rjbpNyQ3YDecN9c4
-FDhQOIw4yDkFOUI5fzm8Ofk6Njp0OrI67zstO2s7qjvoPCc8ZTykPOM9Ij1hPaE94D4gPmA+oD7gPyE/
-YT+iP+JAI0BkQKZA50EpQWpBrEHuQjBCckK1QvdDOkN9Q8BEA0RHRIpEzkUSRVVFmkXeRiJGZ0arRvBH
-NUd7R8BIBUhLSJFI10kdSWNJqUnwSjdKfUrESwxLU0uaS+JMKkxyTLpNAk1KTZNN3E4lTm5Ot08AT0lP
-k0/dUCdQcVC7UQZRUFGbUeZSMVJ8UsdTE1NfU6pT9lRCVI9U21UoVXVVwlYPVlxWqVb3V0RXklfgWC9Y
-fVjLWRpZaVm4WgdaVlqmWvVbRVuVW+VcNVyGXNZdJ114XcleGl5sXr1fD19hX7NgBWBXYKpg/GFPYaJh
-9WJJYpxi8GNDY5dj62RAZJRk6WU9ZZJl52Y9ZpJm6Gc9Z5Nn6Wg/aJZo7GlDaZpp8WpIap9q92tPa6dr
-/2xXbK9tCG1gbbluEm5rbsRvHm94b9FwK3CGcOBxOnGVcfByS3KmcwFzXXO4dBR0cHTMdSh1hXXhdj52
-m3b4d1Z3s3gReG54zHkqeYl553pGeqV7BHtje8J8IXyBfOF9QX2hfgF+Yn7CfyN/hH/lgEeAqIEKgWuB
-zYIwgpKC9INXg7qEHYSAhOOFR4Wrhg6GcobXhzuHn4gEiGmIzokziZmJ/opkisqLMIuWi/yMY4zKjTGN
-mI3/jmaOzo82j56QBpBukNaRP5GokhGSepLjk02TtpQglIqU9JVflcmWNJaflwqXdZfgmEyYuJkkmZCZ
-/JpomtWbQpuvnByciZz3nWSd0p5Anq6fHZ+Ln/qgaaDYoUehtqImopajBqN2o+akVqTHpTilqaYapoum
-/adup+CoUqjEqTepqaocqo+rAqt1q+msXKzQrUStuK4trqGvFq+LsACwdbDqsWCx1rJLssKzOLOutCW0
-nLUTtYq2AbZ5tvC3aLfguFm40blKucK6O7q1uy67p7whvJu9Fb2Pvgq+hL7/v3q/9cBwwOzBZ8Hjwl/C
-28NYw9TEUcTOxUvFyMZGxsPHQce/yD3IvMk6ybnKOMq3yzbLtsw1zLXNNc21zjbOts83z7jQOdC60TzR
-vtI/0sHTRNPG1EnUy9VO1dHWVdbY11zX4Nhk2OjZbNnx2nba+9uA3AXcit0Q3ZbeHN6i3ynfr+A24L3h
-ROHM4lPi2+Nj4+vkc+T85YTmDeaW5x/nqegy6LzpRunQ6lvq5etw6/vshu0R7ZzuKO6070DvzPBY8OXx
-cvH/8ozzGfOn9DT0wvVQ9d72bfb794r4Gfio+Tj5x/pX+uf7d/wH/Jj9Kf26/kv+3P9t//9wYXJhAAAA
-AAADAAAAAmZmAADypwAADVkAABPQAAAKDnZjZ3QAAAAAAAAAAQABAAAAAAAAAAEAAAABAAAAAAAAAAEA
-AAABAAAAAAAAAAEAAG5kaW4AAAAAAAAANgAApgAAAFbAAABIQAAAmkAAACSAAAASAAAAUEAAAFRAAAIz
-MwACMzMAAjMzAAAAAAAAAABzZjMyAAAAAAABC7cAAAWW///zVwAABykAAP3X///7t////aYAAAPaAADA
-9m1tb2QAAAAAAAAF4wAAIkMAACRuy5QQgAAAAAAAAAAAAAAAAAAAAADSJSYnKFokY2xhc3NuYW1lWCRj
-bGFzc2VzXxAQTlNCaXRtYXBJbWFnZVJlcKMpKitfEBBOU0JpdG1hcEltYWdlUmVwWk5TSW1hZ2VSZXBY
-TlNPYmplY3TSJSYtLldOU0FycmF5oi0r0iUmMDFeTlNNdXRhYmxlQXJyYXmjMC0r0zM0CjU2N1dOU1do
-aXRlXE5TQ29sb3JTcGFjZUQwIDAAEAOADNIlJjk6V05TQ29sb3KiOSvSJSY8PVdOU0ltYWdlojwrXxAP
-TlNLZXllZEFyY2hpdmVy0UBBVHJvb3SAAQAIABEAGgAjAC0AMgA3AEYATABXAF4AZQByAHkAgQCDAIUA
-igCMAI4AlQCaAKUApwCpAKsAsACzALUAtwC5ALsAwADXANkA2w51DnoOhQ6ODqEOpQ64DsMOzA7RDtkO
-3A7hDvAO9A77DwMPEA8VDxcPGQ8eDyYPKQ8uDzYPOQ9LD04PUwAAAAAAAAIBAAAAAAAAAEIAAAAAAAAA
-AAAAAAAAAA9VA
-</mutableData>
-        </image>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSApplicationIcon" width="128" height="128"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
