@@ -69,7 +69,7 @@
                 <button toolTip="Delete identifier" id="210">
                     <rect key="frame" x="69" y="44" width="23" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" alternateImage="deleteWidgetPressed" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="348">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="348">
                         <behavior key="behavior" lightByContents="YES"/>
                         <font key="font" metaFont="label"/>
                     </buttonCell>
@@ -524,6 +524,5 @@ Gw
         <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="deleteWidgetPressed" width="22" height="22"/>
     </resources>
 </document>

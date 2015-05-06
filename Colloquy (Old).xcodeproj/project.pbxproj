@@ -250,8 +250,6 @@
 		1CEE3F06057AEC0200AD6DE2 /* JVBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEE3F04057AEC0200AD6DE2 /* JVBuddy.m */; };
 		1CEEAB17095BD23500166A54 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
 		1CEEAB1A095BD25500166A54 /* ChatCore.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		1CF16CE1083ADE590037F222 /* editWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF16CDD083ADE590037F222 /* editWidget.png */; };
-		1CF16CE2083ADE590037F222 /* editWidgetPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF16CDE083ADE590037F222 /* editWidgetPressed.png */; };
 		1CF16D11083ADECF0037F222 /* JVInterfacePreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CF16D0F083ADECF0037F222 /* JVInterfacePreferences.xib */; };
 		1CF4D2F107E5489D00DB421A /* smartTranscriptTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF4D2F007E5489D00DB421A /* smartTranscriptTab.png */; };
 		1CF4D30307E5497400DB421A /* smartTranscriptTabActivity.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF4D30207E5497400DB421A /* smartTranscriptTabActivity.png */; };
@@ -817,8 +815,6 @@
 		1CEE3F03057AEC0200AD6DE2 /* JVBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVBuddy.h; path = Models/JVBuddy.h; sourceTree = "<group>"; };
 		1CEE3F04057AEC0200AD6DE2 /* JVBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVBuddy.m; path = Models/JVBuddy.m; sourceTree = "<group>"; };
 		1CEF8F7B0A3AB7BB0054298A /* JavaScript Support.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "JavaScript Support.xcodeproj"; path = "Plug-Ins/JavaScript Support/JavaScript Support.xcodeproj"; sourceTree = "<group>"; };
-		1CF16CDD083ADE590037F222 /* editWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = editWidget.png; path = Resources/editWidget.png; sourceTree = SOURCE_ROOT; };
-		1CF16CDE083ADE590037F222 /* editWidgetPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = editWidgetPressed.png; path = Resources/editWidgetPressed.png; sourceTree = SOURCE_ROOT; };
 		1CF16D10083ADECF0037F222 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVInterfacePreferences.xib; sourceTree = "<group>"; };
 		1CF4D2F007E5489D00DB421A /* smartTranscriptTab.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smartTranscriptTab.png; sourceTree = "<group>"; };
 		1CF4D30207E5497400DB421A /* smartTranscriptTabActivity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smartTranscriptTabActivity.png; sourceTree = "<group>"; };
@@ -1824,8 +1820,6 @@
 			children = (
 				1CBB23CD04EFE233000001C8 /* actionWidget.png */,
 				1CBB23CE04EFE233000001C8 /* actionWidgetPressed.png */,
-				1CF16CDD083ADE590037F222 /* editWidget.png */,
-				1CF16CDE083ADE590037F222 /* editWidgetPressed.png */,
 				1CD4BD9B05AA773800F72EE6 /* favorites.png */,
 				1CD4BD9C05AA773800F72EE6 /* favoritesPressed.png */,
 				1CBA4E64062CCDA90082D1BF /* infoWidget.png */,
@@ -2193,8 +2187,6 @@
 				0AA8117B0826E08000A3BF2D /* default.js in Resources */,
 				1C05F4560828727D006FCB72 /* markDisplay.png in Resources */,
 				1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.xib in Resources */,
-				1CF16CE1083ADE590037F222 /* editWidget.png in Resources */,
-				1CF16CE2083ADE590037F222 /* editWidgetPressed.png in Resources */,
 				1CF16D11083ADECF0037F222 /* JVInterfacePreferences.xib in Resources */,
 				1C6A429608400BEA00572AB6 /* window.png in Resources */,
 				1C6A42A708400E7900572AB6 /* targetWindow.png in Resources */,
