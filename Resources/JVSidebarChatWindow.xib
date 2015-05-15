@@ -89,7 +89,7 @@
                                             <button id="328" customClass="MVMenuButton">
                                                 <rect key="frame" x="30" y="0.0" width="32" height="23"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
-                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="sidebarFavoritesWidget" imagePosition="only" alignment="center" alternateImage="sidebarFavoritesWidgetPressed" inset="2" id="332">
+                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="CQFavoritesTemplate" imagePosition="only" alignment="center" alternateImage="sidebarFavoritesWidgetPressed" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="332">
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
@@ -97,7 +97,7 @@
                                             <button id="316" customClass="MVMenuButton">
                                                 <rect key="frame" x="-1" y="0.0" width="32" height="23"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
-                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="sidebarActionWidget" imagePosition="only" alignment="center" alternateImage="sidebarActionWidgetPressed" inset="2" id="331">
+                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="CQActionTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="331">
                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
@@ -130,9 +130,8 @@
         </window>
     </objects>
     <resources>
-        <image name="sidebarActionWidget" width="32" height="23"/>
-        <image name="sidebarActionWidgetPressed" width="32" height="23"/>
-        <image name="sidebarFavoritesWidget" width="32" height="23"/>
+        <image name="CQActionTemplate" width="20" height="12"/>
+        <image name="CQFavoritesTemplate" width="20" height="11"/>
         <image name="sidebarFavoritesWidgetPressed" width="32" height="23"/>
     </resources>
 </document>
