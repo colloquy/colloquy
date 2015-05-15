@@ -9,7 +9,10 @@ static NSString *MVToolbarRevealItemIdentifier = @"MVToolbarRevealItem";
 static NSString *MVToolbarClearItemIdentifier = @"MVToolbarClearItem";
 
 NSString *MVPrettyFileSize( unsigned long long size ) {
-	NSString *ret = nil;
+	NSString *ret = [NSByteCountFormatter stringFromByteCount:size countStyle:NSByteCountFormatterCountStyleFile];
+	if (ret != nil) {
+		return ret;
+	}
 	if( size == 0. ) ret = NSLocalizedString( @"Zero bytes", "no file size" );
 	else if( size > 0. && size < 1024. ) ret = [NSString stringWithFormat:NSLocalizedString( @"%lu bytes", "file size measured in bytes" ), size];
 	else if( size >= 1024. && size < pow( 1024., 2. ) ) ret = [NSString stringWithFormat:NSLocalizedString( @"%.1f KB", "file size measured in kilobytes" ), ( size / 1024. )];
