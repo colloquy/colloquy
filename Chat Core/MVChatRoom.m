@@ -75,12 +75,6 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (MVChatConnection *) connection {
-	return _connection;
-}
-
-#pragma mark -
-
 - (BOOL) isEqual:(id) object {
 	if( object == self ) return YES;
 	if( ! object || ! [object isKindOfClass:[self class]] ) return NO;
@@ -122,10 +116,6 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return nil;
 }
 
-- (NSString *) name {
-	return _name;
-}
-
 - (NSString *) displayName {
 	return _connection ? [_connection displayNameForChatRoomNamed:[self name]] : [self name];
 }
@@ -163,34 +153,12 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return ( [self dateJoined] && ! [self dateParted] );
 }
 
-- (NSDate *) dateJoined {
-	return _dateJoined;
-}
-
-- (NSDate *) dateParted {
-	return _dateParted;
-}
-
-- (NSDate *) mostRecentUserActivity {
-	return _mostRecentUserActivity;
-}
-
 - (void) requestRecentActivity {
 	// subclass this method, don't call super
 }
 
 - (void) persistLastActivityDate {
 	// subclass this method, don't call super
-}
-
-#pragma mark -
-
-- (NSStringEncoding) encoding {
-	return _encoding;
-}
-
-- (void) setEncoding:(NSStringEncoding) encoding {
-	_encoding = encoding;
 }
 
 #pragma mark -
@@ -231,20 +199,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (NSData *) topic {
-	return _topic;
-}
-
 - (void) changeTopic:(MVChatString *) topic {
 // subclass this method, if needed
-}
-
-- (MVChatUser *) topicAuthor {
-	return _topicAuthor;
-}
-
-- (NSDate *) dateTopicChanged {
-	return _dateTopicChanged;
 }
 
 #pragma mark -

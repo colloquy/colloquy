@@ -216,9 +216,10 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
+/// subclass this method
 @property(readonly) MVChatConnectionType type;
 
-@property(copy) NSString *uniqueIdentifier;
+@property(nonatomic, copy) NSString *uniqueIdentifier;
 
 @property(strong, readonly) NSSet *supportedFeatures;
 @property(readonly) const NSStringEncoding *supportedStringEncodings;
@@ -229,14 +230,14 @@ extern NSString *MVChatConnectionErrorDomain;
 @property(strong, readonly) NSString *urlScheme;
 @property(strong, readonly) NSURL *url;
 
-@property NSStringEncoding encoding;
+@property(nonatomic) NSStringEncoding encoding;
 
 @property(copy) NSString *realName;
 
 @property(copy) NSString *nickname;
 @property(copy) NSString *preferredNickname;
 
-@property(copy) NSArray *alternateNicknames;
+@property(nonatomic, copy) NSArray *alternateNicknames;
 @property(strong, readonly) NSString *nextAlternateNickname;
 
 @property(copy) NSString *nicknamePassword;
@@ -252,7 +253,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property unsigned short serverPort;
 
-@property MVChatMessageFormat outgoingChatFormat;
+@property(nonatomic) MVChatMessageFormat outgoingChatFormat;
 
 @property(getter=didConnectSecurely) BOOL connectedSecurely; // IRCv3.1 + `tls` capability can indicate that the *next* connection will be secure, but not our current one
 @property(getter=isSecure) BOOL secure;
@@ -284,7 +285,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property(strong, readonly) NSSet *chatUserWatchRules;
 
-@property(copy) MVChatString *awayStatusMessage;
+@property(nonatomic, copy) MVChatString *awayStatusMessage;
 
 @property(readonly, getter=isConnected) BOOL connected;
 @property(strong, readonly) NSDate *connectedDate;
@@ -292,6 +293,7 @@ extern NSString *MVChatConnectionErrorDomain;
 @property(readonly, getter=isWaitingToReconnect) BOOL waitingToReconnect;
 @property(readonly) unsigned short reconnectAttemptCount;
 @property(readonly) MVChatConnectionStatus status;
+/// subclass this method, if needed
 @property(readonly) NSUInteger lag;
 
 #pragma mark -
@@ -313,6 +315,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
+//! subclass this method
 - (void) connect;
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname;
 - (void) disconnect;
@@ -340,6 +343,7 @@ extern NSString *MVChatConnectionErrorDomain;
 #pragma mark -
 
 - (void) processIncomingMessage:(id) raw;
+/// subclass this method, don't call super
 - (void) processIncomingMessage:(id) raw fromServer:(BOOL) fromServer;
 
 #pragma mark -

@@ -1,13 +1,13 @@
 #import "MVAvailability.h"
 #import "MVChatString.h"
 
-typedef NS_ENUM(NSInteger, MVChatUserType) {
+typedef NS_ENUM(OSType, MVChatUserType) {
 	MVChatRemoteUserType = 'remT',
 	MVChatLocalUserType = 'locL',
 	MVChatWildcardUserType = 'wilD'
 };
 
-typedef NS_ENUM(NSInteger, MVChatUserStatus) {
+typedef NS_ENUM(OSType, MVChatUserStatus) {
 	MVChatUserUnknownStatus = 'uKnw',
 	MVChatUserOfflineStatus = 'oflN',
 	MVChatUserDetachedStatus = 'detA',
@@ -92,9 +92,9 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 	BOOL _serverOperator;
 	BOOL _onlineNotificationSent;
 }
-+ (id) wildcardUserFromString:(NSString *) mask;
-+ (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host;
-+ (id) wildcardUserWithFingerprint:(NSString *) fingerprint;
++ (instancetype) wildcardUserFromString:(NSString *) mask;
++ (instancetype) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host;
++ (instancetype) wildcardUserWithFingerprint:(NSString *) fingerprint;
 
 @property(strong, readonly) MVChatConnection *connection;
 @property(readonly) MVChatUserType type;
@@ -106,29 +106,29 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 @property(readonly, getter=isIdentified) BOOL identified;
 @property(readonly, getter=isServerOperator) BOOL serverOperator;
 
-@property(readonly) MVChatUserStatus status;
-@property(strong, readonly) NSData *awayStatusMessage;
+@property(nonatomic, readonly) MVChatUserStatus status;
+@property(copy, readonly) NSData *awayStatusMessage;
 
-@property(strong, readonly) NSDate *dateConnected;
-@property(strong, readonly) NSDate *dateDisconnected;
-@property(strong, readonly) NSDate *dateUpdated;
+@property(copy, readonly) NSDate *dateConnected;
+@property(copy, readonly) NSDate *dateDisconnected;
+@property(copy, readonly) NSDate *dateUpdated;
 @property(nonatomic, copy) NSDate *mostRecentUserActivity;
 
-@property(readonly) NSTimeInterval idleTime;
+@property(nonatomic, readonly) NSTimeInterval idleTime;
 @property(readonly) NSTimeInterval lag;
 
-@property(strong, readonly) NSString *displayName;
-@property(strong, readonly) NSString *nickname;
-@property(strong, readonly) NSString *realName;
-@property(strong, readonly) NSString *username;
-@property(strong, readonly) NSString *account;
-@property(strong, readonly) NSString *address;
-@property(strong, readonly) NSString *serverAddress;
-@property(strong, readonly) NSString *maskRepresentation;
+@property(copy, readonly) NSString *displayName;
+@property(copy, readonly, nonatomic) NSString *nickname;
+@property(copy, readonly, nonatomic) NSString *realName;
+@property(copy, readonly, nonatomic) NSString *username;
+@property(copy, readonly, nonatomic) NSString *account;
+@property(copy, readonly) NSString *address;
+@property(copy, readonly, nonatomic) NSString *serverAddress;
+@property(copy, readonly) NSString *maskRepresentation;
 
-@property(strong, readonly) id uniqueIdentifier;
-@property(strong, readonly) NSData *publicKey;
-@property(strong, readonly) NSString *fingerprint;
+@property(nonatomic, strong, readonly) id uniqueIdentifier;
+@property(copy, readonly) NSData *publicKey;
+@property(copy, readonly) NSString *fingerprint;
 
 @property(readonly) NSUInteger supportedModes;
 @property(readonly) NSUInteger modes;

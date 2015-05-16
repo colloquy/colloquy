@@ -27,6 +27,10 @@ NSString *MVDirectChatConnectionGotMessageNotification = @"";
 
 NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomain";
 
+@interface MVDirectChatConnection () <MVDirectClientConnectionDelegate>
+
+@end
+
 @implementation MVDirectChatConnection
 + (instancetype) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive {
 	static long long passiveId = 0;
@@ -60,30 +64,6 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 }
 
 #pragma mark -
-
-- (BOOL) isPassive {
-	return _passive;
-}
-
-- (MVDirectChatConnectionStatus) status {
-	return _status;
-}
-
-- (MVChatUser *) user {
-	return _user;
-}
-
-- (NSString *) host {
-	return _host;
-}
-
-- (NSString *) connectedHost {
-	return _connectedHost;
-}
-
-- (unsigned short) port {
-	return _port;
-}
 
 - (NSString *) description {
 	return [[self user] description];

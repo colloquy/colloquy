@@ -95,9 +95,9 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 
 @property NSStringEncoding encoding;
 
-@property(strong, readonly) NSData *topic;
+@property(copy, readonly) NSData *topic;
 @property(strong, readonly) MVChatUser *topicAuthor;
-@property(strong, readonly) NSDate *dateTopicChanged;
+@property(copy, readonly) NSDate *dateTopicChanged;
 
 @property(strong, readonly) NSSet *supportedAttributes;
 @property(strong, readonly) NSDictionary *attributes;

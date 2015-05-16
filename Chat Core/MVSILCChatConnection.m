@@ -872,7 +872,7 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-@interface MVSILCChatConnection (Private)
+@interface MVSILCChatConnection ()
 - (void) _silcRunloop;
 @end
 
@@ -1359,11 +1359,9 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 - (NSUInteger) lag {
 	return 0;
 }
-@end
 
 #pragma mark -
 
-@implementation MVSILCChatConnection (MVSILCChatConnectionPrivate)
 + (const char *) _flattenedSILCStringForMessage:(MVChatString *) message andChatFormat:(MVChatMessageFormat) format {
 	NSString *cformat = nil;
 

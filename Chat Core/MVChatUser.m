@@ -114,16 +114,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
-- (MVChatConnection *) connection {
-	return _connection;
-}
-
-- (MVChatUserType) type {
-	return _type;
-}
-
-#pragma mark -
-
 - (BOOL) isRemoteUser {
 	return ( _type == MVChatRemoteUserType );
 }
@@ -134,16 +124,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (BOOL) isWildcardUser {
 	return ( _type == MVChatWildcardUserType );
-}
-
-#pragma mark -
-
-- (BOOL) isIdentified {
-	return _identified;
-}
-
-- (BOOL) isServerOperator {
-	return _serverOperator;
 }
 
 #pragma mark -
@@ -233,48 +213,12 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
-- (MVChatUserStatus) status {
-	return _status;
-}
-
-- (NSData *) awayStatusMessage {
-	return _awayStatusMessage;
-}
-
-#pragma mark -
-
-- (NSDate *) dateConnected {
-	return _dateConnected;
-}
-
-- (NSDate *) dateDisconnected {
-	return _dateDisconnected;
-}
-
-- (NSDate *) dateUpdated {
-	return _dateUpdated;
-}
-
-- (NSDate *) mostRecentUserActivity {
-	return _mostRecentUserActivity;
-}
-
 - (void) requestRecentActivity {
 	// subclass this method, don't call super
 }
 
 - (void) persistLastActivityDate {
 	// subclass this method, don't call super
-}
-
-#pragma mark -
-
-- (NSTimeInterval) idleTime {
-	return _idleTime;
-}
-
-- (NSTimeInterval) lag {
-	return _lag;
 }
 
 #pragma mark -
@@ -309,10 +253,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	return _username;
 }
 
-- (NSString *) address {
-	return _address;
-}
-
 - (NSString *) serverAddress {
 	if( ! _serverAddress ) return [[self connection] server];
 	return _serverAddress;
@@ -324,27 +264,9 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
-- (id) uniqueIdentifier {
-	return _uniqueIdentifier;
-}
-
-- (NSData *) publicKey {
-	return _publicKey;
-}
-
-- (NSString *) fingerprint {
-	return _fingerprint;
-}
-
-#pragma mark -
-
 - (NSUInteger) supportedModes {
 // subclass this method, if needed
 	return 0;
-}
-
-- (NSUInteger) modes {
-	return _modes;
 }
 
 #pragma mark -

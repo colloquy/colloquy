@@ -5,6 +5,8 @@
 
 NSString *MVDCCFriendlyAddress( NSString *address );
 
+@protocol MVDirectClientConnectionDelegate;
+
 @interface MVDirectClientConnection : NSObject {
 @private
 	id _delegate;
@@ -32,10 +34,11 @@ NSString *MVDCCFriendlyAddress( NSString *address );
 
 - (void) writeData:(NSData *) data withTimeout:(NSTimeInterval) timeout withTag:(long) tag;
 
-@property (weak) id delegate;
+@property (weak) id<MVDirectClientConnectionDelegate> delegate;
 @end
 
-@interface NSObject (MVDirectClientConnectionDelegate)
+@protocol MVDirectClientConnectionDelegate <NSObject>
+@optional
 - (void) directClientConnection:(MVDirectClientConnection *) connection didConnectToHost:(NSString *) host port:(unsigned short) port;
 - (void) directClientConnection:(MVDirectClientConnection *) connection acceptingConnectionsToHost:(NSString *) host port:(unsigned short) port;
 - (void) directClientConnection:(MVDirectClientConnection *) connection willDisconnectWithError:(NSError *) error;

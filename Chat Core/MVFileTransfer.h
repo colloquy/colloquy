@@ -11,7 +11,7 @@ extern NSString *MVFileTransferErrorOccurredNotification;
 
 extern NSString *MVFileTransferErrorDomain;
 
-typedef NS_ENUM(NSInteger, MVFileTransferStatus) {
+typedef NS_ENUM(OSType, MVFileTransferStatus) {
 	MVFileTransferDoneStatus = 'trDn',
 	MVFileTransferNormalStatus = 'trNo',
 	MVFileTransferHoldingStatus = 'trHo',
@@ -19,7 +19,7 @@ typedef NS_ENUM(NSInteger, MVFileTransferStatus) {
 	MVFileTransferErrorStatus = 'trEr'
 };
 
-typedef NS_ENUM(NSInteger, MVFileTransferError) {
+typedef NS_ENUM(OSType, MVFileTransferError) {
 	MVFileTransferConnectionError = -1,
 	MVFileTransferFileCreationError = -2,
 	MVFileTransferFileOpenError = -3,
@@ -71,10 +71,10 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 @property(readonly) unsigned long long finalSize;
 @property(readonly) unsigned long long transferred;
 
-@property(strong, readonly) NSDate *startDate;
+@property(copy, readonly) NSDate *startDate;
 @property(readonly) unsigned long long startOffset;
 
-@property(strong, readonly) NSString *host;
+@property(copy, readonly) NSString *host;
 @property(readonly) unsigned short port;
 
 @property(strong, readonly) MVChatUser *user;

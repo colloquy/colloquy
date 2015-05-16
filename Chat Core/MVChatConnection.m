@@ -115,6 +115,16 @@ static const NSStringEncoding supportedEncodings[] = {
 };
 
 @implementation MVChatConnection
+// subclass this method
+@dynamic nickname;
+@synthesize alternateNicknames = _alternateNicks;
+@synthesize nicknamePassword = _npassword;
+
+// subclass this method
+@dynamic serverPort;
+@synthesize proxyType = _proxy;
+@synthesize bouncerType = _bouncer;
+
 + (BOOL) supportsURLScheme:(NSString *) scheme {
 	if( ! scheme ) return NO;
 
@@ -313,9 +323,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (NSString *) uniqueIdentifier {
-	return _uniqueIdentifier;
-}
+@synthesize uniqueIdentifier = _uniqueIdentifier;
 
 - (void) setUniqueIdentifier:(NSString *) uniqueIdentifier {
 	NSParameterAssert( uniqueIdentifier != nil );
@@ -384,16 +392,6 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (NSError *) lastError {
-	return _lastError;
-}
-
-- (NSError *) serverError {
-	return _serverError;
-}
-
-#pragma mark -
-
 - (NSString *) urlScheme {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
@@ -413,10 +411,6 @@ static const NSStringEncoding supportedEncodings[] = {
 		_encoding = newEncoding;
 }
 
-- (NSStringEncoding) encoding {
-	return _encoding;
-}
-
 #pragma mark -
 
 - (void) setRealName:(NSString *) name {
@@ -429,17 +423,6 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 #pragma mark -
-
-- (void) setNickname:(NSString *) nickname {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
-}
-
-- (NSString *) nickname {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
-	return nil;
-}
 
 - (void) setPreferredNickname:(NSString *) nickname {
 // subclass this method, if needed
@@ -458,24 +441,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	_nextAltNickIndex = 0;
 }
 
-- (NSArray *) alternateNicknames {
-	return [NSArray arrayWithArray:_alternateNicks];
-}
-
 - (NSString *) nextAlternateNickname {
 	if( [[self alternateNicknames] count] && _nextAltNickIndex < [[self alternateNicknames] count] )
 		return [self alternateNicknames][_nextAltNickIndex++];
 	return nil;
-}
-
-#pragma mark -
-
-- (void) setNicknamePassword:(NSString *) newPassword {
-	MVSafeCopyAssign( _npassword, newPassword );
-}
-
-- (NSString *) nicknamePassword {
-	return _npassword;
 }
 
 #pragma mark -
@@ -571,186 +540,9 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
-- (void) setServerPort:(unsigned short) port {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
-}
-
-- (unsigned short) serverPort {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
-	return 0;
-}
-
-#pragma mark -
-
 - (void) setOutgoingChatFormat:(MVChatMessageFormat) format {
 	if( ! format ) format = MVChatConnectionDefaultMessageFormat;
 	_outgoingChatFormat = format;
-}
-
-- (MVChatMessageFormat) outgoingChatFormat {
-	return _outgoingChatFormat;
-}
-
-#pragma mark -
-
-- (void) setConnectedSecurely:(BOOL) connectedSecurely {
-	_connectedSecurely = connectedSecurely;
-}
-
-- (BOOL) didConnectSecurely {
-	return _connectedSecurely;
-}
-
-#pragma mark -
-
-- (void) setSecure:(BOOL) ssl {
-	_secure = ssl;
-}
-
-- (BOOL) isSecure {
-	return _secure;
-}
-
-#pragma mark -
-
-- (void) setRequestsSASL:(BOOL) sasl {
-	_requestsSASL = sasl;
-}
-
-- (BOOL) requestsSASL {
-	return _requestsSASL;
-}
-
-#pragma mark -
-
-- (void) setRoomsWaitForIdentification:(BOOL)roomsWaitForIdentification {
-	_roomsWaitForIdentification = roomsWaitForIdentification;
-}
-
-- (BOOL) roomsWaitForIdentification {
-	return _roomsWaitForIdentification;
-}
-
-#pragma mark -
-
-- (void) setProxyType:(MVChatConnectionProxy) newType {
-	_proxy = newType;
-}
-
-- (MVChatConnectionProxy) proxyType {
-	return _proxy;
-}
-
-#pragma mark -
-
-- (void) setProxyServer:(NSString *) address {
-	MVSafeCopyAssign( _proxyServer, address );
-}
-
-- (NSString *) proxyServer {
-	return _proxyServer;
-}
-
-#pragma mark -
-
-- (void) setProxyServerPort:(unsigned short) port {
-	_proxyServerPort = port;
-}
-
-- (unsigned short) proxyServerPort {
-	return _proxyServerPort;
-}
-
-#pragma mark -
-
-- (void) setProxyUsername:(NSString *) newUsername {
-	MVSafeCopyAssign( _proxyUsername, newUsername );
-}
-
-- (NSString *) proxyUsername {
-	return _proxyUsername;
-}
-
-#pragma mark -
-
-- (void) setProxyPassword:(NSString *) newPassword {
-	MVSafeCopyAssign( _proxyPassword, newPassword );
-}
-
-- (NSString *) proxyPassword {
-	return _proxyPassword;
-}
-
-#pragma mark -
-
-- (void) setBouncerType:(MVChatConnectionBouncer) newType {
-	_bouncer = newType;
-}
-
-- (MVChatConnectionBouncer) bouncerType {
-	return _bouncer;
-}
-
-#pragma mark -
-
-- (void) setBouncerServer:(NSString *) address {
-	MVSafeCopyAssign( _bouncerServer, address );
-}
-
-- (NSString *) bouncerServer {
-	return _bouncerServer;
-}
-
-#pragma mark -
-
-- (void) setBouncerServerPort:(unsigned short) port {
-	_bouncerServerPort = port;
-}
-
-- (unsigned short) bouncerServerPort {
-	return _bouncerServerPort;
-}
-
-#pragma mark -
-
-- (void) setBouncerUsername:(NSString *) newUsername {
-	MVSafeCopyAssign( _bouncerUsername, newUsername );
-}
-
-- (NSString *) bouncerUsername {
-	return _bouncerUsername;
-}
-
-#pragma mark -
-
-- (void) setBouncerPassword:(NSString *) newPassword {
-	MVSafeCopyAssign( _bouncerPassword, newPassword );
-}
-
-- (NSString *) bouncerPassword {
-	return _bouncerPassword;
-}
-
-#pragma mark -
-
-- (void) setBouncerDeviceIdentifier:(NSString *) newIdentifier {
-	MVSafeCopyAssign( _bouncerDeviceIdentifier, newIdentifier );
-}
-
-- (NSString *) bouncerDeviceIdentifier {
-	return _bouncerDeviceIdentifier;
-}
-
-#pragma mark -
-
-- (void) setBouncerConnectionIdentifier:(NSString *) newIdentifier {
-	MVSafeCopyAssign( _bouncerConnectionIdentifier, newIdentifier );
-}
-
-- (NSString *) bouncerConnectionIdentifier {
-	return _bouncerConnectionIdentifier;
 }
 
 #pragma mark -
@@ -1010,10 +802,6 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	}
 }
 
-- (MVChatUser *) localUser {
-	return _localUser;
-}
-
 #pragma mark -
 
 - (void) addChatUserWatchRule:(MVChatUserWatchRule *) rule {
@@ -1061,9 +849,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
-- (MVChatString *) awayStatusMessage {
-	return _awayMessage;
-}
+@synthesize awayStatusMessage = _awayMessage;
 
 - (void) setAwayStatusMessage:(MVChatString *) message {
 // subclass this method
@@ -1072,16 +858,8 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
-- (NSDate *) connectedDate {
-	return _connectedDate;
-}
-
 - (BOOL) isConnected {
 	return ( _status == MVChatConnectionConnectedStatus );
-}
-
-- (MVChatConnectionStatus) status {
-	return _status;
 }
 
 - (NSUInteger) lag {
@@ -1121,10 +899,6 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (BOOL) isWaitingToReconnect {
 	return ( ! [self isConnected] && _reconnectTimer ? YES : NO );
-}
-
-- (unsigned short) reconnectAttemptCount {
-	return _reconnectAttemptCount;
 }
 
 - (void) purgeCaches {

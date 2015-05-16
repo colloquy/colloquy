@@ -12,6 +12,15 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchRuleRemovedMatchedUserNotification";
 
 @implementation MVChatUserWatchRule
+@synthesize usernameIsRegularExpression = _usernameIsRegex;
+@synthesize address = _address;
+@synthesize username = _username;
+@synthesize addressIsRegularExpression = _addressIsRegex;
+@synthesize nickname = _nickname;
+@synthesize nicknameIsRegularExpression = _nicknameIsRegex;
+@synthesize realNameIsRegularExpression = _realNameIsRegex;
+@synthesize realName = _realName;
+
 - (instancetype) initWithDictionaryRepresentation:(NSDictionary *) dictionary {
 	if( ( self = [super init] ) ) {
 		[self setUsername:dictionary[@"username"]];
@@ -178,10 +187,6 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	MVSafeCopyAssign( _nickname, newNickname );
 }
 
-- (BOOL) nicknameIsRegularExpression {
-	return _nicknameIsRegex;
-}
-
 - (NSString *) realName {
 	return (_realNameIsRegex && _realName ? [NSString stringWithFormat:@"/%@/", _realName] : _realName);
 }
@@ -193,10 +198,6 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 		newRealName = [newRealName substringWithRange:NSMakeRange( 1, newRealName.length - 2)];
 
 	MVSafeCopyAssign( _realName, newRealName );
-}
-
-- (BOOL) realNameIsRegularExpression {
-	return _realNameIsRegex;
 }
 
 - (NSString *) username {
@@ -212,10 +213,6 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	MVSafeCopyAssign( _username, newUsername );
 }
 
-- (BOOL) usernameIsRegularExpression {
-	return _usernameIsRegex;
-}
-
 - (NSString *) address {
 	return (_addressIsRegex && _address ? [NSString stringWithFormat:@"/%@/", _address] : _address);
 }
@@ -229,31 +226,4 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	MVSafeCopyAssign( _address, newAddress );
 }
 
-- (BOOL) addressIsRegularExpression {
-	return _addressIsRegex;
-}
-
-- (NSData *) publicKey {
-	return _publicKey;
-}
-
-- (void) setPublicKey:(NSData *) publicKey {
-	MVSafeCopyAssign( _publicKey, publicKey );
-}
-
-- (BOOL) isInterim {
-	return _interim;
-}
-
-- (void) setInterim:(BOOL) interim {
-	_interim = interim;
-}
-
-- (NSArray *) applicableServerDomains {
-	return _applicableServerDomains;
-}
-
-- (void) setApplicableServerDomains:(NSArray *) serverDomains {
-	MVSafeCopyAssign( _applicableServerDomains, serverDomains );
-}
 @end
