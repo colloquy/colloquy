@@ -39,6 +39,6 @@
 @interface MVICBChatRoom : MVChatRoom {
 }
 
-- (id) initWithName:(NSString *) name
+- (instancetype) initWithName:(NSString *) name
        andConnection:(MVICBChatConnection *) connection;
 @end

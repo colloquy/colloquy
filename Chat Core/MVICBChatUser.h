@@ -40,8 +40,8 @@
 
 }
 
-- (id) initLocalUserWithConnection:(MVICBChatConnection *) connection;
-- (id) initWithNickname:(NSString *) nickname
+- (instancetype) initLocalUserWithConnection:(MVICBChatConnection *) connection;
+- (instancetype) initWithNickname:(NSString *) nickname
        andConnection:(MVICBChatConnection *) connection;
 
 @end

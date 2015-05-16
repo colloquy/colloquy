@@ -38,8 +38,8 @@
 	NSMutableArray *_fields;
 }
 
-- (id) initWithPacketType:(char) type;
-- (id) initFromRawData:(NSData *) raw;
+- (instancetype) initWithPacketType:(char) type;
+- (instancetype) initFromRawData:(NSData *) raw;
 
 - (NSString *) description;
 - (NSArray *) fields;

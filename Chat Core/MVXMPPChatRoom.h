@@ -9,7 +9,7 @@
 @private
 	MVChatUser *_localMemberUser;
 }
-- (id) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) connection;
+- (instancetype) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) connection;
 @end
 
 @interface MVXMPPChatRoom (MVXMPPChatRoomPrivate)

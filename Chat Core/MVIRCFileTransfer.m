@@ -13,7 +13,18 @@
 
 #define DCCPacketSize 4096
 
+@interface MVIRCUploadFileTransfer () <MVDirectClientConnectionDelegate>
+
+@end
+
+@interface MVIRCDownloadFileTransfer () <MVDirectClientConnectionDelegate>
+
+@end
+
 @implementation MVIRCUploadFileTransfer
+@synthesize _passiveIdentifier = _passiveId;
+@synthesize _fileNameQuoted;
+
 + (instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	static long long passiveId = 0;
 
@@ -175,26 +186,6 @@
 
 #pragma mark -
 
-- (void) _setPassiveIdentifier:(long long) identifier {
-	_passiveId = identifier;
-}
-
-- (long long) _passiveIdentifier {
-	return _passiveId;
-}
-
-#pragma mark -
-
-- (void) _setFileNameQuoted:(BOOL) quoted {
-	_fileNameQuoted = quoted;
-}
-
-- (BOOL) _fileNameQuoted {
-	return _fileNameQuoted;
-}
-
-#pragma mark -
-
 - (void) _setStartOffset:(unsigned long long) newStartOffset {
 	[_fileHandle seekToFileOffset:newStartOffset];
 	[super _setStartOffset:newStartOffset];
@@ -204,6 +195,10 @@
 #pragma mark -
 
 @implementation MVIRCDownloadFileTransfer
+@synthesize _passiveIdentifier = _passiveId;
+@synthesize _fileNameQuoted;
+@synthesize _turbo;
+
 - (void) dealloc {
 	[[[self user] connection] _removeDirectClientConnection:self];
 
@@ -356,33 +351,4 @@
 	else [_directClientConnection connectToHost:[self host] onPort:[self port]];
 }
 
-#pragma mark -
-
-- (void) _setTurbo:(BOOL) turbo {
-	_turbo = turbo;
-}
-
-- (BOOL) _turbo {
-	return _turbo;
-}
-
-#pragma mark -
-
-- (void) _setPassiveIdentifier:(long long) identifier {
-	_passiveId = identifier;
-}
-
-- (long long) _passiveIdentifier {
-	return _passiveId;
-}
-
-#pragma mark -
-
-- (void) _setFileNameQuoted:(BOOL) quoted {
-	_fileNameQuoted = quoted;
-}
-
-- (BOOL) _fileNameQuoted {
-	return _fileNameQuoted;
-}
 @end

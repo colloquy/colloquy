@@ -16,11 +16,8 @@
 - (void) _setupAndStart;
 - (void) _sendNextPacket;
 
-- (void) _setPassiveIdentifier:(long long) identifier;
-@property (readonly) long long _passiveIdentifier;
-
-- (void) _setFileNameQuoted:(BOOL) quoted;
-@property (readonly) BOOL _fileNameQuoted;
+@property (setter=_setPassiveIdentifier:) long long _passiveIdentifier;
+@property (setter=_setFileNameQuoted:) BOOL _fileNameQuoted;
 @end
 
 #pragma mark -
@@ -34,12 +31,7 @@
 }
 - (void) _setupAndStart;
 
-- (void) _setTurbo:(BOOL) turbo;
-@property (readonly) BOOL _turbo;
-
-- (void) _setPassiveIdentifier:(long long) identifier;
-@property (readonly) long long _passiveIdentifier;
-
-- (void) _setFileNameQuoted:(BOOL) quoted;
-@property (readonly) BOOL _fileNameQuoted;
+@property (setter=_setTurbo:) BOOL _turbo;
+@property (setter=_setPassiveIdentifier:) long long _passiveIdentifier;
+@property (setter=_setFileNameQuoted:) BOOL _fileNameQuoted;
 @end

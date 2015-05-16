@@ -8,7 +8,7 @@
 @private
 	BOOL _roomMember;
 }
-- (id) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) connection;
+- (instancetype) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) connection;
 @end
 
 @interface MVXMPPChatUser (MVXMPPChatUserPrivate)
