@@ -290,7 +290,7 @@ would you like to view the emoticons in the Appearance Preferences */
 "Appearance" = "Apariencia";
 
 /* appearance preferences menu item title */
-"Appearance Preferences..." = "Preferencias de apariencia...";
+"Appearance Preferences..." = "Preferencias de apariencia…";
 
 /* available buddy status */
 "Available" = "Disponible";
@@ -308,7 +308,7 @@ would you like to view the emoticons in the Appearance Preferences */
 "Ban From Room" = "Expulsar del canal";
 
 /* ban from room (customized) contextual menu - admin only */
-"Ban From Room..." = "Expulsar del canal...";
+"Ban From Room..." = "Expulsar del canal…";
 
 /* ban user button */
 "Ban User" = "Expulsar usuario";
@@ -511,7 +511,7 @@ inspector toolbar button in customize palette */
 "Join Room" = "Visitar canal";
 
 /* join room contextual menu item title */
-"Join Room..." = "Visitar canal...";
+"Join Room..." = "Visitar canal…";
 
 /* join chat room button tooltip */
 "Join a chat room" = "Visitar un canal de chat";
@@ -529,7 +529,7 @@ inspector toolbar button in customize palette */
 "Kick & Ban From Room" = "Patear y expulsar del canal";
 
 /* kickban from room (customized) contextual menu - admin only */
-"Kick & Ban From Room..." = "Patear y expulsar del canal...";
+"Kick & Ban From Room..." = "Patear y expulsar del canal…";
 
 /* kick and ban user button */
 "Kick & Ban User" = "Patear y expulsar usuario";
@@ -538,7 +538,7 @@ inspector toolbar button in customize palette */
 "Kick From Room" = "Patear del canal";
 
 /* kick from room (customized) contextual menu - admin only */
-"Kick From Room..." = "Kick From Room...";
+"Kick From Room..." = "Kick From Room…";
 
 /* kick user button */
 "Kick User" = "Patear usuario";
@@ -562,7 +562,7 @@ inspector toolbar button in customize palette */
 "Message User" = "Enviar mensaje";
 
 /* message user contextual menu item title */
-"Message User..." = "Enviar mensaje...";
+"Message User..." = "Enviar mensaje…";
 
 /* message user button tooltip */
 "Message a user" = "Enviar mensaje a un usuario";
@@ -620,13 +620,13 @@ no answer */
 "One of your highlight words was mentioned in %@." = "Una de sus palabras destacadas fue mencionada en %@.";
 
 /* open favorites folder menu title */
-"Open Favorites folder..." = "Abrir carpeta de favoritos...";
+"Open Favorites folder..." = "Abrir carpeta de favoritos…";
 
 /* server console button tooltip */
 "Open the server console" = "Abrir consola del servidor";
 
 /* other image label */
-"Other..." = "Otros...";
+"Other..." = "Otros…";
 
 /* chat panes drawer toolbar customize palette name */
 "Panel Drawer" = "Cajón del panel";
@@ -710,7 +710,7 @@ no answer */
 "Save" = "Guardar";
 
 /* save as button name */
-"Save As..." = "Guardar como...";
+"Save As..." = "Guardar como…";
 
 /* send file toolbar tooltip
 send file toolbar customize palette name
@@ -721,7 +721,7 @@ send file toolbar button name */
 "Send File Passively" = "Enviar archivo usando transferencia pasiva";
 
 /* send file contextual menu */
-"Send File..." = "Enviar archivo...";
+"Send File..." = "Enviar archivo…";
 
 /* send message contextual menu */
 "Send Message" = "Enviar mensaje";
@@ -1129,7 +1129,7 @@ yes answer */
 "incompatible encoding" = "codificación incompatible";
 
 /* joining status info line in drawer */
-"joining..." = "visitando...";
+"joining..." = "visitando…";
 
 /* chat room kicked status line in drawer */
 "kicked out" = "Pateado";

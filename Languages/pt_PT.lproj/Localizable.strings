@@ -320,7 +320,7 @@ would you like to view the emoticons in the Appearance Preferences */
 "Appearance" = "Aparência";
 
 /* appearance preferences menu item title */
-"Appearance Preferences..." = "Preferências de Aparência...";
+"Appearance Preferences..." = "Preferências de Aparência…";
 
 /* confirm the delete of a connection */
 "Are you sure you want to delete the connection for %@? Any associated Keychain passwords will also be deleted." = "Tem a certeza que quer apagar a ligação para %@? Quaisquer palavras-passe associadas no chaveiro também serão apagadas.";
@@ -353,7 +353,7 @@ would you like to view the emoticons in the Appearance Preferences */
 "Ban From Room" = "Banir da sala";
 
 /* ban from room (customized) contextual menu - admin only */
-"Ban From Room..." = "Banir da sala...";
+"Ban From Room..." = "Banir da sala…";
 
 /* ban user button */
 "Ban User" = "Banir utilizador";
@@ -572,7 +572,7 @@ inspector toolbar button in customize palette */
 "Join Room" = "juntar-se a uma sala";
 
 /* join room contextual menu item title */
-"Join Room..." = "Juntar-se a uma sala...";
+"Join Room..." = "Juntar-se a uma sala…";
 
 /* join chat room button tooltip */
 "Join a chat room" = "Juntar-se a uma sala de conversa";
@@ -593,7 +593,7 @@ inspector toolbar button in customize palette */
 "Kick & Ban From Room" = "Expulsar a pontapé e banir da sala";
 
 /* kickban from room (customized) contextual menu - admin only */
-"Kick & Ban From Room..." = "Expulsar a pontapé e banir da sala...";
+"Kick & Ban From Room..." = "Expulsar a pontapé e banir da sala…";
 
 /* kick and ban user button */
 "Kick & Ban User" = "Expulsar a pontapé e banir utilizador";
@@ -602,7 +602,7 @@ inspector toolbar button in customize palette */
 "Kick From Room" = "Expulsar a pontapé da sala";
 
 /* kick from room (customized) contextual menu - admin only */
-"Kick From Room..." = "Expulsar a pontapé da sala...";
+"Kick From Room..." = "Expulsar a pontapé da sala…";
 
 /* kick user button */
 "Kick User" = "Expulsar utilizador a pontapé";
@@ -633,7 +633,7 @@ mark display toolbar customize palette name */
 "Message User" = "Enviar mensagem a utilizador";
 
 /* message user contextual menu item title */
-"Message User..." = "Enviar mensagem a utilizador...";
+"Message User..." = "Enviar mensagem a utilizador…";
 
 /* message user button tooltip */
 "Message a user" = "Enviar mensagem a um utilizador";
@@ -663,7 +663,7 @@ mark display toolbar customize palette name */
 "New Room Operator" = "Novo operador da sala";
 
 /* new smart transcript menu title */
-"New Smart Transcript..." = "Nova transcrição inteligente...";
+"New Smart Transcript..." = "Nova transcrição inteligente…";
 
 /* new window label, interface preferences */
 "New Window" = "Nova janela";
@@ -712,13 +712,13 @@ no answer */
 "One of your highlight words was mentioned in %@." = "Uma das suas palavras a destacar foi mencionada em %@.";
 
 /* open favorites folder menu title */
-"Open Favorites folder..." = "Abrir pasta de favoritos...";
+"Open Favorites folder..." = "Abrir pasta de favoritos…";
 
 /* server console button tooltip */
 "Open the server console" = "Abrir a consola do servidor";
 
 /* other image label */
-"Other..." = "Outra...";
+"Other..." = "Outra…";
 
 /* chat panes drawer toolbar customize palette name */
 "Panel Drawer" = "Gaveta do painel";
@@ -805,7 +805,7 @@ no answer */
 "Save" = "Guardar";
 
 /* save as button name */
-"Save As..." = "Guardar como...";
+"Save As..." = "Guardar como…";
 
 /* search toolbar item label
 search patlette label
@@ -827,7 +827,7 @@ send file toolbar button name */
 "Send File Passively" = "Enviar ficheiro em modo passivo";
 
 /* send file contextual menu */
-"Send File..." = "Enviar ficheiro...";
+"Send File..." = "Enviar ficheiro…";
 
 /* send message contextual menu */
 "Send Message" = "Enviar mensagem";
@@ -1263,7 +1263,7 @@ yes answer */
 "incompatible encoding" = "codificação incompatível";
 
 /* joining status info line in drawer */
-"joining..." = "a entrar...";
+"joining..." = "a entrar…";
 
 /* chat room kicked status line in drawer */
 "kicked out" = "expulso a pontapé";

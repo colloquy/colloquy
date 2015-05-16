@@ -312,7 +312,7 @@ number of room members information line */
 "Appearance" = "Apparence";
 
 /* appearance preferences menu item title */
-"Appearance Preferences..." = "Préférences d'apparence...";
+"Appearance Preferences..." = "Préférences d'apparence…";
 
 /* confirm the delete of a connection */
 "Are you sure you want to delete the connection for %@? Any associated Keychain passwords will also be deleted." = "Etes vous sûr de vouloir effacer la connexion pour %@? Tous les mots de passe associés seront aussi effacés.";
@@ -345,7 +345,7 @@ number of room members information line */
 "Ban From Room" = "Bannir du canal";
 
 /* ban from room (customized) contextual menu - admin only */
-"Ban From Room..." = "Bannir du canal...";
+"Ban From Room..." = "Bannir du canal…";
 
 /* ban user button */
 "Ban User" = "Bannir utilisateur";
@@ -558,10 +558,10 @@ short toolbar inspector button name */
 "Join Chat Room" = "Rejoindre un canal";
 
 /* short toolbar join chat room button name */
-"Join Room" = "Rejoindre...";
+"Join Room" = "Rejoindre…";
 
 /* join room contextual menu item title */
-"Join Room..." = "Aller sur un canal...";
+"Join Room..." = "Aller sur un canal…";
 
 /* join chat room button tooltip */
 "Join a chat room" = "Joindre un canal";
@@ -591,7 +591,7 @@ short toolbar inspector button name */
 "Kick From Room" = "Ejecter du canal";
 
 /* kick from room (customized) contextual menu - admin only */
-"Kick From Room..." = "Ejecter du canal...";
+"Kick From Room..." = "Ejecter du canal…";
 
 /* kick user button */
 "Kick User" = "Ejecter l'utilisateur";
@@ -615,7 +615,7 @@ short toolbar inspector button name */
 "Message User" = "Envoyer un message";
 
 /* message user contextual menu item title */
-"Message User..." = "Envoyer un message...";
+"Message User..." = "Envoyer un message…";
 
 /* message user button tooltip */
 "Message a user" = "Envoyer un message à un utilisateur";
@@ -669,13 +669,13 @@ short toolbar inspector button name */
 "One of your highlight words was mentioned in %@." = "Un de vos mots d'highlight a été mentionné dans %@.";
 
 /* open favorites folder menu title */
-"Open Favorites folder..." = "Ouvrir le dossier des favoris...";
+"Open Favorites folder..." = "Ouvrir le dossier des favoris…";
 
 /* server console button tooltip */
 "Open the server console" = "Ouvrir la console serveur";
 
 /* other image label */
-"Other..." = "Autre...";
+"Other..." = "Autre…";
 
 /* chat panes drawer toolbar customize palette name */
 "Panel Drawer" = "Tiroir du panneau";
@@ -759,7 +759,7 @@ short toolbar inspector button name */
 "Save" = "Enregistrer";
 
 /* save as button name */
-"Save As..." = "Enregistrer sous...";
+"Save As..." = "Enregistrer sous…";
 
 /* search toolbar item menu representation title
 search toolbar item label
@@ -775,7 +775,7 @@ send file toolbar customize palette name */
 "Send File Passively" = "Envoyer un fichier passivement";
 
 /* send file contextual menu */
-"Send File..." = "Envoyer un fichier...";
+"Send File..." = "Envoyer un fichier…";
 
 /* send message contextual menu */
 "Send Message" = "Envoyer un message";
@@ -1167,7 +1167,7 @@ ban hostmask label */
 "incompatible encoding" = "encodage incompatible";
 
 /* joining status info line in drawer */
-"joining..." = "en cours...";
+"joining..." = "en cours…";
 
 /* chat room kicked status line in drawer */
 "kicked out" = "éjécté";

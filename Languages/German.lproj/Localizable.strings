@@ -240,7 +240,7 @@ number of room members information line */
 "Appearance" = "Erscheinungsbild";
 
 /* appearance preferences menu item title */
-"Appearance Preferences..." = "Erscheinungbild-Einstellungen...";
+"Appearance Preferences..." = "Erscheinungbild-Einstellungen…";
 
 /* available buddy status */
 "Available" = "Anwesend";
@@ -258,7 +258,7 @@ number of room members information line */
 "Ban From Room" = "Aus diesem Raum verbannen";
 
 /* ban from room (customized) contextual menu - admin only */
-"Ban From Room..." = "Aus diesem Raum verbannen...";
+"Ban From Room..." = "Aus diesem Raum verbannen…";
 
 /* ban user button */
 "Ban User" = "Teilnehmer verbannen";
@@ -471,7 +471,7 @@ short toolbar inspector button name */
 "Join Room" = "Raum betreten";
 
 /* join room contextual menu item title */
-"Join Room..." = "Raum betreten...";
+"Join Room..." = "Raum betreten…";
 
 /* join chat room button tooltip */
 "Join a chat room" = "Einen Chatroom betreten";
@@ -483,7 +483,7 @@ short toolbar inspector button name */
 "Kick & Ban From Room" = "Aus dem Raum kicken & verbannen";
 
 /* kickban from room (customized) contextual menu - admin only */
-"Kick & Ban From Room..." = "Aus dem Raum kicken & verbannen...";
+"Kick & Ban From Room..." = "Aus dem Raum kicken & verbannen…";
 
 /* kick and ban user button */
 "Kick & Ban User" = "Teilnehmer kicken & verbannen";
@@ -492,7 +492,7 @@ short toolbar inspector button name */
 "Kick From Room" = "Aus dem Raum kicken";
 
 /* kick from room (customized) contextual menu - admin only */
-"Kick From Room..." = "Aus dem Raum kicken...";
+"Kick From Room..." = "Aus dem Raum kicken…";
 
 /* kick user button */
 "Kick User" = "Teilnehmer kicken";
@@ -516,7 +516,7 @@ short toolbar inspector button name */
 "Message User" = "Teilnehmer schreiben";
 
 /* message user contextual menu item title */
-"Message User..." = "Teilnehmer schreiben...";
+"Message User..." = "Teilnehmer schreiben…";
 
 /* message user button tooltip */
 "Message a user" = "Einem Teilnehmer schreiben";
@@ -537,7 +537,7 @@ short toolbar inspector button name */
 "New Room Operator" = "Chatroom-Teilnehmer befördert";
 
 /* new smart transcript menu title */
-"New Smart Transcript..." = "Neue intelligente Aufzeichnung...";
+"New Smart Transcript..." = "Neue intelligente Aufzeichnung…";
 
 /* new window label, interface preferences */
 "New Window" = "Neues Fenster";
@@ -579,13 +579,13 @@ short toolbar inspector button name */
 "One of your highlight words was mentioned in %@." = "Eines Ihrer Highlight-Wörter wurde in %@ erwähnt.";
 
 /* open favorites folder menu title */
-"Open Favorites folder..." = "Favoriten öffnen...";
+"Open Favorites folder..." = "Favoriten öffnen…";
 
 /* server console button tooltip */
 "Open the server console" = "Server-Konsole öffnen";
 
 /* other image label */
-"Other..." = "Auswählen...";
+"Other..." = "Auswählen…";
 
 /* chat panes drawer toolbar customize palette name */
 "Panel Drawer" = "Seitenfach";
@@ -648,13 +648,13 @@ short toolbar inspector button name */
 "Save" = "Sichern";
 
 /* save as button name */
-"Save As..." = "Sichern unter...";
+"Save As..." = "Sichern unter…";
 
 /* send files passively file send open dialog button */
 "Send File Passively" = "Datei passiv senden";
 
 /* send file contextual menu */
-"Send File..." = "Datei senden...";
+"Send File..." = "Datei senden…";
 
 /* send message contextual menu */
 "Send Message" = "Nachricht senden";
@@ -995,7 +995,7 @@ ban hostmask label */
 "incompatible encoding" = "inkompatible Kodierung";
 
 /* joining status info line in drawer */
-"joining..." = "betreten...";
+"joining..." = "betreten…";
 
 /* chat room kicked status line in drawer */
 "kicked out" = "gekickt";

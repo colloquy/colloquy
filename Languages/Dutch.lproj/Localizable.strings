@@ -283,7 +283,7 @@
 "Join Room" = "Betreed Kanaal";
 
 /* join room contextual menu item title */
-"Join Room..." = "Betreed Kanaal...";
+"Join Room..." = "Betreed Kanaal…";
 
 /* message user button tooltip */
 "Message a user" = "Verzend een Gebruiker een Bericht";
@@ -292,7 +292,7 @@
 "Message User" = "Verzend Gebruiker Bericht";
 
 /* message user contextual menu item title */
-"Message User..." = "Verzend Gebruiker Bericht...";
+"Message User..." = "Verzend Gebruiker Bericht…";
 
 /* singular minute */
 "minute" = "minuut";
@@ -322,7 +322,7 @@
 "New Connection" = "Nieuwe Verbinding";
 
 /* new smart transcript menu title */
-"New Smart Transcript..." = "Nieuw Slim Transcript...";
+"New Smart Transcript..." = "Nieuw Slim Transcript…";
 
 /* chat invalid nickname dialog title */
 "Nickname is blank" = "Bijnaam is leeg";
@@ -356,7 +356,7 @@
 "Offline" = "Offline";
 
 /* open favorites folder menu title */
-"Open Favorites folder..." = "Toon map met Favorieten...";
+"Open Favorites folder..." = "Toon map met Favorieten…";
 
 /* server console button tooltip */
 "Open the server console" = "Open de serverconsole";
@@ -392,7 +392,7 @@
 "Save" = "Bewaar";
 
 /* save as button name */
-"Save As..." = "Bewaar Als...";
+"Save As..." = "Bewaar Als…";
 
 /* singular second */
 "second" = "seconde";
@@ -834,7 +834,7 @@
 "And reason:" = "En omwille van:";
 
 /* appearance preferences menu item title */
-"Appearance Preferences..." = "Voorkeuren Uiterlijk...";
+"Appearance Preferences..." = "Voorkeuren Uiterlijk…";
 
 /* ban user from room label */
 "Ban %@ from the %@ room." = "Verban %1$@ uit de chatuimte %2$@.";
@@ -843,7 +843,7 @@
 "Ban From Room" = "Verban Uit Kanaal";
 
 /* ban from room (customized) contextual menu - admin only */
-"Ban From Room..." = "Verban Uit Kanaal...";
+"Ban From Room..." = "Verban Uit Kanaal…";
 
 /* ban user button */
 "Ban User" = "Verban Gebruiker";
@@ -922,7 +922,7 @@
 "incompatible encoding" = "incompatibele encodering";
 
 /* joining status info line in drawer */
-"joining..." = "betreden...";
+"joining..." = "betreden…";
 
 /* kick user from room */
 "Kick %@ from the %@ room." = "Verwijder %1$@ uit het %2$@ kanaal.";
@@ -931,7 +931,7 @@
 "Kick & Ban From Room" = "Verwijder En Verban Uit Kanaal";
 
 /* kickban from room (customized) contextual menu - admin only */
-"Kick & Ban From Room..." = "Verwijder En Verban Uit Kanaal...";
+"Kick & Ban From Room..." = "Verwijder En Verban Uit Kanaal…";
 
 /* kick and ban user button */
 "Kick & Ban User" = "Verwijder En Verban Gebruiker";
@@ -943,7 +943,7 @@
 "Kick From Room" = "Verwijder Uit Kanaal";
 
 /* kick from room (customized) contextual menu - admin only */
-"Kick From Room..." = "Verwijder Uit Kanaal...";
+"Kick From Room..." = "Verwijder Uit Kanaal…";
 
 /* kick user button */
 "Kick User" = "Verwijder Gebruiker";
@@ -1004,7 +1004,7 @@
 "One of your highlight words was mentioned in %@." = "Een van uw signaalwoorden werd vermeld in %@.";
 
 /* other image label */
-"Other..." = "Andere...";
+"Other..." = "Andere…";
 
 /* preferences menu item title */
 "Preferences" = "Voorkeuren";
@@ -1071,7 +1071,7 @@
 "Send File Passively" = "Verzend Bestand Passief";
 
 /* send file contextual menu */
-"Send File..." = "Verzend Bestand...";
+"Send File..." = "Verzend Bestand…";
 
 /* send message contextual menu */
 "Send Message" = "Verzend Bericht";
@@ -1326,7 +1326,7 @@
 "None" = "Geen";
 
 /* other image label */
-"Other..." = "Andere...";
+"Other..." = "Andere…";
 
 /* server window label, interface preferences */
 "Server Window" = "Server Venster";

@@ -308,7 +308,7 @@ would you like to view the emoticons in the Appearance Preferences */
 "Appearance" = "Aspetto";
 
 /* appearance preferences menu item title */
-"Appearance Preferences..." = "Preferenze dell'aspetto...";
+"Appearance Preferences..." = "Preferenze dell'aspetto…";
 
 /* confirm the delete of a connection */
 "Are you sure you want to delete the connection for %@? Any associated Keychain passwords will also be deleted." = "Sei sicuro di voler cancellare la connessione con %@? Tutte le password associate salvate nel portachiavi saranno perse.";
@@ -341,7 +341,7 @@ would you like to view the emoticons in the Appearance Preferences */
 "Ban From Room" = "Banna dalla stanza";
 
 /* ban from room (customized) contextual menu - admin only */
-"Ban From Room..." = "Banna dalla stanza...";
+"Ban From Room..." = "Banna dalla stanza…";
 
 /* ban user button */
 "Ban User" = "Banna utente";
@@ -560,7 +560,7 @@ inspector toolbar button in customize palette */
 "Join Room" = "Accedi a stanza";
 
 /* join room contextual menu item title */
-"Join Room..." = "Accedi a stanza...";
+"Join Room..." = "Accedi a stanza…";
 
 /* join chat room button tooltip */
 "Join a chat room" = "Accedi a stanza";
@@ -581,7 +581,7 @@ inspector toolbar button in customize palette */
 "Kick & Ban From Room" = "Caccia e banna dalla stanza";
 
 /* kickban from room (customized) contextual menu - admin only */
-"Kick & Ban From Room..." = "Caccia e banna dalla stanza...";
+"Kick & Ban From Room..." = "Caccia e banna dalla stanza…";
 
 /* kick and ban user button */
 "Kick & Ban User" = "Caccia e banna utente";
@@ -590,7 +590,7 @@ inspector toolbar button in customize palette */
 "Kick From Room" = "Caccia dalla stanza";
 
 /* kick from room (customized) contextual menu - admin only */
-"Kick From Room..." = "Caccia dalla stanza...";
+"Kick From Room..." = "Caccia dalla stanza…";
 
 /* kick user button */
 "Kick User" = "Caccia utente";
@@ -621,7 +621,7 @@ mark display toolbar customize palette name */
 "Message User" = "Messaggio a utente";
 
 /* message user contextual menu item title */
-"Message User..." = "Messaggio a utente...";
+"Message User..." = "Messaggio a utente…";
 
 /* message user button tooltip */
 "Message a user" = "Messaggio ad un utente";
@@ -651,7 +651,7 @@ mark display toolbar customize palette name */
 "New Room Operator" = "Nuovo operatore";
 
 /* new smart transcript menu title */
-"New Smart Transcript..." = "Nuova sessione breve...";
+"New Smart Transcript..." = "Nuova sessione breve…";
 
 /* new window label, interface preferences */
 "New Window" = "Nuova finestra";
@@ -700,13 +700,13 @@ no answer */
 "One of your highlight words was mentioned in %@." = "Una delle tue parole evidenziate è stata menzionata in %@.";
 
 /* open favorites folder menu title */
-"Open Favorites folder..." = "Apri cartella preferiti...";
+"Open Favorites folder..." = "Apri cartella preferiti…";
 
 /* server console button tooltip */
 "Open the server console" = "Apri console del server";
 
 /* other image label */
-"Other..." = "Altro...";
+"Other..." = "Altro…";
 
 /* chat panes drawer toolbar customize palette name */
 "Panel Drawer" = "Pannello del cassetto";
@@ -793,7 +793,7 @@ no answer */
 "Save" = "Salva";
 
 /* save as button name */
-"Save As..." = "Salva come...";
+"Save As..." = "Salva come…";
 
 /* search toolbar item label
 search patlette label
@@ -815,7 +815,7 @@ send file toolbar button name */
 "Send File Passively" = "Invia file passivamente";
 
 /* send file contextual menu */
-"Send File..." = "Invia file...";
+"Send File..." = "Invia file…";
 
 /* send message contextual menu */
 "Send Message" = "Invia messaggio";
@@ -1251,7 +1251,7 @@ yes answer */
 "incompatible encoding" = "codifica incompatibile";
 
 /* joining status info line in drawer */
-"joining..." = "accedo...";
+"joining..." = "accedo…";
 
 /* chat room kicked status line in drawer */
 "kicked out" = "cacciato";
