@@ -29,6 +29,11 @@ enum {
 };
 
 @implementation CQPreferencesIgnoreEditViewController
+- (instancetype) initWithStyle:(UITableViewStyle) style {
+	NSAssert(NO, @"use -[CQPreferencesIgnoreEditViewController initWithConnection:] instead");
+	return self = [super initWithStyle:style];
+}
+
 - (instancetype) initWithConnection:(MVChatConnection *) connection {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
