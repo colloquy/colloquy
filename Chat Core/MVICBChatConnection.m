@@ -340,14 +340,13 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 	for( NSString *room in rooms ) {
 		if( room.length ) {
-			[self joinChatRoomNamed:room withPassphrase:nil];
+			[self joinChatRoomNamed:room];
 			break;
 		}
 	}
 }
 
-- (void) joinChatRoomNamed:(NSString *) name
-			withPassphrase:(NSString *) passphrase {
+- (void) joinChatRoomNamed:(NSString *) name withPassphrase:(NSString * __nullable) passphrase {
 	if( _loggedIn )
 		[self _joinChatRoomNamed:name withPassphrase:passphrase alreadyJoined:NO];
 	else

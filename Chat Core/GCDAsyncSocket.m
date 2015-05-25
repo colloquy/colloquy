@@ -107,6 +107,8 @@ static const int logLevel = GCDAsyncSocketLogLevel;
 **/
 #define SOCKET_NULL -1
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wimplicit-retain-self"
 
 NSString *const GCDAsyncSocketException = @"GCDAsyncSocketException";
 NSString *const GCDAsyncSocketErrorDomain = @"GCDAsyncSocketErrorDomain";
@@ -7717,3 +7719,5 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 }
 
 @end	
+
+#pragma clang diagnostic pop

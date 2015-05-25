@@ -1,3 +1,5 @@
+NS_ASSUME_NONNULL_BEGIN
+
 @class MVChatConnection;
 @class MVChatUser;
 
@@ -34,7 +36,7 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 	case MVFileTransferHoldingStatus: return @"trHo";
 	case MVFileTransferStoppedStatus: return @"trSt";
 	case MVFileTransferErrorStatus: return @"trEr";
-	default: return nil;
+	default: return @"";
 	}
 }
 
@@ -109,3 +111,5 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 - (void) accept;
 - (void) acceptByResumingIfPossible:(BOOL) resume;
 @end
+
+NS_ASSUME_NONNULL_END

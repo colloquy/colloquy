@@ -1421,8 +1421,8 @@ static NSMenu *favoritesMenu = nil;
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Delete Connection", "name for delete connection button in customize palette" )];
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Delete Connection", "delete connection button tooltip" )];
-		[toolbarItem setImage:[NSImage imageNamed:@"delete"]];
-
+		NSImage *deleteImage = [NSImage imageNamed:@"delete"];
+		[toolbarItem setImage:deleteImage];
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:NULL];
 	} else if( [itemIdent isEqualToString:MVToolbarConsoleItemIdentifier] ) {

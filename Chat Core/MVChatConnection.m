@@ -373,7 +373,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[self disconnectWithReason:nil];
 }
 
-- (void) disconnectWithReason:(MVChatString *) reason {
+- (void) disconnectWithReason:(MVChatString * __nullable) reason {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
 }
@@ -470,7 +470,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) setNicknamePassword:(NSString *) newPassword {
+- (void) setNicknamePassword:(NSString * __nullable) newPassword {
 	MVSafeCopyAssign( _npassword, newPassword );
 }
 
@@ -790,7 +790,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
-- (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments {
+- (void) sendCommand:(NSString *) command withArguments:(MVChatString * __nullable) arguments {
 	// subclass this method, don't call super
 	[self doesNotRecognizeSelector:_cmd];
 }
@@ -910,7 +910,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	[self joinChatRoomNamed:room withPassphrase:nil];
 }
 
-- (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase {
+- (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString * __nullable) passphrase {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
 }
@@ -1063,7 +1063,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	return _awayMessage;
 }
 
-- (void) setAwayStatusMessage:(MVChatString *) message {
+- (void) setAwayStatusMessage:(MVChatString * __nullable) message {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
 }

@@ -1,5 +1,7 @@
 #import "MVChatConnection.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSThread (NSThreadLeopard)
 - (void) cancel;
 - (void) setName:(NSString *) name;
@@ -37,3 +39,5 @@
 - (void) _markUserAsOnline:(MVChatUser *) user;
 - (void) _markUserAsOffline:(MVChatUser *) user;
 @end
+
+NS_ASSUME_NONNULL_END

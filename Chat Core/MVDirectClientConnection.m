@@ -13,6 +13,8 @@
 
 #import <arpa/inet.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *MVDCCFriendlyAddress( NSString *address ) {
 	NSURL *url = [NSURL URLWithString:@"http://colloquy.info/ip.php"];
 	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:3.];
@@ -123,7 +125,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 #pragma mark -
 
-- (void) setDelegate:(id) delegate {
+- (void) setDelegate:(id __nullable) delegate {
 	_delegate = delegate;
 }
 
@@ -343,3 +345,5 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

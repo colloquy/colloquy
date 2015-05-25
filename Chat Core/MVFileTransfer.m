@@ -14,6 +14,8 @@
 #import "MVSILCFileTransfer.h"
 #endif
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *MVDownloadFileTransferOfferNotification = @"MVDownloadFileTransferOfferNotification";
 NSString *MVFileTransferDataTransferredNotification = @"MVFileTransferDataTransferredNotification";
 NSString *MVFileTransferStartedNotification = @"MVFileTransferStartedNotification";
@@ -270,3 +272,5 @@ static BOOL autoPortMapping = YES;
 	MVSafeCopyAssign( _originalFileName, newOriginalFileName );
 }
 @end
+
+NS_ASSUME_NONNULL_END

@@ -1,6 +1,8 @@
 #import "MVAvailability.h"
 #import "MVChatString.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, MVChatUserType) {
 	MVChatRemoteUserType = 'remT',
 	MVChatLocalUserType = 'locL',
@@ -92,9 +94,9 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 	BOOL _serverOperator;
 	BOOL _onlineNotificationSent;
 }
-+ (id) wildcardUserFromString:(NSString *) mask;
-+ (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host;
-+ (id) wildcardUserWithFingerprint:(NSString *) fingerprint;
++ (instancetype) wildcardUserFromString:(NSString *) mask;
++ (instancetype) wildcardUserWithNicknameMask:(NSString * __nullable) nickname andHostMask:(NSString * __nullable) host;
++ (instancetype) wildcardUserWithFingerprint:(NSString *) fingerprint;
 
 @property(strong, readonly) MVChatConnection *connection;
 @property(readonly) MVChatUserType type;
@@ -155,7 +157,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 
 - (BOOL) hasAttributeForKey:(NSString *) key;
 - (id) attributeForKey:(NSString *) key;
-- (void) setAttribute:(id) attribute forKey:(id) key;
+- (void) setAttribute:(id __nullable) attribute forKey:(id) key;
 
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes;
@@ -164,8 +166,8 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 
 - (MVUploadFileTransfer *) sendFile:(NSString *) path passively:(BOOL) passive;
 
-- (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments;
-- (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments;
+- (void) sendSubcodeRequest:(NSString *) command withArguments:(id __nullable) arguments;
+- (void) sendSubcodeReply:(NSString *) command withArguments:(id __nullable) arguments;
 
 - (void) requestRecentActivity;
 - (void) persistLastActivityDate;
@@ -179,3 +181,5 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 @property(readonly) NSScriptObjectSpecifier *objectSpecifier;
 @end
 #endif
+
+NS_ASSUME_NONNULL_END

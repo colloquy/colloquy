@@ -1,3 +1,5 @@
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *MVChatPluginManagerWillReloadPluginsNotification;
 extern NSString *MVChatPluginManagerDidReloadPluginsNotification;
 extern NSString *MVChatPluginManagerDidFindInvalidPluginsNotification;
@@ -18,11 +20,11 @@ extern NSString *MVChatPluginManagerDidFindInvalidPluginsNotification;
 - (void) removePlugin:(id) plugin;
 
 - (NSArray *) pluginsThatRespondToSelector:(SEL) selector;
-- (NSArray *) pluginsOfClass:(Class) class thatRespondToSelector:(SEL) selector;
+- (NSArray *) pluginsOfClass:(Class __nullable) class thatRespondToSelector:(SEL) selector;
 
 - (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation;
 - (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop;
-- (NSArray *) makePluginsOfClass:(Class) class performInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop;
+- (NSArray *) makePluginsOfClass:(Class __nullable) class performInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop;
 @end
 
 @protocol MVChatPlugin
@@ -33,3 +35,5 @@ extern NSString *MVChatPluginManagerDidFindInvalidPluginsNotification;
 - (void) load;
 - (void) unload;
 @end
+
+NS_ASSUME_NONNULL_END

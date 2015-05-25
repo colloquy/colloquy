@@ -1,6 +1,8 @@
 #import <ChatCore/MVAvailability.h>
 #import <ChatCore/MVChatString.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_OPTIONS(NSUInteger, MVChatRoomMode) {
 	MVChatRoomNoModes = 0,
 	MVChatRoomPrivateMode = 1 << 0,
@@ -120,7 +122,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 - (void) join;
 - (void) part;
 
-- (void) partWithReason:(MVChatString *) reason;
+- (void) partWithReason:(MVChatString * __nullable) reason;
 
 - (void) changeTopic:(MVChatString *) topic;
 
@@ -145,7 +147,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 
 - (void) setModes:(NSUInteger) modes;
 - (void) setMode:(MVChatRoomMode) mode;
-- (void) setMode:(MVChatRoomMode) mode withAttribute:(id) attribute;
+- (void) setMode:(MVChatRoomMode) mode withAttribute:(id __nullable) attribute;
 - (void) removeMode:(MVChatRoomMode) mode;
 
 - (NSSet *) memberUsersWithModes:(NSUInteger) modes;
@@ -154,7 +156,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 - (MVChatUser *) memberUserWithUniqueIdentifier:(id) identifier;
 - (BOOL) hasUser:(MVChatUser *) user;
 
-- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString *) reason;
+- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString * __nullable) reason;
 
 - (void) addBanForUser:(MVChatUser *) user;
 - (void) removeBanForUser:(MVChatUser *) user;
@@ -181,3 +183,5 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 @property(readonly) NSScriptObjectSpecifier *objectSpecifier;
 @end
 #endif
+
+NS_ASSUME_NONNULL_END

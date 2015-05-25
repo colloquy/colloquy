@@ -1,5 +1,7 @@
 #import "MVFileTransfer.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface MVFileTransfer (MVFileTransferPrivate)
 - (void) _setStatus:(MVFileTransferStatus) status;
 - (void) _setFinalSize:(unsigned long long) finalSize;
@@ -19,3 +21,5 @@
 @interface MVDownloadFileTransfer (MVDownloadFileTransferPrivate)
 - (void) _setOriginalFileName:(NSString *) originalFileName;
 @end
+
+NS_ASSUME_NONNULL_END

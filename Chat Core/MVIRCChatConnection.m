@@ -423,7 +423,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 #pragma mark -
 
-- (void) setNicknamePassword:(NSString *) newPassword {
+- (void) setNicknamePassword:(NSString * __nullable) newPassword {
 	[super setNicknamePassword:newPassword];
 	_pendingIdentificationAttempt = NO;
 	if( [self isConnected] )
@@ -520,8 +520,10 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	}
 
 	if( now ) {
+		__weak __typeof__((self)) weakSelf = self;
 		dispatch_async(_connectionQueue, ^{
-			MVSafeAdoptAssign( _lastCommand, [[NSDate alloc] init] );
+			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+			MVSafeAdoptAssign( strongSelf->_lastCommand, [[NSDate alloc] init] );
 			[self _writeDataToServer:raw];
 		});
 	} else {
@@ -2000,11 +2002,13 @@ end:
 	_nextPingTimeInterval = [NSDate timeIntervalSinceReferenceDate] + JVPingServerInterval ;
 	double delayInSeconds = JVPingServerInterval + 1.;
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+	__weak __typeof__((self)) weakSelf = self;
 	dispatch_after(popTime, _connectionQueue, ^(void){
+		__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 		NSTimeInterval nowTimeInterval = [NSDate timeIntervalSinceReferenceDate];
-		if (_nextPingTimeInterval < nowTimeInterval) {
-			_nextPingTimeInterval = nowTimeInterval + JVPingServerInterval;
-			[self _pingServer];
+		if (strongSelf->_nextPingTimeInterval < nowTimeInterval) {
+			strongSelf->_nextPingTimeInterval = nowTimeInterval + JVPingServerInterval;
+			[strongSelf _pingServer];
 		}
 	});
 }
@@ -2059,9 +2063,11 @@ end:
 		else _sendQueueProcessing = NO;
 	}
 
+	__weak __typeof__((self)) weakSelf = self;
 	dispatch_async(_connectionQueue, ^{
-		MVSafeAdoptAssign( _lastCommand, [[NSDate alloc] init] );
-		[self _writeDataToServer:data];
+		__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+		MVSafeAdoptAssign( strongSelf->_lastCommand, [[NSDate alloc] init] );
+		[strongSelf _writeDataToServer:data];
 	});
 }
 

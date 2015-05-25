@@ -292,7 +292,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	[[currentFiles selectedRowIndexes] enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop) {
 		[array addObject:[[self _infoForTransferAtIndex:i] objectForKey:@"path"]];
 		[string appendString:[[[self _infoForTransferAtIndex:i] objectForKey:@"path"] lastPathComponent]];
-		if ( ! ( [[currentFiles selectedRowIndexes] lastIndex] == i ) ) [string appendString:@"\n"];
+		if ( ! ( [[self->currentFiles selectedRowIndexes] lastIndex] == i ) ) [string appendString:@"\n"];
 	}];
 
 	[[NSPasteboard generalPasteboard] setPropertyList:array forType:NSFilenamesPboardType];
@@ -364,7 +364,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	[_calculationItems removeAllObjects];
 	[[currentFiles selectedRowIndexes] enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
-		[_calculationItems addObject:[self _infoForTransferAtIndex:index]];
+		[self->_calculationItems addObject:[self _infoForTransferAtIndex:index]];
 	}];
 }
 

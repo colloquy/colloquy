@@ -119,8 +119,6 @@ void PFMoveToApplicationsFolderIfNecessary(void)
 	}
 	
 	return;
-	
-	showFailureAlert();
 }
 
 void showFailureAlert()

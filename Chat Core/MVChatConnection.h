@@ -3,6 +3,8 @@
 #import <ChatCore/MVAvailability.h>
 #import <ChatCore/MVChatString.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, MVChatConnectionType) {
 	MVChatConnectionUnsupportedType = 0,
 	MVChatConnectionICBType = 'icbC',
@@ -239,7 +241,7 @@ extern NSString *MVChatConnectionErrorDomain;
 @property(copy) NSArray *alternateNicknames;
 @property(strong, readonly) NSString *nextAlternateNickname;
 
-@property(copy) NSString *nicknamePassword;
+@property(copy, null_resettable) NSString *nicknamePassword;
 
 @property(strong, readonly) NSString *certificateServiceName;
 @property(strong, readonly) NSString *certificatePassword;
@@ -284,7 +286,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property(strong, readonly) NSSet *chatUserWatchRules;
 
-@property(copy) MVChatString *awayStatusMessage;
+@property(copy, null_resettable) MVChatString *awayStatusMessage;
 
 @property(readonly, getter=isConnected) BOOL connected;
 @property(strong, readonly) NSDate *connectedDate;
@@ -316,7 +318,7 @@ extern NSString *MVChatConnectionErrorDomain;
 - (void) connect;
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname;
 - (void) disconnect;
-- (void) disconnectWithReason:(MVChatString *) reason;
+- (void) disconnectWithReason:(MVChatString * __nullable) reason;
 - (void) forceDisconnect;
 
 #pragma mark -
@@ -326,7 +328,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-- (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments;
+- (void) sendCommand:(NSString *) command withArguments:(MVChatString * __nullable) arguments;
 
 #pragma mark -
 
@@ -346,7 +348,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 - (void) joinChatRoomsNamed:(NSArray *) rooms;
 - (void) joinChatRoomNamed:(NSString *) room;
-- (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase;
+- (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString * __nullable) passphrase;
 
 #pragma mark -
 
@@ -412,3 +414,5 @@ extern NSString *MVChatConnectionErrorDomain;
 - (void) connected:(MVChatConnection *) connection;
 - (void) disconnecting:(MVChatConnection *) connection;
 @end
+
+NS_ASSUME_NONNULL_END

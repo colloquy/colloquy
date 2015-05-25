@@ -111,7 +111,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	[self persistLastActivityDate];
 }
 
-- (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments {
+- (void) sendSubcodeRequest:(NSString *) command withArguments:(id __nullable) arguments {
 	NSParameterAssert( command != nil );
 	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
 		NSString *prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@ :\001%@ ", [self nickname], command];
@@ -178,7 +178,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	}
 }
 
-- (void) setAttribute:(id) attribute forKey:(id) key {
+- (void) setAttribute:(id __nullable) attribute forKey:(id) key {
 	[super setAttribute:attribute forKey:MVAttributeNameForMetadataKey(key)];
 }
 

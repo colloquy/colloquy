@@ -8,6 +8,8 @@
 #import "NSDataAdditions.h"
 #import "NSNotificationAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *MVChatRoomMemberQuietedFeature = @"MVChatRoomMemberQuietedFeature";
 NSString *MVChatRoomMemberVoicedFeature = @"MVChatRoomMemberVoicedFeature";
 NSString *MVChatRoomMemberHalfOperatorFeature = @"MVChatRoomMemberHalfOperatorFeature";
@@ -152,7 +154,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[self partWithReason:nil];
 }
 
-- (void) partWithReason:(MVChatString *) reason {
+- (void) partWithReason:(MVChatString * __nullable) reason {
 // subclass this method, don't call super
 	[self doesNotRecognizeSelector:_cmd];
 }
@@ -337,7 +339,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[self setMode:mode withAttribute:nil];
 }
 
-- (void) setMode:(MVChatRoomMode) mode withAttribute:(id) attribute {
+- (void) setMode:(MVChatRoomMode) mode withAttribute:(id __nullable) attribute {
 	NSParameterAssert( [self supportedModes] & mode );
 // subclass this method, call super first
 }
@@ -414,7 +416,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString *) reason {
+- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString * __nullable) reason {
 	NSParameterAssert( user != nil );
 // subclass this method, call super first
 }
@@ -616,7 +618,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	}
 }
 
-- (void) _setMode:(MVChatRoomMode) mode withAttribute:(id) attribute {
+- (void) _setMode:(MVChatRoomMode) mode withAttribute:(id __nullable) attribute {
 	_modes |= mode;
 	@synchronized( _modeAttributes ) {
 		if( attribute ) _modeAttributes[@(mode)] = attribute;
@@ -631,12 +633,12 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	}
 }
 
-- (void) _setDateJoined:(NSDate *) date {
+- (void) _setDateJoined:(NSDate * __nullable) date {
 	MVSafeCopyAssign( _dateJoined, date );
 	if (date) [_connection _addJoinedRoom:self];
 }
 
-- (void) _setDateParted:(NSDate *) date {
+- (void) _setDateParted:(NSDate * __nullable) date {
 	MVSafeCopyAssign( _dateParted, date );
 	if (date) [_connection _removeJoinedRoom:self];
 }
@@ -759,3 +761,5 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 @end
 #endif
+
+NS_ASSUME_NONNULL_END

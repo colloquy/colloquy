@@ -45,7 +45,7 @@
 
 - (void) setItalicState:(BOOL) italic {
 	NSFont *font = [self attribute:NSFontAttributeName atIndex:0 effectiveRange:NULL];
-	if( bold ) font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSItalicFontMask];
+	if( italic ) font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSItalicFontMask];
 	else font = [[NSFontManager sharedFontManager] convertFont:font toNotHaveTrait:NSItalicFontMask];
 	if( font ) [self addAttribute:NSFontAttributeName value:font range:NSMakeRange( 0, [self length] )];
 }

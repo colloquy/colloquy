@@ -5,6 +5,8 @@
 #import "NSNumberAdditions.h"
 #import "NSStringAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 static MVChatPluginManager *sharedInstance = nil;
 NSString *MVChatPluginManagerWillReloadPluginsNotification = @"MVChatPluginManagerWillReloadPluginsNotification";
 NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManagerDidReloadPluginsNotification";
@@ -143,7 +145,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	return [self pluginsOfClass:NULL thatRespondToSelector:selector];
 }
 
-- (NSArray *) pluginsOfClass:(Class) class thatRespondToSelector:(SEL) selector {
+- (NSArray *) pluginsOfClass:(Class __nullable) class thatRespondToSelector:(SEL) selector {
 	NSParameterAssert( selector != NULL );
 
 	NSMutableArray *qualified = [[NSMutableArray allocWithZone:nil] init];
@@ -165,7 +167,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	return [self makePluginsOfClass:NULL performInvocation:invocation stoppingOnFirstSuccessfulReturn:stop];
 }
 
-- (NSArray *) makePluginsOfClass:(Class) class performInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop {
+- (NSArray *) makePluginsOfClass:(Class __nullable) class performInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop {
 	NSParameterAssert( invocation != nil );
 	NSParameterAssert( [invocation selector] != NULL );
 
@@ -221,3 +223,5 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	return nil;
 }
 @end
+
+NS_ASSUME_NONNULL_END

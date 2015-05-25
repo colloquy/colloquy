@@ -8,6 +8,8 @@
 
 #import "MVChatConnection.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedNotification";
 NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchRuleRemovedMatchedUserNotification";
 
@@ -257,3 +259,5 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	MVSafeCopyAssign( _applicableServerDomains, serverDomains );
 }
 @end
+
+NS_ASSUME_NONNULL_END

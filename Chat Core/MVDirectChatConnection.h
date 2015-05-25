@@ -1,5 +1,7 @@
 #import "MVChatConnection.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *MVDirectChatConnectionOfferNotification;
 
 extern NSString *MVDirectChatConnectionDidConnectNotification;
@@ -57,3 +59,5 @@ typedef enum {
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *)attributes;
 @end
+
+NS_ASSUME_NONNULL_END

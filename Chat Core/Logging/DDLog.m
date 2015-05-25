@@ -46,6 +46,9 @@
 
 #define LOG_MAX_QUEUE_SIZE 1000 // Should not exceed INT32_MAX
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wimplicit-retain-self"
+
 // The "global logging queue" refers to [DDLog loggingQueue].
 // It is the queue that all log statements go through.
 //
@@ -1083,3 +1086,5 @@ static char *dd_str_copy(const char *str)
 }
 
 @end
+
+#pragma clang diagnostic pop

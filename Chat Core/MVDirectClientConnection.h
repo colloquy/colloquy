@@ -1,5 +1,7 @@
 #import <ChatCore/MVAvailability.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class GCDAsyncSocket;
 @class MVDirectClientConnection;
 @class TCMPortMapping;
@@ -43,6 +45,7 @@ NSString *MVDCCFriendlyAddress( NSString *address );
 
 - (void) writeData:(NSData *) data withTimeout:(NSTimeInterval) timeout withTag:(long) tag;
 
-@property (weak) id <MVDirectClientConnectionDelegate> delegate;
+@property (weak, null_resettable) id <MVDirectClientConnectionDelegate> delegate;
 @end
 
+NS_ASSUME_NONNULL_END
