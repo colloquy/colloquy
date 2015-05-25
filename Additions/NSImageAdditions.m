@@ -2,14 +2,6 @@
 
 @implementation NSImage (NSImageAdditions)
 // Created for Adium by Evan Schoenberg on Tue Dec 02 2003 under the GPL.
-// Returns an image from the owners bundle with the specified name
-+ (NSImage *) imageNamed:(NSString *) name forClass:(Class) class {
-	NSBundle *ownerBundle = [NSBundle bundleForClass:class];
-	NSString *imagePath = [ownerBundle pathForImageResource:name];
-	return [[NSImage alloc] initWithContentsOfFile:imagePath];
-}
-
-// Created for Adium by Evan Schoenberg on Tue Dec 02 2003 under the GPL.
 // Draw this image in a rect, tiling if the rect is larger than the image
 - (void) tileInRect:(NSRect) rect {
 	NSSize size = [self size];

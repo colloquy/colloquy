@@ -1,5 +1,4 @@
 @interface NSImage (NSImageAdditions)
-+ (NSImage *) imageNamed:(NSString *) name forClass:(Class) class;
 - (void) tileInRect:(NSRect) rect;
 
 + (NSImage *) imageFromPDF:(NSString *) pdfName;
