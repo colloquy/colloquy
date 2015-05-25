@@ -30,6 +30,9 @@
 		0A5B683F0810EC9700398D5A /* default.css in Resources */ = {isa = PBXBuildFile; fileRef = 0A5B683E0810EC9700398D5A /* default.css */; };
 		0AA8117B0826E08000A3BF2D /* default.js in Resources */ = {isa = PBXBuildFile; fileRef = 0AA811220826DB8800A3BF2D /* default.js */; };
 		19937ADB1AEAAC71005D6C44 /* CQKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 19937ADA1AEAAC71005D6C44 /* CQKeychain.m */; };
+		19F292981B130440000198FE /* connect.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 19F292951B130440000198FE /* connect.pdf */; };
+		19F292991B130440000198FE /* disconnect.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 19F292961B130440000198FE /* disconnect.pdf */; };
+		19F2929A1B130440000198FE /* joinRoom.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 19F292971B130440000198FE /* joinRoom.pdf */; };
 		1C043B4B13DC8B7200B8FD9E /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1C043B4913DC8B7200B8FD9E /* Credits.rtf */; };
 		1C05E1EF08F262F500E097BC /* ColloquyScripting.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */; };
 		1C05F4560828727D006FCB72 /* markDisplay.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C05F4550828727D006FCB72 /* markDisplay.png */; };
@@ -166,9 +169,6 @@
 		1CB2CD38052DDC560094AAA4 /* connecting.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E2536D0387657C01000102 /* connecting.png */; };
 		1CB2CD39052DDC560094AAA4 /* connectingSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E2536E0387657C01000102 /* connectingSelected.png */; };
 		1CB2CD3A052DDC560094AAA4 /* autoHeader.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E253710387690301000102 /* autoHeader.png */; };
-		1CB2CD3B052DDC560094AAA4 /* connect.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E2537C038809A201000102 /* connect.png */; };
-		1CB2CD3C052DDC560094AAA4 /* disconnect.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E2537D038809A201000102 /* disconnect.png */; };
-		1CB2CD3F052DDC560094AAA4 /* joinRoom.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E06408038D6DEB01000102 /* joinRoom.png */; };
 		1CB2CD43052DDC560094AAA4 /* addWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = F5C3D42303973E7B01000102 /* addWidget.png */; };
 		1CB2CD44052DDC560094AAA4 /* addWidgetSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = F5C3D42403973E7B01000102 /* addWidgetSelected.png */; };
 		1CB2CD45052DDC560094AAA4 /* removeWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = F5C3D42503973E7B01000102 /* removeWidget.png */; };
@@ -492,6 +492,9 @@
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		19937AD91AEAAC71005D6C44 /* CQKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQKeychain.h; path = Shared/Controllers/CQKeychain.h; sourceTree = "<group>"; };
 		19937ADA1AEAAC71005D6C44 /* CQKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQKeychain.m; path = Shared/Controllers/CQKeychain.m; sourceTree = "<group>"; };
+		19F292951B130440000198FE /* connect.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = connect.pdf; path = "Resources/Toolbar Icons/connect.pdf"; sourceTree = "<group>"; };
+		19F292961B130440000198FE /* disconnect.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = disconnect.pdf; path = "Resources/Toolbar Icons/disconnect.pdf"; sourceTree = "<group>"; };
+		19F292971B130440000198FE /* joinRoom.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = joinRoom.pdf; path = "Resources/Toolbar Icons/joinRoom.pdf"; sourceTree = "<group>"; };
 		1C018BF90A26930500C18024 /* Basic.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Basic.pch; sourceTree = "<group>"; };
 		1C04394607CAFC7D00304949 /* AppleScript Support.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "AppleScript Support.xcodeproj"; path = "Plug-Ins/AppleScript Support/AppleScript Support.xcodeproj"; sourceTree = "<group>"; };
 		1C043B4A13DC8B7200B8FD9E /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = Languages/English.lproj/Credits.rtf; sourceTree = "<group>"; };
@@ -1088,15 +1091,12 @@
 		F5C4977C0385785401000102 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/MVConnections.nib; sourceTree = "<group>"; };
 		F5D04C03019489B801A35792 /* encoding.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = encoding.png; path = "Resources/Toolbar Icons/encoding.png"; sourceTree = "<group>"; };
 		F5DD34730382E5E501000102 /* Colloquy.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Colloquy.icns; path = Resources/Colloquy.icns; sourceTree = SOURCE_ROOT; };
-		F5E06408038D6DEB01000102 /* joinRoom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = joinRoom.png; path = "Resources/Toolbar Icons/joinRoom.png"; sourceTree = SOURCE_ROOT; };
 		F5E2536603874B5601000102 /* statusHeader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = statusHeader.png; path = Resources/statusHeader.png; sourceTree = "<group>"; };
 		F5E253690387618E01000102 /* connected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = connected.png; path = Resources/connected.png; sourceTree = SOURCE_ROOT; };
 		F5E2536A0387618E01000102 /* connectedSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = connectedSelected.png; path = Resources/connectedSelected.png; sourceTree = SOURCE_ROOT; };
 		F5E2536D0387657C01000102 /* connecting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = connecting.png; path = Resources/connecting.png; sourceTree = SOURCE_ROOT; };
 		F5E2536E0387657C01000102 /* connectingSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = connectingSelected.png; path = Resources/connectingSelected.png; sourceTree = SOURCE_ROOT; };
 		F5E253710387690301000102 /* autoHeader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = autoHeader.png; path = Resources/autoHeader.png; sourceTree = SOURCE_ROOT; };
-		F5E2537C038809A201000102 /* connect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = connect.png; path = "Resources/Toolbar Icons/connect.png"; sourceTree = SOURCE_ROOT; };
-		F5E2537D038809A201000102 /* disconnect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = disconnect.png; path = "Resources/Toolbar Icons/disconnect.png"; sourceTree = SOURCE_ROOT; };
 		F5E2538403882A8501000102 /* MVColorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVColorPanel.h; path = Views/MVColorPanel.h; sourceTree = "<group>"; };
 		F5E2538503882A8501000102 /* MVColorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVColorPanel.m; path = Views/MVColorPanel.m; sourceTree = "<group>"; };
 		F5E98623018B412B01EE70DE /* NSAttributedStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSAttributedStringAdditions.h; path = Additions/NSAttributedStringAdditions.h; sourceTree = "<group>"; };
@@ -1900,20 +1900,20 @@
 		F5ED0F46017CD77701EE70DE /* Toolbar Icons */ = {
 			isa = PBXGroup;
 			children = (
-				1C05F4550828727D006FCB72 /* markDisplay.png */,
 				1CBECE5D050A8D21000001C8 /* chooseStyle.png */,
-				92C70D1C1A5E89A000080E45 /* messageUser.pdf */,
-				F5E06408038D6DEB01000102 /* joinRoom.png */,
-				F5E2537C038809A201000102 /* connect.png */,
+				19F292951B130440000198FE /* connect.pdf */,
 				92C70D1A1A5E898100080E45 /* console.pdf */,
-				F5E2537D038809A201000102 /* disconnect.png */,
-				F5BC17DF019656E901A35792 /* info.png */,
-				1CE95885063F3BF90071C9C3 /* inspector.png */,
 				F5ED0F58017CD79801EE70DE /* delete.png */,
+				19F292961B130440000198FE /* disconnect.pdf */,
 				F5E98659018CB25601EE70DE /* emoticon.png */,
 				F5D04C03019489B801A35792 /* encoding.png */,
-				1CBECD660508C61B000001C8 /* showdrawer.png */,
 				1CF627CA07558F79005DFCFA /* fileSend.png */,
+				F5BC17DF019656E901A35792 /* info.png */,
+				1CE95885063F3BF90071C9C3 /* inspector.png */,
+				19F292971B130440000198FE /* joinRoom.pdf */,
+				1C05F4550828727D006FCB72 /* markDisplay.png */,
+				92C70D1C1A5E89A000080E45 /* messageUser.pdf */,
+				1CBECD660508C61B000001C8 /* showdrawer.png */,
 				1CF4D76507E6AD4400DB421A /* smartTranscriptSettings.png */,
 			);
 			name = "Toolbar Icons";
@@ -2130,6 +2130,7 @@
 				1CB2CD1D052DDC560094AAA4 /* pending.png in Resources */,
 				1CB2CD1E052DDC560094AAA4 /* done.png in Resources */,
 				1CB2CD1F052DDC560094AAA4 /* stop.png in Resources */,
+				19F292981B130440000198FE /* connect.pdf in Resources */,
 				1CB2CD20052DDC560094AAA4 /* clear.png in Resources */,
 				1CB2CD21052DDC560094AAA4 /* reveal.png in Resources */,
 				92C70D171A5E88CE00080E45 /* founder.pdf in Resources */,
@@ -2150,9 +2151,7 @@
 				1CB2CD38052DDC560094AAA4 /* connecting.png in Resources */,
 				1CB2CD39052DDC560094AAA4 /* connectingSelected.png in Resources */,
 				1CB2CD3A052DDC560094AAA4 /* autoHeader.png in Resources */,
-				1CB2CD3B052DDC560094AAA4 /* connect.png in Resources */,
-				1CB2CD3C052DDC560094AAA4 /* disconnect.png in Resources */,
-				1CB2CD3F052DDC560094AAA4 /* joinRoom.png in Resources */,
+				19F2929A1B130440000198FE /* joinRoom.pdf in Resources */,
 				1CB2CD43052DDC560094AAA4 /* addWidget.png in Resources */,
 				1CB2CD44052DDC560094AAA4 /* addWidgetSelected.png in Resources */,
 				1CB2CD45052DDC560094AAA4 /* removeWidget.png in Resources */,
@@ -2243,6 +2242,7 @@
 				1C96E95906AAEC280013B0A9 /* TranscriptPreferences.png in Resources */,
 				1C7EF54106B341890037F173 /* roomTabNewHighlightMessage.png in Resources */,
 				1C7EF54206B341890037F173 /* roomTabNewMessage.png in Resources */,
+				19F292991B130440000198FE /* disconnect.pdf in Resources */,
 				1C7EF5C206B346E50037F173 /* privateChatTab.png in Resources */,
 				92C70D181A5E88CE00080E45 /* voice.pdf in Resources */,
 				1C7EF5C306B346E50037F173 /* privateChatTabNewMessage.png in Resources */,
