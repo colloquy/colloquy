@@ -1,13 +1,24 @@
 #import <ChatCore/MVAvailability.h>
 
 @class GCDAsyncSocket;
+@class MVDirectClientConnection;
 @class TCMPortMapping;
+
+@protocol MVDirectClientConnectionDelegate <NSObject>
+@optional
+- (void) directClientConnection:(MVDirectClientConnection *) connection didConnectToHost:(NSString *) host port:(unsigned short) port;
+- (void) directClientConnection:(MVDirectClientConnection *) connection acceptingConnectionsToHost:(NSString *) host port:(unsigned short) port;
+- (void) directClientConnection:(MVDirectClientConnection *) connection willDisconnectWithError:(NSError *) error;
+- (void) directClientConnectionDidDisconnect:(MVDirectClientConnection *) connection;
+- (void) directClientConnection:(MVDirectClientConnection *) connection didWriteDataWithTag:(long) tag;
+- (void) directClientConnection:(MVDirectClientConnection *) connection didReadData:(NSData *) data withTag:(long) tag;
+@end
 
 NSString *MVDCCFriendlyAddress( NSString *address );
 
 @interface MVDirectClientConnection : NSObject {
 @private
-	id _delegate;
+	NSObject <MVDirectClientConnectionDelegate> *_delegate;
 	GCDAsyncSocket *_connection;
 	GCDAsyncSocket *_acceptConnection;
 #if ENABLE(AUTO_PORT_MAPPING)
@@ -32,14 +43,6 @@ NSString *MVDCCFriendlyAddress( NSString *address );
 
 - (void) writeData:(NSData *) data withTimeout:(NSTimeInterval) timeout withTag:(long) tag;
 
-@property (weak) id delegate;
+@property (weak) id <MVDirectClientConnectionDelegate> delegate;
 @end
 
-@interface NSObject (MVDirectClientConnectionDelegate)
-- (void) directClientConnection:(MVDirectClientConnection *) connection didConnectToHost:(NSString *) host port:(unsigned short) port;
-- (void) directClientConnection:(MVDirectClientConnection *) connection acceptingConnectionsToHost:(NSString *) host port:(unsigned short) port;
-- (void) directClientConnection:(MVDirectClientConnection *) connection willDisconnectWithError:(NSError *) error;
-- (void) directClientConnectionDidDisconnect:(MVDirectClientConnection *) connection;
-- (void) directClientConnection:(MVDirectClientConnection *) connection didWriteDataWithTag:(long) tag;
-- (void) directClientConnection:(MVDirectClientConnection *) connection didReadData:(NSData *) data withTag:(long) tag;
-@end

@@ -231,7 +231,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	_acceptConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue socketQueue:_connectionDelegateQueue];
 
 	NSRange ports = [portsObject rangeValue];
-	NSUInteger port = ports.location;
+	unsigned short port = ports.location;
 	BOOL success = NO;
 
 	while( ! success ) {

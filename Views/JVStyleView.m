@@ -27,29 +27,14 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 @interface WebView (WebViewLeopard)
-- (void) setDrawsBackground:(BOOL) draws; // supported in 10.3.9/Tiger
-- (BOOL) drawsBackground; // supported in 10.3.9/Tiger
 - (void) setBackgroundColor:(NSColor *) color; // new in Safari 3/Leopard
 - (void) setProhibitsMainFrameScrolling:(BOOL) prohibit; // new in Safari 3/Leopard
-- (WebFrame *) selectedFrame;
 @end
 
 #pragma mark -
 
 @interface WebView (WebViewPrivate)
 - (WebFrame *) _frameForCurrentSelection;
-@end
-
-#pragma mark -
-
-@interface DOMNode (DOMNodeLeopard)
-- (DOMNode *) insertBefore:(DOMNode *) newChild refChild:(DOMNode *) refChild;
-@end
-
-#pragma mark -
-
-@interface DOMElement (DOMElementLeopard)
-- (void) setAttribute:(NSString *) name value:(NSString *) value;
 @end
 
 #pragma mark -

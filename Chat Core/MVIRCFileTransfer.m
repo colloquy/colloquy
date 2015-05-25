@@ -13,6 +13,9 @@
 
 #define DCCPacketSize 4096
 
+@interface MVIRCUploadFileTransfer () <MVDirectClientConnectionDelegate>
+@end
+
 @implementation MVIRCUploadFileTransfer
 + (instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	static long long passiveId = 0;
@@ -202,6 +205,9 @@
 @end
 
 #pragma mark -
+
+@interface MVIRCDownloadFileTransfer () <MVDirectClientConnectionDelegate>
+@end
 
 @implementation MVIRCDownloadFileTransfer
 - (void) dealloc {

@@ -1152,7 +1152,7 @@ static SilcClientOperations silcClientOps = {
 
 	if( alwaysAccept ) {
 		NSData *pk = [dictionary objectForKey:@"pk"];
-		NSString *filename = [self _publicKeyFilename:[dictionary[@"connType"] unsignedLongValue] andPublicKey:(unsigned char *)[pk bytes] withLen:pk.length usingSilcConn:conn];
+		NSString *filename = [self _publicKeyFilename:[dictionary[@"connType"] intValue] andPublicKey:(unsigned char *)[pk bytes] withLen:pk.length usingSilcConn:conn];
 		silc_pkcs_save_public_key_data( [filename fileSystemRepresentation], (unsigned char *)[pk bytes], pk.length, SILC_PKCS_FILE_PEM);
 	}
 }

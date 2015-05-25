@@ -27,6 +27,9 @@ NSString *MVDirectChatConnectionGotMessageNotification = @"";
 
 NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomain";
 
+@interface MVDirectChatConnection () <MVDirectClientConnectionDelegate>
+@end
+
 @implementation MVDirectChatConnection
 + (instancetype) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive {
 	static long long passiveId = 0;
