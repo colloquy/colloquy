@@ -300,7 +300,6 @@
 		928FB03613EE64C700A0DF4B /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 928FB03513EE64C700A0DF4B /* libicucore.dylib */; };
 		9295C85D1675E227009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
 		92A711951A4A5166009E80F0 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A711941A4A5166009E80F0 /* SecurityInterface.framework */; };
-		92C70D091A5E87CF00080E45 /* room.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D081A5E87CF00080E45 /* room.pdf */; };
 		92C70D121A5E88CE00080E45 /* half-op.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D0A1A5E88CE00080E45 /* half-op.pdf */; };
 		92C70D131A5E88CE00080E45 /* person.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D0B1A5E88CE00080E45 /* person.pdf */; };
 		92C70D141A5E88CE00080E45 /* admin.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D0C1A5E88CE00080E45 /* admin.pdf */; };
@@ -2169,7 +2168,6 @@
 				1CB2CD58052DDC560094AAA4 /* chooseStyle.png in Resources */,
 				1CB2CD59052DDC560094AAA4 /* Emoticons in Resources */,
 				1CB2CD5A052DDC560094AAA4 /* emoticons.plist in Resources */,
-				92C70D091A5E87CF00080E45 /* room.pdf in Resources */,
 				1CB2CD5B052DDC560094AAA4 /* colloquy-alpha.png in Resources */,
 				1CB2CD5C052DDC560094AAA4 /* newMessage.png in Resources */,
 				1CB2CD5D052DDC560094AAA4 /* newHighlightMessage.png in Resources */,
