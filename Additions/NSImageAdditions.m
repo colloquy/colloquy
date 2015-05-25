@@ -39,6 +39,24 @@
 	}
 }
 
++ (NSImage *) imageFromPDF:(NSString *) pdfName {
+	static NSMutableDictionary *images = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		images = [NSMutableDictionary dictionary];
+	});
+
+	NSImage *image = images[pdfName];
+	if (!image) {
+		NSImage *temporaryImage = [NSImage imageNamed:pdfName];
+		image = [[NSImage alloc] initWithData:temporaryImage.TIFFRepresentation];
+
+		images[pdfName] = image;
+	}
+
+	return image;
+}
+
 + (NSImage *) imageWithBase64EncodedString:(NSString *) base64String {
 	return [[NSImage alloc] initWithBase64EncodedString:base64String];
 }
