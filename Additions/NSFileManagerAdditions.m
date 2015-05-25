@@ -4,6 +4,8 @@
 #include <mach-o/loader.h> 
 #include <mach-o/fat.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation NSFileManager (Additions)
 static inline void markArchitectureAsActiveForCPUType(MVArchitectures *architectures, cpu_type_t cpuType, cpu_subtype_t cpuSubtype) {
 	switch (cpuType) {
@@ -116,3 +118,5 @@ static inline void swapIntsInHeader(uint8_t *bytes, ssize_t length) {
 NSString *NSStringFromMVArchitectures(MVArchitectures architectures) {
 	return [NSString stringWithFormat:@"(\n\tPPC 32-Bit: %d\n\tPPC 64-Bit: %d\n\tIntel x86: %d\n\tIntel x86_64: %d\n\tArmv6: %d\n\tArmv7: %d\n\tUnknown Architectures: %ld\n)", architectures.ppc32, architectures.ppc64, architectures.x86, architectures.x86_64, architectures.armv6, architectures.armv7, architectures.unknown];
 }
+
+NS_ASSUME_NONNULL_END

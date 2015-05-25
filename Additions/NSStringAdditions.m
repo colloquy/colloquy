@@ -6,6 +6,8 @@
 
 #import <sys/time.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 struct EmojiEmoticonPair {
 	const unichar emoji;
 	CFStringRef emoticon;
@@ -1398,3 +1400,5 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

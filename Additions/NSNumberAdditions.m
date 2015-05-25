@@ -1,5 +1,7 @@
 #import "NSNumberAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation NSNumber (NSNumberAdditions)
 + (NSNumber *) numberWithBytes:(const void *) bytes objCType:(const char *) type {
 	if( ! strcmp( type, @encode( char ) ) ) {
@@ -44,3 +46,5 @@
 	} else return nil;
 }
 @end
+
+NS_ASSUME_NONNULL_END

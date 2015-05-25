@@ -4,6 +4,8 @@
 #import "MVIRCChatUser.h"
 #import "NSStringAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation MVIRCChatRoom
 - (instancetype) initWithName:(NSString *) roomName andConnection:(MVIRCChatConnection *) roomConnection {
 	if( ( self = [self init] ) ) {
@@ -39,7 +41,7 @@
 
 #pragma mark -
 
-- (void) partWithReason:(MVChatString *) reason {
+- (void) partWithReason:(MVChatString * __nullable) reason {
 	if( ! [self isJoined] ) return;
 
 	if( reason.length ) {
@@ -68,7 +70,7 @@
 
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) msgEncoding withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( message != nil );
-	[[self connection] _sendMessage:message withEncoding:msgEncoding toTarget:self withTargetPrefix:nil withAttributes:attributes localEcho:NO];
+	[[self connection] _sendMessage:message withEncoding:msgEncoding toTarget:self withTargetPrefix:@"" withAttributes:attributes localEcho:NO];
 
 	_mostRecentUserActivity = [NSDate date];
 	[self persistLastActivityDate];
@@ -112,7 +114,7 @@
 
 #pragma mark -
 
-- (void) setMode:(MVChatRoomMode) mode withAttribute:(id) attribute {
+- (void) setMode:(MVChatRoomMode) mode withAttribute:(id __nullable) attribute {
 	[super setMode:mode withAttribute:attribute];
 
 	switch( mode ) {
@@ -292,7 +294,7 @@
 
 #pragma mark -
 
-- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString *) reason {
+- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString * __nullable) reason {
 	[super kickOutMemberUser:user forReason:reason];
 
 	if( reason ) {
@@ -421,3 +423,5 @@
 	[self _setBansSynced:NO];
 }
 @end
+
+NS_ASSUME_NONNULL_END

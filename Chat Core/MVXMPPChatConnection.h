@@ -5,6 +5,8 @@
 @class JabberID;
 @class XMLElement;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface MVXMPPChatConnection : MVChatConnection {
 @private
 	JabberSession *_session;
@@ -24,3 +26,5 @@
 - (XMLElement *) _capabilitiesElement;
 - (XMLElement *) _multiUserChatExtensionElement;
 @end
+
+NS_ASSUME_NONNULL_END

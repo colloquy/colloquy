@@ -503,13 +503,13 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (void) _setIdleTime:(NSTimeInterval) time {
 	_idleTime = time;
-	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserIdleTimeUpdatedNotification object:self userInfo:nil];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserIdleTimeUpdatedNotification object:self];
 }
 
 - (void) _setStatus:(MVChatUserStatus) newStatus {
 	if( _status == newStatus ) return;
 	_status = newStatus;
-	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserStatusChangedNotification object:self userInfo:nil];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserStatusChangedNotification object:self];
 }
 
 - (void) _setDateConnected:(NSDate * __nullable) date {

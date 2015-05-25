@@ -6,6 +6,8 @@
 #import "MVChatString.h"
 #import "NSNotificationAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation MVXMPPChatUser
 - (id) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) userConnection {
 	if( ( self = [self init] ) ) {
@@ -83,3 +85,5 @@
 	return _roomMember;
 }
 @end
+
+NS_ASSUME_NONNULL_END

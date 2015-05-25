@@ -2,6 +2,8 @@
 #import "MVSILCChatConnection.h"
 #import "MVChatString.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation MVSILCChatUser
 - (id) initLocalUserWithConnection:(MVSILCChatConnection *) userConnection {
 	if( ( self = [self initWithClientEntry:[userConnection _silcConn] -> local_entry andConnection:userConnection] ) ) {
@@ -141,3 +143,5 @@
 	silc_buffer_free( userBuffer );
 }
 @end
+
+NS_ASSUME_NONNULL_END

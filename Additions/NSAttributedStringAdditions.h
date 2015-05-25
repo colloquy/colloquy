@@ -1,3 +1,5 @@
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *NSChatWindowsIRCFormatType;
 extern NSString *NSChatCTCPTwoFormatType;
 
@@ -5,10 +7,10 @@ extern NSString *NSChatCTCPTwoFormatType;
 
 @interface NSAttributedString (NSAttributedStringHTMLAdditions)
 #if SYSTEM(MAC)
-+ (id) attributedStringWithHTMLFragment:(NSString *) fragment baseURL:(NSURL *) url;
++ (instancetype) attributedStringWithHTMLFragment:(NSString *) fragment;
 
-+ (id) attributedStringWithChatFormat:(NSData *) data options:(NSDictionary *) options;
-- (id) initWithChatFormat:(NSData *) data options:(NSDictionary *) options;
++ (instancetype) attributedStringWithChatFormat:(NSData *) data options:(NSDictionary *) options;
+- (instancetype) initWithChatFormat:(NSData *) data options:(NSDictionary *) options;
 #endif
 
 - (NSString *) HTMLFormatWithOptions:(NSDictionary *) options;
@@ -20,3 +22,5 @@ extern NSString *NSChatCTCPTwoFormatType;
 - (NSArray *) cq_componentsSeparatedByCharactersInSet:(NSCharacterSet *) characterSet;
 - (NSAttributedString *) cq_stringByTrimmingCharactersInSet:(NSCharacterSet *) characterSet;
 @end
+
+NS_ASSUME_NONNULL_END

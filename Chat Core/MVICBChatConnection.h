@@ -34,6 +34,8 @@
 
 #import "MVChatConnection.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class GCDAsyncSocket;
 @class MVICBChatRoom;
 
@@ -77,3 +79,5 @@
 - (void) ctsPongPacketWithId:(NSString *) ident;
 - (void) stcDemux:(ICBPacket *) packet;
 @end
+
+NS_ASSUME_NONNULL_END

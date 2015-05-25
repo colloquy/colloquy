@@ -7,6 +7,8 @@
 #import "NSStringAdditions.h"
 #import "MVChatString.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation MVXMPPChatRoom
 - (id) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) connection {
 	if( ( self = [self init] ) ) {
@@ -42,7 +44,7 @@
 
 #pragma mark -
 
-- (void) partWithReason:(MVChatString *) reason {
+- (void) partWithReason:(MVChatString * __nullable) reason {
 	if( ! [self isJoined] ) return;
 	[self _setDateParted:[NSDate date]];
 }
@@ -66,7 +68,7 @@
 
 #pragma mark -
 
-- (void) setMode:(MVChatRoomMode) mode withAttribute:(id) attribute {
+- (void) setMode:(MVChatRoomMode) mode withAttribute:(id __nullable) attribute {
 	[super setMode:mode withAttribute:attribute];
 
 }
@@ -102,7 +104,7 @@
 
 #pragma mark -
 
-- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString *) reason {
+- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString * __nullable) reason {
 	[super kickOutMemberUser:user forReason:reason];
 
 }
@@ -123,3 +125,5 @@
 	MVSafeRetainAssign( _localMemberUser, user );
 }
 @end
+
+NS_ASSUME_NONNULL_END

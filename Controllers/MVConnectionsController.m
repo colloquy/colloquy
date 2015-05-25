@@ -1221,9 +1221,10 @@ static NSMenu *favoritesMenu = nil;
 	}
 }
 
-- (BOOL) tableView:(NSTableView *) view writeRows:(NSArray *) rows toPasteboard:(NSPasteboard *) board {
-	if( view == connections ) {
-		NSInteger row = [[rows lastObject] intValue];
+
+- (BOOL) tableView:(NSTableView *) tableView writeRowsWithIndexes:(NSIndexSet *) rowIndexes toPasteboard:(NSPasteboard *) board {
+	if( tableView == connections ) {
+		NSInteger row = rowIndexes.lastIndex;
 		NSDictionary *info = nil;
 		MVChatConnection *connection = nil;
 		NSString *string = nil;

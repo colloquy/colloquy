@@ -2,6 +2,8 @@
 #import "MVAvailability.h"
 #import <pthread.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation NSNotificationCenter (NSNotificationCenterAdditions)
 + (NSNotificationCenter *) chatCenter {
 #if ENABLE(CHAT_CENTER)
@@ -31,7 +33,7 @@
 
 - (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id) object {
 	if( pthread_main_np() ) [self postNotificationName:name object:object userInfo:nil];
-	else [self postNotificationOnMainThreadWithName:name object:object userInfo:nil waitUntilDone:NO];
+	else [self postNotificationOnMainThreadWithName:name object:object userInfo:@{} waitUntilDone:NO];
 }
 
 - (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id) object userInfo:(NSDictionary *) userInfo {
@@ -62,3 +64,5 @@
 	[info[@"center"] postNotificationName:name object:object userInfo:userInfo];
 }
 @end
+
+NS_ASSUME_NONNULL_END

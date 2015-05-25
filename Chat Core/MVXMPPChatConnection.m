@@ -10,6 +10,8 @@
 #import "NSStringAdditions.h"
 #import "MVChatString.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation MVXMPPChatConnection
 + (NSArray *) defaultServerPorts {
 	return [NSArray arrayWithObjects:[NSNumber numberWithUnsignedShort:5222], [NSNumber numberWithUnsignedShort:5223], nil];
@@ -82,7 +84,7 @@
 	[_session startSession:_localID onPort:_serverPort withServer:_server];
 }
 
-- (void) disconnectWithReason:(MVChatString *) reason {
+- (void) disconnectWithReason:(MVChatString * __nullable) reason {
 	[self _willDisconnect];
 	[_session stopSession];
 }
@@ -115,7 +117,7 @@
 
 #pragma mark -
 
-- (void) setNicknamePassword:(NSString *) newPassword {
+- (void) setNicknamePassword:(NSString * __nullable) newPassword {
 	// not supported
 }
 
@@ -198,7 +200,7 @@
 
 #pragma mark -
 
-- (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase {
+- (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString * __nullable) passphrase {
 	NSParameterAssert( room != nil );
 	NSParameterAssert( room.length > 0 );
 
@@ -411,3 +413,5 @@
 	return [[XMLElement allocWithZone:nil] initWithQName:xQName];
 }
 @end
+
+NS_ASSUME_NONNULL_END

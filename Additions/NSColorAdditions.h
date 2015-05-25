@@ -1,3 +1,5 @@
+NS_ASSUME_NONNULL_BEGIN
+
 #if SYSTEM(MAC)
 @interface NSColor (NSColorAdditions)
 + (NSColor *) colorWithHTMLAttributeValue:(NSString *) attribute;
@@ -6,3 +8,5 @@
 - (NSString *) CSSAttributeValue;
 @end
 #endif
+
+NS_ASSUME_NONNULL_END

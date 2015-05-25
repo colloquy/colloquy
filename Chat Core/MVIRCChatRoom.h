@@ -1,6 +1,8 @@
 #import "MVChatRoom.h"
 #import "MVChatRoomPrivate.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class MVIRCChatConnection;
 
 @interface MVIRCChatRoom : MVChatRoom {
@@ -20,3 +22,5 @@
 - (BOOL) _bansSynced;
 - (void) _setBansSynced:(BOOL) synced;
 @end
+
+NS_ASSUME_NONNULL_END

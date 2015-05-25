@@ -368,17 +368,17 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	}];
 }
 
-- (BOOL) tableView:(NSTableView *) view writeRows:(NSArray *) rows toPasteboard:(NSPasteboard *) board {
+- (BOOL) tableView:(NSTableView *) tableView writeRowsWithIndexes:(NSIndexSet *) rowIndexes toPasteboard:(NSPasteboard *) pboard {
 	NSMutableArray *array = [NSMutableArray array];
 
-	[board declareTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,nil] owner:self];
+	[pboard declareTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,nil] owner:self];
 
-	for( id row in rows ) {
-		NSString *path = [[self _infoForTransferAtIndex:[row unsignedIntValue]] objectForKey:@"path"];
+	[rowIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+		NSString *path = [[self _infoForTransferAtIndex:idx] objectForKey:@"path"];
 		if( path ) [array addObject:path];
-	}
+	}];
 
-	[board setPropertyList:array forType:NSFilenamesPboardType];
+	[pboard setPropertyList:array forType:NSFilenamesPboardType];
 	return YES;
 }
 

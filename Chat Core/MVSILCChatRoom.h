@@ -3,6 +3,8 @@
 #include <libsilcclient/client.h>
 #include <libsilc/silcincludes.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class MVSILCChatConnection;
 
 @interface MVSILCChatRoom : MVChatRoom {
@@ -17,3 +19,5 @@
 
 - (void) updateWithChannelEntry:(SilcChannelEntry) channelEntry;
 @end
+
+NS_ASSUME_NONNULL_END

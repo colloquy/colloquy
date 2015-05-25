@@ -1,5 +1,7 @@
 #import "NSRegularExpressionAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation NSRegularExpression (Additions)
 + (NSRegularExpression *) cachedRegularExpressionWithPattern:(NSString *) pattern options:(NSRegularExpressionOptions) options error:(NSError *__autoreleasing*) error {
 	static NSMutableDictionary *dangerousCache = nil;
@@ -34,3 +36,5 @@
 	return [self matchesInString:string options:NSMatchingReportCompletion range:NSMakeRange(0, string.length)];
 }
 @end
+
+NS_ASSUME_NONNULL_END

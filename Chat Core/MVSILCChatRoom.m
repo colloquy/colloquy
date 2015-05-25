@@ -3,6 +3,8 @@
 #import "MVSILCChatConnection.h"
 #import "MVChatString.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation MVSILCChatRoom
 - (id) initWithChannelEntry:(SilcChannelEntry) channelEntry andConnection:(MVSILCChatConnection *) roomConnection {
 	if( ( self = [self init] ) ) {
@@ -57,7 +59,7 @@
 
 #pragma mark -
 
-- (void) partWithReason:(MVChatString *) reason {
+- (void) partWithReason:(MVChatString * __nullable) reason {
 	if( ! [self isJoined] ) return;
 	if( reason.length ) [[self connection] sendRawMessageWithFormat:@"LEAVE %@ %@", [self name], reason];
 	else [[self connection] sendRawMessageWithFormat:@"LEAVE %@", [self name]];
@@ -100,7 +102,7 @@
 
 #pragma mark -
 
-- (void) setMode:(MVChatRoomMode) mode withAttribute:(id) attribute {
+- (void) setMode:(MVChatRoomMode) mode withAttribute:(id __nullable) attribute {
 	[super setMode:mode withAttribute:attribute];
 
 	switch( mode ) {
@@ -208,7 +210,7 @@
 
 #pragma mark -
 
-- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString *) reason {
+- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString * __nullable) reason {
 	SilcBuffer roomBuffer, userBuffer;
 	MVSILCChatUser *silcUser = (MVSILCChatUser *) user;
 
@@ -320,3 +322,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

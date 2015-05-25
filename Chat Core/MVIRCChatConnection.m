@@ -28,6 +28,7 @@
 #import <CFNetwork/CFNetwork.h>
 #endif
 
+NS_ASSUME_NONNULL_BEGIN
 
 #define JVQueueWaitBeforeConnected 120.
 #define JVPingServerInterval 120.
@@ -172,7 +173,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 - (void) _handleTopic:(NSDictionary *)topicInfo;
 - (void) _handleTopicWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender;
 
-- (void) _parseRoomModes:(NSArray *) parameters forRoom:(MVChatRoom *) room fromSender:(MVChatUser *) sender;
+- (void) _parseRoomModes:(NSArray *) parameters forRoom:(MVChatRoom *) room fromSender:(MVChatUser *__nullable) sender;
 - (void) _handleModeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender;
 /** RPL_CHANNELMODEIS */
 - (void) _handle324WithParameters:(NSArray *) parameters fromSender:(id) sender;
@@ -357,7 +358,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	[self _connect];
 }
 
-- (void) disconnectWithReason:(MVChatString *) reason {
+- (void) disconnectWithReason:(MVChatString * __nullable) reason {
 	[self performSelectorOnMainThread:@selector( cancelPendingReconnectAttempts ) withObject:nil waitUntilDone:YES];
 
 	if( _status == MVChatConnectionConnectedStatus ) {
@@ -481,7 +482,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 #pragma mark -
 
-- (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments {
+- (void) sendCommand:(NSString *) command withArguments:(MVChatString * __nullable) arguments {
 	NSParameterAssert( command != nil );
 	[self _sendCommand:command withArguments:arguments withEncoding:[self encoding] toTarget:nil];
 }
@@ -600,7 +601,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	if( roomList.count ) [self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
 }
 
-- (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase {
+- (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString * __nullable) passphrase {
 	NSParameterAssert( room != nil );
 	NSParameterAssert( room.length > 0 );
 
@@ -773,7 +774,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 #pragma mark -
 
-- (void) setAwayStatusMessage:(MVChatString *) message {
+- (void) setAwayStatusMessage:(MVChatString * __nullable) message {
 	if( message.length ) {
 		MVSafeCopyAssign( _awayMessage, message );
 
@@ -1388,9 +1389,6 @@ end:
 
 	NSString *targetName = [target isKindOfClass:[MVChatRoom class]] ? [target name] : [target nickname];
 
-	if( !targetPrefix )
-		targetPrefix = @"";
-
 	BOOL usingIntentTags = ( [self.supportedFeatures containsObject:MVChatConnectionMessageIntents] );
 	NSString *accountName = self.localUser.account;
 	[self _stripModePrefixesFromNickname:&accountName];
@@ -1473,7 +1471,7 @@ end:
 	} else return NO;
 }
 
-- (void) _sendCommand:(NSString *) command withArguments:(MVChatString *) arguments withEncoding:(NSStringEncoding) encoding toTarget:(id) target {
+- (void) _sendCommand:(NSString *) command withArguments:(MVChatString *) arguments withEncoding:(NSStringEncoding) encoding toTarget:(id __nullable) target {
 	MVAssertMainThreadRequired();
 
 	BOOL isRoom = [target isKindOfClass:[MVChatRoom class]];
@@ -1485,10 +1483,10 @@ end:
 
 	if( isUser || isRoom ) {
 		if( [command isCaseInsensitiveEqualToString:@"me"] || [command isCaseInsensitiveEqualToString:@"action"] ) {
-			[self _sendMessage:arguments withEncoding:encoding toTarget:target withTargetPrefix:nil withAttributes:@{ @"action": @(YES) } localEcho:YES];
+			[self _sendMessage:arguments withEncoding:encoding toTarget:target withTargetPrefix:@"" withAttributes:@{ @"action": @(YES) } localEcho:YES];
 			return;
 		} else if( [command isCaseInsensitiveEqualToString:@"say"] ) {
-			[self _sendMessage:arguments withEncoding:encoding toTarget:target withTargetPrefix:nil withAttributes:@{ } localEcho:YES];
+			[self _sendMessage:arguments withEncoding:encoding toTarget:target withTargetPrefix:@"" withAttributes:@{ } localEcho:YES];
 			return;
 		}
 	}
@@ -1740,7 +1738,7 @@ end:
 
 		MVChatUser *user = [[self chatUsersWithNickname:targetName] anyObject];
 		if( user ) {
-			[self _sendMessage:msg withEncoding:encoding toTarget:user withTargetPrefix:nil withAttributes:@{ } localEcho:echo];
+			[self _sendMessage:msg withEncoding:encoding toTarget:user withTargetPrefix:@"" withAttributes:@{ } localEcho:echo];
 			return;
 		}
 
@@ -2266,7 +2264,7 @@ end:
 	return MVChatRoomMemberNoModes;
 }
 
-- (MVChatRoomMemberMode) _stripModePrefixesFromNickname:(NSString **) nicknamePtr {
+- (MVChatRoomMemberMode) _stripModePrefixesFromNickname:(NSString *__nonnull *__nonnull) nicknamePtr {
 	NSString *nickname = *nicknamePtr;
 	MVChatRoomMemberMode modes = MVChatRoomMemberNoModes;
 	NSMutableDictionary *prefixes = _serverInformation[@"roomMemberPrefixTable"];
@@ -2365,7 +2363,7 @@ end:
 							sendCapReqForFeature = NO;
 						}
 					} else {
-						[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+						[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self];
 						sendCapReqForFeature = NO;
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"multi-prefix"] ) {
@@ -2581,7 +2579,7 @@ end:
 - (void) _handle904WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SASLFAIL
 	[self.localUser _setIdentified:NO];
 
-	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self];
 
 	[self _sendEndCapabilityCommandForcefully:YES];
 }
@@ -2611,7 +2609,7 @@ end:
 		NSString *nick = [self _stringFromPossibleData:parameters[0]];
 		if( ! [nick isEqualToString:[self nickname]] ) {
 			[self _setCurrentNickname:nick];
-			[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
+			[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNicknameAcceptedNotification object:self];
 		}
 	}
 
@@ -2997,7 +2995,7 @@ end:
 }
 
 - (void) _handlePrivmsgWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	[self _handlePrivmsgWithParameters:parameters tags:nil fromSender:sender];
+	[self _handlePrivmsgWithParameters:parameters tags:@{} fromSender:sender];
 }
 
 - (void) _handleNotice:(NSMutableDictionary *) noticeInfo {
@@ -3043,10 +3041,10 @@ end:
 				if( [[self server] hasCaseInsensitiveSubstring:@"ustream"] ) {
 					if( [msg isEqualToString:@"This is a registered nick, either choose another nick or enter the password by doing: /PASS <password>"] ) {
 						if( ! [[self nicknamePassword] length] )
-							[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+							[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self];
 						else [self _identifyWithServicesUsingNickname:[self nickname]];
 					} else if( [msg isEqualToString:@"Incorrect password for this account"] ) {
-						[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+						[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self];
 					}
 				}
 			}
@@ -3150,7 +3148,7 @@ end:
 				[[self localUser] _setIdentified:NO];
 
 				if( ! [[self nicknamePassword] length] )
-					[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+					[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self];
 				else [self _identifyWithServicesUsingNickname:[self nickname]]; // responding to nickserv -> current nickname
 
 				noticeInfo[@"handled"] = @(YES);
@@ -3163,7 +3161,7 @@ end:
 
 				[[self localUser] _setIdentified:NO];
 
-				[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+				[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self];
 
 				noticeInfo[@"handled"] = @(YES);
 
@@ -3240,7 +3238,7 @@ end:
 }
 
 - (void) _handleNoticeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	[self _handleNoticeWithParameters:parameters tags:nil fromSender:sender];
+	[self _handleNoticeWithParameters:parameters tags:@{} fromSender:sender];
 }
 
 - (void) _handleCTCP:(NSDictionary *) ctcpInfo {
@@ -3671,7 +3669,7 @@ end:
 }
 
 - (void) _handleJoinWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	[self _handleJoinWithParameters:parameters tags:nil fromSender:sender];
+	[self _handleJoinWithParameters:parameters tags:@{} fromSender:sender];
 }
 
 - (void) _handlePartWithParameters:(NSArray *) parameters tags:(NSDictionary *) tags fromSender:(MVChatUser *) sender {
@@ -3705,7 +3703,7 @@ end:
 }
 
 - (void) _handlePartWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	[self _handlePartWithParameters:parameters tags:nil fromSender:sender];
+	[self _handlePartWithParameters:parameters tags:@{} fromSender:sender];
 }
 
 - (void) _handleQuitWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
@@ -3788,7 +3786,7 @@ end:
 	[room _setTopicAuthor:author];
 	[room _setTopicDate:[NSDate date]];
 
-	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room];
 }
 
 - (void) _handleTopicWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
@@ -3807,7 +3805,7 @@ end:
 	}
 }
 
-- (void) _parseRoomModes:(NSArray *) parameters forRoom:(MVChatRoom *) room fromSender:(MVChatUser *) sender {
+- (void) _parseRoomModes:(NSArray *) parameters forRoom:(MVChatRoom *) room fromSender:(MVChatUser *__nullable) sender {
 #define enabledHighBit ( 1 << 31 )
 #define banMode ( 1 << 30 )
 #define banExcludeMode ( 1 << 29 )
@@ -4134,7 +4132,7 @@ end:
 			[user _setAwayStatusMessage:awayMsg];
 			[user _setStatus:MVChatUserAwayStatus];
 
-			[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserAwayStatusMessageChangedNotification object:user userInfo:nil];
+			[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserAwayStatusMessageChangedNotification object:user];
 		}
 	}
 }
@@ -4143,13 +4141,13 @@ end:
 	[[self localUser] _setAwayStatusMessage:nil];
 	[[self localUser] _setStatus:MVChatUserAvailableStatus];
 
-	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionSelfAwayStatusChangedNotification object:self userInfo:nil];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionSelfAwayStatusChangedNotification object:self];
 }
 
 - (void) _handle306WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_NOWAWAY
 	[[self localUser] _setStatus:MVChatUserAwayStatus];
 
-	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionSelfAwayStatusChangedNotification object:self userInfo:nil];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionSelfAwayStatusChangedNotification object:self];
 }
 
 #pragma mark -
@@ -4324,7 +4322,7 @@ end:
 		if( time > JVFirstViableTimestamp )
 			[room _setTopicDate:[NSDate dateWithTimeIntervalSince1970:time]];
 
-		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room];
 	}
 }
 
@@ -4384,7 +4382,7 @@ end:
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:parameters[1]]];
 		[user _setDateUpdated:[NSDate date]];
 
-		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserInformationUpdatedNotification object:user];
 
 		if( [_pendingWhoisUsers containsObject:user] ) {
 			[_pendingWhoisUsers removeObject:user];
@@ -4498,7 +4496,7 @@ end:
 
 		//workaround for a freenode (hyperion) bug where the ircd doesnt reply with 318 (RPL_ENDOFWHOIS) in case of 401 (ERR_NOSUCHNICK): end the whois when receiving 401
 		[user _setDateUpdated:[NSDate date]];
-		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserInformationUpdatedNotification object:user];
 
 		if( [_pendingWhoisUsers containsObject:user] ) {
 			[_pendingWhoisUsers removeObject:user];
@@ -4996,3 +4994,5 @@ end:
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

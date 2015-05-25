@@ -1579,7 +1579,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 }
 
 - (void) setScriptTypedTopic:(NSString *) topic {
-	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:topic baseURL:nil];
+	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:topic];
 	[[self target] changeTopic:attributeMsg];
 }
 @end

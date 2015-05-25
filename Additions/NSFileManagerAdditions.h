@@ -1,3 +1,5 @@
+NS_ASSUME_NONNULL_BEGIN
+
 typedef struct {
 	BOOL x86;
 	BOOL x86_64;
@@ -15,3 +17,5 @@ typedef struct {
 @end
 
 NSString *NSStringFromMVArchitectures(MVArchitectures architectures);
+
+NS_ASSUME_NONNULL_END

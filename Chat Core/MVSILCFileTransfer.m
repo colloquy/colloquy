@@ -3,6 +3,8 @@
 #import "MVChatUser.h"
 #import "NSNotificationAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface MVFileTransfer (MVFileTransferSilcPrivate)
 - (void) _silcPostError:(SilcClientFileError) error;
 @end
@@ -210,3 +212,5 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 	_sessionID = sessionID;
 }
 @end
+
+NS_ASSUME_NONNULL_END

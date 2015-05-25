@@ -1,6 +1,8 @@
 #import "MVChatUser.h"
 #import "MVChatUserPrivate.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class MVXMPPChatConnection;
 @class JabberID;
 
@@ -15,3 +17,5 @@
 - (void) _setRoomMember:(BOOL) member;
 - (BOOL) _isRoomMember;
 @end
+
+NS_ASSUME_NONNULL_END

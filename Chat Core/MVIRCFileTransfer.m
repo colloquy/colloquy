@@ -11,6 +11,8 @@
 
 #import <arpa/inet.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #define DCCPacketSize 4096
 
 @interface MVIRCUploadFileTransfer () <MVDirectClientConnectionDelegate>
@@ -392,3 +394,5 @@
 	return _fileNameQuoted;
 }
 @end
+
+NS_ASSUME_NONNULL_END

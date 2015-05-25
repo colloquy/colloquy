@@ -3,6 +3,8 @@
 #include <libsilcclient/client.h>
 #include <libsilc/silcincludes.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class MVSILCChatConnection;
 
 @interface MVSILCChatUser : MVChatUser {
@@ -15,3 +17,5 @@
 
 - (SilcClientEntry) _getClientEntry;
 @end
+
+NS_ASSUME_NONNULL_END

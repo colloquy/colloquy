@@ -1426,7 +1426,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #if USE(ATTRIBUTED_CHAT_STRING)
 	NSString *msg = message;
 	if( [message isKindOfClass:[NSTextStorage class]] ) msg = [message string];
-	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:msg baseURL:nil];
+	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:msg];
 	[self setAwayStatusMessage:attributeMsg];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 	if( [message isKindOfClass:[NSString class]] );
@@ -1590,7 +1590,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	}
 
 #if USE(ATTRIBUTED_CHAT_STRING)
-	NSAttributedString *realMessage = [NSAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
+	NSAttributedString *realMessage = [NSAttributedString attributedStringWithHTMLFragment:message];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 	NSString *realMessage = message;
 #endif
