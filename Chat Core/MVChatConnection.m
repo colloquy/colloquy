@@ -68,7 +68,7 @@ NSString *MVChatConnectionAccountTag = @"MVChatConnectionAccountTag";
 NSString *MVChatConnectionChghost = @"MVChatConnectionChghost";
 NSString *MVChatConnectionCapNotify = @"MVChatConnectionCapNotify";
 NSString *MVChatConnectionInvite = @"MVChatConnectionInvite";
-NSString *MVChatConnectionSelfMessage = @"MVChatConnectionSelfMessage";
+NSString *MVChatConnectionEchoMessage = @"MVChatConnectionEchoMessage";
 
 // InspIRCd Enhancements
 NSString *MVChatConnectionNamesx = @"MVChatConnectionNamesx";

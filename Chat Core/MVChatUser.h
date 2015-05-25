@@ -66,7 +66,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 
 @interface MVChatUser : NSObject {
 @protected
-	MVChatConnection *_connection;
+	__weak MVChatConnection *_connection;
 	id _uniqueIdentifier;
 	NSString *_nickname;
 	NSString *_realName;

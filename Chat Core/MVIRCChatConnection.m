@@ -2422,9 +2422,9 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionCapNotify];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] || [capability isCaseInsensitiveEqualToString:@"znc.in/self-message"] ) {
+				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] || [capability isCaseInsensitiveEqualToString:@"znc.in/self-message"] || [capability isCaseInsensitiveEqualToString:@"echo-message"] || [capability isCaseInsensitiveEqualToString:@"znc.in/echo-message"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionSelfMessage];
+						[_supportedFeatures addObject:MVChatConnectionEchoMessage];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"invite-notify"] ) {
 					@synchronized( _supportedFeatures ) {
@@ -2493,7 +2493,7 @@ end:
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] || [capability isCaseInsensitiveEqualToString:@"znc.in/self-message"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures removeObject:MVChatConnectionSelfMessage];
+						[_supportedFeatures removeObject:MVChatConnectionEchoMessage];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"chghost"] ) {
 					@synchronized( _supportedFeatures ) {

@@ -106,7 +106,7 @@ extern NSString *MVChatConnectionChghost;
 extern NSString *MVChatConnectionAccountTag;
 extern NSString *MVChatConnectionCapNotify;
 extern NSString *MVChatConnectionInvite;
-extern NSString *MVChatConnectionSelfMessage;
+extern NSString *MVChatConnectionEchoMessage;
 
 // InspIRCd Enhancements
 extern NSString *MVChatConnectionNamesx;
