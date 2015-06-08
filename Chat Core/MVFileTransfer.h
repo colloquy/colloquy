@@ -60,6 +60,7 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 + (void) setAutoPortMappingEnabled:(BOOL) enable;
 + (BOOL) isAutoPortMappingEnabled;
 
+- (instancetype) init NS_UNAVAILABLE;
 - (instancetype) initWithUser:(MVChatUser *) user NS_DESIGNATED_INITIALIZER;
 
 @property(readonly, getter=isUpload) BOOL upload;

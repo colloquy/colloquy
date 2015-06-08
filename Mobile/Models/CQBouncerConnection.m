@@ -6,6 +6,11 @@
 #import <objc/message.h>
 
 @implementation CQBouncerConnection
+- (instancetype) init {
+	NSAssert(NO, @"use [CQBouncerConnection initWithBouncerSettings:] instead");
+	return nil;
+}
+
 - (instancetype) initWithBouncerSettings:(CQBouncerSettings *) settings {
 	if (!(self = [super init]))
 		return nil;

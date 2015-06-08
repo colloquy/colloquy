@@ -31,17 +31,17 @@ NS_ASSUME_NONNULL_BEGIN
 	[info[@"center"] postNotification:info[@"notification"]];
 }
 
-- (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id) object {
+- (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id __nullable) object {
 	if( pthread_main_np() ) [self postNotificationName:name object:object userInfo:nil];
 	else [self postNotificationOnMainThreadWithName:name object:object userInfo:@{} waitUntilDone:NO];
 }
 
-- (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id) object userInfo:(NSDictionary *) userInfo {
+- (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id __nullable) object userInfo:(NSDictionary  __nullable *) userInfo {
 	if( pthread_main_np() ) [self postNotificationName:name object:object userInfo:userInfo];
 	else [self postNotificationOnMainThreadWithName:name object:object userInfo:userInfo waitUntilDone:NO];
 }
 
-- (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id) object userInfo:(NSDictionary *) userInfo waitUntilDone:(BOOL) wait {
+- (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id __nullable) object userInfo:(NSDictionary  __nullable *) userInfo waitUntilDone:(BOOL) wait {
 	if( pthread_main_np() ) [self postNotificationName:name object:object userInfo:userInfo];
 	else {
 		NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:3];

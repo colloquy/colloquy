@@ -69,7 +69,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( ctcpReplyNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
 //		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( metadataUpdatedNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
 
-		[_connection _addKnownUser:self];
+		[userConnection _addKnownUser:self];
 	}
 
 	return self;

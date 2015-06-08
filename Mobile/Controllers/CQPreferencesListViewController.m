@@ -179,8 +179,9 @@ enum {
 	point = [tapGesturRecognizer.view convertPoint:point toView:self.tableView];
 
 	NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
-	if ([self.tableView.delegate respondsToSelector:@selector(tableView:accessoryButtonTappedForRowWithIndexPath:)])
-		[self.tableView.delegate tableView:self.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+	id <UITableViewDelegate> delegate = self.tableView.delegate;
+	if ([delegate respondsToSelector:@selector(tableView:accessoryButtonTappedForRowWithIndexPath:)])
+		[delegate tableView:self.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
 }
 
 #pragma mark -

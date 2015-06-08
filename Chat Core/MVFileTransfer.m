@@ -50,6 +50,11 @@ static BOOL autoPortMapping = YES;
 
 #pragma mark -
 
+- (instancetype) init {
+	NSAssert(NO, @"use [MVFileTransfer initWithUser:] instead");
+	return nil;
+}
+
 - (instancetype) initWithUser:(MVChatUser *) chatUser {
 	if( ( self = [super init] ) ) {
 		_status = MVFileTransferHoldingStatus;

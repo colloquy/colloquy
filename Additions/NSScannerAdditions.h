@@ -4,7 +4,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSScanner (NSScannerAdditions)
-- (BOOL) scanCharactersFromSet:(NSCharacterSet *) scanSet maxLength:(NSUInteger) length intoString:(NSString *__nonnull * __nonnull) stringValue;
+- (BOOL) scanCharactersFromSet:(NSCharacterSet *) scanSet maxLength:(NSUInteger) maxLength intoString:(NSString *__nullable * __nullable) stringValue;
 @end
 
 NS_ASSUME_NONNULL_END

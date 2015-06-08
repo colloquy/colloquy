@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 		_connection = roomConnection; // prevent circular retain
 		_name = [roomName copy];
 		_uniqueIdentifier = [roomName lowercaseString];
-		[_connection _addKnownRoom:self];
+		[roomConnection _addKnownRoom:self];
 
 		NSString *recentActivityDateKey = [NSString stringWithFormat:@"%@-%@", self.connection.uniqueIdentifier, self.uniqueIdentifier];
 		_mostRecentUserActivity = [[NSUserDefaults standardUserDefaults] objectForKey:recentActivityDateKey];

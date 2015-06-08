@@ -313,8 +313,9 @@ static CQShowRoomTopic showRoomTopic;
 		theChatInputBar.textView.text = nil;
 
 		// Work around behavior where textViewDidChange: isn't called when you change the text programatically.
-		if ([theChatInputBar.textView.delegate respondsToSelector:@selector(textViewDidChange:)])
-			[theChatInputBar.textView.delegate textViewDidChange:theChatInputBar.textView];
+		__strong id <UITextViewDelegate> strongDelegate = theChatInputBar.textView.delegate;
+		if ([strongDelegate respondsToSelector:@selector(textViewDidChange:)])
+			[strongDelegate textViewDidChange:theChatInputBar.textView];
 
 		[theChatInputBar hideCompletions];
 

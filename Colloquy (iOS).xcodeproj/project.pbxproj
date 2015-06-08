@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		19C7BD581B265FC90073E545 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 19C7BD571B265FC90073E545 /* LaunchScreen.storyboard */; };
 		1C0931030D80C6E900A2705D /* CQColloquyApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0931010D80C6E900A2705D /* CQColloquyApplication.m */; };
 		1C09313B0D80C8F600A2705D /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C09313A0D80C8F600A2705D /* Defaults.plist */; };
 		1C09327E0D80CA4800A2705D /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932670D80CA4800A2705D /* NSDataAdditions.m */; };
@@ -199,6 +200,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		19C7BD571B265FC90073E545 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1C0931010D80C6E900A2705D /* CQColloquyApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQColloquyApplication.m; path = Mobile/Controllers/CQColloquyApplication.m; sourceTree = "<group>"; };
 		1C0931020D80C6E900A2705D /* CQColloquyApplication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQColloquyApplication.h; path = Mobile/Controllers/CQColloquyApplication.h; sourceTree = "<group>"; };
 		1C09310A0D80C71800A2705D /* Colloquy.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Colloquy.pch; path = Mobile/Colloquy.pch; sourceTree = "<group>"; };
@@ -1040,6 +1042,7 @@
 				921857D619D13AE70076F87E /* CQUIChatView.xib */,
 				921857D719D13AE70076F87E /* CQWKChatView.xib */,
 				92E2E65415BFD6740013B032 /* FileTransferTableCell.xib */,
+				19C7BD571B265FC90073E545 /* LaunchScreen.storyboard */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -1222,6 +1225,7 @@
 				1C4CE6410FA03D7800215521 /* Pop.aiff in Resources */,
 				1C4CE6420FA03D7800215521 /* Rattle.aiff in Resources */,
 				1C4CE6430FA03D7800215521 /* Sonar Beep.aiff in Resources */,
+				19C7BD581B265FC90073E545 /* LaunchScreen.storyboard in Resources */,
 				1C4CE6440FA03D7800215521 /* Stoof.aiff in Resources */,
 				1C4CE6450FA03D7800215521 /* Switch.aiff in Resources */,
 				1C4CE6460FA03D7800215521 /* Whip.aiff in Resources */,
@@ -1449,7 +1453,6 @@
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
@@ -1497,7 +1500,6 @@
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
@@ -1544,7 +1546,6 @@
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;

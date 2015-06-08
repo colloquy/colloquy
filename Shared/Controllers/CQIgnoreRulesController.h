@@ -13,6 +13,7 @@ extern NSString *const CQIgnoreRulesNotSavedNotification;
 	NSString *_appSupportPath;
 }
 
+- (instancetype) init NS_UNAVAILABLE;
 - (instancetype) initWithConnection:(MVChatConnection *) connection NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, readonly) NSArray *ignoreRules;

@@ -71,8 +71,9 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (void) dealloc {
-	[_connection _removeKnownRoom:self];
-	[_connection _removeJoinedRoom:self];
+	__strong MVChatConnection *connection = _connection;
+	[connection _removeKnownRoom:self];
+	[connection _removeJoinedRoom:self];
 }
 
 #pragma mark -
@@ -129,7 +130,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (NSString *) displayName {
-	return _connection ? [_connection displayNameForChatRoomNamed:[self name]] : [self name];
+	__strong MVChatConnection *connection = _connection;
+	return connection ? [connection displayNameForChatRoomNamed:[self name]] : [self name];
 }
 
 - (id) uniqueIdentifier {
@@ -635,12 +637,14 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 - (void) _setDateJoined:(NSDate * __nullable) date {
 	MVSafeCopyAssign( _dateJoined, date );
-	if (date) [_connection _addJoinedRoom:self];
+	__strong MVChatConnection *connection = _connection;
+	if (date) [connection _addJoinedRoom:self];
 }
 
 - (void) _setDateParted:(NSDate * __nullable) date {
 	MVSafeCopyAssign( _dateParted, date );
-	if (date) [_connection _removeJoinedRoom:self];
+	__strong MVChatConnection *connection = _connection;
+	if (date) [connection _removeJoinedRoom:self];
 }
 
 - (void) _setTopic:(NSData *) newTopic {

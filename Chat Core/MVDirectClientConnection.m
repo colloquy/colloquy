@@ -7,6 +7,7 @@
 #import "MVUtilities.h"
 #import "NSNotificationAdditions.h"
 
+#undef ENABLE_AUTO_PORT_MAPPING
 #if ENABLE(AUTO_PORT_MAPPING)
 #import <TCMPortMapper/TCMPortMapper.h>
 #endif

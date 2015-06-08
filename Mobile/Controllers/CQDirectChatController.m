@@ -204,6 +204,21 @@ static BOOL showingKeyboard;
 	return chatMessageProcessingQueue;
 }
 
+- (instancetype) initWithStyle:(UITableViewStyle) style {
+	NSAssert(NO, @"use -[CQDirectChatController initWithTarget:] instead");
+	return nil;
+}
+
+- (instancetype) initWithNibName:(NSString *) nibNameOrNil bundle:(NSBundle *) nibBundleOrNil {
+	NSAssert(NO, @"use -[CQDirectChatController initWithTarget:] instead");
+	return nil;
+}
+
+- (instancetype) initWithCoder:(NSCoder *) aDecoder {
+	NSAssert(NO, @"use -[CQDirectChatController initWithTarget:] instead");
+	return nil;
+}
+
 - (instancetype) initWithTarget:(id) target {
 	if (!(self = [super initWithNibName:@"CQUIChatView" bundle:nil]))
 		return nil;
@@ -673,8 +688,9 @@ static BOOL showingKeyboard;
 		theChatInputBar.textView.text = nil;
 
 		// Work around behavior where textViewDidChange: isn't called when you change the text programatically.
-		if ([theChatInputBar.textView.delegate respondsToSelector:@selector(textViewDidChange:)])
-			[theChatInputBar.textView.delegate textViewDidChange:theChatInputBar.textView];
+		__strong id <UITextViewDelegate> strongDelegate = theChatInputBar.textView.delegate;
+		if ([strongDelegate respondsToSelector:@selector(textViewDidChange:)])
+			[strongDelegate textViewDidChange:theChatInputBar.textView];
 
 		[theChatInputBar hideCompletions];
 
