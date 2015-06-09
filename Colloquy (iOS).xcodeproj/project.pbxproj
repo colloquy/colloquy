@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		19C7BD581B265FC90073E545 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 19C7BD571B265FC90073E545 /* LaunchScreen.storyboard */; };
+		19C7F5891B26BE04000F5AAE /* CoreSpotlight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C7F5881B26BE04000F5AAE /* CoreSpotlight.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		19C7F58B1B26C1E3000F5AAE /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C7F58A1B26C1E3000F5AAE /* MobileCoreServices.framework */; };
 		1C0931030D80C6E900A2705D /* CQColloquyApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0931010D80C6E900A2705D /* CQColloquyApplication.m */; };
 		1C09313B0D80C8F600A2705D /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C09313A0D80C8F600A2705D /* Defaults.plist */; };
 		1C09327E0D80CA4800A2705D /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932670D80CA4800A2705D /* NSDataAdditions.m */; };
@@ -201,6 +203,8 @@
 
 /* Begin PBXFileReference section */
 		19C7BD571B265FC90073E545 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		19C7F5881B26BE04000F5AAE /* CoreSpotlight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreSpotlight.framework; path = System/Library/Frameworks/CoreSpotlight.framework; sourceTree = SDKROOT; };
+		19C7F58A1B26C1E3000F5AAE /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		1C0931010D80C6E900A2705D /* CQColloquyApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQColloquyApplication.m; path = Mobile/Controllers/CQColloquyApplication.m; sourceTree = "<group>"; };
 		1C0931020D80C6E900A2705D /* CQColloquyApplication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQColloquyApplication.h; path = Mobile/Controllers/CQColloquyApplication.h; sourceTree = "<group>"; };
 		1C09310A0D80C71800A2705D /* Colloquy.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Colloquy.pch; path = Mobile/Colloquy.pch; sourceTree = "<group>"; };
@@ -537,6 +541,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19C7F58B1B26C1E3000F5AAE /* MobileCoreServices.framework in Frameworks */,
+				19C7F5891B26BE04000F5AAE /* CoreSpotlight.framework in Frameworks */,
 				926678FB19C03FA700CCE5BE /* WebKit.framework in Frameworks */,
 				1CBC07CE0F0741E400EEBCFB /* SystemConfiguration.framework in Frameworks */,
 				1CF50C870ED8BE1100CBE5E3 /* Security.framework in Frameworks */,
@@ -1057,6 +1063,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				19C7F58A1B26C1E3000F5AAE /* MobileCoreServices.framework */,
+				19C7F5881B26BE04000F5AAE /* CoreSpotlight.framework */,
 				926678FA19C03FA700CCE5BE /* WebKit.framework */,
 				926CF2B818FBC5A300A81159 /* libcommonCrypto.dylib */,
 				92AFF84916B0CE4700940E5D /* AVFoundation.framework */,

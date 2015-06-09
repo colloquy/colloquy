@@ -23,6 +23,9 @@
 #import <ChatCore/MVChatConnectionPrivate.h>
 #import <ChatCore/MVChatRoom.h>
 
+#import <CoreSpotlight/CoreSpotlight.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+
 #if SYSTEM(MAC)
 #import <SecurityInterface/SFCertificatePanel.h>
 #endif
@@ -1546,6 +1549,36 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 	NSMutableArray *connections = [[NSMutableArray alloc] initWithCapacity:_directConnections.count];
 	for (MVChatConnection *connection in _directConnections) {
+#if defined(__IPHONE_9_0)
+		if (NSClassFromString(@"CSSearchableIndex") != nil) {
+			CSSearchableItemAttributeSet *connectionAttributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"IRC Server"];
+			connectionAttributeSet.identifier = connection.uniqueIdentifier;
+			connectionAttributeSet.displayName = connectionAttributeSet.title = [NSString stringWithFormat:@"%@ — %@", connection.displayName ?: connection.server, connection.nickname];
+			connectionAttributeSet.alternateNames = @[ connection.server ];
+			connectionAttributeSet.contentType = (__bridge NSString *)kUTTypeURL;
+
+			NSMutableArray *items = [NSMutableArray array];
+			NSMutableArray *keywords = [NSMutableArray arrayWithObjects:@"irc", nil];
+			for (MVChatRoom *chatRoom in connection.knownChatRooms) {
+				[keywords addObject:chatRoom.displayName];
+
+				CSSearchableItemAttributeSet *roomAttributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"IRC Room"];
+				roomAttributeSet.identifier = chatRoom.displayName;
+				roomAttributeSet.displayName = roomAttributeSet.title = [NSString stringWithFormat:@"%@ — %@", connection.displayName ?: connection.server, chatRoom.displayName];
+				roomAttributeSet.contentType = (__bridge NSString *)kUTTypeURL;
+
+				CSSearchableItem *roomItem = [[CSSearchableItem alloc] initWithUniqueIdentifier:chatRoom.uniqueIdentifier domainIdentifier:connection.server attributeSet:roomAttributeSet];
+				[items addObject:roomItem];
+			}
+			connectionAttributeSet.keywords = keywords;
+
+			CSSearchableItem *connectionItem = [[CSSearchableItem alloc] initWithUniqueIdentifier:connection.uniqueIdentifier domainIdentifier:connection.server attributeSet:connectionAttributeSet];
+			[items addObject:connectionItem];
+
+			[[CSSearchableIndex defaultSearchableIndex] indexSearchableItems:items completionHandler:nil];
+		}
+#endif
+
 		NSMutableDictionary *connectionInfo = [self _dictionaryRepresentationForConnection:connection];
 		if (!connectionInfo)
 			continue;
