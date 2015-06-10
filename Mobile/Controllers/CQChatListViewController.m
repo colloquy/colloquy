@@ -230,8 +230,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			viewControllersToClose = allViewControllers;
 
 		BOOL hasChatController = NO;
-		for (MVChatConnection *connection in [CQConnectionsController defaultController].connections) {
-			hasChatController = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection].count;
+		for (MVChatConnection *connectionToCheck in [CQConnectionsController defaultController].connections) {
+			hasChatController = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connectionToCheck].count;
 
 			if (hasChatController)
 				break;
@@ -1296,7 +1296,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 - (void) tableView:(UITableView *) tableView didEndEditingRowAtIndexPath:(NSIndexPath *) indexPath {
 	if ([[UIDevice currentDevice] isPadModel] && _previousSelectedChatViewController) {
-		NSIndexPath *indexPath = indexPathForChatController(_previousSelectedChatViewController, self.editing);
+		indexPath = indexPathForChatController(_previousSelectedChatViewController, self.editing);
 		if (indexPath)
 			[self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 

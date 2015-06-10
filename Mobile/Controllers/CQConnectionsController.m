@@ -1478,8 +1478,8 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		_bouncerChatConnections[settings.identifier] = bouncerChatConnections;
 
 		NSArray *connections = info[@"connections"];
-		for (NSDictionary *info in connections) {
-			MVChatConnection *connection = [self _chatConnectionWithDictionaryRepresentation:info];
+		for (NSDictionary *connectionInfo in connections) {
+			MVChatConnection *connection = [self _chatConnectionWithDictionaryRepresentation:connectionInfo];
 			if (!connection)
 				continue;
 
@@ -1838,7 +1838,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 	for (NSInteger i = (connections.count - 1); i >= 0; --i) {
 		MVChatConnection *connection = connections[i];
-		NSDictionary *notificationInfo = @{@"connection": connection, @"index": @(i)};
+		notificationInfo = @{@"connection": connection, @"index": @(i)};
 		[[NSNotificationCenter chatCenter] postNotificationName:CQConnectionsControllerRemovedConnectionNotification object:self userInfo:notificationInfo];
 	}
 }

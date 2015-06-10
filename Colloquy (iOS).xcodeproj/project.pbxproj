@@ -1461,10 +1461,7 @@
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
-				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1487,10 +1484,7 @@
 					"RKL_BLOCKS=0",
 					"ENABLE_CHAT_CENTER=1",
 				);
-				HEADER_SEARCH_PATHS = (
-					"$(SOURCE_ROOT)",
-					"$(SOURCE_ROOT)/Frameworks/libDER",
-				);
+				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)";
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1508,10 +1502,7 @@
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
-				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1534,10 +1525,7 @@
 					"RKL_BLOCKS=0",
 					"ENABLE_CHAT_CENTER=1",
 				);
-				HEADER_SEARCH_PATHS = (
-					"$(SOURCE_ROOT)",
-					"$(SOURCE_ROOT)/Frameworks/libDER",
-				);
+				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)";
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1554,10 +1542,7 @@
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
-				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1580,10 +1565,7 @@
 					"RKL_BLOCKS=0",
 					"ENABLE_CHAT_CENTER=1",
 				);
-				HEADER_SEARCH_PATHS = (
-					"$(SOURCE_ROOT)",
-					"$(SOURCE_ROOT)/Frameworks/libDER",
-				);
+				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)";
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
