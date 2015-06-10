@@ -158,7 +158,7 @@ static NSMutableArray *highlightWords;
 				_userDefaultsChanged = YES;
 			else [self reloadSplitViewController];
 
-			BOOL disableSingleSwipe = [self splitViewController:self.splitViewController shouldHideViewController:nil inOrientation:UIInterfaceOrientationLandscapeLeft] || [self splitViewController:self.splitViewController shouldHideViewController:nil inOrientation:UIInterfaceOrientationPortrait];
+			BOOL disableSingleSwipe = [self splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:UIInterfaceOrientationLandscapeLeft] || [self splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:UIInterfaceOrientationPortrait];
 			if (disableSingleSwipe)
 				[[CQSettingsController settingsController] setInteger:0 forKey:@"CQSingleFingerSwipe"];
 		}
