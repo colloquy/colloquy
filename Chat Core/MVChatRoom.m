@@ -766,4 +766,9 @@ NS_ASSUME_NONNULL_END
 	[super setValue:value forUndefinedKey:key];
 }
 @end
+
+#else
+
+NS_ASSUME_NONNULL_END
+
 #endif

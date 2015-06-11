@@ -352,19 +352,19 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	}
 
 	id <CQChatViewController> (^findNearestMatchForBlock)(CQMatchingResult) = ^(CQMatchingResult block) {
-		__block id <CQChatViewController> chatViewController = nil;
-		[firstHalf enumerateObjectsWithOptions:options usingBlock:^(id object, NSUInteger index, BOOL *stop) {
+		__block id <CQChatViewController> nearestChatViewController = nil;
+		[firstHalf enumerateObjectsWithOptions:options usingBlock:^(id object, NSUInteger firstHalfIndex, BOOL *stop) {
 			if (block(object)) {
-				chatViewController = object;
+				nearestChatViewController = object;
 
 				*stop = YES;
 			}
 		}];
 
-		if (!chatViewController) {
-			[secondHalf enumerateObjectsWithOptions:options usingBlock:^(id object, NSUInteger index, BOOL *stop) {
+		if (!nearestChatViewController) {
+			[secondHalf enumerateObjectsWithOptions:options usingBlock:^(id object, NSUInteger secondHalfIndex, BOOL *stop) {
 				if (block(object)) {
-					chatViewController = object;
+					nearestChatViewController = object;
 
 					*stop = YES;
 				}
@@ -375,20 +375,20 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	};
 
 	if (requiringActivity && requiringHighlight) {
-		return findNearestMatchForBlock(^BOOL(id <CQChatViewController> chatViewController) {
-			return chatViewController.unreadCount && chatViewController.importantUnreadCount;
+		return findNearestMatchForBlock(^BOOL(id <CQChatViewController> nearestChatViewController) {
+			return nearestChatViewController.unreadCount && nearestChatViewController.importantUnreadCount;
 		});
 	}
 
 	if (requiringHighlight) {
-		return findNearestMatchForBlock(^BOOL(id <CQChatViewController> chatViewController) {
-			return chatViewController.importantUnreadCount;
+		return findNearestMatchForBlock(^BOOL(id <CQChatViewController> nearestChatViewController) {
+			return nearestChatViewController.importantUnreadCount;
 		});
 	}
 
 	if (requiringActivity) {
-		return findNearestMatchForBlock(^BOOL(id <CQChatViewController> chatViewController) {
-			return chatViewController.unreadCount;
+		return findNearestMatchForBlock(^BOOL(id <CQChatViewController> nearestChatViewController) {
+			return nearestChatViewController.unreadCount;
 		});
 	}
 	
