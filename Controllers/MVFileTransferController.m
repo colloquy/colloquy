@@ -86,7 +86,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 + (MVFileTransferController *) defaultController {
 	if( ! sharedInstance ) {
 		sharedInstance = [self alloc];
-		sharedInstance = [sharedInstance initWithWindowNibName:nil];
+		sharedInstance = [sharedInstance initWithWindowNibName:@"MVFileTransfer"];
 	}
 
 	return sharedInstance;
@@ -95,7 +95,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 #pragma mark -
 
 - (id) initWithWindowNibName:(NSString *) windowNibName {
-	if( ( self = [super initWithWindowNibName:@"MVFileTransfer"] ) ) {
+	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
 		_transferStorage = [[NSMutableArray allocWithZone:nil] init];
 		_calculationItems = [[NSMutableArray allocWithZone:nil] init];
 

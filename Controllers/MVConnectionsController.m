@@ -57,7 +57,7 @@ static NSMenu *favoritesMenu = nil;
 + (MVConnectionsController *) defaultController {
 	if( ! sharedInstance ) {
 		sharedInstance = [self alloc];
-		sharedInstance = [sharedInstance initWithWindowNibName:nil];
+		sharedInstance = [sharedInstance initWithWindowNibName:@"MVConnections"];
 	}
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_refreshFavoritesMenu) name:MVChatRoomJoinedNotification object:nil];
@@ -164,7 +164,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (id) initWithWindowNibName:(NSString *) windowNibName {
-	if( ( self = [super initWithWindowNibName:@"MVConnections"] ) ) {
+	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
 		_bookmarks = nil;
 		_passConnection = nil;
 

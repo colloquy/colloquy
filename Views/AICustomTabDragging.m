@@ -184,7 +184,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 //Invoked in the dragging source as the drag begins
 - (void)draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint
 {
-	[session enumerateDraggingItemsWithOptions:0 forView:[self sourceTabView] classes:@[ [NSImage class] ] searchOptions:nil usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop) {
+	[session enumerateDraggingItemsWithOptions:0 forView:[self sourceTabView] classes:@[ [NSImage class] ] searchOptions:@{} usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop) {
 		[self draggingSession:session movedToPoint:screenPoint];
 	}];
 }

@@ -19,7 +19,7 @@
 
 @implementation JVChatRoomBrowser
 - (id) initWithWindowNibName:(NSString *) windowNibName {
-	if( ( self = [super initWithWindowNibName:@"JVChatRoomBrowser"] ) ) {
+	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
 		_self = self;
 		_connection = nil;
 		_roomResults = nil;
@@ -37,7 +37,7 @@
 }
 
 - (id) initWithConnection:(MVChatConnection *) connection {
-	if( ( self = [self initWithWindowNibName:nil] ) ) {
+	if( ( self = [self initWithWindowNibName:@"JVChatRoomBrowser"] ) ) {
 		[self setConnection:connection];
 	}
 	return self;
