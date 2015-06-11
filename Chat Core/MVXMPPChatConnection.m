@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 		_username = NSUserName();
 		_nickname = _username;
 		_session = [[XMPPStream alloc] init];
+ 		[_session addDelegate:self delegateQueue:dispatch_get_main_queue()];
 
 //		[_session addObserver:self selector:@selector( outgoingPacket: ) name:JSESSION_RAWDATA_OUT];
 //		[_session addObserver:self selector:@selector( incomingPacket: ) name:JSESSION_RAWDATA_IN];
@@ -264,7 +265,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) xmppStreamDidDisconnect:(XMPPStream *) sender withError:(NSError *) error {
+	NSLog(@"%@", error);
 	[self _didDisconnect];
+}
+
+- (void)xmppStream:(XMPPStream *)stream didReceiveError:(NSXMLElement *)error {
+	NSLog(@"%@", error);
 }
 
 - (void) outgoingPacket:(NSNotification *) notification {
@@ -277,10 +283,10 @@ NS_ASSUME_NONNULL_BEGIN
 	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
 }
 
-- (XMPPMessage *)xmppStream:(XMPPStream *)stream willReceiveMessage:(XMPPMessage *)message {
+- (void) xmppStream:(XMPPStream *) stream didReceiveMessage:(XMPPMessage *) message {
 	if( [[message type] isEqualToString:@"error"] ) {
 		// handle error
-		return message;
+		return;
 	}
 
 	__unsafe_unretained MVChatRoom *room = nil;
@@ -288,9 +294,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if( [[message type] isEqualToString:@"groupchat"] ) {
 		room = [self joinedChatRoomWithUniqueIdentifier:[message from]];
-		if( ! room ) return message;
+		if( ! room ) return;
 		sender = [self chatUserWithUniqueIdentifier:[message from]];
-		if( [sender isLocalUser] ) return message;
+		if( [sender isLocalUser] ) return;
 	} else {
 		sender = [self chatUserWithUniqueIdentifier:[message from]];
 	}
@@ -315,27 +321,43 @@ NS_ASSUME_NONNULL_BEGIN
 	msgAttributes = nil;
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
-	if( ! msgData.length ) return message;
+	if( ! msgData.length ) return;
 
 	if( room ) {
 		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:msgAttributes];
 	} else {
 		[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:msgAttributes];
 	}
-
-	return message;
 }
 
-- (XMPPPresence *)xmppStream:(XMPPStream *)stream willReceivePresence:(XMPPPresence *)presence {
+- (void) xmppStream:(XMPPStream *) stream didReceiveTrust:(SecTrustRef) trust completionHandler:(void (^)(BOOL shouldTrustPeer)) completionHandler {
+	if (!trust || !completionHandler)
+		return;
+
+	SecTrustEvaluateAsync(trust, dispatch_get_main_queue(), ^(SecTrustRef trustRef, SecTrustResultType result) {
+		if (result == kSecTrustResultProceed || result == kSecTrustResultUnspecified) {
+			completionHandler(YES);
+			return;
+		}
+
+		[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:self userInfo:@{
+			@"completionHandler": completionHandler,
+			@"trust": (__bridge id)trust,
+			@"result": [NSString stringWithFormat:@"%d", result]
+		}];
+	});
+}
+
+- (void) xmppStream:(XMPPStream *) sender didReceivePresence:(XMPPPresence *) presence {
 	XMPPJID *roomID = [presence from];
 	MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:roomID];
 
-	if( ! room ) return presence;
+	if( ! room ) return;
 
 	if ([[presence type] isCaseInsensitiveEqualToString:@"error"]) {
 		 // balance the alloc or retain in joinChatRoomNamed:
 		// handle error...
-		return presence;
+		return;
 	}
 
 	MVXMPPChatUser *user = nil;
@@ -346,7 +368,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if ([[presence type] isCaseInsensitiveEqualToString:@"unavailable"]) {
 		[room _removeMemberUser:user];
 		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
-		return presence;
+		return;
 	}
 
 	__strong id me = room;
@@ -368,8 +390,6 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	me = nil;
-
-	return presence;
 }
 @end
 
