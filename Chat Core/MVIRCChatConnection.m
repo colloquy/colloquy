@@ -3126,7 +3126,7 @@ end:
 
 				_pendingIdentificationAttempt = NO;
 
-				if( [self.supportedFeatures containsObject:MVChatConnectionAccountNotify] )
+				if( [self.supportedFeatures containsObject:MVChatConnectionAccountNotify] && self.localUser.isIdentified )
 					[self sendRawMessageImmediatelyWithFormat:@"ACCOUNT %@", self.localUser.account];
 
 				if( ![[self localUser] isIdentified] )
