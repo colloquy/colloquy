@@ -23,7 +23,9 @@
 #import <ChatCore/MVChatConnectionPrivate.h>
 #import <ChatCore/MVChatRoom.h>
 
+#if defined(__IPHONE_9_0)
 #import <CoreSpotlight/CoreSpotlight.h>
+#endif
 #import <MobileCoreServices/MobileCoreServices.h>
 
 #if SYSTEM(MAC)

@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		19C7BD581B265FC90073E545 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 19C7BD571B265FC90073E545 /* LaunchScreen.storyboard */; };
-		19C7F5891B26BE04000F5AAE /* CoreSpotlight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C7F5881B26BE04000F5AAE /* CoreSpotlight.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		194D95D31B2A33910061AE55 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 194D95D21B2A33910061AE55 /* LaunchScreen.xib */; };
 		19C7F58B1B26C1E3000F5AAE /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C7F58A1B26C1E3000F5AAE /* MobileCoreServices.framework */; };
 		1C0931030D80C6E900A2705D /* CQColloquyApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0931010D80C6E900A2705D /* CQColloquyApplication.m */; };
 		1C09313B0D80C8F600A2705D /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C09313A0D80C8F600A2705D /* Defaults.plist */; };
@@ -202,7 +201,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		19C7BD571B265FC90073E545 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		194D95D21B2A33910061AE55 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		19C7F5881B26BE04000F5AAE /* CoreSpotlight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreSpotlight.framework; path = System/Library/Frameworks/CoreSpotlight.framework; sourceTree = SDKROOT; };
 		19C7F58A1B26C1E3000F5AAE /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		1C0931010D80C6E900A2705D /* CQColloquyApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQColloquyApplication.m; path = Mobile/Controllers/CQColloquyApplication.m; sourceTree = "<group>"; };
@@ -542,7 +541,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				19C7F58B1B26C1E3000F5AAE /* MobileCoreServices.framework in Frameworks */,
-				19C7F5891B26BE04000F5AAE /* CoreSpotlight.framework in Frameworks */,
 				926678FB19C03FA700CCE5BE /* WebKit.framework in Frameworks */,
 				1CBC07CE0F0741E400EEBCFB /* SystemConfiguration.framework in Frameworks */,
 				1CF50C870ED8BE1100CBE5E3 /* Security.framework in Frameworks */,
@@ -1048,7 +1046,7 @@
 				921857D619D13AE70076F87E /* CQUIChatView.xib */,
 				921857D719D13AE70076F87E /* CQWKChatView.xib */,
 				92E2E65415BFD6740013B032 /* FileTransferTableCell.xib */,
-				19C7BD571B265FC90073E545 /* LaunchScreen.storyboard */,
+				194D95D21B2A33910061AE55 /* LaunchScreen.xib */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -1185,6 +1183,7 @@
 				en,
 				de,
 				it,
+				Base,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -1233,10 +1232,10 @@
 				1C4CE6410FA03D7800215521 /* Pop.aiff in Resources */,
 				1C4CE6420FA03D7800215521 /* Rattle.aiff in Resources */,
 				1C4CE6430FA03D7800215521 /* Sonar Beep.aiff in Resources */,
-				19C7BD581B265FC90073E545 /* LaunchScreen.storyboard in Resources */,
 				1C4CE6440FA03D7800215521 /* Stoof.aiff in Resources */,
 				1C4CE6450FA03D7800215521 /* Switch.aiff in Resources */,
 				1C4CE6460FA03D7800215521 /* Whip.aiff in Resources */,
+				194D95D31B2A33910061AE55 /* LaunchScreen.xib in Resources */,
 				8900D7340FBFB2D900DE3E3B /* Servers.plist in Resources */,
 				92B6661417ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf in Resources */,
 				1CB24E03101EBE4800217B50 /* verbs.plist in Resources */,
