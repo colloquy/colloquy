@@ -1,4 +1,4 @@
-#import <Acid/acid.h>
+#import "XMPPFramework.h"
 
 #import "MVXMPPChatRoom.h"
 #import "MVXMPPChatUser.h"
@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation MVXMPPChatRoom
-- (id) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) connection {
+- (id) initWithJabberID:(XMPPJID *) identifier andConnection:(MVXMPPChatConnection *) connection {
 	if( ( self = [self init] ) ) {
 		_connection = connection; // prevent circular retain
 		MVSafeRetainAssign( _uniqueIdentifier, identifier );
@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (NSURL *) url {
-	NSString *urlString = [NSString stringWithFormat:@"%@:%@?join", [[self connection] urlScheme], [[_uniqueIdentifier userhost] stringByEncodingIllegalURLCharacters]];
+	NSString *urlString = [NSString stringWithFormat:@"%@:%@?join", [[self connection] urlScheme], [[_uniqueIdentifier domain] stringByEncodingIllegalURLCharacters]];
 	if( urlString ) return [NSURL URLWithString:urlString];
 	return nil;
 }
@@ -61,9 +61,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) msgEncoding withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( message != nil );
 
-	JabberMessage *jabberMsg = [[JabberMessage alloc] initWithRecipient:_uniqueIdentifier andBody:[message string]];
-	[jabberMsg setType:@"groupchat"];
-	[[(MVXMPPChatConnection *)_connection _chatSession] sendElement:jabberMsg];
+	XMPPMessage *xmppMessage = [XMPPMessage messageWithType:@"groupchat" to:_uniqueIdentifier];
+	[xmppMessage addBody:[message string]];
+
+	[[(MVXMPPChatConnection *)_connection _chatSession] sendElement:xmppMessage];
 }
 
 #pragma mark -

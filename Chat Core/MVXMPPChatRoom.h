@@ -3,7 +3,7 @@
 
 @class MVXMPPChatConnection;
 @class MVXMPPChatUser;
-@class JabberID;
+@class XMPPJID;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 @private
 	MVChatUser *_localMemberUser;
 }
-- (id) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) connection;
+- (id) initWithJabberID:(XMPPJID *) identifier andConnection:(MVXMPPChatConnection *) connection;
 @end
 
 @interface MVXMPPChatRoom (MVXMPPChatRoomPrivate)

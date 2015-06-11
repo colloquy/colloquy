@@ -567,6 +567,8 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	[self refreshInformation];
 }
 
+NS_ASSUME_NONNULL_END
+
 #pragma mark -
 
 - (id) valueForUndefinedKey:(NSString *) key {
@@ -590,5 +592,3 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 @end
 #endif
-
-NS_ASSUME_NONNULL_END

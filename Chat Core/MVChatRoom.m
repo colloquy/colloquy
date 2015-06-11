@@ -742,6 +742,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[self setEncoding:[NSString stringEncodingFromScriptTypedEncoding:newEncoding]];
 }
 
+NS_ASSUME_NONNULL_END
+
 #pragma mark -
 
 - (id) valueForUndefinedKey:(NSString *) key {
@@ -765,5 +767,3 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 @end
 #endif
-
-NS_ASSUME_NONNULL_END

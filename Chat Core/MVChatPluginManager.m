@@ -210,6 +210,8 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 }
 @end
 
+NS_ASSUME_NONNULL_END
+
 #pragma mark -
 
 @interface MVReloadPluginsScriptCommand : NSScriptCommand {}
@@ -223,5 +225,3 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	return nil;
 }
 @end
-
-NS_ASSUME_NONNULL_END
