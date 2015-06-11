@@ -8,7 +8,7 @@
 - (id) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [super init] ) ) {
 		_manager = manager;
-		_pyobjcInstalled = ( PyObjC_ImportAPI != NULL ? YES : NO );
+		_pyobjcInstalled = ( &PyObjC_ImportAPI != NULL ? YES : NO );
 	}
 
 	return self;

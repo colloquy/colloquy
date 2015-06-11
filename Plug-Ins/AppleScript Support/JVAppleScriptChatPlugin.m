@@ -444,7 +444,6 @@
 					}
 					
 					if( [mitem image] && ! NSEqualSizes( size, NSZeroSize ) ) {
-						[[mitem image] setScalesWhenResized:YES];
 						[[mitem image] setSize:size];
 					}
 				} else if( [iconPath isKindOfClass:[NSArray class]] && [(NSArray *)iconPath count] == 3 ) {

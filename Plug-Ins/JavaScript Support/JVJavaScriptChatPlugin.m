@@ -154,7 +154,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	}
 }
 
-- (void) webView:(WebView *) webView windowScriptObjectAvailable:(WebScriptObject *) windowScriptObject {
+- (void) webView:(WebView *) webView didClearWindowObject:(WebScriptObject *) windowObject forFrame:(WebFrame *) frame {
 	[self setupScriptGlobalsForWebView:webView];
 }
 
