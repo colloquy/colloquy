@@ -684,9 +684,9 @@
 		1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Info-ChatCore.plist"; path = "Resources/Info-ChatCore.plist"; sourceTree = SOURCE_ROOT; };
 		1C51B48B052DE0CB00BB459B /* ChatCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C5A1A2206F8F4A000A51F10 /* MVIRCChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVIRCChatConnection.h; path = "Chat Core/MVIRCChatConnection.h"; sourceTree = "<group>"; };
-		1C5A1A2306F8F4A000A51F10 /* MVIRCChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVIRCChatConnection.m; path = "Chat Core/MVIRCChatConnection.m"; sourceTree = "<group>"; wrapsLines = 1; };
+		1C5A1A2306F8F4A000A51F10 /* MVIRCChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVIRCChatConnection.m; path = "Chat Core/MVIRCChatConnection.m"; sourceTree = "<group>"; };
 		1C5A230706FA4F2700A51F10 /* MVSILCChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVSILCChatConnection.h; path = "Chat Core/MVSILCChatConnection.h"; sourceTree = "<group>"; };
-		1C5A230806FA4F2700A51F10 /* MVSILCChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVSILCChatConnection.m; path = "Chat Core/MVSILCChatConnection.m"; sourceTree = "<group>"; wrapsLines = 1; };
+		1C5A230806FA4F2700A51F10 /* MVSILCChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVSILCChatConnection.m; path = "Chat Core/MVSILCChatConnection.m"; sourceTree = "<group>"; };
 		1C5A233D06FA4FEE00A51F10 /* libsilc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilc.framework; path = Frameworks/libsilc.framework; sourceTree = SOURCE_ROOT; };
 		1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilcclient.framework; path = Frameworks/libsilcclient.framework; sourceTree = SOURCE_ROOT; };
 		1C5CBF3306FF986E0006C5B1 /* MVChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUser.h; path = "Chat Core/MVChatUser.h"; sourceTree = "<group>"; };
@@ -1655,7 +1655,6 @@
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 1;
-			wrapsLines = 1;
 		};
 		1CB2C8CC052DDA360094AAA4 /* Products */ = {
 			isa = PBXGroup;
@@ -1754,7 +1753,6 @@
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 1;
-			wrapsLines = 1;
 		};
 		F50B0AA00170C89301A84BDE /* Other Sources & Additions */ = {
 			isa = PBXGroup;
@@ -1791,7 +1789,6 @@
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 1;
-			wrapsLines = 1;
 		};
 		F50B0AA10170C89301A84BDE /* Resources */ = {
 			isa = PBXGroup;
@@ -1809,7 +1806,6 @@
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 1;
-			wrapsLines = 1;
 		};
 /* End PBXGroup section */
 
