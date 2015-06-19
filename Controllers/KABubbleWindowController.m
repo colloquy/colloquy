@@ -145,16 +145,6 @@ static NSUInteger bubbleWindowDepth = 0;
 
 #pragma mark -
 
-- (id) representedObject {
-	return _representedObject;
-}
-
-- (void) setRepresentedObject:(id) object {
-	_representedObject = object;
-}
-
-#pragma mark -
-
 - (BOOL) respondsToSelector:(SEL) selector {
 	if( [[[self window] contentView] respondsToSelector:selector] ) return YES;
 	else return [super respondsToSelector:selector];

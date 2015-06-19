@@ -3,9 +3,9 @@
 	NSString *_title;
 	NSAttributedString *_text;
 	SEL _action;
-	id _target;
+	__unsafe_unretained id _target;
 }
-- (void) setIcon:(NSImage *) icon;
+@property (nonatomic, copy) NSImage *icon;
 - (void) setTitle:(NSString *) title;
 - (void) setAttributedText:(NSAttributedString *) text;
 - (void) setText:(NSString *) text;

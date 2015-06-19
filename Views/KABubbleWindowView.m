@@ -95,26 +95,6 @@ static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat
 
 #pragma mark -
 
-- (id) target {
-	return _target;
-}
-
-- (void) setTarget:(id) object {
-	_target = object;
-}
-
-#pragma mark -
-
-- (SEL) action {
-	return _action;
-}
-
-- (void) setAction:(SEL) selector {
-	_action = selector;
-}
-
-#pragma mark -
-
 - (void) mouseUp:(NSEvent *) event {
 	if( _target && _action && [_target respondsToSelector:_action] )
 		[_target performSelector:_action withObject:self];
