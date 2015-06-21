@@ -13,13 +13,8 @@
 
 @interface KABubbleWindowController : NSWindowController <NSWindowDelegate> {
 	id _self;
-	__unsafe_unretained id <KABubbleWindowControllerDelegate> _delegate;
 	NSTimer *_animationTimer;
 	NSUInteger _depth;
-	BOOL _autoFadeOut;
-	SEL _action;
-	__weak id _target;
-	id _representedObject;
 }
 + (KABubbleWindowController *) bubble;
 + (KABubbleWindowController *) bubbleWithTitle:(NSString *) title text:(id) text icon:(NSImage *) icon;
@@ -30,6 +25,6 @@
 @property BOOL automaticallyFadesOut;
 @property (weak) id target;
 @property SEL action;
-@property id representedObject;
-@property (unsafe_unretained) id <KABubbleWindowControllerDelegate> delegate;
+@property (strong) id representedObject;
+@property (weak) id <KABubbleWindowControllerDelegate> delegate;
 @end

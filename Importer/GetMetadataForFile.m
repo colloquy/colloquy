@@ -12,9 +12,6 @@ __private_extern @interface JVChatTranscriptMetadataExtractor : NSObject <NSXMLP
 	NSDate *dateStarted;
 	NSString *lastEventDate;
 	NSString *source;
-	NSMutableString *content;
-	NSMutableSet *participants;
-	NSCharacterSet *lineBreaks;
 }
 @property (strong) NSCharacterSet *lineBreaks;
 @property (strong) NSMutableString *content;
@@ -28,6 +25,11 @@ __private_extern @interface JVChatTranscriptMetadataExtractor : NSObject <NSXMLP
 @synthesize lineBreaks;
 @synthesize content;
 @synthesize participants;
+
+- (instancetype)init
+{
+	return self = [self initWithCapacity:40];
+}
 
 - (instancetype)initWithCapacity:(NSUInteger)capacity
 {
