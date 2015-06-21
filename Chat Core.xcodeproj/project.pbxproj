@@ -663,7 +663,7 @@
 		19A7A5271B28E7A60022172F /* XMPPTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPTimer.m; sourceTree = "<group>"; };
 		19A7A96A1B28E7A90022172F /* build-libidn.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "build-libidn.sh"; sourceTree = "<group>"; };
 		19A7A96B1B28E7A90022172F /* idn-int.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "idn-int.h"; sourceTree = "<group>"; };
-		19A7A96C1B28E7A90022172F /* libidn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libidn.a; sourceTree = "<group>"; };
+		19A7A96C1B28E7A90022172F /* libidn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libidn.a; path = dependencies/lib/libidn.a; sourceTree = "<group>"; };
 		19A7A96D1B28E7A90022172F /* stringprep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringprep.h; sourceTree = "<group>"; };
 		19A7AE541B28EB200022172F /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = text; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectClientConnection.h; path = "Chat Core/MVDirectClientConnection.h"; sourceTree = "<group>"; };
@@ -748,6 +748,7 @@
 		32C46E190B3AB37E00B96B27 /* MVICBChatUser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MVICBChatUser.m; path = "Chat Core/MVICBChatUser.m"; sourceTree = "<group>"; };
 		431261C0072EE37A00720AD1 /* MVSILCFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = MVSILCFileTransfer.h; path = "Chat Core/MVSILCFileTransfer.h"; sourceTree = "<group>"; };
 		431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MVSILCFileTransfer.m; path = "Chat Core/MVSILCFileTransfer.m"; sourceTree = "<group>"; };
+		5596BE781B37206C0078571A /* build-libidn-OSX.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "build-libidn-OSX.sh"; sourceTree = "<group>"; };
 		55B748161AD2E6FD001459F7 /* RunOnMainThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RunOnMainThread.h; path = Additions/RunOnMainThread.h; sourceTree = "<group>"; };
 		899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerAdditions.h; path = Additions/NSFileManagerAdditions.h; sourceTree = "<group>"; };
 		899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSFileManagerAdditions.m; path = Additions/NSFileManagerAdditions.m; sourceTree = "<group>"; };
@@ -1595,6 +1596,7 @@
 		19A7A9691B28E7A90022172F /* libidn */ = {
 			isa = PBXGroup;
 			children = (
+				5596BE781B37206C0078571A /* build-libidn-OSX.sh */,
 				19A7A96A1B28E7A90022172F /* build-libidn.sh */,
 				19A7A96B1B28E7A90022172F /* idn-int.h */,
 				19A7A96C1B28E7A90022172F /* libidn.a */,
@@ -2037,6 +2039,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1C041DDA08553AD200A5A5BA /* Build configuration list for PBXNativeTarget "Chat Core (Framework)" */;
 			buildPhases = (
+				5596BE7E1B3721C20078571A /* ShellScript */,
 				1CAF64A8099EAB390036A727 /* Unarchive Frameworks */,
 				1C51B47B052DE0CB00BB459B /* Sources */,
 				1C51B484052DE0CB00BB459B /* Frameworks */,
@@ -2171,6 +2174,19 @@
 			shellPath = /bin/sh;
 			shellScript = "cd \"$SRCROOT/Frameworks\"\nrm -rf *.framework\ntar xzf frameworks.tar.gz\n";
 			showEnvVarsInLog = 0;
+		};
+		5596BE7E1B3721C20078571A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd Frameworks/XMPPFramework/Vendor/libidn/\nsh build-libidn-OSX.sh";
 		};
 /* End PBXShellScriptBuildPhase section */
 
