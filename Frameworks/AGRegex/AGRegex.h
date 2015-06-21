@@ -19,7 +19,7 @@
 @class AGRegex, NSArray, NSString;
 
 /*!
-@enum Options 
+@enum AGRegexOptions
 Options defined for -initWithPattern:options:. Two or more options can be combined with the bitwise OR operator.
 @constant AGRegexCaseInsensitive Matching is case insensitive. Equivalent to /i in Perl.
 @constant AGRegexDotAll Dot metacharacter matches any character including newline. Equivalent to /s in Perl.
@@ -27,7 +27,7 @@ Options defined for -initWithPattern:options:. Two or more options can be combin
 @constant AGRegexLazy Makes greedy quantifiers lazy and lazy quantifiers greedy. No equivalent in Perl.
 @constant AGRegexMultiline Caret and dollar anchors match at newline. Equivalent to /m in Perl.
 */
-enum {
+typedef NS_OPTIONS(unsigned int, AGRegexOptions) {
 	AGRegexCaseInsensitive = 1,
 	AGRegexDotAll = 2,
 	AGRegexExtended = 4,
@@ -44,23 +44,23 @@ enum {
 	AGRegex *regex;
 	NSString *string;
 	int *matchv;
-	int count;
+	NSInteger count;
 }
 
 /*!
 @method count
 The number of capturing subpatterns, including the pattern itself. */
-- (int)count;
+@property (readonly) NSInteger count;
 
 /*!
 @method group
 Returns the part of the target string that matched the pattern. */
-- (NSString *)group;
+@property (copy, readonly) NSString *group;
 
 /*!
 @method groupAtIndex:
 Returns the part of the target string that matched the subpattern at the given index or nil if it wasn't matched. The subpatterns are indexed in order of their opening parentheses, 0 is the entire pattern, 1 is the first capturing subpattern, and so on. */
-- (NSString *)groupAtIndex:(int)idx;
+- (NSString *)groupAtIndex:(NSInteger)idx;
 
 /*!
 @method groupNamed:
@@ -70,12 +70,12 @@ Returns the part of the target string that matched the subpattern of the given n
 /*!
 @method range
 Returns the range of the target string that matched the pattern. */
-- (NSRange)range;
+@property (readonly) NSRange range;
 
 /*!
 @method rangeAtIndex:
 Returns the range of the target string that matched the subpattern at the given index or {NSNotFound, 0} if it wasn't matched. The subpatterns are indexed in order of their opening parentheses, 0 is the entire pattern, 1 is the first capturing subpattern, and so on. */
-- (NSRange)rangeAtIndex:(int)idx;
+- (NSRange)rangeAtIndex:(NSInteger)idx;
 
 /*!
 @method rangeNamed:
@@ -85,7 +85,7 @@ Returns the range of the target string that matched the subpattern of the given 
 /*!
 @method string
 Returns the target string. */
-- (NSString *)string;
+@property (readonly, copy) NSString *string;
 
 @end
 
@@ -158,23 +158,23 @@ In Perl, this would return "R", undef, "p", "a", "t", undef, "r". Unfortunately,
 /*!
 @method regexWithPattern:
 Creates a new regex using the given pattern string. Returns nil if the pattern string is invalid. */
-+ (id)regexWithPattern:(NSString *)pat;
++ (instancetype)regexWithPattern:(NSString *)pat;
 
 /*!
 @method regexWithPattern:options:
 Creates a new regex using the given pattern string and option flags. Returns nil if the pattern string is invalid. */
-+ (id)regexWithPattern:(NSString *)pat options:(int)opts;
++ (instancetype)regexWithPattern:(NSString *)pat options:(AGRegexOptions)opts;
 
 
 /*!
 @method initWithPattern:
 Initializes the regex using the given pattern string. Returns nil if the pattern string is invalid. */
-- (id)initWithPattern:(NSString *)pat;
+- (instancetype)initWithPattern:(NSString *)pat;
 
 /*!
 @method initWithPattern:options:
 Initializes the regex using the given pattern string and option flags. Returns nil if the pattern string is invalid. */
-- (id)initWithPattern:(NSString *)pat options:(int)opts;
+- (instancetype)initWithPattern:(NSString *)pat options:(AGRegexOptions)opts;
 
 /*!
 @method findInString:
@@ -226,7 +226,7 @@ Call splitString:limit: with no limit. */
 /*!
 @method splitString:limit:
 Returns an array of strings created by splitting the target string at each occurrence of the pattern. If the limit is positive, no more than that many splits will be made. If there are captured subpatterns, they are returned in the array.  */
-- (NSArray *)splitString:(NSString *)str limit:(int)lim;
+- (NSArray *)splitString:(NSString *)str limit:(NSInteger)lim;
 
 @end
 

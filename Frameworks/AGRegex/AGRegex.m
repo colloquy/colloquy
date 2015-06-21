@@ -57,7 +57,7 @@ static int utf8charcount(const char *str, int len) {
 @end
 
 @interface AGRegexMatch (Private)
-- (id)initWithRegex:(AGRegex *)re string:(NSString *)str vector:(int *)mv count:(int)c;
+- (instancetype)initWithRegex:(AGRegex *)re string:(NSString *)str vector:(int *)mv count:(int)c;
 @end
 
 @interface AGRegexMatchEnumerator : NSEnumerator {
@@ -66,7 +66,7 @@ static int utf8charcount(const char *str, int len) {
     NSRange range;
     unsigned end;
 }
-- (id)initWithRegex:(AGRegex *)re string:(NSString *)s range:(NSRange)r;
+- (instancetype)initWithRegex:(AGRegex *)re string:(NSString *)s range:(NSRange)r;
 @end
 
 
@@ -84,7 +84,7 @@ static AGRegex *backrefPattern;
 
 + (id)regexWithPattern:(NSString *)pat { return [[[self alloc] initWithPattern:pat] autorelease]; }
 
-+ (id)regexWithPattern:(NSString *)pat options:(int)opts { return [[[self alloc] initWithPattern:pat options:opts ] autorelease]; }
++ (id)regexWithPattern:(NSString *)pat options:(AGRegexOptions)opts { return [[[self alloc] initWithPattern:pat options:opts ] autorelease]; }
 
 - (id)init {
 	return [self initWithPattern:@""];
@@ -94,7 +94,7 @@ static AGRegex *backrefPattern;
 	return [self initWithPattern:pat options:0];
 }
 
-- (id)initWithPattern:(NSString *)pat options:(int)opts {
+- (id)initWithPattern:(NSString *)pat options:(AGRegexOptions)opts {
 	if (self = [super init]) {
 		const char *emsg;
 		int eloc, copts = 0;
@@ -318,13 +318,13 @@ static AGRegex *backrefPattern;
 	return [self splitString:str limit:0];
 }
 
-- (NSArray *)splitString:(NSString *)str limit:(int)lim {
+- (NSArray *)splitString:(NSString *)str limit:(NSInteger)lim {
 	NSMutableArray *result = [NSMutableArray array];
 	AGRegexMatch *match;
 	NSArray *allMatches;
 	NSString *group;
 	NSRange remainRange, matchRange;
-	int i, j, count, allCount, length = [str length];
+	NSInteger i, j, count, allCount, length = [str length];
 	// find all matches
 	allMatches = [self findAllInString:str]; 
 	allCount = [allMatches count];
@@ -355,6 +355,8 @@ static AGRegex *backrefPattern;
 @end
 
 @implementation AGRegexMatch
+@synthesize string;
+@synthesize count;
 
 // takes ownership of the passed match vector, free on dealloc
 - (id)initWithRegex:(AGRegex *)re string:(NSString *)str vector:(int *)mv count:(int)c {
@@ -374,15 +376,11 @@ static AGRegex *backrefPattern;
 	[super dealloc];
 }
 
-- (int)count {
-	return count;
-}
-
 - (NSString *)group {
 	return [self groupAtIndex:0];
 }
 
-- (NSString *)groupAtIndex:(int)idx {
+- (NSString *)groupAtIndex:(NSInteger)idx {
 	NSRange r = [self rangeAtIndex:idx];
 	return r.location == NSNotFound ? nil : [string substringWithRange:r];
 }
@@ -398,10 +396,10 @@ static AGRegex *backrefPattern;
 	return [self rangeAtIndex:0];
 }
 
-- (NSRange)rangeAtIndex:(int)idx {
+- (NSRange)rangeAtIndex:(NSInteger)idx {
 	int start, end;
 	if (idx >= count)
-		[NSException raise:NSRangeException format:@"index %d out of bounds", idx];
+		[NSException raise:NSRangeException format:@"index %ld out of bounds", (long)idx];
 	start = matchv[2 * idx];
 	end = matchv[2 * idx + 1];
 	if (start < 0)
@@ -415,10 +413,6 @@ static AGRegex *backrefPattern;
 	if (idx == PCRE_ERROR_NOSUBSTRING)
 		[NSException raise:NSInvalidArgumentException format:@"no group named %@", name];
 	return [self rangeAtIndex:idx];
-}
-
-- (NSString *)string {
-	return string;
 }
 
 - (NSString *)description {
