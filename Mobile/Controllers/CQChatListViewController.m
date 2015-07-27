@@ -589,6 +589,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	// correctly, rather than showing the connection timer label.
 	if (self.editing)
 	{
+		[self.tableView reloadData];
 		[self.tableView beginUpdates];
 		[self.tableView endUpdates];
 	}
