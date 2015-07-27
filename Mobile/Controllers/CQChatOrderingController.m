@@ -438,7 +438,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 - (id) connectionAtIndex:(NSInteger) index {
 	@synchronized([CQConnectionsController defaultController]) {
 		NSArray *orderedConnections = self.orderedConnections;
-		if (index >= (NSInteger)orderedConnections.count)
+		if (index >= (NSInteger)orderedConnections.count || index == NSNotFound)
 			return nil;
 		return orderedConnections[index];
 	}

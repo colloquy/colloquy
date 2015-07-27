@@ -1117,7 +1117,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		}
 
 		if (indexPath.row == 0) {
-			MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:chatIndexPath.section];
+			MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:(chatIndexPath.section - 1)];
 			[[CQChatController defaultController] showNewChatActionSheetForConnection:connection fromPoint:midpointOfRect];
 			return;
 		}
