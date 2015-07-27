@@ -131,10 +131,14 @@
 	if (![UIDevice currentDevice].isSystemEight)
 		[super dismissWithClickedButtonIndex:buttonIndex animated:animated];
 	else {
-		[self.overlappingPresentationViewController.view removeFromSuperview];
-		[self.alertController dismissViewControllerAnimated:YES completion:nil];
-		self.alertController = nil;
-		self.me = nil;
+		__weak __typeof__((self)) weakSelf = self;
+		[self.alertController dismissViewControllerAnimated:YES completion:^{
+			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+			[strongSelf.overlappingPresentationViewController.view removeFromSuperview];
+			strongSelf.alertController = nil;
+			strongSelf.overlappingPresentationViewController = nil;
+			strongSelf.me = nil;
+		}];
 	}
 }
 @end
