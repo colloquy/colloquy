@@ -17,13 +17,13 @@ static NSString *membersFilteredCountFormat;
 
 #define UserIdleTime 600
 
-static unsigned long userStatus(MVChatUser *user, MVChatRoom *room) {
-	unsigned long modes = [room modesForMemberUser:user];
-
-	if (user.serverOperator)
-		return (MVChatRoomMemberFounderMode * 2);
-	return modes;
-}
+//static unsigned long userStatus(MVChatUser *user, MVChatRoom *room) {
+//	unsigned long modes = [room modesForMemberUser:user];
+//
+//	if (user.serverOperator)
+//		return (MVChatRoomMemberFounderMode * 2);
+//	return modes;
+//}
 
 @interface CQChatUserListViewController ()
 @property (atomic, strong) NSMutableArray *users;
@@ -237,7 +237,7 @@ static unsigned long userStatus(MVChatUser *user, MVChatRoom *room) {
 		return;
 
 	@synchronized(self) {
-		MVChatUser *user = self.users[oldIndex];
+//		MVChatUser *user = self.users[oldIndex];
 
 		BOOL searchBarFocused = [_searchController isActive];
 
