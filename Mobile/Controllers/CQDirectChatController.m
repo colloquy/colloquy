@@ -910,6 +910,7 @@ static BOOL showingKeyboard;
 }
 
 - (void) chatInputStyleViewShouldClose:(CQChatInputStyleViewController *) chatInputStyleView {
+	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 	_styleViewController = nil;
 }
 

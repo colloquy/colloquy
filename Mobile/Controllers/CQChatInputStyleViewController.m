@@ -33,12 +33,15 @@
 	self.tableView.layer.borderColor = [UIApplication sharedApplication].keyWindow.tintColor.CGColor;
 	self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	self.tableView.showsVerticalScrollIndicator = NO;
+
+	self.navigationItem.leftBarButtonItem.target = self;
+	self.navigationItem.leftBarButtonItem.action = @selector(close:);
 }
 
 #pragma mark -
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
-	return 4;
+	return 3;
 }
 
 - (CGFloat) tableView:(UITableView *) tableView heightForRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -146,23 +149,6 @@
 				}] forState:UIControlStateNormal];
 
 				updateButtonBackgroundAndTitleColorForState(button, strongSelf.underlined);
-			}];
-
-			return multiButtonCell;
-		}
-
-		if (indexPath.row == 3) {
-			CQMultiButtonTableCell *multiButtonCell = [CQMultiButtonTableCell reusableTableViewCellInTableView:tableView];
-			multiButtonCell.contentView.layer.cornerRadius = 6.;
-			[multiButtonCell addButtonWithConfigurationHandler:^(UIButton *button) {
-				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-
-				[button addTarget:strongSelf action:@selector(close:) forControlEvents:UIControlEventTouchUpInside];
-				[button setTitle:NSLocalizedString(@"Close", @"Close Switch Cell Title") forState:UIControlStateNormal];
-				button.titleLabel.font = [UIFont systemFontOfSize:15.];
-				button.titleLabel.textAlignment = NSTextAlignmentCenter;
-
-				updateButtonBackgroundAndTitleColorForState(button, NO);
 			}];
 
 			return multiButtonCell;
