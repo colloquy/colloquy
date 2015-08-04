@@ -15,7 +15,7 @@
 
 @class CQChatTableCell;
 @class CQChatInputBar;
-@class CQModalViewControllerPresentationViewController;
+@class CQChatInputStyleViewController;
 @class CQUIChatTranscriptView;
 @class CQWKChatTranscriptView;
 @class MVChatUser;
@@ -36,6 +36,8 @@ typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
 	IBOutlet CQChatInputBar *chatInputBar;
 	IBOutlet UIView <CQChatTranscriptView> *transcriptView;
 	IBOutlet UIView *containerView;
+
+	CQChatInputStyleViewController *_styleViewController;
 
 	BOOL _coalescePendingUpdates;
 	NSMutableArray *_pendingPreviousSessionComponents;
@@ -59,8 +61,6 @@ typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
 
 	NSTimeInterval _lastTimestampTime;
 	NSTimeInterval _lastMessageTime;
-
-	CQModalViewControllerPresentationViewController *_stylePresentationViewController;
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
 	BOOL _isShowingCompletionsBeforeRotation;

@@ -13,7 +13,6 @@
 #import "CQConnectionsController.h"
 #import "CQIgnoreRulesController.h"
 #import "CQIntroductoryGIFFrameOperation.h"
-#import "CQModalViewControllerPresentationViewController.h"
 #import "CQPreferencesListViewController.h"
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
@@ -93,7 +92,7 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-@interface CQDirectChatController () <CQChatInputStyleDelegate, CQModalViewControllerPresentationViewControllerDelegate>
+@interface CQDirectChatController () <CQChatInputStyleDelegate>
 @end
 
 @implementation CQDirectChatController
@@ -440,17 +439,15 @@ static BOOL showingKeyboard;
 #pragma mark -
 
 - (void) style:(id) sender {
-	CQChatInputStyleViewController *styleViewController = [[CQChatInputStyleViewController alloc] init];
-	styleViewController.delegate = self;
+	_styleViewController = [[CQChatInputStyleViewController alloc] init];
+	_styleViewController.delegate = self;
 
-	_stylePresentationViewController = [CQModalViewControllerPresentationViewController viewControllerPresentationViewControllerForViewController:styleViewController];
-	_stylePresentationViewController.delegate = self;
+	CQModalNavigationController *navigationController = [[CQModalNavigationController alloc] initWithRootViewController:_styleViewController];
+	navigationController.closeButtonItem = UIBarButtonSystemItemDone;
 
-	[self _updateStylePresentationViewControllerEdgeInsetsForSize:self.view.window.frame.size];
+	[[CQColloquyApplication sharedApplication] presentModalViewController:navigationController animated:YES];
 
 	[self _updateAttributesForStyleViewController];
-
-	[_stylePresentationViewController show];
 }
 
 #pragma mark -
@@ -635,9 +632,7 @@ static BOOL showingKeyboard;
 
 //	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:toInterfaceOrientation]);
 
-	[coordinator animateAlongsideTransition:^(id <UIViewControllerTransitionCoordinatorContext> context) {
-		[self _updateStylePresentationViewControllerEdgeInsetsForSize:self.view.window.frame.size];
-	} completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
+	[coordinator animateAlongsideTransition:nil completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
 		[transcriptView scrollToBottomAnimated:NO];
 
 		if (isShowingCompletionsBeforeRotation)
@@ -835,15 +830,6 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (void) _updateStylePresentationViewControllerEdgeInsetsForSize:(CGSize) size {
-	CGFloat side = (size.width - 270.) / 2.;
-	CGFloat top = 8.;
-	CGFloat bottom = size.height - (top + 265.);
-	_stylePresentationViewController.edgeInsets = UIEdgeInsetsMake(top, side, bottom, side);
-}
-
-#pragma mark -
-
 - (NSMutableAttributedString *) _selectedChatInputBarAttributedString {
 	NSMutableAttributedString *attributedString = [chatInputBar.textView.attributedText mutableCopy];
 	if (!attributedString) {
@@ -862,8 +848,7 @@ static BOOL showingKeyboard;
 	}
 
 	NSMutableAttributedString *attributedString = self._selectedChatInputBarAttributedString;
-	CQChatInputStyleViewController *styleViewController = (CQChatInputStyleViewController *)_stylePresentationViewController.viewControllerToPresent;
-	styleViewController.attributes = [attributedString attributesAtIndex:selectedRange.location longestEffectiveRange:NULL inRange:selectedRange];
+	_styleViewController.attributes = [attributedString attributesAtIndex:selectedRange.location longestEffectiveRange:NULL inRange:selectedRange];
 }
 
 - (void) chatInputStyleView:(CQChatInputStyleViewController *) chatInputStyleView didChangeTextTrait:(CQTextTrait) trait toState:(BOOL) state {
@@ -925,11 +910,7 @@ static BOOL showingKeyboard;
 }
 
 - (void) chatInputStyleViewShouldClose:(CQChatInputStyleViewController *) chatInputStyleView {
-	[_stylePresentationViewController hide];
-}
-
-- (void) modalViewControllerPresentationDidCloseViewController:(CQModalViewControllerPresentationViewController *) modalViewControllerPresentationViewController {
-	_stylePresentationViewController = nil;
+	_styleViewController = nil;
 }
 
 #pragma mark -

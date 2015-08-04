@@ -1551,7 +1551,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 	NSMutableArray *connections = [[NSMutableArray alloc] initWithCapacity:_directConnections.count];
 	for (MVChatConnection *connection in _directConnections) {
-#if defined(__IPHONE_9_0)
+#if defined(__IPHONE_9_0) && 0
 		if (NSClassFromString(@"CSSearchableIndex") != nil) {
 			CSSearchableItemAttributeSet *connectionAttributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"IRC Server"];
 			connectionAttributeSet.identifier = connection.uniqueIdentifier;
