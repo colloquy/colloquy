@@ -1,5 +1,3 @@
-#import <Foundation/NSDictionary.h>
-
 @interface NSDictionary (NSDictionaryAdditions)
 + (NSDictionary *) dictionaryWithKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary;
 

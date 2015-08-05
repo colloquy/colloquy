@@ -1,5 +1,5 @@
 #import "CQPreferencesListViewController.h"
-#import "CQPreferencesListEditViewController.h"
+
 #import "CQPreferencesListChannelEditViewController.h"
 #import "CQPreferencesTextViewController.h"
 

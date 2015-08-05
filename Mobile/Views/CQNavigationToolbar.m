@@ -3,8 +3,6 @@
 
 #import "CQNavigationToolbar.h"
 
-#import "UIDeviceAdditions.h"
-
 @interface CQNavigationToolbar ()
 @property (nonatomic, strong) UIImageView *bottomLineView;
 @end

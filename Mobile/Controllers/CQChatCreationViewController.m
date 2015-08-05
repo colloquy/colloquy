@@ -1,15 +1,11 @@
 #import "CQChatCreationViewController.h"
 
-#import "CQChatController.h"
 #import "CQChatOrderingController.h"
 #import "CQChatEditViewController.h"
-#import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
 #import "CQKeychain.h"
-
-#import <ChatCore/MVChatConnection.h>
 
 @implementation CQChatCreationViewController
 - (void) viewDidLoad {

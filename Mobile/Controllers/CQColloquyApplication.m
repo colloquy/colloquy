@@ -3,13 +3,11 @@
 #import "CQAlertView.h"
 #import "CQAnalyticsController.h"
 #import "CQChatController.h"
-#import "CQChatCreationViewController.h"
 #import "CQChatListViewController.h"
 #import "CQChatNavigationController.h"
 #import "CQChatPresentationController.h"
 #import "CQConnectionsController.h"
 #import "CQConnectionsNavigationController.h"
-#import "CQPocketController.h"
 #import "CQWelcomeController.h"
 
 #import "NSNotificationAdditions.h"

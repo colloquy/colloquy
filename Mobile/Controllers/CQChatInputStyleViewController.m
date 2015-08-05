@@ -1,6 +1,5 @@
 #import "CQChatInputStyleViewController.h"
 
-#import "CQPreferencesSwitchCell.h"
 #import "CQColorPickerTableCell.h"
 
 #import "UIColorAdditions.h"

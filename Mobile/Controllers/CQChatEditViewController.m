@@ -6,7 +6,6 @@
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 #import "CQPreferencesListViewController.h"
-#import "CQPreferencesSwitchCell.h"
 #import "CQPreferencesTextCell.h"
 
 static NSUInteger lastSelectedConnectionIndex = NSNotFound;

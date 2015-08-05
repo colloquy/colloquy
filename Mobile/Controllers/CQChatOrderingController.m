@@ -1,6 +1,5 @@
 #import "CQChatOrderingController.h"
 
-#import "CQDirectChatController.h"
 #import "CQChatRoomController.h"
 #import "CQConsoleController.h"
 

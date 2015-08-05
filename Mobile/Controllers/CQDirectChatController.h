@@ -1,9 +1,7 @@
 #import "CQChatController.h"
 #import "CQChatInputBar.h"
-#import "CQUIChatTranscriptView.h"
-#import "CQWKChatTranscriptView.h"
+#import "CQChatTranscriptViewDelegate.h"
 #import "CQImportantChatMessageViewController.h"
-#import "CQViewController.h"
 
 #import "MVChatString.h"
 
@@ -31,7 +29,7 @@ typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
 };
 
 
-@interface CQDirectChatController : CQViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
+@interface CQDirectChatController : UIViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
 	@protected
 	IBOutlet CQChatInputBar *chatInputBar;
 	IBOutlet UIView <CQChatTranscriptView> *transcriptView;

@@ -1,4 +1,3 @@
-#import "CQChatTableCell.h"
 #import "CQTableViewController.h"
 
 @protocol CQChatViewController;

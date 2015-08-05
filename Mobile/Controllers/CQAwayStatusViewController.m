@@ -1,7 +1,6 @@
 #import "CQAwayStatusViewController.h"
 
 #import "CQColloquyApplication.h"
-#import "CQPreferencesListViewController.h"
 #import "CQTextView.h"
 
 #import "MVChatUser.h"

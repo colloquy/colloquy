@@ -1,7 +1,5 @@
 #import "UIDeviceAdditions.h"
 
-#include <sys/sysctl.h>
-
 #if !TARGET_IPHONE_SIMULATOR
 static NSString *hardwareInfoAsString(const char *keyPath) {
 	char buffer[512] = { 0 };

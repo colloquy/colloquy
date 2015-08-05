@@ -1,5 +1,4 @@
 #import "NSNotificationAdditions.h"
-#import "MVAvailability.h"
 #import <pthread.h>
 
 NS_ASSUME_NONNULL_BEGIN

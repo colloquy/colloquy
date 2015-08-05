@@ -1,14 +1,10 @@
 #import "CQChatUserListViewController.h"
 
-#import "CQChatController.h"
 #import "CQColloquyApplication.h"
-#import "CQChatRoomController.h"
-#import "CQUserInfoController.h"
 #import "CQUserInfoViewController.h"
 
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
-#import <ChatCore/MVChatConnection.h>
 
 #import "UIActionSheetAdditions.h"
 

@@ -1,43 +1,29 @@
 #import "CQDirectChatController.h"
 
 #import "CQAlertView.h"
-#import "CQChatController.h"
+#import "CQBookmarkingController.h"
 #import "CQChatOrderingController.h"
 #import "CQChatCreationViewController.h"
-#import "CQChatInputBar.h"
 #import "CQChatInputStyleViewController.h"
 #import "CQChatPresentationController.h"
 #import "CQChatRoomController.h"
-#import "CQChatTableCell.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 #import "CQIgnoreRulesController.h"
 #import "CQIntroductoryGIFFrameOperation.h"
-#import "CQPreferencesListViewController.h"
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
-#import "CQImportantChatMessageViewController.h"
 #import "CQUserInfoController.h"
-#import "CQDeliciousController.h"
-#import "CQInstapaperController.h"
-#import "CQPinboardController.h"
-#import "CQPocketController.h"
-
 #import "KAIgnoreRule.h"
 
 #import "NSAttributedStringAdditions.h"
 #import "NSDateAdditions.h"
 #import "NSNotificationAdditions.h"
-#import "NSObjectAdditions.h"
-#import "NSStringAdditions.h"
 
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatUserWatchRule.h>
 
 #import <MediaPlayer/MPMusicPlayerController.h>
-#import <MediaPlayer/MPMediaItem.h>
 
 #import <Social/Social.h>
 

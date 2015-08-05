@@ -1,7 +1,5 @@
 #import "CQChatInputBar.h"
 
-#import "CQTextCompletionView.h"
-
 #import "UIColorAdditions.h"
 #import "NSNotificationAdditions.h"
 

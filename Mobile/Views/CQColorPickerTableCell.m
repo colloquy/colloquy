@@ -1,7 +1,5 @@
 #import "CQColorPickerTableCell.h"
 
-#import "UIImageAdditions.h"
-
 @interface CQColorPickerTableCell ()
 @property (atomic, strong) NSMapTable *colorToButtonMap;
 @property (atomic, strong) NSMapTable *buttonToColorMap;

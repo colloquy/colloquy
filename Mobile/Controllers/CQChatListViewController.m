@@ -4,15 +4,14 @@
 #import "CQAwayStatusController.h"
 #import "CQChatOrderingController.h"
 #import "CQChatRoomController.h"
+#import "CQChatTableCell.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
-#import "CQDirectChatController.h"
 #import "CQConsoleController.h"
 #import "CQBouncerEditViewController.h"
 #import "CQConnectionEditViewController.h"
 #import "CQConnectionsNavigationController.h"
 #import "CQPreferencesViewController.h"
-#import "CQChatCreationViewController.h"
 
 #if ENABLE(FILE_TRANSFERS)
 #import "CQFileTransferController.h"
@@ -20,8 +19,6 @@
 #endif
 #import "CQConnectionTableHeaderView.h"
 
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
 #import "NSNotificationAdditions.h"

@@ -4,9 +4,6 @@
 #import "CQConnectionsController.h"
 #import "CQProcessChatMessageOperation.h"
 #import "NSNotificationAdditions.h"
-#import "NSStringAdditions.h"
-
-#import <ChatCore/MVChatConnection.h>
 
 static NSOperationQueue *topicProcessingQueue;
 static BOOL showFullRoomNames;
