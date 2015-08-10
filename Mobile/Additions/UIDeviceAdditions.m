@@ -1,6 +1,9 @@
 #import "UIDeviceAdditions.h"
 
 #if !TARGET_IPHONE_SIMULATOR
+
+#import <sys/sysctl.h>
+
 static NSString *hardwareInfoAsString(const char *keyPath) {
 	char buffer[512] = { 0 };
 	size_t size = sizeof(buffer);
