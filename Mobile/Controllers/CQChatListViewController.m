@@ -428,9 +428,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 - (void) _willBecomeActive:(NSNotification *) notification {
 	[CQChatController defaultController].totalImportantUnreadCount = 0;
-	[self _startUpdatingConnectTimes];
-
 	_active = YES;
+	[self _startUpdatingConnectTimes];
 }
 
 - (void) _willResignActive:(NSNotification *) notification {
@@ -700,9 +699,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) viewWillAppear:(BOOL) animated {
-	[self _startUpdatingConnectTimes];
-
 	_active = YES;
+
+	[self _startUpdatingConnectTimes];
 
 	[self _refreshIndexPathForChatControllersCache];
 
