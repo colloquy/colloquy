@@ -28,9 +28,6 @@
 
 		self.delegate = self;
 	}
-
-	if (![UIDevice currentDevice].isSystemEight)
-		[[CQChatController defaultController] showPendingChatControllerAnimated:NO];
 }
 
 #pragma mark -
@@ -49,9 +46,6 @@
 }
 
 - (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
-	if ([[UIDevice currentDevice] isPadModel])
-		return;
-
 	if (viewController == self.rootViewController) {
 		[[CQChatController defaultController] visibleChatControllerWasHidden];
 

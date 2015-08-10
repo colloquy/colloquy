@@ -44,7 +44,7 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 	if (cached)
 		return result;
 
-	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPhone) && [self.model hasCaseInsensitiveSubstring:@"Phone"] && ![UIDevice currentDevice].isSystemEight;
+	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPad);
 	cached = YES;
 
 	return result;
@@ -57,22 +57,7 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 	if (cached)
 		return result;
 
-	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPad) || [UIDevice currentDevice].isSystemEight;
-	cached = YES;
-
-	return result;
-}
-
-- (BOOL) isSystemEight {
-	static BOOL result;
-	static BOOL cached;
-
-	if (cached)
-		return result;
-
-	if ([[NSProcessInfo processInfo] respondsToSelector:@selector(operatingSystemVersion)])
-		result = [NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 8;
-
+	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPad);
 	cached = YES;
 
 	return result;

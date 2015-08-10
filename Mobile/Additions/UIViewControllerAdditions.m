@@ -6,7 +6,7 @@
 
 @implementation UIViewController (UIViewControllerAdditions)
 - (void) resizeForViewInPopoverUsingTableView:(UITableView *) tableView {
-	if (![[UIDevice currentDevice] isPadModel])
+	if (![UIDevice currentDevice].isPadModel)
 		return;
 
 	CGFloat width = self.preferredContentSize.width;
@@ -42,7 +42,7 @@
 
 - (NSUInteger) supportedInterfaceOrientations {
 	UIInterfaceOrientationMask supportedOrientations = UIInterfaceOrientationMaskPortrait;
-	if (![UIDevice currentDevice].isPhoneModel)
+	if ([UIDevice currentDevice].isPadModel)
 		supportedOrientations |= UIInterfaceOrientationMaskPortraitUpsideDown;
 
 	if (![[CQSettingsController settingsController] boolForKey:@"CQDisableLandscape"])

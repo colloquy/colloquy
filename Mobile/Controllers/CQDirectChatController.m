@@ -165,7 +165,7 @@ static BOOL showingKeyboard;
 
 		[self userDefaultsChanged];
 
-		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+		if ([UIDevice currentDevice].isPadModel) {
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide) name:UIKeyboardWillHideNotification object:nil];
 		}
@@ -219,7 +219,7 @@ static BOOL showingKeyboard;
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:UIContentSizeCategoryDidChangeNotification object:nil];
 
-	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+	if ([UIDevice currentDevice].isPadModel) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
@@ -402,7 +402,7 @@ static BOOL showingKeyboard;
 	sheet.delegate = self;
 	sheet.tag = InfoActionSheet;
 
-	if (!([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+	if (!([UIDevice currentDevice].isPadModel && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		sheet.title = self.user.displayName;
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
@@ -490,16 +490,14 @@ static BOOL showingKeyboard;
 	self.scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
 
 	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
-//	if ([UIDevice currentDevice].isSystemEight) {
-//		CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
-//		webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
-//		webkitChatTranscriptView.transcriptDelegate = self;
+//	CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
+//	webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
+//	webkitChatTranscriptView.transcriptDelegate = self;
 //
-//		[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
+//	[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
 //
-//		[transcriptView removeFromSuperview];
-//		transcriptView = webkitChatTranscriptView;
-//	}
+//	[transcriptView removeFromSuperview];
+//	transcriptView = webkitChatTranscriptView;
 
 	[self _updateRightBarButtonItemAnimated:NO];
 
@@ -508,7 +506,7 @@ static BOOL showingKeyboard;
 
 	[self _userDefaultsChanged];
 
-	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
+	transcriptView.allowSingleSwipeGesture = (![[CQColloquyApplication sharedApplication] splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clear.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateNormal];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clearPressed.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateHighlighted];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButton.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
@@ -523,7 +521,7 @@ static BOOL showingKeyboard;
 	if (self.connection.connected)
 		[_target setMostRecentUserActivity:[NSDate date]];
 
-	if (![UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+	if (![UIDevice currentDevice].isPadModel) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 	}
@@ -587,7 +585,7 @@ static BOOL showingKeyboard;
 
 	[[NSNotificationCenter chatCenter] removeObserver:self name:CQBookmarkingDidNotSaveLinkNotification object:nil];
 
-	if (![UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+	if (![UIDevice currentDevice].isPadModel) {
 		[self.view endEditing:YES];
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
@@ -601,7 +599,7 @@ static BOOL showingKeyboard;
 
 	[UIMenuController sharedMenuController].menuItems = nil;
 
-	if (![UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	if (![UIDevice currentDevice].isPadModel)
 		[chatInputBar resignFirstResponder];
 
 	_allowEditingToEnd = NO;
@@ -625,24 +623,6 @@ static BOOL showingKeyboard;
 			[self _showChatCompletions];
 	}];
 }
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
-- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
-	_isShowingCompletionsBeforeRotation = chatInputBar.isShowingCompletions;
-
-	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:toInterfaceOrientation]);
-}
-
-- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation) fromInterfaceOrientation {
-	[transcriptView scrollToBottomAnimated:NO];
-
-	if (_isShowingCompletionsBeforeRotation) {
-		[self _showChatCompletions];
-
-		_isShowingCompletionsBeforeRotation = NO;
-	}
-}
-#endif
 
 - (BOOL) isFirstResponder {
 	return [chatInputBar isFirstResponder];
@@ -682,7 +662,7 @@ static BOOL showingKeyboard;
 	actionSheet.delegate = self;
 	actionSheet.tag = ActionsActionSheet;
 
-	if (!([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+	if (!([UIDevice currentDevice].isPadModel && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		actionSheet.title = self.user.displayName;
 
 	[actionSheet addButtonWithTitle:NSLocalizedString(@"Recently Sent Messages", @"Recently Sent Messages")];
@@ -1985,7 +1965,7 @@ static BOOL showingKeyboard;
 	const float CQDefaultDynamicTypeFontSize = 17.;
 
 	if (chatTranscriptFontSize == CQDefaultDynamicTypeFontSize) {
-		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+		if ([UIDevice currentDevice].isPadModel) {
 			if (!chatTranscriptFontSizeString.length) {
 				chatTranscriptFontSize = 14; // default
 			} else if ([chatTranscriptFontSizeString isEqualToString:@"smallest"])
@@ -2022,7 +2002,7 @@ static BOOL showingKeyboard;
 	transcriptView.fontFamily = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFont"];
 	transcriptView.fontSize = chatTranscriptFontSize;
 	transcriptView.timestampPosition = timestampEveryMessage ? (timestampOnLeft ? CQTimestampPositionLeft : CQTimestampPositionRight) : CQTimestampPositionCenter;
-	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
+	transcriptView.allowSingleSwipeGesture = (![[CQColloquyApplication sharedApplication] splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
 
 	chatInputBar.font = [chatInputBar.font fontWithSize:chatTranscriptFontSize];
 	if ([self isViewLoaded] && transcriptView)
@@ -2147,7 +2127,7 @@ static BOOL showingKeyboard;
 
 	[self.navigationItem setRightBarButtonItem:item animated:animated];
 
-	if (_active && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	if (_active && [UIDevice currentDevice].isPadModel)
 		[[CQChatController defaultController].chatPresentationController updateToolbarAnimated:YES];
 
 }

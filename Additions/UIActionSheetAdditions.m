@@ -26,7 +26,7 @@
 	[sheet associateObject:user forKey:@"user"];
 	[sheet associateObject:room forKey:@"room"];
 
-	if ([[UIDevice currentDevice] isPadModel] || showingUserInformation)
+	if ([UIDevice currentDevice].isPadModel || showingUserInformation)
 		[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
 
 	if (showingUserInformation)
@@ -195,21 +195,21 @@
 #pragma mark -
 
 - (NSInteger) userInfoButtonIndex {
-	if ([self associatedObjectForKey:@"showing-user-information"] || [[UIDevice currentDevice] isPadModel])
+	if ([self associatedObjectForKey:@"showing-user-information"] || [UIDevice currentDevice].isPadModel)
 		return 1;
 	return NSNotFound;
 }
 
 #if ENABLE(FILE_TRANSFERS)
 - (NSInteger) sendFileButtonIndex {
-	if ([self associatedObjectForKey:@"showing-user-information"] || [[UIDevice currentDevice] isPadModel])
+	if ([self associatedObjectForKey:@"showing-user-information"] || [UIDevice currentDevice].isPadModel)
 		return 2;
 	return 1;
 }
 #endif
 
 - (NSInteger) ignoreButtonIndex {
-	if ([self associatedObjectForKey:@"showing-user-information"] || [[UIDevice currentDevice] isPadModel])
+	if ([self associatedObjectForKey:@"showing-user-information"] || [UIDevice currentDevice].isPadModel)
 		return 2;
 	return 1;
 }

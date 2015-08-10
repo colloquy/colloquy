@@ -19,26 +19,6 @@
 
 #pragma mark -
 
-- (void) _updateTextFieldsForDisplay {
-	if ([UIDevice currentDevice].isSystemEight)
-		return;
-
-	if (_textFieldInformation.count == 0)
-		self.alertViewStyle = UIAlertViewStyleDefault;
-	else if (_textFieldInformation.count == 1)
-		self.alertViewStyle = UIAlertViewStylePlainTextInput;
-	else self.alertViewStyle = UIAlertViewStyleLoginAndPasswordInput;
-
-	for (NSUInteger i = 0; i < _textFieldInformation.count; i++) {
-		NSDictionary *textFieldInformation = _textFieldInformation[i];
-		UITextField *textField = [self textFieldAtIndex:i];
-
-		textField.placeholder = textFieldInformation[@"placeholder"];
-		textField.text = textFieldInformation[@"text"];
-		textField.secureTextEntry = !!textFieldInformation[@"secure"];
-	}
-}
-
 - (void) addTextFieldWithPlaceholder:(NSString *) placeholder andText:(NSString *) text {
 	NSAssert(_textFieldInformation.count + 1 < 3, @"alertView's are limited to a max of 2 textfields as of iOS 5", nil);
 
@@ -50,8 +30,6 @@
 		textFieldInformation[@"text"] = text;
 
 	[_textFieldInformation addObject:textFieldInformation];
-
-	[self _updateTextFieldsForDisplay];
 }
 
 - (void) addSecureTextFieldWithPlaceholder:(NSString *) placeholder {
@@ -64,22 +42,13 @@
 	textFieldInformation[@"secure"] = @(YES);
 
 	[_textFieldInformation addObject:textFieldInformation];
-
-	[self _updateTextFieldsForDisplay];
 }
 
 - (UITextField *) textFieldAtIndex:(NSInteger) textFieldIndex {
-	if (![UIDevice currentDevice].isSystemEight)
-		return [super textFieldAtIndex:textFieldIndex];
 	return self.alertController.textFields[textFieldIndex];
 }
 
 - (void) show {
-	if (![UIDevice currentDevice].isSystemEight) {
-		[super show];
-		return;
-	}
-
 	self.me = self;
 
 	// The overlapping view is needed to work around the following iOS 8(.1-only?) bug on iPad:
@@ -128,17 +97,13 @@
 }
 
 - (void) dismissWithClickedButtonIndex:(NSInteger) buttonIndex animated:(BOOL) animated {
-	if (![UIDevice currentDevice].isSystemEight)
-		[super dismissWithClickedButtonIndex:buttonIndex animated:animated];
-	else {
-		__weak __typeof__((self)) weakSelf = self;
-		[self.alertController dismissViewControllerAnimated:YES completion:^{
-			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-			[strongSelf.overlappingPresentationViewController.view removeFromSuperview];
-			strongSelf.alertController = nil;
-			strongSelf.overlappingPresentationViewController = nil;
-			strongSelf.me = nil;
-		}];
-	}
+	__weak __typeof__((self)) weakSelf = self;
+	[self.alertController dismissViewControllerAnimated:YES completion:^{
+		__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+		[strongSelf.overlappingPresentationViewController.view removeFromSuperview];
+		strongSelf.alertController = nil;
+		strongSelf.overlappingPresentationViewController = nil;
+		strongSelf.me = nil;
+	}];
 }
 @end

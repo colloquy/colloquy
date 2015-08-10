@@ -146,20 +146,18 @@ static NSMutableArray *highlightWords;
 		highlightWords = nil;
 	}
 
-	if ([UIDevice currentDevice].isPadModel) {
-		NSNumber *newSwipeOrientationValue = [[CQSettingsController settingsController] objectForKey:@"CQSplitSwipeOrientations"];
+	NSNumber *newSwipeOrientationValue = [[CQSettingsController settingsController] objectForKey:@"CQSplitSwipeOrientations"];
 
-		if (![_oldSwipeOrientationValue isEqualToNumber:newSwipeOrientationValue]) {
-			_oldSwipeOrientationValue = [newSwipeOrientationValue copy];
+	if (![_oldSwipeOrientationValue isEqualToNumber:newSwipeOrientationValue]) {
+		_oldSwipeOrientationValue = [newSwipeOrientationValue copy];
 
-			if (self.modalViewController)
-				_userDefaultsChanged = YES;
-			else [self reloadSplitViewController];
+		if (self.modalViewController)
+			_userDefaultsChanged = YES;
+		else [self reloadSplitViewController];
 
-			BOOL disableSingleSwipe = [self splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:UIInterfaceOrientationLandscapeLeft] || [self splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:UIInterfaceOrientationPortrait];
-			if (disableSingleSwipe)
-				[[CQSettingsController settingsController] setInteger:0 forKey:@"CQSingleFingerSwipe"];
-		}
+		BOOL disableSingleSwipe = [self splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:UIInterfaceOrientationLandscapeLeft] || [self splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:UIInterfaceOrientationPortrait];
+		if (disableSingleSwipe)
+			[[CQSettingsController settingsController] setInteger:0 forKey:@"CQSingleFingerSwipe"];
 	}
 
 	[self updateAnalytics];
@@ -267,9 +265,6 @@ static NSMutableArray *highlightWords;
 			BOOL animationEnabled = [UIView areAnimationsEnabled];
 			[UIView setAnimationsEnabled:NO];
 
-			if (![[UIDevice currentDevice] isPadModel])
-				[self.navigationController popToRootViewControllerAnimated:NO];
-
 			if (roomName.length) {
 				if ([action isEqualToString:@"j"])
 					[connection joinChatRoomNamed:roomName];
@@ -322,7 +317,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
-	if (![[CQChatController defaultController] hasPendingChatController] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	if (![[CQChatController defaultController] hasPendingChatController] && [UIDevice currentDevice].isPadModel)
 		[[CQChatController defaultController] setFirstChatController];
 
 	if ([_mainWindow respondsToSelector:@selector(setTintColor:)])
@@ -330,12 +325,7 @@ static NSMutableArray *highlightWords;
 
 	[self userDefaultsChanged];
 
-	if ([[UIDevice currentDevice] isPadModel]) {
-		[self reloadSplitViewController];
-	} else {
-		_mainViewController = [CQChatController defaultController].chatNavigationController;
-		_mainWindow.rootViewController = _mainViewController;
-	}
+	[self reloadSplitViewController];
 
 	[_mainWindow makeKeyAndVisible];
 
@@ -507,7 +497,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) showActionSheet:(UIActionSheet *) sheet forSender:(id) sender orFromPoint:(CGPoint) point animated:(BOOL) animated {
-	if (sender && [[UIDevice currentDevice] isPadModel]) {
+	if (sender) {
 		id old = _visibleActionSheet;
 		[old dismissWithClickedButtonIndex:[old cancelButtonIndex] animated:NO];
 		_visibleActionSheet = nil;
@@ -524,61 +514,47 @@ static NSMutableArray *highlightWords;
 		return;
 	}
 
-	if ([sender isKindOfClass:[UIView class]]) {
-		[sheet showInView:sender];
-		return;
-	}
+	// The overlapping view is needed to work around the following iOS 8(.1-only?) bug on iPad:
+	// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
+	// present an action sheet from a point on screen that results in the popover rect overlapping the main view,
+	// the z-index will be incorrect and the action sheet will be clipped by the main view.
+	UIViewController *overlappingPresentationViewController = [[UIViewController alloc] init];
+	overlappingPresentationViewController.view.frame = _mainWindow.frame;
+	overlappingPresentationViewController.view.backgroundColor = [UIColor clearColor];
 
-	if ([UIDevice currentDevice].isSystemEight) {
-		// The overlapping view is needed to work around the following iOS 8(.1-only?) bug on iPad:
-		// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
-		// present an action sheet from a point on screen that results in the popover rect overlapping the main view,
-		// the z-index will be incorrect and the action sheet will be clipped by the main view.
-		UIViewController *overlappingPresentationViewController = [[UIViewController alloc] init];
-		overlappingPresentationViewController.view.frame = _mainWindow.frame;
-		overlappingPresentationViewController.view.backgroundColor = [UIColor clearColor];
+	[_mainWindow addSubview:overlappingPresentationViewController.view];
 
-		[_mainWindow addSubview:overlappingPresentationViewController.view];
+	_alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
-		_alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-
-		CGRect rect = CGRectZero;
-		rect.size = CGSizeMake(1., 1.);
-		if (!CGPointEqualToPoint(point, CGPointZero)) {
-			rect.origin = point;
-			_alertController.popoverPresentationController.sourceRect = rect;
-		} else {
-			rect.origin = _mainWindow.center;
-		}
-
-		for (NSInteger i = 0; i < sheet.numberOfButtons; i++) {
-			NSString *title = [sheet buttonTitleAtIndex:i];
-			UIAlertActionStyle style = UIAlertActionStyleDefault;
-			if (i == sheet.cancelButtonIndex) style = UIAlertActionStyleCancel;
-			else if (i == sheet.destructiveButtonIndex) style = UIAlertActionStyleDestructive;
-
-			__weak __typeof__((self)) weakSelf = self;
-
-			[_alertController addAction:[UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *action) {
-				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-				strongSelf->_alertController = nil;
-
-				[overlappingPresentationViewController.view removeFromSuperview];
-				[sheet.delegate actionSheet:sheet clickedButtonAtIndex:i];
-			}]];
-		}
-
-
-		_alertController.popoverPresentationController.sourceView = overlappingPresentationViewController.view;
-		[overlappingPresentationViewController presentViewController:_alertController animated:YES completion:nil];
+	CGRect rect = CGRectZero;
+	rect.size = CGSizeMake(1., 1.);
+	if (!CGPointEqualToPoint(point, CGPointZero)) {
+		rect.origin = point;
+		_alertController.popoverPresentationController.sourceRect = rect;
 	} else {
-		if (!CGPointEqualToPoint(point, CGPointZero)) {
-			[sheet showFromRect:(CGRect){ point, { 1., 1. } } inView:_mainViewController.view animated:animated];
-			return;
-		}
-
-		[sheet showInView:_mainViewController.view];
+		rect.origin = _mainWindow.center;
 	}
+
+	for (NSInteger i = 0; i < sheet.numberOfButtons; i++) {
+		NSString *title = [sheet buttonTitleAtIndex:i];
+		UIAlertActionStyle style = UIAlertActionStyleDefault;
+		if (i == sheet.cancelButtonIndex) style = UIAlertActionStyleCancel;
+		else if (i == sheet.destructiveButtonIndex) style = UIAlertActionStyleDestructive;
+
+		__weak __typeof__((self)) weakSelf = self;
+
+		[_alertController addAction:[UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *action) {
+			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+			strongSelf->_alertController = nil;
+
+			[overlappingPresentationViewController.view removeFromSuperview];
+			[sheet.delegate actionSheet:sheet clickedButtonAtIndex:i];
+		}]];
+	}
+
+
+	_alertController.popoverPresentationController.sourceView = overlappingPresentationViewController.view;
+	[overlappingPresentationViewController presentViewController:_alertController animated:YES completion:nil];
 }
 
 #pragma mark -
@@ -661,7 +637,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) showConnections:(id) sender {
-	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
+	if ([UIDevice currentDevice].phoneModel) {
 		[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
 		[self.navigationController popToRootViewControllerAnimated:NO];
 	}
@@ -678,7 +654,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) showColloquies:(id) sender hidingTopViewController:(BOOL) hidingTopViewController {
-	if ([[UIDevice currentDevice] isPadModel]) {
+	if ([UIDevice currentDevice].isPadModel) {
 		if (!_colloquiesPopoverController.popoverVisible) {
 			[self dismissPopoversAnimated:NO];
 			[_colloquiesPopoverController presentPopoverFromBarButtonItem:_colloquiesBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
@@ -777,7 +753,7 @@ static NSMutableArray *highlightWords;
 #pragma mark -
 
 - (UIColor *) tintColor {
-	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	if ([UIDevice currentDevice].isPadModel)
 		return nil;
 
 	NSString *style = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptStyle"];

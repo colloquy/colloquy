@@ -14,7 +14,7 @@
 
 	_textView = [[CQTextView alloc] initWithFrame:CGRectZero];
 	_textView.editable = YES;
-	_textView.scrollEnabled = [[UIDevice currentDevice] isPadModel] ? NO : YES;
+	_textView.scrollEnabled = ![UIDevice currentDevice].isPadModel;
 	_textView.font = [UIFont systemFontOfSize:17.];
 	_textView.keyboardType = UIKeyboardTypeDefault;
 	_textView.textAlignment = NSTextAlignmentLeft;
@@ -46,7 +46,7 @@
 
 	_textView.text = @"";
 	_textView.editable = YES;
-	_textView.scrollEnabled = ![[UIDevice currentDevice] isPadModel];
+	_textView.scrollEnabled = ![UIDevice currentDevice].isPadModel;
 	_textView.textColor = [UIColor blackColor];
 	_textView.textAlignment = NSTextAlignmentLeft;
 	_textView.font = [UIFont systemFontOfSize:17.];
@@ -69,7 +69,7 @@
 	CGSize size = [UIScreen mainScreen].bounds.size;
 	BOOL landscapeOrientation = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation);
 
-	if ([[UIDevice currentDevice] isPadModel]) {
+	if ([UIDevice currentDevice].isPadModel) {
 		if (landscapeOrientation)
 			return (CGFloat)MIN(size.height, size.width) / 3;
 		return (CGFloat)MIN(size.height, size.width) / 2;
