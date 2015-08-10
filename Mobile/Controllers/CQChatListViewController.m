@@ -121,14 +121,6 @@ static BOOL showsChatIcons;
 	_connectionsForHeaderViews = [NSMapTable strongToWeakObjectsMapTable];
 	_indexPathsForChatControllers = [NSMapTable strongToStrongObjectsMapTable];
 
-	_colloquiesSearchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
-	_colloquiesSearchBar.delegate = self;
-	_colloquiesSearchBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
-	_colloquiesSearchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:_colloquiesSearchBar contentsController:self];
-	_colloquiesSearchDisplayController.delegate = self;
-	_colloquiesSearchDisplayController.searchResultsDataSource = self;
-	_colloquiesSearchDisplayController.searchResultsDelegate = self;
-
 	return self;
 }
 
@@ -680,14 +672,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	CGRect frame = _colloquiesSearchBar.frame;
-	frame.origin.y -= CGRectGetHeight(frame);
-	_colloquiesSearchBar.frame = frame;
-
-	[_colloquiesSearchBar sizeToFit];
-
 	self.tableView.rowHeight = 62.;
-//	self.tableView.tableHeaderView = _colloquiesSearchBar;
 
 	@synchronized([CQChatOrderingController defaultController]) {
 		if ([[UIDevice currentDevice] isPadModel]) {
@@ -929,29 +914,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 #pragma mark -
 
-- (BOOL) searchBarShouldBeginEditing:(UISearchBar *) searchBar {
-	[_colloquiesSearchDisplayController setActive:YES animated:YES];
-
-	return YES;
-}
-
-- (void) searchDisplayController:(UISearchDisplayController *) controller didLoadSearchResultsTableView:(UITableView *) tableView {
-	tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-	tableView.rowHeight = 62.;
-}
-
-- (void) searchDisplayController:(UISearchDisplayController *) controller willShowSearchResultsTableView:(UITableView *) tableView {
-	tableView.editing = self.editing;
-}
-
-- (BOOL) searchDisplayController:(UISearchDisplayController *) controller shouldReloadTableForSearchString:(NSString *) searchString {
-//	[CQChatOrderingController defaultController].matchingRooms = searchString;
-
-	return YES;
-}
-
-#pragma mark -
-
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
 	NSInteger numberOfSections = [CQConnectionsController defaultController].connections.count;
 	numberOfSections += [CQConnectionsController defaultController].bouncers.count;
@@ -1113,7 +1075,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		}
 
 		if (indexPath.row == 0) {
-			MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:(chatIndexPath.section - 1)];
+			MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:(indexPath.section - 1)];
 			[[CQChatController defaultController] showNewChatActionSheetForConnection:connection fromPoint:midpointOfRect];
 			return;
 		}
@@ -1307,6 +1269,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	NSIndexPath *chatIndexPath = nil;
+
 	if (self.editing) {
 		if (indexPath.section == 0) {
 			CGRect cellRect = [tableView.superview convertRect:[self.tableView rectForRowAtIndexPath:indexPath] fromView:tableView];
@@ -1316,23 +1280,25 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 			return;
 		} else {
-			NSIndexPath *connectionIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - 1)];
+			chatIndexPath = [NSIndexPath indexPathForRow:(indexPath.row - 1) inSection:(indexPath.section - 1)];
 
-			if (indexPath.row == ([self tableView:tableView numberOfRowsInSection:indexPath.section] - 1)) {
+			if (indexPath.row == 0) {
 				CGRect cellRect = [tableView.superview convertRect:[self.tableView rectForRowAtIndexPath:indexPath] fromView:tableView];
 				CGPoint midpointOfRect = CGPointMake(CGRectGetMidX(cellRect), CGRectGetMidY(cellRect));
 
-				MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:connectionIndexPath.section];
+				MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:chatIndexPath.section];
 				[[CQChatController defaultController] showNewChatActionSheetForConnection:connection fromPoint:midpointOfRect];
 
 				return;
 			}
 
-			indexPath = [connectionIndexPath copy];
+			indexPath = [chatIndexPath copy];
 		}
+	} else {
+		chatIndexPath = indexPath;
 	}
 
-	id <CQChatViewController> chatViewController = chatControllerForIndexPath(indexPath);
+	id <CQChatViewController> chatViewController = chatControllerForIndexPath(chatIndexPath);
 #if ENABLE(FILE_TRANSFERS)
 	if (chatViewController && ![chatViewController isKindOfClass:[CQFileTransferController class]]) {
 #endif
