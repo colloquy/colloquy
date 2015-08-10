@@ -15,13 +15,12 @@ typedef NS_ENUM(NSInteger, QChatUserListMode) {
 - (void) chatUserListViewController:(CQChatUserListViewController *) chatUserListViewController didSelectUser:(MVChatUser *) user;
 @end
 
-@interface CQChatUserListViewController : CQPreferencesTableViewController <UIActionSheetDelegate, UISearchDisplayDelegate> {
+@interface CQChatUserListViewController : CQPreferencesTableViewController <UIActionSheetDelegate, UISearchControllerDelegate, UISearchResultsUpdating> {
 	@protected
 	NSMutableArray *_users;
 	NSString *_currentSearchString;
 	MVChatRoom *_room;
-	UISearchBar *_searchBar;
-	UISearchDisplayController *_searchController;
+	UISearchController *_searchController;
 	QChatUserListMode _listMode;
 	id <CQChatUserListViewDelegate> __weak _chatUserDelegate;
 }

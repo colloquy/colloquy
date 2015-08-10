@@ -44,7 +44,7 @@ static NSString *membersFilteredCountFormat;
 
 - (void) dealloc {
 	_chatUserDelegate = nil;
-	_searchBar.delegate = nil;
+	_searchController.searchBar.delegate = nil;
 	_searchController.delegate = nil;
 }
 
@@ -55,20 +55,17 @@ static NSString *membersFilteredCountFormat;
 
 	if (_listMode == CQChatUserListModeBan)
 		return;
-	_searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
-	_searchBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin);
-	_searchBar.placeholder = NSLocalizedString(@"Search", @"Search placeholder text");
-	_searchBar.accessibilityLabel = NSLocalizedString(@"Search Members", @"Voiceover search members label");
-	_searchBar.tintColor = [UIColor colorWithRed:(190. / 255.) green:(199. / 255.) blue:(205. / 255.) alpha:1.]; 
-	_searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
-	_searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
-	[_searchBar sizeToFit];
+	_searchController.searchBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin);
+	_searchController.searchBar.placeholder = NSLocalizedString(@"Search", @"Search placeholder text");
+	_searchController.searchBar.accessibilityLabel = NSLocalizedString(@"Search Members", @"Voiceover search members label");
+	_searchController.searchBar.tintColor = [UIColor colorWithRed:(190. / 255.) green:(199. / 255.) blue:(205. / 255.) alpha:1.];
+	_searchController.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
+	_searchController.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
+	[_searchController.searchBar sizeToFit];
 
-	self.tableView.tableHeaderView = _searchBar;
+	self.tableView.tableHeaderView = _searchController.searchBar;
 
-	_searchController = [[UISearchDisplayController alloc] initWithSearchBar:_searchBar contentsController:self];
-	_searchController.searchResultsDataSource = self;
-	_searchController.searchResultsDelegate = self;
+	_searchController = [[UISearchController alloc] initWithSearchResultsController:self];
 	_searchController.delegate = self;
 
 	UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Members", @"Members back button label") style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -222,7 +219,7 @@ static NSString *membersFilteredCountFormat;
 //	[self _insertUser:user atIndex:index withAnimation:UITableViewRowAnimationLeft];
 
 	if (searchBarFocused)
-		[_searchController setActive:YES animated:YES];
+		[_searchController setActive:YES];
 
 	if ([[UIDevice currentDevice] isPadModel]) 
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
@@ -251,7 +248,7 @@ static NSString *membersFilteredCountFormat;
 //		}
 
 		if (searchBarFocused)
-			[_searchController setActive:YES animated:YES];
+			[_searchController setActive:YES];
 	}
 }
 
@@ -262,7 +259,7 @@ static NSString *membersFilteredCountFormat;
 //	[self _removeUserAtIndex:index withAnimation:UITableViewRowAnimationRight];
 
 	if (searchBarFocused)
-		[_searchController setActive:YES animated:YES];
+		[_searchController setActive:YES];
 
 	if ([[UIDevice currentDevice] isPadModel])
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
@@ -285,25 +282,21 @@ static NSString *membersFilteredCountFormat;
 //		[self.tableView endUpdates];
 
 		if (searchBarFocused)
-			[_searchController setActive:YES animated:YES];
+			[_searchController setActive:YES];
 	}
 }
 
 #pragma mark -
 
-- (BOOL) searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *) searchString {
-	if ([searchString isEqualToString:_currentSearchString])
-		return NO;
-	
+- (void) updateSearchResultsForSearchController:(UISearchController *) searchController {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(filterUsers) object:nil];
-	
+
+	NSString *searchString = searchController.searchBar.text;
 	NSTimeInterval delay = (searchString.length ? (1. / (double)searchString.length) : (1. / 3.));
 	[self performSelector:@selector(filterUsers) withObject:nil afterDelay:delay];
-	
-	return NO;
 }
 
-- (void) searchDisplayControllerWillEndSearch:(UISearchDisplayController *) controller {
+- (void) willDismissSearchController:(UISearchController *) searchController {
 	@synchronized(self) {
 		// The searching has probably ruined the self.matchedUsers array, so rebuild it here when we display the main results table view/
 		[self.matchedUsers setArray:self.users];
@@ -316,7 +309,7 @@ static NSString *membersFilteredCountFormat;
 #pragma mark -
 
 - (void) filterUsers {
-	[self filterUsersWithSearchString:_searchBar.text];
+	[self filterUsersWithSearchString:_searchController.searchBar.text];
 }
 
 - (void) filterUsersWithSearchString:(NSString *) searchString {
@@ -366,7 +359,8 @@ static NSString *membersFilteredCountFormat;
 //			[_searchController.searchResultsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
 //			[_searchController.searchResultsTableView endUpdates];
 //		} else {
-			[_searchController.searchResultsTableView reloadData];
+			[self.tableView reloadData];
+//			[_searchController.searchResultsTableView reloadData];
 //		}
 
 		_currentSearchString = [searchString copy];
@@ -375,7 +369,7 @@ static NSString *membersFilteredCountFormat;
 			self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
 		else self.title = [NSString stringWithFormat:membersFilteredCountFormat, self.matchedUsers.count, self.users.count];
 
-		[_searchBar becomeFirstResponder];
+		[_searchController.searchBar becomeFirstResponder];
 	}
 }
 
