@@ -4,6 +4,8 @@
 
 #import "CQBouncerSettings.h"
 
+#import "UIViewAdditions.h"
+
 @implementation CQConnectionTableHeaderView
 - (instancetype) initWithReuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithReuseIdentifier:reuseIdentifier]))
@@ -182,7 +184,7 @@
 }
 
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
-	[UIView animateWithDuration:(animated ? .3 : .0) delay:0. options:(editing ? UIViewAnimationOptionCurveEaseIn : UIViewAnimationOptionCurveEaseOut) animations:^{
+	[UIView animateWithDuration:(cq_shouldAnimate(animated) ? .3 : .0) delay:0. options:(editing ? UIViewAnimationOptionCurveEaseIn : UIViewAnimationOptionCurveEaseOut) animations:^{
 		_timeLabel.alpha = editing ? 0. : 1.;
 		_disclosureButton.alpha = editing ? 1. : 0.;
 	} completion:NULL];

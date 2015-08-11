@@ -19,6 +19,7 @@
 #import "NSAttributedStringAdditions.h"
 #import "NSDateAdditions.h"
 #import "NSNotificationAdditions.h"
+#import "UIViewAdditions.h"
 
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatUserWatchRule.h>
@@ -1619,7 +1620,7 @@ static BOOL showingKeyboard;
 
 	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
-	[UIView animateWithDuration:(_active ? animationDuration : .0) delay:.0 options:animationCurve animations:^{
+	[UIView animateWithDuration:(cq_shouldAnimate(_active) ? animationDuration : .0) delay:.0 options:animationCurve animations:^{
 		CGRect frame = containerView.frame;
 		frame.size.height = CGRectGetMinY(keyboardRect);
 		containerView.frame = frame;
@@ -1640,7 +1641,7 @@ static BOOL showingKeyboard;
 	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 
-	[UIView animateWithDuration:((_active && self.view.window) ? animationDuration : .0) delay:.0 options:(animationCurve << 16) animations:^{
+	[UIView animateWithDuration:(cq_shouldAnimate(_active && self.view.window) ? animationDuration : .0) delay:.0 options:(animationCurve << 16) animations:^{
 		containerView.frame = self.view.bounds;
 	} completion:NULL];
 }

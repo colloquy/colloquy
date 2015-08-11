@@ -1,5 +1,10 @@
 #import "UIViewAdditions.h"
 
+BOOL cq_shouldAnimate(BOOL wantsToAnimate) {
+	return wantsToAnimate && !UIAccessibilityIsReduceMotionEnabled();
+}
+
+
 @implementation UIView (Additions)
 // reference: http://stackoverflow.com/a/19817135/162361
 - (void) cq_addMatchingConstraintsToView:(UIView *) destination
