@@ -46,7 +46,7 @@ static BOOL showFullRoomNames;
 - (void) dealloc {
 	_searchBar.delegate = nil;
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionChatRoomListUpdatedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionChatRoomListUpdatedNotification object:_connection];
 }
 
 #pragma mark -
