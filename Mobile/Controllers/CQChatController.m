@@ -560,6 +560,7 @@ static CQSoundController *fileTransferSound;
 - (void) showPendingChatControllerAnimated:(BOOL) animated {
 	if (_nextController)
 		[self showChatController:_nextController animated:animated];
+	_nextController = nil;
 }
 
 - (BOOL) hasPendingChatController {
