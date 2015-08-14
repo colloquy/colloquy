@@ -1024,6 +1024,45 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	return UITableViewCellEditingStyleDelete;
 }
 
+- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+	if (self.editing) {
+		if (indexPath.section == 0 || indexPath.row == 0)
+			return nil;
+		indexPath = [NSIndexPath indexPathForRow:(indexPath.row - 1) inSection:(indexPath.section - 1)];
+	}
+
+	void (^partRoom)(id <CQChatViewController>) = ^(id <CQChatViewController> chatViewController) {
+		CQChatRoomController *chatRoomController = (CQChatRoomController *)chatViewController;
+		[chatRoomController part];
+	};
+
+	UITableViewRowActionStyle nextAction = UITableViewRowActionStyleDestructive;
+	UITableViewRowAction *leaveAction = nil;
+	id <CQChatViewController> chatViewController = chatControllerForIndexPath(indexPath);
+	BOOL canPartRoom = ([chatViewController isMemberOfClass:[CQChatRoomController class]] && chatViewController.available);
+	if (canPartRoom) {
+		leaveAction = [UITableViewRowAction rowActionWithStyle:nextAction title:NSLocalizedString(@"Leave", @"Leave confirmation button title") handler:^(UITableViewRowAction *action, NSIndexPath *actionIndexPath) {
+			partRoom(chatViewController);
+			[tableView updateCellAtIndexPath:actionIndexPath withAnimation:UITableViewRowAnimationFade];
+		}];
+	}
+
+	UITableViewRowAction *closeAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:NSLocalizedString(@"Close", @"Close confirmation button title") handler:^(UITableViewRowAction *action, NSIndexPath *actionIndexPath) {
+		if (canPartRoom) {
+			partRoom(chatViewController);
+		}
+		[self _closeChatViewControllers:@[chatViewController] forConnection:chatViewController.connection withRowAnimation:UITableViewRowAnimationAutomatic];
+	}];
+
+	if (leaveAction) {
+		closeAction.backgroundColor = [UIColor colorWithWhite:(200. / 255.) alpha:1.];
+
+		return @[leaveAction, closeAction];
+	}
+
+	return @[closeAction];
+}
+
 - (NSString *) tableView:(UITableView *) tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (self.editing) {
 		if (indexPath.section == 0 || indexPath.row == 0)
