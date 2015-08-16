@@ -1310,9 +1310,10 @@ end:
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
 
-	NSString *stringWithPasswordsHidden = [[[string copy] stringByReplacingOccurrencesOfRegex:@"(^PASS |^AUTHENTICATE (?!\\+$|PLAIN$)|IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:NSRegularExpressionCaseInsensitive range:NSMakeRange(0, string.length) error:NULL] copy];
+	NSMutableString *mutableString = [string mutableCopy];
+	[mutableString replaceOccurrencesOfRegex:@"(^PASS |^AUTHENTICATE (?!\\+$|PLAIN$)|IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:NSRegularExpressionCaseInsensitive range:NSMakeRange(0, string.length) error:NULL];
 
-	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{ @"message": stringWithPasswordsHidden, @"messageData": data, @"outbound": @(YES) }];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{ @"message": [mutableString copy], @"messageData": data, @"outbound": @(YES) }];
 }
 
 - (void) _readNextMessageFromServer {

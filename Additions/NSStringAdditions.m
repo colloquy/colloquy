@@ -1179,17 +1179,9 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
-	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
 	NSMutableString *replacementString = [self mutableCopy];
-
-	for (NSTextCheckingResult *result in [regularExpression matchesInString:self options:optind range:searchRange]) {
-		if (result.range.location == NSNotFound)
-			break; 
-
-		[replacementString replaceCharactersInRange:result.range withString:replacement];
-	}
-
-	return replacementString;
+	[replacementString replaceOccurrencesOfRegex:regex withString:replacement options:options range:searchRange error:error];
+	return [replacementString copy];
 }
 
 #pragma mark -
@@ -1398,6 +1390,24 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 		emojiRange = [self rangeOfEmojiCharactersInRange:NSMakeRange(emojiRange.location + 1, (NSMaxRange(*range) - emojiRange.location - 1))];
 	}
+}
+
+- (void) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement {
+	[self replaceOccurrencesOfRegex:regex withString:replacement options:0 range:NSMakeRange(0, self.length) error:nil];
+}
+
+- (void) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
+	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
+	NSMutableString *replacementString = [self mutableCopy];
+
+	do {
+		NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:searchRange];
+		if (!result || result.range.location == NSNotFound)
+			break;
+
+		searchRange.length += (result.range.length - replacement.length);
+		[replacementString replaceCharactersInRange:result.range withString:replacement];
+	} while (0);
 }
 @end
 
