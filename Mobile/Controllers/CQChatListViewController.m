@@ -1354,9 +1354,12 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 #pragma mark -
 
 - (void) showPreferences:(id) sender {
-	CQPreferencesViewController *preferencesViewController = [[CQPreferencesViewController alloc] init];
+	if ([UIDevice currentDevice].runningOS9)
+		[[UIApplication sharedApplication] openURL:UIApplicationOpenSettingsURLString];
+	else {
+		CQPreferencesViewController *preferencesViewController = [[CQPreferencesViewController alloc] init];
 
-	[[CQColloquyApplication sharedApplication] presentModalViewController:preferencesViewController animated:[UIView areAnimationsEnabled]];
-
+		[[CQColloquyApplication sharedApplication] presentModalViewController:preferencesViewController animated:[UIView areAnimationsEnabled]];
+	}
 }
 @end

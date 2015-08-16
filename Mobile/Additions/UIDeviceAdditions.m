@@ -37,6 +37,19 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 #endif
 }
 
+- (BOOL) isRunningOS9 {
+	static BOOL result;
+	static BOOL cached;
+
+	if (cached)
+		return result;
+
+	result = ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion == 9);
+	cached = YES;
+
+	return result;
+}
+
 - (BOOL) isPhoneModel {
 	static BOOL result;
 	static BOOL cached;
