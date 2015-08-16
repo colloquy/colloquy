@@ -766,24 +766,46 @@ static NSMutableArray *highlightWords;
 
 #pragma mark -
 
-- (UIUserNotificationType) enabledNotificationTypes {
-	return self.currentUserNotificationSettings.types;
+- (UIRemoteNotificationType) enabledRemoteNotificationTypes {
+	if (![UIDevice currentDevice].isSystemEight)
+		return [super enabledRemoteNotificationTypes];
+
+	if (!self.isRegisteredForRemoteNotifications)
+		return UIRemoteNotificationTypeNone;
+
+	UIUserNotificationSettings *currentUserNotificationSettings = self.currentUserNotificationSettings;
+	UIRemoteNotificationType enabledRemoteNotificationTypes = UIRemoteNotificationTypeNone;
+	if (currentUserNotificationSettings.types & UIUserNotificationTypeBadge) enabledRemoteNotificationTypes |= UIRemoteNotificationTypeBadge;
+	if (currentUserNotificationSettings.types & UIUserNotificationTypeSound) enabledRemoteNotificationTypes |= UIRemoteNotificationTypeSound;
+	if (currentUserNotificationSettings.types & UIUserNotificationTypeAlert) enabledRemoteNotificationTypes |= UIRemoteNotificationTypeAlert;
+	return enabledRemoteNotificationTypes;
 }
 
-- (void) registerForNotificationTypes:(UIUserNotificationType) types {
-	[self registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:types categories:nil]];
+- (void) registerForRemoteNotificationTypes:(UIRemoteNotificationType) types {
+	if (![UIDevice currentDevice].isSystemEight) {
+		[super registerForRemoteNotificationTypes:types];
+		return;
+	}
+
+	UIUserNotificationType enabledUserNotificationTypes = UIUserNotificationTypeNone;;
+	if (types & UIRemoteNotificationTypeBadge) enabledUserNotificationTypes |= UIUserNotificationTypeBadge;
+	if (types & UIRemoteNotificationTypeSound) enabledUserNotificationTypes |= UIUserNotificationTypeSound;
+	if (types & UIRemoteNotificationTypeAlert) enabledUserNotificationTypes |= UIUserNotificationTypeAlert;
+
+	UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:enabledUserNotificationTypes categories:nil];
+	[self registerUserNotificationSettings:settings];
 }
 
 - (BOOL) areNotificationBadgesAllowed {
-	return (_deviceToken || [self enabledNotificationTypes] & UIUserNotificationTypeBadge);
+	return (_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeBadge);
 }
 
 - (BOOL) areNotificationSoundsAllowed {
-	return (_deviceToken || [self enabledNotificationTypes] & UIUserNotificationTypeSound);
+	return (_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeSound);
 }
 
 - (BOOL) areNotificationAlertsAllowed {
-	return (_deviceToken || [self enabledNotificationTypes] & UIUserNotificationTypeAlert);
+	return (_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeAlert);
 }
 
 - (void) setApplicationIconBadgeNumber:(NSInteger) applicationIconBadgeNumber {
@@ -807,7 +829,7 @@ static NSMutableArray *highlightWords;
 #if !TARGET_IPHONE_SIMULATOR
 	static BOOL registeredForPush;
 	if (!registeredForPush) {
-		[self registerForNotificationTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert)];
+		[self registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 		registeredForPush = YES;
 	}
 #endif
