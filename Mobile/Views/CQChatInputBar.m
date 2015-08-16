@@ -745,35 +745,38 @@ retry:
 }
 
 - (void) _updateTextTraits {
-//#if ENABLE(SECRETS)
-//	static Class keyboardClass;
-//	if (!keyboardClass) keyboardClass = NSClassFromString(@"UIKeyboardImpl");
-//
-//	NSAssert(keyboardClass, @"UIKeyboardImpl class does not exist.");
-//
-//	__strong id keyboard = [keyboardClass performPrivateSelector:@"activeInstance"];
-//	if (!keyboard)
-//		return;
-//
-//	static SEL takeTextInputTraitsFromDelegateSelector;
-//	if (!takeTextInputTraitsFromDelegateSelector)
-//		takeTextInputTraitsFromDelegateSelector = NSSelectorFromString(@"takeTextInputTraitsFromDelegate");
-//
-//	static SEL takeTextInputTraitsFromSelector;
-//	if (!takeTextInputTraitsFromSelector)
-//		takeTextInputTraitsFromSelector = NSSelectorFromString(@"takeTextInputTraitsFrom:");
-//
-//#pragma clang diagnostic push
-//#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-//
-//	NSAssert([keyboard respondsToSelector:takeTextInputTraitsFromDelegateSelector] || [keyboard respondsToSelector:takeTextInputTraitsFromSelector], @"UIKeyboardImpl does not respond to takeTextInputTraitsFromDelegate or takeTextInputTraitsFrom:.");
-//	if ([keyboard respondsToSelector:takeTextInputTraitsFromDelegateSelector])
-//		[keyboard performSelector:takeTextInputTraitsFromDelegateSelector];
-//	else if ([keyboard respondsToSelector:takeTextInputTraitsFromSelector])
-//		[keyboard performSelector:takeTextInputTraitsFromSelector withObject:_inputView];
-//
-//#pragma clang diagnostic pop
-//#endif
+	if ([UIDevice currentDevice].isSystemEight)
+		return;
+
+#if ENABLE(SECRETS)
+	static Class keyboardClass;
+	if (!keyboardClass) keyboardClass = NSClassFromString(@"UIKeyboardImpl");
+
+	NSAssert(keyboardClass, @"UIKeyboardImpl class does not exist.");
+
+	__strong id keyboard = [keyboardClass performPrivateSelector:@"activeInstance"];
+	if (!keyboard)
+		return;
+
+	static SEL takeTextInputTraitsFromDelegateSelector;
+	if (!takeTextInputTraitsFromDelegateSelector)
+		takeTextInputTraitsFromDelegateSelector = NSSelectorFromString(@"takeTextInputTraitsFromDelegate");
+
+	static SEL takeTextInputTraitsFromSelector;
+	if (!takeTextInputTraitsFromSelector)
+		takeTextInputTraitsFromSelector = NSSelectorFromString(@"takeTextInputTraitsFrom:");
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+
+	NSAssert([keyboard respondsToSelector:takeTextInputTraitsFromDelegateSelector] || [keyboard respondsToSelector:takeTextInputTraitsFromSelector], @"UIKeyboardImpl does not respond to takeTextInputTraitsFromDelegate or takeTextInputTraitsFrom:.");
+	if ([keyboard respondsToSelector:takeTextInputTraitsFromDelegateSelector])
+		[keyboard performSelector:takeTextInputTraitsFromDelegateSelector];
+	else if ([keyboard respondsToSelector:takeTextInputTraitsFromSelector])
+		[keyboard performSelector:takeTextInputTraitsFromSelector withObject:_inputView];
+
+#pragma clang diagnostic pop
+#endif
 }
 
 - (void) _sendText {

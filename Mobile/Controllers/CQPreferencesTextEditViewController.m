@@ -140,4 +140,11 @@
 	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	[self.tableView reloadData];
 }
+
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+	[self.tableView reloadData];
+}
+#endif
 @end

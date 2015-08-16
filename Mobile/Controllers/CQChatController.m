@@ -107,7 +107,9 @@ static CQSoundController *fileTransferSound;
 		return nil;
 
 	_chatNavigationController = [[CQChatNavigationController alloc] init];
-	_chatPresentationController = [[CQChatPresentationController alloc] init];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		_chatPresentationController = [[CQChatPresentationController alloc] init];
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_joinedRoom:) name:MVChatRoomJoinedNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotRoomMessage:) name:MVChatRoomGotMessageNotification object:nil];
@@ -534,16 +536,52 @@ static CQSoundController *fileTransferSound;
 }
 
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
+	if (![UIDevice currentDevice].isPadModel)
+		[[CQColloquyApplication sharedApplication] showColloquies:nil hidingTopViewController:NO];
+
+	BOOL showingVisibleController = (_visibleChatController == controller);
+
 	_nextRoomConnection = nil;
 
-	[_chatNavigationController dismissViewControllerAnimated:animated completion:NULL];
-	[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
+	if ([UIDevice currentDevice].isSystemEight) {
+		[_chatNavigationController dismissViewControllerAnimated:animated completion:NULL];
+		[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
 
-	UINavigationController *navigationController = ((UIViewController *)_visibleChatController).navigationController;
-	if (navigationController == nil) {
-		navigationController = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)controller];
-		[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:navigationController sender:nil];
-	} else if (controller) navigationController.viewControllers = @[ controller ];
+		UINavigationController *navigationController = ((UIViewController *)_visibleChatController).navigationController;
+		if (navigationController == nil) {
+			navigationController = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)controller];
+			[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:navigationController sender:nil];
+		} else if (controller) navigationController.viewControllers = @[ controller ];
+	} else {
+		if (showingVisibleController)
+			return;
+
+		if ([[UIDevice currentDevice] isPadModel]) {
+			_chatPresentationController.topChatViewController = controller;
+
+			[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
+		} else {
+			if (_chatNavigationController.presentedViewController != nil) {
+				[_chatNavigationController popToRootViewControllerAnimated:NO];
+				[_chatNavigationController pushViewController:(UIViewController *)controller animated:NO];
+				[_chatNavigationController dismissViewControllerAnimated:animated completion:NULL];
+			} else {
+				if (!_chatNavigationController.rootViewController)
+					[[CQColloquyApplication sharedApplication] showColloquies:nil];
+
+				if (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController) {
+					_nextController = controller;
+
+					[_chatNavigationController popToRootViewControllerAnimated:animated];
+				} else {
+					[_chatNavigationController popToRootViewControllerAnimated:NO];
+					[_chatNavigationController pushViewController:(UIViewController *)controller animated:animated];
+
+					_nextController = nil;
+				}
+			}
+		}
+	}
 
 	_visibleChatController = controller;
 }
@@ -651,7 +689,7 @@ static CQSoundController *fileTransferSound;
 	NSDictionary *notificationInfo = @{@"controller": controller};
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatControllerRemovedChatViewControllerNotification object:self userInfo:notificationInfo];
 
-	if (_visibleChatController == controller) {
+	if ([[UIDevice currentDevice] isPadModel] && _visibleChatController == controller) {
 		if ([CQChatOrderingController defaultController].chatViewControllers.count) {
 			if (!controllerIndex)
 				controllerIndex = 1;

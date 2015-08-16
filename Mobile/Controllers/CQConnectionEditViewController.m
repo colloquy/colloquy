@@ -551,7 +551,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 }
 
 - (void) deleteConnection:(id) sender {
-	if ([UIDevice currentDevice].isPadModel) {
+	if ([[UIDevice currentDevice] isPadModel]) {
 		UIAlertView *alert = [[CQAlertView alloc] init];
 		alert.delegate = self;
 

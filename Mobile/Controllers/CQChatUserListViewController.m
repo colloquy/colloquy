@@ -77,7 +77,8 @@ static NSString *membersFilteredCountFormat;
 	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissFromDoneButton)];
 	self.navigationItem.rightBarButtonItem = doneButton;
 
-	[self resizeForViewInPopoverUsingTableView:self.tableView];
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -223,7 +224,8 @@ static NSString *membersFilteredCountFormat;
 	if (searchBarFocused)
 		[_searchController setActive:YES animated:YES];
 
-	[self resizeForViewInPopoverUsingTableView:self.tableView];
+	if ([[UIDevice currentDevice] isPadModel]) 
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 - (void) moveUserAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex {
@@ -262,7 +264,8 @@ static NSString *membersFilteredCountFormat;
 	if (searchBarFocused)
 		[_searchController setActive:YES animated:YES];
 
-	[self resizeForViewInPopoverUsingTableView:self.tableView];
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 - (void) updateUserAtIndex:(NSUInteger) index {
@@ -381,8 +384,18 @@ static NSString *membersFilteredCountFormat;
 - (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>) coordinator {
 	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 
-	[self resizeForViewInPopoverUsingTableView:self.tableView];
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
+
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
+	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
+}
+#endif
 
 #pragma mark -
 
@@ -419,7 +432,7 @@ static NSString *membersFilteredCountFormat;
 			cell.imageView.image = [UIImage imageNamed:@"userNormal.png"];
 		}
 
-		if (_listMode == CQChatUserListModeRoom && ![UIDevice currentDevice].isPadModel)
+		if (_listMode == CQChatUserListModeRoom && ![[UIDevice currentDevice] isPadModel])
 			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
 		if (user.status == MVChatUserAwayStatus || user.idleTime >= UserIdleTime) {

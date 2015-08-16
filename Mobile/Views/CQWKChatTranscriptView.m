@@ -476,7 +476,9 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[self resetSoon];
 
 	_allowSingleSwipeGesture = YES;
-	_singleSwipeGestureRecognizers = [[NSMutableArray alloc] init];
+
+	if ([UIDevice currentDevice].isPadModel)
+		_singleSwipeGestureRecognizers = [[NSMutableArray alloc] init];
 
 	for (NSUInteger i = 1; i <= 3; i++) {
 		UISwipeGestureRecognizer *swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGestureRecognized:)];
@@ -486,7 +488,8 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 		[self addGestureRecognizer:swipeGestureRecognizer];
 
-		[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
+		if ([UIDevice currentDevice].isPadModel)
+			[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
 
 		swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGestureRecognized:)];
 		swipeGestureRecognizer.numberOfTouchesRequired = i;
@@ -495,7 +498,8 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 		[self addGestureRecognizer:swipeGestureRecognizer];
 
-		[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
+		if ([UIDevice currentDevice].isPadModel)
+			[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
 	}
 
 	UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureRecognizerRecognized:)];

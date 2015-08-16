@@ -109,7 +109,7 @@ static BOOL showsChatIcons;
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_bouncerAdded:) name:CQConnectionsControllerAddedBouncerSettingsNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_bouncerRemoved:) name:CQConnectionsControllerRemovedBouncerSettingsNotification object:nil];
 
-	if ([UIDevice currentDevice].isPadModel) {
+	if ([[UIDevice currentDevice] isPadModel]) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_updateUnreadMessages:) name:CQChatViewControllerUnreadMessagesUpdatedNotification object:nil];
 	}
@@ -675,10 +675,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	self.tableView.rowHeight = 62.;
 
 	@synchronized([CQChatOrderingController defaultController]) {
-		[self resizeForViewInPopoverUsingTableView:self.tableView];
-		self.tableView.allowsSelectionDuringEditing = YES;
-
-		if ([UIDevice currentDevice].isPadModel) {
+		if ([[UIDevice currentDevice] isPadModel]) {
+			[self resizeForViewInPopoverUsingTableView:self.tableView];
+			self.tableView.allowsSelectionDuringEditing = YES;
 			self.clearsSelectionOnViewWillAppear = NO;
 		}
 	}
@@ -717,8 +716,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		}
 	}
 
-	if (defaultToEditing)
-		[self setEditing:defaultToEditing animated:YES];
+	if (defaultToEditing && ![UIDevice currentDevice].isPadModel)
+		[self setEditing:YES animated:YES];
 
 	[super viewDidAppear:animated];
 }
@@ -741,8 +740,18 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>) coordinator {
 	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 
-	[self resizeForViewInPopoverUsingTableView:self.tableView];
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
+
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
+	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
+}
+#endif
 
 #pragma mark -
 
@@ -769,7 +778,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 		}
 
-		[self resizeForViewInPopoverUsingTableView:self.tableView];
+		if ([[UIDevice currentDevice] isPadModel])
+			[self resizeForViewInPopoverUsingTableView:self.tableView];
 	}
 
 	[self _refreshIndexPathForChatControllersCache];
@@ -1273,7 +1283,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	// Work around a bug on iOS 8(.1?) (on iPad?) where the tableview thinks the section header at the top of the screen
 	// is scrolled because the tableview has been scrolled to the point where there are rows behind it
 	NSIndexPath *firstVisibleRowIndexPath = tableView.indexPathsForVisibleRows.firstObject;
-	if (section == firstVisibleRowIndexPath.section && [UIDevice currentDevice].isPadModel)
+	if (section == firstVisibleRowIndexPath.section && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
 		presentationPoint.y = 86.;
 	else presentationPoint.y = CGRectGetMidY(converted);
 
@@ -1283,15 +1293,18 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 #pragma mark -
 
 - (void) tableView:(UITableView *) tableView willBeginEditingRowAtIndexPath:(NSIndexPath *) indexPath {
-	_previousSelectedChatViewController = chatControllerForIndexPath([self.tableView indexPathForSelectedRow]);
+	if ([[UIDevice currentDevice] isPadModel])
+		_previousSelectedChatViewController = chatControllerForIndexPath([self.tableView indexPathForSelectedRow]);
 }
 
 - (void) tableView:(UITableView *) tableView didEndEditingRowAtIndexPath:(NSIndexPath *) indexPath {
-	indexPath = indexPathForChatController(_previousSelectedChatViewController, self.editing);
-	if (indexPath)
-		[self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+	if ([[UIDevice currentDevice] isPadModel] && _previousSelectedChatViewController) {
+		indexPath = indexPathForChatController(_previousSelectedChatViewController, self.editing);
+		if (indexPath)
+			[self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 
-	_previousSelectedChatViewController = nil;
+		_previousSelectedChatViewController = nil;
+	}
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {

@@ -286,7 +286,7 @@ static BOOL pushAvailable = YES;
 }
 
 - (void) deleteBouncer:(id) sender {
-	if ([UIDevice currentDevice].isPadModel) {
+	if ([[UIDevice currentDevice] isPadModel]) {
 		UIAlertView *alert = [[CQAlertView alloc] init];
 		alert.delegate = self;
 

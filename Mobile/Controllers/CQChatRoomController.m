@@ -218,7 +218,7 @@ static CQShowRoomTopic showRoomTopic;
 		_currentUserListViewController.room = self.room;
 	}
 
-	if ([UIDevice currentDevice].isPadModel) {
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
 		if (!_currentUserListPopoverController) {
 			_currentUserListPopoverController = [[UIPopoverController alloc] initWithContentViewController:_currentUserListViewController];
 			_currentUserListPopoverController.delegate = self;
@@ -254,7 +254,7 @@ static CQShowRoomTopic showRoomTopic;
 	sheet.delegate = self;
 	sheet.tag = JoinActionSheet;
 
-	if ([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation))
+	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		sheet.title = self.room.displayName;
 
 	if (self.available)
@@ -322,7 +322,7 @@ static CQShowRoomTopic showRoomTopic;
 	actionSheet.delegate = self;
 	actionSheet.tag = ActionsActionSheet;
 
-	if ([UIDevice currentDevice].isPadModel && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation))
+	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		actionSheet.title = self.user.displayName;
 
 	[actionSheet addButtonWithTitle:NSLocalizedString(@"Recently Sent Messages", @"Recently Sent Messages button title")];
@@ -1343,7 +1343,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	[self.navigationItem setRightBarButtonItem:item animated:animated];
 
-	if (_active)
+	if (_active && [[UIDevice currentDevice] isPadModel])
 		[[CQChatController defaultController].chatPresentationController updateToolbarAnimated:YES];
 
 }
