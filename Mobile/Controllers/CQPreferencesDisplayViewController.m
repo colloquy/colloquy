@@ -60,16 +60,19 @@ static NSString *const CQPSListTypeFont = @"Font";
 }
 
 - (instancetype) initWithRootPlist {
-	return [self initWithPlistNamed:@"Root"];
+	if (!(self = [super initWithStyle:UITableViewStylePlain]))
+		return nil;
+
+	[self CQPreferencesDisplayViewController_commonInitWithPlist:@"Root"];
+
+	return self;
 }
 
 - (instancetype) initWithPlistNamed:(NSString *) plist {
-	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
+	if (!(self = [super initWithStyle:UITableViewStylePlain]))
 		return nil;
 
-	_preferences = [[NSMutableArray alloc] init];
-
-	[self performSelectorInBackground:@selector(_readSettingsFromPlist:) withObject:plist];
+	[self CQPreferencesDisplayViewController_commonInitWithPlist:plist];
 
 	return self;
 }
@@ -87,6 +90,12 @@ static NSString *const CQPSListTypeFont = @"Font";
 - (instancetype) initWithCoder:(NSCoder *) aDecoder {
 	NSAssert(NO, @"use -[CQPreferencesDisplayViewController initWithPlistNamed:] instead");
 	return nil;
+}
+
+- (void)CQPreferencesDisplayViewController_commonInitWithPlist:(NSString *)plist {
+	_preferences = [[NSMutableArray alloc] init];
+
+	[self _readSettingsFromPlist:plist];
 }
 
 #pragma mark -
