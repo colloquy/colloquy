@@ -316,7 +316,7 @@ static NSMutableArray *highlightWords;
 		[UIFont cq_loadFontWithName:fontName withCompletionHandler:NULL];
 
 	if ([[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"] == 600.)
-		[[NSUserDefaults standardUserDefaults] setObject:300 forKey:@"CQMultitaskingTimeout"];
+		[[NSUserDefaults standardUserDefaults] setDouble:300. forKey:@"CQMultitaskingTimeout"];
 
 	_deviceToken = [[CQSettingsController settingsController] stringForKey:@"CQPushDeviceToken"];
 
