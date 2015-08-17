@@ -196,6 +196,7 @@
 		92F77F641A3ECAE7005667FE /* CQChatInputStyleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F77F631A3ECAE7005667FE /* CQChatInputStyleViewController.m */; };
 		92F99FB819D14034004A7A22 /* UIViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F99FB719D14034004A7A22 /* UIViewAdditions.m */; };
 		9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
+		B6C921061B812F350049622C /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B6C921051B812F350049622C /* libc++.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -527,6 +528,7 @@
 		9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIImageAdditions.m; path = Mobile/Additions/UIImageAdditions.m; sourceTree = "<group>"; };
 		97F85EBC0F2713CA008486E1 /* CQFileTransferTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQFileTransferTableCell.h; sourceTree = "<group>"; };
 		97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQFileTransferTableCell.m; sourceTree = "<group>"; };
+		B6C921051B812F350049622C /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -534,6 +536,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6C921061B812F350049622C /* libc++.dylib in Frameworks */,
 				19C7F58B1B26C1E3000F5AAE /* MobileCoreServices.framework in Frameworks */,
 				926678FB19C03FA700CCE5BE /* WebKit.framework in Frameworks */,
 				1CBC07CE0F0741E400EEBCFB /* SystemConfiguration.framework in Frameworks */,
@@ -1051,6 +1054,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B6C921051B812F350049622C /* libc++.dylib */,
 				19C7F58A1B26C1E3000F5AAE /* MobileCoreServices.framework */,
 				19C7F5881B26BE04000F5AAE /* CoreSpotlight.framework */,
 				926678FA19C03FA700CCE5BE /* WebKit.framework */,
@@ -1153,6 +1157,7 @@
 				ORGANIZATIONNAME = "Colloquy Project";
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
+						DevelopmentTeam = 37EUQ42C7J;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 0;
@@ -1272,7 +1277,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
-			shellScript = "if [[ \"$CONFIGURATION\" == \"Distribution\" ]]; then\n  KEYCHAINS=`security list-keychains`\n\n  if ! [[ \"$KEYCHAINS\" =~ \"colloquy\" ]]; then\n    open `pwd`/Shared/Resources/colloquy.keychain\n  fi\n\n  POCKET_IPHONE_KEY=`security find-generic-password -wa pocket-iphone`\n  perl -p -i -e \"s/Pocket_iPhone_Consumer_Key/$POCKET_IPHONE_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  POCKET_IPAD_KEY=`security find-generic-password -wa pocket-ipad`\n  perl -p -i -e \"s/Pocket_iPad_Consumer_Key/$POCKET_IPAD_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  HOCKEYAPP_IDENTIFIER=`security find-generic-password -wa hockeyapp`\n  perl -p -i -e \"s/Hockeyapp_App_Identifier/$HOCKEYAPP_IDENTIFIER/g\" \"$SRCROOT/Mobile/Controllers/CQColloquyApplication.m\"\nfi\n ";
+			shellScript = "if [[ \"$CONFIGURATION\" == \"Distribution\" ]]; then\n  KEYCHAINS=`security list-keychains`\n\n  if ! [[ \"$KEYCHAINS\" =~ \"colloquy\" ]]; then\n    open Shared/Resources/colloquy.keychain\n  fi\n\n  POCKET_IPHONE_KEY=`security find-generic-password -wa pocket-iphone`\n  perl -p -i -e \"s/Pocket_iPhone_Consumer_Key/$POCKET_IPHONE_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  POCKET_IPAD_KEY=`security find-generic-password -wa pocket-ipad`\n  perl -p -i -e \"s/Pocket_iPad_Consumer_Key/$POCKET_IPAD_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  HOCKEYAPP_IDENTIFIER=`security find-generic-password -wa hockeyapp`\n  perl -p -i -e \"s/Hockeyapp_App_Identifier/$HOCKEYAPP_IDENTIFIER/g\" \"$SRCROOT/Mobile/Controllers/CQColloquyApplication.m\"\nfi\n ";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1450,6 +1455,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1481,7 +1488,7 @@
 					"$(SDKROOT)/usr/lib/system",
 				);
 				PRODUCT_NAME = Colloquy;
-				PROVISIONING_PROFILE = "df6f6b91-55c0-4c60-b88a-229137d57125";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Distribution;
 		};
@@ -1492,6 +1499,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1523,6 +1532,7 @@
 					"$(SDKROOT)/usr/lib/system",
 				);
 				PRODUCT_NAME = Colloquy;
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -1533,6 +1543,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1564,6 +1576,7 @@
 					"$(SDKROOT)/usr/lib/system",
 				);
 				PRODUCT_NAME = Colloquy;
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

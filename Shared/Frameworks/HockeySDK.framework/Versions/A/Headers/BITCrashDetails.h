@@ -29,7 +29,7 @@
 #import <Foundation/Foundation.h>
 
 /**
- *  Provides details about the crash that occured in the previous app session
+ *  Provides details about the crash that occurred in the previous app session
  */
 @interface BITCrashDetails : NSObject
 
@@ -64,7 +64,7 @@
 @property (nonatomic, readonly, strong) NSDate *appStartTime;
 
 /**
- *  Date and time the crash occured, nil if unknown
+ *  Date and time the crash occurred, nil if unknown
  */
 @property (nonatomic, readonly, strong) NSDate *crashTime;
 
@@ -81,9 +81,22 @@
 @property (nonatomic, readonly, strong) NSString *osBuild;
 
 /**
+ *  CFBundleShortVersionString value of the app that crashed
+ *
+ *  Can be `nil` if the crash was captured with an older version of the SDK
+ *  or if the app doesn't set the value.
+ */
+@property (nonatomic, readonly, strong) NSString *appVersion;
+
+/**
  *  CFBundleVersion value of the app that crashed
  */
 @property (nonatomic, readonly, strong) NSString *appBuild;
+
+/**
+ *  Identifier of the app process that crashed
+ */
+@property (nonatomic, readonly, assign) NSUInteger appProcessIdentifier;
 
 /**
  Indicates if the app was killed while being in foreground from the iOS

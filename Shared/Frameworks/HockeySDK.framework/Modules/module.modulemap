@@ -3,4 +3,10 @@ framework module HockeySDK {
   
   export *
   module * { export * }
+  
+  link framework "Foundation"
+  link framework "Security"
+  link framework "SystemConfiguration"
+  link framework "UIKit"
+  link "c++"
 }

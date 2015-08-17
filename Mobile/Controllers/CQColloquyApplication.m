@@ -170,6 +170,8 @@ static NSMutableArray *highlightWords;
 	// Hacky check to make sure the identifier was replaced with a string that isn't ""
 	if (![hockeyappIdentifier hasPrefix:@"Hockeyapp"]) {
 		[[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyappIdentifier delegate:self];
+		[BITHockeyManager sharedHockeyManager].disableInstallTracking = YES;
+
 		[[BITHockeyManager sharedHockeyManager] startManager];
 	}
 
