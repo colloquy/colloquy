@@ -1,4 +1,4 @@
 #import "NSPreferences.h"
 
-@interface JVPreferencesController : NSPreferences {}
+@interface JVPreferencesController : NSPreferences
 @end
