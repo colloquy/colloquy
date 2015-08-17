@@ -8,32 +8,21 @@
 		dateFormatter.dateFormat = format;
 
 		[NSThread currentThread].threadDictionary[format] = dateFormatter;
-
-		MVAutorelease(dateFormatter);
 	}
 
 	return [dateFormatter stringFromDate:date];
 }
 
 + (NSString *) formattedStringWithDate:(NSDate *) date dateStyle:(int) dateStyle timeStyle:(int) timeStyle {
-	NSMutableDictionary *dateFormatters = [NSThread currentThread].threadDictionary[@"dateFormatters"];
-	if (!dateFormatters) {
-		dateFormatters = [NSMutableDictionary dictionary];
-
-		[NSThread currentThread].threadDictionary[@"dateFormatters"] = dateFormatters;
-	}
-
 	NSString *key = [NSString stringWithFormat:@"%d-%d", dateStyle, timeStyle];
-	NSDateFormatter *dateFormatter = dateFormatters[key];
+	NSDateFormatter *dateFormatter = [NSThread currentThread].threadDictionary[key];
 
 	if (!dateFormatter) {
 		dateFormatter = [[NSDateFormatter alloc] init];
 		dateFormatter.dateStyle = dateStyle;
 		dateFormatter.timeStyle = timeStyle;
 
-		dateFormatters[key] = dateFormatter;
-
-		MVAutorelease(dateFormatter);
+		[NSThread currentThread].threadDictionary[key] = dateFormatter;
 	}
 
 	return [dateFormatter stringFromDate:date];

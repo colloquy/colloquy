@@ -779,7 +779,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		MVSafeCopyAssign( _awayMessage, message );
 
 		NSData *msg = [[self class] _flattenedIRCDataForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
-		[self sendRawMessageImmediatelyWithComponents:@"AWAY :", [message string], nil];
+		[self sendRawMessageImmediatelyWithComponents:@"AWAY :", message, nil];
 
 		[[self localUser] _setAwayStatusMessage:msg];
 		[[self localUser] _setStatus:MVChatUserAwayStatus];

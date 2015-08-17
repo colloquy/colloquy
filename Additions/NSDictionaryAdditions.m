@@ -1,4 +1,5 @@
 #import "NSDictionaryAdditions.h"
+#import "NSStringAdditions.h"
 
 @implementation NSDictionary (NSDictionaryAdditions)
 + (NSDictionary *) dictionaryWithKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary {
