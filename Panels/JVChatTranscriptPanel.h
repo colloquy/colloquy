@@ -1,6 +1,5 @@
 #import "JVChatWindowController.h"
 
-@class AGRegex;
 @class JVStyleView;
 @class MVMenuButton;
 @class JVStyle;
@@ -28,7 +27,7 @@ extern NSString *JVToolbarQuickSearchItemIdentifier;
 	NSMenu *_emoticonMenu;
 
 	NSString *_searchQuery;
-	AGRegex *_searchQueryRegex;
+	NSRegularExpression *_searchQueryRegex;
 }
 - (id) initWithTranscript:(NSString *) filename;
 

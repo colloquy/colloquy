@@ -18,8 +18,6 @@
 #import "NSURLAdditions.h"
 #import "NSDateAdditions.h"
 
-#import <AGRegex/AGRegex.h>
-
 NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
 NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
@@ -258,11 +256,12 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 - (void) quickSearchMatchMessage:(JVChatMessage *) message {
 	if( ! message || ! _searchQueryRegex ) return;
+	NSString *bodyAsPlainText = [message bodyAsPlainText];
 	NSColor *markColor = [NSColor orangeColor];
-	AGRegexMatch *match = [_searchQueryRegex findInString:[message bodyAsPlainText]];
-	if( match ) {
+	NSArray *matches = [_searchQueryRegex matchesInString:bodyAsPlainText options:NSMatchingCompleted range:NSMakeRange( 0, bodyAsPlainText.length )];
+	for (NSTextCheckingResult *match in matches) {
 		[display markScrollbarForMessage:message usingMarkIdentifier:@"quick find" andColor:markColor];
-		[display highlightString:[match group] inMessage:message];
+		[display highlightString:[bodyAsPlainText substringWithRange:match.range] inMessage:message];
 	}
 }
 
@@ -276,7 +275,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		// we simply convert this to a regex and not allow patterns. later we will allow user supplied patterns
 		NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 		NSString *pattern = [_searchQuery stringByEscapingCharactersInSet:escapeSet];
-		_searchQueryRegex = [[AGRegex allocWithZone:nil] initWithPattern:pattern options:AGRegexCaseInsensitive];
+		_searchQueryRegex = [NSRegularExpression regularExpressionWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
 	}
 
 	[self _refreshSearch];

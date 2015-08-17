@@ -3,6 +3,7 @@
 // Copyright Graham Booker and Timothy Hatcher. All rights reserved.
 
 #import "NSAttributedStringMoreAdditions.h"
+#import "NSRegularExpressionAdditions.h"
 
 #import <libxml/tree.h>
 
@@ -144,8 +145,8 @@ static NSString *parseCSSStyleAttribute( const char *style, NSMutableDictionary 
 static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionary *currentAttributes, NSURL *base, BOOL first ) {
 	if( ! node || ! node -> name || ! node -> name[0] ) return nil;
 
-	NSMutableAttributedString *ret = [[NSMutableAttributedString new] autorelease];
-	NSMutableDictionary *newAttributes = [[currentAttributes mutableCopy] autorelease];
+	NSMutableAttributedString *ret = [NSMutableAttributedString new];
+	NSMutableDictionary *newAttributes = [currentAttributes mutableCopy];
 	xmlNodePtr child = node -> children;
 	BOOL skipTag = NO;
 
@@ -190,7 +191,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		break;
 	case 'b':
 		if( ! strcmp( (char *) node -> name, "br" ) ) {
-			return [[[NSMutableAttributedString alloc] initWithString:@"\n" attributes:newAttributes] autorelease]; // known to have no content, return now
+			return [[NSMutableAttributedString alloc] initWithString:@"\n" attributes:newAttributes]; // known to have no content, return now
 		} else if( ! strcmp( (char *) node -> name, "b" ) ) {
 			NSFont *font = [[NSFontManager sharedFontManager] convertFont:[newAttributes objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask];
 			if( font ) {
@@ -204,7 +205,6 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 			NSAttributedString *newStr = [[NSAttributedString alloc] initWithString:@"\n\n" attributes:newAttributes];
 			if( newStr ) {
 				[ret appendAttributedString:newStr];
-				[newStr release];
 			}
 		}
 		break;
@@ -235,7 +235,6 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 				xmlChar *content = child -> content;
 				NSAttributedString *new = [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(char *) content] attributes:newAttributes];
 				[ret appendAttributedString:new];
-				[new release];
 			} else [ret appendAttributedString:parseXHTMLTreeNode( child, newAttributes, base, NO )];
 			child = child -> next;
 		}
@@ -248,7 +247,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 			xmlNodeDump( buf, node -> doc, node, 0, 0 );
 
 			NSData *xmlData = [NSData dataWithBytesNoCopy:buf -> content length:buf -> use freeWhenDone:NO];
-			NSString *string = [[[NSString alloc] initWithData:xmlData encoding:NSUTF8StringEncoding] autorelease];
+			NSString *string = [[NSString alloc] initWithData:xmlData encoding:NSUTF8StringEncoding];
 
 			[front appendString:string];
 			[newAttributes setObject:front forKey:@"XHTMLStart"];
@@ -258,7 +257,6 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 
 			NSAttributedString *new = [[NSAttributedString alloc] initWithString:attachment attributes:newAttributes];
 			[ret appendAttributedString:new];
-			[new release];
 
 			xmlBufferFree( buf );
 		} else if( first ) {
@@ -274,11 +272,11 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 
 @implementation NSAttributedString (NSAttributedStringXMLAdditions)
 + (id) attributedStringWithXHTMLTree:(void *) node baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
-	return [[[self alloc] initWithXHTMLTree:node baseURL:base defaultAttributes:attributes] autorelease];
+	return [[self alloc] initWithXHTMLTree:node baseURL:base defaultAttributes:attributes];
 }
 
 + (id) attributedStringWithXHTMLFragment:(NSString *) fragment baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
-	return [[[self alloc] initWithXHTMLFragment:fragment baseURL:base defaultAttributes:attributes] autorelease];
+	return [[self alloc] initWithXHTMLFragment:fragment baseURL:base defaultAttributes:attributes];
 }
 
 - (id) initWithXHTMLTree:(void *) node baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
@@ -299,32 +297,37 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		return self;
 	}
 
-	[self autorelease];
 	return nil;
 }
 @end
-
+	
 #pragma mark -
 
 @implementation NSMutableAttributedString (NSMutableAttributedStringHTMLAdditions)
 - (void) makeLinkAttributesAutomatically {
 	// catch well-formed urls like "http://www.apple.com", "www.apple.com" or "irc://irc.javelin.cc"
-	AGRegex *regex = [AGRegex regexWithPattern:@"\\b(?:[a-zA-Z][a-zA-Z0-9+.-]{2,6}:(?://){0,1}|www\\.)[\\p{L}\\p{N}$\\-_+*'=\\|/\\\\)}\\]%@&#~,:;.!?][\\p{L}\\p{N}$\\-_+*'=\\|/\\\\(){}[\\]%@&#~,:;.!?]{3,}[\\p{L}\\p{N}$\\-_+*=\\|/\\\\({%@&#~]" options:AGRegexCaseInsensitive];
+	static NSDataDetector *linkDataDetector = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		linkDataDetector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
+	});
 
-	for( AGRegexMatch *match in [regex findAllInString:[self string]] ) {
+	for ( NSTextCheckingResult *match in [linkDataDetector matchesInString:[self string] options:NSMatchingCompleted range:NSMakeRange( 0, [self string].length )]) {
 		NSRange foundRange = [match range];
 		NSString *currentLink = [self attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
-		if( ! currentLink ) [self addAttribute:NSLinkAttributeName value:( [[match group] hasCaseInsensitivePrefix:@"www."] ? [@"http://" stringByAppendingString:[match group]] : [match group] ) range:foundRange];
+		NSString *contents = [[self string] substringWithRange:foundRange];
+		if( ! currentLink ) [self addAttribute:NSLinkAttributeName value:( [contents hasCaseInsensitivePrefix:@"www."] ? [@"http://" stringByAppendingString:contents] : contents ) range:foundRange];
 	}
 
 	// catch well-formed email addresses like "timothy@hatcher.name" or "timothy@javelin.cc"
-	regex = [AGRegex regexWithPattern:@"[\\p{L}\\p{N}.+\\-_]+@(?:[\\p{L}\\-_]+\\.)+[\\w]{2,}" options:AGRegexCaseInsensitive];
+	NSRegularExpression *emailRegex = [NSRegularExpression cachedRegularExpressionWithPattern:@"[\\p{L}\\p{N}.+\\-_]+@(?:[\\p{L}\\-_]+\\.)+[\\w]{2,}" options:NSRegularExpressionCaseInsensitive error:nil];
 
-	for( AGRegexMatch *match in [regex findAllInString:[self string]] ) {
+	for( NSTextCheckingResult *match in [emailRegex matchesInString:[self string] options:NSMatchingCompleted range:NSMakeRange( 0, [self string].length )] ) {
 		NSRange foundRange = [match range];
 		NSString *currentLink = [self attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
 		if( ! currentLink ) {
-			NSString *link = [NSString stringWithFormat:@"mailto:%@", [match group]];
+			NSString *contents = [[self string] substringWithRange:foundRange];
+			NSString *link = [NSString stringWithFormat:@"mailto:%@", contents];
 			[self addAttribute:NSLinkAttributeName value:link range:foundRange];
 		}
 	}

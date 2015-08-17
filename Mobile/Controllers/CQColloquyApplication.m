@@ -11,11 +11,11 @@
 #import "CQWelcomeController.h"
 
 #import "NSNotificationAdditions.h"
+#import "NSRegularExpressionAdditions.h"
 #import "UIApplicationAdditions.h"
 #import "UIFontAdditions.h"
 
 #import <HockeySDK/HockeySDK.h>
-#import "RegexKitLite.h"
 
 typedef NS_ENUM(NSInteger, CQSidebarOrientation) {
 	CQSidebarOrientationNone,
@@ -91,7 +91,9 @@ static NSMutableArray *highlightWords;
 
 			NSString *highlightWordsString = [[CQSettingsController settingsController] stringForKey:@"CQHighlightWords"];
 			if (highlightWordsString.length) {
-				[highlightWords addObjectsFromArray:[highlightWordsString cq_componentsMatchedByRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" capture:1]];
+				NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" options:NSRegularExpressionCaseInsensitive error:nil];
+				for (NSTextCheckingResult *result in [regex matchesInString:highlightWordsString options:(NSMatchingOptions)NSMatchingReportCompletion range:NSMakeRange(0, highlightWordsString.length)])
+					[highlightWords addObject:[highlightWordsString substringWithRange:[result rangeAtIndex:1]]];
 
 				highlightWordsString = [highlightWordsString stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" withString:@""];
 

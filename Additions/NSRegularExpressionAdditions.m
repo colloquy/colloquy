@@ -25,9 +25,14 @@ NS_ASSUME_NONNULL_BEGIN
 	if (regularExpression)
 		return regularExpression;
 
-	regularExpression = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:nil];
-
-	dangerousCache[key] = regularExpression;
+	NSError *internalError = nil;
+	regularExpression = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:&internalError];
+	if (!regularExpression) {
+		NSLog(@"%@", internalError);
+		if (error) *error = internalError;
+	} else {
+		dangerousCache[key] = regularExpression;
+	}
 
 	return regularExpression;
 }

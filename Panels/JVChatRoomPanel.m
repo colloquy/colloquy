@@ -395,10 +395,11 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 - (void) sendMessage:(JVMutableChatMessage *) message {
 	[super sendMessage:message];
 
-	AGRegex *regex = [AGRegex regexWithPattern:@"^(.*?)[:;,-]" options:AGRegexCaseInsensitive];
-	AGRegexMatch *match = [regex findInString:[message bodyAsPlainText]];
-	if( [match count] ) {
-		JVChatRoomMember *mbr = [self firstChatRoomMemberWithName:[match groupAtIndex:1]];
+	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"^(.*?)[:;,-]" options:NSRegularExpressionCaseInsensitive error:nil];
+	NSString *bodyAsPlainText = [message bodyAsPlainText];
+	NSTextCheckingResult *match = [regex firstMatchInString:bodyAsPlainText options:NSMatchingCompleted range:NSMakeRange( 0, bodyAsPlainText.length) ];
+	if( match && [match numberOfRanges] ) {
+		JVChatRoomMember *mbr = [self firstChatRoomMemberWithName:[bodyAsPlainText substringWithRange:[match rangeAtIndex:1]]];
 		if( mbr ) [_nextMessageAlertMembers addObject:mbr];
 	}
 }

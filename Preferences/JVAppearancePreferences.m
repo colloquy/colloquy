@@ -6,6 +6,8 @@
 #import "JVColorWellCell.h"
 #import "JVDetailCell.h"
 #import "NSBundleAdditions.h"
+#import "NSRegularExpressionAdditions.h"
+#import "NSStringAdditions.h"
 
 #import <objc/objc-runtime.h>
 
@@ -416,22 +418,23 @@
 		NSUInteger count = 0;
 		for( NSString *style in sarray ) {
 			// Parse all the selectors in the style.
-			AGRegex *regex = [AGRegex regexWithPattern:@"(\\S.*?)\\s*\{([^\\}]*?)\\}" options:( AGRegexCaseInsensitive | AGRegexDotAll )];
+			NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(\\S.*?)\\s*\{([^\\}]*?)\\}" options:(NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators) error:nil];
 
 			NSMutableArray *styleLayout = [NSMutableArray array];
 			[styleLayouts addObject:styleLayout];
 
 			// Step through the selectors.
-			for( AGRegexMatch *selector in [regex findAllInString:style] ) {
+			for( NSTextCheckingResult *selector in [regex matchesInString:style options:NSMatchingCompleted range:NSMakeRange( 0, style.length )] ) {
 				// Parse all the properties for the selector.
-				regex = [AGRegex regexWithPattern:@"(\\S*?):\\s*(.*?);" options:( AGRegexCaseInsensitive | AGRegexDotAll )];
+				regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(\\S*?):\\s*(.*?);" options:(NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators) error:nil];
 
 				// Step through all the properties and build a dictionary on this selector/property/value combo.
-				for( AGRegexMatch *property in [regex findAllInString:[selector groupAtIndex:2]] ) {
+				NSString *matchedText = [style substringWithRange:[selector rangeAtIndex:2]];
+				for( NSTextCheckingResult *property in [regex matchesInString:matchedText options:NSMatchingCompleted range:NSMakeRange( 0, matchedText.length )] ) {
 					NSMutableDictionary *propertyInfo = [NSMutableDictionary dictionary];
-					NSString *p = [property groupAtIndex:1];
-					NSString *s = [selector groupAtIndex:1];
-					NSString *v = [property groupAtIndex:2];
+					NSString *p = [matchedText substringWithRange:[property rangeAtIndex:1]];
+					NSString *s = [style substringWithRange:[selector rangeAtIndex:1]];
+					NSString *v = [matchedText substringWithRange:[property rangeAtIndex:2]];
 
 					[propertyInfo setObject:s forKey:@"selector"];
 					[propertyInfo setObject:p forKey:@"property"];
@@ -442,8 +445,7 @@
 					NSString *value = [self valueOfProperty:p forSelector:s inStyle:css];
 					if( [[info objectForKey:@"type"] isEqualToString:@"list"] ) {
 						// Strip the "!important" flag to compare correctly.
-						regex = [AGRegex regexWithPattern:@"\\s*!\\s*important\\s*$" options:AGRegexCaseInsensitive];
-						NSString *compare = [regex replaceWithString:@"" inString:v];
+						NSString *compare = [v stringByReplacingOccurrencesOfRegex:@"\\s*!\\s*important\\s*$" withString:@"" options:NSRegularExpressionCaseInsensitive range:NSMakeRange( 0, v.length ) error:nil];
 
 						// Try to pick which option the list needs to select.
 						if( ! [value isEqualToString:compare] ) { // Didn't match.
@@ -452,38 +454,32 @@
 						} else [info setObject:[NSNumber numberWithUnsignedLong:count] forKey:@"value"]; // Matched for now.
 					} else if( [[info objectForKey:@"type"] isEqualToString:@"color"] ) {
 						if( value && [v rangeOfString:@"%@"].location != NSNotFound ) {
-							// Strip the "!important" flag to compare correctly.
-							regex = [AGRegex regexWithPattern:@"\\s*!\\s*important\\s*$" options:AGRegexCaseInsensitive];
-
 							// Replace %@ with (.*) so we can pull the color value out.
-							NSString *expression = [regex replaceWithString:@"" inString:v];
+							NSString *expression = [v stringByReplacingOccurrencesOfRegex:@"\\s*!\\s*important\\s*$" withString:@"" options:NSRegularExpressionCaseInsensitive range:NSMakeRange( 0, v.length ) error:nil];
 							expression = [expression stringByEscapingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"]];
 							expression = [NSString stringWithFormat:expression, @"(.*)"];
 
 							// Store the color value if we found one.
-							regex = [AGRegex regexWithPattern:expression options:AGRegexCaseInsensitive];
-							AGRegexMatch *vmatch = [regex findInString:value];
-							if( [vmatch count] ) [info setObject:[vmatch groupAtIndex:1] forKey:@"value"];
+							regex = [NSRegularExpression cachedRegularExpressionWithPattern:expression options:NSRegularExpressionCaseInsensitive error:nil];
+							NSTextCheckingResult *vmatch = [regex firstMatchInString:value options:NSMatchingCompleted range:NSMakeRange( 0, value.length )];
+							if( [vmatch numberOfRanges] ) [info setObject:[value substringWithRange:[vmatch rangeAtIndex:1]] forKey:@"value"];
 						}
 					} else if( [[info objectForKey:@"type"] isEqualToString:@"file"] ) {
 						if( value && [v rangeOfString:@"%@"].location != NSNotFound ) {
-							// Strip the "!important" flag to compare correctly.
-							regex = [AGRegex regexWithPattern:@"\\s*!\\s*important\\s*$" options:AGRegexCaseInsensitive];
-
 							[info setObject:[NSNumber numberWithUnsignedLong:0] forKey:@"value"];
 							[info setObject:[NSNumber numberWithUnsignedLong:0] forKey:@"default"];
 
 							// Replace %@ with (.*) so we can pull the path value out.
-							NSString *expression = [regex replaceWithString:@"" inString:v];
+							NSString *expression = [v stringByReplacingOccurrencesOfRegex:@"\\s*!\\s*important\\s*$" withString:@"" options:NSRegularExpressionCaseInsensitive range:NSMakeRange( 0, v.length ) error:nil];
 							expression = [expression stringByEscapingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"]];
 							expression = [NSString stringWithFormat:expression, @"(.*)"];
 
 							// Store the path value if we found one.
-							regex = [AGRegex regexWithPattern:expression options:AGRegexCaseInsensitive];
-							AGRegexMatch *vmatch = [regex findInString:value];
-							if( [vmatch count] ) {
-								if( ! [[vmatch groupAtIndex:1] isEqualToString:@"none"] )
-									[info setObject:[vmatch groupAtIndex:1] forKey:@"path"];
+							regex = [NSRegularExpression cachedRegularExpressionWithPattern:expression options:NSRegularExpressionCaseInsensitive error:nil];
+							NSTextCheckingResult *vmatch = [regex firstMatchInString:value options:NSMatchingCompleted range:NSMakeRange( 0, value.length )];
+							if( [vmatch numberOfRanges] ) {
+								if( ! [[value substringWithRange:[vmatch rangeAtIndex:1]] isEqualToString:@"none"] )
+									[info setObject:[value substringWithRange:[vmatch rangeAtIndex:1]] forKey:@"path"];
 								else [info removeObjectForKey:@"path"];
 								if( [info objectForKey:@"cell"] )
 									[self buildFileMenuForCell:[info objectForKey:@"cell"] andOptions:info];
@@ -508,30 +504,31 @@
 	selector = [selector stringByEscapingCharactersInSet:escapeSet];
 	property = [property stringByEscapingCharactersInSet:escapeSet];
 
-	AGRegex *regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"%@\\s*\\{[^\\}]*?\\s%@:\\s*(.*?)(?:\\s*!\\s*important\\s*)?;.*?\\}", selector, property] options:( AGRegexCaseInsensitive | AGRegexDotAll )];
-	AGRegexMatch *match = [regex findInString:style];
-	if( [match count] > 1 ) return [match groupAtIndex:1];
+	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[NSString stringWithFormat:@"%@\\s*\\{[^\\}]*?\\s%@:\\s*(.*?)(?:\\s*!\\s*important\\s*)?;.*?\\}", selector, property] options:NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators error:nil];
+	NSTextCheckingResult *match = [regex firstMatchInString:style options:NSMatchingCompleted range:NSMakeRange( 0, style.length ) ];
+	if( [match numberOfRanges] > 1 ) return [style substringWithRange:[match rangeAtIndex:1]];
 
 	return nil;
 }
 
 // Saves a CSS value to the specified property and selector, creating it if one isn't already in the file.
 - (void) setStyleProperty:(NSString *) property forSelector:(NSString *) selector toValue:(NSString *) value {
-	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
-	NSString *rselector = [selector stringByEscapingCharactersInSet:escapeSet];
-	NSString *rproperty = [property stringByEscapingCharactersInSet:escapeSet];
-
-	AGRegex *regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"(%@\\s*\\{[^\\}]*?\\s%@:\\s*)(?:.*?)(;.*?\\})", rselector, rproperty] options:( AGRegexCaseInsensitive | AGRegexDotAll )];
-	if( [[regex findInString:_userStyle] count] ) { // Change existing property in selector block
-		[self setUserStyle:[regex replaceWithString:[NSString stringWithFormat:@"$1%@$2", value] inString:_userStyle]];
-	} else {
-		regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"(\\s%@\\s*\\{)(\\s*)", rselector] options:AGRegexCaseInsensitive];
-		if( [[regex findInString:_userStyle] count] ) { // Append to existing selector block
-			[self setUserStyle:[regex replaceWithString:[NSString stringWithFormat:@"$1$2%@: %@;$2", rproperty, value] inString:_userStyle]];
-		} else { // Create new selector block
-			[self setUserStyle:[_userStyle stringByAppendingFormat:@"%@%@ {\n\t%@: %@;\n}", ( [_userStyle length] ? @"\n\n": @"" ), selector, property, value]];
-		}
-	}
+//	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
+//	NSString *rselector = [selector stringByEscapingCharactersInSet:escapeSet];
+//	NSString *rproperty = [property stringByEscapingCharactersInSet:escapeSet];
+//
+//	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[NSString stringWithFormat:@"(%@\\s*\\{[^\\}]*?\\s%@:\\s*)(?:.*?)(;.*?\\})", rselector, rproperty] options:NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators error:nil];
+//	AGRegex *regex = [AGRegex regexWithPattern: options:( AGRegexCaseInsensitive | AGRegexDotAll )];
+//	if( [[regex findInString:_userStyle] count] ) { // Change existing property in selector block
+//		[self setUserStyle:[regex replaceWithString:[NSString stringWithFormat:@"$1%@$2", value] inString:_userStyle]];
+//	} else {
+//		regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"(\\s%@\\s*\\{)(\\s*)", rselector] options:AGRegexCaseInsensitive];
+//		if( [[regex findInString:_userStyle] count] ) { // Append to existing selector block
+//			[self setUserStyle:[regex replaceWithString:[NSString stringWithFormat:@"$1$2%@: %@;$2", rproperty, value] inString:_userStyle]];
+//		} else { // Create new selector block
+//			[self setUserStyle:[_userStyle stringByAppendingFormat:@"%@%@ {\n\t%@: %@;\n}", ( [_userStyle length] ? @"\n\n": @"" ), selector, property, value]];
+//		}
+//	}
 }
 
 - (void) setUserStyle:(NSString *) style {

@@ -5,7 +5,7 @@
 
 #import "NSDateAdditions.h"
 #import "NSNotificationAdditions.h"
-#import "RegexKitLite.h"
+#import "NSRegularExpressionAdditions.h"
 
 #import <ChatCore/MVChatUser.h>
 
@@ -111,16 +111,25 @@ static void commonChatAndImageReplacment(NSMutableString *string, NSRangePointer
 	// Catch IRC rooms like "#room" but not HTML colors like "#ab12ef" nor HTML entities like "&#135;" or "&amp;".
 	// Catch well-formed urls like "http://www.apple.com", "www.apple.com" or "irc://irc.javelin.cc".
 	// Catch well-formed email addresses like "user@example.com" or "user@example.co.uk".
-	static NSString *urlRegex = @"(\\B(?<!&amp;)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&;#]{2,}\\b)|(\\b(?:[a-zA-Z][a-zA-Z0-9+.-]{2,6}:(?://){0,1}|www\\.)[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+[\\p{L}\\p{N}\\p{M}\\p{S}\\p{C}]\\)?)|([\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+@(?:[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+\\.)+[\\w]{2,})"; 
+	static NSString *urlRegex = @"(\\B(?<!&amp;)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&;#]{2,}\\b)|(\\b(?:[a-zA-Z][a-zA-Z0-9+.-]{2,6}:(?://){0,1}|www\\.)[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+[\\p{L}\\p{N}\\p{M}\\p{S}\\p{C}]\\)?)|([\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+@(?:[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+\\.)+[\\w]{2,})";
+	NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:urlRegex options:NSRegularExpressionCaseInsensitive error:nil];
 
 	NSRange matchedRange = [string rangeOfRegex:urlRegex options:NSRegularExpressionCaseInsensitive inRange:*textRange capture:0 error:NULL];
 	while (matchedRange.location != NSNotFound && (matchedRange.location + matchedRange.length) > 0) {
-		NSArray *components = [string cq_captureComponentsMatchedByRegex:urlRegex options:RKLCaseless range:matchedRange error:NULL];
-		NSCAssert(components.count == 4, @"component count needs to be 4");
+		NSTextCheckingResult *result = [regex firstMatchInString:string options:NSMatchingReportCompletion range:matchedRange];
+		NSCAssert(result.numberOfRanges == 4, @"component count needs to be 4");
 
-		NSString *room = components[1];
-		NSString *url = components[2];
-		NSString *email = components[3];
+#define SubstringFromGroup(string, i, destination) \
+	NSString *destination = nil; \
+	do { \
+		NSRange range = [result rangeAtIndex:i]; \
+		if (range.length > 0) \
+			destination = [string substringWithRange:range]; \
+	} while(0)
+		SubstringFromGroup(string, 1, room);
+		SubstringFromGroup(string, 2, url);
+		SubstringFromGroup(string, 3, email);
+#undef SubstringFromGroup
 
 		NSString *linkHTMLString = nil;
 		if (room.length) {

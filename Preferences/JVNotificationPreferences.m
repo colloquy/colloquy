@@ -1,4 +1,5 @@
 #import "JVNotificationPreferences.h"
+#import "NSRegularExpressionAdditions.h"
 
 @implementation JVNotificationPreferences
 
@@ -65,12 +66,12 @@
 	NSMutableArray *components = [NSMutableArray array];
 	NSString *words = [highlightWords stringValue];
 
-	AGRegex *regex = [AGRegex regexWithPattern:@"(?<=\\s|^)([/\"'].*?[/\"'])(?=\\s|$)"];
+	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(?<=\\s|^)([/\"'].*?[/\"'])(?=\\s|$)" options:0 error:nil];
 
-	for( AGRegexMatch *match in [regex findAllInString:words] )
-		[components addObject:[match groupAtIndex:1]];
+	for( NSTextCheckingResult *match in [regex matchesInString:words options:NSMatchingCompleted range:NSMakeRange( 0, words.length )] )
+		[components addObject:[words substringWithRange:[match rangeAtIndex:1]]];
 
-	words = [regex replaceWithString:@"" inString:words];
+	words = [words stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)([/\"'].*?[/\"'])(?=\\s|$)" withString:@""];
 
 	[components addObjectsFromArray:[words componentsSeparatedByString:@" "]];
 	[components removeObject:@""];

@@ -48,19 +48,30 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 		NSMutableDictionary *tempDictionary = [NSMutableDictionary dictionary];
 		NSInteger org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
 
-		AGRegex *regex = nil;
+		NSInteger serverIndex = -1;
+		NSInteger targetIndex = -1;
+		NSInteger sessionIndex = 2;
+		NSRegularExpression *regex = nil;
 		switch( org ) {
 		case 0: // all in the same folder, w/server
-			regex = [[AGRegex alloc] initWithPattern:@"(?P<target>.*) \\((?P<server>.*)\\) ?(?P<session>.*)\\.colloquyTranscript"];
+			targetIndex = 0;
+			serverIndex = 1;
+			regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(?P<target>.*) \\((?P<server>.*)\\) ?(?P<session>.*)\\.colloquyTranscript" options:0 error:nil];
 			break;
 		case 1: // a folder for each server
-			regex = [[AGRegex alloc] initWithPattern:@"(?P<server>.*)/(?P<target>.*) ?(?P<session>.*)\\.colloquyTranscript"];
+			targetIndex = 1;
+			serverIndex = 0;
+			regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(?P<server>.*)/(?P<target>.*) ?(?P<session>.*)\\.colloquyTranscript" options:0 error:nil];
 			break;
 		case 2: // a folder for each (server,target)
-			regex = [[AGRegex alloc] initWithPattern:@"(?P<target>.*) \\((?P<server>.*)\\)/(.* )?(?P<session>.*)\\.colloquyTranscript"];
+			targetIndex = 0;
+			serverIndex = 1;
+			regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(?P<target>.*) \\((?P<server>.*)\\)/(.* )?(?P<session>.*)\\.colloquyTranscript" options:0 error:nil];
 			break;
 		case 3: // a folder for each server, then for each target
-			regex = [[AGRegex alloc] initWithPattern:@"(?P<server>.*)/(?P<target>.*)/(.* )?(?P<session>.*)\\.colloquyTranscript"];
+			targetIndex = 1;
+			serverIndex = 0;
+			regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(?P<server>.*)/(?P<target>.*)/(.* )?(?P<session>.*)\\.colloquyTranscript" options:0 error:nil];
 			break;
 		}
 
@@ -86,11 +97,12 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 		while( ( logPath = [logsEnum nextObject] ) ) {
 			if( [[logPath pathExtension] isEqualToString:@"colloquyTranscript"] ) {
 				// analyze the path
-				AGRegexMatch *match = [regex findInString:logPath];
+				// :(NSString *)string options:(NSMatchingOptions)options range:(NSRange)range;
+				NSTextCheckingResult *match = [regex matchesInString:logPath options:NSMatchingReportCompletion range:NSMakeRange( 0, logPath.length )];
 
-				NSString *server = [match groupNamed:@"server"];
-				NSString *target = [match groupNamed:@"target"];
-				NSString *session = [match groupNamed:@"session"];
+				NSString *server = [logPath substringWithRange:[match rangeAtIndex:serverIndex]];
+				NSString *target = [logPath substringWithRange:[match rangeAtIndex:targetIndex]];
+				NSString *session = [logPath substringWithRange:[match rangeAtIndex:sessionIndex]];
 				NSString *path = [[self logsPath] stringByAppendingPathComponent:logPath];
 
 				FILE *logsFile = fopen( [path fileSystemRepresentation], "r" );

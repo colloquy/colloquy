@@ -1,6 +1,5 @@
 #import <Cocoa/Cocoa.h>
 #import <SenTestingKit/SenTestingKit.h>
-#import <AGRegex/AGRegex.h>
 #import <ChatCore/ChatCore.h>
 
 #import "JVChatWindowController.h"

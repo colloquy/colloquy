@@ -70,7 +70,6 @@
 		1C716EDD13100F220088C737 /* MVIRCChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED013100F220088C737 /* MVIRCChatUser.m */; };
 		1C716EDE13100F220088C737 /* MVIRCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED213100F220088C737 /* MVIRCFileTransfer.m */; };
 		1C716EE013100F220088C737 /* InterThreadMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED713100F220088C737 /* InterThreadMessaging.m */; };
-		1C716EE113100F220088C737 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED913100F220088C737 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1C716EE213100F220088C737 /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EB913100F220088C737 /* MVChatConnection.m */; };
 		1C716EE313100F220088C737 /* MVChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EBC13100F220088C737 /* MVChatRoom.m */; };
 		1C716EE413100F220088C737 /* MVChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EBF13100F220088C737 /* MVChatUser.m */; };
@@ -1365,7 +1364,6 @@
 				1C716EDE13100F220088C737 /* MVIRCFileTransfer.m in Sources */,
 				922F1CAA1A4EBAF0000CBACE /* NSAttributedStringAdditions.m in Sources */,
 				1C716EE013100F220088C737 /* InterThreadMessaging.m in Sources */,
-				1C716EE113100F220088C737 /* RegexKitLite.m in Sources */,
 				926678F919C03C8500CCE5BE /* CQWKChatTranscriptView.m in Sources */,
 				1C716EE213100F220088C737 /* MVChatConnection.m in Sources */,
 				1C716EE313100F220088C737 /* MVChatRoom.m in Sources */,
