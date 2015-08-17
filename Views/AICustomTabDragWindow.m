@@ -10,6 +10,7 @@
 #import "AICustomTabsView.h"
 #import "AICustomTabCell.h"
 #import "ESFloater.h"
+#import "NSImageAdditions.h"
 
 #define CUSTOM_TABS_INDENT		3					//Indent on left and right of tabbar
 #define CONTENT_OFFSET_X		1					//Offset of content view relative to tabs
@@ -130,11 +131,11 @@
         [customTabsView drawBackgroundInRect:[customTabsView frame] withFrame:[customTabsView frame] selectedTabRect:NSMakeRect(0,0,0,0)];
         insertPoint = [customTabsView frame].origin;
         insertPoint.x += CUSTOM_TABS_INDENT; //Line the tab up a bit more realistically
-		[tabImage compositeToPoint:insertPoint operation:NSCompositeCopy];
+		[tabImage cq_compositeToPoint:insertPoint operation:NSCompositeCopy];
 
         //Draw the content
 		NSPoint	frameOrigin = [[[tabCell tabViewItem] tabView] frame].origin;
-		[contentImage compositeToPoint:NSMakePoint(frameOrigin.x + CONTENT_OFFSET_X, frameOrigin.y) operation:NSCompositeCopy];
+		[contentImage cq_compositeToPoint:NSMakePoint(frameOrigin.x + CONTENT_OFFSET_X, frameOrigin.y) operation:NSCompositeCopy];
 
         [dragWindowImage unlockFocus];
     }
