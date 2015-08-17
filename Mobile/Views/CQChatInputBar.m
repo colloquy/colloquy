@@ -1,5 +1,7 @@
 #import "CQChatInputBar.h"
 
+#import "CQTextView.h"
+
 #import "UIColorAdditions.h"
 #import "NSNotificationAdditions.h"
 
@@ -70,7 +72,7 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 		frame = CGRectMake(6.5, 6.5, frame.size.width - 12., frame.size.height - 12.);
 	else frame = CGRectMake(6., 7., frame.size.width - 12., frame.size.height - 12.);
 
-	_inputView = [[UITextView alloc] initWithFrame:frame];
+	_inputView = [[CQTextView alloc] initWithFrame:frame];
 	_inputView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
 	_inputView.textContainer.heightTracksTextView = YES;
 	_inputView.dataDetectorTypes = UIDataDetectorTypeNone;
