@@ -315,6 +315,9 @@ static NSMutableArray *highlightWords;
 	if ((!font || [font.familyName hasCaseInsensitiveSubstring:@"Helvetica"]) && [[UIFont cq_availableRemoteFontNames] containsObject:fontName])
 		[UIFont cq_loadFontWithName:fontName withCompletionHandler:NULL];
 
+	if ([[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"] == 600.)
+		[[NSUserDefaults standardUserDefaults] setObject:300 forKey:@"CQMultitaskingTimeout"];
+
 	_deviceToken = [[CQSettingsController settingsController] stringForKey:@"CQPushDeviceToken"];
 
 	[CQConnectionsController defaultController];
