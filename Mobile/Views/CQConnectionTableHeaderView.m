@@ -135,16 +135,12 @@ NS_ASSUME_NONNULL_BEGIN
 		unsigned hours = (absoluteInterval / 3600);
 
 		if (interval >= 1.) {
-			if (hours) newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"-%zd:%02zd:%02zd", @"Countdown time format with hours, minutes and seconds"), hours, minutes, seconds];
+			if (UNLIKELY(hours)) newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"-%zd:%02zd:%02zd", @"Countdown time format with hours, minutes and seconds"), hours, minutes, seconds];
 			else newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"-%u:%02zd", @"Countdown time format with minutes and seconds"), minutes, seconds];
 		} else {
-			if (hours) newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"%u:%02zd:%02zd", @"Countup time format with hours, minutes and seconds"), hours, minutes, seconds];
+			if (UNLIKELY(hours)) newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"%u:%02zd:%02zd", @"Countup time format with hours, minutes and seconds"), hours, minutes, seconds];
 			else newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"%u:%02zd", @"Countup time format with minutes and seconds"), minutes, seconds];
 		}
-	}
-
-	if ([_timeLabel.text isEqualToString:newTime]) {
-		return;
 	}
 
 	_timeLabel.text = newTime;
