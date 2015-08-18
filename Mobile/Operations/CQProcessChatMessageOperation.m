@@ -114,7 +114,7 @@ static void commonChatAndImageReplacment(NSMutableString *string, NSRangePointer
 	// Catch well-formed urls like "http://www.apple.com", "www.apple.com" or "irc://irc.javelin.cc".
 	// Catch well-formed email addresses like "user@example.com" or "user@example.co.uk".
 	static NSString *urlRegex = @"(\\B(?<!&amp;)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&;#]{2,}\\b)|(\\b(?:[a-zA-Z][a-zA-Z0-9+.-]{2,6}:(?://){0,1}|www\\.)[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+[\\p{L}\\p{N}\\p{M}\\p{S}\\p{C}]\\)?)|([\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+@(?:[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+\\.)+[\\w]{2,})";
-	NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:urlRegex options:NSRegularExpressionCaseInsensitive error:nil];
+	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:urlRegex options:NSRegularExpressionCaseInsensitive error:nil];
 
 	NSRange matchedRange = [string rangeOfRegex:urlRegex options:NSRegularExpressionCaseInsensitive inRange:*textRange capture:0 error:NULL];
 	while (matchedRange.location != NSNotFound && (matchedRange.location + matchedRange.length) > 0) {
