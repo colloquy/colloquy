@@ -941,8 +941,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 #pragma mark -
 
 - (NSString *) stringByEncodingXMLSpecialCharactersAsEntities {
-	NSCharacterSet *special = [NSCharacterSet characterSetWithCharactersInString:@"&<>\"'"];
-	NSRange range = [self rangeOfCharacterFromSet:special options:NSLiteralSearch];
+	NSRange range = [self rangeOfCharacterFromSet:[NSCharacterSet cq_encodedXMLCharacterSet] options:NSLiteralSearch];
 	if( range.location == NSNotFound )
 		return self;
 
@@ -1202,16 +1201,37 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 @implementation NSMutableString (NSMutableStringAdditions)
 - (void) encodeXMLSpecialCharactersAsEntities {
-	NSCharacterSet *special = [NSCharacterSet characterSetWithCharactersInString:@"&<>\"'"];
-	NSRange range = [self rangeOfCharacterFromSet:special options:NSLiteralSearch];
+	NSRange range = [self rangeOfCharacterFromSet:[NSCharacterSet cq_encodedXMLCharacterSet] options:NSLiteralSearch];
 	if( range.location == NSNotFound )
 		return;
 
-	[self replaceOccurrencesOfString:@"&" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
-	[self replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
-	[self replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
-	[self replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
-	[self replaceOccurrencesOfString:@"'" withString:@"&apos;" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
+	NSUInteger length = self.length;
+	for (NSUInteger i = 0; i < length; i++) {
+		unichar character = [self characterAtIndex:i];
+		switch (character) {
+			case '&':
+				[self replaceCharactersInRange:NSMakeRange(i, 1) withString:@"&amp;"];
+				length += 4; i += 4;
+				break;
+			case '<':
+				[self replaceCharactersInRange:NSMakeRange(i, 1) withString:@"&lt;"];
+				length += 3; i += 3;
+				break;
+			case '>':
+				[self replaceCharactersInRange:NSMakeRange(i, 1) withString:@"&gt;"];
+				length += 3; i += 3;
+				break;
+			case '"':
+				[self replaceCharactersInRange:NSMakeRange(i, 1) withString:@"&quot;"];
+				length += 5; i += 5;
+				break;
+			case '\'':
+				[self replaceCharactersInRange:NSMakeRange(i, 1) withString:@"&apos;"];
+				length += 5; i += 5;
+				break;
+			default: break;
+		}
+	}
 }
 
 - (void) decodeXMLSpecialCharacterEntities {
