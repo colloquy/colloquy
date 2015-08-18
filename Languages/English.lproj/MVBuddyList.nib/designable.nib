@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">101000</int>
-		<string key="IBDocument.SystemVersion">14A388a</string>
-		<string key="IBDocument.InterfaceBuilderVersion">6250</string>
-		<string key="IBDocument.AppKitVersion">1343.14</string>
-		<string key="IBDocument.HIToolboxVersion">755.00</string>
+		<string key="IBDocument.SystemVersion">14F27</string>
+		<string key="IBDocument.InterfaceBuilderVersion">7706</string>
+		<string key="IBDocument.AppKitVersion">1348.17</string>
+		<string key="IBDocument.HIToolboxVersion">758.70</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">6250</string>
+			<string key="NS.object.0">7706</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>NSButton</string>
@@ -54,6 +54,8 @@
 					<characters key="NS.bytes">View</characters>
 				</object>
 				<nil key="NSUserInterfaceItemIdentifier"/>
+				<string key="NSWindowContentMaxSize">{500, 1006}</string>
+				<string key="NSWindowContentMinSize">{180, 108}</string>
 				<object class="NSView" key="NSWindowView" id="158124886">
 					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
@@ -71,6 +73,7 @@
 											<int key="NSvFlags">256</int>
 											<string key="NSFrameSize">{225, 245}</string>
 											<reference key="NSSuperview" ref="275218925"/>
+											<reference key="NSNextKeyView" ref="801530781"/>
 											<bool key="NSEnabled">YES</bool>
 											<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 											<bool key="NSControlAllowsExpansionToolTips">YES</bool>
@@ -190,7 +193,7 @@
 											</array>
 											<double key="NSIntercellSpacingWidth">3</double>
 											<double key="NSIntercellSpacingHeight">2</double>
-											<reference key="NSBackgroundColor" ref="252240481"/>
+											<reference key="NSBackgroundColor" ref="842794846"/>
 											<object class="NSColor" key="NSGridColor" id="1069045331">
 												<int key="NSColorSpace">6</int>
 												<string key="NSCatalogName">System</string>
@@ -225,6 +228,7 @@
 									<int key="NSvFlags">-2147483392</int>
 									<string key="NSFrame">{{-22, 1}, {11, 245}}</string>
 									<reference key="NSSuperview" ref="964943613"/>
+									<reference key="NSNextKeyView" ref="275218925"/>
 									<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 									<string key="NSControlAction">_doScroller:</string>
 									<reference key="NSControlTarget" ref="964943613"/>
@@ -238,6 +242,7 @@
 									<int key="NSvFlags">-2147483392</int>
 									<string key="NSFrame">{{-100, -100}, {197, 15}}</string>
 									<reference key="NSSuperview" ref="964943613"/>
+									<reference key="NSNextKeyView" ref="843389822"/>
 									<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 									<string key="NSControlAction">_doScroller:</string>
 									<reference key="NSControlTarget" ref="964943613"/>
@@ -249,7 +254,7 @@
 							</array>
 							<string key="NSFrame">{{-1, 31}, {227, 247}}</string>
 							<reference key="NSSuperview" ref="158124886"/>
-							<reference key="NSNextKeyView" ref="275218925"/>
+							<reference key="NSNextKeyView" ref="911595261"/>
 							<int key="NSsFlags">133650</int>
 							<reference key="NSVScroller" ref="843389822"/>
 							<reference key="NSHScroller" ref="911595261"/>
@@ -264,6 +269,7 @@
 							<int key="NSvFlags">292</int>
 							<string key="NSFrame">{{39, 5}, {23, 22}}</string>
 							<reference key="NSSuperview" ref="158124886"/>
+							<reference key="NSNextKeyView" ref="935814021"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="723642328">
 								<int key="NSCellFlags">67108864</int>
@@ -297,6 +303,7 @@
 							<int key="NSvFlags">292</int>
 							<string key="NSFrame">{{61, 5}, {23, 22}}</string>
 							<reference key="NSSuperview" ref="158124886"/>
+							<reference key="NSNextKeyView" ref="177154986"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="318197976">
 								<int key="NSCellFlags">67108864</int>
@@ -312,11 +319,7 @@
 								<int key="NSButtonFlags2">6</int>
 								<object class="NSCustomResource" key="NSNormalImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">buddyNew</string>
-								</object>
-								<object class="NSCustomResource" key="NSAlternateImage">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">buddyNewBlue</string>
+									<string key="NSResourceName">NSAddTemplate</string>
 								</object>
 								<string key="NSAlternateContents"/>
 								<string key="NSKeyEquivalent"/>
@@ -330,6 +333,7 @@
 							<int key="NSvFlags">292</int>
 							<string key="NSFrame">{{83, 5}, {23, 22}}</string>
 							<reference key="NSSuperview" ref="158124886"/>
+							<reference key="NSNextKeyView" ref="837674377"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="883288853">
 								<int key="NSCellFlags">603979776</int>
@@ -396,6 +400,7 @@
 							<int key="NSvFlags">292</int>
 							<string key="NSFrame">{{6, 5}, {28, 22}}</string>
 							<reference key="NSSuperview" ref="158124886"/>
+							<reference key="NSNextKeyView" ref="911088752"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="986458386">
 								<int key="NSCellFlags">67108864</int>
@@ -411,11 +416,7 @@
 								<int key="NSButtonFlags2">6</int>
 								<object class="NSCustomResource" key="NSNormalImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">actionWidget</string>
-								</object>
-								<object class="NSCustomResource" key="NSAlternateImage">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">actionWidgetPressed</string>
+									<string key="NSResourceName">NSActionTemplate</string>
 								</object>
 								<string key="NSAlternateContents"/>
 								<object class="NSMutableString" key="NSKeyEquivalent">
@@ -428,6 +429,7 @@
 						</object>
 					</array>
 					<string key="NSFrameSize">{225, 277}</string>
+					<reference key="NSNextKeyView" ref="964943613"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
 				<string key="NSMinSize">{180, 124}</string>
@@ -446,6 +448,7 @@
 					<characters key="NS.bytes">View</characters>
 				</object>
 				<nil key="NSUserInterfaceItemIdentifier"/>
+				<string key="NSWindowContentMinSize">{213, 107}</string>
 				<object class="NSView" key="NSWindowView" id="160211856">
 					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
@@ -558,7 +561,7 @@
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
 				<string key="NSMinSize">{213, 129}</string>
-				<string key="NSMaxSize">{3.4028200000000001e+38, 3.4028200000000001e+38}</string>
+				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 			<object class="NSWindowTemplate" id="65814124">
@@ -572,6 +575,7 @@
 					<characters key="NS.bytes">View</characters>
 				</object>
 				<nil key="NSUserInterfaceItemIdentifier"/>
+				<string key="NSWindowContentMinSize">{213, 107}</string>
 				<object class="NSView" key="NSWindowView" id="1046606819">
 					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
@@ -920,7 +924,7 @@
 														<object class="NSFont" key="NSSupport">
 															<bool key="IBIsSystemFont">YES</bool>
 															<double key="NSSize">12</double>
-															<int key="NSfFlags">4883</int>
+															<int key="NSfFlags">787</int>
 														</object>
 														<reference key="NSControlView" ref="589007795"/>
 														<int key="NSButtonFlags">1215582464</int>
@@ -964,7 +968,7 @@
 											</array>
 											<double key="NSIntercellSpacingWidth">3</double>
 											<double key="NSIntercellSpacingHeight">2</double>
-											<reference key="NSBackgroundColor" ref="252240481"/>
+											<reference key="NSBackgroundColor" ref="842794846"/>
 											<reference key="NSGridColor" ref="1069045331"/>
 											<double key="NSRowHeight">17</double>
 											<int key="NSTvFlags">-767557632</int>
@@ -1029,7 +1033,7 @@
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
 				<string key="NSMinSize">{213, 129}</string>
-				<string key="NSMaxSize">{3.4028200000000001e+38, 3.4028200000000001e+38}</string>
+				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 			<object class="NSMenu" id="759277720">
@@ -2197,16 +2201,14 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="NSActionTemplate">{14, 14}</string>
+			<string key="NSAddTemplate">{11, 11}</string>
 			<string key="NSMenuCheckmark">{12, 12}</string>
 			<string key="NSMenuMixedState">{10, 2}</string>
-			<string key="actionWidget">{28, 22}</string>
-			<string key="actionWidgetPressed">{28, 22}</string>
 			<string key="buddyInfo">{23, 22}</string>
 			<string key="buddyInfoBlue">{23, 22}</string>
 			<string key="buddyMessage">{23, 22}</string>
 			<string key="buddyMessageBlue">{23, 22}</string>
-			<string key="buddyNew">{23, 22}</string>
-			<string key="buddyNewBlue">{23, 22}</string>
 			<string key="buddyOptions">{23, 22}</string>
 			<string key="buddyOptionsBlue">{23, 22}</string>
 		</dictionary>

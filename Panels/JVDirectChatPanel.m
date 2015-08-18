@@ -500,7 +500,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	}
 
 	if( [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] )
-		return ( [_waitingAlerts count] ? [NSImage imageNamed:@"AlertCautionIcon"] : ( _newMessageCount ? ( _newHighlightMessageCount ? [NSImage imageNamed:@"privateChatTabNewMessage"] : [NSImage imageNamed:@"privateChatTabNewMessage"] ) : nil ) );
+		return ( [_waitingAlerts count] ? [NSImage imageNamed:NSImageNameCaution] : ( _newMessageCount ? ( _newHighlightMessageCount ? [NSImage imageNamed:@"privateChatTabNewMessage"] : [NSImage imageNamed:@"privateChatTabNewMessage"] ) : nil ) );
 
 	return ( [_waitingAlerts count] ? [NSImage imageNamed:@"viewAlert"] : nil );
 }

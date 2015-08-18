@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">101000</int>
-		<string key="IBDocument.SystemVersion">14A388a</string>
-		<string key="IBDocument.InterfaceBuilderVersion">6250</string>
-		<string key="IBDocument.AppKitVersion">1343.14</string>
-		<string key="IBDocument.HIToolboxVersion">755.00</string>
+		<string key="IBDocument.SystemVersion">14F27</string>
+		<string key="IBDocument.InterfaceBuilderVersion">7706</string>
+		<string key="IBDocument.AppKitVersion">1348.17</string>
+		<string key="IBDocument.HIToolboxVersion">758.70</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">6250</string>
+			<string key="NS.object.0">7706</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>NSButton</string>
@@ -49,8 +49,9 @@
 					<characters key="NS.bytes">View</characters>
 				</object>
 				<nil key="NSUserInterfaceItemIdentifier"/>
+				<string key="NSWindowContentMinSize">{213, 107}</string>
 				<object class="NSView" key="NSWindowView" id="763880012">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSSplitView" id="344609023">
@@ -70,6 +71,8 @@
 													<int key="NSvFlags">260</int>
 													<string key="NSFrame">{{-1, 0}, {32, 23}}</string>
 													<reference key="NSSuperview" ref="47688326"/>
+													<reference key="NSWindow"/>
+													<reference key="NSNextKeyView" ref="589643333"/>
 													<bool key="NSEnabled">YES</bool>
 													<object class="NSButtonCell" key="NSCell" id="773476005">
 														<int key="NSCellFlags">67108864</int>
@@ -85,7 +88,7 @@
 														<int key="NSButtonFlags2">6</int>
 														<object class="NSCustomResource" key="NSNormalImage">
 															<string key="NSClassName">NSImage</string>
-															<string key="NSResourceName">sidebarActionWidget</string>
+															<string key="NSResourceName">NSActionTemplate</string>
 														</object>
 														<object class="NSCustomResource" key="NSAlternateImage">
 															<string key="NSClassName">NSImage</string>
@@ -105,6 +108,8 @@
 													<int key="NSvFlags">260</int>
 													<string key="NSFrame">{{30, 0}, {32, 23}}</string>
 													<reference key="NSSuperview" ref="47688326"/>
+													<reference key="NSWindow"/>
+													<reference key="NSNextKeyView" ref="639929297"/>
 													<bool key="NSEnabled">YES</bool>
 													<object class="NSButtonCell" key="NSCell" id="962571068">
 														<int key="NSCellFlags">67108864</int>
@@ -134,6 +139,8 @@
 											</array>
 											<string key="NSFrameSize">{201, 23}</string>
 											<reference key="NSSuperview" ref="691961071"/>
+											<reference key="NSWindow"/>
+											<reference key="NSNextKeyView" ref="781759217"/>
 											<string key="NSClassName">JVSideStatusView</string>
 											<string key="NSExtension">NSView</string>
 										</object>
@@ -150,6 +157,8 @@
 															<int key="NSvFlags">4352</int>
 															<string key="NSFrameSize">{201, 390}</string>
 															<reference key="NSSuperview" ref="323422019"/>
+															<reference key="NSWindow"/>
+															<reference key="NSNextKeyView" ref="47688326"/>
 															<bool key="NSEnabled">YES</bool>
 															<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 															<bool key="NSControlAllowsExpansionToolTips">YES</bool>
@@ -215,10 +224,7 @@
 															</array>
 															<double key="NSIntercellSpacingWidth">3</double>
 															<double key="NSIntercellSpacingHeight">2</double>
-															<object class="NSColor" key="NSBackgroundColor">
-																<int key="NSColorSpace">3</int>
-																<bytes key="NSWhite">MQA</bytes>
-															</object>
+															<reference key="NSBackgroundColor" ref="1051522837"/>
 															<object class="NSColor" key="NSGridColor">
 																<int key="NSColorSpace">6</int>
 																<string key="NSCatalogName">System</string>
@@ -242,6 +248,7 @@
 													</array>
 													<string key="NSFrameSize">{201, 390}</string>
 													<reference key="NSSuperview" ref="911615924"/>
+													<reference key="NSWindow"/>
 													<reference key="NSNextKeyView" ref="626906109"/>
 													<reference key="NSDocView" ref="626906109"/>
 													<reference key="NSBGColor" ref="1051522837"/>
@@ -253,6 +260,8 @@
 													<int key="NSvFlags">-2147483392</int>
 													<string key="NSFrame">{{-30, 0}, {15, 390}}</string>
 													<reference key="NSSuperview" ref="911615924"/>
+													<reference key="NSWindow"/>
+													<reference key="NSNextKeyView" ref="323422019"/>
 													<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 													<string key="NSControlAction">_doScroller:</string>
 													<reference key="NSControlTarget" ref="911615924"/>
@@ -265,6 +274,8 @@
 													<int key="NSvFlags">-2147483392</int>
 													<string key="NSFrame">{{-100, -100}, {128, 15}}</string>
 													<reference key="NSSuperview" ref="911615924"/>
+													<reference key="NSWindow"/>
+													<reference key="NSNextKeyView" ref="654567349"/>
 													<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 													<string key="NSControlAction">_doScroller:</string>
 													<reference key="NSControlTarget" ref="911615924"/>
@@ -276,7 +287,8 @@
 											</array>
 											<string key="NSFrame">{{0, 23}, {201, 390}}</string>
 											<reference key="NSSuperview" ref="691961071"/>
-											<reference key="NSNextKeyView" ref="323422019"/>
+											<reference key="NSWindow"/>
+											<reference key="NSNextKeyView" ref="167612142"/>
 											<int key="NSsFlags">133648</int>
 											<reference key="NSVScroller" ref="654567349"/>
 											<reference key="NSHScroller" ref="167612142"/>
@@ -289,6 +301,8 @@
 									</array>
 									<string key="NSFrameSize">{201, 413}</string>
 									<reference key="NSSuperview" ref="344609023"/>
+									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView" ref="911615924"/>
 									<bool key="NSDoNotTranslateAutoresizingMask">YES</bool>
 									<object class="NSMutableString" key="NSClassName">
 										<characters key="NS.bytes">NSView</characters>
@@ -300,6 +314,8 @@
 									<int key="NSvFlags">274</int>
 									<string key="NSFrame">{{210, 0}, {480, 413}}</string>
 									<reference key="NSSuperview" ref="344609023"/>
+									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView"/>
 									<bool key="NSDoNotTranslateAutoresizingMask">YES</bool>
 									<object class="NSMutableString" key="NSClassName">
 										<characters key="NS.bytes">NSView</characters>
@@ -309,14 +325,19 @@
 							</array>
 							<string key="NSFrameSize">{690, 413}</string>
 							<reference key="NSSuperview" ref="763880012"/>
+							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView" ref="691961071"/>
 							<bool key="NSIsVertical">YES</bool>
 						</object>
 					</array>
 					<string key="NSFrameSize">{690, 413}</string>
+					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
+					<reference key="NSNextKeyView" ref="344609023"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
 				<string key="NSMinSize">{213, 129}</string>
-				<string key="NSMaxSize">{3.4028200000000001e+38, 3.4028200000000001e+38}</string>
+				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
 			</object>
 		</array>
@@ -594,7 +615,265 @@
 			<nil key="sourceID"/>
 			<int key="maxID">335</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">JVChatWindowController</string>
+					<string key="superclassName">NSWindowController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="closeCurrentPanel:">id</string>
+						<string key="closeViewsDrawer:">id</string>
+						<string key="detachCurrentPanel:">id</string>
+						<string key="getInfo:">id</string>
+						<string key="joinRoom:">id</string>
+						<string key="openViewsDrawer:">id</string>
+						<string key="selectNextActivePanel:">id</string>
+						<string key="selectNextPanel:">id</string>
+						<string key="selectPreviousActivePanel:">id</string>
+						<string key="selectPreviousPanel:">id</string>
+						<string key="toggleViewsDrawer:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="closeCurrentPanel:">
+							<string key="name">closeCurrentPanel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="closeViewsDrawer:">
+							<string key="name">closeViewsDrawer:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="detachCurrentPanel:">
+							<string key="name">detachCurrentPanel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="getInfo:">
+							<string key="name">getInfo:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="joinRoom:">
+							<string key="name">joinRoom:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="openViewsDrawer:">
+							<string key="name">openViewsDrawer:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="selectNextActivePanel:">
+							<string key="name">selectNextActivePanel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="selectNextPanel:">
+							<string key="name">selectNextPanel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="selectPreviousActivePanel:">
+							<string key="name">selectPreviousActivePanel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="selectPreviousPanel:">
+							<string key="name">selectPreviousPanel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="toggleViewsDrawer:">
+							<string key="name">toggleViewsDrawer:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="chatViewsOutlineView">NSOutlineView</string>
+						<string key="favoritesButton">MVMenuButton</string>
+						<string key="viewActionButton">MVMenuButton</string>
+						<string key="viewsDrawer">NSDrawer</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="chatViewsOutlineView">
+							<string key="name">chatViewsOutlineView</string>
+							<string key="candidateClassName">NSOutlineView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="favoritesButton">
+							<string key="name">favoritesButton</string>
+							<string key="candidateClassName">MVMenuButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="viewActionButton">
+							<string key="name">viewActionButton</string>
+							<string key="candidateClassName">MVMenuButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="viewsDrawer">
+							<string key="name">viewsDrawer</string>
+							<string key="candidateClassName">NSDrawer</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="123025591">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">../Controllers/JVChatWindowController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">JVChatWindowController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="_doubleClickedListItem:">id</string>
+						<string key="closeCurrentPanel:">id</string>
+						<string key="closeViewsDrawer:">id</string>
+						<string key="detachCurrentPanel:">id</string>
+						<string key="getInfo:">id</string>
+						<string key="joinRoom:">id</string>
+						<string key="openViewsDrawer:">id</string>
+						<string key="selectNextActivePanel:">id</string>
+						<string key="selectNextPanel:">id</string>
+						<string key="selectPreviousActivePanel:">id</string>
+						<string key="selectPreviousPanel:">id</string>
+						<string key="toggleSmallDrawerIcons:">id</string>
+						<string key="toggleViewsDrawer:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="_doubleClickedListItem:">
+							<string key="name">_doubleClickedListItem:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="closeCurrentPanel:">
+							<string key="name">closeCurrentPanel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="closeViewsDrawer:">
+							<string key="name">closeViewsDrawer:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="detachCurrentPanel:">
+							<string key="name">detachCurrentPanel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="getInfo:">
+							<string key="name">getInfo:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="joinRoom:">
+							<string key="name">joinRoom:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="openViewsDrawer:">
+							<string key="name">openViewsDrawer:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="selectNextActivePanel:">
+							<string key="name">selectNextActivePanel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="selectNextPanel:">
+							<string key="name">selectNextPanel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="selectPreviousActivePanel:">
+							<string key="name">selectPreviousActivePanel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="selectPreviousPanel:">
+							<string key="name">selectPreviousPanel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="toggleSmallDrawerIcons:">
+							<string key="name">toggleSmallDrawerIcons:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="toggleViewsDrawer:">
+							<string key="name">toggleViewsDrawer:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">../Controllers/JVChatWindowController.m</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">JVSideOutlineView</string>
+					<string key="superclassName">NSOutlineView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">../Views/JVSideOutlineView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">JVSideSplitView</string>
+					<string key="superclassName">JVSplitView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">../Views/JVSideSplitView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">JVSideStatusView</string>
+					<string key="superclassName">NSView</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">splitView</string>
+						<string key="NS.object.0">NSSplitView</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">splitView</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">splitView</string>
+							<string key="candidateClassName">NSSplitView</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">../Views/JVSideStatusView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">JVSidebarChatWindowController</string>
+					<string key="superclassName">JVChatWindowController</string>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="bodyView">NSView</string>
+						<string key="splitView">JVSideSplitView</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="bodyView">
+							<string key="name">bodyView</string>
+							<string key="candidateClassName">NSView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="splitView">
+							<string key="name">splitView</string>
+							<string key="candidateClassName">JVSideSplitView</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">../Controllers/JVSidebarChatWindowController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">JVSplitView</string>
+					<string key="superclassName">NSSplitView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">../Views/JVSplitView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">MVMenuButton</string>
+					<string key="superclassName">NSButton</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">../Views/MVMenuButton.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">doubleClicked:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">doubleClicked:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">doubleClicked:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
+					<reference key="sourceIdentifier" ref="123025591"/>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<bool key="IBDocument.previouslyAttemptedUpgradeToXcode5">YES</bool>
@@ -609,7 +888,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="sidebarActionWidget">{32, 23}</string>
+			<string key="NSActionTemplate">{14, 14}</string>
 			<string key="sidebarActionWidgetPressed">{32, 23}</string>
 			<string key="sidebarFavoritesWidget">{32, 23}</string>
 			<string key="sidebarFavoritesWidgetPressed">{32, 23}</string>

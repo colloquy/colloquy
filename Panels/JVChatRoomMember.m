@@ -260,11 +260,11 @@
 	if( [self buddy] ) {
 		switch( [_user status] ) {
 			case MVChatUserAwayStatus:
-				return [NSImage imageNamed:@"statusAway"];
+				return [NSImage imageNamed:NSImageNameStatusUnavailable];
 			case MVChatUserAvailableStatus:
 				if( [_user idleTime] >= 600. )
-					return [NSImage imageNamed:@"statusIdle"];
-				return [NSImage imageNamed:@"statusAvailable"];
+					return [NSImage imageNamed:NSImageNameStatusPartiallyAvailable];
+				return [NSImage imageNamed:NSImageNameStatusAvailable];
 			default:
 				return nil;
 		}

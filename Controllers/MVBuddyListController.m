@@ -599,14 +599,14 @@ static MVBuddyListController *sharedInstance = nil;
 
 		switch( [buddy status] ) {
 		case MVChatUserAwayStatus:
-			[cell setStatusImage:[NSImage imageNamed:@"statusAway"]];
+			[cell setStatusImage:[NSImage imageNamed:NSImageNameStatusUnavailable]];
 			break;
 		case MVChatUserAvailableStatus:
-			if( [buddy idleTime] >= 600. ) [cell setStatusImage:[NSImage imageNamed:@"statusIdle"]];
-			else [cell setStatusImage:[NSImage imageNamed:@"statusAvailable"]];
+			if( [buddy idleTime] >= 600. ) [cell setStatusImage:[NSImage imageNamed:NSImageNameStatusPartiallyAvailable]];
+			else [cell setStatusImage:[NSImage imageNamed:NSImageNameStatusAvailable]];
 			break;
 		default:
-			[cell setStatusImage:[NSImage imageNamed:@"statusOffline"]];
+			[cell setStatusImage:[NSImage imageNamed:NSImageNameStatusNone]];
 		}
 	} else if( [[column identifier] isEqualToString:@"switch"] ) {
 		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
