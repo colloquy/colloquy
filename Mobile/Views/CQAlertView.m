@@ -78,6 +78,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) show {
 	if (![UIDevice currentDevice].isSystemEight) {
+		if (_textFieldInformation.count) {
+			UITextField *textField = [self textFieldAtIndex:0];
+			[textField becomeFirstResponder];
+		}
+
 		[super show];
 		return;
 	}
@@ -125,6 +130,9 @@ NS_ASSUME_NONNULL_BEGIN
 	rect.origin = [UIApplication sharedApplication].keyWindow.center;
 	self.alertController.popoverPresentationController.sourceRect = rect;
 	self.alertController.popoverPresentationController.sourceView = self.overlappingPresentationViewController.view;
+
+	UITextField *textField = self.alertController.textFields.firstObject;
+	[textField becomeFirstResponder];
 
 	[self.overlappingPresentationViewController presentViewController:self.alertController animated:YES completion:nil];
 }
