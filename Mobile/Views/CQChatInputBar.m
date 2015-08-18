@@ -52,9 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 	foregroundColor = [UIColor colorFromName:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQChatStyleForegroundTextColor"]];
 	backgroundColor = [UIColor colorFromName:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQChatStyleBackgroundTextColor"]];
 
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[[NSNotificationCenter chatCenter] postNotificationName:CQChatInputBarDefaultsChanged object:nil];
-	});
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:CQChatInputBarDefaultsChanged object:nil];
 }
 
 - (void) _commonInitialization {

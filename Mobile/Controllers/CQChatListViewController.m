@@ -1332,8 +1332,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 				return;
 			}
-
-			indexPath = [chatIndexPath copy];
 		}
 	} else {
 		chatIndexPath = indexPath;

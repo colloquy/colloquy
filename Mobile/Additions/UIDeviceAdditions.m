@@ -1,7 +1,5 @@
 #import "UIDeviceAdditions.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
 #if !TARGET_IPHONE_SIMULATOR
 
 #import <sys/sysctl.h>
@@ -19,6 +17,10 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 
 	return @"";
 }
+#else
+
+NS_ASSUME_NONNULL_BEGIN
+
 #endif
 
 @implementation  UIDevice (UIDeviceColloquyAdditions)

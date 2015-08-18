@@ -139,59 +139,57 @@ NS_ASSUME_NONNULL_BEGIN
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
-	dispatch_async(dispatch_get_main_queue(), ^{
-		MVChatUser *user = [actionSheet associatedObjectForKey:@"user"];
-		MVChatRoom *room = [actionSheet associatedObjectForKey:@"room"];
+	MVChatUser *user = [actionSheet associatedObjectForKey:@"user"];
+	MVChatRoom *room = [actionSheet associatedObjectForKey:@"room"];
 
-		if (actionSheet.tag == UserActionSheetTag) {
-			if (buttonIndex == SendMessageButtonIndex) {
-				CQDirectChatController *chatController = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:NO];
-				[[CQChatController defaultController] showChatController:chatController animated:YES];
-			} else if (buttonIndex == [self userInfoButtonIndex]) {
-				CQUserInfoController *userInfoController = [[CQUserInfoController alloc] init];
-				userInfoController.user = user;
+	if (actionSheet.tag == UserActionSheetTag) {
+		if (buttonIndex == SendMessageButtonIndex) {
+			CQDirectChatController *chatController = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:NO];
+			[[CQChatController defaultController] showChatController:chatController animated:YES];
+		} else if (buttonIndex == [self userInfoButtonIndex]) {
+			CQUserInfoController *userInfoController = [[CQUserInfoController alloc] init];
+			userInfoController.user = user;
 
-				[[CQColloquyApplication sharedApplication] dismissPopoversAnimated:YES];
-				[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
+			[[CQColloquyApplication sharedApplication] dismissPopoversAnimated:YES];
+			[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
 
-	#if ENABLE(FILE_TRANSFERS)
-			} else if (buttonIndex == [self sendFileButtonIndex]) {
-				[[CQChatController defaultController] showFilePickerWithUser:user];
-	#endif
-			} else if (buttonIndex == [self operatorActionsButtonIndex]) {
-				NSUInteger localUserModes = (room.connection.localUser ? [room modesForMemberUser:room.connection.localUser] : 0);
-				NSUInteger selectedUserModes = (user ? [room modesForMemberUser:user] : 0);
+#if ENABLE(FILE_TRANSFERS)
+		} else if (buttonIndex == [self sendFileButtonIndex]) {
+			[[CQChatController defaultController] showFilePickerWithUser:user];
+#endif
+		} else if (buttonIndex == [self operatorActionsButtonIndex]) {
+			NSUInteger localUserModes = (room.connection.localUser ? [room modesForMemberUser:room.connection.localUser] : 0);
+			NSUInteger selectedUserModes = (user ? [room modesForMemberUser:user] : 0);
 
-				UIActionSheet *operatorSheet = [UIActionSheet operatorActionSheetWithLocalUserModes:localUserModes targetingUserWithModes:selectedUserModes disciplineModes:[room disciplineModesForMemberUser:user] onRoomWithFeatures:room.connection.supportedFeatures];
-				operatorSheet.delegate = operatorSheet;
-				operatorSheet.title = actionSheet.title;
+			UIActionSheet *operatorSheet = [UIActionSheet operatorActionSheetWithLocalUserModes:localUserModes targetingUserWithModes:selectedUserModes disciplineModes:[room disciplineModesForMemberUser:user] onRoomWithFeatures:room.connection.supportedFeatures];
+			operatorSheet.delegate = operatorSheet;
+			operatorSheet.title = actionSheet.title;
 
-				[operatorSheet associateObject:user forKey:@"user"];
-				[operatorSheet associateObject:room forKey:@"room"];
+			[operatorSheet associateObject:user forKey:@"user"];
+			[operatorSheet associateObject:room forKey:@"room"];
 
-				[[CQColloquyApplication sharedApplication] showActionSheet:operatorSheet forSender:[actionSheet associatedObjectForKey:@"userInfo"] animated:YES];
-			} else if (buttonIndex == [self ignoreButtonIndex]) {
-				if ([self associatedObjectForKey:@"has-ignore-rule"])
-					[room.connection.ignoreController removeIgnoreRuleFromString:user.nickname];
-				else [room.connection.ignoreController addIgnoreRule:[KAIgnoreRule ruleForUser:user.nickname mask:nil message:nil inRooms:nil isPermanent:YES friendlyName:nil]];
-			}
-		} else if (actionSheet.tag == OperatorActionSheetTag) {
-			id action = [actionSheet associatedObjectForKey:@"userInfo"][@(buttonIndex)];
-
-			if ([action isKindOfClass:[NSNumber class]]) {
-				MVChatRoomMemberMode mode = ([action unsignedIntegerValue] & 0x7FFF);
-				BOOL removeMode = (([action unsignedIntegerValue] & (1 << 16)) == (1 << 16));
-
-				if (removeMode) [room removeMode:mode forMemberUser:user];
-				else [room setMode:mode forMemberUser:user];
-			} else if ([action isEqual:@"ban"]) {
-				MVChatUser *wildcardUser = [MVChatUser wildcardUserWithNicknameMask:nil andHostMask:[NSString stringWithFormat:@"*@%@", user.address]];
-				[room addBanForUser:wildcardUser];
-			} else if ([action isEqual:@"kick"]) {
-				[room kickOutMemberUser:user forReason:nil];
-			}
+			[[CQColloquyApplication sharedApplication] showActionSheet:operatorSheet forSender:[actionSheet associatedObjectForKey:@"userInfo"] animated:YES];
+		} else if (buttonIndex == [self ignoreButtonIndex]) {
+			if ([self associatedObjectForKey:@"has-ignore-rule"])
+				[room.connection.ignoreController removeIgnoreRuleFromString:user.nickname];
+			else [room.connection.ignoreController addIgnoreRule:[KAIgnoreRule ruleForUser:user.nickname mask:nil message:nil inRooms:nil isPermanent:YES friendlyName:nil]];
 		}
-	});
+	} else if (actionSheet.tag == OperatorActionSheetTag) {
+		id action = [actionSheet associatedObjectForKey:@"userInfo"][@(buttonIndex)];
+
+		if ([action isKindOfClass:[NSNumber class]]) {
+			MVChatRoomMemberMode mode = ([action unsignedIntegerValue] & 0x7FFF);
+			BOOL removeMode = (([action unsignedIntegerValue] & (1 << 16)) == (1 << 16));
+
+			if (removeMode) [room removeMode:mode forMemberUser:user];
+			else [room setMode:mode forMemberUser:user];
+		} else if ([action isEqual:@"ban"]) {
+			MVChatUser *wildcardUser = [MVChatUser wildcardUserWithNicknameMask:nil andHostMask:[NSString stringWithFormat:@"*@%@", user.address]];
+			[room addBanForUser:wildcardUser];
+		} else if ([action isEqual:@"kick"]) {
+			[room kickOutMemberUser:user forReason:nil];
+		}
+	}
 }
 
 #pragma mark -
