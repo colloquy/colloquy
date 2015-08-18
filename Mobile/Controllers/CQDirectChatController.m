@@ -567,7 +567,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (_revealKeyboard) {
 		_revealKeyboard = NO;
-		[chatInputBar performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.5];
+		[chatInputBar becomeFirstResponder];
 	}
 }
 
@@ -953,7 +953,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (BOOL) _openURL:(NSURL *) url {
-	[self _forceRegsignKeyboard];
+	[self _forceResignKeyboard];
 
 	return [[CQColloquyApplication sharedApplication] openURL:url];
 }
@@ -1043,7 +1043,7 @@ NS_ASSUME_NONNULL_BEGIN
 		creationViewController.roomTarget = YES;
 		creationViewController.selectedConnection = self.connection;
 
-		[self _forceRegsignKeyboard];
+		[self _forceResignKeyboard];
 
 		[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
 
@@ -1206,7 +1206,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[creationViewController showRoomListFilteredWithSearchString:arguments.string];
 
-	[self _forceRegsignKeyboard];
+	[self _forceResignKeyboard];
 
 	[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
 
@@ -1298,7 +1298,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleHelpCommandWithArguments:(MVChatString *) arguments {
-	[self _forceRegsignKeyboard];
+	[self _forceResignKeyboard];
 
 	[[CQColloquyApplication sharedApplication] showHelp:nil];
 
@@ -1312,7 +1312,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleWelcomeCommandWithArguments:(MVChatString *) arguments {
-	[self _forceRegsignKeyboard];
+	[self _forceResignKeyboard];
 
 	[[CQColloquyApplication sharedApplication] showWelcome:nil];
 
@@ -1612,7 +1612,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (_didSendRecently || ![transcriptView canBecomeFirstResponder])
 		return;
 
-	[self _forceRegsignKeyboard];
+	[self _forceResignKeyboard];
 }
 
 - (void) setScrollbackLength:(NSUInteger) scrollbackLength {
@@ -1919,7 +1919,7 @@ NS_ASSUME_NONNULL_BEGIN
 	CQUserInfoController *userInfoController = [[CQUserInfoController alloc] init];
 	userInfoController.user = user;
 
-	[self _forceRegsignKeyboard];
+	[self _forceResignKeyboard];
 
 	[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
 }
@@ -1944,7 +1944,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) _forceRegsignKeyboard {
+- (void) _forceResignKeyboard {
 	_allowEditingToEnd = YES;
 	[chatInputBar resignFirstResponder];
 	_allowEditingToEnd = NO;

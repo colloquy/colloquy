@@ -1262,6 +1262,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	if( _roomListDirty ) return; // already queued to send notification
 	_roomListDirty = YES;
 
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _sendRoomListUpdatedNotification ) object:nil];
 	[self performSelector:@selector( _sendRoomListUpdatedNotification ) withObject:nil afterDelay:( 1. / 3. )];
 }
 

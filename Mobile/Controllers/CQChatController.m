@@ -695,7 +695,7 @@ static CQSoundController *fileTransferSound;
 		if ([CQChatOrderingController defaultController].chatViewControllers.count) {
 			if (!controllerIndex)
 				controllerIndex = 1;
-			[self performSelector:@selector(_showChatControllerUnanimated:) withObject:([CQChatOrderingController defaultController].chatViewControllers)[(controllerIndex - 1)] afterDelay:0.];
+			[self _showChatControllerUnanimated:[CQChatOrderingController defaultController].chatViewControllers[(controllerIndex - 1)]];
 		}
 	}
 }

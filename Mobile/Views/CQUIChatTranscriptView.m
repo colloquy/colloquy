@@ -359,7 +359,7 @@ NS_ASSUME_NONNULL_BEGIN
 		return;
 
 	_resetPending = YES;
-	[self performSelector:@selector(reset) withObject:nil afterDelay:0];
+	[self performSelector:@selector(reset) withObject:nil afterDelay:0.];
 }
 
 - (void) reset {

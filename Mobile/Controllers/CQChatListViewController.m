@@ -343,7 +343,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	// final sanity check
 	if (![cell respondsToSelector:@selector(takeValuesFromChatViewController:)]) {
 		[NSObject cancelPreviousPerformRequestsWithTarget:self.tableView selector:@selector(reloadData) object:nil];
-		[self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.];
+		[self.tableView reloadData];
 		return;
 	}
 
@@ -486,11 +486,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) _chatOrderingControllerDidChangeOrdering:(NSNotification *) notification {
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reorderChatControllers) object:nil];
-	[self performSelector:@selector(_reorderChatControllers) withObject:nil afterDelay:0.];
-}
-
-- (void) _reorderChatControllers {
 	if (!_active)
 		return;
 

@@ -618,7 +618,7 @@ static NSMutableArray *highlightWords;
 			[self performSelector:@selector(_presentModalViewControllerWithInfo:) withObject:@{
 				@"modalViewController": modalViewController,
 				@"animated": @(animated)
-			} afterDelay:0.5];
+			} afterDelay:0.25];
 			return;
 		}
 	}
