@@ -9,9 +9,11 @@
 #import <ChatCore/MVChatString.h>
 #import <ChatCore/MVChatUser.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotification";
 
-@implementation CQIgnoreRulesController
+@implementation  CQIgnoreRulesController
 - (instancetype) init {
 	NSAssert(NO, @"use [CQIgnoreRulesController initWithConnection:] instead");
 	return nil;
@@ -162,3 +164,5 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 	return [_appSupportPath stringByAppendingPathComponent:ignoreFile];
 }
 @end
+
+NS_ASSUME_NONNULL_END

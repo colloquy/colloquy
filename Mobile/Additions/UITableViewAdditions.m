@@ -1,6 +1,8 @@
 #import "UITableViewAdditions.h"
 
-@implementation UITableView (UITableViewColloquyAdditions)
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  UITableView (UITableViewColloquyAdditions)
 - (void) updateCellAtIndexPath:(NSIndexPath *) indexPath withAnimation:(UITableViewRowAnimation) animation {
 	NSParameterAssert(indexPath != nil);
 
@@ -21,7 +23,7 @@
 		[self selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 }
 
-- (void) performAction:(SEL) action forCell:(UITableViewCell *) cell sender:(id) sender {
+- (void) performAction:(SEL) action forCell:(UITableViewCell *) cell sender:(__nullable id) sender {
 	id delegate = self.delegate;
 	if (![delegate respondsToSelector:@selector(tableView:performAction:forRowAtIndexPath:withSender:)])
 		return;
@@ -53,3 +55,5 @@
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

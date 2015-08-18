@@ -16,6 +16,8 @@
 @class MVFileTransfer;
 #endif
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *CQChatControllerAddedChatViewControllerNotification;
 extern NSString *CQChatControllerRemovedChatViewControllerNotification;
 extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
@@ -70,6 +72,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 - (void) closeViewController:(id) controller;
 @end
 
+
 @protocol CQChatViewController <NSObject>
 @property (nonatomic, readonly) MVChatConnection *connection;
 @property (nonatomic, readonly) id target;
@@ -99,3 +102,5 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 @interface MVIRCChatRoom (CQChatControllerAdditions)
 @property (nonatomic, readonly) NSString *displayName;
 @end
+
+NS_ASSUME_NONNULL_END

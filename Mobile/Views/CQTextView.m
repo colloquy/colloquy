@@ -1,6 +1,8 @@
 #import "CQTextView.h"
 
-@implementation CQTextView
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQTextView
 - (instancetype) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
 		return nil;
@@ -76,3 +78,5 @@
 	_placeholder.alpha = !self.text.length;
 }
 @end
+
+NS_ASSUME_NONNULL_END

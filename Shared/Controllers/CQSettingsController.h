@@ -3,14 +3,16 @@ typedef NS_OPTIONS(NSUInteger, CQSettingsLocation) {
 	CQSettingsLocationCloud = (1 << 1) ,
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *const CQSettingsDidChangeNotification;
 
 @protocol CQSettings <NSObject>
 @optional
 - (instancetype) init;
 
-- (id) objectForKey:(NSString *) defaultName;
-- (void) setObject:(id) value forKey:(NSString *) defaultName;
+- (__nullable id) objectForKey:(NSString *) defaultName;
+- (void) setObject:(__nullable id) value forKey:(NSString *) defaultName;
 - (void) removeObjectForKey:(NSString *) defaultName;
 
 - (NSString *) stringForKey:(NSString *) defaultName;
@@ -45,4 +47,6 @@ extern NSString *const CQSettingsDidChangeNotification;
 
 - (void) onLocation:(CQSettingsLocation) location block:(void (^)(id settingsController)) block;
 @end
+
+NS_ASSUME_NONNULL_END
 

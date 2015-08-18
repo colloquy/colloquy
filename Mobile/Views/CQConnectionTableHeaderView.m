@@ -6,7 +6,9 @@
 
 #import "UIViewAdditions.h"
 
-@implementation CQConnectionTableHeaderView
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQConnectionTableHeaderView
 - (instancetype) initWithReuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithReuseIdentifier:reuseIdentifier]))
 		return nil;
@@ -276,8 +278,10 @@
 
 #pragma mark -
 
-- (void) _disclosureButtonPressed:(id) sender {
+- (void) _disclosureButtonPressed:(__nullable id) sender {
 	if (_selectedConnectionHeaderView)
 		_selectedConnectionHeaderView();
 }
 @end
+
+NS_ASSUME_NONNULL_END

@@ -9,6 +9,8 @@
 #include <IOKit/network/IOEthernetController.h>
 #endif
 
+NS_ASSUME_NONNULL_BEGIN
+
 static NSString *applicationNameKey = @"application-name";
 
 #if SYSTEM(IOS)
@@ -136,7 +138,7 @@ static void generateDeviceIdentifier() {
 
 #pragma mark -
 
-@implementation CQAnalyticsController
+@implementation  CQAnalyticsController
 + (CQAnalyticsController *) defaultController {
 #if SYSTEM(MAC)
 	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVAllowAnalytics"])
@@ -222,11 +224,11 @@ static void generateDeviceIdentifier() {
 
 #pragma mark -
 
-- (id) objectForKey:(NSString *) key {
+- (__nullable id) objectForKey:(NSString *) key {
 	return _data[key];
 }
 
-- (void) setObject:(id) object forKey:(NSString *) key {
+- (void) setObject:(__nullable id) object forKey:(NSString *) key {
 	if (object) {
 		_data[key] = object;
 		[self synchronizeSoon];
@@ -312,3 +314,5 @@ static void generateDeviceIdentifier() {
 	[self synchronizeSynchronously];
 }
 @end
+
+NS_ASSUME_NONNULL_END

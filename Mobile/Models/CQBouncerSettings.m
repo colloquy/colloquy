@@ -2,7 +2,9 @@
 
 #import "CQKeychain.h"
 
-@implementation CQBouncerSettings
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQBouncerSettings
 - (instancetype) init {
 	return [self initWithDictionaryRepresentation:@{ @"pushNotifications": @(YES), @"serverPort": @(6667) }];
 }
@@ -94,3 +96,5 @@
 	[[CQKeychain standardKeychain] setPassword:password forServer:_identifier area:@"Bouncer"];
 }
 @end
+
+NS_ASSUME_NONNULL_END

@@ -2,9 +2,11 @@
 
 #import "CQKeychain.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *const CQBookmarkingServicePinboard = @"CQBookmarkingServicePinboard";
 
-@implementation CQPinboardController
+@implementation  CQPinboardController
 + (NSString *) serviceName {
 	return @"Pinboard";
 }
@@ -31,3 +33,5 @@ NSString *const CQBookmarkingServicePinboard = @"CQBookmarkingServicePinboard";
 	[self handleBookmarkingOfLink:urlString];
 }
 @end
+
+NS_ASSUME_NONNULL_END

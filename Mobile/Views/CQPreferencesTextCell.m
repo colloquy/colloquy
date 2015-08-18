@@ -2,7 +2,9 @@
 
 static CQPreferencesTextCell *currentEditingCell;
 
-@implementation CQPreferencesTextCell
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQPreferencesTextCell
 + (CQPreferencesTextCell *) currentEditingCell {
 	return currentEditingCell;
 }
@@ -148,3 +150,5 @@ static CQPreferencesTextCell *currentEditingCell;
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

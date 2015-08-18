@@ -5,9 +5,11 @@
 
 #import <MediaPlayer/MPMoviePlayerController.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?locale=%@";
 
-@implementation CQHelpTopicsViewController
+@implementation  CQHelpTopicsViewController
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -236,3 +238,5 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 	[self.tableView reloadData];
 }
 @end
+
+NS_ASSUME_NONNULL_END

@@ -9,6 +9,8 @@
 @class MVChatConnection;
 @class MVDirectChatConnection;
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *const CQChatOrderingControllerDidChangeOrderingNotification;
 
 @interface CQChatOrderingController : NSObject {
@@ -45,3 +47,5 @@ extern NSString *const CQChatOrderingControllerDidChangeOrderingNotification;
 - (id) connectionAtIndex:(NSInteger) index;
 - (NSUInteger) sectionIndexForConnection:(id) connection;
 @end
+
+NS_ASSUME_NONNULL_END

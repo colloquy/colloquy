@@ -2,7 +2,9 @@
 
 #import "CQColloquyApplication.h"
 
-@implementation CQModalNavigationController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQModalNavigationController
 - (instancetype) initWithRootViewController:(UIViewController *) rootViewController {
 	if (!(self = [self init]))
 		return nil;
@@ -42,7 +44,9 @@
 
 #pragma mark -
 
-- (void) close:(id) sender {
+- (void) close:(__nullable id) sender {
 	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
 @end
+
+NS_ASSUME_NONNULL_END

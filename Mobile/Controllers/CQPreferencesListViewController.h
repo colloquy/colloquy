@@ -4,14 +4,16 @@
 @class CQPreferencesListEditViewController;
 @class CQPreferencesListViewController;
 
-typedef void (^CQPreferencesListBlock)(CQPreferencesListViewController *preferencesListViewController);
-
 typedef NS_ENUM(NSInteger, CQPreferencesListType) {
 	CQPreferencesListTypeNone,
 	CQPreferencesListTypeAudio,
 	CQPreferencesListTypeFont,
 	CQPreferencesListTypeImage
 };
+
+NS_ASSUME_NONNULL_BEGIN
+
+typedef void (^CQPreferencesListBlock)(CQPreferencesListViewController *preferencesListViewController);
 
 @interface CQPreferencesListViewController : CQTableViewController {
 	@protected
@@ -49,9 +51,11 @@ typedef NS_ENUM(NSInteger, CQPreferencesListType) {
 @property (nonatomic, copy) NSString *footerText;
 @property (nonatomic, strong) id customEditingViewController;
 
-@property (nonatomic, weak) id target;
+@property (nonatomic, nullable, weak) id target;
 @property (nonatomic) SEL action;
 @property (nonatomic, copy) CQPreferencesListBlock preferencesListBlock;
 
 @property (nonatomic) CQPreferencesListType listType;
 @end
+
+NS_ASSUME_NONNULL_END

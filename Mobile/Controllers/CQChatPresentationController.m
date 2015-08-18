@@ -7,10 +7,12 @@
 #import "UIDeviceAdditions.h"
 #import "NSNotificationAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQChatPresentationController ()
 @end
 
-@implementation CQChatPresentationController
+@implementation  CQChatPresentationController
 - (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
@@ -200,3 +202,5 @@
 		_topChatViewController.scrollView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(_toolbar.frame), 0., 0., 0.);
 }
 @end
+
+NS_ASSUME_NONNULL_END

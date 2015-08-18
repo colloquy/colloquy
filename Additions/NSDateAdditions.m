@@ -1,5 +1,7 @@
 #import "NSDateAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation NSDate (NSDateAdditions)
 + (NSString *) formattedStringWithDate:(NSDate *) date dateFormat:(NSString *) format {
 	NSDateFormatter *dateFormatter = ([NSThread currentThread].threadDictionary)[format];
@@ -93,3 +95,5 @@ NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFormat) {
 	
 	return result;
 }
+
+NS_ASSUME_NONNULL_END

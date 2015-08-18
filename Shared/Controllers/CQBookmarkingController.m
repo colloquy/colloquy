@@ -17,7 +17,9 @@ NSString *const CQBookmarkingErrorDomain = @"CQBookmarkingErrorDomain";
 
 static NSString *bookmarkingService;
 
-@implementation CQBookmarkingController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQBookmarkingController
 + (void) userDefaultsChanged {
 	bookmarkingService = [[[NSUserDefaults standardUserDefaults] objectForKey:@"CQBookmarkingService"] copy];
 }
@@ -103,3 +105,5 @@ static NSString *bookmarkingService;
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

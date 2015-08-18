@@ -5,6 +5,8 @@
 
 @class MVChatConnection;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQUserInfoRoomListViewController : CQTableViewController <UIActionSheetDelegate> {
 	@protected
 	NSArray *_rooms;
@@ -13,3 +15,5 @@
 @property (nonatomic, strong) NSArray *rooms;
 @property (nonatomic, strong) MVChatConnection *connection;
 @end
+
+NS_ASSUME_NONNULL_END

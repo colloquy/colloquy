@@ -1,13 +1,15 @@
 #import "CQAlertView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQAlertView ()
-@property (atomic, strong) UIViewController *overlappingPresentationViewController;
-@property (atomic, strong) UIAlertController *alertController;
-@property (atomic, strong) id me;
+@property (atomic, nullable, strong) UIViewController *overlappingPresentationViewController;
+@property (atomic, nullable, strong) UIAlertController *alertController;
+@property (atomic, nullable, strong) id me;
 
 @end
 
-@implementation CQAlertView
+@implementation  CQAlertView
 - (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
@@ -39,7 +41,7 @@
 	}
 }
 
-- (void) addTextFieldWithPlaceholder:(NSString *) placeholder andText:(NSString *) text {
+- (void) addTextFieldWithPlaceholder:(NSString *__nullable) placeholder andText:(NSString *__nullable) text {
 	NSAssert(_textFieldInformation.count + 1 < 3, @"alertView's are limited to a max of 2 textfields as of iOS 5", nil);
 
 	NSMutableDictionary *textFieldInformation = [NSMutableDictionary dictionary];
@@ -142,3 +144,5 @@
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

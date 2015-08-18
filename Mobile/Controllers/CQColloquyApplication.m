@@ -24,6 +24,8 @@ typedef NS_ENUM(NSInteger, CQSidebarOrientation) {
 	CQSidebarOrientationAll
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyApplicationDidRecieveDeviceTokenNotification";
 
 #define BrowserAlertTag 1
@@ -33,7 +35,7 @@ static NSMutableArray *highlightWords;
 @interface CQColloquyApplication () <BITHockeyManagerDelegate>
 @end
 
-@implementation CQColloquyApplication
+@implementation  CQColloquyApplication
 + (CQColloquyApplication *) sharedApplication {
 	return (CQColloquyApplication *)[UIApplication sharedApplication];
 }
@@ -509,11 +511,11 @@ static NSMutableArray *highlightWords;
 	[self showActionSheet:sheet forSender:nil orFromPoint:point animated:YES];
 }
 
-- (void) showActionSheet:(UIActionSheet *) sheet forSender:(id) sender animated:(BOOL) animated {
+- (void) showActionSheet:(UIActionSheet *) sheet forSender:(__nullable id) sender animated:(BOOL) animated {
 	[self showActionSheet:sheet forSender:sender orFromPoint:CGPointZero animated:animated];
 }
 
-- (void) showActionSheet:(UIActionSheet *) sheet forSender:(id) sender orFromPoint:(CGPoint) point animated:(BOOL) animated {
+- (void) showActionSheet:(UIActionSheet *) sheet forSender:(__nullable id) sender orFromPoint:(CGPoint) point animated:(BOOL) animated {
 	if (sender && [[UIDevice currentDevice] isPadModel]) {
 		id old = _visibleActionSheet;
 		[old dismissWithClickedButtonIndex:[old cancelButtonIndex] animated:NO];
@@ -650,41 +652,41 @@ static NSMutableArray *highlightWords;
 
 #pragma mark -
 
-- (void) showHelp:(id) sender {
+- (void) showHelp:(__nullable id) sender {
 	CQWelcomeController *welcomeController = [[CQWelcomeController alloc] init];
 	welcomeController.shouldShowOnlyHelpTopics = YES;
 
 	[self presentModalViewController:welcomeController animated:YES];
 }
 
-- (void) showWelcome:(id) sender {
+- (void) showWelcome:(__nullable id) sender {
 	CQWelcomeController *welcomeController = [[CQWelcomeController alloc] init];
 
 	[self presentModalViewController:welcomeController animated:YES];
 }
 
-- (void) toggleConnections:(id) sender {
+- (void) toggleConnections:(__nullable id) sender {
 	[self showConnections:sender];
 }
 
-- (void) showConnections:(id) sender {
+- (void) showConnections:(__nullable id) sender {
 	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
 		[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
 		[self.navigationController popToRootViewControllerAnimated:NO];
 	}
 }
 
-- (void) toggleColloquies:(id) sender {
+- (void) toggleColloquies:(__nullable id) sender {
 	if (_colloquiesPopoverController.popoverVisible)
 		[_colloquiesPopoverController dismissPopoverAnimated:YES];
 	else [self showColloquies:sender];
 }
 
-- (void) showColloquies:(id) sender {
+- (void) showColloquies:(__nullable id) sender {
 	[self showColloquies:sender hidingTopViewController:YES];
 }
 
-- (void) showColloquies:(id) sender hidingTopViewController:(BOOL) hidingTopViewController {
+- (void) showColloquies:(__nullable id) sender hidingTopViewController:(BOOL) hidingTopViewController {
 	if ([[UIDevice currentDevice] isPadModel]) {
 		if (!_colloquiesPopoverController.popoverVisible) {
 			[self dismissPopoversAnimated:NO];
@@ -866,3 +868,5 @@ static NSMutableArray *highlightWords;
 #endif
 }
 @end
+
+NS_ASSUME_NONNULL_END

@@ -1,6 +1,8 @@
 #import "UIImageAdditions.h"
 
-@implementation UIImage (UIImageAdditions)
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  UIImage (UIImageAdditions)
 + (UIImage *) patternImageWithColor:(UIColor *) color {
 	UIImage *image = nil;
 	UIGraphicsBeginImageContext(CGSizeMake(3., 3.)); {
@@ -62,3 +64,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

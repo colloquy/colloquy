@@ -1,5 +1,7 @@
 @protocol CQBrowserViewControllerDelegate;
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
 @interface CQColloquyApplication : UIApplication <UIApplicationDelegate, UISplitViewControllerDelegate, UIAlertViewDelegate> {
@@ -21,11 +23,11 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
 + (CQColloquyApplication *) sharedApplication;
 
-- (void) showHelp:(id) sender;
-- (void) showWelcome:(id) sender;
-- (void) showConnections:(id) sender;
-- (void) showColloquies:(id) sender;
-- (void) showColloquies:(id) sender hidingTopViewController:(BOOL) hidingTopViewController;
+- (void) showHelp:(__nullable id) sender;
+- (void) showWelcome:(__nullable id) sender;
+- (void) showConnections:(__nullable id) sender;
+- (void) showColloquies:(__nullable id) sender;
+- (void) showColloquies:(__nullable id) sender hidingTopViewController:(BOOL) hidingTopViewController;
 
 - (void) dismissPopoversAnimated:(BOOL) animated;
 
@@ -34,7 +36,7 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
 - (void) showActionSheet:(UIActionSheet *) sheet;
 - (void) showActionSheet:(UIActionSheet *) sheet fromPoint:(CGPoint) point;
-- (void) showActionSheet:(UIActionSheet *) sheet forSender:(id) sender animated:(BOOL) animated;
+- (void) showActionSheet:(UIActionSheet *) sheet forSender:(__nullable id) sender animated:(BOOL) animated;
 
 @property (nonatomic, readonly) UIViewController *mainViewController;
 @property (nonatomic, readonly) UIViewController *modalViewController;
@@ -61,3 +63,5 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
 @property (readonly, strong) UISplitViewController *splitViewController;
 @end
+
+NS_ASSUME_NONNULL_END

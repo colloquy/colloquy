@@ -13,6 +13,8 @@ typedef NS_ENUM(NSInteger, CQColorPosition) {
 	CQColorPositionBackground
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol CQChatInputStyleDelegate <NSObject>
 @required
 - (void) chatInputStyleViewShouldClose:(CQChatInputStyleViewController *) chatInputStyleView;
@@ -27,3 +29,5 @@ typedef NS_ENUM(NSInteger, CQColorPosition) {
 
 @property (atomic, assign) BOOL isSelectingRange;
 @end
+
+NS_ASSUME_NONNULL_END

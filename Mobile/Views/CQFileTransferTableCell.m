@@ -14,7 +14,9 @@
 
 #pragma mark -
 
-@implementation CQFileTransferTableCell
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQFileTransferTableCell
 
 - (void) dealloc {
 	[_iconImageView release];
@@ -197,5 +199,7 @@
 #undef LABEL_SPACING
 }
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

@@ -28,7 +28,9 @@ static NSString *mentionServiceReplacementFormat;
 static BOOL timestampEveryMessage;
 static NSString *timestampFormat;
 
-@implementation CQProcessChatMessageOperation
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQProcessChatMessageOperation
 @synthesize processedMessageInfo = _processedMessage;
 
 + (void) userDefaultsChanged {
@@ -184,7 +186,7 @@ static void commonChatAndImageReplacment(NSMutableString *string, NSRangePointer
 	}
 }
 
-static void mentionChatReplacment(NSMutableString *string, NSRangePointer textRange, NSMutableDictionary *unused) {
+static void mentionChatReplacment(NSMutableString *string, NSRangePointer textRange, NSMutableDictionary *__nullable unused) {
 	if (!mentionServiceRegex)
 		return;
 
@@ -202,7 +204,7 @@ static void mentionChatReplacment(NSMutableString *string, NSRangePointer textRa
 	}
 }
 
-static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRangePointer range, NSMutableDictionary *foundGIFs, void (*function)(NSMutableString *, NSRangePointer, NSMutableDictionary *)) {
+static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRangePointer range, NSMutableDictionary *__nullable foundGIFs, void (*function)(NSMutableString *, NSRangePointer, NSMutableDictionary *)) {
 	if (!html || !function || !range)
 		return;
 
@@ -375,3 +377,5 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 		[strongTarget performSelectorOnMainThread:_action withObject:self waitUntilDone:NO];
 }
 @end
+
+NS_ASSUME_NONNULL_END

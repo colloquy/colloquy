@@ -13,6 +13,8 @@
 
 #define SendMessageButtonIndex 0
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UIActionSheet () <UIActionSheetDelegate>
 @end
 
@@ -218,3 +220,5 @@
 	return [self ignoreButtonIndex] + 1;
 }
 @end
+
+NS_ASSUME_NONNULL_END

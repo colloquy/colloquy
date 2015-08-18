@@ -1,3 +1,5 @@
+NS_ASSUME_NONNULL_BEGIN
+
 typedef void (^UITextFieldBlock)(UITextField *textField);
 
 @interface CQPreferencesTextCell : UITableViewCell <UITextFieldDelegate> {
@@ -16,3 +18,5 @@ typedef void (^UITextFieldBlock)(UITextField *textField);
 @property (nonatomic) SEL textEditAction;
 @property (nonatomic, copy) UITextFieldBlock textFieldBlock;
 @end
+
+NS_ASSUME_NONNULL_END

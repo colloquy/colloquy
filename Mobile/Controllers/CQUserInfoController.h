@@ -5,9 +5,13 @@
 
 @class MVChatUser;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQUserInfoController : CQModalNavigationController <UINavigationControllerDelegate> {
 	@protected
 	MVChatUser *_user;
 }
 @property (nonatomic, strong) MVChatUser *user;
 @end
+
+NS_ASSUME_NONNULL_END

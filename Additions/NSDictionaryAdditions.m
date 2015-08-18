@@ -1,6 +1,8 @@
 #import "NSDictionaryAdditions.h"
 #import "NSStringAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation NSDictionary (NSDictionaryAdditions)
 + (NSDictionary *) dictionaryWithKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary {
 	return [[NSMutableDictionary alloc] initWithKeys:keys fromDictionary:dictionary];
@@ -44,3 +46,5 @@
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

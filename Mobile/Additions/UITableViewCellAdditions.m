@@ -1,6 +1,8 @@
 #import "UITableViewCellAdditions.h"
 
-@implementation UITableViewCell (UITableViewCellColloquyAdditions)
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  UITableViewCell (UITableViewCellColloquyAdditions)
 + (id) reusableTableViewCellInTableView:(UITableView *) tableView {
 	return [self reusableTableViewCellInTableView:tableView withIdentifier:NSStringFromClass([self class])];
 }
@@ -42,7 +44,7 @@
 
 #pragma mark -
 
-- (void) performAction:(SEL) action sender:(id) sender {
+- (void) performAction:(SEL) action sender:(__nullable id) sender {
 	UITableView *tableView = (UITableView *)self.superview;
 	if (![tableView isKindOfClass:[UITableView class]])
 		return;
@@ -52,20 +54,22 @@
 
 #pragma mark -
 
-- (void) join:(id) sender {
+- (void) join:(__nullable id) sender {
 	[self performAction:_cmd sender:sender];
 }
 
-- (void) leave:(id) sender {
+- (void) leave:(__nullable id) sender {
 	[self performAction:_cmd sender:sender];
 }
 
-- (void) connect:(id) sender {
+- (void) connect:(__nullable id) sender {
 	[self performAction:_cmd sender:sender];
 }
 
-- (void) disconnect:(id) sender {
+- (void) disconnect:(__nullable id) sender {
 	[self performAction:_cmd sender:sender];
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -1,3 +1,5 @@
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQChatRoomInfoTableCell : UITableViewCell {
 	@protected
 	UIImageView *_iconImageView;
@@ -11,3 +13,5 @@
 @property (nonatomic, copy) NSString *topic;
 @property (nonatomic) NSUInteger memberCount;
 @end
+
+NS_ASSUME_NONNULL_END

@@ -6,7 +6,9 @@
 #define CompletionBubbleRadius 14.5
 #define CompletionBubbleInset 6.5
 
-@implementation CQTextCompletionView
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQTextCompletionView
 @synthesize delegate = _delegate;
 
 - (instancetype) initWithFrame:(CGRect) frame {
@@ -269,3 +271,5 @@
 	self.selectedCompletion = NSNotFound;
 }
 @end
+
+NS_ASSUME_NONNULL_END

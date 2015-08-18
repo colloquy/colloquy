@@ -7,6 +7,8 @@
 
 #define RoomPasswordRow 1
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQPreferencesListEditViewController (Private)
 - (void) listItemChanged:(CQPreferencesTextCell *) sender;
 @end
@@ -16,7 +18,7 @@
 @property (nonatomic, readonly) NSString *password;
 @end
 
-@implementation CQPreferencesListChannelEditViewController
+@implementation  CQPreferencesListChannelEditViewController
 - (void) savePasswordToKeychain {
 	NSString *room = [_connection properNameForChatRoomNamed:self.room];
 	if (room.length)
@@ -113,3 +115,5 @@
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

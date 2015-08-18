@@ -10,6 +10,8 @@ typedef NS_ENUM(NSInteger, CQConsoleMessageType) {
 	CQConsoleMessageTypePing // PING and PONG
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQProcessConsoleMessageOperation : NSOperation {
 	NSMutableString *_message;
 	NSMutableDictionary *_processedMessage;
@@ -40,3 +42,5 @@ typedef NS_ENUM(NSInteger, CQConsoleMessageType) {
 @property SEL action;
 @property (strong) id userInfo;
 @end
+
+NS_ASSUME_NONNULL_END

@@ -2,9 +2,11 @@
 
 #import "CQKeychain.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *const CQBookmarkingServiceInstapaper = @"CQBookmarkingServiceInstapaper";
 
-@implementation CQInstapaperController
+@implementation  CQInstapaperController
 + (NSString *) serviceName {
 	return @"Instapaper";
 }
@@ -31,3 +33,5 @@ NSString *const CQBookmarkingServiceInstapaper = @"CQBookmarkingServiceInstapape
 	[self handleBookmarkingOfLink:urlString];
 }
 @end
+
+NS_ASSUME_NONNULL_END

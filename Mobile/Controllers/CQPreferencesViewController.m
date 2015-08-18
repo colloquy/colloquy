@@ -2,7 +2,9 @@
 
 #import "CQPreferencesDisplayViewController.h"
 
-@implementation CQPreferencesViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQPreferencesViewController
 - (void) viewDidLoad {
 	if (!_rootViewController) {
 		CQPreferencesDisplayViewController *preferencesDisplayViewController = [[CQPreferencesDisplayViewController alloc] initWithRootPlist];
@@ -18,3 +20,5 @@
 	_rootViewController.navigationItem.leftBarButtonItem = nil;
 }
 @end
+
+NS_ASSUME_NONNULL_END

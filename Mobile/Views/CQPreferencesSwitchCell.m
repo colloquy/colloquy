@@ -1,6 +1,8 @@
 #import "CQPreferencesSwitchCell.h"
 
-@implementation CQPreferencesSwitchCell
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQPreferencesSwitchCell
 - (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
@@ -18,7 +20,7 @@
 
 #pragma mark -
 
-- (void) valueChanged:(id) sender {
+- (void) valueChanged:(__nullable id) sender {
 	if (self.switchControlBlock)
 		self.switchControlBlock(sender);
 }
@@ -67,3 +69,5 @@
 	_switchControl.frame = frame;
 }
 @end
+
+NS_ASSUME_NONNULL_END

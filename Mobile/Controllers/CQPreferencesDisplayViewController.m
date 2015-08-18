@@ -7,6 +7,8 @@
 
 #import <objc/runtime.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 // These are defined as constants because they are used in Settings.app
 static NSString *const CQPSGroupSpecifier = @"PSGroupSpecifier";
 static NSString *const CQPSTextFieldSpecifier = @"PSTextFieldSpecifier";
@@ -55,7 +57,7 @@ static NSString *const CQPSListTypeAudio = @"Audio";
 static NSString *const CQPSListTypeImage = @"Image";
 static NSString *const CQPSListTypeFont = @"Font";
 
-@implementation CQPreferencesDisplayViewController {
+@implementation  CQPreferencesDisplayViewController {
 	BOOL _active;
 }
 
@@ -390,3 +392,5 @@ static NSString *const CQPSListTypeFont = @"Font";
 	[controller dismissViewControllerAnimated:[UIView areAnimationsEnabled] completion:NULL];
 }
 @end
+
+NS_ASSUME_NONNULL_END

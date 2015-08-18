@@ -4,7 +4,9 @@ enum {
 	CQMessageSectionRecentlySent
 };
 
-@implementation CQImportantChatMessageViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQImportantChatMessageViewController
 - (instancetype) initWithStyle:(UITableViewStyle) style {
 	NSAssert(NO, @"use -[CQImportantChatMessageViewController initWithMessages:delegate:] instead");
 	return nil;
@@ -80,3 +82,5 @@ enum {
 		[_delegate importantChatMessageViewController:self didSelectMessage:_messages[indexPath.row][@"message"] isAction:[_messages[indexPath.row][@"action"] boolValue]];
 }
 @end
+
+NS_ASSUME_NONNULL_END

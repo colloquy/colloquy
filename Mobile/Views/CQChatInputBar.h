@@ -9,6 +9,8 @@ typedef NS_ENUM(NSInteger, CQChatInputBarResponderState) {
 	CQChatInputBarResponder
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQChatInputBar : UIView <UITextViewDelegate, CQTextCompletionViewDelegate> {
 	@protected
 	UIView *_backgroundView;
@@ -33,7 +35,7 @@ typedef NS_ENUM(NSInteger, CQChatInputBarResponderState) {
 	NSMutableDictionary *_accessoryImages;
 	CQChatInputBarResponderState _responderState;
 }
-@property (nonatomic, weak) IBOutlet id <CQChatInputBarDelegate> delegate;
+@property (nonatomic, nullable, weak) IBOutlet id <CQChatInputBarDelegate> delegate;
 
 @property (nonatomic, strong) UIColor *tintColor;
 @property (nonatomic, strong) UIFont *font;
@@ -72,3 +74,5 @@ typedef NS_ENUM(NSInteger, CQChatInputBarResponderState) {
 - (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) chatInputBar;
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar shouldChangeHeightBy:(CGFloat) difference;
 @end
+
+NS_ASSUME_NONNULL_END

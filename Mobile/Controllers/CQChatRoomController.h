@@ -7,6 +7,8 @@ typedef NS_ENUM(NSInteger, CQChatRoomBatchType) {
 	CQBatchTypeParts
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQChatRoomController : CQDirectChatController <UIPopoverControllerDelegate> {
 	@protected
 	NSMutableArray *_orderedMembers;
@@ -28,3 +30,5 @@ typedef NS_ENUM(NSInteger, CQChatRoomBatchType) {
 
 - (void) didJoin;
 @end
+
+NS_ASSUME_NONNULL_END

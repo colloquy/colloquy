@@ -1,5 +1,7 @@
 @class CQIgnoreRulesController;
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *const CQInlineGIFImageKey;
 
 @interface CQProcessChatMessageOperation : NSOperation {
@@ -30,3 +32,5 @@ extern NSString *const CQInlineGIFImageKey;
 @property SEL action;
 @property (strong) id userInfo;
 @end
+
+NS_ASSUME_NONNULL_END

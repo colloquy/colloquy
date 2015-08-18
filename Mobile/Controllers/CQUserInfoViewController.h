@@ -5,6 +5,8 @@
 
 @class MVChatUser;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQUserInfoViewController : CQTableViewController {
 	@protected
 	MVChatUser *_user;
@@ -14,6 +16,8 @@
 }
 @property (nonatomic, strong) MVChatUser *user;
 
-- (IBAction) showJoinedRooms:(id) sender;
-- (IBAction) refreshInformation:(id) sender;
+- (IBAction) showJoinedRooms:(__nullable id) sender;
+- (IBAction) refreshInformation:(__nullable id) sender;
 @end
+
+NS_ASSUME_NONNULL_END

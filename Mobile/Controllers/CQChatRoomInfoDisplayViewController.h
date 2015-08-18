@@ -2,6 +2,8 @@
 
 @class MVChatRoom;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQChatRoomInfoDisplayViewController : CQTableViewController <UITextFieldDelegate, UITextViewDelegate> {
 @private
 	MVChatRoom *_room;
@@ -15,3 +17,5 @@
 
 - (instancetype) initWithRoom:(MVChatRoom *) room NS_DESIGNATED_INITIALIZER;
 @end
+
+NS_ASSUME_NONNULL_END

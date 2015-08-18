@@ -7,7 +7,9 @@
 #import "CQDirectChatController.h"
 #import "CQKeychain.h"
 
-@implementation CQChatCreationViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQChatCreationViewController
 - (void) viewDidLoad {
 	if (!_rootViewController) {
 		CQChatEditViewController *editViewController = [[CQChatEditViewController alloc] init];
@@ -64,7 +66,7 @@
 	[(CQChatEditViewController *)_rootViewController showRoomListFilteredWithSearchString:searchString];
 }
 
-- (void) commit:(id) sender {
+- (void) commit:(__nullable id) sender {
 	CQChatEditViewController *editViewController = (CQChatEditViewController *)_rootViewController;
 	MVChatConnection *connection = editViewController.selectedConnection;
 
@@ -100,3 +102,5 @@
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

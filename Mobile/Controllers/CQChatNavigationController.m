@@ -3,7 +3,9 @@
 #import "CQChatController.h"
 #import "CQChatListViewController.h"
 
-@implementation CQChatNavigationController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQChatNavigationController
 - (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
@@ -72,3 +74,5 @@
 	[[CQChatController defaultController] showPendingChatControllerAnimated:YES];
 }
 @end
+
+NS_ASSUME_NONNULL_END

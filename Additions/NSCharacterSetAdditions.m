@@ -1,5 +1,7 @@
 #import "NSCharacterSetAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation NSCharacterSet (Additions)
 + (NSCharacterSet *) illegalXMLCharacterSet {
 	static NSMutableCharacterSet *illegalSet = nil;
@@ -18,3 +20,5 @@
 	return [illegalSet copy];
 }
 @end
+
+NS_ASSUME_NONNULL_END

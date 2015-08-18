@@ -2,9 +2,11 @@
 
 #import "NSNotificationAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotification";
 
-@implementation CQSettingsController
+@implementation  CQSettingsController
 + (instancetype)  settingsController {
 	static CQSettingsController *settingsController;
 	static dispatch_once_t onceToken;
@@ -129,3 +131,5 @@ NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotificat
 	return nil;
 }
 @end
+
+NS_ASSUME_NONNULL_END

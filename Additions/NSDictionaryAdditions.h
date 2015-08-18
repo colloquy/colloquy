@@ -1,3 +1,5 @@
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSDictionary (NSDictionaryAdditions)
 + (NSDictionary *) dictionaryWithKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary;
 
@@ -8,3 +10,5 @@
 - (instancetype) initWithKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary;
 - (void) setObjectsForKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary;;
 @end
+
+NS_ASSUME_NONNULL_END

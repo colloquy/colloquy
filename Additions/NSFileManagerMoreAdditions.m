@@ -1,5 +1,7 @@
 #import "NSFileManagerMoreAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation NSFileManager (MoreAdditions)
 // Image formats from https://developer.apple.com/library/ios/#documentation/uikit/reference/UIImage_Class/Reference/Reference.html
 + (BOOL) isValidImageFormat:(NSString *) extension {
@@ -37,3 +39,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

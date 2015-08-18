@@ -743,7 +743,6 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 NS_ASSUME_NONNULL_END
-
 #pragma mark -
 
 - (id) valueForUndefinedKey:(NSString *) key {
@@ -770,5 +769,4 @@ NS_ASSUME_NONNULL_END
 #else
 
 NS_ASSUME_NONNULL_END
-
 #endif

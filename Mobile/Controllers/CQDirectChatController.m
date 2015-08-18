@@ -79,10 +79,12 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQDirectChatController () <CQChatInputStyleDelegate>
 @end
 
-@implementation CQDirectChatController
+@implementation  CQDirectChatController
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -205,7 +207,7 @@ static BOOL showingKeyboard;
 	return nil;
 }
 
-- (instancetype) initWithTarget:(id) target {
+- (instancetype) initWithTarget:(__nullable id) target {
 	if (!(self = [super initWithNibName:@"CQUIChatView" bundle:nil]))
 		return nil;
 
@@ -425,7 +427,7 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (void) style:(id) sender {
+- (void) style:(__nullable id) sender {
 	_styleViewController = [[CQChatInputStyleViewController alloc] init];
 	_styleViewController.delegate = self;
 
@@ -1035,7 +1037,7 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (BOOL) handleJoinCommandWithArguments:(MVChatString *) arguments {
+- (BOOL) handleJoinCommandWithArguments:(MVChatString *__nullable) arguments {
 	if (![arguments.string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
 		CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
 		creationViewController.roomTarget = YES;
@@ -1447,7 +1449,7 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (BOOL) handleTokenCommandWithArguments:(MVChatString *) arguments {
+- (BOOL) handleTokenCommandWithArguments:(MVChatString *__nullable) arguments {
 #if !TARGET_IPHONE_SIMULATOR
 	if (![CQColloquyApplication sharedApplication].deviceToken.length) {
 		_showDeviceTokenWhenRegistered = YES;
@@ -2398,3 +2400,5 @@ static BOOL showingKeyboard;
 
 }
 @end
+
+NS_ASSUME_NONNULL_END

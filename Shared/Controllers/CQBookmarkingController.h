@@ -1,12 +1,14 @@
-extern NSString *const CQBookmarkingDidSaveLinkNotification;
-extern NSString *const CQBookmarkingDidNotSaveLinkNotification;
-
 typedef NS_ENUM(NSInteger, CQBookmarkingError) {
 	CQBookmarkingErrorGeneric,
 	CQBookmarkingErrorAuthorization,
 	CQBookmarkingErrorServer,
 	CQBookmarkingErrorInvalidLink
 };
+
+NS_ASSUME_NONNULL_BEGIN
+
+extern NSString *const CQBookmarkingDidSaveLinkNotification;
+extern NSString *const CQBookmarkingDidNotSaveLinkNotification;
 
 extern NSString *const CQBookmarkingErrorDomain;
 
@@ -31,3 +33,5 @@ extern NSString *const CQBookmarkingErrorDomain;
 + (void) handleBookmarkingOfLink:(NSString *) link;
 + (void) handleBookmarkingResponse:(NSURLResponse *) response withData:(NSData *) data forLink:(NSString *) link;
 @end
+
+NS_ASSUME_NONNULL_END

@@ -35,6 +35,8 @@
 #import "UIApplicationAdditions.h"
 #import "NSNotificationAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *CQConnectionsControllerAddedConnectionNotification = @"CQConnectionsControllerAddedConnectionNotification";
 NSString *CQConnectionsControllerChangedConnectionNotification = @"CQConnectionsControllerChangedConnectionNotification";
 NSString *CQConnectionsControllerRemovedConnectionNotification = @"CQConnectionsControllerRemovedConnectionNotification";
@@ -54,7 +56,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 static NSString *const connectionInvalidSSLCertAction = nil;
 
-@implementation CQConnectionsController
+@implementation  CQConnectionsController
 + (CQConnectionsController *) defaultController {
 	static BOOL creatingSharedInstance = NO;
 	static CQConnectionsController *sharedInstance = nil;
@@ -201,16 +203,16 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet fromPoint:point];
 }
 
-- (void) showBouncerCreationView:(id) sender {
+- (void) showBouncerCreationView:(__nullable id) sender {
 	CQBouncerCreationViewController *bouncerCreationViewController = [[CQBouncerCreationViewController alloc] init];
 	[[CQColloquyApplication sharedApplication] presentModalViewController:bouncerCreationViewController animated:YES];
 }
 
-- (void) showConnectionCreationView:(id) sender {
+- (void) showConnectionCreationView:(__nullable id) sender {
 	[self showConnectionCreationViewForURL:nil];
 }
 
-- (void) showConnectionCreationViewForURL:(NSURL *) url {
+- (void) showConnectionCreationViewForURL:(NSURL *__nullable) url {
 	CQConnectionCreationViewController *connectionCreationViewController = [[CQConnectionCreationViewController alloc] init];
 	connectionCreationViewController.url = url;
 	[[CQColloquyApplication sharedApplication] presentModalViewController:connectionCreationViewController animated:YES];
@@ -1846,9 +1848,13 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 }
 @end
 
+NS_ASSUME_NONNULL_END
+
 #pragma mark -
 
-@implementation MVChatConnection (CQConnectionsControllerAdditions)
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  MVChatConnection (CQConnectionsControllerAdditions)
 + (NSString *) defaultNickname {
 	NSString *defaultNickname = [[CQSettingsController settingsController] stringForKey:@"CQDefaultNickname"];
 	if (defaultNickname.length)
@@ -2135,3 +2141,5 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

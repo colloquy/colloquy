@@ -28,7 +28,9 @@ static BOOL showsChatIcons;
 #define ConnectSheetTag 10
 #define DisconnectSheetTag 20
 
-@implementation CQChatListViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQChatListViewController
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -1366,7 +1368,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 #pragma mark -
 
-- (void) showPreferences:(id) sender {
+- (void) showPreferences:(__nullable id) sender {
 	if ([UIDevice currentDevice].systemNine)
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
 	else {
@@ -1376,3 +1378,5 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

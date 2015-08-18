@@ -2,7 +2,9 @@
 
 #import "CQPreferencesTextCell.h"
 
-@implementation CQPreferencesListEditViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQPreferencesListEditViewController
 - (instancetype) init {
 	return (self = [super initWithStyle:UITableViewStyleGrouped]);
 }
@@ -76,3 +78,5 @@
 	[sender.textField becomeFirstResponder];
 }
 @end
+
+NS_ASSUME_NONNULL_END

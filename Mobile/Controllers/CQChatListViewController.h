@@ -2,6 +2,8 @@
 
 @protocol CQChatViewController;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQChatListViewController : CQTableViewController <UIActionSheetDelegate, UIDocumentInteractionControllerDelegate> {
 	@protected
 	UIActionSheet *_currentConnectionActionSheet;
@@ -23,3 +25,5 @@
 
 - (void) selectChatViewController:(id) controller animatedSelection:(BOOL) animatedSelection animatedScroll:(BOOL) animatedScroll;
 @end
+
+NS_ASSUME_NONNULL_END

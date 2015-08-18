@@ -1,6 +1,8 @@
 #import "CQTableViewController.h"
 
-@implementation CQTableViewController {
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQTableViewController {
 	UITableViewStyle _style;
 	UITableView *_tableView;
 }
@@ -99,3 +101,5 @@
 		[_tableView reloadData];
 }
 @end
+
+NS_ASSUME_NONNULL_END

@@ -2,9 +2,11 @@
 
 #import "CQKeychain.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *const CQBookmarkingServiceDelicious = @"CQBookmarkingServiceDelicious";
 
-@implementation CQDeliciousController
+@implementation  CQDeliciousController
 + (NSString *) serviceName {
 	return @"Delicious";
 }
@@ -29,3 +31,5 @@ NSString *const CQBookmarkingServiceDelicious = @"CQBookmarkingServiceDelicious"
 	[self handleBookmarkingOfLink:urlString];
 }
 @end
+
+NS_ASSUME_NONNULL_END

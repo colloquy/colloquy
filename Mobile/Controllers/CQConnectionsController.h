@@ -15,6 +15,8 @@
 @class MVChatUser;
 @class MVDirectChatConnection;
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *CQConnectionsControllerAddedConnectionNotification;
 extern NSString *CQConnectionsControllerChangedConnectionNotification;
 extern NSString *CQConnectionsControllerRemovedConnectionNotification;
@@ -60,9 +62,9 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 - (BOOL) handleOpenURL:(NSURL *) url;
 
 - (void) showNewConnectionPromptFromPoint:(CGPoint) point;
-- (void) showBouncerCreationView:(id) sender;
-- (void) showConnectionCreationView:(id) sender;
-- (void) showConnectionCreationViewForURL:(NSURL *) url;
+- (void) showBouncerCreationView:(__nullable id) sender;
+- (void) showConnectionCreationView:(__nullable id) sender;
+- (void) showConnectionCreationViewForURL:(NSURL *__nullable) url;
 
 - (MVChatConnection *) connectionForUniqueIdentifier:(NSString *) identifier;
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address;
@@ -117,3 +119,5 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 
 - (void) sendPushNotificationCommands;
 @end
+
+NS_ASSUME_NONNULL_END

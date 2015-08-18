@@ -7,7 +7,9 @@
 
 #import "UIViewAdditions.h"
 
-@implementation CQChatTableCell
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQChatTableCell
 - (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
@@ -75,11 +77,11 @@
 	_nameLabel.text = name;
 }
 
-- (UIImage *) icon {
+- (UIImage *__nullable) icon {
 	return _iconImageView.image;
 }
 
-- (void) setIcon:(UIImage *) icon {
+- (void) setIcon:(UIImage *__nullable) icon {
 	_iconImageView.image = icon;
 }
 
@@ -333,3 +335,5 @@
 	[self layoutSubviewsWithAnimation:NO withDelay:0.];
 }
 @end
+
+NS_ASSUME_NONNULL_END

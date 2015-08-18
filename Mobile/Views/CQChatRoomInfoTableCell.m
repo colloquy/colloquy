@@ -2,7 +2,9 @@
 
 #import "UIViewAdditions.h"
 
-@implementation CQChatRoomInfoTableCell
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQChatRoomInfoTableCell
 - (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
@@ -172,3 +174,5 @@
 	_topicLabel.frame = frame;
 }
 @end
+
+NS_ASSUME_NONNULL_END

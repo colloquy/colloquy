@@ -1,5 +1,7 @@
 @protocol CQTextCompletionViewDelegate;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQTextCompletionView : UIView {
 	@protected
 	CGSize _completionTextSizes[5];
@@ -10,7 +12,7 @@
 @property (nonatomic) NSUInteger selectedCompletion;
 @property (nonatomic, getter=isCloseSelected) BOOL closeSelected;
 
-@property (nonatomic, weak) IBOutlet id <CQTextCompletionViewDelegate> delegate;
+@property (nonatomic, nullable, weak) IBOutlet id <CQTextCompletionViewDelegate> delegate;
 @end
 
 @protocol CQTextCompletionViewDelegate <NSObject>
@@ -18,3 +20,5 @@
 - (void) textCompletionView:(CQTextCompletionView *) textCompletionView didSelectCompletion:(NSString *) completion;
 - (void) textCompletionViewDidClose:(CQTextCompletionView *) textCompletionView;
 @end
+
+NS_ASSUME_NONNULL_END

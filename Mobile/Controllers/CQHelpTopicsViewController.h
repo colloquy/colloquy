@@ -2,6 +2,8 @@
 
 @class MPMoviePlayerController;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQHelpTopicsViewController : CQTableViewController {
 	MPMoviePlayerController *_moviePlayer;
 	NSMutableArray *_helpSections;
@@ -11,3 +13,5 @@
 - (void) loadHelpContent;
 - (void) loadDefaultHelpContent;
 @end
+
+NS_ASSUME_NONNULL_END

@@ -17,6 +17,8 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 
 #pragma mark -
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQChatInputBar (CQChatInputBarPrivate)
 @property (readonly) BOOL _hasMarkedText;
 
@@ -24,9 +26,13 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 - (void) _updateTextTraits;
 @end
 
+NS_ASSUME_NONNULL_END
+
 #pragma mark -
 
-@implementation CQChatInputBar
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQChatInputBar
 @synthesize delegate = _delegate;
 
 + (void) initialize {
@@ -172,7 +178,7 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 	return [_inputView isFirstResponder];
 }
 
-- (BOOL) canPerformAction:(SEL) action withSender:(id) sender {
+- (BOOL) canPerformAction:(SEL) action withSender:(__nullable id) sender {
 	[self hideCompletions];
 	return NO;
 }
@@ -322,7 +328,7 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 	_completions = nil;
 
 	_completionView.hidden = YES;
-	_completionView.completions = nil;
+	_completionView.completions = @[];
 
 	_inputView.returnKeyType = UIReturnKeySend;
 
@@ -431,7 +437,7 @@ retry:
 
 #pragma mark -
 
-- (void) accessoryButtonPressed:(id) sender {
+- (void) accessoryButtonPressed:(__nullable id) sender {
 	__strong __typeof__((_delegate)) strongDelegate = _delegate;
 	if (strongDelegate && [strongDelegate respondsToSelector:@selector(chatInputBarAccessoryButtonPressed:)])
 		[strongDelegate chatInputBarAccessoryButtonPressed:self];
@@ -893,3 +899,5 @@ retry:
 	return fmax(self._lineHeight * 4, CQMaxLineHeight);
 }
 @end
+
+NS_ASSUME_NONNULL_END

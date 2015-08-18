@@ -2,6 +2,8 @@
 
 @class MVChatConnection;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQChatCreationViewController : CQModalNavigationController <UINavigationControllerDelegate> {
 	@protected
 	BOOL _roomTarget;
@@ -16,3 +18,5 @@
 
 - (void) showRoomListFilteredWithSearchString:(NSString *) searchString;
 @end
+
+NS_ASSUME_NONNULL_END

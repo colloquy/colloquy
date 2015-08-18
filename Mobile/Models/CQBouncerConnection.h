@@ -2,6 +2,8 @@
 @class CQBouncerSettings;
 @protocol CQBouncerConnectionDelegate;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQBouncerConnection : NSObject {
 	GCDAsyncSocket *_socket;
 	CQBouncerSettings *_settings;
@@ -34,7 +36,7 @@
 - (void) connect;
 - (void) disconnect;
 
-@property (nonatomic, weak) id <CQBouncerConnectionDelegate> delegate;
+@property (nonatomic, nullable, weak) id <CQBouncerConnectionDelegate> delegate;
 @end
 
 @protocol CQBouncerConnectionDelegate <NSObject>
@@ -44,3 +46,5 @@
 - (void) bouncerConnection:(CQBouncerConnection *) connection didRecieveConnectionInfo:(NSDictionary *) info;
 - (void) bouncerConnectionDidFinishConnectionList:(CQBouncerConnection *) connection;
 @end
+
+NS_ASSUME_NONNULL_END

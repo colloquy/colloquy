@@ -13,6 +13,8 @@
 #define AutomaticTableSection 3
 #define EncodingsTableSection 4
 
+NS_ASSUME_NONNULL_BEGIN
+
 static inline __attribute__((always_inline)) BOOL isDefaultValue(NSString *string) {
 	return [string isEqualToString:@"<<default>>"];
 }
@@ -24,7 +26,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 #pragma mark -
 
-@implementation CQConnectionAdvancedEditController
+@implementation  CQConnectionAdvancedEditController
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -508,3 +510,5 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 	_connection.encoding = encoding;
 }
 @end
+
+NS_ASSUME_NONNULL_END
