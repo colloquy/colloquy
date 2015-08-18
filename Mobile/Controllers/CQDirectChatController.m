@@ -335,7 +335,12 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (UIImage *) icon {
-	return [UIImage imageNamed:@"directChatIcon.png"];
+	static UIImage *icon = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		icon = [UIImage imageNamed:@"directChatIcon.png"];
+	});
+	return icon;
 }
 
 - (void) setTitle:(NSString *) title {

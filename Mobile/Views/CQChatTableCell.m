@@ -82,7 +82,8 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) setIcon:(UIImage *__nullable) icon {
-	_iconImageView.image = icon;
+	if (_iconImageView.image != icon)
+		_iconImageView.image = icon;
 }
 
 - (NSUInteger) unreadCount {

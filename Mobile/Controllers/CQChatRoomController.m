@@ -146,7 +146,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (UIImage *) icon {
-	return [UIImage imageNamed:@"roomIcon.png"];
+	static UIImage *icon = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		icon = [UIImage imageNamed:@"roomIcon.png"];
+	});
+	return icon;
 }
 
 - (NSString *) title {

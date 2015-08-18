@@ -147,10 +147,9 @@ NS_ASSUME_NONNULL_BEGIN
 		return;
 	}
 
-	_timeLabel.text = newTime ? newTime : @"";
+	_timeLabel.text = newTime;
 
-
-	[self setNeedsLayout];
+	[self _layoutTimeLabel];
 }
 
 - (void) setConnectDate:(NSDate *) connectDate {
@@ -219,15 +218,7 @@ NS_ASSUME_NONNULL_BEGIN
 	frame.origin.y = CGRectGetMaxY(_iconImageView.frame) - (frame.size.height / 1.33);
 	_badgeImageView.frame = frame;
 
-	frame = _timeLabel.frame;
-	frame.size = [_timeLabel sizeThatFits:_timeLabel.bounds.size];
-	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
-
-	if (self.showingDeleteConfirmation || self.showsReorderControl)
-		frame.origin.x = self.bounds.size.width - contentRect.origin.x;
-	else frame.origin.x = contentRect.size.width - frame.size.width - TEXT_RIGHT_MARGIN;
-
-	_timeLabel.frame = frame;
+	[self _layoutTimeLabel];
 
 	frame = _serverLabel.frame;
 	frame.size = [_serverLabel sizeThatFits:_serverLabel.bounds.size];
@@ -248,6 +239,19 @@ NS_ASSUME_NONNULL_BEGIN
 	frame.origin.x = contentRect.size.width - frame.size.width - TEXT_RIGHT_MARGIN;
 	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
 	_disclosureButton.frame = frame;
+}
+
+- (void) _layoutTimeLabel {
+	CGRect contentRect = self.contentView.frame;
+	CGRect frame = _timeLabel.frame;
+	frame.size = [_timeLabel sizeThatFits:_timeLabel.bounds.size];
+	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
+
+	if (UNLIKELY(self.showingDeleteConfirmation || self.showsReorderControl))
+		frame.origin.x = self.bounds.size.width - contentRect.origin.x;
+	else frame.origin.x = contentRect.size.width - frame.size.width - TEXT_RIGHT_MARGIN;
+
+	_timeLabel.frame = frame;
 }
 
 - (void) touchesBegan:(NSSet *) touches withEvent:(UIEvent *) event {
