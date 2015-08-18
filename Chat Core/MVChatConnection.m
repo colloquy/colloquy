@@ -870,11 +870,11 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	do {
 		if( [object isKindOfClass:[NSData class]] ) {
 			[data appendData:object];
-		} else if( [firstComponent isKindOfClass:[NSString class]] ) {
-			NSData *stringData = [object dataUsingEncoding:[self encoding] allowLossyConversion:YES];
-			[data appendData:stringData];
 		} else if([object respondsToSelector:@selector(string)]) {
 			NSData *stringData = [[object string] dataUsingEncoding:[self encoding] allowLossyConversion:YES];
+			[data appendData:stringData];
+		} else if( [firstComponent isKindOfClass:[NSString class]] ) {
+			NSData *stringData = [object dataUsingEncoding:[self encoding] allowLossyConversion:YES];
 			[data appendData:stringData];
 		} else {
 			NSData *stringData = [[object description] dataUsingEncoding:[self encoding] allowLossyConversion:YES];
