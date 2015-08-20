@@ -2411,6 +2411,10 @@
 				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					Frameworks/XMPPFramework/Vendor/libidn/dependencies/lib,
+					"$(inherited)",
+				);
 				OTHER_CFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
@@ -2478,6 +2482,10 @@
 				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					Frameworks/XMPPFramework/Vendor/libidn/dependencies/lib,
+					"$(inherited)",
+				);
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,

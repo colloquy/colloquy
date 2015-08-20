@@ -65,11 +65,7 @@
 "%@ Successfully Installed" = "%@ 成功安裝";
 "Disconnect from Server" = "自伺服器斷線";
 "Your Chat password is invalid" = "您的聊天密碼錯誤";
-"%@ (%@)
-%d members
-%@" = "%1$@ (%2$@)
-%3$d members
-%4$@";
+"%@ (%@)\n%d members\n%@" = "%1$@ (%2$@)\n%3$d members\n%4$@";
 "Style" = "樣式";
 "%@ of %@ downloaded, at %@ per second" = "%1$@ 已下載（全部 %2$@ ） ，每秒 %3$@";
 "Room Member Kicked" = "被踢出聊天室的成員";
@@ -279,9 +275,7 @@
 "Change chat style" = "修改聊天樣式";
 "Add to Favorites" = "加入到我的最愛";
 "Replace" = "置換";
-"%@
-%.3f seconds lag" = "%1$@
-%2$.3f seconds lag";
+"%@\n%.3f seconds lag" = "%1$@\n%2$.3f seconds lag";
 "The chat server port you specified is invalid because it can't be negative or greater than 65535." = "您所指定的聊天連接埠錯誤，不可以為負數，或是大於 65535。";
 "%.4f TB" = "%.4f TB";
 "Make Operator" = "給予管理員權限";

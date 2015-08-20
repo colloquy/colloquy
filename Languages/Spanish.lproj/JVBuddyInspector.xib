@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">1020</int>
+		<int key="IBDocument.SystemTarget">1090</int>
 		<string key="IBDocument.SystemVersion">14F27</string>
 		<string key="IBDocument.InterfaceBuilderVersion">7706</string>
 		<string key="IBDocument.AppKitVersion">1348.17</string>
@@ -572,11 +572,7 @@
 							<int key="NSButtonFlags2">6</int>
 							<object class="NSCustomResource" key="NSNormalImage">
 								<string key="NSClassName">NSImage</string>
-								<string key="NSResourceName">editWidget</string>
-							</object>
-							<object class="NSCustomResource" key="NSAlternateImage">
-								<string key="NSClassName">NSImage</string>
-								<string key="NSResourceName">editWidgetPressed</string>
+								<string key="NSResourceName">NSActionTemplate</string>
 							</object>
 							<string key="NSAlternateContents"/>
 							<string key="NSKeyEquivalent"/>
@@ -957,7 +953,7 @@
 											<int key="NSvFlags">256</int>
 											<string key="NSFrameSize">{198, 97}</string>
 											<reference key="NSSuperview" ref="357469602"/>
-											<reference key="NSNextKeyView" ref="141946798"/>
+											<reference key="NSNextKeyView" ref="55152210"/>
 											<bool key="NSEnabled">YES</bool>
 											<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 											<bool key="NSControlAllowsExpansionToolTips">YES</bool>
@@ -1049,7 +1045,7 @@
 							</array>
 							<string key="NSFrame">{{103, 40}, {200, 99}}</string>
 							<reference key="NSSuperview" ref="579688755"/>
-							<reference key="NSNextKeyView" ref="55152210"/>
+							<reference key="NSNextKeyView" ref="357469602"/>
 							<int key="NSsFlags">133650</int>
 							<reference key="NSVScroller" ref="735331852"/>
 							<reference key="NSHScroller" ref="55152210"/>
@@ -1154,7 +1150,7 @@
 					<string key="NSFrameSize">{318, 300}</string>
 					<reference key="NSNextKeyView" ref="633716208"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {2048, 1257}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1920, 1057}}</string>
 				<string key="NSMinSize">{213, 129}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
@@ -2326,10 +2322,6 @@
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<bool key="IBDocument.previouslyAttemptedUpgradeToXcode5">NO</bool>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
-			<integer value="1020" key="NS.object.0"/>
-		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.InterfaceBuilder3</string>
 			<integer value="4600" key="NS.object.0"/>
@@ -2337,13 +2329,12 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="NSActionTemplate">{14, 14}</string>
 			<string key="NSAddTemplate">{11, 11}</string>
 			<string key="NSMenuCheckmark">{12, 12}</string>
 			<string key="NSMenuMixedState">{10, 2}</string>
 			<string key="NSRadioButton">{16, 15}</string>
 			<string key="NSRemoveTemplate">{11, 11}</string>
-			<string key="editWidget">{22, 22}</string>
-			<string key="editWidgetPressed">{22, 22}</string>
 		</dictionary>
 	</data>
 </archive>
