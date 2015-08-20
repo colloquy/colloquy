@@ -1992,7 +1992,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	const float CQDefaultDynamicTypeFontSize = 17.;
 
-	if (chatTranscriptFontSize == CQDefaultDynamicTypeFontSize) {
+	if (chatTranscriptFontSize == CQDefaultDynamicTypeFontSize || [[NSUserDefaults standardUserDefaults] boolForKey:@"CQOverrideDynamicTypeSize"]) {
 		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
 			if (!chatTranscriptFontSizeString.length) {
 				chatTranscriptFontSize = 14; // default
