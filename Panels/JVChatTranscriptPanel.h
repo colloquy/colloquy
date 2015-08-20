@@ -13,7 +13,11 @@ extern NSString *JVToolbarEmoticonsItemIdentifier;
 extern NSString *JVToolbarFindItemIdentifier;
 extern NSString *JVToolbarQuickSearchItemIdentifier;
 
-@interface JVChatTranscriptPanel : NSObject <JVChatViewController, JVChatViewControllerScripting, NSToolbarDelegate, WebUIDelegate> {
+@interface JVChatTranscriptPanel : NSObject <JVChatViewController, JVChatViewControllerScripting, NSToolbarDelegate
+#ifdef __MAC_10_11
+, WebUIDelegate
+#endif
+> {
 	@protected
 	IBOutlet NSView *contents;
 	IBOutlet JVStyleView *display;

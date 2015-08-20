@@ -325,7 +325,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	} else if( [[column identifier] isEqual:@"status"] ) {
 		NSDictionary *info = [self _infoForTransferAtIndex:row];
 		id controller = info[@"controller"];
-		MVFileTransferStatus status = [info[@"status"] unsignedLongValue];
+		MVFileTransferStatus status = [info[@"status"] unsignedIntValue];
 		NSString *imageName = @"pending";
 		if( status == MVFileTransferErrorStatus ) imageName = @"error";
 		else if( status == MVFileTransferStoppedStatus ) imageName = @"stopped";

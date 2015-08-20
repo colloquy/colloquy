@@ -314,7 +314,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		linkDataDetector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
 	});
 
-	for ( NSTextCheckingResult *match in [linkDataDetector matchesInString:[self string] options:NSMatchingCompleted range:NSMakeRange( 0, [self string].length )]) {
+	for ( NSTextCheckingResult *match in [linkDataDetector matchesInString:[self string] options:NSMatchingReportCompletion range:NSMakeRange( 0, [self string].length )]) {
 		NSRange foundRange = [match range];
 		NSString *currentLink = [self attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
 		NSString *contents = [[self string] substringWithRange:foundRange];
@@ -324,7 +324,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 	// catch well-formed email addresses like "timothy@hatcher.name" or "timothy@javelin.cc"
 	NSRegularExpression *emailRegex = [NSRegularExpression cachedRegularExpressionWithPattern:@"[\\p{L}\\p{N}.+\\-_]+@(?:[\\p{L}\\-_]+\\.)+[\\w]{2,}" options:NSRegularExpressionCaseInsensitive error:nil];
 
-	for( NSTextCheckingResult *match in [emailRegex matchesInString:[self string] options:NSMatchingCompleted range:NSMakeRange( 0, [self string].length )] ) {
+	for( NSTextCheckingResult *match in [emailRegex matchesInString:[self string] options:NSMatchingReportCompletion range:NSMakeRange( 0, [self string].length )] ) {
 		NSRange foundRange = [match range];
 		NSString *currentLink = [self attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
 		if( ! currentLink ) {

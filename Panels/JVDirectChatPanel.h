@@ -17,7 +17,11 @@ extern NSString *JVToolbarMarkItemIdentifier;
 extern NSString *JVChatMessageWasProcessedNotification;
 extern NSString *JVChatEventMessageWasProcessedNotification;
 
-@interface JVDirectChatPanel : JVChatTranscriptPanel <NSTextViewDelegate, WebPolicyDelegate> {
+@interface JVDirectChatPanel : JVChatTranscriptPanel <NSTextViewDelegate
+#ifdef __MAC_10_11
+, WebPolicyDelegate
+#endif
+> {
 	@protected
 	IBOutlet MVTextView *send;
 
