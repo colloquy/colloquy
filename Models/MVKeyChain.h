@@ -1,6 +1,6 @@
 #import <Security/Security.h>
 
-typedef NS_ENUM(SecAuthenticationType, MVKeyChainAuthenticationType) {
+typedef NS_ENUM(FourCharCode, MVKeyChainAuthenticationType) {
 	MVKeyChainAuthenticationTypeAny = 0,
 	MVKeyChainAuthenticationTypeNTLM = kSecAuthenticationTypeNTLM,
 	MVKeyChainAuthenticationTypeMSN = kSecAuthenticationTypeMSN,
@@ -10,7 +10,7 @@ typedef NS_ENUM(SecAuthenticationType, MVKeyChainAuthenticationType) {
 	MVKeyChainAuthenticationTypeDefault = kSecAuthenticationTypeDefault
 };
 
-typedef NS_ENUM(SecProtocolType, MVKeyChainProtocol) {
+typedef NS_ENUM(FourCharCode, MVKeyChainProtocol) {
 	MVKeyChainProtocolAny = 0,
 	MVKeyChainProtocolFTP = kSecProtocolTypeFTP,
 	MVKeyChainProtocolFTPAccount = kSecProtocolTypeFTPAccount,
