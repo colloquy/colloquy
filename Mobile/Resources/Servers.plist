@@ -7,72 +7,80 @@
 		<string>irc.abjects.net</string>
 		<key>Name</key>
 		<string>Abjects</string>
+		<key>SSLPort</key>
+		<integer>9000</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
-		<string>irc.allnetwork.org</string>
+		<string>irc.chlame.net</string>
 		<key>Name</key>
-		<string>AllNetwork</string>
+		<string>ChLame</string>
+		<key>SSLPort</key>
+		<integer>6669</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
 		<string>irc.dal.net</string>
 		<key>Name</key>
 		<string>DALnet</string>
-	</dict>
-	<dict>
-		<key>Address</key>
-		<string>irc.darksin.net</string>
-		<key>Name</key>
-		<string>DarkSin</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
 		<string>irc.efnet.org</string>
 		<key>Name</key>
 		<string>EFNet</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
 		<string>irc.esper.net</string>
 		<key>Name</key>
 		<string>EsperNet</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
 		<string>irc.euirc.net</string>
 		<key>Name</key>
 		<string>euIRC</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
 		<string>irc.foonetic.net</string>
 		<key>Name</key>
 		<string>Foonetic</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
 		<string>chat.freenode.net</string>
 		<key>Name</key>
 		<string>Freenode</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
-		<string>irc.gamesurge.net</string>
+		<string>Prothid.NY.US.GameSurge.Net</string>
 		<key>Name</key>
 		<string>GameSurge</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
 		<string>irc.geekshed.net</string>
 		<key>Name</key>
 		<string>Geekshed</string>
-	</dict>
-	<dict>
-		<key>Address</key>
-		<string>irc.geekshed.net</string>
-		<key>Name</key>
-		<string>GeekShed</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
@@ -85,12 +93,16 @@
 		<string>irc.irchighway.net</string>
 		<key>Name</key>
 		<string>IRCHighway</string>
+		<key>SSLPort</key>
+		<integer>9999</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
 		<string>irc.icq.com</string>
 		<key>Name</key>
 		<string>ICQ</string>
+		<key>SSLPort</key>
+		<string>443</string>
 	</dict>
 	<dict>
 		<key>Address</key>
@@ -109,18 +121,24 @@
 		<string>irc.mozilla.org</string>
 		<key>Name</key>
 		<string>Mozilla</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
 		<string>irc.oftc.net</string>
 		<key>Name</key>
 		<string>OFTC</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
 		<string>irc.ogamenet.net</string>
 		<key>Name</key>
 		<string>OGameNet</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
@@ -133,30 +151,40 @@
 		<string>irc.rizon.net</string>
 		<key>Name</key>
 		<string>Rizon</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
-		<string>irc.skyrock.com</string>
+		<string>irc.snoonet.org</string>
 		<key>Name</key>
-		<string>SKYROCK</string>
-	</dict>
-	<dict>
-		<key>Address</key>
-		<string>irc.synirc.net</string>
-		<key>Name</key>
-		<string>synIRC</string>
+		<string>Snoonet</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
 		<string>irc.swiftirc.net</string>
 		<key>Name</key>
 		<string>SwiftIRC</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
+	</dict>
+	<dict>
+		<key>Address</key>
+		<string>irc.synirc.net</string>
+		<key>Name</key>
+		<string>synIRC</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
 		<string>irc.webchat.org</string>
 		<key>Name</key>
 		<string>WebChat</string>
+		<key>SSLPort</key>
+		<integer>994</integer>
 	</dict>
 </array>
 </plist>
