@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">101000</int>
+		<int key="IBDocument.SystemTarget">1090</int>
 		<string key="IBDocument.SystemVersion">14F27</string>
 		<string key="IBDocument.InterfaceBuilderVersion">7706</string>
 		<string key="IBDocument.AppKitVersion">1348.17</string>
@@ -69,6 +69,7 @@
 							<int key="NSvFlags">274</int>
 							<string key="NSFrame">{{0, 25}, {480, 335}}</string>
 							<reference key="NSSuperview" ref="529374429"/>
+							<reference key="NSNextKeyView" ref="229108609"/>
 							<array class="NSMutableArray" key="NSTabViewItems">
 								<object class="NSTabViewItem" id="939783065">
 									<object class="NSMutableString" key="NSIdentifier">
@@ -107,8 +108,9 @@
 						</object>
 					</array>
 					<string key="NSFrameSize">{480, 360}</string>
+					<reference key="NSNextKeyView" ref="771851839"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {2048, 1257}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1920, 1057}}</string>
 				<string key="NSMinSize">{213, 129}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
@@ -294,8 +296,8 @@
 								<int key="NSfFlags">2843</int>
 							</object>
 							<reference key="NSControlView" ref="114778620"/>
-							<int key="NSButtonFlags">-2039218176</int>
-							<int key="NSButtonFlags2">6</int>
+							<int key="NSButtonFlags">-2030829568</int>
+							<int key="NSButtonFlags2">134</int>
 							<object class="NSCustomResource" key="NSNormalImage">
 								<string key="NSClassName">NSImage</string>
 								<string key="NSResourceName">NSActionTemplate</string>
@@ -322,15 +324,11 @@
 							<string key="NSContents"/>
 							<reference key="NSSupport" ref="545208776"/>
 							<reference key="NSControlView" ref="322870699"/>
-							<int key="NSButtonFlags">-2039218176</int>
-							<int key="NSButtonFlags2">6</int>
+							<int key="NSButtonFlags">-2030829568</int>
+							<int key="NSButtonFlags2">134</int>
 							<object class="NSCustomResource" key="NSNormalImage">
 								<string key="NSClassName">NSImage</string>
-								<string key="NSResourceName">favorites</string>
-							</object>
-							<object class="NSCustomResource" key="NSAlternateImage">
-								<string key="NSClassName">NSImage</string>
-								<string key="NSResourceName">favoritesPressed</string>
+								<string key="NSResourceName">CQFavoritesTemplate</string>
 							</object>
 							<string key="NSAlternateContents"/>
 							<object class="NSMutableString" key="NSKeyEquivalent">
@@ -353,15 +351,11 @@
 							<string key="NSContents"/>
 							<reference key="NSSupport" ref="545208776"/>
 							<reference key="NSControlView" ref="885927767"/>
-							<int key="NSButtonFlags">-2042363904</int>
-							<int key="NSButtonFlags2">6</int>
+							<int key="NSButtonFlags">-2033975296</int>
+							<int key="NSButtonFlags2">134</int>
 							<object class="NSCustomResource" key="NSNormalImage">
 								<string key="NSClassName">NSImage</string>
-								<string key="NSResourceName">infoWidget</string>
-							</object>
-							<object class="NSCustomResource" key="NSAlternateImage">
-								<string key="NSClassName">NSImage</string>
-								<string key="NSResourceName">infoWidgetPressed</string>
+								<string key="NSResourceName">CQInfoTemplate</string>
 							</object>
 							<string key="NSAlternateContents"/>
 							<object class="NSMutableString" key="NSKeyEquivalent">
@@ -728,10 +722,6 @@
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<bool key="IBDocument.previouslyAttemptedUpgradeToXcode5">YES</bool>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
-			<integer value="101000" key="NS.object.0"/>
-		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.InterfaceBuilder3</string>
 			<integer value="4600" key="NS.object.0"/>
@@ -739,11 +729,9 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="CQFavoritesTemplate">{19, 9}</string>
+			<string key="CQInfoTemplate">{12, 12}</string>
 			<string key="NSActionTemplate">{14, 14}</string>
-			<string key="favorites">{28, 22}</string>
-			<string key="favoritesPressed">{28, 22}</string>
-			<string key="infoWidget">{22, 22}</string>
-			<string key="infoWidgetPressed">{22, 22}</string>
 		</dictionary>
 	</data>
 </archive>
