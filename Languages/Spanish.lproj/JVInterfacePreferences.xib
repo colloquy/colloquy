@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">1050</int>
+		<int key="IBDocument.SystemTarget">1090</int>
 		<string key="IBDocument.SystemVersion">14F27</string>
 		<string key="IBDocument.InterfaceBuilderVersion">7706</string>
 		<string key="IBDocument.AppKitVersion">1348.17</string>
@@ -410,8 +410,8 @@ b3cuCkEgbmV3IHdpbmRvdyB3aWxsIGJlIG9wZW5lZCBpZiBubyBydWxlIHNldHMgYXBwbHkuA</strin
 											<string key="NSContents"/>
 											<reference key="NSSupport" ref="390977843"/>
 											<reference key="NSControlView" ref="236050397"/>
-											<int key="NSButtonFlags">138690560</int>
-											<int key="NSButtonFlags2">6</int>
+											<int key="NSButtonFlags">147079168</int>
+											<int key="NSButtonFlags2">134</int>
 											<object class="NSCustomResource" key="NSNormalImage" id="839435858">
 												<string key="NSClassName">NSImage</string>
 												<string key="NSResourceName">NSAddTemplate</string>
@@ -550,8 +550,8 @@ b3cuCkEgbmV3IHdpbmRvdyB3aWxsIGJlIG9wZW5lZCBpZiBubyBydWxlIHNldHMgYXBwbHkuA</strin
 											<string key="NSContents"/>
 											<reference key="NSSupport" ref="390977843"/>
 											<reference key="NSControlView" ref="768093477"/>
-											<int key="NSButtonFlags">138690560</int>
-											<int key="NSButtonFlags2">6</int>
+											<int key="NSButtonFlags">147079168</int>
+											<int key="NSButtonFlags2">134</int>
 											<reference key="NSNormalImage" ref="839435858"/>
 											<string key="NSAlternateContents"/>
 											<string key="NSKeyEquivalent"/>
@@ -573,15 +573,11 @@ b3cuCkEgbmV3IHdpbmRvdyB3aWxsIGJlIG9wZW5lZCBpZiBubyBydWxlIHNldHMgYXBwbHkuA</strin
 											<string key="NSContents"/>
 											<reference key="NSSupport" ref="390977843"/>
 											<reference key="NSControlView" ref="203150551"/>
-											<int key="NSButtonFlags">138690560</int>
-											<int key="NSButtonFlags2">6</int>
-											<object class="NSCustomResource" key="NSNormalImage" id="420039821">
+											<int key="NSButtonFlags">147079168</int>
+											<int key="NSButtonFlags2">134</int>
+											<object class="NSCustomResource" key="NSNormalImage" id="758165547">
 												<string key="NSClassName">NSImage</string>
-												<string key="NSResourceName">editWidget</string>
-											</object>
-											<object class="NSCustomResource" key="NSAlternateImage" id="688023563">
-												<string key="NSClassName">NSImage</string>
-												<string key="NSResourceName">editWidgetPressed</string>
+												<string key="NSResourceName">NSActionTemplate</string>
 											</object>
 											<string key="NSAlternateContents"/>
 											<string key="NSKeyEquivalent"/>
@@ -603,10 +599,9 @@ b3cuCkEgbmV3IHdpbmRvdyB3aWxsIGJlIG9wZW5lZCBpZiBubyBydWxlIHNldHMgYXBwbHkuA</strin
 											<string key="NSContents"/>
 											<reference key="NSSupport" ref="390977843"/>
 											<reference key="NSControlView" ref="651043725"/>
-											<int key="NSButtonFlags">138690560</int>
-											<int key="NSButtonFlags2">6</int>
-											<reference key="NSNormalImage" ref="420039821"/>
-											<reference key="NSAlternateImage" ref="688023563"/>
+											<int key="NSButtonFlags">147079168</int>
+											<int key="NSButtonFlags2">134</int>
+											<reference key="NSNormalImage" ref="758165547"/>
 											<string key="NSAlternateContents"/>
 											<string key="NSKeyEquivalent"/>
 											<int key="NSPeriodicDelay">400</int>
@@ -746,8 +741,8 @@ b3cuCkEgbmV3IHdpbmRvdyB3aWxsIGJlIG9wZW5lZCBpZiBubyBydWxlIHNldHMgYXBwbHkuA</strin
 											<string key="NSContents"/>
 											<reference key="NSSupport" ref="390977843"/>
 											<reference key="NSControlView" ref="662852906"/>
-											<int key="NSButtonFlags">138690560</int>
-											<int key="NSButtonFlags2">6</int>
+											<int key="NSButtonFlags">147079168</int>
+											<int key="NSButtonFlags2">134</int>
 											<object class="NSCustomResource" key="NSNormalImage" id="363066832">
 												<string key="NSClassName">NSImage</string>
 												<string key="NSResourceName">NSRemoveTemplate</string>
@@ -776,8 +771,8 @@ b3cuCkEgbmV3IHdpbmRvdyB3aWxsIGJlIG9wZW5lZCBpZiBubyBydWxlIHNldHMgYXBwbHkuA</strin
 											<string key="NSContents"/>
 											<reference key="NSSupport" ref="390977843"/>
 											<reference key="NSControlView" ref="107939317"/>
-											<int key="NSButtonFlags">138690560</int>
-											<int key="NSButtonFlags2">6</int>
+											<int key="NSButtonFlags">147079168</int>
+											<int key="NSButtonFlags2">134</int>
 											<reference key="NSNormalImage" ref="363066832"/>
 											<string key="NSAlternateContents"/>
 											<string key="NSKeyEquivalent"/>
@@ -1091,7 +1086,7 @@ b3cuCkEgbmV3IHdpbmRvdyB3aWxsIGJlIG9wZW5lZCBpZiBubyBydWxlIHNldHMgYXBwbHkuA</strin
 					</array>
 					<string key="NSFrameSize">{292, 124}</string>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {2048, 1257}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1920, 1057}}</string>
 				<string key="NSMinSize">{213, 129}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
@@ -1127,7 +1122,7 @@ b3cuCkEgbmV3IHdpbmRvdyB3aWxsIGJlIG9wZW5lZCBpZiBubyBydWxlIHNldHMgYXBwbHkuA</strin
 											<int key="NSvFlags">256</int>
 											<string key="NSFrameSize">{472, 30}</string>
 											<reference key="NSSuperview" ref="717449014"/>
-											<reference key="NSNextKeyView" ref="270480977"/>
+											<reference key="NSNextKeyView" ref="283050432"/>
 											<bool key="NSEnabled">YES</bool>
 											<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
 											<bool key="NSControlAllowsExpansionToolTips">YES</bool>
@@ -1187,10 +1182,10 @@ b3cuCkEgbmV3IHdpbmRvdyB3aWxsIGJlIG9wZW5lZCBpZiBubyBydWxlIHNldHMgYXBwbHkuA</strin
 														<int key="NSCellFlags">603979776</int>
 														<int key="NSCellFlags2">134217728</int>
 														<string key="NSContents"/>
-														<object class="NSFont" key="NSSupport" id="28">
+														<object class="NSFont" key="NSSupport" id="157569018">
 															<bool key="IBIsSystemFont">YES</bool>
 															<double key="NSSize">12</double>
-															<int key="NSfFlags">4883</int>
+															<int key="NSfFlags">787</int>
 														</object>
 														<reference key="NSControlView" ref="860750606"/>
 														<int key="NSButtonFlags">138690560</int>
@@ -1220,7 +1215,7 @@ b3cuCkEgbmV3IHdpbmRvdyB3aWxsIGJlIG9wZW5lZCBpZiBubyBydWxlIHNldHMgYXBwbHkuA</strin
 														<int key="NSCellFlags">67108864</int>
 														<int key="NSCellFlags2">134217728</int>
 														<string key="NSContents"/>
-														<reference key="NSSupport" ref="28"/>
+														<reference key="NSSupport" ref="157569018"/>
 														<reference key="NSControlView" ref="860750606"/>
 														<int key="NSButtonFlags">141836288</int>
 														<int key="NSButtonFlags2">2</int>
@@ -1287,7 +1282,7 @@ b3cuCkEgbmV3IHdpbmRvdyB3aWxsIGJlIG9wZW5lZCBpZiBubyBydWxlIHNldHMgYXBwbHkuA</strin
 							</array>
 							<string key="NSFrame">{{20, 45}, {474, 32}}</string>
 							<reference key="NSSuperview" ref="92658129"/>
-							<reference key="NSNextKeyView" ref="283050432"/>
+							<reference key="NSNextKeyView" ref="717449014"/>
 							<int key="NSsFlags">133122</int>
 							<reference key="NSVScroller" ref="283050432"/>
 							<reference key="NSHScroller" ref="317141556"/>
@@ -1469,7 +1464,7 @@ b3cuCkEgbmV3IHdpbmRvdyB3aWxsIGJlIG9wZW5lZCBpZiBubyBydWxlIHNldHMgYXBwbHkuA</strin
 					<string key="NSFrameSize">{514, 122}</string>
 					<reference key="NSNextKeyView" ref="699864712"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {2048, 1257}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1920, 1057}}</string>
 				<string key="NSMinSize">{213, 129}</string>
 				<string key="NSMaxSize">{10000000000000, 10000000000000}</string>
 				<bool key="NSWindowIsRestorable">YES</bool>
@@ -2853,6 +2848,7 @@ b3cuCkEgbmV3IHdpbmRvdyB3aWxsIGJlIG9wZW5lZCBpZiBubyBydWxlIHNldHMgYXBwbHkuA</strin
 				<string key="358.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="359.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="36.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<reference key="38.IBNSViewMetadataGestureRecognizers" ref="0"/>
 				<string key="38.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="45.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="46.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2929,10 +2925,6 @@ b3cuCkEgbmV3IHdpbmRvdyB3aWxsIGJlIG9wZW5lZCBpZiBubyBydWxlIHNldHMgYXBwbHkuA</strin
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<bool key="IBDocument.previouslyAttemptedUpgradeToXcode5">NO</bool>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
-			<integer value="1050" key="NS.object.0"/>
-		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDevelopmentDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.InterfaceBuilder3</string>
 			<integer value="4600" key="NS.object.0"/>
@@ -2940,14 +2932,13 @@ b3cuCkEgbmV3IHdpbmRvdyB3aWxsIGJlIG9wZW5lZCBpZiBubyBydWxlIHNldHMgYXBwbHkuA</strin
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="NSActionTemplate">{14, 14}</string>
 			<string key="NSAddTemplate">{11, 11}</string>
 			<string key="NSMenuCheckmark">{12, 12}</string>
 			<string key="NSMenuMixedState">{10, 2}</string>
 			<string key="NSRemoveTemplate">{11, 11}</string>
 			<string key="NSSwitch">{15, 15}</string>
 			<string key="deleteWidgetPressed">{22, 22}</string>
-			<string key="editWidget">{22, 22}</string>
-			<string key="editWidgetPressed">{22, 22}</string>
 		</dictionary>
 	</data>
 </archive>
