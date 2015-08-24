@@ -68,7 +68,7 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 }
 - (instancetype) initWithNibName:(NSString *__nullable) nibNameOrNil bundle:(NSBundle *__nullable) nibBundleOrNil NS_UNAVAILABLE;
 - (instancetype) initWithStyle:(UITableViewStyle) style NS_UNAVAILABLE;
-- (__nullable instancetype) initWithCoder:(NSCoder *) aDecoder NS_UNAVAILABLE;
+- (instancetype) initWithCoder:(NSCoder *) aDecoder NS_UNAVAILABLE;
 
 - (instancetype) initWithTarget:(__nullable id) target NS_DESIGNATED_INITIALIZER;
 

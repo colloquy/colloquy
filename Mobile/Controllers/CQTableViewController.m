@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return self;
 }
 
-- (__nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
 	if (!(self = [super initWithCoder:aDecoder]))
 		return nil;
 

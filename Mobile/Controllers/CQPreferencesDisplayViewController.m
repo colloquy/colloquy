@@ -96,7 +96,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 	return nil;
 }
 
-- (__nullable instancetype) initWithCoder:(NSCoder *) aDecoder {
+- (instancetype) initWithCoder:(NSCoder *) aDecoder {
 	NSAssert(NO, @"use -[CQPreferencesDisplayViewController initWithPlistNamed:] instead");
 	return nil;
 }

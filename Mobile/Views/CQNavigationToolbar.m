@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return self;
 }
 
-- (__nullable instancetype) initWithCoder:(NSCoder *) coder {
+- (instancetype) initWithCoder:(NSCoder *) coder {
 	if (!(self = [super initWithCoder:coder]))
 		return nil;
 

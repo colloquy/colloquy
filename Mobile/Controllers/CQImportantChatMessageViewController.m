@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return nil;
 }
 
-- (__nullable instancetype) initWithCoder:(NSCoder *) aDecoder {
+- (instancetype) initWithCoder:(NSCoder *) aDecoder {
 	NSAssert(NO, @"use -[CQImportantChatMessageViewController initWithMessages:delegate:] instead");
 	return nil;
 }
