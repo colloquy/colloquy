@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (cached)
 		return result;
 
-	result = ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion == 9);
+	result = [UIDevice currentDevice].isSystemEight && ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 9);
 	cached = YES;
 
 	return result;
