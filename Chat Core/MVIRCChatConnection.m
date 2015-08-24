@@ -3991,7 +3991,7 @@ end:
 	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 	if (sender) userInfo[@"by"] = sender;
 	if (unsupportedModes) userInfo[@"unsupportedModes"] = [unsupportedModes copy];
-	userInfo[@"changedModes"] = changedModes;
+	userInfo[@"changedModes"] = @(changedModes);
 	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:userInfo];
 }
 
