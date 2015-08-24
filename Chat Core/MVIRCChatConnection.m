@@ -3988,7 +3988,11 @@ end:
 
 
 	NSUInteger changedModes = ( oldModes ^ [room modes] ) | argModes;
-	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:@{ @"changedModes": @(changedModes), @"by": sender, @"unsupportedModes": [unsupportedModes copy] }];
+	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+	if (sender) userInfo[@"by"] = sender;
+	if (unsupportedModes) userInfo[@"unsupportedModes"] = [unsupportedModes copy];
+	userInfo[@"changedModes"] = changedModes;
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:userInfo];
 }
 
 - (void) _handleModeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
