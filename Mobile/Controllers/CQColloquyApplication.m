@@ -87,25 +87,23 @@ static NSMutableArray *highlightWords;
 }
 
 - (NSArray *) highlightWords {
-	@synchronized(self) {
-		if (!highlightWords) {
-			highlightWords = [[NSMutableArray alloc] init];
+	if (!highlightWords) {
+		highlightWords = [[NSMutableArray alloc] init];
 
-			NSString *highlightWordsString = [[CQSettingsController settingsController] stringForKey:@"CQHighlightWords"];
-			if (highlightWordsString.length) {
-				NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" options:NSRegularExpressionCaseInsensitive error:nil];
-				for (NSTextCheckingResult *result in [regex matchesInString:highlightWordsString options:(NSMatchingOptions)NSMatchingReportCompletion range:NSMakeRange(0, highlightWordsString.length)])
-					[highlightWords addObject:[highlightWordsString substringWithRange:[result rangeAtIndex:1]]];
+		NSString *highlightWordsString = [[CQSettingsController settingsController] stringForKey:@"CQHighlightWords"];
+		if (highlightWordsString.length) {
+			NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" options:NSRegularExpressionCaseInsensitive error:nil];
+			for (NSTextCheckingResult *result in [regex matchesInString:highlightWordsString options:(NSMatchingOptions)NSMatchingReportCompletion range:NSMakeRange(0, highlightWordsString.length)])
+				[highlightWords addObject:[highlightWordsString substringWithRange:[result rangeAtIndex:1]]];
 
-				highlightWordsString = [highlightWordsString stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" withString:@""];
+			highlightWordsString = [highlightWordsString stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" withString:@""];
 
-				[highlightWords addObjectsFromArray:[highlightWordsString componentsSeparatedByString:@" "]];
-				[highlightWords removeObject:@""];
-			}
+			[highlightWords addObjectsFromArray:[highlightWordsString componentsSeparatedByString:@" "]];
+			[highlightWords removeObject:@""];
 		}
-
-		return highlightWords;
 	}
+
+	return highlightWords;
 }
 
 - (void) updateAnalytics {
@@ -146,9 +144,7 @@ static NSMutableArray *highlightWords;
 	if (![NSThread isMainThread])
 		return;
 
-	@synchronized(self) {
-		highlightWords = nil;
-	}
+	highlightWords = nil;
 
 	if ([UIDevice currentDevice].isPadModel) {
 		NSNumber *newSwipeOrientationValue = [[CQSettingsController settingsController] objectForKey:@"CQSplitSwipeOrientations"];

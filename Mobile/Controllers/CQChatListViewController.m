@@ -214,51 +214,49 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 #endif
 
 - (void) _closeChatViewControllers:(NSArray *) viewControllersToClose forConnection:(MVChatConnection *) connection withRowAnimation:(UITableViewRowAnimation) animation {
-	@synchronized([CQChatOrderingController defaultController]) {
-		NSArray *allViewControllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
+	NSArray *allViewControllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
 
-		if (!viewControllersToClose.count)
-			viewControllersToClose = allViewControllers;
+	if (!viewControllersToClose.count)
+		viewControllersToClose = allViewControllers;
 
-		BOOL hasChatController = NO;
-		for (MVChatConnection *connectionToCheck in [CQConnectionsController defaultController].connections) {
-			hasChatController = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connectionToCheck].count;
+	BOOL hasChatController = NO;
+	for (MVChatConnection *connectionToCheck in [CQConnectionsController defaultController].connections) {
+		hasChatController = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connectionToCheck].count;
 
-			if (hasChatController)
-				break;
-		}
-
-		NSMutableArray *rowsToDelete = [[NSMutableArray alloc] init];
-
-		for (id <CQChatViewController> chatViewController in viewControllersToClose) {
-			NSIndexPath *indexPath = indexPathForChatController(chatViewController, self.editing);
-			if (!indexPath)
-				continue;
-
-			[rowsToDelete addObject:indexPath];
-		}
-
-		for (id <CQChatViewController> chatViewController in viewControllersToClose)
-			[[CQChatController defaultController] closeViewController:chatViewController];
-
-		NSAssert(rowsToDelete.count == viewControllersToClose.count, @"All controllers must have a row.");
-
-		if (rowsToDelete.count != viewControllersToClose.count) {
-			[self.tableView reloadData];
-
-			return;
-		}
-
-		NSMutableArray *visibleIndexes = [self.tableView.indexPathsForVisibleRows mutableCopy];
-		[visibleIndexes removeObjectsInArray:rowsToDelete];
-
-		[self.tableView beginUpdates];
-		[self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:animation];
-		[self.tableView reloadRowsAtIndexPaths:visibleIndexes withRowAnimation:UITableViewRowAnimationNone];
-		[self.tableView endUpdates];
-
-		[self _refreshIndexPathForChatControllersCache];
+		if (hasChatController)
+			break;
 	}
+
+	NSMutableArray *rowsToDelete = [[NSMutableArray alloc] init];
+
+	for (id <CQChatViewController> chatViewController in viewControllersToClose) {
+		NSIndexPath *indexPath = indexPathForChatController(chatViewController, self.editing);
+		if (!indexPath)
+			continue;
+
+		[rowsToDelete addObject:indexPath];
+	}
+
+	for (id <CQChatViewController> chatViewController in viewControllersToClose)
+		[[CQChatController defaultController] closeViewController:chatViewController];
+
+	NSAssert(rowsToDelete.count == viewControllersToClose.count, @"All controllers must have a row.");
+
+	if (rowsToDelete.count != viewControllersToClose.count) {
+		[self.tableView reloadData];
+
+		return;
+	}
+
+	NSMutableArray *visibleIndexes = [self.tableView.indexPathsForVisibleRows mutableCopy];
+	[visibleIndexes removeObjectsInArray:rowsToDelete];
+
+	[self.tableView beginUpdates];
+	[self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:animation];
+	[self.tableView reloadRowsAtIndexPaths:visibleIndexes withRowAnimation:UITableViewRowAnimationNone];
+	[self.tableView endUpdates];
+
+	[self _refreshIndexPathForChatControllersCache];
 }
 
 - (CQChatTableCell *) _chatTableCellForController:(id <CQChatViewController>) controller {
@@ -369,21 +367,19 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		return;
 	}
 
-	@synchronized([CQChatOrderingController defaultController]) {
-		MVChatConnection *connection = notification.object;
-		NSUInteger sectionIndex = [[CQChatOrderingController defaultController] sectionIndexForConnection:connection];
-		if (sectionIndex == NSNotFound)
-			return;
+	MVChatConnection *connection = notification.object;
+	NSUInteger sectionIndex = [[CQChatOrderingController defaultController] sectionIndexForConnection:connection];
+	if (sectionIndex == NSNotFound)
+		return;
 
-		if (self.editing)
-			sectionIndex++;
+	if (self.editing)
+		sectionIndex++;
 
-		NSUInteger i = 0;
-		for (id <CQChatViewController> controller in [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection]) {
-			NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i++ inSection:sectionIndex];
-			CQChatTableCell *cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-			[self _refreshChatCell:cell withController:controller animated:YES];
-		}
+	NSUInteger i = 0;
+	for (id <CQChatViewController> controller in [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection]) {
+		NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i++ inSection:sectionIndex];
+		CQChatTableCell *cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+		[self _refreshChatCell:cell withController:controller animated:YES];
 	}
 }
 
@@ -393,20 +389,18 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		return;
 	}
 
-	@synchronized([CQChatOrderingController defaultController]) {
-		id target = notification.object;
-		id <CQChatViewController> controller = nil;
-		if ([target isKindOfClass:[MVChatRoom class]])
-			controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:target ifExists:YES];
-		else if ([target isKindOfClass:[MVChatUser class]])
-			controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:target ifExists:YES];
+	id target = notification.object;
+	id <CQChatViewController> controller = nil;
+	if ([target isKindOfClass:[MVChatRoom class]])
+		controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:target ifExists:YES];
+	else if ([target isKindOfClass:[MVChatUser class]])
+		controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:target ifExists:YES];
 
-		if (!controller)
-			return;
+	if (!controller)
+		return;
 
-		CQChatTableCell *cell = [self _chatTableCellForController:controller];
-		[self _refreshChatCell:cell withController:controller animated:YES];
-	}
+	CQChatTableCell *cell = [self _chatTableCellForController:controller];
+	[self _refreshChatCell:cell withController:controller animated:YES];
 }
 
 - (void) _scrollToRevealSeclectedRow {
@@ -532,22 +526,20 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) _refreshIndexPathForChatControllersCache {
-	@synchronized(self) {
-		_indexPathsForChatControllers = [NSMapTable strongToStrongObjectsMapTable];
+	_indexPathsForChatControllers = [NSMapTable strongToStrongObjectsMapTable];
 
-		for (NSInteger section = 0; section < self.tableView.numberOfSections; section++) {
-			if (self.editing && section == 0)
-				continue;
+	for (NSInteger section = 0; section < self.tableView.numberOfSections; section++) {
+		if (self.editing && section == 0)
+			continue;
 
-			for (NSInteger row = 0; row < [self.tableView numberOfRowsInSection:section]; row++) {
-				NSIndexPath *fetchIndexPath = nil;
-				if (self.editing)
-					fetchIndexPath = [NSIndexPath indexPathForRow:row inSection:(section - 1)];
-				else fetchIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
+		for (NSInteger row = 0; row < [self.tableView numberOfRowsInSection:section]; row++) {
+			NSIndexPath *fetchIndexPath = nil;
+			if (self.editing)
+				fetchIndexPath = [NSIndexPath indexPathForRow:row inSection:(section - 1)];
+			else fetchIndexPath = [NSIndexPath indexPathForRow:row inSection:section];
 
-				id chatViewController = chatControllerForIndexPath(fetchIndexPath);
-				[_indexPathsForChatControllers setObject:[NSIndexPath indexPathForRow:row inSection:section] forKey:chatViewController];
-			}
+			id chatViewController = chatControllerForIndexPath(fetchIndexPath);
+			[_indexPathsForChatControllers setObject:[NSIndexPath indexPathForRow:row inSection:section] forKey:chatViewController];
 		}
 	}
 }
@@ -671,12 +663,10 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	self.tableView.rowHeight = 62.;
 
-	@synchronized([CQChatOrderingController defaultController]) {
-		if ([[UIDevice currentDevice] isPadModel]) {
-			[self resizeForViewInPopoverUsingTableView:self.tableView];
-			self.tableView.allowsSelectionDuringEditing = YES;
-			self.clearsSelectionOnViewWillAppear = NO;
-		}
+	if ([[UIDevice currentDevice] isPadModel]) {
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
+		self.tableView.allowsSelectionDuringEditing = YES;
+		self.clearsSelectionOnViewWillAppear = NO;
 	}
 }
 
@@ -758,26 +748,24 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		return;
 	}
 
-	@synchronized([CQChatOrderingController defaultController]) {
-		NSIndexPath *changedIndexPath = indexPathForChatController(controller, self.editing);
-		NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+	NSIndexPath *changedIndexPath = indexPathForChatController(controller, self.editing);
+	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
 
-		if (selectedIndexPath && changedIndexPath.section == selectedIndexPath.section)
-			[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
+	if (selectedIndexPath && changedIndexPath.section == selectedIndexPath.section)
+		[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
 
-		[self.tableView beginUpdates];
-		[self.tableView insertRowsAtIndexPaths:@[changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
-		[self.tableView endUpdates];
+	[self.tableView beginUpdates];
+	[self.tableView insertRowsAtIndexPaths:@[changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
+	[self.tableView endUpdates];
 
-		if (selectedIndexPath && changedIndexPath.section == selectedIndexPath.section) {
-			if (changedIndexPath.row <= selectedIndexPath.row)
-				selectedIndexPath = [NSIndexPath indexPathForRow:selectedIndexPath.row + 1 inSection:selectedIndexPath.section];
-			[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-		}
-
-		if ([[UIDevice currentDevice] isPadModel])
-			[self resizeForViewInPopoverUsingTableView:self.tableView];
+	if (selectedIndexPath && changedIndexPath.section == selectedIndexPath.section) {
+		if (changedIndexPath.row <= selectedIndexPath.row)
+			selectedIndexPath = [NSIndexPath indexPathForRow:selectedIndexPath.row + 1 inSection:selectedIndexPath.section];
+		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 	}
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
 
 	[self _refreshIndexPathForChatControllersCache];
 }
@@ -927,23 +915,21 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		section--;
 	}
 
-	@synchronized([CQChatOrderingController defaultController]) {
-		id connection = [[CQChatOrderingController defaultController] connectionAtIndex:section];
-		if ([connection isKindOfClass:[CQBouncerSettings class]])
-			return 0;
-
-		if (connection) {
-			NSInteger numberOfRowsInSection = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection].count;
-			if (self.editing)
-				numberOfRowsInSection++;
-			return numberOfRowsInSection;
-		}
-#if ENABLE(FILE_TRANSFERS)
-		return [[CQChatController defaultController] chatViewControllersOfClass:[CQFileTransferController class]].count;
-#else
+	id connection = [[CQChatOrderingController defaultController] connectionAtIndex:section];
+	if ([connection isKindOfClass:[CQBouncerSettings class]])
 		return 0;
-#endif
+
+	if (connection) {
+		NSInteger numberOfRowsInSection = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection].count;
+		if (self.editing)
+			numberOfRowsInSection++;
+		return numberOfRowsInSection;
 	}
+#if ENABLE(FILE_TRANSFERS)
+	return [[CQChatController defaultController] chatViewControllersOfClass:[CQFileTransferController class]].count;
+#else
+	return 0;
+#endif
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -1161,11 +1147,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 #pragma mark -
 
 - (CGFloat) tableView:(UITableView *) tableView heightForHeaderInSection:(NSInteger) section {
-	@synchronized([CQChatOrderingController defaultController]) {
-		if (self.editing && section == 0)
-			return 0.;
-		return 44.;
-	}
+	if (self.editing && section == 0)
+		return 0.;
+	return 44.;
 }
 
 - (UIView *) tableView:(UITableView *) tableView viewForHeaderInSection:(NSInteger) section {
@@ -1175,33 +1159,31 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		section--;
 	}
 
-	@synchronized([CQChatOrderingController defaultController]) {
-		MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:section];
-		if (!connection)
-			return nil;
+	MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:section];
+	if (!connection)
+		return nil;
 
-		CQConnectionTableHeaderView *tableHeaderView = [_headerViewsForConnections objectForKey:connection];
-		if (tableHeaderView == nil) {
-			tableHeaderView = [[CQConnectionTableHeaderView alloc] initWithReuseIdentifier:nil];
-			tableHeaderView.tintColor = [CQColloquyApplication sharedApplication].window.tintColor;
+	CQConnectionTableHeaderView *tableHeaderView = [_headerViewsForConnections objectForKey:connection];
+	if (tableHeaderView == nil) {
+		tableHeaderView = [[CQConnectionTableHeaderView alloc] initWithReuseIdentifier:nil];
+		tableHeaderView.tintColor = [CQColloquyApplication sharedApplication].window.tintColor;
 
-			__weak __typeof__((self)) weakSelf = self;
-			__weak __typeof__((tableView)) weakTableView = tableView;
-			__weak __typeof__((tableHeaderView)) weakTableHeaderView = tableHeaderView;
-			tableHeaderView.selectedConnectionHeaderView = ^{
-				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-				__strong __typeof__((weakTableView)) strongTableView = weakTableView;
-				__strong __typeof__((weakTableHeaderView)) strongTableHeaderView = weakTableHeaderView;
-				NSDictionary *userInfo = @{ @"connection": connection, @"section": @(section) };
-				[strongSelf tableView:strongTableView didSelectHeader:strongTableHeaderView withUserInfo:userInfo];
-			};
-			[_headerViewsForConnections setObject:tableHeaderView forKey:connection];
-			[_connectionsForHeaderViews setObject:connection forKey:tableHeaderView];
-		}
-		[tableHeaderView takeValuesFromConnection:connection];
-
-		return tableHeaderView;
+		__weak __typeof__((self)) weakSelf = self;
+		__weak __typeof__((tableView)) weakTableView = tableView;
+		__weak __typeof__((tableHeaderView)) weakTableHeaderView = tableHeaderView;
+		tableHeaderView.selectedConnectionHeaderView = ^{
+			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+			__strong __typeof__((weakTableView)) strongTableView = weakTableView;
+			__strong __typeof__((weakTableHeaderView)) strongTableHeaderView = weakTableHeaderView;
+			NSDictionary *userInfo = @{ @"connection": connection, @"section": @(section) };
+			[strongSelf tableView:strongTableView didSelectHeader:strongTableHeaderView withUserInfo:userInfo];
+		};
+		[_headerViewsForConnections setObject:tableHeaderView forKey:connection];
+		[_connectionsForHeaderViews setObject:connection forKey:tableHeaderView];
 	}
+	[tableHeaderView takeValuesFromConnection:connection];
+
+	return tableHeaderView;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectHeader:(UITableViewHeaderFooterView *) headerView withUserInfo:(NSDictionary *) userInfo {

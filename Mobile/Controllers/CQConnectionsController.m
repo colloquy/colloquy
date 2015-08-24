@@ -1770,17 +1770,15 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 #pragma mark -
 
 - (CQIgnoreRulesController *) ignoreControllerForConnection:(MVChatConnection *) connection {
-	@synchronized(_ignoreControllers) {
-		CQIgnoreRulesController *ignoreController = _ignoreControllers[connection.uniqueIdentifier];
-		if (ignoreController)
-			return ignoreController;
-
-		ignoreController = [[CQIgnoreRulesController alloc] initWithConnection:connection];
-
-		_ignoreControllers[connection.uniqueIdentifier] = ignoreController;
-
+	CQIgnoreRulesController *ignoreController = _ignoreControllers[connection.uniqueIdentifier];
+	if (ignoreController)
 		return ignoreController;
-	}
+
+	ignoreController = [[CQIgnoreRulesController alloc] initWithConnection:connection];
+
+	_ignoreControllers[connection.uniqueIdentifier] = ignoreController;
+
+	return ignoreController;
 }
 
 #pragma mark -
