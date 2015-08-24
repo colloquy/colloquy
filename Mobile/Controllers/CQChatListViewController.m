@@ -1179,17 +1179,10 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (!connection)
 		return nil;
 
-<<<<<<< .mine
-		CQConnectionTableHeaderView *tableHeaderView = [_headerViewsForConnections objectForKey:connection];
-		if (tableHeaderView == nil) {
-			tableHeaderView = [[CQConnectionTableHeaderView alloc] initWithReuseIdentifier:nil];
-			tableHeaderView.tintColor = [CQColloquyApplication sharedApplication].keyWindow.tintColor;
-=======
 	CQConnectionTableHeaderView *tableHeaderView = [_headerViewsForConnections objectForKey:connection];
 	if (tableHeaderView == nil) {
 		tableHeaderView = [[CQConnectionTableHeaderView alloc] initWithReuseIdentifier:nil];
-		tableHeaderView.tintColor = [CQColloquyApplication sharedApplication].window.tintColor;
->>>>>>> .r6415
+		tableHeaderView.tintColor = [UIApplication sharedApplication].keyWindow.tintColor;
 
 		__weak __typeof__((self)) weakSelf = self;
 		__weak __typeof__((tableView)) weakTableView = tableView;
