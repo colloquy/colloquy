@@ -2,11 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatPresentationController : UIViewController {
-	UIToolbar *_toolbar;
-	NSArray *_standardToolbarItems;
-	UIViewController <CQChatViewController> *_topChatViewController;
-}
+@interface CQChatPresentationController : UIViewController
 @property (nonatomic, copy) NSArray *standardToolbarItems;
 - (void) setStandardToolbarItems:(NSArray *) items animated:(BOOL) animated;
 

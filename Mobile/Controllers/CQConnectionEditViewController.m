@@ -44,7 +44,14 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 #pragma mark -
 
-@implementation  CQConnectionEditViewController
+@interface CQConnectionEditViewController () <UIActionSheetDelegate, UIAlertViewDelegate>
+@end
+
+@implementation  CQConnectionEditViewController {
+	MVChatConnection *_connection;
+	NSArray *_servers;
+	BOOL _newConnection;
+}
 
 + (void) initialize {
 	static BOOL initialized;
@@ -177,7 +184,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	return 0;
 }
 
-- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSIndexPath *__nullable) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (pushAvailable && indexPath.section == PushTableSection && indexPath.row == 0)
 		return indexPath;
 	if (indexPath.section == AutomaticTableSection && indexPath.row == 2)
@@ -267,7 +274,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	}
 }
 
-- (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
+- (NSString *__nullable) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
 	if (section == ServerTableSection)
 		return NSLocalizedString(@"Internet Relay Chat Server", @"Internet Relay Chat Server section title");
 	if (section == IdentityTableSection)

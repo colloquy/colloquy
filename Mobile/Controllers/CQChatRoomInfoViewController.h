@@ -4,12 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatRoomInfoViewController : CQModalNavigationController {
-@private
-	MVChatRoom *_room;
-
-}
-
+@interface CQChatRoomInfoViewController : CQModalNavigationController
 - (instancetype) initWithRoom:(MVChatRoom *) room NS_DESIGNATED_INITIALIZER;
 @end
 

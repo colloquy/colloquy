@@ -4,10 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQConnectionPushEditController : CQTableViewController {
-	@protected
-	MVChatConnection *_connection;
-}
+@interface CQConnectionPushEditController : CQTableViewController
 @property (nonatomic, strong) MVChatConnection *connection;
 @property (nonatomic, assign) BOOL newConnection;
 @end

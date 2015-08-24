@@ -13,7 +13,21 @@ NS_ASSUME_NONNULL_BEGIN
 NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedNotification";
 NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchRuleRemovedMatchedUserNotification";
 
-@implementation MVChatUserWatchRule
+@implementation MVChatUserWatchRule {
+	NSMutableSet *_matchedChatUsers;
+	NSString *_nickname;
+	NSString *_realName;
+	NSString *_username;
+	NSString *_address;
+	NSData *_publicKey;
+	NSArray *_applicableServerDomains;
+	BOOL _nicknameIsRegex;
+	BOOL _realNameIsRegex;
+	BOOL _usernameIsRegex;
+	BOOL _addressIsRegex;
+	BOOL _interim;
+}
+
 - (instancetype) initWithDictionaryRepresentation:(NSDictionary *) dictionary {
 	if( ( self = [super init] ) ) {
 		[self setUsername:dictionary[@"username"]];

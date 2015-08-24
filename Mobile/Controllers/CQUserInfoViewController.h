@@ -7,13 +7,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQUserInfoViewController : CQTableViewController {
-	@protected
-	MVChatUser *_user;
-	NSTimer *_updateTimesTimer;
-	NSTimer *_updateInfoTimer;
-	NSTimeInterval _idleTimeStart;
-}
+@interface CQUserInfoViewController : CQTableViewController
 @property (nonatomic, strong) MVChatUser *user;
 
 - (IBAction) showJoinedRooms:(__nullable id) sender;

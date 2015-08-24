@@ -79,7 +79,6 @@ typedef BOOL (^MVPeerTrustHandler)(SecTrustRef);
 @class MVChatRoom;
 @class MVChatUser;
 @class MVChatUserWatchRule;
-@class MVUploadFileTransfer;
 
 extern NSString *MVChatConnectionWatchFeature;
 

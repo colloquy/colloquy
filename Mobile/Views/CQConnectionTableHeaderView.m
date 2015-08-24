@@ -8,8 +8,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQConnectionTableHeaderView
-- (instancetype) initWithReuseIdentifier:(NSString *) reuseIdentifier {
+@implementation  CQConnectionTableHeaderView {
+	UIImageView *_iconImageView;
+	UIImageView *_badgeImageView;
+	UILabel *_serverLabel;
+	UILabel *_nicknameLabel;
+	UILabel *_timeLabel;
+	NSDate *_connectDate;
+	CQConnectionTableCellStatus _status;
+	UIButton *_disclosureButton;
+
+	UIColor *_originalBackgroundColor;
+}
+
+- (instancetype) initWithReuseIdentifier:(NSString *__nullable) reuseIdentifier {
 	if (!(self = [super initWithReuseIdentifier:reuseIdentifier]))
 		return nil;
 
@@ -250,20 +262,20 @@ NS_ASSUME_NONNULL_BEGIN
 	_timeLabel.frame = frame;
 }
 
-- (void) touchesBegan:(NSSet *) touches withEvent:(UIEvent *) event {
+- (void) touchesBegan:(NSSet *) touches withEvent:(UIEvent *__nullable) event {
 	[super touchesBegan:touches withEvent:event];
 
 	_originalBackgroundColor = [self.contentView.backgroundColor copy];
 	self.contentView.backgroundColor = [UIColor colorWithWhite:(208. / 255.) alpha:1.];
 }
 
-- (void) touchesCancelled:(NSSet *) touches withEvent:(UIEvent *) event {
+- (void) touchesCancelled:(NSSet *__nullable) touches withEvent:(UIEvent *__nullable) event {
 	[super touchesCancelled:touches withEvent:event];
 
 	self.contentView.backgroundColor = _originalBackgroundColor;
 }
 
-- (void) touchesEnded:(NSSet *) touches withEvent:(UIEvent *) event {
+- (void) touchesEnded:(NSSet *) touches withEvent:(UIEvent *__nullable) event {
 	[super touchesEnded:touches withEvent:event];
 
 	self.contentView.backgroundColor = _originalBackgroundColor;

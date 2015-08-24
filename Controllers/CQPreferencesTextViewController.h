@@ -2,10 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQPreferencesTextViewController : CQTableViewController {
-	UITextView *_textView;
-}
-
+@interface CQPreferencesTextViewController : CQTableViewController
 @property (nonatomic, copy) NSString *text;
 @end
 

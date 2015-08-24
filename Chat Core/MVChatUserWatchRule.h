@@ -6,20 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 extern NSString *MVChatUserWatchRuleMatchedNotification;
 extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
 
-@interface MVChatUserWatchRule : NSObject <NSCopying> {
-	NSMutableSet *_matchedChatUsers;
-	NSString *_nickname;
-	NSString *_realName;
-	NSString *_username;
-	NSString *_address;
-	NSData *_publicKey;
-	NSArray *_applicableServerDomains;
-	BOOL _nicknameIsRegex;
-	BOOL _realNameIsRegex;
-	BOOL _usernameIsRegex;
-	BOOL _addressIsRegex;
-	BOOL _interim;
-}
+@interface MVChatUserWatchRule : NSObject <NSCopying>
 - (instancetype) initWithDictionaryRepresentation:(NSDictionary *) dictionary;
 - (NSDictionary *) dictionaryRepresentation;
 

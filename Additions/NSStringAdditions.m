@@ -1412,12 +1412,15 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	}
 }
 
-- (void) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement {
-	[self replaceOccurrencesOfRegex:regex withString:replacement options:0 range:NSMakeRange(0, self.length) error:nil];
+- (BOOL) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement {
+	return [self replaceOccurrencesOfRegex:regex withString:replacement options:0 range:NSMakeRange(0, self.length) error:nil];
 }
 
-- (void) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
+- (BOOL ) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
 	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
+	if (!regularExpression)
+		return NO;
+
 	NSMutableString *replacementString = [self mutableCopy];
 
 	do {
@@ -1428,6 +1431,8 @@ static NSCharacterSet *typicalEmoticonCharacters;
 		searchRange.length += (result.range.length - replacement.length);
 		[replacementString replaceCharactersInRange:result.range withString:replacement];
 	} while (0);
+
+	return YES;
 }
 @end
 

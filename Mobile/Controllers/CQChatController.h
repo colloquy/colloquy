@@ -1,14 +1,9 @@
 #import <ChatCore/MVIRCChatRoom.h>
 
-@class CQChatListViewController;
 @class CQChatNavigationController;
 @class CQChatPresentationController;
-@class CQChatRoomController;
-@class CQConsoleController;
-@class CQDirectChatController;
 @class MVChatConnection;
 @class MVChatUser;
-@class MVDirectChatConnection;
 @protocol CQChatViewController;
 
 #if ENABLE(FILE_TRANSFERS)
@@ -22,16 +17,7 @@ extern NSString *CQChatControllerAddedChatViewControllerNotification;
 extern NSString *CQChatControllerRemovedChatViewControllerNotification;
 extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 
-@interface CQChatController : NSObject <UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
-	@protected
-	CQChatNavigationController *_chatNavigationController;
-	CQChatPresentationController *_chatPresentationController;
-	id <CQChatViewController> _nextController;
-	id <CQChatViewController> _visibleChatController;
-	MVChatConnection *_nextRoomConnection;
-	NSInteger _totalImportantUnreadCount;
-	MVChatUser *_fileUser;
-}
+@interface CQChatController : NSObject
 + (CQChatController *) defaultController;
 
 @property (nonatomic, readonly) id <CQChatViewController> visibleChatController;

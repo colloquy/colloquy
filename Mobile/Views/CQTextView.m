@@ -2,7 +2,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQTextView
+@implementation  CQTextView {
+	UILabel *_placeholder;
+}
+
 - (instancetype) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
 		return nil;
@@ -44,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setText:(NSString *) text {
+- (void) setText:(NSString *__nullable) text {
 	[super setText:text];
 
 	if (text.length)

@@ -13,7 +13,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  KAIgnoreRule
+@implementation  KAIgnoreRule {
+	NSRegularExpression *_userRegex;
+	NSRegularExpression *_maskRegex;
+	NSRegularExpression *_messageRegex;
+}
+
 @synthesize mask = _ignoreMask;
 @synthesize message = _ignoredMessage;
 @synthesize user = _ignoredUser;

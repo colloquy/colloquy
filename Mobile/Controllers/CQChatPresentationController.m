@@ -9,10 +9,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatPresentationController ()
-@end
+@implementation  CQChatPresentationController {
+	UIToolbar *_toolbar;
+	NSArray *_standardToolbarItems;
+	UIViewController <CQChatViewController> *_topChatViewController;
+}
 
-@implementation  CQChatPresentationController
 - (instancetype) init {
 	if (!(self = [super init]))
 		return nil;

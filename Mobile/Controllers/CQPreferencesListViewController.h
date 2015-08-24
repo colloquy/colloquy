@@ -1,7 +1,5 @@
 #import "CQTableViewController.h"
 
-@class AVAudioPlayer;
-@class CQPreferencesListEditViewController;
 @class CQPreferencesListViewController;
 
 typedef NS_ENUM(NSInteger, CQPreferencesListType) {
@@ -15,29 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^CQPreferencesListBlock)(CQPreferencesListViewController *preferencesListViewController);
 
-@interface CQPreferencesListViewController : CQTableViewController {
-	@protected
-	NSMutableArray *_items;
-	UIImage *_itemImage;
-	NSString *_addItemLabelText;
-	NSString *_noItemsLabelText;
-	NSString *_editViewTitle;
-	NSString *_editPlaceholder;
-	NSString *_footerText;
-	NSUInteger _editingIndex;
-	NSInteger _selectedItemIndex;
-	CQPreferencesListEditViewController *_editingViewController;
-	id _customEditingViewController;
-	id __weak _target;
-	SEL _action;
-	CQPreferencesListBlock _preferencesListBlock;
-	BOOL _pendingChanges;
-	BOOL _allowEditing;
-
-	CQPreferencesListType _listType;
-
-	AVAudioPlayer *_audioPlayer;
-}
+@interface CQPreferencesListViewController : CQTableViewController
 @property (nonatomic) BOOL allowEditing;
 @property (nonatomic) NSInteger selectedItemIndex;
 @property (nonatomic, copy) NSArray *items;

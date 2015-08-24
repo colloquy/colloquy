@@ -4,6 +4,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface CQModalNavigationController () <UINavigationControllerDelegate>
+@end
+
 @implementation  CQModalNavigationController
 - (instancetype) initWithRootViewController:(UIViewController *) rootViewController {
 	if (!(self = [self init]))

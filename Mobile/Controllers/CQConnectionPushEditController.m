@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return 0;
 }
 
-- (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
+- (NSString *__nullable) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
 	if (section == PushEnabledTableSection && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
 		return NSLocalizedString(@"Private messages and highlighted room messages\nare pushed. Push notifications require connecting\nto a push aware bouncer.", @"Push Notification section footer title");
 	if (section == PushEnabledTableSection)

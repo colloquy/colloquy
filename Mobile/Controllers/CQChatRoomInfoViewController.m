@@ -5,7 +5,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatRoomInfoViewController
+@implementation  CQChatRoomInfoViewController {
+	MVChatRoom *_room;
+}
+
 - (instancetype) initWithRoom:(MVChatRoom *) room {
 	if (!(self = [super init]))
 		return nil;

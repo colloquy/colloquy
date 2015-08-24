@@ -30,7 +30,23 @@ static BOOL showsChatIcons;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatListViewController
+@interface CQChatListViewController ()  <UIActionSheetDelegate>
+@end
+
+@implementation  CQChatListViewController {
+	UIActionSheet *_currentConnectionActionSheet;
+	UIActionSheet *_currentChatViewActionSheet;
+	id <UIActionSheetDelegate> _currentChatViewActionSheetDelegate;
+	id <CQChatViewController> _previousSelectedChatViewController;
+	BOOL _needsUpdate;
+	BOOL _ignoreNotifications;
+	BOOL _isReordering;
+	NSTimer *_connectTimeUpdateTimer;
+	NSMapTable *_headerViewsForConnections;
+	NSMapTable *_connectionsForHeaderViews;
+	NSMapTable *_indexPathsForChatControllers; // never in editing state
+}
+
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -1017,7 +1033,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	return UITableViewCellEditingStyleDelete;
 }
 
-- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (NSArray *__nullable) tableView:(UITableView *) tableView editActionsForRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (self.editing) {
 		if (indexPath.section == 0 || indexPath.row == 0)
 			return nil;
@@ -1056,7 +1072,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	return @[closeAction];
 }
 
-- (NSString *) tableView:(UITableView *) tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSString *__nullable) tableView:(UITableView *) tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (self.editing) {
 		if (indexPath.section == 0 || indexPath.row == 0)
 			return nil;
@@ -1152,7 +1168,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	return 44.;
 }
 
-- (UIView *) tableView:(UITableView *) tableView viewForHeaderInSection:(NSInteger) section {
+- (UIView *__nullable) tableView:(UITableView *) tableView viewForHeaderInSection:(NSInteger) section {
 	if (self.editing) {
 		if (section == 0)
 			return nil;
@@ -1163,10 +1179,17 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (!connection)
 		return nil;
 
+<<<<<<< .mine
+		CQConnectionTableHeaderView *tableHeaderView = [_headerViewsForConnections objectForKey:connection];
+		if (tableHeaderView == nil) {
+			tableHeaderView = [[CQConnectionTableHeaderView alloc] initWithReuseIdentifier:nil];
+			tableHeaderView.tintColor = [CQColloquyApplication sharedApplication].keyWindow.tintColor;
+=======
 	CQConnectionTableHeaderView *tableHeaderView = [_headerViewsForConnections objectForKey:connection];
 	if (tableHeaderView == nil) {
 		tableHeaderView = [[CQConnectionTableHeaderView alloc] initWithReuseIdentifier:nil];
 		tableHeaderView.tintColor = [CQColloquyApplication sharedApplication].window.tintColor;
+>>>>>>> .r6415
 
 		__weak __typeof__((self)) weakSelf = self;
 		__weak __typeof__((tableView)) weakTableView = tableView;

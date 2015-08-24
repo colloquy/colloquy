@@ -8,11 +8,7 @@ NS_ASSUME_NONNULL_BEGIN
 extern NSString *MVMetadataKeyForAttributeName(NSString *attributeName);
 extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey);
 
-@interface MVIRCChatUser : MVChatUser {
-@private
-	BOOL _hasPendingRefreshInformationRequest;
-}
-
+@interface MVIRCChatUser : MVChatUser
 + (NSArray *) servicesNicknames;
 
 - (instancetype) initLocalUserWithConnection:(MVIRCChatConnection *) connection;

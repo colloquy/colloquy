@@ -13,7 +13,27 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQWKChatTranscriptView
+@interface CQWKChatTranscriptView () <UIGestureRecognizerDelegate, UIScrollViewDelegate, WKNavigationDelegate>
+
+@end
+
+@implementation  CQWKChatTranscriptView {
+@protected
+	UIView *_blockerView;
+	NSMutableArray *_pendingPreviousSessionComponents;
+	NSMutableArray *_pendingComponents;
+	BOOL _scrolling;
+	BOOL _loading;
+	BOOL _resetPending;
+	CGPoint _lastTouchLocation;
+	NSMutableArray *_singleSwipeGestureRecognizers;
+	CQShowRoomTopic _showRoomTopic;
+	BOOL _addedMessage;
+	NSString *_roomTopic;
+	NSString *_roomTopicSetter;
+	BOOL _topicIsHidden;
+}
+
 @synthesize transcriptDelegate = _transcriptDelegate;
 
 @synthesize timestampPosition = _timestampPosition;
@@ -201,7 +221,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (UIView *) hitTest:(CGPoint) point withEvent:(UIEvent *) event {
+- (UIView *__nullable) hitTest:(CGPoint) point withEvent:(UIEvent *__nullable) event {
 	_lastTouchLocation = [[UIApplication sharedApplication].keyWindow.rootViewController.view convertPoint:point fromView:self];
 
 	return [super hitTest:point withEvent:event];;
@@ -249,7 +269,7 @@ NS_ASSUME_NONNULL_BEGIN
 	decisionHandler(WKNavigationActionPolicyCancel);
 }
 
-- (void) webView:(WKWebView *) webView didFinishNavigation:(WKNavigation *) navigation {
+- (void) webView:(WKWebView *) webView didFinishNavigation:(WKNavigation *__null_unspecified) navigation {
 	[self performSelector:@selector(_checkIfLoadingFinished) withObject:nil afterDelay:0.];
 
 //	[self stringByEvaluatingJavaScriptFromString:@"document.body.style.webkitTouchCallout='none';"];
@@ -382,7 +402,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) evaluateJavaScript:(NSString *) script completionHandler:(void (^)(id, NSError *)) completionHandler {
+- (void) evaluateJavaScript:(NSString *) script completionHandler:(void (^__nullable)(__nullable id, NSError *__nullable)) completionHandler {
 	NSLog(@"Refusing to evaluate %@\n%@", script, [NSThread callStackSymbols]);
 }
 

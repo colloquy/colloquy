@@ -52,7 +52,19 @@ static CQSoundController *fileTransferSound;
 
 #pragma mark -
 
-@implementation  CQChatController
+@interface CQChatController () <UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate>
+@end
+
+@implementation  CQChatController {
+	CQChatNavigationController *_chatNavigationController;
+	CQChatPresentationController *_chatPresentationController;
+	id <CQChatViewController> _nextController;
+	id <CQChatViewController> _visibleChatController;
+	MVChatConnection *_nextRoomConnection;
+	NSInteger _totalImportantUnreadCount;
+	MVChatUser *_fileUser;
+}
+
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;

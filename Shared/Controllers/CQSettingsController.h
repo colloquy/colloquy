@@ -35,11 +35,7 @@ extern NSString *const CQSettingsDidChangeNotification;
 - (BOOL) synchronize;
 @end
 
-@interface CQSettingsController : NSObject <CQSettings> {
-	CQSettingsLocation _settingsLocation;
-	BOOL _mirroringEnabled;
-}
-
+@interface CQSettingsController : NSObject <CQSettings>
 + (instancetype) settingsController;
 
 @property (nonatomic) CQSettingsLocation settingsLocation;

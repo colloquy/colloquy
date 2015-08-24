@@ -4,12 +4,15 @@ static CQPreferencesTextCell *currentEditingCell;
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface CQPreferencesTextCell () <UITextFieldDelegate>
+@end
+
 @implementation  CQPreferencesTextCell
 + (CQPreferencesTextCell *) currentEditingCell {
 	return currentEditingCell;
 }
 
-- (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
+- (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *__nullable) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
 

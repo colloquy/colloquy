@@ -2,7 +2,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQPreferencesTextViewController
+@implementation  CQPreferencesTextViewController {
+	UITextView *_textView;
+}
+
 - (void) loadView {
 	_textView = [[UITextView alloc] initWithFrame:CGRectZero];
 	_textView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin);

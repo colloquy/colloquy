@@ -41,7 +41,20 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 #pragma mark -
 
-@implementation MVDirectClientConnection
+@implementation MVDirectClientConnection {
+	NSObject <MVDirectClientConnectionDelegate> *_delegate;
+	GCDAsyncSocket *_connection;
+	GCDAsyncSocket *_acceptConnection;
+#if ENABLE(AUTO_PORT_MAPPING)
+	TCMPortMapping *_portMapping;
+#endif
+	NSThread *_connectionThread;
+	dispatch_queue_t _connectionDelegateQueue;
+	NSConditionLock *_threadWaitLock;
+	unsigned short _port;
+	BOOL _done;
+}
+
 - (void) dealloc {
 	[[NSNotificationCenter chatCenter] removeObserver:self];
 

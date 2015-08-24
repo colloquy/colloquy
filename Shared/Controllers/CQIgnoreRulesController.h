@@ -1,6 +1,5 @@
 @class KAIgnoreRule;
 @class MVChatConnection;
-@class MVChatString;
 @class MVChatUser;
 @class MVChatRoom;
 
@@ -8,13 +7,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const CQIgnoreRulesNotSavedNotification;
 
-@interface CQIgnoreRulesController : NSObject {
-	NSMutableArray *_ignoreRules;
-	MVChatConnection *_connection;
-
-	NSString *_appSupportPath;
-}
-
+@interface CQIgnoreRulesController : NSObject
 - (instancetype) init NS_UNAVAILABLE;
 - (instancetype) initWithConnection:(MVChatConnection *) connection NS_DESIGNATED_INITIALIZER;
 

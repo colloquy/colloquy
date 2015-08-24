@@ -18,7 +18,15 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MVIRCUploadFileTransfer () <MVDirectClientConnectionDelegate>
 @end
 
-@implementation MVIRCUploadFileTransfer
+@implementation MVIRCUploadFileTransfer {
+	MVDirectClientConnection *_directClientConnection;
+	NSFileHandle *_fileHandle;
+	BOOL _fileNameQuoted;
+	BOOL _readData;
+	BOOL _doneSending;
+	long long _passiveId;
+}
+
 + (instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	static long long passiveId = 0;
 
@@ -211,7 +219,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MVIRCDownloadFileTransfer () <MVDirectClientConnectionDelegate>
 @end
 
-@implementation MVIRCDownloadFileTransfer
+@implementation MVIRCDownloadFileTransfer {
+	MVDirectClientConnection *_directClientConnection;
+	NSFileHandle *_fileHandle;
+	BOOL _fileNameQuoted;
+	BOOL _turbo;
+	long long _passiveId;
+}
+
 - (void) dealloc {
 	[[[self user] connection] _removeDirectClientConnection:self];
 

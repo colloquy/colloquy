@@ -1,5 +1,3 @@
-@class UIColor;
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UIImage (UIImageAdditions)

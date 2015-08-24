@@ -19,24 +19,9 @@ typedef enum {
 	MVDirectChatConnectionErrorStatus = 'dcEr'
 } MVDirectChatConnectionStatus;
 
-@class MVDirectClientConnection;
 @class MVChatUser;
 
-@interface MVDirectChatConnection : NSObject {
-@private
-	MVDirectClientConnection *_directClientConnection;
-	MVChatMessageFormat _outgoingChatFormat;
-	NSStringEncoding _encoding;
-	NSString *_host;
-	NSString *_connectedHost;
-	BOOL _passive;
-	BOOL _localRequest;
-	unsigned short _port;
-	long long _passiveId;
-	MVChatUser *_user;
-	MVDirectChatConnectionStatus _status;
-	NSError *_lastError;
-}
+@interface MVDirectChatConnection : NSObject
 + (id) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive;
 
 - (BOOL) isPassive;

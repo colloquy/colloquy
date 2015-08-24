@@ -28,18 +28,22 @@ enum {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQPreferencesIgnoreEditViewController
+@implementation  CQPreferencesIgnoreEditViewController {
+	MVChatConnection *_connection;
+	KAIgnoreRule *_representedRule;
+}
+
 - (instancetype) initWithStyle:(UITableViewStyle) style {
 	NSAssert(NO, @"use -[CQPreferencesIgnoreEditViewController initWithConnection:] instead");
 	return nil;
 }
 
-- (instancetype) initWithNibName:(NSString *) nibNameOrNil bundle:(NSBundle *) nibBundleOrNil {
+- (instancetype) initWithNibName:(NSString *__nullable) nibNameOrNil bundle:(NSBundle *__nullable) nibBundleOrNil {
 	NSAssert(NO, @"use -[CQPreferencesIgnoreEditViewController initWithConnection:] instead");
 	return nil;
 }
 
-- (instancetype) initWithCoder:(NSCoder *) aDecoder {
+- (__nullable instancetype) initWithCoder:(NSCoder *) aDecoder {
 	NSAssert(NO, @"use -[CQPreferencesIgnoreEditViewController initWithConnection:] instead");
 	return nil;
 }
@@ -56,11 +60,11 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (KAIgnoreRule *) _ignoreRule {
-	if (![_listItem isKindOfClass:[KAIgnoreRule class]]) {
-		_listItem = [[KAIgnoreRule alloc] init];
+	if (![self.listItem isKindOfClass:[KAIgnoreRule class]]) {
+		self.listItem = [[KAIgnoreRule alloc] init];
 	}
 
-	return _listItem;
+	return self.listItem;
 }
 
 #pragma mark -
@@ -88,7 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
 		if (indexPath.row == CQPreferencesIgnoreRowNameOrMask) {
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textLabel.text = NSLocalizedString(@"Username", @"Username label");
-			cell.textField.placeholder = _listItemPlaceholder;
+			cell.textField.placeholder = self.listItemPlaceholder;
 			cell.textField.text = self._ignoreRule.user;
 			if (!cell.textField.text)
 				cell.textField.text = self._ignoreRule.mask;
@@ -123,7 +127,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return nil;
 }
 
-- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSIndexPath *__nullable) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section == CQPreferencesIgnoreSectionRooms)
 		return indexPath;
 	return [super tableView:tableView willSelectRowAtIndexPath:indexPath];

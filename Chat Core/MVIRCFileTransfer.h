@@ -4,17 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class MVDirectClientConnection;
-
-@interface MVIRCUploadFileTransfer : MVUploadFileTransfer {
-@private
-	MVDirectClientConnection *_directClientConnection;
-	NSFileHandle *_fileHandle;
-	BOOL _fileNameQuoted;
-	BOOL _readData;
-	BOOL _doneSending;
-	long long _passiveId;
-}
+@interface MVIRCUploadFileTransfer : MVUploadFileTransfer
 - (void) _setupAndStart;
 - (void) _sendNextPacket;
 
@@ -27,13 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-@interface MVIRCDownloadFileTransfer : MVDownloadFileTransfer {
-	MVDirectClientConnection *_directClientConnection;
-	NSFileHandle *_fileHandle;
-	BOOL _fileNameQuoted;
-	BOOL _turbo;
-	long long _passiveId;
-}
+@interface MVIRCDownloadFileTransfer : MVDownloadFileTransfer
 - (void) _setupAndStart;
 
 - (void) _setTurbo:(BOOL) turbo;

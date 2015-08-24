@@ -30,8 +30,10 @@ static NSString *timestampFormat;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQProcessChatMessageOperation
-@synthesize processedMessageInfo = _processedMessage;
+@implementation  CQProcessChatMessageOperation {
+	NSDictionary *_message;
+	NSMutableDictionary *_processedMessage;
+}
 
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])

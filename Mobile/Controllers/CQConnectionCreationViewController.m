@@ -18,7 +18,10 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 #pragma mark -
 
-@implementation  CQConnectionCreationViewController
+@implementation  CQConnectionCreationViewController {
+	MVChatConnection *_connection;
+}
+
 - (instancetype) init {
 	if (!(self = [super init]))
 		return nil;

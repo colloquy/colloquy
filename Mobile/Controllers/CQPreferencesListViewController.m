@@ -13,7 +13,29 @@ enum {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQPreferencesListViewController
+@implementation  CQPreferencesListViewController {
+	NSMutableArray *_items;
+	UIImage *_itemImage;
+	NSString *_addItemLabelText;
+	NSString *_noItemsLabelText;
+	NSString *_editViewTitle;
+	NSString *_editPlaceholder;
+	NSString *_footerText;
+	NSUInteger _editingIndex;
+	NSInteger _selectedItemIndex;
+	CQPreferencesListEditViewController *_editingViewController;
+	id _customEditingViewController;
+	id __weak _target;
+	SEL _action;
+	CQPreferencesListBlock _preferencesListBlock;
+	BOOL _pendingChanges;
+	BOOL _allowEditing;
+
+	CQPreferencesListType _listType;
+
+	AVAudioPlayer *_audioPlayer;
+}
+
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -236,7 +258,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return _items.count;
 }
 
-- (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
+- (NSString *__nullable) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
 	return _footerText;
 }
 
@@ -279,7 +301,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return cell;
 }
 
-- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSIndexPath *__nullable) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (self.editing || !_allowEditing)
 		return indexPath;
 	return nil;

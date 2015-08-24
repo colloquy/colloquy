@@ -12,21 +12,7 @@ typedef NS_ENUM(NSInteger, CQConsoleMessageType) {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQProcessConsoleMessageOperation : NSOperation {
-	NSMutableString *_message;
-	NSMutableDictionary *_processedMessage;
-	NSString *_highlightNickname;
-	NSStringEncoding _encoding;
-	NSStringEncoding _fallbackEncoding;
-	id __weak _target;
-	SEL _action;
-	id _userInfo;
-	BOOL _outbound;
-
-	CQConsoleMessageType _messageType;
-	BOOL _verbose;
-}
-
+@interface CQProcessConsoleMessageOperation : NSOperation
 - (instancetype) initWithMessage:(NSString *) message outbound:(BOOL) outbound;
 
 @property BOOL verbose;

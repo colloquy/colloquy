@@ -23,12 +23,21 @@ static NSString *membersFilteredCountFormat;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatUserListViewController ()
+@interface CQChatUserListViewController () <UIActionSheetDelegate, UISearchDisplayDelegate>
 @property (atomic, strong) NSMutableArray *users;
 @property (atomic, strong) NSMutableArray *matchedUsers;
 @end
 
-@implementation  CQChatUserListViewController
+@implementation  CQChatUserListViewController {
+@protected
+	NSString *_currentSearchString;
+	MVChatRoom *_room;
+	UISearchBar *_searchBar;
+	UISearchDisplayController *_searchController;
+	QChatUserListMode _listMode;
+	id <CQChatUserListViewDelegate> __weak _chatUserDelegate;
+}
+
 + (void) initialize {
 	membersSingleCountFormat = NSLocalizedString(@"Members (%u)", @"Members with single count view title");
 	membersFilteredCountFormat = NSLocalizedString(@"Members (%u of %u)", @"Members with filtered count view title");
@@ -281,7 +290,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (BOOL) searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *) searchString {
+- (BOOL) searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *__nullable) searchString {
 	if ([searchString isEqualToString:_currentSearchString])
 		return NO;
 	
@@ -429,7 +438,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return cell;
 }
 
-- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSIndexPath *__nullable) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	[self endEditing];
 
 	return indexPath;

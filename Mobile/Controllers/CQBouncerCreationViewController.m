@@ -7,7 +7,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQBouncerCreationViewController
+@implementation  CQBouncerCreationViewController {
+	CQBouncerSettings *_settings;
+}
+
 - (instancetype) init {
 	if (!(self = [super init]))
 		return nil;

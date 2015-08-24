@@ -6,18 +6,22 @@ enum {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQImportantChatMessageViewController
+@implementation  CQImportantChatMessageViewController {
+	NSArray *_messages;
+	id <CQImportantChatMessageDelegate> _delegate;
+}
+
 - (instancetype) initWithStyle:(UITableViewStyle) style {
 	NSAssert(NO, @"use -[CQImportantChatMessageViewController initWithMessages:delegate:] instead");
 	return nil;
 }
 
-- (instancetype) initWithNibName:(NSString *) nibNameOrNil bundle:(NSBundle *) nibBundleOrNil {
+- (instancetype) initWithNibName:(NSString *__nullable) nibNameOrNil bundle:(NSBundle *__nullable) nibBundleOrNil {
 	NSAssert(NO, @"use -[CQImportantChatMessageViewController initWithMessages:delegate:] instead");
 	return nil;
 }
 
-- (instancetype) initWithCoder:(NSCoder *) aDecoder {
+- (__nullable instancetype) initWithCoder:(NSCoder *) aDecoder {
 	NSAssert(NO, @"use -[CQImportantChatMessageViewController initWithMessages:delegate:] instead");
 	return nil;
 }
@@ -71,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return cell;
 }
 
-- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSIndexPath *__nullable) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (!_messages.count)
 		return nil;
 	return indexPath;

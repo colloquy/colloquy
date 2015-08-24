@@ -2,9 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class GCDAsyncSocket;
 @class MVDirectClientConnection;
-@class TCMPortMapping;
 
 @protocol MVDirectClientConnectionDelegate <NSObject>
 @optional
@@ -18,20 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 NSString *MVDCCFriendlyAddress( NSString *address );
 
-@interface MVDirectClientConnection : NSObject {
-@private
-	NSObject <MVDirectClientConnectionDelegate> *_delegate;
-	GCDAsyncSocket *_connection;
-	GCDAsyncSocket *_acceptConnection;
-#if ENABLE(AUTO_PORT_MAPPING)
-	TCMPortMapping *_portMapping;
-#endif
-	NSThread *_connectionThread;
-	dispatch_queue_t _connectionDelegateQueue;
-	NSConditionLock *_threadWaitLock;
-	unsigned short _port;
-	BOOL _done;
-}
+@interface MVDirectClientConnection : NSObject
 - (void) connectToHost:(NSString *) host onPort:(unsigned short) port;
 - (void) acceptConnectionOnFirstPortInRange:(NSRange) ports;
 - (void) disconnect;

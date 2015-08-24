@@ -9,8 +9,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatTableCell
-- (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
+@implementation  CQChatTableCell {
+	UIImageView *_iconImageView;
+	UILabel *_nameLabel;
+	CQUnreadCountView *_unreadCountView;
+	NSMutableArray *_chatPreviewLabels;
+	NSUInteger _maximumMessagePreviews;
+	BOOL _showsUserInMessagePreviews;
+	BOOL _available;
+	BOOL _animating;
+}
+
+- (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *__nullable) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
 

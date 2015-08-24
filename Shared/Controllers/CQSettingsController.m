@@ -6,7 +6,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotification";
 
-@implementation  CQSettingsController
+@implementation  CQSettingsController {
+	CQSettingsLocation _settingsLocation;
+	BOOL _mirroringEnabled;
+}
+
 + (instancetype)  settingsController {
 	static CQSettingsController *settingsController;
 	static dispatch_once_t onceToken;

@@ -32,7 +32,21 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 @interface MVDirectChatConnection () <MVDirectClientConnectionDelegate>
 @end
 
-@implementation MVDirectChatConnection
+@implementation MVDirectChatConnection {
+	MVDirectClientConnection *_directClientConnection;
+	MVChatMessageFormat _outgoingChatFormat;
+	NSStringEncoding _encoding;
+	NSString *_host;
+	NSString *_connectedHost;
+	BOOL _passive;
+	BOOL _localRequest;
+	unsigned short _port;
+	long long _passiveId;
+	MVChatUser *_user;
+	MVDirectChatConnectionStatus _status;
+	NSError *_lastError;
+}
+
 + (instancetype) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive {
 	static long long passiveId = 0;
 

@@ -1,6 +1,7 @@
 #import "CQChatRoomController.h"
 
 #import "CQAlertView.h"
+#import "CQChatInputBar.h"
 #import "CQChatPresentationController.h"
 #import "CQChatUserListViewController.h"
 #import "CQColloquyApplication.h"
@@ -28,7 +29,7 @@ static CQShowRoomTopic showRoomTopic;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQDirectChatController (CQDirectChatControllerPrivate)
+@interface CQDirectChatController (CQDirectChatControllerPrivate) <UIAlertViewDelegate, UIActionSheetDelegate, UIPopoverControllerDelegate, CQChatInputBarDelegate>
 - (void) _addPendingComponentsAnimated:(BOOL) animated;
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _didDisconnect:(NSNotification *) notification;

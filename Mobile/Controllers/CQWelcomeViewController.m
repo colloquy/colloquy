@@ -10,7 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQWelcomeViewController
+@implementation  CQWelcomeViewController {
+	CQHelpTopicsViewController *_helpTopicsController;
+}
+
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -42,13 +45,13 @@ NS_ASSUME_NONNULL_BEGIN
 	return 0;
 }
 
-- (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
+- (NSString *__nullable) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
 	if (section == NewConnectionsTableSection)
 		return NSLocalizedString(@"Getting Connected", @"Getting Connected welcome screen header");
 	return nil;
 }
 
-- (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
+- (NSString *__nullable) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
 	if (section == NewConnectionsTableSection)
 		return NSLocalizedString(@"A Colloquy Bouncer allows you to stay\nconnected and receive push notifications\nwhen Colloquy is closed on your device.", @"Colloquy bouncer welcome description");
 	return nil;

@@ -18,7 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSString *password;
 @end
 
-@implementation  CQPreferencesListChannelEditViewController
+@implementation  CQPreferencesListChannelEditViewController {
+	MVChatConnection *_connection;
+	NSString *_password;
+}
+
 - (void) savePasswordToKeychain {
 	NSString *room = [_connection properNameForChatRoomNamed:self.room];
 	if (room.length)
@@ -47,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (NSString *) room {
-	return _listItem;
+	return self.listItem;
 }
 
 - (NSString *) password {

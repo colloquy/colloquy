@@ -9,7 +9,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@implementation  CQAlertView
+@implementation  CQAlertView {
+	NSMutableArray *_textFieldInformation;
+}
+
 - (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
@@ -70,7 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[self _updateTextFieldsForDisplay];
 }
 
-- (UITextField *) textFieldAtIndex:(NSInteger) textFieldIndex {
+- (UITextField *__nullable) textFieldAtIndex:(NSInteger) textFieldIndex {
 	if (![UIDevice currentDevice].isSystemEight)
 		return [super textFieldAtIndex:textFieldIndex];
 	return self.alertController.textFields[textFieldIndex];

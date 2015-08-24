@@ -1,5 +1,3 @@
-@class CQIntroductoryGIFFrameOperation;
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CQIntroductoryGIFFrameOperation : NSOperation

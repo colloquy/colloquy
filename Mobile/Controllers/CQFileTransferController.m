@@ -10,7 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQFileTransferController
+@implementation  CQFileTransferController {
+@protected
+	NSTimer *_timer;
+}
+
 - (id) initWithTransfer:(MVFileTransfer *) transfer {
 	if (!(self = [self init]))
 		return nil;

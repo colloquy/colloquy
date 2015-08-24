@@ -40,7 +40,10 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	return metadataKey;
 }
 
-@implementation MVIRCChatUser
+@implementation MVIRCChatUser {
+	BOOL _hasPendingRefreshInformationRequest;
+}
+
 + (NSArray *) servicesNicknames {
 	return @[
 		@"nickserv", @"chanserv", @"memoserv", @"operserv", @"botserv", // common services

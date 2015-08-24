@@ -9,7 +9,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?locale=%@";
 
-@implementation  CQHelpTopicsViewController
+@implementation  CQHelpTopicsViewController {
+	MPMoviePlayerController *_moviePlayer;
+	NSMutableArray *_helpSections;
+	NSMutableData *_helpData;
+	BOOL _loading;
+}
+
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -88,7 +94,7 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 	return ((NSArray *)_helpSections[section]).count;
 }
 
-- (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
+- (NSString *__nullable) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
 	if (_helpSections.count) {
 		NSArray *sectionItems = _helpSections[section];
 		NSDictionary *info = sectionItems[0];
@@ -98,7 +104,7 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 	return nil;
 }
 
-- (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
+- (NSString *__nullable) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
 	if (_helpSections.count) {
 		NSArray *sectionItems = _helpSections[section];
 		NSDictionary *info = [sectionItems lastObject];
@@ -148,7 +154,7 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
     return cell;
 }
 
-- (NSIndexPath *) tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSIndexPath *__nullable) tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (!_helpSections.count)
 		return nil;
 	return indexPath;

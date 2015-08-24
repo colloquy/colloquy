@@ -35,21 +35,27 @@ enum {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatRoomInfoDisplayViewController () <CQChatUserListViewDelegate>
+@interface CQChatRoomInfoDisplayViewController ()  <UITextFieldDelegate, UITextViewDelegate, CQChatUserListViewDelegate>
 @end
 
-@implementation  CQChatRoomInfoDisplayViewController
+@implementation  CQChatRoomInfoDisplayViewController {
+@private
+	MVChatRoom *_room;
+	NSMutableArray *_bans;
+	UISegmentedControl *_segmentedControl;
+}
+
 - (instancetype) initWithStyle:(UITableViewStyle) style {
 	NSAssert(NO, @"use -[CQChatRoomInfoDisplayViewController initWithRoom:] instead");
 	return nil;
 }
 
-- (instancetype) initWithNibName:(NSString *) nibNameOrNil bundle:(NSBundle *) nibBundleOrNil {
+- (instancetype) initWithNibName:(NSString *__nullable) nibNameOrNil bundle:(NSBundle *__nullable) nibBundleOrNil {
 	NSAssert(NO, @"use -[CQChatRoomInfoDisplayViewController initWithRoom:] instead");
 	return nil;
 }
 
-- (instancetype) initWithCoder:(NSCoder *) aDecoder {
+- (__nullable instancetype) initWithCoder:(NSCoder *) aDecoder {
 	NSAssert(NO, @"use -[CQChatRoomInfoDisplayViewController initWithRoom:] instead");
 	return nil;
 }

@@ -1,6 +1,5 @@
 NS_ASSUME_NONNULL_BEGIN
 
-@class MVChatConnection;
 @class MVChatUser;
 
 extern NSString *MVDownloadFileTransferOfferNotification;
@@ -40,20 +39,7 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 	}
 }
 
-@interface MVFileTransfer : NSObject {
-@protected
-	unsigned long long _finalSize;
-	unsigned long long _transferred;
-	NSDate *_startDate;
-	NSString *_host;
-	BOOL _passive;
-	unsigned short _port;
-	unsigned long long _startOffset;
-	MVChatUser *_user;
-	MVFileTransferStatus _status;
-	NSError *_lastError;
-	NSUInteger _hash;
-}
+@interface MVFileTransfer : NSObject
 + (void) setFileTransferPortRange:(NSRange) range;
 + (NSRange) fileTransferPortRange;
 

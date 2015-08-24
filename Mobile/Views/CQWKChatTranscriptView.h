@@ -4,28 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQWKChatTranscriptView : WKWebView <CQChatTranscriptView, UIGestureRecognizerDelegate, UIScrollViewDelegate, WKNavigationDelegate> {
-	@protected
-	UIView *_blockerView;
-	NSMutableArray *_pendingPreviousSessionComponents;
-	NSMutableArray *_pendingComponents;
-	NSString *_styleIdentifier;
-	NSString *_fontFamily;
-	NSUInteger _fontSize;
-	BOOL _scrolling;
-	BOOL _loading;
-	BOOL _resetPending;
-	CGPoint _lastTouchLocation;
-	BOOL _allowsStyleChanges;
-	CQTimestampPosition _timestampPosition;
-	BOOL _allowSingleSwipeGesture;
-	NSMutableArray *_singleSwipeGestureRecognizers;
-	CQShowRoomTopic _showRoomTopic;
-	BOOL _addedMessage;
-	NSString *_roomTopic;
-	NSString *_roomTopicSetter;
-	BOOL _topicIsHidden;
-}
+@interface CQWKChatTranscriptView : WKWebView <CQChatTranscriptView>
 @end
 
 NS_ASSUME_NONNULL_END

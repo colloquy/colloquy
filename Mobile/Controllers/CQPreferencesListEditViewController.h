@@ -2,12 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQPreferencesListEditViewController : CQPreferencesTableViewController {
-	@protected
-	id _listItem;
-	NSString *_listItemPlaceholder;
-	BOOL _viewDisappearing;
-}
+@interface CQPreferencesListEditViewController : CQPreferencesTableViewController
 @property (nonatomic, copy) id listItem;
 @property (nonatomic, copy) NSString *listItemPlaceholder;
 @end

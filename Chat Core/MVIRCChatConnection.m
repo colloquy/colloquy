@@ -302,6 +302,39 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 
 @implementation MVIRCChatConnection {
+	GCDAsyncSocket *_chatConnection;
+	NSDate *_queueWait;
+	NSDate *_lastCommand;
+	NSMutableArray *_sendQueue;
+	NSMutableSet *_pendingJoinRoomNames;
+	NSMutableSet *_pendingWhoisUsers;
+	NSMutableSet *_directClientConnections;
+	NSMutableDictionary *_serverInformation;
+	NSString *_server;
+	NSString *_realServer;
+	NSString *_currentNickname;
+	NSString *_nickname;
+	NSString *_username;
+	NSString *_password;
+	NSString *_realName;
+	NSMutableSet *_lastSentIsonNicknames;
+	NSCharacterSet *_roomPrefixes;
+	unsigned short _serverPort;
+	unsigned short _isonSentCount;
+	BOOL _sendQueueProcessing;
+	BOOL _sentEndCapabilityCommand;
+	NSTimeInterval _sendEndCapabilityCommandAtTime;
+	BOOL _pendingIdentificationAttempt;
+	NSMutableArray *_umichNoIdentdCaptcha;
+	BOOL _gamesurgeGlobalBotMOTD;
+	NSString *_failedNickname;
+	short _failedNicknameCount;
+	BOOL _nicknameShortened;
+	NSMutableArray *_pendingMonitorList;
+	BOOL _fetchingMonitorList;
+	BOOL _monitorListFull;
+	BOOL _hasRequestedPlaybackList;
+
 	dispatch_queue_t _connectionQueue;
 
 	NSTimeInterval _nextPingTimeInterval;

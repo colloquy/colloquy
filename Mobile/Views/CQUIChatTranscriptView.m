@@ -13,7 +13,27 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQUIChatTranscriptView
+@interface CQUIChatTranscriptView () <UIGestureRecognizerDelegate, UIWebViewDelegate>
+
+@end
+
+@implementation CQUIChatTranscriptView {
+@protected
+	UIView *_blockerView;
+	NSMutableArray *_pendingPreviousSessionComponents;
+	NSMutableArray *_pendingComponents;
+	NSUInteger _fontSize;
+	BOOL _scrolling;
+	BOOL _loading;
+	BOOL _resetPending;
+	CGPoint _lastTouchLocation;
+	NSMutableArray *_singleSwipeGestureRecognizers;
+	CQShowRoomTopic _showRoomTopic;
+	NSString *_roomTopic;
+	NSString *_roomTopicSetter;
+	BOOL _topicIsHidden;
+}
+
 @synthesize transcriptDelegate = _transcriptDelegate;
 
 @synthesize timestampPosition = _timestampPosition;
@@ -32,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return self;
 }
 
-- (instancetype) initWithCoder:(NSCoder *) coder {
+- (__nullable instancetype) initWithCoder:(NSCoder *) coder {
 	if (!(self = [super initWithCoder:coder]))
 		return nil;
 
@@ -52,7 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setDelegate:(id <UIWebViewDelegate>) delegate {
+- (void) setDelegate:(id <UIWebViewDelegate> __nullable) delegate {
 	NSAssert(NO, @"Should not be called. Use _transcriptDelegate instead.");
 }
 
@@ -210,7 +230,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (UIView *) hitTest:(CGPoint) point withEvent:(UIEvent *) event {
+- (UIView *__nullable) hitTest:(CGPoint) point withEvent:(UIEvent *__nullable) event {
 	_lastTouchLocation = [[UIApplication sharedApplication].keyWindow.rootViewController.view convertPoint:point fromView:self];
 
 	return [super hitTest:point withEvent:event];;
@@ -380,7 +400,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (NSString *) stringByEvaluatingJavaScriptFromString:(NSString *) script {
+- (NSString *__nullable) stringByEvaluatingJavaScriptFromString:(NSString *) script {
 	NSLog(@"Refusing to evaluate %@\n%@", script, [NSThread callStackSymbols]);
 
 	return nil;

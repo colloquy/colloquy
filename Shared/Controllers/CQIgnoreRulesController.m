@@ -13,7 +13,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotification";
 
-@implementation  CQIgnoreRulesController
+@implementation  CQIgnoreRulesController {
+	NSMutableArray *_ignoreRules;
+	MVChatConnection *_connection;
+
+	NSString *_appSupportPath;
+}
+
 - (instancetype) init {
 	NSAssert(NO, @"use [CQIgnoreRulesController initWithConnection:] instead");
 	return nil;

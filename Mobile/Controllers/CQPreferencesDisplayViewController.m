@@ -5,6 +5,7 @@
 #import "CQPreferencesSwitchCell.h"
 #import "CQPreferencesTextCell.h"
 
+#import <MessageUI/MessageUI.h>
 #import <objc/runtime.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -57,7 +58,13 @@ static NSString *const CQPSListTypeAudio = @"Audio";
 static NSString *const CQPSListTypeImage = @"Image";
 static NSString *const CQPSListTypeFont = @"Font";
 
+@interface CQPreferencesDisplayViewController () <MFMailComposeViewControllerDelegate>
+@end
+
 @implementation  CQPreferencesDisplayViewController {
+	NSMutableArray *_preferences;
+	NSIndexPath *_selectedIndexPath;
+
 	BOOL _active;
 }
 
@@ -84,12 +91,12 @@ static NSString *const CQPSListTypeFont = @"Font";
 	return nil;
 }
 
-- (instancetype) initWithNibName:(NSString *) nibNameOrNil bundle:(NSBundle *) nibBundleOrNil {
+- (instancetype) initWithNibName:(NSString *__nullable) nibNameOrNil bundle:(NSBundle *__nullable) nibBundleOrNil {
 	NSAssert(NO, @"use -[CQPreferencesDisplayViewController initWithPlistNamed:] instead");
 	return nil;
 }
 
-- (instancetype) initWithCoder:(NSCoder *) aDecoder {
+- (__nullable instancetype) initWithCoder:(NSCoder *) aDecoder {
 	NSAssert(NO, @"use -[CQPreferencesDisplayViewController initWithPlistNamed:] instead");
 	return nil;
 }
@@ -192,15 +199,15 @@ static NSString *const CQPSListTypeFont = @"Font";
 	return [_preferences[section][@"rows"] count];
 }
 
-- (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
+- (NSString *__nullable) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
 	return _preferences[section][CQPSTitle];
 }
 
-- (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
+- (NSString *__nullable) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
 	return _preferences[section][CQPSFooterText];
 }
 
-- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSIndexPath *__nullable) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	NSDictionary *rowDictionary = _preferences[indexPath.section][@"rows"][indexPath.row];
 	if ([rowDictionary[CQPSType] isEqualToString:CQPSTitleValueSpecifier])
 		if (!rowDictionary[CQPSAction])
@@ -388,7 +395,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 	}
 }
 
-- (void) mailComposeController:(MFMailComposeViewController *) controller didFinishWithResult:(MFMailComposeResult) result error:(NSError *) error {
+- (void) mailComposeController:(MFMailComposeViewController *) controller didFinishWithResult:(MFMailComposeResult) result error:(NSError *__nullable) error {
 	[controller dismissViewControllerAnimated:[UIView areAnimationsEnabled] completion:NULL];
 }
 @end

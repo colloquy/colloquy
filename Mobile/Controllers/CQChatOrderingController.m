@@ -90,7 +90,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return NSOrderedSame;
 }
 
-@implementation  CQChatOrderingController
+@implementation CQChatOrderingController {
+	NSMutableArray *_chatControllers;
+}
+
 @synthesize chatViewControllers = _chatControllers;
 
 + (void) userDefaultsChanged {

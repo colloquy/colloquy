@@ -5,25 +5,11 @@
 
 #import <ChatCore/MVFileTransfer.h>
 
-@class MVChatUser;
 @class CQFileTransferController;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQFileTransferTableCell : UITableViewCell {
-@private
-	IBOutlet UIImageView *_iconImageView;
-	IBOutlet UIProgressView *_progressView;
-	IBOutlet UILabel *_userLabel;
-	IBOutlet UILabel *_userTitle;
-	IBOutlet UILabel *_fileLabel;
-	IBOutlet UILabel *_fileTitle;
-	MVFileTransferStatus _status;
-	CQFileTransferController *_controller;
-	UIImage *_thumb;
-	BOOL _upload;
-}
-
+@interface CQFileTransferTableCell : UITableViewCell
 @property (nonatomic) BOOL showsIcon;
 
 - (void) takeValuesFromController:(CQFileTransferController *) controller;

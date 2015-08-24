@@ -10,6 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface CQUserInfoRoomListViewController () <UIActionSheetDelegate>
+@end
+
 @implementation  CQUserInfoRoomListViewController
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))

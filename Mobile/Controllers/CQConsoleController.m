@@ -5,10 +5,10 @@
 #import "NSAttributedStringAdditions.h"
 #import "NSNotificationAdditions.h"
 
+#import "MVDelegateLogger.h"
 #import "MVIRCChatConnection.h"
 
 #import "DDLog.h"
-#import "MVDelegateLogger.h"
 
 static BOOL hideNICKs;
 static BOOL hideTraffic; // JOIN, PART, KICK, INVITE
@@ -27,14 +27,19 @@ NS_ASSUME_NONNULL_BEGIN
 #define defaultNamed(name) \
 	[[CQSettingsController settingsController] boolForKey:[NSString stringWithFormat:@"CQConsoleDisplay%@", name]];
 
-@interface CQDirectChatController (Private)
+@interface CQDirectChatController (Private) <MVLoggingDelegate>
 + (NSOperationQueue *) chatMessageProcessingQueue;
 + (void) userDefaultsChanged;
 
 - (void) _addPendingComponent:(id) component;
 @end
 
-@implementation  CQConsoleController
+@implementation  CQConsoleController {
+	MVChatConnection *_connection;
+
+	MVDelegateLogger *_delegateLogger;
+}
+
 + (void) userDefaultsChanged {
 	[super userDefaultsChanged];
 

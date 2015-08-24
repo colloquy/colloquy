@@ -9,7 +9,7 @@ typedef NS_ENUM(NSInteger, CQChatRoomBatchType) {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatRoomController : CQDirectChatController <UIPopoverControllerDelegate> {
+@interface CQChatRoomController : CQDirectChatController {
 	@protected
 	NSMutableArray *_orderedMembers;
 	BOOL _showingMembersInModalController;
