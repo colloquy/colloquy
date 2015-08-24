@@ -3836,7 +3836,6 @@ end:
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:parameters[0]];
 		NSData *topic = parameters[1];
 		if( ! [topic isKindOfClass:[NSData class]] ) topic = [NSData data];
-		NSLog(@"%@ (%@ / %@)", parameters, room, topic);
 		NSDictionary *info = @{@"room": room, @"author": sender, @"topic": topic};
 		[self _handleTopic:info];
 	}
@@ -4344,7 +4343,6 @@ end:
 #pragma mark Topic Replies
 
 - (void) _handle332WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_TOPIC
-	NSLog(@"%@ / %@", parameters, sender);
 	if( parameters.count == 3 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:parameters[1]];
 		NSData *topic = parameters[2];
