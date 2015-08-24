@@ -275,7 +275,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) dealloc {
 	[[NSNotificationCenter chatCenter] removeObserver:self];
-	[[NSNotificationCenter chatCenter] removeObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 #if (!defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE) && (!defined(COMMAND_LINE_UTILITY) || !COMMAND_LINE_UTILITY)
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
