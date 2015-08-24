@@ -418,7 +418,7 @@
 		NSUInteger count = 0;
 		for( NSString *style in sarray ) {
 			// Parse all the selectors in the style.
-			NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(\\S.*?)\\s*\{([^\\}]*?)\\}" options:(NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators) error:nil];
+			NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(\\S.*?)\\s*\\{([^\\}]*?)\\}" options:(NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators) error:nil];
 
 			NSMutableArray *styleLayout = [NSMutableArray array];
 			[styleLayouts addObject:styleLayout];
