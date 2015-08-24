@@ -462,13 +462,6 @@ static BOOL applicationIsTerminating = NO;
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"MVAskOnInvalidCertificates"] || [[[MVKeyChain defaultKeyChain] genericPasswordForService:@"MVAskOnInvalidCertificates" account:@"MVSecurePrefs"] boolValue])
 		[[MVKeyChain defaultKeyChain] setGenericPassword:@"1" forService:@"MVAskOnInvalidCertificates" account:@"MVSecurePrefs"];
-
-#ifdef DEBUG
-//	NSDebugEnabled = YES;
-//	NSZombieEnabled = YES;
-//	NSDeallocateZombies = NO;
-//	[NSAutoreleasePool enableFreedObjectCheck:YES];
-#endif
 }
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
