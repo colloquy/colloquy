@@ -1,5 +1,7 @@
 #import "CQTableViewController.h"
 
+#import "UITableViewAdditions.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation  CQTableViewController {
@@ -42,6 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
 	tableView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin);
 	tableView.dataSource = self;
 	tableView.delegate = self;
+
+	[tableView hideEmptyCells];
+
 	self.view = tableView;
 }
 
