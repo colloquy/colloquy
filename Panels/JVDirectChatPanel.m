@@ -162,78 +162,13 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		_target = target;
 
 		if( [self connection] ) {
-			NSURL *connURL = [[self connection] url];
-			NSString *targetName = nil;
-
-			if( [target respondsToSelector:@selector( name )] )
-				targetName = [(MVChatRoom *)target name];
-			else if( [target respondsToSelector:@selector( nickname )] )
-				targetName = [(MVChatUser *)target nickname];
-			else targetName = [target description];
-
-			NSURL *source = [[NSURL alloc] initWithScheme:[connURL scheme] host:[connURL host] path:[[connURL path] stringByAppendingString:[NSString stringWithFormat:@"/%@", targetName]]];
-
 			if( ( [self isMemberOfClass:[JVDirectChatPanel class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogPrivateChats"] ) ||
 				( [self isMemberOfClass:[JVChatRoomPanel class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogChatRooms"] ) ) {
-				NSString *logs = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
-				NSFileManager *fileManager = [NSFileManager defaultManager];
 
-				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
-
-				NSInteger org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
-				if( org == 1 ) {
-					logs = [logs stringByAppendingPathComponent:[[self user] serverAddress]];
-					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
-				} else if( org == 2 ) {
-					logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", [self target], [[self user] serverAddress]]];
-					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
-				} else if( org == 3 ) {
-					logs = [logs stringByAppendingPathComponent:[[self user] serverAddress]];
-					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
-
-					logs = [logs stringByAppendingPathComponent:[self title]];
-					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
-				}
-
-				NSString *logName = nil;
-				NSString *dateString = [NSDate formattedShortDateStringForDate:[NSDate date]];
-
-				NSInteger session = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptSessionHandling"];
-				if( ! session ) {
-					BOOL nameFound = NO;
-					NSUInteger i = 1;
-
-					if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
-					else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self user] serverAddress]];
-					nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
-
-					while( ! nameFound ) {
-						if( org ) logName = [NSString stringWithFormat:@"%@ %ld.colloquyTranscript", [self target], i++];
-						else logName = [NSString stringWithFormat:@"%@ (%@) %ld.colloquyTranscript", [self target], [[self user] serverAddress], i++];
-						nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
-					}
-				} else if( session == 1 ) {
-					if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
-					else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self user] serverAddress]];
-				} else if( session == 2 ) {
-					if( org ) logName = [NSMutableString stringWithFormat:@"%@ %@.colloquyTranscript", [self target], dateString];
-					else logName = [NSMutableString stringWithFormat:@"%@ (%@) %@.colloquyTranscript", [self target], [[self user] serverAddress], dateString];
-					[(NSMutableString *)logName replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
-					[(NSMutableString *)logName replaceOccurrencesOfString:@":" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
-				}
-
-				logs = [logs stringByAppendingPathComponent:logName];
-
-				if( [fileManager fileExistsAtPath:logs] )
-					[[self transcript] startNewSession];
-
-				[[self transcript] setFilePath:logs];
-				[[self transcript] setSource:source];
-				[[self transcript] setAutomaticallyWritesChangesToFile:YES];
-				[[self transcript] setElementLimit:0]; // start with zero limit
+				[self checkTranscriptDirectoryState];
 			}
 
-
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
 
 			if( ! [target isKindOfClass:[MVDirectChatConnection class]] ) {
 				[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
@@ -307,6 +242,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 - (void) dealloc {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 	[[NSNotificationCenter chatCenter] removeObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	if( _watchRule ) [[self connection] removeChatUserWatchRule:_watchRule];
 
@@ -597,6 +533,10 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 #pragma mark -
 #pragma mark Prefences/User Defaults
 
+- (void) userDefaultsChanged:(NSNotification *) notification {
+	[self checkTranscriptDirectoryState];
+}
+
 - (void) setPreference:(id) value forKey:(NSString *) key {
 	NSParameterAssert( key != nil );
 	NSParameterAssert( [key length] );
@@ -613,6 +553,79 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	NSParameterAssert( key != nil );
 	NSParameterAssert( [key length] );
 	return [_settings objectForKey:key];
+}
+
+- (void) checkTranscriptDirectoryState {
+	BOOL loggingEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogChatRooms"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogPrivateChats"];
+	NSString *logs = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
+	if( loggingEnabled ) {
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+
+		if ( ! [fileManager fileExistsAtPath:logs])
+			[fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
+
+		NSInteger org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
+		if( org == 1 ) {
+			logs = [logs stringByAppendingPathComponent:[[self user] serverAddress]];
+			if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
+		} else if( org == 2 ) {
+			logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", [self target], [[self user] serverAddress]]];
+			if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
+		} else if( org == 3 ) {
+			logs = [logs stringByAppendingPathComponent:[[self user] serverAddress]];
+			if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
+
+			logs = [logs stringByAppendingPathComponent:[self title]];
+			if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
+		}
+
+		NSString *logName = nil;
+		NSString *dateString = [NSDate formattedShortDateStringForDate:[NSDate date]];
+
+		NSInteger session = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptSessionHandling"];
+		if( ! session ) {
+			BOOL nameFound = NO;
+			NSUInteger i = 1;
+
+			if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
+			else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self user] serverAddress]];
+			nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
+
+			while( ! nameFound ) {
+				if( org ) logName = [NSString stringWithFormat:@"%@ %ld.colloquyTranscript", [self target], i++];
+				else logName = [NSString stringWithFormat:@"%@ (%@) %ld.colloquyTranscript", [self target], [[self user] serverAddress], i++];
+				nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
+			}
+		} else if( session == 1 ) {
+			if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
+			else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self user] serverAddress]];
+		} else if( session == 2 ) {
+			if( org ) logName = [NSMutableString stringWithFormat:@"%@ %@.colloquyTranscript", [self target], dateString];
+			else logName = [NSMutableString stringWithFormat:@"%@ (%@) %@.colloquyTranscript", [self target], [[self user] serverAddress], dateString];
+			[(NSMutableString *)logName replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
+			[(NSMutableString *)logName replaceOccurrencesOfString:@":" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
+		}
+
+		logs = [logs stringByAppendingPathComponent:logName];
+
+		if( [fileManager fileExistsAtPath:logs] )
+			[[self transcript] startNewSession];
+
+		[[self transcript] setFilePath:logs];
+		NSURL *connURL = [[self connection] url];
+		NSString *targetName = nil;
+
+		if( [_target respondsToSelector:@selector( name )] )
+			targetName = [(MVChatRoom *)_target name];
+		else if( [_target respondsToSelector:@selector( nickname )] )
+			targetName = [(MVChatUser *)_target nickname];
+		else targetName = [_target description];
+
+		NSURL *source = [[NSURL alloc] initWithScheme:[connURL scheme] host:[connURL host] path:[[connURL path] stringByAppendingString:[NSString stringWithFormat:@"/%@", targetName]]];
+		[[self transcript] setSource:source];
+		[[self transcript] setAutomaticallyWritesChangesToFile:YES];
+		[[self transcript] setElementLimit:0]; // start with zero limit
+	}
 }
 
 #pragma mark -

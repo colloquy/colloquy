@@ -97,7 +97,6 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 		while( ( logPath = [logsEnum nextObject] ) ) {
 			if( [[logPath pathExtension] isEqualToString:@"colloquyTranscript"] ) {
 				// analyze the path
-				// :(NSString *)string options:(NSMatchingOptions)options range:(NSRange)range;
 				NSTextCheckingResult *match = [regex matchesInString:logPath options:NSMatchingReportCompletion range:NSMakeRange( 0, logPath.length )];
 
 				NSString *server = [logPath substringWithRange:[match rangeAtIndex:serverIndex]];
