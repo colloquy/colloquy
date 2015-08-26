@@ -32,8 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation  CQProcessChatMessageOperation {
 	NSDictionary *_message;
-	NSMutableDictionary *_processedMessage;
 }
+
+@synthesize processedMessageInfo = _processedMessage;
 
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
@@ -294,6 +295,7 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	NSMutableString *messageString = [self _processMessageData:_message[@"message"]];
 	if (!messageString)
 		return;
+
 	MVChatUser *user = _message[@"user"];
 
 	if ([_ignoreController shouldIgnoreMessage:messageString fromUser:user inRoom:_target])
