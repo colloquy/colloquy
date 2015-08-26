@@ -1027,7 +1027,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		return 62.;
 
 	NSUInteger numberOfLines = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQPreviewLinesCount"];
-	return (numberOfLines * [[CQChatTableCell previewLabelFont] lineHeight]) + [[CQChatTableCell nameLabelFont] lineHeight] + 7;
+	CGFloat suggestedHeight = (numberOfLines * [[CQChatTableCell previewLabelFont] lineHeight]) + [[CQChatTableCell nameLabelFont] lineHeight] + 7;
+	return fmax(suggestedHeight, 62.);
 }
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {
