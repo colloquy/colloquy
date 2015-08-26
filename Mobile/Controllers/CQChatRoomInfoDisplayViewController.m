@@ -14,12 +14,6 @@
 #import "NSNotificationAdditions.h"
 
 enum {
-	CQChatRoomInfoModes,
-	CQChatRoomInfoTopic,
-	CQChatRoomInfoBans
-};
-
-enum {
 	CQChatRoomModeRowOutsideMessages,
 	CQChatRoomModeRowTopicByOperators,
 	CQChatRoomModeRowModeratedChat,
@@ -42,41 +36,32 @@ NS_ASSUME_NONNULL_BEGIN
 @private
 	MVChatRoom *_room;
 	NSMutableArray *_bans;
-	UISegmentedControl *_segmentedControl;
+	CQChatRoomInfo _infoType;
 }
 
 - (instancetype) initWithStyle:(UITableViewStyle) style {
-	NSAssert(NO, @"use -[CQChatRoomInfoDisplayViewController initWithRoom:] instead");
+	NSAssert(NO, @"use -[CQChatRoomInfoDisplayViewController initWithRoom:showingInfoType:] instead");
 	return nil;
 }
 
 - (instancetype) initWithNibName:(NSString *__nullable) nibNameOrNil bundle:(NSBundle *__nullable) nibBundleOrNil {
-	NSAssert(NO, @"use -[CQChatRoomInfoDisplayViewController initWithRoom:] instead");
+	NSAssert(NO, @"use -[CQChatRoomInfoDisplayViewController initWithRoom:showingInfoType:] instead");
 	return nil;
 }
 
 - (instancetype) initWithCoder:(NSCoder *) aDecoder {
-	NSAssert(NO, @"use -[CQChatRoomInfoDisplayViewController initWithRoom:] instead");
+	NSAssert(NO, @"use -[CQChatRoomInfoDisplayViewController initWithRoom:showingInfoType:] instead");
 	return nil;
 }
 
-- (instancetype) initWithRoom:(MVChatRoom *) room {
+- (instancetype) initWithRoom:(MVChatRoom *) room showingInfoType:(CQChatRoomInfo) infoType {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 
 	_room = room;
 	[_room.connection sendRawMessageWithFormat:@"MODE %@", _room.name];
 
-	NSMutableArray *items = [NSMutableArray array];
-	[items addObject:NSLocalizedString(@"Modes", @"Modes segment title")];
-	[items addObject:NSLocalizedString(@"Topic", @"Topic segment title")];
-	[items addObject:NSLocalizedString(@"Bans", @"Bans segment title")];
-
-	_segmentedControl = [[UISegmentedControl alloc] initWithItems:items];
-	_segmentedControl.backgroundColor = [UIColor clearColor];
-	_segmentedControl.selectedSegmentIndex = CQChatRoomInfoModes;
-
-	[_segmentedControl addTarget:self action:@selector(_segmentSelected:) forControlEvents:UIControlEventValueChanged];
+	_infoType = infoType;
 
 	return self;
 }
@@ -94,20 +79,13 @@ NS_ASSUME_NONNULL_BEGIN
 	self.tableView.dataSource = self;
 	self.tableView.delegate = self;
 
-	NSArray *items = @[[[UIBarButtonItem alloc] initWithCustomView:_segmentedControl]];
-
-	[self setToolbarItems:items animated:[UIView areAnimationsEnabled]];
-
+	[self _updateRoomInfo];
 	[self _refreshBanList];
-	[self _segmentSelected:_segmentedControl];
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberModeChanged:) name:MVChatRoomUserModeChangedNotification object:_room];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_roomModesChanged:) name:MVChatRoomModesChangedNotification object:_room];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_refreshBanList:) name:MVChatRoomBannedUsersSyncedNotification object:_room];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_topicChanged:) name:MVChatRoomTopicChangedNotification object:_room];
-
-	_segmentedControl.frame = CGRectInset(self.navigationController.toolbar.bounds, 20., 5.);
-	_segmentedControl.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -149,20 +127,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
 	[super setEditing:editing animated:animated];
 
-	if (_segmentedControl.selectedSegmentIndex != CQChatRoomInfoBans)
+	if (_infoType != CQChatRoomInfoBans)
 		return;
-
-	[self.tableView beginUpdates];
-	if (editing)
-		[self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:_bans.count inSection:0]] withRowAnimation:UITableViewRowAnimationBottom];
-	else [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:_bans.count inSection:0]] withRowAnimation:UITableViewRowAnimationBottom];
-	[self.tableView endUpdates];
 }
 
 #pragma mark -
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
-	switch (_segmentedControl.selectedSegmentIndex) {
+	switch (_infoType) {
 	case CQChatRoomInfoBans:
 		if (self.editing)
 			return _bans.count + 1;
@@ -177,7 +149,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (_segmentedControl.selectedSegmentIndex == CQChatRoomInfoTopic) {
+	if (_infoType == CQChatRoomInfoTopic) {
 		CQPreferencesTextViewCell *textViewCell = [CQPreferencesTextViewCell reusableTableViewCellInTableView:tableView];
 		textViewCell.textView.text = [[NSString alloc] initWithData:_room.topic encoding:_room.encoding];
 		textViewCell.textView.placeholder = NSLocalizedString(@"Enter Room Topic", @"Enter Room Topic");
@@ -187,22 +159,22 @@ NS_ASSUME_NONNULL_BEGIN
 		return textViewCell;
 	}
 
-	if (_segmentedControl.selectedSegmentIndex == CQChatRoomInfoBans) {
+	if (_infoType == CQChatRoomInfoBans) {
 		if ((NSUInteger)indexPath.row == _bans.count) {
-			UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:[NSString stringWithFormat:@"%zd", _segmentedControl.selectedSegmentIndex]];
+			UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:@"Add Ban Cell"];
 			cell.textLabel.text = NSLocalizedString(@"Add Ban", @"Add Ban cell item");
 			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 			return cell;
 		}
 
-		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:[NSString stringWithFormat:@"%zd", _segmentedControl.selectedSegmentIndex]];
+		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:@"Ban Cell"];
 		cell.textLabel.text = [_bans[indexPath.row] description];
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
 		return cell;
 	}
 
-	if (_segmentedControl.selectedSegmentIndex == CQChatRoomInfoModes) {
+	if (_infoType == CQChatRoomInfoModes) {
 		NSUInteger localUserModes = (_room.connection.localUser ? [_room modesForMemberUser:_room.connection.localUser] : 0);
 		BOOL canEditModes = (localUserModes > MVChatRoomMemberVoicedMode) || _room.connection.localUser.isServerOperator;
 
@@ -273,11 +245,11 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	// should never reach this point, but, don't crash if we do
-	return [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:[NSString stringWithFormat:@"%zd", _segmentedControl.selectedSegmentIndex]];
+	return [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:[NSString stringWithFormat:@"%zd", _infoType]];
 }
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (_segmentedControl.selectedSegmentIndex != CQChatRoomInfoBans)
+	if (_infoType != CQChatRoomInfoBans)
 		return UITableViewCellEditingStyleNone;
 	if ((NSUInteger)indexPath.row == _bans.count)
 		return UITableViewCellEditingStyleInsert;
@@ -305,7 +277,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if ((NSUInteger)indexPath.row != _bans.count)
 		return;
 
-	if (_segmentedControl.selectedSegmentIndex != CQChatRoomInfoBans)
+	if (_infoType != CQChatRoomInfoBans)
 		return;
 
 	[self _presentUserList];
@@ -355,12 +327,12 @@ NS_ASSUME_NONNULL_BEGIN
 	[self.navigationController pushViewController:chatUserListViewController animated:[UIView areAnimationsEnabled]];
 }
 
-- (void) _segmentSelected:(__nullable id) sender {
-	self.title = [_segmentedControl titleForSegmentAtIndex:_segmentedControl.selectedSegmentIndex];
+- (void) _updateRoomInfo {
+	self.tableView.scrollEnabled = (_infoType != CQChatRoomInfoTopic);
 
-	self.tableView.scrollEnabled = (_segmentedControl.selectedSegmentIndex != CQChatRoomInfoTopic);
+	if (_infoType == CQChatRoomInfoBans) {
+		self.title = NSLocalizedString(@"Bans", @"Bans segment title");
 
-	if (_segmentedControl.selectedSegmentIndex == CQChatRoomInfoBans) {
 		NSUInteger localUserModes = (_room.connection.localUser ? [_room modesForMemberUser:_room.connection.localUser] : 0);
 		BOOL canEditModes = (localUserModes > MVChatRoomMemberVoicedMode) || _room.connection.localUser.isServerOperator;
 
@@ -371,9 +343,13 @@ NS_ASSUME_NONNULL_BEGIN
 		}
 	} else [self.navigationItem setRightBarButtonItem:nil animated:[UIView areAnimationsEnabled]];
 
-	if (_segmentedControl.selectedSegmentIndex == CQChatRoomInfoTopic)
+	if (_infoType == CQChatRoomInfoTopic) {
+		self.title = NSLocalizedString(@"Topic", @"Topic segment title");
 		self.tableView.rowHeight = [CQPreferencesTextViewCell height];
-	else self.tableView.rowHeight = CQDefaultRowHeight;
+	} else {
+		self.title = NSLocalizedString(@"Modes", @"Modes segment title");
+		self.tableView.rowHeight = CQDefaultRowHeight;
+	}
 
 	[self.tableView reloadData];
 }
@@ -406,14 +382,14 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) _maybeReloadModes {
-	if (_segmentedControl.selectedSegmentIndex != CQChatRoomInfoModes)
+	if (_infoType != CQChatRoomInfoModes)
 		return;
 
 	[self.tableView reloadData];
 }
 
 - (void) _maybeReloadTopic {
-	if (_segmentedControl.selectedSegmentIndex != CQChatRoomInfoTopic)
+	if (_infoType != CQChatRoomInfoTopic)
 		return;
 
 	[self.tableView beginUpdates];
@@ -422,7 +398,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) _maybeReloadBans {
-	if (_segmentedControl.selectedSegmentIndex != CQChatRoomInfoBans)
+	if (_infoType != CQChatRoomInfoBans)
 		return;
 
 	[self _refreshBanList];

@@ -1,5 +1,6 @@
 #import "CQDirectChatController.h"
 
+#import "CQActivities.h"
 #import "CQAlertView.h"
 #import "CQBookmarkingController.h"
 #import "CQChatOrderingController.h"
@@ -32,7 +33,6 @@
 #import <objc/message.h>
 
 #define InfoActionSheet 1001
-#define ActionsActionSheet 1002
 #define URLActionSheet 1003
 
 #define CantSendMessageAlertView 100
@@ -122,6 +122,10 @@ NS_ASSUME_NONNULL_BEGIN
 	privateMessageSound = ([soundName isEqualToString:@"None"] ? nil : [[CQSoundController alloc] initWithSoundNamed:soundName]);
 	soundName = [[CQSettingsController settingsController] stringForKey:@"CQSoundOnHighlight"];
 	highlightSound = ([soundName isEqualToString:@"None"] ? nil : [[CQSoundController alloc] initWithSoundNamed:soundName]);
+}
+
+- (BOOL) canBecomeFirstResponder {
+	return YES;
 }
 
 - (void) didNotBookmarkLink:(NSNotification *) notification {
@@ -447,7 +451,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) showRecentlySentMessages {
+- (void) showRecentlySentMessages:(id) sender {
 	CQImportantChatMessageViewController *listViewController = [[CQImportantChatMessageViewController alloc] initWithMessages:_sentMessages delegate:self];
 	CQModalNavigationController *modalNavigationController = [[CQModalNavigationController alloc] initWithRootViewController:listViewController];
 
@@ -687,18 +691,8 @@ NS_ASSUME_NONNULL_BEGIN
 		return;
 	}
 
-	UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
-	actionSheet.delegate = self;
-	actionSheet.tag = ActionsActionSheet;
-
-	if (!([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
-		actionSheet.title = self.user.displayName;
-
-	[actionSheet addButtonWithTitle:NSLocalizedString(@"Recently Sent Messages", @"Recently Sent Messages")];
-
-	actionSheet.cancelButtonIndex = [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
-
-	[[CQColloquyApplication sharedApplication] showActionSheet:actionSheet];
+	UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:nil applicationActivities:[CQActivitiesProvider activities]];
+	[self presentViewController:activityViewController animated:YES completion:nil];
 }
 
 - (BOOL) chatInputBarShouldEndEditing:(CQChatInputBar *) chatInputBar {
@@ -1899,9 +1893,6 @@ NS_ASSUME_NONNULL_BEGIN
 	if (actionSheet.tag == InfoActionSheet) {
 		if (buttonIndex == 0)
 			[self showUserInformation];
-	} else if (actionSheet.tag == ActionsActionSheet) {
-		if (buttonIndex == 0)
-			[self showRecentlySentMessages];
 	} else if (actionSheet.tag == URLActionSheet) {
 		Class <CQBookmarking> bookmarkingService = [CQBookmarkingController activeService];
 		NSURL *URL = [actionSheet associatedObjectForKey:@"URL"];

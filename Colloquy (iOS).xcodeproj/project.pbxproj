@@ -196,6 +196,7 @@
 		92F99FB819D14034004A7A22 /* UIViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F99FB719D14034004A7A22 /* UIViewAdditions.m */; };
 		9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
 		B6C921061B812F350049622C /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B6C921051B812F350049622C /* libc++.dylib */; };
+		B6D085B61B8D6E8400734C96 /* CQActivities.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D085B51B8D6E8400734C96 /* CQActivities.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -528,6 +529,8 @@
 		97F85EBC0F2713CA008486E1 /* CQFileTransferTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQFileTransferTableCell.h; sourceTree = "<group>"; };
 		97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQFileTransferTableCell.m; sourceTree = "<group>"; };
 		B6C921051B812F350049622C /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
+		B6D085B41B8D6E8400734C96 /* CQActivities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQActivities.h; sourceTree = "<group>"; };
+		B6D085B51B8D6E8400734C96 /* CQActivities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQActivities.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -797,6 +800,8 @@
 				1C9B60E80FFAE4C400B7BAC0 /* CQBouncerConnection.h */,
 				1C6341630FAF30B600BB5866 /* CQBouncerSettings.m */,
 				1C6341620FAF30B600BB5866 /* CQBouncerSettings.h */,
+				B6D085B51B8D6E8400734C96 /* CQActivities.m */,
+				B6D085B41B8D6E8400734C96 /* CQActivities.h */,
 			);
 			name = Models;
 			path = Mobile/Models;
@@ -1315,6 +1320,7 @@
 				1CC64B2D0EE97F8B00DE91D0 /* CQChatUserListViewController.m in Sources */,
 				922AF5DE1A42BD4B00B2A966 /* CQColorPickerTableCell.m in Sources */,
 				1CA7151A0EF47D6F006225CD /* CQUnreadCountView.m in Sources */,
+				B6D085B61B8D6E8400734C96 /* CQActivities.m in Sources */,
 				1C20BE820EFEDF26005AD8A5 /* NSDictionaryAdditions.m in Sources */,
 				1CBCFF2D0F04632900EEBCFB /* CQTextCompletionView.m in Sources */,
 				1C1254A40F0D8D7F008F181B /* CQChatCreationViewController.m in Sources */,
