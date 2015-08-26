@@ -34,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) UIScrollView *scrollView;
 
+@property (nonatomic, readonly) NSData *PDFRepresentation;
+
 - (void) stringByEvaluatingJavaScriptFromString:(NSString *) script completionHandler:(void (^__nullable)(NSString *))completionHandler;
 
 - (void) addPreviousSessionComponents:(NSArray *) components;

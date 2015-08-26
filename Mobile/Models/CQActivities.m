@@ -28,7 +28,7 @@ static __weak id cq_currentFirstResponder;
 @implementation CQActivitiesProvider
 + (NSArray *) activities {
 	return @[ [[CQRecentMessagesActivity alloc] init],
-			  [[CQRoomModesActivity alloc] init], [[CQRoomTopicActivity alloc] init], [[CQRoomBansActivity alloc] init], [[CQRoomInvitesActivity alloc] init],
+			  [[CQChatRoomModesActivity alloc] init], [[CQChatRoomTopicActivity alloc] init], [[CQChatRoomBansActivity alloc] init], [[CQChatRoomInvitesActivity alloc] init],
 			  [[CQSaveChatLogToPDFActivity alloc] init] ];
 }
 @end
@@ -69,7 +69,7 @@ static __weak id cq_currentFirstResponder;
 }
 @end
 
-@implementation CQRoomModesActivity
+@implementation `
 - (NSString *) activityTitle {
 	return NSLocalizedString(@"Room Modes", @"Room Modes activity title");
 }
@@ -83,7 +83,7 @@ static __weak id cq_currentFirstResponder;
 }
 @end
 
-@implementation CQRoomTopicActivity
+@implementation CQChatRoomTopicActivity
 - (NSString *) activityTitle {
 	return NSLocalizedString(@"Room Topic", @"Room Topic activity title");
 }
@@ -97,7 +97,7 @@ static __weak id cq_currentFirstResponder;
 }
 @end
 
-@implementation CQRoomBansActivity
+@implementation CQChatRoomBansActivity
 - (NSString *) activityTitle {
 	return NSLocalizedString(@"Ban List", @"Ban List activity title");
 }
@@ -111,7 +111,7 @@ static __weak id cq_currentFirstResponder;
 }
 @end
 
-@implementation CQRoomInvitesActivity
+@implementation CQChatRoomInvitesActivity
 - (NSString *) activityTitle {
 	return NSLocalizedString(@"Invite List", @"Invite List activity title");
 }

@@ -39,7 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 	_unreadCountView = [[CQUnreadCountView alloc] initWithFrame:CGRectZero];
 
 	_maximumMessagePreviews = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQPreviewLinesCount"];
-	NSLog(@"init: _maximumMessagePreviews %tu", _maximumMessagePreviews);
 	_showsUserInMessagePreviews = YES;
 	_available = YES;
 
@@ -225,7 +224,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 	_showsUserInMessagePreviews = YES;
 	_maximumMessagePreviews = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQPreviewLinesCount"];
-	NSLog(@"reuse: _maximumMessagePreviews %tu", _maximumMessagePreviews);
 }
 
 - (void) setHighlighted:(BOOL) highlighted animated:(BOOL) animated {

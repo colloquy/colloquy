@@ -451,6 +451,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
+- (void) saveChatLog:(id) sender {
+	NSData *transcriptPDF = transcriptView.PDFRepresentation;
+	if (!transcriptPDF)
+		return;
+
+	UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:@[ transcriptPDF ] applicationActivities:nil];
+	[self presentViewController:activityController animated:YES completion:nil];
+}
+
 - (void) showRecentlySentMessages:(id) sender {
 	CQImportantChatMessageViewController *listViewController = [[CQImportantChatMessageViewController alloc] initWithMessages:_sentMessages delegate:self];
 	CQModalNavigationController *modalNavigationController = [[CQModalNavigationController alloc] initWithRootViewController:listViewController];

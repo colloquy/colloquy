@@ -2,12 +2,13 @@
 
 #import <ChatCore/MVChatUser.h>
 
+#import "UIPrintPageRendererAdditions.h"
 #import "NSNotificationAdditions.h"
 
 #define DefaultFontSize 14
 #define HideRoomTopicDelay 30.
 
-static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNotification";
+static NSString *const CQChatRoomTopicChangedNotification = @"CQChatRoomTopicChangedNotification";
 
 #pragma mark -
 
@@ -64,7 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) dealloc {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 
-	[[NSNotificationCenter chatCenter] removeObserver:self name:CQRoomTopicChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:CQChatRoomTopicChangedNotification object:nil];
 	[[NSNotificationCenter chatCenter] removeObserver:self name:CQSettingsDidChangeNotification object:nil];
 
 	super.delegate = nil;
@@ -127,6 +128,43 @@ NS_ASSUME_NONNULL_BEGIN
 	_fontSize = fontSize;
 
 	[self _reloadVariantStyle];
+}
+
+- (CGSize) suggestedPaperSize {
+	// measured in points; 1 inch = 72 points
+	// US, Canada, Mexico: 8.5x11
+	// Everyone Else: A4
+	if ([[[NSLocale currentLocale] objectForKey:NSLocaleUsesMetricSystem] boolValue])
+		return CGSizeMake(595.5, 841.); // A4
+	return CGSizeMake(612, 792.); // 8.5x11
+}
+
+- (UIEdgeInsets) suggestedPaperMargin {
+	// measured in points; 1 inch = 72 points
+	return UIEdgeInsetsMake(54., 54., 72., 54.);
+}
+
+- (NSData *) PDFRepresentation {
+	if (self.isLoading)
+		return nil;
+
+	UIPrintPageRenderer *renderer = [[UIPrintPageRenderer alloc] init];
+	[renderer addPrintFormatter:self.viewPrintFormatter startingAtPageAtIndex:0];
+
+	UIEdgeInsets paperMargin = self.suggestedPaperMargin;
+	CGSize paperSize = self.suggestedPaperSize;
+	CGRect paperRect = CGRectMake(0., 0., paperSize.width, paperSize.height);
+	CGRect printableRect = UIEdgeInsetsInsetRect(paperRect, paperMargin);
+
+	@try {
+		[renderer setValue:[NSValue valueWithCGRect:paperRect] forKey:@"paperRect"];
+		[renderer setValue:[NSValue valueWithCGRect:printableRect] forKey:@"printableRect"];
+	} @catch (NSException *e) {
+		NSLog(@"Failed to set PDF size information, unable to generate document");
+		return nil;
+	}
+
+	return [renderer PDFRender];
 }
 
 - (void) setTimestampPosition:(CQTimestampPosition) timestampPosition {

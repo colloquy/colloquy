@@ -195,6 +195,7 @@
 		92F77F641A3ECAE7005667FE /* CQChatInputStyleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F77F631A3ECAE7005667FE /* CQChatInputStyleViewController.m */; };
 		92F99FB819D14034004A7A22 /* UIViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F99FB719D14034004A7A22 /* UIViewAdditions.m */; };
 		9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
+		B68725B11B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B68725B01B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m */; };
 		B6C921061B812F350049622C /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B6C921051B812F350049622C /* libc++.dylib */; };
 		B6D085B61B8D6E8400734C96 /* CQActivities.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D085B51B8D6E8400734C96 /* CQActivities.m */; };
 /* End PBXBuildFile section */
@@ -528,6 +529,8 @@
 		9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIImageAdditions.m; path = Mobile/Additions/UIImageAdditions.m; sourceTree = "<group>"; };
 		97F85EBC0F2713CA008486E1 /* CQFileTransferTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQFileTransferTableCell.h; sourceTree = "<group>"; };
 		97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQFileTransferTableCell.m; sourceTree = "<group>"; };
+		B68725AF1B8E3E320003D4F8 /* UIPrintPageRendererAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIPrintPageRendererAdditions.h; path = Additions/UIPrintPageRendererAdditions.h; sourceTree = "<group>"; };
+		B68725B01B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIPrintPageRendererAdditions.m; path = Additions/UIPrintPageRendererAdditions.m; sourceTree = "<group>"; };
 		B6C921051B812F350049622C /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		B6D085B41B8D6E8400734C96 /* CQActivities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQActivities.h; sourceTree = "<group>"; };
 		B6D085B51B8D6E8400734C96 /* CQActivities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQActivities.m; sourceTree = "<group>"; };
@@ -973,14 +976,18 @@
 				92AF958B1A520D6A006E3152 /* UIColorAdditions.h */,
 				1C3CD7951112357100FE29AA /* UIDeviceAdditions.m */,
 				1C3CD7941112357100FE29AA /* UIDeviceAdditions.h */,
+				9251306619FDCEAA00847018 /* UIFontAdditions.m */,
+				9251306519FDCEAA00847018 /* UIFontAdditions.h */,
 				9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */,
 				9717342A0F2D1CA100DA9CDB /* UIImageAdditions.h */,
+				1CFCB9B91114EED200EA5F10 /* UINavigationControllerAdditions.m */,
+				1CFCB9B81114EED200EA5F10 /* UINavigationControllerAdditions.h */,
+				B68725B01B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m */,
+				B68725AF1B8E3E320003D4F8 /* UIPrintPageRendererAdditions.h */,
 				1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */,
 				1CFF6E800EDF772800D3C557 /* UITableViewAdditions.h */,
 				1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */,
 				1CC576D10ED4684700FEC2C1 /* UITableViewCellAdditions.h */,
-				1CFCB9B91114EED200EA5F10 /* UINavigationControllerAdditions.m */,
-				1CFCB9B81114EED200EA5F10 /* UINavigationControllerAdditions.h */,
 				92F99FB719D14034004A7A22 /* UIViewAdditions.m */,
 				92F99FB619D14034004A7A22 /* UIViewAdditions.h */,
 				92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */,
@@ -1008,8 +1015,6 @@
 				1C0932750D80CA4800A2705D /* NSStringAdditions.m */,
 				1C0932740D80CA4800A2705D /* NSStringAdditions.h */,
 				1C09325D0D80CA4800A2705D /* MVUtilities.h */,
-				9251306619FDCEAA00847018 /* UIFontAdditions.m */,
-				9251306519FDCEAA00847018 /* UIFontAdditions.h */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -1293,6 +1298,7 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1C0931030D80C6E900A2705D /* CQColloquyApplication.m in Sources */,
 				1C09327E0D80CA4800A2705D /* NSDataAdditions.m in Sources */,
+				B68725B11B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m in Sources */,
 				1C0932810D80CA4800A2705D /* NSNotificationAdditions.m in Sources */,
 				1C0932830D80CA4800A2705D /* NSScannerAdditions.m in Sources */,
 				1C0932850D80CA4800A2705D /* NSStringAdditions.m in Sources */,
