@@ -1,5 +1,7 @@
 #import "CQUIChatTranscriptView.h"
 
+#import "CQPrinterPage.h"
+
 #import <ChatCore/MVChatUser.h>
 
 #import "UIPrintPageRendererAdditions.h"
@@ -130,20 +132,6 @@ NS_ASSUME_NONNULL_BEGIN
 	[self _reloadVariantStyle];
 }
 
-- (CGSize) suggestedPaperSize {
-	// measured in points; 1 inch = 72 points
-	// US, Canada, Mexico: 8.5x11
-	// Everyone Else: A4
-	if ([[[NSLocale currentLocale] objectForKey:NSLocaleUsesMetricSystem] boolValue])
-		return CGSizeMake(595.5, 841.); // A4
-	return CGSizeMake(612, 792.); // 8.5x11
-}
-
-- (UIEdgeInsets) suggestedPaperMargin {
-	// measured in points; 1 inch = 72 points
-	return UIEdgeInsetsMake(54., 54., 72., 54.);
-}
-
 - (NSData *) PDFRepresentation {
 	if (self.isLoading)
 		return nil;
@@ -151,8 +139,10 @@ NS_ASSUME_NONNULL_BEGIN
 	UIPrintPageRenderer *renderer = [[UIPrintPageRenderer alloc] init];
 	[renderer addPrintFormatter:self.viewPrintFormatter startingAtPageAtIndex:0];
 
-	UIEdgeInsets paperMargin = self.suggestedPaperMargin;
-	CGSize paperSize = self.suggestedPaperSize;
+	CQPrinterPage *page = [[CQPrinterPage alloc] init];
+
+	UIEdgeInsets paperMargin = page.suggestedPaperMargin;
+	CGSize paperSize = page.suggestedPaperSize;
 	CGRect paperRect = CGRectMake(0., 0., paperSize.width, paperSize.height);
 	CGRect printableRect = UIEdgeInsetsInsetRect(paperRect, paperMargin);
 

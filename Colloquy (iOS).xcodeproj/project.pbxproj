@@ -196,6 +196,7 @@
 		92F99FB819D14034004A7A22 /* UIViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F99FB719D14034004A7A22 /* UIViewAdditions.m */; };
 		9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
 		B68725B11B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B68725B01B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m */; };
+		B68725B41B8E7FF60003D4F8 /* CQPrinterPage.m in Sources */ = {isa = PBXBuildFile; fileRef = B68725B31B8E7FF60003D4F8 /* CQPrinterPage.m */; };
 		B6C921061B812F350049622C /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B6C921051B812F350049622C /* libc++.dylib */; };
 		B6D085B61B8D6E8400734C96 /* CQActivities.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D085B51B8D6E8400734C96 /* CQActivities.m */; };
 /* End PBXBuildFile section */
@@ -531,6 +532,8 @@
 		97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQFileTransferTableCell.m; sourceTree = "<group>"; };
 		B68725AF1B8E3E320003D4F8 /* UIPrintPageRendererAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIPrintPageRendererAdditions.h; path = Additions/UIPrintPageRendererAdditions.h; sourceTree = "<group>"; };
 		B68725B01B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIPrintPageRendererAdditions.m; path = Additions/UIPrintPageRendererAdditions.m; sourceTree = "<group>"; };
+		B68725B21B8E7FF60003D4F8 /* CQPrinterPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPrinterPage.h; sourceTree = "<group>"; };
+		B68725B31B8E7FF60003D4F8 /* CQPrinterPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPrinterPage.m; sourceTree = "<group>"; };
 		B6C921051B812F350049622C /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		B6D085B41B8D6E8400734C96 /* CQActivities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQActivities.h; sourceTree = "<group>"; };
 		B6D085B51B8D6E8400734C96 /* CQActivities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQActivities.m; sourceTree = "<group>"; };
@@ -799,12 +802,14 @@
 		1C63415F0FAF307B00BB5866 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B6D085B51B8D6E8400734C96 /* CQActivities.m */,
+				B6D085B41B8D6E8400734C96 /* CQActivities.h */,
 				1C9B60E90FFAE4C400B7BAC0 /* CQBouncerConnection.m */,
 				1C9B60E80FFAE4C400B7BAC0 /* CQBouncerConnection.h */,
 				1C6341630FAF30B600BB5866 /* CQBouncerSettings.m */,
 				1C6341620FAF30B600BB5866 /* CQBouncerSettings.h */,
-				B6D085B51B8D6E8400734C96 /* CQActivities.m */,
-				B6D085B41B8D6E8400734C96 /* CQActivities.h */,
+				B68725B21B8E7FF60003D4F8 /* CQPrinterPage.h */,
+				B68725B31B8E7FF60003D4F8 /* CQPrinterPage.m */,
 			);
 			name = Models;
 			path = Mobile/Models;
@@ -1411,6 +1416,7 @@
 				927192C616D3272E003380F0 /* CQImportantChatMessageViewController.m in Sources */,
 				922C766B16D9B25400AEFCB4 /* CQBookmarkingController.m in Sources */,
 				922C767516D9C0E900AEFCB4 /* CQDeliciousController.m in Sources */,
+				B68725B41B8E7FF60003D4F8 /* CQPrinterPage.m in Sources */,
 				922C767616D9C0E900AEFCB4 /* CQInstapaperController.m in Sources */,
 				922C767716D9C0E900AEFCB4 /* CQPinboardController.m in Sources */,
 				922C767816D9C0E900AEFCB4 /* CQPocketController.m in Sources */,

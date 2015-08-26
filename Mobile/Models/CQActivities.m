@@ -69,7 +69,7 @@ static __weak id cq_currentFirstResponder;
 }
 @end
 
-@implementation `
+@implementation CQChatRoomModesActivity
 - (NSString *) activityTitle {
 	return NSLocalizedString(@"Room Modes", @"Room Modes activity title");
 }
