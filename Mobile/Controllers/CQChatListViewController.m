@@ -677,8 +677,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	self.tableView.rowHeight = 62.;
-
 	if ([[UIDevice currentDevice] isPadModel]) {
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
 		self.tableView.allowsSelectionDuringEditing = YES;
@@ -983,9 +981,11 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		if ([chatViewController isKindOfClass:[CQDirectChatController class]]) {
 			CQDirectChatController *directChatViewController = (CQDirectChatController *)chatViewController;
 			NSArray *recentMessages = directChatViewController.recentMessages;
-			NSMutableArray *previewMessages = [[NSMutableArray alloc] initWithCapacity:2];
 
-			for (NSInteger i = (recentMessages.count - 1); i >= 0 && previewMessages.count < 2; --i) {
+			NSUInteger capacity = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQPreviewLinesCount"];;
+			NSMutableArray *previewMessages = [[NSMutableArray alloc] initWithCapacity:capacity];
+
+			for (NSInteger i = (recentMessages.count - 1); i >= 0 && previewMessages.count < capacity; --i) {
 				NSDictionary *message = recentMessages[i];
 				MVChatUser *user = message[@"user"];
 				if (!user.localUser) [previewMessages insertObject:message atIndex:0];
@@ -1020,6 +1020,14 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	return cell;
 #endif
+}
+
+- (CGFloat) tableView:(UITableView *) tableView heightForRowAtIndexPath:(NSIndexPath *) indexPath {
+	if (self.editing && (indexPath.section == 0 || indexPath.row == 0))
+		return 62.;
+
+	NSUInteger numberOfLines = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQPreviewLinesCount"];
+	return (numberOfLines * [[CQChatTableCell previewLabelFont] lineHeight]) + [[CQChatTableCell nameLabelFont] lineHeight] + 7;
 }
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {

@@ -4,6 +4,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CQChatTableCell : UITableViewCell
++ (UIFont *)nameLabelFont;
++ (UIFont *)previewLabelFont;
+
 - (void) takeValuesFromChatViewController:(id <CQChatViewController>) controller;
 
 @property (nonatomic, copy) NSString *name;

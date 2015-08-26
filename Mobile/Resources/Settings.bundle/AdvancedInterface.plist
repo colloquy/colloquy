@@ -24,19 +24,57 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Strip Message Styles</string>
+			<string>Show Room Prefixes</string>
 			<key>Key</key>
-			<string>JVChatStripMessageFormatting</string>
+			<string>JVShowFullRoomNames</string>
 			<key>DefaultValue</key>
 			<false/>
+		</dict>
+		<dict>
+			<key>SupportedUserInterfaceIdioms</key>
+			<array>
+				<string>Pad</string>
+			</array>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Preview</string>
+			<key>Key</key>
+			<string>CQPreviewLinesCount</string>
+			<key>Values</key>
+			<array>
+				<real>0</real>
+				<real>1</real>
+				<real>2</real>
+				<real>3</real>
+				<integer>4</integer>
+				<integer>5</integer>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>None</string>
+				<string>1 Line</string>
+				<string>2 Lines</string>
+				<string>3 Lines</string>
+				<string>4 Lines</string>
+				<string>5 Lines</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>2</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string></string>
 		</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Show Room Prefixes</string>
+			<string>Strip Message Styles</string>
 			<key>Key</key>
-			<string>JVShowFullRoomNames</string>
+			<string>JVChatStripMessageFormatting</string>
 			<key>DefaultValue</key>
 			<false/>
 		</dict>
