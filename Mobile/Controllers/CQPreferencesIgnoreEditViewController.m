@@ -28,7 +28,7 @@ enum {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQPreferencesIgnoreEditViewController {
+@implementation CQPreferencesIgnoreEditViewController {
 	MVChatConnection *_connection;
 	KAIgnoreRule *_representedRule;
 }

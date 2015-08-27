@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQUserInfoViewController {
+@implementation CQUserInfoViewController {
 @protected
 	NSTimer *_updateTimesTimer;
 	NSTimer *_updateInfoTimer;

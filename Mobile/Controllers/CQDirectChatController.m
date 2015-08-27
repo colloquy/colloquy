@@ -85,7 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CQDirectChatController () <CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate, CQChatInputStyleDelegate>
 @end
 
-@implementation  CQDirectChatController
+@implementation CQDirectChatController
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -122,10 +122,6 @@ NS_ASSUME_NONNULL_BEGIN
 	privateMessageSound = ([soundName isEqualToString:@"None"] ? nil : [[CQSoundController alloc] initWithSoundNamed:soundName]);
 	soundName = [[CQSettingsController settingsController] stringForKey:@"CQSoundOnHighlight"];
 	highlightSound = ([soundName isEqualToString:@"None"] ? nil : [[CQSoundController alloc] initWithSoundNamed:soundName]);
-}
-
-- (BOOL) canBecomeFirstResponder {
-	return YES;
 }
 
 - (void) didNotBookmarkLink:(NSNotification *) notification {
@@ -456,8 +452,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!transcriptPDF)
 		return;
 
-	UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:@[ transcriptPDF ] applicationActivities:nil];
-	[self presentViewController:activityController animated:YES completion:nil];
+	[self _showActivityViewControllerWithItems:@[ transcriptPDF ] activities:@[]];
 }
 
 - (void) showRecentlySentMessages:(id) sender {
@@ -666,8 +661,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 #endif
 
+- (BOOL) canBecomeFirstResponder {
+	return YES;
+}
+
 - (BOOL) isFirstResponder {
-	return [chatInputBar isFirstResponder];
+	return[chatInputBar isFirstResponder];
 }
 
 - (BOOL) resignFirstResponder {
@@ -700,8 +699,7 @@ NS_ASSUME_NONNULL_BEGIN
 		return;
 	}
 
-	UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:nil applicationActivities:[CQActivitiesProvider activities]];
-	[self presentViewController:activityViewController animated:YES completion:nil];
+	[self _showActivityViewControllerWithItems:@[] activities:[CQActivitiesProvider activities]];
 }
 
 - (BOOL) chatInputBarShouldEndEditing:(CQChatInputBar *) chatInputBar {
@@ -1913,6 +1911,13 @@ NS_ASSUME_NONNULL_BEGIN
 		else if ((!bookmarkingService && buttonIndex == 1) || (bookmarkingService && buttonIndex == 2))
 			[[UIPasteboard generalPasteboard] setURL:URL];
 	}
+}
+
+#pragma mark -
+
+- (void) _showActivityViewControllerWithItems:(NSArray *) items activities:(NSArray *) activities {
+	UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:activities];
+	[self presentViewController:activityController animated:[UIView areAnimationsEnabled] completion:nil];
 }
 
 #pragma mark -

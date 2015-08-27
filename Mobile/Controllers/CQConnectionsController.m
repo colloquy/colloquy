@@ -59,7 +59,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 @interface CQConnectionsController () <UIActionSheetDelegate, UIAlertViewDelegate, CQBouncerConnectionDelegate>
 @end
 
-@implementation  CQConnectionsController {
+@implementation CQConnectionsController {
 	NSMapTable *_connectionToErrorToAlertMap;
 	CQConnectionsNavigationController *_connectionsNavigationController;
 	NSMutableSet *_connections;
@@ -993,7 +993,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		[connection sendCommand:command withArguments:[[NSAttributedString alloc] initWithString:arguments]];
 	}
 
-    for (NSUInteger i = 0; i < rooms.count; i++) {
+	for (NSUInteger i = 0; i < rooms.count; i++) {
 		NSString *room = [connection properNameForChatRoomNamed:rooms[i]];
 		NSString *password = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:room];
 
@@ -1884,7 +1884,7 @@ NS_ASSUME_NONNULL_END
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  MVChatConnection (CQConnectionsControllerAdditions)
+@implementation MVChatConnection (CQConnectionsControllerAdditions)
 + (NSString *) defaultNickname {
 	NSString *defaultNickname = [[CQSettingsController settingsController] stringForKey:@"CQDefaultNickname"];
 	if (defaultNickname.length)

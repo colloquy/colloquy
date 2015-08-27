@@ -5,7 +5,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQConnectionsNavigationController
+@implementation CQConnectionsNavigationController
 - (void) viewDidLoad {
 	[super viewDidLoad];
 

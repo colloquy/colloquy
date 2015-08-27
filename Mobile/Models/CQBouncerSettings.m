@@ -4,7 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQBouncerSettings {
+@implementation CQBouncerSettings {
 	NSString *_password;
 }
 

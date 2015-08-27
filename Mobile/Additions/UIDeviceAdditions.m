@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #endif
 
-@implementation  UIDevice (UIDeviceColloquyAdditions)
+@implementation UIDevice (UIDeviceColloquyAdditions)
 #if TARGET_IPHONE_SIMULATOR
 - (NSString *) model {
 	// This is needed becuase the real UIDevice.model always returns iPhone Simulator, even for the iPad.

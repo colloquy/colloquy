@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (atomic, strong) NSMutableArray *matchedUsers;
 @end
 
-@implementation  CQChatUserListViewController {
+@implementation CQChatUserListViewController {
 @protected
 	NSString *_currentSearchString;
 	MVChatRoom *_room;

@@ -8,7 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQConnectionTableHeaderView {
+@implementation CQConnectionTableHeaderView {
 	UIImageView *_iconImageView;
 	UIImageView *_badgeImageView;
 	UILabel *_serverLabel;

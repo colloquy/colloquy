@@ -6,7 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 NSString *const CQBookmarkingServiceInstapaper = @"CQBookmarkingServiceInstapaper";
 
-@implementation  CQInstapaperController
+@implementation CQInstapaperController
 + (NSString *) serviceName {
 	return @"Instapaper";
 }

@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) editItemAtIndex:(NSUInteger) index;
 @end
 
-@implementation  CQAwayStatusViewController {
+@implementation CQAwayStatusViewController {
 @protected
 	UILongPressGestureRecognizer *_longPressGestureRecognizer;
 }
@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 	else {
 		if (awayStatuses.count) {
 			if (![self statusIsDefaultAwayStatus:awayStatuses[0]]) {
-				for (NSUInteger i = 1; i <  awayStatuses.count; i++) {
+				for (NSUInteger i = 1; i < awayStatuses.count; i++) {
 					NSString *status = awayStatuses[i];
 					if ([self statusIsDefaultAwayStatus:status])
 						[awayStatuses removeObjectAtIndex:i];

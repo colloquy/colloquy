@@ -7,7 +7,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQUserInfoController
+@implementation CQUserInfoController
 - (void) viewDidLoad {
 	if (!_rootViewController) {
 		CQUserInfoViewController *userInfoViewController = [[CQUserInfoViewController alloc] init];

@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CQChatRoomListViewController () <UISearchBarDelegate>
 @end
 
-@implementation  CQChatRoomListViewController {
+@implementation CQChatRoomListViewController {
 @protected
 	NSMutableArray *_rooms;
 	NSMutableArray *_matchedRooms;
@@ -353,7 +353,7 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 	static NSNumberFormatter *numberFormatter;
 	if (!numberFormatter) {
 		numberFormatter = [[NSNumberFormatter alloc] init];
-        numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+		numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
 		numberFormatter.positiveFormat = NSLocalizedString(@"#,##0", @"Plain large number format string");
 	}
 

@@ -2,7 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQTextView {
+@implementation CQTextView {
 	UILabel *_placeholder;
 }
 

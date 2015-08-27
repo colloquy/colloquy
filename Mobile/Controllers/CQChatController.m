@@ -55,7 +55,7 @@ static CQSoundController *fileTransferSound;
 @interface CQChatController () <UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate>
 @end
 
-@implementation  CQChatController {
+@implementation CQChatController {
 	CQChatNavigationController *_chatNavigationController;
 	CQChatPresentationController *_chatPresentationController;
 	id <CQChatViewController> _nextController;
@@ -259,7 +259,7 @@ static CQSoundController *fileTransferSound;
 	MVChatRoom *room = [connection chatRoomWithName:roomName];
 
 	if (invitedUser) {
-		NSString *message = [NSString stringWithFormat:NSLocalizedString(@"%@ invited %@ to \"%@\" on \"%@\".", "User invited to join room alert message"), user.displayName, invitedUser.displayName,  room.displayName, connection.displayName];
+		NSString *message = [NSString stringWithFormat:NSLocalizedString(@"%@ invited %@ to \"%@\" on \"%@\".", "User invited to join room alert message"), user.displayName, invitedUser.displayName, room.displayName, connection.displayName];
 		CQDirectChatController *chatController = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:NO];
 		[chatController addEventMessage:message withIdentifier:@""];
 		return;
@@ -363,22 +363,22 @@ static CQSoundController *fileTransferSound;
 		BOOL sendContact = NO;
 
 		if (buttonIndex == 0) {
-            if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+			if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
 				takeNewPhoto = YES;
-            } else if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+			} else if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
 				sendExistingPhoto = YES;
-            } else {
-                sendContact = YES;
-            }
-        } else if (buttonIndex == 1) {
-            if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+			} else {
+				sendContact = YES;
+			}
+		} else if (buttonIndex == 1) {
+			if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
 				sendExistingPhoto = YES;
-            } else {
-                sendContact = YES;
-            }
-        } else {
+			} else {
+				sendContact = YES;
+			}
+		} else {
 			sendContact = YES;
-        }
+		}
 
 		if (takeNewPhoto) {
 			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -396,7 +396,7 @@ static CQSoundController *fileTransferSound;
 		} else if (sendContact) {
 			NSAssert(NO, @"Contact sending not implemented.");
 		}
-    } else if (actionSheet.tag == FileTypeActionSheetTag) {
+	} else if (actionSheet.tag == FileTypeActionSheetTag) {
 		[self _sendImage:[actionSheet associatedObjectForKey:@"image"] asPNG:(buttonIndex == 0)];
 #endif
 	}
@@ -420,12 +420,12 @@ static CQSoundController *fileTransferSound;
 		[self _sendImage:image asPNG:[behavior isEqualToString:@"PNG"]];
 	}
 
-    [[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
+	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
 
 - (void) imagePickerControllerDidCancel:(UIImagePickerController *) picker {
-    [[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
-    [_fileUser release];
+	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
+	[_fileUser release];
 }
 #endif
 
@@ -719,7 +719,7 @@ NS_ASSUME_NONNULL_END
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  MVIRCChatRoom (CQChatControllerAdditions)
+@implementation MVIRCChatRoom (CQChatControllerAdditions)
 - (NSString *) displayName {
 	if (![[CQSettingsController settingsController] boolForKey:@"JVShowFullRoomNames"])
 		return [self.connection displayNameForChatRoomNamed:self.name];

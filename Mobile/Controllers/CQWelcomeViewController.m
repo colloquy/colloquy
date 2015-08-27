@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQWelcomeViewController {
+@implementation CQWelcomeViewController {
 	CQHelpTopicsViewController *_helpTopicsController;
 }
 
@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
-    return 3;
+	return 3;
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
@@ -78,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
 
-    return cell;
+	return cell;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {

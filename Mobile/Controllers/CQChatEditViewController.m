@@ -12,7 +12,7 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatEditViewController {
+@implementation CQChatEditViewController {
 	NSMutableArray *_sortedConnections;
 }
 

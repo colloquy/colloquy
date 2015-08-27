@@ -4,7 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQPreferencesListEditViewController {
+@implementation CQPreferencesListEditViewController {
 	id _listItem;
 	NSString *_listItemPlaceholder;
 	BOOL _viewDisappearing;

@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_END
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatInputBar {
+@implementation CQChatInputBar {
 @protected
 	UIView *_backgroundView;
 	CQTextCompletionView *_completionView;

@@ -35,12 +35,12 @@ NS_ASSUME_NONNULL_BEGIN
 	else [self postNotificationOnMainThreadWithName:name object:object userInfo:@{} waitUntilDone:NO];
 }
 
-- (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id __nullable) object userInfo:(NSDictionary  * __nullable ) userInfo {
+- (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id __nullable) object userInfo:(NSDictionary * __nullable ) userInfo {
 	if( pthread_main_np() ) [self postNotificationName:name object:object userInfo:userInfo];
 	else [self postNotificationOnMainThreadWithName:name object:object userInfo:userInfo waitUntilDone:NO];
 }
 
-- (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id __nullable) object userInfo:(NSDictionary  * __nullable ) userInfo waitUntilDone:(BOOL) wait {
+- (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id __nullable) object userInfo:(NSDictionary * __nullable ) userInfo waitUntilDone:(BOOL) wait {
 	if( pthread_main_np() ) [self postNotificationName:name object:object userInfo:userInfo];
 	else {
 		if ( !name ) return;

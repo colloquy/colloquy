@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSString *password;
 @end
 
-@implementation  CQPreferencesListChannelEditViewController {
+@implementation CQPreferencesListChannelEditViewController {
 	MVChatConnection *_connection;
 	NSString *_password;
 }

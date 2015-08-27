@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CQBouncerEditViewController () <UIActionSheetDelegate, UIAlertViewDelegate>
 @end
 
-@implementation  CQBouncerEditViewController
+@implementation CQBouncerEditViewController
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) setNewBouncer:(BOOL) newBouncer {
-	if (_newBouncer ==  newBouncer)
+	if (_newBouncer == newBouncer)
 		return;
 
 	_newBouncer = newBouncer;

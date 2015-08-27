@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  KAIgnoreRule {
+@implementation KAIgnoreRule {
 	NSRegularExpression *_userRegex;
 	NSRegularExpression *_maskRegex;
 	NSRegularExpression *_messageRegex;

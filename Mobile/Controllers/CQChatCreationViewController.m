@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatCreationViewController {
+@implementation CQChatCreationViewController {
 	NSString *_name;
 	NSString *_password;
 	BOOL _showListOnLoad;

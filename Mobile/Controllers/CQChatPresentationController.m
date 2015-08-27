@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatPresentationController {
+@implementation CQChatPresentationController {
 	UIToolbar *_toolbar;
 	NSArray *_standardToolbarItems;
 	UIViewController <CQChatViewController> *_topChatViewController;
@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
 - (void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation duration:(NSTimeInterval) duration {
-    [self updateToolbarForInterfaceOrientation:interfaceOrientation animated:NO];
+	[self updateToolbarForInterfaceOrientation:interfaceOrientation animated:NO];
 }
 #endif
 

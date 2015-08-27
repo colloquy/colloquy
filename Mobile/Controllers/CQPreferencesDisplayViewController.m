@@ -61,7 +61,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 @interface CQPreferencesDisplayViewController () <MFMailComposeViewControllerDelegate>
 @end
 
-@implementation  CQPreferencesDisplayViewController {
+@implementation CQPreferencesDisplayViewController {
 	NSMutableArray *_preferences;
 	NSIndexPath *_selectedIndexPath;
 
@@ -145,7 +145,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 	__block NSMutableDictionary *workingSection = nil;
 	__weak __typeof__((_preferences)) weakPreferences = _preferences;
 	[preferences[CQPSPreferenceSpecifiers] enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
-		__strong  __typeof__((weakPreferences)) strongPreferences = weakPreferences;
+		__strong __typeof__((weakPreferences)) strongPreferences = weakPreferences;
 
 		if ([object[CQPSType] isEqualToString:CQPSGroupSpecifier]) {
 			workingSection = [object mutableCopy];

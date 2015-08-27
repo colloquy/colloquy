@@ -444,7 +444,7 @@
 		0AA811220826DB8800A3BF2D /* default.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = default.js; path = Resources/default.js; sourceTree = "<group>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		19937AD91AEAAC71005D6C44 /* CQKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQKeychain.h; path = Shared/Controllers/CQKeychain.h; sourceTree = "<group>"; };
-		19937ADA1AEAAC71005D6C44 /* CQKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQKeychain.m; path = Shared/Controllers/CQKeychain.m; sourceTree = "<group>"; };
+		19937ADA1AEAAC71005D6C44 /* CQKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQKeychain.m; path = Shared/Controllers/CQKeychain.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		19F292951B130440000198FE /* connect.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = connect.pdf; path = "Resources/Toolbar Icons/connect.pdf"; sourceTree = "<group>"; };
 		19F292961B130440000198FE /* disconnect.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = disconnect.pdf; path = "Resources/Toolbar Icons/disconnect.pdf"; sourceTree = "<group>"; };
 		19F292971B130440000198FE /* joinRoom.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = joinRoom.pdf; path = "Resources/Toolbar Icons/joinRoom.pdf"; sourceTree = "<group>"; };

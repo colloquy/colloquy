@@ -5,7 +5,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQAwayStatusController
+@implementation CQAwayStatusController
 - (void) viewDidLoad {
 	if (!_rootViewController) {
 		CQAwayStatusViewController *viewController = [[CQAwayStatusViewController alloc] init];

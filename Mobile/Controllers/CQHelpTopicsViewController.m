@@ -9,7 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?locale=%@";
 
-@implementation  CQHelpTopicsViewController {
+@implementation CQHelpTopicsViewController {
 	MPMoviePlayerController *_moviePlayer;
 	NSMutableArray *_helpSections;
 	NSMutableData *_helpData;
@@ -85,7 +85,7 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 #pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
-    return (_helpSections.count ? _helpSections.count : 1);
+	return (_helpSections.count ? _helpSections.count : 1);
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
@@ -151,7 +151,7 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 		cell.accessoryView = imageView;
 	}
 
-    return cell;
+	return cell;
 }
 
 - (NSIndexPath *__nullable) tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {

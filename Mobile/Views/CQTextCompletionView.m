@@ -8,7 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQTextCompletionView {
+@implementation CQTextCompletionView {
 @protected
 	CGSize _completionTextSizes[5];
 }

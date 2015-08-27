@@ -5,7 +5,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatRoomInfoViewController {
+@implementation CQChatRoomInfoViewController {
 	MVChatRoom *_room;
 	CQChatRoomInfo _infoType;
 }
@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 		_rootViewController = roomInfoDisplayViewController;
 	}
 
-    [super viewDidLoad];
+	[super viewDidLoad];
 
 	UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Close", @"Close button title") style:UIBarButtonItemStyleDone target:self action:@selector(close:)];
 	_rootViewController.navigationItem.leftBarButtonItem = doneItem;

@@ -35,7 +35,7 @@ static NSMutableArray *highlightWords;
 @interface CQColloquyApplication () <UIApplicationDelegate, UISplitViewControllerDelegate, UIAlertViewDelegate, BITHockeyManagerDelegate>
 @end
 
-@implementation  CQColloquyApplication {
+@implementation CQColloquyApplication {
 	UIWindow *_mainWindow;
 	UIViewController *_mainViewController;
 	UIPopoverController *_colloquiesPopoverController;

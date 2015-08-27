@@ -47,7 +47,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 @interface CQConnectionEditViewController () <UIActionSheetDelegate, UIAlertViewDelegate>
 @end
 
-@implementation  CQConnectionEditViewController {
+@implementation CQConnectionEditViewController {
 	MVChatConnection *_connection;
 	NSArray *_servers;
 	BOOL _newConnection;
@@ -94,7 +94,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 #pragma mark -
 
 - (void) setNewConnection:(BOOL)newConnection {
-	if (_newConnection ==  newConnection)
+	if (_newConnection == newConnection)
 		return;
 
 	_newConnection = newConnection;

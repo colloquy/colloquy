@@ -138,7 +138,7 @@ static void generateDeviceIdentifier() {
 
 #pragma mark -
 
-@implementation  CQAnalyticsController {
+@implementation CQAnalyticsController {
 	NSMutableDictionary *_data;
 	BOOL _pendingSynchronize;
 }

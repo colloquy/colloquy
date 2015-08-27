@@ -7,7 +7,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQBouncerConnection {
+@implementation CQBouncerConnection {
 	GCDAsyncSocket *_socket;
 	id <CQBouncerConnectionDelegate> __weak _delegate;
 

@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-@implementation  CQChatRoomController
+@implementation CQChatRoomController
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;

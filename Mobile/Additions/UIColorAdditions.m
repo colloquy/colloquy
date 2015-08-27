@@ -2,7 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  UIColor (Additions)
+@implementation UIColor (Additions)
 + (UIColor *__nullable) colorFromName:(NSString *__nullable) name {
 	if (!name.length)
 		return nil;

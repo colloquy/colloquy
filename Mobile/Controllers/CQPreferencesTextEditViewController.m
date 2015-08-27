@@ -5,7 +5,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQPreferencesTextEditViewController {
+@implementation CQPreferencesTextEditViewController {
 	id <CQPreferencesTextEditViewDelegate> __weak _delegate;
 
 	NSString *_listItemText;

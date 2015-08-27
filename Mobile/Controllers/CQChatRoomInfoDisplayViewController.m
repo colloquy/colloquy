@@ -29,10 +29,10 @@ enum {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatRoomInfoDisplayViewController ()  <UITextFieldDelegate, UITextViewDelegate, CQChatUserListViewDelegate>
+@interface CQChatRoomInfoDisplayViewController () <UITextFieldDelegate, UITextViewDelegate, CQChatUserListViewDelegate>
 @end
 
-@implementation  CQChatRoomInfoDisplayViewController {
+@implementation CQChatRoomInfoDisplayViewController {
 @private
 	MVChatRoom *_room;
 	NSMutableArray *_bans;
@@ -393,7 +393,7 @@ NS_ASSUME_NONNULL_BEGIN
 		return;
 
 	[self.tableView beginUpdates];
-	[self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]]  withRowAnimation:UITableViewRowAnimationNone];
+	[self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:0] ] withRowAnimation:UITableViewRowAnimationNone];
 	[self.tableView endUpdates];
 }
 

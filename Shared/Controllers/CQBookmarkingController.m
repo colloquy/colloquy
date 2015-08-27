@@ -19,7 +19,7 @@ static NSString *bookmarkingService;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQBookmarkingController
+@implementation CQBookmarkingController
 + (void) userDefaultsChanged {
 	bookmarkingService = [[[NSUserDefaults standardUserDefaults] objectForKey:@"CQBookmarkingService"] copy];
 }

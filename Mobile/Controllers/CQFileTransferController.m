@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQFileTransferController {
+@implementation CQFileTransferController {
 @protected
 	NSTimer *_timer;
 }
@@ -31,10 +31,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) dealloc {
 	[[NSNotificationCenter chatCenter] removeObserver:self];
 
-    [_transfer release];
+	[_transfer release];
 	[_timer release];
 
-    [super dealloc];
+	[super dealloc];
 }
 
 #pragma mark -

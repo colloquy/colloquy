@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) _addPendingComponent:(id) component;
 @end
 
-@implementation  CQConsoleController {
+@implementation CQConsoleController {
 	MVChatConnection *_connection;
 
 	MVDelegateLogger *_delegateLogger;

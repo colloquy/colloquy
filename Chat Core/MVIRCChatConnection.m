@@ -2445,7 +2445,7 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionChghost];
 					}
-				}  else if( [capability isCaseInsensitiveEqualToString:@"server-time"] || [capability isCaseInsensitiveEqualToString:@"znc.in/server-time-iso"] ) {
+				} else if( [capability isCaseInsensitiveEqualToString:@"server-time"] || [capability isCaseInsensitiveEqualToString:@"znc.in/server-time-iso"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionServerTime];
 					}
@@ -3152,13 +3152,13 @@ end:
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:message.length];
 
 			if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ||				// Nickserv/*
-			   [msg hasCaseInsensitiveSubstring:@"you are now identified"] ||			// NickServ/freenode
-			   [msg hasCaseInsensitiveSubstring:@"you are already logged in"] ||		// NickServ/freenode
-			   [msg hasCaseInsensitiveSubstring:@"successfully identified"] ||			// NickServ/oftc
-			   [msg hasCaseInsensitiveSubstring:@"already identified"] ||				// NickServ
-			   [msg hasCaseInsensitiveSubstring:@"you are now logged in"] ||			// Q/quakenet
-			   [msg hasCaseInsensitiveSubstring:@"authentication successful"] ||		// X/undernet
-			   [msg hasCaseInsensitiveSubstring:@"i recognize you"] ) {					// AuthServ/gamesurge
+				[msg hasCaseInsensitiveSubstring:@"you are now identified"] ||			// NickServ/freenode
+				[msg hasCaseInsensitiveSubstring:@"you are already logged in"] ||		// NickServ/freenode
+				[msg hasCaseInsensitiveSubstring:@"successfully identified"] ||			// NickServ/oftc
+				[msg hasCaseInsensitiveSubstring:@"already identified"] ||				// NickServ
+				[msg hasCaseInsensitiveSubstring:@"you are now logged in"] ||			// Q/quakenet
+				[msg hasCaseInsensitiveSubstring:@"authentication successful"] ||		// X/undernet
+				[msg hasCaseInsensitiveSubstring:@"i recognize you"] ) {					// AuthServ/gamesurge
 
 				_pendingIdentificationAttempt = NO;
 

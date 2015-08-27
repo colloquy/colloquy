@@ -2,7 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  UITableViewCell (UITableViewCellColloquyAdditions)
+@implementation UITableViewCell (UITableViewCellColloquyAdditions)
 + (id) reusableTableViewCellInTableView:(UITableView *) tableView {
 	return [self reusableTableViewCellInTableView:tableView withIdentifier:NSStringFromClass([self class])];
 }

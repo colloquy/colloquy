@@ -25,7 +25,7 @@ static char encodingTable[64] = {
 		unsigned long ixtext = 0;
 		unsigned long lentext = 0;
 		unsigned char ch = 0;
-		unsigned char inbuf[4] =  { 0, 0, 0, 0 }, outbuf[3] = { 0, 0, 0 };
+		unsigned char inbuf[4] = { 0, 0, 0, 0 }, outbuf[3] = { 0, 0, 0 };
 		short i = 0, ixinbuf = 0;
 		BOOL flignore = NO;
 		BOOL flendtext = NO;
@@ -75,7 +75,7 @@ static char encodingTable[64] = {
 						[mutableData appendBytes:&outbuf[i] length:1];
 				}
 
-				if( flbreak )  break;
+				if( flbreak ) break;
 			}
 		}
 	}

@@ -16,7 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQFileTransferTableCell {
+@implementation CQFileTransferTableCell {
 	IBOutlet UIImageView *_iconImageView;
 	IBOutlet UIProgressView *_progressView;
 	IBOutlet UILabel *_userLabel;
@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[_fileTitle release];
 	[_thumb release];
 
-    [super dealloc];
+	[super dealloc];
 }
 
 #pragma mark -

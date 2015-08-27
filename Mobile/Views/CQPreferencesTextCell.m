@@ -7,7 +7,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CQPreferencesTextCell () <UITextFieldDelegate>
 @end
 
-@implementation  CQPreferencesTextCell
+@implementation CQPreferencesTextCell
 + (CQPreferencesTextCell *) currentEditingCell {
 	return currentEditingCell;
 }

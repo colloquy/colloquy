@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatTableCell {
+@implementation CQChatTableCell {
 	UIImageView *_iconImageView;
 	UILabel *_nameLabel;
 	CQUnreadCountView *_unreadCountView;

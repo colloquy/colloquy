@@ -2,7 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQPreferencesTextViewController {
+@implementation CQPreferencesTextViewController {
 	UITextView *_textView;
 }
 

@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CQWKChatTranscriptView () <UIGestureRecognizerDelegate, UIScrollViewDelegate, WKNavigationDelegate>
 @end
 
-@implementation  CQWKChatTranscriptView {
+@implementation CQWKChatTranscriptView {
 @protected
 	UIView *_blockerView;
 	NSMutableArray *_pendingPreviousSessionComponents;

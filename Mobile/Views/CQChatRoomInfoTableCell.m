@@ -4,7 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatRoomInfoTableCell {
+@implementation CQChatRoomInfoTableCell {
 	UIImageView *_iconImageView;
 	UILabel *_nameLabel;
 	UILabel *_topicLabel;

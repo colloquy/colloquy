@@ -2,7 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  UIImage (UIImageAdditions)
+@implementation UIImage (UIImageAdditions)
 + (UIImage *) patternImageWithColor:(UIColor *) color {
 	UIImage *image = nil;
 	UIGraphicsBeginImageContext(CGSizeMake(3., 3.)); {
@@ -47,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 			bitmap = CGBitmapContextCreate(NULL, size.width, size.height, CGImageGetBitsPerComponent(imageRef), (size_t)(4 * (size.width + 1)), colorSpaceInfo, alphaInfo);
 			break;
 		default:
-			bitmap = CGBitmapContextCreate(NULL, size.height, size.width, CGImageGetBitsPerComponent(imageRef), (size_t)(4  * (size.height + 1)), colorSpaceInfo, alphaInfo);
+			bitmap = CGBitmapContextCreate(NULL, size.height, size.width, CGImageGetBitsPerComponent(imageRef), (size_t)(4 * (size.height + 1)), colorSpaceInfo, alphaInfo);
 			break;
 	}
 

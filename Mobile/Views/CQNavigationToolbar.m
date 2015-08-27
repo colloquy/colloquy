@@ -9,7 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIImageView *bottomLineView;
 @end
 
-@implementation  CQNavigationToolbar
+@implementation CQNavigationToolbar
 - (instancetype) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
 		return nil;

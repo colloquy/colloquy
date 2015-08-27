@@ -13,7 +13,7 @@ enum {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQPreferencesListViewController {
+@implementation CQPreferencesListViewController {
 	NSMutableArray *_items;
 	UIImage *_itemImage;
 	NSString *_addItemLabelText;
@@ -165,7 +165,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (_listType == CQPreferencesListTypeAudio) {
 		NSString *path = [[NSBundle mainBundle] pathForResource:item ofType:@"aiff"];
 		if (path.length)
-			return  CQTableViewCellAccessoryPlay;
+			return CQTableViewCellAccessoryPlay;
 	} else if (_listType == CQPreferencesListTypeImage) {
 		NSString *path = [[NSBundle mainBundle] pathForResource:item ofType:@"aiff"];
 		if (path.length)
@@ -176,7 +176,7 @@ NS_ASSUME_NONNULL_BEGIN
 			return UITableViewCellAccessoryDetailDisclosureButton;
 	}
 
-	return  UITableViewCellAccessoryNone;
+	return UITableViewCellAccessoryNone;
 }
 
 - (UIView *) accessoryViewForAccessoryType:(int) accessoryType {

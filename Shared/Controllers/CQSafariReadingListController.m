@@ -8,7 +8,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 NSString *const CQBookmarkingServiceSafariReadingList = @"CQBookmarkingServiceSafariReadingList";
 
-@implementation  CQSafariReadingListController
+@implementation CQSafariReadingListController
 + (NSString *) serviceName {
 	return @"Safari Reading	List";
 }

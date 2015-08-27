@@ -7,7 +7,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CQHelpTopicViewController () <UIWebViewDelegate>
 @end
 
-@implementation  CQHelpTopicViewController {
+@implementation CQHelpTopicViewController {
 	UIWebView *_webView;
 	NSURL *_urlToHandle;
 }

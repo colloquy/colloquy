@@ -7,7 +7,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CQTableViewController () <UITableViewDelegate, UITableViewDataSource>
 @end
 
-@implementation  CQTableViewController {
+@implementation CQTableViewController {
 	UITableViewStyle _style;
 	UITableView *_tableView;
 }

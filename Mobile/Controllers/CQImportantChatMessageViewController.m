@@ -6,7 +6,7 @@ enum {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQImportantChatMessageViewController {
+@implementation CQImportantChatMessageViewController {
 	NSArray *_messages;
 	id <CQImportantChatMessageDelegate> _delegate;
 }

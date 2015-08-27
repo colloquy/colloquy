@@ -30,10 +30,10 @@ static BOOL showsChatIcons;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatListViewController ()  <UIActionSheetDelegate>
+@interface CQChatListViewController () <UIActionSheetDelegate>
 @end
 
-@implementation  CQChatListViewController {
+@implementation CQChatListViewController {
 	UIActionSheet *_currentConnectionActionSheet;
 	UIActionSheet *_currentChatViewActionSheet;
 	id <UIActionSheetDelegate> _currentChatViewActionSheetDelegate;
