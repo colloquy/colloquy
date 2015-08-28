@@ -1,5 +1,7 @@
 #import "JVChatWindowController.h"
 
+#import <WebKit/WebKit.h>
+
 @class JVStyleView;
 @class MVMenuButton;
 @class JVStyle;
@@ -12,7 +14,7 @@ extern NSString *JVToolbarEmoticonsItemIdentifier;
 extern NSString *JVToolbarFindItemIdentifier;
 extern NSString *JVToolbarQuickSearchItemIdentifier;
 
-@interface JVChatTranscriptPanel : NSObject <JVChatViewController, JVChatViewControllerScripting, NSToolbarDelegate> {
+@interface JVChatTranscriptPanel : NSObject <JVChatViewController, JVChatViewControllerScripting, NSToolbarDelegate, WebUIDelegate> {
 	@protected
 	IBOutlet NSView *contents;
 	IBOutlet JVStyleView *display;

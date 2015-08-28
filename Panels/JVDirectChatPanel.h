@@ -2,6 +2,8 @@
 #import "KAIgnoreRule.h"
 #import "JVChatMessage.h"
 
+#import <WebKit/WebKit.h>
+
 @class MVTextView;
 @class MVChatConnection;
 @class MVChatUserWatchRule;
@@ -16,7 +18,7 @@ extern NSString *JVToolbarMarkItemIdentifier;
 extern NSString *JVChatMessageWasProcessedNotification;
 extern NSString *JVChatEventMessageWasProcessedNotification;
 
-@interface JVDirectChatPanel : JVChatTranscriptPanel {
+@interface JVDirectChatPanel : JVChatTranscriptPanel <WebUIDelegate, WebPolicyDelegate> {
 	@protected
 	IBOutlet MVTextView *send;
 

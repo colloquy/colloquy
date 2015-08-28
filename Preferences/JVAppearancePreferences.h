@@ -1,10 +1,12 @@
 #import "NSPreferences.h"
 
+#import <WebKit/WebKit.h>
+
 @class JVFontPreviewField;
 @class JVStyle;
 @class JVStyleView;
 
-@interface JVAppearancePreferences : NSPreferencesModule {
+@interface JVAppearancePreferences : NSPreferencesModule <WebPolicyDelegate, WebUIDelegate> {
 	IBOutlet JVStyleView *preview;
 	IBOutlet NSPopUpButton *styles;
 	IBOutlet NSPopUpButton *emoticons;
