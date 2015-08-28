@@ -8,12 +8,13 @@ NS_ASSUME_NONNULL_BEGIN
 	if (cacheDictionary)
 		return cacheDictionary;
 
-#if defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && defined(__IPHONE_7_0) && __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_7_0 ||  \
-	defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && defined(__MAC_10_9) && __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9
+#if defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && defined(__IPHONE_7_0) && __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_7_0
 	cacheDictionary = [NSMutableDictionary dictionary];
-#endif
-
+#elif defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && defined(__MAC_10_9) && __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9 && (__LP64__ || NS_BUILD_32_LIKE_64)
+	cacheDictionary = [NSMutableDictionary dictionary];
+#else
 	cacheDictionary = [NSThread currentThread].threadDictionary;
+#endif
 
 	return cacheDictionary;
 }
@@ -36,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (!dateFormatter) {
 		dateFormatter = [[NSDateFormatter alloc] init];
-		dateFormatter.dateSty le = dateStyle;
+		dateFormatter.dateStyle = dateStyle;
 		dateFormatter.timeStyle = timeStyle;
 
 		[self cq_cacheDictionary][key] = dateFormatter;
@@ -65,27 +66,21 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFormat) {
-	static NSDictionary *singularWords;
-	if (!singularWords)
-		singularWords = @{
-						  @(1U): NSLocalizedString(@"second", "Singular second"), @(60U): NSLocalizedString(@"minute", "Singular minute"),
-						  @(3600U): NSLocalizedString(@"hour", "Singular hour"), @(86400U): NSLocalizedString(@"day", "Singular day"),
-						  @(604800U): NSLocalizedString(@"week", "Singular week"), @(2628000U): NSLocalizedString(@"month", "Singular month"),
-						  @(31536000U): NSLocalizedString(@"year", "Singular year")
-						  };
+	NSDictionary *singularWords = @{
+		@(1U): NSLocalizedString(@"second", "Singular second"), @(60U): NSLocalizedString(@"minute", "Singular minute"),
+		@(3600U): NSLocalizedString(@"hour", "Singular hour"), @(86400U): NSLocalizedString(@"day", "Singular day"),
+		@(604800U): NSLocalizedString(@"week", "Singular week"), @(2628000U): NSLocalizedString(@"month", "Singular month"),
+		@(31536000U): NSLocalizedString(@"year", "Singular year")
+	};
 
-	static NSDictionary *pluralWords;
-	if (!pluralWords)
-		pluralWords = @{
-						@(1U): NSLocalizedString(@"seconds", "Plural seconds"), @(60U): NSLocalizedString(@"minutes", "Plural minutes"),
-						@(3600U): NSLocalizedString(@"hours", "Plural hours"), @(86400U): NSLocalizedString(@"days", "Plural days"),
-						@(604800U): NSLocalizedString(@"weeks", "Plural weeks"), @(2628000U): NSLocalizedString(@"months", "Plural months"),
-						@(31536000U): NSLocalizedString(@"years", "Plural years")
-						};
+	NSDictionary *pluralWords = @{
+		@(1U): NSLocalizedString(@"seconds", "Plural seconds"), @(60U): NSLocalizedString(@"minutes", "Plural minutes"),
+		@(3600U): NSLocalizedString(@"hours", "Plural hours"), @(86400U): NSLocalizedString(@"days", "Plural days"),
+		@(604800U): NSLocalizedString(@"weeks", "Plural weeks"), @(2628000U): NSLocalizedString(@"months", "Plural months"),
+		@(31536000U): NSLocalizedString(@"years", "Plural years")
+	};
 
-	static NSArray *breaks;
-	if (!breaks)
-		breaks = @[@(1U), @(60U), @(3600U), @(86400U), @(604800U), @(2628000U), @(31536000U)];
+	NSArray *breaks = @[ @(1U), @(60U), @(3600U), @(86400U), @(604800U), @(2628000U), @(31536000U) ];
 
 	NSTimeInterval seconds = ABS(interval);
 
