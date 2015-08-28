@@ -1934,17 +1934,30 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[self becomeFirstResponder];
 
-	activityController.completionWithItemsHandler = ^(NSString *__nullable activityType, BOOL completed, NSArray *__nullable returnedItems, NSError *__nullable activityError) {
-		[self resignFirstResponder];
-
-		_showingActivityViewController = NO;
-
-		if (inputBarWasFirstResponder)
-			[chatInputBar becomeFirstResponder];
-		else [transcriptView becomeFirstResponder];
-	};
+	__weak __typeof__((self)) weakSelf = self;
+	if ([activityController respondsToSelector:@selector(setCompletionWithItemsHandler:)]) {
+		activityController.completionWithItemsHandler = ^(NSString *__nullable activityType, BOOL completed, NSArray *__nullable returnedItems, NSError *__nullable activityError) {
+			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+			[strongSelf _endShowingActivityViewControllerWithInputBarAsResponder:inputBarWasFirstResponder];
+		};
+	} else {
+		activityController.completionHandler = ^(NSString *__nullable activityType, BOOL completed) {
+			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+			[strongSelf _endShowingActivityViewControllerWithInputBarAsResponder:inputBarWasFirstResponder];
+		}
+	}
 
 	[self presentViewController:activityController animated:[UIView areAnimationsEnabled] completion:nil];
+}
+
+- (void) _endShowingActivityViewControllerWithInputBarAsResponder:(BOOL) inputBarAsResponder {
+	[self resignFirstResponder];
+
+	_showingActivityViewController = NO;
+
+	if (inputBarAsResponder)
+		[chatInputBar becomeFirstResponder];
+	else [transcriptView becomeFirstResponder];
 }
 
 #pragma mark -
