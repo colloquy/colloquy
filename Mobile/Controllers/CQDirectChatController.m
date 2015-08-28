@@ -1944,7 +1944,7 @@ NS_ASSUME_NONNULL_BEGIN
 		activityController.completionHandler = ^(NSString *__nullable activityType, BOOL completed) {
 			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 			[strongSelf _endShowingActivityViewControllerWithInputBarAsResponder:inputBarWasFirstResponder];
-		}
+		};
 	}
 
 	[self presentViewController:activityController animated:[UIView areAnimationsEnabled] completion:nil];
