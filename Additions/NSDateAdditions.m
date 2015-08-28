@@ -3,13 +3,28 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation NSDate (NSDateAdditions)
++ (NSMutableDictionary *) cq_cacheDictionary {
+	static NSMutableDictionary *cacheDictionary = nil;
+	if (cacheDictionary)
+		return cacheDictionary;
+
+#if defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && defined(__IPHONE_7_0) && __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_7_0 ||  \
+	defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && defined(__MAC_10_9) && __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9
+	cacheDictionary = [NSMutableDictionary dictionary];
+#endif
+
+	cacheDictionary = [NSThread currentThread].threadDictionary;
+
+	return cacheDictionary;
+}
+
 + (NSString *) formattedStringWithDate:(NSDate *) date dateFormat:(NSString *) format {
-	NSDateFormatter *dateFormatter = ([NSThread currentThread].threadDictionary)[format];
+	NSDateFormatter *dateFormatter = [self cq_cacheDictionary][format];
 	if (!dateFormatter) {
 		dateFormatter = [[NSDateFormatter alloc] init];
 		dateFormatter.dateFormat = format;
 
-		[NSThread currentThread].threadDictionary[format] = dateFormatter;
+		[self cq_cacheDictionary][format] = dateFormatter;
 	}
 
 	return [dateFormatter stringFromDate:date];
@@ -17,14 +32,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *) formattedStringWithDate:(NSDate *) date dateStyle:(int) dateStyle timeStyle:(int) timeStyle {
 	NSString *key = [NSString stringWithFormat:@"%d-%d", dateStyle, timeStyle];
-	NSDateFormatter *dateFormatter = [NSThread currentThread].threadDictionary[key];
+	NSDateFormatter *dateFormatter = [self cq_cacheDictionary][key];
 
 	if (!dateFormatter) {
 		dateFormatter = [[NSDateFormatter alloc] init];
-		dateFormatter.dateStyle = dateStyle;
+		dateFormatter.dateSty le = dateStyle;
 		dateFormatter.timeStyle = timeStyle;
 
-		[NSThread currentThread].threadDictionary[key] = dateFormatter;
+		[self cq_cacheDictionary][key] = dateFormatter;
 	}
 
 	return [dateFormatter stringFromDate:date];
