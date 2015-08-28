@@ -1,14 +1,12 @@
 #import "CQActivities.h"
 
-#import <objc/runtime.h>
-
 @interface UIResponder (Additions)
 @end
 
 @implementation UIResponder (Additions)
 static __weak id cq_currentFirstResponder;
 
-+ (UIResponder *)cq_currentFirstResponder {
++ (UIResponder *) cq_currentFirstResponder {
 	cq_currentFirstResponder = nil;
 
 	[[UIApplication sharedApplication] sendAction:@selector(cq_findCurrentFirstResponder:) to:nil from:nil forEvent:nil];
@@ -18,7 +16,7 @@ static __weak id cq_currentFirstResponder;
 	return firstResponder;
 }
 
-- (void)cq_findCurrentFirstResponder:(id)sender {
+- (void) cq_findCurrentFirstResponder:(id) sender {
 	cq_currentFirstResponder = self;
 }
 @end
@@ -27,9 +25,8 @@ static __weak id cq_currentFirstResponder;
 
 @implementation CQActivitiesProvider
 + (NSArray *) activities {
-	return @[ [[CQRecentMessagesActivity alloc] init],
-			  [[CQChatRoomModesActivity alloc] init], [[CQChatRoomTopicActivity alloc] init], [[CQChatRoomBansActivity alloc] init], [[CQChatRoomInvitesActivity alloc] init],
-			  [[CQSaveChatLogToPDFActivity alloc] init] ];
+	return @[ [[CQRecentMessagesActivity alloc] init], [[CQSaveChatLogToPDFActivity alloc] init],
+			  [[CQChatRoomTopicActivity alloc] init], [[CQChatRoomBansActivity alloc] init], [[CQChatRoomModesActivity alloc] init] ];
 }
 @end
 
@@ -41,7 +38,7 @@ static __weak id cq_currentFirstResponder;
 }
 
 - (BOOL) canPerformWithActivityItems:(NSArray *) activityItems {
-	return [[UIResponder cq_currentFirstResponder] canPerformAction:[[self class] responderAction] withSender:self];
+	return [[UIResponder cq_currentFirstResponder] canPerformAction:[[self class] responderAction] withSender:nil];
 }
 
 - (void) performActivity {
@@ -61,7 +58,7 @@ static __weak id cq_currentFirstResponder;
 }
 
 - (UIImage *) activityImage {
-	return nil;
+	return [UIImage imageNamed:@"activityMessageHistory.png"];
 }
 
 + (SEL) responderAction {
@@ -71,11 +68,11 @@ static __weak id cq_currentFirstResponder;
 
 @implementation CQChatRoomModesActivity
 - (NSString *) activityTitle {
-	return NSLocalizedString(@"Room Modes", @"Room Modes activity title");
+	return NSLocalizedString(@"Chat Room Modes", @"Room Modes activity title");
 }
 
 - (UIImage *) activityImage {
-	return nil;
+	return [UIImage imageNamed:@"activityRoomModes.png"];
 }
 
 + (SEL) responderAction {
@@ -85,11 +82,11 @@ static __weak id cq_currentFirstResponder;
 
 @implementation CQChatRoomTopicActivity
 - (NSString *) activityTitle {
-	return NSLocalizedString(@"Room Topic", @"Room Topic activity title");
+	return NSLocalizedString(@"Chat Room Topic", @"Room Topic activity title");
 }
 
 - (UIImage *) activityImage {
-	return nil;
+	return [UIImage imageNamed:@"activityRoomTopic.png"];
 }
 
 + (SEL) responderAction {
@@ -103,25 +100,11 @@ static __weak id cq_currentFirstResponder;
 }
 
 - (UIImage *) activityImage {
-	return nil;
+	return [UIImage imageNamed:@"activityRoomBans.png"];
 }
 
 + (SEL) responderAction {
 	return @selector(showRoomBans:);
-}
-@end
-
-@implementation CQChatRoomInvitesActivity
-- (NSString *) activityTitle {
-	return NSLocalizedString(@"Invite List", @"Invite List activity title");
-}
-
-- (UIImage *) activityImage {
-	return nil;
-}
-
-+ (SEL) responderAction {
-	return @selector(showRoomInvites:);
 }
 @end
 
@@ -131,7 +114,7 @@ static __weak id cq_currentFirstResponder;
 }
 
 - (UIImage *) activityImage {
-	return nil;
+	return [UIImage imageNamed:@"activitySaveToPDF.png"];
 }
 
 + (SEL) responderAction {

@@ -1,0 +1,16 @@
+{
+  "images" : [
+    {
+      "idiom" : "iphone",
+      "filename" : "activityRoomModes~phone.pdf"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "activityRoomModes~pad.pdf"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  }
+}

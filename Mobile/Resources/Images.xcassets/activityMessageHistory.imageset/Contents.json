@@ -1,0 +1,16 @@
+{
+  "images" : [
+    {
+      "idiom" : "iphone",
+      "filename" : "activityMessageHistory~phone.pdf"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "activityMessageHistory~pad.pdf"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  }
+}
