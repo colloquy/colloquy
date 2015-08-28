@@ -4,14 +4,14 @@
 @end
 
 @implementation UIResponder (Additions)
-static __weak id cq_currentFirstResponder;
+static id __weak cq_currentFirstResponder;
 
 + (UIResponder *) cq_currentFirstResponder {
 	cq_currentFirstResponder = nil;
 
 	[[UIApplication sharedApplication] sendAction:@selector(cq_findCurrentFirstResponder:) to:nil from:nil forEvent:nil];
 
-	id firstResponder = cq_currentFirstResponder;
+	UIResponder *firstResponder = cq_currentFirstResponder;
 	cq_currentFirstResponder = nil;
 	return firstResponder;
 }
@@ -38,11 +38,20 @@ static __weak id cq_currentFirstResponder;
 }
 
 - (BOOL) canPerformWithActivityItems:(NSArray *) activityItems {
-	return [[UIResponder cq_currentFirstResponder] canPerformAction:[[self class] responderAction] withSender:nil];
+	UIResponder *responder = [UIResponder cq_currentFirstResponder];
+	do {
+		BOOL canPerformAction = [responder canPerformAction:[[self class] responderAction] withSender:nil];
+		if (canPerformAction)
+			return YES;
+		responder = responder.nextResponder;
+	} while (responder);
+
+	return NO;
 }
 
 - (void) performActivity {
 	[[UIApplication sharedApplication] sendAction:[[self class] responderAction] to:nil from:nil forEvent:nil];
+	[self performSelector:@selector(activityDidFinish:) withObject:@YES afterDelay:0.];
 }
 
 + (SEL) responderAction {

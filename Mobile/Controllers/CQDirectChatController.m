@@ -85,7 +85,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CQDirectChatController () <CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate, CQChatInputStyleDelegate>
 @end
 
-@implementation CQDirectChatController
+@implementation CQDirectChatController {
+	BOOL _showingActivityViewController;
+}
+
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -665,11 +668,19 @@ NS_ASSUME_NONNULL_BEGIN
 	return YES;
 }
 
+- (BOOL) becomeFirstResponder {
+	if (_showingActivityViewController)
+		return [super becomeFirstResponder];
+	return NO;
+}
+
 - (BOOL) isFirstResponder {
-	return[chatInputBar isFirstResponder];
+	return [chatInputBar isFirstResponder];
 }
 
 - (BOOL) resignFirstResponder {
+	if (_showingActivityViewController)
+		return [super resignFirstResponder];
 	return [chatInputBar resignFirstResponder];
 }
 
@@ -1916,7 +1927,23 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) _showActivityViewControllerWithItems:(NSArray *) items activities:(NSArray *) activities {
+	_showingActivityViewController = YES;
+
 	UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:activities];
+	BOOL inputBarWasFirstResponder = [chatInputBar isFirstResponder];
+
+	[self becomeFirstResponder];
+
+	activityController.completionWithItemsHandler = ^(NSString *__nullable activityType, BOOL completed, NSArray *__nullable returnedItems, NSError *__nullable activityError) {
+		[self resignFirstResponder];
+
+		_showingActivityViewController = NO;
+
+		if (inputBarWasFirstResponder)
+			[chatInputBar becomeFirstResponder];
+		else [transcriptView becomeFirstResponder];
+	};
+
 	[self presentViewController:activityController animated:[UIView areAnimationsEnabled] completion:nil];
 }
 
