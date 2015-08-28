@@ -1,11 +1,13 @@
 #import "MVChatPluginManager.h"
 
+#import <WebKit/WebKit.h>
+
 extern NSString *JVJavaScriptErrorDomain;
 
 @class WebScriptCallFrame;
 @class WebView;
 
-@interface JVJavaScriptChatPlugin : NSObject <MVChatPlugin> {
+@interface JVJavaScriptChatPlugin : NSObject <MVChatPlugin, WebUIDelegate, WebPolicyDelegate, WebFrameLoadDelegate> {
 	MVChatPluginManager *_manager;
 	NSString *_path;
 	NSDate *_modDate;

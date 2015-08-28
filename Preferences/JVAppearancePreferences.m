@@ -7,7 +7,6 @@
 #import "JVDetailCell.h"
 #import "NSBundleAdditions.h"
 #import "NSRegularExpressionAdditions.h"
-#import "NSStringAdditions.h"
 
 #import <objc/objc-runtime.h>
 
