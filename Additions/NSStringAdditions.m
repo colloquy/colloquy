@@ -1421,23 +1421,13 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	return [self replaceOccurrencesOfRegex:regex withString:replacement options:0 range:NSMakeRange(0, self.length) error:nil];
 }
 
-- (BOOL ) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
+- (BOOL) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
 	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
 	if (!regularExpression)
 		return NO;
 
-	NSMutableString *replacementString = [self mutableCopy];
-
-	do {
-		NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:searchRange];
-		if (!result || result.range.location == NSNotFound)
-			break;
-
-		searchRange.length += (result.range.length - replacement.length);
-		[replacementString replaceCharactersInRange:result.range withString:replacement];
-	} while (0);
-
-	return YES;
+	NSUInteger matches = [regularExpression replaceMatchesInString:self options:0 range:searchRange withTemplate:replacement];
+	return matches > 0;
 }
 @end
 
