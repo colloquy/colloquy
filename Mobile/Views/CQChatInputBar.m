@@ -850,11 +850,9 @@ retry:
 	NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	paragraphStyle.lineSpacing = 1.1;
 	paragraphStyle.lineHeightMultiple = 1.1;
-#if defined(__IPHONE_9_0) && 0
 	if ([paragraphStyle respondsToSelector:@selector(setAllowsDefaultTighteningForTruncation:)]) {
 		paragraphStyle.allowsDefaultTighteningForTruncation = YES;
 	}
-#endif
 
 	attributes[NSParagraphStyleAttributeName] = [paragraphStyle copy];
 
