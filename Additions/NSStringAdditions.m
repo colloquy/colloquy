@@ -931,10 +931,12 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 - (NSString *) cq_sentenceCaseString {
 	NSMutableString *copy = [self mutableCopy];
-	NSLinguisticTaggerOptions options = NSLinguisticTaggerOmitPunctuation | NSLinguisticTaggerOmitWhitespace | NSLinguisticTaggerOmitOther | NSLinguisticTaggerJoinNames;
-	[self enumerateLinguisticTagsInRange:NSMakeRange(0, self.length) scheme:NSLinguisticTagSchemeTokenType options:options orthography:nil usingBlock:^(NSString *tag, NSRange tokenRange, NSRange sentenceRange, BOOL *stop) {
-		[copy replaceCharactersInRange:tokenRange withString:[[copy substringWithRange:tokenRange] capitalizedStringWithLocale:[NSLocale currentLocale]]];
-		*stop = YES;
+	[copy enumerateSubstringsInRange:NSMakeRange(0, copy.length) options:NSStringEnumerationBySentences usingBlock:^(NSString *sentence, NSRange sentenceRange, NSRange enclosingRange, BOOL *stop) {
+		const NSLinguisticTaggerOptions options = NSLinguisticTaggerOmitPunctuation | NSLinguisticTaggerOmitWhitespace | NSLinguisticTaggerOmitOther | NSLinguisticTaggerJoinNames;
+		[copy enumerateLinguisticTagsInRange:sentenceRange scheme:NSLinguisticTagSchemeTokenType options:options orthography:nil usingBlock:^(NSString *tag, NSRange tokenRange, NSRange tokenSentenceRange, BOOL *innerStop) {
+			[copy replaceCharactersInRange:tokenRange withString:[[copy substringWithRange:tokenRange] capitalizedStringWithLocale:[NSLocale currentLocale]]];
+			*innerStop = YES;
+		}];
 	}];
 	return [copy copy];
 }
