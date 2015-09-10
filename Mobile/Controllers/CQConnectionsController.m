@@ -1009,6 +1009,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 - (void) _didConnectOrDidNotConnect:(NSNotification *) notification {
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
 }
 
 - (void) _didNotConnect:(NSNotification *) notification {
@@ -1563,6 +1564,20 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 }
 
 #pragma mark -
+
+- (void) openAllConnections {
+	for (MVChatConnection *connection in self.connections) {
+		if (!(connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus))
+			[connection connect];
+	}
+}
+
+- (void) closeAllConnections {
+	for (MVChatConnection *connection in self.connections) {
+		if ((connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus))
+			[connection disconnect];
+	}
+}
 
 - (void) saveConnections {
 	if (!_loadedConnections)

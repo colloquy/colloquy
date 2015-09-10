@@ -810,6 +810,49 @@ static NSMutableArray *highlightWords;
 
 #pragma mark -
 
+- (void) updateAppShortcuts {
+	CQAppIconOptions options = CQAppIconOptionNone;
+
+	if ([CQConnectionsController defaultController].connectedConnections.count)
+		options |= CQAppIconOptionDisconnect;
+	if ([CQConnectionsController defaultController].connectedConnections.count != [CQConnectionsController defaultController].connections.count)
+		options |= CQAppIconOptionConnect;
+	if ([CQChatController defaultController].totalImportantUnreadCount || [CQChatController defaultController].totalUnreadCount)
+		options |= CQAppIconOptionMarkAllAsRead;
+
+	self.appIconOptions = options;
+}
+
+- (void) setAppIconOptions:(CQAppIconOptions) appIconOptions {
+	if (![UIDevice currentDevice].isSystemNine)
+		return;
+
+	_appIconOptions = appIconOptions;
+
+	NSMutableArray *options = [NSMutableArray array];
+	if ((appIconOptions & CQAppIconOptionConnect) == CQAppIconOptionConnect)
+		[options addObject:[[UIMutableApplicationShortcutItem alloc] initWithType:@"CQAppShortcutConnect" localizedTitle:NSLocalizedString(@"Connect", @"Connect")]];
+
+	if ((appIconOptions & CQAppIconOptionDisconnect) == CQAppIconOptionDisconnect)
+		[options addObject:[[UIMutableApplicationShortcutItem alloc] initWithType:@"CQAppShortcutDisconnect" localizedTitle:NSLocalizedString(@"Disconnect", @"Disconnect")]];
+
+	if ((appIconOptions & CQAppIconOptionMarkAllAsRead) == CQAppIconOptionMarkAllAsRead)
+		[options addObject:[[UIMutableApplicationShortcutItem alloc] initWithType:@"CQAppShortcutMarkAsRead" localizedTitle:NSLocalizedString(@"Mark Messages As Read", @"Mark Messages As Read")]];
+
+	self.shortcutItems = options;
+}
+
+- (void) application:(UIApplication *) application performActionForShortcutItem:(UIApplicationShortcutItem *) shortcutItem completionHandler:(void(^)(BOOL succeeded)) completionHandler {
+	if ([shortcutItem.type isEqualToString:@"CQAppShortcutConnect"])
+		[[CQConnectionsController defaultController] openAllConnections];
+	else if ([shortcutItem.type isEqualToString:@"CQAppShortcutDisconnect"])
+		[[CQConnectionsController defaultController] closeAllConnections];
+	else if ([shortcutItem.type isEqualToString:@"CQAppShortcutMarkAsread"])
+		[[CQChatController defaultController] resetTotalUnreadCount];
+}
+
+#pragma mark -
+
 - (UIRemoteNotificationType) enabledRemoteNotificationTypes {
 	if (![UIDevice currentDevice].isSystemEight)
 		return [super enabledRemoteNotificationTypes];

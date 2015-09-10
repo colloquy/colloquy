@@ -27,6 +27,8 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 @property (nonatomic, readonly) MVChatConnection *nextRoomConnection;
 
 @property (nonatomic) NSInteger totalImportantUnreadCount;
+@property (nonatomic, readonly) NSInteger totalUnreadCount;
+- (void) resetTotalUnreadCount;
 
 - (NSDictionary *) persistentStateForConnection:(MVChatConnection *) connection;
 - (void) restorePersistentState:(NSDictionary *) state forConnection:(MVChatConnection *) connection;
@@ -77,6 +79,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 @property (nonatomic, readonly) NSDictionary *persistentState;
 @property (nonatomic, readonly) NSUInteger unreadCount;
 @property (nonatomic, readonly) NSUInteger importantUnreadCount;
+- (void) markAsRead;
 
 @property (nonatomic, readonly) UIActionSheet *actionSheet;
 
