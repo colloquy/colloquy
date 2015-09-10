@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (instancetype) initWithCoder:(NSCoder *) coder {
+- (nullable instancetype) initWithCoder:(NSCoder *) coder {
 	if ([coder allowsKeyedCoding])
 		return [self initForUser:[coder decodeObjectForKey:@"KAIgnoreUser"] mask:[coder decodeObjectForKey:@"KAIgnoreMask"] message:[coder decodeObjectForKey:@"KAIgnoreMessage"] inRooms:[coder decodeObjectForKey:@"KAIgnoreRooms"] isPermanent:[coder decodeBoolForKey:@"KAIgnorePermanent"] friendlyName:[coder decodeObjectForKey:@"KAIgnoreFriendlyName"]];
 
