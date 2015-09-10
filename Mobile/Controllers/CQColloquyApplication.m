@@ -433,6 +433,8 @@ static NSMutableArray *highlightWords;
 - (void) applicationWillTerminate:(UIApplication *) application {
 	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 
+	self.appIconOptions = CQAppIconOptionConnect;
+
 	[self submitRunTime];
 }
 

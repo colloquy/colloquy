@@ -1,5 +1,7 @@
 #import "CQTextView.h"
 
+#import "NSStringAdditions.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation CQTextView {
@@ -35,7 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
 	[self.attributedText enumerateAttributesInRange:NSMakeRange(0, self.text.length) options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop) {
 		attributes[[NSValue valueWithRange:range]] = attrs;
 	}];
-	self.text = [self.text capitalizedStringWithLocale:[NSLocale currentLocale]];
+
+	self.text = self.text.cq_sentenceCaseString;
+
 	if (attributes.count) {
 		NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self.text];
 		[attributes enumerateKeysAndObjectsUsingBlock:^(NSValue *range, NSDictionary *attrs, BOOL *stop) {

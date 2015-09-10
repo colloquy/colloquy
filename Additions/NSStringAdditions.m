@@ -929,7 +929,17 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
-+ (NSString *) stringByReversingString:(NSString *) normalString {
+- (NSString *) cq_sentenceCaseString {
+	NSMutableString *copy = [self mutableCopy];
+	NSLinguisticTaggerOptions options = NSLinguisticTaggerOmitPunctuation | NSLinguisticTaggerOmitWhitespace | NSLinguisticTaggerOmitOther | NSLinguisticTaggerJoinNames;
+	[self enumerateLinguisticTagsInRange:NSMakeRange(0, self.length) scheme:NSLinguisticTagSchemeTokenType options:options orthography:nil usingBlock:^(NSString *tag, NSRange tokenRange, NSRange sentenceRange, BOOL *stop) {
+		[copy replaceCharactersInRange:tokenRange withString:[[copy substringWithRange:tokenRange] capitalizedStringWithLocale:[NSLocale currentLocale]]];
+		*stop = YES;
+	}];
+	return [copy copy];
+}
+
++ (NSString *) cq_stringByReversingString:(NSString *) normalString {
 	NSMutableString *reversedString = [[NSMutableString alloc] initWithCapacity:normalString.length];
 
 	for (NSInteger index = normalString.length - 1; index >= 0; index--)
