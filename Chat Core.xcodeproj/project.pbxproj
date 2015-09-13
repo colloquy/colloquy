@@ -2039,7 +2039,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1C041DDA08553AD200A5A5BA /* Build configuration list for PBXNativeTarget "Chat Core (Framework)" */;
 			buildPhases = (
-				5596BE7E1B3721C20078571A /* ShellScript */,
 				1CAF64A8099EAB390036A727 /* Unarchive Frameworks */,
 				1C51B47B052DE0CB00BB459B /* Sources */,
 				1C51B484052DE0CB00BB459B /* Frameworks */,
@@ -2174,19 +2173,6 @@
 			shellPath = /bin/sh;
 			shellScript = "cd \"$SRCROOT/Frameworks\"\nrm -rf *.framework\ntar xzf frameworks.tar.gz\n";
 			showEnvVarsInLog = 0;
-		};
-		5596BE7E1B3721C20078571A /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cd Frameworks/XMPPFramework/Vendor/libidn/\nsh build-libidn-OSX.sh";
 		};
 /* End PBXShellScriptBuildPhase section */
 
