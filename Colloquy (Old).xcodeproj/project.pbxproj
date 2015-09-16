@@ -1421,6 +1421,7 @@
 			name = "Metadata Importer";
 			path = Importer;
 			sourceTree = "<group>";
+			usesTabs = 0;
 		};
 		F50B0A9F0170C89301A84BDE /* Sources & Headers */ = {
 			isa = PBXGroup;
