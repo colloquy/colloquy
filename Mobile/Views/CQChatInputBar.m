@@ -45,7 +45,6 @@ NS_ASSUME_NONNULL_BEGIN
 	UITextAutocapitalizationType _defaultAutocapitalizationType;
 	UIViewAnimationCurve _animationCurve;
 	NSTimeInterval _animationDuration;
-	UIButton *_accessoryButton;
 	UIImageView *_overlayBackgroundView;
 	UIImageView *_overlayBackgroundViewPiece;
 	UIView *_topLineView;
