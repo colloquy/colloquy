@@ -83,7 +83,7 @@ static BOOL showingKeyboard;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CQDirectChatController () <CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate, CQChatInputStyleDelegate>
-@property (strong) UIPopoverController *activityPopoverController;
+@property (strong, nullable) UIPopoverController *activityPopoverController;
 @end
 
 @implementation CQDirectChatController {
