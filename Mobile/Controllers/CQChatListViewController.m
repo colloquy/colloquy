@@ -923,11 +923,18 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (!indexPath)
 		return nil;
 
-	return chatControllerForIndexPath(indexPath);
+	id <CQChatViewController> chatController = chatControllerForIndexPath(indexPath);
+	if (![chatController isKindOfClass:[UIViewController class]])
+		return nil; // eg: file transfers
+
+	if ([chatController respondsToSelector:@selector(markAsRead)])
+		[chatController markAsRead];
+
+	return (UIViewController *)chatController;
 }
 
 - (void) previewingContext:(id <UIViewControllerPreviewing>) previewingContext commitViewController:(UIViewController *) viewControllerToCommit {
-	[[CQChatController defaultController] showChatController:viewControllerToCommit animated:YES];
+	[[CQChatController defaultController] showChatController:(id <CQChatViewController>)viewControllerToCommit animated:YES];
 }
 
 #pragma mark -
