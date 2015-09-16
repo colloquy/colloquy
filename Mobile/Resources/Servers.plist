@@ -102,7 +102,7 @@
 		<key>Name</key>
 		<string>ICQ</string>
 		<key>SSLPort</key>
-		<string>443</string>
+		<integer>443</integer>
 	</dict>
 	<dict>
 		<key>Address</key>
