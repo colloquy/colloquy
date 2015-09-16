@@ -33,3 +33,4 @@ project.xcworkspace/
 # We're going to have our own ignore file in there.
 # Frameworks/
 Frameworks/XMPPFramework/Vendor/libidn/dependencies/
+*.xcscmblueprint

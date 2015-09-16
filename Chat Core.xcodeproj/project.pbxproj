@@ -2406,7 +2406,6 @@
 					"-seg1addr",
 					0xa10000,
 					"-lxml2",
-					"-I/usr/include/libxml2",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.chatCore;
 				PRODUCT_NAME = ChatCore;
@@ -2478,7 +2477,6 @@
 					"-seg1addr",
 					0xa10000,
 					"-lxml2",
-					"-I/usr/include/libxml2",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.chatCore;
 				PRODUCT_NAME = ChatCore;
