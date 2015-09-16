@@ -1607,7 +1607,6 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	NSUInteger pushConnectionCount = 0;
 	NSUInteger roomCount = 0;
 
-	NSData *serverImageData = UIImagePNGRepresentation([UIImage imageNamed:@"server.png"]);
 	NSMutableArray *connections = [[NSMutableArray alloc] initWithCapacity:_directConnections.count];
 	for (MVChatConnection *connection in _directConnections) {
 		if (NSClassFromString(@"CSSearchableIndex") != nil && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"]) {
@@ -1619,7 +1618,6 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 			if (connection.displayName.length && connection.server.length)
 				connectionAttributeSet.alternateNames = @[ connection.server ];
 			connectionAttributeSet.contentType = (__bridge NSString *)kUTTypeMessage;
-			connectionAttributeSet.thumbnailData = serverImageData;
 			connectionAttributeSet.contentTypeTree = @[ (__bridge id)kUTTypeItem, (__bridge id)kUTTypeURL, (__bridge NSString *)kUTTypeMessage ];
 
 			NSMutableArray *items = [NSMutableArray array];
