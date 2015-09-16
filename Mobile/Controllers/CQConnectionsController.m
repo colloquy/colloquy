@@ -1121,6 +1121,27 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		return;
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
+
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"]) {
+		if (NSClassFromString(@"CSSearchableIndex") == nil)
+			return;
+
+		[[CSSearchableIndex defaultSearchableIndex] deleteAllSearchableItemsWithCompletionHandler:^(NSError * _Nullable error) {
+			if (error) {
+				NSString *title = NSLocalizedString(@"Unknown Error", @"Unknown Error error title");
+				NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Unable to remove index from Spotlight: %@", @"search deletion failed error message"), error.localizedDescription];
+				if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+					[[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay") otherButtonTitles:nil] show];
+				} else {
+					UILocalNotification *notification = [[UILocalNotification alloc] init];
+					notification.alertTitle = title;
+					notification.alertBody = message;
+
+					[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+				}
+			}
+		}];
+	}
 }
 
 - (void) _batteryStateChanged {
@@ -1589,7 +1610,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	NSData *serverImageData = UIImagePNGRepresentation([UIImage imageNamed:@"server.png"]);
 	NSMutableArray *connections = [[NSMutableArray alloc] initWithCapacity:_directConnections.count];
 	for (MVChatConnection *connection in _directConnections) {
-		if (NSClassFromString(@"CSSearchableIndex") != nil) {
+		if (NSClassFromString(@"CSSearchableIndex") != nil && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"]) {
 			CSSearchableItemAttributeSet *connectionAttributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"IRC Server"];
 			connectionAttributeSet.identifier = connection.uniqueIdentifier;
 			if (connection.displayName.length || connection.server.length)
