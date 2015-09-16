@@ -826,7 +826,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) setAppIconOptions:(CQAppIconOptions) appIconOptions {
-	if (![UIDevice currentDevice].isSystemNine)
+	if (![self respondsToSelector:@selector(setShortcutItems:)])
 		return;
 
 	_appIconOptions = appIconOptions;
