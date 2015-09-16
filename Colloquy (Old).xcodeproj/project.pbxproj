@@ -1707,7 +1707,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
 				LastTestingUpgradeCheck = 0510;
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0700;
 				TargetAttributes = {
 					55C8A2CF180735D100A7BB42 = {
 						TestTargetID = 1CB2CCF5052DDC560094AAA4;
@@ -2654,6 +2654,7 @@
 					Shared/Models,
 				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.standard-commands";
 				PRODUCT_NAME = "Standard Commands";
 				WRAPPER_EXTENSION = plugin;
 			};
@@ -2680,6 +2681,7 @@
 					"-fconstant-cfstrings",
 					"-Wno-arc-performSelector-leaks",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy;
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2692,6 +2694,7 @@
 				GCC_PREFIX_HEADER = Basic.pch;
 				HEADER_SEARCH_PATHS = "${SDK_DIR}/usr/include/libxml2";
 				INFOPLIST_FILE = Importer/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.metadata-importer";
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = mdimporter;
 			};
@@ -2711,6 +2714,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					DEBUG,
@@ -2735,6 +2739,7 @@
 					Shared/Models,
 				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.standard-commands";
 				PRODUCT_NAME = "Standard Commands";
 				WRAPPER_EXTENSION = plugin;
 			};
@@ -2761,6 +2766,7 @@
 					"-fconstant-cfstrings",
 					"-Wno-arc-performSelector-leaks",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy;
 				PRODUCT_NAME = Colloquy;
 				SECTORDER_FLAGS = (
 					"-sectorder",
@@ -2781,6 +2787,7 @@
 				GCC_PREFIX_HEADER = Basic.pch;
 				HEADER_SEARCH_PATHS = "${SDK_DIR}/usr/include/libxml2";
 				INFOPLIST_FILE = Importer/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.metadata-importer";
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = mdimporter;
 			};
@@ -2835,6 +2842,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "Tests/Colloquy Tests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.maddthesane.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
@@ -2874,6 +2882,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "Tests/Colloquy Tests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.maddthesane.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};

@@ -2081,7 +2081,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0700;
 			};
 			buildConfigurationList = 1C041DDE08553AD200A5A5BA /* Build configuration list for PBXProject "Chat Core" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2408,6 +2408,7 @@
 					"-lxml2",
 					"-I/usr/include/libxml2",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.chatCore;
 				PRODUCT_NAME = ChatCore;
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
@@ -2427,6 +2428,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2478,6 +2480,7 @@
 					"-lxml2",
 					"-I/usr/include/libxml2",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.chatCore;
 				PRODUCT_NAME = ChatCore;
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;

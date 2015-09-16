@@ -1,7 +1,12 @@
 #import "NSURLAdditions.h"
 
+#warning this whole file uses deprecated functions, because there is no replacement!
+
 @implementation NSURL (NSURLAdditions)
 + (instancetype) URLWithInternetLocationFile:(NSString *) path {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+	
 	const char *fileSystemPath = [[NSFileManager defaultManager] fileSystemRepresentationWithPath:path];
 
 	FSRef ref;
@@ -20,12 +25,17 @@
 	}
 
 	Handle res = Get1IndResource( 'url ', 1 );
+	HLock(res);
 	NSString *urlString = [[NSString alloc] initWithBytes:*res length:GetHandleSize( res ) encoding:NSUTF8StringEncoding];
+	HUnlock(res);
 	NSURL *url = [NSURL URLWithString:urlString];
 	[urlString release];
 	ReleaseResource( res );
 	CloseResFile( fileRefNum );
 
 	return url;
+
+#pragma clang diagnostic pop
 }
 @end
+

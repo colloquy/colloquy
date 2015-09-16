@@ -223,7 +223,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0700;
 			};
 			buildConfigurationList = 1C7F306F0855489300D41FB0 /* Build configuration list for PBXProject "F-Script Support" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -348,6 +348,7 @@
 					../../Shared/Models,
 				);
 				INFOPLIST_FILE = Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.fscript-support";
 				PRODUCT_NAME = "F-Script Support";
 				WRAPPER_EXTENSION = plugin;
 			};
@@ -373,6 +374,7 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				LLVM_LTO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.fscript-support";
 				PRODUCT_NAME = "F-Script Support";
 				WRAPPER_EXTENSION = plugin;
 			};
@@ -390,6 +392,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
