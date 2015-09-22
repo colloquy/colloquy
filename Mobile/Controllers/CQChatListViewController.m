@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @implementation CQChatListViewController {
+	id <UIViewControllerPreviewing> _previewingContext;
 	UIActionSheet *_currentConnectionActionSheet;
 	UIActionSheet *_currentChatViewActionSheet;
 	id <UIActionSheetDelegate> _currentChatViewActionSheetDelegate;
@@ -144,6 +145,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) dealloc {
 	[[NSNotificationCenter chatCenter] removeObserver:self];
+	[self unregisterForPreviewingWithContext:_previewingContext];
 }
 
 #pragma mark -
@@ -685,7 +687,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	}
 
 	if ([self respondsToSelector:@selector(registerForPreviewingWithDelegate:sourceView:)])
-		[self registerForPreviewingWithDelegate:self sourceView:self.view];
+		_previewingContext = [self registerForPreviewingWithDelegate:self sourceView:self.view.window];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -924,17 +926,19 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		return nil;
 
 	id <CQChatViewController> chatController = chatControllerForIndexPath(indexPath);
-	if (![chatController isKindOfClass:[UIViewController class]])
+	if (![chatController respondsToSelector:@selector(previewableViewController)])
 		return nil; // eg: file transfers
 
 	if ([chatController respondsToSelector:@selector(markAsRead)])
 		[chatController markAsRead];
 
-	return (UIViewController *)chatController;
+	UIViewController *viewController = chatController.previewableViewController;
+	[viewController associateObject:chatController forKey:@"chatController"];
+	return viewController;
 }
 
 - (void) previewingContext:(id <UIViewControllerPreviewing>) previewingContext commitViewController:(UIViewController *) viewControllerToCommit {
-	[[CQChatController defaultController] showChatController:(id <CQChatViewController>)viewControllerToCommit animated:YES];
+	[[CQChatController defaultController] showChatController:(id <CQChatViewController>)[viewControllerToCommit associatedObjectForKey:@"chatController"] animated:YES];
 }
 
 #pragma mark -

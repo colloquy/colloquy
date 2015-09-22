@@ -505,6 +505,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
+- (UIViewController *) previewableViewController {
+	UIViewController *viewController = [[UIViewController alloc] init];
+	if (![self isViewLoaded]) {
+		[self loadViewIfNeeded];
+
+		while (!transcriptView.readyForDisplay)
+			[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:CQWebViewMagicNumber]];
+	}
+
+	viewController.view = [transcriptView snapshotViewAfterScreenUpdates:YES];
+	return viewController;
+}
+
+#pragma mark -
+
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
@@ -571,12 +586,6 @@ NS_ASSUME_NONNULL_BEGIN
 	[self _addPendingComponentsAnimated:YES];
 
 	[transcriptView performSelector:@selector(flashScrollIndicators) withObject:nil afterDelay:0.1];
-
-	if (_unreadHighlightedMessages)
-		[CQChatController defaultController].totalImportantUnreadCount -= _unreadHighlightedMessages;
-
-	if (_unreadMessages && self.user)
-		[CQChatController defaultController].totalImportantUnreadCount -= _unreadMessages;
 
 	[self markAsRead];
 
@@ -945,12 +954,6 @@ NS_ASSUME_NONNULL_BEGIN
 	_pendingPreviousSessionComponents = nil;
 	_recentMessages = nil;
 
-	if (_unreadHighlightedMessages)
-		[CQChatController defaultController].totalImportantUnreadCount -= _unreadHighlightedMessages;
-
-	if (_unreadMessages && self.user)
-		[CQChatController defaultController].totalImportantUnreadCount -= _unreadMessages;
-
 	[self markAsRead];
 
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
@@ -959,6 +962,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) markAsRead {
+	if (_unreadHighlightedMessages)
+		[CQChatController defaultController].totalImportantUnreadCount -= _unreadHighlightedMessages;
+
+	if (_unreadMessages && self.user)
+		[CQChatController defaultController].totalImportantUnreadCount -= _unreadMessages;
+
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
 
@@ -2156,12 +2165,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) _willBecomeActive {
 	[self _addPendingComponentsAnimated:NO];
-
-	if (_unreadHighlightedMessages)
-		[CQChatController defaultController].totalImportantUnreadCount -= _unreadHighlightedMessages;
-
-	if (_unreadMessages && self.user)
-		[CQChatController defaultController].totalImportantUnreadCount -= _unreadMessages;
 
 	[self markAsRead];
 

@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 @synthesize fontFamily = _fontFamily;
 @synthesize fontSize = _fontSize;
 @synthesize styleIdentifier = _styleIdentifier;
+@synthesize readyForDisplay = _readyForDisplay;
 
 - (instancetype) initWithFrame:(CGRect) frame {
 	WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
@@ -420,6 +421,7 @@ NS_ASSUME_NONNULL_BEGIN
 	_blockerView.hidden = NO;
 
 	_loading = YES;
+	_readyForDisplay = NO;
 	[self loadHTMLString:[self _contentHTML] baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 
 	__strong __typeof__((_transcriptDelegate)) transcriptDelegate = _transcriptDelegate;
@@ -610,11 +612,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) _checkIfLoadingFinished {
 	[self stringByEvaluatingJavaScriptFromString:@"isDocumentReady()" completionHandler:^(NSString *result) {
 		if (![result boolValue]) {
-			[self performSelector:_cmd withObject:nil afterDelay:0.05];
+			[self performSelector:_cmd withObject:nil afterDelay:CQWebViewMagicNumber];
 			return;
 		}
 
 		_loading = NO;
+		_readyForDisplay = YES;
 
 		[self _addComponentsToTranscript:_pendingPreviousSessionComponents fromPreviousSession:YES animated:NO];
 
@@ -624,7 +627,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 		_pendingComponents = nil;
 
-		[self performSelector:@selector(_unhideBlockerView) withObject:nil afterDelay:0.05];
+		[self performSelector:@selector(_unhideBlockerView) withObject:nil afterDelay:CQWebViewMagicNumber];
 
 		[self noteTopicChangeTo:_roomTopic by:_roomTopicSetter];
 

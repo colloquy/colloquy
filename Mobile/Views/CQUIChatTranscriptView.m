@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 @synthesize fontFamily = _fontFamily;
 @synthesize fontSize = _fontSize;
 @synthesize styleIdentifier = _styleIdentifier;
+@synthesize readyForDisplay = _readyForDisplay;
 
 - (instancetype) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
@@ -419,6 +420,10 @@ NS_ASSUME_NONNULL_BEGIN
 	_blockerView.hidden = NO;
 
 	_loading = YES;
+
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_markAsReady) object:nil];
+	_readyForDisplay = NO;
+
 	[self loadHTMLString:[self _contentHTML] baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 
 	__strong __typeof__((_transcriptDelegate)) transcriptDelegate = _transcriptDelegate;
@@ -590,14 +595,19 @@ NS_ASSUME_NONNULL_BEGIN
 	return [NSString stringWithFormat:templateString, _styleIdentifier, [self _variantStyleString], @"topicSeven"];
 }
 
+- (void) _markAsReady {
+	_readyForDisplay = YES;
+}
+
 - (void) _checkIfLoadingFinished {
 	NSString *result = [super stringByEvaluatingJavaScriptFromString:@"isDocumentReady()"];
 	if (![result isEqualToString:@"true"]) {
-		[self performSelector:_cmd withObject:nil afterDelay:0.05];
+		[self performSelector:_cmd withObject:nil afterDelay:CQWebViewMagicNumber];
 		return;
 	}
 
 	_loading = NO;
+	[self performSelector:@selector(_markAsReady) withObject:nil afterDelay:CQWebViewMagicNumber];
 
 #if !defined(CQ_GENERATING_SCREENSHOTS)
 	[self _addComponentsToTranscript:_pendingPreviousSessionComponents fromPreviousSession:YES animated:NO];
@@ -611,7 +621,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	_pendingComponents = nil;
 
-	[self performSelector:@selector(_unhideBlockerView) withObject:nil afterDelay:0.05];
+	[self performSelector:@selector(_unhideBlockerView) withObject:nil afterDelay:CQWebViewMagicNumber];
 
 	[self noteTopicChangeTo:_roomTopic by:_roomTopicSetter];
 

@@ -1,3 +1,5 @@
+static CGFloat CQWebViewMagicNumber = 0.05;
+
 typedef NS_ENUM(NSInteger, CQShowRoomTopic) {
 	CQShowRoomTopicNever,
 	CQShowRoomTopicOnChange,
@@ -32,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CQTimestampPosition timestampPosition;
 @property (nonatomic, assign) BOOL allowSingleSwipeGesture;
 
+@property (nonatomic, readonly) BOOL readyForDisplay;
 @property (nonatomic, readonly) UIScrollView *scrollView;
 
 @property (nonatomic, readonly) NSData *PDFRepresentation;
