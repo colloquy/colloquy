@@ -120,11 +120,7 @@ NS_ASSUME_NONNULL_BEGIN
 		__weak __typeof__((self)) weakSelf = self;
 		[self.alertController addAction:[UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *action) {
 			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-			[strongSelf.overlappingPresentationViewController.view removeFromSuperview];
-			[strongSelf.delegate alertView:strongSelf clickedButtonAtIndex:i];
-
-			strongSelf.alertController = nil;
-			strongSelf.me = nil;
+			[strongSelf _dismissWithClickAtIndex:i];
 		}]];
 	}
 
@@ -147,12 +143,24 @@ NS_ASSUME_NONNULL_BEGIN
 		__weak __typeof__((self)) weakSelf = self;
 		[self.alertController dismissViewControllerAnimated:YES completion:^{
 			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-			[strongSelf.overlappingPresentationViewController.view removeFromSuperview];
-			strongSelf.alertController = nil;
-			strongSelf.overlappingPresentationViewController = nil;
-			strongSelf.me = nil;
+			[strongSelf _dismissWithClickAtIndex:buttonIndex];
 		}];
 	}
+}
+
+- (void) _dismissWithClickAtIndex:(NSInteger) buttonIndex {
+	[[NSOperationQueue mainQueue] addOperationWithBlock:^{
+		[self.overlappingPresentationViewController.view removeFromSuperview];
+		[self.overlappingPresentationViewController removeFromParentViewController];
+		self.overlappingPresentationViewController = nil;
+
+		__strong id <UIAlertViewDelegate> delegate = self.delegate;
+		if ([delegate respondsToSelector:@selector(alertView:clickedButtonAtIndex:)])
+			[delegate alertView:self clickedButtonAtIndex:buttonIndex];
+
+		self.alertController = nil;
+		self.me = nil;
+	}];
 }
 @end
 
