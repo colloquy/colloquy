@@ -1966,7 +1966,7 @@ NS_ASSUME_NONNULL_BEGIN
 		};
 	}
 
-	if ([UIDevice currentDevice].isPhoneModel)
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
 		[self presentViewController:activityController animated:[UIView areAnimationsEnabled] completion:nil];
 	else {
 		[_activityPopoverController dismissPopoverAnimated:NO];
