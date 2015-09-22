@@ -169,9 +169,9 @@ NS_ASSUME_NONNULL_BEGIN
 		_animating = YES;
 
 	NSTimeInterval animationDelay = 0.;
-
-	if (_chatPreviewLabels.count >= _maximumMessagePreviews) {
-		UILabel *firstLabel = _chatPreviewLabels[0];
+	NSUInteger labelCount = _chatPreviewLabels.count;
+	if (labelCount && labelCount >= _maximumMessagePreviews) {
+		UILabel *firstLabel = _chatPreviewLabels.firstObject;
 		[_chatPreviewLabels removeObjectAtIndex:0];
 
 		if (cq_shouldAnimate(animated)) {
