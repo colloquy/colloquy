@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) dealloc {
 	_searchBar.delegate = nil;
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionChatRoomListUpdatedNotification object:_connection];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionChatRoomListUpdatedNotification object:nil];
 }
 
 #pragma mark -
@@ -86,11 +86,10 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) setConnection:(MVChatConnection *) connection {
-	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionChatRoomListUpdatedNotification object:_connection];
-
 	_connection = connection;
 
-	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_roomListUpdated:) name:MVChatConnectionChatRoomListUpdatedNotification object:connection];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionChatRoomListUpdatedNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_roomListUpdated:) name:MVChatConnectionChatRoomListUpdatedNotification object:nil];
 
 	[connection connectAppropriately];
 	[connection fetchChatRoomList];
@@ -435,6 +434,9 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 }
 
 - (void) _roomListUpdated:(NSNotification *) notification {
+	if (notification.object != _connection)
+		return;
+
 	NSDictionary *chatRoomListResults = _connection.chatRoomListResults;
 	NSSet *roomsAdded = notification.userInfo[@"added"];
 	for (NSString *room in roomsAdded) {
