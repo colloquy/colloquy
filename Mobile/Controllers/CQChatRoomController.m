@@ -225,7 +225,10 @@ NS_ASSUME_NONNULL_BEGIN
 		_currentUserListViewController.room = self.room;
 	}
 
-	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+	BOOL usePopoverController = [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad;
+	if ([UIDevice currentDevice].isSystemEight)
+		usePopoverController = usePopoverController && self.view.window.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+	if (usePopoverController) {
 		if (!_currentUserListPopoverController) {
 			_currentUserListPopoverController = [[UIPopoverController alloc] initWithContentViewController:_currentUserListViewController];
 			_currentUserListPopoverController.delegate = self;

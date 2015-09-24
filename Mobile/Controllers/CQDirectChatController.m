@@ -1966,7 +1966,10 @@ NS_ASSUME_NONNULL_BEGIN
 		};
 	}
 
-	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+	BOOL usePopoverController = [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad;
+	if ([UIDevice currentDevice].isSystemEight)
+		usePopoverController = self.view.window.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone || !usePopoverController)
 		[self presentViewController:activityController animated:[UIView areAnimationsEnabled] completion:nil];
 	else {
 		[_activityPopoverController dismissPopoverAnimated:NO];
