@@ -551,8 +551,8 @@
 		1C6A112806BC0C9E00A66340 /* NSAttributedStringMoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSAttributedStringMoreAdditions.h; path = Additions/NSAttributedStringMoreAdditions.h; sourceTree = "<group>"; };
 		1C6A112906BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSAttributedStringMoreAdditions.m; path = Additions/NSAttributedStringMoreAdditions.m; sourceTree = "<group>"; };
 		1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
-		1C6A40C7083FF6C600572AB6 /* JVInterfacePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVInterfacePreferences.h; path = Preferences/JVInterfacePreferences.h; sourceTree = "<group>"; };
-		1C6A40C8083FF6C600572AB6 /* JVInterfacePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVInterfacePreferences.m; path = Preferences/JVInterfacePreferences.m; sourceTree = "<group>"; };
+		1C6A40C7083FF6C600572AB6 /* JVInterfacePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVInterfacePreferences.h; sourceTree = "<group>"; };
+		1C6A40C8083FF6C600572AB6 /* JVInterfacePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVInterfacePreferences.m; sourceTree = "<group>"; };
 		1C6A429508400BEA00572AB6 /* window.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = window.png; path = Resources/window.png; sourceTree = "<group>"; };
 		1C6A42A608400E7900572AB6 /* targetWindow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = targetWindow.png; path = Resources/targetWindow.png; sourceTree = "<group>"; };
 		1C6A451E0841746500572AB6 /* JVChatViewCriterionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatViewCriterionController.h; path = Controllers/JVChatViewCriterionController.h; sourceTree = "<group>"; };
@@ -610,12 +610,12 @@
 		1C9437080639F86700618CD9 /* JVMarkedScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVMarkedScroller.h; path = Views/JVMarkedScroller.h; sourceTree = "<group>"; };
 		1C9437090639F86700618CD9 /* JVMarkedScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVMarkedScroller.m; path = Views/JVMarkedScroller.m; sourceTree = "<group>"; };
 		1C96E93206AAD81B0013B0A9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVTranscriptPreferences.nib; sourceTree = "<group>"; };
-		1C96E93C06AADBBD0013B0A9 /* JVTranscriptPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVTranscriptPreferences.h; path = Preferences/JVTranscriptPreferences.h; sourceTree = "<group>"; };
-		1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVTranscriptPreferences.m; path = Preferences/JVTranscriptPreferences.m; sourceTree = "<group>"; };
+		1C96E93C06AADBBD0013B0A9 /* JVTranscriptPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVTranscriptPreferences.h; sourceTree = "<group>"; };
+		1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVTranscriptPreferences.m; sourceTree = "<group>"; };
 		1C96E95806AAEC280013B0A9 /* TranscriptPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TranscriptPreferences.png; path = "Resources/Preference Related/TranscriptPreferences.png"; sourceTree = "<group>"; };
 		1C9981F90603EF2F006C6417 /* NotificationPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NotificationPreferences.png; path = "Resources/Preference Related/NotificationPreferences.png"; sourceTree = "<group>"; };
-		1C9982000603EFD6006C6417 /* JVNotificationPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVNotificationPreferences.h; path = Preferences/JVNotificationPreferences.h; sourceTree = "<group>"; };
-		1C9982010603EFD6006C6417 /* JVNotificationPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVNotificationPreferences.m; path = Preferences/JVNotificationPreferences.m; sourceTree = "<group>"; };
+		1C9982000603EFD6006C6417 /* JVNotificationPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVNotificationPreferences.h; sourceTree = "<group>"; };
+		1C9982010603EFD6006C6417 /* JVNotificationPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVNotificationPreferences.m; sourceTree = "<group>"; };
 		1C9982050603F097006C6417 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVNotificationPreferences.nib; sourceTree = "<group>"; };
 		1C9982AC0604BA1F006C6417 /* sound.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sound.png; path = Resources/sound.png; sourceTree = "<group>"; };
 		1C9982AF0604BEAA006C6417 /* notifications.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = notifications.plist; path = Resources/notifications.plist; sourceTree = "<group>"; };
@@ -697,8 +697,8 @@
 		1CBC62E205488C73009E59E1 /* JVPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVPreferencesController.h; path = Controllers/JVPreferencesController.h; sourceTree = "<group>"; };
 		1CBC62E305488C73009E59E1 /* JVPreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVPreferencesController.m; path = Controllers/JVPreferencesController.m; sourceTree = "<group>"; };
 		1CBC62E605488CBA009E59E1 /* NSPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSPreferences.h; path = Controllers/NSPreferences.h; sourceTree = "<group>"; };
-		1CBC630905489484009E59E1 /* JVGeneralPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVGeneralPreferences.h; path = Preferences/JVGeneralPreferences.h; sourceTree = "<group>"; };
-		1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVGeneralPreferences.m; path = Preferences/JVGeneralPreferences.m; sourceTree = "<group>"; };
+		1CBC630905489484009E59E1 /* JVGeneralPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVGeneralPreferences.h; sourceTree = "<group>"; };
+		1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVGeneralPreferences.m; sourceTree = "<group>"; };
 		1CBC63180548975E009E59E1 /* GeneralPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = GeneralPreferences.png; path = "Resources/Preference Related/GeneralPreferences.png"; sourceTree = "<group>"; };
 		1CBC634805489BEE009E59E1 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVGeneralPreferences.nib; sourceTree = "<group>"; };
 		1CBECD660508C61B000001C8 /* showdrawer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = showdrawer.png; path = "Resources/Toolbar Icons/showdrawer.png"; sourceTree = SOURCE_ROOT; };
@@ -706,10 +706,10 @@
 		1CBECE390508D58F000001C8 /* JVChatWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVChatWindow.nib; path = Resources/JVChatWindow.nib; sourceTree = SOURCE_ROOT; };
 		1CBECE3A0508D58F000001C8 /* JVDirectChat.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVDirectChat.nib; path = Resources/JVDirectChat.nib; sourceTree = SOURCE_ROOT; };
 		1CBECE5D050A8D21000001C8 /* chooseStyle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = chooseStyle.png; path = "Resources/Toolbar Icons/chooseStyle.png"; sourceTree = SOURCE_ROOT; };
-		1CC6FC500549FCD70075807C /* JVAppearancePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVAppearancePreferences.h; path = Preferences/JVAppearancePreferences.h; sourceTree = "<group>"; };
-		1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVAppearancePreferences.m; path = Preferences/JVAppearancePreferences.m; sourceTree = "<group>"; };
-		1CC6FC540549FDD70075807C /* JVBehaviorPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVBehaviorPreferences.h; path = Preferences/JVBehaviorPreferences.h; sourceTree = "<group>"; };
-		1CC6FC550549FDD70075807C /* JVBehaviorPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVBehaviorPreferences.m; path = Preferences/JVBehaviorPreferences.m; sourceTree = "<group>"; };
+		1CC6FC500549FCD70075807C /* JVAppearancePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppearancePreferences.h; sourceTree = "<group>"; };
+		1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppearancePreferences.m; sourceTree = "<group>"; };
+		1CC6FC540549FDD70075807C /* JVBehaviorPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVBehaviorPreferences.h; sourceTree = "<group>"; };
+		1CC6FC550549FDD70075807C /* JVBehaviorPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVBehaviorPreferences.m; sourceTree = "<group>"; };
 		1CC6FC63054A003C0075807C /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVAppearancePreferences.nib; sourceTree = "<group>"; };
 		1CC6FC65054A003C0075807C /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVFileTransferPreferences.nib; sourceTree = "<group>"; };
 		1CC6FC6F054A02F70075807C /* BehaviorPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BehaviorPreferences.png; path = "Resources/Preference Related/BehaviorPreferences.png"; sourceTree = SOURCE_ROOT; };
@@ -771,8 +771,8 @@
 		1CD9DF6507D934F70006BB99 /* Colloquy.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Colloquy.sdef; path = Resources/Colloquy.sdef; sourceTree = "<group>"; };
 		1CDDCF830716208300FE11C3 /* MVChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatRoom.h; path = "Chat Core/MVChatRoom.h"; sourceTree = "<group>"; };
 		1CDDCF840716208300FE11C3 /* MVChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUser.h; path = "Chat Core/MVChatUser.h"; sourceTree = "<group>"; };
-		1CDEE25505823C13000B9075 /* JVFileTransferPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVFileTransferPreferences.h; path = Preferences/JVFileTransferPreferences.h; sourceTree = "<group>"; };
-		1CDEE25605823C13000B9075 /* JVFileTransferPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVFileTransferPreferences.m; path = Preferences/JVFileTransferPreferences.m; sourceTree = "<group>"; };
+		1CDEE25505823C13000B9075 /* JVFileTransferPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVFileTransferPreferences.h; sourceTree = "<group>"; };
+		1CDEE25605823C13000B9075 /* JVFileTransferPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFileTransferPreferences.m; sourceTree = "<group>"; };
 		1CDEE4770583DC58000B9075 /* JVBuddyInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVBuddyInspector.h; path = Inspectors/JVBuddyInspector.h; sourceTree = "<group>"; };
 		1CDEE4780583DC58000B9075 /* JVBuddyInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVBuddyInspector.m; path = Inspectors/JVBuddyInspector.m; sourceTree = "<group>"; };
 		1CDEE48C0583E268000B9075 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVBuddyInspector.nib; sourceTree = "<group>"; };
@@ -1288,7 +1288,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1CBC62F405488D5A009E59E1 /* Preference Modules */ = {
+		1CBC62F405488D5A009E59E1 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
 				1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */,
@@ -1306,7 +1306,7 @@
 				1CC6FC550549FDD70075807C /* JVBehaviorPreferences.m */,
 				1CC6FC540549FDD70075807C /* JVBehaviorPreferences.h */,
 			);
-			name = "Preference Modules";
+			path = Preferences;
 			sourceTree = "<group>";
 		};
 		1CBC6317054896CB009E59E1 /* Preference Icons */ = {
@@ -1550,7 +1550,7 @@
 				1CFAFED8053C1BC500C702F9 /* Controllers */,
 				1CABFD090658622600801C15 /* Panels & List Items */,
 				1CFAFED5053C1BA500C702F9 /* Inspectors */,
-				1CBC62F405488D5A009E59E1 /* Preference Modules */,
+				1CBC62F405488D5A009E59E1 /* Preferences */,
 				1CC478470427BB2C00000102 /* Plug–Ins */,
 				CBF684F00820174000F498FB /* Metadata Importer */,
 			);
