@@ -36,7 +36,7 @@
 	id _currentModule;
 	void *_reserved;
 }
-+ (NSPreferences*) sharedPreferences;
++ (instancetype) sharedPreferences;
 + (void) setDefaultPreferencesClass:(Class) class;
 + (Class) defaultPreferencesClass;
 

@@ -10,11 +10,15 @@
 #import "JVChatRoomBrowser.h"
 #import "JVStyle.h"
 #import "JVEmoticonSet.h"
-#import <WebKit/WebKit.h>
 #import "JVStyleView.h"
-#import "JVConnectionInspector.h"
 
 #import <WebKit/WebKit.h>
+
+@interface MVChatConnection (MVChatConnectionInspection) <JVInspection>
+- (id <JVInspector>) inspector;
+@end
+
+#pragma mark -
 
 @interface JVChatTranscriptPanel (JVChatTranscriptPanelPrivate)
 - (void) _reloadCurrentStyle:(id) sender;
@@ -229,15 +233,14 @@
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"ban"] ) {
 			NSArray *args = [arguments.string componentsSeparatedByString:@" "];
-			for( NSString *arg in args ) {
-				NSString *arg1 = arg;
+			for( __strong NSString *arg in args ) {
 				if( arg.length ) {
 					MVChatUser *user = nil;
 					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] || ! [room.target memberUsersWithNickname:arg] ) {
 						if ( ! [arg hasCaseInsensitiveSubstring:@"!"] && [arg hasCaseInsensitiveSubstring:@"@"] )
-							arg1 = [@"*!*" stringByAppendingString:arg];
-						user = [MVChatUser wildcardUserFromString:arg1];
-					} else user = [[room.target memberUsersWithNickname:arg1] anyObject];
+							arg = [@"*!*" stringByAppendingString:arg];
+						user = [MVChatUser wildcardUserFromString:arg];
+					} else user = [[room.target memberUsersWithNickname:arg] anyObject];
 
 					if( user ) [room.target addBanForUser:user];
 				}
@@ -245,16 +248,15 @@
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"unban"] ) {
 			NSArray *args = [arguments.string componentsSeparatedByString:@" "];
-			for( NSString *arg in args ) {
-				NSString *arg1 = arg;
+			for( __strong NSString *arg in args ) {
 				if( arg.length ) {
 					MVChatUser *user = nil;
 					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] || ! [room.target memberUsersWithNickname:arg] ) {
 						if ( ! [arg hasCaseInsensitiveSubstring:@"!"] && [arg hasCaseInsensitiveSubstring:@"@"] )
-							arg1 = [@"*!*" stringByAppendingString:arg];
-						user = [MVChatUser wildcardUserFromString:arg1];
+							arg = [@"*!*" stringByAppendingString:arg];
+						user = [MVChatUser wildcardUserFromString:arg];
 					} else
-						user = [[room.target memberUsersWithNickname:arg1] anyObject];
+						user = [[room.target memberUsersWithNickname:arg] anyObject];
 
 					if( user ) [room.target removeBanForUser:user];
 				}
@@ -507,11 +509,10 @@
 		[connection joinChatRoomNamed:[arguments stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
 		return YES;
 	} else if( arguments.length && channels.count > 1 ) {
-		for( NSString *channel in channels ) {
-			NSString *channel1 = channel;
-			channel1 = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+		for( __strong NSString *channel in channels ) {
+			channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 			if( channel.length )
-				[(NSMutableArray *)channels addObject:channel1];
+				[(NSMutableArray *)channels addObject:channel];
 		}
 
 		[connection joinChatRoomsNamed:channels];

@@ -1,7 +1,4 @@
 #import "MVChatPluginManager.h"
-#import "JVNotificationController.h"
-
-#import <WebKit/WebKit.h>
 
 #import <WebKit/WebKit.h>
 
