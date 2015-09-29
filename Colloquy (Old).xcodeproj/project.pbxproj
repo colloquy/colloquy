@@ -61,7 +61,7 @@
 		1C2391C10677E8F1000E89A7 /* aquaTabRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C2391B90677E8F1000E89A7 /* aquaTabRight.png */; };
 		1C2462A505F9205900505752 /* JVStyleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2462A305F9205900505752 /* JVStyleView.m */; };
 		1C386FAA1032471F00660864 /* TCMPortMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C386FA91032471F00660864 /* TCMPortMapper.framework */; };
-		1C386FB61032474D00660864 /* TCMPortMapper.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C386FA91032471F00660864 /* TCMPortMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		1C386FB61032474D00660864 /* TCMPortMapper.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C386FA91032471F00660864 /* TCMPortMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C397368082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.xib */; };
 		1C3B290806529E720066197C /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; };
 		1C415F270B350CA300239EB3 /* JVToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C415F250B350CA300239EB3 /* JVToolbarItem.m */; };
@@ -96,7 +96,7 @@
 		1C7EF5C206B346E50037F173 /* privateChatTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF5C006B346E50037F173 /* privateChatTab.png */; };
 		1C7EF5C306B346E50037F173 /* privateChatTabNewMessage.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF5C106B346E50037F173 /* privateChatTabNewMessage.png */; };
 		1C7F30160855467F00D41FB0 /* Colloquy.mdimporter in Copy Spotlight Importer */ = {isa = PBXBuildFile; fileRef = CBF685150820186F00F498FB /* Colloquy.mdimporter */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		1C8444A30F26C7D600701E36 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		1C8444A30F26C7D600701E36 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1C8BDCF4054345160035B84A /* JVChatUserInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8BDCF2054345160035B84A /* JVChatUserInspector.m */; };
 		1C8BDD2205436A030035B84A /* JVChatMemberInspector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C8BDD2005436A020035B84A /* JVChatMemberInspector.xib */; };
 		1C9014C107A2D798002942A7 /* MVChatUserAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9014BF07A2D798002942A7 /* MVChatUserAdditions.m */; };
@@ -188,26 +188,24 @@
 		1CECE26006A37BEC00350564 /* JVBehaviorPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CECE22F06A37A8300350564 /* JVBehaviorPreferences.xib */; };
 		1CEE3F06057AEC0200AD6DE2 /* JVBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEE3F04057AEC0200AD6DE2 /* JVBuddy.m */; };
 		1CEEAB17095BD23500166A54 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
-		1CEEAB1A095BD25500166A54 /* ChatCore.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		1CEEAB1A095BD25500166A54 /* ChatCore.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1CF16D11083ADECF0037F222 /* JVInterfacePreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CF16D0F083ADECF0037F222 /* JVInterfacePreferences.xib */; };
 		1CF4D2F107E5489D00DB421A /* smartTranscriptTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF4D2F007E5489D00DB421A /* smartTranscriptTab.png */; };
 		1CF4D30307E5497400DB421A /* smartTranscriptTabActivity.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF4D30207E5497400DB421A /* smartTranscriptTabActivity.png */; };
 		1CF5F8D207D537E50019DC13 /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF5F8D107D537E50019DC13 /* Growl.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF5F8D107D537E50019DC13 /* Growl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF5F8D107D537E50019DC13 /* Growl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1CF79CBF07AC77E600696918 /* JVChatTranscript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF79CBD07AC77E600696918 /* JVChatTranscript.m */; };
 		1CF8030E070C893500C9B54C /* libsilc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; };
 		1CF8030F070C893500C9B54C /* libsilcclient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; };
-		1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		1CF803F1070C948000C9B54C /* NSURLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1CF803F1070C948000C9B54C /* NSURLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */; };
 		5575C7BF1AFAB53D001EEF98 /* widgets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5575C7BE1AFAB53D001EEF98 /* widgets.xcassets */; };
 		558EF2371AEC356800619BDE /* Room Member Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 558EF2361AEC356800619BDE /* Room Member Icons.xcassets */; };
 		55B0EF3618CE3DE10000E4CA /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B0EF3518CE3DE10000E4CA /* libxml2.dylib */; };
 		55B0EF3718CE3E040000E4CA /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B0EF3518CE3DE10000E4CA /* libxml2.dylib */; };
 		55B0EF3A18CE3E250000E4CA /* libexslt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B0EF3818CE3E250000E4CA /* libexslt.dylib */; };
 		55B0EF3B18CE3E250000E4CA /* libxslt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B0EF3918CE3E250000E4CA /* libxslt.dylib */; };
-		55B0EF5118CE40DA0000E4CA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55B0EF4D18CE40DA0000E4CA /* InfoPlist.strings */; };
-		55B0EF5218CE40DA0000E4CA /* schema.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55B0EF4F18CE40DA0000E4CA /* schema.strings */; };
 		55B56A921B0693C9008DC039 /* Preferences.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55B56A911B0693C9008DC039 /* Preferences.xcassets */; };
 		55B56AA01B069524008DC039 /* OS X toolbars.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55B56A9F1B069524008DC039 /* OS X toolbars.xcassets */; };
 		55C8A2D9180735D100A7BB42 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55C8A2D7180735D100A7BB42 /* InfoPlist.strings */; };
@@ -224,6 +222,8 @@
 		92823CF2168FFA0A000EC36E /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CF1168FFA0A000EC36E /* KAIgnoreRule.m */; };
 		9295C85D1675E227009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
 		92A711951A4A5166009E80F0 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A711941A4A5166009E80F0 /* SecurityInterface.framework */; };
+		CBF6855D08201B7300F498FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CBF6852D0820190D00F498FB /* InfoPlist.strings */; };
+		CBF6855E08201B7300F498FB /* schema.strings in Resources */ = {isa = PBXBuildFile; fileRef = CBF6852F0820190D00F498FB /* schema.strings */; };
 		CBF6855F08201B7300F498FB /* schema.xml in Resources */ = {isa = PBXBuildFile; fileRef = CBF685340820190D00F498FB /* schema.xml */; };
 		CBF6856208201B7A00F498FB /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF685310820190D00F498FB /* GetMetadataForFile.m */; };
 		CBF6856308201B7A00F498FB /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = CBF685330820190D00F498FB /* main.c */; };
@@ -709,8 +709,6 @@
 		55B0EF3518CE3DE10000E4CA /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		55B0EF3818CE3E250000E4CA /* libexslt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libexslt.dylib; path = usr/lib/libexslt.dylib; sourceTree = SDKROOT; };
 		55B0EF3918CE3E250000E4CA /* libxslt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxslt.dylib; path = usr/lib/libxslt.dylib; sourceTree = SDKROOT; };
-		55B0EF4E18CE40DA0000E4CA /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		55B0EF5018CE40DA0000E4CA /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/schema.strings; sourceTree = "<group>"; };
 		55B56A911B0693C9008DC039 /* Preferences.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Preferences.xcassets; path = Resources/Preferences.xcassets; sourceTree = SOURCE_ROOT; };
 		55B56A9F1B069524008DC039 /* OS X toolbars.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "OS X toolbars.xcassets"; sourceTree = "<group>"; };
 		55B748191AD2E957001459F7 /* RunOnMainThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RunOnMainThread.h; path = Additions/RunOnMainThread.h; sourceTree = "<group>"; };
@@ -877,6 +875,8 @@
 		A18BCA2208FF589D0005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
 		A1E1610309228E4F004920E8 /* French */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = French; path = Languages/French.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CBF685150820186F00F498FB /* Colloquy.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Colloquy.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBF6852E0820190D00F498FB /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CBF685300820190D00F498FB /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/schema.strings; sourceTree = "<group>"; };
 		CBF685310820190D00F498FB /* GetMetadataForFile.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GetMetadataForFile.m; sourceTree = "<group>"; };
 		CBF685320820190D00F498FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CBF685330820190D00F498FB /* main.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
@@ -1395,8 +1395,8 @@
 			children = (
 				CBF685320820190D00F498FB /* Info.plist */,
 				CBF685340820190D00F498FB /* schema.xml */,
-				55B0EF4D18CE40DA0000E4CA /* InfoPlist.strings */,
-				55B0EF4F18CE40DA0000E4CA /* schema.strings */,
+				CBF6852D0820190D00F498FB /* InfoPlist.strings */,
+				CBF6852F0820190D00F498FB /* schema.strings */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1736,6 +1736,7 @@
 				Dutch,
 				pt_PT,
 				en,
+				nb,
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
 			productRefGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
@@ -1922,9 +1923,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBF6855D08201B7300F498FB /* InfoPlist.strings in Resources */,
+				CBF6855E08201B7300F498FB /* schema.strings in Resources */,
 				CBF6855F08201B7300F498FB /* schema.xml in Resources */,
-				55B0EF5218CE40DA0000E4CA /* schema.strings in Resources */,
-				55B0EF5118CE40DA0000E4CA /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2515,22 +2516,6 @@
 			name = JVInterfacePreferences.xib;
 			sourceTree = "<group>";
 		};
-		55B0EF4D18CE40DA0000E4CA /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				55B0EF4E18CE40DA0000E4CA /* English */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		55B0EF4F18CE40DA0000E4CA /* schema.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				55B0EF5018CE40DA0000E4CA /* English */,
-			);
-			name = schema.strings;
-			sourceTree = "<group>";
-		};
 		55C8A2D7180735D100A7BB42 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2554,6 +2539,22 @@
 				9200339E13D9258A005B69BA /* zh_TW */,
 			);
 			name = MVFileTransfer.xib;
+			sourceTree = "<group>";
+		};
+		CBF6852D0820190D00F498FB /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CBF6852E0820190D00F498FB /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		CBF6852F0820190D00F498FB /* schema.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CBF685300820190D00F498FB /* English */,
+			);
+			name = schema.strings;
 			sourceTree = "<group>";
 		};
 		F5394BEB0378E23701A35792 /* Colloquy.xib */ = {
@@ -2763,6 +2764,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = Resources/Info.plist;
+				LLVM_LTO = YES;
 				OTHER_CFLAGS = (
 					"-fconstant-cfstrings",
 					"-Wno-arc-performSelector-leaks",

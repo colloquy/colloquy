@@ -28,7 +28,7 @@
 	<key>CFBundleName</key>
 	<string>Colloquy Metadata Importer</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>1.0.1</string>
 	<key>CFPlugInDynamicRegisterFunction</key>
 	<string></string>
 	<key>CFPlugInDynamicRegistration</key>
