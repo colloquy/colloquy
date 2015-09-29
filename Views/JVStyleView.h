@@ -71,7 +71,7 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 
 - (void) markScrollbarForMessage:(JVChatMessage *) message;
 - (void) markScrollbarForMessage:(JVChatMessage *) message usingMarkIdentifier:(NSString *) identifier andColor:(NSColor *) color;
-- (void) markScrollbarForMessages:(NSArray *) messages;
+- (void) markScrollbarForMessages:(NSArray<JVChatMessage*> *) messages;
 
 - (void) clearScrollbarMarks;
 - (void) clearScrollbarMarksWithIdentifier:(NSString *) identifier;

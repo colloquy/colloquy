@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSString *_nickname;
 	NSString *_password;
 }
-+ (NSArray *) defaultServerPorts;
++ (NSArray <NSNumber*> *) defaultServerPorts;
 @end
 
 @interface MVXMPPChatConnection (MVXMPPChatConnectionPrivate)

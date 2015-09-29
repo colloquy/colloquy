@@ -51,8 +51,8 @@
 
 + (BOOL)isNewStartTURNRequest:(XMPPIQ *)iq;
 
-+ (NSArray *)proxyCandidates;
-+ (void)setProxyCandidates:(NSArray *)candidates;
++ (NSArray<NSString*> *)proxyCandidates;
++ (void)setProxyCandidates:(NSArray<NSString*> *)candidates;
 
 - (id)initWithStream:(XMPPStream *)xmppStream toJID:(XMPPJID *)jid;
 - (id)initWithStream:(XMPPStream *)xmppStream incomingTURNRequest:(XMPPIQ *)iq;

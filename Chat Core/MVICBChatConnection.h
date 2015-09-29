@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSMutableArray *_sendQueue;
 	BOOL _sendQueueProcessing : 1;
 }
-+ (NSArray *) defaultServerPorts;
++ (NSArray<NSNumber*> *) defaultServerPorts;
 
 - (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier;
 @end

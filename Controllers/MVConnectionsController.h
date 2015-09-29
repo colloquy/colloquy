@@ -94,7 +94,7 @@
 @property (readonly, copy) NSArray *connections;
 @property (readonly, copy) NSArray *connectedConnections;
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address;
-- (NSArray *) connectionsForServerAddress:(NSString *) address;
+- (NSArray<MVChatConnection*> *) connectionsForServerAddress:(NSString *) address;
 - (BOOL) managesConnection:(MVChatConnection *) connection;
 
 - (void) setAutoConnect:(BOOL) autoConnect forConnection:(MVChatConnection *) connection;

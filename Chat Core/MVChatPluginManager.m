@@ -141,11 +141,11 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	return [NSArray arrayWithArray:_plugins];
 }
 
-- (NSArray *) pluginsThatRespondToSelector:(SEL) selector {
+- (nullable NSArray *) pluginsThatRespondToSelector:(SEL) selector {
 	return [self pluginsOfClass:NULL thatRespondToSelector:selector];
 }
 
-- (NSArray *) pluginsOfClass:(Class __nullable) class thatRespondToSelector:(SEL) selector {
+- (nullable NSArray *) pluginsOfClass:(Class __nullable) class thatRespondToSelector:(SEL) selector {
 	NSParameterAssert( selector != NULL );
 
 	NSMutableArray *qualified = [[NSMutableArray allocWithZone:nil] init];

@@ -35,6 +35,6 @@
 - (BOOL) textView:(NSTextView *) textView enterKeyPressed:(NSEvent *) event;
 - (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event;
 - (BOOL) textView:(NSTextView *) textView escapeKeyPressed:(NSEvent *) event;
-- (NSArray *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix;
+- (NSArray<NSString*> *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix;
 - (void) textView:(NSTextView *) textView selectedCompletion:(NSString *) completion fromPrefix:(NSString *) prefix;
 @end

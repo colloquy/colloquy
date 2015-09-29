@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 	BOOL _sentQuitCommand;
 	BOOL _lookingUpUsers;
 }
-+ (NSArray *) defaultServerPorts;
++ (NSArray<NSNumber*> *) defaultServerPorts;
 
 - (MVChatRoom *) joinedChatRoomWithChannel:(SilcChannelEntry) channel;
 @end

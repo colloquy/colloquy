@@ -1786,7 +1786,7 @@ static NSMenu *favoritesMenu = nil;
 		if( [info[@"encoding"] longValue] ) connection.encoding = [info[@"encoding"] longValue];
 		else connection.encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 
-		connection.outgoingChatFormat = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"];
+		connection.outgoingChatFormat = (OSType)[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"];
 
 		if( info[@"realName"] ) connection.realName = info[@"realName"];
 		if( info[@"nickname"] ) connection.preferredNickname = info[@"nickname"];

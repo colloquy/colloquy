@@ -89,23 +89,23 @@ typedef NS_ENUM(NSInteger, GCDAsyncSocketError) {
 
 #pragma mark Configuration
 
-@property (atomic, weak, readwrite) id delegate;
+@property (atomic, weak, readwrite) id<GCDAsyncSocketDelegate> delegate;
 #if OS_OBJECT_USE_OBJC
 @property (atomic, strong, readwrite) dispatch_queue_t delegateQueue;
 #else
 @property (atomic, assign, readwrite) dispatch_queue_t delegateQueue;
 #endif
 
-- (void)getDelegate:(id *)delegatePtr delegateQueue:(dispatch_queue_t *)delegateQueuePtr;
-- (void)setDelegate:(id)delegate delegateQueue:(dispatch_queue_t)delegateQueue;
+- (void)getDelegate:(id<GCDAsyncSocketDelegate> *)delegatePtr delegateQueue:(dispatch_queue_t *)delegateQueuePtr;
+- (void)setDelegate:(id<GCDAsyncSocketDelegate>)delegate delegateQueue:(dispatch_queue_t)delegateQueue;
 
 /**
  * If you are setting the delegate to nil within the delegate's dealloc method,
  * you may need to use the synchronous versions below.
 **/
-- (void)synchronouslySetDelegate:(id)delegate;
+- (void)synchronouslySetDelegate:(id<GCDAsyncSocketDelegate>)delegate;
 - (void)synchronouslySetDelegateQueue:(dispatch_queue_t)delegateQueue;
-- (void)synchronouslySetDelegate:(id)delegate delegateQueue:(dispatch_queue_t)delegateQueue;
+- (void)synchronouslySetDelegate:(id<GCDAsyncSocketDelegate>)delegate delegateQueue:(dispatch_queue_t)delegateQueue;
 
 /**
  * By default, both IPv4 and IPv6 are enabled.

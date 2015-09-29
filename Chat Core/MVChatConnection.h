@@ -208,7 +208,7 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSUInteger _hash;
 }
 + (BOOL) supportsURLScheme:(NSString *) scheme;
-+ (NSArray *) defaultServerPortsForType:(MVChatConnectionType) type;
++ (NSArray<NSNumber*> *) defaultServerPortsForType:(MVChatConnectionType) type;
 
 #pragma mark -
 

@@ -42,7 +42,7 @@
 - (instancetype) initFromRawData:(NSData *) raw;
 
 - (NSString *) description;
-- (NSArray *) fields;
+- (NSArray<NSString*> *) fields;
 - (NSUInteger) length;
 - (NSData *) rawData;
 - (char) type;

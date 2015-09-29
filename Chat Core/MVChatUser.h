@@ -135,8 +135,8 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 @property(readonly) NSUInteger supportedModes;
 @property(readonly) NSUInteger modes;
 
-@property(strong, readonly) NSSet *supportedAttributes;
-@property(strong, readonly) NSDictionary *attributes;
+@property(strong, readonly) NSSet<NSString*> *supportedAttributes;
+@property(strong, readonly) NSDictionary<NSString*,id> *attributes;
 
 @property NSUInteger roomCount;
 
