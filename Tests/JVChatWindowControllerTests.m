@@ -10,9 +10,12 @@
 	JVChatWindowController *_windowController;
 	NSUInteger _newMessages;
 }
+
+@property NSUInteger newMessagesWaiting;
 @end
 
 @implementation JVTestChatViewController
+@synthesize newMessagesWaiting = _newMessages;
 - (MVChatConnection *) connection {
 	return nil;
 }
@@ -55,14 +58,6 @@
 
 - (NSString *) title {
 	return @"Test";
-}
-
-- (NSUInteger) newMessagesWaiting {
-	return _newMessages;
-}
-
-- (void) setNewMessagesWaiting:(NSUInteger) new {
-	_newMessages = new;
 }
 
 - (NSString *) toolbarIdentifier {
