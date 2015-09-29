@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <development version="5100" identifier="xcode"/>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
     </dependencies>
     <objects>
@@ -24,7 +24,7 @@
             <value key="minSize" type="size" width="350" height="129"/>
             <value key="maxSize" type="size" width="700" height="450"/>
             <view key="contentView" id="6">
-                <rect key="frame" x="1" y="1" width="350" height="187"/>
+                <rect key="frame" x="0.0" y="0.0" width="350" height="187"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <progressIndicator verticalHuggingPriority="750" maxValue="1" bezeled="NO" controlSize="small" style="bar" id="20">
@@ -45,7 +45,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" id="egJ-MG-oPh">
                             <rect key="frame" x="1" y="17" width="335" height="96"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" autosaveColumns="NO" headerView="55" id="35">
                                     <rect key="frame" x="0.0" y="0.0" width="335" height="19"/>

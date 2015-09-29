@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <development version="5100" identifier="xcode"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
     </dependencies>
     <objects>
@@ -67,7 +66,7 @@
                 <button id="289" customClass="MVMenuButton">
                     <rect key="frame" x="1" y="-1" width="28" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="only" alignment="left" borderStyle="border" imageScaling="proportionallyDown" id="299">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="CQActionTemplate" imagePosition="only" alignment="left" borderStyle="border" imageScaling="proportionallyDown" id="299">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="label"/>
                     </buttonCell>
@@ -121,8 +120,8 @@
         </customView>
     </objects>
     <resources>
+        <image name="CQActionTemplate" width="19" height="12"/>
         <image name="CQFavoritesTemplate" width="19" height="9"/>
         <image name="CQInfoTemplate" width="12" height="12"/>
-        <image name="NSActionTemplate" width="14" height="14"/>
     </resources>
 </document>

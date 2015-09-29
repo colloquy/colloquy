@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <development version="5100" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="JVBehaviorPreferences">
@@ -14,7 +14,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="9" userLabel="View">
             <rect key="frame" x="0.0" y="0.0" width="587" height="360"/>
             <autoresizingMask key="autoresizingMask"/>
@@ -22,7 +22,7 @@
                 <box title="Box" boxType="oldStyle" borderType="none" titlePosition="noTitle" id="212">
                     <rect key="frame" x="0.0" y="0.0" width="587" height="360"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <view key="contentView">
+                    <view key="contentView" id="izY-bm-iQ1">
                         <rect key="frame" x="0.0" y="0.0" width="587" height="360"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -100,7 +100,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                 <popUpButtonCell key="cell" type="push" title="Nachricht senden" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="426" id="586">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
+                                    <font key="font" metaFont="menu"/>
                                     <menu key="menu" title="OtherViews" id="423">
                                         <items>
                                             <menuItem title="Nachricht senden" state="on" id="426"/>
@@ -150,7 +150,7 @@ Spitznamenvervollständigung durch Tabulator ist auch ohne diese Einstellung akt
                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                 <popUpButtonCell key="cell" type="push" title="Nachricht senden" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="431" id="589">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
+                                    <font key="font" metaFont="menu"/>
                                     <menu key="menu" title="OtherViews" id="430">
                                         <items>
                                             <menuItem title="Nachricht senden" state="on" id="431"/>
@@ -298,7 +298,6 @@ Spitznamenvervollständigung durch Tabulator ist auch ohne diese Einstellung akt
                                 <autoresizingMask key="autoresizingMask"/>
                                 <stepperCell key="cell" continuous="YES" alignment="left" maxValue="59" valueWraps="YES" id="598"/>
                                 <connections>
-                                    <binding destination="443" name="enabled" keyPath="values.JVAutoRejoinRoomsOnKick" id="521"/>
                                     <binding destination="443" name="value" keyPath="values.JVAutoRejoinRoomsDelay" id="559">
                                         <dictionary key="options">
                                             <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
@@ -307,6 +306,7 @@ Spitznamenvervollständigung durch Tabulator ist auch ohne diese Einstellung akt
                                             <bool key="NSValidatesImmediately" value="YES"/>
                                         </dictionary>
                                     </binding>
+                                    <binding destination="443" name="enabled" keyPath="values.JVAutoRejoinRoomsOnKick" id="521"/>
                                 </connections>
                             </stepper>
                             <textField verticalHuggingPriority="750" id="502">
@@ -318,7 +318,6 @@ Spitznamenvervollständigung durch Tabulator ist auch ohne diese Einstellung akt
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                                 <connections>
-                                    <binding destination="443" name="enabled" keyPath="values.JVAutoRejoinRoomsOnKick" id="520"/>
                                     <binding destination="443" name="value" keyPath="values.JVAutoRejoinRoomsDelay" id="555">
                                         <dictionary key="options">
                                             <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
@@ -327,6 +326,7 @@ Spitznamenvervollständigung durch Tabulator ist auch ohne diese Einstellung akt
                                             <bool key="NSValidatesImmediately" value="YES"/>
                                         </dictionary>
                                     </binding>
+                                    <binding destination="443" name="enabled" keyPath="values.JVAutoRejoinRoomsOnKick" id="520"/>
                                 </connections>
                             </textField>
                             <textField verticalHuggingPriority="750" id="503">
