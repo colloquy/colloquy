@@ -1950,21 +1950,12 @@ NS_ASSUME_NONNULL_BEGIN
 	[self becomeFirstResponder];
 
 	__weak __typeof__((self)) weakSelf = self;
-	if ([activityController respondsToSelector:@selector(setCompletionWithItemsHandler:)]) {
-		activityController.completionWithItemsHandler = ^(NSString *__nullable activityType, BOOL completed, NSArray *__nullable returnedItems, NSError *__nullable activityError) {
-			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-			[strongSelf _endShowingActivityViewControllerWithInputBarAsResponder:inputBarWasFirstResponder];
-			[strongSelf.activityPopoverController dismissPopoverAnimated:YES];
-			strongSelf.activityPopoverController = nil;
-		};
-	} else {
-		activityController.completionHandler = ^(NSString *__nullable activityType, BOOL completed) {
-			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-			[strongSelf _endShowingActivityViewControllerWithInputBarAsResponder:inputBarWasFirstResponder];
-			[strongSelf.activityPopoverController dismissPopoverAnimated:YES];
-			strongSelf.activityPopoverController = nil;
-		};
-	}
+	activityController.completionWithItemsHandler = ^(NSString *__nullable activityType, BOOL completed, NSArray *__nullable returnedItems, NSError *__nullable activityError) {
+		__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+		[strongSelf _endShowingActivityViewControllerWithInputBarAsResponder:inputBarWasFirstResponder];
+		[strongSelf.activityPopoverController dismissPopoverAnimated:YES];
+		strongSelf.activityPopoverController = nil;
+	};
 
 	BOOL usePopoverController = [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad;
 	if ([UIDevice currentDevice].isSystemEight)

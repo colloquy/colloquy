@@ -1084,12 +1084,11 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		[chatRoomController part];
 	};
 
-	UITableViewRowActionStyle nextAction = UITableViewRowActionStyleDestructive;
 	UITableViewRowAction *leaveAction = nil;
 	id <CQChatViewController> chatViewController = chatControllerForIndexPath(indexPath);
 	BOOL canPartRoom = ([chatViewController isMemberOfClass:[CQChatRoomController class]] && chatViewController.available);
 	if (canPartRoom) {
-		leaveAction = [UITableViewRowAction rowActionWithStyle:nextAction title:NSLocalizedString(@"Leave", @"Leave confirmation button title") handler:^(UITableViewRowAction *action, NSIndexPath *actionIndexPath) {
+		leaveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:NSLocalizedString(@"Leave", @"Leave confirmation button title") handler:^(UITableViewRowAction *action, NSIndexPath *actionIndexPath) {
 			partRoom(chatViewController);
 			[tableView updateCellAtIndexPath:actionIndexPath withAnimation:UITableViewRowAnimationFade];
 		}];
