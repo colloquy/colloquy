@@ -66,6 +66,10 @@ NS_ASSUME_NONNULL_BEGIN
 	if (_listMode == CQChatUserListModeBan)
 		return;
 
+	_searchController = [[UISearchController alloc] initWithSearchResultsController:self];
+	_searchController.delegate = self;
+	_searchController.searchResultsUpdater = self;
+
 	_searchController.searchBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin);
 	_searchController.searchBar.placeholder = NSLocalizedString(@"Search", @"Search placeholder text");
 	_searchController.searchBar.accessibilityLabel = NSLocalizedString(@"Search Members", @"Voiceover search members label");
@@ -75,10 +79,6 @@ NS_ASSUME_NONNULL_BEGIN
 	[_searchController.searchBar sizeToFit];
 
 	self.tableView.tableHeaderView = _searchController.searchBar;
-
-	_searchController = [[UISearchController alloc] initWithSearchResultsController:self];
-	_searchController.delegate = self;
-	_searchController.searchResultsUpdater = self;
 
 	UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Members", @"Members back button label") style:UIBarButtonItemStylePlain target:nil action:nil];
 	self.navigationItem.backBarButtonItem = backButton;
