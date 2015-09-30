@@ -16,8 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype) initWithMessage:(NSString *) message outbound:(BOOL) outbound;
 
 @property BOOL verbose;
-@property NSStringEncoding encoding;
-@property NSStringEncoding fallbackEncoding;
 
 @property (readonly) NSMutableDictionary *processedMessageInfo;
 @property (readonly) NSString *processedMessageAsHTML;

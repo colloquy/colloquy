@@ -150,9 +150,6 @@ NS_ASSUME_NONNULL_BEGIN
 	NSParameterAssert(message != nil);
 
 	CQProcessConsoleMessageOperation *operation = [[CQProcessConsoleMessageOperation alloc] initWithMessage:message outbound:outbound];
-	operation.encoding = self.encoding;
-	operation.fallbackEncoding = self.connection.encoding;
-
 	operation.target = self;
 	operation.action = @selector(_consoleMessageProcessed:);
 

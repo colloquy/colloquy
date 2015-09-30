@@ -27,8 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 	_outbound = outbound;
 	_message = [message mutableCopy];
-	_encoding = NSUTF8StringEncoding;
-	_fallbackEncoding = NSISOLatin1StringEncoding;
 
 	return self;
 }
@@ -113,7 +111,6 @@ NS_ASSUME_NONNULL_BEGIN
 	__strong __typeof__((_target)) strongTarget = _target;
 	if (strongTarget && _action)
 		[strongTarget performSelectorOnMainThread:_action withObject:self waitUntilDone:NO];
-
 }
 @end
 
