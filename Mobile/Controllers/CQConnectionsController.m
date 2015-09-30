@@ -1088,8 +1088,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	MVChatConnection *connection = notification.object;
 	[connection removePersistentInformationObjectForKey:@"tryBouncerFirst"];
 
+#if !TARGET_IPHONE_SIMULATOR
 	id <NSObject> activityToken = [[NSProcessInfo processInfo] beginActivityWithOptions:NSActivityUserInitiated reason:[NSString stringWithFormat:@"%@ is open and connected", connection.displayName]];
 	[_activityTokens setObject:activityToken forKey:connection];
+#endif
 
 	if (!connection.directConnection)
 		connection.temporaryDirectConnection = NO;
@@ -1109,9 +1111,11 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	MVChatConnection *connection = notification.object;
 	[connection removePersistentInformationObjectForKey:@"tryBouncerFirst"];
 
+#if !TARGET_IPHONE_SIMULATOR
 	id <NSObject> activityToken = [_activityTokens objectForKey:connection];
 	[[NSProcessInfo processInfo] endActivity:activityToken];
 	[_activityTokens removeObjectForKey:connection];
+#endif
 
 	[self _possiblyEndBackgroundTaskSoon];
 }
