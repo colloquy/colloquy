@@ -56,12 +56,6 @@ NS_ASSUME_NONNULL_BEGIN
 	[self updateToolbarForInterfaceOrientation:size.width > 480. ? UIInterfaceOrientationLandscapeLeft : UIInterfaceOrientationPortrait animated:NO];
 }
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
-- (void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation duration:(NSTimeInterval) duration {
-	[self updateToolbarForInterfaceOrientation:interfaceOrientation animated:NO];
-}
-#endif
-
 #pragma mark -
 
 - (void) updateToolbarAnimated:(BOOL) animated {

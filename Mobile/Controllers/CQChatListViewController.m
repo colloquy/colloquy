@@ -751,15 +751,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
-- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
-	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-
-	if ([[UIDevice currentDevice] isPadModel])
-		[self resizeForViewInPopoverUsingTableView:self.tableView];
-}
-#endif
-
 #pragma mark -
 
 - (void) chatViewControllerAdded:(id) controller {

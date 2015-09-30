@@ -526,16 +526,14 @@ NS_ASSUME_NONNULL_BEGIN
 	self.scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
 
 	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
-//	if ([UIDevice currentDevice].isSystemEight) {
-//		CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
-//		webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
-//		webkitChatTranscriptView.transcriptDelegate = self;
+//	CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
+//	webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
+//	webkitChatTranscriptView.transcriptDelegate = self;
 //
-//		[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
+//	[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
 //
-//		[transcriptView removeFromSuperview];
-//		transcriptView = webkitChatTranscriptView;
-//	}
+//	[transcriptView removeFromSuperview];
+//	transcriptView = webkitChatTranscriptView;
 
 	[self _updateRightBarButtonItemAnimated:NO];
 
@@ -654,24 +652,6 @@ NS_ASSUME_NONNULL_BEGIN
 			[self _showChatCompletions];
 	}];
 }
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
-- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
-	_isShowingCompletionsBeforeRotation = chatInputBar.isShowingCompletions;
-
-	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![self.splitViewController.delegate splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:toInterfaceOrientation]);
-}
-
-- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation) fromInterfaceOrientation {
-	[transcriptView scrollToBottomAnimated:NO];
-
-	if (_isShowingCompletionsBeforeRotation) {
-		[self _showChatCompletions];
-
-		_isShowingCompletionsBeforeRotation = NO;
-	}
-}
-#endif
 
 - (BOOL) canBecomeFirstResponder {
 	return YES;
