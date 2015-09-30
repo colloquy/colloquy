@@ -41,7 +41,6 @@ NS_ASSUME_NONNULL_BEGIN
 	id <CQChatViewController> _previousSelectedChatViewController;
 	BOOL _needsUpdate;
 	BOOL _ignoreNotifications;
-	BOOL _isReordering;
 	NSTimer *_connectTimeUpdateTimer;
 	NSMapTable *_headerViewsForConnections;
 	NSMapTable *_connectionsForHeaderViews;
@@ -502,14 +501,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (!_active)
 		return;
 
-	if (_isReordering) {
-		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
-		[self performSelector:_cmd withObject:nil afterDelay:0.];
-		return;
-	}
-
-	_isReordering = YES;
-
 	NSMapTable *existingIndexPathsForChatControllers = [_indexPathsForChatControllers copy];
 
 	[self _refreshIndexPathForChatControllersCache];
@@ -540,8 +531,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			[self.tableView moveRowAtIndexPath:indexPathPair[1] toIndexPath:indexPathPair[0]];
 		[self.tableView endUpdates];
 	}
-
-	_isReordering = NO;
 }
 
 - (void) _refreshIndexPathForChatControllersCache {
@@ -583,8 +572,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	// Force UITableView to reload section headers. If we are in an editing state, this will make the tableview display the (i) button
 	// correctly, rather than showing the connection timer label.
-	if (self.editing)
-	{
+	if (self.editing) {
 		[self.tableView reloadData];
 		[self.tableView beginUpdates];
 		[self.tableView endUpdates];
@@ -659,7 +647,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 - (void) bouncerSettingsAdded:(CQBouncerSettings *) bouncer {
 	NSUInteger section = [[CQChatOrderingController defaultController] sectionIndexForConnection:bouncer];
+	[self.tableView beginUpdates];
 	[self.tableView insertSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationTop];
+	[self.tableView endUpdates];
 
 	[self _refreshIndexPathForChatControllersCache];
 }
