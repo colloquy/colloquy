@@ -5,7 +5,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CQAlertView ()
 @property (atomic, nullable, strong) UIViewController *overlappingPresentationViewController;
 @property (atomic, nullable, strong) UIAlertController *alertController;
-@property (atomic, nullable, strong) id me;
 
 @end
 
@@ -24,26 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) _updateTextFieldsForDisplay {
-	if ([UIDevice currentDevice].isSystemEight)
-		return;
-
-	if (_textFieldInformation.count == 0)
-		self.alertViewStyle = UIAlertViewStyleDefault;
-	else if (_textFieldInformation.count == 1)
-		self.alertViewStyle = UIAlertViewStylePlainTextInput;
-	else self.alertViewStyle = UIAlertViewStyleLoginAndPasswordInput;
-
-	for (NSUInteger i = 0; i < _textFieldInformation.count; i++) {
-		NSDictionary *textFieldInformation = _textFieldInformation[i];
-		UITextField *textField = [self textFieldAtIndex:i];
-
-		textField.placeholder = textFieldInformation[@"placeholder"];
-		textField.text = textFieldInformation[@"text"];
-		textField.secureTextEntry = !!textFieldInformation[@"secure"];
-	}
-}
-
 - (void) addTextFieldWithPlaceholder:(NSString *__nullable) placeholder andText:(NSString *__nullable) text {
 	NSAssert(_textFieldInformation.count + 1 < 3, @"alertView's are limited to a max of 2 textfields as of iOS 5", nil);
 
@@ -55,8 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
 		textFieldInformation[@"text"] = text;
 
 	[_textFieldInformation addObject:textFieldInformation];
-
-	[self _updateTextFieldsForDisplay];
 }
 
 - (void) addSecureTextFieldWithPlaceholder:(NSString *) placeholder {
@@ -69,29 +46,13 @@ NS_ASSUME_NONNULL_BEGIN
 	textFieldInformation[@"secure"] = @(YES);
 
 	[_textFieldInformation addObject:textFieldInformation];
-
-	[self _updateTextFieldsForDisplay];
 }
 
 - (UITextField *__nullable) textFieldAtIndex:(NSInteger) textFieldIndex {
-	if (![UIDevice currentDevice].isSystemEight)
-		return [super textFieldAtIndex:textFieldIndex];
 	return self.alertController.textFields[textFieldIndex];
 }
 
 - (void) show {
-	if (![UIDevice currentDevice].isSystemEight) {
-		if (_textFieldInformation.count) {
-			UITextField *textField = [self textFieldAtIndex:0];
-			[textField becomeFirstResponder];
-		}
-
-		[super show];
-		return;
-	}
-
-	self.me = self;
-
 	// The overlapping view is needed to work around the following iOS 8(.1-only?) bug on iPad:
 	// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
 	// present an action sheet from a point on screen that results in the popover rect overlapping the main view,
@@ -137,29 +98,26 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) dismissWithClickedButtonIndex:(NSInteger) buttonIndex animated:(BOOL) animated {
-	if (![UIDevice currentDevice].isSystemEight)
-		[super dismissWithClickedButtonIndex:buttonIndex animated:animated];
-	else {
-		__weak __typeof__((self)) weakSelf = self;
-		[self.alertController dismissViewControllerAnimated:YES completion:^{
-			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-			[strongSelf _dismissWithClickAtIndex:buttonIndex];
-		}];
-	}
+	__weak __typeof__((self)) weakSelf = self;
+	[self.alertController dismissViewControllerAnimated:YES completion:^{
+		__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+		[strongSelf _dismissWithClickAtIndex:buttonIndex];
+	}];
 }
 
 - (void) _dismissWithClickAtIndex:(NSInteger) buttonIndex {
+	__weak __typeof__((self)) weakSelf = self;
 	[[NSOperationQueue mainQueue] addOperationWithBlock:^{
-		[self.overlappingPresentationViewController.view removeFromSuperview];
-		[self.overlappingPresentationViewController removeFromParentViewController];
-		self.overlappingPresentationViewController = nil;
+		__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+		[strongSelf.overlappingPresentationViewController.view removeFromSuperview];
+		[strongSelf.overlappingPresentationViewController removeFromParentViewController];
+		strongSelf.overlappingPresentationViewController = nil;
 
-		__strong id <UIAlertViewDelegate> delegate = self.delegate;
+		__strong id <UIAlertViewDelegate> delegate = strongSelf.delegate;
 		if ([delegate respondsToSelector:@selector(alertView:clickedButtonAtIndex:)])
-			[delegate alertView:self clickedButtonAtIndex:buttonIndex];
+			[delegate alertView:strongSelf clickedButtonAtIndex:buttonIndex];
 
-		self.alertController = nil;
-		self.me = nil;
+		strongSelf.alertController = nil;
 	}];
 }
 @end

@@ -1937,10 +1937,8 @@ NS_ASSUME_NONNULL_BEGIN
 		strongSelf.activityPopoverController = nil;
 	};
 
-	BOOL usePopoverController = [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad;
-	if ([UIDevice currentDevice].isSystemEight)
-		usePopoverController = self.view.window.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
-	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone || !usePopoverController)
+	BOOL usePopoverController = [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad && self.view.window.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+	if (!usePopoverController)
 		[self presentViewController:activityController animated:[UIView areAnimationsEnabled] completion:nil];
 	else {
 		[_activityPopoverController dismissPopoverAnimated:NO];

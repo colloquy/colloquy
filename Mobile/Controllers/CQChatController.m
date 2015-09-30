@@ -571,49 +571,16 @@ static CQSoundController *fileTransferSound;
 	if (![UIDevice currentDevice].isPadModel)
 		[[CQColloquyApplication sharedApplication] showColloquies:nil hidingTopViewController:NO];
 
-	BOOL showingVisibleController = (_visibleChatController == controller);
-
 	_nextRoomConnection = nil;
 
-	if ([UIDevice currentDevice].isSystemEight) {
-		[_chatNavigationController dismissViewControllerAnimated:animated completion:NULL];
-		[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
+	[_chatNavigationController dismissViewControllerAnimated:animated completion:NULL];
+	[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
 
-		UINavigationController *navigationController = ((UIViewController *)_visibleChatController).navigationController;
-		if (navigationController == nil) {
-			navigationController = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)controller];
-			[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:navigationController sender:nil];
-		} else if (controller) navigationController.viewControllers = @[ controller ];
-	} else {
-		if (showingVisibleController)
-			return;
-
-		if ([[UIDevice currentDevice] isPadModel]) {
-			_chatPresentationController.topChatViewController = controller;
-
-			[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
-		} else {
-			if (_chatNavigationController.presentedViewController != nil) {
-				[_chatNavigationController popToRootViewControllerAnimated:NO];
-				[_chatNavigationController pushViewController:(UIViewController *)controller animated:NO];
-				[_chatNavigationController dismissViewControllerAnimated:animated completion:NULL];
-			} else {
-				if (!_chatNavigationController.rootViewController)
-					[[CQColloquyApplication sharedApplication] showColloquies:nil];
-
-				if (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController) {
-					_nextController = controller;
-
-					[_chatNavigationController popToRootViewControllerAnimated:animated];
-				} else {
-					[_chatNavigationController popToRootViewControllerAnimated:NO];
-					[_chatNavigationController pushViewController:(UIViewController *)controller animated:animated];
-
-					_nextController = nil;
-				}
-			}
-		}
-	}
+	UINavigationController *navigationController = ((UIViewController *)_visibleChatController).navigationController;
+	if (navigationController == nil) {
+		navigationController = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)controller];
+		[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:navigationController sender:nil];
+	} else if (controller) navigationController.viewControllers = @[ controller ];
 
 	_visibleChatController = controller;
 }

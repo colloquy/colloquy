@@ -37,9 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 		self.delegate = self;
 	}
-
-	if (![UIDevice currentDevice].isSystemEight)
-		[[CQChatController defaultController] showPendingChatControllerAnimated:NO];
 }
 
 #pragma mark -

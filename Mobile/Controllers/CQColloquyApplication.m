@@ -530,96 +530,63 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) showActionSheet:(UIActionSheet *) sheet forSender:(__nullable id) sender orFromPoint:(CGPoint) point animated:(BOOL) animated {
-	if ([UIDevice currentDevice].isSystemEight) {
-		[_overlappingPresentationViewController.view removeFromSuperview];
-		_overlappingPresentationViewController = nil;
-		[_alertController dismissViewControllerAnimated:NO completion:nil];
-		_alertController = nil;
+	[_overlappingPresentationViewController.view removeFromSuperview];
+	_overlappingPresentationViewController = nil;
+	[_alertController dismissViewControllerAnimated:NO completion:nil];
+	_alertController = nil;
 
-		_alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-		if ([_alertController.popoverPresentationController respondsToSelector:@selector(canOverlapSourceViewRect)])
-			_alertController.popoverPresentationController.canOverlapSourceViewRect = YES;
+	_alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+	if ([_alertController.popoverPresentationController respondsToSelector:@selector(canOverlapSourceViewRect)])
+		_alertController.popoverPresentationController.canOverlapSourceViewRect = YES;
 
-		// The overlapping view is needed to work around the following iOS 8(.1-only?) bug on iPad:
-		// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
-		// present an action sheet from a point on screen that results in the popover rect overlapping the main view,
-		// the z-index will be incorrect and the action sheet will be clipped by the main view.
-		_overlappingPresentationViewController = [[UIViewController alloc] init];
-		_overlappingPresentationViewController.view.backgroundColor = [UIColor clearColor];
+	// The overlapping view is needed to work around the following iOS 8(.1-only?) bug on iPad:
+	// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
+	// present an action sheet from a point on screen that results in the popover rect overlapping the main view,
+	// the z-index will be incorrect and the action sheet will be clipped by the main view.
+	_overlappingPresentationViewController = [[UIViewController alloc] init];
+	_overlappingPresentationViewController.view.backgroundColor = [UIColor clearColor];
 
-		if ([sender isKindOfClass:[UIView class]] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
-			_overlappingPresentationViewController.view.frame = [sender bounds];
+	if ([sender isKindOfClass:[UIView class]] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+		_overlappingPresentationViewController.view.frame = [sender bounds];
 
-			[sender addSubview:_overlappingPresentationViewController.view];
+		[sender addSubview:_overlappingPresentationViewController.view];
 
-			_alertController.popoverPresentationController.sourceRect = [sender bounds];
-			_alertController.popoverPresentationController.sourceView = sender;
-		} else {
-			_overlappingPresentationViewController.view.frame = _mainWindow.frame;
+		_alertController.popoverPresentationController.sourceRect = [sender bounds];
+		_alertController.popoverPresentationController.sourceView = sender;
+	} else {
+		_overlappingPresentationViewController.view.frame = _mainWindow.frame;
 
-			[_mainWindow addSubview:_overlappingPresentationViewController.view];
+		[_mainWindow addSubview:_overlappingPresentationViewController.view];
 
-			CGRect rect = CGRectZero;
-			rect.size = CGSizeMake(1., 1.);
-			rect.origin = CGPointEqualToPoint(point, CGPointZero) ? _mainWindow.center : point;
+		CGRect rect = CGRectZero;
+		rect.size = CGSizeMake(1., 1.);
+		rect.origin = CGPointEqualToPoint(point, CGPointZero) ? _mainWindow.center : point;
 
-			_alertController.popoverPresentationController.sourceRect = rect;
-			_alertController.popoverPresentationController.sourceView = _overlappingPresentationViewController.view;
-		}
-
-		for (NSInteger i = 0; i < sheet.numberOfButtons; i++) {
-			NSString *title = [sheet buttonTitleAtIndex:i];
-			UIAlertActionStyle style = UIAlertActionStyleDefault;
-			if (i == sheet.cancelButtonIndex) style = UIAlertActionStyleCancel;
-			else if (i == sheet.destructiveButtonIndex) style = UIAlertActionStyleDestructive;
-
-			__weak __typeof__((self)) weakSelf = self;
-
-			[_alertController addAction:[UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *action) {
-				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-
-				[strongSelf->_alertController removeFromParentViewController];
-				[strongSelf->_overlappingPresentationViewController.view removeFromSuperview];
-				strongSelf->_alertController = nil;
-				strongSelf->_overlappingPresentationViewController = nil;
-
-				[sheet.delegate actionSheet:sheet clickedButtonAtIndex:i];
-			}]];
-		}
-
-		[_overlappingPresentationViewController presentViewController:_alertController animated:YES completion:nil];
-
-		return;
+		_alertController.popoverPresentationController.sourceRect = rect;
+		_alertController.popoverPresentationController.sourceView = _overlappingPresentationViewController.view;
 	}
 
-	if (sender && [[UIDevice currentDevice] isPadModel]) {
-		id old = _visibleActionSheet;
-		[old dismissWithClickedButtonIndex:[old cancelButtonIndex] animated:NO];
-		_visibleActionSheet = nil;
+	for (NSInteger i = 0; i < sheet.numberOfButtons; i++) {
+		NSString *title = [sheet buttonTitleAtIndex:i];
+		UIAlertActionStyle style = UIAlertActionStyleDefault;
+		if (i == sheet.cancelButtonIndex) style = UIAlertActionStyleCancel;
+		else if (i == sheet.destructiveButtonIndex) style = UIAlertActionStyleDestructive;
 
-		if ([sender isKindOfClass:[UIBarButtonItem class]]) {
-			[sheet showFromBarButtonItem:sender animated:animated];
-			_visibleActionSheet = sheet;
-		} else if ([sender isKindOfClass:[UIView class]]) {
-			UIView *view = sender;
-			[sheet showFromRect:view.bounds inView:view animated:animated];
-			_visibleActionSheet = sheet;
-		}
+		__weak __typeof__((self)) weakSelf = self;
 
-		return;
+		[_alertController addAction:[UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *action) {
+			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+
+			[strongSelf->_alertController removeFromParentViewController];
+			[strongSelf->_overlappingPresentationViewController.view removeFromSuperview];
+			strongSelf->_alertController = nil;
+			strongSelf->_overlappingPresentationViewController = nil;
+
+			[sheet.delegate actionSheet:sheet clickedButtonAtIndex:i];
+		}]];
 	}
 
-	if ([sender isKindOfClass:[UIView class]]) {
-		[sheet showInView:sender];
-		return;
-	}
-
-	if (!CGPointEqualToPoint(point, CGPointZero)) {
-		[sheet showFromRect:(CGRect){ point, { 1., 1. } } inView:_mainViewController.view animated:animated];
-		return;
-	}
-
-	[sheet showInView:_mainViewController.view];
+	[_overlappingPresentationViewController presentViewController:_alertController animated:YES completion:nil];
 }
 
 #pragma mark -
