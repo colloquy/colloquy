@@ -33,6 +33,7 @@
 #import "UITableViewAdditions.h"
 #import "UITableViewCellAdditions.h"
 #import "UIViewControllerAdditions.h"
+#import "UIWIndowAdditions.h"
 
 #import "CQSettingsController.h"
 

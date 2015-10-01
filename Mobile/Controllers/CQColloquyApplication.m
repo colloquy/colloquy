@@ -283,7 +283,7 @@ static NSMutableArray *highlightWords;
 			BOOL animationEnabled = [UIView areAnimationsEnabled];
 			[UIView setAnimationsEnabled:NO];
 
-			if (![[UIDevice currentDevice] isPadModel])
+			if (!self.navigationController.view.window.isFullscreen)
 				[self.navigationController popToRootViewControllerAnimated:NO];
 
 			if (roomName.length) {
@@ -679,7 +679,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) showColloquies:(__nullable id) sender hidingTopViewController:(BOOL) hidingTopViewController {
-	if ([[UIDevice currentDevice] isPadModel]) {
+	if (self.navigationController.view.window.isFullscreen) {
 		if (!_colloquiesPopoverController.popoverVisible) {
 			[self dismissPopoversAnimated:NO];
 			[_colloquiesPopoverController presentPopoverFromBarButtonItem:_colloquiesBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];

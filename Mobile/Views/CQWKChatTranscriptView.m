@@ -186,10 +186,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (BOOL) gestureRecognizerShouldBegin:(UIGestureRecognizer *) gestureRecognizer {
-	return [UIDevice currentDevice].isPadModel;
-}
-
 - (BOOL) gestureRecognizer:(UIGestureRecognizer *) gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *) otherGestureRecognizer {
 	return YES;
 }
@@ -542,7 +538,6 @@ NS_ASSUME_NONNULL_BEGIN
 		swipeGestureRecognizer.numberOfTouchesRequired = i;
 		swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
 		swipeGestureRecognizer.cancelsTouchesInView = NO;
-		swipeGestureRecognizer.delegate = self;
 
 		[self addGestureRecognizer:swipeGestureRecognizer];
 		[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
@@ -551,7 +546,6 @@ NS_ASSUME_NONNULL_BEGIN
 		swipeGestureRecognizer.numberOfTouchesRequired = i;
 		swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
 		swipeGestureRecognizer.cancelsTouchesInView = NO;
-		swipeGestureRecognizer.delegate = self;
 
 		[self addGestureRecognizer:swipeGestureRecognizer];
 		[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];

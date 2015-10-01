@@ -675,8 +675,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	[self resizeForViewInPopoverUsingTableView:self.tableView];
 
-	self.tableView.allowsSelectionDuringEditing = [[UIDevice currentDevice] isPadModel];
-	self.clearsSelectionOnViewWillAppear = ![[UIDevice currentDevice] isPadModel];
+	self.tableView.allowsSelectionDuringEditing = self.view.window.isFullscreen;
+	self.clearsSelectionOnViewWillAppear = !self.view.window.isFullscreen;
 
 	if ([self respondsToSelector:@selector(registerForPreviewingWithDelegate:sourceView:)])
 		_previewingContext = [self registerForPreviewingWithDelegate:self sourceView:self.view.window];
@@ -714,7 +714,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		}
 	}
 
-	if (defaultToEditing && ![UIDevice currentDevice].isPadModel)
+	if (defaultToEditing && !self.view.window.isFullscreen)
 		[self setEditing:YES animated:YES];
 
 	[super viewDidAppear:animated];
@@ -739,6 +739,11 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 
 	[self resizeForViewInPopoverUsingTableView:self.tableView];
+}
+
+- (void) traitCollectionDidChange:(nullable UITraitCollection *) previousTraitCollection {
+	self.tableView.allowsSelectionDuringEditing = self.view.window.isFullscreen;
+	self.clearsSelectionOnViewWillAppear = !self.view.window.isFullscreen;
 }
 
 #pragma mark -

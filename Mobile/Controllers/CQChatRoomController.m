@@ -262,7 +262,7 @@ NS_ASSUME_NONNULL_BEGIN
 	sheet.delegate = self;
 	sheet.tag = JoinActionSheet;
 
-	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+	if (!(self.view.window.isFullscreen && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		sheet.title = self.room.displayName;
 
 	if (self.available)
@@ -354,7 +354,7 @@ NS_ASSUME_NONNULL_BEGIN
 	sheet.title = nickname;
 	sheet.tag = NicknameActionSheet;
 
-	if ([UIDevice currentDevice].isPadModel)
+	if ([[UIDevice currentDevice] isPadModel] && self.view.window.isFullscreen)
 		[[CQColloquyApplication sharedApplication] showActionSheet:sheet fromPoint:location];
 	else [[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:nil animated:YES];
 }

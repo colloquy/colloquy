@@ -409,7 +409,7 @@ NS_ASSUME_NONNULL_BEGIN
 		cell.imageView.image = [UIImage imageNamed:@"userNormal.png"];
 	}
 
-	if (_listMode == CQChatUserListModeRoom && [UIDevice currentDevice].isPadModel)
+	if (_listMode == CQChatUserListModeRoom && self.view.window.isFullscreen)
 		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
 	if (user.status == MVChatUserAwayStatus || user.idleTime >= UserIdleTime) {

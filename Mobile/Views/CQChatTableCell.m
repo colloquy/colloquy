@@ -229,7 +229,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setHighlighted:(BOOL) highlighted animated:(BOOL) animated {
 	[super setHighlighted:highlighted animated:animated];
 
-	if ([[UIDevice currentDevice] isPadModel])
+	if (self.window.isFullscreen)
 		return;
 
 	[UIView animateWithDuration:(cq_shouldAnimate(animated) ? .3 : 0.) animations:^{
@@ -249,7 +249,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setSelected:(BOOL) selected animated:(BOOL) animated {
 	[super setSelected:selected animated:animated];
 
-	if ([[UIDevice currentDevice] isPadModel])
+	if (self.window.isFullscreen)
 		return;
 
 	[UIView animateWithDuration:(cq_shouldAnimate(animated) ? .3 : 0.) animations:^{

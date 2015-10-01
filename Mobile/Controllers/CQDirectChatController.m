@@ -542,7 +542,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[self _userDefaultsChanged];
 
-	transcriptView.allowSingleSwipeGesture = (![UIDevice currentDevice].isPadModel || ![self.splitViewController.delegate splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
+	transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] || ![self.splitViewController.delegate splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clear.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateNormal];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clearPressed.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateHighlighted];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButton.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
@@ -643,7 +643,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
 	BOOL isShowingCompletionsBeforeRotation = chatInputBar.isShowingCompletions;
 
-//	transcriptView.allowSingleSwipeGesture = (![UIDevice currentDevice].isPadModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:toInterfaceOrientation]);
+//	transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:toInterfaceOrientation]);
 
 	[coordinator animateAlongsideTransition:nil completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
 		[transcriptView scrollToBottomAnimated:NO];
@@ -2075,7 +2075,7 @@ NS_ASSUME_NONNULL_BEGIN
 	transcriptView.fontFamily = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFont"];
 	transcriptView.fontSize = chatTranscriptFontSize;
 	transcriptView.timestampPosition = timestampEveryMessage ? (timestampOnLeft ? CQTimestampPositionLeft : CQTimestampPositionRight) : CQTimestampPositionCenter;
-	transcriptView.allowSingleSwipeGesture = (![UIDevice currentDevice].isPadModel || ![self.splitViewController.delegate splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
+	transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] || ![self.splitViewController.delegate splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
 
 	chatInputBar.font = [chatInputBar.font fontWithSize:chatTranscriptFontSize];
 	if ([self isViewLoaded] && transcriptView)

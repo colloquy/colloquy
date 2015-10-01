@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSUInteger) supportedInterfaceOrientations {
 	UIInterfaceOrientationMask supportedOrientations = UIInterfaceOrientationMaskPortrait;
-	if ([UIDevice currentDevice].isPadModel)
+	if ([[UIDevice currentDevice] isPadModel])
 		supportedOrientations |= UIInterfaceOrientationMaskPortraitUpsideDown;
 
 	if (![[CQSettingsController settingsController] boolForKey:@"CQDisableLandscape"])
