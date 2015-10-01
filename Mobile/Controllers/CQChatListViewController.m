@@ -512,7 +512,11 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		if (self.editing) {
 			if (lookupIndexPath.section == 0)
 				continue;
-			lookupIndexPath = [NSIndexPath indexPathForRow:lookupIndexPath.row inSection:(lookupIndexPath.section - 1)];
+
+			if (lookupIndexPath.row == 0)
+				continue;
+
+			lookupIndexPath = [NSIndexPath indexPathForRow:(lookupIndexPath.row - 1) inSection:(lookupIndexPath.section - 1)];
 		}
 
 		id currentChatControllerForIndexPath = chatControllerForIndexPath(lookupIndexPath);
