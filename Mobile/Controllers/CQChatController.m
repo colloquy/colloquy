@@ -121,9 +121,7 @@ static CQSoundController *fileTransferSound;
 		return nil;
 
 	_chatNavigationController = [[CQChatNavigationController alloc] init];
-
-	if ([[UIDevice currentDevice] isPadModel])
-		_chatPresentationController = [[CQChatPresentationController alloc] init];
+	_chatPresentationController = [[CQChatPresentationController alloc] init];
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_joinedRoom:) name:MVChatRoomJoinedNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotRoomMessage:) name:MVChatRoomGotMessageNotification object:nil];
@@ -568,9 +566,6 @@ static CQSoundController *fileTransferSound;
 }
 
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
-	if (![UIDevice currentDevice].isPadModel)
-		[[CQColloquyApplication sharedApplication] showColloquies:nil hidingTopViewController:NO];
-
 	_nextRoomConnection = nil;
 
 	[_chatNavigationController dismissViewControllerAnimated:animated completion:NULL];
@@ -688,7 +683,7 @@ static CQSoundController *fileTransferSound;
 	NSDictionary *notificationInfo = @{@"controller": controller};
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatControllerRemovedChatViewControllerNotification object:self userInfo:notificationInfo];
 
-	if ([[UIDevice currentDevice] isPadModel] && _visibleChatController == controller) {
+	if (_visibleChatController == controller) {
 		if ([CQChatOrderingController defaultController].chatViewControllers.count) {
 			if (!controllerIndex)
 				controllerIndex = 1;

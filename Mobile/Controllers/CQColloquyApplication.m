@@ -162,20 +162,18 @@ static NSMutableArray *highlightWords;
 
 	highlightWords = nil;
 
-	if ([UIDevice currentDevice].isPadModel) {
-		NSNumber *newSwipeOrientationValue = [[CQSettingsController settingsController] objectForKey:@"CQSplitSwipeOrientations"];
+	NSNumber *newSwipeOrientationValue = [[CQSettingsController settingsController] objectForKey:@"CQSplitSwipeOrientations"];
 
-		if (![_oldSwipeOrientationValue isEqualToNumber:newSwipeOrientationValue]) {
-			_oldSwipeOrientationValue = [newSwipeOrientationValue copy];
+	if (![_oldSwipeOrientationValue isEqualToNumber:newSwipeOrientationValue]) {
+		_oldSwipeOrientationValue = [newSwipeOrientationValue copy];
 
-			if (self.modalViewController)
-				_userDefaultsChanged = YES;
-			else [self reloadSplitViewController];
+		if (self.modalViewController)
+			_userDefaultsChanged = YES;
+		else [self reloadSplitViewController];
 
-			BOOL disableSingleSwipe = [self splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:UIInterfaceOrientationLandscapeLeft] || [self splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:UIInterfaceOrientationPortrait];
-			if (disableSingleSwipe)
-				[[CQSettingsController settingsController] setInteger:0 forKey:@"CQSingleFingerSwipe"];
-		}
+		BOOL disableSingleSwipe = [self splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:UIInterfaceOrientationLandscapeLeft] || [self splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:UIInterfaceOrientationPortrait];
+		if (disableSingleSwipe)
+			[[CQSettingsController settingsController] setInteger:0 forKey:@"CQSingleFingerSwipe"];
 	}
 
 	[self updateAnalytics];
@@ -351,12 +349,7 @@ static NSMutableArray *highlightWords;
 
 	[self userDefaultsChanged];
 
-	if ([[UIDevice currentDevice] isPadModel]) {
-		[self reloadSplitViewController];
-	} else {
-		_mainViewController = [CQChatController defaultController].chatNavigationController;
-		_mainWindow.rootViewController = _mainViewController;
-	}
+	[self reloadSplitViewController];
 
 	[_mainWindow makeKeyAndVisible];
 

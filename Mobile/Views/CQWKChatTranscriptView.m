@@ -186,6 +186,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
+- (BOOL) gestureRecognizerShouldBegin:(UIGestureRecognizer *) gestureRecognizer {
+	return [UIDevice currentDevice].isPadModel;
+}
+
 - (BOOL) gestureRecognizer:(UIGestureRecognizer *) gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *) otherGestureRecognizer {
 	return YES;
 }
@@ -531,30 +535,26 @@ NS_ASSUME_NONNULL_BEGIN
 	[self resetSoon];
 
 	_allowSingleSwipeGesture = YES;
-
-	if ([UIDevice currentDevice].isPadModel)
-		_singleSwipeGestureRecognizers = [[NSMutableArray alloc] init];
+	_singleSwipeGestureRecognizers = [[NSMutableArray alloc] init];
 
 	for (NSUInteger i = 1; i <= 3; i++) {
 		UISwipeGestureRecognizer *swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGestureRecognized:)];
 		swipeGestureRecognizer.numberOfTouchesRequired = i;
 		swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
 		swipeGestureRecognizer.cancelsTouchesInView = NO;
+		swipeGestureRecognizer.delegate = self;
 
 		[self addGestureRecognizer:swipeGestureRecognizer];
-
-		if ([UIDevice currentDevice].isPadModel)
-			[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
+		[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
 
 		swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGestureRecognized:)];
 		swipeGestureRecognizer.numberOfTouchesRequired = i;
 		swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
 		swipeGestureRecognizer.cancelsTouchesInView = NO;
+		swipeGestureRecognizer.delegate = self;
 
 		[self addGestureRecognizer:swipeGestureRecognizer];
-
-		if ([UIDevice currentDevice].isPadModel)
-			[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
+		[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
 	}
 
 	UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureRecognizerRecognized:)];

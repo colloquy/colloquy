@@ -1330,7 +1330,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	[self.navigationItem setRightBarButtonItem:item animated:animated];
 
-	if (_active && [[UIDevice currentDevice] isPadModel])
+	if (_active)
 		[[CQChatController defaultController].chatPresentationController updateToolbarAnimated:YES];
 
 }

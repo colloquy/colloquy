@@ -43,19 +43,6 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 }
 
-- (BOOL) isPhoneModel {
-	static BOOL result;
-	static BOOL cached;
-
-	if (cached)
-		return result;
-
-	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPhone) && [self.model hasCaseInsensitiveSubstring:@"Phone"] && ![UIDevice currentDevice].isSystemEight;
-	cached = YES;
-
-	return result;
-}
-
 - (BOOL) isPadModel {
 	static BOOL result;
 	static BOOL cached;
@@ -63,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (cached)
 		return result;
 
-	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPad) || [UIDevice currentDevice].isSystemEight;
+	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPad);
 	cached = YES;
 
 	return result;

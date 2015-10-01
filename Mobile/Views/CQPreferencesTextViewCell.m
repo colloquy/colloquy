@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	_textView = [[CQTextView alloc] initWithFrame:CGRectZero];
 	_textView.editable = YES;
-	_textView.scrollEnabled = [[UIDevice currentDevice] isPadModel] ? NO : YES;
+	_textView.scrollEnabled = ![[UIDevice currentDevice] isPadModel];
 	_textView.font = [UIFont systemFontOfSize:17.];
 	_textView.keyboardType = UIKeyboardTypeDefault;
 	_textView.textAlignment = NSTextAlignmentLeft;
