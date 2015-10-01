@@ -1,7 +1,7 @@
 @import url(common.css);
 
 body {
-	font-family: "Helvetica Neue", Helvetica, sans-serif;
+	font-family: -apple-system-body, "Helvetica Neue", Helvetica, sans-serif;
 	font-size: 14px;
 	padding: 4px 0;
 }

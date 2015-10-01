@@ -324,7 +324,8 @@ static NSMutableArray *highlightWords;
 
 	NSString *fontName = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptFont"];
 	UIFont *font = [UIFont fontWithName:fontName size:12.];
-	if ((!font || [font.familyName hasCaseInsensitiveSubstring:@"Helvetica"]) && [[UIFont cq_availableRemoteFontNames] containsObject:fontName])
+	UIFont *systemFont = [UIFont systemFontOfSize:12.];
+	if ((!font || [font.familyName isCaseInsensitiveEqualToString:systemFont.familyName]) && [[UIFont cq_availableRemoteFontNames] containsObject:fontName])
 		[UIFont cq_loadFontWithName:fontName withCompletionHandler:NULL];
 
 	if ([[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"] == 600.)
@@ -344,8 +345,12 @@ static NSMutableArray *highlightWords;
 	if (![[CQChatController defaultController] hasPendingChatController] && [UIDevice currentDevice].isPadModel)
 		[[CQChatController defaultController] setFirstChatController];
 
-	if ([_mainWindow respondsToSelector:@selector(setTintColor:)])
-		_mainWindow.tintColor = [UIColor colorWithRed:0.427 green:0.086 blue:0.396 alpha:1];
+	_mainWindow.tintColor = [UIColor colorWithRed:0.427 green:0.086 blue:0.396 alpha:1];
+	if (UIAccessibilityDarkerSystemColorsEnabled()) {
+		CGFloat hue, saturation, brightness, alpha = 0.;
+		[_mainWindow.tintColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+		_mainWindow.tintColor = [UIColor colorWithHue:hue saturation:saturation * 1.13 brightness:brightness * .88 alpha:alpha];
+	}
 
 	[self userDefaultsChanged];
 
