@@ -173,7 +173,6 @@ NS_ASSUME_NONNULL_BEGIN
 	_status = status;
 
 	switch (status) {
-	default:
 	case CQConnectionTableCellNotConnectedStatus:
 		_badgeImageView.image = nil;
 		break;

@@ -893,7 +893,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	return ret;
 }
 
-- (NSString *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set {
+- (NSAttributedString *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set {
 	NSMutableAttributedString *mutableStorage = [self mutableCopy];
 	NSRange range = [mutableStorage.string rangeOfCharacterFromSet:set];
 	while (range.location != NSNotFound) {

@@ -151,7 +151,7 @@ NS_ASSUME_NONNULL_BEGIN
 		[renderer setValue:[NSValue valueWithCGRect:paperRect] forKey:@"paperRect"];
 		[renderer setValue:[NSValue valueWithCGRect:printableRect] forKey:@"printableRect"];
 	} @catch (NSException *e) {
-		NSLog(@"Failed to set PDF size information, unable to generate document");
+		NSLog(@"Failed to set PDF size information, unable to generate document: %@", e);
 		return nil;
 	}
 

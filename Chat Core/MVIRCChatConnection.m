@@ -3849,7 +3849,7 @@ end:
 
 	NSUInteger oldModes = [room modes];
 	NSUInteger argModes = 0;
-	NSUInteger value = 0;
+	NSInteger value = 0;
 	NSMutableArray *argsNeeded = [[NSMutableArray alloc] initWithCapacity:10];
 	NSUInteger i = 0, count = parameters.count;
 	NSMutableString *unsupportedModes = [NSMutableString string];

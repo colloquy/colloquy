@@ -181,7 +181,7 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_screencastDidFinishPlaying) name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];
 
 			[_moviePlayer play];
-		} @catch (NSException *exception) {
+		} @catch (__unused NSException *exception) {
 			[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 
 			[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];
