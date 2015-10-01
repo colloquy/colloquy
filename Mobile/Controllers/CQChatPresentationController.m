@@ -63,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) updateToolbarForInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation animated:(BOOL) animated {
-	if ([UIDevice currentDevice].userInterfaceIdiom != UIUserInterfaceIdiomPad)
+	if (![UIDevice currentDevice].isPadModel)
 		return;
 
 	NSMutableArray *allItems = [_standardToolbarItems mutableCopy];

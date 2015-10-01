@@ -56,19 +56,6 @@ NS_ASSUME_NONNULL_BEGIN
 	return result;
 }
 
-- (BOOL) isSystemEight {
-	static BOOL result;
-	static BOOL cached;
-
-	if (cached)
-		return result;
-
-	result = [NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 8;
-	cached = YES;
-
-	return result;
-}
-
 static BOOL isRetinaResultCached = NO;
 - (BOOL) isRetina {
 	static BOOL result;

@@ -173,10 +173,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 		[self userDefaultsChanged];
 
-		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
-			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
-			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide) name:UIKeyboardWillHideNotification object:nil];
-		}
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide) name:UIKeyboardWillHideNotification object:nil];
 	});
 }
 
@@ -227,12 +225,10 @@ NS_ASSUME_NONNULL_BEGIN
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:UIContentSizeCategoryDidChangeNotification object:nil];
 
-	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
-		_showingKeyboard = showingKeyboard;
-	}
+	_showingKeyboard = showingKeyboard;
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_nicknameDidChange:) name:MVChatUserNicknameChangedNotification object:nil];
 
@@ -415,7 +411,7 @@ NS_ASSUME_NONNULL_BEGIN
 	sheet.delegate = self;
 	sheet.tag = InfoActionSheet;
 
-	if (!([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+	if (!([UIDevice currentDevice].isPadModel && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		sheet.title = self.user.displayName;
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
@@ -557,11 +553,6 @@ NS_ASSUME_NONNULL_BEGIN
 	if (self.connection.connected)
 		[_target setMostRecentUserActivity:[NSDate date]];
 
-	if (![UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-	}
-
 	if (_showingKeyboard || showingKeyboard || hardwareKeyboard) {
 		_revealKeyboard = YES;
 	}
@@ -614,11 +605,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[[NSNotificationCenter chatCenter] removeObserver:self name:CQBookmarkingDidNotSaveLinkNotification object:nil];
 
-	if (![UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+
+	if (!self.view.window.isFullscreen)
 		[self.view endEditing:YES];
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-	}
 
 	[super viewWillDisappear:animated];
 }
@@ -628,7 +619,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[UIMenuController sharedMenuController].menuItems = nil;
 
-	if (![UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	if (!self.view.window.isFullscreen)
 		[chatInputBar resignFirstResponder];
 
 	_allowEditingToEnd = NO;
@@ -1937,7 +1928,7 @@ NS_ASSUME_NONNULL_BEGIN
 		strongSelf.activityPopoverController = nil;
 	};
 
-	BOOL usePopoverController = [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad && self.view.window.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+	BOOL usePopoverController = [UIDevice currentDevice].isPadModel && self.view.window.isFullscreen;
 	if (!usePopoverController)
 		[self presentViewController:activityController animated:[UIView areAnimationsEnabled] completion:nil];
 	else {
@@ -2038,7 +2029,7 @@ NS_ASSUME_NONNULL_BEGIN
 	const float CQDefaultDynamicTypeFontSize = 17.;
 
 	if (chatTranscriptFontSize == CQDefaultDynamicTypeFontSize || [[NSUserDefaults standardUserDefaults] boolForKey:@"CQOverrideDynamicTypeSize"]) {
-		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+		if ([UIDevice currentDevice].isPadModel) {
 			if (!chatTranscriptFontSizeString.length) {
 				chatTranscriptFontSize = 14; // default
 			} else if ([chatTranscriptFontSizeString isEqualToString:@"smallest"])
@@ -2193,7 +2184,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[self.navigationItem setRightBarButtonItem:item animated:animated];
 
-	if (_active && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	if (_active)
 		[[CQChatController defaultController].chatPresentationController updateToolbarAnimated:YES];
 
 }

@@ -1301,7 +1301,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	// Work around a bug on iOS 8(.1?) (on iPad?) where the tableview thinks the section header at the top of the screen
 	// is scrolled because the tableview has been scrolled to the point where there are rows behind it
 	NSIndexPath *firstVisibleRowIndexPath = tableView.indexPathsForVisibleRows.firstObject;
-	if (section == firstVisibleRowIndexPath.section && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	if (section == firstVisibleRowIndexPath.section && [UIDevice currentDevice].isPadModel)
 		presentationPoint.y = 86.;
 	else presentationPoint.y = CGRectGetMidY(converted);
 

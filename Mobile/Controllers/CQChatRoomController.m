@@ -225,7 +225,7 @@ NS_ASSUME_NONNULL_BEGIN
 		_currentUserListViewController.room = self.room;
 	}
 
-	BOOL usePopoverController = [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad && self.view.window.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+	BOOL usePopoverController = [UIDevice currentDevice].isPadModel && self.view.window.isFullscreen;
 	if (usePopoverController) {
 		if (!_currentUserListPopoverController) {
 			_currentUserListPopoverController = [[UIPopoverController alloc] initWithContentViewController:_currentUserListViewController];

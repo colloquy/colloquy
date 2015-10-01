@@ -341,7 +341,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *__nullable) launchOptions {
-	if (![[CQChatController defaultController] hasPendingChatController] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	if (![[CQChatController defaultController] hasPendingChatController] && [UIDevice currentDevice].isPadModel)
 		[[CQChatController defaultController] setFirstChatController];
 
 	if ([_mainWindow respondsToSelector:@selector(setTintColor:)])
@@ -539,7 +539,7 @@ static NSMutableArray *highlightWords;
 	_overlappingPresentationViewController = [[UIViewController alloc] init];
 	_overlappingPresentationViewController.view.backgroundColor = [UIColor clearColor];
 
-	if ([sender isKindOfClass:[UIView class]] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+	if ([sender isKindOfClass:[UIView class]] && [UIDevice currentDevice].isPadModel && !_mainWindow.isFullscreen) {
 		_overlappingPresentationViewController.view.frame = [sender bounds];
 
 		[sender addSubview:_overlappingPresentationViewController.view];
@@ -662,7 +662,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) showConnections:(__nullable id) sender {
-	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
+	if (![UIDevice currentDevice].isPadModel) {
 		[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
 		[self.navigationController popToRootViewControllerAnimated:NO];
 	}
@@ -778,7 +778,7 @@ static NSMutableArray *highlightWords;
 #pragma mark -
 
 - (UIColor *) tintColor {
-	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	if ([UIDevice currentDevice].isPadModel)
 		return nil;
 
 	NSString *style = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptStyle"];
