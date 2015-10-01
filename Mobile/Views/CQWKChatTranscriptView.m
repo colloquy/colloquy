@@ -300,11 +300,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) webView:(WKWebView *) webView didFinishNavigation:(WKNavigation *__null_unspecified) navigation {
 	[self performSelector:@selector(_checkIfLoadingFinished) withObject:nil afterDelay:0.];
 
-//	[self stringByEvaluatingJavaScriptFromString:@"document.body.style.webkitTouchCallout='none';"];
-
-	NSString *dynamicBodyFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].fontName;
-	BOOL isBold = [dynamicBodyFont hasCaseInsensitiveSubstring:@"Bold"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Italic"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Medium"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Black"];
-	if (isBold)
+	if (UIAccessibilityIsBoldTextEnabled())
 		[self stringByEvaluatingJavaScriptFromString:@"document.body.style.fontWeight='bold';"];
 	else [self stringByEvaluatingJavaScriptFromString:@"document.body.style.fontWeight='';"];
 }
