@@ -11,8 +11,7 @@
 
 typedef NS_ENUM(NSInteger, CQMentionLinkService) {
 	CQMentionLinkServiceNone,
-	CQMentionLinkServiceTwitter,
-	CQMentionLinkServiceAppDotNet
+	CQMentionLinkServiceTwitter
 };
 
 NSString *const CQInlineGIFImageKey = @"CQInlineGIFImageKey";
@@ -50,10 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 	inlineAudio = [[CQSettingsController settingsController] boolForKey:@"CQInlineAudio"];
 
 	CQMentionLinkService mentionService = (CQMentionLinkService)[[CQSettingsController settingsController] integerForKey:@"CQMentionLinkService"];
-	if (mentionService == CQMentionLinkServiceAppDotNet) {
-		mentionServiceRegex = @"\\B@[a-zA-Z0-9_]{1,20}";
-		mentionServiceReplacementFormat = @"<a href=\"https://alpha.app.net/%@\">@%@</a>";
-	} else if (mentionService == CQMentionLinkServiceTwitter) {
+	if (mentionService == CQMentionLinkServiceTwitter) {
 		mentionServiceRegex = @"\\B@[a-zA-Z0-9_]{1,20}";
 		mentionServiceReplacementFormat = @"<a href=\"https://twitter.com/%@\">@%@</a>";
 	} else {
