@@ -640,7 +640,7 @@ NS_ASSUME_NONNULL_BEGIN
 		if (isShowingCompletionsBeforeRotation)
 			[self _showChatCompletions];
 
-		transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
+		transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] || ![self.splitViewController.delegate splitViewController:nil shouldHideViewController:nil inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
 	}];
 }
 
