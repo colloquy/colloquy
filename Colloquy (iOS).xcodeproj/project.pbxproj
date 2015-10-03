@@ -813,8 +813,8 @@
 				1C9B60E80FFAE4C400B7BAC0 /* CQBouncerConnection.h */,
 				1C6341630FAF30B600BB5866 /* CQBouncerSettings.m */,
 				1C6341620FAF30B600BB5866 /* CQBouncerSettings.h */,
-				B68725B21B8E7FF60003D4F8 /* CQPrinterPage.h */,
 				B68725B31B8E7FF60003D4F8 /* CQPrinterPage.m */,
+				B68725B21B8E7FF60003D4F8 /* CQPrinterPage.h */,
 			);
 			name = Models;
 			path = Mobile/Models;
