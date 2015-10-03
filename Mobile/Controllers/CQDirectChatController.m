@@ -634,13 +634,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
 	BOOL isShowingCompletionsBeforeRotation = chatInputBar.isShowingCompletions;
 
-//	transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:toInterfaceOrientation]);
-
 	[coordinator animateAlongsideTransition:nil completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
 		[transcriptView scrollToBottomAnimated:NO];
 
 		if (isShowingCompletionsBeforeRotation)
 			[self _showChatCompletions];
+
+		transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
 	}];
 }
 
