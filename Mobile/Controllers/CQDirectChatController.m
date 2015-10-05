@@ -255,7 +255,6 @@ NS_ASSUME_NONNULL_BEGIN
 	[self setScrollbackLength:scrollbackLength];
 
 	_sentMessages = [[NSMutableArray alloc] init];
-	_batchStorage = [NSMutableDictionary dictionary];
 	_batchTypeAssociation = [NSMutableDictionary dictionary];
 
 	return self;
