@@ -1,7 +1,6 @@
 #import "JVChatTranscriptPanel.h"
 #import "KAIgnoreRule.h"
 #import "JVChatMessage.h"
-#import <WebKit/WebPolicyDelegate.h>
 
 #import <WebKit/WebKit.h>
 
@@ -19,15 +18,7 @@ extern NSString *JVToolbarMarkItemIdentifier;
 extern NSString *JVChatMessageWasProcessedNotification;
 extern NSString *JVChatEventMessageWasProcessedNotification;
 
-<<<<<<< HEAD
-@interface JVDirectChatPanel : JVChatTranscriptPanel <NSTextViewDelegate
-#ifdef __MAC_10_11
-, WebPolicyDelegate
-#endif
-> {
-=======
 @interface JVDirectChatPanel : JVChatTranscriptPanel <WebUIDelegate, WebPolicyDelegate> {
->>>>>>> svn
 	@protected
 	IBOutlet MVTextView *send;
 

@@ -27,6 +27,9 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 
 @property (nonatomic) BOOL shouldLogRawMessagesToConsole;
 
+- (void) openAllConnections;
+- (void) closeAllConnections;
+
 - (void) saveConnections;
 - (void) saveConnectionPasswordsToKeychain;
 

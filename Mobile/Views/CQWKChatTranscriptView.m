@@ -512,6 +512,8 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) _commonInitialization {
+	if ([self respondsToSelector:@selector(setAllowsLinkPreview:)])
+		self.allowsLinkPreview = YES;
 	self.scrollView.delegate = self;
 	self.navigationDelegate = self;
 

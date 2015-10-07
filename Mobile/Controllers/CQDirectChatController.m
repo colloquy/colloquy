@@ -577,8 +577,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (_unreadMessages && self.user)
 		[CQChatController defaultController].totalImportantUnreadCount -= _unreadMessages;
 
-	_unreadMessages = 0;
-	_unreadHighlightedMessages = 0;
+	[self markAsRead];
 
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 
@@ -951,12 +950,18 @@ NS_ASSUME_NONNULL_BEGIN
 	if (_unreadMessages && self.user)
 		[CQChatController defaultController].totalImportantUnreadCount -= _unreadMessages;
 
-	_unreadMessages = 0;
-	_unreadHighlightedMessages = 0;
+	[self markAsRead];
 
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 
 	[transcriptView reset];
+}
+
+- (void) markAsRead {
+	_unreadMessages = 0;
+	_unreadHighlightedMessages = 0;
+
+	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
 }
 
 #pragma mark -
@@ -2145,8 +2150,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (_unreadMessages && self.user)
 		[CQChatController defaultController].totalImportantUnreadCount -= _unreadMessages;
 
-	_unreadMessages = 0;
-	_unreadHighlightedMessages = 0;
+	[self markAsRead];
 
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 }

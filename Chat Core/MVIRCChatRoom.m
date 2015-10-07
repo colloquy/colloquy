@@ -362,7 +362,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if ( [addressMask hasCaseInsensitiveSuffix:@"IP"] ) {
 		addressMaskToBan = [[addressMask substringToIndex:addressMask.length - 2] stringByAppendingString:@"*"];
 	} else if ( [addressMask isMatchedByRegex:regexForIPv4Addresses] || [addressMask isMatchedByRegex:regexForIPv6Addresses] ) {
-		NSString *reversedIP = [NSString stringByReversingString:addressMask];
+		NSString *reversedIP = [NSString cq_stringByReversingString:addressMask];
 		scanner = [NSScanner scannerWithString:reversedIP];
 
 		[scanner setCharactersToBeSkipped:nil];

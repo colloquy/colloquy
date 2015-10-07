@@ -4,6 +4,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
+typedef NS_OPTIONS(NSInteger, CQAppIconOptions) {
+	CQAppIconOptionNone = 0,
+	CQAppIconOptionConnect = 1 << 0,
+	CQAppIconOptionDisconnect = 1 << 1,
+	CQAppIconOptionMarkAllAsRead = 1 << 2
+};
+
 @interface CQColloquyApplication : UIApplication
 + (CQColloquyApplication *) sharedApplication;
 
@@ -37,6 +44,9 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
 @property (nonatomic, readonly) NSDate *launchDate;
 @property (nonatomic, strong) NSDate *resumeDate;
+
+- (void) updateAppShortcuts;
+@property (nonatomic) CQAppIconOptions appIconOptions;
 
 - (void) submitRunTime;
 

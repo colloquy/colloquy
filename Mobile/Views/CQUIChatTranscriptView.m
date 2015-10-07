@@ -55,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return self;
 }
 
-- (instancetype) initWithCoder:(NSCoder *) coder {
+- (nullable instancetype) initWithCoder:(NSCoder *) coder {
 	if (!(self = [super initWithCoder:coder]))
 		return nil;
 
@@ -543,6 +543,9 @@ NS_ASSUME_NONNULL_BEGIN
 	_showRoomTopic = (CQShowRoomTopic)[[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
 
 	self.dataDetectorTypes = UIDataDetectorTypeNone;
+	if ([self respondsToSelector:@selector(setAllowsLinkPreview:)])
+		self.allowsLinkPreview = YES;
+	self.allowsInlineMediaPlayback = YES;
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged:) name:CQSettingsDidChangeNotification object:nil];
 }

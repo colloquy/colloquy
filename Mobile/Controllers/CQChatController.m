@@ -156,6 +156,8 @@ static CQSoundController *fileTransferSound;
 
 	CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:NO];
 	[controller addMessage:notification.userInfo];
+
+	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
 }
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {
@@ -176,6 +178,7 @@ static CQSoundController *fileTransferSound;
 	if (!hideFromUser) {
 		CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:NO userInitiated:NO];
 		[controller addMessage:notification.userInfo];
+		[[CQColloquyApplication sharedApplication] updateAppShortcuts];
 	}
 }
 
@@ -184,6 +187,7 @@ static CQSoundController *fileTransferSound;
 
 	CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForDirectChatConnection:connection ifExists:NO];
 	[controller addMessage:notification.userInfo];
+	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
 }
 
 #if ENABLE(FILE_TRANSFERS)
@@ -441,6 +445,20 @@ static CQSoundController *fileTransferSound;
 		[UIApplication sharedApplication].applicationIconBadgeNumber = count;
 
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatControllerChangedTotalImportantUnreadCountNotification object:self];
+}
+
+- (NSInteger) totalUnreadCount {
+	NSInteger totalUnreadCount = 0;
+	for (id <CQChatViewController> chatViewController in [CQChatOrderingController defaultController].chatViewControllers)
+		if ([chatViewController respondsToSelector:@selector(unreadCount)])
+			totalUnreadCount += chatViewController.unreadCount;
+	return totalUnreadCount;
+}
+
+- (void) resetTotalUnreadCount {
+	for (id <CQChatViewController> chatViewController in [CQChatOrderingController defaultController].chatViewControllers)
+		if ([chatViewController respondsToSelector:@selector(markAsRead)])
+			[chatViewController markAsRead];
 }
 
 #pragma mark -

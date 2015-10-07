@@ -23,9 +23,7 @@
 #import <ChatCore/MVChatConnectionPrivate.h>
 #import <ChatCore/MVChatRoom.h>
 
-#if defined(__IPHONE_9_0) && 0
 #import <CoreSpotlight/CoreSpotlight.h>
-#endif
 #import <MobileCoreServices/MobileCoreServices.h>
 
 #if SYSTEM(MAC)
@@ -1011,6 +1009,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 - (void) _didConnectOrDidNotConnect:(NSNotification *) notification {
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
 }
 
 - (void) _didNotConnect:(NSNotification *) notification {
@@ -1566,6 +1565,20 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 #pragma mark -
 
+- (void) openAllConnections {
+	for (MVChatConnection *connection in self.connections) {
+		if (!(connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus))
+			[connection connect];
+	}
+}
+
+- (void) closeAllConnections {
+	for (MVChatConnection *connection in self.connections) {
+		if ((connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus))
+			[connection disconnect];
+	}
+}
+
 - (void) saveConnections {
 	if (!_loadedConnections)
 		return;
@@ -1573,12 +1586,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	NSUInteger pushConnectionCount = 0;
 	NSUInteger roomCount = 0;
 
-#if defined(__IPHONE_9_0) && 0
 	NSData *serverImageData = UIImagePNGRepresentation([UIImage imageNamed:@"server.png"]);
-#endif
 	NSMutableArray *connections = [[NSMutableArray alloc] initWithCapacity:_directConnections.count];
 	for (MVChatConnection *connection in _directConnections) {
-#if defined(__IPHONE_9_0) && 0
 		if (NSClassFromString(@"CSSearchableIndex") != nil) {
 			CSSearchableItemAttributeSet *connectionAttributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"IRC Server"];
 			connectionAttributeSet.identifier = connection.uniqueIdentifier;
@@ -1613,7 +1623,6 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 			[[CSSearchableIndex defaultSearchableIndex] indexSearchableItems:items completionHandler:nil];
 		}
-#endif
 
 		NSMutableDictionary *connectionInfo = [self _dictionaryRepresentationForConnection:connection];
 		if (!connectionInfo)
