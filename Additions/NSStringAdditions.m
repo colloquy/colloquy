@@ -1136,9 +1136,11 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];	
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:range];
 
+	if (result == nil)
+		return NSMakeRange(NSNotFound, 0);
+
 	NSRange foundRange = [result rangeAtIndex:capture];
-	if (!(foundRange.location + foundRange.length))
-		return NSMakeRange(NSNotFound, 0); // work around iOS 5/NSRegularExpression bug where it doesn't return NSNotFound when not found
+
 	return foundRange;
 }
 
@@ -1149,6 +1151,9 @@ static NSCharacterSet *typicalEmoticonCharacters;
 - (NSString *) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error {
 	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:range];
+
+	if (result == nil)
+		return nil;
 
 	NSRange resultRange = [result rangeAtIndex:capture];
 
@@ -1162,7 +1167,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:range];
 
-	if (!result)
+	if (result == nil)
 		return nil;
 
 	NSMutableArray *results = [NSMutableArray array];
@@ -1416,23 +1421,13 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	return [self replaceOccurrencesOfRegex:regex withString:replacement options:0 range:NSMakeRange(0, self.length) error:nil];
 }
 
-- (BOOL ) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
+- (BOOL) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
 	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
 	if (!regularExpression)
 		return NO;
 
-	NSMutableString *replacementString = [self mutableCopy];
-
-	do {
-		NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:searchRange];
-		if (!result || result.range.location == NSNotFound)
-			break;
-
-		searchRange.length += (result.range.length - replacement.length);
-		[replacementString replaceCharactersInRange:result.range withString:replacement];
-	} while (0);
-
-	return YES;
+	NSUInteger matches = [regularExpression replaceMatchesInString:self options:0 range:searchRange withTemplate:replacement];
+	return matches > 0;
 }
 @end
 

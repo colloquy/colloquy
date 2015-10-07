@@ -21,6 +21,5 @@ CQActivitySubclass(CQSaveChatLogToPDFActivity, saveChatLog)
 CQActivitySubclass(CQChatRoomModesActivity, showRoomInfo)
 CQActivitySubclass(CQChatRoomTopicActivity, showRoomTopic)
 CQActivitySubclass(CQChatRoomBansActivity, showRoomBans)
-CQActivitySubclass(CQChatRoomInvitesActivity, showRoomInvites)
 
 #undef CQActivitySubclass

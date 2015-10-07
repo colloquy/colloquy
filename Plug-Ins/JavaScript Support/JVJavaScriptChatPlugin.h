@@ -1,12 +1,18 @@
 #import "MVChatPluginManager.h"
 #import "JVNotificationController.h"
 
+#import <WebKit/WebKit.h>
+
 extern NSString *JVJavaScriptErrorDomain;
 
 @class WebScriptCallFrame;
 @class WebView;
 
+<<<<<<< HEAD
 @interface JVJavaScriptChatPlugin : NSObject <MVChatPlugin, MVChatPluginNotificationSupport> {
+=======
+@interface JVJavaScriptChatPlugin : NSObject <MVChatPlugin, WebUIDelegate, WebPolicyDelegate, WebFrameLoadDelegate> {
+>>>>>>> svn
 	MVChatPluginManager *_manager;
 	NSString *_path;
 	NSDate *_modDate;

@@ -1,3 +1,5 @@
+#import <WebKit/WebKit.h>
+
 @class JVMarkedScroller;
 @class JVChatTranscript;
 @class JVChatMessage;
@@ -9,7 +11,7 @@
 extern NSString *JVStyleViewDidClearNotification;
 extern NSString *JVStyleViewDidChangeStylesNotification;
 
-@interface JVStyleView : WebView {
+@interface JVStyleView : WebView <WebFrameLoadDelegate> {
 	IBOutlet NSTextView *nextTextView;
 	BOOL _forwarding;
 	BOOL _switchingStyles;

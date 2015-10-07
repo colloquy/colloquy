@@ -18,13 +18,18 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 
 @implementation JVTranscriptFindWindowController
 + (JVTranscriptFindWindowController *) sharedController {
-	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
+	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:@"JVFind"] ) );
 }
 
 #pragma mark -
 
+<<<<<<< HEAD
 - (instancetype) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:@"JVFind"] ) ) {
+=======
+- (id) initWithWindowNibName:(NSString *) windowNibName {
+	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
+>>>>>>> svn
 		_rules = nil;
 		_results = nil;
 		_lastMessageIndex = 0;
