@@ -213,8 +213,8 @@ stringprep (char *in,
 	    int done_prohibited = 0;
 	    int done_ral = 0;
 	    int done_l = 0;
-	    int contains_ral = -1;
-	    int contains_l = -1;
+	    ssize_t contains_ral = -1;
+	    ssize_t contains_l = -1;
 
 	    for (j = 0; profile[j].operation; j++)
 	      if (profile[j].operation == STRINGPREP_BIDI_PROHIBIT_TABLE)

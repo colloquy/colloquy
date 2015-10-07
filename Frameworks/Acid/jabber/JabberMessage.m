@@ -57,43 +57,38 @@ XPathQuery* QRY_DELAY;
 
 +(void) initialize
 {
-    QRY_ENCRYPT = [[XPathQuery alloc] initWithPath:@"/message/x[%jabber:x:encrypted]"];
-    QRY_BODY = [[XPathQuery alloc] initWithPath:@"/message/body"];
-    QRY_SUBJECT = [[XPathQuery alloc] initWithPath:@"/message/subject"];
-    QRY_COMPOSING = [[XPathQuery alloc] initWithPath:@"/message/x[%jabber:x:event]/composing"];
-    QRY_CHATSTATE_COMPOSING = [[XPathQuery alloc] initWithPath:@"/message/composing[%http://jabber.org/protocol/chatstates]"];
-    QRY_CHATSTATE_ACTIVE = [[XPathQuery alloc] initWithPath:@"/message/active[%http://jabber.org/protocol/chatstates]"];
-    QRY_MEVENT_ID = [[XPathQuery alloc] initWithPath:@"/message/x[%jabber:x:event]/id"];
-    QRY_DELAY = [[XPathQuery alloc] initWithPath:@"/message/x[%jabber:x:delay]@stamp"];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        QRY_ENCRYPT = [[XPathQuery alloc] initWithPath:@"/message/x[%jabber:x:encrypted]"];
+        QRY_BODY = [[XPathQuery alloc] initWithPath:@"/message/body"];
+        QRY_SUBJECT = [[XPathQuery alloc] initWithPath:@"/message/subject"];
+        QRY_COMPOSING = [[XPathQuery alloc] initWithPath:@"/message/x[%jabber:x:event]/composing"];
+        QRY_CHATSTATE_COMPOSING = [[XPathQuery alloc] initWithPath:@"/message/composing[%http://jabber.org/protocol/chatstates]"];
+        QRY_CHATSTATE_ACTIVE = [[XPathQuery alloc] initWithPath:@"/message/active[%http://jabber.org/protocol/chatstates]"];
+        QRY_MEVENT_ID = [[XPathQuery alloc] initWithPath:@"/message/x[%jabber:x:event]/id"];
+        QRY_DELAY = [[XPathQuery alloc] initWithPath:@"/message/x[%jabber:x:delay]@stamp"];
+    });
 }
 
--(id) initWithRecipient:(JabberID*)jid
+-(instancetype) initWithRecipient:(JabberID*)jid
 {
     if (!(self = [super initWithQName:JABBER_MESSAGE_QN])) return nil;
 
     // Setup "to" attribute
-    to = [jid retain];
+    to = jid;
     [self putAttribute:@"to" withValue:[to completeID]];
 
     return self;
 }
 
--(id) initWithRecipient:(JabberID*)jid andBody:(NSString*)b
+-(instancetype) initWithRecipient:(JabberID*)jid andBody:(NSString*)b
 {
     if (!(self = [self initWithRecipient:jid])) return nil;
+    b = [b copy];
     [self addUniqueIDAttribute];
     [[self addElementWithName:@"body"] addCData:b];
-    body = [b retain];
+    body = b;
     return self;
-}
-
--(void) dealloc
-{
-    [to release];
-    [from release];
-    [body release];
-    [subject release];
-    [super dealloc];
 }
 
 -(void) setup
@@ -108,14 +103,14 @@ XPathQuery* QRY_DELAY;
     {
         // Append GMT timezone
         delaystamp = [delaystamp stringByAppendingString:@" 0000"];
-        delayedOnDate = [[NSCalendarDate dateWithString:delaystamp
-                                     calendarFormat:@"%Y%m%dT%H:%M:%S %z"] retain];
+        delayedOnDate = [NSCalendarDate dateWithString:delaystamp
+                                     calendarFormat:@"%Y%m%dT%H:%M:%S %z"];
         wasDelayed = YES;
     }
 
-    encrypted = [[QRY_ENCRYPT queryForString:self] retain];
-    body = [[QRY_BODY queryForString:self] retain];
-    subject = [[QRY_SUBJECT queryForString:self] retain];
+    encrypted = [QRY_ENCRYPT queryForString:self];
+    body = [QRY_BODY queryForString:self];
+    subject = [QRY_SUBJECT queryForString:self];
     to = [[JabberID alloc] initWithString:[self getAttribute:@"to"]];
     from = [[JabberID alloc] initWithString:[self getAttribute:@"from"]];
     isAction = [[QRY_BODY queryForString:self] hasPrefix:@"/me "];
@@ -132,15 +127,13 @@ XPathQuery* QRY_DELAY;
 
 -(void) setTo:(JabberID*)jid
 {
-    [to release];
-    to = [jid retain];
+    to = jid;
     [self putAttribute:@"to" withValue:[jid completeID]];
 }
 
 -(void)setFrom:(JabberID*)jid
 {
-    [from release];
-    from = [jid retain];
+    from = jid;
     [self putAttribute:@"from" withValue:[jid completeID]];
 }
 
@@ -151,22 +144,22 @@ XPathQuery* QRY_DELAY;
 
 -(void) setType:(NSString*)value
 {
-    [self putAttribute:@"type" withValue:value];
+    [self putAttribute:@"type" withValue:[value copy]];
 }
 
 -(void) setBody:(NSString*)s
 {
-    [body release];
-    body = [s retain];
+    s = [s copy];
+    body = s;
     // XXX: need to replace if existing already
     [[self addElementWithName:@"body"] addCData:s];
 }
 
 -(void) setEncrypted:(NSString*)s
 {
-    [encrypted release];
+    s = [s copy];
     XMLElement* elem;
-    encrypted = [s retain];
+    encrypted = s;
     elem = [self addElementWithName:@"x"];
     [elem putAttribute:@"xmlns" withValue:@"jabber:x:encrypted"];
     // XXX: need to replace if existing already
@@ -175,8 +168,8 @@ XPathQuery* QRY_DELAY;
 
 -(void) setSubject:(NSString*)s
 {
-    [subject release];
-    subject = [s retain];
+    s = [s copy];
+    subject = s;
     // XXX: need to replace if existing already!
     [[self addElementWithName:@"subject"] addCData:s];
 }
@@ -198,7 +191,7 @@ XPathQuery* QRY_DELAY;
     [self setType:@"chat"];
     elem = [self addElementWithQName:JABBER_X_EVENT_QN];
     [elem addElementWithName:@"composing"];
-    [[elem addElementWithName:@"id"] addCData:mid];
+    [[elem addElementWithName:@"id"] addCData:[mid copy]];
     eventType = JMEVENT_COMPOSING;
 }
 
@@ -206,7 +199,7 @@ XPathQuery* QRY_DELAY;
 {
     XMLElement* elem = [self addElementWithQName:JABBER_X_EVENT_QN];
     assert(eventType == JMEVENT_NONE);
-    [[elem addElementWithName:@"id"] addCData:mid];
+    [[elem addElementWithName:@"id"] addCData:[mid copy]];
     eventType = JMEVENT_COMPOSING_CANCEL;
 }
 

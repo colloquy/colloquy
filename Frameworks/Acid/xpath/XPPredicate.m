@@ -34,42 +34,35 @@
     BOOL      _invert;
     BOOL      _wildcard;
 }
--(id) initWithName:(NSString*)name withValue:(NSString*)value;
--(id) initInvertedWithName:(NSString*)name withValue:(NSString*)value;
+-(instancetype) initWithName:(NSString*)name withValue:(NSString*)value;
+-(instancetype) initInvertedWithName:(NSString*)name withValue:(NSString*)value;
 -(BOOL) matches:(XMLElement*)elem;
 @end
 
 @implementation XP_AttrValue
--(id) initWithName:(NSString*)name withValue:(NSString*)value
+-(instancetype) initWithName:(NSString*)name withValue:(NSString*)value
 {
 	if (!(self = [super init])) return nil;
-    _name = [name retain];
+    _name = name;
 
     if ([value characterAtIndex:[value length]-1] == '*')
     {
         _wildcard = TRUE;
-        _value = [[value substringToIndex:[value length]-1] retain];
+        _value = [value substringToIndex:[value length]-1];
     }
     else
     {
-        _value = [value retain];
+        _value = value;
     }
 
     return self;
 }
 
--(id) initInvertedWithName:(NSString*)name withValue:(NSString*)value
+-(instancetype) initInvertedWithName:(NSString*)name withValue:(NSString*)value
 {
     if (!(self = [self initWithName:name withValue:value])) return nil;
     _invert = YES;
     return self;
-}
-
--(void) dealloc
-{
-    [_name release];
-    [_value release];
-    [super dealloc];
 }
 
 -(BOOL) matches:(XMLElement*)elem
@@ -103,34 +96,27 @@
     BOOL      _invert;
     BOOL      _userhostOnly;
 }
--(id) initWithName:(NSString*)name withValue:(NSString*)value;
--(id) initInvertedWithName:(NSString*)name withValue:(NSString*)value;
+-(instancetype) initWithName:(NSString*)name withValue:(NSString*)value;
+-(instancetype) initInvertedWithName:(NSString*)name withValue:(NSString*)value;
 -(BOOL) matches:(XMLElement*)elem;
 -(void) selectCompareUserHostOnly:(BOOL)value;
 @end
 
 @implementation XP_JIDAttrValue
--(id) initWithName:(NSString*)name withValue:(NSString*)value
+-(instancetype) initWithName:(NSString*)name withValue:(NSString*)value
 {
 	if (!(self = [super init])) return nil;
-    _name = [name retain];
+    _name = name;
     _value = [[JabberID alloc] initWithEscapedString:value];
 
     return self;
 }
 
--(id) initInvertedWithName:(NSString*)name withValue:(NSString*)value
+-(instancetype) initInvertedWithName:(NSString*)name withValue:(NSString*)value
 {
     if (!(self = [self initWithName:name withValue:value])) return nil;
     _invert = YES;
     return self;
-}
-
--(void) dealloc
-{
-    [_name release];
-    [_value release];
-    [super dealloc];
 }
 
 -(void) selectCompareUserHostOnly:(BOOL)value
@@ -166,22 +152,16 @@
 {
     NSString* _xmlns;
 }
--(id) initWithNS:(NSString*)namespace;
+-(instancetype) initWithNS:(NSString*)namespace;
 -(BOOL) matches:(XMLElement*)elem;
 @end
 
 @implementation XP_Namespace
--(id) initWithNS:(NSString*)namespace
+-(instancetype) initWithNS:(NSString*)namespace
 {
 	if (!(self = [super init])) return nil;
-    _xmlns = [namespace retain];
+    _xmlns = [namespace copy];
     return self;
-}
-
--(void) dealloc
-{
-    [_xmlns release];
-    [super dealloc];
 }
 
 -(BOOL) matches:(XMLElement*)elem
@@ -297,14 +277,12 @@
         assert(0);
     }
 
-    [result autorelease];
     return result;
 }
 
 +(XPPredicate *) createAttributeExists:(NSString*)attributeName
 {
     XP_AttrValue* result = [[XP_AttrValue alloc] initWithName:attributeName withValue:nil];
-    [result autorelease];
     return result;
 }
 

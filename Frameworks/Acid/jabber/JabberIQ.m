@@ -24,9 +24,23 @@
 
 #import "acid.h"
 
-NSString* QUERY_PATH = @"/iq[@id='%@']";
+//This file is NOT converted to ARC because of handleCallback:
+
+#define QUERY_PATH @"/iq[@id='%@']"
+
+@interface JabberIQ ()
+@property (assign) JabberSession *session;
+@end
 
 @implementation JabberIQ
+{
+    JabberSession* _session;
+    NSString*      _query;
+    id             _observer;
+    SEL            _callback;
+    id             _object;
+}
+@synthesize queryElement = _query_elem;
 
 +(id) constructIQGet:(NSString*)namespace withSession:(JabberSession*)s
 {
@@ -56,12 +70,14 @@ NSString* QUERY_PATH = @"/iq[@id='%@']";
     return [result autorelease];
 }
 
--(id) initWithSession:(JabberSession*)s 
+-(instancetype) initWithSession:(JabberSession*)s
 {
-    if (!(self = [super initWithQName:JABBER_IQ_QN])) return nil;
-    _session = s;
+    if (self = [super initWithQName:JABBER_IQ_QN])
+    {
+    self.session = s;
     _query = [NSString stringWithFormat:QUERY_PATH, [self addUniqueIDAttribute]];
     [_query retain];
+    }
     return self;
 }
 
@@ -83,11 +99,6 @@ NSString* QUERY_PATH = @"/iq[@id='%@']";
     _observer = observer;
     _callback = selector;
     _object = object;
-}
-
--(XMLElement*) queryElement
-{
-    return _query_elem;
 }
 
 -(id) copyWithZone:(NSZone*)zone

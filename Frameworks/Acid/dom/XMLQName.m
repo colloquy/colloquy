@@ -45,16 +45,9 @@ XMLQNameManager* QNManager;
 -(instancetype) initWithName:(NSString*)name inURI:(NSString*)uri
 {
     if (!(self = [super init])) return nil;
-    _name = [name retain];
-    _uri  = [uri retain];
+    _name = [name copy];
+    _uri  = [uri copy];
     return self;
-}
-
--(void) dealloc
-{
-    [_name release];
-    [_uri release];
-    [super dealloc];
 }
 
 -(NSString*) description
@@ -65,7 +58,7 @@ XMLQNameManager* QNManager;
 -(id) copyWithZone:(NSZone*)zone
 {
     // XMLQName objects are immutable
-    return [self retain];
+    return self;
 }
 
 +(XMLQName*) construct:(NSString*)name withURI:(NSString*)uri
@@ -114,8 +107,6 @@ XMLQNameManager* QNManager;
 -(id) init
 {
     if (QNManager != nil) {
-        [self autorelease];
-        [QNManager retain];
         return QNManager;
     }
 
@@ -123,12 +114,6 @@ XMLQNameManager* QNManager;
     _uri_map = [[NSMutableDictionary alloc] init];
 
     return self;
-}
-
--(void) dealloc
-{
-    [_uri_map release];
-    [super dealloc];
 }
 
 -(XMLQName*) lookup:(NSString*)name withURI:(NSString*)uri
@@ -139,7 +124,6 @@ XMLQNameManager* QNManager;
     {
         result = [[XMLQName alloc] initWithName:name inURI:uri];
         _uri_map[key] = result;
-        [result release];
     }
     return result;
 }
@@ -161,7 +145,6 @@ XMLQNameManager* QNManager;
             result = [[XMLQName alloc] initWithName:key inURI:nil];
         }
         _uri_map[key] = result;
-        [result release];
     }
     return result;
 }

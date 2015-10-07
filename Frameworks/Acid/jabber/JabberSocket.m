@@ -30,16 +30,23 @@
 @end
 
 @implementation JabberSocket
+{
+    dispatch_queue_t  _connectionDelegateQueue;
+    GCDAsyncSocket*   _socket;
+    XMLElementStream* _parser;
+    JabberSession*    _session;
+    NSTimer*          _timer;
+}
 @synthesize useSSL = _useSSL;
 
--(id) initWithJabberSession:(JabberSession*)session
+-(instancetype) initWithJabberSession:(JabberSession*)session
 {
     if (!(self = [super init]))
 		return nil;
 
 	_connectionDelegateQueue = dispatch_queue_create([[self description] UTF8String], 0);
     _socket = [[NSClassFromString(@"GCDAsyncSocket") alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue];
-    _session = [session retain];    
+    _session = session;    
 
     return self;
 }
@@ -47,11 +54,8 @@
 -(void) dealloc
 {
     [_timer invalidate];
-    [_socket release];
-    [_session release];
     _session = nil;
 	dispatch_release(_connectionDelegateQueue);
-    [super dealloc];
 }
 
 -(void) onKeepAliveTick:(NSTimer*)t
@@ -107,12 +111,10 @@
 - (void) socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
 {
 	if (_useSSL) {
-		NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
-		settings[(NSString *)kCFStreamSSLAllowsAnyRoot] = @YES;
-		settings[(id)kCFStreamPropertySocketSecurityLevel] = (id)kCFStreamSocketSecurityLevelNegotiatedSSL;
+        NSDictionary *settings = @{(NSString *)kCFStreamSSLAllowsAnyRoot: @YES,
+                                   (id)kCFStreamPropertySocketSecurityLevel: (id)kCFStreamSocketSecurityLevelNegotiatedSSL};
 
 		[_socket startTLS:settings];
-		[settings release];
 	}
 
 	[_session postNotificationName:JSESSION_CONNECTED object:self];
@@ -127,7 +129,7 @@
 	[_socket readDataWithTimeout:-1. tag:0];
 }
 
-- (void) socketDidDisconnect:(AsyncSocket *)sock
+- (void) socketDidDisconnect:(GCDAsyncSocket *)sock
 {
     [_timer invalidate];
     _timer = nil;

@@ -30,15 +30,17 @@
 static NSMutableDictionary* G_cache;
 
 @implementation JabberID
+{
+    JabberID* _userhost_jid;
+    NSUInteger _hash_value; // cache the hash value, since it is
+                            // time-consuming to create
+}
 @synthesize hash = _hash_value;
-@synthesize hostname = _hostname;
-@synthesize username = _username;
-@synthesize resource = _resource;
 @synthesize completeID = _complete;
 
 -(id) copyWithZone:(NSZone*)zone
 {
-    return [self retain];
+    return self;
 }
 
 +(BOOL) parseString:(NSString*)jid 
@@ -147,7 +149,7 @@ static NSMutableDictionary* G_cache;
     }
     else
     {
-        *complete = [*hostname retain];
+        *complete = *hostname;
     }
     
     return TRUE;
@@ -161,7 +163,7 @@ static NSMutableDictionary* G_cache;
     });
 }
 
--(id) initWithFormat:(NSString*)fmt, ...
+-(instancetype) initWithFormat:(NSString*)fmt, ...
 {
     va_list argList;
     NSString* fstr;
@@ -172,16 +174,14 @@ static NSMutableDictionary* G_cache;
     va_end(argList);
 
     result = [self initWithString:fstr];
-    [fstr release];
     return result;
 }
 
 
--(id) initWithString:(NSString*)jidstring
+-(instancetype) initWithString:(NSString*)jidstring
 {
     if ([jidstring length] == 0)
     {
-        [self release];
         return nil;
     }
 
@@ -189,31 +189,33 @@ static NSMutableDictionary* G_cache;
     JabberID* result = G_cache[jidstring];
     if (result != nil)
     {
-        [self release];
-        return [result retain];
+        return result;
     }
 
     // Ok, this particular string wasn't found -- let's parse
     // and string prep before looking again
 	if (!(self = [super init])) return nil;
 
+    NSString *tmpUserName = _username,
+    *tmpHostName = _hostname,
+    *tmpResource = _resource,
+    *tmpComplete = _complete;
     if ([JabberID parseString:jidstring
-                  intoUsername:&_username
-                  intoHostname:&_hostname
-                  intoResource:&_resource
-                  intoComplete:&_complete] == NO)
+                  intoUsername:&tmpUserName
+                  intoHostname:&tmpHostName
+                  intoResource:&tmpResource
+                  intoComplete:&tmpComplete] == NO)
     {
         // Invalid JID
-        [self release];
         return nil;
     }
 
     // Save the values just generated -- so that dealloc works
     // correctly
-    [_username retain];
-    [_hostname retain];
-    [_resource retain];
-    [_complete retain];
+    _username = tmpUserName;
+    _hostname = tmpHostName;
+    _resource = tmpResource;
+    _complete = tmpComplete;
 
     // Check the cache for the JID again...
     result = G_cache[_complete];
@@ -224,8 +226,7 @@ static NSMutableDictionary* G_cache;
         G_cache[jidstring] = result;
 
         // Cleanup and return the object we found
-        [self release];
-        return [result retain];
+        return result;
     }
     
     // Pre-compute the hash value
@@ -247,20 +248,19 @@ static NSMutableDictionary* G_cache;
         {
             // No userhost jid found -- make it
             uhjid = [[JabberID alloc] init];
-            uhjid->_username = [_username retain];
-            uhjid->_hostname = [_hostname retain];
-            uhjid->_complete = [key retain];
+            uhjid->_username = _username;
+            uhjid->_hostname = _hostname;
+            uhjid->_complete = key;
             uhjid->_hash_value = [key hash];
             
             // Store it in the cache
             G_cache[key] = uhjid;
 
             // Release this jid -- we'll retain it in just a sec...
-            [uhjid release];
         }
 
         // Save this jid as our own
-        _userhost_jid = [uhjid retain];
+        _userhost_jid = uhjid;
     }
 
     // Save the result in the cache -- save it once with the 
@@ -272,14 +272,14 @@ static NSMutableDictionary* G_cache;
     return self;
 }
 
--(id) initWithEscapedString:(NSString*)jidstring
+-(instancetype) initWithEscapedString:(NSString*)jidstring
 {
     NSData *jidstringData = [jidstring dataUsingEncoding:NSUTF8StringEncoding];
     return [self initWithString:[XMLCData unescape:[jidstringData bytes] ofLength:[jidstringData length]]];
 }
 
 
--(id) initWithUserHost:(NSString*)userhost
+-(instancetype) initWithUserHost:(NSString*)userhost
           andResource:(NSString*)resource
 {
     if ([resource length] > 0)
@@ -296,7 +296,7 @@ static NSMutableDictionary* G_cache;
 
 +(id) withString:(NSString*)jidstring
 {
-    return [[[JabberID alloc] initWithString:jidstring] autorelease];
+    return [[JabberID alloc] initWithString:jidstring];
 }
 
 +(id) withFormat:(NSString*)fmt, ...
@@ -310,7 +310,6 @@ static NSMutableDictionary* G_cache;
     va_end(argList);
 
     result = [self withString:fstr];
-    [fstr release];
     return result;
 }
 
@@ -318,20 +317,8 @@ static NSMutableDictionary* G_cache;
 +(id) withUserHost:(NSString*)userhost
       andResource:(NSString*)resource
 {
-    return [[[JabberID alloc] initWithUserHost:userhost
-                             andResource:resource] autorelease];
-}
-
--(void) dealloc
-{
-    [_username release];
-    [_hostname release];
-    [_resource release];
-    [_complete release];
-
-    [_userhost_jid release];
-
-    [super dealloc];
+    return [[JabberID alloc] initWithUserHost:userhost
+                             andResource:resource];
 }
 
 -(NSString*) userhost

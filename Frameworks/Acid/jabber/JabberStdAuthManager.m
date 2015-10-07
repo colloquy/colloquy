@@ -22,20 +22,27 @@
 // $Id: JabberStdAuthManager.m,v 1.2 2005/04/29 18:44:44 gbooker Exp $
 //============================================================================
 
-#import "acid.h"
+#import "Acid.h"
 #include <CommonCrypto/CommonCrypto.h>
 #include <CommonCrypto/CommonDigest.h>
 
-NSString* DFMT = @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x";
+#define DFMT @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x"
 
 @implementation JabberStdAuthManager
+{
+    JabberID*      _jid;
+    JabberSession* _session;
+    NSString*      _0k_token;
+    int            _0k_sequence;
+    JAuthType      _type;
+}
 
 -(void) authenticateJID:(JabberID*)jid forSession:(JabberSession*)session
 {
     JabberIQ* auth_query;
 
     // Save JID and session info
-    _jid = [jid retain];
+    _jid = jid;
     _session = session;
     
     // Build an auth query

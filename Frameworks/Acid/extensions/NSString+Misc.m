@@ -30,7 +30,6 @@
 {
     NSData *data = [[NSData alloc] initWithBytes:bytes length:length];
     self = [self initWithData:data encoding:NSUTF8StringEncoding];
-    [data release];
     return self;
 }
 
@@ -40,7 +39,6 @@
     NSData* data = [[NSData alloc] initWithBytesNoCopy:bytes length:length 
                                   freeWhenDone:free];
     self = [self initWithData:data encoding:NSUTF8StringEncoding];
-    [data release];
     return self;
 }
 

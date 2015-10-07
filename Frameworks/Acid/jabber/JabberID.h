@@ -34,19 +34,10 @@
   insensitivity.
 */
 @interface JabberID : NSObject <NSCopying, NSCoding>
-{
-    NSString* _username;
-    NSString* _hostname;
-    NSString* _resource;
-    NSString* _complete;
-    JabberID* _userhost_jid;
-    NSUInteger _hash_value; // cache the hash value, since it is
-			      // time-consuming to create
-}
 
 /*!
-  @method hash
-  @abstract return an unsigned value associated with the value of this
+  @property hash
+  @abstract An unsigned value associated with the value of this
   JabberID. This value will remain constant over the lifetime of the
   JabberID instance, and will be equivalent to the value of another
   JabberID instance which would be considered equivalent (although
@@ -104,52 +95,52 @@
   @param resource  resource portion of the Jabber Identifier
 */
 -(instancetype) initWithUserHost:(NSString*)userhost
-           andResource:(NSString*)resource;
+                     andResource:(NSString*)resource;
 
 /*!
-  @method username
-  @abstract Retrieve the username (Node) portion of the Jabber
+  @property username
+  @abstract The username (Node) portion of the Jabber
   Identifier, or "" if none.
  */
 @property (readonly, copy) NSString *username;
 /*!
-  @method userhost
-  @abstract Retrieve the userhost portion of the Jabber Identifier
+  @property userhost
+  @abstract The userhost portion of the Jabber Identifier
 */
 @property (readonly, copy) NSString *userhost;
 /*!
-  @method hostname
-  @abstract Retrieve the hostname (Domain) portion of the Jabber Identifier
+  @property hostname
+  @abstract The hostname (Domain) portion of the Jabber Identifier
 */
 @property (readonly, copy) NSString *hostname;
 /*!
-  @method resource
-  @abstract Retrieve the resource portion of the Jabber Identifier, or
+  @property resource
+  @abstract The resource portion of the Jabber Identifier, or
   "" if none.
 */
 @property (readonly, copy) NSString *resource;
 /*!
-  @method hasResource
-  @abstract returns YES if there is a resource on the Jabber Identifier
+  @property hasResource
+  @abstract Is \c YES if there is a resource on the Jabber Identifier
 */
 @property (readonly) BOOL hasResource;
 /*!
-  @method hasUsername
-  @abstract returns YES if there is a username (Node) on the Jabber
+  @property hasUsername
+  @abstract Is \c YES if there is a username (Node) on the Jabber
   Identifier
 */
 @property (readonly) BOOL hasUsername;
 
 /*!
-  @method userhostJID
-  @abstract returns a Jabber Identifier without any resource
+  @property userhostJID
+  @abstract A Jabber Identifier without any resource
   portion. Returns self if there was no resource
 */
--(JabberID*) userhostJID;
+@property (readonly, strong) JabberID *userhostJID;
 
 /*!
-  @method completeID
-  @abstract returns a NSString representation of the full Jabber Identifier
+  @property completeID
+  @abstract An NSString representation of the full Jabber Identifier
 */
 @property (readonly, copy) NSString *completeID;
 @property (readonly, copy) NSString *escapedCompleteID;
@@ -163,7 +154,7 @@
 -(BOOL) isEqual:(JabberID*)other;
 -(NSComparisonResult) compare:(JabberID *)object;
 
-/*
+/*!
  @method isUserhostEqual:
  @abstract determine if two Jabber Identifiers have matching userhosts
  @param other second Jabber Identifier to which we are comparing
@@ -198,5 +189,5 @@
   @param resource  resource portion of the Jabber Identifier
  */
 +(instancetype) withUserHost:(NSString*)userhost
-      andResource:(NSString*)resource;
+                 andResource:(NSString*)resource;
 @end

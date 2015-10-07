@@ -28,7 +28,7 @@
 
 @interface JRGroup : NSObject <JabberGroup>
 {
-    NSString*       _name;
+@private
     NSMutableArray* _items;
 }
 +(instancetype) groupWithName: (NSString*) name;
@@ -50,8 +50,7 @@
 +(id) groupWithName: (NSString*) name
 {
     JRGroup* result = [[JRGroup alloc] init];
-    result->_name = [name retain];
-    [result autorelease];
+    result->_name = name;
     return result;
 }
 
@@ -60,13 +59,6 @@
 	if (!(self = [super init])) return nil;
     _items = [[NSMutableArray alloc] init];
     return self;
-}
-
--(void) dealloc
-{
-    [_items release];
-    [_name release];
-    [super dealloc];
 }
 
 -(NSUInteger) count
@@ -101,6 +93,11 @@
 @end
 
 @implementation JabberGroupTracker
+{
+    NSMutableDictionary* _groups;
+    NSMutableArray*      _groupArray;
+}
+
 - (NSUInteger) count
 {
     return [_groupArray count];
@@ -119,9 +116,7 @@
 -(BOOL) onAddedItem: (id)item
 {
     BOOL retval = NO;
-    id groupName;
-    NSEnumerator *e = [[item groups] objectEnumerator];
-    while ((groupName = [e nextObject]))
+    for (id groupName in [item groups])
     {
         if ([self item: item addedToGroup: groupName])
         {
@@ -134,9 +129,7 @@
 -(BOOL) onRemovedItem: (id)item
 {
     BOOL retval = NO;
-    id groupName;
-    NSEnumerator *e = [[item groups] objectEnumerator];
-    while ((groupName = [e nextObject]))
+    for (id groupName in [item groups])
     {
         if ([self item: item removedFromGroup: groupName])
         {
@@ -146,7 +139,7 @@
     return retval;
 }
 
-- (id) init
+- (instancetype) init
 {
     if ((self = [super init]))
     {
@@ -156,17 +149,14 @@
     return self;
 }
 
-- (id) initFromRoster: (JabberRoster*) roster withFilter: (id) object selector: (SEL) selector
+- (instancetype) initFromRoster: (JabberRoster*) roster withFilter: (id) object selector: (SEL) selector
 {
     if ((self = [self init]))
     {
-        id item;
-        NSEnumerator *e;
         _groups = [[NSMutableDictionary alloc] init];
         _groupArray = [[NSMutableArray alloc] init];
 
-        e = [roster itemEnumerator];
-        while ((item = [e nextObject]))
+        for (id item in roster)
         {
             if (object != nil)
             {
@@ -186,18 +176,11 @@
 }
 
 
-- (id) initFromRoster: (JabberRoster*) roster
+- (instancetype) initFromRoster: (JabberRoster*) roster
 {
     return [self initFromRoster: roster withFilter: nil selector: nil];
 }
 
-
-- (void) dealloc
-{
-    [_groups release];
-    [_groupArray release];
-    [super dealloc];
-}
 
 -(BOOL) item: (id) item addedToGroup: (NSString*) groupName
 {

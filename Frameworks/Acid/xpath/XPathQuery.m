@@ -29,26 +29,14 @@
 // ---------------------------
 @implementation XPathQuery
 
--(id) initWithPath:(NSString*)path
+-(instancetype) initWithPath:(NSString*)path
 {
     if ((self = [super init]))
     {
-        _expression = [[XPLocation createWithPath:path] retain];
-        _path = [path retain];
+        _expression = [XPLocation createWithPath:path];
+        _path = [path copy];
     }
     return self;
-}
-
--(void) dealloc
-{
-    [_expression release];
-    [_path release];
-    [super dealloc];
-}
-
--(NSString*) path
-{
-    return _path;
 }
 
 -(BOOL) matches:(XMLElement*)elem
@@ -62,13 +50,11 @@
     [_expression queryForString:elem withResultBuffer:result];
     if ([result length] == 0)
     {
-        [result release];
         return nil;
     }
     else
     {
-        [result autorelease];
-        return result;
+        return [result copy];
     }
 }
 
@@ -78,13 +64,11 @@
     [_expression queryForList:elem withResultArray:result];
     if ([result count] == 0)
     {
-        [result release];
         return nil;
     }
     else
     {
-        [result autorelease];
-        return result;
+        return [result copy];
     }
 }
 
@@ -94,41 +78,35 @@
     [_expression queryForStringList:elem withResultArray:result];
     if ([result count] == 0)
     {
-        [result release];
         return nil;
     }
     else
     {
-        [result autorelease];
-        return result;
+        return [result copy];
     }
 }
 
 +(BOOL) matches:(XMLElement*)elem xpath:(NSString*)path
 {
     XPathQuery* xp = [[XPathQuery alloc] initWithPath:path];
-    [xp autorelease];
     return [xp matches:elem];
 }
 
 +(NSString*)  queryForString:(XMLElement*)elem xpath:(NSString*)path
 {
     XPathQuery* xp = [[XPathQuery alloc] initWithPath:path];
-    [xp autorelease];
     return [xp queryForString:elem];
 }
 
 +(NSArray*)   queryForList:(XMLElement*)elem xpath:(NSString*)path
 {
     XPathQuery* xp = [[XPathQuery alloc] initWithPath:path];
-    [xp autorelease];
     return [xp queryForList:elem];
 }
 
 +(NSArray*) queryForStringList:(XMLElement*)elem xpath:(NSString*)path
 {
     XPathQuery* xp = [[XPathQuery alloc] initWithPath:path];
-    [xp autorelease];
     return [xp queryForStringList:elem];
 }
 

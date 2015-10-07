@@ -35,6 +35,8 @@ XMLQName* JABBER_IQ_VERSION_QN;
 XMLQName* JABBER_IQ_LAST_QN;
 XMLQName* JABBER_CLIENTCAP_QN;
 
+//This file is NOT converted to ARC because it relies on retain counts.
+
 @interface Jabber : NSObject
 
 @end

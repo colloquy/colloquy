@@ -34,6 +34,12 @@ XPathQuery* QRY_SIGN;
 @end
 
 @implementation JabberPresence
+@synthesize from;
+@synthesize to;
+@synthesize priority;
+@synthesize show;
+@synthesize sign;
+@synthesize status;
 
 +(instancetype) constructElement:(XMLQName*)qname withAttributes:(NSMutableDictionary*)atts withDefaultURI:(NSString*)default_uri
 {
@@ -49,10 +55,13 @@ XPathQuery* QRY_SIGN;
 
 +(void) initialize
 {
-    QRY_PRIORITY = [[XPathQuery alloc] initWithPath:@"/presence/priority"];
-    QRY_SHOW     = [[XPathQuery alloc] initWithPath:@"/presence/show"];
-    QRY_STATUS   = [[XPathQuery alloc] initWithPath:@"/presence/status"];
-    QRY_SIGN  	 = [[XPathQuery alloc] initWithPath:@"/presence/x[%jabber:x:signed]"];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        QRY_PRIORITY = [[XPathQuery alloc] initWithPath:@"/presence/priority"];
+        QRY_SHOW     = [[XPathQuery alloc] initWithPath:@"/presence/show"];
+        QRY_STATUS   = [[XPathQuery alloc] initWithPath:@"/presence/status"];
+        QRY_SIGN  	 = [[XPathQuery alloc] initWithPath:@"/presence/x[%jabber:x:signed]"];
+    });
 }
 
 -(void) setup
@@ -60,19 +69,9 @@ XPathQuery* QRY_SIGN;
     to = [[JabberID alloc] initWithString:[self getAttribute:@"to"]];
     from = [[JabberID alloc] initWithString:[self getAttribute:@"from"]];
     priority = [[QRY_PRIORITY queryForString:self] intValue];
-    show = [[QRY_SHOW queryForString:self] retain];
-    status = [[QRY_STATUS queryForString:self] retain];
-    sign = [[QRY_SIGN queryForString:self] retain];
-}
-
--(void) dealloc
-{
-    [status release];
-    [show release];
-    [to release];
-    [from release];
-    [sign release];
-    [super dealloc];
+    show = [QRY_SHOW queryForString:self];
+    status = [QRY_STATUS queryForString:self];
+    sign = [QRY_SIGN queryForString:self];
 }
 
 -(BOOL) isEqual:(JabberPresence*)other
@@ -88,37 +87,6 @@ XPathQuery* QRY_SIGN;
 -(NSComparisonResult) compareFromResourcesIgnoringCase:(id)other
 {
     return [[from resource] caseInsensitiveCompare:[[other from] resource]];
-}
-
-
--(JabberID*) from
-{
-    return from;
-}
-
--(JabberID*) to
-{
-    return to;
-}
-
--(int) priority
-{
-    return priority;
-}
-
--(NSString*) show
-{
-    return show;
-}
-
--(NSString*) sign
-{
-    return sign;
-}
-
--(NSString*) status
-{
-    return status;
 }
 
 @end

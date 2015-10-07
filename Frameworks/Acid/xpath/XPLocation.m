@@ -25,13 +25,13 @@
 #import "acid-xpath.h"
 #import "acid-dom.h"
 
-@interface XPLocation (Private)
--(id) initWithTokens:(NSMutableString*)pathtokens;
+@interface XPLocation ()
+-(instancetype) initWithTokens:(NSMutableString*)pathtokens;
 @end
 
 @implementation XPLocation
 
--(id) init
+-(instancetype) init
 {
     if ((self = [super init]))
     {
@@ -40,23 +40,14 @@
     return self;
 }
 
--(void) dealloc
-{
-    [_predicates release];
-    [_next release];
-    [_elementName release];
-    [_attributeName release];
-    [super dealloc];
-}
-
 +(id) createWithPath:(NSString*)basepath
 {
-    NSMutableString* pathtokens = [[basepath mutableCopy] autorelease];
+    NSMutableString* pathtokens = [basepath mutableCopy];
     XPLocation* result = [[XPLocation alloc] initWithTokens:pathtokens];
-    return [result autorelease];
+    return result;
 }
 
--(id) initWithTokens:(NSMutableString*)pathtokens
+-(instancetype) initWithTokens:(NSMutableString*)pathtokens
 {
     self = [super init];
     if (self == nil)
@@ -74,7 +65,6 @@
     assert(_elementName != nil);
 
     // Save a copy of the element location name
-    [_elementName retain];
 
     // Begin looping
     while (YES)
@@ -125,8 +115,7 @@
     if (_next != nil)
     {
         NSEnumerator* e = [elem childElementsEnumerator];
-        id curr;
-        while ((curr = [e nextObject]))
+        for (id curr in e)
         {
             if ([_next matches:curr])
                 return YES;
@@ -151,8 +140,7 @@
         if (_next != nil)
         {
             NSEnumerator* e = [elem childElementsEnumerator];
-            id curr;
-            while ((curr = [e nextObject]))
+            for (id curr in e)
             {
                 [_next queryForString:curr withResultBuffer:result];
             }
@@ -185,8 +173,7 @@
         if (_next != nil)
         {
             NSEnumerator* e = [elem childElementsEnumerator];
-            id curr;
-            while ((curr = [e nextObject]))
+            for (id curr in e)
             {
                 [_next queryForList:curr withResultArray:result];
             }
@@ -217,8 +204,7 @@
         if (_next != nil)
         {
             NSEnumerator* e = [elem childElementsEnumerator];
-            id curr;
-            while ((curr = [e nextObject]))
+            for (id curr in e)
             {
                 [_next queryForStringList:curr withResultArray:result];
             }
@@ -241,9 +227,7 @@
 
     if (_predicates != nil)
     {
-        NSEnumerator* e = [_predicates objectEnumerator];
-        id curr;
-        while ((curr = [e nextObject]))
+        for (id curr in _predicates)
         {
             if (![curr matches:elem])
                 return NO;

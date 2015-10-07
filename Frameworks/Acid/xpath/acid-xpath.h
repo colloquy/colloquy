@@ -31,7 +31,7 @@
 #import <Foundation/NSString.h>
 
 /*!
-  @class NSMutableString (_ACID_EXT)
+  @e NSMutableString (_ACID_EXT)
   @abstract adds tokenization and range removal to NSMutableString
 */
 @interface NSMutableString (_ACID_EXT)
@@ -39,7 +39,7 @@
   @method nextTokenDelimitedBy
   @abstract return a substring up to one of the tokens specified
   @param tokens  string holding nondelimited characters to be used as tokens
-  @param substring, or an empty string on failure
+  @return substring, or an empty string on failure
 */
 -(NSString*) nextTokenDelimitedBy:(NSString*)tokens;
 /*!
@@ -47,7 +47,7 @@
   @abstract return a substring from a starting index up to one of the
   tokens specified
   @param tokens  string holding nondelimited characters to be used as tokens
-  @param substring, or an empty string on failure
+  @return substring, or an empty string on failure
 */
 -(NSString*) nextTokenDelimitedBy:(NSString*)tokens searchFromIndex:(NSInteger)index;
 /*!
@@ -96,7 +96,6 @@
 @end
 
 @interface XPathQuery : NSObject {
-    NSString*        _path;
     id               _expression;
 }
 

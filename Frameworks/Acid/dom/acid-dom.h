@@ -25,10 +25,6 @@
 #import <Foundation/NSObject.h>
 
 @interface XMLQName : NSObject <NSCopying>
-{
-    NSString* _name;
-    NSString* _uri;
-}
 
 -(instancetype) initWithName:(NSString*)name inURI:(NSString*)uri;
 
@@ -57,9 +53,6 @@
 
 
 @interface XMLCData : NSObject <XMLNode>
-{
-    NSMutableString* _text; // CData is stored as escaped text
-}
 
 // Basic initializers
 -(instancetype)   init;
@@ -92,22 +85,14 @@
 
 
 @interface XMLElement : NSObject <XMLNode, NSFastEnumeration>
-{
-    NSMutableDictionary* _attribs;  // XMLQName->NSString
-    NSMutableArray*      _children;
-    XMLElement*          _parent;
-    XMLQName*            _name;
-    NSString*            _defaultURI;
-    NSMutableDictionary* _namespaces; // NSString:URI->NSString:prefix
-}
 
 // Basic initializers
 -(instancetype)   init;
 
 // Extended initializers
 -(instancetype) initWithQName:(XMLQName*)qname
-     withAttributes:(NSMutableDictionary*)atts
-     withDefaultURI:(NSString*)uri;
+               withAttributes:(NSMutableDictionary*)atts
+               withDefaultURI:(NSString*)uri;
 
 -(instancetype) initWithQName:(XMLQName*)qname;
 
@@ -124,10 +109,10 @@
 -(XMLCData*)   addCData:(NSString*)cdata;
 
 // Enumerators
--(NSEnumerator*) childElementsEnumerator;
+@property (readonly, strong) NSEnumerator *childElementsEnumerator;
 
 // Raw child management
-@property (readonly, assign) id<XMLNode> firstChild;
+@property (readonly, unsafe_unretained) id<XMLNode> firstChild;
 -(void) appendChildNode:(id <XMLNode>)node;
 -(void) detachChildNode:(id <XMLNode>)node;
 
@@ -161,23 +146,20 @@
 -(XMLQName*) getQName:(NSString*)name ofURI:(NSString*)uri;
 -(XMLQName*) getQName:(const char*)expatname;
 
-@property (assign) XMLElement *parent;
+@property (weak) XMLElement *parent;
 @property (readonly, copy) NSString*   defaultURI;
 
 -(NSString*) addUniqueIDAttribute;
 
 -(void) setup;
 
+/// Implemented by subclasses
++(instancetype) constructElement:(XMLQName*)qname withAttributes:(NSMutableDictionary*)atts withDefaultURI:(NSString*)default_uri NS_RETURNS_RETAINED;
+
 @end
 
 
 @interface XMLAccumulator : NSObject
-{
-    NSMutableString*     _data;
-    NSMutableDictionary* _prefixes; // uri -> prefix
-    NSMutableDictionary* _overrides;
-    unsigned             _prefix_counter;
-}
 
 -(instancetype) init:(NSMutableString*)data;
 
@@ -203,17 +185,6 @@
 @end
 
 @interface XMLElementStream : NSObject 
-{
-    BOOL _document_started;
-    BOOL _document_ended;
-
-    void*       _parser;
-    XMLElement*      _current_element;
-
-    NSMutableArray*  _default_uri_stack;
-    
-    id<XMLElementStreamListener> _listener;
-}
 
 +(void) registerElementFactory:(Class)factory;
 
@@ -233,7 +204,7 @@
 -(void) enterNamespace: (const char*)prefix withURI:(const char*)uri;
 -(void) exitNamespace: (const char*)prefix;
 
--(NSString*) currentNamespaceURI;
+@property (readonly, copy) NSString *currentNamespaceURI;
 
 @end
 

@@ -26,24 +26,23 @@
 #import <expat.h>
 
 @implementation XMLAccumulator
+{
+    NSMutableString*     _data;
+    NSMutableDictionary* _prefixes; // uri -> prefix
+    NSMutableDictionary* _overrides;
+    unsigned             _prefix_counter;
+}
 
--(id) init:(NSMutableString*)data 
+-(instancetype) init:(NSMutableString*)data 
 {
     if(self = [super init]){
-		_prefixes = [[NSMutableDictionary alloc] init];
-		_overrides = [[NSMutableDictionary alloc] init];
-		_data = [data retain];
-	}
+        _prefixes = [[NSMutableDictionary alloc] init];
+        _overrides = [[NSMutableDictionary alloc] init];
+        _data = data;
+    }
     return self;
 }
 
--(void) dealloc
-{
-    [_data release];
-    [_prefixes release];
-    [_overrides release];
-    [super dealloc];
-}
 
 -(void) addOverridePrefix:(NSString*)prefix forURI:(NSString*)uri 
 {
@@ -58,7 +57,6 @@
     {
         prefix = [[NSString alloc] initWithFormat:@"xn%d", _prefix_counter++];
         _prefixes[uri] = prefix;
-        [prefix autorelease];
     }
     return prefix;
 }
@@ -178,16 +176,13 @@
 
 -(void) addChildren:(NSArray*)children ofElement:(XMLElement*)elem
 {
-    id<XMLNode> curobj;
-    NSEnumerator* e = [children objectEnumerator];
-
     // First add the closing ">" on the string; this makes the
     // assumption that addChildren is only called after all the
     // attributes have been added
     [_data appendString:@">"];
 
     // Process child nodes
-    while ((curobj = [e nextObject]))
+    for (id<XMLNode> curobj in children)
     {
         [curobj description:self];
     }
@@ -201,18 +196,16 @@
 +(NSString*) process:(XMLElement*)element
 {
     NSMutableString* result = nil;
-	// Create a pool to catch any temps which might be generated
-	@autoreleasepool {
-		// Setup result data holder and accumulator
-		NSMutableString* result = [[NSMutableString alloc] initWithCapacity:512];
-		XMLAccumulator* acc = [[XMLAccumulator alloc] init:result];
-		[element description:acc];
-		[acc release];
-		
-		// Let go of the autorelease pool
-	}
+    // Create a pool to catch any temps which might be generated
+    @autoreleasepool {
+        // Setup result data holder and accumulator
+        NSMutableString* result = [[NSMutableString alloc] initWithCapacity:512];
+        XMLAccumulator* acc = [[XMLAccumulator alloc] init:result];
+        [element description:acc];
+        
+        // Let go of the autorelease pool
+    }
     // Now autorelase the result string
-    [result autorelease];
     return result;
 }
 
