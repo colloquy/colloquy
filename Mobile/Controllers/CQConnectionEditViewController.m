@@ -451,6 +451,12 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	_connection.displayName = serverInfo[@"Name"];
 	_connection.server = serverInfo[@"Address"];
 
+	NSNumber *SSLPort = serverInfo[@"SSLPort"];
+	if (SSLPort) {
+		_connection.secure = YES;
+		_connection.serverPort = [SSLPort shortValue];
+	}
+
 	if (!_newConnection)
 		self.title = _connection.displayName;
 

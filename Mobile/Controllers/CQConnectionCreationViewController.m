@@ -46,8 +46,8 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 - (void) setUrl:(NSURL *__nullable) url {
 	_connection.server = (url.host.length ? url.host : @"<<placeholder>>");
 	_connection.preferredNickname = (url.user.length ? url.user : @"<<default>>");
-	_connection.secure = ([url.scheme isEqualToString:@"ircs"] || [url.port unsignedShortValue] == 994);
-	_connection.serverPort = ([url.port unsignedShortValue] ? [url.port unsignedShortValue] : (_connection.secure ? 994 : 6667));
+	_connection.secure = ([url.scheme isEqualToString:@"ircs"] || [url.port unsignedShortValue] == 6697);
+	_connection.serverPort = ([url.port unsignedShortValue] ? [url.port unsignedShortValue] : (_connection.secure ? 6697 : 6667));
 
 	NSString *target = nil;
 	if (url.fragment.length) target = [@"#" stringByAppendingString:[url.fragment stringByDecodingIllegalURLCharacters]];

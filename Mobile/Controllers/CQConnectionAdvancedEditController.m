@@ -304,7 +304,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		if (indexPath.row == 0) {
 			CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
-			unsigned short defaultPort = (_connection.secure ? 994 : 6667);
+			unsigned short defaultPort = (_connection.secure ? 6697 : 6667);
 
 			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 			cell.textEditAction = @selector(serverPortChanged:);
@@ -462,7 +462,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 	if (newPort)
 		_connection.serverPort = (newPort % 65536);
 
-	unsigned short defaultPort = (_connection.secure ? 994 : 6667);
+	unsigned short defaultPort = (_connection.secure ? 6697 : 6667);
 	sender.textField.text = (_connection.serverPort == defaultPort ? @"" : [NSString stringWithFormat:@"%hu", _connection.serverPort]);
 }
 
@@ -470,8 +470,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 	_connection.secure = sender.on;
 
 	if (_connection.secure && _connection.serverPort == 6667)
-		_connection.serverPort = 994;
-	else if (!_connection.secure && _connection.serverPort == 994)
+		_connection.serverPort = 6697;
+	else if (!_connection.secure && _connection.serverPort == 6697)
 		_connection.serverPort = 6667;
 
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:SettingsTableSection] withAnimation:UITableViewRowAnimationNone];

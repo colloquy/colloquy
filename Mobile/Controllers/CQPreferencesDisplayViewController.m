@@ -62,7 +62,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 }
 
 - (instancetype) initWithRootPlist {
-	if (!(self = [super initWithStyle:UITableViewStylePlain]))
+	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 
 	[self CQPreferencesDisplayViewController_commonInitWithPlist:@"Root"];
@@ -71,7 +71,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 }
 
 - (instancetype) initWithPlistNamed:(NSString *) plist {
-	if (!(self = [super initWithStyle:UITableViewStylePlain]))
+	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 
 	[self CQPreferencesDisplayViewController_commonInitWithPlist:plist];
