@@ -4,9 +4,6 @@
 #import "CQConnectionsController.h"
 #import "CQProcessChatMessageOperation.h"
 #import "NSNotificationAdditions.h"
-#import "NSStringAdditions.h"
-
-#import <ChatCore/MVChatConnection.h>
 
 static NSOperationQueue *topicProcessingQueue;
 static BOOL showFullRoomNames;
@@ -48,6 +45,8 @@ static BOOL showFullRoomNames;
 
 - (void) dealloc {
 	_searchBar.delegate = nil;
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionChatRoomListUpdatedNotification object:nil];
 }
 
 #pragma mark -

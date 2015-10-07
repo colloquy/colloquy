@@ -109,7 +109,6 @@
 		1CC64B2D0EE97F8B00DE91D0 /* CQChatUserListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC64B2C0EE97F8B00DE91D0 /* CQChatUserListViewController.m */; };
 		1CD46802102A5EBB00A7A49E /* whats-new.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CD46801102A5EBB00A7A49E /* whats-new.html */; };
 		1CD84C2B10040AB300E56A7E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CD84C2A10040AB300E56A7E /* MediaPlayer.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		1CDDE9AB118C8DB300C83EBE /* CQViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9AA118C8DB300C83EBE /* CQViewController.m */; };
 		1CDDE9C5118C8EB700C83EBE /* CQTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9C4118C8EB700C83EBE /* CQTableViewController.m */; };
 		1CDDE9F6118CD2B800C83EBE /* NSObjectAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9F5118CD2B800C83EBE /* NSObjectAdditions.m */; };
 		1CE3FB120D8A3DC100FB035F /* CQConnectionCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */; };
@@ -155,7 +154,6 @@
 		922C767716D9C0E900AEFCB4 /* CQPinboardController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C767216D9C0E900AEFCB4 /* CQPinboardController.m */; };
 		922C767816D9C0E900AEFCB4 /* CQPocketController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C767416D9C0E900AEFCB4 /* CQPocketController.m */; };
 		922F1CAA1A4EBAF0000CBACE /* NSAttributedStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 922F1CA91A4EBAF0000CBACE /* NSAttributedStringAdditions.m */; };
-		922F1CAD1A4ECC6E000CBACE /* CQModalViewControllerPresentationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922F1CAC1A4ECC6E000CBACE /* CQModalViewControllerPresentationViewController.m */; };
 		924108D615A5605A001F7681 /* NSFileManagerMoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 924108D515A5605A001F7681 /* NSFileManagerMoreAdditions.m */; };
 		9247414316119CCC009132B5 /* chromatic-redux.css in Resources */ = {isa = PBXBuildFile; fileRef = 9247414116119CCC009132B5 /* chromatic-redux.css */; };
 		924B823A116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 924B8239116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m */; };
@@ -373,8 +371,6 @@
 		1CC64B2C0EE97F8B00DE91D0 /* CQChatUserListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatUserListViewController.m; sourceTree = "<group>"; };
 		1CD46801102A5EBB00A7A49E /* whats-new.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "whats-new.html"; sourceTree = "<group>"; };
 		1CD84C2A10040AB300E56A7E /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
-		1CDDE9A9118C8DB300C83EBE /* CQViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQViewController.h; path = Mobile/Controllers/CQViewController.h; sourceTree = "<group>"; };
-		1CDDE9AA118C8DB300C83EBE /* CQViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQViewController.m; path = Mobile/Controllers/CQViewController.m; sourceTree = "<group>"; };
 		1CDDE9C3118C8EB700C83EBE /* CQTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQTableViewController.h; path = Mobile/Controllers/CQTableViewController.h; sourceTree = "<group>"; };
 		1CDDE9C4118C8EB700C83EBE /* CQTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQTableViewController.m; path = Mobile/Controllers/CQTableViewController.m; sourceTree = "<group>"; };
 		1CDDE9F4118CD2B800C83EBE /* NSObjectAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSObjectAdditions.h; path = Additions/NSObjectAdditions.h; sourceTree = "<group>"; };
@@ -452,8 +448,6 @@
 		922C767416D9C0E900AEFCB4 /* CQPocketController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPocketController.m; path = Shared/Controllers/CQPocketController.m; sourceTree = "<group>"; };
 		922F1CA81A4EBAF0000CBACE /* NSAttributedStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSAttributedStringAdditions.h; path = Additions/NSAttributedStringAdditions.h; sourceTree = "<group>"; };
 		922F1CA91A4EBAF0000CBACE /* NSAttributedStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSAttributedStringAdditions.m; path = Additions/NSAttributedStringAdditions.m; sourceTree = "<group>"; };
-		922F1CAB1A4ECC6E000CBACE /* CQModalViewControllerPresentationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQModalViewControllerPresentationViewController.h; path = Mobile/Controllers/CQModalViewControllerPresentationViewController.h; sourceTree = "<group>"; };
-		922F1CAC1A4ECC6E000CBACE /* CQModalViewControllerPresentationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQModalViewControllerPresentationViewController.m; path = Mobile/Controllers/CQModalViewControllerPresentationViewController.m; sourceTree = "<group>"; };
 		924108D415A5605A001F7681 /* NSFileManagerMoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerMoreAdditions.h; path = Additions/NSFileManagerMoreAdditions.h; sourceTree = "<group>"; };
 		924108D515A5605A001F7681 /* NSFileManagerMoreAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSFileManagerMoreAdditions.m; path = Additions/NSFileManagerMoreAdditions.m; sourceTree = "<group>"; };
 		9247414116119CCC009132B5 /* chromatic-redux.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "chromatic-redux.css"; sourceTree = "<group>"; };
@@ -747,8 +741,6 @@
 				1CA3DEBA10290B0E008B1AD2 /* CQHelpTopicViewController.h */,
 				925C594B1177CB63001995E0 /* CQModalNavigationController.m */,
 				925C594A1177CB63001995E0 /* CQModalNavigationController.h */,
-				922F1CAC1A4ECC6E000CBACE /* CQModalViewControllerPresentationViewController.m */,
-				922F1CAB1A4ECC6E000CBACE /* CQModalViewControllerPresentationViewController.h */,
 				9290603516B261830095EC03 /* CQPreferencesViewController.m */,
 				9290603416B261830095EC03 /* CQPreferencesViewController.h */,
 				9292E92F16A956E300F22070 /* CQPreferencesDisplayViewController.m */,
@@ -761,16 +753,14 @@
 				1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */,
 				1C6D464B10FAEA1A00BE77ED /* CQPreferencesTableViewController.m */,
 				1C6D464A10FAEA1A00BE77ED /* CQPreferencesTableViewController.h */,
-				92B6661517ED7E0D00BA3DD9 /* CQPreferencesTextViewController.h */,
 				92B6661617ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m */,
+				92B6661517ED7E0D00BA3DD9 /* CQPreferencesTextViewController.h */,
 				924B8239116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m */,
 				924B8238116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.h */,
 				89E87C080FA0450800B49230 /* CQSoundController.m */,
 				89E87C070FA0450800B49230 /* CQSoundController.h */,
 				1CDDE9C4118C8EB700C83EBE /* CQTableViewController.m */,
 				1CDDE9C3118C8EB700C83EBE /* CQTableViewController.h */,
-				1CDDE9AA118C8DB300C83EBE /* CQViewController.m */,
-				1CDDE9A9118C8DB300C83EBE /* CQViewController.h */,
 				1CFCBA341114FB2500EA5F10 /* CQWelcomeController.m */,
 				1CFCBA331114FB2500EA5F10 /* CQWelcomeController.h */,
 				1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */,
@@ -1310,7 +1300,6 @@
 				1C0932830D80CA4800A2705D /* NSScannerAdditions.m in Sources */,
 				1C0932850D80CA4800A2705D /* NSStringAdditions.m in Sources */,
 				1C0937820D8116FC00A2705D /* CQChatController.m in Sources */,
-				922F1CAD1A4ECC6E000CBACE /* CQModalViewControllerPresentationViewController.m in Sources */,
 				1C0938950D813A6B00A2705D /* CQDirectChatController.m in Sources */,
 				1C0938960D813A6C00A2705D /* CQChatRoomController.m in Sources */,
 				1C82C1970D83CF1D009ABD9F /* CQChatTableCell.m in Sources */,
@@ -1374,7 +1363,6 @@
 				92F3BF80117186AF00A4F554 /* CQTextView.m in Sources */,
 				925C594C1177CB63001995E0 /* CQModalNavigationController.m in Sources */,
 				925C59591177D84C001995E0 /* CQAwayStatusController.m in Sources */,
-				1CDDE9AB118C8DB300C83EBE /* CQViewController.m in Sources */,
 				1CDDE9C5118C8EB700C83EBE /* CQTableViewController.m in Sources */,
 				1CDDE9F6118CD2B800C83EBE /* NSObjectAdditions.m in Sources */,
 				891E84D4123F0C8C00EC3C0F /* NSCharacterSetAdditions.m in Sources */,

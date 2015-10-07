@@ -3,9 +3,6 @@
 #import "CQTextView.h"
 #import "CQPreferencesTextViewCell.h"
 
-#import "MVIRCChatConnection.h"
-#import "MVChatUser.h"
-
 @implementation CQPreferencesTextEditViewController
 @synthesize listItem = _listItemText;
 

@@ -1,9 +1,7 @@
 #import "CQChatController.h"
 #import "CQChatInputBar.h"
-#import "CQUIChatTranscriptView.h"
-#import "CQWKChatTranscriptView.h"
+#import "CQChatTranscriptViewDelegate.h"
 #import "CQImportantChatMessageViewController.h"
-#import "CQViewController.h"
 
 #import "MVChatString.h"
 
@@ -15,7 +13,7 @@
 
 @class CQChatTableCell;
 @class CQChatInputBar;
-@class CQModalViewControllerPresentationViewController;
+@class CQChatInputStyleViewController;
 @class CQUIChatTranscriptView;
 @class CQWKChatTranscriptView;
 @class MVChatUser;
@@ -31,11 +29,13 @@ typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
 };
 
 
-@interface CQDirectChatController : CQViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
+@interface CQDirectChatController : UIViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
 	@protected
 	IBOutlet CQChatInputBar *chatInputBar;
 	IBOutlet UIView <CQChatTranscriptView> *transcriptView;
 	IBOutlet UIView *containerView;
+
+	CQChatInputStyleViewController *_styleViewController;
 
 	BOOL _coalescePendingUpdates;
 	NSMutableArray *_pendingPreviousSessionComponents;
@@ -59,8 +59,6 @@ typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
 
 	NSTimeInterval _lastTimestampTime;
 	NSTimeInterval _lastMessageTime;
-
-	CQModalViewControllerPresentationViewController *_stylePresentationViewController;
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
 	BOOL _isShowingCompletionsBeforeRotation;

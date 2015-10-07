@@ -1,5 +1,3 @@
-#import "CQChatController.h"
-
 @class MVChatConnection;
 @class CQChatListViewController;
 

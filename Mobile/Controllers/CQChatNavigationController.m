@@ -2,7 +2,6 @@
 
 #import "CQChatController.h"
 #import "CQChatListViewController.h"
-#import "CQColloquyApplication.h"
 
 @implementation CQChatNavigationController
 - (instancetype) init {

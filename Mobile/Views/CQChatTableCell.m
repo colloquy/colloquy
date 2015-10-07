@@ -1,9 +1,8 @@
 #import "CQChatTableCell.h"
+
 #import "CQChatController.h"
 #import "CQUnreadCountView.h"
 
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
 @implementation CQChatTableCell

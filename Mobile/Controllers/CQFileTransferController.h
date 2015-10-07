@@ -3,12 +3,10 @@
 
 #if ENABLE(FILE_TRANSFERS)
 
-#import "CQViewController.h"
-
 @class MVFileTransfer;
 @class CQFileTransferTableCell;
 
-@interface CQFileTransferController : CQViewController {
+@interface CQFileTransferController : UIViewController {
     @protected
     MVFileTransfer *_transfer;
 	CQFileTransferTableCell *_cell;

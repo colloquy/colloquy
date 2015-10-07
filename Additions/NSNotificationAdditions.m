@@ -1,5 +1,4 @@
 #import "NSNotificationAdditions.h"
-#import "MVAvailability.h"
 #import <pthread.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -44,9 +43,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id __nullable) object userInfo:(NSDictionary  * __nullable ) userInfo waitUntilDone:(BOOL) wait {
 	if( pthread_main_np() ) [self postNotificationName:name object:object userInfo:userInfo];
 	else {
+		if ( !name ) return;
 		NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:3];
-		if( name ) info[@"name"] = name;
-		else return;
+		info[@"name"] = name;
 
 		if( object ) info[@"object"] = object;
 		if( userInfo ) info[@"userInfo"] = userInfo;
@@ -57,11 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (void) _postNotificationName:(NSDictionary *) info {
-	NSString *name = info[@"name"];
-	id object = info[@"object"];
-	NSDictionary *userInfo = info[@"userInfo"];
-
-	[info[@"center"] postNotificationName:name object:object userInfo:userInfo];
+	[info[@"center"] postNotificationName:info[@"name"] object:info[@"object"] userInfo:info[@"userInfo"]];
 }
 @end
 

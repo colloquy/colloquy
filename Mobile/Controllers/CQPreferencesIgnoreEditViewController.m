@@ -7,8 +7,6 @@
 
 #import "KAIgnoreRule.h"
 
-#import "NSStringAdditions.h"
-
 enum {
 	CQPreferencesIgnoreRowNameOrMask,
 	CQPreferencesIgnoreRowDisplayName,

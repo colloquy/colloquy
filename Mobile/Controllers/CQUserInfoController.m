@@ -5,10 +5,6 @@
 
 #import "CQUserInfoViewController.h"
 
-#import "MVChatUser.h"
-
-#import "CQColloquyApplication.h"
-
 @implementation CQUserInfoController
 - (void) viewDidLoad {
 	if (!_rootViewController) {

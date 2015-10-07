@@ -2,7 +2,6 @@
 
 #import "CQAlertView.h"
 #import "CQChatCreationViewController.h"
-#import "CQChatListViewController.h"
 #import "CQChatNavigationController.h"
 #import "CQChatOrderingController.h"
 #import "CQChatPresentationController.h"
@@ -10,13 +9,11 @@
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 #import "CQConsoleController.h"
-#import "CQDirectChatController.h"
 #if ENABLE(FILE_TRANSFERS)
 #import "CQFileTransferController.h"
 #endif
 #import "CQSoundController.h"
 
-#import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVDirectChatConnection.h>
 #if ENABLE(FILE_TRANSFERS)

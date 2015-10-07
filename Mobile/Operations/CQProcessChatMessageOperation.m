@@ -5,7 +5,6 @@
 
 #import "NSDateAdditions.h"
 #import "NSNotificationAdditions.h"
-#import "NSStringAdditions.h"
 #import "RegexKitLite.h"
 
 #import <ChatCore/MVChatUser.h>

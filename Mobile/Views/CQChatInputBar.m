@@ -1,7 +1,5 @@
 #import "CQChatInputBar.h"
 
-#import "CQTextCompletionView.h"
-
 #import "UIColorAdditions.h"
 #import "NSNotificationAdditions.h"
 
@@ -74,7 +72,7 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 
 	_inputView = [[UITextView alloc] initWithFrame:frame];
 	_inputView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
-	_inputView.contentSize = CGSizeMake(230., self._lineHeight);
+	_inputView.textContainer.heightTracksTextView = YES;
 	_inputView.dataDetectorTypes = UIDataDetectorTypeNone;
 	_inputView.returnKeyType = UIReturnKeySend;
 	_inputView.autocapitalizationType = UITextAutocapitalizationTypeSentences;
@@ -218,6 +216,8 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 }
 
 - (void) setHeight:(CGFloat) height numberOfLines:(NSUInteger) numberOfLines {
+	height += self._lineHeight;
+
 	if (height == CGRectGetHeight(self.frame))
 		return;
 
@@ -234,7 +234,7 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 
 		// Work around iOS 7 bug where the input view frame doesn't update right away after being set, causing text to be clipped.
 		_inputView.frame = _inputView.frame;
-		_inputView.contentSize = CGSizeMake(floorf((_inputView.frame.size.width - (_inputView.frame.origin.x * 2))), ((numberOfLines + 1) * self._lineHeight));
+		_inputView.contentSize = CGSizeMake(floorf((_inputView.frame.size.width - (_inputView.frame.origin.x * 2))), (numberOfLines * self._lineHeight));
 	}
 }
 
@@ -274,7 +274,7 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 		else if (symbolicTraits & UIFontDescriptorTraitBold) symbolicTraits ^= UIFontDescriptorTraitBold;
 
 		UIFontDescriptor *fontDescriptor = [font.fontDescriptor fontDescriptorWithSymbolicTraits:symbolicTraits];
-		_inputView.font = [UIFont fontWithDescriptor:fontDescriptor size:-1];
+		_inputView.font = [UIFont fontWithDescriptor:fontDescriptor size:font.pointSize];
 	}
 
 	[self _resetTextViewHeight];
@@ -405,26 +405,23 @@ retry:
 
 #pragma mark -
 
+- (NSInteger)_numberOfLines {
+	// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/TextLayout/Tasks/CountLines.html
+	NSUInteger numberOfLines = 0;
+	for (NSUInteger i = 0; i < _inputView.layoutManager.numberOfGlyphs; numberOfLines++) {
+		NSRange lineRange;
+		[_inputView.layoutManager lineFragmentRectForGlyphAtIndex:i effectiveRange:&lineRange];
+		i = NSMaxRange(lineRange);
+	}
+	return numberOfLines;
+}
+
 - (void) updateTextViewContentSize {
-	if (_inputView.hasText && _inputView.text.length) {
-		CGSize lineSize = [@"a" sizeWithAttributes:@{ NSFontAttributeName: _inputView.font }];
-
-		NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-		paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-
-		CGFloat availableWidth = _inputView.contentSize.width - 5.;
-		CGSize suggestedTextSize = [_inputView.text boundingRectWithSize:CGSizeMake(availableWidth, 90000) options:(NSStringDrawingOptions)NSStringDrawingUsesLineFragmentOrigin attributes:@{
-			NSFontAttributeName: _inputView.font,
-			NSParagraphStyleAttributeName: paragraphStyle
-		} context:nil].size;
-
-		CGFloat numberOfLines = roundf(suggestedTextSize.height / lineSize.height);
-		CGFloat contentHeight = fminf((self._inactiveLineHeight + ((numberOfLines - 1) * self._lineHeight)), self._maxLineHeight);
-
-		if (contentHeight < self._maxLineHeight)
-			_inputView.scrollEnabled = NO;
-		else _inputView.scrollEnabled = YES;
-		[self setHeight:contentHeight numberOfLines:(numberOfLines - 1)];
+	if (_inputView.hasText || self._hasMarkedText) {
+		NSUInteger numberOfLines = self._numberOfLines;
+		CGFloat contentHeight = fminf(numberOfLines * self._lineHeight, self._maxLineHeight);
+		_inputView.scrollEnabled = (contentHeight >= self._maxLineHeight);
+		[self setHeight:contentHeight numberOfLines:numberOfLines];
 	} else {
 		[self _resetTextViewHeight];
 	}
@@ -714,6 +711,7 @@ retry:
 		frame.size.height = (self.frame.size.height - (17));
 		frame.origin.y = (self.frame.size.height - frame.size.height) / 2.;
 		_inputView.frame = frame;
+		_inputView.textContainer.size = CGSizeMake(frame.size.width, 0); // 0 = unlimited space
 
 		[UIView performWithoutAnimation:^{
 			frame = _accessoryButton.frame;
@@ -808,7 +806,7 @@ retry:
 }
 
 - (void) _resetTextViewHeight {
-	[self setHeight:self._inactiveLineHeight numberOfLines:0];
+	[self setHeight:self._lineHeight numberOfLines:0];
 
 	_inputView.scrollEnabled = NO;
 }
@@ -824,6 +822,18 @@ retry:
 	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 	attributes[NSFontAttributeName] = self.font;
 	attributes[NSUnderlineStyleAttributeName] = (underlineText ? @(NSUnderlineStyleSingle) : @(NSUnderlineStyleNone));
+
+	NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+	paragraphStyle.lineSpacing = 1.1;
+	paragraphStyle.lineHeightMultiple = 1.1;
+#if defined(__IPHONE_9_0) && 0
+	if ([paragraphStyle respondsToSelector:@selector(setAllowsDefaultTighteningForTruncation:)]) {
+		paragraphStyle.allowsDefaultTighteningForTruncation = YES;
+	}
+#endif
+
+	attributes[NSParagraphStyleAttributeName] = [paragraphStyle copy];
+
 	if (foregroundColor) attributes[NSForegroundColorAttributeName] = foregroundColor;
 	if (backgroundColor) attributes[NSBackgroundColorAttributeName] = backgroundColor;
 

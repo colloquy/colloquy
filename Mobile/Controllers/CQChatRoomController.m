@@ -1,8 +1,6 @@
 #import "CQChatRoomController.h"
 
 #import "CQAlertView.h"
-#import "CQChatController.h"
-#import "CQChatInputStyleViewController.h"
 #import "CQChatPresentationController.h"
 #import "CQChatUserListViewController.h"
 #import "CQColloquyApplication.h"
@@ -12,8 +10,6 @@
 #import "CQChatRoomInfoViewController.h"
 #import "CQSoundController.h"
 
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
 #import "UIActionSheetAdditions.h"

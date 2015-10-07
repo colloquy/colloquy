@@ -9,8 +9,6 @@
 
 #import "KAIgnoreRule.h"
 
-#import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
 #define SendMessageButtonIndex 0

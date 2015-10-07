@@ -2,7 +2,7 @@
 //  Copyright 2009 Concinnous Software. All rights reserved.
 
 #import "CQUserInfoViewController.h"
-#import "CQPreferencesTextCell.h"
+
 #import "CQUserInfoRoomListViewController.h"
 
 #import <ChatCore/MVChatUser.h>

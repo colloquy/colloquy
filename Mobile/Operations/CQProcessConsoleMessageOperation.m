@@ -1,7 +1,5 @@
 #import "CQProcessConsoleMessageOperation.h"
 
-#import "NSStringAdditions.h"
-
 static NSRegularExpression *numericRegularExpression;
 
 @implementation CQProcessConsoleMessageOperation

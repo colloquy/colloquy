@@ -1,6 +1,7 @@
 #import "CQUIChatTranscriptView.h"
 
 #import <ChatCore/MVChatUser.h>
+
 #import "NSNotificationAdditions.h"
 
 #define DefaultFontSize 14
