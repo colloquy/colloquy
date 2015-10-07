@@ -30,7 +30,7 @@ static BOOL showsChatIcons;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatListViewController () <UIActionSheetDelegate>
+@interface CQChatListViewController () <UIActionSheetDelegate, UIViewControllerPreviewingDelegate>
 @end
 
 @implementation CQChatListViewController {
@@ -170,6 +170,7 @@ static id <CQChatViewController> chatControllerForIndexPath(NSIndexPath *indexPa
 
 	if ((NSInteger)chatViewControllersForConnection.count > indexPath.row)
 		return chatViewControllersForConnection[indexPath.row];
+
 	return nil;
 }
 
@@ -682,6 +683,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		self.tableView.allowsSelectionDuringEditing = YES;
 		self.clearsSelectionOnViewWillAppear = NO;
 	}
+
+	if ([self respondsToSelector:@selector(registerForPreviewingWithDelegate:sourceView:)])
+		[self registerForPreviewingWithDelegate:self sourceView:self.view];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -910,6 +914,28 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	return NO;
 }
 #endif
+
+#pragma mark -
+
+
+- (nullable UIViewController *) previewingContext:(id <UIViewControllerPreviewing>) previewingContext viewControllerForLocation:(CGPoint) location {
+	NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
+	if (!indexPath)
+		return nil;
+
+	id <CQChatViewController> chatController = chatControllerForIndexPath(indexPath);
+	if (![chatController isKindOfClass:[UIViewController class]])
+		return nil; // eg: file transfers
+
+	if ([chatController respondsToSelector:@selector(markAsRead)])
+		[chatController markAsRead];
+
+	return (UIViewController *)chatController;
+}
+
+- (void) previewingContext:(id <UIViewControllerPreviewing>) previewingContext commitViewController:(UIViewController *) viewControllerToCommit {
+	[[CQChatController defaultController] showChatController:(id <CQChatViewController>)viewControllerToCommit animated:YES];
+}
 
 #pragma mark -
 
@@ -1369,13 +1395,13 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 #pragma mark -
 
 - (void) showPreferences:(__nullable id) sender {
-	if ([UIDevice currentDevice].systemNine)
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-	else {
+//	if ([UIDevice currentDevice].systemNine)
+//		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+//	else {
 		CQPreferencesViewController *preferencesViewController = [[CQPreferencesViewController alloc] init];
 
 		[[CQColloquyApplication sharedApplication] presentModalViewController:preferencesViewController animated:[UIView areAnimationsEnabled]];
-	}
+//	}
 }
 @end
 

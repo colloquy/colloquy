@@ -200,6 +200,7 @@
 		9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
 		B68725B11B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B68725B01B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m */; };
 		B68725B41B8E7FF60003D4F8 /* CQPrinterPage.m in Sources */ = {isa = PBXBuildFile; fileRef = B68725B31B8E7FF60003D4F8 /* CQPrinterPage.m */; };
+		B6BE5F451BA27B7100EB3659 /* CQ3DTouchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = B6BE5F441BA27B7100EB3659 /* CQ3DTouchGestureRecognizer.m */; };
 		B6C921061B812F350049622C /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B6C921051B812F350049622C /* libc++.dylib */; };
 		B6D085B61B8D6E8400734C96 /* CQActivities.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D085B51B8D6E8400734C96 /* CQActivities.m */; };
 		B6F99EE61BA0FAB5000F4929 /* CoreSpotlight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C7F5881B26BE04000F5AAE /* CoreSpotlight.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -541,6 +542,8 @@
 		B68725B01B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIPrintPageRendererAdditions.m; path = Additions/UIPrintPageRendererAdditions.m; sourceTree = "<group>"; };
 		B68725B21B8E7FF60003D4F8 /* CQPrinterPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPrinterPage.h; sourceTree = "<group>"; };
 		B68725B31B8E7FF60003D4F8 /* CQPrinterPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPrinterPage.m; sourceTree = "<group>"; };
+		B6BE5F431BA27B7100EB3659 /* CQ3DTouchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQ3DTouchGestureRecognizer.h; sourceTree = "<group>"; };
+		B6BE5F441BA27B7100EB3659 /* CQ3DTouchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQ3DTouchGestureRecognizer.m; sourceTree = "<group>"; };
 		B6C921051B812F350049622C /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		B6D085B41B8D6E8400734C96 /* CQActivities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQActivities.h; sourceTree = "<group>"; };
 		B6D085B51B8D6E8400734C96 /* CQActivities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQActivities.m; sourceTree = "<group>"; };
@@ -811,6 +814,8 @@
 		1C63415F0FAF307B00BB5866 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B6BE5F441BA27B7100EB3659 /* CQ3DTouchGestureRecognizer.m */,
+				B6BE5F431BA27B7100EB3659 /* CQ3DTouchGestureRecognizer.h */,
 				B6D085B51B8D6E8400734C96 /* CQActivities.m */,
 				B6D085B41B8D6E8400734C96 /* CQActivities.h */,
 				1C9B60E90FFAE4C400B7BAC0 /* CQBouncerConnection.m */,
@@ -1318,6 +1323,7 @@
 				1C0931030D80C6E900A2705D /* CQColloquyApplication.m in Sources */,
 				1C09327E0D80CA4800A2705D /* NSDataAdditions.m in Sources */,
 				B68725B11B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m in Sources */,
+				B6BE5F451BA27B7100EB3659 /* CQ3DTouchGestureRecognizer.m in Sources */,
 				1C0932810D80CA4800A2705D /* NSNotificationAdditions.m in Sources */,
 				1C0932830D80CA4800A2705D /* NSScannerAdditions.m in Sources */,
 				1C0932850D80CA4800A2705D /* NSStringAdditions.m in Sources */,
@@ -1487,6 +1493,7 @@
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1533,6 +1540,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Shared/Frameworks",
@@ -1578,6 +1586,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Shared/Frameworks",

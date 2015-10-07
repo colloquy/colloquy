@@ -148,5 +148,7 @@
 	<false/>
 	<key>CQPreviewLinesCount</key>
 	<integer>2</integer>
+	<key>CQIndexInSpotlight</key>
+	<true/>
 </dict>
 </plist>

@@ -1121,6 +1121,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		return;
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
+
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"])
+		[self indexConnectionsInSpotlight];
+	else [self removeConnectionsIndexfromSpotlight];
 }
 
 - (void) _batteryStateChanged {
@@ -1586,43 +1590,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	NSUInteger pushConnectionCount = 0;
 	NSUInteger roomCount = 0;
 
-	NSData *serverImageData = UIImagePNGRepresentation([UIImage imageNamed:@"server.png"]);
 	NSMutableArray *connections = [[NSMutableArray alloc] initWithCapacity:_directConnections.count];
 	for (MVChatConnection *connection in _directConnections) {
-		if (NSClassFromString(@"CSSearchableIndex") != nil) {
-			CSSearchableItemAttributeSet *connectionAttributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"IRC Server"];
-			connectionAttributeSet.identifier = connection.uniqueIdentifier;
-			if (connection.displayName.length || connection.server.length)
-				connectionAttributeSet.displayName = connectionAttributeSet.title = [NSString stringWithFormat:@"%@ — %@", connection.displayName ?: connection.server, connection.nickname];
-			else connectionAttributeSet.displayName = connectionAttributeSet.title = connection.nickname;
-			if (connection.displayName.length && connection.server.length)
-				connectionAttributeSet.alternateNames = @[ connection.server ];
-			connectionAttributeSet.contentType = (__bridge NSString *)kUTTypeMessage;
-			connectionAttributeSet.thumbnailData = serverImageData;
-			connectionAttributeSet.contentTypeTree = @[ (__bridge id)kUTTypeItem, (__bridge id)kUTTypeURL, (__bridge NSString *)kUTTypeMessage ];
-
-			NSMutableArray *items = [NSMutableArray array];
-			NSMutableArray *keywords = [@[ @"irc", connection.displayName ?: connection.server ?: @"", connection.nickname ?: @"", connection.username ?: @"", connection.realName ?: @"" ] mutableCopy];
-			for (MVChatRoom *chatRoom in connection.knownChatRooms) {
-				[keywords addObject:chatRoom.displayName];
-
-				CSSearchableItemAttributeSet *roomAttributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"IRC Room"];
-				roomAttributeSet.identifier = chatRoom.displayName;
-				if (connection.displayName.length || connection.server.length)
-					roomAttributeSet.displayName = roomAttributeSet.title = [NSString stringWithFormat:@"%@ — %@", connection.displayName ?: connection.server, chatRoom.displayName];
-				else roomAttributeSet.displayName = roomAttributeSet.title = chatRoom.displayName;
-				roomAttributeSet.contentType = (__bridge NSString *)kUTTypeURL;
-
-				CSSearchableItem *roomItem = [[CSSearchableItem alloc] initWithUniqueIdentifier:chatRoom.uniqueIdentifier domainIdentifier:connection.server attributeSet:roomAttributeSet];
-				[items addObject:roomItem];
-			}
-			connectionAttributeSet.keywords = keywords;
-
-			CSSearchableItem *connectionItem = [[CSSearchableItem alloc] initWithUniqueIdentifier:connection.uniqueIdentifier domainIdentifier:connection.server attributeSet:connectionAttributeSet];
-			[items addObject:connectionItem];
-
-			[[CSSearchableIndex defaultSearchableIndex] indexSearchableItems:items completionHandler:nil];
-		}
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"])
+			[self _indexConnetionInSpotlight:connection];
 
 		NSMutableDictionary *connectionInfo = [self _dictionaryRepresentationForConnection:connection];
 		if (!connectionInfo)
@@ -1680,6 +1651,71 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		for (MVChatConnection *connection in [self bouncerChatConnectionsForIdentifier:settings.identifier])
 			[connection savePasswordsToKeychain];
 	}
+}
+
+#pragma mark -
+
+- (void) _indexConnetionInSpotlight:(MVChatConnection *) connection {
+	if (NSClassFromString(@"CSSearchableIndex") == nil)
+		return;
+
+	CSSearchableItemAttributeSet *connectionAttributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"IRC Server"];
+	connectionAttributeSet.identifier = connection.uniqueIdentifier;
+	if (connection.displayName.length || connection.server.length)
+		connectionAttributeSet.displayName = connectionAttributeSet.title = [NSString stringWithFormat:@"%@ — %@", connection.displayName ?: connection.server, connection.nickname];
+	else connectionAttributeSet.displayName = connectionAttributeSet.title = connection.nickname;
+	if (connection.displayName.length && connection.server.length)
+		connectionAttributeSet.alternateNames = @[ connection.server ];
+	connectionAttributeSet.contentType = (__bridge NSString *)kUTTypeMessage;
+	connectionAttributeSet.contentTypeTree = @[ (__bridge id)kUTTypeItem, (__bridge id)kUTTypeURL, (__bridge NSString *)kUTTypeMessage ];
+
+	NSMutableArray *items = [NSMutableArray array];
+	NSMutableArray *keywords = [@[ @"irc", connection.displayName ?: connection.server ?: @"", connection.nickname ?: @"", connection.username ?: @"", connection.realName ?: @"" ] mutableCopy];
+	for (MVChatRoom *chatRoom in connection.knownChatRooms) {
+		[keywords addObject:chatRoom.displayName];
+
+		CSSearchableItemAttributeSet *roomAttributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"IRC Room"];
+		roomAttributeSet.identifier = chatRoom.displayName;
+		if (connection.displayName.length || connection.server.length)
+			roomAttributeSet.displayName = roomAttributeSet.title = [NSString stringWithFormat:@"%@ — %@", connection.displayName ?: connection.server, chatRoom.displayName];
+		else roomAttributeSet.displayName = roomAttributeSet.title = chatRoom.displayName;
+		roomAttributeSet.contentType = (__bridge NSString *)kUTTypeURL;
+
+		CSSearchableItem *roomItem = [[CSSearchableItem alloc] initWithUniqueIdentifier:chatRoom.uniqueIdentifier domainIdentifier:connection.server attributeSet:roomAttributeSet];
+		[items addObject:roomItem];
+	}
+	connectionAttributeSet.keywords = keywords;
+
+	CSSearchableItem *connectionItem = [[CSSearchableItem alloc] initWithUniqueIdentifier:connection.uniqueIdentifier domainIdentifier:connection.server attributeSet:connectionAttributeSet];
+	[items addObject:connectionItem];
+
+	[[CSSearchableIndex defaultSearchableIndex] indexSearchableItems:items completionHandler:nil];
+}
+
+- (void) indexConnectionsInSpotlight {
+	for (MVChatConnection *connection in _directConnections)
+		[self _indexConnetionInSpotlight:connection];
+}
+
+- (void) removeConnectionsIndexfromSpotlight {
+	if (NSClassFromString(@"CSSearchableIndex") == nil)
+		return;
+
+	[[CSSearchableIndex defaultSearchableIndex] deleteAllSearchableItemsWithCompletionHandler:^(NSError * _Nullable error) {
+		if (error) {
+			NSString *title = NSLocalizedString(@"Unknown Error", @"Unknown Error error title");
+			NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Unable to remove index from Spotlight: %@", @"search deletion failed error message"), error.localizedDescription];
+			if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+				[[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay") otherButtonTitles:nil] show];
+			} else {
+				UILocalNotification *notification = [[UILocalNotification alloc] init];
+				notification.alertTitle = title;
+				notification.alertBody = message;
+
+				[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+			}
+		}
+	}];
 }
 
 #pragma mark -

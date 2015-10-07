@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) UITextView *textView;
 @property (nonatomic, readonly) NSRange caretRange;
+@property (nonatomic, readonly) UIButton *accessoryButton;
+
 @property (nonatomic) UITextAutocapitalizationType autocapitalizationType;
 
 @property (nonatomic, readonly, getter=isShowingCompletions) BOOL showingCompletions;

@@ -83,6 +83,7 @@ static BOOL showingKeyboard;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CQDirectChatController () <CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate, CQChatInputStyleDelegate>
+@property (strong, nullable) UIPopoverController *activityPopoverController;
 @end
 
 @implementation CQDirectChatController {
@@ -1944,15 +1945,27 @@ NS_ASSUME_NONNULL_BEGIN
 		activityController.completionWithItemsHandler = ^(NSString *__nullable activityType, BOOL completed, NSArray *__nullable returnedItems, NSError *__nullable activityError) {
 			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 			[strongSelf _endShowingActivityViewControllerWithInputBarAsResponder:inputBarWasFirstResponder];
+			[strongSelf.activityPopoverController dismissPopoverAnimated:YES];
+			strongSelf.activityPopoverController = nil;
 		};
 	} else {
 		activityController.completionHandler = ^(NSString *__nullable activityType, BOOL completed) {
 			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 			[strongSelf _endShowingActivityViewControllerWithInputBarAsResponder:inputBarWasFirstResponder];
+			[strongSelf.activityPopoverController dismissPopoverAnimated:YES];
+			strongSelf.activityPopoverController = nil;
 		};
 	}
 
-	[self presentViewController:activityController animated:[UIView areAnimationsEnabled] completion:nil];
+	if ([UIDevice currentDevice].isPhoneModel)
+		[self presentViewController:activityController animated:[UIView areAnimationsEnabled] completion:nil];
+	else {
+		[_activityPopoverController dismissPopoverAnimated:NO];
+		_activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:activityController];
+
+		CGRect frame = [self.view convertRect:chatInputBar.accessoryButton.frame fromView:chatInputBar];
+		[_activityPopoverController presentPopoverFromRect:frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+	}
 }
 
 - (void) _endShowingActivityViewControllerWithInputBarAsResponder:(BOOL) inputBarAsResponder {
