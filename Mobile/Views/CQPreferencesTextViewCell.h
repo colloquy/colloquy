@@ -2,10 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQPreferencesTextViewCell : UITableViewCell {
-@protected
-	CQTextView *_textView;
-}
+@interface CQPreferencesTextViewCell : UITableViewCell
 @property (nonatomic, strong) CQTextView *textView;
 + (CGFloat) height;
 @end

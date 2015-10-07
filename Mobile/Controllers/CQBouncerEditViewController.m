@@ -25,7 +25,10 @@ static BOOL pushAvailable = YES;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQBouncerEditViewController
+@interface CQBouncerEditViewController () <UIActionSheetDelegate, UIAlertViewDelegate>
+@end
+
+@implementation CQBouncerEditViewController
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -41,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) setNewBouncer:(BOOL) newBouncer {
-	if (_newBouncer ==  newBouncer)
+	if (_newBouncer == newBouncer)
 		return;
 
 	_newBouncer = newBouncer;
@@ -82,7 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return 0;
 }
 
-- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSIndexPath *__nullable) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section == UpdateTableSection && indexPath.row == 0)
 		return indexPath;
 	return nil;
@@ -95,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 }
 
-- (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
+- (NSString *__nullable) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
 	if (section == ServerTableSection)
 		return NSLocalizedString(@"Colloquy Bouncer Server", @"Colloquy Bouncer Server section title");
 	if (section == AuthenticationTableSection)
@@ -103,7 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return nil;
 }
 
-- (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
+- (NSString *__nullable) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
 	if (section == ServerTableSection)
 		return NSLocalizedString(@"Requires a Mac running Colloquy with\nthe bouncer enabled in Preferences.", @"Bouncer Server section footer title");
 	if (section == PushTableSection && pushAvailable)

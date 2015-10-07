@@ -11,20 +11,7 @@ typedef NS_ENUM(NSInteger, CQConnectionTableCellStatus) {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQConnectionTableHeaderView : UITableViewHeaderFooterView {
-	@protected
-	UIImageView *_iconImageView;
-	UIImageView *_badgeImageView;
-	UILabel *_serverLabel;
-	UILabel *_nicknameLabel;
-	UILabel *_timeLabel;
-	NSDate *_connectDate;
-	CQConnectionTableCellStatus _status;
-	UIButton *_disclosureButton;
-
-	UIColor *_originalBackgroundColor;
-}
-
+@interface CQConnectionTableHeaderView : UITableViewHeaderFooterView
 - (void) takeValuesFromBouncerSettings:(CQBouncerSettings *) bouncerSettings;
 - (void) takeValuesFromConnection:(MVChatConnection *) connection;
 - (void) updateConnectTime;

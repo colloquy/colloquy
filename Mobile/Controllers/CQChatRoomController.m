@@ -1,6 +1,7 @@
 #import "CQChatRoomController.h"
 
 #import "CQAlertView.h"
+#import "CQChatInputBar.h"
 #import "CQChatPresentationController.h"
 #import "CQChatUserListViewController.h"
 #import "CQColloquyApplication.h"
@@ -18,7 +19,6 @@
 
 #define NicknameActionSheet 1
 #define JoinActionSheet 2
-#define ActionsActionSheet 3
 
 static BOOL showJoinEvents;
 static BOOL showHostmasksOnJoin;
@@ -28,7 +28,7 @@ static CQShowRoomTopic showRoomTopic;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQDirectChatController (CQDirectChatControllerPrivate)
+@interface CQDirectChatController (CQDirectChatControllerPrivate) <UIAlertViewDelegate, UIActionSheetDelegate, UIPopoverControllerDelegate, CQChatInputBarDelegate>
 - (void) _addPendingComponentsAnimated:(BOOL) animated;
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _didDisconnect:(NSNotification *) notification;
@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-@implementation  CQChatRoomController
+@implementation CQChatRoomController
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -310,35 +310,6 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 #pragma mark -
-
-- (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) theChatInputBar {
-	if ([theChatInputBar isFirstResponder] && theChatInputBar.textView.hasText) {
-		theChatInputBar.textView.text = nil;
-
-		// Work around behavior where textViewDidChange: isn't called when you change the text programatically.
-		__strong id <UITextViewDelegate> strongDelegate = theChatInputBar.textView.delegate;
-		if ([strongDelegate respondsToSelector:@selector(textViewDidChange:)])
-			[strongDelegate textViewDidChange:theChatInputBar.textView];
-
-		[theChatInputBar hideCompletions];
-
-		return;
-	}
-
-	UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
-	actionSheet.delegate = self;
-	actionSheet.tag = ActionsActionSheet;
-
-	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
-		actionSheet.title = self.user.displayName;
-
-	[actionSheet addButtonWithTitle:NSLocalizedString(@"Recently Sent Messages", @"Recently Sent Messages button title")];
-	[actionSheet addButtonWithTitle:NSLocalizedString(@"Room Info", @"Room Info button title")];
-
-	actionSheet.cancelButtonIndex = [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
-
-	[[CQColloquyApplication sharedApplication] showActionSheet:actionSheet];
-}
 
 - (NSArray *) chatInputBar:(CQChatInputBar *) inputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
 	NSMutableArray *completions = [[NSMutableArray alloc] init];
@@ -1325,14 +1296,22 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 				[self part];
 			else [self join];
 		}
-	} else if (actionSheet.tag == ActionsActionSheet) {
-		if (buttonIndex == 0) {
-			[self showRecentlySentMessages];
-		} else if (buttonIndex == 1) {
-			CQChatRoomInfoViewController *roomInfoViewController = [[CQChatRoomInfoViewController alloc] initWithRoom:_target];
-			[[CQColloquyApplication sharedApplication] presentModalViewController:roomInfoViewController animated:[UIView areAnimationsEnabled]];
-		}
 	} else [super actionSheet:actionSheet clickedButtonAtIndex:buttonIndex];
+}
+
+- (void) showRoomModes:(id) sender {
+	CQChatRoomInfoViewController *roomInfoViewController = [[CQChatRoomInfoViewController alloc] initWithRoom:_target showingInfoType:CQChatRoomInfoModes];
+	[[CQColloquyApplication sharedApplication] presentModalViewController:roomInfoViewController animated:[UIView areAnimationsEnabled]];
+}
+
+- (void) showRoomTopic:(id) sender {
+	CQChatRoomInfoViewController *roomInfoViewController = [[CQChatRoomInfoViewController alloc] initWithRoom:_target showingInfoType:CQChatRoomInfoTopic];
+	[[CQColloquyApplication sharedApplication] presentModalViewController:roomInfoViewController animated:[UIView areAnimationsEnabled]];
+}
+
+- (void) showRoomBans:(id) sender {
+	CQChatRoomInfoViewController *roomInfoViewController = [[CQChatRoomInfoViewController alloc] initWithRoom:_target showingInfoType:CQChatRoomInfoBans];
+	[[CQColloquyApplication sharedApplication] presentModalViewController:roomInfoViewController animated:[UIView areAnimationsEnabled]];
 }
 
 #pragma mark -

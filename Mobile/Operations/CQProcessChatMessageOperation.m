@@ -30,7 +30,10 @@ static NSString *timestampFormat;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQProcessChatMessageOperation
+@implementation CQProcessChatMessageOperation {
+	NSDictionary *_message;
+}
+
 @synthesize processedMessageInfo = _processedMessage;
 
 + (void) userDefaultsChanged {
@@ -160,7 +163,7 @@ static void commonChatAndImageReplacment(NSMutableString *string, NSRangePointer
 					linkHTMLString = [NSString stringWithFormat:@"<audio controls preload=\"metadata\" src=\"%@\" id=\"%@\" style=\"max-width: 100%%; max-height: 75%%\"></audio>", [fullURL absoluteString], [fullURL absoluteString]];
 				} else if (inlineVideo && [NSFileManager isValidVideoFormat:fullURL.pathExtension]) {
 					linkHTMLString = [NSString stringWithFormat:@"<video controls preload=\"metadata\" src=\"%@\" id=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></video>", [fullURL absoluteString], [fullURL absoluteString]];
-				}  else {
+				} else {
 					url = [url stringByReplacingOccurrencesOfString:@"/" withString:@"/\u200b"];
 					url = [url stringByReplacingOccurrencesOfString:@"?" withString:@"?\u200b"];
 					url = [url stringByReplacingOccurrencesOfString:@"=" withString:@"=\u200b"];
@@ -292,6 +295,7 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	NSMutableString *messageString = [self _processMessageData:_message[@"message"]];
 	if (!messageString)
 		return;
+
 	MVChatUser *user = _message[@"user"];
 
 	if ([_ignoreController shouldIgnoreMessage:messageString fromUser:user inRoom:_target])

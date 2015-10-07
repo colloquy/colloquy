@@ -2,16 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQBouncerSettings : NSObject {
-	NSString *_identifier;
-	NSString *_displayName;
-	NSString *_server;
-	NSString *_username;
-	NSString *_password;
-	unsigned short _serverPort;
-	BOOL _pushNotifications;
-	MVChatConnectionBouncer _type;
-}
+@interface CQBouncerSettings : NSObject
 - (instancetype) initWithDictionaryRepresentation:(NSDictionary *) info NS_DESIGNATED_INITIALIZER;
 
 - (NSMutableDictionary *) dictionaryRepresentation;

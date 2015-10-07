@@ -7,10 +7,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQUserInfoController : CQModalNavigationController <UINavigationControllerDelegate> {
-	@protected
-	MVChatUser *_user;
-}
+@interface CQUserInfoController : CQModalNavigationController
 @property (nonatomic, strong) MVChatUser *user;
 @end
 

@@ -4,23 +4,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
-@interface CQColloquyApplication : UIApplication <UIApplicationDelegate, UISplitViewControllerDelegate, UIAlertViewDelegate> {
-	@protected
-	UIWindow *_mainWindow;
-	UIViewController *_mainViewController;
-	UIPopoverController *_colloquiesPopoverController;
-	UIBarButtonItem *_colloquiesBarButtonItem;
-	UIToolbar *_toolbar;
-	NSDate *_launchDate;
-	NSDate *_resumeDate;
-	NSString *_deviceToken;
-	NSUInteger _networkIndicatorStack;
-	UIActionSheet *_visibleActionSheet;
-	NSNumber *_oldSwipeOrientationValue;
-	BOOL _userDefaultsChanged;
-	UIAlertController *_alertController;
-}
-
+@interface CQColloquyApplication : UIApplication
 + (CQColloquyApplication *) sharedApplication;
 
 - (void) showHelp:(__nullable id) sender;

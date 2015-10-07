@@ -5,7 +5,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatNavigationController
+@interface CQChatNavigationController () <UINavigationControllerDelegate>
+@end
+
+@implementation CQChatNavigationController {
+	CQChatListViewController *_chatListViewController;
+	BOOL _active;
+}
+
 - (instancetype) init {
 	if (!(self = [super init]))
 		return nil;

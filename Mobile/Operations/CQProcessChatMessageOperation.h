@@ -4,17 +4,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const CQInlineGIFImageKey;
 
-@interface CQProcessChatMessageOperation : NSOperation {
-	NSDictionary *_message;
-	NSMutableDictionary *_processedMessage;
-	NSString *_highlightNickname;
-	CQIgnoreRulesController *_ignoreController;
-	NSStringEncoding _encoding;
-	NSStringEncoding _fallbackEncoding;
-	id __weak _target;
-	SEL _action;
-	id _userInfo;
-}
+@interface CQProcessChatMessageOperation : NSOperation
 - (instancetype) initWithMessageData:(NSData *) messageData;
 - (instancetype) initWithMessageInfo:(NSDictionary *) messageInfo;
 

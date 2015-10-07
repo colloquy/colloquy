@@ -4,10 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQAwayStatusController : CQModalNavigationController {
-@protected
-	MVChatConnection *_connection;
-}
+@interface CQAwayStatusController : CQModalNavigationController
 @property (nonatomic, strong) MVChatConnection *connection;
 @end
 

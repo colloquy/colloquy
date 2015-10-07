@@ -23,12 +23,21 @@ static NSString *membersFilteredCountFormat;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatUserListViewController ()
+@interface CQChatUserListViewController () <UIActionSheetDelegate, UISearchDisplayDelegate>
 @property (atomic, strong) NSMutableArray *users;
 @property (atomic, strong) NSMutableArray *matchedUsers;
 @end
 
-@implementation  CQChatUserListViewController
+@implementation CQChatUserListViewController {
+@protected
+	NSString *_currentSearchString;
+	MVChatRoom *_room;
+	UISearchBar *_searchBar;
+	UISearchDisplayController *_searchController;
+	QChatUserListMode _listMode;
+	id <CQChatUserListViewDelegate> __weak _chatUserDelegate;
+}
+
 + (void) initialize {
 	membersSingleCountFormat = NSLocalizedString(@"Members (%u)", @"Members with single count view title");
 	membersFilteredCountFormat = NSLocalizedString(@"Members (%u of %u)", @"Members with filtered count view title");
@@ -97,12 +106,10 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) setRoomUsers:(NSArray *) users {
-	@synchronized(self) {
-		[self.users setArray:users];
-		self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
+	[self.users setArray:users];
+	self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
 
-		[self.matchedUsers setArray:users];
-	}
+	[self.matchedUsers setArray:users];
 
 	[self.tableView reloadData];
 }
@@ -149,70 +156,64 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) _moveUser:(MVChatUser *) user atIndex:(NSUInteger) fromIndex toIndex:(NSUInteger) toIndex withAnimation:(UITableViewRowAnimation) animation {
-//	@synchronized(self) {
-//		NSParameterAssert(user != nil);
-//		NSParameterAssert(fromIndex <= self.users.count);
-//		NSParameterAssert(toIndex <= self.users.count);
+//	NSParameterAssert(user != nil);
+//	NSParameterAssert(fromIndex <= self.users.count);
+//	NSParameterAssert(toIndex <= self.users.count);
 //
-//		[self.users removeObjectAtIndex:fromIndex];
-//		[self.users insertObject:user atIndex:toIndex];
+//	[self.users removeObjectAtIndex:fromIndex];
+//	[self.users insertObject:user atIndex:toIndex];
 //
-//		if (!_currentSearchString.length || [user.nickname hasCaseInsensitiveSubstring:_currentSearchString]) {
-//			NSInteger removalMatchesIndex = [self _indexForRemovedMatchUser:user];
-//			[self.matchedUsers removeObjectAtIndex:removalMatchesIndex];
+//	if (!_currentSearchString.length || [user.nickname hasCaseInsensitiveSubstring:_currentSearchString]) {
+//		NSInteger removalMatchesIndex = [self _indexForRemovedMatchUser:user];
+//		[self.matchedUsers removeObjectAtIndex:removalMatchesIndex];
 //
-//			NSInteger insertionMatchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:fromIndex];
-//			[self.matchedUsers insertObject:user atIndex:insertionMatchesIndex];
+//		NSInteger insertionMatchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:fromIndex];
+//		[self.matchedUsers insertObject:user atIndex:insertionMatchesIndex];
 //
-//			if (insertionMatchesIndex != removalMatchesIndex) {
-//				[self.tableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:removalMatchesIndex inSection:0] toIndexPath:[NSIndexPath indexPathForRow:insertionMatchesIndex inSection:0]];
-//				[self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:removalMatchesIndex inSection:0], [NSIndexPath indexPathForRow:insertionMatchesIndex inSection:0] ] withRowAnimation:UITableViewRowAnimationFade];
-//			} else [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:insertionMatchesIndex inSection:0] ] withRowAnimation:UITableViewRowAnimationFade];
-//		}
+//		if (insertionMatchesIndex != removalMatchesIndex) {
+//			[self.tableView moveRowAtIndexPath:[NSIndexPath indexPathForRow:removalMatchesIndex inSection:0] toIndexPath:[NSIndexPath indexPathForRow:insertionMatchesIndex inSection:0]];
+//			[self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:removalMatchesIndex inSection:0], [NSIndexPath indexPathForRow:insertionMatchesIndex inSection:0] ] withRowAnimation:UITableViewRowAnimationFade];
+//		} else [self.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:insertionMatchesIndex inSection:0] ] withRowAnimation:UITableViewRowAnimationFade];
 //	}
 }
 
 - (void) _insertUser:(MVChatUser *) user atIndex:(NSUInteger) index withAnimation:(UITableViewRowAnimation) animation {
-//	@synchronized(self) {
-//		NSParameterAssert(user != nil);
-//		NSParameterAssert(index <= self.users.count);
+//	NSParameterAssert(user != nil);
+//	NSParameterAssert(index <= self.users.count);
 //
-//		[self.users insertObject:user atIndex:index];
+//	[self.users insertObject:user atIndex:index];
 //
-//		if (!_currentSearchString.length || [user.nickname hasCaseInsensitiveSubstring:_currentSearchString]) {
-//			NSInteger matchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:index];
+//	if (!_currentSearchString.length || [user.nickname hasCaseInsensitiveSubstring:_currentSearchString]) {
+//		NSInteger matchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:index];
 //
-//			[self.matchedUsers insertObject:user atIndex:matchesIndex];
+//		[self.matchedUsers insertObject:user atIndex:matchesIndex];
 //
-//			NSArray *indexPaths = @[[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
-//			[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:animation];
-//		}
-//
-//		if (self.users.count == self.matchedUsers.count)
-//			self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
-//		else self.title = [NSString stringWithFormat:membersFilteredCountFormat, self.matchedUsers.count, self.users.count];
+//		NSArray *indexPaths = @[[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
+//		[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 //	}
+//
+//	if (self.users.count == self.matchedUsers.count)
+//		self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
+//	else self.title = [NSString stringWithFormat:membersFilteredCountFormat, self.matchedUsers.count, self.users.count];
 }
 
 - (void) _removeUserAtIndex:(NSUInteger) index withAnimation:(UITableViewRowAnimation) animation {
-//	@synchronized(self) {
-//		NSParameterAssert(index <= self.users.count);
+//	NSParameterAssert(index <= self.users.count);
 //
-//		MVChatUser *user = self.users[index];
+//	MVChatUser *user = self.users[index];
 //
-//		[self.users removeObjectAtIndex:index];
+//	[self.users removeObjectAtIndex:index];
 //
-//		NSUInteger matchesIndex = [self _indexForRemovedMatchUser:user];
-//		if (matchesIndex != NSNotFound) {
-//			[self.matchedUsers removeObjectAtIndex:matchesIndex];
+//	NSUInteger matchesIndex = [self _indexForRemovedMatchUser:user];
+//	if (matchesIndex != NSNotFound) {
+//		[self.matchedUsers removeObjectAtIndex:matchesIndex];
 //
-//			NSArray *indexPaths = @[[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
-//			[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
-//		}
-//		if (self.users.count == self.matchedUsers.count)
-//			self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
-//		else self.title = [NSString stringWithFormat:membersFilteredCountFormat, self.matchedUsers.count, self.users.count];
+//		NSArray *indexPaths = @[[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
+//		[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 //	}
+//	if (self.users.count == self.matchedUsers.count)
+//		self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
+//	else self.title = [NSString stringWithFormat:membersFilteredCountFormat, self.matchedUsers.count, self.users.count];
 }
 
 #pragma mark -
@@ -234,27 +235,25 @@ NS_ASSUME_NONNULL_BEGIN
 	if (oldIndex == newIndex)
 		return;
 
-	@synchronized(self) {
-//		MVChatUser *user = self.users[oldIndex];
+//	MVChatUser *user = self.users[oldIndex];
 
-		BOOL searchBarFocused = [_searchController isActive];
+	BOOL searchBarFocused = [_searchController isActive];
 
-		[self.tableView reloadData];
-//		NSInteger oldMatchesIndex = [self _indexForRemovedMatchUser:user];
-//		NSInteger newMatchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:newIndex];
+	[self.tableView reloadData];
+//	NSInteger oldMatchesIndex = [self _indexForRemovedMatchUser:user];
+//	NSInteger newMatchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:newIndex];
 //
-//		if (newMatchesIndex > oldMatchesIndex)
-//			--newMatchesIndex;
+//	if (newMatchesIndex > oldMatchesIndex)
+//		--newMatchesIndex;
 //
-//		if (oldMatchesIndex == newMatchesIndex) {
-//			[self _moveUser:user atIndex:oldIndex toIndex:newIndex withAnimation:UITableViewRowAnimationFade];
-//		} else {
-//			[self _moveUser:user atIndex:oldIndex toIndex:newIndex withAnimation:(newIndex > oldIndex ? UITableViewRowAnimationBottom : UITableViewRowAnimationTop)];
-//		}
+//	if (oldMatchesIndex == newMatchesIndex) {
+//		[self _moveUser:user atIndex:oldIndex toIndex:newIndex withAnimation:UITableViewRowAnimationFade];
+//	} else {
+//		[self _moveUser:user atIndex:oldIndex toIndex:newIndex withAnimation:(newIndex > oldIndex ? UITableViewRowAnimationBottom : UITableViewRowAnimationTop)];
+//	}
 
-		if (searchBarFocused)
-			[_searchController setActive:YES animated:YES];
-	}
+	if (searchBarFocused)
+		[_searchController setActive:YES animated:YES];
 }
 
 - (void) removeUserAtIndex:(NSUInteger) index {
@@ -271,29 +270,27 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) updateUserAtIndex:(NSUInteger) index {
-	@synchronized(self) {
-//		NSParameterAssert(index <= self.users.count);
+//	NSParameterAssert(index <= self.users.count);
 //
-//		MVChatUser *user = self.users[index];
-//		NSUInteger matchesIndex = [self.matchedUsers indexOfObjectIdenticalTo:user];
-//		if (matchesIndex == NSNotFound)
-//			return;
+//	MVChatUser *user = self.users[index];
+//	NSUInteger matchesIndex = [self.matchedUsers indexOfObjectIdenticalTo:user];
+//	if (matchesIndex == NSNotFound)
+//		return;
 
-		BOOL searchBarFocused = [_searchController isActive];
+	BOOL searchBarFocused = [_searchController isActive];
 
-		[self.tableView reloadData];
-//		[self.tableView beginUpdates];
-//		[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:matchesIndex inSection:0] withAnimation:UITableViewRowAnimationFade];
-//		[self.tableView endUpdates];
+	[self.tableView reloadData];
+//	[self.tableView beginUpdates];
+//	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:matchesIndex inSection:0] withAnimation:UITableViewRowAnimationFade];
+//	[self.tableView endUpdates];
 
-		if (searchBarFocused)
-			[_searchController setActive:YES animated:YES];
-	}
+	if (searchBarFocused)
+		[_searchController setActive:YES animated:YES];
 }
 
 #pragma mark -
 
-- (BOOL) searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *) searchString {
+- (BOOL) searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *__nullable) searchString {
 	if ([searchString isEqualToString:_currentSearchString])
 		return NO;
 	
@@ -306,13 +303,11 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) searchDisplayControllerWillEndSearch:(UISearchDisplayController *) controller {
-	@synchronized(self) {
-		// The searching has probably ruined the self.matchedUsers array, so rebuild it here when we display the main results table view/
-		[self.matchedUsers setArray:self.users];
-		[self.tableView reloadData];
+	// The searching has probably ruined the self.matchedUsers array, so rebuild it here when we display the main results table view/
+	[self.matchedUsers setArray:self.users];
+	[self.tableView reloadData];
 
-		self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
-	}
+	self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
 }
 
 #pragma mark -
@@ -322,63 +317,61 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) filterUsersWithSearchString:(NSString *) searchString {
-	@synchronized(self) {
-		NSArray *previousUsersArray = self.matchedUsers;
+	NSArray *previousUsersArray = self.matchedUsers;
 
-		if (searchString.length) {
-			self.matchedUsers = [[NSMutableArray alloc] init];
+	if (searchString.length) {
+		self.matchedUsers = [[NSMutableArray alloc] init];
 
-			NSArray *searchArray = (_currentSearchString && [searchString hasPrefix:_currentSearchString] ? previousUsersArray : self.users);
-			for (MVChatUser *user in searchArray) {
-				if (![user.nickname hasCaseInsensitiveSubstring:searchString])
-					continue;
-				[self.matchedUsers addObject:user];
-			}
-		} else {
-			self.matchedUsers = [self.users mutableCopy];
+		NSArray *searchArray = (_currentSearchString && [searchString hasPrefix:_currentSearchString] ? previousUsersArray : self.users);
+		for (MVChatUser *user in searchArray) {
+			if (![user.nickname hasCaseInsensitiveSubstring:searchString])
+				continue;
+			[self.matchedUsers addObject:user];
 		}
-
-//		if (ABS((NSInteger)(previousUsersArray.count - self.matchedUsers.count)) < 40) {
-//			NSSet *matchedUsersSet = [[NSSet alloc] initWithArray:self.matchedUsers];
-//			NSSet *previousUsersSet = [[NSSet alloc] initWithArray:previousUsersArray];
-//
-//			[_searchController.searchResultsTableView beginUpdates];
-//
-//			NSUInteger index = 0;
-//			NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
-//
-//			for (MVChatUser *user in previousUsersArray) {
-//				if (![matchedUsersSet containsObject:user])
-//					[indexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
-//				++index;
-//			}
-//
-//			[_searchController.searchResultsTableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
-//
-//			index = 0;
-//
-//			indexPaths = [[NSMutableArray alloc] init];
-//
-//			for (MVChatUser *user in self.matchedUsers) {
-//				if (![previousUsersSet containsObject:user])
-//					[indexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
-//				++index;
-//			}
-//
-//			[_searchController.searchResultsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
-//			[_searchController.searchResultsTableView endUpdates];
-//		} else {
-			[_searchController.searchResultsTableView reloadData];
-//		}
-
-		_currentSearchString = [searchString copy];
-
-		if (self.users.count == self.matchedUsers.count)
-			self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
-		else self.title = [NSString stringWithFormat:membersFilteredCountFormat, self.matchedUsers.count, self.users.count];
-
-		[_searchBar becomeFirstResponder];
+	} else {
+		self.matchedUsers = [self.users mutableCopy];
 	}
+
+//	if (ABS((NSInteger)(previousUsersArray.count - self.matchedUsers.count)) < 40) {
+//		NSSet *matchedUsersSet = [[NSSet alloc] initWithArray:self.matchedUsers];
+//		NSSet *previousUsersSet = [[NSSet alloc] initWithArray:previousUsersArray];
+//
+//		[_searchController.searchResultsTableView beginUpdates];
+//
+//		NSUInteger index = 0;
+//		NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+//
+//		for (MVChatUser *user in previousUsersArray) {
+//			if (![matchedUsersSet containsObject:user])
+//				[indexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
+//			++index;
+//		}
+//
+//		[_searchController.searchResultsTableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+//
+//		index = 0;
+//
+//		indexPaths = [[NSMutableArray alloc] init];
+//
+//		for (MVChatUser *user in self.matchedUsers) {
+//			if (![previousUsersSet containsObject:user])
+//				[indexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
+//			++index;
+//		}
+//
+//		[_searchController.searchResultsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+//		[_searchController.searchResultsTableView endUpdates];
+//	} else {
+		[_searchController.searchResultsTableView reloadData];
+//	}
+
+	_currentSearchString = [searchString copy];
+
+	if (self.users.count == self.matchedUsers.count)
+		self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
+	else self.title = [NSString stringWithFormat:membersFilteredCountFormat, self.matchedUsers.count, self.users.count];
+
+	[_searchBar becomeFirstResponder];
 }
 
 #pragma mark -
@@ -402,93 +395,85 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
-	@synchronized(self) {
-		return self.matchedUsers.count;
-	}
+	return self.matchedUsers.count;
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
-	@synchronized(self) {
-		MVChatUser *user = self.matchedUsers[indexPath.row];
+	MVChatUser *user = self.matchedUsers[indexPath.row];
 
-		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
-		cell.textLabel.text = user.nickname;
+	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
+	cell.textLabel.text = user.nickname;
 
-		if (_room) {
-			unsigned long modes = [_room modesForMemberUser:user];
+	if (_room) {
+		unsigned long modes = [_room modesForMemberUser:user];
 
-			if (user.serverOperator)
-				cell.imageView.image = [UIImage imageNamed:@"userSuperOperator.png"];
-			else if (modes & MVChatRoomMemberFounderMode)
-				cell.imageView.image = [UIImage imageNamed:@"userFounder.png"];
-			else if (modes & MVChatRoomMemberAdministratorMode)
-				cell.imageView.image = [UIImage imageNamed:@"userAdmin.png"];
-			else if (modes & MVChatRoomMemberOperatorMode)
-				cell.imageView.image = [UIImage imageNamed:@"userOperator.png"];
-			else if (modes & MVChatRoomMemberHalfOperatorMode)
-				cell.imageView.image = [UIImage imageNamed:@"userHalfOperator.png"];
-			else if (modes & MVChatRoomMemberVoicedMode)
-				cell.imageView.image = [UIImage imageNamed:@"userVoice.png"];
-			else cell.imageView.image = [UIImage imageNamed:@"userNormal.png"];
-		} else {
-			cell.imageView.image = [UIImage imageNamed:@"userNormal.png"];
-		}
-
-		if (_listMode == CQChatUserListModeRoom && ![[UIDevice currentDevice] isPadModel])
-			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-
-		if (user.status == MVChatUserAwayStatus || user.idleTime >= UserIdleTime) {
-			cell.imageView.alpha = .5;
-			cell.textLabel.alpha = .5;
-		} else {
-			cell.imageView.alpha = 1.;
-			cell.textLabel.alpha = 1.;
-		}
-
-		return cell;
+		if (user.serverOperator)
+			cell.imageView.image = [UIImage imageNamed:@"userSuperOperator.png"];
+		else if (modes & MVChatRoomMemberFounderMode)
+			cell.imageView.image = [UIImage imageNamed:@"userFounder.png"];
+		else if (modes & MVChatRoomMemberAdministratorMode)
+			cell.imageView.image = [UIImage imageNamed:@"userAdmin.png"];
+		else if (modes & MVChatRoomMemberOperatorMode)
+			cell.imageView.image = [UIImage imageNamed:@"userOperator.png"];
+		else if (modes & MVChatRoomMemberHalfOperatorMode)
+			cell.imageView.image = [UIImage imageNamed:@"userHalfOperator.png"];
+		else if (modes & MVChatRoomMemberVoicedMode)
+			cell.imageView.image = [UIImage imageNamed:@"userVoice.png"];
+		else cell.imageView.image = [UIImage imageNamed:@"userNormal.png"];
+	} else {
+		cell.imageView.image = [UIImage imageNamed:@"userNormal.png"];
 	}
+
+	if (_listMode == CQChatUserListModeRoom && ![[UIDevice currentDevice] isPadModel])
+		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+
+	if (user.status == MVChatUserAwayStatus || user.idleTime >= UserIdleTime) {
+		cell.imageView.alpha = .5;
+		cell.textLabel.alpha = .5;
+	} else {
+		cell.imageView.alpha = 1.;
+		cell.textLabel.alpha = 1.;
+	}
+
+	return cell;
 }
 
-- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSIndexPath *__nullable) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	[self endEditing];
 
 	return indexPath;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	@synchronized(self) {
-		MVChatUser *user = self.matchedUsers[indexPath.row];
+	MVChatUser *user = self.matchedUsers[indexPath.row];
 
-		__strong __typeof__((_chatUserDelegate)) chatUserDelegate = _chatUserDelegate;
-		BOOL shouldPresentInformation = YES;
-		if (chatUserDelegate && [chatUserDelegate respondsToSelector:@selector(chatUserListViewController:shouldPresentInformationForUser:)])
-			shouldPresentInformation = [chatUserDelegate chatUserListViewController:self shouldPresentInformationForUser:user];
+	__strong __typeof__((_chatUserDelegate)) chatUserDelegate = _chatUserDelegate;
+	BOOL shouldPresentInformation = YES;
+	if (chatUserDelegate && [chatUserDelegate respondsToSelector:@selector(chatUserListViewController:shouldPresentInformationForUser:)])
+		shouldPresentInformation = [chatUserDelegate chatUserListViewController:self shouldPresentInformationForUser:user];
 
-		if (shouldPresentInformation) {
-			UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+	if (shouldPresentInformation) {
+		UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 
-			UIActionSheet *sheet = [UIActionSheet userActionSheetForUser:user inRoom:_room showingUserInformation:NO];
-			sheet.title = cell.textLabel.text;
+		UIActionSheet *sheet = [UIActionSheet userActionSheetForUser:user inRoom:_room showingUserInformation:NO];
+		sheet.title = cell.textLabel.text;
 
-			[sheet associateObject:cell forKey:@"userInfo"];
+		[sheet associateObject:cell forKey:@"userInfo"];
 
-			[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:cell animated:YES];
+		[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:cell animated:YES];
 
-			[tableView deselectRowAtIndexPath:indexPath animated:NO];
-		}
-
-		if (chatUserDelegate && [chatUserDelegate respondsToSelector:@selector(chatUserListViewController:didSelectUser:)])
-			[chatUserDelegate chatUserListViewController:self didSelectUser:user];
+		[tableView deselectRowAtIndexPath:indexPath animated:NO];
 	}
+
+	if (chatUserDelegate && [chatUserDelegate respondsToSelector:@selector(chatUserListViewController:didSelectUser:)])
+		[chatUserDelegate chatUserListViewController:self didSelectUser:user];
 }
 
 - (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
-	@synchronized(self) {
-		CQUserInfoViewController *userInfoViewController = [[CQUserInfoViewController alloc] init];
-		userInfoViewController.user = self.matchedUsers[indexPath.row];
+	CQUserInfoViewController *userInfoViewController = [[CQUserInfoViewController alloc] init];
+	userInfoViewController.user = self.matchedUsers[indexPath.row];
 
-		[self.navigationController pushViewController:userInfoViewController animated:YES];
-	}
+	[self.navigationController pushViewController:userInfoViewController animated:YES];
 }
 
 - (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -500,14 +485,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(__nullable id) sender {
-	@synchronized(self) {
-		MVChatUser *user = self.matchedUsers[indexPath.row];
-		if (!user)
-			return;
+	MVChatUser *user = self.matchedUsers[indexPath.row];
+	if (!user)
+		return;
 
-		if (action == @selector(copy:))
-			[UIPasteboard generalPasteboard].string = user.nickname;
-	}
+	if (action == @selector(copy:))
+		[UIPasteboard generalPasteboard].string = user.nickname;
 }
 
 #pragma mark -

@@ -1,21 +1,23 @@
 #import "CQDirectChatController.h"
 
+#import "CQActivities.h"
 #import "CQAlertView.h"
 #import "CQBookmarkingController.h"
 #import "CQChatOrderingController.h"
 #import "CQChatCreationViewController.h"
+#import "CQChatInputBar.h"
 #import "CQChatInputStyleViewController.h"
 #import "CQChatPresentationController.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 #import "CQIgnoreRulesController.h"
+#import "CQImportantChatMessageViewController.h"
 #import "CQIntroductoryGIFFrameOperation.h"
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
 #import "CQUserInfoController.h"
 #import "KAIgnoreRule.h"
-
 #import "NSAttributedStringAdditions.h"
 #import "NSDateAdditions.h"
 #import "NSNotificationAdditions.h"
@@ -31,7 +33,6 @@
 #import <objc/message.h>
 
 #define InfoActionSheet 1001
-#define ActionsActionSheet 1002
 #define URLActionSheet 1003
 
 #define CantSendMessageAlertView 100
@@ -81,10 +82,10 @@ static BOOL showingKeyboard;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQDirectChatController () <CQChatInputStyleDelegate>
+@interface CQDirectChatController () <CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate, CQChatInputStyleDelegate>
 @end
 
-@implementation  CQDirectChatController
+@implementation CQDirectChatController
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -197,7 +198,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return nil;
 }
 
-- (instancetype) initWithNibName:(NSString *) nibNameOrNil bundle:(NSBundle *) nibBundleOrNil {
+- (instancetype) initWithNibName:(NSString *__nullable) nibNameOrNil bundle:(NSBundle *__nullable) nibBundleOrNil {
 	NSAssert(NO, @"use -[CQDirectChatController initWithTarget:] instead");
 	return nil;
 }
@@ -343,7 +344,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return icon;
 }
 
-- (void) setTitle:(NSString *) title {
+- (void) setTitle:(NSString *__nullable) title {
 	// Do nothing, not changeable.
 }
 
@@ -446,7 +447,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) showRecentlySentMessages {
+- (void) saveChatLog:(id) sender {
+	NSData *transcriptPDF = transcriptView.PDFRepresentation;
+	if (!transcriptPDF)
+		return;
+
+	[self _showActivityViewControllerWithItems:@[ transcriptPDF ] activities:@[]];
+}
+
+- (void) showRecentlySentMessages:(id) sender {
 	CQImportantChatMessageViewController *listViewController = [[CQImportantChatMessageViewController alloc] initWithMessages:_sentMessages delegate:self];
 	CQModalNavigationController *modalNavigationController = [[CQModalNavigationController alloc] initWithRootViewController:listViewController];
 
@@ -462,7 +471,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (NSArray *) keyCommands {
+- (NSArray *__nullable) keyCommands {
 	static NSArray *keyCommands = nil;
 	if (!keyCommands) {
 		UIKeyCommand *altTabKeyCommand = [UIKeyCommand keyCommandWithInput:@"\t" modifierFlags:UIKeyModifierAlternate action:@selector(_handleKeyCommand:)];
@@ -516,7 +525,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[self _userDefaultsChanged];
 
-	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
+	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![self.splitViewController.delegate splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clear.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateNormal];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clearPressed.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateHighlighted];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButton.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
@@ -638,7 +647,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
 	_isShowingCompletionsBeforeRotation = chatInputBar.isShowingCompletions;
 
-	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:toInterfaceOrientation]);
+	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![self.splitViewController.delegate splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:toInterfaceOrientation]);
 }
 
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation) fromInterfaceOrientation {
@@ -652,8 +661,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 #endif
 
+- (BOOL) canBecomeFirstResponder {
+	return YES;
+}
+
 - (BOOL) isFirstResponder {
-	return [chatInputBar isFirstResponder];
+	return[chatInputBar isFirstResponder];
 }
 
 - (BOOL) resignFirstResponder {
@@ -686,18 +699,7 @@ NS_ASSUME_NONNULL_BEGIN
 		return;
 	}
 
-	UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
-	actionSheet.delegate = self;
-	actionSheet.tag = ActionsActionSheet;
-
-	if (!([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
-		actionSheet.title = self.user.displayName;
-
-	[actionSheet addButtonWithTitle:NSLocalizedString(@"Recently Sent Messages", @"Recently Sent Messages")];
-
-	actionSheet.cancelButtonIndex = [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
-
-	[[CQColloquyApplication sharedApplication] showActionSheet:actionSheet];
+	[self _showActivityViewControllerWithItems:@[] activities:[CQActivitiesProvider activities]];
 }
 
 - (BOOL) chatInputBarShouldEndEditing:(CQChatInputBar *) chatInputBar {
@@ -1898,9 +1900,6 @@ NS_ASSUME_NONNULL_BEGIN
 	if (actionSheet.tag == InfoActionSheet) {
 		if (buttonIndex == 0)
 			[self showUserInformation];
-	} else if (actionSheet.tag == ActionsActionSheet) {
-		if (buttonIndex == 0)
-			[self showRecentlySentMessages];
 	} else if (actionSheet.tag == URLActionSheet) {
 		Class <CQBookmarking> bookmarkingService = [CQBookmarkingController activeService];
 		NSURL *URL = [actionSheet associatedObjectForKey:@"URL"];
@@ -1912,6 +1911,13 @@ NS_ASSUME_NONNULL_BEGIN
 		else if ((!bookmarkingService && buttonIndex == 1) || (bookmarkingService && buttonIndex == 2))
 			[[UIPasteboard generalPasteboard] setURL:URL];
 	}
+}
+
+#pragma mark -
+
+- (void) _showActivityViewControllerWithItems:(NSArray *) items activities:(NSArray *) activities {
+	UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:activities];
+	[self presentViewController:activityController animated:[UIView areAnimationsEnabled] completion:nil];
 }
 
 #pragma mark -
@@ -2030,7 +2036,7 @@ NS_ASSUME_NONNULL_BEGIN
 	transcriptView.fontFamily = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFont"];
 	transcriptView.fontSize = chatTranscriptFontSize;
 	transcriptView.timestampPosition = timestampEveryMessage ? (timestampOnLeft ? CQTimestampPositionLeft : CQTimestampPositionRight) : CQTimestampPositionCenter;
-	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
+	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![self.splitViewController.delegate splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
 
 	chatInputBar.font = [chatInputBar.font fontWithSize:chatTranscriptFontSize];
 	if ([self isViewLoaded] && transcriptView)

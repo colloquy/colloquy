@@ -2,9 +2,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQPreferencesDeleteCell
+@implementation CQPreferencesDeleteCell
 
-- (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
+- (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *__nullable) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
 
@@ -26,11 +26,11 @@ NS_ASSUME_NONNULL_BEGIN
 	return self;
 }
 
-- (UIView *) backgroundView {
+- (UIView *__nullable) backgroundView {
 	return nil;
 }
 
-- (UIView *) selectedBackgroundView {
+- (UIView *__nullable) selectedBackgroundView {
 	return nil;
 }
 

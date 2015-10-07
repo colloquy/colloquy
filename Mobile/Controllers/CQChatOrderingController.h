@@ -13,10 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const CQChatOrderingControllerDidChangeOrderingNotification;
 
-@interface CQChatOrderingController : NSObject {
-	@private
-	NSMutableArray *_chatControllers;
-}
+@interface CQChatOrderingController : NSObject
 + (CQChatOrderingController *) defaultController;
 
 @property (nonatomic, readonly) NSArray *chatViewControllers;

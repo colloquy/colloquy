@@ -1,12 +1,6 @@
-@class MVChatConnection;
-@class CQChatListViewController;
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatNavigationController : UINavigationController <UINavigationControllerDelegate> {
-	CQChatListViewController *_chatListViewController;
-	BOOL _active;
-}
+@interface CQChatNavigationController : UINavigationController
 - (void) selectChatViewController:(id) controller animatedSelection:(BOOL) animatedSelection animatedScroll:(BOOL) animatedScroll;
 @end
 

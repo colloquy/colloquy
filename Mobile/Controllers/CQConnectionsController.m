@@ -23,7 +23,7 @@
 #import <ChatCore/MVChatConnectionPrivate.h>
 #import <ChatCore/MVChatRoom.h>
 
-#if defined(__IPHONE_9_0)
+#if defined(__IPHONE_9_0) && 0
 #import <CoreSpotlight/CoreSpotlight.h>
 #endif
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -56,7 +56,29 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 static NSString *const connectionInvalidSSLCertAction = nil;
 
-@implementation  CQConnectionsController
+@interface CQConnectionsController () <UIActionSheetDelegate, UIAlertViewDelegate, CQBouncerConnectionDelegate>
+@end
+
+@implementation CQConnectionsController {
+	NSMapTable *_connectionToErrorToAlertMap;
+	CQConnectionsNavigationController *_connectionsNavigationController;
+	NSMutableSet *_connections;
+	NSMutableArray *_directConnections;
+	NSMutableArray *_bouncers;
+	NSMutableSet *_bouncerConnections;
+	NSMutableDictionary *_bouncerChatConnections;
+	NSMutableDictionary *_ignoreControllers;
+	BOOL _loadedConnections;
+	NSUInteger _connectingCount;
+	NSUInteger _connectedCount;
+	UILocalNotification *_timeRemainingLocalNotifiction;
+	UIBackgroundTaskIdentifier _backgroundTask;
+	NSTimeInterval _allowedBackgroundTime;
+	NSMutableSet *_automaticallySetConnectionAwayStatus;
+	BOOL _shouldLogRawMessagesToConsole;
+	NSMapTable *_activityTokens;
+}
+
 + (CQConnectionsController *) defaultController {
 	static BOOL creatingSharedInstance = NO;
 	static CQConnectionsController *sharedInstance = nil;
@@ -971,7 +993,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		[connection sendCommand:command withArguments:[[NSAttributedString alloc] initWithString:arguments]];
 	}
 
-    for (NSUInteger i = 0; i < rooms.count; i++) {
+	for (NSUInteger i = 0; i < rooms.count; i++) {
 		NSString *room = [connection properNameForChatRoomNamed:rooms[i]];
 		NSString *password = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:room];
 
@@ -1551,24 +1573,34 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	NSUInteger pushConnectionCount = 0;
 	NSUInteger roomCount = 0;
 
+#if defined(__IPHONE_9_0) && 0
+	NSData *serverImageData = UIImagePNGRepresentation([UIImage imageNamed:@"server.png"]);
+#endif
 	NSMutableArray *connections = [[NSMutableArray alloc] initWithCapacity:_directConnections.count];
 	for (MVChatConnection *connection in _directConnections) {
 #if defined(__IPHONE_9_0) && 0
 		if (NSClassFromString(@"CSSearchableIndex") != nil) {
 			CSSearchableItemAttributeSet *connectionAttributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"IRC Server"];
 			connectionAttributeSet.identifier = connection.uniqueIdentifier;
-			connectionAttributeSet.displayName = connectionAttributeSet.title = [NSString stringWithFormat:@"%@ — %@", connection.displayName ?: connection.server, connection.nickname];
-			connectionAttributeSet.alternateNames = @[ connection.server ];
-			connectionAttributeSet.contentType = (__bridge NSString *)kUTTypeURL;
+			if (connection.displayName.length || connection.server.length)
+				connectionAttributeSet.displayName = connectionAttributeSet.title = [NSString stringWithFormat:@"%@ — %@", connection.displayName ?: connection.server, connection.nickname];
+			else connectionAttributeSet.displayName = connectionAttributeSet.title = connection.nickname;
+			if (connection.displayName.length && connection.server.length)
+				connectionAttributeSet.alternateNames = @[ connection.server ];
+			connectionAttributeSet.contentType = (__bridge NSString *)kUTTypeMessage;
+			connectionAttributeSet.thumbnailData = serverImageData;
+			connectionAttributeSet.contentTypeTree = @[ (__bridge id)kUTTypeItem, (__bridge id)kUTTypeURL, (__bridge NSString *)kUTTypeMessage ];
 
 			NSMutableArray *items = [NSMutableArray array];
-			NSMutableArray *keywords = [NSMutableArray arrayWithObjects:@"irc", nil];
+			NSMutableArray *keywords = [@[ @"irc", connection.displayName ?: connection.server ?: @"", connection.nickname ?: @"", connection.username ?: @"", connection.realName ?: @"" ] mutableCopy];
 			for (MVChatRoom *chatRoom in connection.knownChatRooms) {
 				[keywords addObject:chatRoom.displayName];
 
 				CSSearchableItemAttributeSet *roomAttributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"IRC Room"];
 				roomAttributeSet.identifier = chatRoom.displayName;
-				roomAttributeSet.displayName = roomAttributeSet.title = [NSString stringWithFormat:@"%@ — %@", connection.displayName ?: connection.server, chatRoom.displayName];
+				if (connection.displayName.length || connection.server.length)
+					roomAttributeSet.displayName = roomAttributeSet.title = [NSString stringWithFormat:@"%@ — %@", connection.displayName ?: connection.server, chatRoom.displayName];
+				else roomAttributeSet.displayName = roomAttributeSet.title = chatRoom.displayName;
 				roomAttributeSet.contentType = (__bridge NSString *)kUTTypeURL;
 
 				CSSearchableItem *roomItem = [[CSSearchableItem alloc] initWithUniqueIdentifier:chatRoom.uniqueIdentifier domainIdentifier:connection.server attributeSet:roomAttributeSet];
@@ -1770,17 +1802,15 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 #pragma mark -
 
 - (CQIgnoreRulesController *) ignoreControllerForConnection:(MVChatConnection *) connection {
-	@synchronized(_ignoreControllers) {
-		CQIgnoreRulesController *ignoreController = _ignoreControllers[connection.uniqueIdentifier];
-		if (ignoreController)
-			return ignoreController;
-
-		ignoreController = [[CQIgnoreRulesController alloc] initWithConnection:connection];
-
-		_ignoreControllers[connection.uniqueIdentifier] = ignoreController;
-
+	CQIgnoreRulesController *ignoreController = _ignoreControllers[connection.uniqueIdentifier];
+	if (ignoreController)
 		return ignoreController;
-	}
+
+	ignoreController = [[CQIgnoreRulesController alloc] initWithConnection:connection];
+
+	_ignoreControllers[connection.uniqueIdentifier] = ignoreController;
+
+	return ignoreController;
 }
 
 #pragma mark -
@@ -1854,7 +1884,7 @@ NS_ASSUME_NONNULL_END
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  MVChatConnection (CQConnectionsControllerAdditions)
+@implementation MVChatConnection (CQConnectionsControllerAdditions)
 + (NSString *) defaultNickname {
 	NSString *defaultNickname = [[CQSettingsController settingsController] stringForKey:@"CQDefaultNickname"];
 	if (defaultNickname.length)

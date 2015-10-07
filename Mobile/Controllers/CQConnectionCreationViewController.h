@@ -1,13 +1,8 @@
 #import "CQModalNavigationController.h"
 
-@class MVChatConnection;
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQConnectionCreationViewController : CQModalNavigationController <UINavigationControllerDelegate> {
-	@protected
-	MVChatConnection *_connection;
-}
+@interface CQConnectionCreationViewController : CQModalNavigationController
 @property (nonatomic, nullable, copy) NSURL *url;
 @end
 

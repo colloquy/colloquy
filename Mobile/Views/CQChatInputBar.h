@@ -2,7 +2,6 @@
 #import "MVChatString.h"
 
 @protocol CQChatInputBarDelegate;
-@class CQTextCompletionView;
 
 typedef NS_ENUM(NSInteger, CQChatInputBarResponderState) {
 	CQChatInputBarNotResponder,
@@ -11,30 +10,7 @@ typedef NS_ENUM(NSInteger, CQChatInputBarResponderState) {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatInputBar : UIView <UITextViewDelegate, CQTextCompletionViewDelegate> {
-	@protected
-	UIView *_backgroundView;
-	UITextView *_inputView;
-	CQTextCompletionView *_completionView;
-	NSArray *_completions;
-	NSRange _completionRange;
-	BOOL _completionCapturedKeyboard;
-	BOOL _disableCompletionUntilNextWord;
-	BOOL _autocomplete;
-	BOOL _spaceCyclesCompletions;
-	BOOL _autocorrect;
-	BOOL _autocapitalizeNextLetter;
-	BOOL _textNeedsClearing;
-	UITextAutocapitalizationType _defaultAutocapitalizationType;
-	UIViewAnimationCurve _animationCurve;
-	NSTimeInterval _animationDuration;
-	UIButton *_accessoryButton;
-	UIImageView *_overlayBackgroundView;
-	UIImageView *_overlayBackgroundViewPiece;
-	UIView *_topLineView;
-	NSMutableDictionary *_accessoryImages;
-	CQChatInputBarResponderState _responderState;
-}
+@interface CQChatInputBar : UIView
 @property (nonatomic, nullable, weak) IBOutlet id <CQChatInputBarDelegate> delegate;
 
 @property (nonatomic, strong) UIColor *tintColor;

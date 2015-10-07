@@ -2,13 +2,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^UITextFieldBlock)(UITextField *textField);
 
-@interface CQPreferencesTextCell : UITableViewCell <UITextFieldDelegate> {
-	@protected
-	UITextField *_textField;
-	BOOL _enabled;
-	SEL _textEditAction;
-	UITextFieldBlock _textFieldBlock;
-}
+@interface CQPreferencesTextCell : UITableViewCell
 + (CQPreferencesTextCell *) currentEditingCell;
 
 @property (nonatomic, readonly) UITextField *textField;

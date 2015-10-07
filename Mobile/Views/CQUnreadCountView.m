@@ -2,11 +2,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQUnreadCountView
+@implementation CQUnreadCountView {
+@protected
+	NSUInteger _normalCount;
+}
+
 - (instancetype) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
 		return nil;
+
 	self.opaque = NO;
+
 	return self;
 }
 

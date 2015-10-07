@@ -1,8 +1,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQTableViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface CQTableViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 - (instancetype)initWithStyle:(UITableViewStyle)style NS_DESIGNATED_INITIALIZER;
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithNibName:(NSString *__nullable)nibNameOrNil bundle:(NSBundle *__nullable)nibBundleOrNil NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, strong, readonly) UITableView *tableView;

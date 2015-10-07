@@ -32,10 +32,25 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 static NSMutableArray *highlightWords;
 
-@interface CQColloquyApplication () <BITHockeyManagerDelegate>
+@interface CQColloquyApplication () <UIApplicationDelegate, UISplitViewControllerDelegate, UIAlertViewDelegate, BITHockeyManagerDelegate>
 @end
 
-@implementation  CQColloquyApplication
+@implementation CQColloquyApplication {
+	UIWindow *_mainWindow;
+	UIViewController *_mainViewController;
+	UIPopoverController *_colloquiesPopoverController;
+	UIBarButtonItem *_colloquiesBarButtonItem;
+	UIToolbar *_toolbar;
+	NSDate *_launchDate;
+	NSDate *_resumeDate;
+	NSString *_deviceToken;
+	NSUInteger _networkIndicatorStack;
+	UIActionSheet *_visibleActionSheet;
+	NSNumber *_oldSwipeOrientationValue;
+	BOOL _userDefaultsChanged;
+	UIAlertController *_alertController;
+}
+
 + (CQColloquyApplication *) sharedApplication {
 	return (CQColloquyApplication *)[UIApplication sharedApplication];
 }
@@ -52,7 +67,7 @@ static NSMutableArray *highlightWords;
 
 #pragma mark -
 
-- (UIWindow *) window {
+- (UIWindow *__nullable) window {
 	return _mainWindow;
 }
 
@@ -87,25 +102,23 @@ static NSMutableArray *highlightWords;
 }
 
 - (NSArray *) highlightWords {
-	@synchronized(self) {
-		if (!highlightWords) {
-			highlightWords = [[NSMutableArray alloc] init];
+	if (!highlightWords) {
+		highlightWords = [[NSMutableArray alloc] init];
 
-			NSString *highlightWordsString = [[CQSettingsController settingsController] stringForKey:@"CQHighlightWords"];
-			if (highlightWordsString.length) {
-				NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" options:NSRegularExpressionCaseInsensitive error:nil];
-				for (NSTextCheckingResult *result in [regex matchesInString:highlightWordsString options:(NSMatchingOptions)NSMatchingReportCompletion range:NSMakeRange(0, highlightWordsString.length)])
-					[highlightWords addObject:[highlightWordsString substringWithRange:[result rangeAtIndex:1]]];
+		NSString *highlightWordsString = [[CQSettingsController settingsController] stringForKey:@"CQHighlightWords"];
+		if (highlightWordsString.length) {
+			NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" options:NSRegularExpressionCaseInsensitive error:nil];
+			for (NSTextCheckingResult *result in [regex matchesInString:highlightWordsString options:(NSMatchingOptions)NSMatchingReportCompletion range:NSMakeRange(0, highlightWordsString.length)])
+				[highlightWords addObject:[highlightWordsString substringWithRange:[result rangeAtIndex:1]]];
 
-				highlightWordsString = [highlightWordsString stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" withString:@""];
+			highlightWordsString = [highlightWordsString stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" withString:@""];
 
-				[highlightWords addObjectsFromArray:[highlightWordsString componentsSeparatedByString:@" "]];
-				[highlightWords removeObject:@""];
-			}
+			[highlightWords addObjectsFromArray:[highlightWordsString componentsSeparatedByString:@" "]];
+			[highlightWords removeObject:@""];
 		}
-
-		return highlightWords;
 	}
+
+	return highlightWords;
 }
 
 - (void) updateAnalytics {
@@ -146,9 +159,7 @@ static NSMutableArray *highlightWords;
 	if (![NSThread isMainThread])
 		return;
 
-	@synchronized(self) {
-		highlightWords = nil;
-	}
+	highlightWords = nil;
 
 	if ([UIDevice currentDevice].isPadModel) {
 		NSNumber *newSwipeOrientationValue = [[CQSettingsController settingsController] objectForKey:@"CQSplitSwipeOrientations"];
@@ -308,7 +319,7 @@ static NSMutableArray *highlightWords;
 	_mainWindow.rootViewController = _mainViewController;
 }
 
-- (BOOL) application:(UIApplication *) application willFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
+- (BOOL) application:(UIApplication *) application willFinishLaunchingWithOptions:(NSDictionary *__nullable) launchOptions {
 	NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]];
 	[[CQSettingsController settingsController] registerDefaults:defaults];
 
@@ -330,7 +341,7 @@ static NSMutableArray *highlightWords;
 	return YES;
 }
 
-- (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
+- (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *__nullable) launchOptions {
 	if (![[CQChatController defaultController] hasPendingChatController] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
 		[[CQChatController defaultController] setFirstChatController];
 

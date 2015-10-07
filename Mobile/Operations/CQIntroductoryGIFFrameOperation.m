@@ -51,7 +51,7 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQIntroductoryGIFFrameOperation {
+@implementation CQIntroductoryGIFFrameOperation {
 	BOOL _cancelled;
 	BOOL _started;
 	BOOL _finished;

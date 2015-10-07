@@ -4,15 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatCreationViewController : CQModalNavigationController <UINavigationControllerDelegate> {
-	@protected
-	BOOL _roomTarget;
-	MVChatConnection *_selectedConnection;
-	NSString *_name;
-	NSString *_password;
-	BOOL _showListOnLoad;
-	NSString *_searchString;
-}
+@interface CQChatCreationViewController : CQModalNavigationController
 @property (nonatomic, getter=isRoomTarget) BOOL roomTarget;
 @property (nonatomic, strong) MVChatConnection *selectedConnection;
 

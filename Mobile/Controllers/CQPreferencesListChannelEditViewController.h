@@ -4,10 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQPreferencesListChannelEditViewController : CQPreferencesListEditViewController {
-	MVChatConnection *_connection;
-	NSString *_password;
-}
+@interface CQPreferencesListChannelEditViewController : CQPreferencesListEditViewController
 @property (nonatomic, strong) MVChatConnection *connection;
 @end
 

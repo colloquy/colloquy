@@ -1,26 +1,14 @@
 #import "CQPreferencesTableViewController.h"
 
-@class CQTextView;
-
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol CQPreferencesTextEditViewDelegate <NSObject>
 @optional
-- (NSString *) stringForFooterWithTextView:(CQTextView *) textView;
-- (NSInteger) integerForCountdownInFooterWithTextView:(CQTextView *) textView;
+- (NSString *) stringForFooterWithTextView:(UITextView *) textView;
+- (NSInteger) integerForCountdownInFooterWithTextView:(UITextView *) textView;
 @end
 
-@interface CQPreferencesTextEditViewController : CQPreferencesTableViewController {
-@protected
-	id <CQPreferencesTextEditViewDelegate> __weak _delegate;
-
-	NSString *_listItemText;
-	NSString *_listItemPlaceholder;
-
-	NSInteger _charactersRemainingBeforeDisplay;
-
-	UILabel *_footerLabel;
-}
+@interface CQPreferencesTextEditViewController : CQPreferencesTableViewController
 @property (nonatomic, nullable, weak) id <CQPreferencesTextEditViewDelegate> delegate;
 @property (nonatomic, copy) NSString *listItem;
 @property (nonatomic, copy) NSString *listItemPlaceholder;

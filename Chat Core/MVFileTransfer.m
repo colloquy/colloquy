@@ -27,7 +27,20 @@ NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 static NSRange portRange = { 1024, 24 };
 static BOOL autoPortMapping = YES;
 
-@implementation MVFileTransfer
+@implementation MVFileTransfer {
+	unsigned long long _finalSize;
+	unsigned long long _transferred;
+	NSDate *_startDate;
+	NSString *_host;
+	BOOL _passive;
+	unsigned short _port;
+	unsigned long long _startOffset;
+	MVChatUser *_user;
+	MVFileTransferStatus _status;
+	NSError *_lastError;
+	NSUInteger _hash;
+}
+
 + (void) setFileTransferPortRange:(NSRange) range {
 	portRange = range;
 }

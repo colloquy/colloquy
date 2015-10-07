@@ -9,8 +9,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) CGFloat height;
 @end
 
-@implementation  CQPreferencesTextViewCell
-- (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
+@implementation CQPreferencesTextViewCell
+- (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *__nullable) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
 
@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(layoutSubviews) name:UIKeyboardDidShowNotification object:nil];
 
-    return self;
+	return self;
 }
 
 - (void) dealloc {

@@ -1,7 +1,5 @@
 #import "CQChatController.h"
-#import "CQChatInputBar.h"
 #import "CQChatTranscriptViewDelegate.h"
-#import "CQImportantChatMessageViewController.h"
 
 #import "MVChatString.h"
 
@@ -30,7 +28,7 @@ extern NSString *CQChatViewControllerHandledMessageNotification;
 extern NSString *CQChatViewControllerRecentMessagesUpdatedNotification;
 extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 
-@interface CQDirectChatController : UIViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
+@interface CQDirectChatController : UIViewController <CQChatViewController> {
 	@protected
 	IBOutlet CQChatInputBar *chatInputBar;
 	IBOutlet UIView <CQChatTranscriptView> *transcriptView;
@@ -68,7 +66,7 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 	NSMutableDictionary *_batchStorage; // { "batchIdentifier": any associated data }
 	NSMutableDictionary *_batchTypeAssociation; // { @(batchType): [ "batchIdentifier", "otherBatchIdentifier" ] }
 }
-- (instancetype) initWithNibName:(NSString *) nibNameOrNil bundle:(NSBundle *) nibBundleOrNil NS_UNAVAILABLE;
+- (instancetype) initWithNibName:(NSString *__nullable) nibNameOrNil bundle:(NSBundle *__nullable) nibBundleOrNil NS_UNAVAILABLE;
 - (instancetype) initWithStyle:(UITableViewStyle) style NS_UNAVAILABLE;
 - (instancetype) initWithCoder:(NSCoder *) aDecoder NS_UNAVAILABLE;
 
@@ -84,8 +82,6 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 - (void) clearController;
 
 - (void) markScrollback;
-
-- (void) showRecentlySentMessages;
 
 - (void) sendMessage:(MVChatString *) message asAction:(BOOL) action;
 

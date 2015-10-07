@@ -1,20 +1,12 @@
 @class MVChatUser;
-@class CQUnreadCountView;
 @protocol CQChatViewController;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatTableCell : UITableViewCell {
-	@protected
-	UIImageView *_iconImageView;
-	UILabel *_nameLabel;
-	CQUnreadCountView *_unreadCountView;
-	NSMutableArray *_chatPreviewLabels;
-	NSUInteger _maximumMessagePreviews;
-	BOOL _showsUserInMessagePreviews;
-	BOOL _available;
-	BOOL _animating;
-}
+@interface CQChatTableCell : UITableViewCell
++ (UIFont *)nameLabelFont;
++ (UIFont *)previewLabelFont;
+
 - (void) takeValuesFromChatViewController:(id <CQChatViewController>) controller;
 
 @property (nonatomic, copy) NSString *name;

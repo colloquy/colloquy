@@ -1,11 +1,8 @@
-@class MVChatConnection;
-@class CQBouncerSettings;
-
 #import "CQModalNavigationController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQConnectionsNavigationController : CQModalNavigationController <UINavigationControllerDelegate>
+@interface CQConnectionsNavigationController : CQModalNavigationController
 @end
 
 NS_ASSUME_NONNULL_END

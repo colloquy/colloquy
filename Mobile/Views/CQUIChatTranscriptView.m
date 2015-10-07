@@ -1,19 +1,42 @@
 #import "CQUIChatTranscriptView.h"
 
+#import "CQPrinterPage.h"
+
 #import <ChatCore/MVChatUser.h>
 
+#import "UIPrintPageRendererAdditions.h"
 #import "NSNotificationAdditions.h"
 
 #define DefaultFontSize 14
 #define HideRoomTopicDelay 30.
 
-static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNotification";
+static NSString *const CQChatRoomTopicChangedNotification = @"CQChatRoomTopicChangedNotification";
 
 #pragma mark -
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQUIChatTranscriptView
+@interface CQUIChatTranscriptView () <UIGestureRecognizerDelegate, UIWebViewDelegate>
+
+@end
+
+@implementation CQUIChatTranscriptView {
+@protected
+	UIView *_blockerView;
+	NSMutableArray *_pendingPreviousSessionComponents;
+	NSMutableArray *_pendingComponents;
+	NSUInteger _fontSize;
+	BOOL _scrolling;
+	BOOL _loading;
+	BOOL _resetPending;
+	CGPoint _lastTouchLocation;
+	NSMutableArray *_singleSwipeGestureRecognizers;
+	CQShowRoomTopic _showRoomTopic;
+	NSString *_roomTopic;
+	NSString *_roomTopicSetter;
+	BOOL _topicIsHidden;
+}
+
 @synthesize transcriptDelegate = _transcriptDelegate;
 
 @synthesize timestampPosition = _timestampPosition;
@@ -44,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) dealloc {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 
-	[[NSNotificationCenter chatCenter] removeObserver:self name:CQRoomTopicChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:CQChatRoomTopicChangedNotification object:nil];
 	[[NSNotificationCenter chatCenter] removeObserver:self name:CQSettingsDidChangeNotification object:nil];
 
 	super.delegate = nil;
@@ -52,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setDelegate:(id <UIWebViewDelegate>) delegate {
+- (void) setDelegate:(id <UIWebViewDelegate> __nullable) delegate {
 	NSAssert(NO, @"Should not be called. Use _transcriptDelegate instead.");
 }
 
@@ -107,6 +130,31 @@ NS_ASSUME_NONNULL_BEGIN
 	_fontSize = fontSize;
 
 	[self _reloadVariantStyle];
+}
+
+- (NSData *) PDFRepresentation {
+	if (self.isLoading)
+		return nil;
+
+	UIPrintPageRenderer *renderer = [[UIPrintPageRenderer alloc] init];
+	[renderer addPrintFormatter:self.viewPrintFormatter startingAtPageAtIndex:0];
+
+	CQPrinterPage *page = [[CQPrinterPage alloc] init];
+
+	UIEdgeInsets paperMargin = page.suggestedPaperMargin;
+	CGSize paperSize = page.suggestedPaperSize;
+	CGRect paperRect = CGRectMake(0., 0., paperSize.width, paperSize.height);
+	CGRect printableRect = UIEdgeInsetsInsetRect(paperRect, paperMargin);
+
+	@try {
+		[renderer setValue:[NSValue valueWithCGRect:paperRect] forKey:@"paperRect"];
+		[renderer setValue:[NSValue valueWithCGRect:printableRect] forKey:@"printableRect"];
+	} @catch (NSException *e) {
+		NSLog(@"Failed to set PDF size information, unable to generate document");
+		return nil;
+	}
+
+	return [renderer PDFRender];
 }
 
 - (void) setTimestampPosition:(CQTimestampPosition) timestampPosition {
@@ -210,7 +258,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (UIView *) hitTest:(CGPoint) point withEvent:(UIEvent *) event {
+- (UIView *__nullable) hitTest:(CGPoint) point withEvent:(UIEvent *__nullable) event {
 	_lastTouchLocation = [[UIApplication sharedApplication].keyWindow.rootViewController.view convertPoint:point fromView:self];
 
 	return [super hitTest:point withEvent:event];;
@@ -380,7 +428,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (NSString *) stringByEvaluatingJavaScriptFromString:(NSString *) script {
+- (NSString *__nullable) stringByEvaluatingJavaScriptFromString:(NSString *) script {
 	NSLog(@"Refusing to evaluate %@\n%@", script, [NSThread callStackSymbols]);
 
 	return nil;

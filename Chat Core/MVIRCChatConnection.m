@@ -304,6 +304,39 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 
 @implementation MVIRCChatConnection {
+	GCDAsyncSocket *_chatConnection;
+	NSDate *_queueWait;
+	NSDate *_lastCommand;
+	NSMutableArray *_sendQueue;
+	NSMutableSet *_pendingJoinRoomNames;
+	NSMutableSet *_pendingWhoisUsers;
+	NSMutableSet *_directClientConnections;
+	NSMutableDictionary *_serverInformation;
+	NSString *_server;
+	NSString *_realServer;
+	NSString *_currentNickname;
+	NSString *_nickname;
+	NSString *_username;
+	NSString *_password;
+	NSString *_realName;
+	NSMutableSet *_lastSentIsonNicknames;
+	NSCharacterSet *_roomPrefixes;
+	unsigned short _serverPort;
+	unsigned short _isonSentCount;
+	BOOL _sendQueueProcessing;
+	BOOL _sentEndCapabilityCommand;
+	NSTimeInterval _sendEndCapabilityCommandAtTime;
+	BOOL _pendingIdentificationAttempt;
+	NSMutableArray *_umichNoIdentdCaptcha;
+	BOOL _gamesurgeGlobalBotMOTD;
+	NSString *_failedNickname;
+	short _failedNicknameCount;
+	BOOL _nicknameShortened;
+	NSMutableArray *_pendingMonitorList;
+	BOOL _fetchingMonitorList;
+	BOOL _monitorListFull;
+	BOOL _hasRequestedPlaybackList;
+
 	dispatch_queue_t _connectionQueue;
 
 	NSTimeInterval _nextPingTimeInterval;
@@ -2429,7 +2462,7 @@ end:
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionChghost];
 					}
-				}  else if( [capability isCaseInsensitiveEqualToString:@"server-time"] || [capability isCaseInsensitiveEqualToString:@"znc.in/server-time-iso"] ) {
+				} else if( [capability isCaseInsensitiveEqualToString:@"server-time"] || [capability isCaseInsensitiveEqualToString:@"znc.in/server-time-iso"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionServerTime];
 					}
@@ -2905,14 +2938,15 @@ end:
 
 	__unsafe_unretained MVChatRoom *room = privmsgInfo[@"room"];
 	__unsafe_unretained MVChatUser *sender = privmsgInfo[@"user"];
-	__unsafe_unretained NSMutableData *message = privmsgInfo[@"message"];
+	__strong NSMutableData *message = privmsgInfo[@"message"];
+	__unsafe_unretained NSMutableData *unsafeMessage = message;
 #if ENABLE(PLUGINS)
 	__unsafe_unretained NSMutableDictionary *unsafePrivmsgInfo = privmsgInfo;
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatUser * ), @encode( id ), @encode( NSMutableDictionary * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processIncomingMessageAsData:from:to:attributes: )];
-	[invocation setArgument:&message atIndex:2];
+	[invocation setArgument:&unsafeMessage atIndex:2];
 	[invocation setArgument:&sender atIndex:3];
 	[invocation setArgument:&room atIndex:4];
 	[invocation setArgument:&unsafePrivmsgInfo atIndex:5];
@@ -2920,7 +2954,7 @@ end:
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 #endif
 
-	if( ! message.length ) return;
+	if( ! unsafeMessage.length ) return;
 
 	if( room ) {
 		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:room userInfo:privmsgInfo];
@@ -3029,14 +3063,15 @@ end:
 	id target = noticeInfo[@"target"];
 	__unsafe_unretained MVChatRoom *room = noticeInfo[@"room"];
 	__unsafe_unretained MVChatUser *sender = noticeInfo[@"user"];
-	__unsafe_unretained NSMutableData *message = noticeInfo[@"message"];
+	__strong NSMutableData *message = noticeInfo[@"message"];
+	__unsafe_unretained NSMutableData *unsafeMessage = message;
 #if ENABLE(PLUGINS)
 	__unsafe_unretained NSMutableDictionary *unsafeNoticeInfo = noticeInfo;
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatUser * ), @encode( id ), @encode( NSMutableDictionary * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processIncomingMessageAsData:from:to:attributes: )];
-	[invocation setArgument:&message atIndex:2];
+	[invocation setArgument:&unsafeMessage atIndex:2];
 	[invocation setArgument:&sender atIndex:3];
 	[invocation setArgument:&room atIndex:4];
 	[invocation setArgument:&unsafeNoticeInfo atIndex:5];
@@ -3044,13 +3079,13 @@ end:
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 #endif
 
-	if( ! message.length ) return;
+	if( ! unsafeMessage.length ) return;
 
 	if( room ) {
 		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:room userInfo:noticeInfo];
 	} else {
 		if( [[sender nickname] isCaseInsensitiveEqualToString:[self server]] || ( _realServer && [[sender nickname] isCaseInsensitiveEqualToString:_realServer] ) || [[sender nickname] isCaseInsensitiveEqualToString:@"irc.umich.edu"] ) {
-			NSString *msg = [self _newStringWithBytes:[message bytes] length:message.length];
+			NSString *msg = [self _newStringWithBytes:[unsafeMessage bytes] length:unsafeMessage.length];
 
 			// Auto reply to servers asking us to send a PASS because they could not detect an identd
 			if (![self isConnected]) {
@@ -3134,13 +3169,13 @@ end:
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:message.length];
 
 			if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ||				// Nickserv/*
-			   [msg hasCaseInsensitiveSubstring:@"you are now identified"] ||			// NickServ/freenode
-			   [msg hasCaseInsensitiveSubstring:@"you are already logged in"] ||		// NickServ/freenode
-			   [msg hasCaseInsensitiveSubstring:@"successfully identified"] ||			// NickServ/oftc
-			   [msg hasCaseInsensitiveSubstring:@"already identified"] ||				// NickServ
-			   [msg hasCaseInsensitiveSubstring:@"you are now logged in"] ||			// Q/quakenet
-			   [msg hasCaseInsensitiveSubstring:@"authentication successful"] ||		// X/undernet
-			   [msg hasCaseInsensitiveSubstring:@"i recognize you"] ) {					// AuthServ/gamesurge
+				[msg hasCaseInsensitiveSubstring:@"you are now identified"] ||			// NickServ/freenode
+				[msg hasCaseInsensitiveSubstring:@"you are already logged in"] ||		// NickServ/freenode
+				[msg hasCaseInsensitiveSubstring:@"successfully identified"] ||			// NickServ/oftc
+				[msg hasCaseInsensitiveSubstring:@"already identified"] ||				// NickServ
+				[msg hasCaseInsensitiveSubstring:@"you are now logged in"] ||			// Q/quakenet
+				[msg hasCaseInsensitiveSubstring:@"authentication successful"] ||		// X/undernet
+				[msg hasCaseInsensitiveSubstring:@"i recognize you"] ) {					// AuthServ/gamesurge
 
 				_pendingIdentificationAttempt = NO;
 
@@ -3784,9 +3819,10 @@ end:
 	__unsafe_unretained MVChatRoom *room = topicInfo[@"room"];
 	__unsafe_unretained MVChatUser *author = topicInfo[@"author"];
 	NSMutableData *topic = [topicInfo[@"topic"] mutableCopy];
+	NSMutableData *safeTopic = topic;
 
 #if ENABLE(PLUGINS)
-	__unsafe_unretained NSMutableData *unsafeTopic = topic;
+	__unsafe_unretained NSMutableData *unsafeTopic = safeTopic;
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatRoom * ), @encode( MVChatUser * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -3800,7 +3836,7 @@ end:
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 #endif
 
-	[room _setTopic:topic];
+	[room _setTopic:safeTopic];
 	[room _setTopicAuthor:author];
 	[room _setTopicDate:[NSDate date]];
 
@@ -3817,7 +3853,6 @@ end:
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:parameters[0]];
 		NSData *topic = parameters[1];
 		if( ! [topic isKindOfClass:[NSData class]] ) topic = [NSData data];
-
 		NSDictionary *info = @{@"room": room, @"author": sender, @"topic": topic};
 		[self _handleTopic:info];
 	}
@@ -3972,7 +4007,11 @@ end:
 
 
 	NSUInteger changedModes = ( oldModes ^ [room modes] ) | argModes;
-	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:@{ @"changedModes": @(changedModes), @"by": sender, @"unsupportedModes": [unsupportedModes copy] }];
+	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+	if (sender) userInfo[@"by"] = sender;
+	if (unsupportedModes) userInfo[@"unsupportedModes"] = [unsupportedModes copy];
+	userInfo[@"changedModes"] = @(changedModes);
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:userInfo];
 }
 
 - (void) _handleModeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {

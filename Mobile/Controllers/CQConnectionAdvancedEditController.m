@@ -26,7 +26,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 #pragma mark -
 
-@implementation  CQConnectionAdvancedEditController
+@implementation CQConnectionAdvancedEditController
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -80,7 +80,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 	}
 }
 
-- (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
+- (NSString *__nullable) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
 	switch (section) {
 		case SettingsTableSection: return NSLocalizedString(@"Connection Settings", @"Connection Settings section title");
 		case AuthenticationTableSection: return NSLocalizedString(@"Authentication", @"Authentication section title");
@@ -88,7 +88,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 	}
 }
 
-- (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
+- (NSString *__nullable) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
 	if (section == SettingsTableSection)
 		return NSLocalizedString(@"Authentication via SASL uses your\nnickname and nickname password.", @"Settings section footer title");
 	if (section == AuthenticationTableSection)
@@ -96,7 +96,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 	return nil;
 }
 
-- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSIndexPath *__nullable) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section == IdentitiesTableSection && indexPath.row == 0)
 		return indexPath;
 	if (indexPath.section == AutomaticTableSection && indexPath.row == 0)

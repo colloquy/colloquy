@@ -351,41 +351,41 @@ BOOL isValidUTF8( const char *s, NSUInteger len ) {
 }
 
 static const unsigned char mIRCColors[][3] = {
-	{ 0xff, 0xff, 0xff },  /* 00) white */
-	{ 0x00, 0x00, 0x00 },  /* 01) black */
-	{ 0x00, 0x00, 0x7b },  /* 02) blue */
-	{ 0x00, 0x94, 0x00 },  /* 03) green */
-	{ 0xff, 0x00, 0x00 },  /* 04) red */
-	{ 0x7b, 0x00, 0x00 },  /* 05) brown */
-	{ 0x9c, 0x00, 0x9c },  /* 06) purple */
-	{ 0xff, 0x7b, 0x00 },  /* 07) orange */
-	{ 0xff, 0xff, 0x00 },  /* 08) yellow */
-	{ 0x00, 0xff, 0x00 },  /* 09) bright green */
-	{ 0x00, 0x94, 0x94 },  /* 10) cyan */
-	{ 0x00, 0xff, 0xff },  /* 11) bright cyan */
-	{ 0x00, 0x00, 0xff },  /* 12) bright blue */
-	{ 0xff, 0x00, 0xff },  /* 13) bright purple */
-	{ 0x7b, 0x7b, 0x7b },  /* 14) gray */
-	{ 0xd6, 0xd6, 0xd6 }   /* 15) light gray */
+	{ 0xff, 0xff, 0xff }, /* 00) white */
+	{ 0x00, 0x00, 0x00 }, /* 01) black */
+	{ 0x00, 0x00, 0x7b }, /* 02) blue */
+	{ 0x00, 0x94, 0x00 }, /* 03) green */
+	{ 0xff, 0x00, 0x00 }, /* 04) red */
+	{ 0x7b, 0x00, 0x00 }, /* 05) brown */
+	{ 0x9c, 0x00, 0x9c }, /* 06) purple */
+	{ 0xff, 0x7b, 0x00 }, /* 07) orange */
+	{ 0xff, 0xff, 0x00 }, /* 08) yellow */
+	{ 0x00, 0xff, 0x00 }, /* 09) bright green */
+	{ 0x00, 0x94, 0x94 }, /* 10) cyan */
+	{ 0x00, 0xff, 0xff }, /* 11) bright cyan */
+	{ 0x00, 0x00, 0xff }, /* 12) bright blue */
+	{ 0xff, 0x00, 0xff }, /* 13) bright purple */
+	{ 0x7b, 0x7b, 0x7b }, /* 14) gray */
+	{ 0xd6, 0xd6, 0xd6 } /* 15) light gray */
 };
 
 static const unsigned char CTCPColors[][3] = {
-	{ 0x00, 0x00, 0x00 },  /* 0) black */
-	{ 0x00, 0x00, 0x7f },  /* 1) blue */
-	{ 0x00, 0x7f, 0x00 },  /* 2) green */
-	{ 0x00, 0x7f, 0x7f },  /* 3) cyan */
-	{ 0x7f, 0x00, 0x00 },  /* 4) red */
-	{ 0x7f, 0x00, 0x7f },  /* 5) purple */
-	{ 0x7f, 0x7f, 0x00 },  /* 6) brown */
-	{ 0xc0, 0xc0, 0xc0 },  /* 7) light gray */
-	{ 0x7f, 0x7f, 0x7f },  /* 8) gray */
-	{ 0x00, 0x00, 0xff },  /* 9) bright blue */
-	{ 0x00, 0xff, 0x00 },  /* A) bright green */
-	{ 0x00, 0xff, 0xff },  /* B) bright cyan */
-	{ 0xff, 0x00, 0x00 },  /* C) bright red */
-	{ 0xff, 0x00, 0xff },  /* D) bright magenta */
-	{ 0xff, 0xff, 0x00 },  /* E) yellow */
-	{ 0xff, 0xff, 0xff }   /* F) white */
+	{ 0x00, 0x00, 0x00 }, /* 0) black */
+	{ 0x00, 0x00, 0x7f }, /* 1) blue */
+	{ 0x00, 0x7f, 0x00 }, /* 2) green */
+	{ 0x00, 0x7f, 0x7f }, /* 3) cyan */
+	{ 0x7f, 0x00, 0x00 }, /* 4) red */
+	{ 0x7f, 0x00, 0x7f }, /* 5) purple */
+	{ 0x7f, 0x7f, 0x00 }, /* 6) brown */
+	{ 0xc0, 0xc0, 0xc0 }, /* 7) light gray */
+	{ 0x7f, 0x7f, 0x7f }, /* 8) gray */
+	{ 0x00, 0x00, 0xff }, /* 9) bright blue */
+	{ 0x00, 0xff, 0x00 }, /* A) bright green */
+	{ 0x00, 0xff, 0xff }, /* B) bright cyan */
+	{ 0xff, 0x00, 0x00 }, /* C) bright red */
+	{ 0xff, 0x00, 0xff }, /* D) bright magenta */
+	{ 0xff, 0xff, 0x00 }, /* E) yellow */
+	{ 0xff, 0xff, 0xff } /* F) white */
 };
 
 static BOOL scanOneOrTwoDigits( NSScanner *scanner, NSUInteger *number ) {
@@ -1412,12 +1412,15 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	}
 }
 
-- (void) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement {
-	[self replaceOccurrencesOfRegex:regex withString:replacement options:0 range:NSMakeRange(0, self.length) error:nil];
+- (BOOL) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement {
+	return [self replaceOccurrencesOfRegex:regex withString:replacement options:0 range:NSMakeRange(0, self.length) error:nil];
 }
 
-- (void) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
+- (BOOL ) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
 	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
+	if (!regularExpression)
+		return NO;
+
 	NSMutableString *replacementString = [self mutableCopy];
 
 	do {
@@ -1428,6 +1431,8 @@ static NSCharacterSet *typicalEmoticonCharacters;
 		searchRange.length += (result.range.length - replacement.length);
 		[replacementString replaceCharactersInRange:result.range withString:replacement];
 	} while (0);
+
+	return YES;
 }
 @end
 

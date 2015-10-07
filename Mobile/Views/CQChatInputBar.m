@@ -19,7 +19,7 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatInputBar (CQChatInputBarPrivate)
+@interface CQChatInputBar (CQChatInputBarPrivate) <UITextViewDelegate, CQTextCompletionViewDelegate>
 @property (readonly) BOOL _hasMarkedText;
 
 - (void) _moveCaretToOffset:(NSUInteger) offset;
@@ -32,8 +32,26 @@ NS_ASSUME_NONNULL_END
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatInputBar
-@synthesize delegate = _delegate;
+@implementation CQChatInputBar {
+@protected
+	UIView *_backgroundView;
+	CQTextCompletionView *_completionView;
+	NSArray *_completions;
+	NSRange _completionRange;
+	BOOL _completionCapturedKeyboard;
+	BOOL _disableCompletionUntilNextWord;
+	BOOL _autocapitalizeNextLetter;
+	BOOL _textNeedsClearing;
+	UITextAutocapitalizationType _defaultAutocapitalizationType;
+	UIViewAnimationCurve _animationCurve;
+	NSTimeInterval _animationDuration;
+	UIButton *_accessoryButton;
+	UIImageView *_overlayBackgroundView;
+	UIImageView *_overlayBackgroundViewPiece;
+	UIView *_topLineView;
+	NSMutableDictionary *_accessoryImages;
+	CQChatInputBarResponderState _responderState;
+}
 
 + (void) initialize {
 	static dispatch_once_t onceToken;

@@ -6,7 +6,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation MVIRCChatRoom
+@implementation MVIRCChatRoom {
+	BOOL _namesSynced;
+	BOOL _bansSynced;
+}
+
 - (instancetype) initWithName:(NSString *) roomName andConnection:(MVIRCChatConnection *) roomConnection {
 	if( ( self = [self init] ) ) {
 		_connection = roomConnection; // prevent circular retain

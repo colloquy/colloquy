@@ -2,7 +2,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQSoundController
+@implementation CQSoundController {
+	SystemSoundID _sound;
+	NSTimeInterval _previousPlayTime;
+	NSString *_soundName;
+}
+
 + (void) vibrate {
 	static NSTimeInterval previousVibrateTime = 0.;
 

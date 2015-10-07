@@ -13,6 +13,10 @@
 #include <netinet/if_ether.h>
 #include <net/if_dl.h>
 
+#if defined(TARGET_OS_MAC) && TARGET_OS_MAC
+#import <AppKit/AppKit.h>
+#endif
+
 // openssl is deprecated on OS X 10.7+
 #ifdef USE_OPENSSL
 #include <openssl/md5.h>

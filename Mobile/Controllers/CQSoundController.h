@@ -2,11 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQSoundController : NSObject {
-	SystemSoundID _sound;
-	NSTimeInterval _previousPlayTime;
-	NSString *_soundName;
-}
+@interface CQSoundController : NSObject
 + (void) vibrate;
 
 - (instancetype) init NS_UNAVAILABLE;

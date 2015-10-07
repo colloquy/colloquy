@@ -12,7 +12,10 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatEditViewController
+@implementation CQChatEditViewController {
+	NSMutableArray *_sortedConnections;
+}
+
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -89,7 +92,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 	return 0;
 }
 
-- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSIndexPath *__nullable) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if ((indexPath.section == 0 && indexPath.row == 0) || (indexPath.section == 2 && indexPath.row == 0))
 		return indexPath;
 	return nil;
@@ -132,7 +135,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 	}
 }
 
-- (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
+- (NSString *__nullable) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
 	if (section == 0)
 		return NSLocalizedString(@"Chat Server", @"Chat Server section title");
 	if (section == 1 && _roomTarget)

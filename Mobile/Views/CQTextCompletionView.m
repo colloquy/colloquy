@@ -8,8 +8,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQTextCompletionView
-@synthesize delegate = _delegate;
+@implementation CQTextCompletionView {
+@protected
+	CGSize _completionTextSizes[5];
+}
+
+@synthesize selectedCompletion = _selectedCompletion;
 
 - (instancetype) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
@@ -218,7 +222,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return CGRectInset(enclosingRect, -(CompletionBubbleInset + 2.), -(CompletionBubbleInset + 2.)).size;
 }
 
-- (BOOL) pointInside:(CGPoint) point withEvent:(UIEvent *) event {
+- (BOOL) pointInside:(CGPoint) point withEvent:(UIEvent *__nullable) event {
 	CGRect enclosingRect = CGRectMake(CompletionBubbleInset, CompletionBubbleInset, 40., CompletionBubbleRadius * 2.);
 
 	for (NSUInteger i = 0; i < MaximumCompletions; ++i) {
@@ -230,7 +234,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return CGRectContainsPoint(enclosingRect, point);
 }
 
-- (void) touchesBegan:(NSSet *) touches withEvent:(UIEvent *) event {
+- (void) touchesBegan:(NSSet *) touches withEvent:(UIEvent *__nullable) event {
 	NSParameterAssert(touches.count == 1);
 
 	UITouch *touch = [touches anyObject];
@@ -239,7 +243,7 @@ NS_ASSUME_NONNULL_BEGIN
 	self.selectedCompletion = [self completionIndexForPoint:location];
 }
 
-- (void) touchesMoved:(NSSet *) touches withEvent:(UIEvent *) event {
+- (void) touchesMoved:(NSSet *) touches withEvent:(UIEvent *__nullable) event {
 	NSParameterAssert(touches.count == 1);
 
 	UITouch *touch = [touches anyObject];
@@ -250,7 +254,7 @@ NS_ASSUME_NONNULL_BEGIN
 	else self.selectedCompletion = NSNotFound;
 }
 
-- (void) touchesEnded:(NSSet *) touches withEvent:(UIEvent *) event {
+- (void) touchesEnded:(NSSet *) touches withEvent:(UIEvent *__nullable) event {
 	if (_selectedCompletion == NSNotFound)
 		return;
 
@@ -267,7 +271,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 }
 
-- (void) touchesCancelled:(NSSet *) touches withEvent:(UIEvent *) event {
+- (void) touchesCancelled:(NSSet *__nullable) touches withEvent:(UIEvent *__nullable) event {
 	self.selectedCompletion = NSNotFound;
 }
 @end

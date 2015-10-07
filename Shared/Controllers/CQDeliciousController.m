@@ -6,7 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 NSString *const CQBookmarkingServiceDelicious = @"CQBookmarkingServiceDelicious";
 
-@implementation  CQDeliciousController
+@implementation CQDeliciousController
 + (NSString *) serviceName {
 	return @"Delicious";
 }

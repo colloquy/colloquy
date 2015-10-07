@@ -4,11 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQBouncerEditViewController : CQPreferencesTableViewController <UIActionSheetDelegate, UIAlertViewDelegate> {
-	@protected
-	CQBouncerSettings *_settings;
-	BOOL _newBouncer;
-}
+@interface CQBouncerEditViewController : CQPreferencesTableViewController
 @property (nonatomic, strong) CQBouncerSettings *settings;
 @property (nonatomic, getter=isNewBouncer) BOOL newBouncer;
 @end

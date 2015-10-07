@@ -9,8 +9,28 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatTableCell
-- (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
+@implementation CQChatTableCell {
+	UIImageView *_iconImageView;
+	UILabel *_nameLabel;
+	CQUnreadCountView *_unreadCountView;
+	NSMutableArray *_chatPreviewLabels;
+	NSUInteger _maximumMessagePreviews;
+	BOOL _showsUserInMessagePreviews;
+	BOOL _available;
+	BOOL _animating;
+}
+
+#pragma mark -
+
++ (UIFont *) previewLabelFont {
+	return [UIFont systemFontOfSize:14.];
+}
+
++ (UIFont *) nameLabelFont {
+	return [UIFont boldSystemFontOfSize:18.];
+}
+
+- (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *__nullable) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
 
@@ -18,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 	_nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	_unreadCountView = [[CQUnreadCountView alloc] initWithFrame:CGRectZero];
 
-	_maximumMessagePreviews = 2;
+	_maximumMessagePreviews = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQPreviewLinesCount"];
 	_showsUserInMessagePreviews = YES;
 	_available = YES;
 
@@ -26,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[self.contentView addSubview:_nameLabel];
 	[self.contentView addSubview:_unreadCountView];
 
-	_nameLabel.font = [UIFont boldSystemFontOfSize:18.];
+	_nameLabel.font = [[self class] nameLabelFont];
 	_nameLabel.textColor = self.textLabel.textColor;
 	_nameLabel.highlightedTextColor = self.textLabel.highlightedTextColor;
 
@@ -133,6 +153,7 @@ NS_ASSUME_NONNULL_BEGIN
 		for (NSUInteger i = 0; i < _chatPreviewLabels.count; ++i) {
 			if (i == 0)
 				continue;
+
 			UILabel *currentLabel = _chatPreviewLabels[i];
 			UILabel *previousLabel = _chatPreviewLabels[(i - 1)];
 			previousLabel.text = currentLabel.text;
@@ -167,7 +188,7 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
-	label.font = [UIFont systemFontOfSize:14.];
+	label.font = [[self class] previewLabelFont];
 	label.backgroundColor = [UIColor clearColor];
 	label.textColor = [UIColor colorWithWhite:(150. / 255.) alpha:1.];
 	label.alpha = (animated ? 0. : (_available ? 1. : 0.5));
@@ -202,7 +223,7 @@ NS_ASSUME_NONNULL_BEGIN
 	self.available = YES;
 
 	_showsUserInMessagePreviews = YES;
-	_maximumMessagePreviews = 2;
+	_maximumMessagePreviews = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQPreviewLinesCount"];
 }
 
 - (void) setHighlighted:(BOOL) highlighted animated:(BOOL) animated {

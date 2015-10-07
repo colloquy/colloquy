@@ -4,7 +4,12 @@ static NSRegularExpression *numericRegularExpression;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQProcessConsoleMessageOperation
+@implementation CQProcessConsoleMessageOperation {
+	NSMutableString *_message;
+	NSString *_highlightNickname;
+	BOOL _outbound;
+}
+
 @synthesize processedMessageInfo = _processedMessage;
 
 + (void) initialize {

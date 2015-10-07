@@ -1,19 +1,41 @@
 #import "CQWKChatTranscriptView.h"
 
+#import "CQPrinterPage.h"
+
 #import <ChatCore/MVChatUser.h>
 
+#import "UIPrintPageRendererAdditions.h"
 #import "NSNotificationAdditions.h"
 
 #define DefaultFontSize 14
 #define HideRoomTopicDelay 30.
 
-static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNotification";
+static NSString *const CQChatRoomTopicChangedNotification = @"CQChatRoomTopicChangedNotification";
 
 #pragma mark -
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQWKChatTranscriptView
+@interface CQWKChatTranscriptView () <UIGestureRecognizerDelegate, UIScrollViewDelegate, WKNavigationDelegate>
+@end
+
+@implementation CQWKChatTranscriptView {
+@protected
+	UIView *_blockerView;
+	NSMutableArray *_pendingPreviousSessionComponents;
+	NSMutableArray *_pendingComponents;
+	BOOL _scrolling;
+	BOOL _loading;
+	BOOL _resetPending;
+	CGPoint _lastTouchLocation;
+	NSMutableArray *_singleSwipeGestureRecognizers;
+	CQShowRoomTopic _showRoomTopic;
+	BOOL _addedMessage;
+	NSString *_roomTopic;
+	NSString *_roomTopicSetter;
+	BOOL _topicIsHidden;
+}
+
 @synthesize transcriptDelegate = _transcriptDelegate;
 
 @synthesize timestampPosition = _timestampPosition;
@@ -42,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 
-	[[NSNotificationCenter chatCenter] removeObserver:self name:CQRoomTopicChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:CQChatRoomTopicChangedNotification object:nil];
 	[[NSNotificationCenter chatCenter] removeObserver:self name:CQSettingsDidChangeNotification object:nil];
 }
 
@@ -99,6 +121,31 @@ NS_ASSUME_NONNULL_BEGIN
 	_fontSize = fontSize;
 
 	[self _reloadVariantStyle];
+}
+
+- (NSData *) PDFRepresentation {
+	if (self.isLoading)
+		return nil;
+
+	UIPrintPageRenderer *renderer = [[UIPrintPageRenderer alloc] init];
+	[renderer addPrintFormatter:self.viewPrintFormatter startingAtPageAtIndex:0];
+
+	CQPrinterPage *page = [[CQPrinterPage alloc] init];
+
+	UIEdgeInsets paperMargin = page.suggestedPaperMargin;
+	CGSize paperSize = page.suggestedPaperSize;
+	CGRect paperRect = CGRectMake(0., 0., paperSize.width, paperSize.height);
+	CGRect printableRect = UIEdgeInsetsInsetRect(paperRect, paperMargin);
+
+	@try {
+		[renderer setValue:[NSValue valueWithCGRect:paperRect] forKey:@"paperRect"];
+		[renderer setValue:[NSValue valueWithCGRect:printableRect] forKey:@"printableRect"];
+	} @catch (NSException *e) {
+		NSLog(@"Failed to set PDF size information, unable to generate document");
+		return nil;
+	}
+
+	return [renderer PDFRender];
 }
 
 - (void) setTimestampPosition:(CQTimestampPosition) timestampPosition {
@@ -201,7 +248,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (UIView *) hitTest:(CGPoint) point withEvent:(UIEvent *) event {
+- (UIView *__nullable) hitTest:(CGPoint) point withEvent:(UIEvent *__nullable) event {
 	_lastTouchLocation = [[UIApplication sharedApplication].keyWindow.rootViewController.view convertPoint:point fromView:self];
 
 	return [super hitTest:point withEvent:event];;
@@ -249,7 +296,7 @@ NS_ASSUME_NONNULL_BEGIN
 	decisionHandler(WKNavigationActionPolicyCancel);
 }
 
-- (void) webView:(WKWebView *) webView didFinishNavigation:(WKNavigation *) navigation {
+- (void) webView:(WKWebView *) webView didFinishNavigation:(WKNavigation *__null_unspecified) navigation {
 	[self performSelector:@selector(_checkIfLoadingFinished) withObject:nil afterDelay:0.];
 
 //	[self stringByEvaluatingJavaScriptFromString:@"document.body.style.webkitTouchCallout='none';"];
@@ -382,7 +429,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) evaluateJavaScript:(NSString *) script completionHandler:(void (^)(id, NSError *)) completionHandler {
+- (void) evaluateJavaScript:(NSString *) script completionHandler:(void (^__nullable)(__nullable id, NSError *__nullable)) completionHandler {
 	NSLog(@"Refusing to evaluate %@\n%@", script, [NSThread callStackSymbols]);
 }
 

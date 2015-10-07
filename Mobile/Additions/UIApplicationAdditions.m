@@ -29,7 +29,7 @@ static void reachabilityStatusChangedCallback(SCNetworkReachabilityRef target, S
 	[application cq_setReachabilityState:reachabilityState];
 }
 
-@implementation  UIApplication (Additions)
+@implementation UIApplication (Additions)
 - (CQReachabilityState) cq_reachabilityState {
 	return [[self associatedObjectForKey:@"reachabilityState"] intValue];
 }
@@ -41,7 +41,7 @@ static void reachabilityStatusChangedCallback(SCNetworkReachabilityRef target, S
 	[self associateObject:@(reachabilityState) forKey:@"reachabilityState"];
 	[self didChangeValueForKey:@"cq_reachabilityState"];
 
-    [[NSNotificationCenter chatCenter] postNotificationName:CQReachabilityStateDidChangeNotification object:self userInfo:@{
+	[[NSNotificationCenter chatCenter] postNotificationName:CQReachabilityStateDidChangeNotification object:self userInfo:@{
 		CQReachabilityNewStateKey: @(reachabilityState),
 		CQReachabilityOldStateKey: @(oldState)
 	}];

@@ -2,11 +2,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^UISwitchControlBlock)(UISwitch *switchControl);
 
-@interface CQPreferencesSwitchCell : UITableViewCell {
-	@protected
-	UISwitch *_switchControl;
-	UISwitchControlBlock _switchControlBlock;
-}
+@interface CQPreferencesSwitchCell : UITableViewCell
 @property (nonatomic, getter=isOn) BOOL on;
 
 @property (nonatomic, readonly) UISwitch *switchControl;

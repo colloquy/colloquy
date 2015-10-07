@@ -7,8 +7,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (atomic, strong) NSMapTable *buttonToColorMap;
 @end
 
-@implementation  CQColorPickerTableCell
-- (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
+@implementation CQColorPickerTableCell
+- (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *__nullable) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
 
@@ -122,7 +122,7 @@ NS_ASSUME_NONNULL_END
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQMultiButtonTableCell : UITableViewCell
+@implementation CQMultiButtonTableCell : UITableViewCell
 - (void) addButtonWithConfigurationHandler:(void (^)(UIButton *button)) configurationHandler {
 	UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
 	button.layer.borderWidth = 1.;

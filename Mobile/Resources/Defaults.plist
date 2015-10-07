@@ -146,5 +146,7 @@
 	<integer>0</integer>
 	<key>CQOverrideDynamicTypeSize</key>
 	<false/>
+	<key>CQPreviewLinesCount</key>
+	<integer>2</integer>
 </dict>
 </plist>

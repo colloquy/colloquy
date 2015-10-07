@@ -1,9 +1,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQAnalyticsController : NSObject {
-	NSMutableDictionary *_data;
-	BOOL _pendingSynchronize;
-}
+@interface CQAnalyticsController : NSObject
 + (CQAnalyticsController *) defaultController;
 
 @property (nonatomic, readonly) NSString *uniqueIdentifier;

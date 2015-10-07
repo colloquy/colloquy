@@ -6,7 +6,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQWelcomeController
+@implementation CQWelcomeController
 - (void) viewDidLoad {
 	if (_shouldShowOnlyHelpTopics && !_rootViewController)
 		_rootViewController = [[CQHelpTopicsViewController alloc] init];

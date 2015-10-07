@@ -5,7 +5,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQAwayStatusController
+@implementation CQAwayStatusController
 - (void) viewDidLoad {
 	if (!_rootViewController) {
 		CQAwayStatusViewController *viewController = [[CQAwayStatusViewController alloc] init];
@@ -18,10 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 #pragma mark -
-
-- (MVChatConnection *) connection {
-	return _connection;
-}
 
 - (void) setConnection:(MVChatConnection *) connection {
 	_connection = connection;

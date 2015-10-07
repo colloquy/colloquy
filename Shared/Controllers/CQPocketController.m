@@ -8,7 +8,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 
-@implementation  CQPocketController
+@implementation CQPocketController
 + (NSString *) serviceName {
 	return @"Pocket";
 }

@@ -4,7 +4,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQHelpTopicViewController
+@interface CQHelpTopicViewController () <UIWebViewDelegate>
+@end
+
+@implementation CQHelpTopicViewController {
+	UIWebView *_webView;
+	NSURL *_urlToHandle;
+}
+
 - (instancetype) initWithHTMLContent:(NSString *) content {
 	if (!(self = [self init]))
 		return nil;

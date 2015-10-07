@@ -1,6 +1,9 @@
 #import "MVDelegateLogger.h"
 
-@implementation MVDelegateLogger
+@implementation MVDelegateLogger {
+	__weak id <MVLoggingDelegate> _delegate;
+}
+
 - (instancetype) init {
 	NSAssert(NO, @"use [MVDelegateLogger initWithDelegate:] instead");
 	return nil;

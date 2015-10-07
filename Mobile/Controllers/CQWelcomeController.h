@@ -2,10 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQWelcomeController : CQModalNavigationController {
-	@protected
-	BOOL _shouldShowOnlyHelpTopics;
-}
+@interface CQWelcomeController : CQModalNavigationController
 @property (nonatomic) BOOL shouldShowOnlyHelpTopics;
 @end
 

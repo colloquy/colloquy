@@ -6,7 +6,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  UIViewController (UIViewControllerAdditions)
+@implementation UIViewController (UIViewControllerAdditions)
 - (void) resizeForViewInPopoverUsingTableView:(UITableView *) tableView {
 	if (![[UIDevice currentDevice] isPadModel])
 		return;

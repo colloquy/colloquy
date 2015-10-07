@@ -13,7 +13,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotification";
 
-@implementation  CQIgnoreRulesController
+@implementation CQIgnoreRulesController {
+	NSMutableArray *_ignoreRules;
+	MVChatConnection *_connection;
+
+	NSString *_appSupportPath;
+}
+
 - (instancetype) init {
 	NSAssert(NO, @"use [CQIgnoreRulesController initWithConnection:] instead");
 	return nil;
@@ -36,71 +42,59 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 #pragma mark -
 
 - (NSArray *) ignoreRules {
-	@synchronized(_ignoreRules) {
-		return [_ignoreRules copy];
-	}
+	return [_ignoreRules copy];
 }
 
 #pragma mark -
 
 - (void) addIgnoreRule:(KAIgnoreRule *) ignoreRule {
-	@synchronized(_ignoreRules) {
-		for (KAIgnoreRule *rule in _ignoreRules)
-			if ([rule isEqual:ignoreRule])
-				return;
+	for (KAIgnoreRule *rule in _ignoreRules)
+		if ([rule isEqual:ignoreRule])
+			return;
 
-		[_ignoreRules addObject:ignoreRule];
+	[_ignoreRules addObject:ignoreRule];
 
-		if (ignoreRule.isPermanent)
-			[self synchronizeSoon];
-	}
+	if (ignoreRule.isPermanent)
+		[self synchronizeSoon];
 }
 
 - (void) removeIgnoreRule:(KAIgnoreRule *) ignoreRule {
-	@synchronized(_ignoreRules) {
-		[_ignoreRules removeObject:ignoreRule];
+	[_ignoreRules removeObject:ignoreRule];
 
-		if (ignoreRule.isPermanent)
-			[self synchronizeSoon];
-	}
+	if (ignoreRule.isPermanent)
+		[self synchronizeSoon];
 }
 
 - (void) removeIgnoreRuleFromString:(NSString *) ignoreRuleString {
 	BOOL permanentIgnoreRuleWasRemoved = NO;
 
-	@synchronized(_ignoreRules) {
-		for (KAIgnoreRule *rule in [_ignoreRules copy]) {
-			if ([rule.user isEqualToString:ignoreRuleString] || [rule.mask isEqualToString:ignoreRuleString] || [rule.message isEqualToString:ignoreRuleString]) {
-				[_ignoreRules removeObject:rule];
+	for (KAIgnoreRule *rule in [_ignoreRules copy]) {
+		if ([rule.user isEqualToString:ignoreRuleString] || [rule.mask isEqualToString:ignoreRuleString] || [rule.message isEqualToString:ignoreRuleString]) {
+			[_ignoreRules removeObject:rule];
 
-				if (rule.isPermanent)
-					permanentIgnoreRuleWasRemoved = YES;
-			}
+			if (rule.isPermanent)
+				permanentIgnoreRuleWasRemoved = YES;
 		}
-
-		if (permanentIgnoreRuleWasRemoved)
-			[self synchronizeSoon];
 	}
+
+	if (permanentIgnoreRuleWasRemoved)
+		[self synchronizeSoon];
 }
 
 #pragma mark -
 
 - (BOOL) hasIgnoreRuleForUser:(MVChatUser *) user {
-	@synchronized(_ignoreRules) {
-		for (KAIgnoreRule *rule in _ignoreRules)
-			if ([rule.user isEqualToString:user.nickname])
-				return YES;
-		return NO;
-	}
+	for (KAIgnoreRule *rule in _ignoreRules)
+		if ([rule.user isEqualToString:user.nickname])
+			return YES;
+	return NO;
 }
 
 - (BOOL) shouldIgnoreMessage:(id) message fromUser:(MVChatUser *) user inRoom:(MVChatRoom *) room {
-	@synchronized(_ignoreRules) {
-		for (KAIgnoreRule *rule in _ignoreRules)
-			if ([rule matchUser:user message:message inTargetRoom:room] != JVNotIgnored)
-				return YES;
-		return NO;
-	}
+	for (KAIgnoreRule *rule in _ignoreRules)
+		if ([rule matchUser:user message:message inTargetRoom:room] != JVNotIgnored)
+			return YES;
+	return NO;
 }
 
 #pragma mark -
@@ -115,11 +109,9 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 
 	NSMutableArray *permanentIgnores = [NSMutableArray array];
 
-	@synchronized(_ignoreRules) {
-		for (KAIgnoreRule *rule in _ignoreRules)
-			if (rule.isPermanent)
-				[permanentIgnores addObject:[NSKeyedArchiver archivedDataWithRootObject:rule]];
-	}
+	for (KAIgnoreRule *rule in _ignoreRules)
+		if (rule.isPermanent)
+			[permanentIgnores addObject:[NSKeyedArchiver archivedDataWithRootObject:rule]];
 
 	if (!permanentIgnores.count) {
 		[[NSFileManager defaultManager] removeItemAtPath:self._ignoreFilePath error:nil];

@@ -2,7 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  UITableView (UITableViewColloquyAdditions)
+@implementation UITableView (UITableViewColloquyAdditions)
 - (void) updateCellAtIndexPath:(NSIndexPath *) indexPath withAnimation:(UITableViewRowAnimation) animation {
 	NSParameterAssert(indexPath != nil);
 

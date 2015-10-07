@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_END
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatInputStyleViewController
+@implementation CQChatInputStyleViewController
 - (instancetype) init {
 	return (self = [super initWithStyle:UITableViewStylePlain]);
 }

@@ -2,12 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQTextCompletionView : UIView {
-	@protected
-	CGSize _completionTextSizes[5];
-	NSUInteger _selectedCompletion;
-	NSArray *_completions;
-}
+@interface CQTextCompletionView : UIView
 @property (nonatomic, copy) NSArray *completions;
 @property (nonatomic) NSUInteger selectedCompletion;
 @property (nonatomic, getter=isCloseSelected) BOOL closeSelected;

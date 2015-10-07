@@ -1,29 +1,9 @@
-@class GCDAsyncSocket;
 @class CQBouncerSettings;
 @protocol CQBouncerConnectionDelegate;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQBouncerConnection : NSObject {
-	GCDAsyncSocket *_socket;
-	CQBouncerSettings *_settings;
-	id <CQBouncerConnectionDelegate> __weak _delegate;
-
-	NSString *_connectionIdentifier;
-	NSString *_serverAddress;
-	unsigned short _serverPort;
-	BOOL _secure;
-	NSString *_username;
-	NSString *_realName;
-	NSString *_password;
-	NSString *_nickname;
-	NSString *_nicknamePassword;
-	NSArray *_alternateNicknames;
-	NSStringEncoding _encoding;
-	NSTimeInterval _connectedTime;
-	NSError *_error;
-	id _userInfo;
-}
+@interface CQBouncerConnection : NSObject
 - (instancetype) init NS_UNAVAILABLE;
 - (instancetype) initWithBouncerSettings:(CQBouncerSettings *) settings NS_DESIGNATED_INITIALIZER;
 

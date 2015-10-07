@@ -4,7 +4,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQPreferencesListEditViewController
+@implementation CQPreferencesListEditViewController {
+	id _listItem;
+	NSString *_listItemPlaceholder;
+	BOOL _viewDisappearing;
+}
+
 - (instancetype) init {
 	return (self = [super initWithStyle:UITableViewStyleGrouped]);
 }
@@ -63,7 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return cell;
 }
 
-- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSIndexPath *__nullable) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	return nil;
 }
 

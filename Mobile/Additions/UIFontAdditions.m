@@ -28,7 +28,7 @@ NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingStat
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  UIFont (Additions)
+@implementation UIFont (Additions)
 + (NSArray *) cq_availableRemoteFontNames {
 	static NSArray *availableRemoteFontNames = nil;
 	static dispatch_once_t onceToken;

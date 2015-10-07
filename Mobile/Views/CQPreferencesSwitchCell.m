@@ -2,8 +2,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQPreferencesSwitchCell
-- (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
+@implementation CQPreferencesSwitchCell
+- (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *__nullable) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
 

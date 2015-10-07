@@ -1,9 +1,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQPreferencesDeleteCell : UITableViewCell {
-	@protected
-	UIButton *_deleteButton;
-}
+@interface CQPreferencesDeleteCell : UITableViewCell
 @property (nonatomic) SEL deleteAction;
 
 @property (nonatomic, readonly) UIButton *deleteButton;

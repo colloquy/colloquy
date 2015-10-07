@@ -5,12 +5,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQAwayStatusViewController : CQPreferencesListViewController <CQPreferencesTextEditViewDelegate, UIActionSheetDelegate> {
-@protected
-	MVChatConnection *_connection;
-
-	UILongPressGestureRecognizer *_longPressGestureRecognizer;
-}
+@interface CQAwayStatusViewController : CQPreferencesListViewController
 @property (nonatomic, strong) MVChatConnection *connection;
 @end
 

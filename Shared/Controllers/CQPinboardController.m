@@ -6,7 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 NSString *const CQBookmarkingServicePinboard = @"CQBookmarkingServicePinboard";
 
-@implementation  CQPinboardController
+@implementation CQPinboardController
 + (NSString *) serviceName {
 	return @"Pinboard";
 }

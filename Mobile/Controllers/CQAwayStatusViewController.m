@@ -10,11 +10,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQPreferencesListViewController (Private)
+@interface CQPreferencesListViewController (Private) <CQPreferencesTextEditViewDelegate, UIActionSheetDelegate>
 - (void) editItemAtIndex:(NSUInteger) index;
 @end
 
-@implementation  CQAwayStatusViewController
+@implementation CQAwayStatusViewController {
+@protected
+	UILongPressGestureRecognizer *_longPressGestureRecognizer;
+}
+
 - (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
@@ -31,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 	else {
 		if (awayStatuses.count) {
 			if (![self statusIsDefaultAwayStatus:awayStatuses[0]]) {
-				for (NSUInteger i = 1; i <  awayStatuses.count; i++) {
+				for (NSUInteger i = 1; i < awayStatuses.count; i++) {
 					NSString *status = awayStatuses[i];
 					if ([self statusIsDefaultAwayStatus:status])
 						[awayStatuses removeObjectAtIndex:i];
@@ -124,7 +128,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
 
-	if (indexPath.row < (NSInteger)_items.count) {
+	if (indexPath.row < (NSInteger)self.items.count) {
 		cell.textLabel.adjustsFontSizeToFitWidth = YES;
 		cell.textLabel.minimumScaleFactor = (15. / cell.textLabel.font.pointSize);
 		cell.textLabel.textColor = [UIColor blackColor];
@@ -137,19 +141,19 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (tableView.editing || indexPath.row > (NSInteger)_items.count) {
+	if (tableView.editing || indexPath.row > (NSInteger)self.items.count) {
 		CQPreferencesTextEditViewController *editingViewController = [[CQPreferencesTextEditViewController alloc] init];
 		editingViewController.delegate = self;
 		editingViewController.charactersRemainingBeforeDisplay = 25;
 
-		_customEditingViewController = editingViewController;
+		self.customEditingViewController = editingViewController;
 
 		[self editItemAtIndex:indexPath.row];
 	} else {
-		if (!_items.count)
+		if (!self.items.count)
 			return;
 
-		_connection.awayStatusMessage = _items[indexPath.row];
+		_connection.awayStatusMessage = self.items[indexPath.row];
 
 		[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 	}

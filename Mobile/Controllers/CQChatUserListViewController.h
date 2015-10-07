@@ -17,17 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) chatUserListViewController:(CQChatUserListViewController *) chatUserListViewController didSelectUser:(MVChatUser *) user;
 @end
 
-@interface CQChatUserListViewController : CQPreferencesTableViewController <UIActionSheetDelegate, UISearchDisplayDelegate> {
-	@protected
-	NSMutableArray *_users;
-	NSString *_currentSearchString;
-	MVChatRoom *_room;
-	UISearchBar *_searchBar;
-	UISearchDisplayController *_searchController;
-	QChatUserListMode _listMode;
-	id <CQChatUserListViewDelegate> __weak _chatUserDelegate;
-}
-
+@interface CQChatUserListViewController : CQPreferencesTableViewController
 - (void) setRoomUsers:(NSArray *) roomUsers;
 
 @property (nonatomic, strong) MVChatRoom *room;

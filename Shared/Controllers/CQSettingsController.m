@@ -6,8 +6,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotification";
 
-@implementation  CQSettingsController
-+ (instancetype)  settingsController {
+@implementation CQSettingsController {
+	CQSettingsLocation _settingsLocation;
+	BOOL _mirroringEnabled;
+}
+
++ (instancetype) settingsController {
 	static CQSettingsController *settingsController;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
@@ -50,7 +54,7 @@ NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotificat
 #pragma mark -
 
 - (NSMethodSignature *) methodSignatureForSelector:(SEL) selector {
-    return [[self _defaultLocation] methodSignatureForSelector:selector];
+	return [[self _defaultLocation] methodSignatureForSelector:selector];
 }
 
 - (void) forwardInvocation:(NSInvocation *) invocation {

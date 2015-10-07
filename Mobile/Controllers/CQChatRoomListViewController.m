@@ -10,7 +10,20 @@ static BOOL showFullRoomNames;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQChatRoomListViewController
+@interface CQChatRoomListViewController () <UISearchBarDelegate>
+@end
+
+@implementation CQChatRoomListViewController {
+@protected
+	NSMutableArray *_rooms;
+	NSMutableArray *_matchedRooms;
+	NSMutableSet *_processedRooms;
+	NSString *_currentSearchString;
+	UISearchBar *_searchBar;
+	BOOL _updatePending;
+	BOOL _showingUpdateRow;
+}
+
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -244,7 +257,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return cell;
 }
 
-- (NSIndexPath *) tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSIndexPath *__nullable) tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (_showingUpdateRow)
 		return nil;
 	return indexPath;
@@ -340,7 +353,7 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 	static NSNumberFormatter *numberFormatter;
 	if (!numberFormatter) {
 		numberFormatter = [[NSNumberFormatter alloc] init];
-        numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+		numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
 		numberFormatter.positiveFormat = NSLocalizedString(@"#,##0", @"Plain large number format string");
 	}
 

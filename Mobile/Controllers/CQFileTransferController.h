@@ -8,13 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQFileTransferController : UIViewController {
-    @protected
-    MVFileTransfer *_transfer;
-	CQFileTransferTableCell *_cell;
-	NSTimer *_timer;
-}
-
+@interface CQFileTransferController : UIViewController
 @property (nonatomic, readonly) MVFileTransfer *transfer;
 @property (nonatomic, assign) CQFileTransferTableCell *cell;
 @property (nonatomic, readonly) BOOL thumbnailAvailable;

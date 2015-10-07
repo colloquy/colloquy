@@ -7,7 +7,24 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQBouncerConnection
+@implementation CQBouncerConnection {
+	GCDAsyncSocket *_socket;
+	id <CQBouncerConnectionDelegate> __weak _delegate;
+
+	NSString *_connectionIdentifier;
+	NSString *_serverAddress;
+	unsigned short _serverPort;
+	BOOL _secure;
+	NSString *_username;
+	NSString *_realName;
+	NSString *_password;
+	NSString *_nickname;
+	NSString *_nicknamePassword;
+	NSArray *_alternateNicknames;
+	NSStringEncoding _encoding;
+	NSTimeInterval _connectedTime;
+	NSError *_error;
+}
 - (instancetype) init {
 	NSAssert(NO, @"use [CQBouncerConnection initWithBouncerSettings:] instead");
 	return nil;

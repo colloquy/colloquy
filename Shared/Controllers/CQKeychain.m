@@ -4,7 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQKeychain
+@implementation CQKeychain
 + (CQKeychain *) standardKeychain {
 	static CQKeychain *sharedInstance;
 	if (!sharedInstance) sharedInstance = [[self alloc] init];

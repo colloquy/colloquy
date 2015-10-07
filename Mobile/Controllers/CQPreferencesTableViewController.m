@@ -4,7 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQPreferencesTableViewController
+@implementation CQPreferencesTableViewController
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 

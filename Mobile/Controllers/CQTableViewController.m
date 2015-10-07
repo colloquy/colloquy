@@ -1,8 +1,13 @@
 #import "CQTableViewController.h"
 
+#import "UITableViewAdditions.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation  CQTableViewController {
+@interface CQTableViewController () <UITableViewDelegate, UITableViewDataSource>
+@end
+
+@implementation CQTableViewController {
 	UITableViewStyle _style;
 	UITableView *_tableView;
 }
@@ -17,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return self;
 }
 
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+- (instancetype)initWithNibName:(NSString *__nullable)nibNameOrNil bundle:(NSBundle *__nullable)nibBundleOrNil {
 	if (!(self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]))
 		return nil;
 
@@ -42,6 +47,9 @@ NS_ASSUME_NONNULL_BEGIN
 	tableView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin);
 	tableView.dataSource = self;
 	tableView.delegate = self;
+
+	[tableView hideEmptyCells];
+
 	self.view = tableView;
 }
 

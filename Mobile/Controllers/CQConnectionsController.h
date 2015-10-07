@@ -1,19 +1,9 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 
-#import "CQBouncerConnection.h"
-
 @class CQBouncerSettings;
-@class CQChatRoomController;
-@class CQConnectionEditViewController;
 @class CQConnectionsNavigationController;
-@class CQDirectChatController;
 @class CQIgnoreRulesController;
-@class KAIgnoreRule;
-@class MVChatConnection;
-@class MVChatRoom;
-@class MVChatUser;
-@class MVDirectChatConnection;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,26 +14,7 @@ extern NSString *CQConnectionsControllerMovedConnectionNotification;
 extern NSString *CQConnectionsControllerAddedBouncerSettingsNotification;
 extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 
-@interface CQConnectionsController : NSObject <UIActionSheetDelegate, UIAlertViewDelegate, CQBouncerConnectionDelegate> {
-	@protected
-	NSMapTable *_connectionToErrorToAlertMap;
-	CQConnectionsNavigationController *_connectionsNavigationController;
-	NSMutableSet *_connections;
-	NSMutableArray *_directConnections;
-	NSMutableArray *_bouncers;
-	NSMutableSet *_bouncerConnections;
-	NSMutableDictionary *_bouncerChatConnections;
-	NSMutableDictionary *_ignoreControllers;
-	BOOL _loadedConnections;
-	NSUInteger _connectingCount;
-	NSUInteger _connectedCount;
-	UILocalNotification *_timeRemainingLocalNotifiction;
-	UIBackgroundTaskIdentifier _backgroundTask;
-	NSTimeInterval _allowedBackgroundTime;
-	NSMutableSet *_automaticallySetConnectionAwayStatus;
-	BOOL _shouldLogRawMessagesToConsole;
-	NSMapTable *_activityTokens;
-}
+@interface CQConnectionsController : NSObject
 + (CQConnectionsController *) defaultController;
 
 @property (nonatomic, readonly) CQConnectionsNavigationController *connectionsNavigationController;

@@ -4,14 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatEditViewController : CQPreferencesTableViewController {
-	@protected
-	BOOL _roomTarget;
-	NSMutableArray *_sortedConnections;
-	MVChatConnection *_selectedConnection;
-	NSString *_name;
-	NSString *_password;
-}
+@interface CQChatEditViewController : CQPreferencesTableViewController
 @property (nonatomic, getter=isRoomTarget) BOOL roomTarget;
 @property (nonatomic, strong) MVChatConnection *selectedConnection;
 @property (nonatomic, readonly) NSString *name;
