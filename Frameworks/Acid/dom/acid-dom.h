@@ -23,6 +23,9 @@
 //============================================================================
 
 #import <Foundation/NSObject.h>
+#import <Foundation/NSEnumerator.h>
+#import <Foundation/NSDictionary.h>
+#import <Foundation/NSString.h>
 
 @interface XMLQName : NSObject <NSCopying>
 

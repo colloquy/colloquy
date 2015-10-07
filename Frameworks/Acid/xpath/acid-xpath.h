@@ -29,6 +29,7 @@
 */
 #import <Foundation/NSObject.h>
 #import <Foundation/NSString.h>
+#import <Foundation/NSArray.h>
 
 /*!
   @e NSMutableString (_ACID_EXT)
