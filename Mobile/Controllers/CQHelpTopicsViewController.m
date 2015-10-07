@@ -61,11 +61,7 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 - (void) connectionDidFinishLoading:(NSURLConnection *) connection {
 	_loading = NO;
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
-	NSArray *help = [NSPropertyListSerialization propertyListFromData:_helpData mutabilityOption:NSPropertyListImmutable format:NULL errorDescription:NULL];
-#else
 	NSArray *help = [NSPropertyListSerialization propertyListWithData:_helpData options:NSPropertyListImmutable format:NULL error:NULL];
-#endif
 
 	_helpData = nil;
 
@@ -185,7 +181,7 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_screencastDidFinishPlaying) name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];
 
 			[_moviePlayer play];
-		} @catch (NSException *exception) {
+		} @catch (__unused NSException *exception) {
 			[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 
 			[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];

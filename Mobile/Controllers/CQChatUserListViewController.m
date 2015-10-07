@@ -23,7 +23,7 @@ static NSString *membersFilteredCountFormat;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatUserListViewController () <UIActionSheetDelegate, UISearchDisplayDelegate>
+@interface CQChatUserListViewController () <UIActionSheetDelegate, UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating>
 @property (atomic, strong) NSMutableArray *users;
 @property (atomic, strong) NSMutableArray *matchedUsers;
 @end
@@ -32,8 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protected
 	NSString *_currentSearchString;
 	MVChatRoom *_room;
-	UISearchBar *_searchBar;
-	UISearchDisplayController *_searchController;
+	UISearchController *_searchController;
 	QChatUserListMode _listMode;
 	id <CQChatUserListViewDelegate> __weak _chatUserDelegate;
 }
@@ -55,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) dealloc {
 	_chatUserDelegate = nil;
-	_searchBar.delegate = nil;
+	_searchController.searchBar.delegate = nil;
 	_searchController.delegate = nil;
 }
 
@@ -66,21 +65,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (_listMode == CQChatUserListModeBan)
 		return;
-	_searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
-	_searchBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin);
-	_searchBar.placeholder = NSLocalizedString(@"Search", @"Search placeholder text");
-	_searchBar.accessibilityLabel = NSLocalizedString(@"Search Members", @"Voiceover search members label");
-	_searchBar.tintColor = [UIColor colorWithRed:(190. / 255.) green:(199. / 255.) blue:(205. / 255.) alpha:1.]; 
-	_searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
-	_searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
-	[_searchBar sizeToFit];
 
-	self.tableView.tableHeaderView = _searchBar;
-
-	_searchController = [[UISearchDisplayController alloc] initWithSearchBar:_searchBar contentsController:self];
-	_searchController.searchResultsDataSource = self;
-	_searchController.searchResultsDelegate = self;
+	_searchController = [[UISearchController alloc] initWithSearchResultsController:self];
 	_searchController.delegate = self;
+	_searchController.searchResultsUpdater = self;
+
+	_searchController.searchBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin);
+	_searchController.searchBar.placeholder = NSLocalizedString(@"Search", @"Search placeholder text");
+	_searchController.searchBar.accessibilityLabel = NSLocalizedString(@"Search Members", @"Voiceover search members label");
+	_searchController.searchBar.tintColor = [UIColor colorWithRed:(190. / 255.) green:(199. / 255.) blue:(205. / 255.) alpha:1.];
+	_searchController.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
+	_searchController.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
+	[_searchController.searchBar sizeToFit];
+
+	self.tableView.tableHeaderView = _searchController.searchBar;
 
 	UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Members", @"Members back button label") style:UIBarButtonItemStylePlain target:nil action:nil];
 	self.navigationItem.backBarButtonItem = backButton;
@@ -88,8 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
 	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissFromDoneButton)];
 	self.navigationItem.rightBarButtonItem = doneButton;
 
-	if ([[UIDevice currentDevice] isPadModel])
-		[self resizeForViewInPopoverUsingTableView:self.tableView];
+	[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -225,10 +222,9 @@ NS_ASSUME_NONNULL_BEGIN
 //	[self _insertUser:user atIndex:index withAnimation:UITableViewRowAnimationLeft];
 
 	if (searchBarFocused)
-		[_searchController setActive:YES animated:YES];
+		_searchController.active = YES;
 
-	if ([[UIDevice currentDevice] isPadModel]) 
-		[self resizeForViewInPopoverUsingTableView:self.tableView];
+	[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 - (void) moveUserAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex {
@@ -253,7 +249,7 @@ NS_ASSUME_NONNULL_BEGIN
 //	}
 
 	if (searchBarFocused)
-		[_searchController setActive:YES animated:YES];
+		_searchController.active = YES;
 }
 
 - (void) removeUserAtIndex:(NSUInteger) index {
@@ -263,10 +259,9 @@ NS_ASSUME_NONNULL_BEGIN
 //	[self _removeUserAtIndex:index withAnimation:UITableViewRowAnimationRight];
 
 	if (searchBarFocused)
-		[_searchController setActive:YES animated:YES];
+		_searchController.active = YES;
 
-	if ([[UIDevice currentDevice] isPadModel])
-		[self resizeForViewInPopoverUsingTableView:self.tableView];
+	[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 - (void) updateUserAtIndex:(NSUInteger) index {
@@ -285,24 +280,23 @@ NS_ASSUME_NONNULL_BEGIN
 //	[self.tableView endUpdates];
 
 	if (searchBarFocused)
-		[_searchController setActive:YES animated:YES];
+		_searchController.active = YES;
 }
 
 #pragma mark -
 
-- (BOOL) searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *__nullable) searchString {
+- (void) updateSearchResultsForSearchController:(UISearchController *) searchController {
+	NSString *searchString = searchController.searchBar.text;
 	if ([searchString isEqualToString:_currentSearchString])
-		return NO;
-	
+		return;
+
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(filterUsers) object:nil];
-	
+
 	NSTimeInterval delay = (searchString.length ? (1. / (double)searchString.length) : (1. / 3.));
 	[self performSelector:@selector(filterUsers) withObject:nil afterDelay:delay];
-	
-	return NO;
 }
 
-- (void) searchDisplayControllerWillEndSearch:(UISearchDisplayController *) controller {
+- (void) willDismissSearchController:(UISearchController *) searchController {
 	// The searching has probably ruined the self.matchedUsers array, so rebuild it here when we display the main results table view/
 	[self.matchedUsers setArray:self.users];
 	[self.tableView reloadData];
@@ -313,7 +307,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) filterUsers {
-	[self filterUsersWithSearchString:_searchBar.text];
+	[self filterUsersWithSearchString:_searchController.searchBar.text];
 }
 
 - (void) filterUsersWithSearchString:(NSString *) searchString {
@@ -362,7 +356,8 @@ NS_ASSUME_NONNULL_BEGIN
 //		[_searchController.searchResultsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
 //		[_searchController.searchResultsTableView endUpdates];
 //	} else {
-		[_searchController.searchResultsTableView reloadData];
+	// TODO
+		[self.tableView reloadData];
 //	}
 
 	_currentSearchString = [searchString copy];
@@ -371,7 +366,7 @@ NS_ASSUME_NONNULL_BEGIN
 		self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
 	else self.title = [NSString stringWithFormat:membersFilteredCountFormat, self.matchedUsers.count, self.users.count];
 
-	[_searchBar becomeFirstResponder];
+	[_searchController.searchBar becomeFirstResponder];
 }
 
 #pragma mark -
@@ -379,18 +374,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>) coordinator {
 	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 
-	if ([[UIDevice currentDevice] isPadModel])
-		[self resizeForViewInPopoverUsingTableView:self.tableView];
+	[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
-- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
-	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-
-	if ([[UIDevice currentDevice] isPadModel])
-		[self resizeForViewInPopoverUsingTableView:self.tableView];
-}
-#endif
 
 #pragma mark -
 
@@ -424,7 +409,7 @@ NS_ASSUME_NONNULL_BEGIN
 		cell.imageView.image = [UIImage imageNamed:@"userNormal.png"];
 	}
 
-	if (_listMode == CQChatUserListModeRoom && ![[UIDevice currentDevice] isPadModel])
+	if (_listMode == CQChatUserListModeRoom && self.view.window.isFullscreen)
 		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
 	if (user.status == MVChatUserAwayStatus || user.idleTime >= UserIdleTime) {
@@ -491,6 +476,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (action == @selector(copy:))
 		[UIPasteboard generalPasteboard].string = user.nickname;
+}
+
+#pragma mark -
+
+- (void) traitCollectionDidChange:(nullable UITraitCollection *) previousTraitCollection {
+	if ([self isViewLoaded])
+		[self.tableView reloadData];
 }
 
 #pragma mark -

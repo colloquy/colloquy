@@ -225,7 +225,8 @@ NS_ASSUME_NONNULL_BEGIN
 		_currentUserListViewController.room = self.room;
 	}
 
-	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+	BOOL usePopoverController = [UIDevice currentDevice].isPadModel && self.view.window.isFullscreen;
+	if (usePopoverController) {
 		if (!_currentUserListPopoverController) {
 			_currentUserListPopoverController = [[UIPopoverController alloc] initWithContentViewController:_currentUserListViewController];
 			_currentUserListPopoverController.delegate = self;
@@ -261,7 +262,7 @@ NS_ASSUME_NONNULL_BEGIN
 	sheet.delegate = self;
 	sheet.tag = JoinActionSheet;
 
-	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+	if (!(self.view.window.isFullscreen && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		sheet.title = self.room.displayName;
 
 	if (self.available)
@@ -353,7 +354,7 @@ NS_ASSUME_NONNULL_BEGIN
 	sheet.title = nickname;
 	sheet.tag = NicknameActionSheet;
 
-	if ([UIDevice currentDevice].isPadModel)
+	if ([[UIDevice currentDevice] isPadModel] && self.view.window.isFullscreen)
 		[[CQColloquyApplication sharedApplication] showActionSheet:sheet fromPoint:location];
 	else [[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:nil animated:YES];
 }
@@ -1329,7 +1330,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	[self.navigationItem setRightBarButtonItem:item animated:animated];
 
-	if (_active && [[UIDevice currentDevice] isPadModel])
+	if (_active)
 		[[CQChatController defaultController].chatPresentationController updateToolbarAnimated:YES];
 
 }

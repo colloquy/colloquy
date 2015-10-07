@@ -43,32 +43,6 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 }
 
-- (BOOL) isSystemNine {
-	static BOOL result;
-	static BOOL cached;
-
-	if (cached)
-		return result;
-
-	result = [UIDevice currentDevice].isSystemEight && ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 9);
-	cached = YES;
-
-	return result;
-}
-
-- (BOOL) isPhoneModel {
-	static BOOL result;
-	static BOOL cached;
-
-	if (cached)
-		return result;
-
-	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPhone) && [self.model hasCaseInsensitiveSubstring:@"Phone"] && ![UIDevice currentDevice].isSystemEight;
-	cached = YES;
-
-	return result;
-}
-
 - (BOOL) isPadModel {
 	static BOOL result;
 	static BOOL cached;
@@ -76,22 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (cached)
 		return result;
 
-	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPad) || [UIDevice currentDevice].isSystemEight;
-	cached = YES;
-
-	return result;
-}
-
-- (BOOL) isSystemEight {
-	static BOOL result;
-	static BOOL cached;
-
-	if (cached)
-		return result;
-
-	if ([[NSProcessInfo processInfo] respondsToSelector:@selector(operatingSystemVersion)])
-		result = [NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 8;
-
+	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPad);
 	cached = YES;
 
 	return result;

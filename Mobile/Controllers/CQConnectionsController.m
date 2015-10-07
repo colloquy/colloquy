@@ -54,7 +54,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 static NSString *const connectionInvalidSSLCertAction = nil;
 
-@interface CQConnectionsController () <UIActionSheetDelegate, UIAlertViewDelegate, CQBouncerConnectionDelegate>
+@interface CQConnectionsController () <UIActionSheetDelegate, UIAlertViewDelegate, CSSearchableIndexDelegate, CQBouncerConnectionDelegate>
 @end
 
 @implementation CQConnectionsController {
@@ -141,6 +141,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 #else
 	_shouldLogRawMessagesToConsole = [[CQSettingsController settingsController] boolForKey:@"CQLogRawMessagesToConsole"];
 #endif
+
+	if (NSClassFromString(@"CSSearchableIndex"))
+		[CSSearchableIndex defaultSearchableIndex].indexDelegate = self;
 
 	return self;
 }
@@ -384,6 +387,20 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 			[[CQKeychain standardKeychain] setPassword:[alertView associatedObjectForKey:@"result"] forServer:certificateSubject area:@"Trust"];
 		}
 	}
+}
+
+#pragma mark -
+
+- (void) searchableIndex:(CSSearchableIndex *) searchableIndex reindexSearchableItemsWithIdentifiers:(NSArray <NSString *> *) identifiers acknowledgementHandler:(void (^)(void)) acknowledgementHandler {
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"])
+		[self indexConnectionsInSpotlight];
+	acknowledgementHandler();
+}
+
+- (void) searchableIndex:(CSSearchableIndex *) searchableIndex reindexAllSearchableItemsWithAcknowledgementHandler:(void (^)(void)) acknowledgementHandler {
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"])
+		[self indexConnectionsInSpotlight];
+	acknowledgementHandler();
 }
 
 #pragma mark -
@@ -1088,8 +1105,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	MVChatConnection *connection = notification.object;
 	[connection removePersistentInformationObjectForKey:@"tryBouncerFirst"];
 
+#if !TARGET_IPHONE_SIMULATOR
 	id <NSObject> activityToken = [[NSProcessInfo processInfo] beginActivityWithOptions:NSActivityUserInitiated reason:[NSString stringWithFormat:@"%@ is open and connected", connection.displayName]];
 	[_activityTokens setObject:activityToken forKey:connection];
+#endif
 
 	if (!connection.directConnection)
 		connection.temporaryDirectConnection = NO;
@@ -1109,9 +1128,11 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	MVChatConnection *connection = notification.object;
 	[connection removePersistentInformationObjectForKey:@"tryBouncerFirst"];
 
+#if !TARGET_IPHONE_SIMULATOR
 	id <NSObject> activityToken = [_activityTokens objectForKey:connection];
 	[[NSProcessInfo processInfo] endActivity:activityToken];
 	[_activityTokens removeObjectForKey:connection];
+#endif
 
 	[self _possiblyEndBackgroundTaskSoon];
 }

@@ -74,6 +74,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 - (void) restorePersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection;
 - (void) close;
 
+@property (nonatomic, readonly) UIViewController *previewableViewController;
 - (void) dismissPopoversAnimated:(BOOL) animated;
 
 @property (nonatomic, readonly) NSDictionary *persistentState;

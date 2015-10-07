@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 @synthesize fontFamily = _fontFamily;
 @synthesize fontSize = _fontSize;
 @synthesize styleIdentifier = _styleIdentifier;
+@synthesize readyForDisplay = _readyForDisplay;
 
 - (instancetype) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
@@ -150,7 +151,7 @@ NS_ASSUME_NONNULL_BEGIN
 		[renderer setValue:[NSValue valueWithCGRect:paperRect] forKey:@"paperRect"];
 		[renderer setValue:[NSValue valueWithCGRect:printableRect] forKey:@"printableRect"];
 	} @catch (NSException *e) {
-		NSLog(@"Failed to set PDF size information, unable to generate document");
+		NSLog(@"Failed to set PDF size information, unable to generate document: %@", e);
 		return nil;
 	}
 
@@ -299,11 +300,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) webViewDidFinishLoad:(UIWebView *) webView {
 	[self performSelector:@selector(_checkIfLoadingFinished) withObject:nil afterDelay:0.];
 
-//	[super stringByEvaluatingJavaScriptFromString:@"document.body.style.webkitTouchCallout='none';"];
-
-	NSString *dynamicBodyFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].fontName;
-	BOOL isBold = [dynamicBodyFont hasCaseInsensitiveSubstring:@"Bold"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Italic"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Medium"] || [dynamicBodyFont hasCaseInsensitiveSubstring:@"Black"];
-	if (isBold)
+	if (UIAccessibilityIsBoldTextEnabled())
 		[super stringByEvaluatingJavaScriptFromString:@"document.body.style.fontWeight='bold';"];
 	else [super stringByEvaluatingJavaScriptFromString:@"document.body.style.fontWeight='';"];
 }
@@ -419,6 +416,10 @@ NS_ASSUME_NONNULL_BEGIN
 	_blockerView.hidden = NO;
 
 	_loading = YES;
+
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_markAsReady) object:nil];
+	_readyForDisplay = NO;
+
 	[self loadHTMLString:[self _contentHTML] baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 
 	__strong __typeof__((_transcriptDelegate)) transcriptDelegate = _transcriptDelegate;
@@ -509,9 +510,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[self resetSoon];
 
 	_allowSingleSwipeGesture = YES;
-
-	if ([UIDevice currentDevice].isPadModel)
-		_singleSwipeGestureRecognizers = [[NSMutableArray alloc] init];
+	_singleSwipeGestureRecognizers = [[NSMutableArray alloc] init];
 
 	for (NSUInteger i = 1; i <= 3; i++) {
 		UISwipeGestureRecognizer *swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGestureRecognized:)];
@@ -520,9 +519,7 @@ NS_ASSUME_NONNULL_BEGIN
 		swipeGestureRecognizer.cancelsTouchesInView = NO;
 
 		[self addGestureRecognizer:swipeGestureRecognizer];
-
-		if ([UIDevice currentDevice].isPadModel)
-			[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
+		[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
 
 		swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGestureRecognized:)];
 		swipeGestureRecognizer.numberOfTouchesRequired = i;
@@ -530,9 +527,7 @@ NS_ASSUME_NONNULL_BEGIN
 		swipeGestureRecognizer.cancelsTouchesInView = NO;
 
 		[self addGestureRecognizer:swipeGestureRecognizer];
-
-		if ([UIDevice currentDevice].isPadModel)
-			[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
+		[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
 	}
 
 	UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureRecognizerRecognized:)];
@@ -590,14 +585,19 @@ NS_ASSUME_NONNULL_BEGIN
 	return [NSString stringWithFormat:templateString, _styleIdentifier, [self _variantStyleString], @"topicSeven"];
 }
 
+- (void) _markAsReady {
+	_readyForDisplay = YES;
+}
+
 - (void) _checkIfLoadingFinished {
 	NSString *result = [super stringByEvaluatingJavaScriptFromString:@"isDocumentReady()"];
 	if (![result isEqualToString:@"true"]) {
-		[self performSelector:_cmd withObject:nil afterDelay:0.05];
+		[self performSelector:_cmd withObject:nil afterDelay:CQWebViewMagicNumber];
 		return;
 	}
 
 	_loading = NO;
+	[self performSelector:@selector(_markAsReady) withObject:nil afterDelay:CQWebViewMagicNumber];
 
 #if !defined(CQ_GENERATING_SCREENSHOTS)
 	[self _addComponentsToTranscript:_pendingPreviousSessionComponents fromPreviousSession:YES animated:NO];
@@ -611,7 +611,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	_pendingComponents = nil;
 
-	[self performSelector:@selector(_unhideBlockerView) withObject:nil afterDelay:0.05];
+	[self performSelector:@selector(_unhideBlockerView) withObject:nil afterDelay:CQWebViewMagicNumber];
 
 	[self noteTopicChangeTo:_roomTopic by:_roomTopicSetter];
 

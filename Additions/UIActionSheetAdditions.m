@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[sheet associateObject:user forKey:@"user"];
 	[sheet associateObject:room forKey:@"room"];
 
-	if ([[UIDevice currentDevice] isPadModel] || showingUserInformation)
+	if ([UIApplication sharedApplication].keyWindow.isFullscreen || showingUserInformation)
 		[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
 
 	if (showingUserInformation)
@@ -195,21 +195,21 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (NSInteger) userInfoButtonIndex {
-	if ([self associatedObjectForKey:@"showing-user-information"] || [[UIDevice currentDevice] isPadModel])
+	if ([self associatedObjectForKey:@"showing-user-information"] || self.window.isFullscreen)
 		return 1;
 	return NSNotFound;
 }
 
 #if ENABLE(FILE_TRANSFERS)
 - (NSInteger) sendFileButtonIndex {
-	if ([self associatedObjectForKey:@"showing-user-information"] || [[UIDevice currentDevice] isPadModel])
+	if ([self associatedObjectForKey:@"showing-user-information"] || self.window.isFullscreen)
 		return 2;
 	return 1;
 }
 #endif
 
 - (NSInteger) ignoreButtonIndex {
-	if ([self associatedObjectForKey:@"showing-user-information"] || [[UIDevice currentDevice] isPadModel])
+	if ([self associatedObjectForKey:@"showing-user-information"] || self.window.isFullscreen)
 		return 2;
 	return 1;
 }

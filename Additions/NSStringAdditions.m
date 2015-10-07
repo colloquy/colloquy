@@ -997,11 +997,11 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 #pragma mark -
 
 - (NSString *) stringByEncodingIllegalURLCharacters {
-	return (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes( NULL, (CFStringRef)self, NULL, CFSTR( ",;:/?@&$=|^~`\{}[]" ), kCFStringEncodingUTF8 ));
+	return [self stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@",;:/?@&$=|^~`\{}[]"]];
 }
 
 - (NSString *) stringByDecodingIllegalURLCharacters {
-	return (NSString *)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapes( NULL, (CFStringRef)self, CFSTR( "" ) ));
+	return [self stringByRemovingPercentEncoding];
 }
 
 #pragma mark -

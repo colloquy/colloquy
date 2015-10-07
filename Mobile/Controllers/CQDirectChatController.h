@@ -59,10 +59,6 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 	NSTimeInterval _lastTimestampTime;
 	NSTimeInterval _lastMessageTime;
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
-	BOOL _isShowingCompletionsBeforeRotation;
-#endif
-
 	NSMutableDictionary *_batchStorage; // { "batchIdentifier": any associated data }
 	NSMutableDictionary *_batchTypeAssociation; // { @(batchType): [ "batchIdentifier", "otherBatchIdentifier" ] }
 }

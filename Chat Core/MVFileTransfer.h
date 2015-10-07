@@ -38,7 +38,6 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 	case MVFileTransferHoldingStatus: return @"trHo";
 	case MVFileTransferStoppedStatus: return @"trSt";
 	case MVFileTransferErrorStatus: return @"trEr";
-	default: return @"";
 	}
 }
 

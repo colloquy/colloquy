@@ -566,7 +566,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 }
 
 - (void) deleteConnection:(__nullable id) sender {
-	if ([[UIDevice currentDevice] isPadModel]) {
+	if ([[UIDevice currentDevice] isPadModel] && self.view.window.isFullscreen) {
 		UIAlertView *alert = [[CQAlertView alloc] init];
 		alert.delegate = self;
 

@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void) userDefaultsChanged;
 
 - (void) _addPendingComponent:(id) component;
+- (BOOL) _sendText:(MVChatString *) text;
 @end
 
 @implementation CQConsoleController {
@@ -149,9 +150,6 @@ NS_ASSUME_NONNULL_BEGIN
 	NSParameterAssert(message != nil);
 
 	CQProcessConsoleMessageOperation *operation = [[CQProcessConsoleMessageOperation alloc] initWithMessage:message outbound:outbound];
-	operation.encoding = self.encoding;
-	operation.fallbackEncoding = self.connection.encoding;
-
 	operation.target = self;
 	operation.action = @selector(_consoleMessageProcessed:);
 
@@ -163,7 +161,10 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(MVChatString *) text {
-	[_connection sendRawMessage:text];
+	if ([super _sendText:text])
+		return YES;
+
+	[_connection sendRawMessage:MVChatStringAsString(text)];
 
 	NSData *data = nil;
 	if ([text respondsToSelector:@selector(dataUsingEncoding:)])

@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (NSString *__nullable) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
-	if (section == PushEnabledTableSection && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	if (section == PushEnabledTableSection && [UIDevice currentDevice].isPadModel && self.view.window.isFullscreen)
 		return NSLocalizedString(@"Private messages and highlighted room messages\nare pushed. Push notifications require connecting\nto a push aware bouncer.", @"Push Notification section footer title");
 	if (section == PushEnabledTableSection)
 		return NSLocalizedString(@"Private messages and highlighted\nroom messages are pushed.\n\nPush notifications require connecting\nto a push aware bouncer.", @"Push Notification section footer title");

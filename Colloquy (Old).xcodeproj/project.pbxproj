@@ -1159,7 +1159,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1CBC62F405488D5A009E59E1 /* Preference Modules */ = {
+		1CBC62F405488D5A009E59E1 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
 				1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */,
@@ -1177,7 +1177,6 @@
 				1CC6FC550549FDD70075807C /* JVBehaviorPreferences.m */,
 				1CC6FC540549FDD70075807C /* JVBehaviorPreferences.h */,
 			);
-			name = "Preference Modules";
 			path = Preferences;
 			sourceTree = "<group>";
 		};
@@ -1432,7 +1431,7 @@
 				1CFAFED8053C1BC500C702F9 /* Controllers */,
 				1CABFD090658622600801C15 /* Panels & List Items */,
 				1CFAFED5053C1BA500C702F9 /* Inspectors */,
-				1CBC62F405488D5A009E59E1 /* Preference Modules */,
+				1CBC62F405488D5A009E59E1 /* Preferences */,
 				1CC478470427BB2C00000102 /* Plug–Ins */,
 				CBF684F00820174000F498FB /* Metadata Importer */,
 			);

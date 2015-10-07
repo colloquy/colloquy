@@ -172,7 +172,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 				supportsCurrentInterfaceIdiom = NO;
 
 				for (NSString *userInterfaceIdiom in supportedInterfaceIdioms) {
-					if (([userInterfaceIdiom isEqualToString:@"Pad"] && [UIDevice currentDevice].isPadModel) || ([userInterfaceIdiom isEqualToString:@"Phone"] && ![UIDevice currentDevice].isPadModel)) {
+					if (([userInterfaceIdiom isEqualToString:@"Pad"] && [[UIDevice currentDevice] isPadModel]) || ([userInterfaceIdiom isEqualToString:@"Phone"] && ![[UIDevice currentDevice] isPadModel])) {
 						supportsCurrentInterfaceIdiom = YES;
 
 						break;

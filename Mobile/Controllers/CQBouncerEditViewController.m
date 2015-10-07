@@ -291,7 +291,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) deleteBouncer:(__nullable id) sender {
-	if ([[UIDevice currentDevice] isPadModel]) {
+	if ([[UIDevice currentDevice] isPadModel] && self.view.window.isFullscreen) {
 		UIAlertView *alert = [[CQAlertView alloc] init];
 		alert.delegate = self;
 

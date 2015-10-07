@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 
-	if (![[UIDevice currentDevice] isPadModel])
+	if (!self.view.window.isFullscreen)
 		sheet.title = _rooms[indexPath.row];
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"Join Room", @"Join Room button title")];

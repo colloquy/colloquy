@@ -34,13 +34,13 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @implementation CQChatListViewController {
+	id <UIViewControllerPreviewing> _previewingContext;
 	UIActionSheet *_currentConnectionActionSheet;
 	UIActionSheet *_currentChatViewActionSheet;
 	id <UIActionSheetDelegate> _currentChatViewActionSheetDelegate;
 	id <CQChatViewController> _previousSelectedChatViewController;
 	BOOL _needsUpdate;
 	BOOL _ignoreNotifications;
-	BOOL _isReordering;
 	NSTimer *_connectTimeUpdateTimer;
 	NSMapTable *_headerViewsForConnections;
 	NSMapTable *_connectionsForHeaderViews;
@@ -127,13 +127,12 @@ NS_ASSUME_NONNULL_BEGIN
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_bouncerAdded:) name:CQConnectionsControllerAddedBouncerSettingsNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_bouncerRemoved:) name:CQConnectionsControllerRemovedBouncerSettingsNotification object:nil];
 
-	if ([[UIDevice currentDevice] isPadModel]) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_updateUnreadMessages:) name:CQChatViewControllerUnreadMessagesUpdatedNotification object:nil];
-	}
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_updateUnreadMessages:) name:CQChatViewControllerUnreadMessagesUpdatedNotification object:nil];
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_connectionDidConnect:) name:MVChatConnectionDidConnectNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_chatOrderingControllerDidChangeOrdering:) name:CQChatOrderingControllerDidChangeOrderingNotification object:nil];
+
 	_needsUpdate = YES;
 	_headerViewsForConnections = [NSMapTable weakToStrongObjectsMapTable];
 	_connectionsForHeaderViews = [NSMapTable strongToWeakObjectsMapTable];
@@ -144,6 +143,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) dealloc {
 	[[NSNotificationCenter chatCenter] removeObserver:self];
+	[self unregisterForPreviewingWithContext:_previewingContext];
 }
 
 #pragma mark -
@@ -500,14 +500,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (!_active)
 		return;
 
-	if (_isReordering) {
-		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
-		[self performSelector:_cmd withObject:nil afterDelay:0.];
-		return;
-	}
-
-	_isReordering = YES;
-
 	NSMapTable *existingIndexPathsForChatControllers = [_indexPathsForChatControllers copy];
 
 	[self _refreshIndexPathForChatControllersCache];
@@ -519,7 +511,11 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		if (self.editing) {
 			if (lookupIndexPath.section == 0)
 				continue;
-			lookupIndexPath = [NSIndexPath indexPathForRow:lookupIndexPath.row inSection:(lookupIndexPath.section - 1)];
+
+			if (lookupIndexPath.row == 0)
+				continue;
+
+			lookupIndexPath = [NSIndexPath indexPathForRow:(lookupIndexPath.row - 1) inSection:(lookupIndexPath.section - 1)];
 		}
 
 		id currentChatControllerForIndexPath = chatControllerForIndexPath(lookupIndexPath);
@@ -538,8 +534,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			[self.tableView moveRowAtIndexPath:indexPathPair[1] toIndexPath:indexPathPair[0]];
 		[self.tableView endUpdates];
 	}
-
-	_isReordering = NO;
 }
 
 - (void) _refreshIndexPathForChatControllersCache {
@@ -581,8 +575,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	// Force UITableView to reload section headers. If we are in an editing state, this will make the tableview display the (i) button
 	// correctly, rather than showing the connection timer label.
-	if (self.editing)
-	{
+	if (self.editing) {
 		[self.tableView reloadData];
 		[self.tableView beginUpdates];
 		[self.tableView endUpdates];
@@ -657,7 +650,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 - (void) bouncerSettingsAdded:(CQBouncerSettings *) bouncer {
 	NSUInteger section = [[CQChatOrderingController defaultController] sectionIndexForConnection:bouncer];
+	[self.tableView beginUpdates];
 	[self.tableView insertSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationTop];
+	[self.tableView endUpdates];
 
 	[self _refreshIndexPathForChatControllersCache];
 }
@@ -678,14 +673,13 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	if ([[UIDevice currentDevice] isPadModel]) {
-		[self resizeForViewInPopoverUsingTableView:self.tableView];
-		self.tableView.allowsSelectionDuringEditing = YES;
-		self.clearsSelectionOnViewWillAppear = NO;
-	}
+	[self resizeForViewInPopoverUsingTableView:self.tableView];
+
+	self.tableView.allowsSelectionDuringEditing = self.view.window.isFullscreen;
+	self.clearsSelectionOnViewWillAppear = !self.view.window.isFullscreen;
 
 	if ([self respondsToSelector:@selector(registerForPreviewingWithDelegate:sourceView:)])
-		[self registerForPreviewingWithDelegate:self sourceView:self.view];
+		_previewingContext = [self registerForPreviewingWithDelegate:self sourceView:self.view.window];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -706,8 +700,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	// reload data, as the unread counts may be inaccurate due to swiping to change rooms
 	[self.tableView reloadData];
 
-	if ([self.navigationController.navigationBar respondsToSelector:@selector(setBarTintColor:)])
-		self.navigationController.navigationBar.barTintColor = nil;
+	self.navigationController.navigationBar.barTintColor = nil;
 }
 
 - (void) viewDidAppear:(BOOL) animated {
@@ -721,7 +714,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		}
 	}
 
-	if (defaultToEditing && ![UIDevice currentDevice].isPadModel)
+	if (defaultToEditing && !self.view.window.isFullscreen)
 		[self setEditing:YES animated:YES];
 
 	[super viewDidAppear:animated];
@@ -745,18 +738,13 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>) coordinator {
 	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 
-	if ([[UIDevice currentDevice] isPadModel])
-		[self resizeForViewInPopoverUsingTableView:self.tableView];
+	[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
-- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
-	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-
-	if ([[UIDevice currentDevice] isPadModel])
-		[self resizeForViewInPopoverUsingTableView:self.tableView];
+- (void) traitCollectionDidChange:(nullable UITraitCollection *) previousTraitCollection {
+	self.tableView.allowsSelectionDuringEditing = self.view.window.isFullscreen;
+	self.clearsSelectionOnViewWillAppear = !self.view.window.isFullscreen;
 }
-#endif
 
 #pragma mark -
 
@@ -782,8 +770,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 	}
 
-	if ([[UIDevice currentDevice] isPadModel])
-		[self resizeForViewInPopoverUsingTableView:self.tableView];
+	[self resizeForViewInPopoverUsingTableView:self.tableView];
 
 	[self _refreshIndexPathForChatControllersCache];
 }
@@ -924,17 +911,19 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		return nil;
 
 	id <CQChatViewController> chatController = chatControllerForIndexPath(indexPath);
-	if (![chatController isKindOfClass:[UIViewController class]])
+	if (![chatController respondsToSelector:@selector(previewableViewController)])
 		return nil; // eg: file transfers
 
 	if ([chatController respondsToSelector:@selector(markAsRead)])
 		[chatController markAsRead];
 
-	return (UIViewController *)chatController;
+	UIViewController *viewController = chatController.previewableViewController;
+	[viewController associateObject:chatController forKey:@"chatController"];
+	return viewController;
 }
 
 - (void) previewingContext:(id <UIViewControllerPreviewing>) previewingContext commitViewController:(UIViewController *) viewControllerToCommit {
-	[[CQChatController defaultController] showChatController:(id <CQChatViewController>)viewControllerToCommit animated:YES];
+	[[CQChatController defaultController] showChatController:(id <CQChatViewController>)[viewControllerToCommit associatedObjectForKey:@"chatController"] animated:YES];
 }
 
 #pragma mark -
@@ -1080,12 +1069,11 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		[chatRoomController part];
 	};
 
-	UITableViewRowActionStyle nextAction = UITableViewRowActionStyleDestructive;
 	UITableViewRowAction *leaveAction = nil;
 	id <CQChatViewController> chatViewController = chatControllerForIndexPath(indexPath);
 	BOOL canPartRoom = ([chatViewController isMemberOfClass:[CQChatRoomController class]] && chatViewController.available);
 	if (canPartRoom) {
-		leaveAction = [UITableViewRowAction rowActionWithStyle:nextAction title:NSLocalizedString(@"Leave", @"Leave confirmation button title") handler:^(UITableViewRowAction *action, NSIndexPath *actionIndexPath) {
+		leaveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:NSLocalizedString(@"Leave", @"Leave confirmation button title") handler:^(UITableViewRowAction *action, NSIndexPath *actionIndexPath) {
 			partRoom(chatViewController);
 			[tableView updateCellAtIndexPath:actionIndexPath withAnimation:UITableViewRowAnimationFade];
 		}];
@@ -1313,7 +1301,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	// Work around a bug on iOS 8(.1?) (on iPad?) where the tableview thinks the section header at the top of the screen
 	// is scrolled because the tableview has been scrolled to the point where there are rows behind it
 	NSIndexPath *firstVisibleRowIndexPath = tableView.indexPathsForVisibleRows.firstObject;
-	if (section == firstVisibleRowIndexPath.section && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	if (section == firstVisibleRowIndexPath.section && [UIDevice currentDevice].isPadModel)
 		presentationPoint.y = 86.;
 	else presentationPoint.y = CGRectGetMidY(converted);
 
@@ -1323,12 +1311,11 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 #pragma mark -
 
 - (void) tableView:(UITableView *) tableView willBeginEditingRowAtIndexPath:(NSIndexPath *) indexPath {
-	if ([[UIDevice currentDevice] isPadModel])
-		_previousSelectedChatViewController = chatControllerForIndexPath([self.tableView indexPathForSelectedRow]);
+	_previousSelectedChatViewController = chatControllerForIndexPath([self.tableView indexPathForSelectedRow]);
 }
 
 - (void) tableView:(UITableView *) tableView didEndEditingRowAtIndexPath:(NSIndexPath *) indexPath {
-	if ([[UIDevice currentDevice] isPadModel] && _previousSelectedChatViewController) {
+	if (_previousSelectedChatViewController) {
 		indexPath = indexPathForChatController(_previousSelectedChatViewController, self.editing);
 		if (indexPath)
 			[self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];

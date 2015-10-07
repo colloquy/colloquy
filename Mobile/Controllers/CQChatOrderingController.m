@@ -133,7 +133,9 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[self performSelector:@selector(_sortChatControllers) withObject:nil afterDelay:0.];
 }
 
+
 - (void) _sortChatControllers {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_sortChatControllers) object:nil];
 	[_chatControllers sortUsingFunction:sortControllersAscending context:NULL];
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatOrderingControllerDidChangeOrderingNotification object:nil];
 }
@@ -145,10 +147,11 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 - (void) _addViewController:(id <CQChatViewController>) controller resortingRightAway:(BOOL) resortingRightAway {
 	[_chatControllers addObject:controller];
 
-	// sorting is handled async now when rooms add messages (such as join events)
-
 	NSDictionary *notificationInfo = @{@"controller": controller};
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatControllerAddedChatViewControllerNotification object:self userInfo:notificationInfo];
+
+	if (resortingRightAway)
+		[self _sortChatControllers];
 }
 
 - (void) addViewController:(id <CQChatViewController>) controller {
@@ -160,11 +163,14 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		NSAssert([controller conformsToProtocol:@protocol(CQChatViewController)], @"Cannot add chat view controller that does not conform to CQChatViewController");
 		[self _addViewController:controller resortingRightAway:NO];
 	}
-	// sorting is handled async now when rooms add messages (such as join events)
+
+	[self _sortChatControllers];
 }
 
 - (void) removeViewController:(id <CQChatViewController>) controller {
 	[_chatControllers removeObject:controller];
+
+	[self _sortChatControllers];
 }
 
 #if ENABLE(FILE_TRANSFERS)

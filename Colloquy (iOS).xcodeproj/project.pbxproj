@@ -200,7 +200,7 @@
 		9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
 		B68725B11B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B68725B01B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m */; };
 		B68725B41B8E7FF60003D4F8 /* CQPrinterPage.m in Sources */ = {isa = PBXBuildFile; fileRef = B68725B31B8E7FF60003D4F8 /* CQPrinterPage.m */; };
-		B6BE5F451BA27B7100EB3659 /* CQ3DTouchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = B6BE5F441BA27B7100EB3659 /* CQ3DTouchGestureRecognizer.m */; };
+		B6BFA5431BBDA3B6000C3BBC /* UIWindowAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B6BFA5421BBDA3B6000C3BBC /* UIWindowAdditions.m */; settings = {ASSET_TAGS = (); }; };
 		B6C921061B812F350049622C /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B6C921051B812F350049622C /* libc++.dylib */; };
 		B6D085B61B8D6E8400734C96 /* CQActivities.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D085B51B8D6E8400734C96 /* CQActivities.m */; };
 		B6F99EE61BA0FAB5000F4929 /* CoreSpotlight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C7F5881B26BE04000F5AAE /* CoreSpotlight.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -542,8 +542,8 @@
 		B68725B01B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIPrintPageRendererAdditions.m; path = Additions/UIPrintPageRendererAdditions.m; sourceTree = "<group>"; };
 		B68725B21B8E7FF60003D4F8 /* CQPrinterPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPrinterPage.h; sourceTree = "<group>"; };
 		B68725B31B8E7FF60003D4F8 /* CQPrinterPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPrinterPage.m; sourceTree = "<group>"; };
-		B6BE5F431BA27B7100EB3659 /* CQ3DTouchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQ3DTouchGestureRecognizer.h; sourceTree = "<group>"; };
-		B6BE5F441BA27B7100EB3659 /* CQ3DTouchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQ3DTouchGestureRecognizer.m; sourceTree = "<group>"; };
+		B6BFA5411BBDA3B6000C3BBC /* UIWindowAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIWindowAdditions.h; path = Mobile/Additions/UIWindowAdditions.h; sourceTree = "<group>"; };
+		B6BFA5421BBDA3B6000C3BBC /* UIWindowAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIWindowAdditions.m; path = Mobile/Additions/UIWindowAdditions.m; sourceTree = "<group>"; };
 		B6C921051B812F350049622C /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		B6D085B41B8D6E8400734C96 /* CQActivities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQActivities.h; sourceTree = "<group>"; };
 		B6D085B51B8D6E8400734C96 /* CQActivities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQActivities.m; sourceTree = "<group>"; };
@@ -814,8 +814,6 @@
 		1C63415F0FAF307B00BB5866 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				B6BE5F441BA27B7100EB3659 /* CQ3DTouchGestureRecognizer.m */,
-				B6BE5F431BA27B7100EB3659 /* CQ3DTouchGestureRecognizer.h */,
 				B6D085B51B8D6E8400734C96 /* CQActivities.m */,
 				B6D085B41B8D6E8400734C96 /* CQActivities.h */,
 				1C9B60E90FFAE4C400B7BAC0 /* CQBouncerConnection.m */,
@@ -1012,6 +1010,8 @@
 				92F99FB619D14034004A7A22 /* UIViewAdditions.h */,
 				92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */,
 				92D30F2A116D2B020060EE33 /* UIViewControllerAdditions.h */,
+				B6BFA5421BBDA3B6000C3BBC /* UIWindowAdditions.m */,
+				B6BFA5411BBDA3B6000C3BBC /* UIWindowAdditions.h */,
 				922F1CA91A4EBAF0000CBACE /* NSAttributedStringAdditions.m */,
 				922F1CA81A4EBAF0000CBACE /* NSAttributedStringAdditions.h */,
 				891E84D3123F0C8C00EC3C0F /* NSCharacterSetAdditions.m */,
@@ -1322,8 +1322,8 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1C0931030D80C6E900A2705D /* CQColloquyApplication.m in Sources */,
 				1C09327E0D80CA4800A2705D /* NSDataAdditions.m in Sources */,
+				B6BFA5431BBDA3B6000C3BBC /* UIWindowAdditions.m in Sources */,
 				B68725B11B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m in Sources */,
-				B6BE5F451BA27B7100EB3659 /* CQ3DTouchGestureRecognizer.m in Sources */,
 				1C0932810D80CA4800A2705D /* NSNotificationAdditions.m in Sources */,
 				1C0932830D80CA4800A2705D /* NSScannerAdditions.m in Sources */,
 				1C0932850D80CA4800A2705D /* NSStringAdditions.m in Sources */,
@@ -1491,10 +1491,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
+				CLANG_ENABLE_MODULE_DEBUGGING = NO;
+				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				COPY_PHASE_STRIP = NO;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_ON_DEMAND_RESOURCES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Shared/Frameworks",
@@ -1518,7 +1521,7 @@
 				);
 				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)";
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(SDK_DIR)/usr/lib/system",
@@ -1536,11 +1539,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
+				CLANG_ENABLE_MODULE_DEBUGGING = NO;
+				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_BITCODE = NO;
+				ENABLE_ON_DEMAND_RESOURCES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Shared/Frameworks",
@@ -1564,7 +1570,7 @@
 				);
 				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)";
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(SDK_DIR)/usr/lib/system",
@@ -1582,11 +1588,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
+				CLANG_ENABLE_MODULE_DEBUGGING = NO;
+				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_BITCODE = NO;
+				ENABLE_ON_DEMAND_RESOURCES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Shared/Frameworks",
@@ -1610,7 +1619,7 @@
 				);
 				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)";
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(SDK_DIR)/usr/lib/system",
