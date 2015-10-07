@@ -9,10 +9,10 @@
 #import "NSColorAdditions.h"
 
 @interface NSTerminologyRegistry : NSObject // Private Foundation Class
-- (id) initWithSuiteName:(NSString *) name bundle:(NSBundle *) bundle;
-- (NSString *) suiteName;
-- (NSArray *) suiteNameArray;
-- (NSString *) suiteDescription;
+- (instancetype) initWithSuiteName:(NSString *) name bundle:(NSBundle *) bundle;
+@property (readonly, copy) NSString *suiteName;
+@property (readonly, copy) NSArray *suiteNameArray;
+@property (readonly, copy) NSString *suiteDescription;
 - (NSDictionary *) classTerminologyDictionary:(NSString *) className;
 - (NSDictionary *) commandTerminologyDictionary:(NSString *) commandName;
 - (NSDictionary *) enumerationTerminologyDictionary:(NSString *) enumName;
@@ -23,41 +23,30 @@
 
 @interface NSScriptObjectSpecifier (NSScriptObjectSpecifierPrivate) // Private Foundation Methods
 + (id) _objectSpecifierFromDescriptor:(NSAppleEventDescriptor *) descriptor inCommandConstructionContext:(id) context;
-- (NSAppleEventDescriptor *) _asDescriptor;
+@property (readonly, copy) NSAppleEventDescriptor *_asDescriptor;
 @end
 
 #pragma mark -
 
 @interface NSAEDescriptorTranslator : NSObject // Private Foundation Class
-+ (id) sharedAEDescriptorTranslator;
++ (NSAEDescriptorTranslator*) sharedAEDescriptorTranslator;
 - (NSAppleEventDescriptor *) descriptorByTranslatingObject:(id) object ofType:(id) type inSuite:(id) suite;
 - (id) objectByTranslatingDescriptor:(NSAppleEventDescriptor *) descriptor toType:(id) type inSuite:(id) suite;
 - (void) registerTranslator:(id) translator selector:(SEL) selector toTranslateFromClass:(Class) class;
-- (void) registerTranslator:(id) translator selector:(SEL) selector toTranslateFromDescriptorType:(unsigned int) type;
+- (void) registerTranslator:(id) translator selector:(SEL) selector toTranslateFromDescriptorType:(OSType) type;
 @end
 
 #pragma mark -
 
 @interface NSString (NSStringFourCharCode)
-- (unsigned long) fourCharCode;
+@property (readonly) OSType fourCharCode;
 @end
 
 #pragma mark -
 
 @implementation NSString (NSStringFourCharCode)
-- (unsigned long) fourCharCode {
-	unsigned long ret = 0, length = [self length];
-
-	if( length >= 1 ) ret |= ( [self characterAtIndex:0] & 0x00ff ) << 24;
-	else ret |= ' ' << 24;
-	if( length >= 2 ) ret |= ( [self characterAtIndex:1] & 0x00ff ) << 16;
-	else ret |= ' ' << 16;
-	if( length >= 3 ) ret |= ( [self characterAtIndex:2] & 0x00ff ) << 8;
-	else ret |= ' ' << 8;
-	if( length >= 4 ) ret |= ( [self characterAtIndex:3] & 0x00ff );
-	else ret |= ' ';
-
-	return ret;
+- (OSType) fourCharCode {
+	return UTGetOSTypeFromString((CFStringRef)self);
 }
 @end
 
@@ -78,7 +67,9 @@
 #pragma mark -
 
 @implementation JVAppleScriptChatPlugin
-- (id) initWithManager:(MVChatPluginManager *) manager {
+@synthesize scriptFilePath = _path;
+
+- (instancetype) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [self init] ) ) {
 		_manager = manager;
 		_doseNotRespond = [[NSMutableSet set] retain];
@@ -89,7 +80,7 @@
 	return self;
 }
 
-- (id) initWithScript:(NSAppleScript *) script atPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
+- (instancetype) initWithScript:(NSAppleScript *) script atPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
 	if( ( self = [self initWithManager:manager] ) ) {
 		_script = [script retain];
 		_path = [path copyWithZone:[self zone]];
@@ -97,12 +88,14 @@
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( checkForModifications: ) name:NSApplicationWillBecomeActiveNotification object:[NSApplication sharedApplication]];
 
-		[self performSelector:@selector( idle ) withObject:nil afterDelay:0.];
+		dispatch_async(dispatch_get_current_queue(), ^{
+			[self idle];
+		});
 	}
 	return self;
 }
 
-- (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
+- (instancetype) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
 	NSAppleScript *script = [[[NSAppleScript alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:NULL] autorelease];
 	if( ! [script compileAndReturnError:NULL] ) {
 		[self release];
@@ -138,18 +131,6 @@
 
 #pragma mark -
 
-- (NSAppleScript *) script {
-	return _script;
-}
-
-- (void) setScript:(NSAppleScript *) script {
-	id old = _script;
-	_script = [script retain];
-	[old release];
-}
-
-#pragma mark -
-
 - (void) reloadFromDisk {
 	NSString *filePath = [self scriptFilePath];
 
@@ -162,7 +143,9 @@
 	[_doseNotRespond removeAllObjects];
 
 	[self performSelector:@selector( load )];
-	[self performSelector:@selector( idle ) withObject:nil afterDelay:0.];
+	dispatch_async(dispatch_get_current_queue(), ^{
+		[self idle];
+	});
 }
 
 #pragma mark -
@@ -173,32 +156,17 @@
 
 #pragma mark -
 
-- (NSString *) scriptFilePath {
-	return _path;
-}
-
-- (void) setScriptFilePath:(NSString *) path {
-	id old = _path;
-	_path = [path copyWithZone:[self zone]];
-	[old release];
-}
-
-#pragma mark -
-
-- (id) callScriptHandler:(unsigned long) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector {
+- (id) callScriptHandler:(OSType) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector {
 	if( ! _script ) return nil;
 
 	int pid = [[NSProcessInfo processInfo] processIdentifier];
 	NSAppleEventDescriptor *targetAddress = [NSAppleEventDescriptor descriptorWithDescriptorType:typeKernelProcessID bytes:&pid length:sizeof( pid )];
 	NSAppleEventDescriptor *event = [NSAppleEventDescriptor appleEventWithEventClass:'cplG' eventID:handler targetDescriptor:targetAddress returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID];
 
-	NSEnumerator *enumerator = [arguments objectEnumerator];
-	NSEnumerator *kenumerator = [arguments keyEnumerator];
 	NSAppleEventDescriptor *descriptor = nil;
-	NSString *key = nil;
-	id value = nil;
 
-	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
+	for (NSString *key in arguments) {
+		id value = arguments[key];
 		NSScriptObjectSpecifier *specifier = nil;
 		if( [value isKindOfClass:[NSScriptObjectSpecifier class]] ) specifier = value;
 		else specifier = [value objectSpecifier];
@@ -214,15 +182,15 @@
 	NSAppleEventDescriptor *result = [_script executeAppleEvent:event error:&error];
 
 	if( error && ! result ) { // an error
-		int code = [[error objectForKey:NSAppleScriptErrorNumber] intValue];
+		int code = [error[NSAppleScriptErrorNumber] intValue];
 		if( code == errAEEventNotHandled || code == errAEHandlerNotFound ) {
 			[self doesNotRespondToSelector:selector]; // disable for future calls
 		} else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAppleScriptDebugging"] ) {
-			NSString *errorDesc = [error objectForKey:NSAppleScriptErrorMessage];
+			NSString *errorDesc = error[NSAppleScriptErrorMessage];
 			NSScriptCommandDescription *commandDesc = [[NSScriptSuiteRegistry sharedScriptSuiteRegistry] commandDescriptionWithAppleEventClass:'cplG' andAppleEventCode:handler];
 			NSString *scriptSuiteName = [[NSScriptSuiteRegistry sharedScriptSuiteRegistry] suiteForAppleEventCode:'cplG'];
 			NSTerminologyRegistry *term = [[[NSClassFromString( @"NSTerminologyRegistry" ) alloc] initWithSuiteName:scriptSuiteName bundle:[NSBundle mainBundle]] autorelease];
-			NSString *handlerName = [[term commandTerminologyDictionary:[commandDesc commandName]] objectForKey:@"Name"];
+			NSString *handlerName = [term commandTerminologyDictionary:[commandDesc commandName]][@"Name"];
 			if( ! handlerName ) handlerName = [commandDesc commandName];
 			if( NSRunCriticalAlertPanel( NSLocalizedString( @"AppleScript Plugin Error", "AppleScript plugin error title" ), NSLocalizedString( @"The AppleScript plugin \"%@\" had an error while calling the \"%@\" handler.\n\n%@", "AppleScript plugin error message" ), nil, NSLocalizedString( @"Edit...", "edit button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], handlerName, errorDesc ) == NSCancelButton ) {
 				[[NSWorkspace sharedWorkspace] openFile:[self scriptFilePath]];
@@ -257,7 +225,9 @@
 			id old = _modDate;
 			_modDate = [[NSDate date] retain];
 			[old release];
-			[self performSelector:@selector( promptForReload ) withObject:nil afterDelay:0.];
+			dispatch_async(dispatch_get_current_queue(), ^{
+				[self promptForReload];
+			});
 		}
 	}
 }
@@ -294,7 +264,7 @@
 #pragma mark -
 
 - (void) load {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[self scriptFilePath], @"lOd1", nil];
+	NSDictionary *args = @{@"lOd1": [self scriptFilePath]};
 	[self callScriptHandler:'lOdX' withArguments:args forSelector:_cmd];
 }
 
@@ -303,24 +273,24 @@
 }
 
 - (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", ( arguments ? (id)arguments : (id)[NSNull null] ), @"psR1", user, @"psR2", [user connection], @"psR3", nil];
+	NSDictionary *args = @{@"----": command, @"psR1": ( arguments ? (id)arguments : (id)[NSNull null] ), @"psR2": user, @"psR3": [user connection]};
 	id result = [self callScriptHandler:'psRX' withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", ( arguments ? (id)arguments : (id)[NSNull null] ), @"psL1", user, @"psL2", [user connection], @"psL3", nil];
+	NSDictionary *args = @{@"----": command, @"psL1": ( arguments ? (id)arguments : (id)[NSNull null] ), @"psL2": user, @"psL3": [user connection]};
 	id result = [self callScriptHandler:'psLX' withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (void) connected:(MVChatConnection *) connection {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"----", nil];
+	NSDictionary *args = @{@"----": connection};
 	[self callScriptHandler:'cTsX' withArguments:args forSelector:_cmd];
 }
 
 - (void) disconnecting:(MVChatConnection *) connection {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"----", nil];
+	NSDictionary *args = @{@"----": connection};
 	[self callScriptHandler:'dFsX' withArguments:args forSelector:_cmd];
 }
 
@@ -336,7 +306,7 @@
 	}
 
 	NSString *title = [sender title];
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:title, @"----", object, @"pcM1", submenu, @"pcM2", nil];
+	NSDictionary *args = @{@"----": title, @"pcM1": object, @"pcM2": submenu};
 	[self callScriptHandler:'pcMX' withArguments:args forSelector:_cmd];
 }
 
@@ -357,16 +327,16 @@
 					[mitem release];
 				}
 			} else if( [item isKindOfClass:[NSDictionary class]] ) {
-				NSString *title = [item objectForKey:@"title"];
-				NSArray *sub = [item objectForKey:@"submenu"];
-				NSNumber *enabled = [item objectForKey:@"enabled"];
-				NSNumber *checked = [item objectForKey:@"checked"];
-				NSNumber *indent = [item objectForKey:@"indent"];
-				NSNumber *alternate = [item objectForKey:@"alternate"];
-				id iconPath = [item objectForKey:@"icon"];
-				id iconSize = [item objectForKey:@"iconsize"];
-				NSString *tooltip = [item objectForKey:@"tooltip"];
-				id context = [item objectForKey:@"context"];
+				NSString *title = item[@"title"];
+				NSArray *sub = item[@"submenu"];
+				NSNumber *enabled = item[@"enabled"];
+				NSNumber *checked = item[@"checked"];
+				NSNumber *indent = item[@"indent"];
+				NSNumber *alternate = item[@"alternate"];
+				id iconPath = item[@"icon"];
+				id iconSize = item[@"iconsize"];
+				NSString *tooltip = item[@"tooltip"];
+				id context = item[@"context"];
 
 				if( ! [title isKindOfClass:[NSString class]] ) continue;
 				if( ! [tooltip isKindOfClass:[NSString class]] ) tooltip = nil;
@@ -403,7 +373,7 @@
 					if( [iconPath hasPrefix:@"#"] ) {
 						NSSize size = NSZeroSize;
 						if( [iconSize isKindOfClass:[NSArray class]] && [(NSArray *)iconSize count] == 2 ) {
-							size = NSMakeSize( [[iconSize objectAtIndex:0] unsignedIntValue], [[iconSize objectAtIndex:1] unsignedIntValue] );
+							size = NSMakeSize( [iconSize[0] unsignedIntValue], [iconSize[1] unsignedIntValue] );
 						} else if( [iconSize isKindOfClass:[NSNumber class]] ) {
 							size = NSMakeSize( [iconSize unsignedIntValue], [iconSize unsignedIntValue] );
 						} else size = NSMakeSize( 24., 12. );
@@ -438,24 +408,23 @@
 					
 					NSSize size = NSZeroSize;
 					if( [iconSize isKindOfClass:[NSArray class]] && [(NSArray *)iconSize count] == 2 ) {
-						size = NSMakeSize( [[iconSize objectAtIndex:0] unsignedIntValue], [[iconSize objectAtIndex:1] unsignedIntValue] );
+						size = NSMakeSize( [iconSize[0] unsignedIntValue], [iconSize[1] unsignedIntValue] );
 					} else if( [iconSize isKindOfClass:[NSNumber class]] ) {
 						size = NSMakeSize( [iconSize unsignedIntValue], [iconSize unsignedIntValue] );
 					}
 					
 					if( [mitem image] && ! NSEqualSizes( size, NSZeroSize ) ) {
-						[[mitem image] setScalesWhenResized:YES];
 						[[mitem image] setSize:size];
 					}
 				} else if( [iconPath isKindOfClass:[NSArray class]] && [(NSArray *)iconPath count] == 3 ) {
 					NSSize size = NSZeroSize;
 					if( [iconSize isKindOfClass:[NSArray class]] && [(NSArray *)iconSize count] == 2 ) {
-						size = NSMakeSize( [[iconSize objectAtIndex:0] unsignedIntValue], [[iconSize objectAtIndex:1] unsignedIntValue] );
+						size = NSMakeSize( [iconSize[0] unsignedIntValue], [iconSize[1] unsignedIntValue] );
 					} else if( [iconSize isKindOfClass:[NSNumber class]] ) {
 						size = NSMakeSize( [iconSize unsignedIntValue], [iconSize unsignedIntValue] );
 					} else size = NSMakeSize( 24., 12. );
 
-					NSColor *color = [NSColor colorWithCalibratedRed:( [[iconPath objectAtIndex:0] unsignedIntValue] / 65535. ) green:( [[iconPath objectAtIndex:1] unsignedIntValue] / 65535. ) blue:( [[iconPath objectAtIndex:2] unsignedIntValue] / 65535. ) alpha:1.];
+					NSColor *color = [NSColor colorWithCalibratedRed:( [iconPath[0] unsignedIntValue] / 65535. ) green:( [iconPath[1] unsignedIntValue] / 65535. ) blue:( [iconPath[2] unsignedIntValue] / 65535. ) alpha:1.];
 					NSImage *icon = [[NSImage alloc] initWithSize:size];
 
 					[icon lockFocus];
@@ -492,13 +461,13 @@
 }
 
 - (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:object, @"----", ( view ? (id) view : (id) [NSNull null] ), @"cMi1", nil];
+	NSDictionary *args = @{@"----": object, @"cMi1": ( view ? (id) view : (id) [NSNull null] )};
 	id result = [self callScriptHandler:'cMiX' withArguments:args forSelector:_cmd];
 	NSMutableArray *ret = [NSMutableArray array];
 
 	if( ! result ) return nil;
 	if( ! [result isKindOfClass:[NSArray class]] )
-		result = [NSArray arrayWithObject:result];
+		result = @[result];
 
 	[self buildMenuInto:ret fromReturnContainer:result withRepresentedObject:object];
 
@@ -507,29 +476,29 @@
 }
 
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context andPreferences:(NSDictionary *) preferences {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:identifier, @"----", context, @"nOt1", preferences, @"nOt2", nil];
+	NSDictionary *args = @{@"----": identifier, @"nOt1": context, @"nOt2": preferences};
 	[self callScriptHandler:'nOtX' withArguments:args forSelector:_cmd];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", [arguments string], @"pcC1", view, @"pcC2", nil];
+	NSDictionary *args = @{@"----": command, @"pcC1": [arguments string], @"pcC2": view};
 	id result = [self callScriptHandler:'pcCX' withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (BOOL) handleClickedLink:(NSURL *) url inView:(id <JVChatViewController>) view {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[url absoluteString], @"----", view, @"hCl1", nil];
+	NSDictionary *args = @{@"----": [url absoluteString], @"hCl1": view};
 	id result = [self callScriptHandler:'hClX' withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (void) processIncomingMessage:(JVMutableChatMessage *) message inView:(id <JVChatViewController>) view {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:[message isAction]], @"piM1", [message sender], @"piM2", view, @"piM3", nil];
+	NSDictionary *args = @{@"----": message, @"piM1": @([message isAction]), @"piM2": [message sender], @"piM3": view};
 	[self callScriptHandler:'piMX' withArguments:args forSelector:_cmd];
 }
 
 - (void) processOutgoingMessage:(JVMutableChatMessage *) message inView:(id <JVChatViewController>) view {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:[message isAction]], @"poM1", view, @"poM2", nil];
+	NSDictionary *args = @{@"----": message, @"poM1": @([message isAction]), @"poM2": view};
 	[self callScriptHandler:'poMX' withArguments:args forSelector:_cmd];
 }
 
@@ -539,57 +508,57 @@
 }*/
 
 - (void) memberJoined:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mJr1", nil];
+	NSDictionary *args = @{@"----": member, @"mJr1": room};
 	[self callScriptHandler:'mJrX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberParted:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room forReason:(NSAttributedString *) reason {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mPr1", [reason string], @"mPr2", nil];
+	NSDictionary *args = @{@"----": member, @"mPr1": room, @"mPr2": [reason string]};
 	[self callScriptHandler:'mPrX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberKicked:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mKr1", by, @"mKr2", [reason string], @"mKr3", nil];
+	NSDictionary *args = @{@"----": member, @"mKr1": room, @"mKr2": by, @"mKr3": [reason string]};
 	[self callScriptHandler:'mKrX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberPromoted:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:"cOpr" objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
+	NSDictionary *args = @{@"----": member, @"mSc1": [NSValue valueWithBytes:"cOpr" objCType:@encode( char * )], @"mSc2": by, @"mSc3": room};
 	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberDemoted:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:( [member voice] ? "VoIc" : "noRm" ) objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
+	NSDictionary *args = @{@"----": member, @"mSc1": [NSValue valueWithBytes:( [member voice] ? "VoIc" : "noRm" ) objCType:@encode( char * )], @"mSc2": by, @"mSc3": room};
 	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberVoiced:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:"VoIc" objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
+	NSDictionary *args = @{@"----": member, @"mSc1": [NSValue valueWithBytes:"VoIc" objCType:@encode( char * )], @"mSc2": by, @"mSc3": room};
 	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberDevoiced:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:( [member operator] ? "cOpr" : "noRm" ) objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
+	NSDictionary *args = @{@"----": member, @"mSc1": [NSValue valueWithBytes:( [member operator] ? "cOpr" : "noRm" ) objCType:@encode( char * )], @"mSc2": by, @"mSc3": room};
 	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
 - (void) joinedRoom:(JVChatRoomPanel *) room {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", nil];
+	NSDictionary *args = @{@"----": room};
 	[self callScriptHandler:'jRmX' withArguments:args forSelector:_cmd];
 }
 
 - (void) partingFromRoom:(JVChatRoomPanel *) room {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", nil];
+	NSDictionary *args = @{@"----": room};
 	[self callScriptHandler:'pRmX' withArguments:args forSelector:_cmd];
 }
 
 - (void) kickedFromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", by, @"kRm1", [reason string], @"kRm2", nil];
+	NSDictionary *args = @{@"----": room, @"kRm1": by, @"kRm2": [reason string]};
 	[self callScriptHandler:'kRmX' withArguments:args forSelector:_cmd];
 }
 
 - (void) topicChangedTo:(NSAttributedString *) topic inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) member {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[topic string], @"rTc1", member, @"rTc2", room, @"rTc3", nil];
+	NSDictionary *args = @{@"rTc1": [topic string], @"rTc2": member, @"rTc3": room};
 	[self callScriptHandler:'rTcX' withArguments:args forSelector:_cmd];
 }
 @end

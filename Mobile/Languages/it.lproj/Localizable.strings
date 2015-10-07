@@ -8,7 +8,7 @@
 "%@ (%u)" = "%1$@ (%2$u)";
 
 /* User changed the room topic event message */
-"%@ changed the topic to \"%@\"." = "%1$@ ha cambiato l'argomento del canale in: %2$@.";
+"%@ changed the topic to \"%@\"." = "%1$@ ha cambiato l'argomento del canale in: \"%2$@\".";
 
 /* User no longer has special voice status and can't talk in moderated rooms mode event message */
 "%@ had voice removed by %@." = "%2$@ ha disattivato la modalità VOICE su %1$@.";
@@ -41,7 +41,7 @@
 "%@ set a ban on %@." = "%1$@ ha attivato il BAN su %2$@.";
 
 /* File download alert message */
-"%@ wants to send you \"%@\"." = "%1$@ vuole inviarti un file:%2$@.";
+"%@ wants to send you \"%@\"." = "%1$@ vuole inviarti un file:\"%2$@\".";
 
 /* User is no longer a room administrator mode event message */
 "%@ was demoted from administrator by %@." = "%2$@ ha rimosso %1$@ dalla carica di amministratore.";
@@ -243,16 +243,16 @@
 "Ban from Room" = "Attiva BAN";
 
 /* cannot change used nickname error */
-"Can't change nick from \"%@\" to \"%@\" because it is already taken on \"%@\"." = "Impossibile cambiare da:%1$@ a: %2$@ Perché il nick è già usato da qualcun'altro%3$@.";
+"Can't change nick from \"%@\" to \"%@\" because it is already taken on \"%@\"." = "Impossibile cambiare da:\"%1$@\" a: \"%2$@\" Perché il nick è già usato da qualcun'altro\"%3$@\".";
 
 /* Can't change nickname alert title */
 "Can't Change Nickname" = "Cambio del nick non riuscito";
 
 /* Can't change nick too fast alert message */
-"Can't change nicknames too fast on \"%@\", wait and try again." = "Su %@non ti è permesso cambiare nick troppe volte. Aspetta e riprova dopo.";
+"Can't change nicknames too fast on \"%@\", wait and try again." = "Su %@\"non ti è permesso cambiare nick troppe volte. Aspetta e riprova dopo.";
 
 /* Can't change nick because of room alert message */
-"Can't change your nickname while in \"%@\" on \"%@\". Leave the room and try again." = "Impossibile cambiare nick su %1$@ - %2$@. Esci dal canale e poi riprova.";
+"Can't change your nickname while in \"%@\" on \"%@\". Leave the room and try again." = "Impossibile cambiare nick su \"%1$@\" - \"%2$@\". Esci dal canale e poi riprova.";
 
 /* Can't Connect to Bouncer alert title */
 "Can't Connect to Bouncer" = "Connessione al Bouncer Non Riuscita";
@@ -261,13 +261,13 @@
 "Can't Connect to Server" = "Connessione al Server Non Riuscita";
 
 /* Can't connect to bouncer alert message */
-"Can't connect to the bouncer \"%@\". Check the bouncer settings and try again." = "Impossibile connettersi al bouncer %@. Controlla che le impostazioni siano valide, poi riprova.";
+"Can't connect to the bouncer \"%@\". Check the bouncer settings and try again." = "Impossibile connettersi al bouncer \"%@\". Controlla che le impostazioni siano valide, poi riprova.";
 
 /* Connect directly alert message */
-"Can't connect to the server \"%@\" via \"%@\". Would you like to connect directly?" = "Impossibile connettersi al server %1$@ via %2$@. Vuoi provare la connessione diretta?";
+"Can't connect to the server \"%@\" via \"%@\". Would you like to connect directly?" = "Impossibile connettersi al server \"%1$@\" via \"%2$@\". Vuoi provare la connessione diretta?";
 
 /* Cannot connect alert message */
-"Can't connect to the server \"%@\"." = "Connessione al server %@ Non Riuscita.";
+"Can't connect to the server \"%@\"." = "Connessione al server \"%@\" Non Riuscita.";
 
 /* Can't join room alert title */
 "Can't Join Room" = "Impossibile Entrare nella Stanza";
@@ -279,10 +279,10 @@
 "Can't Send Message" = "Invio Messaggio Non Riuscito";
 
 /* Cant send message alert message */
-"Can't send messages to \"%@\" due to some room restriction." = "L'invio del messaggio a %@ non è riuscito, a causa di una restrizione del canale.";
+"Can't send messages to \"%@\" due to some room restriction." = "L'invio del messaggio a \"%@\" non è riuscito, a causa di una restrizione del canale.";
 
 /* cant send to room error */
-"Can't send to room \"%@\" on \"%@\"." = "Impossibile inviare msg al canale %1$@ su %2$@.";
+"Can't send to room \"%@\" on \"%@\"." = "Impossibile inviare msg al canale \"%1$@\" su \"%2$@\".";
 
 /* Cancel button title */
 "Cancel" = "Annulla";
@@ -420,13 +420,13 @@
 "Create Away Status&" = "Crea Stato di Away&";
 
 /* Current topic event message */
-"Current chat topic is \"%@\", set by %@." = "L'argomento è %1$@, scritto da %2$@.";
+"Current chat topic is \"%@\", set by %@." = "L'argomento è \"%1$@\", scritto da %2$@.";
 
 /* Current topic set by you event message */
-"Current chat topic is \"%@\", set by you." = "L'argomento è %@, scritto da te.";
+"Current chat topic is \"%@\", set by you." = "L'argomento è \"%@\", scritto da te.";
 
 /* Current topic with no user event message */
-"Current chat topic is \"%@\"." = "L'argomento è %@.";
+"Current chat topic is \"%@\"." = "L'argomento è \"%@\".";
 
 /* Encoding name */
 "Cyrillic (ISO 8859-5)" = "Cyrillic (ISO 8859-5)";
@@ -578,7 +578,7 @@
 "hours" = "ore";
 
 /* Identify to join room alert message */
-"Identify with network services to join \"%@\" on \"%@\"." = "Devi Autenticarti con la rete %2$@ per entrare nel canale %1$@.";
+"Identify with network services to join \"%@\" on \"%@\"." = "Devi Autenticarti con la rete \"%2$@\" per entrare nel canale \"%1$@\".";
 
 /* Idle Time user info label */
 "idle time" = "tempo di inattività";
@@ -1023,10 +1023,10 @@
 "Servers" = "Servers";
 
 /* services down error */
-"Services down on \"%@\"." = "Servizi fuori uso su %@.";
+"Services down on \"%@\"." = "Servizi fuori uso su \"%@\".";
 
 /* Services won't let you change your nickname alert message */
-"Services won't let you change your nickname to \"%@\" on \"%@\"." = "Su %2$@ il server non ti permette di cambiare nick a %1$@.";
+"Services won't let you change your nickname to \"%@\" on \"%@\"." = "Su %2$@ il server non ti permette di cambiare nick a \"%1$@\".";
 
 /* Set Away Status& button title */
 "Set Away Status&" = "Imposta lo stato di Away&";
@@ -1069,44 +1069,44 @@
 "The #help room is joined by default." = "Il canale #help viene sempre aperto di default.";
 
 /* user not on the server */
-"The command \"%@\" is not a valid command on the \"%@\" server." = "Il comando %1$@ non è riconosciuto dal server  %2$@ .";
+"The command \"%@\" is not a valid command on the \"%@\" server." = "Il comando \"%1$@\" non è riconosciuto dal server  %2$@ .";
 
 /* Authentication section footer title */
 "The nickname password is used to\nauthenticate with services (e.g. NickServ)." = "La password associata serve per\nautenticarsi con il server (i.e. NickServ).";
 
 /* room does not support modes error */
-"The room \"%@\" on \"%@\" does not support modes." = "Il canale %1$@ su %2$@ non supporta i cambiamenti delle modalità.";
+"The room \"%@\" on \"%@\" does not support modes." = "Il canale \"%1$@\" su \"%2$@\" non supporta i cambiamenti delle modalità.";
 
 /* Room does not support modes alert message */
-"The room \"%@\" on \"%@\" doesn't support modes." = "Il canale %1$@ su %2$@ non supporta i cambiamenti delle modalità.";
+"The room \"%@\" on \"%@\" doesn't support modes." = "Il canale \"%1$@\" su \"%2$@\" non supporta i cambiamenti delle modalità.";
 
 /* room encountered unknown error */
-"The room \"%@\" on \"%@\" encountered an unknown error, see server details for more information." = "Il canale %1$@ su %2$@ ha riportato un errore non identificato. Per maggiori info controlla i Dettagli Server.";
+"The room \"%@\" on \"%@\" encountered an unknown error, see server details for more information." = "Il canale \"%1$@\" su \"%2$@\" ha riportato un errore non identificato. Per maggiori info controlla i Dettagli Server.";
 
 /* Room is full alert message
    room is full error */
-"The room \"%@\" on \"%@\" is full." = "Il canale %1$@ su %2$@ è pieno.";
+"The room \"%@\" on \"%@\" is full." = "Il canale \"%1$@\" su \"%2$@\" è pieno.";
 
 /* invite only room error */
-"The room \"%@\" on \"%@\" is invite only." = "Ti serve un invito per entrare nel canale %1$@ su %2$@.";
+"The room \"%@\" on \"%@\" is invite only." = "Ti serve un invito per entrare nel canale \"%1$@\" su \"%2$@\".";
 
 /* Room is invite-only alert message */
-"The room \"%@\" on \"%@\" is invite-only." = "Ti serve un invito per entrare nel canale %1$@ su %2$@.";
+"The room \"%@\" on \"%@\" is invite-only." = "Ti serve un invito per entrare nel canale \"%1$@\" su \"%2$@\".";
 
 /* Room is full alert message */
-"The room \"%@\" on \"%@\" is password protected, and you didn't supply the correct password." = "Serve un codice per entrare su %1$@ - %2$@, e tu non hai fornito un codice corretto.";
+"The room \"%@\" on \"%@\" is password protected, and you didn't supply the correct password." = "Serve un codice per entrare su \"%1$@\" - \"%2$@\", e tu non hai fornito un codice corretto.";
 
 /* room password protected error */
-"The room \"%@\" on \"%@\" is password protected." = "Serve un codice per entrare su %1$@ - %2$@ .";
+"The room \"%@\" on \"%@\" is password protected." = "Serve un codice per entrare su \"%1$@\" - \"%2$@ .";
 
 /* user not on the server */
-"The user \"%@\" is no longer connected (or never was connected) to the \"%@\" server." = "L'utente %1$@ si è disconnesso dal server %2$@(o non si è proprio connesso).";
+"The user \"%@\" is no longer connected (or never was connected) to the \"%@\" server." = "L'utente \"%1$@\" si è disconnesso dal server \"%2$@\"(o non si è proprio connesso).";
 
 /* Can't send message to user because they are disconnected alert message */
 "The user is not connected." = "L'utente non è connesso.";
 
 /* no such user error */
-"There is no user called \"%@\" on \"%@\"." = "Non c'è nessun utente con il nome di %1$@ su %2$@.";
+"There is no user called \"%@\" on \"%@\"." = "Non c'è nessun utente con il nome di \"%1$@\" su \"%2$@\".";
 
 /* To: label */
 "To:" = "A:";
@@ -1231,10 +1231,10 @@
 "years" = "anni";
 
 /* Banned from room alert message */
-"You are banned from \"%@\" on \"%@\"." = "Sei Bannato da %1$@ su %2$@.";
+"You are banned from \"%@\" on \"%@\"." = "Sei Bannato da \"%1$@\" su \"%2$@\".";
 
 /* banned from room error */
-"You are banned from the room \"%@\" on \"%@\"." = "Sei Bannato dal Canale %1$@ su %2$@.";
+"You are banned from the room \"%@\" on \"%@\"." = "Sei Bannato dal Canale \"%1$@\" su \"%2$@\".";
 
 /* Can't send message to user because server is connecting alert message */
 "You are currently connecting,\ntry sending again soon." = "Connessione in corso,\ninvia nuovamente il messaggio più tardi.";
@@ -1256,13 +1256,13 @@
 "You are now known as %@." = "Hai cambiato il tuo nick in %@.";
 
 /* cant change nick because of chatroom error */
-"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again." = "Non puoi cambiare il tuo nick mentre sei dentro %1$@ su %2$@. Esci dal canale e riprova.";
+"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again." = "Non puoi cambiare il tuo nick mentre sei dentro \"%1$@\" su \"%2$@\". Esci dal canale e riprova.";
 
 /* You changed the room topic event message */
-"You changed the topic to \"%@\"." = "Hai cambiato l'argomento in %@.";
+"You changed the topic to \"%@\"." = "Hai cambiato l'argomento in \"%@\".";
 
 /* cant change nick too fast error */
-"You changed your nickname too fast on \"%@\", please wait and try again." = "Hai cambiato il tuo nick con troppa insistenza su %@, aspetta un momento e riprova.";
+"You changed your nickname too fast on \"%@\", please wait and try again." = "Hai cambiato il tuo nick con troppa insistenza su \"%@\", aspetta un momento e riprova.";
 
 /* You removed our room administrator mode event message */
 "You demoted yourself from administrator." = "Ti sei rimosso dalla carica di amministratore.";
@@ -1286,7 +1286,7 @@
 "You have returned from being away." = "Il tuo stato non è più \'Away\'.";
 
 /* Marked as away event message */
-"You have set yourself as away with the message \"%@\"." = "Il tuo stato è ora di \'Away\', con il messaggio: %@.";
+"You have set yourself as away with the message \"%@\"." = "Il tuo stato è ora di \'Away\', con il messaggio: \"%@\".";
 
 /* Joined room event message */
 "You joined the room." = "Sei entrato nel canale.";
@@ -1307,7 +1307,7 @@
 "You need to enter an Instapaper username in Colloquy's Settings." = "Devi inserire il Nome Utente per Instapaper nelle Impostazioni.";
 
 /* identify to join room error */
-"You need to identify with network services to join the room \"%@\" on \"%@\"." = "Devi essere registrato ed identificato con il server per entrare nel canale %1$@ su %2$@.";
+"You need to identify with network services to join the room \"%@\" on \"%@\"." = "Devi essere registrato ed identificato con il server per entrare nel canale \"%1$@\" su \"%2$@\".";
 
 /* You gave ourself the room administrator mode event message */
 "You promoted yourself to Administrator." = "Ti sei promosso alla carica di Amministratore.";
@@ -1349,10 +1349,10 @@
 "You were granted voice by %@." = "%@ ha attivato la modalità VOICE su di te.";
 
 /* Invited to join room alert message */
-"You were invited to \"%@\" by \"%@\" on \"%@\"." = "%2$@ ti ha invitato nel canale %1$@ su %3$@.";
+"You were invited to \"%@\" by \"%@\" on \"%@\"." = "%2$@ ti ha invitato nel canale \"%1$@\" su \"%3$@\".";
 
 /* Kicked from room alert message */
-"You were kicked from \"%@\" by \"%@\" on \"%@\"." = "%2$@ ti ha mandato via dal canale %1$@ su %3$@.";
+"You were kicked from \"%@\" by \"%@\" on \"%@\"." = "%2$@ ti ha mandato via dal canale\" %1$@\" su \"%3$@\".";
 
 /* You were kicked from the room event message */
 "You were kicked from the room by %@." = "%@ ti ha mandato via dal canale.";
@@ -1379,10 +1379,10 @@
 "Your device token is only shown locally and is:" = "Il token del tuo dispositivo è disponibile solo localmente, ed è:";
 
 /* nickname changed by services error */
-"Your nickname is being changed by services on \"%@\" because it is registered and you did not supply the correct password to identify." = "Il nick che hai scelto è registrato. Se non fornisci la password per confermare di esserne il proprietario, il tuo nick verrà cambiato dai server %@.";
+"Your nickname is being changed by services on \"%@\" because it is registered and you did not supply the correct password to identify." = "Il nick che hai scelto è registrato. Se non fornisci la password per confermare di esserne il proprietario, il tuo nick verrà cambiato dai server \"%@\".";
 
 /* Username was changed by server alert message */
-"Your nickname is being changed on \"%@\" because you didn't identify." = "Il tuo nick è stato cambiato dai server %@ perché non hai fornito la password.";
+"Your nickname is being changed on \"%@\" because you didn't identify." = "Il tuo nick è stato cambiato dai server \"%@\" perché non hai fornito la password.";
 
 /* YouTube application name */
 "YouTube" = "YouTube";

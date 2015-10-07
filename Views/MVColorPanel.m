@@ -8,20 +8,16 @@
 #pragma mark -
 
 @interface MVColorPanel (MVColorPanelPrivate)
-- (NSView *) _makeAccessoryView;
+@property (readonly, strong) NSView *_makeAccessoryView;
 @end
 
 #pragma mark -
 
 @implementation MVColorPanel
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) )
 		[self setAccessoryView:[self _makeAccessoryView]];
 	return self;
-}
-
-- (void) dealloc {
-	destination = nil;
 }
 
 - (void) _forceSendAction:(BOOL) action notification:(BOOL) notification firstResponder:(BOOL) firstResponder {

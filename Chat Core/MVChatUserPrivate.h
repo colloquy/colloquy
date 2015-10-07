@@ -7,6 +7,7 @@
 - (void) _setNickname:(NSString *) name;
 - (void) _setRealName:(NSString *) name;
 - (void) _setUsername:(NSString *) name;
+- (void) _setAccount:(NSString *) account;
 - (void) _setAddress:(NSString *) address;
 - (void) _setServerAddress:(NSString *) address;
 - (void) _setPublicKey:(NSData *) key;

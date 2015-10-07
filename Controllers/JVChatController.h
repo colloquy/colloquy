@@ -25,12 +25,12 @@
 
 - (void) addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller userInitiated:(BOOL) initiated;
 
-- (NSSet *) allChatWindowControllers;
-- (JVChatWindowController *) createChatWindowController;
+@property (readonly, copy) NSSet *allChatWindowControllers;
+@property (readonly, strong) JVChatWindowController *createChatWindowController;
 - (JVChatWindowController *) chatWindowControllerWithIdentifier:(NSString *) identifier;
 - (void) disposeChatWindowController:(JVChatWindowController *) controller;
 
-- (NSSet *) allChatViewControllers;
+@property (readonly, copy) NSSet *allChatViewControllers;
 - (NSSet *) chatViewControllersWithConnection:(MVChatConnection *) connection;
 - (NSSet *) chatViewControllersOfClass:(Class) class;
 - (NSSet *) chatViewControllersKindOfClass:(Class) class;
@@ -43,8 +43,8 @@
 - (JVChatTranscriptPanel *) chatViewControllerForTranscript:(NSString *) filename;
 - (JVChatConsolePanel *) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 
-- (JVSmartTranscriptPanel *) createSmartTranscript;
-- (NSSet *) smartTranscripts;
+@property (readonly, strong) JVSmartTranscriptPanel *createSmartTranscript;
+@property (readonly, copy) NSSet *smartTranscripts;
 - (void) saveSmartTranscripts;
 - (void) disposeSmartTranscript:(JVSmartTranscriptPanel *) panel;
 

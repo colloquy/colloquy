@@ -30,8 +30,7 @@
 }
 
 // Basic initializers
--(id)   init;
--(void) dealloc;
+-(instancetype)   init;
 
     // QName accessors
 -(XMLQName*) lookup:(NSString*)name withURI:(NSString*)uri;
@@ -43,7 +42,7 @@ XMLQNameManager* QNManager;
 
 @implementation XMLQName
 
--(id) initWithName:(NSString*)name inURI:(NSString*)uri
+-(instancetype) initWithName:(NSString*)name inURI:(NSString*)uri
 {
     if (!(self = [super init])) return nil;
     _name = [name retain];
@@ -56,16 +55,6 @@ XMLQNameManager* QNManager;
     [_name release];
     [_uri release];
     [super dealloc];
-}
-
--(NSString*) name
-{
-    return _name;
-}
-
--(NSString*) uri
-{
-    return _uri;
 }
 
 -(NSString*) description
@@ -145,11 +134,11 @@ XMLQNameManager* QNManager;
 -(XMLQName*) lookup:(NSString*)name withURI:(NSString*)uri
 {
     NSString* key = [NSString stringWithFormat:@"%@|%@", uri, name];
-    XMLQName* result = [_uri_map objectForKey:key];
+    XMLQName* result = _uri_map[key];
     if (result == nil)
     {
         result = [[XMLQName alloc] initWithName:name inURI:uri];
-        [_uri_map setObject:result forKey:key];
+        _uri_map[key] = result;
         [result release];
     }
     return result;
@@ -157,21 +146,21 @@ XMLQNameManager* QNManager;
 
 -(XMLQName*) lookup:(const char*)expatname
 {
-    NSString* key = [NSString stringWithUTF8String: expatname];
-    XMLQName* result = [_uri_map objectForKey:key];
+    NSString* key = @(expatname);
+    XMLQName* result = _uri_map[key];
     if (result == nil)
     {
         NSArray* components = [key componentsSeparatedByString:@"|"];
         if ([components count] == 2)
         {
-            result = [[XMLQName alloc] initWithName:[components objectAtIndex:1] 
-                                       inURI:[components objectAtIndex:0]];
+            result = [[XMLQName alloc] initWithName:components[1] 
+                                       inURI:components[0]];
         }
         else
         {
             result = [[XMLQName alloc] initWithName:key inURI:nil];
         }
-        [_uri_map setObject:result forKey:key];
+        _uri_map[key] = result;
         [result release];
     }
     return result;
@@ -181,7 +170,7 @@ XMLQNameManager* QNManager;
 {
     if (strchr(expatname, '|') == NULL)
     {
-        return [self lookup:[NSString stringWithUTF8String:expatname] withURI:uri];
+        return [self lookup:@(expatname) withURI:uri];
     }
     else
     {

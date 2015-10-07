@@ -15,13 +15,12 @@
     CGFloat             maxOpacity;
 }
 
-+ (id)floaterWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask title:(NSString *) title;
-- (id)initWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask title:(NSString *) title;
++ (instancetype)floaterWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask title:(NSString *) title;
+- (instancetype)initWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask title:(NSString *) title NS_DESIGNATED_INITIALIZER;
 - (void)moveFloaterToPoint:(NSPoint)inPoint;
 - (IBAction)close:(id)sender;
 - (void)endFloater;
-- (void)setImage:(NSImage *)inImage;
-- (NSImage *)image;
+@property (strong) NSImage *image;
 - (void)setVisible:(BOOL)inVisible animate:(BOOL)animate;
 - (void)setMaxOpacity:(CGFloat)inMaxOpacity;
 

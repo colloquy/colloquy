@@ -31,5 +31,5 @@
  @abstract insert the item, return the index the item was inserted at, or -1 if
  the item is already inserted.
  */
--(int) addObject:(id)object sortStringSelector:(SEL)selector;
+-(NSInteger) addObject:(id)object sortStringSelector:(SEL)selector;
 @end

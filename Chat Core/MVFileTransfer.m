@@ -48,22 +48,13 @@ static BOOL autoPortMapping = YES;
 
 #pragma mark -
 
-- (id) initWithUser:(MVChatUser *) chatUser {
+- (instancetype) initWithUser:(MVChatUser *) chatUser {
 	if( ( self = [super init] ) ) {
 		_status = MVFileTransferHoldingStatus;
-		_user = [chatUser retain];
+		_user = chatUser;
 	}
 
 	return self;
-}
-
-- (void) dealloc {
-	[_startDate release];
-	[_host release];
-	[_user release];
-	[_lastError release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -179,16 +170,15 @@ static BOOL autoPortMapping = YES;
 
 	MVSafeRetainAssign( _lastError, error );
 
-	NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:error, @"error", nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferErrorOccurredNotification object:self userInfo:info];
-	[info release];
+	NSDictionary *info = @{ @"error": error };
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVFileTransferErrorOccurredNotification object:self userInfo:info];
 }
 @end
 
 #pragma mark -
 
 @implementation MVUploadFileTransfer
-+ (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
++ (instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	switch([[user connection] type]) {
 #if ENABLE(IRC)
 	case MVChatConnectionIRCType:
@@ -201,14 +191,6 @@ static BOOL autoPortMapping = YES;
 	default:
 		return nil;
 	}
-}
-
-#pragma mark -
-
-- (void) dealloc {
-	[_source release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -235,15 +217,6 @@ static BOOL autoPortMapping = YES;
 #pragma mark -
 
 @implementation MVDownloadFileTransfer
-- (void) dealloc {
-	[_destination release];
-	[_originalFileName release];
-
-	[super dealloc];
-}
-
-#pragma mark -
-
 - (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) rename {
 	// subclass if needed, call super
 	MVSafeCopyAssign( _destination, [path stringByStandardizingPath] );

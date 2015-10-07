@@ -11,11 +11,11 @@ extern NSString *JVFScriptErrorDomain;
 	NSDate *_modDate;
 	BOOL _errorShown;
 }
-- (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
+- (instancetype) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 
-- (MVChatPluginManager *) pluginManager;
-- (FSInterpreter *) scriptInterpreter;
-- (NSString *) scriptFilePath;
+@property (readonly, strong) MVChatPluginManager *pluginManager;
+@property (readonly, strong) FSInterpreter *scriptInterpreter;
+@property (readonly, copy) NSString *scriptFilePath;
 - (void) reloadFromDisk;
 - (void) inspectVariableNamed:(NSString *) variableName;
 

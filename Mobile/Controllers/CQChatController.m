@@ -23,6 +23,8 @@
 #import <ChatCore/MVFileTransfer.h>
 #endif
 
+#import "NSNotificationAdditions.h"
+
 NSString *CQChatControllerAddedChatViewControllerNotification = @"CQChatControllerAddedChatViewControllerNotification";
 NSString *CQChatControllerRemovedChatViewControllerNotification = @"CQChatControllerRemovedChatViewControllerNotification";
 NSString *CQChatControllerChangedTotalImportantUnreadCountNotification = @"CQChatControllerChangedTotalImportantUnreadCountNotification";
@@ -84,7 +86,7 @@ static CQSoundController *fileTransferSound;
 
 	userDefaultsInitialized = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	[self userDefaultsChanged];
 }
@@ -103,7 +105,7 @@ static CQSoundController *fileTransferSound;
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
 
@@ -112,21 +114,21 @@ static CQSoundController *fileTransferSound;
 	if ([[UIDevice currentDevice] isPadModel])
 		_chatPresentationController = [[CQChatPresentationController alloc] init];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_joinedRoom:) name:MVChatRoomJoinedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRoomMessage:) name:MVChatRoomGotMessageNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotPrivateMessage:) name:MVChatConnectionGotPrivateMessageNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotDirectChatMessage:) name:MVDirectChatConnectionGotMessageNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_invitedToRoom:) name:MVChatRoomInvitedNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_joinedRoom:) name:MVChatRoomJoinedNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotRoomMessage:) name:MVChatRoomGotMessageNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotPrivateMessage:) name:MVChatConnectionGotPrivateMessageNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotDirectChatMessage:) name:MVDirectChatConnectionGotMessageNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_invitedToRoom:) name:MVChatRoomInvitedNotification object:nil];
 #if ENABLE(FILE_TRANSFERS)
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotFileDownloadOffer:) name:MVDownloadFileTransferOfferNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotFileDownloadOffer:) name:MVDownloadFileTransferOfferNotification object:nil];
 #endif
 
 	return self;
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[[NSNotificationCenter defaultCenter] removeObserver:_chatPresentationController];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:_chatPresentationController];
 }
 
 #pragma mark -
@@ -195,7 +197,7 @@ static CQSoundController *fileTransferSound;
 	NSString *file = transfer.originalFileName;
 	NSString *user = transfer.user.displayName;
 
-	UIAlertView *alert = [[UIAlertView alloc] init];
+	UIAlertView *alert = [[CQAlertView alloc] init];
 	alert.tag = FileDownloadAlertTag;
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"File Download", "File Download alert title");
@@ -241,6 +243,16 @@ static CQSoundController *fileTransferSound;
 - (void) _invitedToRoom:(NSNotification *) notification {
 	NSString *roomName = notification.userInfo[@"room"];
 	MVChatConnection *connection = [notification object];
+	MVChatUser *invitedUser = notification.userInfo[@"target"];
+	MVChatUser *user = notification.userInfo[@"user"];
+	MVChatRoom *room = [connection chatRoomWithName:roomName];
+
+	if (invitedUser) {
+		NSString *message = [NSString stringWithFormat:NSLocalizedString(@"%@ invited %@ to \"%@\" on \"%@\".", "User invited to join room alert message"), user.displayName, invitedUser.displayName,  room.displayName, connection.displayName];
+		CQDirectChatController *chatController = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:NO];
+		[chatController addEventMessage:message withIdentifier:@""];
+		return;
+	}
 
 	if ([chatRoomInviteAction isEqualToString:@"Auto-Join"]) {
 		[connection joinChatRoomNamed:roomName];
@@ -249,8 +261,6 @@ static CQSoundController *fileTransferSound;
 		return;
 	}
 
-	MVChatUser *user = notification.userInfo[@"user"];
-	MVChatRoom *room = [connection chatRoomWithName:roomName];
 
 	NSString *message = [NSString stringWithFormat:NSLocalizedString(@"You are invited to \"%@\" by \"%@\" on \"%@\".", "Invited to join room alert message"), room.displayName, user.displayName, connection.displayName];
 
@@ -419,7 +429,7 @@ static CQSoundController *fileTransferSound;
 	if ([CQColloquyApplication sharedApplication].areNotificationBadgesAllowed)
 		[UIApplication sharedApplication].applicationIconBadgeNumber = count;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerChangedTotalImportantUnreadCountNotification object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQChatControllerChangedTotalImportantUnreadCountNotification object:self];
 }
 
 #pragma mark -
@@ -529,41 +539,63 @@ static CQSoundController *fileTransferSound;
 }
 
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
-	if (![UIDevice currentDevice].isPadModel) {
+	if (![UIDevice currentDevice].isPadModel)
 		[[CQColloquyApplication sharedApplication] showColloquies:nil hidingTopViewController:NO];
-	}
 
-	if (_visibleChatController == controller)
-		return;
+	BOOL showingVisibleController = (_visibleChatController == controller);
 
 	_nextRoomConnection = nil;
 
-	_visibleChatController = controller;
-
-	if ([[UIDevice currentDevice] isPadModel]) {
-		_chatPresentationController.topChatViewController = controller;
+	if ([UIDevice currentDevice].isSystemEight) {
+		[_chatNavigationController dismissViewControllerAnimated:animated completion:NULL];
 		[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
+
+		UINavigationController *navigationController = ((UIViewController *)_visibleChatController).navigationController;
+		if (navigationController == nil) {
+			navigationController = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)controller];
+			[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:navigationController sender:nil];
+		} else if (controller) navigationController.viewControllers = @[ controller ];
 	} else {
-		if (_chatNavigationController.presentedViewController != nil) {
-			[_chatNavigationController popToRootViewControllerAnimated:NO];
-			[_chatNavigationController pushViewController:(UIViewController *)controller animated:NO];
-			[_chatNavigationController dismissViewControllerAnimated:animated completion:NULL];
+		if (showingVisibleController)
+			return;
+
+		if ([[UIDevice currentDevice] isPadModel]) {
+			_chatPresentationController.topChatViewController = controller;
+
+			[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
 		} else {
-			if (!_chatNavigationController.rootViewController)
-				[[CQColloquyApplication sharedApplication] showColloquies:nil];
-
-			if (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController) {
-				_nextController = controller;
-
-				[_chatNavigationController popToRootViewControllerAnimated:animated];
-			} else {
+			if (_chatNavigationController.presentedViewController != nil) {
 				[_chatNavigationController popToRootViewControllerAnimated:NO];
-				[_chatNavigationController pushViewController:(UIViewController *)controller animated:animated];
+				[_chatNavigationController pushViewController:(UIViewController *)controller animated:NO];
+				[_chatNavigationController dismissViewControllerAnimated:animated completion:NULL];
+			} else {
+				if (!_chatNavigationController.rootViewController)
+					[[CQColloquyApplication sharedApplication] showColloquies:nil];
 
-				_nextController = nil;
+				if (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController) {
+					_nextController = controller;
+
+					[_chatNavigationController popToRootViewControllerAnimated:animated];
+				} else {
+					[_chatNavigationController popToRootViewControllerAnimated:NO];
+					[_chatNavigationController pushViewController:(UIViewController *)controller animated:animated];
+
+					_nextController = nil;
+				}
 			}
 		}
 	}
+
+	_visibleChatController = controller;
+}
+
+- (void) setFirstChatController {
+	MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:0];
+	if (!connection)
+		return;
+
+	NSArray *chatViewControllersForConnection = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
+	_nextController = chatViewControllersForConnection.firstObject;
 }
 
 - (void) showPendingChatControllerAnimated:(BOOL) animated {
@@ -657,7 +689,7 @@ static CQSoundController *fileTransferSound;
 	[[CQChatOrderingController defaultController] removeViewController:controller];
 
 	NSDictionary *notificationInfo = @{@"controller": controller};
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerRemovedChatViewControllerNotification object:self userInfo:notificationInfo];
+	[[NSNotificationCenter chatCenter] postNotificationName:CQChatControllerRemovedChatViewControllerNotification object:self userInfo:notificationInfo];
 
 	if ([[UIDevice currentDevice] isPadModel] && _visibleChatController == controller) {
 		if ([CQChatOrderingController defaultController].chatViewControllers.count) {

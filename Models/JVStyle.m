@@ -1,13 +1,13 @@
-#import <libxml/tree.h>
-#import <libxslt/transform.h>
-#import <libxslt/xsltutils.h>
+#include <libxml/tree.h>
+#include <libxslt/transform.h>
+#include <libxslt/xsltutils.h>
 
 #import "JVStyle.h"
 #import "JVEmoticonSet.h"
 #import "JVChatMessage.h"
 #import "NSBundleAdditions.h"
 
-@interface JVStyle (JVStylePrivate)
+@interface JVStyle ()
 + (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
 + (void) _freeXsltParamArray:(const char **) params;
 
@@ -46,7 +46,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			NSString *fullPath = [path stringByAppendingPathComponent:file];
 			NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:NO];
-			if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[file pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coSt' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
+			if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[file pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [attributes[NSFileHFSTypeCode] unsignedIntValue] == 'coSt' && [attributes[NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
 				NSBundle *bundle = nil;
 				JVStyle *style = nil;
 				if( ( bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]] ) ) {
@@ -59,14 +59,14 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 	[allStyles intersectSet:styles];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVStylesScannedNotification object:allStyles];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVStylesScannedNotification object:allStyles];
 }
 
 + (NSSet *) styles {
 	return allStyles;
 }
 
-+ (id) styleWithIdentifier:(NSString *) identifier {
++ (instancetype) styleWithIdentifier:(NSString *) identifier {
 	for( JVStyle *style in allStyles )
 		if( [[style identifier] isEqualToString:identifier] )
 			return style;
@@ -94,7 +94,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 #pragma mark -
 
-+ (id) defaultStyle {
++ (JVStyle*) defaultStyle {
 	id ret = [self styleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
 	if( ! ret ) {
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultStyle"];
@@ -110,13 +110,13 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	if( ! style ) [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultStyle"];
 	else [[NSUserDefaults standardUserDefaults] setObject:[style identifier] forKey:@"JVChatDefaultStyle"];
 
-	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[self defaultStyle], @"default", nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVStyleVariantChangedNotification object:oldDefault userInfo:info];
+	NSDictionary *info = @{@"default": [self defaultStyle]};
+	[[NSNotificationCenter chatCenter] postNotificationName:JVStyleVariantChangedNotification object:oldDefault userInfo:info];
 }
 
 #pragma mark -
 
-- (id) initWithBundle:(NSBundle *) bundle {
+- (instancetype) initWithBundle:(NSBundle *) bundle {
 	if( ( self = [self init] ) ) {
 		if( ! bundle ) {
 			return nil;
@@ -124,7 +124,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 		[allStyles addObject:self];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _clearVariantCache ) name:JVNewStyleVariantAddedNotification object:self];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _clearVariantCache ) name:JVNewStyleVariantAddedNotification object:self];
 
 		_bundle = nil;
 		_XSLStyle = NULL;
@@ -140,20 +140,19 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 
 	_parameters = nil;
 
 	[self _setBundle:nil]; // this will dealloc all other dependant objects
 	[self unlink];
-
 }
 
 #pragma mark -
 
 - (void) unlink {
 	[allStyles removeObject:self];
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVStylesScannedNotification object:allStyles];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVStylesScannedNotification object:allStyles];
 }
 
 - (void) reload {
@@ -248,7 +247,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	const char *string = [xml UTF8String];
 	if( ! string ) return nil;
 
-	xmlDoc *doc = xmlParseMemory( string, strlen( string ) );
+	xmlDoc *doc = xmlParseMemory( string, (int)strlen( string ) );
 	if( ! doc ) return nil;
 
 	NSString *result = [self transformXMLDocument:doc withParameters:parameters];
@@ -283,7 +282,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		}
 
 		if( result ) {
-			ret = [NSString stringWithUTF8String:(char *) result];
+			ret = @((char *) result);
 			free( result );
 		}
 
@@ -364,8 +363,8 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		}
 	}
 
-	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[self defaultVariantName], @"variant", nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVDefaultStyleVariantChangedNotification object:self userInfo:info];
+	NSDictionary *info = @{@"variant": [self defaultVariantName]};
+	[[NSNotificationCenter chatCenter] postNotificationName:JVDefaultStyleVariantChangedNotification object:self userInfo:info];
 }
 
 #pragma mark -
@@ -501,11 +500,9 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 - (NSString *) description {
 	return [self identifier];
 }
-@end
 
 #pragma mark -
 
-@implementation JVStyle (JVStylePrivate)
 + (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary {
 	const char **temp = NULL, **ret = NULL;
 
@@ -514,7 +511,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	ret = temp = malloc( ( ( [dictionary count] * 2 ) + 1 ) * sizeof( char * ) );
 
 	for( NSString *key in dictionary ) {
-		NSString *value = [dictionary objectForKey:key];
+		NSString *value = dictionary[key];
 
 		*(temp++) = (char *) strdup( [key UTF8String] );
 		*(temp++) = (char *) strdup( [value UTF8String] );
@@ -550,7 +547,6 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 	[self setMainParameters:[NSDictionary dictionaryWithContentsOfFile:[_bundle pathForResource:@"parameters" ofType:@"plist"]]];
 
-	[_bundle load];
 	[self reload];
 }
 

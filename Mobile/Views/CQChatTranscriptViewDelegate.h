@@ -1,14 +1,14 @@
-typedef enum {
+typedef NS_ENUM(NSInteger, CQShowRoomTopic) {
 	CQShowRoomTopicNever,
 	CQShowRoomTopicOnChange,
 	CQShowRoomTopicAlways
-} CQShowRoomTopic;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, CQTimestampPosition) {
 	CQTimestampPositionLeft,
 	CQTimestampPositionRight,
 	CQTimestampPositionCenter
-} CQTimestampPosition;
+};
 
 @protocol CQChatTranscriptViewDelegate <NSObject>
 @optional

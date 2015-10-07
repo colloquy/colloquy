@@ -3,6 +3,6 @@
 @interface JVChatTabItem : NSTabViewItem {
 	id <JVChatViewController> _controller;
 }
-- (id) initWithChatViewController:(id <JVChatViewController>) controller;
-- (id <JVChatViewController>) chatViewController;
+- (instancetype) initWithChatViewController:(id <JVChatViewController>) controller NS_DESIGNATED_INITIALIZER;
+@property (readonly, strong) id<JVChatViewController> chatViewController;
 @end

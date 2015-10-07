@@ -13,7 +13,7 @@ extern const NSStringEncoding JVAllowedTextEncodings[];
 }
 
 - (NSImage *) imageForPreferenceNamed:(NSString *) name {
-	return [NSImage imageNamed:@"GeneralPreferences"];
+	return [NSImage imageNamed:NSImageNamePreferencesGeneral];
 }
 
 - (BOOL) isResizable {

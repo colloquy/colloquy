@@ -4,20 +4,22 @@
 
 #import "NSAttributedStringMoreAdditions.h"
 
-#import <libxml/tree.h>
+#import "NSStringAdditions.h"
+
+#include <libxml/tree.h>
 
 static void setItalicOrObliqueFont( NSMutableDictionary *attrs ) {
 	NSFontManager *fm = [NSFontManager sharedFontManager];
-	NSFont *font = [attrs objectForKey:NSFontAttributeName];
+	NSFont *font = attrs[NSFontAttributeName];
 	if( ! font ) font = [NSFont userFontOfSize:12];
 	if( ! ( [fm traitsOfFont:font] & NSItalicFontMask ) ) {
 		NSFont *newFont = [fm convertFont:font toHaveTrait:NSItalicFontMask];
 		if( newFont == font ) {
 			// font couldn't be made italic
-			[attrs setObject:[NSNumber numberWithFloat:JVItalicObliquenessValue] forKey:NSObliquenessAttributeName];
+			attrs[NSObliquenessAttributeName] = @(JVItalicObliquenessValue);
 		} else {
 			// We got an italic font
-			[attrs setObject:newFont forKey:NSFontAttributeName];
+			attrs[NSFontAttributeName] = newFont;
 			[attrs removeObjectForKey:NSObliquenessAttributeName];
 		}
 	}
@@ -25,17 +27,17 @@ static void setItalicOrObliqueFont( NSMutableDictionary *attrs ) {
 
 static void removeItalicOrObliqueFont( NSMutableDictionary *attrs ) {
 	NSFontManager *fm = [NSFontManager sharedFontManager];
-	NSFont *font = [attrs objectForKey:NSFontAttributeName];
+	NSFont *font = attrs[NSFontAttributeName];
 	if( ! font ) font = [NSFont userFontOfSize:12];
 	if( [fm traitsOfFont:font] & NSItalicFontMask ) {
 		font = [fm convertFont:font toNotHaveTrait:NSItalicFontMask];
-		[attrs setObject:font forKey:NSFontAttributeName];
+		attrs[NSFontAttributeName] = font;
 	}
 	[attrs removeObjectForKey:NSObliquenessAttributeName];
 }
 
 static NSString *parseCSSStyleAttribute( const char *style, NSMutableDictionary *currentAttributes ) {
-	NSScanner *scanner = [NSScanner scannerWithString:[NSString stringWithUTF8String:style]];
+	NSScanner *scanner = [NSScanner scannerWithString:@(style)];
 	NSMutableString *unhandledStyles = [NSMutableString string];
 
 	while( ! [scanner isAtEnd] ) {
@@ -55,26 +57,26 @@ static NSString *parseCSSStyleAttribute( const char *style, NSMutableDictionary 
 		if( [prop isEqualToString:@"color"] ) {
 			NSColor *color = [NSColor colorWithCSSAttributeValue:attr];
 			if( color ) {
-				[currentAttributes setObject:color forKey:NSForegroundColorAttributeName];
+				currentAttributes[NSForegroundColorAttributeName] = color;
 				handled = YES;
 			}
 		} else if( [prop isEqualToString:@"background-color"] ) {
 			NSColor *color = [NSColor colorWithCSSAttributeValue:attr];
 			if( color ) {
-				[currentAttributes setObject:color forKey:NSBackgroundColorAttributeName];
+				currentAttributes[NSBackgroundColorAttributeName] = color;
 				handled = YES;
 			}
 		} else if( [prop isEqualToString:@"font-weight"] ) {
 			if( [attr rangeOfString:@"bold"].location != NSNotFound || [attr intValue] >= 500 ) {
-				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[currentAttributes objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask];
+				NSFont *font = [[NSFontManager sharedFontManager] convertFont:currentAttributes[NSFontAttributeName] toHaveTrait:NSBoldFontMask];
 				if( font ) {
-					[currentAttributes setObject:font forKey:NSFontAttributeName];
+					currentAttributes[NSFontAttributeName] = font;
 					handled = YES;
 				}
 			} else {
-				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[currentAttributes objectForKey:NSFontAttributeName] toNotHaveTrait:NSBoldFontMask];
+				NSFont *font = [[NSFontManager sharedFontManager] convertFont:currentAttributes[NSFontAttributeName] toNotHaveTrait:NSBoldFontMask];
 				if( font ) {
-					[currentAttributes setObject:font forKey:NSFontAttributeName];
+					currentAttributes[NSFontAttributeName] = font;
 					handled = YES;
 				}
 			}
@@ -88,41 +90,41 @@ static NSString *parseCSSStyleAttribute( const char *style, NSMutableDictionary 
 			}
 		} else if( [prop isEqualToString:@"font-variant"] ) {
 			if( [attr rangeOfString:@"small-caps"].location != NSNotFound ) {
-				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[currentAttributes objectForKey:NSFontAttributeName] toHaveTrait:NSSmallCapsFontMask];
+				NSFont *font = [[NSFontManager sharedFontManager] convertFont:currentAttributes[NSFontAttributeName] toHaveTrait:NSSmallCapsFontMask];
 				if( font ) {
-					[currentAttributes setObject:font forKey:NSFontAttributeName];
+					currentAttributes[NSFontAttributeName] = font;
 					handled = YES;
 				}
 			} else {
-				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[currentAttributes objectForKey:NSFontAttributeName] toNotHaveTrait:NSSmallCapsFontMask];
+				NSFont *font = [[NSFontManager sharedFontManager] convertFont:currentAttributes[NSFontAttributeName] toNotHaveTrait:NSSmallCapsFontMask];
 				if( font ) {
-					[currentAttributes setObject:font forKey:NSFontAttributeName];
+					currentAttributes[NSFontAttributeName] = font;
 					handled = YES;
 				}
 			}
 		} else if( [prop isEqualToString:@"font-stretch"] ) {
 			if( [attr rangeOfString:@"normal"].location != NSNotFound ) {
-				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[currentAttributes objectForKey:NSFontAttributeName] toNotHaveTrait:( NSCondensedFontMask | NSExpandedFontMask )];
+				NSFont *font = [[NSFontManager sharedFontManager] convertFont:currentAttributes[NSFontAttributeName] toNotHaveTrait:( NSCondensedFontMask | NSExpandedFontMask )];
 				if( font ) {
-					[currentAttributes setObject:font forKey:NSFontAttributeName];
+					currentAttributes[NSFontAttributeName] = font;
 					handled = YES;
 				}
 			} else if( [attr rangeOfString:@"condensed"].location != NSNotFound || [attr rangeOfString:@"narrower"].location != NSNotFound ) {
-				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[currentAttributes objectForKey:NSFontAttributeName] toHaveTrait:NSCondensedFontMask];
+				NSFont *font = [[NSFontManager sharedFontManager] convertFont:currentAttributes[NSFontAttributeName] toHaveTrait:NSCondensedFontMask];
 				if( font ) {
-					[currentAttributes setObject:font forKey:NSFontAttributeName];
+					currentAttributes[NSFontAttributeName] = font;
 					handled = YES;
 				}
 			} else {
-				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[currentAttributes objectForKey:NSFontAttributeName] toHaveTrait:NSExpandedFontMask];
+				NSFont *font = [[NSFontManager sharedFontManager] convertFont:currentAttributes[NSFontAttributeName] toHaveTrait:NSExpandedFontMask];
 				if( font ) {
-					[currentAttributes setObject:font forKey:NSFontAttributeName];
+					currentAttributes[NSFontAttributeName] = font;
 					handled = YES;
 				}
 			}
 		} else if( [prop isEqualToString:@"text-decoration"] ) {
 			if( [attr rangeOfString:@"underline"].location != NSNotFound ) {
-				[currentAttributes setObject:[NSNumber numberWithUnsignedLong:1] forKey:NSUnderlineStyleAttributeName];
+				currentAttributes[NSUnderlineStyleAttributeName] = @1UL;
 				handled = YES;
 			} else {
 				[currentAttributes removeObjectForKey:NSUnderlineStyleAttributeName];
@@ -158,7 +160,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		break;
 	case 'u':
 		if( ! strcmp( (char *) node -> name, "u" ) ) {
-			[newAttributes setObject:[NSNumber numberWithUnsignedLong:1] forKey:NSUnderlineStyleAttributeName];
+			newAttributes[NSUnderlineStyleAttributeName] = @1UL;
 			skipTag = YES;
 		}
 		break;
@@ -166,12 +168,12 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		if( ! strcmp( (char *) node -> name, "a" ) ) {
 			xmlChar *link = xmlGetProp( node, (xmlChar *) "href" );
 			if( link ) {
-				[newAttributes setObject:[NSString stringWithUTF8String:(char *) link] forKey:NSLinkAttributeName];
+				newAttributes[NSLinkAttributeName] = @((char *) link);
 				xmlFree( link );
 				skipTag = YES;
 				xmlChar *title = xmlGetProp( node, (xmlChar *) "title" );
 				if( title ) {
-					[newAttributes setObject:[NSString stringWithUTF8String:(char *) title] forKey:@"LinkTitle"];
+					newAttributes[@"LinkTitle"] = @((char *) title);
 					xmlFree( title );
 				}
 			}
@@ -181,8 +183,8 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		if( ! strcmp( (char *) node -> name, "font" ) ) {
 			xmlChar *attr = xmlGetProp( node, (xmlChar *) "color" );
 			if( attr ) {
-				NSColor *color = [NSColor colorWithHTMLAttributeValue:[NSString stringWithUTF8String:(char *) attr]];
-				if( color ) [newAttributes setObject:color forKey:NSForegroundColorAttributeName];
+				NSColor *color = [NSColor colorWithHTMLAttributeValue:@((char *) attr)];
+				if( color ) newAttributes[NSForegroundColorAttributeName] = color;
 				xmlFree( attr );
 				skipTag = YES;
 			}
@@ -192,9 +194,9 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		if( ! strcmp( (char *) node -> name, "br" ) ) {
 			return [[[NSMutableAttributedString alloc] initWithString:@"\n" attributes:newAttributes] autorelease]; // known to have no content, return now
 		} else if( ! strcmp( (char *) node -> name, "b" ) ) {
-			NSFont *font = [[NSFontManager sharedFontManager] convertFont:[newAttributes objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask];
+			NSFont *font = [[NSFontManager sharedFontManager] convertFont:newAttributes[NSFontAttributeName] toHaveTrait:NSBoldFontMask];
 			if( font ) {
-				[newAttributes setObject:font forKey:NSFontAttributeName];
+				newAttributes[NSFontAttributeName] = font;
 				skipTag = YES;
 			}
 		}
@@ -217,8 +219,8 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 	if( skipTag || first ) {
 		xmlChar *classes = xmlGetProp( node, (xmlChar *) "class" );
 		if( classes ) {
-			NSArray *cls = [[NSString stringWithUTF8String:(char *) classes] componentsSeparatedByString:@" "];
-			[newAttributes setObject:[NSSet setWithArray:cls] forKey:@"CSSClasses"];
+			NSArray *cls = [@((char *) classes) componentsSeparatedByString:@" "];
+			newAttributes[@"CSSClasses"] = [NSSet setWithArray:cls];
 			xmlFree( classes );
 		}
 
@@ -226,14 +228,14 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		xmlChar *style = xmlGetProp( node, (xmlChar *) "style" );
 		if( style ) {
 			NSString *unhandledStyles = parseCSSStyleAttribute( (char *) style, newAttributes );
-			if( unhandledStyles ) [newAttributes setObject:unhandledStyles forKey:@"CSSText"];
+			if( unhandledStyles ) newAttributes[@"CSSText"] = unhandledStyles;
 			xmlFree( style );
 		}
 
 		while( child ) {
 			if( child -> type == XML_TEXT_NODE ) {
 				xmlChar *content = child -> content;
-				NSAttributedString *new = [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(char *) content] attributes:newAttributes];
+				NSAttributedString *new = [[NSAttributedString alloc] initWithString:@((char *) content) attributes:newAttributes];
 				[ret appendAttributedString:new];
 				[new release];
 			} else [ret appendAttributedString:parseXHTMLTreeNode( child, newAttributes, base, NO )];
@@ -241,7 +243,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		}
 	} else if( ! skipTag && node -> type == XML_ELEMENT_NODE ) {
 		if( ! first ) {
-			NSMutableString *front = [newAttributes objectForKey:@"XHTMLStart"];
+			NSMutableString *front = newAttributes[@"XHTMLStart"];
 			if( ! front ) front = [NSMutableString string];
 
 			xmlBufferPtr buf = xmlBufferCreate();
@@ -251,7 +253,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 			NSString *string = [[[NSString alloc] initWithData:xmlData encoding:NSUTF8StringEncoding] autorelease];
 
 			[front appendString:string];
-			[newAttributes setObject:front forKey:@"XHTMLStart"];
+			newAttributes[@"XHTMLStart"] = front;
 
 			unichar attachmentChar = NSAttachmentCharacter;
 			NSString *attachment = [NSString stringWithCharacters:&attachmentChar length:1];
@@ -273,27 +275,27 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 #pragma mark -
 
 @implementation NSAttributedString (NSAttributedStringXMLAdditions)
-+ (id) attributedStringWithXHTMLTree:(void *) node baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
++ (instancetype) attributedStringWithXHTMLTree:(void *) node baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
 	return [[[self alloc] initWithXHTMLTree:node baseURL:base defaultAttributes:attributes] autorelease];
 }
 
-+ (id) attributedStringWithXHTMLFragment:(NSString *) fragment baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
++ (instancetype) attributedStringWithXHTMLFragment:(NSString *) fragment baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
 	return [[[self alloc] initWithXHTMLFragment:fragment baseURL:base defaultAttributes:attributes] autorelease];
 }
 
-- (id) initWithXHTMLTree:(void *) node baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
+- (instancetype) initWithXHTMLTree:(void *) node baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
 	NSMutableDictionary *attrs = [NSMutableDictionary dictionaryWithDictionary:attributes];
-	if( ! [attrs objectForKey:NSFontAttributeName] )
-		[attrs setObject:[NSFont userFontOfSize:12.] forKey:NSFontAttributeName];
+	if( ! attrs[NSFontAttributeName] )
+		attrs[NSFontAttributeName] = [NSFont userFontOfSize:12.];
 	id ret = parseXHTMLTreeNode( (xmlNode *) node, attrs, base, YES );
 	return [self initWithAttributedString:ret];
 }
 
-- (id) initWithXHTMLFragment:(NSString *) fragment baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
+- (instancetype) initWithXHTMLFragment:(NSString *) fragment baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
 	const char *string = [[NSString stringWithFormat:@"<root>%@</root>", [fragment stringByStrippingIllegalXMLCharacters]] UTF8String];
 
 	if( string ) {
-		xmlDocPtr tempDoc = xmlParseMemory( string, strlen( string ) );
+		xmlDocPtr tempDoc = xmlParseMemory( string, (int)strlen( string ) );
 		self = [self initWithXHTMLTree:xmlDocGetRootElement( tempDoc ) baseURL:base defaultAttributes:attributes];
 		xmlFreeDoc( tempDoc );
 		return self;

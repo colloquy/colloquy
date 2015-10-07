@@ -19,6 +19,7 @@
 	BOOL _allowSingleSwipeGesture;
 	NSMutableArray *_singleSwipeGestureRecognizers;
 	CQShowRoomTopic _showRoomTopic;
+	BOOL _addedMessage;
 	NSString *_roomTopic;
 	NSString *_roomTopicSetter;
 	BOOL _topicIsHidden;

@@ -24,7 +24,20 @@
 
 #import "acid.h"
 
+@interface JabberMessage ()
++(instancetype) constructElement:(XMLQName*)qname withAttributes:(NSMutableDictionary*)atts withDefaultURI:(NSString*)default_uri NS_RETURNS_RETAINED;
+@end
+
 @implementation JabberMessage
+@synthesize to;
+@synthesize from;
+@synthesize body;
+@synthesize action = isAction;
+@synthesize subject;
+@synthesize encrypted;
+@synthesize wasDelayed;
+@synthesize delayedOnDate;
+@synthesize eventType;
 
 XPathQuery* QRY_BODY;
 XPathQuery* QRY_ENCRYPT;
@@ -35,7 +48,7 @@ XPathQuery* QRY_CHATSTATE_ACTIVE;
 XPathQuery* QRY_MEVENT_ID;
 XPathQuery* QRY_DELAY;
 
-+(id) constructElement:(XMLQName*)qname withAttributes:(NSMutableDictionary*)atts withDefaultURI:(NSString*)default_uri
++(instancetype) constructElement:(XMLQName*)qname withAttributes:(NSMutableDictionary*)atts withDefaultURI:(NSString*)default_uri
 {
     if ([qname isEqual:JABBER_MESSAGE_QN])
         return [[JabberMessage alloc] initWithQName:qname withAttributes:atts withDefaultURI:default_uri];
@@ -117,21 +130,11 @@ XPathQuery* QRY_DELAY;
         eventType = JMEVENT_COMPOSING_CANCEL;    
 }
 
--(JabberID*) to
-{
-    return to;
-}
-
 -(void) setTo:(JabberID*)jid
 {
     [to release];
     to = [jid retain];
     [self putAttribute:@"to" withValue:[jid completeID]];
-}
-
--(JabberID*) from
-{
-    return from;
 }
 
 -(void)setFrom:(JabberID*)jid
@@ -151,13 +154,9 @@ XPathQuery* QRY_DELAY;
     [self putAttribute:@"type" withValue:value];
 }
 
--(NSString*) body
-{
-    return body;
-}
-
 -(void) setBody:(NSString*)s
 {
+    [body release];
     body = [s retain];
     // XXX: need to replace if existing already
     [[self addElementWithName:@"body"] addCData:s];
@@ -165,6 +164,7 @@ XPathQuery* QRY_DELAY;
 
 -(void) setEncrypted:(NSString*)s
 {
+    [encrypted release];
     XMLElement* elem;
     encrypted = [s retain];
     elem = [self addElementWithName:@"x"];
@@ -173,42 +173,12 @@ XPathQuery* QRY_DELAY;
     [elem addCData:s];
 }
 
--(NSString*) encrypted
-{
-    return encrypted;
-}
-
--(NSString*) subject
-{
-    return subject;
-}
-
 -(void) setSubject:(NSString*)s
 {
+    [subject release];
     subject = [s retain];
     // XXX: need to replace if existing already!
     [[self addElementWithName:@"subject"] addCData:s];
-}
-
--(BOOL) isAction
-{
-    return isAction;
-}
-
--(BOOL) wasDelayed
-{
-    return wasDelayed;
-}
-
-
--(NSDate*) delayedOnDate
-{
-    return delayedOnDate;
-}
-
--(JMEvent) eventType
-{
-    return eventType;
 }
 
 -(void) addComposingRequest

@@ -42,18 +42,14 @@
 }
 
 + (id)customTabForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView;
-- (void)setAllowsInactiveTabClosing:(BOOL)inValue;
-- (BOOL)allowsInactiveTabClosing;
-- (void)setSelected:(BOOL)inSelected;
-- (BOOL)isSelected;
+@property BOOL allowsInactiveTabClosing;
+@property (getter=isSelected) BOOL selected;
 - (void)setHoveringClose:(BOOL)hovering;
-- (void)setHighlighted:(BOOL)inHighlight;
-- (BOOL)isHighlighted;
-- (void)setFrame:(NSRect)inFrame;
-- (NSRect)frame;
-- (NSSize)size;
+@property (getter=isHighlighted) BOOL highlighted;
+@property NSRect frame;
+@property (readonly) NSSize size;
 - (NSComparisonResult)compareWidth:(AICustomTabCell *)tab;
-- (NSTabViewItem *)tabViewItem;
+@property (readonly, strong) NSTabViewItem *tabViewItem;
 - (void)drawWithFrame:(NSRect)rect inView:(NSView *)controlView;
 - (void)drawWithFrame:(NSRect)rect inView:(NSView *)controlView ignoreSelection:(BOOL)ignoreSelection;
 - (void)addTrackingRectsWithFrame:(NSRect)trackRect cursorLocation:(NSPoint)cursorLocation;
@@ -64,6 +60,6 @@
 - (BOOL)startTrackingAt:(NSPoint)startPoint inView:(NSView *)controlView;
 - (BOOL)continueTracking:(NSPoint)lastPoint at:(NSPoint)currentPoint inView:(NSView *)controlView;
 - (void)stopTracking:(NSPoint)lastPoint at:(NSPoint)stopPoint inView:(NSView *)controlView mouseIsUp:(BOOL)flag;
-- (NSAttributedString *)attributedLabel;
+@property (readonly, copy) NSAttributedString *attributedLabel;
 
 @end

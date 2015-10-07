@@ -14,20 +14,20 @@
 #define WINDOW_FADE_SNAP                        0.05 //How close to min/max we must get before fade is finished
 
 @interface ESFloater (PRIVATE)
-- (id)initWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask;
+- (instancetype)initWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask;
 - (void)_setWindowOpacity:(CGFloat)opacity;
 @end
 
 @implementation ESFloater
 
 //
-+ (id)floaterWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask title:(NSString *) title
++ (instancetype)floaterWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask title:(NSString *) title
 {
     return([[self alloc] initWithImage:inImage styleMask:styleMask title:title]);
 }
 
 //
-- (id)initWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask title:(NSString *) title
+- (instancetype)initWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask title:(NSString *) title
 {
     NSRect  frame;
 

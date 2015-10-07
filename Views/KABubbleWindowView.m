@@ -1,9 +1,9 @@
 #import "KABubbleWindowView.h"
 
 static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat *outData ) {
-	static float dark[4] = { .69412, .83147, .96078, .95 };
-	static float light[4] = { .93725, .96863, .99216, .95 };
-	float a = inData[0];
+	static CGFloat dark[4] = { .69412, .83147, .96078, .95 };
+	static CGFloat light[4] = { .93725, .96863, .99216, .95 };
+	CGFloat a = inData[0];
 	NSUInteger i = 0;
 
 	for( i = 0; i < 4; i++ )
@@ -13,14 +13,6 @@ static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat
 #pragma mark -
 
 @implementation KABubbleWindowView
-- (void) dealloc {
-
-	_icon = nil;
-	_title = nil;
-	_text = nil;
-	_target = nil;
-
-}
 
 - (void) drawRect:(NSRect) rect {
 	[[NSColor clearColor] set];
@@ -61,7 +53,7 @@ static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat
 	[[NSColor colorWithCalibratedRed:0. green:0. blue:0. alpha:.5] set];
 	[path stroke];
 
-	[_title drawAtPoint:NSMakePoint( 55., 40. ) withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont boldSystemFontOfSize:13.], NSFontAttributeName, [NSColor controlTextColor], NSForegroundColorAttributeName, nil]];
+	[_title drawAtPoint:NSMakePoint( 55., 40. ) withAttributes:@{NSFontAttributeName: [NSFont boldSystemFontOfSize:13.], NSForegroundColorAttributeName: [NSColor controlTextColor]}];
 	[_text drawInRect:NSMakeRect( 55., 10., 200., 30. )];
 
 	if( [_icon size].width > 32. || [_icon size].height > 32. ) { // Assume a square image.
@@ -74,7 +66,7 @@ static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat
 		[_icon unlockFocus];
 	}
 
-	[_icon compositeToPoint:NSMakePoint( 15., 20. ) operation:NSCompositeSourceAtop fraction:1.];
+	[_icon drawAtPoint:NSMakePoint( 15., 20. ) fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1.];
 
 	[[self window] invalidateShadow];
 }
@@ -97,7 +89,7 @@ static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat
 }
 
 - (void) setText:(NSString *) text {
-	_text = [[NSAttributedString alloc] initWithString:text attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont messageFontOfSize:11.], NSFontAttributeName, [NSColor controlTextColor], NSForegroundColorAttributeName, nil]];
+	_text = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: [NSFont messageFontOfSize:11.], NSForegroundColorAttributeName: [NSColor controlTextColor]}];
 	[self setNeedsDisplay:YES];
 }
 

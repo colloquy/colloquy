@@ -6,12 +6,13 @@
 #import "MVUtilities.h"
 #import "MVChatPluginManager.h"
 #import "NSMethodSignatureAdditions.h"
+#import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
 #import "MVChatString.h"
 
 @implementation MVXMPPChatConnection
 + (NSArray *) defaultServerPorts {
-	return [NSArray arrayWithObjects:[NSNumber numberWithUnsignedShort:5222], [NSNumber numberWithUnsignedShort:5223], nil];
+	return @[[NSNumber numberWithUnsignedShort:5222], [NSNumber numberWithUnsignedShort:5223]];
 }
 
 #pragma mark -
@@ -20,8 +21,8 @@
 	if( ( self = [super init] ) ) {
 		_serverPort = 5222;
 		_server = @"jabber.org";
-		_username = [NSUserName() retain];
-		_nickname = [_username retain];
+		_username = NSUserName();
+		_nickname = _username;
 		_session = [[JabberSession alloc] init];
 
 		[_session addObserver:self selector:@selector( sessionStarted: ) name:JSESSION_STARTED];
@@ -39,22 +40,8 @@
 	return self;
 }
 
-- (void) finalize {
-	[self disconnect];
-	[super finalize];
-}
-
 - (void) dealloc {
 	[self disconnect];
-
-	[_session release];
-	[_localID release];
-	[_server release];
-	[_username release];
-	[_nickname release];
-	[_password release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -194,19 +181,19 @@
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] || [identifier isKindOfClass:[JabberID class]] );
 
 	if( [identifier isKindOfClass:[NSString class]] )
-		identifier = [[[JabberID allocWithZone:nil] initWithString:identifier] autorelease];
+		identifier = [[JabberID allocWithZone:nil] initWithString:identifier];
 	if( [identifier isEqual:[[self localUser] uniqueIdentifier]] )
 		return [self localUser];
 
 	MVChatUser *user = nil;
 	@synchronized( _knownUsers ) {
-		user = [_knownUsers objectForKey:[identifier completeID]];
-		if( user ) return [[user retain] autorelease];
+		user = _knownUsers[[identifier completeID]];
+		if( user ) return user;
 
 		user = [[MVXMPPChatUser allocWithZone:nil] initWithJabberID:identifier andConnection:self];
 	}
 
-	return [user autorelease];
+	return user;
 }
 
 #pragma mark -
@@ -222,11 +209,9 @@
 	*/
 
 	JabberID *roomId = [[JabberID allocWithZone:nil] initWithString:room];
-	MVXMPPChatRoom *joiningRoom = (MVXMPPChatRoom *)[[self joinedChatRoomWithUniqueIdentifier:roomId] retain];
+	MVXMPPChatRoom *joiningRoom = (MVXMPPChatRoom *)[self joinedChatRoomWithUniqueIdentifier:roomId];
 	if( joiningRoom && [joiningRoom isJoined] ) {
 		// already joined
-		[joiningRoom release];
-		[roomId release];
 		return;
 	}
 
@@ -241,7 +226,6 @@
 		[[x addElementWithName:@"password"] addCData:passphrase];
 
 	[_session sendElement:presence];
-	[presence release];
 
 	JabberID *localUserJabberId = [[JabberID allocWithZone:nil] initWithString:localUserStringId];
 	MVXMPPChatUser *localUser = (MVXMPPChatUser *)[self chatUserWithUniqueIdentifier:localUserJabberId];
@@ -257,10 +241,6 @@
 	[joiningRoom _clearBannedUsers];
 
 	// joiningRoom will be released in incomingPresence
-
-	[localUserStringId release];
-	[localUserJabberId release];
-	[roomId release];
 }
 
 #pragma mark -
@@ -292,14 +272,12 @@
 
 - (void) outgoingPacket:(NSNotification *) notification {
 	NSString *string = [[NSString alloc] initWithData:[notification object] encoding:NSUTF8StringEncoding];
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
-	[string release];
+	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{@"message": string, @"outbound": @YES}];
 }
 
 - (void) incomingPacket:(NSNotification *) notification {
 	NSString *string = [[NSString alloc] initWithData:[notification object] encoding:NSUTF8StringEncoding];
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
-	[string release];
+	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{@"message": string, @"outbound": @NO}];
 }
 
 - (void) incomingMessage:(NSNotification *) notification {
@@ -314,8 +292,8 @@
 	case JMEVENT_COMPOSING_REQUEST:
 		// fall through
 	case JMEVENT_NONE: {
-		MVChatRoom *room = nil;
-		MVChatUser *sender = nil;
+		__unsafe_unretained MVChatRoom *room = nil;
+		__unsafe_unretained MVChatUser *sender = nil;
 
 		if( [[message type] isEqualToString:@"groupchat"] ) {
 			room = [self joinedChatRoomWithUniqueIdentifier:[[message from] userhostJID]];
@@ -327,30 +305,33 @@
 		}
 
 		NSMutableData *msgData = [[[message body] dataUsingEncoding:NSUTF8StringEncoding] mutableCopyWithZone:nil];
+		__unsafe_unretained NSMutableData *unsafeMsgData = msgData;
 
 		NSMutableDictionary *msgAttributes = [[NSMutableDictionary allocWithZone:nil] init];
-		[msgAttributes setObject:sender forKey:@"user"];
-		[msgAttributes setObject:msgData forKey:@"message"];
+		__unsafe_unretained NSMutableDictionary *unsafeMsgAttributes = msgAttributes;
+		msgAttributes[@"user"] = sender;
+		msgAttributes[@"message"] = msgData;
 
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatUser * ), @encode( id ), @encode( NSMutableDictionary * ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 		[invocation setSelector:@selector( processIncomingMessageAsData:from:to:attributes: )];
-		[invocation setArgument:&msgData atIndex:2];
+		[invocation setArgument:&unsafeMsgData atIndex:2];
 		[invocation setArgument:&sender atIndex:3];
 		[invocation setArgument:&room atIndex:4];
-		[invocation setArgument:&msgAttributes atIndex:5];
+		[invocation setArgument:&unsafeMsgAttributes atIndex:5];
+
+		msgData = nil;
+		msgAttributes = nil;
 
 		[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		if( ! msgData.length ) return;
 
 		if( room ) {
-			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:msgAttributes];
+			[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:msgAttributes];
 		} else {
-			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:msgAttributes];
+			[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:msgAttributes];
 		}
 
-		[msgData release];
-		[msgAttributes release];
 		break;
 	}
 
@@ -369,7 +350,7 @@
 	if( ! room ) return;
 
 	if ([[presence getAttribute:@"type"] isCaseInsensitiveEqualToString:@"error"]) {
-		[room release]; // balance the alloc or retain in joinChatRoomNamed:
+		 // balance the alloc or retain in joinChatRoomNamed:
 		// handle error...
 		return;
 	}
@@ -381,16 +362,17 @@
 
 	if ([[presence getAttribute:@"type"] isCaseInsensitiveEqualToString:@"unavailable"]) {
 		[room _removeMemberUser:user];
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
+		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomUserPartedNotification object:room userInfo:@{@"user": user}];
 		return;
 	}
 
-	[room retain]; // retain incase the following release is the last reference
+	__strong id me = room;
+	 // retain incase the following release is the last reference
 
 	if( ! [room isJoined] ) {
 		[room _setDateJoined:[NSDate date]];
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomJoinedNotification object:room];
-		[room release]; // balance the alloc or retain in joinChatRoomNamed:
+		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomJoinedNotification object:room];
+		 // balance the alloc or retain in joinChatRoomNamed:
 	}
 
 	if( ! [room hasUser:user] ) {
@@ -398,11 +380,11 @@
 		[room _addMemberUser:user];
 		[self _markUserAsOnline:user];
 
-		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSArray arrayWithObject:user] forKey:@"added"];
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomMemberUsersSyncedNotification object:room userInfo:userInfo];
+		NSDictionary *userInfo = @{@"added": @[user]};
+		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomMemberUsersSyncedNotification object:room userInfo:userInfo];
 	}
 
-	[room release];
+	me = nil;
 }
 @end
 
@@ -421,11 +403,11 @@
 	XMLElement *caps = [[XMLElement allocWithZone:nil] initWithQName:JABBER_CLIENTCAP_QN];
 	[caps putAttribute:@"node" withValue:@"http://colloquy.info/caps"];
 	[caps putAttribute:@"ver" withValue:@"2.1"];
-	return [caps autorelease];
+	return caps;
 }
 
 - (XMLElement *) _multiUserChatExtensionElement {
 	XMLQName *xQName = [XMLQName construct:@"x" withURI:@"http://jabber.org/protocol/muc"];
-	return [[[XMLElement allocWithZone:nil] initWithQName:xQName] autorelease];
+	return [[XMLElement allocWithZone:nil] initWithQName:xQName];
 }
 @end

@@ -183,7 +183,7 @@ get_first_set(const pcre *code, const char *stringname, int *ovector)
 {
 const real_pcre *re = (const real_pcre *)code;
 int entrysize;
-char *first, *last;
+char *first = NULL, *last = NULL;
 uschar *entry;
 if ((re->options & (PCRE_DUPNAMES | PCRE_JCHANGED)) == 0)
   return pcre_get_stringnumber(code, stringname);

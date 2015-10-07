@@ -1,7 +1,11 @@
 #import "JVDetailCell.h"
 
 @implementation JVDetailCell
-- (id) init {
+@synthesize highlightedImage = _altImage;
+@synthesize informationText = _infoText;
+@synthesize lineBreakMode = _lineBreakMode;
+
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_altImage = nil;
 		_statusImage = nil;
@@ -27,95 +31,6 @@
 	cell -> _lineBreakMode = _lineBreakMode;
 	cell -> _leftMargin = _leftMargin;
 	return cell;
-}
-
-- (void) dealloc {
-
-	_altImage = nil;
-	_statusImage = nil;
-	_mainText = nil;
-	_infoText = nil;
-
-}
-
-#pragma mark -
-
-- (void) setStatusImage:(NSImage *) image {
-	_statusImage = image;
-}
-
-- (NSImage *) statusImage {
-	return _statusImage;
-}
-
-#pragma mark -
-
-- (void) setStatusNumber:(NSUInteger) number {
-	_statusNumber = number;
-}
-
-- (NSUInteger) statusNumber {
-	return _statusNumber;
-}
-
-#pragma mark -
-
-- (void) setImportantStatusNumber:(NSUInteger) number {
-	_importantStatusNumber = number;
-}
-
-- (NSUInteger) importantStatusNumber {
-	return _importantStatusNumber;
-}
-
-#pragma mark -
-
-- (void) setHighlightedImage:(NSImage *) image {
-	_altImage = image;
-}
-
-- (NSImage *) highlightedImage {
-	return _altImage;
-}
-
-#pragma mark -
-
-- (void) setMainText:(NSString *) text {
-	_mainText = [text copy];
-}
-
-- (NSString *) mainText {
-	return _mainText;
-}
-
-#pragma mark -
-
-- (void) setInformationText:(NSString *) text {
-	_infoText = [text copy];
-}
-
-- (NSString *) informationText {
-	return _infoText;
-}
-
-#pragma mark -
-
-- (void) setBoldAndWhiteOnHighlight:(BOOL) boldAndWhite {
-	_boldAndWhiteOnHighlight = boldAndWhite;
-}
-
-- (BOOL) boldAndWhiteOnHighlight {
-	return _boldAndWhiteOnHighlight;
-}
-
-#pragma mark -
-
-- (void) setLeftMargin:(CGFloat) margin {
-	_leftMargin = margin;
-}
-
-- (CGFloat) leftMargin {
-	return _leftMargin;
 }
 
 #pragma mark -
@@ -144,14 +59,14 @@
 		[shadow setShadowBlurRadius:0.1];
 		[shadow setShadowColor:[[NSColor shadowColor] colorWithAlphaComponent:0.2]];
 
-		[attributes setObject:boldFont forKey:NSFontAttributeName];
-		[attributes setObject:whiteColor forKey:NSForegroundColorAttributeName];
-		[attributes setObject:shadow forKey:NSShadowAttributeName];
+		attributes[NSFontAttributeName] = boldFont;
+		attributes[NSForegroundColorAttributeName] = whiteColor;
+		attributes[NSShadowAttributeName] = shadow;
 
 		boldFont = [[NSFontManager sharedFontManager] fontWithFamily:@"Lucida Grande" traits:0 weight:15 size:9.];
-		[subAttributes setObject:boldFont forKey:NSFontAttributeName];
-		[subAttributes setObject:whiteColor forKey:NSForegroundColorAttributeName];
-		[subAttributes setObject:shadow forKey:NSShadowAttributeName];
+		subAttributes[NSFontAttributeName] = boldFont;
+		subAttributes[NSForegroundColorAttributeName] = whiteColor;
+		subAttributes[NSShadowAttributeName] = shadow;
 	}
 
 	if( highlighted && _altImage ) {
@@ -220,7 +135,7 @@
 		NSMutableParagraphStyle *numberParaStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 		[numberParaStyle setAlignment:NSCenterTextAlignment];
 
-		NSDictionary *statusNumberAttributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, numberParaStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, [NSNumber numberWithFloat:1.0], NSKernAttributeName, nil];
+		NSDictionary *statusNumberAttributes = @{NSFontAttributeName: font, NSParagraphStyleAttributeName: numberParaStyle, NSForegroundColorAttributeName: textColor, NSKernAttributeName: @1.0f};
 
 		NSString *statusText = [NSString stringWithFormat:@"%ld", ( _statusNumber ? _statusNumber : _importantStatusNumber )];
 		NSSize numberSize = [statusText sizeWithAttributes:statusNumberAttributes];
@@ -302,7 +217,7 @@
 	}
 
 	if( _statusImage && NSHeight( cellFrame ) >= [_statusImage size].height ) {
-		[_statusImage compositeToPoint:NSMakePoint( NSMaxX( cellFrame ) - statusWidth, NSMaxY( cellFrame ) - ( ( NSHeight( cellFrame ) / 2 ) - ( [_statusImage size].height / 2 ) ) ) operation:NSCompositeSourceAtop fraction:( [self isEnabled] ? 1. : 0.5)];
+		  [_statusImage compositeToPoint:NSMakePoint( NSMaxX( cellFrame ) - statusWidth, NSMaxY( cellFrame ) - ( ( NSHeight( cellFrame ) / 2 ) - ( [_statusImage size].height / 2 ) ) ) operation:NSCompositeSourceAtop fraction:( [self isEnabled] ? 1. : 0.5)];
 	}
 }
 
@@ -314,14 +229,6 @@
 
 - (void) setImageAlignment:(NSImageAlignment) newAlign {
 	[super setImageAlignment:NSImageAlignLeft];
-}
-
-- (void) setLineBreakMode:(NSLineBreakMode) mode {
-	_lineBreakMode = mode;
-}
-
-- (NSLineBreakMode) lineBreakMode {
-	return _lineBreakMode;
 }
 
 - (void) setStringValue:(NSString *) string {

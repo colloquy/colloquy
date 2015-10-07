@@ -1,5 +1,6 @@
 #import "CQBouncerEditViewController.h"
 
+#import "CQAlertView.h"
 #import "CQBouncerSettings.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
@@ -23,7 +24,7 @@ static BOOL pushAvailable = YES;
 #pragma mark -
 
 @implementation CQBouncerEditViewController
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 
@@ -200,17 +201,13 @@ static BOOL pushAvailable = YES;
 		return cell;
 	} else if (indexPath.section == UpdateTableSection && indexPath.row == 0) {
 		UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0., 10., CGRectGetWidth(tableView.frame), 20.)];
 
-		label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		label.font = [UIFont boldSystemFontOfSize:15.];
-		label.textColor = [UIColor colorWithRed:(85. / 255.) green:(102. / 255.) blue:(145. / 255.) alpha:1.];
-		label.highlightedTextColor = [UIColor whiteColor];
+		cell.textLabel.font = [UIFont boldSystemFontOfSize:15.];
+		cell.textLabel.textColor = [UIColor colorWithRed:(85. / 255.) green:(102. / 255.) blue:(145. / 255.) alpha:1.];
+		cell.textLabel.highlightedTextColor = [UIColor whiteColor];
 
-		[cell.contentView addSubview:label];
-
-		label.text = NSLocalizedString(@"Update Connection List", @"Update Connection List button label");
-		label.textAlignment = NSTextAlignmentCenter;
+		cell.textLabel.text = NSLocalizedString(@"Update Connection List", @"Update Connection List button label");
+		cell.textLabel.textAlignment = NSTextAlignmentCenter;
 
 		return cell;
 	} else if (indexPath.section == DeleteTableSection && indexPath.row == 0) {
@@ -290,7 +287,7 @@ static BOOL pushAvailable = YES;
 
 - (void) deleteBouncer:(id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
-		UIAlertView *alert = [[UIAlertView alloc] init];
+		UIAlertView *alert = [[CQAlertView alloc] init];
 		alert.delegate = self;
 
 		alert.title = NSLocalizedString(@"Delete Bouncer", @"Delete Bouncer alert title");

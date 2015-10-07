@@ -1,3 +1,7 @@
+a {
+	-webkit-touch-callout: none;
+}
+
 .mark {
 	width: 80%;
 	color: #222222;

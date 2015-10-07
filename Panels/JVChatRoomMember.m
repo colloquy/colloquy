@@ -9,8 +9,8 @@
 #import "MVChatUserAdditions.h"
 
 @interface JVChatRoomMember (JVChatMemberPrivate)
-- (NSString *) _selfStoredNickname;
-- (NSString *) _selfCompositeName;
+@property (readonly, copy) NSString *_selfStoredNickname;
+@property (readonly, copy) NSString *_selfCompositeName;
 - (void) _detach;
 @end
 
@@ -32,31 +32,26 @@
 
 #pragma mark -
 
-- (id) initWithRoom:(JVChatRoomPanel *) room andUser:(MVChatUser *) user {
+- (instancetype) initWithRoom:(JVChatRoomPanel *) room andUser:(MVChatUser *) user {
 	if( ( self = [self init] ) ) {
 		_room = room; // prevent circular retain
 		_user = user;
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserInformationUpdatedNotification object:user];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserStatusChangedNotification object:user];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserAwayStatusMessageChangedNotification object:user];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserIdleTimeUpdatedNotification object:user];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserInformationUpdatedNotification object:user];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserStatusChangedNotification object:user];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserAwayStatusMessageChangedNotification object:user];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserIdleTimeUpdatedNotification object:user];
 	}
 
 	return self;
 }
 
-- (id) initLocalMemberWithRoom:(JVChatRoomPanel *) room {
+- (instancetype) initLocalMemberWithRoom:(JVChatRoomPanel *) room {
 	return [self initWithRoom:room andUser:[[room connection] localUser]];
 }
 
 - (void) dealloc {
 	[self _detach];
-
-
-	_room = nil;
-	_user = nil;
-
 }
 
 #pragma mark -
@@ -243,14 +238,14 @@
 
 - (NSImage *) icon {
 	NSUInteger modes = [[_room target] modesForMemberUser:_user];
-	NSString *iconName = @"person";
+	NSString *iconName = @"userNormal";
 
-	if( [_user isServerOperator] ) iconName = @"admin";
-	else if( modes & MVChatRoomMemberFounderMode ) iconName = @"founder";
-	else if( modes & MVChatRoomMemberAdministratorMode ) iconName = @"super-op";
-	else if( modes & MVChatRoomMemberOperatorMode ) iconName = @"op";
-	else if( modes & MVChatRoomMemberHalfOperatorMode ) iconName = @"half-op";
-	else if( modes & MVChatRoomMemberVoicedMode ) iconName = @"voice";
+	if( [_user isServerOperator] ) iconName = @"userAdmin";
+	else if( modes & MVChatRoomMemberFounderMode ) iconName = @"userFounder";
+	else if( modes & MVChatRoomMemberAdministratorMode ) iconName = @"userSuperOperator";
+	else if( modes & MVChatRoomMemberOperatorMode ) iconName = @"userOperator";
+	else if( modes & MVChatRoomMemberHalfOperatorMode ) iconName = @"userHalfOperator";
+	else if( modes & MVChatRoomMemberVoicedMode ) iconName = @"userVoice";
 
 	return [NSImage imageNamed:iconName];
 }
@@ -259,11 +254,11 @@
 	if( [self buddy] ) {
 		switch( [_user status] ) {
 			case MVChatUserAwayStatus:
-				return [NSImage imageNamed:@"statusAway"];
+				return [NSImage imageNamed:NSImageNameStatusUnavailable];
 			case MVChatUserAvailableStatus:
 				if( [_user idleTime] >= 600. )
-					return [NSImage imageNamed:@"statusIdle"];
-				return [NSImage imageNamed:@"statusAvailable"];
+					return [NSImage imageNamed:NSImageNameStatusPartiallyAvailable];
+				return [NSImage imageNamed:NSImageNameStatusAvailable];
 			default:
 				return nil;
 		}
@@ -274,7 +269,7 @@
 
 - (NSString *) title {
 	if( [self isLocalUser] ) {
-		JVBuddyName nameStyle = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"];
+		JVBuddyName nameStyle = (JVBuddyName)[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"];
 		if( nameStyle == JVBuddyFullName )
 			return [self _selfCompositeName];
 		if( nameStyle == JVBuddyGivenNickname )
@@ -351,7 +346,7 @@
 		[item setTarget:self];
 		[menu addItem:item];
 
-		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Kick From Room..."], "kick from room (customized) contextual menu - admin only" ) action:@selector( customKick: ) keyEquivalent:@""];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kick From Room...", "kick from room (customized) contextual menu - admin only" ) action:@selector( customKick: ) keyEquivalent:@""];
 		[item setKeyEquivalentModifierMask:NSAlternateKeyMask];
 		[item setAlternate:YES];
 		[item setTarget:self];
@@ -362,7 +357,7 @@
 			[item setTarget:self];
 			[menu addItem:item];
 
-			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Ban From Room..."], "ban from room (customized) contextual menu - admin only" ) action:@selector( customBan: ) keyEquivalent:@""];
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Ban From Room...", "ban from room (customized) contextual menu - admin only" ) action:@selector( customBan: ) keyEquivalent:@""];
 			[item setKeyEquivalentModifierMask:NSAlternateKeyMask];
 			[item setAlternate:YES];
 			[item setTarget:self];
@@ -372,7 +367,7 @@
 			[item setTarget:self];
 			[menu addItem:item];
 
-			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Kick & Ban From Room..."], "kickban from room (customized) contextual menu - admin only" ) action:@selector( customKickban: ) keyEquivalent:@""];
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kick & Ban From Room...", "kickban from room (customized) contextual menu - admin only" ) action:@selector( customKickban: ) keyEquivalent:@""];
 			[item setKeyEquivalentModifierMask:NSAlternateKeyMask];
 			[item setAlternate:YES];
 			[item setTarget:self];
@@ -690,16 +685,14 @@
 
 	[super setValue:value forUndefinedKey:key];
 }
-@end
 
 #pragma mark -
 
-@implementation JVChatRoomMember (JVChatMemberPrivate)
 - (void) _detach {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserInformationUpdatedNotification object:_user];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserStatusChangedNotification object:_user];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserAwayStatusMessageChangedNotification object:_user];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserIdleTimeUpdatedNotification object:_user];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserInformationUpdatedNotification object:_user];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserStatusChangedNotification object:_user];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserAwayStatusMessageChangedNotification object:_user];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserIdleTimeUpdatedNotification object:_user];
 
 	_room = nil;
 }

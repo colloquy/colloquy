@@ -1,7 +1,7 @@
 #import "NSMethodSignatureAdditions.h"
 
 @implementation NSMethodSignature (NSMethodSignatureAdditions)
-+ (id) methodSignatureWithReturnAndArgumentTypes:(const char *) retType, ... {
++ (instancetype) methodSignatureWithReturnAndArgumentTypes:(const char *) retType, ... {
 	NSMutableString *types = [NSMutableString stringWithFormat:@"%s@:", retType];
 
 	char *type = NULL;
@@ -10,7 +10,7 @@
 	va_start( strings, retType );
 
 	while( ( type = va_arg( strings, char * ) ) )
-		[types appendString:[NSString stringWithUTF8String:type]];
+		[types appendString:@(type)];
 
 	va_end( strings );
 

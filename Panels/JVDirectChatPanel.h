@@ -16,7 +16,7 @@ extern NSString *JVToolbarMarkItemIdentifier;
 extern NSString *JVChatMessageWasProcessedNotification;
 extern NSString *JVChatEventMessageWasProcessedNotification;
 
-@interface JVDirectChatPanel : JVChatTranscriptPanel {
+@interface JVDirectChatPanel : JVChatTranscriptPanel <NSTextViewDelegate> {
 	@protected
 	IBOutlet MVTextView *send;
 
@@ -46,17 +46,17 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 	BOOL _loadingPersonImage;
 	NSData *_personImageData;
 }
-- (id) initWithTarget:(id) target;
-- (id) target;
-- (MVChatUser *) user;
-- (NSURL *) url;
+- (instancetype) initWithTarget:(id) target;
+@property (readonly, assign) id target;
+@property (readonly, strong) MVChatUser *user;
+@property (readonly, copy) NSURL *url;
 
 - (void) showAlert:(NSPanel *) alert withName:(NSString *) name;
 
 - (void) setPreference:(id) value forKey:(NSString *) key;
 - (id) preferenceForKey:(NSString *) key;
 
-- (NSStringEncoding) encoding;
+@property (readonly) NSStringEncoding encoding;
 - (IBAction) changeEncoding:(id) sender;
 
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
@@ -64,14 +64,14 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user withAttributes:(NSDictionary *) msgAttributes withIdentifier:(NSString *) identifier andType:(JVChatMessageType) type;
 - (void) processIncomingMessage:(JVMutableChatMessage *) message;
 - (void) echoSentMessageToDisplay:(JVMutableChatMessage *) message;
-- (JVMutableChatMessage *) currentMessage;
+@property (readonly, strong) JVMutableChatMessage *currentMessage;
 
 - (void) addMessageToHistory:(NSAttributedString *)message;
 
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context;
 
-- (NSUInteger) newMessagesWaiting;
-- (NSUInteger) newHighlightMessagesWaiting;
+@property (readonly) NSUInteger newMessagesWaiting;
+@property (readonly) NSUInteger newHighlightMessagesWaiting;
 
 - (IBAction) send:(id) sender;
 - (void) sendMessage:(JVMutableChatMessage *) message;

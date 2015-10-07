@@ -1,8 +1,8 @@
 #import "JVEmoticonSet.h"
 #import "NSBundleAdditions.h"
 
-@interface JVEmoticonSet (JVEmoticonSetPrivate)
-- (void) _setBundle:(NSBundle *) bundle;
+@interface JVEmoticonSet ()
+@property (readwrite, strong, nonatomic, null_resettable, setter=_setBundle:) NSBundle *bundle;
 @end
 
 #pragma mark -
@@ -12,15 +12,16 @@ static NSMutableSet *allEmoticonSets = nil;
 NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotification";
 
 @implementation JVEmoticonSet
+@synthesize bundle = _bundle;
 + (void) scanForEmoticonSets {
 	NSMutableSet *styles = [NSMutableSet set];
 	if( ! allEmoticonSets ) allEmoticonSets = styles;
 
 	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:5];
-	[paths addObject:[NSString stringWithFormat:@"%@/Emoticons", [[NSBundle bundleForClass:[self class]] resourcePath]]];
+	[paths addObject:[[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:@"Emoticons"]];
 	if( ! [[NSBundle mainBundle] isEqual:[NSBundle bundleForClass:[self class]]] )
-		[paths addObject:[NSString stringWithFormat:@"%@/Emoticons", [[NSBundle mainBundle] resourcePath]]];
+		[paths addObject:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Emoticons"]];
 	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Emoticons", bundleName] stringByExpandingTildeInPath]];
 	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Emoticons", bundleName]];
 	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Emoticons", bundleName]];
@@ -29,7 +30,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			NSString *fullPath = [path stringByAppendingPathComponent:file];
 			NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:nil];
-			if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyEmoticons"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coEm' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
+			if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyEmoticons"] == NSOrderedSame || ( [attributes[NSFileHFSTypeCode] unsignedIntValue] == 'coEm' && [attributes[NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
 				NSBundle *bundle = nil;
 				JVEmoticonSet *emoticon = nil;
 				if( ( bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]] ) ) {
@@ -41,14 +42,14 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 	[allEmoticonSets intersectSet:styles];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVEmoticonSetsScannedNotification object:allEmoticonSets];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVEmoticonSetsScannedNotification object:allEmoticonSets];
 }
 
 + (NSSet *) emoticonSets {
-	return allEmoticonSets;
+	return [allEmoticonSets copy];
 }
 
-+ (id) emoticonSetWithIdentifier:(NSString *) identifier {
++ (instancetype) emoticonSetWithIdentifier:(NSString *) identifier {
 	if( [identifier isEqualToString:@"cc.javelin.colloquy.emoticons.text-only"] )
 		return [self textOnlyEmoticonSet];
 
@@ -91,7 +92,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 #pragma mark -
 
-- (id) initWithBundle:(NSBundle *) bundle {
+- (instancetype) initWithBundle:(NSBundle *) bundle {
 	if( ! bundle ) {
 		return nil;
 	}
@@ -99,15 +100,14 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 	if( ( self = [self init] ) ) {
 		[allEmoticonSets addObject:self];
 
-		_bundle = nil;
-		[self _setBundle:bundle];
+		self.bundle = bundle;
 	}
 
 	return self;
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 	[self _setBundle:nil]; // this will dealloc all other dependant objects
 	[self unlink];
 }
@@ -116,7 +116,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 - (void) unlink {
 	[allEmoticonSets removeObject:self];
-	[[NSNotificationCenter defaultCenter] postNotificationName:JVEmoticonSetsScannedNotification object:allEmoticonSets];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVEmoticonSetsScannedNotification object:allEmoticonSets];
 }
 
 - (BOOL) isCompliant {
@@ -137,7 +137,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 
 	for( NSString *key in [self emoticonMappings] ) {
-		NSArray *obj = [[self emoticonMappings] objectForKey:key];
+		NSArray *obj = [self emoticonMappings][key];
 
 		for( NSString *str in obj ) {
 			NSMutableString *search = [str mutableCopy];
@@ -162,10 +162,6 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 #pragma mark -
 
-- (NSBundle *) bundle {
-	return _bundle;
-}
-
 - (NSString *) identifier {
 	if( [[self bundle] isEqual:[NSBundle mainBundle]] )
 		return @"cc.javelin.colloquy.emoticons.text-only";
@@ -188,21 +184,17 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 #pragma mark -
 
-- (NSDictionary *) emoticonMappings {
-	return _emoticonMappings;
-}
-
 - (NSArray *) emoticonMenuItems {
 	NSMutableArray *ret = [NSMutableArray array];
 	NSMenuItem *menuItem = nil;
 	NSDictionary *info = nil;
 
 	for( info in _emoticonMenu ) {
-		if( ! [(NSString *)[info objectForKey:@"name"] length] ) continue;
-		menuItem = [[NSMenuItem alloc] initWithTitle:[info objectForKey:@"name"] action:NULL keyEquivalent:@""];
-		if( [(NSString *)[info objectForKey:@"image"] length] )
-			[menuItem setImage:[[NSImage alloc] initWithContentsOfFile:[[self bundle] pathForResource:[info objectForKey:@"image"] ofType:nil]]];
-		[menuItem setRepresentedObject:[info objectForKey:@"insert"]];
+		if( ! [(NSString *)info[@"name"] length] ) continue;
+		menuItem = [[NSMenuItem alloc] initWithTitle:info[@"name"] action:NULL keyEquivalent:@""];
+		if( [(NSString *)info[@"image"] length] )
+			[menuItem setImage:[[NSImage alloc] initWithContentsOfFile:[[self bundle] pathForResource:info[@"image"] ofType:nil]]];
+		[menuItem setRepresentedObject:info[@"insert"]];
 		[ret addObject:menuItem];
 	}
 
@@ -227,11 +219,9 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 	NSString *contents = [NSString stringWithContentsOfURL:[self styleSheetLocation] encoding:NSUTF8StringEncoding error:NULL];
 	return ( contents ? contents : @"" );
 }
-@end
 
 #pragma mark -
 
-@implementation JVEmoticonSet (JVEmoticonSetPrivate)
 - (void) _setBundle:(NSBundle *) bundle {
 	_bundle = bundle;
 

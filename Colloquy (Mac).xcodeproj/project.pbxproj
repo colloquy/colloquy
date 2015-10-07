@@ -51,7 +51,7 @@
 		1CC42D0113A67F6600D6A4F0 /* Additions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC42CF013A67EDA00D6A4F0 /* Additions.a */; };
 		1CC42D1A13A6811900D6A4F0 /* InterThreadMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8E13100B360088C737 /* InterThreadMessaging.m */; };
 		1CC42D1B13A6814B00D6A4F0 /* MVChatConnectionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1A91741356C2A3004FC76B /* MVChatConnectionAdditions.m */; };
-		1CC42D1C13A6815B00D6A4F0 /* CQKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B269131183FC006FA16B /* CQKeychain.m */; };
+		1CC42D1C13A6815B00D6A4F0 /* CQKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B269131183FC006FA16B /* CQKeychain.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		1CCB9DAC130A7D1B009F679C /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB9DAB130A7D1B009F679C /* CoreServices.framework */; };
 		1CCF503D1336A2D0004294C9 /* CQColloquyDaemon.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCF503C1336A2D0004294C9 /* CQColloquyDaemon.m */; };
 		1CD4B77B1352169E0086EDE8 /* CQDaemonChatConnectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4B77A1352169E0086EDE8 /* CQDaemonChatConnectionController.m */; };
@@ -1091,7 +1091,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ARC_MIGRATION = precheck;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 					COMMAND_LINE_UTILITY,
@@ -1118,6 +1118,7 @@
 			baseConfigurationReference = 1C61A55213106225009DF5DF /* Base.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEPLOYMENT_POSTPROCESSING = NO;
@@ -1147,6 +1148,7 @@
 			baseConfigurationReference = 1C61A55213106225009DF5DF /* Base.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREFIX_HEADER = Mac/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",

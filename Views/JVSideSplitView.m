@@ -1,7 +1,7 @@
 #import "JVSideSplitView.h"
 
 @implementation JVSideSplitView
-- (id) initWithCoder:(NSCoder *) decoder {
+- (instancetype) initWithCoder:(NSCoder *) decoder {
 	if( ( self = [super initWithCoder:decoder] ) )
 		_mainSubviewIndex = 1;
 	return self;
@@ -33,8 +33,8 @@
 	float dividerThickness = [self dividerThickness];
 	NSRect newFrame = [self frame];
 
-	NSView *mainView = [[self subviews] objectAtIndex:_mainSubviewIndex];
-	NSView *otherView = ( _mainSubviewIndex ? [[self subviews] objectAtIndex:0] : [[self subviews] objectAtIndex:1] );
+	NSView *mainView = [self subviews][_mainSubviewIndex];
+	NSView *otherView = ( _mainSubviewIndex ? [self subviews][0] : [self subviews][1] );
 
 	NSRect mainFrame = [mainView frame];
 	NSRect otherFrame = [otherView frame];

@@ -10,14 +10,11 @@
 #import "JVChatRoomBrowser.h"
 #import "JVStyle.h"
 #import "JVEmoticonSet.h"
+#import <WebKit/WebKit.h>
+#import "JVStyleView.h"
+#import "JVConnectionInspector.h"
 
 #import <WebKit/WebKit.h>
-
-@interface MVChatConnection (MVChatConnectionInspection) <JVInspection>
-- (id <JVInspector>) inspector;
-@end
-
-#pragma mark -
 
 @interface JVChatTranscriptPanel (JVChatTranscriptPanelPrivate)
 - (void) _reloadCurrentStyle:(id) sender;
@@ -26,13 +23,13 @@
 #pragma mark -
 
 @interface MVChatConnection (MVChatConnectionPrivate)
-- (NSCharacterSet *) _nicknamePrefixes;
+@property (readonly, copy) NSCharacterSet *_nicknamePrefixes;
 @end
 
 #pragma mark -
 
 @implementation JVStandardCommands
-- (id) initWithManager:(MVChatPluginManager *) manager {
+- (instancetype) initWithManager:(MVChatPluginManager *) manager {
 	return [super init];
 }
 
@@ -233,13 +230,14 @@
 		} else if( ! [command caseInsensitiveCompare:@"ban"] ) {
 			NSArray *args = [arguments.string componentsSeparatedByString:@" "];
 			for( NSString *arg in args ) {
+				NSString *arg1 = arg;
 				if( arg.length ) {
 					MVChatUser *user = nil;
 					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] || ! [room.target memberUsersWithNickname:arg] ) {
 						if ( ! [arg hasCaseInsensitiveSubstring:@"!"] && [arg hasCaseInsensitiveSubstring:@"@"] )
-							arg = [@"*!*" stringByAppendingString:arg];
-						user = [MVChatUser wildcardUserFromString:arg];
-					} else user = [[room.target memberUsersWithNickname:arg] anyObject];
+							arg1 = [@"*!*" stringByAppendingString:arg];
+						user = [MVChatUser wildcardUserFromString:arg1];
+					} else user = [[room.target memberUsersWithNickname:arg1] anyObject];
 
 					if( user ) [room.target addBanForUser:user];
 				}
@@ -248,14 +246,15 @@
 		} else if( ! [command caseInsensitiveCompare:@"unban"] ) {
 			NSArray *args = [arguments.string componentsSeparatedByString:@" "];
 			for( NSString *arg in args ) {
+				NSString *arg1 = arg;
 				if( arg.length ) {
 					MVChatUser *user = nil;
 					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] || ! [room.target memberUsersWithNickname:arg] ) {
 						if ( ! [arg hasCaseInsensitiveSubstring:@"!"] && [arg hasCaseInsensitiveSubstring:@"@"] )
-							arg = [@"*!*" stringByAppendingString:arg];
-						user = [MVChatUser wildcardUserFromString:arg];
+							arg1 = [@"*!*" stringByAppendingString:arg];
+						user = [MVChatUser wildcardUserFromString:arg1];
 					} else
-						user = [[room.target memberUsersWithNickname:arg] anyObject];
+						user = [[room.target memberUsersWithNickname:arg1] anyObject];
 
 					if( user ) [room.target removeBanForUser:user];
 				}
@@ -384,8 +383,8 @@
 				target = ((MVChatRoom *)room.target).name;
 			else [scanner scanUpToCharactersFromSet:whitespace intoString:&target];
 		}
-		[prefixes release];
-
+		prefixes = nil;
+		
 		[scanner scanCharactersFromSet:whitespace intoString:NULL];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n"] intoString:&message];
 
@@ -429,7 +428,7 @@
 		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.google.com/search?q=%@", [arguments.string stringByEncodingIllegalURLCharacters]]];
 		NSWorkspaceLaunchOptions options = (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVURLOpensInBackground"]) ? NSWorkspaceLaunchDefault : NSWorkspaceLaunchWithoutActivation;
 
-		[[NSWorkspace sharedWorkspace] openURLs:[NSArray arrayWithObject:url] withAppBundleIdentifier:nil options:options additionalEventParamDescriptor:nil launchIdentifiers:nil];
+		[[NSWorkspace sharedWorkspace] openURLs:@[url] withAppBundleIdentifier:nil options:options additionalEventParamDescriptor:nil launchIdentifiers:nil];
 
 		return YES;
 	}
@@ -460,7 +459,7 @@
 
 	if( ! path.length )
 		[user sendFile:nil];
-	else [[NSNotificationCenter defaultCenter] postNotificationName:MVFileTransferStartedNotification object:[user sendFile:path passively:passive]];
+	else [[NSNotificationCenter chatCenter] postNotificationName:MVFileTransferStartedNotification object:[user sendFile:path passively:passive]];
 
 	return YES;
 }
@@ -509,9 +508,10 @@
 		return YES;
 	} else if( arguments.length && channels.count > 1 ) {
 		for( NSString *channel in channels ) {
-			channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+			NSString *channel1 = channel;
+			channel1 = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 			if( channel.length )
-				[(NSMutableArray *)channels addObject:channel];
+				[(NSMutableArray *)channels addObject:channel1];
 		}
 
 		[connection joinChatRoomsNamed:channels];
@@ -528,10 +528,10 @@
 
 - (BOOL) handlePartWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
 	NSArray *args = [arguments componentsSeparatedByString:@" "];
-	NSArray *channels = [[args objectAtIndex:0] componentsSeparatedByString:@","];
+	NSArray *channels = [args[0] componentsSeparatedByString:@","];
 	
 	NSString *message = [[args subarrayWithRange:NSMakeRange(1, args.count - 1)] componentsJoinedByString:@" "];
-	NSAttributedString *reason = [[[NSAttributedString alloc] initWithString:message] autorelease];
+	NSAttributedString *reason = [[NSAttributedString alloc] initWithString:message];
 
 	if( channels.count == 1 ) {
 		[[connection joinedChatRoomWithName:[channels lastObject]] partWithReason:reason];
@@ -679,13 +679,13 @@
 	}
 
 	if( [args hasPrefix:@"-"] ) { // parse commands/flags
-		if( [[argsArray objectAtIndex:0] rangeOfString:@"p"].location != NSNotFound ) permanent = YES;
-		if( [[argsArray objectAtIndex:0] rangeOfString:@"m"].location != NSNotFound ) {
+		if( [argsArray[0] rangeOfString:@"p"].location != NSNotFound ) permanent = YES;
+		if( [argsArray[0] rangeOfString:@"m"].location != NSNotFound ) {
 			member = NO;
 			message = YES;
 		}
 
-		if( [[argsArray objectAtIndex:0] rangeOfString:@"n"].location != NSNotFound ) member = YES;
+		if( [argsArray[0] rangeOfString:@"n"].location != NSNotFound ) member = YES;
 
 		offset++; // lookup next arg.
 	}
@@ -694,7 +694,7 @@
 	if( argsArray.count < ( offset + ( message ? 1 : 0 ) + ( member ? 1 : 0 ) ) ) return NO;
 
 	if( member ) {
-		memberString = [argsArray objectAtIndex:offset];
+		memberString = argsArray[offset];
 		offset++;
 		args = [[argsArray subarrayWithRange:NSMakeRange( offset, argsArray.count - offset )] componentsJoinedByString:@" "];
 		// without that, the / test in message could have matched the / from the nick...
@@ -705,12 +705,12 @@
 			messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"\""].location + 1, [args rangeOfString:@"\"" options:NSBackwardsSearch].location - ( [args rangeOfString:@"\""].location + 1 ) )];
 		} else if( [args rangeOfString:@"/"].location != NSNotFound) {
 			messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"/"].location, [args rangeOfString:@"/" options:NSBackwardsSearch].location - [args rangeOfString:@"/"].location + 1 )];
-		} else messageString = [argsArray objectAtIndex:offset];
+		} else messageString = argsArray[offset];
 
 		offset += [messageString componentsSeparatedByString:@" "].count;
 	}
 
-	if( offset < argsArray.count && ((NSString *)[argsArray objectAtIndex:offset]).length )
+	if( offset < argsArray.count && ((NSString *)argsArray[offset]).length )
 		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, argsArray.count - offset )];
 
 	KAIgnoreRule *rule = nil;
@@ -753,12 +753,12 @@
 	}
 
 	if( [args hasPrefix:@"-"] ) { // parse commands/flags
-		if( [[argsArray objectAtIndex:0] rangeOfString:@"m"].location != NSNotFound ) {
+		if( [argsArray[0] rangeOfString:@"m"].location != NSNotFound ) {
 			member = NO;
 			message = YES;
 		}
 
-		if( [[argsArray objectAtIndex:0] rangeOfString:@"n"].location != NSNotFound ) member = YES;
+		if( [argsArray[0] rangeOfString:@"n"].location != NSNotFound ) member = YES;
 
 		offset++; // lookup next arg.
 	}
@@ -767,7 +767,7 @@
 	if( argsArray.count < ( offset + ( message ? 1 : 0 ) + ( member ? 1 : 0 ) ) ) return NO;
 
 	if( member ) {
-		memberString = [argsArray objectAtIndex:offset];
+		memberString = argsArray[offset];
 		offset++;
 		args = [[argsArray subarrayWithRange:NSMakeRange( offset, argsArray.count - offset )] componentsJoinedByString:@" "];
 		// without that, the / test in message could have matched the / from the nick...
@@ -778,17 +778,17 @@
 			messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"\""].location + 1, [args rangeOfString:@"\"" options:NSBackwardsSearch].location - ( [args rangeOfString:@"\""].location + 1 ) )];
 		} else if( [args rangeOfString:@"/"].location != NSNotFound) {
 			messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"/"].location, [args rangeOfString:@"/" options:NSBackwardsSearch].location - [args rangeOfString:@"/"].location + 1 )];
-		} else messageString = [argsArray objectAtIndex:offset];
+		} else messageString = argsArray[offset];
 
 		offset += [messageString componentsSeparatedByString:@" "].count;
 	}
 
-	if( offset < argsArray.count && ((NSString *)[argsArray objectAtIndex:offset]).length )
+	if( offset < argsArray.count && ((NSString *)argsArray[offset]).length )
 		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, argsArray.count - offset )];
 
 	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:view.connection];
 	for( NSUInteger i = 0; i < rules.count; i++ ) {
-		KAIgnoreRule *rule = [rules objectAtIndex:i];
+		KAIgnoreRule *rule = rules[i];
 		if( ( !rule.user || [rule.user isCaseInsensitiveEqualToString:memberString] ) && ( !rule.message || [rule.message isCaseInsensitiveEqualToString:messageString] ) && ( !rule.rooms || [rule.rooms isEqualToArray:rooms] ) ) {
 			[rules removeObjectAtIndex:i];
 			i--;

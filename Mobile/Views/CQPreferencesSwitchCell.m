@@ -1,12 +1,9 @@
 #import "CQPreferencesSwitchCell.h"
 
 @implementation CQPreferencesSwitchCell
-- (id) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
+- (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
-
-	// Workaround the font showing up larger in edit vs new. Not sure why...
-	self.textLabel.font = [UIFont systemFontOfSize:17.];
 
 	self.selectionStyle = UITableViewCellSelectionStyleNone;
 

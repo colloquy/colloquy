@@ -10,7 +10,7 @@
 @end
 
 @implementation CQNavigationToolbar
-- (id) initWithFrame:(CGRect) frame {
+- (instancetype) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
 		return nil;
 
@@ -19,7 +19,7 @@
 	return self;
 }
 
-- (id) initWithCoder:(NSCoder *) coder {
+- (instancetype) initWithCoder:(NSCoder *) coder {
 	if (!(self = [super initWithCoder:coder]))
 		return nil;
 

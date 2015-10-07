@@ -40,6 +40,12 @@
 	</dict>
 	<dict>
 		<key>Address</key>
+		<string>irc.euirc.net</string>
+		<key>Name</key>
+		<string>euIRC</string>
+	</dict>
+	<dict>
+		<key>Address</key>
 		<string>irc.foonetic.net</string>
 		<key>Name</key>
 		<string>Foonetic</string>
@@ -55,6 +61,12 @@
 		<string>irc.gamesurge.net</string>
 		<key>Name</key>
 		<string>GameSurge</string>
+	</dict>
+	<dict>
+		<key>Address</key>
+		<string>irc.geekshed.net</string>
+		<key>Name</key>
+		<string>Geekshed</string>
 	</dict>
 	<dict>
 		<key>Address</key>
@@ -94,6 +106,12 @@
 	</dict>
 	<dict>
 		<key>Address</key>
+		<string>irc.mozilla.org</string>
+		<key>Name</key>
+		<string>Mozilla</string>
+	</dict>
+	<dict>
+		<key>Address</key>
 		<string>irc.oftc.net</string>
 		<key>Name</key>
 		<string>OFTC</string>
@@ -126,19 +144,13 @@
 		<key>Address</key>
 		<string>irc.synirc.net</string>
 		<key>Name</key>
-		<string>SynIRC</string>
+		<string>synIRC</string>
 	</dict>
 	<dict>
 		<key>Address</key>
 		<string>irc.swiftirc.net</string>
 		<key>Name</key>
 		<string>SwiftIRC</string>
-	</dict>
-	<dict>
-		<key>Address</key>
-		<string></string>
-		<key>Name</key>
-		<string>Undernet</string>
 	</dict>
 	<dict>
 		<key>Address</key>

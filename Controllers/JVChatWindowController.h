@@ -25,10 +25,9 @@ extern NSString *JVChatViewPboardType;
 	BOOL _reloadingData;
 	BOOL _closing;
 }
-- (NSString *) identifier;
-- (void) setIdentifier:(NSString *) identifier;
+@property (copy) NSString *identifier;
 
-- (NSString *) userDefaultsPreferencesKey;
+@property (readonly, copy) NSString *userDefaultsPreferencesKey;
 - (void) setPreference:(id) value forKey:(NSString *) key;
 - (id) preferenceForKey:(NSString *) key;
 
@@ -46,10 +45,10 @@ extern NSString *JVChatViewPboardType;
 
 - (NSArray *) chatViewControllersForConnection:(MVChatConnection *) connection;
 - (NSArray *) chatViewControllersWithControllerClass:(Class) class;
-- (NSArray *) allChatViewControllers;
+@property (readonly, copy) NSArray *allChatViewControllers;
 
-- (id <JVChatViewController>) activeChatViewController;
-- (id <JVChatListItem>) selectedListItem;
+@property (readonly, strong) id<JVChatViewController> activeChatViewController;
+@property (readonly, strong) id<JVChatListItem> selectedListItem;
 
 - (IBAction) getInfo:(id) sender;
 
@@ -62,10 +61,11 @@ extern NSString *JVChatViewPboardType;
 - (IBAction) selectNextPanel:(id) sender;
 - (IBAction) selectNextActivePanel:(id) sender;
 
-- (NSToolbarItem *) toggleChatDrawerToolbarItem;
+@property (readonly, copy) NSToolbarItem *toggleChatDrawerToolbarItem;
 - (IBAction) toggleViewsDrawer:(id) sender;
 - (IBAction) openViewsDrawer:(id) sender;
 - (IBAction) closeViewsDrawer:(id) sender;
+- (IBAction) toggleSmallDrawerIcons:(id) sender;
 
 - (void) reloadListItem:(id <JVChatListItem>) controller andChildren:(BOOL) children;
 - (BOOL) isListItemExpanded:(id <JVChatListItem>) item;
@@ -74,7 +74,7 @@ extern NSString *JVChatViewPboardType;
 @end
 
 @interface JVChatWindowController (JVChatWindowControllerScripting)
-- (NSNumber *) uniqueIdentifier;
+@property (readonly, copy) NSNumber *uniqueIdentifier;
 @end
 
 @protocol JVChatViewController <JVChatListItem>
@@ -92,9 +92,8 @@ extern NSString *JVChatViewPboardType;
 - (NSString *) toolbarIdentifier;
 - (NSString *) windowTitle;
 - (NSString *) identifier;
-@end
 
-@interface NSObject (JVChatViewControllerOptional)
+@optional
 - (void) willSelect;
 - (void) didSelect;
 
@@ -121,9 +120,8 @@ extern NSString *JVChatViewPboardType;
 - (id <JVChatListItem>) parent;
 - (NSImage *) icon;
 - (NSString *) title;
-@end
 
-@interface NSObject (JVChatListItemOptional)
+@optional
 - (BOOL) acceptsDraggedFileOfType:(NSString *) type;
 - (void) handleDraggedFile:(NSString *) path;
 - (IBAction) doubleClicked:(id) sender;

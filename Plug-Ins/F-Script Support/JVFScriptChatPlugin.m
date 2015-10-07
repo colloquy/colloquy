@@ -9,16 +9,16 @@
 NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 
 @interface BlockStackElem : NSObject <NSCoding> {}
-- (Block *) block;
-- (NSString *) errorStr;
-- (int) firstCharIndex;
-- (int) lastCharIndex;
+@property (readonly, copy) Block *block;
+@property (readonly, copy) NSString *errorStr;
+@property (readonly) int firstCharIndex;
+@property (readonly) int lastCharIndex;
 @end
 
 #pragma mark -
 
 @implementation JVFScriptChatPlugin
-- (id) initWithManager:(MVChatPluginManager *) manager {
+- (instancetype) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [self init] ) ) {
 		_manager = manager;
 		_scriptInterpreter = nil;
@@ -29,7 +29,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 	return self;
 }
 
-- (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
+- (instancetype) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
 	if( ( self = [self initWithManager:manager] ) ) {
 		_path = [path copyWithZone:[self zone]];
 		_scriptInterpreter = [[FSInterpreter interpreter] retain];
@@ -71,7 +71,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 }
 
 - (oneway void) release {
-	int retainCount = [self retainCount] - 1;
+	NSInteger retainCount = [self retainCount] - 1;
 	if( retainCount == 1 ) {
 		id temp = _scriptInterpreter;
 		_scriptInterpreter = nil;
@@ -155,10 +155,10 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 	id object = [[self scriptInterpreter] objectForIdentifier:blockName found:&found];
 
 	if( found && [object isKindOfClass:[Block class]] ) {
-		if( ! arguments ) arguments = [NSArray arrayWithObject:[NSNull null]];
+		if( ! arguments ) arguments = @[[NSNull null]];
 		if( (unsigned)[(Block *)object argumentCount] > [arguments count] ) {
 			NSMutableArray *newArgs = [[arguments mutableCopy] autorelease];
-			for( unsigned i = [arguments count]; i < (unsigned)[(Block *)object argumentCount]; i++ )
+			for( NSUInteger i = [arguments count]; i < (unsigned)[(Block *)object argumentCount]; i++ )
 				[newArgs addObject:[NSNull null]];
 			arguments = newArgs;
 		}
@@ -167,18 +167,18 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 			id returnValue = [(Block *)object valueWithArguments:arguments];
 			if( [returnValue isKindOfClass:[FSBoolean class]] ) {
 				BOOL returnBool = ( [returnValue isEqual:[FSBoolean fsTrue]] ? YES : NO );
-				return [NSNumber numberWithBool:returnBool];
+				return @(returnBool);
 			} else {
 				return returnValue;
 			}
 		} @catch ( NSException *exception ) {
 			if( ! _errorShown ) {
-				BlockStackElem *stack = [[[exception userInfo] objectForKey:@"blockStack"] lastObject];
+				BlockStackElem *stack = [[exception userInfo][@"blockStack"] lastObject];
 				NSString *locationError = @"";
 				if( stack ) locationError = [NSString stringWithFormat:@" The error occured near character %d inside the block.", [stack firstCharIndex]];
 
 				_errorShown = YES;
-				int result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"F-Script Plugin Error", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error title" ), NSLocalizedStringFromTableInBundle( @"The F-Script plugin \"%@\" had an error while calling the \"%@\" block.%@\n\n%@", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error message" ), nil, NSLocalizedStringFromTableInBundle( @"Inspect", nil, [NSBundle bundleForClass:[self class]], "inspect button title" ), NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], blockName, locationError, [exception reason] );
+				NSInteger result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"F-Script Plugin Error", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error title" ), NSLocalizedStringFromTableInBundle( @"The F-Script plugin \"%@\" had an error while calling the \"%@\" block.%@\n\n%@", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error message" ), nil, NSLocalizedStringFromTableInBundle( @"Inspect", nil, [NSBundle bundleForClass:[self class]], "inspect button title" ), NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], blockName, locationError, [exception reason] );
 				_errorShown = NO;
 
 				if( result == NSCancelButton ) {
@@ -192,14 +192,14 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 		}
 	}
 
-	NSDictionary *error = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Block with identifier \"%@\" not found", blockName] forKey:NSLocalizedDescriptionKey];
+	NSDictionary *error = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Block with identifier \"%@\" not found", blockName]};
 	return [NSError errorWithDomain:JVFScriptErrorDomain code:-1 userInfo:error];
 }
 
 #pragma mark -
 
 - (void) load {
-	NSArray *args = [NSArray arrayWithObjects:[self scriptFilePath], nil];
+	NSArray *args = @[[self scriptFilePath]];
 	[self callScriptBlockNamed:@"load" withArguments:args forSelector:_cmd];
 }
 
@@ -208,104 +208,104 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 }
 
 - (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view {
-	NSArray *args = [NSArray arrayWithObjects:( object ? (id)object : (id)[NSNull null] ), ( view ? (id)view : (id)[NSNull null] ), nil];
+	NSArray *args = @[( object ? (id)object : (id)[NSNull null] ), ( view ? (id)view : (id)[NSNull null] )];
 	id result = [self callScriptBlockNamed:@"contextualMenuItems" withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSArray class]] ? result : nil );
 }
 
 - (NSArray *) toolbarItemIdentifiersForView:(id <JVChatViewController>) view {
-	NSArray *args = [NSArray arrayWithObjects:view, nil];
+	NSArray *args = @[view];
 	id result = [self callScriptBlockNamed:@"toolbarItemIdentifiers" withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSArray class]] ? result : nil );
 }
 
 - (NSToolbarItem *) toolbarItemForIdentifier:(NSString *) identifier inView:(id <JVChatViewController>) view willBeInsertedIntoToolbar:(BOOL) willBeInserted {
-	NSArray *args = [NSArray arrayWithObjects:identifier, view, [NSNumber numberWithBool:willBeInserted], nil];
+	NSArray *args = @[identifier, view, @(willBeInserted)];
 	id result = [self callScriptBlockNamed:@"toolbarItem" withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSToolbarItem class]] ? result : nil );
 }
 
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context andPreferences:(NSDictionary *) preferences {
-	NSArray *args = [NSArray arrayWithObjects:identifier, ( context ? (id)context : (id)[NSNull null] ), ( preferences ? (id)preferences : (id)[NSNull null] ), nil];
+	NSArray *args = @[identifier, ( context ? (id)context : (id)[NSNull null] ), ( preferences ? (id)preferences : (id)[NSNull null] )];
 	[self callScriptBlockNamed:@"performNotification" withArguments:args forSelector:_cmd];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
-	NSArray *args = [NSArray arrayWithObjects:command, ( arguments ? (id)arguments : (id)[NSNull null] ), ( connection ? (id)connection : (id)[NSNull null] ), ( view ? (id)view : (id)[NSNull null] ), nil];
+	NSArray *args = @[command, ( arguments ? (id)arguments : (id)[NSNull null] ), ( connection ? (id)connection : (id)[NSNull null] ), ( view ? (id)view : (id)[NSNull null] )];
 	id result = [self callScriptBlockNamed:@"processUserCommand" withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (BOOL) handleClickedLink:(NSURL *) url inView:(id <JVChatViewController>) view {
-	NSArray *args = [NSArray arrayWithObjects:url, ( view ? (id)view : (id)[NSNull null] ), nil];
+	NSArray *args = @[url, ( view ? (id)view : (id)[NSNull null] )];
 	id result = [self callScriptBlockNamed:@"handleClickedLink" withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (void) processIncomingMessage:(JVMutableChatMessage *) message inView:(id <JVChatViewController>) view {
-	NSArray *args = [NSArray arrayWithObjects:message, view, nil];
+	NSArray *args = @[message, view];
 	[self callScriptBlockNamed:@"processIncomingMessage" withArguments:args forSelector:_cmd];
 }
 
 - (void) processOutgoingMessage:(JVMutableChatMessage *) message inView:(id <JVChatViewController>) view {
-	NSArray *args = [NSArray arrayWithObjects:message, view, nil];
+	NSArray *args = @[message, view];
 	[self callScriptBlockNamed:@"processOutgoingMessage" withArguments:args forSelector:_cmd];
 }
 
 - (void) memberJoined:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room {
-	NSArray *args = [NSArray arrayWithObjects:member, room, nil];
+	NSArray *args = @[member, room];
 	[self callScriptBlockNamed:@"memberJoined" withArguments:args forSelector:_cmd];
 }
 
 - (void) memberParted:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room forReason:(NSAttributedString *) reason {
-	NSArray *args = [NSArray arrayWithObjects:member, room, ( reason ? (id)reason : (id)[NSNull null] ), nil];
+	NSArray *args = @[member, room, ( reason ? (id)reason : (id)[NSNull null] )];
 	[self callScriptBlockNamed:@"memberParted" withArguments:args forSelector:_cmd];
 }
 
 - (void) memberKicked:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSArray *args = [NSArray arrayWithObjects:member, room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)reason : (id)[NSNull null] ), nil];
+	NSArray *args = @[member, room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)reason : (id)[NSNull null] )];
 	[self callScriptBlockNamed:@"memberKicked" withArguments:args forSelector:_cmd];
 }
 
 - (void) joinedRoom:(JVChatRoomPanel *) room {
-	NSArray *args = [NSArray arrayWithObject:room];
+	NSArray *args = @[room];
 	[self callScriptBlockNamed:@"joinedRoom" withArguments:args forSelector:_cmd];
 }
 
 - (void) partingFromRoom:(JVChatRoomPanel *) room {
-	NSArray *args = [NSArray arrayWithObject:room];
+	NSArray *args = @[room];
 	[self callScriptBlockNamed:@"partingFromRoom" withArguments:args forSelector:_cmd];
 }
 
 - (void) kickedFromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSArray *args = [NSArray arrayWithObjects:room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)reason : (id)[NSNull null] ), nil];
+	NSArray *args = @[room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)reason : (id)[NSNull null] )];
 	[self callScriptBlockNamed:@"kickedFromRoom" withArguments:args forSelector:_cmd];
 }
 
 - (void) topicChangedTo:(NSAttributedString *) topic inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) member {
-	NSArray *args = [NSArray arrayWithObjects:topic, room, ( member ? (id)member : (id)[NSNull null] ), nil];
+	NSArray *args = @[topic, room, ( member ? (id)member : (id)[NSNull null] )];
 	[self callScriptBlockNamed:@"topicChanged" withArguments:args forSelector:_cmd];
 }
 
 - (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user {
-	NSArray *args = [NSArray arrayWithObjects:command, ( arguments ? (id)arguments : (id)[NSNull null] ), user, nil];
+	NSArray *args = @[command, ( arguments ? (id)arguments : (id)[NSNull null] ), user];
 	id result = [self callScriptBlockNamed:@"processSubcodeRequest" withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user {
-	NSArray *args = [NSArray arrayWithObjects:command, ( arguments ? (id)arguments : (id)[NSNull null] ), user, nil];
+	NSArray *args = @[command, ( arguments ? (id)arguments : (id)[NSNull null] ), user];
 	id result = [self callScriptBlockNamed:@"processSubcodeReply" withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (void) connected:(MVChatConnection *) connection {
-	NSArray *args = [NSArray arrayWithObject:connection];
+	NSArray *args = @[connection];
 	[self callScriptBlockNamed:@"connected" withArguments:args forSelector:_cmd];
 }
 
 - (void) disconnecting:(MVChatConnection *) connection {
-	NSArray *args = [NSArray arrayWithObject:connection];
+	NSArray *args = @[connection];
 	[self callScriptBlockNamed:@"disconnecting" withArguments:args forSelector:_cmd];
 }
 @end

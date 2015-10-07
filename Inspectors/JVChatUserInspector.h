@@ -3,15 +3,15 @@
 #import "JVInspectorController.h"
 
 @interface JVDirectChatPanel (JVDirectChatPanelInspection) <JVInspection>
-- (id <JVInspector>) inspector;
+@property (readonly, strong) id<JVInspector> inspector;
 @end
 
 @interface JVChatRoomMember (JVChatRoomMemberInspection) <JVInspection>
-- (id <JVInspector>) inspector;
+@property (readonly, strong) id<JVInspector> inspector;
 @end
 
 @interface MVChatUser (MVChatUserInspection) <JVInspection>
-- (id <JVInspector>) inspector;
+@property (readonly, strong) id<JVInspector> inspector;
 @end
 
 @interface JVChatUserInspector : NSObject <JVInspector> {
@@ -42,7 +42,7 @@
 	BOOL _nibLoaded;
 	BOOL _addressResolved;
 }
-- (id) initWithChatUser:(MVChatUser *) user;
+- (instancetype) initWithChatUser:(MVChatUser *) user;
 - (void) updateLocalTime;
 
 - (IBAction) requestLocalTime:(id) sender;

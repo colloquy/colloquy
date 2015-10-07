@@ -14,7 +14,7 @@ static NSRegularExpression *numericRegularExpression;
 	});
 }
 
-- (id) initWithMessage:(NSString *) message outbound:(BOOL) outbound {
+- (instancetype) initWithMessage:(NSString *) message outbound:(BOOL) outbound {
 	NSParameterAssert(message != nil);
 
 	if (!(self = [self init]))

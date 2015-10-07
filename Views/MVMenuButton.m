@@ -7,7 +7,7 @@
 @synthesize drawsArrow = _drawsArrow;
 @synthesize retina = _retina;
 
-- (id) initWithFrame:(NSRect) frame {
+- (instancetype) initWithFrame:(NSRect) frame {
 	if( ( self = [super initWithFrame:frame] ) ) {
 		[self setBordered:NO];
 		[self setButtonType:NSMomentaryChangeButton];
@@ -15,7 +15,7 @@
 	return self;
 }
 
-- (id) initWithCoder:(NSCoder *) coder {
+- (instancetype) initWithCoder:(NSCoder *) coder {
 	if( ( self = [super initWithCoder:coder] ) ) {
 		_size = NSRegularControlSize;
 		_drawsArrow = NO;

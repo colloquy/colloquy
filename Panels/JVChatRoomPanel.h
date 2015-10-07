@@ -13,7 +13,7 @@ extern NSString *const MVFavoritesListDidUpdateNotification;
 	BOOL _kickedFromRoom;
 	BOOL _banListSynced;
 	NSUInteger _joinCount;
-	CFMutableDictionaryRef _memberRegexes;
+	NSRegularExpression *_membersRegex;
 }
 - (void) joined;
 - (void) parting;
@@ -26,7 +26,7 @@ extern NSString *const MVFavoritesListDidUpdateNotification;
 - (NSSet *) chatRoomMembersWithName:(NSString *) name;
 - (JVChatRoomMember *) firstChatRoomMemberWithName:(NSString *) name;
 - (JVChatRoomMember *) chatRoomMemberForUser:(MVChatUser *) user;
-- (JVChatRoomMember *) localChatRoomMember;
+@property (readonly, strong) JVChatRoomMember *localChatRoomMember;
 - (void) resortMembers;
 
 - (void) handleRoomMessageNotification:(NSNotification *) notification;

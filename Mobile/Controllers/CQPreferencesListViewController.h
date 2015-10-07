@@ -6,12 +6,12 @@
 
 typedef void (^CQPreferencesListBlock)(CQPreferencesListViewController *preferencesListViewController);
 
-typedef enum {
+typedef NS_ENUM(NSInteger, CQPreferencesListType) {
 	CQPreferencesListTypeNone,
 	CQPreferencesListTypeAudio,
 	CQPreferencesListTypeFont,
 	CQPreferencesListTypeImage
-} CQPreferencesListType;
+};
 
 @interface CQPreferencesListViewController : CQTableViewController {
 	@protected
@@ -39,6 +39,7 @@ typedef enum {
 @property (nonatomic) BOOL allowEditing;
 @property (nonatomic) NSInteger selectedItemIndex;
 @property (nonatomic, copy) NSArray *items;
+@property (nonatomic, copy) NSArray *values;
 @property (nonatomic, copy) NSArray *details;
 @property (nonatomic, strong) UIImage *itemImage;
 @property (nonatomic, copy) NSString *addItemLabelText;

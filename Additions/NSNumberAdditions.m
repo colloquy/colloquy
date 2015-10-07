@@ -4,43 +4,43 @@
 + (NSNumber *) numberWithBytes:(const void *) bytes objCType:(const char *) type {
 	if( ! strcmp( type, @encode( char ) ) ) {
 		char *val = (char *) bytes;
-		return [NSNumber numberWithChar:*val];
+		return @(*val);
 	} else if( ! strcmp( type, @encode( unsigned char ) ) ) {
 		unsigned char *val = (unsigned char *) bytes;
-		return [NSNumber numberWithUnsignedChar:*val];
+		return @(*val);
 	} else if( ! strcmp( type, @encode( BOOL ) ) ) {
 		BOOL *val = (BOOL *) bytes;
-		return [NSNumber numberWithBool:*val];
+		return @(*val);
 	} else if( ! strcmp( type, @encode( short ) ) ) {
 		short *val = (short *) bytes;
-		return [NSNumber numberWithShort:*val];
+		return @(*val);
 	} else if( ! strcmp( type, @encode( unsigned short ) ) ) {
 		unsigned short *val = (unsigned short *) bytes;
-		return [NSNumber numberWithUnsignedShort:*val];
+		return @(*val);
 	} else if( ! strcmp( type, @encode( int ) ) ) {
 		int *val = (int *) bytes;
-		return [NSNumber numberWithInt:*val];
+		return @(*val);
 	} else if( ! strcmp( type, @encode( unsigned ) ) ) {
 		unsigned *val = (unsigned *) bytes;
-		return [NSNumber numberWithUnsignedInt:*val];
+		return @(*val);
 	} else if( ! strcmp( type, @encode( long ) ) ) {
 		long *val = (long *) bytes;
-		return [NSNumber numberWithLong:*val];
+		return @(*val);
 	} else if( ! strcmp( type, @encode( unsigned long ) ) ) {
 		unsigned long *val = (unsigned long *) bytes;
-		return [NSNumber numberWithUnsignedLong:*val];
+		return @(*val);
 	} else if( ! strcmp( type, @encode( long long ) ) ) {
 		long long *val = (long long *) bytes;
-		return [NSNumber numberWithLongLong:*val];
+		return @(*val);
 	} else if( ! strcmp( type, @encode( unsigned long long ) ) ) {
 		unsigned long long *val = (unsigned long long *) bytes;
-		return [NSNumber numberWithUnsignedLongLong:*val];
+		return @(*val);
 	} else if( ! strcmp( type, @encode( float ) ) ) {
 		float *val = (float *) bytes;
-		return [NSNumber numberWithFloat:*val];
+		return @(*val);
 	} else if( ! strcmp( type, @encode( double ) ) ) {
 		double *val = (double *) bytes;
-		return [NSNumber numberWithDouble:*val];
+		return @(*val);
 	} else return nil;
 }
 @end

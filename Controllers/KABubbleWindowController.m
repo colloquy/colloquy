@@ -25,7 +25,7 @@ static NSUInteger bubbleWindowDepth = 0;
 	return ret;
 }
 
-- (id) init {
+- (instancetype) init {
 	NSPanel *panel = [[NSPanel alloc] initWithContentRect:NSMakeRect( 0., 0., 270., 65. ) styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
 	[panel setBecomesKeyOnlyIfNeeded:YES];
 	[panel setHidesOnDeactivate:NO];
@@ -38,6 +38,7 @@ static NSUInteger bubbleWindowDepth = 0;
 	[panel setReleasedWhenClosed:YES];
 	[panel setDelegate:self];
 
+	if (self = [super initWithWindow:panel]) {
 	KABubbleWindowView *view = [[KABubbleWindowView alloc] initWithFrame:[panel frame]];
 	[view setTarget:self];
 	[view setAction:@selector( _bubbleClicked: )];
@@ -58,9 +59,11 @@ static NSUInteger bubbleWindowDepth = 0;
 	_action = NULL;
 	_animationTimer = nil;
 
-	return [super initWithWindow:panel];
+	}
+	return self;
 }
 
+//TODO: check this! dealloc will NEVER be called due to _self retaining self!
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
@@ -138,33 +141,7 @@ static NSUInteger bubbleWindowDepth = 0;
 
 #pragma mark -
 
-- (BOOL) automaticallyFadesOut {
-	return _autoFadeOut;
-}
-
-- (void) setAutomaticallyFadesOut:(BOOL) autoFade {
-	_autoFadeOut = autoFade;
-}
-
-#pragma mark -
-
-- (id) target {
-	return _target;
-}
-
-- (void) setTarget:(id) object {
-	_target = object;
-}
-
-#pragma mark -
-
-- (SEL) action {
-	return _action;
-}
-
-- (void) setAction:(SEL) selector {
-	_action = selector;
-}
+@synthesize automaticallyFadesOut = _autoFadeOut;
 
 #pragma mark -
 
@@ -174,16 +151,6 @@ static NSUInteger bubbleWindowDepth = 0;
 
 - (void) setRepresentedObject:(id) object {
 	_representedObject = object;
-}
-
-#pragma mark -
-
-- (id) delegate {
-	return _delegate;
-}
-
-- (void) setDelegate:(id) delegate {
-	_delegate = delegate;
 }
 
 #pragma mark -

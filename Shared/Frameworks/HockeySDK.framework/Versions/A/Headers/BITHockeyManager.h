@@ -2,7 +2,7 @@
  * Author: Andreas Linde <mail@andreaslinde.de>
  *         Kent Sutherland
  *
- * Copyright (c) 2012-2013 HockeyApp, Bit Stadium GmbH.
+ * Copyright (c) 2012-2014 HockeyApp, Bit Stadium GmbH.
  * All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -45,7 +45,7 @@
  
  This is the principal SDK class. It represents the entry point for the HockeySDK. The main promises of the class are initializing the SDK modules, providing access to global properties and to all modules. Initialization is divided into several distinct phases:
  
- 1. Setup the [HockeyApp](http://hockeyapp.net/) app identifier and the optional delegate: This is the least required information on setting up the SDK and using it. It does some simple validation of the app identifier and checks if the app is running from the App Store or not. If the [Atlassian JMC framework](http://www.atlassian.com/jmc/) is found, it will disable its Crash Reporting module and configure it with the Jira configuration data from [HockeyApp](http://hockeyapp.net/).
+ 1. Setup the [HockeyApp](http://hockeyapp.net/) app identifier and the optional delegate: This is the least required information on setting up the SDK and using it. It does some simple validation of the app identifier and checks if the app is running from the App Store or not.
  2. Provides access to the SDK modules `BITCrashManager`, `BITUpdateManager`, and `BITFeedbackManager`. This way all modules can be further configured to personal needs, if the defaults don't fit the requirements.
  3. Configure each module.
  4. Start up all modules.
@@ -66,7 +66,7 @@
  
  @warning The SDK is **NOT** thread safe and has to be set up on the main thread!
  
- @warning You should **NOT** change any module configuration after calling `startManager`!
+ @warning Most properties of all components require to be set **BEFORE** calling`startManager`!
 
  */
 
@@ -75,7 +75,7 @@
 #pragma mark - Public Methods
 
 ///-----------------------------------------------------------------------------
-/// @name Initializion
+/// @name Initialization
 ///-----------------------------------------------------------------------------
 
 /**
@@ -84,6 +84,22 @@
  @return A singleton BITHockeyManager instance ready use
  */
 + (BITHockeyManager *)sharedHockeyManager;
+
+
+/**
+ Initializes the manager with a particular app identifier
+ 
+ Initialize the manager with a HockeyApp app identifier.
+ 
+    [[BITHockeyManager sharedHockeyManager]
+      configureWithIdentifier:@"<AppIdentifierFromHockeyApp>"];
+ 
+ @see configureWithIdentifier:delegate:
+ @see configureWithBetaIdentifier:liveIdentifier:delegate:
+ @see startManager
+ @param appIdentifier The app identifier that should be used.
+ */
+- (void)configureWithIdentifier:(NSString *)appIdentifier;
 
 
 /**
@@ -97,6 +113,7 @@
       configureWithIdentifier:@"<AppIdentifierFromHockeyApp>"
                      delegate:nil];
 
+ @see configureWithIdentifier:
  @see configureWithBetaIdentifier:liveIdentifier:delegate:
  @see startManager
  @see BITHockeyManagerDelegate
@@ -132,6 +149,7 @@
  you to upload any IPA files, uploading only the dSYM package for crash reporting is
  just fine.
 
+ @see configureWithIdentifier:
  @see configureWithIdentifier:delegate:
  @see startManager
  @see BITHockeyManagerDelegate
@@ -164,10 +182,30 @@
 
 
 /**
+ Set the delegate
+ 
+ Defines the class that implements the optional protocol `BITHockeyManagerDelegate`.
+ 
+ The delegate will automatically be propagated to all components. There is no need to set the delegate
+ for each component individually.
+ 
+ @warning This property needs to be set before calling `startManager`
+ 
+ @see BITHockeyManagerDelegate
+ @see BITCrashManagerDelegate
+ @see BITUpdateManagerDelegate
+ @see BITFeedbackManagerDelegate
+ */
+@property (nonatomic, weak) id<BITHockeyManagerDelegate> delegate;
+
+
+/**
  Defines the server URL to send data to or request data from
  
  By default this is set to the HockeyApp servers and there rarely should be a
  need to modify that.
+ 
+ @warning This property needs to be set before calling `startManager`
  */
 @property (nonatomic, strong) NSString *serverURL;
 
@@ -191,7 +229,10 @@
  If this flag is enabled, then crash reporting is disabled and no crashes will
  be send.
  
- Please note that the Crash Manager will be initialized anyway!
+ Please note that the Crash Manager instance will be initialized anyway, but crash report
+ handling (signal and uncaught exception handlers) will **not** be registered.
+
+ @warning This property needs to be set before calling `startManager`
 
  *Default*: _NO_
  @see crashManager
@@ -218,8 +259,10 @@
  If this flag is enabled, then checking for updates and submitting beta usage
  analytics will be turned off!
  
- Please note that the Update Manager will be initialized anyway!
+ Please note that the Update Manager instance will be initialized anyway!
  
+ @warning This property needs to be set before calling `startManager`
+
  *Default*: _NO_
  @see updateManager
  */
@@ -245,8 +288,10 @@
  If this flag is enabled, then checking for updates when the app runs from the
  app store will be turned on!
  
- Please note that the Store Update Manager will be initialized anyway!
- 
+ Please note that the Store Update Manager instance will be initialized anyway!
+
+ @warning This property needs to be set before calling `startManager`
+
  *Default*: _NO_
  @see storeUpdateManager
  */
@@ -271,8 +316,10 @@
  If this flag is enabled, then letting the user give feedback and
  get responses will be turned off!
  
- Please note that the Feedback Manager will be initialized anyway!
- 
+ Please note that the Feedback Manager instance will be initialized anyway!
+
+ @warning This property needs to be set before calling `startManager`
+
  *Default*: _NO_
  @see feedbackManager
  */
@@ -280,9 +327,6 @@
 
 /**
  Reference to the initialized BITAuthenticator module
- 
- The authenticator is disabled by default. To enable it you need to set
- `[BITAuthenticator authenticationType]` and `[BITAuthenticator validationType]`
  
  Returns the BITAuthenticator instance initialized by BITHockeyManager
  
@@ -331,9 +375,123 @@
  This is ignored if the app is running in the App Store and reverts to the
  default value in that case.
  
+ @warning This property needs to be set before calling `startManager`
+ 
  *Default*: _NO_
  */
 @property (nonatomic, assign, getter=isDebugLogEnabled) BOOL debugLogEnabled;
 
+
+///-----------------------------------------------------------------------------
+/// @name Integration test
+///-----------------------------------------------------------------------------
+
+/**
+ Pings the server with the HockeyApp app identifiers used for initialization
+ 
+ Call this method once for debugging purposes to test if your SDK setup code
+ reaches the server successfully.
+ 
+ Once invoked, check the apps page on HockeyApp for a verification.
+ 
+ If you setup the SDK with a beta and live identifier, a call to both app IDs will be done.
+
+ This call is ignored if the app is running in the App Store!.
+ */
+- (void)testIdentifier;
+
+
+///-----------------------------------------------------------------------------
+/// @name Additional meta data
+///-----------------------------------------------------------------------------
+
+/** Set the userid that should used in the SDK components
+ 
+ Right now this is used by the `BITCrashManager` to attach to a crash report.
+ `BITFeedbackManager` uses it too for assigning the user to a discussion thread.
+
+ The value can be set at any time and will be stored in the keychain on the current
+ device only! To delete the value from the keychain set the value to `nil`.
+ 
+ This property is optional and can be used as an alternative to the delegate. If you
+ want to define specific data for each component, use the delegate instead which does
+ overwrite the values set by this property.
+ 
+ @warning When returning a non nil value, crash reports are not anonymous any more
+ and the crash alerts will not show the word "anonymous"!
+ 
+ @warning This property needs to be set before calling `startManager` to be considered
+ for being added to crash reports as meta data.
+
+ @see userName
+ @see userEmail
+ @see `[BITHockeyManagerDelegate userIDForHockeyManager:componentManager:]`
+ */
+@property (nonatomic, retain) NSString *userID;
+
+
+/** Set the user name that should used in the SDK components
+ 
+ Right now this is used by the `BITCrashManager` to attach to a crash report.
+ `BITFeedbackManager` uses it too for assigning the user to a discussion thread.
+ 
+ The value can be set at any time and will be stored in the keychain on the current
+ device only! To delete the value from the keychain set the value to `nil`.
+ 
+ This property is optional and can be used as an alternative to the delegate. If you
+ want to define specific data for each component, use the delegate instead which does
+ overwrite the values set by this property.
+
+ @warning When returning a non nil value, crash reports are not anonymous any more
+ and the crash alerts will not show the word "anonymous"!
+
+ @warning This property needs to be set before calling `startManager` to be considered
+ for being added to crash reports as meta data.
+
+ @see userID
+ @see userEmail
+ @see `[BITHockeyManagerDelegate userNameForHockeyManager:componentManager:]`
+ */
+@property (nonatomic, retain) NSString *userName;
+
+
+/** Set the users email address that should used in the SDK components
+ 
+ Right now this is used by the `BITCrashManager` to attach to a crash report.
+ `BITFeedbackManager` uses it too for assigning the user to a discussion thread.
+ 
+ The value can be set at any time and will be stored in the keychain on the current
+ device only! To delete the value from the keychain set the value to `nil`.
+ 
+ This property is optional and can be used as an alternative to the delegate. If you
+ want to define specific data for each component, use the delegate instead which does
+ overwrite the values set by this property.
+ 
+ @warning When returning a non nil value, crash reports are not anonymous any more
+ and the crash alerts will not show the word "anonymous"!
+ 
+ @warning This property needs to be set before calling `startManager` to be considered
+ for being added to crash reports as meta data.
+
+ @see userID
+ @see userName
+ @see `[BITHockeyManagerDelegate userEmailForHockeyManager:componentManager:]`
+ */
+@property (nonatomic, retain) NSString *userEmail;
+
+
+///-----------------------------------------------------------------------------
+/// @name SDK meta data
+///-----------------------------------------------------------------------------
+
+/**
+ Returns the SDK Version (CFBundleShortVersionString).
+ */
+- (NSString *)version;
+
+/**
+ Returns the SDK Build (CFBundleVersion) as a string.
+ */
+- (NSString *)build;
 
 @end

@@ -8,10 +8,15 @@
 		dangerousCache = [[NSMutableDictionary alloc] init];
 	});
 
+	NSString *patternKey = dangerousCache[pattern];
+	if (!patternKey) {
+		patternKey = [NSRegularExpression escapedPatternForString:pattern];
+		dangerousCache[pattern] = patternKey;
+	}
 #if SYSTEM(MAC)
-	NSString *key = [NSString stringWithFormat:@"%ld-%@", options, pattern];
+	NSString *key = [NSString stringWithFormat:@"%ld-%@", options, patternKey];
 #else
-	NSString *key = [NSString stringWithFormat:@"%tu-%@", options, pattern];
+	NSString *key = [NSString stringWithFormat:@"%tu-%@", options, patternKey];
 #endif
 	NSRegularExpression *regularExpression = dangerousCache[key];
 
@@ -23,5 +28,9 @@
 	dangerousCache[key] = regularExpression;
 
 	return regularExpression;
+}
+
+- (NSArray *) cq_matchesInString:(NSString *) string {
+	return [self matchesInString:string options:NSMatchingReportCompletion range:NSMakeRange(0, string.length)];
 }
 @end

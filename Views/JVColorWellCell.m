@@ -11,7 +11,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	for( JVColorWellCell *cell in colorWellCells ) {
 		if( [cell isActive] ) {
 			[cell setColor:[panel color]];
-			[[NSNotificationCenter defaultCenter] postNotificationName:JVColorWellCellColorDidChangeNotification object:cell userInfo:nil];
+			[[NSNotificationCenter chatCenter] postNotificationName:JVColorWellCellColorDidChangeNotification object:cell userInfo:nil];
 		}
 	}
 }
@@ -32,11 +32,11 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 
 #pragma mark -
 
-- (id) initTextCell:(NSString *) string {
+- (instancetype) initTextCell:(NSString *) string {
 	return [self initImageCell:nil];
 }
 
-- (id) initImageCell:(NSImage *) image {
+- (instancetype) initImageCell:(NSImage *) image {
 	static BOOL observingClose = NO;
 	if( ! observingClose ) {
 		[[NSNotificationCenter defaultCenter] addObserver:[self class] selector:@selector( colorPanelClosed: ) name:NSWindowWillCloseNotification object:[NSColorPanel sharedColorPanel]];
@@ -82,9 +82,6 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	if( ! [colorWellCells count] ) {
 		colorWellCells = nil;
 	}
-
-	_color = nil;
-
 }
 
 #pragma mark -
@@ -102,7 +99,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	if( _showsWebValue ) {
 		NSString *webValue = [_color HTMLAttributeValue];
 		BOOL highlighted = ( [self isHighlighted] && [[controlView window] firstResponder] == controlView && [[controlView window] isKeyWindow] && [[NSApplication sharedApplication] isActive] );
-		NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[self font], NSFontAttributeName, ( [self isEnabled] ? ( highlighted ? [NSColor alternateSelectedControlTextColor] : [NSColor controlTextColor] ) : ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.50] ) ), NSForegroundColorAttributeName, nil];
+		NSDictionary *attributes = @{NSFontAttributeName: [self font], NSForegroundColorAttributeName: ( [self isEnabled] ? ( highlighted ? [NSColor alternateSelectedControlTextColor] : [NSColor controlTextColor] ) : ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.50] ) )};
 		NSSize stringSize = [webValue sizeWithAttributes:attributes];
 		float y = NSMinY( cellFrame ) + ( NSHeight( cellFrame ) / 2. ) - ( stringSize.height / 2. );
 		[webValue drawInRect:NSMakeRect( NSMinX( cellFrame ) + ( NSHeight( cellFrame ) * 1.5 ) + 8., y, NSMaxX( cellFrame ) - ( NSHeight( cellFrame ) * 1.5 ) - 8., stringSize.height ) withAttributes:attributes];
@@ -213,13 +210,4 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	[self setColor:[NSColor colorWithCSSAttributeValue:string]];
 }
 
-#pragma mark -
-
-- (void) setShowsWebValue:(BOOL) web {
-	_showsWebValue = web;
-}
-
-- (BOOL) showsWebValue {
-	return _showsWebValue;
-}
 @end

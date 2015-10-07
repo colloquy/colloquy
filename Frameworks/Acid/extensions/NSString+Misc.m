@@ -26,7 +26,7 @@
 
 @implementation NSString (AcidExtensions)
 
-- (id)initWithUTF8String:(const char *)bytes length:(unsigned)length
+- (id)initWithUTF8String:(const char *)bytes length:(NSUInteger)length
 {
     NSData *data = [[NSData alloc] initWithBytes:bytes length:length];
     self = [self initWithData:data encoding:NSUTF8StringEncoding];
@@ -34,7 +34,7 @@
     return self;
 }
 
-- (id)initWithUTF8StringNoCopy:(char*)bytes length:(unsigned)length
+- (id)initWithUTF8StringNoCopy:(char*)bytes length:(NSUInteger)length
     freeWhenDone:(BOOL)free
 {
     NSData* data = [[NSData alloc] initWithBytesNoCopy:bytes length:length 

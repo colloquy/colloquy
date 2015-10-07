@@ -12,7 +12,7 @@
 NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotification";
 
 @implementation CQIgnoreRulesController
-- (id) initWithConnection:(MVChatConnection *) connection {
+- (instancetype) initWithConnection:(MVChatConnection *) connection {
 	if (!(self = [super init]))
 		return nil;
 
@@ -122,7 +122,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 
 	NSString *ignoreFilePath = self._ignoreFilePath;
 	if (!ignoreFilePath) {
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:CQIgnoreRulesNotSavedNotification object:nil userInfo:nil];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQIgnoreRulesNotSavedNotification object:nil userInfo:nil];
 
 		return;
 	}
@@ -131,7 +131,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 	NSError *error = nil;
 	NSData *rootData = [NSKeyedArchiver archivedDataWithRootObject:permanentIgnores];
 	if (![rootData writeToFile:self._ignoreFilePath options:NSDataWritingAtomic error:&error])
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:CQIgnoreRulesNotSavedNotification object:nil userInfo:@{@"connection": _connection, @"error": error}];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQIgnoreRulesNotSavedNotification object:nil userInfo:@{@"connection": _connection, @"error": error}];
 }
 
 #pragma mark -

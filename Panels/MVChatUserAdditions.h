@@ -1,5 +1,5 @@
 @interface MVChatUser (MVChatUserAdditions)
-- (NSString *) xmlDescription;
+@property (readonly, copy) NSString *xmlDescription;
 - (NSString *) xmlDescriptionWithTagName:(NSString *) tag;
 
 - (NSArray *) standardMenuItems;

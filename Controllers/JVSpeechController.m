@@ -9,23 +9,16 @@
 	return sharedSpeechController;
 }
 
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_speechQueue = [[NSMutableArray alloc] initWithCapacity:15];
-		_synthesizers = [[NSArray alloc] initWithObjects:[[NSSpeechSynthesizer alloc] initWithVoice:nil], [[NSSpeechSynthesizer alloc] initWithVoice:nil], [[NSSpeechSynthesizer alloc] initWithVoice:nil], nil];
+		_synthesizers = @[[[NSSpeechSynthesizer alloc] initWithVoice:nil], [[NSSpeechSynthesizer alloc] initWithVoice:nil], [[NSSpeechSynthesizer alloc] initWithVoice:nil]];
 
 		for( NSSpeechSynthesizer *synthesizer in _synthesizers )
 			synthesizer.delegate = self;
 	}
 
 	return self;
-}
-
-- (void) dealloc {
-
-	_speechQueue = nil;
-	_synthesizers = nil;
-
 }
 
 - (void) startSpeakingString:(NSString *) string usingVoice:(NSString *) voice {
@@ -44,15 +37,15 @@
 	if( [_speechQueue count] > 15 )
 		[_speechQueue removeObjectAtIndex:0];
 
-	[_speechQueue addObject:[NSDictionary dictionaryWithObjectsAndKeys:string, @"text", voice, @"voice", nil]];
+	[_speechQueue addObject:@{@"text": string, @"voice": voice}];
 }
 
 - (void) speechSynthesizer:(NSSpeechSynthesizer *) sender didFinishSpeaking:(BOOL) finishedSpeaking {
 	if( [_speechQueue count] ) {
-		NSDictionary *nextSpeech = [_speechQueue objectAtIndex:0];
+		NSDictionary *nextSpeech = _speechQueue[0];
 		[_speechQueue removeObjectAtIndex:0];
-		[sender setVoice:[nextSpeech objectForKey:@"voice"]];
-		[sender startSpeakingString:[nextSpeech objectForKey:@"text"]];
+		[sender setVoice:nextSpeech[@"voice"]];
+		[sender startSpeakingString:nextSpeech[@"text"]];
 	}
 }
 @end

@@ -2,15 +2,12 @@
 #import "JVChatWindowController.h"
 
 @implementation JVChatTabItem
-- (id) initWithChatViewController:(id <JVChatViewController>) controller {
+@synthesize chatViewController = _controller;
+- (instancetype) initWithChatViewController:(id <JVChatViewController>) controller {
 	if( ( self = [super initWithIdentifier:[controller identifier]] ) ) {
 		_controller = controller;
 	}
 	return self;
-}
-
-- (void) dealloc {
-	_controller = nil;
 }
 
 - (id <JVChatViewController>) chatViewController {
@@ -29,7 +26,6 @@
 
 	if( [active size].width > 16. || [active size].height > 16. ) {
 		NSImage *ret = [active copy];
-		[ret setScalesWhenResized:YES];
 		[ret setSize:NSMakeSize( 16., 16. )];
 		active = ret;
 	}

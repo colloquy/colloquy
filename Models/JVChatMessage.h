@@ -1,69 +1,40 @@
 #import "JVChatTranscript.h"
 #import "KAIgnoreRule.h"
 
-typedef enum _JVChatMessageType {
+typedef NS_ENUM(OSType, JVChatMessageType) {
 	JVChatMessageNormalType = 'noMt',
 	JVChatMessageNoticeType = 'nTMt'
-} JVChatMessageType;
+};
 
-@interface JVChatMessage : NSObject <NSMutableCopying, JVChatTranscriptElement> {
-	@public
-	/* xmlNode */ void *_node;
-	/* xmlDoc */ void *_doc;
-	NSString *_messageIdentifier;
-	NSScriptObjectSpecifier *_objectSpecifier;
-	JVChatTranscript *_transcript;
-
-	id _senderIdentifier;
-	NSString *_senderName;
-	NSString *_senderNickname;
-	NSString *_senderHostmask;
-	NSString *_senderClass;
-	NSString *_senderBuddyIdentifier;
-
-	NSTextStorage *_attributedMessage;
-	NSDate *_date;
-	NSURL *_source;
-	JVIgnoreMatchResult _ignoreStatus;
-	JVChatMessageType _type;
-	NSUInteger _consecutiveOffset;
-	BOOL _senderIsLocalUser;
-	BOOL _action;
-	BOOL _highlighted;
-	BOOL _loaded;
-	BOOL _bodyLoaded;
-	BOOL _senderLoaded;
-	NSMutableDictionary *_attributes;
-}
+@interface JVChatMessage : NSObject <NSMutableCopying, JVChatTranscriptElement>
 - (/* xmlNode */ void *) node;
 
-- (NSDate *) date;
+@property (readonly, strong) NSDate *date;
 
-- (NSUInteger) consecutiveOffset;
+@property (readonly) NSUInteger consecutiveOffset;
 
-- (NSString *) senderName;
-- (NSString *) senderIdentifier;
-- (NSString *) senderNickname;
-- (NSString *) senderHostmask;
-- (NSString *) senderClass;
-- (NSString *) senderBuddyIdentifier;
-- (BOOL) senderIsLocalUser;
+@property (readonly, copy) NSString *senderName;
+@property (readonly, copy) NSString *senderIdentifier;
+@property (readonly, copy) NSString *senderNickname;
+@property (readonly, copy) NSString *senderHostmask;
+@property (readonly, copy) NSString *senderClass;
+@property (readonly, copy) NSString *senderBuddyIdentifier;
+@property (readonly) BOOL senderIsLocalUser;
 
 - (NSTextStorage *) body;
-- (NSString *) bodyAsPlainText;
-- (NSString *) bodyAsHTML;
+@property (readonly, copy) NSString *bodyAsPlainText;
+@property (readonly, copy) NSString *bodyAsHTML;
 
-- (BOOL) isAction;
-- (BOOL) isHighlighted;
-- (JVIgnoreMatchResult) ignoreStatus;
-- (JVChatMessageType) type;
+@property (readonly, getter=isAction) BOOL action;
+@property (readonly, getter=isHighlighted) BOOL highlighted;
+@property (readonly) JVIgnoreMatchResult ignoreStatus;
+@property (readonly) JVChatMessageType type;
 
-- (NSURL *) source;
-- (JVChatTranscript *) transcript;
-- (NSString *) messageIdentifier;
+@property (readonly, strong) NSURL *source;
+@property (readonly, weak) JVChatTranscript *transcript;
+@property (readonly, copy) NSString *messageIdentifier;
 
-- (NSScriptObjectSpecifier *) objectSpecifier;
-- (void) setObjectSpecifier:(NSScriptObjectSpecifier *) objectSpecifier;
+@property (strong) NSScriptObjectSpecifier *objectSpecifier;
 
 - (NSDictionary *) attributes;
 - (id) attributeForKey:(id) key;
@@ -73,25 +44,24 @@ typedef enum _JVChatMessageType {
 	@protected
 	id _sender;
 }
-+ (id) messageWithText:(id) body sender:(id) sender;
-- (id) initWithText:(id) body sender:(id) sender;
++ (instancetype) messageWithText:(id) body sender:(id) sender;
+- (instancetype) initWithText:(id) body sender:(id) sender;
 
-- (void) setDate:(NSDate *) date;
+@property (readwrite, strong) NSDate *date;
 
-- (id) sender;
-- (void) setSender:(id) sender;
+@property (strong) id sender;
 
 - (void) setBody:(id) message;
-- (void) setBodyAsPlainText:(NSString *) message;
-- (void) setBodyAsHTML:(NSString *) message;
+@property (readwrite, copy) NSString *bodyAsPlainText;
+@property (readwrite, copy) NSString *bodyAsHTML;
 
-- (void) setAction:(BOOL) action;
-- (void) setHighlighted:(BOOL) highlighted;
-- (void) setIgnoreStatus:(JVIgnoreMatchResult) ignoreStatus;
-- (void) setType:(JVChatMessageType) type;
+@property (readwrite, getter=isAction) BOOL action;
+@property (readwrite, getter=isHighlighted) BOOL highlighted;
+@property (readwrite) JVIgnoreMatchResult ignoreStatus;
+@property (readwrite) JVChatMessageType type;
 
-- (void) setSource:(NSURL *) source;
-- (void) setMessageIdentifier:(NSString *) identifier;
+@property (readwrite, strong) NSURL *source;
+@property (readwrite, copy) NSString *messageIdentifier;
 
 - (NSMutableDictionary *) attributes;
 - (void) setAttributes:(NSDictionary *) attributes;

@@ -4,6 +4,7 @@
 #import "MVXMPPChatConnection.h"
 #import "MVUtilities.h"
 #import "MVChatString.h"
+#import "NSNotificationAdditions.h"
 
 @implementation MVXMPPChatUser
 - (id) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) userConnection {
@@ -18,9 +19,7 @@
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	[super dealloc];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 }
 
 #pragma mark -
@@ -70,7 +69,6 @@
 	[jabberMsg setType:@"chat"];
 	[jabberMsg addComposingRequest];
 	[[(MVXMPPChatConnection *)_connection _chatSession] sendElement:jabberMsg];
-	[jabberMsg release];
 }
 @end
 

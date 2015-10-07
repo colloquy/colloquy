@@ -7,14 +7,14 @@
 @class ABPeoplePickerController;
 @class MVChatConnection;
 
-typedef enum {
+typedef NS_ENUM(OSType, MVBuddyListSortOrder) {
 	MVAvailabilitySortOrder = 'avlY',
 	MVFirstNameSortOrder = 'fSnM',
 	MVLastNameSortOrder = 'lSnM',
 	MVServerSortOrder = 'serV'
-} MVBuddyListSortOrder;
+};
 
-@interface MVBuddyListController : NSWindowController <JVInspectionDelegator> {
+@interface MVBuddyListController : NSWindowController <JVInspectionDelegator, NSTableViewDataSource> {
 	@private
 	IBOutlet MVTableView *buddies;
 	IBOutlet NSButton *sendMessageButton;
@@ -46,7 +46,7 @@ typedef enum {
 	BOOL _showOfflineBuddies;
 	MVBuddyListSortOrder _sortOrder;
 
-	float _animationPosition;
+	CGFloat _animationPosition;
 	NSMutableArray *_oldPositions;
 	BOOL _viewingTop;
 	BOOL _needsToAnimate;
@@ -64,8 +64,8 @@ typedef enum {
 - (void) addBuddy:(JVBuddy *) buddy;
 
 - (JVBuddy *) buddyForUser:(MVChatUser *) user;
-- (NSArray *) buddies;
-- (NSSet *) onlineBuddies;
+@property (readonly, copy) NSArray *buddies;
+@property (readonly, copy) NSSet *onlineBuddies;
 
 - (IBAction) showBuddyPickerSheet:(id) sender;
 - (IBAction) cancelBuddySelection:(id) sender;
@@ -82,24 +82,19 @@ typedef enum {
 - (IBAction) messageSelectedBuddy:(id) sender;
 - (IBAction) sendFileToSelectedBuddy:(id) sender;
 
-- (void) setShowFullNames:(BOOL) flag;
-- (BOOL) showFullNames;
+@property BOOL showFullNames;
 - (IBAction) toggleShowFullNames:(id) sender;
 
-- (void) setShowNicknameAndServer:(BOOL) flag;
-- (BOOL) showNicknameAndServer;
+@property BOOL showNicknameAndServer;
 - (IBAction) toggleShowNicknameAndServer:(id) sender;
 
-- (void) setShowIcons:(BOOL) flag;
-- (BOOL) showIcons;
+@property BOOL showIcons;
 - (IBAction) toggleShowIcons:(id) sender;
 
-- (void) setShowOfflineBuddies:(BOOL) flag;
-- (BOOL) showOfflineBuddies;
+@property BOOL showOfflineBuddies;
 - (IBAction) toggleShowOfflineBuddies:(id) sender;
 
-- (void) setSortOrder:(MVBuddyListSortOrder) order;
-- (MVBuddyListSortOrder) sortOrder;
+@property MVBuddyListSortOrder sortOrder;
 - (IBAction) sortByAvailability:(id) sender;
 - (IBAction) sortByFirstName:(id) sender;
 - (IBAction) sortByLastName:(id) sender;

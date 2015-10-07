@@ -7,8 +7,7 @@
 	unsigned long long _currentMark;
 	BOOL _jumpingToMark;
 }
-- (void) setLocationOfCurrentMark:(unsigned long long) location;
-- (unsigned long long) locationOfCurrentMark;
+@property unsigned long long locationOfCurrentMark;
 
 - (IBAction) jumpToPreviousMark:(id) sender;
 - (IBAction) jumpToNextMark:(id) sender;
@@ -31,15 +30,14 @@
 - (void) removeMarksInRange:(NSRange) range;
 - (void) removeAllMarks;
 
-- (void) setMarks:(NSSet *) marks;
-- (NSSet *) marks;
+@property (copy) NSSet *marks;
 
 - (void) startShadedAreaAt:(unsigned long long) location;
 - (void) stopShadedAreaAt:(unsigned long long) location;
 
 - (void) removeAllShadedAreas;
 
-- (unsigned long long) contentViewLength;
-- (CGFloat) scaleToContentView;
-- (CGFloat) shiftAmountToCenterAlign;
+@property (readonly) unsigned long long contentViewLength;
+@property (readonly) CGFloat scaleToContentView;
+@property (readonly) CGFloat shiftAmountToCenterAlign;
 @end

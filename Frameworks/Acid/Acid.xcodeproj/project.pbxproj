@@ -3,16 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		55D85B1F1AED9ECD000492A9 /* libexpat.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55D85B1E1AED9ECD000492A9 /* libexpat.dylib */; };
 		922453C2168905B700BFF3FF /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 922453C1168905B700BFF3FF /* GCDAsyncSocket.h */; };
-		DD4A10890BD5DA910051366F /* xmlparse.c in Sources */ = {isa = PBXBuildFile; fileRef = DD4A10770BD5DA910051366F /* xmlparse.c */; };
-		DD4A108A0BD5DA910051366F /* xmlrole.c in Sources */ = {isa = PBXBuildFile; fileRef = DD4A10780BD5DA910051366F /* xmlrole.c */; };
-		DD4A108C0BD5DA910051366F /* xmltok.c in Sources */ = {isa = PBXBuildFile; fileRef = DD4A107A0BD5DA910051366F /* xmltok.c */; };
-		DD5BB1140BD5DAE9005DDA42 /* expat.h in Headers */ = {isa = PBXBuildFile; fileRef = DD4A10710BD5DA910051366F /* expat.h */; };
-		DD8ADFBB0BD1741A009AB74D /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF5B0BD1741A009AB74D /* sha1.c */; };
 		DD8ADFBD0BD1741A009AB74D /* acid.h in Headers */ = {isa = PBXBuildFile; fileRef = DD8ADF5D0BD1741A009AB74D /* acid.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DD8ADFC90BD1741A009AB74D /* acid-dom.h in Headers */ = {isa = PBXBuildFile; fileRef = DD8ADF6E0BD1741A009AB74D /* acid-dom.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DD8ADFCA0BD1741A009AB74D /* XMLAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF6F0BD1741A009AB74D /* XMLAccumulator.m */; };
@@ -60,27 +56,11 @@
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		1CF24BB60C6E2648006BD6A5 /* keycache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keycache.h; sourceTree = "<group>"; };
 		1CF24BFC0C6E26F2006BD6A5 /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
+		55D85B1E1AED9ECD000492A9 /* libexpat.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libexpat.dylib; path = usr/lib/libexpat.dylib; sourceTree = SDKROOT; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* Acid.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Acid.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		922453C1168905B700BFF3FF /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncSocket.h; path = "../../../Chat Core/GCDAsyncSocket.h"; sourceTree = "<group>"; };
 		DD438C530BD87CBD0042117F /* Acid.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = Acid.exp; sourceTree = "<group>"; };
-		DD4A106D0BD5DA910051366F /* ascii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ascii.h; sourceTree = "<group>"; };
-		DD4A106E0BD5DA910051366F /* asciitab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asciitab.h; sourceTree = "<group>"; };
-		DD4A106F0BD5DA910051366F /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		DD4A10710BD5DA910051366F /* expat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = expat.h; sourceTree = "<group>"; };
-		DD4A10720BD5DA910051366F /* iasciitab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iasciitab.h; sourceTree = "<group>"; };
-		DD4A10730BD5DA910051366F /* latin1tab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = latin1tab.h; sourceTree = "<group>"; };
-		DD4A10740BD5DA910051366F /* nametab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nametab.h; sourceTree = "<group>"; };
-		DD4A10750BD5DA910051366F /* utf8tab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf8tab.h; sourceTree = "<group>"; };
-		DD4A10760BD5DA910051366F /* winconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = winconfig.h; sourceTree = "<group>"; };
-		DD4A10770BD5DA910051366F /* xmlparse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmlparse.c; sourceTree = "<group>"; };
-		DD4A10780BD5DA910051366F /* xmlrole.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmlrole.c; sourceTree = "<group>"; };
-		DD4A10790BD5DA910051366F /* xmlrole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlrole.h; sourceTree = "<group>"; };
-		DD4A107A0BD5DA910051366F /* xmltok.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok.c; sourceTree = "<group>"; };
-		DD4A107B0BD5DA910051366F /* xmltok.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltok.h; sourceTree = "<group>"; };
-		DD4A107C0BD5DA910051366F /* xmltok_impl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok_impl.c; sourceTree = "<group>"; };
-		DD4A107D0BD5DA910051366F /* xmltok_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltok_impl.h; sourceTree = "<group>"; };
-		DD4A107E0BD5DA910051366F /* xmltok_ns.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok_ns.c; sourceTree = "<group>"; };
 		DD8ADF5B0BD1741A009AB74D /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha1.c; sourceTree = "<group>"; };
 		DD8ADF5C0BD1741A009AB74D /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
 		DD8ADF5D0BD1741A009AB74D /* acid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = acid.h; sourceTree = "<group>"; };
@@ -140,6 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55D85B1F1AED9ECD000492A9 /* libexpat.dylib in Frameworks */,
 				DDBE55910BD1845D004ED228 /* libssl.dylib in Frameworks */,
 				DDBE55BA0BD187D5004ED228 /* libcrypto.dylib in Frameworks */,
 				DDF45AC40BD5CC500050911E /* Foundation.framework in Frameworks */,
@@ -169,6 +150,7 @@
 			);
 			name = Acid;
 			sourceTree = "<group>";
+			usesTabs = 0;
 		};
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
@@ -198,7 +180,6 @@
 				DD8ADF900BD1741A009AB74D /* jabber */,
 				DD8ADF9F0BD1741A009AB74D /* utility */,
 				DD8ADFB60BD1741A009AB74D /* xpath */,
-				DD4A106C0BD5DA910051366F /* expat */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -206,36 +187,13 @@
 		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				55D85B1E1AED9ECD000492A9 /* libexpat.dylib */,
 				DDBE55B90BD187D5004ED228 /* libcrypto.dylib */,
 				DDBE55900BD1845D004ED228 /* libssl.dylib */,
 				DDE46AAC0BD7246C0064D202 /* CoreServices.framework */,
 				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
 			);
 			name = "Linked Frameworks";
-			sourceTree = "<group>";
-		};
-		DD4A106C0BD5DA910051366F /* expat */ = {
-			isa = PBXGroup;
-			children = (
-				DD4A106D0BD5DA910051366F /* ascii.h */,
-				DD4A106E0BD5DA910051366F /* asciitab.h */,
-				DD4A106F0BD5DA910051366F /* config.h */,
-				DD4A10710BD5DA910051366F /* expat.h */,
-				DD4A10720BD5DA910051366F /* iasciitab.h */,
-				DD4A10730BD5DA910051366F /* latin1tab.h */,
-				DD4A10740BD5DA910051366F /* nametab.h */,
-				DD4A10750BD5DA910051366F /* utf8tab.h */,
-				DD4A10760BD5DA910051366F /* winconfig.h */,
-				DD4A10770BD5DA910051366F /* xmlparse.c */,
-				DD4A10780BD5DA910051366F /* xmlrole.c */,
-				DD4A10790BD5DA910051366F /* xmlrole.h */,
-				DD4A107A0BD5DA910051366F /* xmltok.c */,
-				DD4A107B0BD5DA910051366F /* xmltok.h */,
-				DD4A107C0BD5DA910051366F /* xmltok_impl.c */,
-				DD4A107D0BD5DA910051366F /* xmltok_impl.h */,
-				DD4A107E0BD5DA910051366F /* xmltok_ns.c */,
-			);
-			path = expat;
 			sourceTree = "<group>";
 		};
 		DD8ADF5A0BD1741A009AB74D /* 3rdparty */ = {
@@ -366,7 +324,6 @@
 				DD8ADFE70BD1741A009AB74D /* acid-jabber.h in Headers */,
 				DD8AE0090BD1741A009AB74D /* acid-xpath.h in Headers */,
 				DD8ADFEA0BD1741A009AB74D /* JabberID.h in Headers */,
-				DD5BB1140BD5DAE9005DDA42 /* expat.h in Headers */,
 				922453C2168905B700BFF3FF /* GCDAsyncSocket.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -399,9 +356,10 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 0630;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "Acid" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -422,7 +380,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD8ADFBB0BD1741A009AB74D /* sha1.c in Sources */,
 				DD8ADFCA0BD1741A009AB74D /* XMLAccumulator.m in Sources */,
 				DD8ADFCB0BD1741A009AB74D /* XMLCData.m in Sources */,
 				DD8ADFCC0BD1741A009AB74D /* XMLElement.m in Sources */,
@@ -455,18 +412,16 @@
 				DD8AE00A0BD1741A009AB74D /* XPathQuery.m in Sources */,
 				DD8AE00B0BD1741A009AB74D /* XPLocation.m in Sources */,
 				DD8AE00C0BD1741A009AB74D /* XPPredicate.m in Sources */,
-				DD4A10890BD5DA910051366F /* xmlparse.c in Sources */,
-				DD4A108A0BD5DA910051366F /* xmlrole.c in Sources */,
-				DD4A108C0BD5DA910051366F /* xmltok.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		1DEB91AE08733DA50010E9CD /* Development */ = {
+		1DEB91AE08733DA50010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXPORTED_SYMBOLS_FILE = Acid.exp;
@@ -475,26 +430,49 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				PRODUCT_NAME = Acid;
+				SDKROOT = macosx;
 				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = framework;
 			};
-			name = Development;
+			name = Debug;
 		};
-		1DEB91B208733DA50010E9CD /* Development */ = {
+		1DEB91B208733DA50010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DDF45C0C0BD5CF0E0050911E /* Common Settings.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SYMROOT = ../../build;
 			};
-			name = Development;
+			name = Debug;
 		};
 		DDF45C080BD5CEF40050911E /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DDF45C0C0BD5CF0E0050911E /* Common Settings.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				SYMROOT = ../../build;
 			};
 			name = Release;
@@ -502,6 +480,7 @@
 		DDF45C090BD5CEF40050911E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				EXPORTED_SYMBOLS_FILE = Acid.exp;
@@ -510,6 +489,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				PRODUCT_NAME = Acid;
+				SDKROOT = macosx;
 				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -521,20 +501,20 @@
 		1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "Acid" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB91AE08733DA50010E9CD /* Development */,
+				1DEB91AE08733DA50010E9CD /* Debug */,
 				DDF45C090BD5CEF40050911E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Release;
 		};
 		1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "Acid" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB91B208733DA50010E9CD /* Development */,
+				1DEB91B208733DA50010E9CD /* Debug */,
 				DDF45C080BD5CEF40050911E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

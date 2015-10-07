@@ -1,8 +1,7 @@
 @interface NSScriptCommand (NSScriptCommandAdditions)
-- (id) subjectParameter;
-- (NSScriptObjectSpecifier *) subjectSpecifier;
-- (void) setSubjectSpecifier:(NSScriptObjectSpecifier *) subject;
-- (BOOL) subjectSupportsCommand;
+@property (readonly, strong) id subjectParameter;
+@property (strong) NSScriptObjectSpecifier *subjectSpecifier;
+@property (readonly) BOOL subjectSupportsCommand;
 - (id) executeCommandOnSubject;
 - (id) evaluatedDirectParameter;
 @end

@@ -8,25 +8,23 @@
 	NSTimer *_idleTimer;
 	NSDate *_modDate;
 }
-- (id) initWithScript:(NSAppleScript *) script atPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
-- (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
+- (instancetype) initWithScript:(NSAppleScript *) script atPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
+- (instancetype) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 
-- (NSAppleScript *) script;
-- (void) setScript:(NSAppleScript *) script;
+@property (strong) NSAppleScript *script;
 
 - (void) reloadFromDisk;
 
-- (MVChatPluginManager *) pluginManager;
+@property (readonly, strong) MVChatPluginManager *pluginManager;
 
-- (NSString *) scriptFilePath;
-- (void) setScriptFilePath:(NSString *) path;
+@property (copy) NSString *scriptFilePath;
 
-- (id) callScriptHandler:(unsigned long) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector;
+- (id) callScriptHandler:(OSType) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector;
 
 - (BOOL) respondsToSelector:(SEL) selector;
 - (void) doesNotRespondToSelector:(SEL) selector;
 @end
 
 @interface NSAppleScript (NSAppleScriptIdentifier)
-- (NSNumber *) scriptIdentifier;
+@property (readonly, copy) NSNumber *scriptIdentifier;
 @end

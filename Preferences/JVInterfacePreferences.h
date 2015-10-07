@@ -28,8 +28,8 @@
 	BOOL _makingNewWindowSet;
 	BOOL _makingNewRuleSet;
 }
-- (NSMutableArray *) selectedRules;
-- (NSMutableArray *) editingCriterion;
+@property (readonly, copy) NSMutableArray *selectedRules;
+@property (readonly, copy) NSMutableArray *editingCriterion;
 
 - (IBAction) addWindowSet:(id) sender;
 - (IBAction) editWindowSet:(id) sender;

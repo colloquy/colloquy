@@ -10,7 +10,7 @@
 - (void) initializeFromDefaults;
 - (void) willBeDisplayed;
 - (void) saveChanges;
-- (BOOL) hasChangesPending;
+@property (readonly) BOOL hasChangesPending;
 - (NSImage *) imageForPreferenceNamed:(NSString *) name;
 - (NSBox *) viewForPreferenceNamed:(NSString *) name;
 @end
@@ -36,25 +36,25 @@
 	id _currentModule;
 	void *_reserved;
 }
-+ (id) sharedPreferences;
++ (NSPreferences*) sharedPreferences;
 + (void) setDefaultPreferencesClass:(Class) class;
 + (Class) defaultPreferencesClass;
 
 - (void) addPreferenceNamed:(NSString *) name owner:(id) owner;
 
-- (NSSize) preferencesContentSize;
+@property (readonly) NSSize preferencesContentSize;
 
 - (void) showPreferencesPanel;
 - (void) showPreferencesPanelForOwner:(id) owner;
 - (int) showModalPreferencesPanelForOwner:(id) owner;
-- (int) showModalPreferencesPanel;
+@property (readonly) int showModalPreferencesPanel;
 
-- (void) ok:(id) sender;
-- (void) cancel:(id) sender;
-- (void) apply:(id) sender;
+- (IBAction) ok:(id) sender;
+- (IBAction) cancel:(id) sender;
+- (IBAction) apply:(id) sender;
 
-- (NSString *) windowTitle;
-- (BOOL) usesButtons;
+@property (readonly, copy) NSString *windowTitle;
+@property (readonly) BOOL usesButtons;
 @end
 
 @interface NSPreferencesModule : NSObject <NSPreferencesModule> {
@@ -64,7 +64,7 @@
 	void *_reserved;
 }
 + (id) sharedInstance;
-- (NSString *) preferencesNibName;
+@property (readonly, copy) NSString *preferencesNibName;
 
 - (void) setPreferencesView:(NSView *) view;
 
@@ -73,13 +73,12 @@
 
 - (NSString *) titleForIdentifier:(NSString *) identifier;
 
-- (BOOL) hasChangesPending;
+@property (readonly) BOOL hasChangesPending;
 - (void) saveChanges;
 - (void) willBeDisplayed;
 - (void) initializeFromDefaults;
 - (void) didChange;
 
-- (NSSize) minSize;
-- (void) setMinSize:(NSSize) size;
-- (BOOL) isResizable;
+@property NSSize minSize;
+@property (readonly, getter=isResizable) BOOL resizable;
 @end

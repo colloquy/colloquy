@@ -12,17 +12,19 @@
 #import "CQPocketController.h"
 #import "CQWelcomeController.h"
 
+#import "NSNotificationAdditions.h"
 #import "UIApplicationAdditions.h"
+#import "UIFontAdditions.h"
 
 #import <HockeySDK/HockeySDK.h>
 #import "RegexKitLite.h"
 
-typedef enum {
+typedef NS_ENUM(NSInteger, CQSidebarOrientation) {
 	CQSidebarOrientationNone,
 	CQSidebarOrientationPortrait,
 	CQSidebarOrientationLandscape,
 	CQSidebarOrientationAll
-} CQSidebarOrientation;
+};
 
 NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyApplicationDidRecieveDeviceTokenNotification";
 
@@ -38,7 +40,7 @@ static NSMutableArray *highlightWords;
 	return (CQColloquyApplication *)[UIApplication sharedApplication];
 }
 
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
 
@@ -115,9 +117,6 @@ static NSMutableArray *highlightWords;
 	information = ([[CQSettingsController settingsController] boolForKey:@"CQDisableLandscape"] ? @"0" : @"1");
 	[analyticsController setObject:information forKey:@"landscape"];
 
-	information = ([[CQSettingsController settingsController] boolForKey:@"CQDisableBuiltInBrowser"] ? @"0" : @"1");
-	[analyticsController setObject:information forKey:@"browser"];
-
 	information = [[NSLocale autoupdatingCurrentLocale] localeIdentifier];
 	[analyticsController setObject:information forKey:@"locale"];
 
@@ -159,7 +158,7 @@ static NSMutableArray *highlightWords;
 				_userDefaultsChanged = YES;
 			else [self reloadSplitViewController];
 
-			BOOL disableSingleSwipe = [self splitViewController:nil shouldHideViewController:nil inOrientation:UIInterfaceOrientationLandscapeLeft] || [self splitViewController:nil shouldHideViewController:nil inOrientation:UIInterfaceOrientationPortrait];
+			BOOL disableSingleSwipe = [self splitViewController:self.splitViewController shouldHideViewController:nil inOrientation:UIInterfaceOrientationLandscapeLeft] || [self splitViewController:self.splitViewController shouldHideViewController:nil inOrientation:UIInterfaceOrientationPortrait];
 			if (disableSingleSwipe)
 				[[CQSettingsController settingsController] setInteger:0 forKey:@"CQSingleFingerSwipe"];
 		}
@@ -243,7 +242,7 @@ static NSMutableArray *highlightWords;
 
 	[self updateAnalytics];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 }
 
 - (void) handleNotificationWithUserInfo:(NSDictionary *) userInfo {
@@ -289,15 +288,11 @@ static NSMutableArray *highlightWords;
 #pragma mark -
 
 - (void) reloadSplitViewController {
-	[_connectionsPopoverController dismissPopoverAnimated:YES];
-	_connectionsPopoverController = nil;
-
 	[_colloquiesPopoverController dismissPopoverAnimated:YES];
 	_colloquiesPopoverController = nil;
 	_colloquiesBarButtonItem = nil;
 
 	UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
-	_connectionsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connections", @"Connections button title") style:UIBarButtonItemStylePlain target:self action:@selector(toggleConnections:)];
 
 	CQChatPresentationController *presentationController = [CQChatController defaultController].chatPresentationController;
 	[presentationController setStandardToolbarItems:@[] animated:NO];
@@ -313,6 +308,11 @@ static NSMutableArray *highlightWords;
 	NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]];
 	[[CQSettingsController settingsController] registerDefaults:defaults];
 
+	NSString *fontName = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptFont"];
+	UIFont *font = [UIFont fontWithName:fontName size:12.];
+	if ((!font || [font.familyName hasCaseInsensitiveSubstring:@"Helvetica"]) && [[UIFont cq_availableRemoteFontNames] containsObject:fontName])
+		[UIFont cq_loadFontWithName:fontName withCompletionHandler:NULL];
+
 	_deviceToken = [[CQSettingsController settingsController] stringForKey:@"CQPushDeviceToken"];
 
 	[CQConnectionsController defaultController];
@@ -324,6 +324,9 @@ static NSMutableArray *highlightWords;
 }
 
 - (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
+	if (![[CQChatController defaultController] hasPendingChatController] && [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
+		[[CQChatController defaultController] setFirstChatController];
+
 	if ([_mainWindow respondsToSelector:@selector(setTintColor:)])
 		_mainWindow.tintColor = [UIColor colorWithRed:0.427 green:0.086 blue:0.396 alpha:1];
 
@@ -337,6 +340,9 @@ static NSMutableArray *highlightWords;
 	}
 
 	[_mainWindow makeKeyAndVisible];
+
+	if ([[CQChatController defaultController] hasPendingChatController])
+		[[CQChatController defaultController] showPendingChatControllerAnimated:NO];
 
 	[self handleNotificationWithUserInfo:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
 
@@ -362,8 +368,11 @@ static NSMutableArray *highlightWords;
 	if (!apsInfo.count)
 		return;
 
-	if ([self areNotificationBadgesAllowed])
-		self.applicationIconBadgeNumber = [apsInfo[@"badge"] integerValue];
+	self.applicationIconBadgeNumber = [apsInfo[@"badge"] integerValue];
+}
+
+- (void) application:(UIApplication *) application didRegisterUserNotificationSettings:(UIUserNotificationSettings *) notificationSettings {
+	[self registerForRemoteNotifications];
 }
 
 - (void) application:(UIApplication *) application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *) deviceToken {
@@ -386,7 +395,7 @@ static NSMutableArray *highlightWords;
 
 	_deviceToken = deviceTokenString;
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQColloquyApplicationDidRecieveDeviceTokenNotification object:self userInfo:@{@"deviceToken": deviceTokenString}];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQColloquyApplicationDidRecieveDeviceTokenNotification object:self userInfo:@{@"deviceToken": deviceTokenString}];
 }
 
 - (void) application:(UIApplication *) application didFailToRegisterForRemoteNotificationsWithError:(NSError *) error {
@@ -395,7 +404,7 @@ static NSMutableArray *highlightWords;
 
 - (BOOL) application:(UIApplication *) application handleOpenURL:(NSURL *) url {
 	if ([url.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"CQPocketShouldConvertTokenFromTokenNotification" object:nil];
+		[[NSNotificationCenter chatCenter] postNotificationName:@"CQPocketShouldConvertTokenFromTokenNotification" object:nil];
 
 		return YES;
 	}
@@ -411,7 +420,7 @@ static NSMutableArray *highlightWords;
 
 #pragma mark -
 
-- (void)splitViewController:(UISplitViewController *) splitViewController popoverController:(UIPopoverController *) popoverController willPresentViewController:(UIViewController *) viewController {
+- (void) splitViewController:(UISplitViewController *) splitViewController popoverController:(UIPopoverController *) popoverController willPresentViewController:(UIViewController *) viewController {
 	if (![viewController isKindOfClass:[CQChatNavigationController class]])
 		return;
 
@@ -472,6 +481,19 @@ static NSMutableArray *highlightWords;
 	return NO;
 }
 
+- (BOOL) splitViewController:(UISplitViewController *) splitViewController collapseSecondaryViewController:(UIViewController *) secondaryViewController ontoPrimaryViewController:(UIViewController *) primaryViewController {
+	if (!secondaryViewController)
+		return YES;
+
+	if ([secondaryViewController isKindOfClass:[CQChatPresentationController class]]) {
+		CQChatPresentationController *presentationController = (CQChatPresentationController *)secondaryViewController;
+		if (!presentationController.topChatViewController)
+			return YES;
+	}
+
+	return [secondaryViewController isFirstResponder];
+}
+
 #pragma mark -
 
 - (void) showActionSheet:(UIActionSheet *) sheet {
@@ -509,12 +531,56 @@ static NSMutableArray *highlightWords;
 		return;
 	}
 
-	if (!CGPointEqualToPoint(point, CGPointZero)) {
-		[sheet showFromRect:(CGRect){ point, { 1., 1. } } inView:_mainViewController.view animated:animated];
-		return;
-	}
+	if ([UIDevice currentDevice].isSystemEight) {
+		// The overlapping view is needed to work around the following iOS 8(.1-only?) bug on iPad:
+		// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
+		// present an action sheet from a point on screen that results in the popover rect overlapping the main view,
+		// the z-index will be incorrect and the action sheet will be clipped by the main view.
+		UIViewController *overlappingPresentationViewController = [[UIViewController alloc] init];
+		overlappingPresentationViewController.view.frame = _mainWindow.frame;
+		overlappingPresentationViewController.view.backgroundColor = [UIColor clearColor];
 
-	[sheet showInView:_mainViewController.view];
+		[_mainWindow addSubview:overlappingPresentationViewController.view];
+
+		_alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+
+		CGRect rect = CGRectZero;
+		rect.size = CGSizeMake(1., 1.);
+		if (!CGPointEqualToPoint(point, CGPointZero)) {
+			rect.origin = point;
+			_alertController.popoverPresentationController.sourceRect = rect;
+		} else {
+			rect.origin = _mainWindow.center;
+		}
+
+		for (NSInteger i = 0; i < sheet.numberOfButtons; i++) {
+			NSString *title = [sheet buttonTitleAtIndex:i];
+			UIAlertActionStyle style = UIAlertActionStyleDefault;
+			if (i == sheet.cancelButtonIndex) style = UIAlertActionStyleCancel;
+			else if (i == sheet.destructiveButtonIndex) style = UIAlertActionStyleDestructive;
+
+			__weak __typeof__((self)) weakSelf = self;
+
+			[_alertController addAction:[UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *action) {
+				__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+				strongSelf->_alertController = nil;
+
+				[overlappingPresentationViewController.view removeFromSuperview];
+				[sheet.delegate actionSheet:sheet clickedButtonAtIndex:i];
+			}]];
+		}
+
+
+		_alertController.popoverPresentationController.sourceView = overlappingPresentationViewController.view;
+		[overlappingPresentationViewController presentViewController:_alertController animated:YES completion:nil];
+	} else {
+		if (!CGPointEqualToPoint(point, CGPointZero)) {
+			[sheet showFromRect:(CGRect){ point, { 1., 1. } } inView:_mainViewController.view animated:animated];
+			return;
+		}
+
+		[sheet showInView:_mainViewController.view];
+	}
 }
 
 #pragma mark -
@@ -593,21 +659,11 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) toggleConnections:(id) sender {
-	if (_connectionsPopoverController.popoverVisible)
-		[_connectionsPopoverController dismissPopoverAnimated:YES];
-	else [self showConnections:sender];
+	[self showConnections:sender];
 }
 
 - (void) showConnections:(id) sender {
-	if ([[UIDevice currentDevice] isPadModel]) {
-//		if (!_connectionsPopoverController)
-//			_connectionsPopoverController = [[UIPopoverController alloc] initWithContentViewController:[CQConnectionsController defaultController].connectionsNavigationController];
-
-//		if (!_connectionsPopoverController.popoverVisible) {
-//			[self dismissPopoversAnimated:NO];
-//			[_connectionsPopoverController presentPopoverFromBarButtonItem:_connectionsBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-//		}
-	} else {
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
 		[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
 		[self.navigationController popToRootViewControllerAnimated:NO];
 	}
@@ -636,7 +692,6 @@ static NSMutableArray *highlightWords;
 
 - (void) dismissPopoversAnimated:(BOOL) animated {
 	[_colloquiesPopoverController dismissPopoverAnimated:animated];
-	[_connectionsPopoverController dismissPopoverAnimated:animated];
 
 	id <CQChatViewController> controller = [CQChatController defaultController].visibleChatController;
 	if ([controller respondsToSelector:@selector(dismissPopoversAnimated:)])
@@ -724,7 +779,7 @@ static NSMutableArray *highlightWords;
 #pragma mark -
 
 - (UIColor *) tintColor {
-	if ([[UIDevice currentDevice] isPadModel])
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
 		return nil;
 
 	NSString *style = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptStyle"];
@@ -737,16 +792,51 @@ static NSMutableArray *highlightWords;
 
 #pragma mark -
 
+- (UIRemoteNotificationType) enabledRemoteNotificationTypes {
+	if (![UIDevice currentDevice].isSystemEight)
+		return [super enabledRemoteNotificationTypes];
+
+	if (!self.isRegisteredForRemoteNotifications)
+		return UIRemoteNotificationTypeNone;
+
+	UIUserNotificationSettings *currentUserNotificationSettings = self.currentUserNotificationSettings;
+	UIRemoteNotificationType enabledRemoteNotificationTypes = UIRemoteNotificationTypeNone;
+	if (currentUserNotificationSettings.types & UIUserNotificationTypeBadge) enabledRemoteNotificationTypes |= UIRemoteNotificationTypeBadge;
+	if (currentUserNotificationSettings.types & UIUserNotificationTypeSound) enabledRemoteNotificationTypes |= UIRemoteNotificationTypeSound;
+	if (currentUserNotificationSettings.types & UIUserNotificationTypeAlert) enabledRemoteNotificationTypes |= UIRemoteNotificationTypeAlert;
+	return enabledRemoteNotificationTypes;
+}
+
+- (void) registerForRemoteNotificationTypes:(UIRemoteNotificationType) types {
+	if (![UIDevice currentDevice].isSystemEight) {
+		[super registerForRemoteNotificationTypes:types];
+		return;
+	}
+
+	UIUserNotificationType enabledUserNotificationTypes = UIUserNotificationTypeNone;;
+	if (types & UIRemoteNotificationTypeBadge) enabledUserNotificationTypes |= UIUserNotificationTypeBadge;
+	if (types & UIRemoteNotificationTypeSound) enabledUserNotificationTypes |= UIUserNotificationTypeSound;
+	if (types & UIRemoteNotificationTypeAlert) enabledUserNotificationTypes |= UIUserNotificationTypeAlert;
+
+	UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:enabledUserNotificationTypes categories:nil];
+	[self registerUserNotificationSettings:settings];
+}
+
 - (BOOL) areNotificationBadgesAllowed {
-	return (!_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeBadge);
+	return (_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeBadge);
 }
 
 - (BOOL) areNotificationSoundsAllowed {
-	return (!_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeSound);
+	return (_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeSound);
 }
 
 - (BOOL) areNotificationAlertsAllowed {
-	return (!_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeAlert);
+	return (_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeAlert);
+}
+
+- (void) setApplicationIconBadgeNumber:(NSInteger) applicationIconBadgeNumber {
+	if (self.areNotificationBadgesAllowed)
+		[super setApplicationIconBadgeNumber:applicationIconBadgeNumber];
 }
 
 - (void) presentLocalNotificationNow:(UILocalNotification *) notification {
@@ -756,10 +846,12 @@ static NSMutableArray *highlightWords;
 		notification.soundName = nil;
 	if (![self areNotificationBadgesAllowed])
 		notification.applicationIconBadgeNumber = 0;
-	[super presentLocalNotificationNow:notification];
+
+	if (notification.alertBody.length || notification.soundName.length || notification.applicationIconBadgeNumber > 0)
+		[super presentLocalNotificationNow:notification];
 }
 
-- (void) registerForRemoteNotifications {
+- (void) registerForPushNotifications {
 #if !TARGET_IPHONE_SIMULATOR
 	static BOOL registeredForPush;
 	if (!registeredForPush) {

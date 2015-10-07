@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "miniupnpc.h"
-#include "miniwget.h"
 #ifdef WIN32
 #include <winsock2.h>
 #include <io.h>

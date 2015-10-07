@@ -13,7 +13,7 @@
 				<string>colloquystyle</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>Generic.icns</string>
+			<string>Generic</string>
 			<key>CFBundleTypeName</key>
 			<string>Chat style</string>
 			<key>CFBundleTypeOSTypes</key>
@@ -22,6 +22,10 @@
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>None</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>info.colloquy.style</string>
+			</array>
 			<key>LSTypeIsPackage</key>
 			<true/>
 		</dict>
@@ -32,7 +36,7 @@
 				<string>colloquyemoticons</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>Generic.icns</string>
+			<string>Generic</string>
 			<key>CFBundleTypeName</key>
 			<string>Chat emoticons</string>
 			<key>CFBundleTypeOSTypes</key>
@@ -41,6 +45,10 @@
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>None</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>info.colloquy.emoticons</string>
+			</array>
 			<key>LSTypeIsPackage</key>
 			<true/>
 		</dict>
@@ -51,7 +59,7 @@
 				<string>colloquytranscript</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>Generic.icns</string>
+			<string>Generic</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>application/xml</string>
@@ -64,12 +72,18 @@
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>info.colloquy.transcript</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<false/>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>Colloquy</string>
+	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Colloquy 2.4.3; Copyright © 2003-2014, Colloquy Project</string>
+	<string>Colloquy 2.5; Copyright © 2003-2014, Colloquy Project</string>
 	<key>CFBundleIconFile</key>
 	<string>Colloquy</string>
 	<key>CFBundleIdentifier</key>
@@ -81,7 +95,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.4.3</string>
+	<string>2.5</string>
 	<key>CFBundleSignature</key>
 	<string>coRC</string>
 	<key>CFBundleURLTypes</key>
@@ -106,7 +120,7 @@
 	<key>CFBundleVersion</key>
 	<string>source</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>10.7</string>
+	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
 	<string>http://colloquy.info</string>
 	<key>NSAppleScriptEnabled</key>
@@ -141,7 +155,7 @@
 			<key>UTTypeDescription</key>
 			<string>Chat style</string>
 			<key>UTTypeIconFile</key>
-			<string>Generic.icns</string>
+			<string>Generic</string>
 			<key>UTTypeIdentifier</key>
 			<string>info.colloquy.style</string>
 			<key>UTTypeReferenceURL</key>
@@ -149,7 +163,9 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>com.apple.ostype</key>
-				<string>coSt</string>
+				<array>
+					<string>coSt</string>
+				</array>
 				<key>public.filename-extension</key>
 				<array>
 					<string>colloquyStyle</string>
@@ -165,7 +181,7 @@
 			<key>UTTypeDescription</key>
 			<string>Chat emoticons</string>
 			<key>UTTypeIconFile</key>
-			<string>Generic.icns</string>
+			<string>Generic</string>
 			<key>UTTypeIdentifier</key>
 			<string>info.colloquy.emoticons</string>
 			<key>UTTypeReferenceURL</key>
@@ -173,7 +189,9 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>com.apple.ostype</key>
-				<string>coEm</string>
+				<array>
+					<string>coEm</string>
+				</array>
 				<key>public.filename-extension</key>
 				<array>
 					<string>colloquyEmoticons</string>
@@ -190,7 +208,7 @@
 			<key>UTTypeDescription</key>
 			<string>Chat transcript</string>
 			<key>UTTypeIconFile</key>
-			<string>Generic.icns</string>
+			<string>Generic</string>
 			<key>UTTypeIdentifier</key>
 			<string>info.colloquy.transcript</string>
 			<key>UTTypeReferenceURL</key>
@@ -198,7 +216,9 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>com.apple.ostype</key>
-				<string>coTr</string>
+				<array>
+					<string>coTr</string>
+				</array>
 				<key>public.filename-extension</key>
 				<array>
 					<string>colloquyTranscript</string>

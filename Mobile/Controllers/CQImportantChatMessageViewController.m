@@ -5,7 +5,7 @@ enum {
 };
 
 @implementation CQImportantChatMessageViewController
-- (id) initWithMessages:(NSArray *) messages delegate:(id <CQImportantChatMessageDelegate>) delegate {
+- (instancetype) initWithMessages:(NSArray *) messages delegate:(id <CQImportantChatMessageDelegate>) delegate {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 
@@ -39,11 +39,12 @@ enum {
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 
 	if (_messages.count) {
-		cell.textLabel.text = _messages[indexPath.row][@"message"];
+		cell.textLabel.attributedText = _messages[indexPath.row][@"message"];;
 		if ([_messages[indexPath.row][@"action"] boolValue]) {
-			// action, set image
-		} else {
-			// not an action, set image
+			NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@" • "];
+			[attributedString appendAttributedString:cell.textLabel.attributedText];
+
+			cell.textLabel.attributedText = attributedString;
 		}
 	} else {
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;

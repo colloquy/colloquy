@@ -1,11 +1,13 @@
+#import <Cocoa/Cocoa.h>
+
+@protocol KABubbleWindowControllerDelegate;
+
 @interface KABubbleWindowController : NSWindowController <NSWindowDelegate> {
 	id _self;
-	id _delegate;
 	NSTimer *_animationTimer;
 	NSUInteger _depth;
 	BOOL _autoFadeOut;
 	SEL _action;
-	id _target;
 	id _representedObject;
 }
 + (KABubbleWindowController *) bubble;
@@ -14,23 +16,15 @@
 - (void) startFadeIn;
 - (void) startFadeOut;
 
-- (BOOL) automaticallyFadesOut;
-- (void) setAutomaticallyFadesOut:(BOOL) autoFade;
-
-- (id) target;
-- (void) setTarget:(id) object;
-
-- (SEL) action;
-- (void) setAction:(SEL) selector;
-
-- (id) representedObject;
-- (void) setRepresentedObject:(id) object;
-
-- (id) delegate;
-- (void) setDelegate:(id) delegate;
+@property BOOL automaticallyFadesOut;
+@property (weak) id target;
+@property SEL action;
+@property (strong) id representedObject;
+@property (weak) id<KABubbleWindowControllerDelegate> delegate;
 @end
 
-@interface NSObject (KABubbleWindowControllerDelegate)
+@protocol KABubbleWindowControllerDelegate <NSObject>
+@optional
 - (void) bubbleWillFadeIn:(KABubbleWindowController *) bubble;
 - (void) bubbleDidFadeIn:(KABubbleWindowController *) bubble;
 

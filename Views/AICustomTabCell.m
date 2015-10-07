@@ -40,9 +40,9 @@ static NSSize		rightCapSize;
 #define TAB_MIN_WIDTH			48      //(Could be used to) Enforce a mininum tab size safari style
 #define TAB_SELECTED_HIGHER     NO     	//Draw the selected tab higher?
 
-@interface AICustomTabCell (PRIVATE)
-- (id)initForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView;
-- (NSRect)_closeButtonRect;
+@interface AICustomTabCell ()
+- (instancetype)initForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView;
+@property (readonly) NSRect _closeButtonRect;
 @end
 
 @implementation AICustomTabCell
@@ -54,7 +54,7 @@ static NSSize		rightCapSize;
 }
 
 //init
-- (id)initForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView
+- (instancetype)initForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView
 {
     static BOOL haveLoadedImages = NO;
 
@@ -66,10 +66,8 @@ static NSSize		rightCapSize;
 		tabFrontMiddle = [NSImage imageNamed:@"aquaTabMiddle"];
 		tabFrontRight = [NSImage imageNamed:@"aquaTabRight"];
 
-		tabCloseFront = [NSImage imageNamed:@"aquaTabClose"];
-		tabCloseBack = [NSImage imageNamed:@"aquaTabCloseBack"];
-		tabCloseFrontPressed = [NSImage imageNamed:@"aquaTabClosePressed"];
-		tabCloseFrontRollover = [NSImage imageNamed:@"aquaTabCloseRollover"];
+		tabCloseFront = [NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate];
+		tabCloseBack = [NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate];
 
 		leftCapSize = [tabFrontLeft size];
 		rightCapSize = [tabFrontRight size];
@@ -227,7 +225,7 @@ static NSSize		rightCapSize;
     //Background
     if(selected && !ignoreSelection){
         //Draw the left cap
-        [tabFrontLeft compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y) operation:NSCompositeSourceOver];
+		[tabFrontLeft compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y) operation:NSCompositeSourceOver];
 
         //Draw the middle
         sourceRect = NSMakeRect(0, 0, [tabFrontMiddle size].width, [tabFrontMiddle size].height);
@@ -237,13 +235,12 @@ static NSSize		rightCapSize;
             if((destRect.origin.x + destRect.size.width) > middleRightEdge){
                 sourceRect.size.width -= (destRect.origin.x + destRect.size.width) - middleRightEdge;
             }
-            [tabFrontMiddle compositeToPoint:destRect.origin fromRect:sourceRect operation:NSCompositeSourceOver];
+			[tabFrontMiddle compositeToPoint:destRect.origin fromRect:sourceRect operation:NSCompositeSourceOver];
             destRect.origin.x += destRect.size.width;
         }
 
         //Draw the right cap
-        [tabFrontRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y) operation:NSCompositeSourceOver];
-
+		[tabFrontRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y) operation:NSCompositeSourceOver];
     }else if(highlighted){
         [[NSColor colorWithCalibratedWhite:0.0 alpha:0.1] set];
         [NSBezierPath fillRect:NSMakeRect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height)];
@@ -293,11 +290,9 @@ static NSSize		rightCapSize;
 
 		//Update the attributed string
 		attributedLabel = [[NSAttributedString alloc] initWithString:[tabViewItem label] attributes:
-			[NSDictionary dictionaryWithObjectsAndKeys:
-				( wasEnabled ? [NSColor controlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.5] ), NSForegroundColorAttributeName,
-				[NSFont systemFontOfSize:11], NSFontAttributeName,
-				paragraphStyle, NSParagraphStyleAttributeName,
-				nil]];
+			@{NSForegroundColorAttributeName: ( wasEnabled ? [NSColor controlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.5] ),
+				NSFontAttributeName: [NSFont systemFontOfSize:11],
+				NSParagraphStyleAttributeName: paragraphStyle}];
 	}
 
 	return(attributedLabel);

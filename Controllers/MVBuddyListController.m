@@ -9,6 +9,7 @@
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
 #import "MVTableView.h"
+#import "MVApplicationController.h"
 
 static MVBuddyListController *sharedInstance = nil;
 
@@ -19,6 +20,16 @@ static MVBuddyListController *sharedInstance = nil;
 - (void) _setBuddiesNeedSortAnimated;
 - (void) _sortBuddiesAnimated:(id) sender;
 - (NSMenu *) _menuForBuddy:(JVBuddy *) buddy;
+@end
+
+#pragma mark -
+
+@implementation JVBuddy (JVBuddyObjectSpecifier)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[MVBuddyListController class]];
+	NSScriptObjectSpecifier *container = [[MVBuddyListController sharedBuddyList] objectSpecifier];
+	return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"buddies" uniqueID:[self uniqueIdentifier]];
+}
 @end
 
 #pragma mark -
@@ -35,15 +46,15 @@ static MVBuddyListController *sharedInstance = nil;
 
 #pragma mark -
 
-- (id) initWithWindowNibName:(NSString *) windowNibName {
+- (instancetype) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:@"MVBuddyList"] ) ) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyOnline: ) name:JVBuddyCameOnlineNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyOffline: ) name:JVBuddyWentOfflineNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyUserCameOnlineNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyUserWentOfflineNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyActiveUserChangedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyUserStatusChangedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyUserIdleTimeUpdatedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyOnline: ) name:JVBuddyCameOnlineNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyOffline: ) name:JVBuddyWentOfflineNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyUserCameOnlineNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyUserWentOfflineNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyActiveUserChangedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyUserStatusChangedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyUserIdleTimeUpdatedNotification object:nil];
 
 		_onlineBuddies = [[NSMutableSet allocWithZone:nil] initWithCapacity:20];
 		_buddyList = [[NSMutableSet allocWithZone:nil] initWithCapacity:40];
@@ -51,13 +62,13 @@ static MVBuddyListController *sharedInstance = nil;
 
 		[self _loadBuddyList];
 
-		[JVBuddy setPreferredName:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatBuddyNameStyle"]];
+		[JVBuddy setPreferredName:(OSType)[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatBuddyNameStyle"]];
 
 		[self setShowIcons:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatBuddyListShowIcons"]];
 		[self setShowFullNames:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatBuddyListShowFullNames"]];
 		[self setShowNicknameAndServer:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatBuddyListShowNicknameAndServer"]];
 		[self setShowOfflineBuddies:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatBuddyListShowOfflineBuddies"]];
-		[self setSortOrder:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatBuddyListSortOrder"]];
+		[self setSortOrder:(OSType)[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatBuddyListSortOrder"]];
 	}
 
 	return self;
@@ -66,20 +77,11 @@ static MVBuddyListController *sharedInstance = nil;
 - (void) dealloc {
 	[self save];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 	if( self == sharedInstance ) {
 		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _sortBuddiesAnimated: ) object:nil];
 		sharedInstance = nil;
 	}
-
-
-	_onlineBuddies = nil;
-	_buddyList = nil;
-	_buddyOrder = nil;
-	_oldPositions = nil;
-	_addPerson = nil;
-	_addServers = nil;
-
 }
 
 - (void) windowDidLoad {
@@ -114,7 +116,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[pickerView setTarget:self];
 	[pickerView setNameDoubleAction:@selector( confirmBuddySelection: )];
 
-	[buddies registerForDraggedTypes:[NSArray arrayWithObject:NSFilenamesPboardType]];
+	[buddies registerForDraggedTypes:@[NSFilenamesPboardType]];
 
 	if( _showIcons || _showNicknameAndServer ) [buddies setRowHeight:36.];
 	else [buddies setRowHeight:18.];
@@ -140,14 +142,14 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (id <JVInspection>) objectToInspect {
 	if( [buddies selectedRow] == -1 ) return nil;
-	id item = [_buddyOrder objectAtIndex:[buddies selectedRow]];
+	id item = _buddyOrder[[buddies selectedRow]];
 	if( [item conformsToProtocol:@protocol( JVInspection )] ) return item;
 	else return nil;
 }
 
 - (IBAction) getInfo:(id) sender {
 	if( [buddies selectedRow] == -1 ) return;
-	id item = [_buddyOrder objectAtIndex:[buddies selectedRow]];
+	id item = _buddyOrder[[buddies selectedRow]];
 	if( [item conformsToProtocol:@protocol( JVInspection )] )
 		[[JVInspectorController inspectorOfObject:item] show:sender];
 }
@@ -362,7 +364,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (IBAction) messageSelectedBuddy:(id) sender {
 	if( [buddies selectedRow] == -1 ) return;
-	JVBuddy *buddy = [_buddyOrder objectAtIndex:[buddies selectedRow]];
+	JVBuddy *buddy = _buddyOrder[[buddies selectedRow]];
 	MVChatUser *user = [buddy activeUser];
 	if( [user type] != MVChatRemoteUserType ) return;
 	[[JVChatController defaultController] chatViewControllerForUser:user ifExists:NO];
@@ -370,7 +372,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (IBAction) sendFileToSelectedBuddy:(id) sender {
 	if( [buddies selectedRow] == -1 ) return;
-	JVBuddy *buddy = [_buddyOrder objectAtIndex:[buddies selectedRow]];
+	JVBuddy *buddy = _buddyOrder[[buddies selectedRow]];
 	MVChatUser *user = [buddy activeUser];
 	[user sendFile:sender];
 }
@@ -520,14 +522,12 @@ static MVBuddyListController *sharedInstance = nil;
 	}
 	return YES;
 }
-@end
 
 #pragma mark -
 
-@implementation MVBuddyListController (MVBuddyListControllerDelegate)
 - (void) clear:(id) sender {
 	if( [buddies selectedRow] == -1 ) return;
-	JVBuddy *buddy = [_buddyOrder objectAtIndex:[buddies selectedRow]];
+	JVBuddy *buddy = _buddyOrder[[buddies selectedRow]];
 	[_buddyList removeObject:buddy];
 	[_onlineBuddies removeObject:buddy];
 	[_buddyOrder removeObjectIdenticalTo:buddy];
@@ -547,7 +547,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == servers ) {
-		MVChatConnection *connection = [[[MVConnectionsController defaultController] connections] objectAtIndex:row];
+		MVChatConnection *connection = [[MVConnectionsController defaultController] connections][row];
 		if( [[column identifier] isEqualToString:@"domain"] )
 			return [connection server];
 		return nil;
@@ -558,13 +558,10 @@ static MVBuddyListController *sharedInstance = nil;
 
 	if( [[column identifier] isEqualToString:@"buddy"] ) {
 		if( _showIcons ) {
-			JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
+			JVBuddy *buddy = _buddyOrder[row];
 			NSImage *ret = [buddy picture];
-			if( ! ret ) ret = [[NSImage imageNamed:@"largePerson"] copy];
-			if( [ret size].width > 32 || [ret size].height > 32 ) {
-				[ret setScalesWhenResized:YES];
-				[ret setSize:NSMakeSize( 32., 32. )];
-			}
+			if( ! ret ) ret = [[NSImage imageNamed:@"person"] copy];
+			[ret setSize:NSMakeSize( 32., 32. )];
 
 			return ret;
 		}
@@ -575,7 +572,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == servers ) {
-		MVChatConnection *connection = [[[MVConnectionsController defaultController] connections] objectAtIndex:row];
+		MVChatConnection *connection = [[MVConnectionsController defaultController] connections][row];
 		if( [[column identifier] isEqualToString:@"check"] )
 			[cell setState:( [_addServers containsObject:[connection server]] )];
 		return;
@@ -585,7 +582,7 @@ static MVBuddyListController *sharedInstance = nil;
 		return;
 
 	if( [[column identifier] isEqualToString:@"buddy"] ) {
-		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
+		JVBuddy *buddy = _buddyOrder[row];
 		MVChatUser *user = [buddy activeUser];
 
 		if( user && ( ! _showFullNames || ! [[buddy compositeName] length] ) ) {
@@ -602,17 +599,17 @@ static MVBuddyListController *sharedInstance = nil;
 
 		switch( [buddy status] ) {
 		case MVChatUserAwayStatus:
-			[cell setStatusImage:[NSImage imageNamed:@"statusAway"]];
+			[cell setStatusImage:[NSImage imageNamed:NSImageNameStatusUnavailable]];
 			break;
 		case MVChatUserAvailableStatus:
-			if( [buddy idleTime] >= 600. ) [cell setStatusImage:[NSImage imageNamed:@"statusIdle"]];
-			else [cell setStatusImage:[NSImage imageNamed:@"statusAvailable"]];
+			if( [buddy idleTime] >= 600. ) [cell setStatusImage:[NSImage imageNamed:NSImageNameStatusPartiallyAvailable]];
+			else [cell setStatusImage:[NSImage imageNamed:NSImageNameStatusAvailable]];
 			break;
 		default:
-			[cell setStatusImage:[NSImage imageNamed:@"statusOffline"]];
+			[cell setStatusImage:[NSImage imageNamed:NSImageNameStatusNone]];
 		}
 	} else if( [[column identifier] isEqualToString:@"switch"] ) {
-		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
+		JVBuddy *buddy = _buddyOrder[row];
 		NSSet *users = [buddy users];
 
 		if( [users count] >= 2 ) {
@@ -649,7 +646,7 @@ static MVBuddyListController *sharedInstance = nil;
 	if( tableView == servers ) {
 		if( [[tableColumn identifier] isEqualToString:@"check"] ) {
 			if( [object isKindOfClass:[NSNumber class]] ) {
-				MVChatConnection *connection = [[[MVConnectionsController defaultController] connections] objectAtIndex:row];
+				MVChatConnection *connection = [[MVConnectionsController defaultController] connections][row];
 				if( [object boolValue] ) [_addServers addObject:[connection server]];
 				else [_addServers removeObject:[connection server]];
 
@@ -665,13 +662,13 @@ static MVBuddyListController *sharedInstance = nil;
 	if( tableView != buddies || row == -1 || row >= (int)[_buddyOrder count] )
 		return;
 
-	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
+	JVBuddy *buddy = _buddyOrder[row];
 	NSSet *users = [buddy users];
 
 	NSMutableArray *ordered = [[users allObjects] mutableCopyWithZone:nil];
 	[ordered sortUsingSelector:@selector( compareByNickname: )];
 
-	[buddy setActiveUser:[ordered objectAtIndex:[object unsignedIntValue]]];
+	[buddy setActiveUser:ordered[[object unsignedIntValue]]];
 
 
 	[buddies reloadData];
@@ -680,7 +677,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (NSMenu *) tableView:(MVTableView *) tableView menuForTableColumn:(NSTableColumn *) tableColumn row:(int) row {
 	if( tableView != buddies || row == -1 || row >= (int)[_buddyOrder count] ) return nil;
-	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
+	JVBuddy *buddy = _buddyOrder[row];
 	return [self _menuForBuddy:buddy];
 }
 
@@ -688,7 +685,7 @@ static MVBuddyListController *sharedInstance = nil;
 	if( tableView != buddies || row == -1 || row >= (int)[_buddyOrder count] ) return nil;
 
 	NSMutableString *ret = [NSMutableString string];
-	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
+	JVBuddy *buddy = _buddyOrder[row];
 	MVChatUser *user = [buddy activeUser];
 
 	[ret appendFormat:@"%@\n", [buddy compositeName]];
@@ -718,7 +715,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[actionButton setEnabled:enabled];
 
 	if( [buddies selectedRow] != -1 ) {
-		JVBuddy *buddy = [_buddyOrder objectAtIndex:[buddies selectedRow]];
+		JVBuddy *buddy = _buddyOrder[[buddies selectedRow]];
 		[actionButton setMenu:[self _menuForBuddy:buddy]];
 	} else {
 		[actionButton setMenu:nil];
@@ -739,9 +736,9 @@ static MVBuddyListController *sharedInstance = nil;
 	if( tableView != buddies ) return NO;
 
 	NSPasteboard *board = [info draggingPasteboard];
-	if( [board availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]] ) {
+	if( [board availableTypeFromArray:@[NSFilenamesPboardType]] ) {
 		BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
-		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
+		JVBuddy *buddy = _buddyOrder[row];
 		MVChatUser *user = [buddy activeUser];
 		NSArray *files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
 
@@ -764,19 +761,19 @@ static MVBuddyListController *sharedInstance = nil;
 #define curveFunction(t,p) ( pow( 1 - pow( ( 1 - t ), p ), ( p ? ( 1 / p ) : 0. ) ) )
 #define easeFunction(t) ( ( sin( ( t * M_PI ) - M_PI_2 ) + 1. ) / 2. )
 
-- (NSRect) tableView:(MVTableView *) tableView rectOfRow:(int) row defaultRect:(NSRect) defaultRect {
+- (NSRect) tableView:(MVTableView *) tableView rectOfRow:(NSInteger) row defaultRect:(NSRect) defaultRect {
 	if( _animating ) {
-		NSInteger oldPosition = [[_oldPositions objectAtIndex:row] intValue];
+		NSInteger oldPosition = [_oldPositions[row] intValue];
 		NSRect oldR = [tableView originalRectOfRow:oldPosition];
 		NSRect newR = [tableView originalRectOfRow:row];
 
-		float t = _animationPosition;
+		CGFloat t = _animationPosition;
 
-		unsigned count = [_buddyOrder count];
-		float rowPos = ( (float) row / (float) count );
-		float rowPosAdjusted = _viewingTop ? ( 1. - rowPos ) : rowPos;
-		float curve = 0.3;
-		float p = rowPosAdjusted * ( curve * 2. ) + 1. - curve;
+		NSUInteger count = [_buddyOrder count];
+		CGFloat rowPos = ( (float) row / (float) count );
+		CGFloat rowPosAdjusted = _viewingTop ? ( 1. - rowPos ) : rowPos;
+		CGFloat curve = 0.3;
+		CGFloat p = rowPosAdjusted * ( curve * 2. ) + 1. - curve;
 
 		t = curveFunction( t, p );
 		t = easeFunction( t );
@@ -784,11 +781,9 @@ static MVBuddyListController *sharedInstance = nil;
 		return NSMakeRect( NSMinX( oldR ) + ( t * ( NSMinX( newR ) - NSMinX( oldR ) ) ), NSMinY( oldR ) + ( t * ( NSMinY( newR ) - NSMinY( oldR ) ) ), NSWidth( newR ), NSHeight( newR ) );
 	} else return defaultRect;
 }
-@end
 
 #pragma mark -
 
-@implementation MVBuddyListController (MVBuddyListControllerPrivate)
 - (void) _animateStep:(NSTimer *) timer {
 	static NSDate *start = nil;
 	if( ! _animationPosition ) {
@@ -849,7 +844,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 	id selectedObject = nil;
 	if( [buddies selectedRow] != -1 && [buddies selectedRow] < (int)[oldOrder count] )
-		selectedObject = [oldOrder objectAtIndex:[buddies selectedRow]];
+		selectedObject = oldOrder[[buddies selectedRow]];
 
 	[self _sortBuddies];
 
@@ -868,7 +863,7 @@ static MVBuddyListController *sharedInstance = nil;
 	_oldPositions = [NSMutableArray arrayWithCapacity:[_buddyOrder count]];
 
 	for( id object in _buddyOrder )
-		[_oldPositions addObject:[NSNumber numberWithUnsignedLong:[oldOrder indexOfObject:object]]];
+		[_oldPositions addObject:@([oldOrder indexOfObject:object])];
 
 	visibleRows = [buddies rowsInRect:[buddies visibleRect]];
 	_viewingTop = NSMaxRange( visibleRows ) < 0.6 * [_buddyOrder count];
@@ -895,12 +890,12 @@ static MVBuddyListController *sharedInstance = nil;
 	[self _buddyChanged:notification];
 
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:NSLocalizedString( @"Buddy Available", "available buddy bubble title" )  forKey:@"title"];
-	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now online.", "available buddy bubble text" ), [buddy displayName]] forKey:@"description"];
+	context[@"title"] = NSLocalizedString( @"Buddy Available", "available buddy bubble title" );
+	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now online.", "available buddy bubble text" ), [buddy displayName]];
 
 	NSImage *icon = [buddy picture];
-	if( ! icon ) icon = [NSImage imageNamed:@"largePerson"];
-	[context setObject:icon forKey:@"image"];
+	if( ! icon ) icon = [NSImage imageNamed:@"person"];
+	context[@"image"] = icon;
 
 	[[JVNotificationController defaultController] performNotification:@"JVChatBuddyOnline" withContextInfo:context];
 }
@@ -918,12 +913,12 @@ static MVBuddyListController *sharedInstance = nil;
 	MVChatConnection *buddyConnection = [[buddy activeUser] connection];
 	if( [buddyConnection isConnected] ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:NSLocalizedString( @"Buddy Unavailable", "unavailable buddy bubble title" ) forKey:@"title"];
-		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now offline.", "unavailable buddy bubble text" ), [buddy displayName]] forKey:@"description"];
+		context[@"title"] = NSLocalizedString( @"Buddy Unavailable", "unavailable buddy bubble title" );
+		context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now offline.", "unavailable buddy bubble text" ), [buddy displayName]];
 
 		NSImage *icon = [buddy picture];
-		if( ! icon ) icon = [NSImage imageNamed:@"largePerson"];
-		[context setObject:icon forKey:@"image"];
+		if( ! icon ) icon = [NSImage imageNamed:@"person"];
+		context[@"image"] = icon;
 
 		[[JVNotificationController defaultController] performNotification:@"JVChatBuddyOffline" withContextInfo:context];
 	}
@@ -961,7 +956,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 			MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:nil] init];
 			[rule setNickname:nick];
-			[rule setApplicableServerDomains:[NSArray arrayWithObject:server]];
+			[rule setApplicableServerDomains:@[server]];
 
 			[buddy addWatchRule:rule];
 
@@ -1026,23 +1021,11 @@ static MVBuddyListController *sharedInstance = nil;
 
 	return menu;
 }
-@end
 
 #pragma mark -
 
-@implementation JVBuddy (JVBuddyObjectSpecifier)
-- (NSScriptObjectSpecifier *) objectSpecifier {
-	id classDescription = [NSClassDescription classDescriptionForClass:[MVBuddyListController class]];
-	NSScriptObjectSpecifier *container = [[MVBuddyListController sharedBuddyList] objectSpecifier];
-	return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"buddies" uniqueID:[self uniqueIdentifier]];
-}
-@end
-
-#pragma mark -
-
-@implementation MVBuddyListController (MVBuddyListControllerScripting)
 - (MVChatConnection *) valueInBuddiesAtIndex:(NSUInteger) index {
-	return [_buddyOrder objectAtIndex:index];
+	return _buddyOrder[index];
 }
 
 - (void) addInBuddies:(JVBuddy *) buddy {
@@ -1058,7 +1041,7 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) removeFromBuddiesAtIndex:(NSUInteger) index {
-	JVBuddy *buddy = [_buddyOrder objectAtIndex:index];
+	JVBuddy *buddy = _buddyOrder[index];
 	[_buddyList removeObject:buddy];
 	[_onlineBuddies removeObject:buddy];
 	[_buddyOrder removeObjectIdenticalTo:buddy];

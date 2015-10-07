@@ -20,35 +20,35 @@
 	IBOutlet NSButton *cancelButton;
 	IBOutlet NSWindow *banWindow;
 }
-- (id) initWithRoom:(JVChatRoomPanel *) room andUser:(MVChatUser *) user;
-- (id) initLocalMemberWithRoom:(JVChatRoomPanel *) room;
+- (instancetype) initWithRoom:(JVChatRoomPanel *) room andUser:(MVChatUser *) user;
+- (instancetype) initLocalMemberWithRoom:(JVChatRoomPanel *) room;
 
 - (NSComparisonResult) compare:(JVChatRoomMember *) member;
 - (NSComparisonResult) compareUsingStatus:(JVChatRoomMember *) member;
 - (NSComparisonResult) compareUsingBuddyStatus:(JVChatRoomMember *) member;
 
-- (JVChatRoomPanel *) room;
-- (MVChatConnection *) connection;
-- (MVChatUser *) user;
-- (JVBuddy *) buddy;
+@property (readonly, strong) JVChatRoomPanel *room;
+@property (readonly, strong) MVChatConnection *connection;
+@property (readonly, strong) MVChatUser *user;
+@property (readonly, strong) JVBuddy *buddy;
 
-- (NSString *) displayName;
-- (NSString *) nickname;
-- (NSString *) realName;
-- (NSString *) username;
-- (NSString *) address;
-- (NSString *) hostmask;
+@property (readonly, copy) NSString *displayName;
+@property (readonly, copy) NSString *nickname;
+@property (readonly, copy) NSString *realName;
+@property (readonly, copy) NSString *username;
+@property (readonly, copy) NSString *address;
+@property (readonly, copy) NSString *hostmask;
 
-- (BOOL) voice;
-- (BOOL) quieted;
-- (BOOL) operator;
-- (BOOL) halfOperator;
-- (BOOL) roomAdministrator;
-- (BOOL) roomFounder;
-- (BOOL) serverOperator;
-- (BOOL) isLocalUser;
+@property (readonly) BOOL voice;
+@property (readonly) BOOL quieted;
+@property (readonly) BOOL operator;
+@property (readonly) BOOL halfOperator;
+@property (readonly) BOOL roomAdministrator;
+@property (readonly) BOOL roomFounder;
+@property (readonly) BOOL serverOperator;
+@property (getter=isLocalUser, readonly) BOOL localUser;
 
-- (NSString *) xmlDescription;
+@property (readonly, copy) NSString *xmlDescription;
 - (NSString *) xmlDescriptionWithTagName:(NSString *) tag;
 
 - (IBAction) startChat:(id) sender;

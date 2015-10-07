@@ -1,6 +1,8 @@
 #import "CQChatRoomController.h"
 
+#import "CQAlertView.h"
 #import "CQChatController.h"
+#import "CQChatInputStyleViewController.h"
 #import "CQChatPresentationController.h"
 #import "CQChatUserListViewController.h"
 #import "CQColloquyApplication.h"
@@ -15,6 +17,8 @@
 #import <ChatCore/MVChatUser.h>
 
 #import "UIActionSheetAdditions.h"
+
+#import "NSNotificationAdditions.h"
 
 #define NicknameActionSheet 1
 #define JoinActionSheet 2
@@ -31,6 +35,8 @@ static CQShowRoomTopic showRoomTopic;
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _didDisconnect:(NSNotification *) notification;
 - (void) _userDefaultsChanged;
+- (void) _batchUpdatesWillBegin:(NSNotification *) notification;
+- (void) _batchUpdatesDidEnd:(NSNotification *) notification;
 @end
 
 #pragma mark -
@@ -55,12 +61,12 @@ static CQShowRoomTopic showRoomTopic;
 
 	userDefaultsInitialized = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	[self userDefaultsChanged];
 }
 
-- (id) initWithTarget:(id) target {
+- (instancetype) initWithTarget:(id) target {
 	if (!(self = [super initWithTarget:target]))
 		return nil;
 
@@ -70,24 +76,24 @@ static CQShowRoomTopic showRoomTopic;
 
 	self.room.encoding = self.encoding;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_partedRoom:) name:MVChatRoomPartedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_kicked:) name:MVChatRoomKickedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_partedRoom:) name:MVChatRoomPartedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_kicked:) name:MVChatRoomKickedNotification object:target];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberNicknameChanged:) name:MVChatUserNicknameChangedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberModeChanged:) name:MVChatRoomUserModeChangedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_roomModesChanged:) name:MVChatRoomModesChangedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberBanned:) name:MVChatRoomUserBannedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberBanRemoved:) name:MVChatRoomUserBanRemovedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_bannedMembersSynced:) name:MVChatRoomBannedUsersSyncedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_membersSynced:) name:MVChatRoomMemberUsersSyncedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberJoined:) name:MVChatRoomUserJoinedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberParted:) name:MVChatRoomUserPartedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberKicked:) name:MVChatRoomUserKickedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberNicknameChanged:) name:MVChatUserNicknameChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberModeChanged:) name:MVChatRoomUserModeChangedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_roomModesChanged:) name:MVChatRoomModesChangedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberBanned:) name:MVChatRoomUserBannedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberBanRemoved:) name:MVChatRoomUserBanRemovedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_bannedMembersSynced:) name:MVChatRoomBannedUsersSyncedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_membersSynced:) name:MVChatRoomMemberUsersSyncedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberJoined:) name:MVChatRoomUserJoinedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberParted:) name:MVChatRoomUserPartedNotification object:target];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberKicked:) name:MVChatRoomUserKickedNotification object:target];
 
 	return self;
 }
 
-- (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
+- (instancetype) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
 	NSString *roomName = state[@"room"];
 	if (!roomName) {
 		return nil;
@@ -110,7 +116,7 @@ static CQShowRoomTopic showRoomTopic;
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 }
 
 #pragma mark -
@@ -163,7 +169,7 @@ static CQShowRoomTopic showRoomTopic;
 	if (self.room)
 		state[@"room"] = self.room.name;
 	if (_joined)
-		state[@"joined"] = @YES;
+		state[@"joined"] = @(YES);
 
 	return state;
 }
@@ -202,8 +208,8 @@ static CQShowRoomTopic showRoomTopic;
 	_banListSynced = NO;
 	_membersNeedSorted = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_nicknameChanged:) name:MVChatConnectionNicknameAcceptedNotification object:self.connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_topicChanged:) name:MVChatRoomTopicChangedNotification object:self.room];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_nicknameChanged:) name:MVChatConnectionNicknameAcceptedNotification object:self.connection];
+	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_topicChanged:) name:MVChatRoomTopicChangedNotification object:self.room];
 }
 
 - (void) showMembers {
@@ -216,7 +222,7 @@ static CQShowRoomTopic showRoomTopic;
 		_currentUserListViewController.room = self.room;
 	}
 
-	if ([[UIDevice currentDevice] isPadModel]) {
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
 		if (!_currentUserListPopoverController) {
 			_currentUserListPopoverController = [[UIPopoverController alloc] initWithContentViewController:_currentUserListViewController];
 			_currentUserListPopoverController.delegate = self;
@@ -266,8 +272,8 @@ static CQShowRoomTopic showRoomTopic;
 
 #pragma mark -
 
-- (BOOL) handleTopicCommandWithArguments:(NSString *) arguments {
-	if (![arguments stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
+- (BOOL) handleTopicCommandWithArguments:(MVChatString *) arguments {
+	if (![arguments.string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
 		[self _displayCurrentTopicOnlyIfSet:NO];
 		return YES;
 	}
@@ -275,13 +281,13 @@ static CQShowRoomTopic showRoomTopic;
 	return NO;
 }
 
-- (BOOL) handleNamesCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleNamesCommandWithArguments:(MVChatString *) arguments {
 	[self showMembers];
 	return YES;
 }
 
-- (BOOL) handleInviteCommandWithArguments:(NSString *) arguments {
-	NSArray *nicknames = [arguments componentsSeparatedByString:@" "];
+- (BOOL) handleInviteCommandWithArguments:(MVChatString *) arguments {
+	NSArray *nicknames = [arguments.string componentsSeparatedByString:@" "];
 	if (nicknames.count == 0)
 		return NO;
 
@@ -303,7 +309,7 @@ static CQShowRoomTopic showRoomTopic;
 #pragma mark -
 
 - (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) theChatInputBar {
-	if ([theChatInputBar isFirstResponder]) {
+	if ([theChatInputBar isFirstResponder] && theChatInputBar.textView.hasText) {
 		theChatInputBar.textView.text = nil;
 
 		// Work around behavior where textViewDidChange: isn't called when you change the text programatically.
@@ -322,7 +328,7 @@ static CQShowRoomTopic showRoomTopic;
 	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		actionSheet.title = self.user.displayName;
 
-	[actionSheet addButtonWithTitle:NSLocalizedString(@"Recent Messages", @"Recent Messages button title")];
+	[actionSheet addButtonWithTitle:NSLocalizedString(@"Recently Sent Messages", @"Recently Sent Messages button title")];
 	[actionSheet addButtonWithTitle:NSLocalizedString(@"Room Info", @"Room Info button title")];
 
 	actionSheet.cancelButtonIndex = [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
@@ -477,8 +483,8 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	_parting = NO;
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
 
 	[self _updateRightBarButtonItemAnimated:YES];
 }
@@ -486,8 +492,8 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 - (void) _partedRoom:(NSNotification *) notification {
 	[self addEventMessage:NSLocalizedString(@"You left the room.", "Left room event message") withIdentifier:@"parted" announceWithVoiceOver:YES];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
 
 	[self _updateRightBarButtonItemAnimated:YES];
 
@@ -519,15 +525,15 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	[self _processMessageData:reasonData target:self action:@selector(_displayProcessedKickReason:) userInfo:notification.userInfo];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
+	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
 
 	if ([[CQSettingsController settingsController] boolForKey:@"JVAutoRejoinRoomsOnKick"]) {
 		[self performSelector:@selector(join) withObject:nil afterDelay:5.];
 		return;
 	}
 
-	UIAlertView *alert = [[UIAlertView alloc] init];
+	UIAlertView *alert = [[CQAlertView alloc] init];
 	alert.tag = RejoinRoomAlertTag;
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"Kicked from Room", "Kicked from room alert title");
@@ -1060,14 +1066,19 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		return;
 
 	if (showJoinEvents) {
-		NSString *eventMessageFormat = [NSLocalizedString(@"%@ joined the room.", "User has join the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		NSString *userInformation = nil;
-		
-		if (showHostmasksOnJoin)
-			userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForMemberUser:user], user.username, user.address];
-		else userInformation = [self _markupForMemberUser:user];
+		NSString *batchIdentifier = notification.userInfo[@"batch"];
+		if (batchIdentifier.length) {
+			[_batchStorage[batchIdentifier] addObject:user];
+		} else {
+			NSString *eventMessageFormat = [NSLocalizedString(@"%@ joined the room.", "User has join the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			NSString *userInformation = nil;
 
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:@"memberJoined" announceWithVoiceOver:YES];
+			if (showHostmasksOnJoin)
+				userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForMemberUser:user], user.username, user.address];
+			else userInformation = [self _markupForMemberUser:user];
+
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:@"memberJoined" announceWithVoiceOver:YES];
+		}
 	}
 
 	[_orderedMembers addObject:user];
@@ -1105,8 +1116,13 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	MVChatUser *user = notification.userInfo[@"user"];
 
 	if (showLeaveEvents) {
-		NSData *reasonData = notification.userInfo[@"reason"];
-		[self _processMessageData:reasonData target:self action:@selector(_displayProcessedMemberPartReason:) userInfo:notification.userInfo];
+		NSString *batchIdentifier = notification.userInfo[@"batch"];
+		if (batchIdentifier.length) {
+			[_batchStorage[batchIdentifier] addObject:user];
+		} else {
+			NSData *reasonData = notification.userInfo[@"reason"];
+			[self _processMessageData:reasonData target:self action:@selector(_displayProcessedMemberPartReason:) userInfo:notification.userInfo];
+		}
 	}
 
 	NSUInteger index = [_orderedMembers indexOfObjectIdenticalTo:user];
@@ -1182,6 +1198,90 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	return [NSString stringWithFormat:@"%@ \u2014 %@\n%@", self.room.displayName, user.displayName, messageText];
 }
 
+- (void) _batchUpdatesWillBegin:(NSNotification *) notification {
+	[super _batchUpdatesWillBegin:notification];
+
+	NSInteger batchType = CQBatchTypeUnknown;
+	NSString *type = notification.userInfo[@"type"];
+	if ([type isCaseInsensitiveEqualToString:@"NETSPLIT"]) {
+		batchType = CQBatchTypeParts;
+	} else if ([type isCaseInsensitiveEqualToString:@"NETJOIN"]) {
+		batchType = CQBatchTypeJoins;
+	} else {
+		[super _batchUpdatesWillBegin:notification];
+		return;
+	}
+
+	NSString *identifier = notification.userInfo[@"identifier"];
+	NSMutableArray *associatedBatches = _batchTypeAssociation[@(batchType)];
+	if (!associatedBatches)
+		_batchTypeAssociation[@(batchType)] = [NSMutableArray array];
+	[associatedBatches addObject:identifier];
+
+	_batchStorage[identifier] = [NSMutableArray array];
+}
+
+- (void) _batchUpdatesDidEnd:(NSNotification *) notification {
+	NSString *type = notification.userInfo[@"type"];
+	NSString *identifier = notification.userInfo[@"identifier"];
+
+	NSArray *batchStorage = _batchStorage[identifier];
+	NSInteger batchType = CQBatchTypeUnknown;
+
+	BOOL showHostmasks = NO;
+	NSString *singularEventMessageFormat = nil;
+	NSString *manyEventMessageFormat = nil;
+	NSString *voiceoverMessage = nil;
+	NSString *eventIdentifier = nil;
+	if ([type isCaseInsensitiveEqualToString:@"NETSPLIT"]) {
+		batchType = CQBatchTypeParts;
+
+		showHostmasks = showHostmasksOnPart;
+		singularEventMessageFormat = [NSLocalizedString(@"%@ left the room due to a netsplit.", "User has left the room after a netsplit event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		manyEventMessageFormat = [NSLocalizedString(@"%@ have left the room due to a netsplit.", "Users have left the room after a netsplit event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		voiceoverMessage = NSLocalizedString(@"%tu have left the room due to a netsplit.", "Count of users have left the room after a netsplit voiceover message");
+		eventIdentifier = @"memberParted";
+	} else if ([type isCaseInsensitiveEqualToString:@"NETJOIN"]) {
+		batchType = CQBatchTypeJoins;
+
+		showHostmasks = showHostmasksOnJoin;
+		singularEventMessageFormat = [NSLocalizedString(@"%@ rejoined the room after a netsplit.", "User has join the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		manyEventMessageFormat = singularEventMessageFormat;
+		voiceoverMessage = NSLocalizedString(@"%tu people have rejoined the room after to a netsplit.", "Count of users have joined the room after a netsplit voiceover message");
+		eventIdentifier = @"memberJoined";
+	} else {
+		[super _batchUpdatesDidEnd:notification];
+		return;
+	}
+
+	if (batchStorage.count == 1) {
+		MVChatUser *user = batchStorage.firstObject;
+		NSString *userInformation = nil;
+		if (showHostmasks)
+			userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForUser:user], user.username, user.address];
+		else userInformation = [self _markupForUser:user];
+
+		NSString *eventMessageFormat = singularEventMessageFormat;
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:eventIdentifier announceWithVoiceOver:YES];
+	} else if (batchStorage.count) {
+		NSString *groupingSeparator = [[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator];
+		NSString *usersParted = [batchStorage componentsJoinedByString:[NSString stringWithFormat:@"%@ ", groupingSeparator]];
+		NSString *eventMessageFormat = manyEventMessageFormat;
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, usersParted] withIdentifier:eventIdentifier announceWithVoiceOver:NO];
+
+		NSString *fullVoiceoverMessage = [NSString stringWithFormat:voiceoverMessage, batchStorage.count];
+		if ([self canAnnounceWithVoiceOverAndMessageIsImportant:YES])
+			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, fullVoiceoverMessage);
+	}
+
+	NSMutableArray *associatedBatches = _batchTypeAssociation[@(batchType)];
+	[associatedBatches removeObject:identifier];
+
+	if (associatedBatches.count == 0)
+		[_batchTypeAssociation removeObjectForKey:@(batchType)];
+	[_batchStorage removeObjectForKey:identifier];
+}
+
 #pragma mark -
 
 - (void) _addPendingComponentsAnimated:(BOOL) animated {
@@ -1237,8 +1337,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	UIBarButtonItem *item = nil;
 
 	if (self.available) {
-        BOOL isPadModel = [[UIDevice currentDevice] isPadModel]; 
-		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:isPadModel ? @"members-large.png" : @"members.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showMembers)];
+		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showMembers)];
 		item.accessibilityLabel = NSLocalizedString(@"Members List", @"Voiceover members list label"); 
 	} else {
 		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Join", "Join button title") style:UIBarButtonItemStyleDone target:self action:@selector(join)];	
@@ -1253,7 +1352,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 }
 
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
-	UIAlertView *alert = [[UIAlertView alloc] init];
+	UIAlertView *alert = [[CQAlertView alloc] init];
 	alert.delegate = self;
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];

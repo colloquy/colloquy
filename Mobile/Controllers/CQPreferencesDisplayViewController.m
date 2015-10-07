@@ -59,11 +59,11 @@ static NSString *const CQPSListTypeFont = @"Font";
 	BOOL _active;
 }
 
-- (id) initWithRootPlist {
+- (instancetype) initWithRootPlist {
 	return [self initWithPlistNamed:@"Root"];
 }
 
-- (id) initWithPlistNamed:(NSString *) plist {
+- (instancetype) initWithPlistNamed:(NSString *) plist {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 
@@ -333,6 +333,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 			preferencesListViewController.listType = CQPreferencesListTypeImage;
 		else if ([listType isCaseInsensitiveEqualToString:CQPSListTypeFont])
 			preferencesListViewController.listType = CQPreferencesListTypeFont;
+		preferencesListViewController.values = rowDictionary[CQPSValues];
 		viewController = preferencesListViewController;
 	} else if ([rowDictionary[CQPSType] isEqualToString:CQPSTitleValueSpecifier]) {
 		NSString *address = rowDictionary[CQPSAddress];

@@ -25,7 +25,7 @@
 - (void)moveToPoint:(NSPoint)inPoint;
 - (NSImage *)dragTabImageForTabCell:(AICustomTabCell *)tabCell inCustomTabsView:(AICustomTabsView *)customTabsView;
 - (NSImage *)dragWindowImageForWindow:(NSWindow *)window customTabsView:(AICustomTabsView *)customTabsView tabCell:(AICustomTabCell *)tabCell;
-- (NSImage *)dragImage;
+@property (readonly, copy) NSImage *dragImage;
 - (void)closeWindow;
 
 @end

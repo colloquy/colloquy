@@ -1,4 +1,4 @@
-typedef enum {
+typedef NS_ENUM(NSInteger, CQConsoleMessageType) {
 	CQConsoleMessageTypeNick,
 	CQConsoleMessageTypeTraffic, // JOIN, PART, KICK, INVITE
 	CQConsoleMessageTypeTopic,
@@ -8,7 +8,7 @@ typedef enum {
 	CQConsoleMessageTypeUnknown, // WALLOP, OLINES, etc
 	CQConsoleMessageTypeCTCP,
 	CQConsoleMessageTypePing // PING and PONG
-} CQConsoleMessageType;
+};
 
 @interface CQProcessConsoleMessageOperation : NSOperation {
 	NSMutableString *_message;
@@ -25,7 +25,7 @@ typedef enum {
 	BOOL _verbose;
 }
 
-- (id) initWithMessage:(NSString *) message outbound:(BOOL) outbound;
+- (instancetype) initWithMessage:(NSString *) message outbound:(BOOL) outbound;
 
 @property BOOL verbose;
 @property NSStringEncoding encoding;

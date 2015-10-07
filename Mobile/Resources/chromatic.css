@@ -9,13 +9,11 @@ body {
 
 a {
 	color: hsl(220, 65%, 40%);
-	pointer-events: auto;
 }
 
 .notice-wrapper, .message-wrapper {
 	padding: 3px 8px;
 	border-top: 1px solid rgba(0, 0, 0, 0.075);
-	pointer-events: none;
 }
 
 .notice-wrapper.subsequent:not(.highlight) + .notice-wrapper:not(.highlight), .message-wrapper.subsequent:not(.highlight) + .message-wrapper:not(.highlight) {
@@ -68,7 +66,6 @@ a {
 }
 
 .nickname {
-	-webkit-touch-callout: none;
 	text-decoration: none;
 }
 

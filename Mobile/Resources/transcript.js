@@ -116,7 +116,7 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 	if (self) className += " self";
 
 	var timestampClassName = timestampPosition === null ? "timestamp" : "timestamp " + timestampPosition;
-	if (!previousSession && timestamp !== null) {
+	if (!previousSession && timestamp !== null && timestamp.length > 0) {
 		var timestampElement = document.createElement("span");
 		timestampElement.className = timestampClassName;
 		timestampElement.innerHTML = timestamp;
@@ -188,7 +188,7 @@ function markScrollback() {
 function setTimestampPosition(position) {
 	timestampPosition = position;
 
-	var className = timestampPosition === null ? "event" : "timestamp " + timestampPosition;
+	var className = timestampPosition === null ? "timestamp" : "timestamp " + timestampPosition;
 	var elements = document.getElementsByClassName("timestamp");
 	for (var i = 0; i < elements.length; i++)
 		elements[i].className = className;

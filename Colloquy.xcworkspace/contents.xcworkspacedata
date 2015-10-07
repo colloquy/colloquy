@@ -7,4 +7,7 @@
    <FileRef
       location = "container:Colloquy (Mac).xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Colloquy (Old).xcodeproj">
+   </FileRef>
 </Workspace>

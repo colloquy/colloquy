@@ -21,7 +21,7 @@
 	NSMutableArray *_roomOrder;
 	NSString *_currentFilter;
 }
-+ (id) chatRoomBrowserForConnection:(MVChatConnection *) connection;
++ (instancetype) chatRoomBrowserForConnection:(MVChatConnection *) connection;
 
 - (IBAction) close:(id) sender;
 - (IBAction) joinRoom:(id) sender;
@@ -32,9 +32,7 @@
 
 - (IBAction) changeConnection:(id) sender;
 
-- (void) setFilter:(NSString *) filter;
-- (NSString *) filter;
+@property (copy) NSString *filter;
 
-- (void) setConnection:(MVChatConnection *) connection;
-- (MVChatConnection *) connection;
+@property (strong) MVChatConnection *connection;
 @end

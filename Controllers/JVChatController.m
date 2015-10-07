@@ -13,7 +13,7 @@
 #import "JVChatMessage.h"
 #import "JVChatRoomMember.h"
 
-#import <libxml/parser.h>
+#include <libxml/parser.h>
 
 static JVChatController *sharedInstance = nil;
 static NSMenu *smartTranscriptMenu = nil;
@@ -72,7 +72,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_chatWindows = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
 		_chatControllers = [[NSMutableSet allocWithZone:nil] initWithCapacity:50];
@@ -84,14 +84,14 @@ static NSMenu *smartTranscriptMenu = nil;
 			if( object ) [_chatControllers addObject:object];
 		}
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _joinedRoom: ) name:MVChatRoomJoinedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _invitedToRoom: ) name:MVChatRoomInvitedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _invitedToDirectChat: ) name:MVDirectChatConnectionOfferNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotBeep: ) name:MVChatConnectionGotBeepNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotPrivateMessage: ) name:MVChatConnectionGotPrivateMessageNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotRoomMessage: ) name:MVChatRoomGotMessageNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotDirectChatMessage: ) name:MVDirectChatConnectionGotMessageNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred: ) name:MVChatConnectionErrorNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _joinedRoom: ) name:MVChatRoomJoinedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _invitedToRoom: ) name:MVChatRoomInvitedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _invitedToDirectChat: ) name:MVDirectChatConnectionOfferNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _gotBeep: ) name:MVChatConnectionGotBeepNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _gotPrivateMessage: ) name:MVChatConnectionGotPrivateMessageNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _gotRoomMessage: ) name:MVChatRoomGotMessageNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _gotDirectChatMessage: ) name:MVDirectChatConnectionGotMessageNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _errorOccurred: ) name:MVChatConnectionErrorNotification object:nil];
 
 		[[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeyPath:@"values.JVChatWindowRuleSets" options:NSKeyValueObservingOptionNew context:NULL];
 	}
@@ -101,14 +101,9 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (void) dealloc {
 	[[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeyPath:@"values.JVChatWindowRuleSets"];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	if( self == sharedInstance ) sharedInstance = nil;
-
-
-	_chatWindows = nil;
-	_chatControllers = nil;
-	_windowRuleSets = nil;
-
+	[[NSNotificationCenter chatCenter] removeObserver:self];
+	//This will never get called:
+	//if( self == sharedInstance ) sharedInstance = nil;
 }
 
 #pragma mark -
@@ -120,12 +115,12 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	NSDictionary *windowSet = nil;
 	for( windowSet in _windowRuleSets ) {
-		for( NSDictionary *ruleSet in [windowSet objectForKey:@"rules"]) {
-			BOOL andOperation = ( [[ruleSet objectForKey:@"operation"] intValue] == 2 );
-			BOOL ignore = [[ruleSet objectForKey:@"ignoreCase"] boolValue];
+		for( NSDictionary *ruleSet in windowSet[@"rules"]) {
+			BOOL andOperation = ( [ruleSet[@"operation"] intValue] == 2 );
+			BOOL ignore = [ruleSet[@"ignoreCase"] boolValue];
 			BOOL match = ( andOperation ? YES : NO );
 
-			for( JVChatViewCriterionController *criterion in [ruleSet objectForKey:@"criterion"]) {
+			for( JVChatViewCriterionController *criterion in ruleSet[@"criterion"]) {
 				BOOL localMatch = [criterion matchChatView:controller ignoringCase:ignore];
 				match = ( andOperation ? ( match & localMatch ) : ( match | localMatch ) );
 				if( ! localMatch && andOperation ) break; // fails, this wont match with all rules
@@ -142,16 +137,16 @@ static NSMenu *smartTranscriptMenu = nil;
 	}
 
 	if( finalMatch && windowSet ) {
-		if( [[windowSet objectForKey:@"special"] isEqualToString:@"currentWindow"] || [[windowSet objectForKey:@"currentWindow"] boolValue] ) {
+		if( [windowSet[@"special"] isEqualToString:@"currentWindow"] || [windowSet[@"currentWindow"] boolValue] ) {
 			for( windowController in _chatWindows )
 				if( [[windowController window] isMainWindow] ) break;
 			if( ! windowController ) windowController = [_chatWindows anyObject];
-		} else if( [[windowSet objectForKey:@"special"] isEqualToString:@"newWindow"] ) {
+		} else if( [windowSet[@"special"] isEqualToString:@"newWindow"] ) {
 			windowController = [self createChatWindowController];
-		} else if( [[windowSet objectForKey:@"special"] isEqualToString:@"serverWindow"] ) {
+		} else if( [windowSet[@"special"] isEqualToString:@"serverWindow"] ) {
 			windowController = [self chatWindowControllerWithIdentifier:[[controller connection] server]];
-		} else if( [(NSString *)[windowSet objectForKey:@"identifier"] length] ) {
-			windowController = [self chatWindowControllerWithIdentifier:[windowSet objectForKey:@"identifier"]];
+		} else if( [(NSString *)windowSet[@"identifier"] length] ) {
+			windowController = [self chatWindowControllerWithIdentifier:windowSet[@"identifier"]];
 		}
 	}
 
@@ -357,7 +352,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	NSParameterAssert( panel != nil );
 
 	if( [panel respondsToSelector:@selector( willDispose )] )
-		[(NSObject *)panel willDispose];
+		[(id<JVChatViewController>)panel willDispose];
 
 	[[panel windowController] removeChatViewController:panel];
 	[_chatControllers removeObject:panel];
@@ -392,7 +387,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	NSParameterAssert( controller != nil );
 
 	if( [controller respondsToSelector:@selector( willDispose )] )
-		[(NSObject *)controller willDispose];
+		[(id<JVChatViewController>)controller willDispose];
 
 	[[controller windowController] removeChatViewController:controller];
 
@@ -449,11 +444,9 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	return ignoreResult;
 }
-@end
 
 #pragma mark -
 
-@implementation JVChatController (JVChatControllerPrivate)
 - (void) _joinedRoom:(NSNotification *) notification {
 	MVChatRoom *rm = [notification object];
 	if( ! [[MVConnectionsController defaultController] managesConnection:[rm connection]] ) return;
@@ -462,18 +455,27 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (void) _invitedToRoom:(NSNotification *) notification {
-	NSString *room = [[notification userInfo] objectForKey:@"room"];
-	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
+	NSString *room = [notification userInfo][@"room"];
+	MVChatUser *user = [notification userInfo][@"user"];
 	MVChatConnection *connection = [notification object];
 
 	if( ! [[MVConnectionsController defaultController] managesConnection:connection] ) return;
+
+	MVChatUser *invitedUser = notification.userInfo[@"target"];
+	if (invitedUser) {
+		NSString *message = [NSString stringWithFormat:NSLocalizedString(@"%@ invited %@ to \"%@\" on \"%@\".", "User invited to join room alert message"), user.displayName, invitedUser.displayName,  room, connection.server];
+		MVChatRoom *roomInstance = [connection chatRoomWithName:room];
+		JVChatRoomPanel *chatRoomPanel = [self chatViewControllerForRoom:roomInstance ifExists:NO];
+		[chatRoomPanel addEventMessageToDisplay:message withName:@"invite" andAttributes:nil];
+		return;
+	}
 
 	NSString *title = NSLocalizedString( @"Chat Room Invite", "member invited to room title" );
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", "you were invited to join a chat room status message" ), room, [user nickname]];
 
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:NSLocalizedString( @"Invited to Chat", "bubble title invited to room" ) forKey:@"title"];
-	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message invited to room" ), room, [user nickname]] forKey:@"description"];
+	context[@"title"] = NSLocalizedString( @"Invited to Chat", "bubble title invited to room" );
+	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message invited to room" ), room, [user nickname]];
 	[[JVNotificationController defaultController] performNotification:@"JVChatRoomInvite" withContextInfo:context];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinChatRoomOnInvite"] || NSRunInformationalAlertPanel( title, @"%@", NSLocalizedString( @"Join", "join button" ), NSLocalizedString( @"Decline", "decline button" ), nil, message ) == NSOKButton )
@@ -481,7 +483,7 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (void) _invitedToDirectChat:(NSNotification *) notification {
-	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
+	MVChatUser *user = [notification userInfo][@"user"];
 	MVDirectChatConnection *connection = [notification object];
 
 	if( ! [[MVConnectionsController defaultController] managesConnection:[user connection]] ) return;
@@ -490,8 +492,8 @@ static NSMenu *smartTranscriptMenu = nil;
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to participate in a chat with %@. Would you like to accept this invitation?", "you were invited to a direct chat status message" ), [user nickname]];
 
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:NSLocalizedString( @"Invited to Direct Chat", "bubble title invited to direct chat" ) forKey:@"title"];
-	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to participate in a chat with %@.", "bubble message invited to participate in a direct chat" ), [user nickname]] forKey:@"description"];
+	context[@"title"] = NSLocalizedString( @"Invited to Direct Chat", "bubble title invited to direct chat" );
+	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"You were invited to participate in a chat with %@.", "bubble message invited to participate in a direct chat" ), [user nickname]];
 	[[JVNotificationController defaultController] performNotification:@"JVDirectChatInvite" withContextInfo:context];
 
 	if( NSRunInformationalAlertPanel( title, @"%@", NSLocalizedString( @"Accept", "accept button" ), NSLocalizedString( @"Decline", "decline button" ), nil, message ) == NSOKButton ) {
@@ -502,28 +504,28 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (void) _gotBeep:(NSNotification *) notification {
 	NSDictionary *userInfo = [notification userInfo];
-	MVChatUser *user = [userInfo objectForKey:@"user"];
+	MVChatUser *user = userInfo[@"user"];
 
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:NSLocalizedString( @"Beep received", "beep bubble title" ) forKey:@"title"];
-	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ is reclaiming your attention by means of a beep.", "beep bubble text" ), [user nickname]] forKey:@"description"];
-	[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
-	[context setObject:[[user nickname] stringByAppendingString:@"JVChatBeeped"] forKey:@"coalesceKey"];
-	[context setObject:self forKey:@"target"];
-	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
+	context[@"title"] = NSLocalizedString( @"Beep received", "beep bubble title" );
+	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@ is reclaiming your attention by means of a beep.", "beep bubble text" ), [user nickname]];
+	context[@"image"] = [NSImage imageNamed:@"activityNewImportant"];
+	context[@"coalesceKey"] = [[user nickname] stringByAppendingString:@"JVChatBeeped"];
+	context[@"target"] = self;
+	context[@"action"] = NSStringFromSelector( @selector( activate: ) );
 	[[JVNotificationController defaultController] performNotification:@"JVChatBeeped" withContextInfo:context];
 }
 
 - (void) _gotDirectChatMessage:(NSNotification *) notification {
 	MVDirectChatConnection *connection = [notification object];
-	NSData *message = [[notification userInfo] objectForKey:@"message"];
+	NSData *message = [notification userInfo][@"message"];
 	MVChatUser *user = [connection user];
 
 	if( ! [[MVConnectionsController defaultController] managesConnection:[user connection]] ) return;
 
 	if( ( [self shouldIgnoreUser:user withMessage:nil inView:nil] == JVNotIgnored ) ) {
 		JVDirectChatPanel *controller = [self chatViewControllerForDirectChatConnection:connection ifExists:NO userInitiated:NO];
-		[controller addMessageToDisplay:message fromUser:user withAttributes:[notification userInfo] withIdentifier:[[notification userInfo] objectForKey:@"identifier"] andType:JVChatMessageNormalType];
+		[controller addMessageToDisplay:message fromUser:user withAttributes:[notification userInfo] withIdentifier:[notification userInfo][@"identifier"] andType:JVChatMessageNormalType];
 	}
 }
 
@@ -539,42 +541,42 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	if( ! [[MVConnectionsController defaultController] managesConnection:[user connection]] ) return;
 
-	NSData *message = [[notification userInfo] objectForKey:@"message"];
+	NSData *message = [notification userInfo][@"message"];
 	MVChatUser* sender = user;
 
-	if( [user isLocalUser] && [[notification userInfo] objectForKey:@"target"] )
-		user = [[notification userInfo] objectForKey:@"target"];
+	if( [user isLocalUser] && [notification userInfo][@"target"] )
+		user = [notification userInfo][@"target"];
 
 	BOOL hideFromUser = NO;
-	if( [[[notification userInfo] objectForKey:@"notice"] boolValue] ) {
+	if( [[notification userInfo][@"notice"] boolValue] ) {
 
-		if( ! [self chatViewControllerForUser:user ifExists:YES] && ( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"] == 0 || ( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"] == 2 && [[notification userInfo] objectForKey:@"handled"] ) ) )
+		if( ! [self chatViewControllerForUser:user ifExists:YES] && ( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"] == 0 || ( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"] == 2 && [notification userInfo][@"handled"] ) ) )
 			hideFromUser = YES;
 
 		MVChatConnection *connection = [user connection];
-		NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:[connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
+		NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:@([connection encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
 		NSAttributedString *messageString = [NSAttributedString attributedStringWithChatFormat:message options:options];
 		if( ! messageString ) {
-			[options setObject:[NSNumber numberWithUnsignedLong:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
+			options[@"StringEncoding"] = @(NSISOLatin1StringEncoding);
 			messageString = [NSAttributedString attributedStringWithChatFormat:message options:options];
 		}
 
 		if( [[user nickname] isEqualToString:@"MemoServ"] && [[messageString string] rangeOfString:@"new memo" options:NSCaseInsensitiveSearch].location != NSNotFound && [[messageString string] rangeOfString:@" no " options:NSCaseInsensitiveSearch].location == NSNotFound ) {
 
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:NSLocalizedString( @"You Have New Memos", "new memos bubble title" ) forKey:@"title"];
-			[context setObject:messageString forKey:@"description"];
-			[context setObject:[NSImage imageNamed:@"Stickies"] forKey:@"image"];
-			[context setObject:self forKey:@"target"];
-			[context setObject:NSStringFromSelector( @selector( _checkMemos: ) ) forKey:@"action"];
-			[context setObject:connection forKey:@"representedObject"];
+			context[@"title"] = NSLocalizedString( @"You Have New Memos", "new memos bubble title" );
+			context[@"description"] = messageString;
+			context[@"image"] = [NSImage imageNamed:@"Stickies"];
+			context[@"target"] = self;
+			context[@"action"] = NSStringFromSelector( @selector( _checkMemos: ) );
+			context[@"representedObject"] = connection;
 			[[JVNotificationController defaultController] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
 
 		} else {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"Notice from %@", "notice message from user title" ), [user displayName]] forKey:@"title"];
-			[context setObject:messageString forKey:@"description"];
-			[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
+			context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"Notice from %@", "notice message from user title" ), [user displayName]];
+			context[@"description"] = messageString;
+			context[@"image"] = [NSImage imageNamed:@"activityNewImportant"];
 			NSString *type = ( hideFromUser ? @"JVChatUnhandledNoticeMessage" : @"JVChatNoticeMessage" );
 			[[JVNotificationController defaultController] performNotification:type withContextInfo:context];
 		}
@@ -582,22 +584,22 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	if( ! hideFromUser && ( [self shouldIgnoreUser:user withMessage:nil inView:nil] == JVNotIgnored ) ) {
 		JVDirectChatPanel *controller = [self chatViewControllerForUser:user ifExists:NO userInitiated:NO];
-		JVChatMessageType type = ( [[[notification userInfo] objectForKey:@"notice"] boolValue] ? JVChatMessageNoticeType : JVChatMessageNormalType );
-		[controller addMessageToDisplay:message fromUser:sender withAttributes:[notification userInfo] withIdentifier:[[notification userInfo] objectForKey:@"identifier"] andType:type];
+		JVChatMessageType type = ( [[notification userInfo][@"notice"] boolValue] ? JVChatMessageNoticeType : JVChatMessageNormalType );
+		[controller addMessageToDisplay:message fromUser:sender withAttributes:[notification userInfo] withIdentifier:[notification userInfo][@"identifier"] andType:type];
 	}
 }
 
 - (void) _errorOccurred:(NSNotification *) notification {
-	NSError *error = [[notification userInfo] objectForKey:@"error"];
+	NSError *error = [notification userInfo][@"error"];
 	if( [error code] == MVChatConnectionErroneusNicknameError ) {
-		NSString *nickname = [[error userInfo] objectForKey:@"nickname"];
+		NSString *nickname = [error userInfo][@"nickname"];
 		NSAlert *alert = [[NSAlert alloc] init];
 		[alert setMessageText:NSLocalizedString( @"Connection error", "connection error alert dialog title" )];
 		[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"Could not connect to server because the requested nickname (%@) was unavailable or invalid.", "connection error alert dialog message" ), nickname]];
 		[alert setAlertStyle:NSInformationalAlertStyle];
 		[alert runModal];
 	} else if( [error code] == MVChatConnectionNoSuchUserError ) {
-		MVChatUser *user = [[error userInfo] objectForKey:@"user"];
+		MVChatUser *user = [error userInfo][@"user"];
 		JVDirectChatPanel *panel = [self chatViewControllerForUser:user ifExists:YES];
 		if( ! panel || ( panel && [[panel windowController] activeChatViewController] != panel ) ) {
 			NSAlert *alert = [[NSAlert alloc] init];
@@ -613,7 +615,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		[alert setAlertStyle:NSInformationalAlertStyle];
 		[alert runModal];
 	} else if( [error code] == MVChatConnectionProtocolError ) {
-		NSString *reason = [[error userInfo] objectForKey:@"reason"];
+		NSString *reason = [error userInfo][@"reason"];
 		NSAlert *alert = [[NSAlert alloc] init];
 		[alert setMessageText:NSLocalizedString( @"Chat protocol error", "malformed packet alert dialog title" )];
 		[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"Client got a malformed packet: %@", "malformed packet alert dialog message" ), reason]];
@@ -700,10 +702,10 @@ static NSMenu *smartTranscriptMenu = nil;
 @implementation JVStartChatScriptCommand
 - (id) performDefaultImplementation {
 	NSDictionary *args = [self evaluatedArguments];
-	id target = [args objectForKey:@"target"];
+	id target = args[@"target"];
 
 	if( target && [target isKindOfClass:[NSString class]] ) {
-		MVChatConnection *connection = [args objectForKey:@"connection"];
+		MVChatConnection *connection = args[@"connection"];
 		if( ! connection ) {
 			[self setScriptErrorNumber:1000];
 			[self setScriptErrorString:@"The connection parameter was missing and is required when the user is a nickname string."];
@@ -763,7 +765,7 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (id <JVChatViewController>) valueInChatViewsAtIndex:(NSUInteger) index {
-	return [[self chatViews] objectAtIndex:index];
+	return [self chatViews][index];
 }
 
 - (id <JVChatViewController>) valueInChatViewsWithUniqueID:(id) identifier {
@@ -795,7 +797,7 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (void) removeFromChatViewsAtIndex:(NSUInteger) index {
-	id <JVChatViewController> view = [[self chatViews] objectAtIndex:index];
+	id <JVChatViewController> view = [self chatViews][index];
 	if( view ) [[JVChatController defaultController] disposeViewController:view];
 }
 
@@ -810,7 +812,7 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (id <JVChatViewController>) valueInChatViewsAtIndex:(NSUInteger) index withClass:(Class) class {
-	return [[self chatViewsWithClass:class] objectAtIndex:index];
+	return [self chatViewsWithClass:class][index];
 }
 
 - (id <JVChatViewController>) valueInChatViewsWithUniqueID:(id) identifier andClass:(Class) class {
@@ -826,7 +828,7 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (void) removeFromChatViewsAtIndex:(NSUInteger) index withClass:(Class) class {
-	id <JVChatViewController> view = [[self chatViewsWithClass:class] objectAtIndex:index];
+	id <JVChatViewController> view = [self chatViewsWithClass:class][index];
 	if( view ) [[JVChatController defaultController] disposeViewController:view];
 }
 
@@ -1035,7 +1037,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 		if( ! startSpec && ! endSpec ) return nil;
 
-		if( ! [chatViews count] ) [NSArray array];
+		if( ! [chatViews count] ) return @[];
 
 		if( ( ! startSpec || [startKey isEqualToString:@"chatViews"] || [startKey isEqualToString:@"chatRooms"] || [startKey isEqualToString:@"directChats"] || [startKey isEqualToString:@"chatConsoles"] || [startKey isEqualToString:@"chatTranscripts"] ) && ( ! endSpec || [endKey isEqualToString:@"chatViews"] || [endKey isEqualToString:@"chatRooms"] || [endKey isEqualToString:@"directChats"] || [endKey isEqualToString:@"chatConsoles"] || [endKey isEqualToString:@"chatTranscripts"] ) ) {
 			NSUInteger startIndex = 0;
@@ -1047,7 +1049,7 @@ static NSMenu *smartTranscriptMenu = nil;
 				id startObject = [startSpec objectsByEvaluatingSpecifier];
 				if( [startObject isKindOfClass:[NSArray class]] ) {
 					if( ! [(NSArray *)startObject count] ) startObject = nil;
-					else startObject = [startObject objectAtIndex:0];
+					else startObject = startObject[0];
 				}
 				if( ! startObject ) return nil;
 				startIndex = [chatViews indexOfObjectIdenticalTo:startObject];
@@ -1068,7 +1070,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 			// Accept backwards ranges gracefully
 			if( endIndex < startIndex ) {
-				unsigned temp = endIndex;
+				NSUInteger temp = endIndex;
 				endIndex = startIndex;
 				startIndex = temp;
 			}
@@ -1084,12 +1086,12 @@ static NSMenu *smartTranscriptMenu = nil;
 
 			for( NSUInteger i = startIndex; i <= endIndex; i++ ) {
 				if( keyIsGeneric ) {
-					[result addObject:[NSNumber numberWithUnsignedLong:i]];
+					[result addObject:@(i)];
 				} else {
-					obj = [chatViews objectAtIndex:i];
+					obj = chatViews[i];
 					curKeyIndex = [rangeKeyObjects indexOfObjectIdenticalTo:obj];
 					if( curKeyIndex != NSNotFound )
-						[result addObject:[NSNumber numberWithUnsignedLong:curKeyIndex]];
+						[result addObject:@(curKeyIndex)];
 				}
 			}
 
@@ -1111,7 +1113,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 		if( ! baseSpec ) return nil;
 
-		if( ! [chatViews count] ) return [NSArray array];
+		if( ! [chatViews count] ) return @[];
 
 		if( [baseKey isEqualToString:@"chatViews"] || [baseKey isEqualToString:@"chatRooms"] || [baseKey isEqualToString:@"directChats"] || [baseKey isEqualToString:@"chatConsoles"] || [baseKey isEqualToString:@"chatTranscripts"] ) {
 			NSUInteger baseIndex = 0;
@@ -1124,8 +1126,8 @@ static NSMenu *smartTranscriptMenu = nil;
 			if( [baseObject isKindOfClass:[NSArray class]] ) {
 				NSUInteger baseCount = [(NSArray *)baseObject count];
 				if( baseCount ) {
-					if( relPos == NSRelativeBefore ) baseObject = [baseObject objectAtIndex:0];
-					else baseObject = [baseObject objectAtIndex:( baseCount - 1 )];
+					if( relPos == NSRelativeBefore ) baseObject = baseObject[0];
+					else baseObject = baseObject[( baseCount - 1 )];
 				} else baseObject = nil;
 			}
 
@@ -1148,13 +1150,13 @@ static NSMenu *smartTranscriptMenu = nil;
 
 			while( baseIndex < viewCount ) {
 				if( keyIsGeneric ) {
-					[result addObject:[NSNumber numberWithUnsignedLong:baseIndex]];
+					[result addObject:@(baseIndex)];
 					break;
 				} else {
-					obj = [chatViews objectAtIndex:baseIndex];
+					obj = chatViews[baseIndex];
 					curKeyIndex = [relKeyObjects indexOfObjectIdenticalTo:obj];
 					if( curKeyIndex != NSNotFound ) {
-						[result addObject:[NSNumber numberWithUnsignedLong:curKeyIndex]];
+						[result addObject:@(curKeyIndex)];
 						break;
 					}
 				}

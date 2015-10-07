@@ -5,12 +5,13 @@
 #import "CQNavigationToolbar.h"
 
 #import "UIDeviceAdditions.h"
+#import "NSNotificationAdditions.h"
 
 @interface CQChatPresentationController ()
 @end
 
 @implementation CQChatPresentationController
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
 
@@ -19,6 +20,11 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applyiOS7NavigationBarSizing) name:UIApplicationWillChangeStatusBarFrameNotification object:nil];
 
 	return self;
+}
+
+- (void) dealloc {
+	[[NSNotificationCenter chatCenter] removeObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark -
@@ -59,6 +65,9 @@
 }
 
 - (void) updateToolbarForInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation animated:(BOOL) animated {
+	if ([UIDevice currentDevice].userInterfaceIdiom != UIUserInterfaceIdiomPad)
+		return;
+
 	NSMutableArray *allItems = [_standardToolbarItems mutableCopy];
 
 	UIBarButtonItem *leftBarButtonItem = _topChatViewController.navigationItem.leftBarButtonItem;
@@ -174,6 +183,8 @@
 	CGRect frame = _toolbar.frame;
 	frame.size.width = self.view.frame.size.width;
 
+	BOOL isNotOS8 = ![UIDevice currentDevice].isSystemEight;
+
 	// If we are on iOS 7 or up, the statusbar is now part of the navigation bar, so, we need to fake its height
 	CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
 	// We can't do the following:
@@ -181,9 +192,11 @@
 	// because when the app first loads, it fails to convert the rect, and we are given {{0, 0}, {20, 1024}} as the
 	// statusBarFrame, even after self.view is added to its superview, is loaded, and self.view.window is set.
 	CGFloat statusBarHeight = fmin(statusBarFrame.size.height, statusBarFrame.size.width);
-	frame.size.height += statusBarHeight;
+	if (isNotOS8)
+		frame.size.height += statusBarHeight;
 	_toolbar.frame = frame;
 
-	_topChatViewController.scrollView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(_toolbar.frame), 0., 0., 0.);
+	if (isNotOS8 || UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation))
+		_topChatViewController.scrollView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(_toolbar.frame), 0., 0., 0.);
 }
 @end

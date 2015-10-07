@@ -1,13 +1,7 @@
 #import "JVChatTranscript.h"
 
-@interface JVChatSession : NSObject <JVChatTranscriptElement> {
-	@protected
-	/* xmlNode */ void *_node;
-	NSScriptObjectSpecifier *_objectSpecifier;
-	JVChatTranscript *_transcript;
-	NSDate *_startDate;
-}
+@interface JVChatSession : NSObject <JVChatTranscriptElement>
 - (/* xmlNode */ void *) node;
-- (JVChatTranscript *) transcript;
-- (NSDate *) startDate;
+@property (readonly, weak) JVChatTranscript *transcript;
+@property (readonly, copy) NSDate *startDate;
 @end

@@ -25,7 +25,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 #pragma mark -
 
 @implementation CQConnectionAdvancedEditController
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 

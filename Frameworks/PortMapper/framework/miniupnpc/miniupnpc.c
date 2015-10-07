@@ -560,11 +560,11 @@ void GetUPNPUrls(struct UPNPUrls * urls, struct IGDdatas * data,
 
 #ifdef DEBUG
 	printf("urls->ipcondescURL='%s' %lu n1=%d\n", urls->ipcondescURL,
-	       strlen(urls->ipcondescURL), n1);
+	       (unsigned long)strlen(urls->ipcondescURL), n1);
 	printf("urls->controlURL='%s' %lu n2=%d\n", urls->controlURL,
-	       strlen(urls->controlURL), n2);
+	       (unsigned long)strlen(urls->controlURL), n2);
 	printf("urls->controlURL_CIF='%s' %lu n3=%d\n", urls->controlURL_CIF,
-	       strlen(urls->controlURL_CIF), n3);
+	       (unsigned long)strlen(urls->controlURL_CIF), n3);
 #endif
 }
 
@@ -626,7 +626,7 @@ int ReceiveData(int socket, char * data, int length, int timeout)
 	return n;
 }
 
-static int
+int
 UPNPIGD_IsConnected(struct UPNPUrls * urls, struct IGDdatas * data)
 {
 	char status[64];

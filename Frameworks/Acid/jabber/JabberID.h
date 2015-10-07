@@ -40,7 +40,7 @@
     NSString* _resource;
     NSString* _complete;
     JabberID* _userhost_jid;
-    unsigned int _hash_value; // cache the hash value, since it is
+    NSUInteger _hash_value; // cache the hash value, since it is
 			      // time-consuming to create
 }
 
@@ -52,14 +52,14 @@
   JabberID instance which would be considered equivalent (although
   non-equivalent objects could have the same hash value).
 */
--(unsigned) hash;
+@property (readonly) NSUInteger hash;
 
 /*!
   @method initWithCoder
   @abstract Initializes a newly allocated instance from data in
   decoder. Returns self.
 */
--(id) initWithCoder:(NSCoder*) coder;
+-(instancetype) initWithCoder:(NSCoder*) coder;
 
 /*!
   @method encodeWithCoder
@@ -88,11 +88,11 @@
   Returns self, or nil if the object is not a valid Jabber
   Identifier
 */
--(id) initWithString:(NSString*)jidstring;
--(id) initWithEscapedString:(NSString*)jidstring;
+-(instancetype) initWithString:(NSString*)jidstring;
+-(instancetype) initWithEscapedString:(NSString*)jidstring;
 
--(id) initWithFormat:(NSString*)fmt, ...;
-+(id) withFormat:(NSString*)fmt, ...;
+-(instancetype) initWithFormat:(NSString*)fmt, ...;
++(instancetype) withFormat:(NSString*)fmt, ...;
 
 
 /*!
@@ -103,44 +103,42 @@
   @param userhost  userhost portion of the Jabber Identifier
   @param resource  resource portion of the Jabber Identifier
 */
--(id) initWithUserHost:(NSString*)userhost
+-(instancetype) initWithUserHost:(NSString*)userhost
            andResource:(NSString*)resource;
-
--(void) dealloc;
 
 /*!
   @method username
   @abstract Retrieve the username (Node) portion of the Jabber
   Identifier, or "" if none.
  */
--(NSString*) username;
+@property (readonly, copy) NSString *username;
 /*!
   @method userhost
   @abstract Retrieve the userhost portion of the Jabber Identifier
 */
--(NSString*) userhost;
+@property (readonly, copy) NSString *userhost;
 /*!
   @method hostname
   @abstract Retrieve the hostname (Domain) portion of the Jabber Identifier
 */
--(NSString*) hostname;
+@property (readonly, copy) NSString *hostname;
 /*!
   @method resource
   @abstract Retrieve the resource portion of the Jabber Identifier, or
   "" if none.
 */
--(NSString*) resource;
+@property (readonly, copy) NSString *resource;
 /*!
   @method hasResource
   @abstract returns YES if there is a resource on the Jabber Identifier
 */
--(BOOL) hasResource;
+@property (readonly) BOOL hasResource;
 /*!
   @method hasUsername
   @abstract returns YES if there is a username (Node) on the Jabber
   Identifier
 */
--(BOOL) hasUsername;
+@property (readonly) BOOL hasUsername;
 
 /*!
   @method userhostJID
@@ -153,8 +151,8 @@
   @method completeID
   @abstract returns a NSString representation of the full Jabber Identifier
 */
--(NSString*) completeID;
--(NSString*) escapedCompleteID;
+@property (readonly, copy) NSString *completeID;
+@property (readonly, copy) NSString *escapedCompleteID;
 
 /*!
     @method isEqual:
@@ -191,7 +189,7 @@
   @abstract create a temporary from NSString. Returns self, or nil if
   the object is not a valid Jabber Identifier
  */
-+(id) withString:(NSString*)jidstring;
++(instancetype) withString:(NSString*)jidstring;
 /*!
   @method withUserHost:andResource
   @abstract create a temporary from two NSString objects. Returns
@@ -199,6 +197,6 @@
   @param userhost  userhost portion of the Jabber Identifier
   @param resource  resource portion of the Jabber Identifier
  */
-+(id) withUserHost:(NSString*)userhost
++(instancetype) withUserHost:(NSString*)userhost
       andResource:(NSString*)resource;
 @end

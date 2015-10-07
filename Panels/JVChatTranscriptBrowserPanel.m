@@ -132,9 +132,9 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 		_selectedTag = 1;
 		_nibLoaded = NO;
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( beginIndexing: ) name:JVMachineBecameIdleNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( stopIndexing: ) name:JVMachineStoppedIdlingNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( markDirty: ) name:JVChatTranscriptUpdatedNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( beginIndexing: ) name:JVMachineBecameIdleNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( stopIndexing: ) name:JVMachineStoppedIdlingNotification object:nil];
+		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( markDirty: ) name:JVChatTranscriptUpdatedNotification object:nil];
 
 		if( [_dirtyLogs count] ) [self performSelector:@selector( beginIndexing: ) withObject:nil afterDelay:0.];
 
@@ -146,7 +146,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 
 - (void) dealloc {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter chatCenter] removeObserver:self];
 
 	_shouldIndex = NO;
 	[NSKeyedArchiver archiveRootObject:_dirtyLogs toFile:[self dirtyPath]];
@@ -295,35 +295,35 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 }
 
 - (void) indexingThread {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *path = nil;
-
-	[NSThread setThreadPriority:0.25];
-
-	while( _shouldIndex ) {
-		@synchronized( _dirtyLogs ) {
-			path = [[_dirtyLogs anyObject] retain];
-			if( path ) [_dirtyLogs removeObject:path];
+	@autoreleasepool {
+		NSString *path = nil;
+		
+		[NSThread setThreadPriority:0.25];
+		
+		while( _shouldIndex ) {
+			@synchronized( _dirtyLogs ) {
+				path = [[_dirtyLogs anyObject] retain];
+				if( path ) [_dirtyLogs removeObject:path];
+			}
+			
+			if( ! path ) break;
+			
+			SKDocumentRef document = SKDocumentCreateWithURL( (CFURLRef) [NSURL fileURLWithPath:path] );
+			NSString *toIndex = [[NSString alloc] initWithContentsOfFile:path]; // FIXME strip xml (w/o NSXMLDocument...) ?
+			SKIndexAddDocumentWithText( _logsIndex, document, (CFStringRef) toIndex, YES );
+			CFRelease( document );
+			
+			[toIndex release];
+			[path release];
+			
+			[self performSelectorOnMainThread:@selector( updateStatus ) withObject:nil waitUntilDone:NO];
 		}
-
-		if( ! path ) break;
-
-		SKDocumentRef document = SKDocumentCreateWithURL( (CFURLRef) [NSURL fileURLWithPath:path] );
-		NSString *toIndex = [[NSString alloc] initWithContentsOfFile:path]; // FIXME strip xml (w/o NSXMLDocument...) ?
-		SKIndexAddDocumentWithText( _logsIndex, document, (CFStringRef) toIndex, YES );
-		CFRelease( document );
-
-		[toIndex release];
-		[path release];
-
-		[self performSelectorOnMainThread:@selector( updateStatus ) withObject:nil waitUntilDone:NO];
+		
+		[self performSelectorOnMainThread:@selector( syncDirtyLogsList ) withObject:nil waitUntilDone:NO];
+		
+		SKIndexFlush( _logsIndex );
+		
 	}
-
-	[self performSelectorOnMainThread:@selector( syncDirtyLogsList ) withObject:nil waitUntilDone:NO];
-
-	SKIndexFlush( _logsIndex );
-
-	[pool release];
 }
 
 - (void) stopIndexing:(NSNotification *) notification {

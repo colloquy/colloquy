@@ -1,3 +1,5 @@
+#ifndef __MVFILETRANSFER__
+#define __MVFILETRANSFER__
 @class MVChatConnection;
 @class MVChatUser;
 
@@ -9,22 +11,22 @@ extern NSString *MVFileTransferErrorOccurredNotification;
 
 extern NSString *MVFileTransferErrorDomain;
 
-typedef enum {
+typedef NS_ENUM(NSInteger, MVFileTransferStatus) {
 	MVFileTransferDoneStatus = 'trDn',
 	MVFileTransferNormalStatus = 'trNo',
 	MVFileTransferHoldingStatus = 'trHo',
 	MVFileTransferStoppedStatus = 'trSt',
 	MVFileTransferErrorStatus = 'trEr'
-} MVFileTransferStatus;
+};
 
-typedef enum {
+typedef NS_ENUM(NSInteger, MVFileTransferError) {
 	MVFileTransferConnectionError = -1,
 	MVFileTransferFileCreationError = -2,
 	MVFileTransferFileOpenError = -3,
 	MVFileTransferAlreadyExistsError = -4,
 	MVFileTransferUnexpectedlyEndedError = -5,
 	MVFileTransferKeyAgreementError = -6
-} MVFileTransferError;
+};
 
 static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus status);
 static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus status) {
@@ -58,24 +60,24 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 + (void) setAutoPortMappingEnabled:(BOOL) enable;
 + (BOOL) isAutoPortMappingEnabled;
 
-- (id) initWithUser:(MVChatUser *) user;
+- (instancetype) initWithUser:(MVChatUser *) user NS_DESIGNATED_INITIALIZER;
 
 @property(readonly, getter=isUpload) BOOL upload;
 @property(readonly, getter=isDownload) BOOL download;
 @property(readonly, getter=isPassive) BOOL passive;
 @property(readonly) MVFileTransferStatus status;
-@property(readonly) NSError *lastError;
+@property(strong, readonly) NSError *lastError;
 
 @property(readonly) unsigned long long finalSize;
 @property(readonly) unsigned long long transferred;
 
-@property(readonly) NSDate *startDate;
+@property(strong, readonly) NSDate *startDate;
 @property(readonly) unsigned long long startOffset;
 
-@property(readonly) NSString *host;
+@property(strong, readonly) NSString *host;
 @property(readonly) unsigned short port;
 
-@property(readonly) MVChatUser *user;
+@property(strong, readonly) MVChatUser *user;
 
 - (void) cancel;
 @end
@@ -86,9 +88,9 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 @protected
 	NSString *_source;
 }
-+ (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive;
++ (instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive;
 
-@property(readonly) NSString *source;
+@property(strong, readonly) NSString *source;
 @end
 
 #pragma mark -
@@ -100,7 +102,7 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 	NSString *_originalFileName;
 }
 @property(copy) NSString *destination;
-@property(readonly) NSString *originalFileName;
+@property(strong, readonly) NSString *originalFileName;
 
 - (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) allow;
 
@@ -109,3 +111,5 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 - (void) accept;
 - (void) acceptByResumingIfPossible:(BOOL) resume;
 @end
+
+#endif

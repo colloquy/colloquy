@@ -1,12 +1,12 @@
 extern NSString *const CQBookmarkingDidSaveLinkNotification;
 extern NSString *const CQBookmarkingDidNotSaveLinkNotification;
 
-typedef enum {
+typedef NS_ENUM(NSInteger, CQBookmarkingError) {
 	CQBookmarkingErrorGeneric,
 	CQBookmarkingErrorAuthorization,
 	CQBookmarkingErrorServer,
 	CQBookmarkingErrorInvalidLink
-} CQBookmarkingError;
+};
 
 extern NSString *const CQBookmarkingErrorDomain;
 

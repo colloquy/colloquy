@@ -1,11 +1,12 @@
 #import "MVChatPluginManager.h"
+#import "JVNotificationController.h"
 
 extern NSString *JVJavaScriptErrorDomain;
 
 @class WebScriptCallFrame;
 @class WebView;
 
-@interface JVJavaScriptChatPlugin : NSObject <MVChatPlugin> {
+@interface JVJavaScriptChatPlugin : NSObject <MVChatPlugin, MVChatPluginNotificationSupport> {
 	MVChatPluginManager *_manager;
 	NSString *_path;
 	NSDate *_modDate;
@@ -16,10 +17,10 @@ extern NSString *JVJavaScriptErrorDomain;
 	BOOL _errorShown;
 	BOOL _scriptGlobalsAdded;
 }
-- (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
+- (instancetype) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 
-- (MVChatPluginManager *) pluginManager;
-- (NSString *) scriptFilePath;
+@property (readonly, strong) MVChatPluginManager *pluginManager;
+@property (readonly, copy) NSString *scriptFilePath;
 - (void) reloadFromDisk;
 
 - (void) setupScriptGlobalsForWebView:(WebView *) webView;

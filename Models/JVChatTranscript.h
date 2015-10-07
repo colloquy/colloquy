@@ -21,42 +21,41 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 	unsigned long long _previousLogOffset;
 	NSUInteger _elementLimit;
 }
-+ (id) chatTranscript;
-+ (id) chatTranscriptWithChatTranscript:(JVChatTranscript *) transcript;
-+ (id) chatTranscriptWithElements:(NSArray *) elements;
-+ (id) chatTranscriptWithContentsOfFile:(NSString *) path;
-+ (id) chatTranscriptWithContentsOfURL:(NSURL *) url;
++ (instancetype) chatTranscript;
++ (instancetype) chatTranscriptWithChatTranscript:(JVChatTranscript *) transcript;
++ (instancetype) chatTranscriptWithElements:(NSArray *) elements;
++ (instancetype) chatTranscriptWithContentsOfFile:(NSString *) path;
++ (instancetype) chatTranscriptWithContentsOfURL:(NSURL *) url;
 
-- (id) init;
-- (id) initWithChatTranscript:(JVChatTranscript *) transcript;
-- (id) initWithElements:(NSArray *) elements;
-- (id) initWithContentsOfFile:(NSString *) path;
-- (id) initWithContentsOfURL:(NSURL *) url;
+- (instancetype) init;
+- (instancetype) initWithChatTranscript:(JVChatTranscript *) transcript;
+- (instancetype) initWithElements:(NSArray *) elements;
+- (instancetype) initWithContentsOfFile:(NSString *) path;
+- (instancetype) initWithContentsOfURL:(NSURL *) url;
 
 - (/* xmlDoc */ void *) document;
 
-- (BOOL) isEmpty;
-- (NSUInteger) elementCount;
-- (NSUInteger) sessionCount;
-- (NSUInteger) messageCount;
-- (NSUInteger) eventCount;
+@property (readonly, getter=isEmpty) BOOL empty;
+@property (readonly) NSUInteger elementCount;
+@property (readonly) NSUInteger sessionCount;
+@property (readonly) NSUInteger messageCount;
+@property (readonly) NSUInteger eventCount;
 
-- (void) setElementLimit:(NSUInteger) limit;
-- (NSUInteger) elementLimit;
+@property NSUInteger elementLimit;
 
-- (NSArray *) elements;
+@property (readonly, copy) NSArray *elements;
 - (NSArray *) elementsInRange:(NSRange) range;
 - (id) elementAtIndex:(NSUInteger) index;
-- (id) lastElement;
+@property (readonly, strong) id lastElement;
 
 - (NSArray *) appendElements:(NSArray *) elements;
 - (void) appendChatTranscript:(JVChatTranscript *) transcript;
 
-- (NSArray *) messages;
+@property (readonly, copy) NSArray *messages;
 - (NSArray *) messagesInRange:(NSRange) range;
 - (JVChatMessage *) messageAtIndex:(NSUInteger) index;
 - (JVChatMessage *) messageWithIdentifier:(NSString *) identifier;
-- (JVChatMessage *) lastMessage;
+@property (readonly, strong) JVChatMessage *lastMessage;
 
 - (BOOL) containsMessageWithIdentifier:(NSString *) identifier;
 
@@ -65,33 +64,27 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 - (NSArray *) appendMessages:(NSArray *) messages;
 - (NSArray *) appendMessages:(NSArray *) messages forceNewEnvelope:(BOOL) forceEnvelope;
 
-- (NSArray *) sessions;
+@property (readonly, copy) NSArray *sessions;
 - (NSArray *) sessionsInRange:(NSRange) range;
 - (JVChatSession *) sessionAtIndex:(NSUInteger) index;
-- (JVChatSession *) lastSession;
+@property (readonly, strong) JVChatSession *lastSession;
 
-- (JVChatSession *) startNewSession;
+@property (readonly, strong) JVChatSession *startNewSession;
 - (JVChatSession *) appendSession:(JVChatSession *) session;
 
-- (NSArray *) events;
+@property (readonly, copy) NSArray *events;
 - (NSArray *) eventsInRange:(NSRange) range;
 - (JVChatEvent *) eventAtIndex:(NSUInteger) index;
-- (JVChatEvent *) lastEvent;
+@property (readonly, strong) JVChatEvent *lastEvent;
 
 - (BOOL) containsEventWithIdentifier:(NSString *) identifier;
 
 - (JVChatEvent *) appendEvent:(JVChatEvent *) event;
 
-- (NSString *) filePath;
-- (void) setFilePath:(NSString *) filePath;
-
-- (NSCalendarDate *) dateBegan;
-
-- (NSURL *) source;
-- (void) setSource:(NSURL *) source;
-
-- (BOOL) automaticallyWritesChangesToFile;
-- (void) setAutomaticallyWritesChangesToFile:(BOOL) option;
+@property (copy) NSString *filePath;
+@property (readonly, copy) NSCalendarDate *dateBegan;
+@property (strong) NSURL *source;
+@property BOOL automaticallyWritesChangesToFile;
 
 - (BOOL) writeToFile:(NSString *) path atomically:(BOOL) atomically;
 - (BOOL) writeToURL:(NSURL *) url atomically:(BOOL) atomically;

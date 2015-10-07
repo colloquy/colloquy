@@ -6,6 +6,8 @@
 @class MVChatUser;
 @class MVFileTransfer;
 
+extern NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature;
+
 @interface MVIRCChatConnection : MVChatConnection {
 @private
 	GCDAsyncSocket *_chatConnection;
@@ -27,7 +29,6 @@
 	NSCharacterSet *_roomPrefixes;
 	unsigned short _serverPort;
 	unsigned short _isonSentCount;
-	BOOL _watchCommandSupported;
 	BOOL _sendQueueProcessing;
 	BOOL _sentEndCapabilityCommand;
 	NSTimeInterval _sendEndCapabilityCommandAtTime;
@@ -37,6 +38,10 @@
 	NSString *_failedNickname;
 	short _failedNicknameCount;
 	BOOL _nicknameShortened;
+	NSMutableArray *_pendingMonitorList;
+	BOOL _fetchingMonitorList;
+	BOOL _monitorListFull;
+	BOOL _hasRequestedPlaybackList;
 }
 + (NSArray *) defaultServerPorts;
 @end
@@ -44,7 +49,7 @@
 #pragma mark -
 
 @interface MVChatConnection (MVIRCChatConnectionPrivate)
-- (GCDAsyncSocket *) _chatConnection;
+@property (readonly, strong) GCDAsyncSocket *_chatConnection;
 - (void) _connect;
 
 - (void) _readNextMessageFromServer;
@@ -80,11 +85,11 @@
 
 - (void) _resetSupportedFeatures;
 
-- (NSCharacterSet *) _nicknamePrefixes;
+@property (readonly, copy) NSCharacterSet *_nicknamePrefixes;
 - (MVChatRoomMemberMode) _modeForNicknamePrefixCharacter:(unichar) character;
 - (MVChatRoomMemberMode) _stripModePrefixesFromNickname:(NSString **) nickname;
 
-- (NSString *) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length;
+- (NSString *) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length NS_RETURNS_RETAINED;
 - (NSString *) _stringFromPossibleData:(id) input;
 
 - (void) _cancelScheduledSendEndCapabilityCommand;

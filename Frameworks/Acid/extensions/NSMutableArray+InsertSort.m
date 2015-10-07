@@ -25,20 +25,20 @@
 #import "NSMutableArray+InsertSort.h"
 
 @implementation NSMutableArray (AcidExtensions)
--(int) addObject: (id) object sortStringSelector: (SEL) selector
+-(NSInteger) addObject: (id) object sortStringSelector: (SEL) selector
 {
     NSString* lvalue = [object performSelector: selector];
     unsigned int i;
     for (i = 0; i < [self count]; i++)
     {
-        NSString* rvalue = [[self objectAtIndex: i] performSelector: selector];
+        NSString* rvalue = [self[i] performSelector: selector];
         switch([lvalue compare: rvalue options: NSCaseInsensitiveSearch])
         {
             case NSOrderedAscending:
                 [self insertObject: object atIndex: i];
                 return i;
             case NSOrderedSame:
-                if ([object isEqual: [self objectAtIndex: i]])
+                if ([object isEqual: self[i]])
                 {
                     return -1;
                 }

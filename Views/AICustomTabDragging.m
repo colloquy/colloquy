@@ -29,7 +29,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 }
 
 //Init
-- (id)init
+- (instancetype)init
 {
 	if (!(self = [super init])) return nil;
 	_destinationOfLastDrag = nil;
@@ -86,7 +86,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
     BOOL			sourceWindowWillHide;
 
 	//Post the dragging will begin notification
-	[[NSNotificationCenter defaultCenter] postNotificationName:AICustomTabDragWillBegin object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:AICustomTabDragWillBegin object:self];
 
 	//Setup
 	 destTabBar = nil;
@@ -128,7 +128,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 
 	//Perform the drag
 	pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
-	[pboard declareTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER, nil] owner:self];
+	[pboard declareTypes:@[TAB_CELL_IDENTIFIER] owner:self];
 	[pboard setString:TAB_CELL_IDENTIFIER forType:TAB_CELL_IDENTIFIER];
 	[[inEvent window] dragImage:[tabDragWindow dragImage]
 							 at:NSMakePoint(clickLocation.x + dragOffset.width, clickLocation.y + dragOffset.height)
@@ -152,7 +152,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 }
 
 //End a drag
-- (void)acceptDragIntoTabView:(AICustomTabsView *)destTabView atIndex:(int)destIndex
+- (void)acceptDragIntoTabView:(AICustomTabsView *)destTabView atIndex:(NSInteger)destIndex
 {
 	if(destTabView == sourceTabBar){
 		//Tab re-arranging we handle internally
@@ -174,7 +174,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	[self cleanupDrag];
 
 	//Post the dragging did finish notification
-	[[NSNotificationCenter defaultCenter] postNotificationName:AICustomTabDragDidComplete object:self];
+	[[NSNotificationCenter chatCenter] postNotificationName:AICustomTabDragDidComplete object:self];
 }
 
 

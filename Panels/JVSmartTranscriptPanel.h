@@ -16,13 +16,13 @@
 	NSUInteger _newMessages;
 	NSUInteger _origSheetHeight;
 }
-- (id) initWithSettings:(NSDictionary *) settings;
+- (instancetype) initWithSettings:(NSDictionary *) settings;
 
 - (NSComparisonResult) compare:(JVSmartTranscriptPanel *) panel;
 
-- (NSMutableArray *) rules;
+@property (readonly, copy) NSMutableArray *rules;
 
-- (NSUInteger) newMessagesWaiting;
+@property (readonly) NSUInteger newMessagesWaiting;
 - (void) matchMessage:(JVChatMessage *) message fromView:(id <JVChatViewController>) view;
 
 - (IBAction) editSettings:(id) sender;
