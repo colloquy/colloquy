@@ -58,23 +58,19 @@ static long long hardwareInfoAsLargeNumber(const char *keyPath) {
 static NSString *uniqueMachineIdentifier;
 
 static kern_return_t findEthernetInterfaces(io_iterator_t *matchingServices) {
-	CFMutableDictionaryRef matchingDict = IOServiceMatching(kIOEthernetInterfaceClass);
+	NSMutableDictionary *matchingDict = CFBridgingRelease(IOServiceMatching(kIOEthernetInterfaceClass));
 	if (!matchingDict)
 		return KERN_FAILURE;
 
-	CFMutableDictionaryRef propertyMatchDict = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+	NSMutableDictionary *propertyMatchDict = [[NSMutableDictionary alloc] initWithCapacity:1];
 	if (!propertyMatchDict) {
-		CFRelease(matchingDict);
 		return KERN_FAILURE;
 	}
 
-	CFDictionarySetValue(propertyMatchDict, CFSTR(kIOPrimaryInterface), kCFBooleanTrue);
-	CFDictionarySetValue(matchingDict, CFSTR(kIOPropertyMatchKey), propertyMatchDict);
+	propertyMatchDict[@kIOPrimaryInterface] = @YES;
+	matchingDict[@kIOPropertyMatchKey] = propertyMatchDict;
 
-	CFRelease(propertyMatchDict);
-	propertyMatchDict = NULL;
-
-	return IOServiceGetMatchingServices(kIOMasterPortDefault, matchingDict, matchingServices);
+	return IOServiceGetMatchingServices(kIOMasterPortDefault, CFBridgingRetain(matchingDict), matchingServices);
 }
 
 static kern_return_t getMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress, UInt8 bufferSize) {

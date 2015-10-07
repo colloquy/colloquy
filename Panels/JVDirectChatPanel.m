@@ -955,7 +955,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		cformat = nil;
 	}
 
-	NSDictionary *options = @{@"StringEncoding": @([self encoding]), @"FormatType": cformat};
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:@([self encoding]), @"StringEncoding", cformat, @"FormatType", nil];
 	NSData *msgData = [[message body] chatFormatWithOptions:options]; // we could save this back to the message object before sending
 	[self addMessageToDisplay:msgData fromUser:[message sender] withAttributes:[message attributes] withIdentifier:[message messageIdentifier] andType:[message type]];
 }
@@ -1687,7 +1687,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		NSDictionary *options = @{@"IgnoreFonts": @YES, @"IgnoreFontSizes": @YES};
 		NSString *msgString = [messageString HTMLFormatWithOptions:options];
 
-		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), msgString] withName:@"awaySet" andAttributes:@{@"away-message": messageString}];
+		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), msgString] withName:@"awaySet" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:messageString, @"away-message", nil]];
 
 		NSUInteger messageCount = [display _visibleMessageCount];
 		NSUInteger loc = [display _locationOfElementAtIndex:( messageCount - 1 )];
