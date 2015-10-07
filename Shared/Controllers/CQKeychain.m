@@ -76,7 +76,7 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 
 	NSMutableDictionary *passwordQuery = createBaseDictionary(server, area);
 
-	passwordQuery[(__bridge id)kSecReturnData] = (__bridge id)kCFBooleanTrue;
+	passwordQuery[(__bridge id)kSecReturnData] = @YES;
 	passwordQuery[(__bridge id)kSecMatchLimit] = (__bridge id)kSecMatchLimitOne;
 
 	CFTypeRef resultDataRef;

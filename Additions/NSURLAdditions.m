@@ -25,9 +25,7 @@
 	}
 
 	Handle res = Get1IndResource( 'url ', 1 );
-	HLock(res);
 	NSString *urlString = [[NSString alloc] initWithBytes:*res length:GetHandleSize( res ) encoding:NSUTF8StringEncoding];
-	HUnlock(res);
 	NSURL *url = [NSURL URLWithString:urlString];
 	ReleaseResource( res );
 	CloseResFile( fileRefNum );

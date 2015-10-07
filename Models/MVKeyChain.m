@@ -64,7 +64,7 @@ static MVKeyChain *sharedInstance = nil;
 		[self removeInternetPasswordForServer:server securityDomain:domain account:account path:nil port:port protocol:protocol authenticationType:authType];
 	} else if( ! [[self internetPasswordForServer:server securityDomain:domain account:account path:nil port:port protocol:protocol authenticationType:authType] isEqualToString:password] ) {
 		[self removeInternetPasswordForServer:server securityDomain:domain account:account path:nil port:port protocol:protocol authenticationType:authType];
-		SecKeychainAddInternetPassword( NULL, MVStringByteLength( server ), [server UTF8String], MVStringByteLength( domain ), [domain UTF8String], MVStringByteLength( account ), [account UTF8String], MVStringByteLength( path ), [path UTF8String], port, protocol, authType, MVStringByteLength( password ), (void *) [password UTF8String], NULL );
+		SecKeychainAddInternetPassword( NULL, MVStringByteLength( server ), [server UTF8String], MVStringByteLength( domain ), [domain UTF8String], MVStringByteLength( account ), [account UTF8String], MVStringByteLength( path ), [path UTF8String], port, (SecProtocolType)protocol, (SecAuthenticationType)authType, MVStringByteLength( password ), (void *) [password UTF8String], NULL );
 	}
 }
 
@@ -74,7 +74,7 @@ static MVKeyChain *sharedInstance = nil;
 	void *p = NULL;
 	NSString *string = nil;
 
-	ret = SecKeychainFindInternetPassword( NULL, MVStringByteLength( server ), [server UTF8String], MVStringByteLength( domain ), [domain UTF8String], MVStringByteLength( account ), [account UTF8String], MVStringByteLength( path ), [path UTF8String], port, protocol, authType, &len, &p, NULL );
+	ret = SecKeychainFindInternetPassword( NULL, MVStringByteLength( server ), [server UTF8String], MVStringByteLength( domain ), [domain UTF8String], MVStringByteLength( account ), [account UTF8String], MVStringByteLength( path ), [path UTF8String], port, (SecProtocolType)protocol, (SecAuthenticationType)authType, &len, &p, NULL );
 	if( ret == noErr ) {
 		if ( p ) {
 			string = [[NSString allocWithZone:nil] initWithBytes:(const void *) p length:len encoding:NSUTF8StringEncoding];
@@ -93,7 +93,7 @@ static MVKeyChain *sharedInstance = nil;
 
 	NSParameterAssert( server || account );
 
-	ret = SecKeychainFindInternetPassword( NULL, MVStringByteLength( server ), [server UTF8String], MVStringByteLength( domain ), [domain UTF8String], MVStringByteLength( account ), [account UTF8String], MVStringByteLength( path ), [path UTF8String], port, protocol, authType, NULL, NULL, &itemref );
+	ret = SecKeychainFindInternetPassword( NULL, MVStringByteLength( server ), [server UTF8String], MVStringByteLength( domain ), [domain UTF8String], MVStringByteLength( account ), [account UTF8String], MVStringByteLength( path ), [path UTF8String], port, (SecProtocolType)protocol, (SecAuthenticationType)authType, NULL, NULL, &itemref );
 	if( ret == noErr ) SecKeychainItemDelete( itemref );
 }
 @end
