@@ -48,7 +48,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 #pragma mark -
 
 - (void) addIgnoreRule:(KAIgnoreRule *) ignoreRule {
-	for (KAIgnoreRule *rule in _ignoreRules)
+	for (KAIgnoreRule *rule in self.ignoreRules)
 		if ([rule isEqual:ignoreRule])
 			return;
 
@@ -68,7 +68,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 - (void) removeIgnoreRuleFromString:(NSString *) ignoreRuleString {
 	BOOL permanentIgnoreRuleWasRemoved = NO;
 
-	for (KAIgnoreRule *rule in [_ignoreRules copy]) {
+	for (KAIgnoreRule *rule in self.ignoreRules) {
 		if ([rule.user isEqualToString:ignoreRuleString] || [rule.mask isEqualToString:ignoreRuleString] || [rule.message isEqualToString:ignoreRuleString]) {
 			[_ignoreRules removeObject:rule];
 
@@ -84,14 +84,14 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 #pragma mark -
 
 - (BOOL) hasIgnoreRuleForUser:(MVChatUser *) user {
-	for (KAIgnoreRule *rule in _ignoreRules)
+	for (KAIgnoreRule *rule in self.ignoreRules)
 		if ([rule.user isEqualToString:user.nickname])
 			return YES;
 	return NO;
 }
 
 - (BOOL) shouldIgnoreMessage:(id) message fromUser:(MVChatUser *) user inRoom:(MVChatRoom *) room {
-	for (KAIgnoreRule *rule in _ignoreRules)
+	for (KAIgnoreRule *rule in self.ignoreRules)
 		if ([rule matchUser:user message:message inTargetRoom:room] != JVNotIgnored)
 			return YES;
 	return NO;
@@ -109,7 +109,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 
 	NSMutableArray *permanentIgnores = [NSMutableArray array];
 
-	for (KAIgnoreRule *rule in _ignoreRules)
+	for (KAIgnoreRule *rule in self.ignoreRules)
 		if (rule.isPermanent)
 			[permanentIgnores addObject:[NSKeyedArchiver archivedDataWithRootObject:rule]];
 
