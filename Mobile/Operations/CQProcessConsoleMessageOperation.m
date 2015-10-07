@@ -2,7 +2,9 @@
 
 static NSRegularExpression *numericRegularExpression;
 
-@implementation CQProcessConsoleMessageOperation
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQProcessConsoleMessageOperation
 @synthesize processedMessageInfo = _processedMessage;
 
 + (void) initialize {
@@ -109,3 +111,5 @@ static NSRegularExpression *numericRegularExpression;
 
 }
 @end
+
+NS_ASSUME_NONNULL_END

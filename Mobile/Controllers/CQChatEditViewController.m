@@ -10,7 +10,9 @@
 
 static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 
-@implementation CQChatEditViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQChatEditViewController
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -142,7 +144,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 
 - (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
 	if (_roomTarget && indexPath.section == 1 && indexPath.row == 0) {
-		[self showRoomListFilteredWithSearchString:nil];
+		[self showRoomListFilteredWithSearchString:@""];
 		return;
 	}
 }
@@ -266,3 +268,5 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] withAnimation:UITableViewRowAnimationNone];
 }
 @end
+
+NS_ASSUME_NONNULL_END

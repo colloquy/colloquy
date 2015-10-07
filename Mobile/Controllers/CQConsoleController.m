@@ -10,9 +10,6 @@
 #import "DDLog.h"
 #import "MVDelegateLogger.h"
 
-#define defaultNamed(name) \
-	[[CQSettingsController settingsController] boolForKey:[NSString stringWithFormat:@"CQConsoleDisplay%@", name]];
-
 static BOOL hideNICKs;
 static BOOL hideTraffic; // JOIN, PART, KICK, INVITE
 static BOOL hideTOPICs;
@@ -25,6 +22,11 @@ static BOOL hidePINGs;
 static BOOL hideSocketInformation;
 static BOOL verbose;
 
+NS_ASSUME_NONNULL_BEGIN
+
+#define defaultNamed(name) \
+	[[CQSettingsController settingsController] boolForKey:[NSString stringWithFormat:@"CQConsoleDisplay%@", name]];
+
 @interface CQDirectChatController (Private)
 + (NSOperationQueue *) chatMessageProcessingQueue;
 + (void) userDefaultsChanged;
@@ -32,7 +34,7 @@ static BOOL verbose;
 - (void) _addPendingComponent:(id) component;
 @end
 
-@implementation CQConsoleController
+@implementation  CQConsoleController
 + (void) userDefaultsChanged {
 	[super userDefaultsChanged];
 
@@ -61,7 +63,7 @@ static BOOL verbose;
 	});
 }
 
-- (instancetype) initWithTarget:(id) target {
+- (instancetype) initWithTarget:(__nullable id) target {
 	if (!(self = [super initWithTarget:nil]))
 		return self;
 
@@ -243,3 +245,5 @@ static BOOL verbose;
 	_recentMessages = nil;
 }
 @end
+
+NS_ASSUME_NONNULL_END

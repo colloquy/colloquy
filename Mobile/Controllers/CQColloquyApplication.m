@@ -11,11 +11,11 @@
 #import "CQWelcomeController.h"
 
 #import "NSNotificationAdditions.h"
+#import "NSRegularExpressionAdditions.h"
 #import "UIApplicationAdditions.h"
 #import "UIFontAdditions.h"
 
 #import <HockeySDK/HockeySDK.h>
-#import "RegexKitLite.h"
 
 typedef NS_ENUM(NSInteger, CQSidebarOrientation) {
 	CQSidebarOrientationNone,
@@ -23,6 +23,8 @@ typedef NS_ENUM(NSInteger, CQSidebarOrientation) {
 	CQSidebarOrientationLandscape,
 	CQSidebarOrientationAll
 };
+
+NS_ASSUME_NONNULL_BEGIN
 
 NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyApplicationDidRecieveDeviceTokenNotification";
 
@@ -33,7 +35,7 @@ static NSMutableArray *highlightWords;
 @interface CQColloquyApplication () <BITHockeyManagerDelegate>
 @end
 
-@implementation CQColloquyApplication
+@implementation  CQColloquyApplication
 + (CQColloquyApplication *) sharedApplication {
 	return (CQColloquyApplication *)[UIApplication sharedApplication];
 }
@@ -91,7 +93,9 @@ static NSMutableArray *highlightWords;
 
 			NSString *highlightWordsString = [[CQSettingsController settingsController] stringForKey:@"CQHighlightWords"];
 			if (highlightWordsString.length) {
-				[highlightWords addObjectsFromArray:[highlightWordsString cq_componentsMatchedByRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" capture:1]];
+				NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" options:NSRegularExpressionCaseInsensitive error:nil];
+				for (NSTextCheckingResult *result in [regex matchesInString:highlightWordsString options:(NSMatchingOptions)NSMatchingReportCompletion range:NSMakeRange(0, highlightWordsString.length)])
+					[highlightWords addObject:[highlightWordsString substringWithRange:[result rangeAtIndex:1]]];
 
 				highlightWordsString = [highlightWordsString stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" withString:@""];
 
@@ -170,6 +174,8 @@ static NSMutableArray *highlightWords;
 	// Hacky check to make sure the identifier was replaced with a string that isn't ""
 	if (![hockeyappIdentifier hasPrefix:@"Hockeyapp"]) {
 		[[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyappIdentifier delegate:self];
+		[BITHockeyManager sharedHockeyManager].disableInstallTracking = YES;
+
 		[[BITHockeyManager sharedHockeyManager] startManager];
 	}
 
@@ -310,6 +316,9 @@ static NSMutableArray *highlightWords;
 	UIFont *font = [UIFont fontWithName:fontName size:12.];
 	if ((!font || [font.familyName hasCaseInsensitiveSubstring:@"Helvetica"]) && [[UIFont cq_availableRemoteFontNames] containsObject:fontName])
 		[UIFont cq_loadFontWithName:fontName withCompletionHandler:NULL];
+
+	if ([[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"] == 600.)
+		[[NSUserDefaults standardUserDefaults] setDouble:300. forKey:@"CQMultitaskingTimeout"];
 
 	_deviceToken = [[CQSettingsController settingsController] stringForKey:@"CQPushDeviceToken"];
 
@@ -502,11 +511,11 @@ static NSMutableArray *highlightWords;
 	[self showActionSheet:sheet forSender:nil orFromPoint:point animated:YES];
 }
 
-- (void) showActionSheet:(UIActionSheet *) sheet forSender:(id) sender animated:(BOOL) animated {
+- (void) showActionSheet:(UIActionSheet *) sheet forSender:(__nullable id) sender animated:(BOOL) animated {
 	[self showActionSheet:sheet forSender:sender orFromPoint:CGPointZero animated:animated];
 }
 
-- (void) showActionSheet:(UIActionSheet *) sheet forSender:(id) sender orFromPoint:(CGPoint) point animated:(BOOL) animated {
+- (void) showActionSheet:(UIActionSheet *) sheet forSender:(__nullable id) sender orFromPoint:(CGPoint) point animated:(BOOL) animated {
 	if (sender && [[UIDevice currentDevice] isPadModel]) {
 		id old = _visibleActionSheet;
 		[old dismissWithClickedButtonIndex:[old cancelButtonIndex] animated:NO];
@@ -609,7 +618,7 @@ static NSMutableArray *highlightWords;
 			[self performSelector:@selector(_presentModalViewControllerWithInfo:) withObject:@{
 				@"modalViewController": modalViewController,
 				@"animated": @(animated)
-			} afterDelay:0.5];
+			} afterDelay:0.25];
 			return;
 		}
 	}
@@ -643,41 +652,41 @@ static NSMutableArray *highlightWords;
 
 #pragma mark -
 
-- (void) showHelp:(id) sender {
+- (void) showHelp:(__nullable id) sender {
 	CQWelcomeController *welcomeController = [[CQWelcomeController alloc] init];
 	welcomeController.shouldShowOnlyHelpTopics = YES;
 
 	[self presentModalViewController:welcomeController animated:YES];
 }
 
-- (void) showWelcome:(id) sender {
+- (void) showWelcome:(__nullable id) sender {
 	CQWelcomeController *welcomeController = [[CQWelcomeController alloc] init];
 
 	[self presentModalViewController:welcomeController animated:YES];
 }
 
-- (void) toggleConnections:(id) sender {
+- (void) toggleConnections:(__nullable id) sender {
 	[self showConnections:sender];
 }
 
-- (void) showConnections:(id) sender {
+- (void) showConnections:(__nullable id) sender {
 	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
 		[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
 		[self.navigationController popToRootViewControllerAnimated:NO];
 	}
 }
 
-- (void) toggleColloquies:(id) sender {
+- (void) toggleColloquies:(__nullable id) sender {
 	if (_colloquiesPopoverController.popoverVisible)
 		[_colloquiesPopoverController dismissPopoverAnimated:YES];
 	else [self showColloquies:sender];
 }
 
-- (void) showColloquies:(id) sender {
+- (void) showColloquies:(__nullable id) sender {
 	[self showColloquies:sender hidingTopViewController:YES];
 }
 
-- (void) showColloquies:(id) sender hidingTopViewController:(BOOL) hidingTopViewController {
+- (void) showColloquies:(__nullable id) sender hidingTopViewController:(BOOL) hidingTopViewController {
 	if ([[UIDevice currentDevice] isPadModel]) {
 		if (!_colloquiesPopoverController.popoverVisible) {
 			[self dismissPopoversAnimated:NO];
@@ -859,3 +868,5 @@ static NSMutableArray *highlightWords;
 #endif
 }
 @end
+
+NS_ASSUME_NONNULL_END

@@ -4,6 +4,8 @@
 
 #import "UIColorAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQChatInputStyleViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (atomic, assign) BOOL bold;
 @property (atomic, assign) BOOL italicized;
@@ -14,9 +16,13 @@
 @property (atomic, copy) UIColor *backgroundColor;
 @end
 
+NS_ASSUME_NONNULL_END
+
 #pragma mark -
 
-@implementation CQChatInputStyleViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQChatInputStyleViewController
 - (instancetype) init {
 	return (self = [super initWithStyle:UITableViewStylePlain]);
 }
@@ -159,7 +165,7 @@
 
 #pragma mark -
 
-- (void) close:(id) sender {
+- (void) close:(__nullable id) sender {
 	__strong __typeof__((self.delegate)) strongDelegate = self.delegate;
 	[strongDelegate chatInputStyleViewShouldClose:self];
 }
@@ -181,7 +187,7 @@
 
 #pragma mark -
 
-- (void) toggleBoldface:(id) sender {
+- (void) toggleBoldface:(__nullable id) sender {
 	self.bold = !self.bold;
 	__strong __typeof__((self.delegate)) strongDelegate = self.delegate;
 	[strongDelegate chatInputStyleView:self didChangeTextTrait:CQTextTraitBold toState:self.bold];
@@ -191,7 +197,7 @@
 	[self.tableView endUpdates];
 }
 
-- (void) toggleItalics:(id) sender {
+- (void) toggleItalics:(__nullable id) sender {
 	self.italicized = !self.italicized;
 	__strong __typeof__((self.delegate)) strongDelegate = self.delegate;
 	[strongDelegate chatInputStyleView:self didChangeTextTrait:CQTextTraitItalic toState:self.italicized];
@@ -201,7 +207,7 @@
 	[self.tableView endUpdates];
 }
 
-- (void) toggleUnderline:(id) sender {
+- (void) toggleUnderline:(__nullable id) sender {
 	self.underlined = !self.underlined;
 	__strong __typeof__((self.delegate)) strongDelegate = self.delegate;
 	[strongDelegate chatInputStyleView:self didChangeTextTrait:CQTextTraitUnderline toState:self.underlined];
@@ -213,11 +219,11 @@
 
 #pragma mark -
 
-- (void) startAffectingForeground:(id) sender {
+- (void) startAffectingForeground:(__nullable id) sender {
 	[self _toggleAffectingForegroundToState:YES];
 }
 
-- (void) startAffectingBackground:(id) sender {
+- (void) startAffectingBackground:(__nullable id) sender {
 	[self _toggleAffectingForegroundToState:NO];
 }
 
@@ -229,3 +235,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -3,7 +3,9 @@
 
 #import <ChatCore/MVChatRoom.h>
 
-@implementation CQChatRoomInfoViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQChatRoomInfoViewController
 - (instancetype) initWithRoom:(MVChatRoom *) room {
 	if (!(self = [super init]))
 		return nil;
@@ -27,3 +29,5 @@
 	_rootViewController.navigationItem.leftBarButtonItem = doneItem;
 }
 @end
+
+NS_ASSUME_NONNULL_END

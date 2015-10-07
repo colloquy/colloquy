@@ -9,6 +9,8 @@ typedef NS_ENUM(NSInteger, QChatUserListMode) {
 	CQChatUserListModeBan
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol CQChatUserListViewDelegate <NSObject>
 @optional
 - (BOOL) chatUserListViewController:(CQChatUserListViewController *) chatUserListViewController shouldPresentInformationForUser:(MVChatUser *) user;
@@ -31,7 +33,7 @@ typedef NS_ENUM(NSInteger, QChatUserListMode) {
 @property (nonatomic, strong) MVChatRoom *room;
 @property (nonatomic, assign) QChatUserListMode listMode;
 
-@property (nonatomic, weak) id <CQChatUserListViewDelegate> chatUserDelegate;
+@property (nonatomic, nullable, weak) id <CQChatUserListViewDelegate> chatUserDelegate;
 
 - (void) filterUsersWithSearchString:(NSString *) searchString;
 
@@ -40,3 +42,5 @@ typedef NS_ENUM(NSInteger, QChatUserListMode) {
 - (void) removeUserAtIndex:(NSUInteger) index;
 - (void) updateUserAtIndex:(NSUInteger) index;
 @end
+
+NS_ASSUME_NONNULL_END

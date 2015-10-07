@@ -2,6 +2,8 @@
 
 #import <WebKit/WebKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQWKChatTranscriptView : WKWebView <CQChatTranscriptView, UIGestureRecognizerDelegate, UIScrollViewDelegate, WKNavigationDelegate> {
 	@protected
 	UIView *_blockerView;
@@ -25,3 +27,5 @@
 	BOOL _topicIsHidden;
 }
 @end
+
+NS_ASSUME_NONNULL_END

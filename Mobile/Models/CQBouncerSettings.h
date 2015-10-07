@@ -1,5 +1,7 @@
 #import "MVChatConnection.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQBouncerSettings : NSObject {
 	NSString *_identifier;
 	NSString *_displayName;
@@ -28,3 +30,5 @@
 
 @property (nonatomic) BOOL pushNotifications;
 @end
+
+NS_ASSUME_NONNULL_END

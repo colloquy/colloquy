@@ -2,7 +2,9 @@
 
 #import <Security/Security.h>
 
-@implementation CQKeychain
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQKeychain
 + (CQKeychain *) standardKeychain {
 	static CQKeychain *sharedInstance;
 	if (!sharedInstance) sharedInstance = [[self alloc] init];
@@ -25,7 +27,7 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	[self setPassword:password forServer:server area:area displayValue:nil];
 }
 
-- (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *) area displayValue:(NSString *)displayValue {
+- (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *) area displayValue:(NSString *__nullable)displayValue {
 	if (!password.length) {
 		[self removePasswordForServer:server area:area];
 		return;
@@ -40,7 +42,7 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	[self setData:passwordData forServer:server area:area displayValue:nil];
 }
 
-- (void) setData:(NSData *) passwordData forServer:(NSString *) server area:(NSString *) area displayValue:(NSString *)displayValue {
+- (void) setData:(NSData *) passwordData forServer:(NSString *) server area:(NSString *) area displayValue:(NSString *__nullable)displayValue {
 	NSParameterAssert(server);
 
 	if (!passwordData.length) {
@@ -96,3 +98,5 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	SecItemDelete((__bridge CFDictionaryRef)passwordQuery);
 }
 @end
+
+NS_ASSUME_NONNULL_END

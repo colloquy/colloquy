@@ -33,10 +33,12 @@ enum {
 
 #define CQDefaultRowHeight 42.
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQChatRoomInfoDisplayViewController () <CQChatUserListViewDelegate>
 @end
 
-@implementation CQChatRoomInfoDisplayViewController
+@implementation  CQChatRoomInfoDisplayViewController
 - (instancetype) initWithStyle:(UITableViewStyle) style {
 	NSAssert(NO, @"use -[CQChatRoomInfoDisplayViewController initWithRoom:] instead");
 	return nil;
@@ -90,7 +92,7 @@ enum {
 
 	[self setToolbarItems:items animated:[UIView areAnimationsEnabled]];
 
-	[self _refreshBanList:nil];
+	[self _refreshBanList];
 	[self _segmentSelected:_segmentedControl];
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_memberModeChanged:) name:MVChatRoomUserModeChangedNotification object:_room];
@@ -347,7 +349,7 @@ enum {
 	[self.navigationController pushViewController:chatUserListViewController animated:[UIView areAnimationsEnabled]];
 }
 
-- (void) _segmentSelected:(id) sender {
+- (void) _segmentSelected:(__nullable id) sender {
 	self.title = [_segmentedControl titleForSegmentAtIndex:_segmentedControl.selectedSegmentIndex];
 
 	self.tableView.scrollEnabled = (_segmentedControl.selectedSegmentIndex != CQChatRoomInfoTopic);
@@ -384,6 +386,10 @@ enum {
 }
 
 - (void) _refreshBanList:(NSNotification *) notification {
+	[self _refreshBanList];
+}
+
+- (void) _refreshBanList {
 	_bans = [[[_room.bannedUsers allObjects] sortedArrayUsingSelector:@selector(compareByAddress:)] mutableCopy];
 }
 
@@ -413,8 +419,10 @@ enum {
 	if (_segmentedControl.selectedSegmentIndex != CQChatRoomInfoBans)
 		return;
 
-	[self _refreshBanList:nil];
+	[self _refreshBanList];
 
 	// check right bar button item
 }
 @end
+
+NS_ASSUME_NONNULL_END

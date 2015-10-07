@@ -6,6 +6,8 @@
 @class MVFileTransfer;
 @class CQFileTransferTableCell;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQFileTransferController : UIViewController {
     @protected
     MVFileTransfer *_transfer;
@@ -20,5 +22,7 @@
 - (id) initWithTransfer:(MVFileTransfer *) transfer;
 - (UIImage *) thumbnailWithSize:(CGSize) size;
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

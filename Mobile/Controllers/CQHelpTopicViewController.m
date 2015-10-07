@@ -2,7 +2,9 @@
 
 #import "CQColloquyApplication.h"
 
-@implementation CQHelpTopicViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQHelpTopicViewController
 - (instancetype) initWithHTMLContent:(NSString *) content {
 	if (!(self = [self init]))
 		return nil;
@@ -38,7 +40,7 @@
 	if (!_urlToHandle)
 		return;
 
-	[[UIApplication sharedApplication] performSelector:@selector(openURL:) withObject:_urlToHandle afterDelay:0.];
+	[[UIApplication sharedApplication] openURL:_urlToHandle];
 
 	_urlToHandle = nil;
 }
@@ -61,3 +63,5 @@
 	return NO;
 }
 @end
+
+NS_ASSUME_NONNULL_END

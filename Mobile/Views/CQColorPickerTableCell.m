@@ -1,11 +1,13 @@
 #import "CQColorPickerTableCell.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQColorPickerTableCell ()
 @property (atomic, strong) NSMapTable *colorToButtonMap;
 @property (atomic, strong) NSMapTable *buttonToColorMap;
 @end
 
-@implementation CQColorPickerTableCell
+@implementation  CQColorPickerTableCell
 - (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
@@ -97,7 +99,7 @@
 	}];
 }
 
-- (void) colorSelected:(id) sender {
+- (void) colorSelected:(__nullable id) sender {
 	UIColor *newColor = [self.buttonToColorMap objectForKey:sender];
 	self.activeColor = (newColor == self.activeColor ? nil : newColor);
 
@@ -108,15 +110,19 @@
 		self.colorSelectedBlock(self.activeColor);
 }
 
-- (void) colorSelectionStarted:(id) sender {
+- (void) colorSelectionStarted:(__nullable id) sender {
 	UIButton *button = (UIButton *)sender;
 	button.layer.borderColor = [[UIColor colorWithCGColor:button.layer.borderColor] colorWithAlphaComponent:.5].CGColor;
 }
 @end
 
+NS_ASSUME_NONNULL_END
+
 #pragma mark -
 
-@implementation CQMultiButtonTableCell : UITableViewCell
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQMultiButtonTableCell : UITableViewCell
 - (void) addButtonWithConfigurationHandler:(void (^)(UIButton *button)) configurationHandler {
 	UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
 	button.layer.borderWidth = 1.;
@@ -167,3 +173,5 @@
 	[self.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 @end
+
+NS_ASSUME_NONNULL_END

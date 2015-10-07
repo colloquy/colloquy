@@ -2,9 +2,11 @@
 
 #import "NSNotificationAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotification";
 
-@implementation CQSettingsController
+@implementation  CQSettingsController
 + (instancetype)  settingsController {
 	static CQSettingsController *settingsController;
 	static dispatch_once_t onceToken;
@@ -100,14 +102,8 @@ NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotificat
 	}
 
 	if (changedLocation == _settingsLocation) {
-		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_notifyObserversSettingsChanged) object:nil];
-		[self performSelector:@selector(_notifyObserversSettingsChanged) withObject:nil afterDelay:0.];
+		[[NSNotificationCenter chatCenter] postNotificationName:CQSettingsDidChangeNotification object:nil userInfo:nil];
 	}
-}
-
-- (void) _notifyObserversSettingsChanged {
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_notifyObserversSettingsChanged) object:nil];
-	[[NSNotificationCenter chatCenter] postNotificationName:CQSettingsDidChangeNotification object:nil userInfo:nil];
 }
 
 - (id) _defaultLocation {
@@ -129,3 +125,5 @@ NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotificat
 	return nil;
 }
 @end
+
+NS_ASSUME_NONNULL_END

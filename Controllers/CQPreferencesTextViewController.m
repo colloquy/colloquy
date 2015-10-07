@@ -1,6 +1,8 @@
 #import "CQPreferencesTextViewController.h"
 
-@implementation CQPreferencesTextViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQPreferencesTextViewController
 - (void) loadView {
 	_textView = [[UITextView alloc] initWithFrame:CGRectZero];
 	_textView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin);
@@ -20,3 +22,5 @@
 	_textView.text = text;
 }
 @end
+
+NS_ASSUME_NONNULL_END

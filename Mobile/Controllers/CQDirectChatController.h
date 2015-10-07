@@ -19,15 +19,16 @@
 @class MVChatUser;
 @class MVChatUserWatchRule;
 
-extern NSString *CQChatViewControllerHandledMessageNotification;
-extern NSString *CQChatViewControllerRecentMessagesUpdatedNotification;
-extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
-
 typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
 	CQBatchTypeUnknown = -1,
 	CQBatchTypeBuffer = 0
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
+extern NSString *CQChatViewControllerHandledMessageNotification;
+extern NSString *CQChatViewControllerRecentMessagesUpdatedNotification;
+extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 
 @interface CQDirectChatController : UIViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
 	@protected
@@ -71,7 +72,7 @@ typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
 - (instancetype) initWithStyle:(UITableViewStyle) style NS_UNAVAILABLE;
 - (instancetype) initWithCoder:(NSCoder *) aDecoder NS_UNAVAILABLE;
 
-- (instancetype) initWithTarget:(id) target NS_DESIGNATED_INITIALIZER;
+- (instancetype) initWithTarget:(__nullable id) target NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, readonly) MVChatUser *user;
 
@@ -99,3 +100,5 @@ typedef NS_ENUM(NSInteger, CQDirectChatBatchType) {
 
 - (BOOL) canAnnounceWithVoiceOverAndMessageIsImportant:(BOOL) important;
 @end
+
+NS_ASSUME_NONNULL_END

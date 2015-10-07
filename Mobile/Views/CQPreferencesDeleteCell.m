@@ -1,6 +1,8 @@
 #import "CQPreferencesDeleteCell.h"
 
-@implementation CQPreferencesDeleteCell
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQPreferencesDeleteCell
 
 - (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
@@ -43,3 +45,5 @@
 	[_deleteButton addTarget:nil action:action forControlEvents:UIControlEventTouchUpInside];
 }
 @end
+
+NS_ASSUME_NONNULL_END

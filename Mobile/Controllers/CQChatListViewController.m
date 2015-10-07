@@ -28,7 +28,9 @@ static BOOL showsChatIcons;
 #define ConnectSheetTag 10
 #define DisconnectSheetTag 20
 
-@implementation CQChatListViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQChatListViewController
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -120,14 +122,6 @@ static BOOL showsChatIcons;
 	_headerViewsForConnections = [NSMapTable weakToStrongObjectsMapTable];
 	_connectionsForHeaderViews = [NSMapTable strongToWeakObjectsMapTable];
 	_indexPathsForChatControllers = [NSMapTable strongToStrongObjectsMapTable];
-
-	_colloquiesSearchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
-	_colloquiesSearchBar.delegate = self;
-	_colloquiesSearchBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
-	_colloquiesSearchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:_colloquiesSearchBar contentsController:self];
-	_colloquiesSearchDisplayController.delegate = self;
-	_colloquiesSearchDisplayController.searchResultsDataSource = self;
-	_colloquiesSearchDisplayController.searchResultsDelegate = self;
 
 	return self;
 }
@@ -349,7 +343,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	// final sanity check
 	if (![cell respondsToSelector:@selector(takeValuesFromChatViewController:)]) {
 		[NSObject cancelPreviousPerformRequestsWithTarget:self.tableView selector:@selector(reloadData) object:nil];
-		[self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.];
+		[self.tableView reloadData];
 		return;
 	}
 
@@ -428,9 +422,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 - (void) _willBecomeActive:(NSNotification *) notification {
 	[CQChatController defaultController].totalImportantUnreadCount = 0;
-	[self _startUpdatingConnectTimes];
-
 	_active = YES;
+	[self _startUpdatingConnectTimes];
 }
 
 - (void) _willResignActive:(NSNotification *) notification {
@@ -493,11 +486,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) _chatOrderingControllerDidChangeOrdering:(NSNotification *) notification {
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_reorderChatControllers) object:nil];
-	[self performSelector:@selector(_reorderChatControllers) withObject:nil afterDelay:0.];
-}
-
-- (void) _reorderChatControllers {
 	if (!_active)
 		return;
 
@@ -681,14 +669,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	CGRect frame = _colloquiesSearchBar.frame;
-	frame.origin.y -= CGRectGetHeight(frame);
-	_colloquiesSearchBar.frame = frame;
-
-	[_colloquiesSearchBar sizeToFit];
-
 	self.tableView.rowHeight = 62.;
-//	self.tableView.tableHeaderView = _colloquiesSearchBar;
 
 	@synchronized([CQChatOrderingController defaultController]) {
 		if ([[UIDevice currentDevice] isPadModel]) {
@@ -700,9 +681,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) viewWillAppear:(BOOL) animated {
-	[self _startUpdatingConnectTimes];
-
 	_active = YES;
+
+	[self _startUpdatingConnectTimes];
 
 	[self _refreshIndexPathForChatControllersCache];
 
@@ -930,29 +911,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 #pragma mark -
 
-- (BOOL) searchBarShouldBeginEditing:(UISearchBar *) searchBar {
-	[_colloquiesSearchDisplayController setActive:YES animated:YES];
-
-	return YES;
-}
-
-- (void) searchDisplayController:(UISearchDisplayController *) controller didLoadSearchResultsTableView:(UITableView *) tableView {
-	tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-	tableView.rowHeight = 62.;
-}
-
-- (void) searchDisplayController:(UISearchDisplayController *) controller willShowSearchResultsTableView:(UITableView *) tableView {
-	tableView.editing = self.editing;
-}
-
-- (BOOL) searchDisplayController:(UISearchDisplayController *) controller shouldReloadTableForSearchString:(NSString *) searchString {
-//	[CQChatOrderingController defaultController].matchingRooms = searchString;
-
-	return YES;
-}
-
-#pragma mark -
-
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
 	NSInteger numberOfSections = [CQConnectionsController defaultController].connections.count;
 	numberOfSections += [CQConnectionsController defaultController].bouncers.count;
@@ -1073,6 +1031,45 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	return UITableViewCellEditingStyleDelete;
 }
 
+- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+	if (self.editing) {
+		if (indexPath.section == 0 || indexPath.row == 0)
+			return nil;
+		indexPath = [NSIndexPath indexPathForRow:(indexPath.row - 1) inSection:(indexPath.section - 1)];
+	}
+
+	void (^partRoom)(id <CQChatViewController>) = ^(id <CQChatViewController> chatViewController) {
+		CQChatRoomController *chatRoomController = (CQChatRoomController *)chatViewController;
+		[chatRoomController part];
+	};
+
+	UITableViewRowActionStyle nextAction = UITableViewRowActionStyleDestructive;
+	UITableViewRowAction *leaveAction = nil;
+	id <CQChatViewController> chatViewController = chatControllerForIndexPath(indexPath);
+	BOOL canPartRoom = ([chatViewController isMemberOfClass:[CQChatRoomController class]] && chatViewController.available);
+	if (canPartRoom) {
+		leaveAction = [UITableViewRowAction rowActionWithStyle:nextAction title:NSLocalizedString(@"Leave", @"Leave confirmation button title") handler:^(UITableViewRowAction *action, NSIndexPath *actionIndexPath) {
+			partRoom(chatViewController);
+			[tableView updateCellAtIndexPath:actionIndexPath withAnimation:UITableViewRowAnimationFade];
+		}];
+	}
+
+	UITableViewRowAction *closeAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:NSLocalizedString(@"Close", @"Close confirmation button title") handler:^(UITableViewRowAction *action, NSIndexPath *actionIndexPath) {
+		if (canPartRoom) {
+			partRoom(chatViewController);
+		}
+		[self _closeChatViewControllers:@[chatViewController] forConnection:chatViewController.connection withRowAnimation:UITableViewRowAnimationAutomatic];
+	}];
+
+	if (leaveAction) {
+		closeAction.backgroundColor = [UIColor colorWithWhite:(200. / 255.) alpha:1.];
+
+		return @[leaveAction, closeAction];
+	}
+
+	return @[closeAction];
+}
+
 - (NSString *) tableView:(UITableView *) tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (self.editing) {
 		if (indexPath.section == 0 || indexPath.row == 0)
@@ -1114,7 +1111,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		}
 
 		if (indexPath.row == 0) {
-			MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:(chatIndexPath.section - 1)];
+			MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:(indexPath.section - 1)];
 			[[CQChatController defaultController] showNewChatActionSheetForConnection:connection fromPoint:midpointOfRect];
 			return;
 		}
@@ -1308,6 +1305,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	NSIndexPath *chatIndexPath = nil;
+
 	if (self.editing) {
 		if (indexPath.section == 0) {
 			CGRect cellRect = [tableView.superview convertRect:[self.tableView rectForRowAtIndexPath:indexPath] fromView:tableView];
@@ -1317,23 +1316,23 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 			return;
 		} else {
-			NSIndexPath *connectionIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:(indexPath.section - 1)];
+			chatIndexPath = [NSIndexPath indexPathForRow:(indexPath.row - 1) inSection:(indexPath.section - 1)];
 
-			if (indexPath.row == ([self tableView:tableView numberOfRowsInSection:indexPath.section] - 1)) {
+			if (indexPath.row == 0) {
 				CGRect cellRect = [tableView.superview convertRect:[self.tableView rectForRowAtIndexPath:indexPath] fromView:tableView];
 				CGPoint midpointOfRect = CGPointMake(CGRectGetMidX(cellRect), CGRectGetMidY(cellRect));
 
-				MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:connectionIndexPath.section];
+				MVChatConnection *connection = [[CQChatOrderingController defaultController] connectionAtIndex:chatIndexPath.section];
 				[[CQChatController defaultController] showNewChatActionSheetForConnection:connection fromPoint:midpointOfRect];
 
 				return;
 			}
-
-			indexPath = [connectionIndexPath copy];
 		}
+	} else {
+		chatIndexPath = indexPath;
 	}
 
-	id <CQChatViewController> chatViewController = chatControllerForIndexPath(indexPath);
+	id <CQChatViewController> chatViewController = chatControllerForIndexPath(chatIndexPath);
 #if ENABLE(FILE_TRANSFERS)
 	if (chatViewController && ![chatViewController isKindOfClass:[CQFileTransferController class]]) {
 #endif
@@ -1362,10 +1361,15 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 #pragma mark -
 
-- (void) showPreferences:(id) sender {
-	CQPreferencesViewController *preferencesViewController = [[CQPreferencesViewController alloc] init];
+- (void) showPreferences:(__nullable id) sender {
+	if ([UIDevice currentDevice].systemNine)
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+	else {
+		CQPreferencesViewController *preferencesViewController = [[CQPreferencesViewController alloc] init];
 
-	[[CQColloquyApplication sharedApplication] presentModalViewController:preferencesViewController animated:[UIView areAnimationsEnabled]];
-
+		[[CQColloquyApplication sharedApplication] presentModalViewController:preferencesViewController animated:[UIView areAnimationsEnabled]];
+	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

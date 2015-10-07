@@ -32,6 +32,8 @@ static BOOL pushAvailable = NO;
 static BOOL pushAvailable = YES;
 #endif
 
+NS_ASSUME_NONNULL_BEGIN
+
 static inline __attribute__((always_inline)) BOOL isDefaultValue(NSString *string) {
 	return [string isEqualToString:@"<<default>>"];
 }
@@ -42,7 +44,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 #pragma mark -
 
-@implementation CQConnectionEditViewController
+@implementation  CQConnectionEditViewController
 
 + (void) initialize {
 	static BOOL initialized;
@@ -550,7 +552,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	_connection.multitaskingSupported = sender.on;
 }
 
-- (void) deleteConnection:(id) sender {
+- (void) deleteConnection:(__nullable id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
 		UIAlertView *alert = [[CQAlertView alloc] init];
 		alert.delegate = self;
@@ -592,3 +594,5 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 }
 @end
+
+NS_ASSUME_NONNULL_END

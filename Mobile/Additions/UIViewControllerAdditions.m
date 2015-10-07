@@ -4,7 +4,9 @@
 #define CQMaximumPortraitPopoverHeight 876 // 921 (default) - 45 (height of a UITextField)
 #define CQMaximumLandscapePopoverHeight 620 // 665 (default) - 45 (height of a UITextField)
 
-@implementation UIViewController (UIViewControllerAdditions)
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  UIViewController (UIViewControllerAdditions)
 - (void) resizeForViewInPopoverUsingTableView:(UITableView *) tableView {
 	if (![[UIDevice currentDevice] isPadModel])
 		return;
@@ -51,3 +53,5 @@
 	return supportedOrientations;
 }
 @end
+
+NS_ASSUME_NONNULL_END

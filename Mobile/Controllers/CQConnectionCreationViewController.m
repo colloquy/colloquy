@@ -6,6 +6,8 @@
 
 #import <ChatCore/MVChatConnection.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 static inline __attribute__((always_inline)) BOOL isDefaultValue(NSString *string) {
 	return [string isEqualToString:@"<<default>>"];
 }
@@ -16,7 +18,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 #pragma mark -
 
-@implementation CQConnectionCreationViewController
+@implementation  CQConnectionCreationViewController
 - (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
@@ -35,13 +37,13 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	return self;
 }
 
-- (NSURL *) url {
+- (NSURL *__nullable) url {
 	if (isPlaceholderValue(_connection.server))
 		return nil;
 	return _connection.url;
 }
 
-- (void) setUrl:(NSURL *) url {
+- (void) setUrl:(NSURL *__nullable) url {
 	_connection.server = (url.host.length ? url.host : @"<<placeholder>>");
 	_connection.preferredNickname = (url.user.length ? url.user : @"<<default>>");
 	_connection.secure = ([url.scheme isEqualToString:@"ircs"] || [url.port unsignedShortValue] == 994);
@@ -78,7 +80,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 }
 
 #pragma mark -
-- (void) commit:(id) sender {
+- (void) commit:(__nullable id) sender {
 	[(CQConnectionEditViewController *)_rootViewController endEditing];
 
 	if (isPlaceholderValue(_connection.server)) {
@@ -104,3 +106,5 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
 @end
+
+NS_ASSUME_NONNULL_END

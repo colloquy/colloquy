@@ -23,7 +23,9 @@ static BOOL pushAvailable = YES;
 
 #pragma mark -
 
-@implementation CQBouncerEditViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQBouncerEditViewController
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -285,7 +287,7 @@ static BOOL pushAvailable = YES;
 		[connection sendPushNotificationCommands]; 
 }
 
-- (void) deleteBouncer:(id) sender {
+- (void) deleteBouncer:(__nullable id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
 		UIAlertView *alert = [[CQAlertView alloc] init];
 		alert.delegate = self;
@@ -327,3 +329,5 @@ static BOOL pushAvailable = YES;
 	[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 }
 @end
+
+NS_ASSUME_NONNULL_END

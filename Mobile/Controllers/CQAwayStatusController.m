@@ -3,7 +3,9 @@
 
 #import "MVChatConnection.h"
 
-@implementation CQAwayStatusController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQAwayStatusController
 - (void) viewDidLoad {
 	if (!_rootViewController) {
 		CQAwayStatusViewController *viewController = [[CQAwayStatusViewController alloc] init];
@@ -27,3 +29,5 @@
 	((CQAwayStatusViewController *)_rootViewController).connection = connection;
 }
 @end
+
+NS_ASSUME_NONNULL_END

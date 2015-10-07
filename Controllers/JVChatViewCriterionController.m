@@ -4,6 +4,7 @@
 #import "JVChatTranscriptPanel.h"
 #import "JVSmartTranscriptPanel.h"
 #import "JVChatConsolePanel.h"
+#import "NSRegularExpressionAdditions.h"
 
 @implementation JVChatViewCriterionController
 + (instancetype) controller {
@@ -241,8 +242,8 @@
 		BOOL match = NO;
 		JVChatViewCriterionOperation oper = [self operation];
 		if( oper == JVChatViewTextMatchCriterionOperation || oper == JVChatViewTextDoesNotMatchCriterionOperation ) {
-			AGRegex *regex = [AGRegex regexWithPattern:[self query] options:( ignoreCase ? AGRegexCaseInsensitive : 0 )];
-			AGRegexMatch *result = [regex findInString:value];
+			NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[self query] options:( ignoreCase ? NSRegularExpressionCaseInsensitive : 0 ) error:nil];
+			NSTextCheckingResult *result = [regex firstMatchInString:value options:NSMatchingCompleted range:NSMakeRange( 0, value.length )];
 			if( result ) match = YES;
 			if( oper == JVChatViewTextDoesNotMatchCriterionOperation ) match = ! match;
 		} else if( oper >= 3 && oper <= 6 ) {

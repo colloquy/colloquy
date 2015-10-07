@@ -27,6 +27,7 @@
 #import "NSAttributedStringMoreAdditions.h"
 #import "NSBundleAdditions.h"
 #import "NSDateAdditions.h"
+#import "NSRegularExpressionAdditions.h"
 
 static NSSet *actionVerbs = nil;
 
@@ -798,22 +799,21 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		if( [self connection] )
 			[names addObject:[[self connection] nickname]];
 
-		AGRegex *regex = nil;
+		NSRegularExpression *regex = nil;
 
 		for( __strong NSString *name in names ) {
 			if( ! [name length] ) continue;
 
 			if( [name hasPrefix:@"/"] && [name hasSuffix:@"/"] && [name length] > 1 ) {
-				regex = [AGRegex regexWithPattern:[name substringWithRange:NSMakeRange( 1, [name length] - 2 )] options:AGRegexCaseInsensitive];
+				regex = [NSRegularExpression cachedRegularExpressionWithPattern:[name substringWithRange:NSMakeRange( 1, [name length] - 2 )] options:NSRegularExpressionCaseInsensitive error:nil];
 			} else {
 				name = [name stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'"]];
 				NSString *pattern = [NSString stringWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", [name stringByEscapingCharactersInSet:escapeSet]];
-				regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
+				regex = [NSRegularExpression cachedRegularExpressionWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
 			}
 
-			NSArray *matches = [regex findAllInString:[messageString string]];
-
-			for( AGRegexMatch *match in matches ) {
+			NSArray *matches = [regex matchesInString:[messageString string] options:NSMatchingCompleted range:NSMakeRange( 0, [messageString string].length ) ];
+			for( NSTextCheckingResult *match in matches ) {
 				NSRange foundRange = [match range];
 				NSMutableSet *classes = [NSMutableSet setWithSet:[messageString attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL]];
 				[classes addObject:@"highlight"];
@@ -1583,13 +1583,14 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( [[self connection] type] != MVChatConnectionIRCType ) return;
 
 	// catch IRC rooms like "#room" but not HTML colors like "#ab12ef" nor HTML entities like "&#135;" or "&amp;"
-	AGRegex *regex = [AGRegex regexWithPattern:@"\\B(?<!&)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&#]{2,}\\b" options:AGRegexCaseInsensitive];
-	NSArray *matches = [regex findAllInString:[message string]];
+	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"\\B(?<!&)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&#]{2,}\\b" options:NSRegularExpressionCaseInsensitive error:nil];
+	NSArray *matches = [regex matchesInString:[message string] options:NSMatchingCompleted range:NSMakeRange( 0, [message string].length )];
 
-	for( AGRegexMatch *match in matches ) {
+	for( NSTextCheckingResult *match in matches ) {
 		NSRange foundRange = [match range];
+		NSString *text = [[message string] substringWithRange:foundRange];
 		id currentLink = [message attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
-		if( ! currentLink ) [message addAttribute:NSLinkAttributeName value:[NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[self connection] server], [match group]] range:foundRange];
+		if( ! currentLink ) [message addAttribute:NSLinkAttributeName value:[NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[self connection] server], text] range:foundRange];
 	}
 }
 

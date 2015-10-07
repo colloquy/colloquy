@@ -2,7 +2,9 @@
 
 #import "CQPreferencesTextCell.h"
 
-@implementation CQPreferencesTableViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQPreferencesTableViewController
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
@@ -15,3 +17,5 @@
 	[self.view endEditing:YES];
 }
 @end
+
+NS_ASSUME_NONNULL_END

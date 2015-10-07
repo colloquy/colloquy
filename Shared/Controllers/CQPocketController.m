@@ -4,9 +4,11 @@
 
 #import "NSNotificationAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 
-@implementation CQPocketController
+@implementation  CQPocketController
 + (NSString *) serviceName {
 	return @"Pocket";
 }
@@ -102,3 +104,5 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 	}];
 }
 @end
+
+NS_ASSUME_NONNULL_END

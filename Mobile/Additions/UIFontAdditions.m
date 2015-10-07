@@ -26,7 +26,9 @@ NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingStat
 }
 
 
-@implementation UIFont (Additions)
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  UIFont (Additions)
 + (NSArray *) cq_availableRemoteFontNames {
 	static NSArray *availableRemoteFontNames = nil;
 	static dispatch_once_t onceToken;
@@ -48,7 +50,7 @@ NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingStat
 	}];
 }
 
-+ (void) cq_loadFontWithName:(NSString *) fontName withCompletionHandler:(CQRemoteFontCompletionHandler)completionHandler {
++ (void) cq_loadFontWithName:(NSString *) fontName withCompletionHandler:(__nullable CQRemoteFontCompletionHandler)completionHandler {
 	void (^postSuccessNotification)(NSString *, UIFont *) = ^(NSString *loadedFontName, UIFont *loadedFont) {
 		dispatch_async(dispatch_get_main_queue(), ^{
 			NSDictionary *userInfo = nil;
@@ -134,3 +136,5 @@ NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingStat
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

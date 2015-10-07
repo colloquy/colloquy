@@ -11,7 +11,9 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 #pragma mark -
 
-@implementation CQUIChatTranscriptView
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQUIChatTranscriptView
 @synthesize transcriptDelegate = _transcriptDelegate;
 
 @synthesize timestampPosition = _timestampPosition;
@@ -357,7 +359,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 		return;
 
 	_resetPending = YES;
-	[self performSelector:@selector(reset) withObject:nil afterDelay:0];
+	[self performSelector:@selector(reset) withObject:nil afterDelay:0.];
 }
 
 - (void) reset {
@@ -384,7 +386,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	return nil;
 }
 
-- (void) stringByEvaluatingJavaScriptFromString:(NSString *) script completionHandler:(void (^)(NSString *))completionHandler {
+- (void) stringByEvaluatingJavaScriptFromString:(NSString *) script completionHandler:(void (^__nullable)(NSString *))completionHandler {
 	NSString *result = [super stringByEvaluatingJavaScriptFromString:script];
 
 	if (completionHandler)
@@ -576,3 +578,5 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	_blockerView.hidden = YES;
 }
 @end
+
+NS_ASSUME_NONNULL_END

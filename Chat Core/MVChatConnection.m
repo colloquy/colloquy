@@ -664,6 +664,9 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	do {
 		if( [object isKindOfClass:[NSData class]] ) {
 			[data appendData:object];
+		} else if([object respondsToSelector:@selector(string)]) {
+			NSData *stringData = [[object string] dataUsingEncoding:[self encoding] allowLossyConversion:YES];
+			[data appendData:stringData];
 		} else if( [firstComponent isKindOfClass:[NSString class]] ) {
 			NSData *stringData = [object dataUsingEncoding:[self encoding] allowLossyConversion:YES];
 			[data appendData:stringData];
@@ -1035,9 +1038,8 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	if( _roomListDirty ) return; // already queued to send notification
 	_roomListDirty = YES;
 
-	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)( NSEC_PER_SEC / 3)), dispatch_get_main_queue(), ^{
-		[self _sendRoomListUpdatedNotification];
-	});
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _sendRoomListUpdatedNotification ) object:nil];
+	[self performSelector:@selector( _sendRoomListUpdatedNotification ) withObject:nil afterDelay:( 1. / 3. )];
 }
 
 - (void) _sendRoomListUpdatedNotification {

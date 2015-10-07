@@ -6,6 +6,7 @@
 #import "JVChatMessage.h"
 #import "JVDirectChatPanel.h"
 #import "JVChatRoomPanel.h"
+#import "NSRegularExpressionAdditions.h"
 
 @implementation JVTranscriptCriterionController
 + (instancetype) controller {
@@ -249,8 +250,8 @@
 		BOOL match = NO;
 		JVTranscriptCriterionOperation oper = [self operation];
 		if( oper == JVTranscriptTextMatchCriterionOperation || oper == JVTranscriptTextDoesNotMatchCriterionOperation ) {
-			AGRegex *regex = [AGRegex regexWithPattern:[self query] options:( ignoreCase ? AGRegexCaseInsensitive : 0 )];
-			AGRegexMatch *result = [regex findInString:value];
+			NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[self query] options:( ignoreCase ? NSRegularExpressionCaseInsensitive : 0) error:nil];
+			NSTextCheckingResult *result = [regex firstMatchInString:value options:NSMatchingCompleted range:NSMakeRange( 0, value.length )];
 			if( result ) match = YES;
 			if( oper == JVTranscriptTextDoesNotMatchCriterionOperation ) match = ! match;
 		} else if( oper >= 3 && oper <= 6 ) {
@@ -305,10 +306,10 @@
 		case JVTranscriptMessageAddressedToMeCriterionKind:
 		case JVTranscriptMessageNotAddressedToMeCriterionKind: {
 			if( ! chatView || ! [chatView connection] ) return NO;
-			AGRegex *regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"^%@[:;,-]", [[[chatView connection] localUser] nickname]] options:( ignoreCase ? AGRegexCaseInsensitive : 0 )];
-			AGRegexMatch *match = [regex findInString:[message bodyAsPlainText]];
-			if( [match count] && [self kind] == JVTranscriptMessageAddressedToMeCriterionKind ) return YES;
-			else if( ! [match count] && [self kind] == JVTranscriptMessageNotAddressedToMeCriterionKind ) return YES;
+			NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[NSString stringWithFormat:@"^%@[:;,-]", [[[chatView connection] localUser] nickname]] options:( ignoreCase ? NSRegularExpressionCaseInsensitive : 0) error:nil];
+			NSTextCheckingResult *match = [regex firstMatchInString:[message bodyAsPlainText] options:NSMatchingCompleted range:NSMakeRange( 0, [message bodyAsPlainText].length )];
+			if( [match numberOfRanges] && [self kind] == JVTranscriptMessageAddressedToMeCriterionKind ) return YES;
+			else if( ! [match numberOfRanges] && [self kind] == JVTranscriptMessageNotAddressedToMeCriterionKind ) return YES;
 			return NO; }
 		case JVTranscriptMessageHighlightedCriterionKind:
 			return [message isHighlighted];

@@ -8,7 +8,9 @@
 
 #import <ChatCore/MVChatConnection.h>
 
-@implementation CQUserInfoRoomListViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQUserInfoRoomListViewController
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -55,11 +57,11 @@
 	return YES;
 }
 
-- (BOOL) tableView:(UITableView *) tableView canPerformAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+- (BOOL) tableView:(UITableView *) tableView canPerformAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(__nullable id) sender {
 	return (action == @selector(copy:));
 }
 
-- (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+- (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(__nullable id) sender {
 	NSString *roomName = _rooms[indexPath.row];
 
 	if (action == @selector(copy:))
@@ -91,3 +93,5 @@
 	[self.tableView reloadData];
 }
 @end
+
+NS_ASSUME_NONNULL_END

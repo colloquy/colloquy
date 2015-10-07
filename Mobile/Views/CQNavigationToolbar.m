@@ -3,11 +3,13 @@
 
 #import "CQNavigationToolbar.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQNavigationToolbar ()
 @property (nonatomic, strong) UIImageView *bottomLineView;
 @end
 
-@implementation CQNavigationToolbar
+@implementation  CQNavigationToolbar
 - (instancetype) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
 		return nil;
@@ -62,3 +64,5 @@
 	[self bringSubviewToFront:_bottomLineView];
 }
 @end
+
+NS_ASSUME_NONNULL_END

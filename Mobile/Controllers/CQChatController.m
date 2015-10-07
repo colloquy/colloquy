@@ -22,6 +22,8 @@
 
 #import "NSNotificationAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *CQChatControllerAddedChatViewControllerNotification = @"CQChatControllerAddedChatViewControllerNotification";
 NSString *CQChatControllerRemovedChatViewControllerNotification = @"CQChatControllerRemovedChatViewControllerNotification";
 NSString *CQChatControllerChangedTotalImportantUnreadCountNotification = @"CQChatControllerChangedTotalImportantUnreadCountNotification";
@@ -50,7 +52,7 @@ static CQSoundController *fileTransferSound;
 
 #pragma mark -
 
-@implementation CQChatController
+@implementation  CQChatController
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -598,6 +600,7 @@ static CQSoundController *fileTransferSound;
 - (void) showPendingChatControllerAnimated:(BOOL) animated {
 	if (_nextController)
 		[self showChatController:_nextController animated:animated];
+	_nextController = nil;
 }
 
 - (BOOL) hasPendingChatController {
@@ -692,18 +695,24 @@ static CQSoundController *fileTransferSound;
 		if ([CQChatOrderingController defaultController].chatViewControllers.count) {
 			if (!controllerIndex)
 				controllerIndex = 1;
-			[self performSelector:@selector(_showChatControllerUnanimated:) withObject:([CQChatOrderingController defaultController].chatViewControllers)[(controllerIndex - 1)] afterDelay:0.];
-		} else [self showChatController:nil animated:YES];
+			[self _showChatControllerUnanimated:[CQChatOrderingController defaultController].chatViewControllers[(controllerIndex - 1)]];
+		}
 	}
 }
 @end
 
+NS_ASSUME_NONNULL_END
+
 #pragma mark -
 
-@implementation MVIRCChatRoom (CQChatControllerAdditions)
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  MVIRCChatRoom (CQChatControllerAdditions)
 - (NSString *) displayName {
 	if (![[CQSettingsController settingsController] boolForKey:@"JVShowFullRoomNames"])
 		return [self.connection displayNameForChatRoomNamed:self.name];
 	return self.name;
 }
 @end
+
+NS_ASSUME_NONNULL_END

@@ -11,7 +11,9 @@
 #import "JVDirectChatPanel.h"
 #endif
 
-@implementation KAIgnoreRule
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  KAIgnoreRule
 @synthesize mask = _ignoreMask;
 @synthesize message = _ignoredMessage;
 @synthesize user = _ignoredUser;
@@ -209,3 +211,5 @@
 	MVSafeAdoptAssign(_userRegex, newMessageRegex);
 }
 @end
+
+NS_ASSUME_NONNULL_END

@@ -5,7 +5,9 @@
 
 #import "CQUserInfoViewController.h"
 
-@implementation CQUserInfoController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQUserInfoController
 - (void) viewDidLoad {
 	if (!_rootViewController) {
 		CQUserInfoViewController *userInfoViewController = [[CQUserInfoViewController alloc] init];
@@ -28,3 +30,5 @@
 	((CQUserInfoViewController *)_rootViewController).user = user;
 }
 @end
+
+NS_ASSUME_NONNULL_END

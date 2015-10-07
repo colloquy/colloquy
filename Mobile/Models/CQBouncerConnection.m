@@ -5,7 +5,9 @@
 
 #import <objc/message.h>
 
-@implementation CQBouncerConnection
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQBouncerConnection
 - (instancetype) init {
 	NSAssert(NO, @"use [CQBouncerConnection initWithBouncerSettings:] instead");
 	return nil;
@@ -334,3 +336,5 @@ end:
 	[_socket readDataToData:delimiter withTimeout:-1. tag:0];
 }
 @end
+
+NS_ASSUME_NONNULL_END

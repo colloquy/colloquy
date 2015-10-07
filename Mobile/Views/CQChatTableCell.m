@@ -5,7 +5,11 @@
 
 #import <ChatCore/MVChatUser.h>
 
-@implementation CQChatTableCell
+#import "UIViewAdditions.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQChatTableCell
 - (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
@@ -73,12 +77,13 @@
 	_nameLabel.text = name;
 }
 
-- (UIImage *) icon {
+- (UIImage *__nullable) icon {
 	return _iconImageView.image;
 }
 
-- (void) setIcon:(UIImage *) icon {
-	_iconImageView.image = icon;
+- (void) setIcon:(UIImage *__nullable) icon {
+	if (_iconImageView.image != icon)
+		_iconImageView.image = icon;
 }
 
 - (NSUInteger) unreadCount {
@@ -148,7 +153,7 @@
 		UILabel *firstLabel = _chatPreviewLabels[0];
 		[_chatPreviewLabels removeObjectAtIndex:0];
 
-		if (animated) {
+		if (cq_shouldAnimate(animated)) {
 			[UIView animateWithDuration:.2 delay:0. options:UIViewAnimationOptionCurveEaseOut animations:^{
 				firstLabel.alpha = 0.;
 			} completion:^(BOOL finished) {
@@ -173,7 +178,7 @@
 
 	[self layoutSubviewsWithAnimation:animated withDelay:animationDelay];
 
-	if (animated) {
+	if (cq_shouldAnimate(animated)) {
 		[UIView animateWithDuration:.35 delay:0. options:UIViewAnimationOptionCurveEaseIn animations:^{
 			label.alpha = (_available ? 1. : 0.5);
 		} completion:^(BOOL finished) {
@@ -206,7 +211,7 @@
 	if ([[UIDevice currentDevice] isPadModel])
 		return;
 
-	[UIView animateWithDuration:(animated ? .3 : 0.) animations:^{
+	[UIView animateWithDuration:(cq_shouldAnimate(animated) ? .3 : 0.) animations:^{
 		CGFloat alpha = (_available || highlighted || self.selected ? 1. : 0.5);
 		_nameLabel.alpha = alpha;
 		_iconImageView.alpha = alpha;
@@ -226,7 +231,7 @@
 	if ([[UIDevice currentDevice] isPadModel])
 		return;
 
-	[UIView animateWithDuration:(animated ? .3 : 0.) animations:^{
+	[UIView animateWithDuration:(cq_shouldAnimate(animated) ? .3 : 0.) animations:^{
 		CGFloat alpha = (_available || selected || self.highlighted ? 1. : 0.5);
 		_nameLabel.alpha = alpha;
 		_iconImageView.alpha = alpha;
@@ -237,7 +242,7 @@
 }
 
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
-	[UIView animateWithDuration:(animated ? .3 : 0.) delay:0. options:(editing ? UIViewAnimationOptionCurveEaseIn : UIViewAnimationOptionCurveEaseOut) animations:^{
+	[UIView animateWithDuration:(cq_shouldAnimate(animated) ? .3 : 0.) delay:0. options:(editing ? UIViewAnimationOptionCurveEaseIn : UIViewAnimationOptionCurveEaseOut) animations:^{
 		[super setEditing:editing animated:animated];
 
 		_unreadCountView.alpha = editing ? 0. : 1.;
@@ -303,7 +308,7 @@
 	if (!self.editing && _unreadCountView.bounds.size.width)
 		frame.size.width -= (contentRect.size.width - CGRectGetMinX(_unreadCountView.frame));
 
-	[UIView animateWithDuration:(animated ? .25 : .0) animations:^{
+	[UIView animateWithDuration:(cq_shouldAnimate(animated) ? .25 : .0) animations:^{
 		_nameLabel.frame = frame;
 
 		CGFloat newVerticalOrigin = frame.origin.y + frame.size.height - LABEL_SPACING;
@@ -331,3 +336,5 @@
 	[self layoutSubviewsWithAnimation:NO withDelay:0.];
 }
 @end
+
+NS_ASSUME_NONNULL_END

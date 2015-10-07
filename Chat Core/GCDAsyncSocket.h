@@ -48,8 +48,7 @@ extern NSString *const GCDAsyncSocketSSLDiffieHellmanParameters;
 #define GCDAsyncSocketLoggingContext 65535
 
 
-typedef NS_ENUM(NSInteger, GCDAsyncSocketError)
-{
+typedef NS_ENUM(NSInteger, GCDAsyncSocketError) {
 	GCDAsyncSocketNoError = 0,           // Never used
 	GCDAsyncSocketBadConfigError,        // Invalid configuration
 	GCDAsyncSocketBadParamError,         // Invalid parameter was passed

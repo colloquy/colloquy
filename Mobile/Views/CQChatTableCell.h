@@ -2,6 +2,8 @@
 @class CQUnreadCountView;
 @protocol CQChatViewController;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQChatTableCell : UITableViewCell {
 	@protected
 	UIImageView *_iconImageView;
@@ -16,7 +18,7 @@
 - (void) takeValuesFromChatViewController:(id <CQChatViewController>) controller;
 
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) UIImage *icon;
+@property (nonatomic, nullable, copy) UIImage *icon;
 @property (nonatomic) BOOL available;
 @property (nonatomic) NSUInteger unreadCount;
 @property (nonatomic) NSUInteger importantUnreadCount;
@@ -28,3 +30,5 @@
 
 - (void) layoutSubviewsWithAnimation:(BOOL) animated withDelay:(NSTimeInterval) animationDelay;
 @end
+
+NS_ASSUME_NONNULL_END

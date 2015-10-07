@@ -26,6 +26,8 @@ static BOOL showHostmasksOnPart;
 static BOOL showLeaveEvents;
 static CQShowRoomTopic showRoomTopic;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
 - (void) _addPendingComponentsAnimated:(BOOL) animated;
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
@@ -37,7 +39,7 @@ static CQShowRoomTopic showRoomTopic;
 
 #pragma mark -
 
-@implementation CQChatRoomController
+@implementation  CQChatRoomController
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -62,7 +64,7 @@ static CQShowRoomTopic showRoomTopic;
 	[self userDefaultsChanged];
 }
 
-- (instancetype) initWithTarget:(id) target {
+- (instancetype) initWithTarget:(__nullable id) target {
 	if (!(self = [super initWithTarget:target]))
 		return nil;
 
@@ -144,7 +146,12 @@ static CQShowRoomTopic showRoomTopic;
 }
 
 - (UIImage *) icon {
-	return [UIImage imageNamed:@"roomIcon.png"];
+	static UIImage *icon = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		icon = [UIImage imageNamed:@"roomIcon.png"];
+	});
+	return icon;
 }
 
 - (NSString *) title {
@@ -1374,3 +1381,5 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	[alert show];
 }
 @end
+
+NS_ASSUME_NONNULL_END

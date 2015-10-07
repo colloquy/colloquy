@@ -304,7 +304,7 @@ enum {
 //    NSLog(@"%s addresses:%@ masks:%@",__FUNCTION__,IPAddresses, subNetMasks);
     if (routerAddress) {
         NSString *ipAddress = nil;
-        int i;
+        NSUInteger i;
         for (i=0;i<[IPAddresses count];i++) {
             ipAddress = (NSString *) IPAddresses[i];
             NSString *subNetMask = (NSString *) subNetMasks[i];

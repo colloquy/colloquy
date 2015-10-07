@@ -1,5 +1,7 @@
 @class CQIntroductoryGIFFrameOperation;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQIntroductoryGIFFrameOperation : NSOperation
 - (instancetype) init NS_UNAVAILABLE;
 - (instancetype) initWithURL:(NSURL *) url NS_DESIGNATED_INITIALIZER;
@@ -20,3 +22,5 @@
 @property SEL action; // Signature: - (void) operationCompleted:(CQIntroductoryGIFFrameOperation *) operation;
 @property (strong) id userInfo;
 @end
+
+NS_ASSUME_NONNULL_END

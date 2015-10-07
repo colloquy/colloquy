@@ -941,8 +941,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 #pragma mark -
 
 - (NSString *) stringByEncodingXMLSpecialCharactersAsEntities {
-	NSCharacterSet *special = [NSCharacterSet characterSetWithCharactersInString:@"&<>\"'"];
-	NSRange range = [self rangeOfCharacterFromSet:special options:NSLiteralSearch];
+	NSRange range = [self rangeOfCharacterFromSet:[NSCharacterSet cq_encodedXMLCharacterSet] options:NSLiteralSearch];
 	if( range.location == NSNotFound )
 		return self;
 
@@ -1179,17 +1178,9 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
-	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
 	NSMutableString *replacementString = [self mutableCopy];
-
-	for (NSTextCheckingResult *result in [regularExpression matchesInString:self options:optind range:searchRange]) {
-		if (result.range.location == NSNotFound)
-			break; 
-
-		[replacementString replaceCharactersInRange:result.range withString:replacement];
-	}
-
-	return replacementString;
+	[replacementString replaceOccurrencesOfRegex:regex withString:replacement options:options range:searchRange error:error];
+	return [replacementString copy];
 }
 
 #pragma mark -
@@ -1210,16 +1201,37 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 @implementation NSMutableString (NSMutableStringAdditions)
 - (void) encodeXMLSpecialCharactersAsEntities {
-	NSCharacterSet *special = [NSCharacterSet characterSetWithCharactersInString:@"&<>\"'"];
-	NSRange range = [self rangeOfCharacterFromSet:special options:NSLiteralSearch];
+	NSRange range = [self rangeOfCharacterFromSet:[NSCharacterSet cq_encodedXMLCharacterSet] options:NSLiteralSearch];
 	if( range.location == NSNotFound )
 		return;
 
-	[self replaceOccurrencesOfString:@"&" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
-	[self replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
-	[self replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
-	[self replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
-	[self replaceOccurrencesOfString:@"'" withString:@"&apos;" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
+	NSUInteger length = self.length;
+	for (NSUInteger i = 0; i < length; i++) {
+		unichar character = [self characterAtIndex:i];
+		switch (character) {
+			case '&':
+				[self replaceCharactersInRange:NSMakeRange(i, 1) withString:@"&amp;"];
+				length += 4; i += 4;
+				break;
+			case '<':
+				[self replaceCharactersInRange:NSMakeRange(i, 1) withString:@"&lt;"];
+				length += 3; i += 3;
+				break;
+			case '>':
+				[self replaceCharactersInRange:NSMakeRange(i, 1) withString:@"&gt;"];
+				length += 3; i += 3;
+				break;
+			case '"':
+				[self replaceCharactersInRange:NSMakeRange(i, 1) withString:@"&quot;"];
+				length += 5; i += 5;
+				break;
+			case '\'':
+				[self replaceCharactersInRange:NSMakeRange(i, 1) withString:@"&apos;"];
+				length += 5; i += 5;
+				break;
+			default: break;
+		}
+	}
 }
 
 - (void) decodeXMLSpecialCharacterEntities {
@@ -1398,6 +1410,24 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 		emojiRange = [self rangeOfEmojiCharactersInRange:NSMakeRange(emojiRange.location + 1, (NSMaxRange(*range) - emojiRange.location - 1))];
 	}
+}
+
+- (void) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement {
+	[self replaceOccurrencesOfRegex:regex withString:replacement options:0 range:NSMakeRange(0, self.length) error:nil];
+}
+
+- (void) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
+	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
+	NSMutableString *replacementString = [self mutableCopy];
+
+	do {
+		NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:searchRange];
+		if (!result || result.range.location == NSNotFound)
+			break;
+
+		searchRange.length += (result.range.length - replacement.length);
+		[replacementString replaceCharactersInRange:result.range withString:replacement];
+	} while (0);
 }
 @end
 

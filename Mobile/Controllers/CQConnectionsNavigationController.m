@@ -3,7 +3,9 @@
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 
-@implementation CQConnectionsNavigationController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQConnectionsNavigationController
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
@@ -11,9 +13,11 @@
 	_rootViewController.navigationItem.leftBarButtonItem = doneItem;
 }
 
-- (void) close:(id) sender {
+- (void) close:(__nullable id) sender {
 	[[CQConnectionsController defaultController] saveConnections];
 
 	[super close:sender];
 }
 @end
+
+NS_ASSUME_NONNULL_END

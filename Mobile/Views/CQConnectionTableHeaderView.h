@@ -9,6 +9,8 @@ typedef NS_ENUM(NSInteger, CQConnectionTableCellStatus) {
 	CQConnectionTableCellConnectedStatus
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQConnectionTableHeaderView : UITableViewHeaderFooterView {
 	@protected
 	UIImageView *_iconImageView;
@@ -40,3 +42,5 @@ typedef NS_ENUM(NSInteger, CQConnectionTableCellStatus) {
 
 @property (atomic, copy) void (^selectedConnectionHeaderView)();
 @end
+
+NS_ASSUME_NONNULL_END

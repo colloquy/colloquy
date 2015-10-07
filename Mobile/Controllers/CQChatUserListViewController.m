@@ -21,12 +21,14 @@ static NSString *membersFilteredCountFormat;
 //	return modes;
 //}
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQChatUserListViewController ()
 @property (atomic, strong) NSMutableArray *users;
 @property (atomic, strong) NSMutableArray *matchedUsers;
 @end
 
-@implementation CQChatUserListViewController
+@implementation  CQChatUserListViewController
 + (void) initialize {
 	membersSingleCountFormat = NSLocalizedString(@"Members (%u)", @"Members with single count view title");
 	membersFilteredCountFormat = NSLocalizedString(@"Members (%u of %u)", @"Members with filtered count view title");
@@ -493,11 +495,11 @@ static NSString *membersFilteredCountFormat;
 	return YES;
 }
 
-- (BOOL) tableView:(UITableView *) tableView canPerformAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+- (BOOL) tableView:(UITableView *) tableView canPerformAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(__nullable id) sender {
 	return (action == @selector(copy:));
 }
 
-- (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+- (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(__nullable id) sender {
 	@synchronized(self) {
 		MVChatUser *user = self.matchedUsers[indexPath.row];
 		if (!user)
@@ -514,3 +516,5 @@ static NSString *membersFilteredCountFormat;
 	[self dismissViewControllerAnimated:YES completion:NULL];
 }
 @end
+
+NS_ASSUME_NONNULL_END

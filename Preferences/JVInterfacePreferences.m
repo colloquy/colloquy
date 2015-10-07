@@ -143,6 +143,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 - (NSImage *) iconForRules:(NSArray *) rules {
 	NSImage *icon = [NSImage imageNamed:NSImageNameActionTemplate];
+	icon.size = NSMakeSize(16., 16.);
 	BOOL multipleType = NO;
 
 	for( JVChatViewCriterionController *rule in rules ) {

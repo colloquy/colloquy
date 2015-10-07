@@ -1,5 +1,7 @@
 @protocol CQChatViewController;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQChatPresentationController : UIViewController {
 	UIToolbar *_toolbar;
 	NSArray *_standardToolbarItems;
@@ -13,3 +15,5 @@
 - (void) updateToolbarAnimated:(BOOL) animated;
 - (void) updateToolbarForInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation animated:(BOOL) animated;
 @end
+
+NS_ASSUME_NONNULL_END

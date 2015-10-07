@@ -26,7 +26,9 @@ enum {
 	CQPreferencesIgnoreSectionPermanent
 };
 
-@implementation CQPreferencesIgnoreEditViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQPreferencesIgnoreEditViewController
 - (instancetype) initWithStyle:(UITableViewStyle) style {
 	NSAssert(NO, @"use -[CQPreferencesIgnoreEditViewController initWithConnection:] instead");
 	return nil;
@@ -173,3 +175,5 @@ enum {
 	self._ignoreRule.permanent = sender.on;
 }
 @end
+
+NS_ASSUME_NONNULL_END

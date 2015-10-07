@@ -1,5 +1,7 @@
 #import "NSCharacterSetAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation NSCharacterSet (Additions)
 + (NSCharacterSet *) illegalXMLCharacterSet {
 	static NSMutableCharacterSet *illegalSet = nil;
@@ -15,4 +17,14 @@
 
 	return [illegalSet copy];
 }
+
++ (NSCharacterSet *) cq_encodedXMLCharacterSet {
+	static NSCharacterSet *specialSet = nil;
+	if (!specialSet) {
+		specialSet = [NSCharacterSet characterSetWithCharactersInString:@"&<>\"'"];;
+	}
+	return specialSet;
+}
 @end
+
+NS_ASSUME_NONNULL_END

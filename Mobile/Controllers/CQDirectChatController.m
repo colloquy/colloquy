@@ -19,6 +19,7 @@
 #import "NSAttributedStringAdditions.h"
 #import "NSDateAdditions.h"
 #import "NSNotificationAdditions.h"
+#import "UIViewAdditions.h"
 
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatUserWatchRule.h>
@@ -78,10 +79,12 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQDirectChatController () <CQChatInputStyleDelegate>
 @end
 
-@implementation CQDirectChatController
+@implementation  CQDirectChatController
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -204,7 +207,7 @@ static BOOL showingKeyboard;
 	return nil;
 }
 
-- (instancetype) initWithTarget:(id) target {
+- (instancetype) initWithTarget:(__nullable id) target {
 	if (!(self = [super initWithNibName:@"CQUIChatView" bundle:nil]))
 		return nil;
 
@@ -332,7 +335,12 @@ static BOOL showingKeyboard;
 #pragma mark -
 
 - (UIImage *) icon {
-	return [UIImage imageNamed:@"directChatIcon.png"];
+	static UIImage *icon = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		icon = [UIImage imageNamed:@"directChatIcon.png"];
+	});
+	return icon;
 }
 
 - (void) setTitle:(NSString *) title {
@@ -424,7 +432,7 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (void) style:(id) sender {
+- (void) style:(__nullable id) sender {
 	_styleViewController = [[CQChatInputStyleViewController alloc] init];
 	_styleViewController.delegate = self;
 
@@ -564,7 +572,7 @@ static BOOL showingKeyboard;
 
 	if (_revealKeyboard) {
 		_revealKeyboard = NO;
-		[chatInputBar performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.5];
+		[chatInputBar becomeFirstResponder];
 	}
 }
 
@@ -950,7 +958,7 @@ static BOOL showingKeyboard;
 #pragma mark -
 
 - (BOOL) _openURL:(NSURL *) url {
-	[self _forceRegsignKeyboard];
+	[self _forceResignKeyboard];
 
 	return [[CQColloquyApplication sharedApplication] openURL:url];
 }
@@ -1034,13 +1042,13 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (BOOL) handleJoinCommandWithArguments:(MVChatString *) arguments {
+- (BOOL) handleJoinCommandWithArguments:(MVChatString *__nullable) arguments {
 	if (![arguments.string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
 		CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
 		creationViewController.roomTarget = YES;
 		creationViewController.selectedConnection = self.connection;
 
-		[self _forceRegsignKeyboard];
+		[self _forceResignKeyboard];
 
 		[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
 
@@ -1203,7 +1211,7 @@ static BOOL showingKeyboard;
 
 	[creationViewController showRoomListFilteredWithSearchString:arguments.string];
 
-	[self _forceRegsignKeyboard];
+	[self _forceResignKeyboard];
 
 	[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
 
@@ -1295,7 +1303,7 @@ static BOOL showingKeyboard;
 }
 
 - (BOOL) handleHelpCommandWithArguments:(MVChatString *) arguments {
-	[self _forceRegsignKeyboard];
+	[self _forceResignKeyboard];
 
 	[[CQColloquyApplication sharedApplication] showHelp:nil];
 
@@ -1309,7 +1317,7 @@ static BOOL showingKeyboard;
 }
 
 - (BOOL) handleWelcomeCommandWithArguments:(MVChatString *) arguments {
-	[self _forceRegsignKeyboard];
+	[self _forceResignKeyboard];
 
 	[[CQColloquyApplication sharedApplication] showWelcome:nil];
 
@@ -1446,7 +1454,7 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (BOOL) handleTokenCommandWithArguments:(MVChatString *) arguments {
+- (BOOL) handleTokenCommandWithArguments:(MVChatString *__nullable) arguments {
 #if !TARGET_IPHONE_SIMULATOR
 	if (![CQColloquyApplication sharedApplication].deviceToken.length) {
 		_showDeviceTokenWhenRegistered = YES;
@@ -1609,7 +1617,7 @@ static BOOL showingKeyboard;
 	if (_didSendRecently || ![transcriptView canBecomeFirstResponder])
 		return;
 
-	[self _forceRegsignKeyboard];
+	[self _forceResignKeyboard];
 }
 
 - (void) setScrollbackLength:(NSUInteger) scrollbackLength {
@@ -1639,7 +1647,7 @@ static BOOL showingKeyboard;
 
 	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
-	[UIView animateWithDuration:(_active ? animationDuration : .0) delay:.0 options:animationCurve animations:^{
+	[UIView animateWithDuration:(cq_shouldAnimate(_active) ? animationDuration : .0) delay:.0 options:animationCurve animations:^{
 		CGRect frame = containerView.frame;
 		frame.size.height = CGRectGetMinY(keyboardRect);
 		containerView.frame = frame;
@@ -1660,7 +1668,7 @@ static BOOL showingKeyboard;
 	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 
-	[UIView animateWithDuration:((_active && self.view.window) ? animationDuration : .0) delay:.0 options:(animationCurve << 16) animations:^{
+	[UIView animateWithDuration:(cq_shouldAnimate(_active && self.view.window) ? animationDuration : .0) delay:.0 options:(animationCurve << 16) animations:^{
 		containerView.frame = self.view.bounds;
 	} completion:NULL];
 }
@@ -1916,7 +1924,7 @@ static BOOL showingKeyboard;
 	CQUserInfoController *userInfoController = [[CQUserInfoController alloc] init];
 	userInfoController.user = user;
 
-	[self _forceRegsignKeyboard];
+	[self _forceResignKeyboard];
 
 	[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
 }
@@ -1941,7 +1949,7 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (void) _forceRegsignKeyboard {
+- (void) _forceResignKeyboard {
 	_allowEditingToEnd = YES;
 	[chatInputBar resignFirstResponder];
 	_allowEditingToEnd = NO;
@@ -2397,3 +2405,5 @@ static BOOL showingKeyboard;
 
 }
 @end
+
+NS_ASSUME_NONNULL_END

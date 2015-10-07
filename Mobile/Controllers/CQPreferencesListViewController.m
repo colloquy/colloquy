@@ -11,7 +11,9 @@ enum {
 	CQTableViewCellAccessoryPlay = (UITableViewCellAccessoryCheckmark + 10)
 };
 
-@implementation CQPreferencesListViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQPreferencesListViewController
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -423,3 +425,5 @@ enum {
 	[_audioPlayer play];
 }
 @end
+
+NS_ASSUME_NONNULL_END

@@ -1,7 +1,9 @@
 #import "UIColorAdditions.h"
 
-@implementation UIColor (Additions)
-+ (UIColor *) colorFromName:(NSString *) name {
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  UIColor (Additions)
++ (UIColor *__nullable) colorFromName:(NSString *__nullable) name {
 	if (!name.length)
 		return nil;
 
@@ -46,3 +48,5 @@
 	return nil;
 }
 @end
+
+NS_ASSUME_NONNULL_END

@@ -71,7 +71,7 @@
 	<key>CQPrivateMessageAlertTimeout</key>
 	<integer>0</integer>
 	<key>CQMultitaskingTimeout</key>
-	<integer>600</integer>
+	<integer>300</integer>
 	<key>CQShowHostmaskOnJoin</key>
 	<false/>
 	<key>CQShowHostmaskOnPart</key>

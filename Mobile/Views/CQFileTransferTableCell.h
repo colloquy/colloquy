@@ -8,6 +8,8 @@
 @class MVChatUser;
 @class CQFileTransferController;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQFileTransferTableCell : UITableViewCell {
 @private
 	IBOutlet UIImageView *_iconImageView;
@@ -26,5 +28,7 @@
 
 - (void) takeValuesFromController:(CQFileTransferController *) controller;
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

@@ -4,7 +4,11 @@
 
 #import "CQBouncerSettings.h"
 
-@implementation CQConnectionTableHeaderView
+#import "UIViewAdditions.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQConnectionTableHeaderView
 - (instancetype) initWithReuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithReuseIdentifier:reuseIdentifier]))
 		return nil;
@@ -131,22 +135,17 @@
 		unsigned hours = (absoluteInterval / 3600);
 
 		if (interval >= 1.) {
-			if (hours) newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"-%zd:%02zd:%02zd", @"Countdown time format with hours, minutes and seconds"), hours, minutes, seconds];
+			if (UNLIKELY(hours)) newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"-%zd:%02zd:%02zd", @"Countdown time format with hours, minutes and seconds"), hours, minutes, seconds];
 			else newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"-%u:%02zd", @"Countdown time format with minutes and seconds"), minutes, seconds];
 		} else {
-			if (hours) newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"%u:%02zd:%02zd", @"Countup time format with hours, minutes and seconds"), hours, minutes, seconds];
+			if (UNLIKELY(hours)) newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"%u:%02zd:%02zd", @"Countup time format with hours, minutes and seconds"), hours, minutes, seconds];
 			else newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"%u:%02zd", @"Countup time format with minutes and seconds"), minutes, seconds];
 		}
 	}
 
-	if ([_timeLabel.text isEqualToString:newTime]) {
-		return;
-	}
+	_timeLabel.text = newTime;
 
-	_timeLabel.text = newTime ? newTime : @"";
-
-
-	[self setNeedsLayout];
+	[self _layoutTimeLabel];
 }
 
 - (void) setConnectDate:(NSDate *) connectDate {
@@ -182,7 +181,7 @@
 }
 
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
-	[UIView animateWithDuration:(animated ? .3 : .0) delay:0. options:(editing ? UIViewAnimationOptionCurveEaseIn : UIViewAnimationOptionCurveEaseOut) animations:^{
+	[UIView animateWithDuration:(cq_shouldAnimate(animated) ? .3 : .0) delay:0. options:(editing ? UIViewAnimationOptionCurveEaseIn : UIViewAnimationOptionCurveEaseOut) animations:^{
 		_timeLabel.alpha = editing ? 0. : 1.;
 		_disclosureButton.alpha = editing ? 1. : 0.;
 	} completion:NULL];
@@ -215,15 +214,7 @@
 	frame.origin.y = CGRectGetMaxY(_iconImageView.frame) - (frame.size.height / 1.33);
 	_badgeImageView.frame = frame;
 
-	frame = _timeLabel.frame;
-	frame.size = [_timeLabel sizeThatFits:_timeLabel.bounds.size];
-	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
-
-	if (self.showingDeleteConfirmation || self.showsReorderControl)
-		frame.origin.x = self.bounds.size.width - contentRect.origin.x;
-	else frame.origin.x = contentRect.size.width - frame.size.width - TEXT_RIGHT_MARGIN;
-
-	_timeLabel.frame = frame;
+	[self _layoutTimeLabel];
 
 	frame = _serverLabel.frame;
 	frame.size = [_serverLabel sizeThatFits:_serverLabel.bounds.size];
@@ -244,6 +235,19 @@
 	frame.origin.x = contentRect.size.width - frame.size.width - TEXT_RIGHT_MARGIN;
 	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
 	_disclosureButton.frame = frame;
+}
+
+- (void) _layoutTimeLabel {
+	CGRect contentRect = self.contentView.frame;
+	CGRect frame = _timeLabel.frame;
+	frame.size = [_timeLabel sizeThatFits:_timeLabel.bounds.size];
+	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
+
+	if (UNLIKELY(self.showingDeleteConfirmation || self.showsReorderControl))
+		frame.origin.x = self.bounds.size.width - contentRect.origin.x;
+	else frame.origin.x = contentRect.size.width - frame.size.width - TEXT_RIGHT_MARGIN;
+
+	_timeLabel.frame = frame;
 }
 
 - (void) touchesBegan:(NSSet *) touches withEvent:(UIEvent *) event {
@@ -274,8 +278,10 @@
 
 #pragma mark -
 
-- (void) _disclosureButtonPressed:(id) sender {
+- (void) _disclosureButtonPressed:(__nullable id) sender {
 	if (_selectedConnectionHeaderView)
 		_selectedConnectionHeaderView();
 }
 @end
+
+NS_ASSUME_NONNULL_END

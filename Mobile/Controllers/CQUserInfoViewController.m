@@ -11,7 +11,9 @@
 #import "NSDateAdditions.h"
 #import "NSNotificationAdditions.h"
 
-@implementation CQUserInfoViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQUserInfoViewController
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -203,11 +205,11 @@
 	return YES;
 }
 
-- (BOOL) tableView:(UITableView *) tableView canPerformAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+- (BOOL) tableView:(UITableView *) tableView canPerformAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(__nullable id) sender {
 	return (action == @selector(copy:));
 }
 
-- (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+- (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(__nullable id) sender {
 	if (action != @selector(copy:))
 		return;
 
@@ -228,7 +230,7 @@
 
 #pragma mark -
 
-- (IBAction) showJoinedRooms:(id) sender {
+- (IBAction) showJoinedRooms:(__nullable id) sender {
 	CQUserInfoRoomListViewController *roomsController = [[CQUserInfoRoomListViewController alloc] init];
 	roomsController.rooms = [_user attributeForKey:MVChatUserKnownRoomsAttribute];
 	roomsController.connection = _user.connection;
@@ -236,7 +238,7 @@
 	[self.navigationController pushViewController:roomsController animated:YES];
 }
 
-- (IBAction) refreshInformation:(id) sender {
+- (IBAction) refreshInformation:(__nullable id) sender {
 	[_user refreshInformation];
 }
 
@@ -306,3 +308,5 @@
 	[self.tableView reloadData];
 }
 @end
+
+NS_ASSUME_NONNULL_END

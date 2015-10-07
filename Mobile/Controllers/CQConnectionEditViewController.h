@@ -2,6 +2,8 @@
 
 @class MVChatConnection;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQConnectionEditViewController : CQPreferencesTableViewController <UIActionSheetDelegate, UIAlertViewDelegate> {
 	@protected
 	MVChatConnection *_connection;
@@ -11,3 +13,5 @@
 @property (nonatomic, strong) MVChatConnection *connection;
 @property (nonatomic, getter=isNewConnection) BOOL newConnection;
 @end
+
+NS_ASSUME_NONNULL_END

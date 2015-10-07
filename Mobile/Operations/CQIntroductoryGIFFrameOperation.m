@@ -49,7 +49,9 @@ static const NSUInteger GIFInterlacingLength = 1;
 static const NSUInteger GIFMinimumLZWCodeSizeLength = 1;
 static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 
-@implementation CQIntroductoryGIFFrameOperation {
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQIntroductoryGIFFrameOperation {
 	BOOL _cancelled;
 	BOOL _started;
 	BOOL _finished;
@@ -316,3 +318,5 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 	return _introductoryFrameImage;
 }
 @end
+
+NS_ASSUME_NONNULL_END

@@ -106,6 +106,9 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 - (void) substituteEmojiForEmoticons;
 - (void) substituteEmojiForEmoticonsInRange:(NSRangePointer) range;
 - (void) substituteEmojiForEmoticonsInRange:(NSRangePointer) range encodeXMLSpecialCharactersAsEntities:(BOOL) encode;
+
+- (void) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement;
+- (void) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error;
 @end
 
 NS_ASSUME_NONNULL_END

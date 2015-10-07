@@ -1,6 +1,8 @@
 #import "CQUnreadCountView.h"
 
-@implementation CQUnreadCountView
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQUnreadCountView
 - (instancetype) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
 		return nil;
@@ -150,3 +152,5 @@
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

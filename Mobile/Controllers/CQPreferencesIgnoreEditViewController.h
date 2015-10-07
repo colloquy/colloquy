@@ -3,6 +3,8 @@
 @class MVChatConnection;
 @class KAIgnoreRule;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQPreferencesIgnoreEditViewController : CQPreferencesListEditViewController {
 @private
 	MVChatConnection *_connection;
@@ -17,3 +19,5 @@
 
 @property (nonatomic, readonly) KAIgnoreRule *representedRule;
 @end
+
+NS_ASSUME_NONNULL_END

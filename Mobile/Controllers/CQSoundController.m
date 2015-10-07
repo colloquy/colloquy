@@ -1,6 +1,8 @@
 #import "CQSoundController.h"
 
-@implementation CQSoundController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQSoundController
 + (void) vibrate {
 	static NSTimeInterval previousVibrateTime = 0.;
 
@@ -63,3 +65,5 @@
 	AudioServicesPlaySystemSound(_sound);
 }
 @end
+
+NS_ASSUME_NONNULL_END

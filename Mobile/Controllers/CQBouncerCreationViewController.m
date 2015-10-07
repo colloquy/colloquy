@@ -5,7 +5,9 @@
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 
-@implementation CQBouncerCreationViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQBouncerCreationViewController
 - (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
@@ -37,7 +39,7 @@
 
 #pragma mark -
 
-- (void) commit:(id) sender {
+- (void) commit:(__nullable id) sender {
 	[(CQBouncerEditViewController *)_rootViewController endEditing];
 
 	[[CQConnectionsController defaultController] addBouncerSettings:_settings];
@@ -47,3 +49,5 @@
 	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
 @end
+
+NS_ASSUME_NONNULL_END

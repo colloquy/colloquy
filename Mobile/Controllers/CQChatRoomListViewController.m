@@ -8,7 +8,9 @@
 static NSOperationQueue *topicProcessingQueue;
 static BOOL showFullRoomNames;
 
-@implementation CQChatRoomListViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQChatRoomListViewController
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -46,7 +48,7 @@ static BOOL showFullRoomNames;
 - (void) dealloc {
 	_searchBar.delegate = nil;
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionChatRoomListUpdatedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionChatRoomListUpdatedNotification object:_connection];
 }
 
 #pragma mark -
@@ -272,11 +274,11 @@ static BOOL showFullRoomNames;
 	return !_showingUpdateRow;
 }
 
-- (BOOL) tableView:(UITableView *) tableView canPerformAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+- (BOOL) tableView:(UITableView *) tableView canPerformAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(__nullable id) sender {
 	return (!_showingUpdateRow && action == @selector(copy:));
 }
 
-- (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+- (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(__nullable id) sender {
 	if (_showingUpdateRow)
 		return;
 
@@ -488,3 +490,5 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 
 }
 @end
+
+NS_ASSUME_NONNULL_END

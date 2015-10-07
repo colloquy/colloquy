@@ -1,3 +1,5 @@
+NS_ASSUME_NONNULL_BEGIN
+
 typedef void (^CQColorSelected)(UIColor *);
 
 @interface CQColorPickerTableCell : UITableViewCell
@@ -11,3 +13,5 @@ typedef void (^CQColorSelected)(UIColor *);
 
 @property (nonatomic, assign) BOOL expands;
 @end
+
+NS_ASSUME_NONNULL_END

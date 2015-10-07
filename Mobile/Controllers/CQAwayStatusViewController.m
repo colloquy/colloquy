@@ -8,11 +8,13 @@
 
 #import "NSNotificationAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQPreferencesListViewController (Private)
 - (void) editItemAtIndex:(NSUInteger) index;
 @end
 
-@implementation CQAwayStatusViewController
+@implementation  CQAwayStatusViewController
 - (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
@@ -221,3 +223,5 @@
 	[[CQSettingsController settingsController] setObject:awayStatuses forKey:@"CQAwayStatuses"];
 }
 @end
+
+NS_ASSUME_NONNULL_END

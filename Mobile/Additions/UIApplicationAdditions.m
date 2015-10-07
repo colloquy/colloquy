@@ -8,6 +8,8 @@ NSString *const CQReachabilityStateDidChangeNotification = @"CQReachabilityState
 NSString *const CQReachabilityNewStateKey = @"CQReachabilityNewStateKey";
 NSString *const CQReachabilityOldStateKey = @"CQReachabilityOldStateKey";
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UIApplication (Private)
 - (void) cq_setReachabilityState:(CQReachabilityState) reachabilityState;
 @end
@@ -27,7 +29,7 @@ static void reachabilityStatusChangedCallback(SCNetworkReachabilityRef target, S
 	[application cq_setReachabilityState:reachabilityState];
 }
 
-@implementation UIApplication (Additions)
+@implementation  UIApplication (Additions)
 - (CQReachabilityState) cq_reachabilityState {
 	return [[self associatedObjectForKey:@"reachabilityState"] intValue];
 }
@@ -67,3 +69,5 @@ static void reachabilityStatusChangedCallback(SCNetworkReachabilityRef target, S
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

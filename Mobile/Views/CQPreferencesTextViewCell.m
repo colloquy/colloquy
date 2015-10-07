@@ -3,11 +3,13 @@
 #import "CQPreferencesTextViewCell.h"
 #import "CQTextView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQPreferencesTextViewCell (Private)
 @property (nonatomic, readonly) CGFloat height;
 @end
 
-@implementation CQPreferencesTextViewCell
+@implementation  CQPreferencesTextViewCell
 - (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
@@ -112,3 +114,5 @@
 	return [_textView resignFirstResponder];
 }
 @end
+
+NS_ASSUME_NONNULL_END

@@ -4,6 +4,8 @@
 @class MVChatUser;
 @class MVChatRoom;
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *const CQIgnoreRulesNotSavedNotification;
 
 @interface CQIgnoreRulesController : NSObject {
@@ -27,3 +29,5 @@ extern NSString *const CQIgnoreRulesNotSavedNotification;
 
 - (void) synchronize;
 @end
+
+NS_ASSUME_NONNULL_END

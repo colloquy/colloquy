@@ -2,11 +2,10 @@
 
 @protocol CQChatViewController;
 
-@interface CQChatListViewController : CQTableViewController <UIActionSheetDelegate, UIDocumentInteractionControllerDelegate, UISearchBarDelegate, UISearchDisplayDelegate> {
-	@protected
-	UISearchBar *_colloquiesSearchBar;
-	UISearchDisplayController *_colloquiesSearchDisplayController;
+NS_ASSUME_NONNULL_BEGIN
 
+@interface CQChatListViewController : CQTableViewController <UIActionSheetDelegate, UIDocumentInteractionControllerDelegate> {
+	@protected
 	UIActionSheet *_currentConnectionActionSheet;
 	UIActionSheet *_currentChatViewActionSheet;
 	id <UIActionSheetDelegate> _currentChatViewActionSheetDelegate;
@@ -26,3 +25,5 @@
 
 - (void) selectChatViewController:(id) controller animatedSelection:(BOOL) animatedSelection animatedScroll:(BOOL) animatedScroll;
 @end
+
+NS_ASSUME_NONNULL_END

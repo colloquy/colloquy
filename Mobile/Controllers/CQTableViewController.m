@@ -1,14 +1,58 @@
 #import "CQTableViewController.h"
 
-@implementation CQTableViewController
-- (instancetype) initWithStyle:(UITableViewStyle) style {
-	return (self = [super initWithStyle:style]);
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQTableViewController {
+	UITableViewStyle _style;
+	UITableView *_tableView;
+}
+
+- (instancetype)initWithStyle:(UITableViewStyle)style {
+	if (!(self = [super initWithNibName:nil bundle:nil]))
+		return nil;
+
+	_style = style;
+	_clearsSelectionOnViewWillAppear = YES;
+
+	return self;
+}
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+	if (!(self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]))
+		return nil;
+
+	_style = UITableViewStylePlain;
+	_clearsSelectionOnViewWillAppear = YES;
+
+	return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+	if (!(self = [super initWithCoder:aDecoder]))
+		return nil;
+
+	_style = UITableViewStylePlain;
+	_clearsSelectionOnViewWillAppear = YES;
+
+	return self;
+}
+
+- (void) loadView {
+	UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:_style];
+	tableView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin);
+	tableView.dataSource = self;
+	tableView.delegate = self;
+	self.view = tableView;
+}
+
+- (UITableView *)tableView {
+	return (UITableView *)self.view;
 }
 
 - (void) dealloc {
 	if ([self isViewLoaded]) {
-		self.tableView.dataSource = nil;
-		self.tableView.delegate = nil;
+		_tableView.dataSource = nil;
+		_tableView.delegate = nil;
 	}
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -18,13 +62,18 @@
 
 - (void) viewDidLoad {
 	[super viewDidLoad];
-	[self.tableView performSelectorOnMainThread:@selector(hideEmptyCells) withObject:nil waitUntilDone:YES];
+	[_tableView performSelectorOnMainThread:@selector(hideEmptyCells) withObject:nil waitUntilDone:YES];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_reloadTableView) name:UIApplicationWillEnterForegroundNotification object:nil];
+
+	if (_clearsSelectionOnViewWillAppear) {
+		for (NSIndexPath *indexPath in _tableView.indexPathsForSelectedRows)
+			[_tableView deselectRowAtIndexPath:indexPath animated:NO];
+	}
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
@@ -35,8 +84,22 @@
 
 #pragma mark -
 
+- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	NSAssert(NO, @"tableView:numberOfRowsInSection: not implemented");
+	return 0;
+}
+
+- (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
+	NSAssert(NO, @"tableView:cellForRowAtIndexPath: not implemented");
+	return nil;
+}
+
+#pragma mark -
+
 - (void) _reloadTableView {
 	if ([self isViewLoaded])
-		[self.tableView reloadData];
+		[_tableView reloadData];
 }
 @end
+
+NS_ASSUME_NONNULL_END

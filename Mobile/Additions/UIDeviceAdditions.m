@@ -1,6 +1,11 @@
 #import "UIDeviceAdditions.h"
 
 #if !TARGET_IPHONE_SIMULATOR
+
+#import <sys/sysctl.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
 static NSString *hardwareInfoAsString(const char *keyPath) {
 	char buffer[512] = { 0 };
 	size_t size = sizeof(buffer);
@@ -12,9 +17,13 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 
 	return @"";
 }
+#else
+
+NS_ASSUME_NONNULL_BEGIN
+
 #endif
 
-@implementation UIDevice (UIDeviceColloquyAdditions)
+@implementation  UIDevice (UIDeviceColloquyAdditions)
 #if TARGET_IPHONE_SIMULATOR
 - (NSString *) model {
 	// This is needed becuase the real UIDevice.model always returns iPhone Simulator, even for the iPad.
@@ -32,6 +41,19 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 #else
 	return hardwareInfoAsString("hw.model");
 #endif
+}
+
+- (BOOL) isSystemNine {
+	static BOOL result;
+	static BOOL cached;
+
+	if (cached)
+		return result;
+
+	result = ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion == 9);
+	cached = YES;
+
+	return result;
 }
 
 - (BOOL) isPhoneModel {
@@ -94,3 +116,5 @@ static BOOL isRetinaResultCached = NO;
 	isRetinaResultCached = NO;
 }
 @end
+
+NS_ASSUME_NONNULL_END

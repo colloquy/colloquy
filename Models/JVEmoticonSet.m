@@ -1,5 +1,6 @@
 #import "JVEmoticonSet.h"
 #import "NSBundleAdditions.h"
+#import "NSRegularExpressionAdditions.h"
 
 @interface JVEmoticonSet ()
 @property (readwrite, strong, nonatomic, null_resettable, setter=_setBundle:) NSBundle *bundle;
@@ -143,10 +144,10 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 			NSMutableString *search = [str mutableCopy];
 			[search escapeCharactersInSet:escapeSet];
 
-			AGRegex *regex = [[AGRegex alloc] initWithPattern:[NSString stringWithFormat:@"(?<=\\s|^)%@(?=\\s|$)", search]];
-			NSArray *matches = [regex findAllInString:[string string]];
+			NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"(?<=\\s|^)%@(?=\\s|$)", search] options:0 error:nil];
+			NSArray *matches = [regex matchesInString:[string string] options:NSMatchingCompleted range:NSMakeRange( 0, [string string].length )];
 
-			for( AGRegexMatch *match in matches ) {
+			for( NSTextCheckingResult *match in matches ) {
 				NSRange foundRange = [match range];
 				NSString *startHTML = [string attribute:@"XHTMLStart" atIndex:foundRange.location effectiveRange:NULL];
 				NSString *endHTML = [string attribute:@"XHTMLEnd" atIndex:foundRange.location effectiveRange:NULL];

@@ -10,6 +10,8 @@ typedef NS_ENUM(NSInteger, CQTimestampPosition) {
 	CQTimestampPositionCenter
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol CQChatTranscriptViewDelegate <NSObject>
 @optional
 - (void) transcriptView:(id) transcriptView receivedSwipeWithTouchCount:(NSUInteger) touchCount leftward:(BOOL) leftward;
@@ -21,7 +23,7 @@ typedef NS_ENUM(NSInteger, CQTimestampPosition) {
 @end
 
 @protocol CQChatTranscriptView <NSObject>
-@property (nonatomic, weak) IBOutlet id <CQChatTranscriptViewDelegate> transcriptDelegate;
+@property (nonatomic, nullable, weak) IBOutlet id <CQChatTranscriptViewDelegate> transcriptDelegate;
 
 @property (nonatomic, assign) BOOL allowsStyleChanges;
 @property (nonatomic, copy) NSString *styleIdentifier;
@@ -32,7 +34,7 @@ typedef NS_ENUM(NSInteger, CQTimestampPosition) {
 
 @property (nonatomic, readonly) UIScrollView *scrollView;
 
-- (void) stringByEvaluatingJavaScriptFromString:(NSString *) script completionHandler:(void (^)(NSString *))completionHandler;
+- (void) stringByEvaluatingJavaScriptFromString:(NSString *) script completionHandler:(void (^__nullable)(NSString *))completionHandler;
 
 - (void) addPreviousSessionComponents:(NSArray *) components;
 - (void) addComponents:(NSArray *) components animated:(BOOL) animated;
@@ -52,3 +54,5 @@ typedef NS_ENUM(NSInteger, CQTimestampPosition) {
 - (void) reset;
 - (void) resetSoon;
 @end
+
+NS_ASSUME_NONNULL_END

@@ -8,7 +8,9 @@
 
 #import <ChatCore/MVFileTransfer.h>
 
-@implementation CQFileTransferController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQFileTransferController
 - (id) initWithTransfer:(MVFileTransfer *) transfer {
 	if (!(self = [self init]))
 		return nil;
@@ -147,5 +149,7 @@
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

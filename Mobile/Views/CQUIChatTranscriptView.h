@@ -1,5 +1,7 @@
 #import "CQChatTranscriptViewDelegate.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQUIChatTranscriptView : UIWebView <CQChatTranscriptView, UIGestureRecognizerDelegate, UIWebViewDelegate> {
 	@protected
 	UIView *_blockerView;
@@ -22,3 +24,5 @@
 	BOOL _topicIsHidden;
 }
 @end
+
+NS_ASSUME_NONNULL_END

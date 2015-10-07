@@ -9,12 +9,12 @@
 	double top = rect.origin.y + rect.size.height;
 	double right = rect.origin.x + rect.size.width;
 
+	NSRect sourceRect = NSMakeRect( 0, 0, size.width, size.height );
+
 	// Tile vertically
 	while( destRect.origin.y < top ) {
 		// Tile horizontally
 		while( destRect.origin.x < right ) {
-			NSRect sourceRect = NSMakeRect( 0, 0, size.width, size.height );
-
 			// Crop as necessary
 			if( ( destRect.origin.x + destRect.size.width ) > right )
 				sourceRect.size.width -= ( destRect.origin.x + destRect.size.width ) - right;
@@ -23,12 +23,38 @@
 				sourceRect.size.height -= ( destRect.origin.y + destRect.size.height ) - top;
 
 			// Draw and shift
-			[self compositeToPoint:destRect.origin fromRect:sourceRect operation:NSCompositeSourceOver];
+			[self cq_compositeToPoint:destRect.origin fromRect:sourceRect operation:NSCompositeSourceOver];
 			destRect.origin.x += destRect.size.width;
 		}
 
 		destRect.origin.y += destRect.size.height;
 	}
+}
+
+// Everything below here was created for Colloquy by Zachary drayer under the same license as Chat Core
+- (void) cq_compositeToPoint:(NSPoint) point fromRect:(NSRect) rect operation:(NSCompositingOperation) operation fraction:(CGFloat) delta {
+//	[self drawInRect:NSMakeRect(point.x, point.y, self.size.width, self.size.height) fromRect:rect operation:operation fraction:delta];
+	[self compositeToPoint:point fromRect:rect operation:operation fraction:delta];
+}
+
+- (void) cq_compositeToPoint:(NSPoint) point fromRect:(NSRect) rect operation:(NSCompositingOperation) operation {
+//	[self cq_compositeToPoint:point fromRect:rect operation:operation fraction:1.0];
+	[self compositeToPoint:point fromRect:rect operation:operation];
+}
+
+- (void) cq_compositeToPoint:(NSPoint) point operation:(NSCompositingOperation) operation fraction:(CGFloat) delta {
+//	[self cq_compositeToPoint:point fromRect:NSMakeRect(point.x, point.y, self.size.width, self.size.height)	operation:operation fraction:delta];
+	[self compositeToPoint:point operation:operation fraction:delta];
+}
+
+- (void) cq_compositeToPoint:(NSPoint) point operation:(NSCompositingOperation) operation {
+//	[self cq_compositeToPoint:point fromRect:NSMakeRect(point.x, point.y, self.size.width, self.size.height) operation:operation fraction:1.0];
+	[self compositeToPoint:point operation:operation];
+}
+
+- (void) cq_dissolveToPoint:(NSPoint) point fraction:(CGFloat) delta {
+//	[self cq_compositeToPoint:point fromRect:NSMakeRect(point.x, point.y, self.size.width, self.size.height) operation:NSCompositeSourceOver fraction:delta];
+	[self dissolveToPoint:point fraction:delta];
 }
 
 + (NSImage *) imageFromPDF:(NSString *) pdfName {

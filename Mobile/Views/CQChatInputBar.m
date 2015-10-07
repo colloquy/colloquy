@@ -1,5 +1,7 @@
 #import "CQChatInputBar.h"
 
+#import "CQTextView.h"
+
 #import "UIColorAdditions.h"
 #import "NSNotificationAdditions.h"
 
@@ -15,6 +17,8 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 
 #pragma mark -
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQChatInputBar (CQChatInputBarPrivate)
 @property (readonly) BOOL _hasMarkedText;
 
@@ -22,9 +26,13 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 - (void) _updateTextTraits;
 @end
 
+NS_ASSUME_NONNULL_END
+
 #pragma mark -
 
-@implementation CQChatInputBar
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQChatInputBar
 @synthesize delegate = _delegate;
 
 + (void) initialize {
@@ -44,9 +52,7 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 	foregroundColor = [UIColor colorFromName:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQChatStyleForegroundTextColor"]];
 	backgroundColor = [UIColor colorFromName:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQChatStyleBackgroundTextColor"]];
 
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[[NSNotificationCenter chatCenter] postNotificationName:CQChatInputBarDefaultsChanged object:nil];
-	});
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:CQChatInputBarDefaultsChanged object:nil];
 }
 
 - (void) _commonInitialization {
@@ -70,7 +76,7 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 		frame = CGRectMake(6.5, 6.5, frame.size.width - 12., frame.size.height - 12.);
 	else frame = CGRectMake(6., 7., frame.size.width - 12., frame.size.height - 12.);
 
-	_inputView = [[UITextView alloc] initWithFrame:frame];
+	_inputView = [[CQTextView alloc] initWithFrame:frame];
 	_inputView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
 	_inputView.textContainer.heightTracksTextView = YES;
 	_inputView.dataDetectorTypes = UIDataDetectorTypeNone;
@@ -170,7 +176,7 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 	return [_inputView isFirstResponder];
 }
 
-- (BOOL) canPerformAction:(SEL) action withSender:(id) sender {
+- (BOOL) canPerformAction:(SEL) action withSender:(__nullable id) sender {
 	[self hideCompletions];
 	return NO;
 }
@@ -320,7 +326,7 @@ static NSString *const CQChatInputBarDefaultsChanged = @"CQChatInputBarDefaultsC
 	_completions = nil;
 
 	_completionView.hidden = YES;
-	_completionView.completions = nil;
+	_completionView.completions = @[];
 
 	_inputView.returnKeyType = UIReturnKeySend;
 
@@ -429,7 +435,7 @@ retry:
 
 #pragma mark -
 
-- (void) accessoryButtonPressed:(id) sender {
+- (void) accessoryButtonPressed:(__nullable id) sender {
 	__strong __typeof__((_delegate)) strongDelegate = _delegate;
 	if (strongDelegate && [strongDelegate respondsToSelector:@selector(chatInputBarAccessoryButtonPressed:)])
 		[strongDelegate chatInputBarAccessoryButtonPressed:self];
@@ -891,3 +897,5 @@ retry:
 	return fmax(self._lineHeight * 4, CQMaxLineHeight);
 }
 @end
+
+NS_ASSUME_NONNULL_END

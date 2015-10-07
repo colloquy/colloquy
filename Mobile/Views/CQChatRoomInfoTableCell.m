@@ -1,6 +1,10 @@
 #import "CQChatRoomInfoTableCell.h"
 
-@implementation CQChatRoomInfoTableCell
+#import "UIViewAdditions.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQChatRoomInfoTableCell
 - (instancetype) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
@@ -97,7 +101,7 @@
 }
 
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
-	[UIView animateWithDuration:.3 delay:.0 options:(editing ? UIViewAnimationOptionCurveEaseIn : UIViewAnimationOptionCurveEaseOut) animations:^{
+	[UIView animateWithDuration:cq_shouldAnimate(animated) ? .3 : .0 delay:.0 options:(editing ? UIViewAnimationOptionCurveEaseIn : UIViewAnimationOptionCurveEaseOut) animations:^{
 		[super setEditing:editing animated:animated];
 
 		_memberCountLabel.alpha = editing ? 0. : 1.;
@@ -170,3 +174,5 @@
 	_topicLabel.frame = frame;
 }
 @end
+
+NS_ASSUME_NONNULL_END

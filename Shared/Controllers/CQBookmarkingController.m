@@ -17,7 +17,9 @@ NSString *const CQBookmarkingErrorDomain = @"CQBookmarkingErrorDomain";
 
 static NSString *bookmarkingService;
 
-@implementation CQBookmarkingController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQBookmarkingController
 + (void) userDefaultsChanged {
 	bookmarkingService = [[[NSUserDefaults standardUserDefaults] objectForKey:@"CQBookmarkingService"] copy];
 }
@@ -63,9 +65,12 @@ static NSString *bookmarkingService;
 		return;
 	}
 
-	[NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+	NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"info.colloquy.HTTP.backgroundSession"];
+	NSURLSession *backgroundSession = [NSURLSession sessionWithConfiguration:configuration];
+
+	[[backgroundSession dataTaskWithRequest:request completionHandler:^(NSData *__nullable data, NSURLResponse *__nullable response, NSError *__nullable error) {
 		[self handleBookmarkingResponse:response withData:data forLink:link];
-	}];
+	}] resume];
 }
 
 + (void) handleBookmarkingResponse:(NSURLResponse *) response withData:(NSData *) data forLink:(NSString *) link {
@@ -100,3 +105,5 @@ static NSString *bookmarkingService;
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

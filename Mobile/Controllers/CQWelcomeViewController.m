@@ -8,7 +8,9 @@
 #define WhatsNewTableSection 1
 #define HelpTableSection 2
 
-@implementation CQWelcomeViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQWelcomeViewController
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -98,3 +100,5 @@
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

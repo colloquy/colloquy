@@ -7,6 +7,8 @@
 
 #import <objc/runtime.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 // These are defined as constants because they are used in Settings.app
 static NSString *const CQPSGroupSpecifier = @"PSGroupSpecifier";
 static NSString *const CQPSTextFieldSpecifier = @"PSTextFieldSpecifier";
@@ -55,21 +57,24 @@ static NSString *const CQPSListTypeAudio = @"Audio";
 static NSString *const CQPSListTypeImage = @"Image";
 static NSString *const CQPSListTypeFont = @"Font";
 
-@implementation CQPreferencesDisplayViewController {
+@implementation  CQPreferencesDisplayViewController {
 	BOOL _active;
 }
 
 - (instancetype) initWithRootPlist {
-	return [self initWithPlistNamed:@"Root"];
+	if (!(self = [super initWithStyle:UITableViewStylePlain]))
+		return nil;
+
+	[self CQPreferencesDisplayViewController_commonInitWithPlist:@"Root"];
+
+	return self;
 }
 
 - (instancetype) initWithPlistNamed:(NSString *) plist {
-	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
+	if (!(self = [super initWithStyle:UITableViewStylePlain]))
 		return nil;
 
-	_preferences = [[NSMutableArray alloc] init];
-
-	[self performSelectorInBackground:@selector(_readSettingsFromPlist:) withObject:plist];
+	[self CQPreferencesDisplayViewController_commonInitWithPlist:plist];
 
 	return self;
 }
@@ -87,6 +92,12 @@ static NSString *const CQPSListTypeFont = @"Font";
 - (instancetype) initWithCoder:(NSCoder *) aDecoder {
 	NSAssert(NO, @"use -[CQPreferencesDisplayViewController initWithPlistNamed:] instead");
 	return nil;
+}
+
+- (void)CQPreferencesDisplayViewController_commonInitWithPlist:(NSString *)plist {
+	_preferences = [[NSMutableArray alloc] init];
+
+	[self _readSettingsFromPlist:plist];
 }
 
 #pragma mark -
@@ -381,3 +392,5 @@ static NSString *const CQPSListTypeFont = @"Font";
 	[controller dismissViewControllerAnimated:[UIView areAnimationsEnabled] completion:NULL];
 }
 @end
+
+NS_ASSUME_NONNULL_END

@@ -1,5 +1,7 @@
 #import <AudioToolbox/AudioServices.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface CQSoundController : NSObject {
 	SystemSoundID _sound;
 	NSTimeInterval _previousPlayTime;
@@ -14,3 +16,5 @@
 
 - (void) playSound;
 @end
+
+NS_ASSUME_NONNULL_END

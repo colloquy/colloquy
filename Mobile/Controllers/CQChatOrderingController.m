@@ -12,6 +12,8 @@
 
 #import "NSNotificationAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 static NSString *roomOrdering;
 NSString *const CQChatOrderingControllerDidChangeOrderingNotification = @"CQChatOrderingControllerDidChangeOrderingNotification";
 
@@ -88,7 +90,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return NSOrderedSame;
 }
 
-@implementation CQChatOrderingController
+@implementation  CQChatOrderingController
 @synthesize chatViewControllers = _chatControllers;
 
 + (void) userDefaultsChanged {
@@ -456,3 +458,5 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

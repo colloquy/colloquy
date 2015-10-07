@@ -4,6 +4,8 @@
 
 @class CQImportantChatMessageViewController;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol CQImportantChatMessageDelegate <NSObject>
 @optional
 - (void) importantChatMessageViewController:(CQImportantChatMessageViewController *) importantChatMessageViewController didSelectMessage:(MVChatString *) message isAction:(BOOL) isAction;
@@ -21,3 +23,5 @@
 
 - (instancetype) initWithMessages:(NSArray *) messages delegate:(id <CQImportantChatMessageDelegate>) delegate NS_DESIGNATED_INITIALIZER;
 @end
+
+NS_ASSUME_NONNULL_END

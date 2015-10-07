@@ -3,7 +3,9 @@
 #import "CQTextView.h"
 #import "CQPreferencesTextViewCell.h"
 
-@implementation CQPreferencesTextEditViewController
+NS_ASSUME_NONNULL_BEGIN
+
+@implementation  CQPreferencesTextEditViewController
 @synthesize listItem = _listItemText;
 
 - (instancetype) init {
@@ -148,3 +150,5 @@
 }
 #endif
 @end
+
+NS_ASSUME_NONNULL_END
