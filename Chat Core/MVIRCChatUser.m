@@ -6,6 +6,8 @@
 #import "MVChatString.h"
 #import "NSNotificationAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *MVMetadataKeyForAttributeName(NSString *attributeName) {
 	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserSSLCertFingerprintAttribute]) return @"server.certfp";
 	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserEmailAttribute]) return @"user.email";
@@ -48,7 +50,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 }
 
 - (instancetype) initLocalUserWithConnection:(MVIRCChatConnection *) userConnection {
-	if( ( self = [self initWithNickname:nil andConnection:userConnection] ) ) {
+	if( ( self = [self initWithNickname:@"" andConnection:userConnection] ) ) {
 		_type = MVChatLocalUserType;
 		MVSafeCopyAssign( _uniqueIdentifier, [[self nickname] lowercaseString] );
 	}
@@ -67,7 +69,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( ctcpReplyNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
 //		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( metadataUpdatedNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
 
-		[_connection _addKnownUser:self];
+		[userConnection _addKnownUser:self];
 	}
 
 	return self;
@@ -97,7 +99,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( message != nil );
-	[[self connection] _sendMessage:message withEncoding:encoding toTarget:self withTargetPrefix:nil withAttributes:attributes localEcho:NO];
+	[[self connection] _sendMessage:message withEncoding:encoding toTarget:self withTargetPrefix:@"" withAttributes:attributes localEcho:NO];
 
 	_mostRecentUserActivity = [NSDate date];
 	[self persistLastActivityDate];
@@ -111,7 +113,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	[self persistLastActivityDate];
 }
 
-- (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments {
+- (void) sendSubcodeRequest:(NSString *) command withArguments:(id __nullable) arguments {
 	NSParameterAssert( command != nil );
 	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
 		NSString *prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@ :\001%@ ", [self nickname], command];
@@ -124,7 +126,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	[self persistLastActivityDate];
 }
 
-- (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments {
+- (void) sendSubcodeReply:(NSString *) command withArguments:(id __nullable) arguments {
 	NSParameterAssert( command != nil );
 	if( [[self connection] status] == MVChatConnectionConnectingStatus ) {
 		if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
@@ -178,7 +180,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	}
 }
 
-- (void) setAttribute:(id) attribute forKey:(id) key {
+- (void) setAttribute:(id __nullable) attribute forKey:(id) key {
 	[super setAttribute:attribute forKey:MVAttributeNameForMetadataKey(key)];
 }
 
@@ -217,3 +219,5 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	}
 }
 @end
+
+NS_ASSUME_NONNULL_END

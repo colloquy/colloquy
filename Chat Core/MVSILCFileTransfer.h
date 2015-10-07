@@ -3,6 +3,8 @@
 #include <libsilc/silcincludes.h>
 #include <libsilcclient/silcclient.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface MVSILCUploadFileTransfer : MVUploadFileTransfer {
 	SilcUInt32 _sessionID;
 }
@@ -30,3 +32,5 @@
 - (SilcUInt32) _sessionID;
 - (void) _setSessionID:(SilcUInt32) sessionID;
 @end
+
+NS_ASSUME_NONNULL_END

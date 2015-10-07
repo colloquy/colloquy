@@ -38,7 +38,7 @@ static MVBuddyListController *sharedInstance = nil;
 + (MVBuddyListController *) sharedBuddyList {
 	if( ! sharedInstance ) {
 		sharedInstance = [self alloc];
-		sharedInstance = [sharedInstance initWithWindowNibName:nil];
+		sharedInstance = [sharedInstance initWithWindowNibName:@"MVBuddyList"];
 	}
 
 	return sharedInstance;
@@ -47,7 +47,7 @@ static MVBuddyListController *sharedInstance = nil;
 #pragma mark -
 
 - (instancetype) initWithWindowNibName:(NSString *) windowNibName {
-	if( ( self = [super initWithWindowNibName:@"MVBuddyList"] ) ) {
+	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyOnline: ) name:JVBuddyCameOnlineNotification object:nil];
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyOffline: ) name:JVBuddyWentOfflineNotification object:nil];
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyUserCameOnlineNotification object:nil];

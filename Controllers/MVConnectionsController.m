@@ -17,6 +17,8 @@
 
 #import <SecurityInterface/SFCertificateTrustPanel.h>
 
+#import <SecurityInterface/SFCertificateTrustPanel.h>
+
 static MVConnectionsController *sharedInstance = nil;
 
 static NSString *const connectionInvalidSSLCertAction = nil;
@@ -58,7 +60,7 @@ static NSMenu *favoritesMenu = nil;
 + (MVConnectionsController *) defaultController {
 	if( ! sharedInstance ) {
 		sharedInstance = [self alloc];
-		sharedInstance = [sharedInstance initWithWindowNibName:nil];
+		sharedInstance = [sharedInstance initWithWindowNibName:@"MVConnections"];
 	}
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_refreshFavoritesMenu) name:MVChatRoomJoinedNotification object:nil];
@@ -165,7 +167,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (instancetype) initWithWindowNibName:(NSString *) windowNibName {
-	if( ( self = [super initWithWindowNibName:@"MVConnections"] ) ) {
+	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
 		_bookmarks = nil;
 		_passConnection = nil;
 
@@ -1214,9 +1216,10 @@ static NSMenu *favoritesMenu = nil;
 	}
 }
 
-- (BOOL) tableView:(NSTableView *) view writeRows:(NSArray *) rows toPasteboard:(NSPasteboard *) board {
-	if( view == connections ) {
-		NSInteger row = [[rows lastObject] intValue];
+
+- (BOOL) tableView:(NSTableView *) tableView writeRowsWithIndexes:(NSIndexSet *) rowIndexes toPasteboard:(NSPasteboard *) board {
+	if( tableView == connections ) {
+		NSInteger row = rowIndexes.lastIndex;
 		NSDictionary *info = nil;
 		MVChatConnection *connection = nil;
 		NSString *string = nil;
@@ -1415,7 +1418,6 @@ static NSMenu *favoritesMenu = nil;
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Delete Connection", "delete connection button tooltip" )];
 		[toolbarItem setImage:[[NSWorkspace sharedWorkspace] iconForFileType: NSFileTypeForHFSTypeCode(kToolbarDeleteIcon)]];
-
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:NULL];
 	} else if( [itemIdent isEqualToString:MVToolbarConsoleItemIdentifier] ) {
@@ -1784,7 +1786,7 @@ static NSMenu *favoritesMenu = nil;
 		if( [info[@"encoding"] longValue] ) connection.encoding = [info[@"encoding"] longValue];
 		else connection.encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 
-		connection.outgoingChatFormat = (OSType)[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"];
+		connection.outgoingChatFormat = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"];
 
 		if( info[@"realName"] ) connection.realName = info[@"realName"];
 		if( info[@"nickname"] ) connection.preferredNickname = info[@"nickname"];

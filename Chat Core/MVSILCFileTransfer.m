@@ -4,6 +4,8 @@
 #import "NSNotificationAdditions.h"
 #import "RunOnMainThread.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface MVFileTransfer (MVFileTransferSilcPrivate)
 - (void) _silcPostError:(SilcClientFileError) error;
 @end
@@ -57,7 +59,6 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 		case SILC_CLIENT_FILE_ERROR: {
 			NSDictionary *info = @{NSLocalizedDescriptionKey: @"The file transfer terminated unexpectedly."};
 			NSError *error = [[NSError allocWithZone:nil] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferUnexpectedlyEndedError userInfo:info];
-			
 			RunOnMainThreadAsync(^{
 				[self _postError:error];
 			});
@@ -220,3 +221,5 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 	_sessionID = sessionID;
 }
 @end
+
+NS_ASSUME_NONNULL_END

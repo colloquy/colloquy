@@ -230,8 +230,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			viewControllersToClose = allViewControllers;
 
 		BOOL hasChatController = NO;
-		for (MVChatConnection *connection in [CQConnectionsController defaultController].connections) {
-			hasChatController = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection].count;
+		for (MVChatConnection *connectionToCheck in [CQConnectionsController defaultController].connections) {
+			hasChatController = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connectionToCheck].count;
 
 			if (hasChatController)
 				break;
@@ -730,7 +730,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		}
 	}
 
-	if (defaultToEditing)
+	if (defaultToEditing && ![UIDevice currentDevice].isPadModel)
 		[self setEditing:YES animated:YES];
 
 	[super viewDidAppear:animated];
@@ -819,19 +819,10 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (editing == self.editing)
 		return;
 
-	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
-
 	[super setEditing:editing animated:animated];
 	[self.tableView setEditing:editing animated:animated];
 
 	[self _refreshIndexPathForChatControllersCache];
-
-	if ([[UIDevice currentDevice] isPadModel]) {
-		if (editing)
-			selectedIndexPath = [NSIndexPath indexPathForRow:selectedIndexPath.row inSection:selectedIndexPath.section + 1];
-		else selectedIndexPath = [NSIndexPath indexPathForRow:selectedIndexPath.row inSection:selectedIndexPath.section - 1];
-		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-	}
 
 	if (!editing) // fix the button resets itself back to "Edit", despite the possibleTitle being set to "Manage" on iOS 7.x
 		self.editButtonItem.title = NSLocalizedString(@"Manage", @"Manage button title");
@@ -1305,7 +1296,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 - (void) tableView:(UITableView *) tableView didEndEditingRowAtIndexPath:(NSIndexPath *) indexPath {
 	if ([[UIDevice currentDevice] isPadModel] && _previousSelectedChatViewController) {
-		NSIndexPath *indexPath = indexPathForChatController(_previousSelectedChatViewController, self.editing);
+		indexPath = indexPathForChatController(_previousSelectedChatViewController, self.editing);
 		if (indexPath)
 			[self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 

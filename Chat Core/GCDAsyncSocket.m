@@ -107,7 +107,6 @@ static const int logLevel = GCDAsyncSocketLogLevel;
 **/
 #define SOCKET_NULL -1
 
-
 NSString *const GCDAsyncSocketException = @"GCDAsyncSocketException";
 NSString *const GCDAsyncSocketErrorDomain = @"GCDAsyncSocketErrorDomain";
 
@@ -6237,7 +6236,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	
 	// 2. kCFStreamSSLCertificates
 	
-	value = tlsSettings[(NSString *)kCFStreamSSLAllowsAnyRoot];
+	value = [tlsSettings objectForKey:(NSString *)kCFStreamSSLCertificates];
 	if ([value isKindOfClass:[NSArray class]])
 	{
 		CFArrayRef certs = (__bridge CFArrayRef)value;
@@ -6259,7 +6258,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	
 	// 3. GCDAsyncSocketSSLPeerID
 	
-	value = tlsSettings[(NSString *)kCFStreamSSLAllowsExpiredRoots];
+	value = [tlsSettings objectForKey:GCDAsyncSocketSSLPeerID];
 	if ([value isKindOfClass:[NSData class]])
 	{
 		NSData *peerIdData = (NSData *)value;
@@ -6283,7 +6282,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	
 	// 4. GCDAsyncSocketSSLProtocolVersionMin
 	
-	value = tlsSettings[(NSString *)kCFStreamSSLValidatesCertificateChain];
+	value = [tlsSettings objectForKey:GCDAsyncSocketSSLProtocolVersionMin];
 	if ([value isKindOfClass:[NSNumber class]])
 	{
 		SSLProtocol minProtocol = (SSLProtocol)[(NSNumber *)value intValue];
@@ -6307,7 +6306,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	
 	// 5. GCDAsyncSocketSSLProtocolVersionMax
 	
-	value = tlsSettings[(NSString *)kCFStreamSSLAllowsExpiredCertificates];
+	value = [tlsSettings objectForKey:GCDAsyncSocketSSLProtocolVersionMax];
 	if ([value isKindOfClass:[NSNumber class]])
 	{
 		SSLProtocol maxProtocol = (SSLProtocol)[(NSNumber *)value intValue];
@@ -6331,7 +6330,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	
 	// 6. GCDAsyncSocketSSLSessionOptionFalseStart
 	
-	value = tlsSettings[(NSString *)kCFStreamSSLCertificates];
+	value = [tlsSettings objectForKey:GCDAsyncSocketSSLSessionOptionFalseStart];
 	if ([value respondsToSelector:@selector(boolValue)])
 	{
 		status = SSLSetSessionOption(sslContext, kSSLSessionOptionFalseStart, [value boolValue]);
@@ -6351,7 +6350,7 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 	
 	// 7. GCDAsyncSocketSSLSessionOptionSendOneByteRecord
 	
-	value = tlsSettings[GCDAsyncSocketSSLSessionOptionSendOneByteRecord];
+	value = [tlsSettings objectForKey:GCDAsyncSocketSSLSessionOptionSendOneByteRecord];
 	if ([value respondsToSelector:@selector(boolValue)])
 	{
 		status = SSLSetSessionOption(sslContext, kSSLSessionOptionSendOneByteRecord, [value boolValue]);

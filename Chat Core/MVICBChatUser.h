@@ -34,6 +34,8 @@
 
 #import "MVChatUser.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class MVICBChatConnection;
 
 @interface MVICBChatUser : MVChatUser {
@@ -45,3 +47,5 @@
        andConnection:(MVICBChatConnection *) connection;
 
 @end
+
+NS_ASSUME_NONNULL_END

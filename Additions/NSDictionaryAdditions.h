@@ -10,7 +10,3 @@
 - (instancetype) initWithKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary;
 - (void) setObjectsForKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary;;
 @end
-
-@interface NSMutableDictionary (NSDictionaryAdditions)
-- (void) setObjectsForKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary;;
-@end

@@ -74,6 +74,21 @@ static NSString *const CQPSListTypeFont = @"Font";
 	return self;
 }
 
+- (instancetype) initWithStyle:(UITableViewStyle) style {
+	NSAssert(NO, @"use -[CQPreferencesDisplayViewController initWithPlistNamed:] instead");
+	return nil;
+}
+
+- (instancetype) initWithNibName:(NSString *) nibNameOrNil bundle:(NSBundle *) nibBundleOrNil {
+	NSAssert(NO, @"use -[CQPreferencesDisplayViewController initWithPlistNamed:] instead");
+	return nil;
+}
+
+- (instancetype) initWithCoder:(NSCoder *) aDecoder {
+	NSAssert(NO, @"use -[CQPreferencesDisplayViewController initWithPlistNamed:] instead");
+	return nil;
+}
+
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL) animated {

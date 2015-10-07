@@ -5,6 +5,21 @@ enum {
 };
 
 @implementation CQImportantChatMessageViewController
+- (instancetype) initWithStyle:(UITableViewStyle) style {
+	NSAssert(NO, @"use -[CQImportantChatMessageViewController initWithMessages:delegate:] instead");
+	return nil;
+}
+
+- (instancetype) initWithNibName:(NSString *) nibNameOrNil bundle:(NSBundle *) nibBundleOrNil {
+	NSAssert(NO, @"use -[CQImportantChatMessageViewController initWithMessages:delegate:] instead");
+	return nil;
+}
+
+- (instancetype) initWithCoder:(NSCoder *) aDecoder {
+	NSAssert(NO, @"use -[CQImportantChatMessageViewController initWithMessages:delegate:] instead");
+	return nil;
+}
+
 - (instancetype) initWithMessages:(NSArray *) messages delegate:(id <CQImportantChatMessageDelegate>) delegate {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;

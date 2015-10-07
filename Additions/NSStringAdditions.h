@@ -1,5 +1,8 @@
 #ifndef ColloquyNSSTRINGADDITIONS
 #define ColloquyNSSTRINGADDITIONS
+
+NS_ASSUME_NONNULL_BEGIN
+
 BOOL isValidUTF8( const char *string, NSUInteger length );
 
 #define is7Bit(ch) (((ch) & 0x80) == 0)
@@ -104,5 +107,7 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 - (void) substituteEmojiForEmoticonsInRange:(NSRangePointer) range;
 - (void) substituteEmojiForEmoticonsInRange:(NSRangePointer) range encodeXMLSpecialCharactersAsEntities:(BOOL) encode;
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

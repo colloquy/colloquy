@@ -179,8 +179,9 @@ enum {
 	point = [tapGesturRecognizer.view convertPoint:point toView:self.tableView];
 
 	NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
-	if ([self.tableView.delegate respondsToSelector:@selector(tableView:accessoryButtonTappedForRowWithIndexPath:)])
-		[self.tableView.delegate tableView:self.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
+	id <UITableViewDelegate> delegate = self.tableView.delegate;
+	if ([delegate respondsToSelector:@selector(tableView:accessoryButtonTappedForRowWithIndexPath:)])
+		[delegate tableView:self.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
 }
 
 #pragma mark -
@@ -311,7 +312,7 @@ enum {
 			if ((!font || [font.familyName hasCaseInsensitiveSubstring:@"Helvetica"]) && [[UIFont cq_availableRemoteFontNames] containsObject:self.values[indexPath.row]])
 			{
 				__weak __typeof__((self)) weakSelf = self;
-				[UIFont cq_loadFontWithName:self.values[indexPath.row] withCompletionHandler:^(NSString *fontName, UIFont *font) {
+				[UIFont cq_loadFontWithName:self.values[indexPath.row] withCompletionHandler:^(NSString *fontName, UIFont *loadedFont) {
 					__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 					[strongSelf.tableView beginUpdates];
 					[strongSelf.tableView reloadRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationFade];

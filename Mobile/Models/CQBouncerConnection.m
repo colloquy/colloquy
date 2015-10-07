@@ -6,6 +6,11 @@
 #import <objc/message.h>
 
 @implementation CQBouncerConnection
+- (instancetype) init {
+	NSAssert(NO, @"use [CQBouncerConnection initWithBouncerSettings:] instead");
+	return nil;
+}
+
 - (instancetype) initWithBouncerSettings:(CQBouncerSettings *) settings {
 	if (!(self = [super init]))
 		return nil;
@@ -308,7 +313,6 @@ end:
 		if (_encoding)
 			info[@"encoding"] = @(_encoding);
 
-		__strong __typeof__((_delegate)) delegate = _delegate;
 		[delegate bouncerConnection:self didRecieveConnectionInfo:info];
 	}
 

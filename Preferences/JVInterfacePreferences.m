@@ -244,15 +244,15 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	}
 }
 
-- (BOOL) tableView:(NSTableView *) view writeRows:(NSArray *) rows toPasteboard:(NSPasteboard *) board {
-	if( view == windowSetsTable ) {
-		NSInteger row = [[rows lastObject] intValue];
+- (BOOL) tableView:(NSTableView *) tableView writeRowsWithIndexes:(NSIndexSet *) rowIndexes toPasteboard:(NSPasteboard *) pboard {
+	if( tableView == windowSetsTable ) {
+		NSInteger row = rowIndexes.lastIndex;
 		if( row == -1 ) return NO;
 
 		NSData *data = [NSData dataWithBytes:&row length:sizeof( &row )];
 
-		[board declareTypes:@[JVInterfacePreferencesWindowDragPboardType] owner:self];
-		[board setData:data forType:JVInterfacePreferencesWindowDragPboardType];
+		[pboard declareTypes:@[JVInterfacePreferencesWindowDragPboardType] owner:self];
+		[pboard setData:data forType:JVInterfacePreferencesWindowDragPboardType];
 		return YES;
 	}
 

@@ -354,7 +354,7 @@ static  NSImage			*tabDivider = nil;
 		AICustomTabCell		*tabCell;
 
 		//Create a new tab cell
-		 tabCell = [AICustomTabCell customTabForTabViewItem:tabViewItem customTabsView:self];
+		 tabCell = [AICustomTabCell customTabForTabViewItem:(NSTabViewItem <AICustomTabViewItem> *)tabViewItem customTabsView:self];
 		[tabCell setSelected:(tabViewItem == [tabView selectedTabViewItem])];
 		[tabCell setAllowsInactiveTabClosing:allowsInactiveTabClosing];
 

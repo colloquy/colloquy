@@ -2,14 +2,6 @@
 
 @implementation NSImage (NSImageAdditions)
 // Created for Adium by Evan Schoenberg on Tue Dec 02 2003 under the GPL.
-// Returns an image from the owners bundle with the specified name
-+ (NSImage *) imageNamed:(NSString *) name forClass:(Class) class {
-	NSBundle *ownerBundle = [NSBundle bundleForClass:class];
-	NSString *imagePath = [ownerBundle pathForImageResource:name];
-	return [[NSImage alloc] initWithContentsOfFile:imagePath];
-}
-
-// Created for Adium by Evan Schoenberg on Tue Dec 02 2003 under the GPL.
 // Draw this image in a rect, tiling if the rect is larger than the image
 - (void) tileInRect:(NSRect) rect {
 	NSSize size = [self size];
@@ -39,62 +31,21 @@
 	}
 }
 
-+ (NSImage *) imageWithBase64EncodedString:(NSString *) base64String {
-	return [[NSImage alloc] initWithBase64EncodedString:base64String];
-}
++ (NSImage *) imageFromPDF:(NSString *) pdfName {
+	static NSMutableDictionary *images = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		images = [NSMutableDictionary dictionary];
+	});
 
-- (instancetype) initWithBase64EncodedString:(NSString *) base64String {
-	if( [base64String length] ) {
-		NSSize tempSize = { 100, 100 };
-		NSData *data = nil;
-		NSImageRep *imageRep = nil;
+	NSImage *image = images[pdfName];
+	if (!image) {
+		NSImage *temporaryImage = [NSImage imageNamed:pdfName];
+		image = [[NSImage alloc] initWithData:temporaryImage.TIFFRepresentation];
 
-		self = [self initWithSize:tempSize];
-
-		if( self ) {
-			// Now, interpret the inBase64String.
-			data = [NSData dataWithBase64EncodedString:base64String];
-
-			// Create an image representation from the data.
-			if( data ) imageRep = [NSBitmapImageRep imageRepWithData:data];
-
-			if( imageRep ) {
-				// Set the real size of the image and add the representation.
-				[self setSize:[imageRep size]];
-				[self addRepresentation:imageRep];
-			}
-		}
-
-		return self;
+		images[pdfName] = image;
 	}
 
-	return nil;
-}
-
-- (NSString *) base64EncodingWithFileType:(NSBitmapImageFileType) fileType {
-	NSString *result = nil;
-	NSBitmapImageRep *imageRep = nil;
-	NSData *imageData = nil;
-
-	// Look for an existing representation in the NSBitmapImageRep class.
-	for( id object in [self representations] ) {
-		if( object && [object isKindOfClass:[NSBitmapImageRep class]] )
-			imageRep = object;
-	}
-
-	if( ! imageRep ) {
-		imageRep = [NSBitmapImageRep imageRepWithData:[self TIFFRepresentation]];
-		if( imageRep ) [self addRepresentation:imageRep];
-	}
-
-	if( imageRep ) {
-		NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
-		dict[NSImageInterlaced] = @NO;
-		imageData = [imageRep representationUsingType:fileType properties:dict];
-	}
-
-	if( imageData ) result = [imageData base64EncodingWithLineLength:78];
-
-	return result;
+	return image;
 }
 @end

@@ -1,6 +1,12 @@
 #import "MVDelegateLogger.h"
 
 @implementation MVDelegateLogger
+- (instancetype) init {
+	NSAssert(NO, @"use [MVDelegateLogger initWithDelegate:] instead");
+	return nil;
+}
+
+
 - (instancetype) initWithDelegate:(id <MVLoggingDelegate>) delegate {
 	if (!(self = [super init]))
 		return nil;

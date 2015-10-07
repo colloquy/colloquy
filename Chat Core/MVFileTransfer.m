@@ -14,6 +14,8 @@
 #import "MVSILCFileTransfer.h"
 #endif
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *MVDownloadFileTransferOfferNotification = @"MVDownloadFileTransferOfferNotification";
 NSString *MVFileTransferDataTransferredNotification = @"MVFileTransferDataTransferredNotification";
 NSString *MVFileTransferStartedNotification = @"MVFileTransferStartedNotification";
@@ -47,6 +49,11 @@ static BOOL autoPortMapping = YES;
 }
 
 #pragma mark -
+
+- (instancetype) init {
+	NSAssert(NO, @"use [MVFileTransfer initWithUser:] instead");
+	return nil;
+}
 
 - (instancetype) initWithUser:(MVChatUser *) chatUser {
 	if( ( self = [super init] ) ) {
@@ -147,6 +154,7 @@ static BOOL autoPortMapping = YES;
 
 #pragma mark -
 
+
 - (BOOL) isUpload {
 	return YES;
 }
@@ -210,3 +218,5 @@ static BOOL autoPortMapping = YES;
 	MVSafeCopyAssign( _originalFileName, newOriginalFileName );
 }
 @end
+
+NS_ASSUME_NONNULL_END

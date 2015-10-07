@@ -6,6 +6,8 @@
 #define SilcLock(client) silc_mutex_lock(silc_schedule_get_callback_lock((client)->schedule))
 #define SilcUnlock(client) silc_mutex_unlock(silc_schedule_get_callback_lock((client)->schedule))
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface MVSILCChatConnection : MVChatConnection {
 @private
 	SilcClient _silcClient;
@@ -43,7 +45,7 @@
 - (SilcClientParams *) _silcClientParams;
 
 - (SilcClientConnection) _silcConn;
-- (void) _setSilcConn:(SilcClientConnection) aSilcConn;
+- (void) _setSilcConn:(SilcClientConnection __nullable) aSilcConn;
 
 - (void) _stopSilcRunloop;
 
@@ -55,7 +57,7 @@
 - (NSMutableDictionary *) _sentCommands;
 
 - (NSData *) _detachInfo;
-- (void) _setDetachInfo:(NSData *) info;
+- (void) _setDetachInfo:(NSData * __nullable) info;
 
 - (void) _addCommand:(NSString *) raw forNumber:(SilcUInt16) cmd_ident;
 - (NSString *) _getCommandForNumber:(SilcUInt16) cmd_ident;
@@ -68,3 +70,5 @@
 
 - (NSString *) _publicKeyFilename:(SilcSocketType) connType andPublicKey:(unsigned char *) pk withLen:(SilcUInt32) pkLen usingSilcConn:(SilcClientConnection) conn;
 @end
+
+NS_ASSUME_NONNULL_END

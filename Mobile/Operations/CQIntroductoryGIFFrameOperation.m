@@ -64,6 +64,11 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 @synthesize introductoryFrameImage = _introductoryFrameImage;
 @synthesize introductoryFrameImageData = _introductoryFrameImageData;
 
+- (instancetype) init {
+	NSAssert(NO, @"use [CQIntroductoryGIFFrameOperation initWithURL:] instead");
+	return nil;
+}
+
 - (instancetype) initWithURL:(NSURL *) url {
 	NSParameterAssert(url);
 

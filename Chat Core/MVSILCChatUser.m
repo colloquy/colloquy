@@ -2,6 +2,8 @@
 #import "MVSILCChatConnection.h"
 #import "MVChatString.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation MVSILCChatUser
 - (id) initLocalUserWithConnection:(MVSILCChatConnection *) userConnection {
 	if( ( self = [self initWithClientEntry:[userConnection _silcConn] -> local_entry andConnection:userConnection] ) ) {
@@ -68,7 +70,7 @@
 	[self _setServerOperator:( clientEntry -> mode & SILC_UMODE_SERVER_OPERATOR || clientEntry -> mode & SILC_UMODE_ROUTER_OPERATOR )];
 
 	unsigned char *identifier = silc_id_id2str( clientEntry -> id, SILC_ID_CLIENT );
-	size_t len = silc_id_get_len( clientEntry -> id, SILC_ID_CLIENT );
+	SilcUInt32 len = silc_id_get_len( clientEntry -> id, SILC_ID_CLIENT );
 	[self _setUniqueIdentifier:[NSData dataWithBytes:identifier length:len]];
 
 	_clientEntry = clientEntry;
@@ -141,3 +143,5 @@
 	silc_buffer_free( userBuffer );
 }
 @end
+
+NS_ASSUME_NONNULL_END

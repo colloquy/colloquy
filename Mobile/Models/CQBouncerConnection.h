@@ -22,6 +22,7 @@
 	NSError *_error;
 	id _userInfo;
 }
+- (instancetype) init NS_UNAVAILABLE;
 - (instancetype) initWithBouncerSettings:(CQBouncerSettings *) settings NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, strong) CQBouncerSettings *settings;

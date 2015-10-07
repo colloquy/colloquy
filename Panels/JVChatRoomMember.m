@@ -1,6 +1,7 @@
 #import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
 #import "JVChatController.h"
+#import "NSImageAdditions.h"
 #import "MVBuddyListController.h"
 #import "MVFileTransferController.h"
 #import "JVBuddy.h"
@@ -247,7 +248,7 @@
 	else if( modes & MVChatRoomMemberHalfOperatorMode ) iconName = @"userHalfOperator";
 	else if( modes & MVChatRoomMemberVoicedMode ) iconName = @"userVoice";
 
-	return [NSImage imageNamed:iconName];
+	return [NSImage imageFromPDF:iconName];
 }
 
 - (NSImage *) statusImage {

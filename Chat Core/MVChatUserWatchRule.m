@@ -8,6 +8,8 @@
 
 #import "MVChatConnection.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedNotification";
 NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchRuleRemovedMatchedUserNotification";
 
@@ -35,7 +37,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	return self;
 }
 
-- (id) copyWithZone:(NSZone *) zone {
+- (id) copyWithZone:(NSZone * __nullable) zone {
 	MVChatUserWatchRule *copy = [[MVChatUserWatchRule alloc] init];
 
 	MVSafeCopyAssign( copy->_username, _username );
@@ -227,3 +229,5 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

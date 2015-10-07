@@ -1,7 +1,9 @@
 #import "NSScriptCommandAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSScriptObjectSpecifier (NSScriptObjectSpecifierPrivate) // Private Foundation Methods
-+ (id) _objectSpecifierFromDescriptor:(NSAppleEventDescriptor *) descriptor inCommandConstructionContext:(id) context;
++ (id) _objectSpecifierFromDescriptor:(NSAppleEventDescriptor *) descriptor inCommandConstructionContext:(id __nullable) context;
 - (NSAppleEventDescriptor *) _asDescriptor;
 @end
 
@@ -85,3 +87,5 @@
 	return param;
 }
 @end
+
+NS_ASSUME_NONNULL_END

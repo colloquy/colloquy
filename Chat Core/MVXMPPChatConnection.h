@@ -1,14 +1,16 @@
 #import "MVChatConnection.h"
 #import "MVChatConnectionPrivate.h"
 
-@class JabberSession;
-@class JabberID;
-@class XMLElement;
+@class XMPPStream;
+@class XMPPJID;
+@class XMPPElement;
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface MVXMPPChatConnection : MVChatConnection {
 @private
-	JabberSession *_session;
-	JabberID *_localID;
+	XMPPStream *_session;
+	XMPPJID *_localID;
 	unsigned short _serverPort;
 	NSString *_server;
 	NSString *_username;
@@ -19,8 +21,10 @@
 @end
 
 @interface MVXMPPChatConnection (MVXMPPChatConnectionPrivate)
-- (JabberSession *) _chatSession;
-- (JabberID *) _localUserID;
-- (XMLElement *) _capabilitiesElement;
-- (XMLElement *) _multiUserChatExtensionElement;
+- (XMPPStream *) _chatSession;
+- (XMPPJID *) _localUserID;
+- (XMPPElement *) _capabilitiesElement;
+- (XMPPElement *) _multiUserChatExtensionElement;
 @end
+
+NS_ASSUME_NONNULL_END

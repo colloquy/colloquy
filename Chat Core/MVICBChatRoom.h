@@ -34,6 +34,8 @@
 
 #import "MVChatRoom.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class MVICBChatConnection;
 
 @interface MVICBChatRoom : MVChatRoom {
@@ -42,3 +44,5 @@
 - (instancetype) initWithName:(NSString *) name
        andConnection:(MVICBChatConnection *) connection;
 @end
+
+NS_ASSUME_NONNULL_END

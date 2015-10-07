@@ -8,10 +8,14 @@
 
 @implementation JVPreferencesController
 - (instancetype) init {
+	if (!(self = [super init]))
+		return nil;
+
 	_preferenceTitles = [NSMutableArray array];
 	_preferenceModules = [NSMutableArray array];
 	_currentSessionPreferenceViews = [NSMutableDictionary dictionary];
 	_masterPreferenceViews = [NSMutableDictionary dictionary];
+
 	return self;
 }
 

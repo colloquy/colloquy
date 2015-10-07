@@ -1,5 +1,7 @@
 #import "MVDirectChatConnection.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface MVDirectChatConnection (MVDirectChatConnectionPrivate)
 - (instancetype) initWithUser:(MVChatUser *) user;
 
@@ -16,3 +18,5 @@
 
 @property (readonly) long long _passiveIdentifier;
 @end
+
+NS_ASSUME_NONNULL_END

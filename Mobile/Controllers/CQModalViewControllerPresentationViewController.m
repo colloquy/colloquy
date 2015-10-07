@@ -58,9 +58,9 @@
 			[self.view addSubview:self.viewControllerToPresent.view];
 
 			[UIView animateWithDuration:.2 animations:^{
-				CGRect frame = self.viewControllerToPresent.view.frame;
-				frame.origin.y += frame.size.height;
-				self.viewControllerToPresent.view.frame = frame;
+				CGRect frameToPresent = self.viewControllerToPresent.view.frame;
+				frameToPresent.origin.y += frameToPresent.size.height;
+				self.viewControllerToPresent.view.frame = frameToPresent;
 			}];
 		} [self.viewControllerToPresent didMoveToParentViewController:self];
 	}];
@@ -79,7 +79,7 @@
 		[UIView animateWithDuration:.1 animations:^{
 			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 			strongSelf.view.alpha = 0.;
-		} completion:^(BOOL finished) {
+		} completion:^(BOOL innerFinished) {
 			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 			strongSelf.presentingWindow.hidden = YES;
 			[strongSelf.presentingWindow removeFromSuperview];

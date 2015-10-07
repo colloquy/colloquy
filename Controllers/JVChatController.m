@@ -92,18 +92,15 @@ static NSMenu *smartTranscriptMenu = nil;
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _gotRoomMessage: ) name:MVChatRoomGotMessageNotification object:nil];
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _gotDirectChatMessage: ) name:MVDirectChatConnectionGotMessageNotification object:nil];
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _errorOccurred: ) name:MVChatConnectionErrorNotification object:nil];
-
-		[[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeyPath:@"values.JVChatWindowRuleSets" options:NSKeyValueObservingOptionNew context:NULL];
 	}
 
 	return self;
 }
 
 - (void) dealloc {
-	[[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeyPath:@"values.JVChatWindowRuleSets"];
 	[[NSNotificationCenter chatCenter] removeObserver:self];
-	//This will never get called:
-	//if( self == sharedInstance ) sharedInstance = nil;
+	if( self == sharedInstance ) sharedInstance = nil;
+
 }
 
 #pragma mark -

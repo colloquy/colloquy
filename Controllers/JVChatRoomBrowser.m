@@ -19,7 +19,7 @@
 
 @implementation JVChatRoomBrowser
 - (instancetype) initWithWindowNibName:(NSString *) windowNibName {
-	if( ( self = [super initWithWindowNibName:@"JVChatRoomBrowser"] ) ) {
+	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
 		_self = self;
 		_connection = nil;
 		_roomResults = nil;
@@ -37,7 +37,7 @@
 }
 
 - (instancetype) initWithConnection:(MVChatConnection *) connection {
-	if( ( self = [self initWithWindowNibName:nil] ) ) {
+	if( ( self = [self initWithWindowNibName:@"JVChatRoomBrowser"] ) ) {
 		[self setConnection:connection];
 	}
 	return self;
@@ -238,8 +238,10 @@
 	if( _connection && ! _collapsed )
 		[self _startFetch];
 
+	__weak __typeof__((self)) weakSelf = self;
 	dispatch_async(dispatch_get_main_queue(), ^{
-		if( _connection ) [[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _needToRefreshResults: ) name:MVChatConnectionChatRoomListUpdatedNotification object:_connection];
+		__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+		if( strongSelf->_connection ) [[NSNotificationCenter chatCenter] addObserver:strongSelf selector:@selector( _needToRefreshResults: ) name:MVChatConnectionChatRoomListUpdatedNotification object:strongSelf->_connection];
 	});
 
 	_roomResults = [_connection chatRoomListResults];

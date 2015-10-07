@@ -37,6 +37,21 @@ enum {
 @end
 
 @implementation CQChatRoomInfoDisplayViewController
+- (instancetype) initWithStyle:(UITableViewStyle) style {
+	NSAssert(NO, @"use -[CQChatRoomInfoDisplayViewController initWithRoom:] instead");
+	return nil;
+}
+
+- (instancetype) initWithNibName:(NSString *) nibNameOrNil bundle:(NSBundle *) nibBundleOrNil {
+	NSAssert(NO, @"use -[CQChatRoomInfoDisplayViewController initWithRoom:] instead");
+	return nil;
+}
+
+- (instancetype) initWithCoder:(NSCoder *) aDecoder {
+	NSAssert(NO, @"use -[CQChatRoomInfoDisplayViewController initWithRoom:] instead");
+	return nil;
+}
+
 - (instancetype) initWithRoom:(MVChatRoom *) room {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;

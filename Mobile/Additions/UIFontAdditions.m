@@ -49,19 +49,19 @@ NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingStat
 }
 
 + (void) cq_loadFontWithName:(NSString *) fontName withCompletionHandler:(CQRemoteFontCompletionHandler)completionHandler {
-	void (^postSuccessNotification)(NSString *, UIFont *) = ^(NSString *fontName, UIFont *font) {
+	void (^postSuccessNotification)(NSString *, UIFont *) = ^(NSString *loadedFontName, UIFont *loadedFont) {
 		dispatch_async(dispatch_get_main_queue(), ^{
 			NSDictionary *userInfo = nil;
-			if (fontName && font) userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: fontName, CQRemoteFontCourierFontLoadingFontKey: font };
-			else if (fontName) userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: fontName };
-			else if (font) userInfo = @{ CQRemoteFontCourierFontLoadingFontKey: font };
+			if (loadedFontName && loadedFont) userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: loadedFontName, CQRemoteFontCourierFontLoadingFontKey: loadedFont };
+			else if (loadedFontName) userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: loadedFontName };
+			else if (loadedFont) userInfo = @{ CQRemoteFontCourierFontLoadingFontKey: loadedFont };
 			[[NSNotificationCenter chatCenter] postNotificationName:CQRemoteFontCourierFontLoadingDidSucceedNotification object:nil userInfo:userInfo];
 		});
 	};
 
-	void (^postFailureNotification)(NSString *) = ^(NSString *fontName) {
+	void (^postFailureNotification)(NSString *) = ^(NSString *failedFont) {
 		dispatch_async(dispatch_get_main_queue(), ^{
-			NSDictionary *userInfo = fontName ? userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: fontName } : nil;
+			NSDictionary *userInfo = failedFont ? userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: failedFont } : nil;
 			[[NSNotificationCenter chatCenter] postNotificationName:CQRemoteFontCourierFontLoadingDidFailNotification object:nil userInfo:userInfo];
 		});
 	};
@@ -100,8 +100,8 @@ NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingStat
 						CTFontManagerRegisterFontsForURL(fontURL, kCTFontManagerScopeUser, NULL); // This scope is documented as unavailable on iOS. But, it still seems to work.
 
 					if (!errorEncountered && completionHandler) {
-						UIFont *font = [UIFont fontWithName:fontName size:12.];
-						completionHandler(fontName, font);
+						UIFont *loadedFont = [UIFont fontWithName:fontName size:12.];
+						completionHandler(fontName, loadedFont);
 
 						postSuccessNotification(fontName, font);
 					}

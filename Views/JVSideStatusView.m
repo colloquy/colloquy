@@ -48,7 +48,7 @@
 	NSRect newFrame = [[self superview] frame];
 	newFrame.size.width = clickLocation.x + _clickOffset;
 
-	id delegate = [splitView delegate];
+	id <NSSplitViewDelegate> delegate = [splitView delegate];
 	if( delegate && [delegate respondsToSelector:@selector( splitView:constrainSplitPosition:ofSubviewAt: )] ) {
 		float new = [delegate splitView:splitView constrainSplitPosition:newFrame.size.width ofSubviewAt:0];
 		newFrame.size.width = new;

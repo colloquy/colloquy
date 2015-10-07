@@ -8,6 +8,8 @@
 #import "NSDataAdditions.h"
 #import "NSNotificationAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *MVChatRoomMemberQuietedFeature = @"MVChatRoomMemberQuietedFeature";
 NSString *MVChatRoomMemberVoicedFeature = @"MVChatRoomMemberVoicedFeature";
 NSString *MVChatRoomMemberHalfOperatorFeature = @"MVChatRoomMemberHalfOperatorFeature";
@@ -69,8 +71,15 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (void) dealloc {
-	[_connection _removeKnownRoom:self];
-	[_connection _removeJoinedRoom:self];
+	__strong MVChatConnection *connection = _connection;
+	[connection _removeKnownRoom:self];
+	[connection _removeJoinedRoom:self];
+}
+
+#pragma mark -
+
+- (MVChatConnection *) connection {
+	return _connection;
 }
 
 #pragma mark -
@@ -117,7 +126,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (NSString *) displayName {
-	return _connection ? [_connection displayNameForChatRoomNamed:[self name]] : [self name];
+	__strong MVChatConnection *connection = _connection;
+	return connection ? [connection displayNameForChatRoomNamed:[self name]] : [self name];
 }
 
 - (id) uniqueIdentifier {
@@ -142,7 +152,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[self partWithReason:nil];
 }
 
-- (void) partWithReason:(MVChatString *) reason {
+- (void) partWithReason:(MVChatString * __nullable) reason {
 // subclass this method, don't call super
 	[self doesNotRecognizeSelector:_cmd];
 }
@@ -293,7 +303,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[self setMode:mode withAttribute:nil];
 }
 
-- (void) setMode:(MVChatRoomMode) mode withAttribute:(id) attribute {
+- (void) setMode:(MVChatRoomMode) mode withAttribute:(id __nullable) attribute {
 	NSParameterAssert( [self supportedModes] & mode );
 // subclass this method, call super first
 }
@@ -370,7 +380,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString *) reason {
+- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString * __nullable) reason {
 	NSParameterAssert( user != nil );
 // subclass this method, call super first
 }
@@ -572,7 +582,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	}
 }
 
-- (void) _setMode:(MVChatRoomMode) mode withAttribute:(id) attribute {
+- (void) _setMode:(MVChatRoomMode) mode withAttribute:(id __nullable) attribute {
 	_modes |= mode;
 	@synchronized( _modeAttributes ) {
 		if( attribute ) _modeAttributes[@(mode)] = attribute;
@@ -587,14 +597,16 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	}
 }
 
-- (void) _setDateJoined:(NSDate *) date {
+- (void) _setDateJoined:(NSDate * __nullable) date {
 	MVSafeCopyAssign( _dateJoined, date );
-	if (date) [_connection _addJoinedRoom:self];
+	__strong MVChatConnection *connection = _connection;
+	if (date) [connection _addJoinedRoom:self];
 }
 
-- (void) _setDateParted:(NSDate *) date {
+- (void) _setDateParted:(NSDate * __nullable) date {
 	MVSafeCopyAssign( _dateParted, date );
-	if (date) [_connection _removeJoinedRoom:self];
+	__strong MVChatConnection *connection = _connection;
+	if (date) [connection _removeJoinedRoom:self];
 }
 
 - (void) _setTopic:(NSData *) newTopic {
@@ -692,6 +704,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[self setEncoding:[NSString stringEncodingFromScriptTypedEncoding:newEncoding]];
 }
 
+NS_ASSUME_NONNULL_END
+
 #pragma mark -
 
 - (id) valueForUndefinedKey:(NSString *) key {
@@ -714,4 +728,9 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[super setValue:value forUndefinedKey:key];
 }
 @end
+
+#else
+
+NS_ASSUME_NONNULL_END
+
 #endif

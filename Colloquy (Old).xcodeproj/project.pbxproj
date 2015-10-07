@@ -263,8 +263,6 @@
 		CBF6856308201B7A00F498FB /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = CBF685330820190D00F498FB /* main.c */; };
 		CBF6857708201C4C00F498FB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 089C1672FE841209C02AAC07 /* Foundation.framework */; };
 		DDF034100BD529AE0096B109 /* JVDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBB23DA04F03CA7000001C8 /* JVDetailCell.m */; };
-		DDF64DA60BD2B0C3009E8FF6 /* Acid.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDF64DA50BD2B0C3009E8FF6 /* Acid.framework */; };
-		DDF64DA80BD2B0D7009E8FF6 /* Acid.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = DDF64DA50BD2B0C3009E8FF6 /* Acid.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -410,7 +408,6 @@
 				1CEEAB1A095BD25500166A54 /* ChatCore.framework in Copy Frameworks */,
 				1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */,
 				1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */,
-				DDF64DA80BD2B0D7009E8FF6 /* Acid.framework in Copy Frameworks */,
 				1C6C75490630AD9500698F55 /* AGRegex.framework in Copy Frameworks */,
 				1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */,
 				1C8444A30F26C7D600701E36 /* Sparkle.framework in Copy Frameworks */,
@@ -964,7 +961,6 @@
 		CBF685330820190D00F498FB /* main.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		CBF685340820190D00F498FB /* schema.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = schema.xml; sourceTree = "<group>"; };
 		CBF687A508202F3F00F498FB /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
-		DDF64DA50BD2B0C3009E8FF6 /* Acid.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Acid.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F50B0AA20170CAD701A84BDE /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F51A4F2B01C2DDD201EE70DE /* MVFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVFileTransferController.m; path = Controllers/MVFileTransferController.m; sourceTree = "<group>"; };
 		F51A4F2C01C2DDD201EE70DE /* MVFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVFileTransferController.h; path = Controllers/MVFileTransferController.h; sourceTree = "<group>"; };
@@ -1046,7 +1042,6 @@
 				1CF8030F070C893500C9B54C /* libsilcclient.framework in Frameworks */,
 				1CF5F8D207D537E50019DC13 /* Growl.framework in Frameworks */,
 				1CEEAB17095BD23500166A54 /* ChatCore.framework in Frameworks */,
-				DDF64DA60BD2B0C3009E8FF6 /* Acid.framework in Frameworks */,
 				89EB91AA0F269BEF0028B3E3 /* Sparkle.framework in Frameworks */,
 				1CE009840FC7B16700F5AB04 /* IOKit.framework in Frameworks */,
 				1C386FAA1032471F00660864 /* TCMPortMapper.framework in Frameworks */,
@@ -1102,7 +1097,6 @@
 				F5FB4CE60393C15601000102 /* AddressBook.framework */,
 				CBF687A508202F3F00F498FB /* CoreServices.framework */,
 				89EB91A90F269BEF0028B3E3 /* Sparkle.framework */,
-				DDF64DA50BD2B0C3009E8FF6 /* Acid.framework */,
 				1C6C75450630AD5300698F55 /* AGRegex.framework */,
 				1C386FA91032471F00660864 /* TCMPortMapper.framework */,
 				1C3B290706529E720066197C /* ChatCore.framework */,

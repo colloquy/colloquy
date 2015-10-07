@@ -7,7 +7,7 @@
 
 static JVNotificationController *sharedInstance = nil;
 
-@interface JVNotificationController (JVNotificationControllerPrivate) <GrowlApplicationBridgeDelegate>
+@interface JVNotificationController (JVNotificationControllerPrivate) <GrowlApplicationBridgeDelegate, KABubbleWindowControllerDelegate>
 - (void) _bounceIconOnce;
 - (void) _bounceIconContinuously;
 - (void) _showBubbleForIdentifier:(NSString *) identifier withContext:(NSDictionary *) context andPrefs:(NSDictionary *) eventPrefs;

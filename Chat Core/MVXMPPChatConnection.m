@@ -1,4 +1,4 @@
-#import <Acid/acid.h>
+#import "XMPPFramework.h"
 
 #import "MVXMPPChatConnection.h"
 #import "MVXMPPChatUser.h"
@@ -9,6 +9,8 @@
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
 #import "MVChatString.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @implementation MVXMPPChatConnection
 + (NSArray *) defaultServerPorts {
@@ -23,18 +25,11 @@
 		_server = @"jabber.org";
 		_username = NSUserName();
 		_nickname = _username;
-		_session = [[JabberSession alloc] init];
+		_session = [[XMPPStream alloc] init];
+ 		[_session addDelegate:self delegateQueue:dispatch_get_main_queue()];
 
-		[_session addObserver:self selector:@selector( sessionStarted: ) name:JSESSION_STARTED];
-		[_session addObserver:self selector:@selector( sessionEnded: ) name:JSESSION_ENDED];
-		[_session addObserver:self selector:@selector( connectFailed: ) name:JSESSION_ERROR_CONNECT_FAILED];
-		[_session addObserver:self selector:@selector( badUser: ) name:JSESSION_ERROR_BADUSER];
-		[_session addObserver:self selector:@selector( authorizationReady: ) name:JSESSION_AUTHREADY];
-		[_session addObserver:self selector:@selector( authorizationFailed: ) name:JSESSION_ERROR_AUTHFAILED];
-		[_session addObserver:self selector:@selector( outgoingPacket: ) name:JSESSION_RAWDATA_OUT];
-		[_session addObserver:self selector:@selector( incomingPacket: ) name:JSESSION_RAWDATA_IN];
-		[_session addObserver:self selector:@selector( incomingMessage: ) xpath:@"/message"];
-		[_session addObserver:self selector:@selector( incomingPresence: ) xpath:@"/presence"];
+//		[_session addObserver:self selector:@selector( outgoingPacket: ) name:JSESSION_RAWDATA_OUT];
+//		[_session addObserver:self selector:@selector( incomingPacket: ) name:JSESSION_RAWDATA_IN];
 	}
 
 	return self;
@@ -66,11 +61,11 @@
 
 	[self _willConnect];
 
-	JabberID *localId = nil;
+	XMPPJID *localId = nil;
 	NSRange atRange = [_username rangeOfString:@"@" options:NSLiteralSearch];
 	if( atRange.location == NSNotFound )
-		localId = [[JabberID alloc] initWithFormat:@"%@@%@/colloquy", _username, _server];
-	else localId = [[JabberID alloc] initWithFormat:@"%@/colloquy", _username];
+		localId = [XMPPJID jidWithUser:_username domain:_server resource:@"colloquy"];
+	else localId = [XMPPJID jidWithString:_username resource:@"colloquy"];
 
 	MVChatUser *localUser = [[MVXMPPChatUser allocWithZone:nil] initWithJabberID:localId andConnection:self];
 	[localUser _setType:MVChatLocalUserType];
@@ -78,13 +73,21 @@
 	MVSafeAdoptAssign( _localID, localId );
 	MVSafeAdoptAssign( _localUser, localUser );
 
-	[_session setUseSSL:_secure];
-	[_session startSession:_localID onPort:_serverPort withServer:_server];
+	[_session setStartTLSPolicy:_secure ? XMPPStreamStartTLSPolicyRequired : XMPPStreamStartTLSPolicyPreferred];
+	[_session setHostName:_server];
+	[_session setHostPort:_serverPort];
+	[_session setMyJID:_localID];
+
+	NSError *error;
+	if (![_session connectWithTimeout:30.0 error:&error]) {
+		MVSafeAdoptAssign( _lastError, error );
+	}
+	
 }
 
-- (void) disconnectWithReason:(MVChatString *) reason {
+- (void) disconnectWithReason:(MVChatString * __nullable) reason {
 	[self _willDisconnect];
-	[_session stopSession];
+	[_session disconnect];
 }
 
 #pragma mark -
@@ -115,7 +118,7 @@
 
 #pragma mark -
 
-- (void) setNicknamePassword:(NSString *) newPassword {
+- (void) setNicknamePassword:(NSString * __nullable) newPassword {
 	// not supported
 }
 
@@ -178,16 +181,16 @@
 }
 
 - (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
-	NSParameterAssert( [identifier isKindOfClass:[NSString class]] || [identifier isKindOfClass:[JabberID class]] );
+	NSParameterAssert( [identifier isKindOfClass:[NSString class]] || [identifier isKindOfClass:[XMPPJID class]] );
 
 	if( [identifier isKindOfClass:[NSString class]] )
-		identifier = [[JabberID allocWithZone:nil] initWithString:identifier];
+		identifier = [XMPPJID jidWithString:identifier];
 	if( [identifier isEqual:[[self localUser] uniqueIdentifier]] )
 		return [self localUser];
 
 	MVChatUser *user = nil;
 	@synchronized( _knownUsers ) {
-		user = _knownUsers[[identifier completeID]];
+		user = [_knownUsers objectForKey:[identifier full]];
 		if( user ) return user;
 
 		user = [[MVXMPPChatUser allocWithZone:nil] initWithJabberID:identifier andConnection:self];
@@ -198,7 +201,7 @@
 
 #pragma mark -
 
-- (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase {
+- (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString * __nullable) passphrase {
 	NSParameterAssert( room != nil );
 	NSParameterAssert( room.length > 0 );
 
@@ -208,7 +211,7 @@
 	</presence>
 	*/
 
-	JabberID *roomId = [[JabberID allocWithZone:nil] initWithString:room];
+	XMPPJID *roomId = [XMPPJID jidWithString:room];
 	MVXMPPChatRoom *joiningRoom = (MVXMPPChatRoom *)[self joinedChatRoomWithUniqueIdentifier:roomId];
 	if( joiningRoom && [joiningRoom isJoined] ) {
 		// already joined
@@ -216,18 +219,19 @@
 	}
 
 	NSString *localUserStringId = [[NSString allocWithZone:nil] initWithFormat:@"%@/%@", room, [self nickname]];
-	JabberPresence *presence = [[JabberPresence allocWithZone:nil] initWithQName:JABBER_PRESENCE_QN];
-	[presence putAttribute:@"to" withValue:localUserStringId];
-
-	[presence addElement:[self _capabilitiesElement]];
-	XMLElement *x = [presence addElement:[self _multiUserChatExtensionElement]];
+//	[XMLQName construct:@"presence" withURI:@"jabber:client"];
+	XMPPPresence *presence = [XMPPPresence presence];
+	[presence addAttributeWithName:@"to" objectValue:localUserStringId];
+	[presence addChild:[self _capabilitiesElement]];
+	XMPPElement *x = [self _multiUserChatExtensionElement];
+	[presence addChild:x];
 
 	if (passphrase.length)
-		[[x addElementWithName:@"password"] addCData:passphrase];
+		[x addChild:[XMPPElement elementWithName:@"cdata" objectValue:passphrase]];
 
 	[_session sendElement:presence];
 
-	JabberID *localUserJabberId = [[JabberID allocWithZone:nil] initWithString:localUserStringId];
+	XMPPJID *localUserJabberId = [XMPPJID jidWithString:localUserStringId];
 	MVXMPPChatUser *localUser = (MVXMPPChatUser *)[self chatUserWithUniqueIdentifier:localUserJabberId];
 	[localUser _setRoomMember:YES];
 	[localUser _setType:MVChatLocalUserType];
@@ -245,29 +249,28 @@
 
 #pragma mark -
 
-- (void) connectFailed:(NSNotification *) notification {
+- (void) xmppStreamConnectDidTimeout:(XMPPStream *) sender {
 	[self _didNotConnect];
 }
 
-- (void) badUser:(NSNotification *) notification {
-	NSLog(@"badUser");
-}
-
-- (void) authorizationReady:(NSNotification *) notification {
-	if( _password )
-		[[notification object] authenticateWithPassword:_password];
-}
-
-- (void) authorizationFailed:(NSNotification *) notification {
+- (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error {
 	NSLog(@"authorizationFailed");
 }
 
-- (void) sessionStarted:(NSNotification *) notification {
+- (void) xmppStreamDidConnect:(XMPPStream *) sender {
 	[self _didConnect];
+
+	if( _password )
+		[sender authenticateWithPassword:_password error:NULL];
 }
 
-- (void) sessionEnded:(NSNotification *) notification {
+- (void) xmppStreamDidDisconnect:(XMPPStream *) sender withError:(NSError *) error {
+	NSLog(@"%@", error);
 	[self _didDisconnect];
+}
+
+- (void)xmppStream:(XMPPStream *)stream didReceiveError:(NSXMLElement *)error {
+	NSLog(@"%@", error);
 }
 
 - (void) outgoingPacket:(NSNotification *) notification {
@@ -280,76 +283,78 @@
 	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{@"message": string, @"outbound": @NO}];
 }
 
-- (void) incomingMessage:(NSNotification *) notification {
-	JabberMessage *message = [notification object];
-
+- (void) xmppStream:(XMPPStream *) stream didReceiveMessage:(XMPPMessage *) message {
 	if( [[message type] isEqualToString:@"error"] ) {
 		// handle error
 		return;
 	}
 
-	switch( [message eventType] ) {
-	case JMEVENT_COMPOSING_REQUEST:
-		// fall through
-	case JMEVENT_NONE: {
-		__unsafe_unretained MVChatRoom *room = nil;
-		__unsafe_unretained MVChatUser *sender = nil;
+	__unsafe_unretained MVChatRoom *room = nil;
+	__unsafe_unretained MVChatUser *sender = nil;
 
-		if( [[message type] isEqualToString:@"groupchat"] ) {
-			room = [self joinedChatRoomWithUniqueIdentifier:[[message from] userhostJID]];
-			if( ! room ) return;
-			sender = [self chatUserWithUniqueIdentifier:[message from]];
-			if( [sender isLocalUser] ) return;
-		} else {
-			sender = [self chatUserWithUniqueIdentifier:[message from]];
-		}
-
-		NSMutableData *msgData = [[[message body] dataUsingEncoding:NSUTF8StringEncoding] mutableCopyWithZone:nil];
-		__unsafe_unretained NSMutableData *unsafeMsgData = msgData;
-
-		NSMutableDictionary *msgAttributes = [[NSMutableDictionary allocWithZone:nil] init];
-		__unsafe_unretained NSMutableDictionary *unsafeMsgAttributes = msgAttributes;
-		msgAttributes[@"user"] = sender;
-		msgAttributes[@"message"] = msgData;
-
-		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatUser * ), @encode( id ), @encode( NSMutableDictionary * ), nil];
-		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-		[invocation setSelector:@selector( processIncomingMessageAsData:from:to:attributes: )];
-		[invocation setArgument:&unsafeMsgData atIndex:2];
-		[invocation setArgument:&sender atIndex:3];
-		[invocation setArgument:&room atIndex:4];
-		[invocation setArgument:&unsafeMsgAttributes atIndex:5];
-
-		msgData = nil;
-		msgAttributes = nil;
-
-		[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
-		if( ! msgData.length ) return;
-
-		if( room ) {
-			[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:msgAttributes];
-		} else {
-			[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:msgAttributes];
-		}
-
-		break;
+	if( [[message type] isEqualToString:@"groupchat"] ) {
+		room = [self joinedChatRoomWithUniqueIdentifier:[message from]];
+		if( ! room ) return;
+		sender = [self chatUserWithUniqueIdentifier:[message from]];
+		if( [sender isLocalUser] ) return;
+	} else {
+		sender = [self chatUserWithUniqueIdentifier:[message from]];
 	}
 
-	case JMEVENT_COMPOSING:
-		break;
-	case JMEVENT_COMPOSING_CANCEL:
-		break;
+	NSMutableData *msgData = [[[message body] dataUsingEncoding:NSUTF8StringEncoding] mutableCopyWithZone:nil];
+	__unsafe_unretained NSMutableData *unsafeMsgData = msgData;
+
+	NSMutableDictionary *msgAttributes = [[NSMutableDictionary allocWithZone:nil] init];
+	__unsafe_unretained NSMutableDictionary *unsafeMsgAttributes = msgAttributes;
+	[msgAttributes setObject:sender forKey:@"user"];
+	[msgAttributes setObject:msgData forKey:@"message"];
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatUser * ), @encode( id ), @encode( NSMutableDictionary * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	[invocation setSelector:@selector( processIncomingMessageAsData:from:to:attributes: )];
+	[invocation setArgument:&unsafeMsgData atIndex:2];
+	[invocation setArgument:&sender atIndex:3];
+	[invocation setArgument:&room atIndex:4];
+	[invocation setArgument:&unsafeMsgAttributes atIndex:5];
+
+	msgData = nil;
+	msgAttributes = nil;
+
+	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+	if( ! msgData.length ) return;
+
+	if( room ) {
+		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:msgAttributes];
+	} else {
+		[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:msgAttributes];
 	}
 }
 
-- (void) incomingPresence:(NSNotification *) notification {
-	JabberPresence *presence = [notification object];
-	JabberID *roomID = [[presence from] userhostJID];
+- (void) xmppStream:(XMPPStream *) stream didReceiveTrust:(SecTrustRef) trust completionHandler:(void (^)(BOOL shouldTrustPeer)) completionHandler {
+	if (!trust || !completionHandler)
+		return;
+
+	SecTrustEvaluateAsync(trust, dispatch_get_main_queue(), ^(SecTrustRef trustRef, SecTrustResultType result) {
+		if (result == kSecTrustResultProceed || result == kSecTrustResultUnspecified) {
+			completionHandler(YES);
+			return;
+		}
+
+		[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:self userInfo:@{
+			@"completionHandler": completionHandler,
+			@"trust": (__bridge id)trust,
+			@"result": [NSString stringWithFormat:@"%d", result]
+		}];
+	});
+}
+
+- (void) xmppStream:(XMPPStream *) sender didReceivePresence:(XMPPPresence *) presence {
+	XMPPJID *roomID = [presence from];
 	MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:roomID];
 
 	if( ! room ) return;
 
-	if ([[presence getAttribute:@"type"] isCaseInsensitiveEqualToString:@"error"]) {
+	if ([[presence type] isCaseInsensitiveEqualToString:@"error"]) {
 		 // balance the alloc or retain in joinChatRoomNamed:
 		// handle error...
 		return;
@@ -360,7 +365,7 @@
 		user = (MVXMPPChatUser *)[room localMemberUser];
 	else user = (MVXMPPChatUser *)[self chatUserWithUniqueIdentifier:[presence from]];
 
-	if ([[presence getAttribute:@"type"] isCaseInsensitiveEqualToString:@"unavailable"]) {
+	if ([[presence type] isCaseInsensitiveEqualToString:@"unavailable"]) {
 		[room _removeMemberUser:user];
 		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomUserPartedNotification object:room userInfo:@{@"user": user}];
 		return;
@@ -391,23 +396,24 @@
 #pragma mark -
 
 @implementation MVXMPPChatConnection (MVXMPPChatConnectionPrivate)
-- (JabberSession *) _chatSession {
+- (XMPPStream *) _chatSession {
 	return _session;
 }
 
-- (JabberID *) _localUserID {
+- (XMPPJID *) _localUserID {
 	return _localID;
 }
 
-- (XMLElement *) _capabilitiesElement {
-	XMLElement *caps = [[XMLElement allocWithZone:nil] initWithQName:JABBER_CLIENTCAP_QN];
-	[caps putAttribute:@"node" withValue:@"http://colloquy.info/caps"];
-	[caps putAttribute:@"ver" withValue:@"2.1"];
+- (XMPPElement *) _capabilitiesElement {
+	XMPPElement *caps = [XMPPElement elementWithName:@"c" URI:@"http://jabber.org/protocols/caps"];
+	[caps addAttributeWithName:@"node" objectValue:@"http://colloquy.info/caps"];
+	[caps addAttributeWithName:@"ver" objectValue:@"2.1"];
 	return caps;
 }
 
-- (XMLElement *) _multiUserChatExtensionElement {
-	XMLQName *xQName = [XMLQName construct:@"x" withURI:@"http://jabber.org/protocol/muc"];
-	return [[XMLElement allocWithZone:nil] initWithQName:xQName];
+- (XMPPElement *) _multiUserChatExtensionElement {
+	return [XMPPElement elementWithName:@"x" URI:@"http://jabber.org/protocol/muc"];
 }
 @end
+
+NS_ASSUME_NONNULL_END

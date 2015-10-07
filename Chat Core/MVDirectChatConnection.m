@@ -17,6 +17,8 @@
 #import "NSAttributedStringAdditions.h"
 #endif
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *MVDirectChatConnectionOfferNotification = @"MVDirectChatConnectionOfferNotification";
 
 NSString *MVDirectChatConnectionDidConnectNotification = @"MVDirectChatConnectionDidConnectNotification";
@@ -28,7 +30,6 @@ NSString *MVDirectChatConnectionGotMessageNotification = @"";
 NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomain";
 
 @interface MVDirectChatConnection () <MVDirectClientConnectionDelegate>
-
 @end
 
 @implementation MVDirectChatConnection
@@ -305,3 +306,5 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionErrorOccurredNotification object:self userInfo:info];
 }
 @end
+
+NS_ASSUME_NONNULL_END

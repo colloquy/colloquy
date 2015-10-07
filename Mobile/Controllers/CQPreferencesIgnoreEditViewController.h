@@ -6,8 +6,12 @@
 @interface CQPreferencesIgnoreEditViewController : CQPreferencesListEditViewController {
 @private
 	MVChatConnection *_connection;
-	KAIgnoreRule *__weak _representedRule;
+	KAIgnoreRule *_representedRule;
 }
+
+- (instancetype) initWithNibName:(NSString *) nibNameOrNil bundle:(NSBundle *) nibBundleOrNil NS_UNAVAILABLE;
+- (instancetype) initWithStyle:(UITableViewStyle) style NS_UNAVAILABLE;
+- (instancetype) initWithCoder:(NSCoder *) aDecoder NS_UNAVAILABLE;
 
 - (instancetype) initWithConnection:(MVChatConnection *) connection NS_DESIGNATED_INITIALIZER;
 

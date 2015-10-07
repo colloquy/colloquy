@@ -89,7 +89,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 + (MVFileTransferController *) defaultController {
 	if( ! sharedInstance ) {
 		sharedInstance = [self alloc];
-		sharedInstance = [sharedInstance initWithWindowNibName:nil];
+		sharedInstance = [sharedInstance initWithWindowNibName:@"MVFileTransfer"];
 	}
 
 	return sharedInstance;
@@ -98,7 +98,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 #pragma mark -
 
 - (instancetype) initWithWindowNibName:(NSString *) windowNibName {
-	if( ( self = [super initWithWindowNibName:@"MVFileTransfer"] ) ) {
+	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
 		_transferStorage = [[NSMutableArray allocWithZone:nil] init];
 		_calculationItems = [[NSMutableArray allocWithZone:nil] init];
 
@@ -358,21 +358,21 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	[_calculationItems removeAllObjects];
 	[[currentFiles selectedRowIndexes] enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
-		[_calculationItems addObject:[self _infoForTransferAtIndex:index]];
+		[self->_calculationItems addObject:[self _infoForTransferAtIndex:index]];
 	}];
 }
 
-- (BOOL) tableView:(NSTableView *) view writeRows:(NSArray *) rows toPasteboard:(NSPasteboard *) board {
+- (BOOL) tableView:(NSTableView *) tableView writeRowsWithIndexes:(NSIndexSet *) rowIndexes toPasteboard:(NSPasteboard *) pboard {
 	NSMutableArray *array = [NSMutableArray array];
 
-	[board declareTypes:@[NSFilenamesPboardType] owner:self];
+	[pboard declareTypes:@[NSFilenamesPboardType] owner:self];
 
-	for( id row in rows ) {
-		NSString *path = [self _infoForTransferAtIndex:[row unsignedIntValue]][@"path"];
+	[rowIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+		NSString *path = [[self _infoForTransferAtIndex:idx] objectForKey:@"path"];
 		if( path ) [array addObject:path];
-	}
+	}];
 
-	[board setPropertyList:array forType:NSFilenamesPboardType];
+	[pboard setPropertyList:array forType:NSFilenamesPboardType];
 	return YES;
 }
 

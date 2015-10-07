@@ -2,6 +2,8 @@
 #import "MVFileTransferPrivate.h"
 #import "Transmission.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class MVDirectClientConnection;
 
 @interface MVIRCUploadFileTransfer : MVUploadFileTransfer {
@@ -35,3 +37,5 @@
 @property (setter=_setPassiveIdentifier:) long long _passiveIdentifier;
 @property (setter=_setFileNameQuoted:) BOOL _fileNameQuoted;
 @end
+
+NS_ASSUME_NONNULL_END

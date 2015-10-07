@@ -1,6 +1,6 @@
 #import "JVChatTranscript.h"
 
-@interface JVChatEvent : NSObject <JVChatTranscriptElement> 
+@interface JVChatEvent : NSObject <JVChatTranscriptElement>
 - (/* xmlNode */ void *) node;
 
 @property (readonly, weak) JVChatTranscript *transcript;

@@ -1,3 +1,5 @@
+NS_ASSUME_NONNULL_BEGIN
+
 @class MVChatUser;
 @class MVChatConnection;
 
@@ -18,7 +20,7 @@ extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
 	BOOL _addressIsRegex;
 	BOOL _interim;
 }
-- (instancetype) initWithDictionaryRepresentation:(NSDictionary *) dictionary NS_DESIGNATED_INITIALIZER;
+- (instancetype) initWithDictionaryRepresentation:(NSDictionary *) dictionary;
 - (NSDictionary *) dictionaryRepresentation;
 
 - (BOOL) isEqualToChatUserWatchRule:(MVChatUserWatchRule *) anotherRule;
@@ -48,3 +50,5 @@ extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
 @property(copy) NSArray *applicableServerDomains;
 
 @end
+
+NS_ASSUME_NONNULL_END

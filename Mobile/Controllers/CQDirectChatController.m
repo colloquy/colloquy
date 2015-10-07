@@ -204,6 +204,21 @@ static BOOL showingKeyboard;
 	return chatMessageProcessingQueue;
 }
 
+- (instancetype) initWithStyle:(UITableViewStyle) style {
+	NSAssert(NO, @"use -[CQDirectChatController initWithTarget:] instead");
+	return nil;
+}
+
+- (instancetype) initWithNibName:(NSString *) nibNameOrNil bundle:(NSBundle *) nibBundleOrNil {
+	NSAssert(NO, @"use -[CQDirectChatController initWithTarget:] instead");
+	return nil;
+}
+
+- (instancetype) initWithCoder:(NSCoder *) aDecoder {
+	NSAssert(NO, @"use -[CQDirectChatController initWithTarget:] instead");
+	return nil;
+}
+
 - (instancetype) initWithTarget:(id) target {
 	if (!(self = [super initWithNibName:@"CQUIChatView" bundle:nil]))
 		return nil;
@@ -510,7 +525,7 @@ static BOOL showingKeyboard;
 
 	[self _userDefaultsChanged];
 
-	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
+	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clear.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateNormal];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clearPressed.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateHighlighted];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButton.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
@@ -634,7 +649,7 @@ static BOOL showingKeyboard;
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
 	_isShowingCompletionsBeforeRotation = chatInputBar.isShowingCompletions;
 
-	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:toInterfaceOrientation]);
+	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:toInterfaceOrientation]);
 }
 
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation) fromInterfaceOrientation {
@@ -673,8 +688,9 @@ static BOOL showingKeyboard;
 		theChatInputBar.textView.text = nil;
 
 		// Work around behavior where textViewDidChange: isn't called when you change the text programatically.
-		if ([theChatInputBar.textView.delegate respondsToSelector:@selector(textViewDidChange:)])
-			[theChatInputBar.textView.delegate textViewDidChange:theChatInputBar.textView];
+		__strong id <UITextViewDelegate> strongDelegate = theChatInputBar.textView.delegate;
+		if ([strongDelegate respondsToSelector:@selector(textViewDidChange:)])
+			[strongDelegate textViewDidChange:theChatInputBar.textView];
 
 		[theChatInputBar hideCompletions];
 
@@ -2038,7 +2054,7 @@ static BOOL showingKeyboard;
 	transcriptView.fontFamily = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFont"];
 	transcriptView.fontSize = chatTranscriptFontSize;
 	transcriptView.timestampPosition = timestampEveryMessage ? (timestampOnLeft ? CQTimestampPositionLeft : CQTimestampPositionRight) : CQTimestampPositionCenter;
-	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
+	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
 
 	chatInputBar.font = [chatInputBar.font fontWithSize:chatTranscriptFontSize];
 	if ([self isViewLoaded] && transcriptView)

@@ -184,11 +184,11 @@ static BOOL verbose;
 	[self addMessage:notification.userInfo[@"message"] outbound:[notification.userInfo[@"outbound"] boolValue]];
 }
 
-- (void) delegateLogger:(MVDelegateLogger *) delegateLogger socketTrafficDidOccur:(NSString *) socketTraffic context:(void *) context {
+- (void) delegateLogger:(MVDelegateLogger *) delegateLogger socketTrafficDidOccur:(NSString *) socketTraffic context:(int) context {
 	if (hideSocketInformation)
 		return;
 
-	if (context != (__bridge void *)_connection._chatConnection)
+	if (context != (int)((__bridge void *)_connection._chatConnection))
 		return;
 
 	[self addMessage:socketTraffic outbound:NO];

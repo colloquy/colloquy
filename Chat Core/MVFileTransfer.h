@@ -1,5 +1,8 @@
 #ifndef __MVFILETRANSFER__
 #define __MVFILETRANSFER__
+
+NS_ASSUME_NONNULL_BEGIN
+
 @class MVChatConnection;
 @class MVChatUser;
 
@@ -19,7 +22,7 @@ typedef NS_ENUM(OSType, MVFileTransferStatus) {
 	MVFileTransferErrorStatus = 'trEr'
 };
 
-typedef NS_ENUM(OSType, MVFileTransferError) {
+typedef NS_ENUM(NSInteger, MVFileTransferError) {
 	MVFileTransferConnectionError = -1,
 	MVFileTransferFileCreationError = -2,
 	MVFileTransferFileOpenError = -3,
@@ -36,7 +39,7 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 	case MVFileTransferHoldingStatus: return @"trHo";
 	case MVFileTransferStoppedStatus: return @"trSt";
 	case MVFileTransferErrorStatus: return @"trEr";
-	default: return nil;
+	default: return @"";
 	}
 }
 
@@ -60,6 +63,7 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 + (void) setAutoPortMappingEnabled:(BOOL) enable;
 + (BOOL) isAutoPortMappingEnabled;
 
+- (instancetype) init NS_UNAVAILABLE;
 - (instancetype) initWithUser:(MVChatUser *) user NS_DESIGNATED_INITIALIZER;
 
 @property(readonly, getter=isUpload) BOOL upload;
@@ -71,10 +75,10 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 @property(readonly) unsigned long long finalSize;
 @property(readonly) unsigned long long transferred;
 
-@property(copy, readonly) NSDate *startDate;
+@property(strong, readonly) NSDate *startDate;
 @property(readonly) unsigned long long startOffset;
 
-@property(copy, readonly) NSString *host;
+@property(strong, readonly) NSString *host;
 @property(readonly) unsigned short port;
 
 @property(strong, readonly) MVChatUser *user;
@@ -111,5 +115,7 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 - (void) accept;
 - (void) acceptByResumingIfPossible:(BOOL) resume;
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

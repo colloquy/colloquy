@@ -50,6 +50,8 @@
 #import "NSNotificationAdditions.h"
 #import "RunOnMainThread.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 #pragma mark Prototypes for auxiliary functions
 
 static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r );
@@ -85,7 +87,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 - (void) _writeDataToServer:(id) raw;
 - (void) _readNextMessageFromServer;
 - (void) _joinChatRoomNamed:(NSString *) name
-		 withPassphrase:(NSString *) passphrase
+		 withPassphrase:(NSString * __nullable) passphrase
 	     alreadyJoined:(BOOL) joined;
 - (void) _updateKnownUser:(MVChatUser *) user
          withNewNickname:(NSString *) newNickname;
@@ -147,7 +149,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 #pragma mark Modifiers
 
-- (void) setAwayStatusMessage:(MVChatString *) message {
+- (void) setAwayStatusMessage:(MVChatString * __nullable) message {
 }
 
 - (void) setNickname:(NSString *) newNickname {
@@ -231,7 +233,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 		      inThread:_connectionThread];
 }
 
-- (void) disconnectWithReason:(MVChatString *) reason {
+- (void) disconnectWithReason:(MVChatString * __nullable) reason {
 	[self cancelPendingReconnectAttempts];
 	if( _sendQueueProcessing && _connectionThread )
 		[self performSelector:@selector( _stopSendQueue )
@@ -251,7 +253,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	}
 }
 
-- (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments {
+- (void) sendCommand:(NSString *) command withArguments:(MVChatString * __nullable) arguments {
 #if USE(ATTRIBUTED_CHAT_STRING)
 	NSString *argumentsString = [arguments string];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
@@ -325,14 +327,13 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 	for( NSString *room in rooms ) {
 		if( room.length ) {
-			[self joinChatRoomNamed:room withPassphrase:nil];
+			[self joinChatRoomNamed:room];
 			break;
 		}
 	}
 }
 
-- (void) joinChatRoomNamed:(NSString *) name
-			withPassphrase:(NSString *) passphrase {
+- (void) joinChatRoomNamed:(NSString *) name withPassphrase:(NSString * __nullable) passphrase {
 	if( _loggedIn )
 		[self _joinChatRoomNamed:name withPassphrase:passphrase alreadyJoined:NO];
 	else
@@ -542,7 +543,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 #pragma mark Rooms handling
 
 - (void) _joinChatRoomNamed:(NSString *) name
-		 withPassphrase:(NSString *) passphrase
+		 withPassphrase:(NSString * __nullable) passphrase
 		 alreadyJoined:(BOOL) joined {
 	[name retain];
 	if( [name compare:[_room name] options:NSCaseInsensitiveSearch] != 0 ) {
@@ -795,7 +796,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 		                  dataUsingEncoding:[self encoding]]];
 		[[NSNotificationCenter chatCenter]
 		 postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification
-		 object:_room userInfo:nil];
+		 object:_room];
 	} else {
 		[[NSNotificationCenter chatCenter]
 		 postNotificationOnMainThreadWithName:MVChatConnectionGotInformationalMessageNotification
@@ -1055,7 +1056,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	if( [msg compare:@"A brick flies off into the ether."] == 0 ) {
 		[[NSNotificationCenter chatCenter]
 		 postNotificationOnMainThreadWithName:MVChatRoomUserBrickedNotification
-		 object:_room userInfo:nil];
+		 object:_room];
 	} else if( hasSubstring(msg, @" has been bricked.", &r) ) {
 		NSString *nick = [msg substringToIndex:r.location];
 		MVChatUser *who = [self chatUserWithUniqueIdentifier:nick];
@@ -1116,7 +1117,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 			[[NSNotificationCenter chatCenter]
 			 postNotificationOnMainThreadWithName:MVChatConnectionNicknameAcceptedNotification
-			 object:self userInfo:nil];
+			 object:self];
 		} else {
 			[self _updateKnownUser:who withNewNickname:newnick];
 
@@ -1199,9 +1200,11 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 			[_room _setTopicDate:[NSDate date]];
 			[[NSNotificationCenter chatCenter]
 			 postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification
-			 object:_room userInfo:nil];
+			 object:_room];
 		}
 	}
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

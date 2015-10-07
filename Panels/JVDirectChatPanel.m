@@ -747,7 +747,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	if( ! messageString ) {
 		options[@"StringEncoding"] = @(NSISOLatin1StringEncoding);
-		messageString = [NSMutableAttributedString attributedStringWithChatFormat:message options:options];
+		messageString = [[NSTextStorage alloc] initWithAttributedString:[NSMutableAttributedString attributedStringWithChatFormat:message options:options]];
 
 		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:baseFont, NSFontAttributeName, nil];
 		NSMutableAttributedString *error = [[NSMutableAttributedString alloc] initWithString:[@" " stringByAppendingString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )] attributes:attributes];
@@ -1968,7 +1968,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		}
 	}
 
-	NSAttributedString *realMessage = [NSAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
+	NSAttributedString *realMessage = [NSAttributedString attributedStringWithHTMLFragment:message];
 	BOOL realAction = ( action ? [action boolValue] : NO );
 	BOOL realLocalEcho = ( localEcho ? [localEcho boolValue] : YES );
 

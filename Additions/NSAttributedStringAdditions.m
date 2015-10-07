@@ -5,6 +5,8 @@
 #import <CoreFoundation/CFString.h>
 #import <CoreFoundation/CFStringEncodingExt.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 static const unsigned char mIRCColors[][3] = {
 	{ 0xff, 0xff, 0xff },  /* 00) white */
 	{ 0x00, 0x00, 0x00 },  /* 01) black */
@@ -107,11 +109,10 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 @implementation NSAttributedString (NSAttributedStringHTMLAdditions)
 #if SYSTEM(MAC)
-+ (instancetype) attributedStringWithHTMLFragment:(NSString *) fragment baseURL:(NSURL *) url {
++ (instancetype) attributedStringWithHTMLFragment:(NSString *) fragment {
 	NSParameterAssert( fragment != nil );
 
-	NSMutableDictionary *options = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:@(NSUTF8StringEncoding), NSCharacterEncodingDocumentOption, nil];
-	if( url ) options[NSBaseURLDocumentOption] = url;
+	NSMutableDictionary *options = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:NSUTF8StringEncoding], NSCharacterEncodingDocumentOption, nil];
 
 	// we suround the fragment in the #01FE02 green color so we can later key it out and strip it
 	// this will result in colorless areas of our string, letting the color be defined by the interface
@@ -936,3 +937,5 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	return [self attributedSubstringFromRange:NSMakeRange(startIndexToRemove, string.length - startIndexToRemove - (string.length - (endIndexToRemove + 1)))];
 }
 @end
+
+NS_ASSUME_NONNULL_END

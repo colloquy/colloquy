@@ -1,6 +1,7 @@
 @class CQIntroductoryGIFFrameOperation;
 
 @interface CQIntroductoryGIFFrameOperation : NSOperation
+- (instancetype) init NS_UNAVAILABLE;
 - (instancetype) initWithURL:(NSURL *) url NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, readonly) NSURL *url;

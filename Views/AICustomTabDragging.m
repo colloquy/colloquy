@@ -180,14 +180,17 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 
 //Drag Tracking --------------------------------------------------------------------------------------------------------
 #pragma mark Drag Tracking (Source)
+
 //Invoked in the dragging source as the drag begins
-- (void)draggedImage:(NSImage *)image beganAt:(NSPoint)screenPoint
+- (void)draggingSession:(NSDraggingSession *)session willBeginAtPoint:(NSPoint)screenPoint
 {
-    [self draggedImage:image movedTo:screenPoint];
+	[session enumerateDraggingItemsWithOptions:0 forView:[self sourceTabView] classes:@[ [NSImage class] ] searchOptions:@{} usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop) {
+		[self draggingSession:session movedToPoint:screenPoint];
+	}];
 }
 
 //Invoked in the dragging source as the drag moves
-- (void)draggedImage:(NSImage *)image movedTo:(NSPoint)screenPoint
+- (void)draggingSession:(NSDraggingSession *)session movedToPoint:(NSPoint)screenPoint
 {
 	[tabDragWindow setDisplayingFullWindow:(!destTabBar) animate:YES];
 
@@ -197,7 +200,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 }
 
 //Invoked in the dragging source as the drag ends
-- (void)draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation
+- (void)draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation
 {
 	if(operation == NSDragOperationNone){ //when dropped on the screen
 		//Sneaky Bug Fix ---
@@ -218,9 +221,9 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 }
 
 //Prevent dragging of tabs to another application
-- (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL)isLocal
+- (NSDragOperation)draggingSession:(NSDraggingSession *)session sourceOperationMaskForDraggingContext:(NSDraggingContext)context
 {
-    return(isLocal ? NSDragOperationEvery : NSDragOperationNone);
+    return(context == NSDraggingContextWithinApplication ? NSDragOperationEvery : NSDragOperationNone);
 }
 
 //Clean up drag variables

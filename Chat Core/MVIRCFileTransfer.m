@@ -11,11 +11,9 @@
 
 #import <arpa/inet.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #define DCCPacketSize 4096
-
-@interface MVIRCUploadFileTransfer () <MVDirectClientConnectionDelegate>
-
-@end
 
 @interface MVIRCDownloadFileTransfer () <MVDirectClientConnectionDelegate>
 
@@ -194,11 +192,13 @@
 
 #pragma mark -
 
+@interface MVIRCDownloadFileTransfer () <MVDirectClientConnectionDelegate>
+@end
+
 @implementation MVIRCDownloadFileTransfer
 @synthesize _passiveIdentifier = _passiveId;
 @synthesize _fileNameQuoted;
 @synthesize _turbo;
-
 - (void) dealloc {
 	[[[self user] connection] _removeDirectClientConnection:self];
 
@@ -352,3 +352,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
