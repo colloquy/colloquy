@@ -117,15 +117,17 @@ static JVNotificationController *sharedInstance = nil;
 		NSString *desc = description;
 		if( [desc isKindOfClass:[NSAttributedString class]] ) desc = [description string];
 		NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-		NSDictionary *notification = @{GROWL_APP_NAME: programName,
-			GROWL_NOTIFICATION_NAME: identifier,
-			GROWL_NOTIFICATION_TITLE: title,
-			GROWL_NOTIFICATION_DESCRIPTION: desc,
-			GROWL_NOTIFICATION_ICON_DATA: [icon TIFFRepresentation],
-			GROWL_NOTIFICATION_IDENTIFIER: context[@"coalesceKey"],
+		NSDictionary *notification = [NSDictionary dictionaryWithObjectsAndKeys:
+			programName, GROWL_APP_NAME,
+			identifier, GROWL_NOTIFICATION_NAME,
+			title, GROWL_NOTIFICATION_TITLE,
+			desc, GROWL_NOTIFICATION_DESCRIPTION,
+			[icon TIFFRepresentation], GROWL_NOTIFICATION_ICON_DATA,
+			[context objectForKey:@"coalesceKey"], GROWL_NOTIFICATION_IDENTIFIER,
 			// this next key is not guaranteed to be non-nil
 			// make sure it stays last, unless you want to ensure it's non-nil
-			GROWL_NOTIFICATION_STICKY: eventPrefs[@"keepBubbleOnScreen"]};
+			[eventPrefs objectForKey:@"keepBubbleOnScreen"], GROWL_NOTIFICATION_STICKY,
+			nil];
 		[GrowlApplicationBridge notifyWithDictionary:notification];
 	} else if( NSAppKitVersionNumber10_8 > floor( NSAppKitVersionNumber ) ) {
 		if( ( bubble = _bubbles[context[@"coalesceKey"]] ) ) {

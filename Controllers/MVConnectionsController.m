@@ -17,8 +17,6 @@
 
 #import <SecurityInterface/SFCertificateTrustPanel.h>
 
-#import <SecurityInterface/SFCertificateTrustPanel.h>
-
 static MVConnectionsController *sharedInstance = nil;
 
 static NSString *const connectionInvalidSSLCertAction = nil;
@@ -192,7 +190,7 @@ static NSMenu *favoritesMenu = nil;
 
 				NSURL *url = [NSURL URLWithInternetLocationFile:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@", item] stringByExpandingTildeInPath]];
 				if( url ) {
-					[favorites addObject:@{@"target": [url.path lastPathComponent], @"server": url.host, @"scheme": url.scheme}];
+					[favorites addObject:[NSDictionary dictionaryWithObjectsAndKeys:[url.path lastPathComponent], @"target", url.host, @"server", url.scheme, @"scheme", nil]];
 
 					[[NSFileManager defaultManager] removeItemAtPath:item error:nil];
 				}

@@ -1411,10 +1411,10 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 					break;
 				default:
 				case MVChatNoMessageFormat:
-					cformat = @"";
+					cformat = nil;
 			}
 
-			NSDictionary *options = @{@"StringEncoding": @(realEncoding), @"FormatType": cformat};
+			NSDictionary *options = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:realEncoding], @"StringEncoding", cformat, @"FormatType", nil];
 			NSData *msgData = [realMessage chatFormatWithOptions:options];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 			NSData *msgData = [realMessage dataUsingEncoding:realEncoding];
