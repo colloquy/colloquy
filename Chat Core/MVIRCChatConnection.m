@@ -2263,6 +2263,8 @@ end:
 - (NSString *) _stringFromPossibleData:(id) input {
 	if( [input isKindOfClass:[NSData class]] )
 		return [self _newStringWithBytes:[input bytes] length:[input length]];
+	if( [input isKindOfClass:[NSAttributedString class]] )
+		return [input string];
 	return input;
 }
 
