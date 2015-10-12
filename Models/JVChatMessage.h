@@ -7,7 +7,7 @@ typedef NS_ENUM(OSType, JVChatMessageType) {
 };
 
 @interface JVChatMessage : NSObject <NSMutableCopying, JVChatTranscriptElement>
-- (/* xmlNode */ void *) node;
+- (struct _xmlNode*) node;
 
 @property (readonly, strong) NSDate *date;
 

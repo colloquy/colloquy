@@ -2,6 +2,11 @@
 #import "JVChatSession_Private.h"
 #include <libxml/tree.h>
 
+@interface JVChatSession ()
+@property (readwrite, setter=_setNode:) xmlNode *node;
+
+@end
+
 @implementation JVChatSession {
 @protected
 	xmlNode *_node;
@@ -11,13 +16,7 @@
 }
 
 @synthesize transcript = _transcript;
-- (void *) node {
-	return _node;
-}
-
-- (void) _setNode:(xmlNode *) node {
-	_node = node;
-}
+@synthesize node = _node;
 
 #pragma mark -
 

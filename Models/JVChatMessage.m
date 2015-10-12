@@ -43,6 +43,8 @@
 	NSMutableDictionary *_attributes;
 }
 
+@synthesize node = _node;
+
 + (void) initialize {
 	[super initialize];
 	static BOOL tooLate = NO;
@@ -139,7 +141,7 @@
 
 #pragma mark -
 
-- (void *) node {
+- (xmlNode *) node {
 	if( ! _node ) {
 		NSDictionary *options = @{@"IgnoreFonts": @YES, @"IgnoreFontSizes": @YES};
 		NSString *htmlMessage = ( [self body] ? [[self body] HTMLFormatWithOptions:options] : @"" );

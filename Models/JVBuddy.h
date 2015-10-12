@@ -9,6 +9,7 @@ extern NSString *JVBuddyUserIdleTimeUpdatedNotification;
 extern NSString *JVBuddyActiveUserChangedNotification;
 
 @class ABPerson;
+@class MVChatUser;
 
 typedef NS_OPTIONS(unsigned int, JVBuddyName) {
 	JVBuddyActiveNickname = 0x0,
@@ -42,9 +43,9 @@ typedef NS_OPTIONS(unsigned int, JVBuddyName) {
 @property (readonly, copy) NSString *displayName;
 @property (readonly, copy) NSString *nickname;
 
-@property (readonly, copy) NSSet *users;
+@property (readonly, copy) NSSet<MVChatUser*> *users;
 
-@property (readonly, copy) NSArray *watchRules;
+@property (readonly, copy) NSArray<MVChatUserWatchRule*> *watchRules;
 - (void) addWatchRule:(MVChatUserWatchRule *) rule;
 - (void) removeWatchRule:(MVChatUserWatchRule *) rule;
 

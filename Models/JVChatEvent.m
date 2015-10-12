@@ -21,6 +21,9 @@
 	BOOL _loadedAttributes;
 	BOOL _loadedSmall;
 }
+
+@synthesize node = _node;
+
 - (void) dealloc {
 	_node = NULL;
 

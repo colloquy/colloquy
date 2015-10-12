@@ -8,9 +8,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 static MVChatPluginManager *sharedInstance = nil;
-NSString *MVChatPluginManagerWillReloadPluginsNotification = @"MVChatPluginManagerWillReloadPluginsNotification";
-NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManagerDidReloadPluginsNotification";
-NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginManagerDidFindInvalidPluginsNotification";
+NSString *const MVChatPluginManagerWillReloadPluginsNotification = @"MVChatPluginManagerWillReloadPluginsNotification";
+NSString *const MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManagerDidReloadPluginsNotification";
+NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginManagerDidFindInvalidPluginsNotification";
 
 #pragma mark -
 

@@ -1,8 +1,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString *MVChatPluginManagerWillReloadPluginsNotification;
-extern NSString *MVChatPluginManagerDidReloadPluginsNotification;
-extern NSString *MVChatPluginManagerDidFindInvalidPluginsNotification;
+extern NSString *const MVChatPluginManagerWillReloadPluginsNotification;
+extern NSString *const MVChatPluginManagerDidReloadPluginsNotification;
+extern NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification;
 
 @interface MVChatPluginManager : NSObject {
 	@private

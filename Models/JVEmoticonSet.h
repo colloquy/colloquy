@@ -1,5 +1,7 @@
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString * __nonnull JVEmoticonSetsScannedNotification;
 
 @interface JVEmoticonSet : NSObject {
@@ -8,30 +10,32 @@ extern NSString * __nonnull JVEmoticonSetsScannedNotification;
 	NSArray *_emoticonMenu;
 }
 + (void) scanForEmoticonSets;
-+ (nonnull NSSet *) emoticonSets;
-+ (nullable instancetype) emoticonSetWithIdentifier:(nonnull NSString *) identifier;
-+ (nullable instancetype) newWithBundle:(nonnull NSBundle *) bundle;
++ (NSSet<JVEmoticonSet*> *) emoticonSets;
++ (nullable instancetype) emoticonSetWithIdentifier:(NSString *) identifier;
++ (nullable instancetype) newWithBundle:(NSBundle *) bundle;
 
-+ (nonnull instancetype) textOnlyEmoticonSet;
++ (instancetype) textOnlyEmoticonSet;
 
 - (nullable instancetype) initWithBundle:(nonnull NSBundle *) bundle;
 
 - (void) unlink;
 @property (readonly, getter=isCompliant) BOOL compliant;
 
-- (void) performEmoticonSubstitution:(nonnull NSMutableAttributedString *) string;
+- (void) performEmoticonSubstitution:(NSMutableAttributedString *) string;
 
 @property (readonly, strong, nonatomic, null_resettable) NSBundle *bundle;
-@property (readonly, copy, nonnull) NSString *identifier;
+@property (readonly, copy) NSString *identifier;
 
-- (NSComparisonResult) compare:(nonnull JVEmoticonSet *) style;
-@property (readonly, copy, nonnull) NSString *displayName;
+- (NSComparisonResult) compare:(JVEmoticonSet *) style;
+@property (readonly, copy) NSString *displayName;
 
-@property (readonly, copy, nonnull) NSDictionary *emoticonMappings;
-@property (readonly, copy, nonnull) NSArray *emoticonMenuItems;
+@property (readonly, copy) NSDictionary<NSString*, NSArray<NSString*>*> *emoticonMappings;
+@property (readonly, copy) NSArray<NSMenuItem*> *emoticonMenuItems;
 
 @property (readonly, copy, nullable) NSURL *baseLocation;
 @property (readonly, copy, nullable) NSURL *styleSheetLocation;
 
-@property (readonly, copy, nonnull) NSString *contentsOfStyleSheet;
+@property (readonly, copy) NSString *contentsOfStyleSheet;
 @end
+
+NS_ASSUME_NONNULL_END
