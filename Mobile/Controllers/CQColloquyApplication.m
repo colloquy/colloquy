@@ -78,12 +78,6 @@ static NSMutableArray *highlightWords;
 	return nil;
 }
 
-- (UINavigationController *) navigationController {
-	if ([_mainViewController isKindOfClass:[UINavigationController class]])
-		return (UINavigationController *)_mainViewController;
-	return nil;
-}
-
 #pragma mark -
 
 - (NSSet *) handledURLSchemes {
@@ -282,9 +276,6 @@ static NSMutableArray *highlightWords;
 
 			BOOL animationEnabled = [UIView areAnimationsEnabled];
 			[UIView setAnimationsEnabled:NO];
-
-			if (!self.navigationController.view.window.isFullscreen)
-				[self.navigationController popToRootViewControllerAnimated:NO];
 
 			if (roomName.length) {
 				if ([action isEqualToString:@"j"])
@@ -667,10 +658,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) showConnections:(__nullable id) sender {
-	if (![UIDevice currentDevice].isPadModel) {
-		[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
-		[self.navigationController popToRootViewControllerAnimated:NO];
-	}
+	[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
 }
 
 - (void) toggleColloquies:(__nullable id) sender {
@@ -684,13 +672,9 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) showColloquies:(__nullable id) sender hidingTopViewController:(BOOL) hidingTopViewController {
-	if (self.navigationController.view.window.isFullscreen) {
-		if (!_colloquiesPopoverController.popoverVisible) {
-			[self dismissPopoversAnimated:NO];
-			[_colloquiesPopoverController presentPopoverFromBarButtonItem:_colloquiesBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-		}
-	} else {
-		[self.navigationController popToRootViewControllerAnimated:YES];
+	if (!_colloquiesPopoverController.popoverVisible) {
+		[self dismissPopoversAnimated:NO];
+		[_colloquiesPopoverController presentPopoverFromBarButtonItem:_colloquiesBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 	}
 }
 
@@ -705,7 +689,7 @@ static NSMutableArray *highlightWords;
 - (void) submitRunTime {
 	NSTimeInterval runTime = ABS([_resumeDate timeIntervalSinceNow]);
 	[[CQAnalyticsController defaultController] setObject:@(runTime) forKey:@"run-time"];
-	[[CQAnalyticsController defaultController] synchronizeSynchronously];
+	[[CQAnalyticsController defaultController] synchronize];
 }
 
 #pragma mark -

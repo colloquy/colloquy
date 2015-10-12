@@ -289,25 +289,7 @@ static void generateDeviceIdentifier() {
 	_data[deviceIdentifierKey] = deviceIdentifier;
 	_data[applicationNameKey] = applicationName;
 
-	[NSURLConnection connectionWithRequest:[self _urlRequest] delegate:nil];
-
-	[_data removeAllObjects];
-}
-
-- (void) synchronizeSynchronously {
-	if (!_data.count)
-		return;
-
-	_pendingSynchronize = NO;
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
-
-	_data[deviceIdentifierKey] = deviceIdentifier;
-	_data[applicationNameKey] = applicationName;
-
-	NSMutableURLRequest *request = [self _urlRequest];
-	[request setTimeoutInterval:5.];
-
-	[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL];
+	[[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"info.colloquy.mobi.backgroundSession"]] dataTaskWithRequest:[self _urlRequest]];
 
 	[_data removeAllObjects];
 }
@@ -315,7 +297,7 @@ static void generateDeviceIdentifier() {
 #pragma mark -
 
 - (void) applicationWillTerminate {
-	[self synchronizeSynchronously];
+	[[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"info.colloquy.mobi.backgroundSession"]] dataTaskWithRequest:[self _urlRequest]];
 }
 @end
 
