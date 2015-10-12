@@ -703,23 +703,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	self.navigationController.navigationBar.barTintColor = nil;
 }
 
-- (void) viewDidAppear:(BOOL) animated {
-	BOOL defaultToEditing = YES;
-
-	for (MVChatConnection *connection in [CQConnectionsController defaultController].connections) {
-		NSArray *chatViewControllersForConnection = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
-		if (chatViewControllersForConnection.count) {
-			defaultToEditing = NO;
-			break;
-		}
-	}
-
-	if (defaultToEditing && !self.view.window.isFullscreen)
-		[self setEditing:YES animated:YES];
-
-	[super viewDidAppear:animated];
-}
-
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
