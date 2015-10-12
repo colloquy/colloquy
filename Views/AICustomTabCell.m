@@ -25,8 +25,8 @@ static NSImage		*tabFrontMiddle = nil;
 static NSImage		*tabFrontRight = nil;
 static NSImage		*tabCloseFront = nil;
 static NSImage		*tabCloseBack = nil;
-static NSImage		*tabCloseFrontPressed = nil;
-static NSImage		*tabCloseFrontRollover = nil;
+//static NSImage		*tabCloseFrontPressed = nil;
+//static NSImage		*tabCloseFrontRollover = nil;
 static NSSize		leftCapSize;
 static NSSize		rightCapSize;
 
@@ -69,6 +69,7 @@ static NSSize		rightCapSize;
 
 		tabCloseFront = [NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate];
 		tabCloseBack = [NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate];
+		//tabCloseFrontRollover = [NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate];
 
 		leftCapSize = [tabFrontLeft size];
 		rightCapSize = [tabFrontRight size];
@@ -251,7 +252,7 @@ static NSSize		rightCapSize;
 	NSImage *leftIcon = [tabViewItem icon];
 	if((hoveringClose && (selected || allowsInactiveTabClosing || ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ))) || !leftIcon){
 		if(hoveringClose){
-			leftIcon = (trackingClose ? tabCloseFrontPressed : tabCloseFrontRollover);
+			leftIcon = tabCloseFront;// (trackingClose ? tabCloseFrontPressed : tabCloseFrontRollover);
 		}else{
 			leftIcon = ((selected && !ignoreSelection) ? tabCloseFront : tabCloseBack);
 		}
