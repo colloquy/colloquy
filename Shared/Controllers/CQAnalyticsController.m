@@ -172,7 +172,17 @@ static void generateDeviceIdentifier() {
 	}
 
 	_data = [[NSMutableDictionary alloc] initWithCapacity:10];
-	_backgroundSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"info.colloquy.mobi.backgroundSession"]];
+
+	NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"info.colloquy.mobi.backgroundSession"];
+	configuration.discretionary = YES;
+	configuration.allowsCellularAccess = YES;
+	configuration.sessionSendsLaunchEvents = NO;
+	configuration.HTTPShouldUsePipelining = NO;
+	configuration.HTTPCookieAcceptPolicy = NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain;
+	configuration.HTTPMaximumConnectionsPerHost = 1;
+	configuration.shouldUseExtendedBackgroundIdleMode = YES;
+
+	_backgroundSession = [NSURLSession sessionWithConfiguration:configuration];
 
 	generateDeviceIdentifier();
 
