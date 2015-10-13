@@ -1048,10 +1048,8 @@ NS_ASSUME_NONNULL_BEGIN
 	[self.connection connectAppropriately];
 
 	NSArray *rooms = [arguments.string componentsSeparatedByString:@","];
-	if (rooms.count == 1 && ((NSString *)rooms[0]).length)
-		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:rooms[0] andConnection:self.connection];
-	else if (rooms.count > 1)
-		[[CQColloquyApplication sharedApplication] showColloquies:nil];
+	if (((NSString *)rooms.firstObject).length)
+		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:rooms.firstObject andConnection:self.connection];
 
 	// Return NO so the command is handled in ChatCore.
 	return NO;

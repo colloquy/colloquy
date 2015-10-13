@@ -3,11 +3,9 @@
 #import "CQAlertView.h"
 #import "CQAnalyticsController.h"
 #import "CQChatController.h"
-#import "CQChatListViewController.h"
-#import "CQChatNavigationController.h"
-#import "CQChatPresentationController.h"
 #import "CQConnectionsController.h"
 #import "CQConnectionsNavigationController.h"
+#import "CQRootContainerViewController.h"
 #import "CQWelcomeController.h"
 
 #import "NSNotificationAdditions.h"
@@ -17,13 +15,6 @@
 
 #import <HockeySDK/HockeySDK.h>
 
-typedef NS_ENUM(NSInteger, CQSidebarOrientation) {
-	CQSidebarOrientationNone,
-	CQSidebarOrientationPortrait,
-	CQSidebarOrientationLandscape,
-	CQSidebarOrientationAll
-};
-
 NS_ASSUME_NONNULL_BEGIN
 
 NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyApplicationDidRecieveDeviceTokenNotification";
@@ -32,14 +23,13 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 static NSMutableArray *highlightWords;
 
-@interface CQColloquyApplication () <UIApplicationDelegate, UISplitViewControllerDelegate, UIAlertViewDelegate, BITHockeyManagerDelegate>
+@interface CQColloquyApplication () <UIApplicationDelegate, UIAlertViewDelegate, BITHockeyManagerDelegate>
 @end
 
 @implementation CQColloquyApplication {
 	UIWindow *_mainWindow;
-	UIViewController *_mainViewController;
+	CQRootContainerViewController *_rootContainerViewController;
 	UIViewController *_overlappingPresentationViewController;
-	UIBarButtonItem *_colloquiesBarButtonItem;
 	UIToolbar *_toolbar;
 	NSDate *_launchDate;
 	NSDate *_resumeDate;
@@ -69,12 +59,6 @@ static NSMutableArray *highlightWords;
 
 - (UIWindow *__nullable) window {
 	return _mainWindow;
-}
-
-- (UISplitViewController *) splitViewController {
-	if ([_mainViewController isKindOfClass:[UISplitViewController class]])
-		return (UISplitViewController *)_mainViewController;
-	return nil;
 }
 
 #pragma mark -
@@ -292,17 +276,9 @@ static NSMutableArray *highlightWords;
 #pragma mark -
 
 - (void) reloadSplitViewController {
-	_colloquiesBarButtonItem = nil;
+	[_rootContainerViewController buildRootViewController];
 
-	UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
-	CQChatPresentationController *presentationController = [CQChatController defaultController].chatPresentationController;
-	[presentationController setStandardToolbarItems:@[] animated:NO];
-
-	splitViewController.viewControllers = @[[CQChatController defaultController].chatNavigationController, presentationController];
-	splitViewController.delegate = self;
-//	splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
-
-	_mainViewController = splitViewController;
+	_mainViewController = _rootContainerViewController.rootViewController;
 	_mainWindow.rootViewController = _mainViewController;
 }
 
@@ -325,6 +301,7 @@ static NSMutableArray *highlightWords;
 	[CQChatController defaultController];
 
 	_mainWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+	_rootContainerViewController = [[CQRootContainerViewController alloc] init];
 
 	return YES;
 }
@@ -423,94 +400,6 @@ static NSMutableArray *highlightWords;
 	self.appIconOptions = CQAppIconOptionConnect;
 
 	[self submitRunTime];
-}
-
-#pragma mark -
-
-- (UISplitViewControllerDisplayMode) targetDisplayModeForActionInSplitViewController:(UISplitViewController *) splitViewController {
-	NSUInteger allowedOrientation = [[CQSettingsController settingsController] integerForKey:@"CQSplitSwipeOrientations"];
-	if (allowedOrientation == CQSidebarOrientationNone)
-		return UISplitViewControllerDisplayModeAllVisible;
-
-	if (allowedOrientation == CQSidebarOrientationAll)
-		return UISplitViewControllerDisplayModePrimaryHidden;
-
-	UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
-	if (UIInterfaceOrientationIsLandscape(interfaceOrientation) && (allowedOrientation == CQSidebarOrientationLandscape))
-		return UISplitViewControllerDisplayModePrimaryHidden;
-
-	if (UIInterfaceOrientationIsPortrait(interfaceOrientation) && (allowedOrientation == CQSidebarOrientationPortrait))
-		return UISplitViewControllerDisplayModePrimaryHidden;
-
-	return UISplitViewControllerDisplayModeAllVisible;
-}
-
-- (void) splitViewController:(UISplitViewController *) splitViewController willChangeToDisplayMode:(UISplitViewControllerDisplayMode) displayMode {
-	if (displayMode == UISplitViewControllerDisplayModePrimaryHidden || displayMode == UISplitViewControllerDisplayModePrimaryOverlay)
-		[self cq_splitViewController:splitViewController willHideViewController:splitViewController.viewControllers.firstObject];
-	else [self cq_splitViewController:splitViewController willShowViewController:splitViewController.viewControllers.firstObject];
-}
-
-- (BOOL) splitViewController:(UISplitViewController *) splitViewController collapseSecondaryViewController:(UIViewController *) secondaryViewController ontoPrimaryViewController:(UIViewController *) primaryViewController {
-	if (!secondaryViewController)
-		return YES;
-
-	if ([secondaryViewController isKindOfClass:[CQChatPresentationController class]]) {
-		CQChatPresentationController *presentationController = (CQChatPresentationController *)secondaryViewController;
-		if (!presentationController.topChatViewController)
-			return YES;
-	}
-
-	return [secondaryViewController isFirstResponder];
-}
-
-- (BOOL) splitViewController:(UISplitViewController *) splitViewController showDetailViewController:(UIViewController *) viewController sender:(nullable id) sender {
-	[self cq_splitViewController:splitViewController willPresentViewController:viewController];
-
-	return NO;
-}
-
-- (void) cq_splitViewController:(UISplitViewController *) splitViewController willPresentViewController:(UIViewController *) viewController {
-	if (![viewController isKindOfClass:[CQChatNavigationController class]])
-		return;
-
-	CQChatNavigationController *navigationController = (CQChatNavigationController *)viewController;
-	((CQChatListViewController *)(navigationController.topViewController)).active = YES;
-}
-
-- (void) cq_splitViewController:(UISplitViewController *) splitViewController willHideViewController:(UIViewController *) viewController {
-	UIBarButtonItem *barButtonItem = splitViewController.displayModeButtonItem;
-	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;
-	NSMutableArray *items = [chatPresentationController.standardToolbarItems mutableCopy];
-
-	if (items.count && items[0] == barButtonItem)
-		return;
-
-	if (viewController == [CQChatController defaultController].chatNavigationController) {
-		_colloquiesBarButtonItem = barButtonItem;
-
-		[barButtonItem setTitle:@"Colloquies"];
-		[barButtonItem setAction:@selector(toggleColloquies:)];
-		[barButtonItem setTarget:self];
-	}
-
-	[items insertObject:barButtonItem atIndex:0];
-
-	[chatPresentationController setStandardToolbarItems:items animated:NO];
-}
-
-- (void) cq_splitViewController:(UISplitViewController *) splitViewController willShowViewController:(UIViewController *) viewController {
-	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;
-	NSMutableArray *items = [chatPresentationController.standardToolbarItems mutableCopy];
-
-	if (viewController == [CQChatController defaultController].chatNavigationController) {
-		NSAssert(_colloquiesBarButtonItem == splitViewController.displayModeButtonItem, @"Bar button item was not the known Colloquies bar button item.");
-		_colloquiesBarButtonItem = nil;
-	}
-
-	[items removeObjectIdenticalTo:splitViewController.displayModeButtonItem];
-
-	[chatPresentationController setStandardToolbarItems:items animated:NO];
 }
 
 #pragma mark -
@@ -668,19 +557,6 @@ static NSMutableArray *highlightWords;
 
 - (void) showConnections:(__nullable id) sender {
 	[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
-}
-
-- (void) toggleColloquies:(__nullable id) sender {
-	if (NO /* visible */) { /* hide */}
-	else [self showColloquies:sender];
-}
-
-- (void) showColloquies:(__nullable id) sender {
-	[self showColloquies:sender hidingTopViewController:YES];
-}
-
-- (void) showColloquies:(__nullable id) sender hidingTopViewController:(BOOL) hidingTopViewController {
-	if (NO /* visible */) { /* show */ [self dismissPopoversAnimated:YES]; }
 }
 
 - (void) dismissPopoversAnimated:(BOOL) animated {

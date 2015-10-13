@@ -574,7 +574,7 @@ static CQSoundController *fileTransferSound;
 	UINavigationController *navigationController = ((UIViewController *)_visibleChatController).navigationController;
 	if (navigationController == nil) {
 		navigationController = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)controller];
-		[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:navigationController sender:nil];
+		[_chatNavigationController.splitViewController showDetailViewController:navigationController sender:nil];
 	} else if (controller) navigationController.viewControllers = @[ controller ];
 
 	_visibleChatController = controller;
@@ -650,8 +650,6 @@ static CQSoundController *fileTransferSound;
 	[self showChatControllerWhenAvailableForRoomNamed:@"#colloquy-mobile" andConnection:connection];
 
 	[connection joinChatRoomNamed:@"#colloquy-mobile"];
-
-	[[CQColloquyApplication sharedApplication] showColloquies:nil];
 }
 
 #pragma mark -
