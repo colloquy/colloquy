@@ -90,7 +90,7 @@ typedef NS_ENUM(NSInteger, CQSidebarOrientation) {
 - (void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
 	[self.splitViewController viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 
-	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 		UISplitViewControllerDisplayMode displayMode = [self targetDisplayModeForActionInSplitViewController:self.splitViewController];
 		self.splitViewController.preferredDisplayMode = displayMode;
 
@@ -103,7 +103,7 @@ typedef NS_ENUM(NSInteger, CQSidebarOrientation) {
 - (void) willTransitionToTraitCollection:(UITraitCollection *) newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
 	[self.splitViewController willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
 
-	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 		UISplitViewControllerDisplayMode displayMode = self.splitViewController.displayMode;
 
 		BOOL displayModeDesiresButton = displayMode == UISplitViewControllerDisplayModePrimaryHidden || displayMode == UISplitViewControllerDisplayModePrimaryOverlay;
