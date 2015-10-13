@@ -537,7 +537,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[self _userDefaultsChanged];
 
-	transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] || ![self.splitViewController.delegate splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
+	transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] && !(self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryHidden || self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryOverlay));
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clear.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateNormal];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clearPressed.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateHighlighted];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButton.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
@@ -639,7 +639,7 @@ NS_ASSUME_NONNULL_BEGIN
 		if (isShowingCompletionsBeforeRotation)
 			[self _showChatCompletions];
 
-		transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] || ![self.splitViewController.delegate splitViewController:nil shouldHideViewController:nil inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
+		transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] && !(self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryHidden || self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryOverlay));
 	}];
 }
 
@@ -2065,7 +2065,7 @@ NS_ASSUME_NONNULL_BEGIN
 	transcriptView.fontFamily = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFont"];
 	transcriptView.fontSize = chatTranscriptFontSize;
 	transcriptView.timestampPosition = timestampEveryMessage ? (timestampOnLeft ? CQTimestampPositionLeft : CQTimestampPositionRight) : CQTimestampPositionCenter;
-	transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] || ![self.splitViewController.delegate splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
+	transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] && !(self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryHidden || self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryOverlay));
 
 	chatInputBar.font = [chatInputBar.font fontWithSize:chatTranscriptFontSize];
 	if ([self isViewLoaded] && transcriptView)
