@@ -141,6 +141,7 @@ static void generateDeviceIdentifier() {
 @implementation CQAnalyticsController {
 	NSMutableDictionary *_data;
 	BOOL _pendingSynchronize;
+	NSURLSession *_backgroundSession;
 }
 
 + (CQAnalyticsController *) defaultController {
@@ -171,6 +172,7 @@ static void generateDeviceIdentifier() {
 	}
 
 	_data = [[NSMutableDictionary alloc] initWithCapacity:10];
+	_backgroundSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"info.colloquy.mobi.backgroundSession"]];
 
 	generateDeviceIdentifier();
 
@@ -289,7 +291,7 @@ static void generateDeviceIdentifier() {
 	_data[deviceIdentifierKey] = deviceIdentifier;
 	_data[applicationNameKey] = applicationName;
 
-	[[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"info.colloquy.mobi.backgroundSession"]] dataTaskWithRequest:[self _urlRequest]];
+	[[_backgroundSession dataTaskWithRequest:[self _urlRequest]] resume];
 
 	[_data removeAllObjects];
 }
@@ -297,7 +299,7 @@ static void generateDeviceIdentifier() {
 #pragma mark -
 
 - (void) applicationWillTerminate {
-	[[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"info.colloquy.mobi.backgroundSession"]] dataTaskWithRequest:[self _urlRequest]];
+	[[_backgroundSession dataTaskWithRequest:[self _urlRequest]] resume];
 }
 @end
 
