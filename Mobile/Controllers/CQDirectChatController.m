@@ -225,7 +225,6 @@ NS_ASSUME_NONNULL_BEGIN
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:UIContentSizeCategoryDidChangeNotification object:nil];
 
-	NSLog(@"_showingKeyboard = %d", showingKeyboard);
 	_showingKeyboard = showingKeyboard;
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_nicknameDidChange:) name:MVChatUserNicknameChangedNotification object:nil];
@@ -1629,7 +1628,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) keyboardWillShow:(NSNotification *) notification {
 	_showingKeyboard = YES;
-	NSLog(@"_showingKeyboard = YES");
 
 	if (![self isViewLoaded] || !self.view.window)
 		return;
@@ -1652,7 +1650,6 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!_showingKeyboard)
 		return;
 
-	NSLog(@"_showingKeyboard = NO");
 	_showingKeyboard = NO;
 
 	if (![self isViewLoaded])
