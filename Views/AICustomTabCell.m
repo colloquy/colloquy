@@ -25,8 +25,8 @@ static NSImage		*tabFrontMiddle = nil;
 static NSImage		*tabFrontRight = nil;
 static NSImage		*tabCloseFront = nil;
 static NSImage		*tabCloseBack = nil;
-//static NSImage		*tabCloseFrontPressed = nil;
-//static NSImage		*tabCloseFrontRollover = nil;
+static NSImage		*tabCloseFrontPressed = nil;
+static NSImage		*tabCloseFrontRollover = nil;
 static NSSize		leftCapSize;
 static NSSize		rightCapSize;
 
@@ -67,9 +67,12 @@ static NSSize		rightCapSize;
 		tabFrontMiddle = [NSImage imageNamed:@"aquaTabMiddle"];
 		tabFrontRight = [NSImage imageNamed:@"aquaTabRight"];
 
-		tabCloseFront = [NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate];
-		tabCloseBack = [NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate];
-		//tabCloseFrontRollover = [NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate];
+		NSImage *stopTemp = [NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate];
+		//TODO: Darken/lighten based on what Cocoa/Apple's HIG expects, rather than manually...
+		tabCloseFront = [NSImage templateImage:stopTemp withColor:[NSColor colorWithCalibratedWhite:0.5 alpha:1] andSize:NSZeroSize];
+		tabCloseBack = [NSImage templateImage:stopTemp withColor:[NSColor colorWithCalibratedWhite:0.7 alpha:1] andSize:NSZeroSize];
+		tabCloseFrontPressed = [NSImage templateImage:stopTemp withColor:[NSColor colorWithCalibratedWhite:0.25 alpha:1] andSize:NSZeroSize];
+		tabCloseFrontRollover = [NSImage templateImage:stopTemp withColor:[NSColor colorWithCalibratedWhite:0.33 alpha:1] andSize:NSZeroSize];
 
 		leftCapSize = [tabFrontLeft size];
 		rightCapSize = [tabFrontRight size];
@@ -77,6 +80,8 @@ static NSSize		rightCapSize;
         haveLoadedImages = YES;
     }
 
+	//TODO: maybe we can use background styles somehow?
+	//self.backgroundStyle = NSBackgroundStyleRaised;
     tabViewItem = inTabViewItem;
 	view = inView;
     allowsInactiveTabClosing = NO;
@@ -252,7 +257,7 @@ static NSSize		rightCapSize;
 	NSImage *leftIcon = [tabViewItem icon];
 	if((hoveringClose && (selected || allowsInactiveTabClosing || ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ))) || !leftIcon){
 		if(hoveringClose){
-			leftIcon = tabCloseFront;// (trackingClose ? tabCloseFrontPressed : tabCloseFrontRollover);
+			leftIcon = (trackingClose ? tabCloseFrontPressed : tabCloseFrontRollover);
 		}else{
 			leftIcon = ((selected && !ignoreSelection) ? tabCloseFront : tabCloseBack);
 		}

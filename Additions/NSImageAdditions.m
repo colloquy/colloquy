@@ -57,6 +57,37 @@
 	[self dissolveToPoint:point fraction:delta];
 }
 
++ (NSImage *)templateName:(NSString *)templateName
+				withColor:(NSColor *)tint
+				  andSize:(CGSize)targetSize
+{
+	return [self templateImage:[NSImage imageNamed:templateName] withColor:tint andSize:targetSize];
+}
+
++ (NSImage *)templateImage:(NSImage *)template
+				 withColor:(NSColor *)tint
+				   andSize:(CGSize)targetSize
+{
+	NSSize size = (CGSizeEqualToSize(targetSize, CGSizeZero)
+				   ? [template size]
+				   : targetSize);
+	NSRect imageBounds = NSMakeRect(0, 0, size.width, size.height);
+	
+	NSImage *copiedImage = [template copy];
+	[copiedImage setTemplate:NO];
+	[copiedImage setSize:size];
+	
+	[copiedImage lockFocus];
+	
+	[tint set];
+	NSRectFillUsingOperation(imageBounds, NSCompositeSourceAtop);
+	
+	[copiedImage unlockFocus];
+	
+	return copiedImage;
+}
+
+
 + (NSImage *) imageFromPDF:(NSString *) pdfName {
 	static NSMutableDictionary *images = nil;
 	static dispatch_once_t onceToken;
