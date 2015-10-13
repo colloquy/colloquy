@@ -3,6 +3,7 @@
 #import "CQChatController.h"
 #import "CQChatListViewController.h"
 #import "CQChatNavigationController.h"
+#import "CQChatOrderingController.h"
 #import "CQChatPresentationController.h"
 
 typedef NS_ENUM(NSInteger, CQSidebarOrientation) {
@@ -13,20 +14,28 @@ typedef NS_ENUM(NSInteger, CQSidebarOrientation) {
 };
 
 @interface CQRootContainerViewController () <UISplitViewControllerDelegate>
-@property (strong) UISplitViewController *rootViewController;
+@property (strong) UISplitViewController *splitViewController;
 @end
 
 @implementation CQRootContainerViewController
 - (void) buildRootViewController {
-	UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
+	if (self.splitViewController) {
+		[self.splitViewController willMoveToParentViewController:nil];
+		[self.splitViewController.view removeFromSuperview];
+		[self.splitViewController removeFromParentViewController];
+	}
+
+	self.splitViewController = [[UISplitViewController alloc] init];
 	CQChatPresentationController *presentationController = [CQChatController defaultController].chatPresentationController;
 	[presentationController setStandardToolbarItems:@[] animated:NO];
 
-	splitViewController.viewControllers = @[[CQChatController defaultController].chatNavigationController, presentationController];
-	splitViewController.delegate = self;
-	splitViewController.preferredDisplayMode = [self targetDisplayModeForActionInSplitViewController:splitViewController];
+	self.splitViewController.viewControllers = @[[CQChatController defaultController].chatNavigationController, presentationController];
+	self.splitViewController.delegate = self;
+	self.splitViewController.preferredDisplayMode = [self targetDisplayModeForActionInSplitViewController:self.splitViewController];
 
-	self.rootViewController = splitViewController;
+	[self addChildViewController:self.splitViewController];
+	[self.view addSubview:self.splitViewController.view];
+	[self didMoveToParentViewController:self];
 }
 
 #pragma mark -
@@ -47,12 +56,6 @@ typedef NS_ENUM(NSInteger, CQSidebarOrientation) {
 		return UISplitViewControllerDisplayModePrimaryOverlay;
 
 	return UISplitViewControllerDisplayModeAllVisible;
-}
-
-- (void) splitViewController:(UISplitViewController *) splitViewController willChangeToDisplayMode:(UISplitViewControllerDisplayMode) displayMode {
-	if (displayMode == UISplitViewControllerDisplayModePrimaryHidden || displayMode == UISplitViewControllerDisplayModePrimaryOverlay)
-		[self cq_splitViewController:splitViewController willHideViewController:splitViewController.viewControllers.firstObject];
-	else [self cq_splitViewController:splitViewController willShowViewController:splitViewController.viewControllers.firstObject];
 }
 
 - (BOOL) splitViewController:(UISplitViewController *) splitViewController collapseSecondaryViewController:(UIViewController *) secondaryViewController ontoPrimaryViewController:(UIViewController *) primaryViewController {
@@ -82,18 +85,47 @@ typedef NS_ENUM(NSInteger, CQSidebarOrientation) {
 	((CQChatListViewController *)(navigationController.topViewController)).active = YES;
 }
 
-- (void) cq_splitViewController:(UISplitViewController *) splitViewController willHideViewController:(UIViewController *) viewController {
+#pragma mark -
+
+- (void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
+	[self.splitViewController viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		UISplitViewControllerDisplayMode displayMode = [self targetDisplayModeForActionInSplitViewController:self.splitViewController];
+		self.splitViewController.preferredDisplayMode = displayMode;
+
+		BOOL displayModeDesiresButton = displayMode == UISplitViewControllerDisplayModePrimaryHidden || displayMode == UISplitViewControllerDisplayModePrimaryOverlay;
+		BOOL traitCollectionAllowsButton = self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+		[self _updateRightNavigationItemButtonWithDisplayModeDesiresButton:displayModeDesiresButton traitCollectionAllowsButton:traitCollectionAllowsButton];
+	} completion:nil];
 }
 
-- (void) cq_splitViewController:(UISplitViewController *) splitViewController willShowViewController:(UIViewController *) viewController {
+- (void) willTransitionToTraitCollection:(UITraitCollection *) newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
+	[self.splitViewController willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
+
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		UISplitViewControllerDisplayMode displayMode = self.splitViewController.displayMode;
+
+		BOOL displayModeDesiresButton = displayMode == UISplitViewControllerDisplayModePrimaryHidden || displayMode == UISplitViewControllerDisplayModePrimaryOverlay;
+		BOOL traitCollectionAllowsButton = newCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+		[self _updateRightNavigationItemButtonWithDisplayModeDesiresButton:displayModeDesiresButton traitCollectionAllowsButton:traitCollectionAllowsButton];
+	} completion:nil];
 }
 
 #pragma mark -
 
-- (void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
-	UISplitViewController *splitViewController = (UISplitViewController *)self.rootViewController;
-	[coordinator animateAlongsideTransition:nil completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
-		splitViewController.preferredDisplayMode = [self targetDisplayModeForActionInSplitViewController:splitViewController];
-	}];
+- (void) _updateRightNavigationItemButtonWithDisplayModeDesiresButton:(BOOL) displayModeDesiresButton traitCollectionAllowsButton:(BOOL) traitCollectionAllowsButton {
+	for (UIViewController <CQChatViewController> *chatController in [CQChatOrderingController defaultController].chatViewControllers) {
+		if (displayModeDesiresButton && traitCollectionAllowsButton) {
+			UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Colloquies", @"Colloquies") style:UIBarButtonItemStylePlain target:self action:@selector(toggleColloquies:)];
+			chatController.navigationItem.leftBarButtonItem = item;
+		} else {
+			chatController.navigationItem.leftBarButtonItem = nil;
+		}
+	}
+}
+
+- (void) toggleColloquies:(id) sender {
+	self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModePrimaryOverlay;
 }
 @end

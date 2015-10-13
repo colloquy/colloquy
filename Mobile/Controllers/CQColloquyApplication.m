@@ -278,7 +278,7 @@ static NSMutableArray *highlightWords;
 - (void) reloadSplitViewController {
 	[_rootContainerViewController buildRootViewController];
 
-	_mainViewController = _rootContainerViewController.rootViewController;
+	_mainViewController = _rootContainerViewController;
 	_mainWindow.rootViewController = _mainViewController;
 }
 
