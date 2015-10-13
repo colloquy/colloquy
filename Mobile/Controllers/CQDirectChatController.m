@@ -225,9 +225,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:UIContentSizeCategoryDidChangeNotification object:nil];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-
+	NSLog(@"_showingKeyboard = %d", showingKeyboard);
 	_showingKeyboard = showingKeyboard;
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_nicknameDidChange:) name:MVChatUserNicknameChangedNotification object:nil];
@@ -242,7 +240,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 		[self.connection addChatUserWatchRule:_watchRule];
 
-		_revealKeyboard = YES;
+		_showingKeyboard = YES;
 	}
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(scrollbackLengthDidChange:) name:CQScrollbackLengthDidChangeNotification object:nil];
@@ -275,8 +273,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (!(self = [self initWithTarget:user]))
 		return nil;
-
-	_revealKeyboard = NO;
 
 	[self restorePersistentState:state usingConnection:connection];
 
@@ -545,16 +541,18 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) viewWillAppear:(BOOL) animated {
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+
+	if (_showingKeyboard || showingKeyboard || hardwareKeyboard)
+		[chatInputBar becomeFirstResponder];
+
 	[super viewWillAppear:animated];
 
 	[self _addPendingComponentsAnimated:NO];
 
 	if (self.connection.connected)
 		[_target setMostRecentUserActivity:[NSDate date]];
-
-	if (_showingKeyboard || showingKeyboard || hardwareKeyboard) {
-		_revealKeyboard = YES;
-	}
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(didNotBookmarkLink:) name:CQBookmarkingDidNotSaveLinkNotification object:nil];
 
@@ -578,11 +576,6 @@ NS_ASSUME_NONNULL_BEGIN
 	[self markAsRead];
 
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
-
-	if (_revealKeyboard) {
-		_revealKeyboard = NO;
-		[chatInputBar becomeFirstResponder];
-	}
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
@@ -1636,6 +1629,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) keyboardWillShow:(NSNotification *) notification {
 	_showingKeyboard = YES;
+	NSLog(@"_showingKeyboard = YES");
 
 	if (![self isViewLoaded] || !self.view.window)
 		return;
@@ -1658,6 +1652,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!_showingKeyboard)
 		return;
 
+	NSLog(@"_showingKeyboard = NO");
 	_showingKeyboard = NO;
 
 	if (![self isViewLoaded])
