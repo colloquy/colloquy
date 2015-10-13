@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (_listMode == CQChatUserListModeBan)
 		return;
 
-	_searchController = [[UISearchController alloc] initWithSearchResultsController:self];
+	_searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
 	_searchController.delegate = self;
 	_searchController.searchResultsUpdater = self;
 
