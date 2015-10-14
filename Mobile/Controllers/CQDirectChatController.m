@@ -513,8 +513,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	self.scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
-
 	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
 //	CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
 //	webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
@@ -1322,6 +1320,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL) handleTweetCommandWithArguments:(MVChatString *) arguments {
 	SLComposeViewController *composeViewController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+	if ([UIPasteboard generalPasteboard].string.length)
+		[composeViewController setInitialText:[UIPasteboard generalPasteboard].string];
+
+	if ([UIPasteboard generalPasteboard].URL)
+		[composeViewController addURL:[UIPasteboard generalPasteboard].URL];
+
+	if ([UIPasteboard generalPasteboard].image)
+		[composeViewController addImage:[UIPasteboard generalPasteboard].image];
+
 	composeViewController.completionHandler = ^(SLComposeViewControllerResult result) { /* do nothing */ };
 	[self.navigationController presentViewController:composeViewController animated:YES completion:NULL];
 
@@ -2067,7 +2074,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 	BOOL autocorrect = ![[CQSettingsController settingsController] boolForKey:@"CQDisableChatAutocorrection"];
 	chatInputBar.autocorrect = autocorrect;
-
 	chatInputBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
 	id capitalizationBehavior = [[CQSettingsController settingsController] objectForKey:@"CQChatAutocapitalizationBehavior"];
@@ -2082,7 +2088,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (![user.connection isEqual:[_target connection]])
 		return;
 
-	[transcriptView noteNicknameChangedFrom:(notification.userInfo)[@"oldNickname"] to:user.nickname];
+	[transcriptView noteNicknameChangedFrom:notification.userInfo[@"oldNickname"] to:user.nickname];
 
 	if (_target == user)
 		self.title = user.nickname;
