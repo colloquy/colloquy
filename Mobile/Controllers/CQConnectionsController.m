@@ -904,14 +904,14 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 - (void) _gotRawConnectionMessage:(NSNotification *) notification {
 	if (!_shouldLogRawMessagesToConsole)
 		return;
-//
-//	MVChatConnection *connection = notification.object;
-//	NSString *message = [notification userInfo][@"message"];
-//	BOOL outbound = [[notification userInfo][@"outbound"] boolValue];
-//
-//	if (connection.bouncerType == MVChatConnectionColloquyBouncer)
-//		NSLog(@"%@ (via %@): %@ %@", connection.server, connection.bouncerServer, (outbound ? @"<<" : @">>"), message);
-//	else NSLog(@"%@: %@ %@", connection.server, (outbound ? @"<<" : @">>"), message);
+
+	MVChatConnection *connection = notification.object;
+	NSString *message = [notification userInfo][@"message"];
+	BOOL outbound = [[notification userInfo][@"outbound"] boolValue];
+
+	if (connection.bouncerType == MVChatConnectionColloquyBouncer)
+		NSLog(@"%@ (via %@): %@ %@", connection.server, connection.bouncerServer, (outbound ? @"<<" : @">>"), message);
+	else NSLog(@"%@: %@ %@", connection.server, (outbound ? @"<<" : @">>"), message);
 }
 
 - (BOOL) _shouldDisableIdleTimer {
