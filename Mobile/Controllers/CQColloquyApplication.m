@@ -157,6 +157,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) performDeferredLaunchWork {
+#if !TARGET_IPHONE_SIMULATOR
 	NSString *hockeyappIdentifier = @"Hockeyapp_App_Identifier";
 	// Hacky check to make sure the identifier was replaced with a string that isn't ""
 	if (![hockeyappIdentifier hasPrefix:@"Hockeyapp"]) {
@@ -165,6 +166,7 @@ static NSMutableArray *highlightWords;
 
 		[[BITHockeyManager sharedHockeyManager] startManager];
 	}
+#endif
 
 	[self cq_beginReachabilityMonitoring];
 
@@ -461,7 +463,7 @@ static NSMutableArray *highlightWords;
 
 		__weak __typeof__((self)) weakSelf = self;
 
-		[_alertController addAction:[UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *action) {
+		UIAlertAction *action = [UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *selectedAction) {
 			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 
 			[strongSelf->_alertController removeFromParentViewController];
@@ -470,7 +472,12 @@ static NSMutableArray *highlightWords;
 			strongSelf->_overlappingPresentationViewController = nil;
 
 			[sheet.delegate actionSheet:sheet clickedButtonAtIndex:i];
-		}]];
+		}];
+
+		[_alertController addAction:action];
+
+		if (i == sheet.cancelButtonIndex && [_alertController respondsToSelector:@selector(setPreferredAction:)])
+			_alertController.preferredAction = action;
 	}
 
 	[_overlappingPresentationViewController presentViewController:_alertController animated:YES completion:nil];

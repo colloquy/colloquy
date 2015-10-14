@@ -79,10 +79,15 @@ NS_ASSUME_NONNULL_BEGIN
 		if (i == self.cancelButtonIndex) style = UIAlertActionStyleCancel;
 
 		__weak __typeof__((self)) weakSelf = self;
-		[self.alertController addAction:[UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *action) {
+		UIAlertAction *action = [UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *selectedAction) {
 			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 			[strongSelf _dismissWithClickAtIndex:i];
-		}]];
+		}];
+
+		[self.alertController addAction:action];
+
+		if (i == self.cancelButtonIndex && [self.alertController respondsToSelector:@selector(setPreferredAction:)])
+			self.alertController.preferredAction = action;
 	}
 
 	CGRect rect = CGRectZero;
