@@ -847,7 +847,9 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionQueue socketQueue:_connectionQueue];
 	_chatConnection.IPv6Enabled = YES;
 	_chatConnection.IPv4PreferredOverIPv6 = YES;
+#if TARGET_OS_IPHONE
 	[_chatConnection enableExtendBackgroundIdleMode];
+#endif
 	[old setDelegate:nil];
 	[old disconnect];
 
