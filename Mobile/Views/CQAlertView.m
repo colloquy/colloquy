@@ -78,10 +78,8 @@ NS_ASSUME_NONNULL_BEGIN
 		UIAlertActionStyle style = UIAlertActionStyleDefault;
 		if (i == self.cancelButtonIndex) style = UIAlertActionStyleCancel;
 
-		__weak __typeof__((self)) weakSelf = self;
 		UIAlertAction *action = [UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *selectedAction) {
-			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-			[strongSelf _dismissWithClickAtIndex:i];
+			[self _dismissWithClickAtIndex:i];
 		}];
 
 		[self.alertController addAction:action];
