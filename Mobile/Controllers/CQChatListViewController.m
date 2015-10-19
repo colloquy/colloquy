@@ -622,6 +622,15 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (self.editing)
 		sectionIndex++;
 
+	// this happens in situations where bouncers send lots of data in rapid succession, or bouncer hostnames + usernames are small
+	// and we have multiple bouncers to parse/insert at once
+	__strong __typeof__((self.tableView.dataSource)) dataSource = self.tableView.dataSource;
+	if ([dataSource numberOfSectionsInTableView:self.tableView] > sectionIndex) {
+		[self.tableView reloadData];
+		[self _refreshIndexPathForChatControllersCache];
+		return;
+	}
+
 	[self.tableView beginUpdates];
 	[self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
 	[self.tableView endUpdates];
@@ -917,6 +926,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	if (self.editing)
 		numberOfSections++;
+	NSLog(@"%zd sections", numberOfSections);
 	return numberOfSections;
 }
 
@@ -1054,6 +1064,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	UITableViewRowAction *leaveAction = nil;
 	id <CQChatViewController> chatViewController = chatControllerForIndexPath(indexPath);
+	if (!chatViewController)
+		return nil;
+
 	BOOL canPartRoom = ([chatViewController isMemberOfClass:[CQChatRoomController class]] && chatViewController.available);
 	if (canPartRoom) {
 		leaveAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:NSLocalizedString(@"Leave", @"Leave confirmation button title") handler:^(UITableViewRowAction *action, NSIndexPath *actionIndexPath) {
@@ -1063,16 +1076,15 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	}
 
 	UITableViewRowAction *closeAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:NSLocalizedString(@"Close", @"Close confirmation button title") handler:^(UITableViewRowAction *action, NSIndexPath *actionIndexPath) {
-		if (canPartRoom) {
+		if (canPartRoom)
 			partRoom(chatViewController);
-		}
 		[self _closeChatViewControllers:@[chatViewController] forConnection:chatViewController.connection withRowAnimation:UITableViewRowAnimationAutomatic];
 	}];
 
 	if (leaveAction) {
 		closeAction.backgroundColor = [UIColor colorWithWhite:(200. / 255.) alpha:1.];
 
-		return @[leaveAction, closeAction];
+		return @[ leaveAction, closeAction ];
 	}
 
 	return @[closeAction];
