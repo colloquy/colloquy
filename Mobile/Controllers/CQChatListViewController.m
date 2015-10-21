@@ -926,7 +926,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	if (self.editing)
 		numberOfSections++;
-	NSLog(@"%zd sections", numberOfSections);
+
 	return numberOfSections;
 }
 
