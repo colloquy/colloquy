@@ -3,7 +3,7 @@
 @class CQChatUserListViewController;
 
 typedef NS_ENUM(NSInteger, CQChatRoomBatchType) {
-	CQBatchTypeJoins = CQBatchTypeBuffer + 1,
+	CQBatchTypeJoins = 1000,
 	CQBatchTypeParts
 };
 
