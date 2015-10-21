@@ -112,10 +112,12 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 			<array>
 				<string></string>
 				<string>AmericanTypewriter</string>
+				<string>Athelas-Regular</string>
 				<string>Avenir-Medium</string>
 				<string>AvenirNext-Medium</string>
 				<string>Baskerville</string>
 				<string>BookAntiqua</string>
+				<string>Charter-Roman</string>
 				<string>ComicSansMS</string>
 				<string>Courier</string>
 				<string>CourierNewPSMT</string>
@@ -130,13 +132,17 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 				<string>HoeflerText-Regular</string>
 				<string>Impact</string>
 				<string>Iowan</string>
+				<string>Kefa-Regular</string>
 				<string>LucidaGrande</string>
 				<string>MarkerFelt-Thin</string>
 				<string>Menlo</string>
 				<string>MicrosoftSansSerif</string>
 				<string>OpenDyslexic-Regular</string>
 				<string>Optima-Regular</string>
+				<string>Osaka</string>
+				<string>Osaka-Mono</string>
 				<string>Palatino-Roman</string>
+				<string>PTMono-Regular</string>
 				<string>Superclarendon</string>
 				<string>Tahoma</string>
 				<string>Thonburi</string>
@@ -148,10 +154,12 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 			<array>
 				<string>Style Default</string>
 				<string>American Typewriter</string>
+				<string>Athelas</string>
 				<string>Avenir</string>
 				<string>Avenir Next</string>
 				<string>Baskerville</string>
 				<string>Book Antiqua</string>
+				<string>Charter</string>
 				<string>Comic Sans</string>
 				<string>Courier</string>
 				<string>Courier New</string>
@@ -166,13 +174,17 @@ Except as contained in this notice, the names of Gnome, the Gnome Foundation, an
 				<string>Hoefler Text</string>
 				<string>Impact</string>
 				<string>Iowan Old Style</string>
+				<string>Kefa</string>
 				<string>Lucida Grande</string>
 				<string>Marker Felt</string>
 				<string>Menlo</string>
 				<string>Microsoft Sans Serif</string>
 				<string>OpenDyslexic</string>
 				<string>Optima</string>
+				<string>Osaka</string>
+				<string>Osaka Monospace</string>
 				<string>Palatino</string>
+				<string>PTMono</string>
 				<string>Superclarendon</string>
 				<string>Tahoma</string>
 				<string>Thonburi</string>
