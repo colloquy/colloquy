@@ -252,7 +252,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 		// Work around iOS 7 bug where the input view frame doesn't update right away after being set, causing text to be clipped.
 		_inputView.frame = _inputView.frame;
-		_inputView.contentSize = CGSizeMake(floorf((_inputView.frame.size.width - (_inputView.frame.origin.x * 2))), (numberOfLines * self._lineHeight));
+
+		CGFloat contentWidth = floorf((_inputView.frame.size.width - (_inputView.frame.origin.x * 2)));
+		CGFloat contentHeight = ceilf((numberOfLines * self._lineHeight));
+		contentHeight += (fabs(_inputView.contentInset.top) * numberOfLines + 1);
+		_inputView.contentSize = CGSizeMake(contentWidth, height);
+		_inputView.scrollEnabled = (contentHeight >= CGRectGetHeight(_inputView.frame));
+
+		if (_inputView.scrollEnabled)
+			_inputView.contentOffset = CGPointMake(_inputView.contentOffset.x, _inputView.contentOffset.y + fabs(_inputView.contentInset.top));
 	}
 }
 
@@ -438,7 +446,6 @@ retry:
 	if (_inputView.hasText || self._hasMarkedText) {
 		NSUInteger numberOfLines = self._numberOfLines;
 		CGFloat contentHeight = fminf(numberOfLines * self._lineHeight, self._maxLineHeight);
-		_inputView.scrollEnabled = (contentHeight >= self._maxLineHeight);
 		[self setHeight:contentHeight numberOfLines:numberOfLines];
 	} else {
 		[self _resetTextViewHeight];
@@ -821,9 +828,7 @@ retry:
 }
 
 - (void) _resetTextViewHeight {
-	[self setHeight:self._lineHeight numberOfLines:0];
-
-	_inputView.scrollEnabled = NO;
+	[self setHeight:self._lineHeight numberOfLines:1];
 }
 
 - (void) _resetTextAttributes {
@@ -871,18 +876,14 @@ retry:
 - (void) _updateImagesForResponderState {
 	CQChatInputBarResponderState activeResponderState = _responderState;
 	if (!_inputView.hasText)
-	{
 		activeResponderState = CQChatInputBarNotResponder;
-	}
 
 	UIImage *defaultImage = _accessoryImages[@(activeResponderState)][@(UIControlStateNormal)];
 	if (defaultImage)
 		[_accessoryButton setImage:defaultImage forState:UIControlStateNormal];
 
 	UIImage *pressedImage = _accessoryImages[@(activeResponderState)][@(UIControlStateHighlighted)];
-	if (pressedImage)
-		[_accessoryButton setImage:pressedImage forState:UIControlStateHighlighted];
-	else [_accessoryButton setImage:nil forState:UIControlStateHighlighted];
+	[_accessoryButton setImage:pressedImage forState:UIControlStateHighlighted];
 }
 
 #pragma mark -
@@ -894,7 +895,7 @@ retry:
 - (CGFloat) _lineHeight {
 	if (!_inputView.font)
 		return CQLineHeight;
-	return fmaxf(CQLineHeight, [@"Jy" sizeWithAttributes:@{ NSFontAttributeName: _inputView.font }].height);
+	return ceilf(fmaxf(CQLineHeight, _inputView.font.lineHeight));
 }
 
 - (CGFloat) _inactiveLineHeight {
