@@ -432,7 +432,8 @@ NS_ASSUME_NONNULL_BEGIN
 	if (shouldPresentInformation) {
 		UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 
-		UIActionSheet *sheet = [UIActionSheet userActionSheetForUser:user inRoom:_room showingUserInformation:NO];
+		BOOL showingUserInformation = _listMode == CQChatUserListModeRoom && !self.view.window.isFullscreen;
+		UIActionSheet *sheet = [UIActionSheet userActionSheetForUser:user inRoom:_room showingUserInformation:showingUserInformation];
 		sheet.title = cell.textLabel.text;
 
 		[sheet associateObject:cell forKey:@"userInfo"];
