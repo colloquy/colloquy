@@ -1738,7 +1738,7 @@ end:
 		MVChatString *msg = nil;
 
 		[argumentsScanner scanUpToCharactersFromSet:whitespaceCharacters intoString:&targetName];
-		if( [whitespaceCharacters characterIsMember:[argumentsScanner.string characterAtIndex:argumentsScanner.scanLocation]] )
+		if( ![argumentsScanner isAtEnd] && [whitespaceCharacters characterIsMember:[argumentsScanner.string characterAtIndex:argumentsScanner.scanLocation]] )
 			argumentsScanner.scanLocation++;
 
 		if( !targetName.length ) return;

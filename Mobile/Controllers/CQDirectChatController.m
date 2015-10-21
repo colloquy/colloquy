@@ -1054,7 +1054,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleMsgCommandWithArguments:(MVChatString *) arguments {
-	if (!MVChatStringAsString(arguments).length) {
+	if (!arguments.length) {
 		[self _showChatCreationViewController];
 
 		return YES;
@@ -1068,17 +1068,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (targetName.length > 1 && [[self.connection chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]]) {
 		MVChatRoom *room = [self.connection chatRoomWithUniqueIdentifier:targetName];
-		CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:YES];
+		CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:NO];
 		if (controller) [[CQChatController defaultController] showChatController:controller animated:YES];
 	} else {
 		MVChatUser *user = [[self.connection chatUsersWithNickname:targetName] anyObject];
-		CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:YES];
+		CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:NO];
 		[[CQChatController defaultController] showChatController:controller animated:YES];
 		if (controller) [[CQChatController defaultController] showChatController:controller animated:YES];
 	}
 
-	// Return NO so the command is handled in ChatCore.
-	return NO;
+	// If we have a message, return NO so the command is handled in ChatCore.
+	return [argumentsScanner isAtEnd];
 }
 
 - (BOOL) handleNoticeCommandWithArguments:(MVChatString *) arguments {
