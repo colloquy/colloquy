@@ -1032,13 +1032,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL) handleJoinCommandWithArguments:(MVChatString *__nullable) arguments {
 	if (![arguments.string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
-		CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
-		creationViewController.roomTarget = YES;
-		creationViewController.selectedConnection = self.connection;
-
-		[self _forceResignKeyboard];
-
-		[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
+		[self _showChatCreationViewController];
 
 		return YES;
 	}
@@ -1058,6 +1052,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleMsgCommandWithArguments:(MVChatString *) arguments {
+	if (!MVChatStringAsString(arguments).length) {
+		[self _showChatCreationViewController];
+
+		vreturn YES;
+	}
+
 	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments.string];
 	[argumentsScanner setCharactersToBeSkipped:nil];
 
@@ -1944,6 +1944,18 @@ NS_ASSUME_NONNULL_BEGIN
 	if (inputBarAsResponder)
 		[chatInputBar becomeFirstResponder];
 	else [transcriptView becomeFirstResponder];
+}
+
+#pragma mark -
+
+- (void) _showChatCreationViewController {
+	CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
+	creationViewController.roomTarget = YES;
+	creationViewController.selectedConnection = self.connection;
+
+	[self _forceResignKeyboard];
+
+	[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
 }
 
 #pragma mark -
