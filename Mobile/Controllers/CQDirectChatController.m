@@ -187,10 +187,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (NSOperationQueue *) chatMessageProcessingQueue {
-	if (!chatMessageProcessingQueue) {
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
 		chatMessageProcessingQueue = [[NSOperationQueue alloc] init];
 		chatMessageProcessingQueue.maxConcurrentOperationCount = 1;
-	}
+		chatMessageProcessingQueue.qualityOfService = NSQualityOfServiceUserInitiated;
+	});
 
 	return chatMessageProcessingQueue;
 }
@@ -1055,7 +1057,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!MVChatStringAsString(arguments).length) {
 		[self _showChatCreationViewController];
 
-		vreturn YES;
+		return YES;
 	}
 
 	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments.string];
