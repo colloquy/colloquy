@@ -59,7 +59,11 @@ NS_ASSUME_NONNULL_BEGIN
 		return nil;
 
 	_room = room;
-	[_room.connection sendRawMessageWithFormat:@"MODE %@", _room.name];
+
+	if (infoType == CQChatRoomInfoModes)
+		[_room.connection sendRawMessageWithFormat:@"MODE %@", _room.name];
+	else if (infoType == CQChatRoomInfoBans)
+		[_room.connection sendRawMessageWithFormat:@"MODE %@ b", _room.name];
 
 	_infoType = infoType;
 
@@ -86,18 +90,6 @@ NS_ASSUME_NONNULL_BEGIN
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_roomModesChanged:) name:MVChatRoomModesChangedNotification object:_room];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_refreshBanList:) name:MVChatRoomBannedUsersSyncedNotification object:_room];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_topicChanged:) name:MVChatRoomTopicChangedNotification object:_room];
-}
-
-- (void) viewWillAppear:(BOOL) animated {
-	[super viewWillAppear:animated];
-
-	[self.navigationController setToolbarHidden:NO animated:[UIView areAnimationsEnabled]];
-}
-
-- (void) viewWillDisappear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-
-	[self.navigationController setToolbarHidden:YES animated:[UIView areAnimationsEnabled]];
 }
 
 #pragma mark -
@@ -129,6 +121,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (_infoType != CQChatRoomInfoBans)
 		return;
+
+	[self.tableView reloadData];
 }
 
 #pragma mark -
@@ -347,7 +341,10 @@ NS_ASSUME_NONNULL_BEGIN
 		self.title = NSLocalizedString(@"Topic", @"Topic segment title");
 		self.tableView.rowHeight = [CQPreferencesTextViewCell height];
 	} else {
-		self.title = NSLocalizedString(@"Modes", @"Modes segment title");
+		if (_infoType == CQChatRoomInfoModes)
+			self.title = NSLocalizedString(@"Modes", @"Modes segment title");
+		else if (_infoType == CQChatRoomInfoBans)
+			self.title = NSLocalizedString(@"Bans", @"Bans segment title");
 		self.tableView.rowHeight = CQDefaultRowHeight;
 	}
 
