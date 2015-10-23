@@ -153,7 +153,7 @@ NS_ASSUME_NONNULL_BEGIN
 		if (!self.items.count)
 			return;
 
-		_connection.awayStatusMessage = self.items[indexPath.row];
+		_connection.awayStatusMessage = [[NSAttributedString alloc] initWithString:self.items[indexPath.row]];
 
 		[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 	}
