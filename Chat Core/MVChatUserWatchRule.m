@@ -20,7 +20,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	NSString *_username;
 	NSString *_address;
 	NSData *_publicKey;
-	NSArray *_applicableServerDomains;
+	NSArray <NSString *> *_applicableServerDomains;
 	BOOL _nicknameIsRegex;
 	BOOL _realNameIsRegex;
 	BOOL _usernameIsRegex;
@@ -265,11 +265,11 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	_interim = interim;
 }
 
-- (NSArray *) applicableServerDomains {
+- (NSArray <NSString *> *) applicableServerDomains {
 	return _applicableServerDomains;
 }
 
-- (void) setApplicableServerDomains:(NSArray *) serverDomains {
+- (void) setApplicableServerDomains:(NSArray <NSString *> *) serverDomains {
 	MVSafeCopyAssign( _applicableServerDomains, serverDomains );
 }
 @end

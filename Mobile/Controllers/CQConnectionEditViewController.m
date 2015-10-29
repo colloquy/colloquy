@@ -49,7 +49,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 @implementation CQConnectionEditViewController {
 	MVChatConnection *_connection;
-	NSArray *_servers;
+	NSArray <NSDictionary *> *_servers;
 	BOOL _newConnection;
 }
 
@@ -120,7 +120,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		_servers = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Servers" ofType:@"plist"]];
 
 	CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
-	NSMutableArray *servers = [[NSMutableArray alloc] init];
+	NSMutableArray <NSString *> *servers = [[NSMutableArray alloc] init];
 	NSUInteger selectedServerIndex = NSNotFound;
 
 	NSUInteger index = 0;
@@ -392,7 +392,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			cell.textLabel.text = NSLocalizedString(@"Join Rooms", @"Join Rooms connection setting label");
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-			NSArray *rooms = _connection.automaticJoinedRooms;
+			NSArray <NSString *> *rooms = _connection.automaticJoinedRooms;
 			if (rooms.count)
 				cell.detailTextLabel.text = [NSString stringWithFormat:@"%tu", rooms.count];
 			else cell.detailTextLabel.text = NSLocalizedString(@"None", @"None label");

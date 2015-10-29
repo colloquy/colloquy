@@ -10,7 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 extern NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature;
 
 @interface MVIRCChatConnection : MVChatConnection
-+ (NSArray *) defaultServerPorts;
++ (NSArray <NSNumber *> *) defaultServerPorts;
 @end
 
 #pragma mark -

@@ -6,7 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) updateCellAtIndexPath:(NSIndexPath *) indexPath withAnimation:(UITableViewRowAnimation) animation {
 	NSParameterAssert(indexPath != nil);
 
-	NSArray *indexPaths = @[indexPath];
+	NSArray <NSIndexPath *> *indexPaths = @[indexPath];
 
 	NSIndexPath *selectedIndexPath = [self indexPathForSelectedRow];
 	BOOL selected = (selectedIndexPath && indexPath.section == selectedIndexPath.section && indexPath.row == selectedIndexPath.row);

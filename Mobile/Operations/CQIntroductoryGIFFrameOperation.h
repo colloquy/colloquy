@@ -6,11 +6,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSURL *url;
 
-@property (nonatomic, readonly) NSData *introductoryFrameImageData;
+@property (nonatomic, readonly) NSData *__nullable introductoryFrameImageData;
 #if TARGET_OS_IPHONE
-@property (nonatomic, readonly) UIImage *introductoryFrameImage;
+@property (nonatomic, readonly) UIImage *__nullable introductoryFrameImage;
 #else
-@property (nonatomic, readonly) NSImage *introductoryFrameImage;
+@property (nonatomic, readonly) NSImage *__nullable introductoryFrameImage;
 #endif
 
 // - If you want a block-based completion handler, remember that -completionBlock is already built into NSOperation.
@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak) id target;
 @property SEL action; // Signature: - (void) operationCompleted:(CQIntroductoryGIFFrameOperation *) operation;
 @property (strong) id userInfo;
+
+@property BOOL loggingEnabled;
 @end
 
 NS_ASSUME_NONNULL_END

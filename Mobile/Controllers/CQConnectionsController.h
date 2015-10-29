@@ -1,6 +1,7 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 
+@class CQBouncerConnection;
 @class CQBouncerSettings;
 @class CQConnectionsNavigationController;
 @class CQIgnoreRulesController;
@@ -22,8 +23,8 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 @property (nonatomic, readonly) NSSet *connections;
 @property (nonatomic, readonly) NSSet *connectedConnections;
 
-@property (nonatomic, readonly) NSArray *directConnections;
-@property (nonatomic, readonly) NSArray *bouncers;
+@property (nonatomic, readonly) NSArray <MVChatConnection *> *directConnections;
+@property (nonatomic, readonly) NSArray <CQBouncerSettings *> *bouncers;
 
 @property (nonatomic) BOOL shouldLogRawMessagesToConsole;
 
@@ -42,7 +43,7 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 
 - (MVChatConnection *) connectionForUniqueIdentifier:(NSString *) identifier;
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address;
-- (NSArray *) connectionsForServerAddress:(NSString *) address;
+- (NSArray <MVChatConnection *> *) connectionsForServerAddress:(NSString *) address;
 - (BOOL) managesConnection:(MVChatConnection *) connection;
 
 - (void) addConnection:(MVChatConnection *) connection;
@@ -56,7 +57,7 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 - (void) moveConnectionAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex forBouncerIdentifier:(NSString *) identifier;
 
 - (CQBouncerSettings *) bouncerSettingsForIdentifier:(NSString *) identifier;
-- (NSArray *) bouncerChatConnectionsForIdentifier:(NSString *) identifier;
+- (NSArray <MVChatConnection *> *) bouncerChatConnectionsForIdentifier:(NSString *) identifier;
 
 - (void) refreshBouncerConnectionsWithBouncerSettings:(CQBouncerSettings *) settings;
 
@@ -73,8 +74,8 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 + (NSStringEncoding) defaultEncoding;
 
 @property (nonatomic, copy) NSString *displayName;
-@property (nonatomic, copy) NSArray *automaticJoinedRooms;
-@property (nonatomic, copy) NSArray *automaticCommands;
+@property (nonatomic, copy) NSArray <NSString *> *automaticJoinedRooms;
+@property (nonatomic, copy) NSArray <NSString *> *automaticCommands;
 @property (nonatomic) BOOL automaticallyConnect;
 @property (nonatomic) BOOL consoleOnLaunch;
 @property (nonatomic) BOOL multitaskingSupported;

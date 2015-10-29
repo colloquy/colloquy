@@ -910,11 +910,11 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	return [self attributedSubstringFromRange:NSMakeRange(index, length - index)];
 }
 
-- (NSArray *) cq_componentsSeparatedByCharactersInSet:(NSCharacterSet *) characterSet {
+- (NSArray <NSAttributedString *> *) cq_componentsSeparatedByCharactersInSet:(NSCharacterSet *) characterSet {
 	NSParameterAssert(characterSet);
 
-	NSArray *stringComponentsSeparatedByCharactersInSet = [self.string componentsSeparatedByCharactersInSet:characterSet];
-	NSMutableArray *componentsSeparatedByCharactersInSet = [NSMutableArray array];
+	NSArray <NSString *> *stringComponentsSeparatedByCharactersInSet = [self.string componentsSeparatedByCharactersInSet:characterSet];
+	NSMutableArray <NSAttributedString *> *componentsSeparatedByCharactersInSet = [NSMutableArray array];
 	NSUInteger currentIndex = 0;
 	for (NSString *string in stringComponentsSeparatedByCharactersInSet) {
 		[componentsSeparatedByCharactersInSet addObject:[self attributedSubstringFromRange:NSMakeRange(currentIndex, string.length)]];

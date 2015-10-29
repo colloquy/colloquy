@@ -21,7 +21,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #define BrowserAlertTag 1
 
-static NSMutableArray *highlightWords;
+static NSMutableArray <NSString *> *highlightWords;
 
 @interface CQColloquyApplication () <UIApplicationDelegate, UIAlertViewDelegate, BITHockeyManagerDelegate>
 @end
@@ -68,9 +68,9 @@ static NSMutableArray *highlightWords;
 	if (!schemes) {
 		schemes = [[NSMutableSet alloc] init];
 
-		NSArray *urlTypes = [NSBundle mainBundle].infoDictionary[@"CFBundleURLTypes"];
+		NSArray <NSString *> *urlTypes = [NSBundle mainBundle].infoDictionary[@"CFBundleURLTypes"];
 		for (NSDictionary *type in urlTypes) {
-			NSArray *schemesForType = type[@"CFBundleURLSchemes"];
+			NSArray <NSString *> *schemesForType = type[@"CFBundleURLSchemes"];
 			for (NSString *scheme in schemesForType)
 				[schemes addObject:scheme.lowercaseString];
 		}
@@ -79,7 +79,7 @@ static NSMutableArray *highlightWords;
 	return schemes;
 }
 
-- (NSArray *) highlightWords {
+- (NSArray <NSString *> *) highlightWords {
 	if (!highlightWords) {
 		highlightWords = [[NSMutableArray alloc] init];
 
@@ -291,8 +291,9 @@ static NSMutableArray *highlightWords;
 	NSString *fontName = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptFont"];
 	UIFont *font = [UIFont fontWithName:fontName size:12.];
 	UIFont *systemFont = [UIFont systemFontOfSize:12.];
-	if ((!font || [font.familyName isCaseInsensitiveEqualToString:systemFont.familyName]) && [[UIFont cq_availableRemoteFontNames] containsObject:fontName])
-		[UIFont cq_loadFontWithName:fontName withCompletionHandler:NULL];
+
+	if (!font || [font.familyName isCaseInsensitiveEqualToString:systemFont.familyName])
+		[UIFont cq_loadRemoteFontWithName:fontName completionHandler:NULL];
 
 	if ([[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"] == 600.)
 		[[NSUserDefaults standardUserDefaults] setDouble:300. forKey:@"CQMultitaskingTimeout"];
@@ -685,7 +686,7 @@ static NSMutableArray *highlightWords;
 
 	_appIconOptions = appIconOptions;
 
-	NSMutableArray *options = [NSMutableArray array];
+	NSMutableArray <UIMutableApplicationShortcutItem *> *options = [NSMutableArray array];
 	if ((appIconOptions & CQAppIconOptionConnect) == CQAppIconOptionConnect)
 		[options addObject:[[UIMutableApplicationShortcutItem alloc] initWithType:@"CQAppShortcutConnect" localizedTitle:NSLocalizedString(@"Connect", @"Connect")]];
 

@@ -1,9 +1,3 @@
-@interface CQActivitiesProvider : NSObject
-+ (NSArray /* <CQActivity> */ *)activities;
-@end
-
-#pragma mark -
-
 @interface CQActivity : UIActivity
 @end
 
@@ -23,3 +17,9 @@ CQActivitySubclass(CQChatRoomTopicActivity, showRoomTopic)
 CQActivitySubclass(CQChatRoomBansActivity, showRoomBans)
 
 #undef CQActivitySubclass
+
+#pragma mark -
+
+@interface CQActivitiesProvider : NSObject
++ (NSArray <CQActivity *> *)activities;
+@end

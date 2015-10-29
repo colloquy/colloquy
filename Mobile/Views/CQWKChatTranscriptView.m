@@ -22,8 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation CQWKChatTranscriptView {
 @protected
 	UIView *_blockerView;
-	NSMutableArray *_pendingPreviousSessionComponents;
-	NSMutableArray *_pendingComponents;
+	NSMutableArray <NSDictionary *> *_pendingPreviousSessionComponents;
+	NSMutableArray <NSDictionary *> *_pendingComponents;
 	BOOL _scrolling;
 	BOOL _loading;
 	BOOL _resetPending;
@@ -307,7 +307,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) addPreviousSessionComponents:(NSArray *) components {
+- (void) addPreviousSessionComponents:(NSArray <NSDictionary *> *) components {
 	NSParameterAssert(components != nil);
 
 	if (_loading || _resetPending) {
@@ -323,7 +323,7 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 }
 
-- (void) addComponents:(NSArray *) components animated:(BOOL) animated {
+- (void) addComponents:(NSArray <NSDictionary *> *) components animated:(BOOL) animated {
 	NSParameterAssert(components != nil);
 
 	if (_loading || _resetPending) {

@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	self.title = NSLocalizedString(@"Create Away Status…", @"Create Away Status title");
 
-	NSMutableArray *awayStatuses = [[[CQSettingsController settingsController] arrayForKey:@"CQAwayStatuses"] mutableCopy];
+	NSMutableArray <NSString *> *awayStatuses = [[[CQSettingsController settingsController] arrayForKey:@"CQAwayStatuses"] mutableCopy];
 	if (!awayStatuses)
 		awayStatuses = [[NSMutableArray alloc] init];
 
@@ -215,7 +215,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) updateAwayStatuses:(CQPreferencesListViewController *) sender {
-	NSMutableArray *awayStatuses = [[NSMutableArray alloc] initWithCapacity:sender.items.count];
+	NSMutableArray <NSString *> *awayStatuses = [[NSMutableArray alloc] initWithCapacity:sender.items.count];
 
 	for (__strong NSString *awayStatus in sender.items) {
 		awayStatus = [awayStatus stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];

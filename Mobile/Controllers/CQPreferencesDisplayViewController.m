@@ -166,7 +166,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 				[strongPreferences addObject:workingSection];
 			}
 
-			NSArray *supportedInterfaceIdioms = object[CQPSSupportedUserInterfaceIdioms];
+			NSArray <NSString *> *supportedInterfaceIdioms = object[CQPSSupportedUserInterfaceIdioms];
 			BOOL supportsCurrentInterfaceIdiom = YES;
 			if (supportedInterfaceIdioms) {
 				supportsCurrentInterfaceIdiom = NO;

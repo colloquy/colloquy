@@ -5,7 +5,7 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation NSFileManager (MoreAdditions)
 // Image formats from https://developer.apple.com/library/ios/#documentation/uikit/reference/UIImage_Class/Reference/Reference.html
 + (BOOL) isValidImageFormat:(NSString *) extension {
-	static NSArray *validExtensions = nil;
+	static NSArray <NSString *> *validExtensions = nil;
 
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Audio and video formats from http://developer.apple.com/library/ios/DOCUMENTATION/AppleApplications/Reference/SafariWebContent/SafariWebContent.pdf
 + (BOOL) isValidAudioFormat:(NSString *) extension {
-	static NSArray *validExtensions = nil;
+	static NSArray <NSString *> *validExtensions = nil;
 
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (BOOL) isValidVideoFormat:(NSString *) extension {
-	static NSArray *validExtensions = nil;
+	static NSArray <NSString *> *validExtensions = nil;
 
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{

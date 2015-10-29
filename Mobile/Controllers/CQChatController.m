@@ -462,12 +462,12 @@ static CQSoundController *fileTransferSound;
 #pragma mark -
 
 - (NSDictionary *) persistentStateForConnection:(MVChatConnection *) connection {
-	NSArray *controllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
+	NSArray <id <CQChatViewController>> *controllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
 	if (!controllers.count)
 		return nil;
 
 	NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
-	NSMutableArray *controllerStates = [[NSMutableArray alloc] init];
+	NSMutableArray <NSDictionary *> *controllerStates = [[NSMutableArray alloc] init];
 
 	for (id <CQChatViewController> controller in controllers) {
 		if (![controller respondsToSelector:@selector(persistentState)])
@@ -487,7 +487,7 @@ static CQSoundController *fileTransferSound;
 }
 
 - (void) restorePersistentState:(NSDictionary *) state forConnection:(MVChatConnection *) connection {
-	NSMutableArray *viewControllers = [NSMutableArray array];
+	NSMutableArray <id <CQChatViewController>> *viewControllers = [NSMutableArray array];
 
 	for (NSDictionary *controllerState in state[@"chatControllers"]) {
 		NSString *className = controllerState[@"class"];
@@ -585,7 +585,7 @@ static CQSoundController *fileTransferSound;
 	if (!connection)
 		return;
 
-	NSArray *chatViewControllersForConnection = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
+	NSArray <id <CQChatViewController>> *chatViewControllersForConnection = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
 	_nextController = chatViewControllersForConnection.firstObject;
 }
 

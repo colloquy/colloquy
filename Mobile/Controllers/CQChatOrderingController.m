@@ -5,6 +5,7 @@
 
 #import "CQConnectionsController.h"
 
+#import "CQBouncerConnection.h"
 #import "CQBouncerSettings.h"
 
 #import <ChatCore/MVChatConnection.h>
@@ -91,7 +92,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 @implementation CQChatOrderingController {
-	NSMutableArray *_chatControllers;
+	NSMutableArray <id <CQChatViewController>> *_chatControllers;
 }
 
 @synthesize chatViewControllers = _chatControllers;
@@ -158,7 +159,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[self _addViewController:controller resortingRightAway:YES];
 }
 
-- (void) addViewControllers:(NSArray *) controllers {
+- (void) addViewControllers:(NSArray <id <CQChatViewController>> *) controllers {
 	for (id <CQChatViewController> controller in controllers) {
 		NSAssert([controller conformsToProtocol:@protocol(CQChatViewController)], @"Cannot add chat view controller that does not conform to CQChatViewController");
 		[self _addViewController:controller resortingRightAway:NO];
@@ -202,10 +203,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return nil;
 }
 
-- (NSArray *) chatViewControllersForConnection:(MVChatConnection *) connection {
+- (NSArray <id <CQChatViewController>> *) chatViewControllersForConnection:(MVChatConnection *) connection {
 	NSParameterAssert(connection != nil);
 
-	NSMutableArray *result = [NSMutableArray array];
+	NSMutableArray <id <CQChatViewController>> *result = [NSMutableArray array];
 
 	for (id controller in _chatControllers)
 		if ([controller conformsToProtocol:@protocol(CQChatViewController)] && ((id <CQChatViewController>) controller).connection == connection)
@@ -214,10 +215,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return result;
 }
 
-- (NSArray *) chatViewControllersOfClass:(Class) class {
+- (NSArray <id <CQChatViewController>> *) chatViewControllersOfClass:(Class) class {
 	NSParameterAssert(class != NULL);
 
-	NSMutableArray *result = [NSMutableArray array];
+	NSMutableArray <id <CQChatViewController>> *result = [NSMutableArray array];
 
 	for (id controller in _chatControllers)
 		if ([controller isMemberOfClass:class])
@@ -226,10 +227,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return result;
 }
 
-- (NSArray *) chatViewControllersKindOfClass:(Class) class {
+- (NSArray <id <CQChatViewController>> *) chatViewControllersKindOfClass:(Class) class {
 	NSParameterAssert(class != NULL);
 
-	NSMutableArray *result = [NSMutableArray array];
+	NSMutableArray <id <CQChatViewController>> *result = [NSMutableArray array];
 
 	for (id controller in _chatControllers)
 		if ([controller isKindOfClass:class])
@@ -348,8 +349,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		return [_chatControllers lastObject];
 
 	NSUInteger index = [_chatControllers indexOfObject:chatViewController];
-	NSArray *firstHalf = nil;
-	NSArray *secondHalf = nil;
+	NSArray <id <CQChatViewController>> *firstHalf = nil;
+	NSArray <id <CQChatViewController>> *secondHalf = nil;
 
 	if (options & NSEnumerationReverse) {
 		firstHalf = [_chatControllers subarrayWithRange:NSMakeRange(0, index)];
@@ -430,22 +431,22 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 #pragma mark -
 
-- (NSArray *) orderedConnections {
-	NSArray *bouncers = [CQConnectionsController defaultController].bouncers;
-	NSMutableArray *allConnections = [bouncers mutableCopy];
+- (NSArray <MVChatConnection *> *) orderedConnections {
+	NSArray <CQBouncerSettings *> *bouncers = [CQConnectionsController defaultController].bouncers;
+	NSMutableArray <MVChatConnection *> *allConnections = [bouncers mutableCopy];
 	for (CQBouncerSettings *settings in bouncers) {
-		NSArray *connections = [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:settings.identifier];
+		NSArray <MVChatConnection *> *connections = [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:settings.identifier];
 		[allConnections addObjectsFromArray:connections];
-		
 	}
-	NSArray *connections = [CQConnectionsController defaultController].directConnections;
+
+	NSArray <MVChatConnection *> *connections = [CQConnectionsController defaultController].directConnections;
 	[allConnections addObjectsFromArray:connections];
 	return [allConnections copy];
 }
 
 - (id) connectionAtIndex:(NSInteger) index {
 	@synchronized([CQConnectionsController defaultController]) {
-		NSArray *orderedConnections = self.orderedConnections;
+		NSArray <MVChatConnection *> *orderedConnections = self.orderedConnections;
 		if (index >= (NSInteger)orderedConnections.count || index == NSNotFound)
 			return nil;
 		return orderedConnections[index];

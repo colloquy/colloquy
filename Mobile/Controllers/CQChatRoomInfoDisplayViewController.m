@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation CQChatRoomInfoDisplayViewController {
 @private
 	MVChatRoom *_room;
-	NSMutableArray *_bans;
+	NSMutableArray <MVChatUser *> *_bans;
 	CQChatRoomInfo _infoType;
 }
 

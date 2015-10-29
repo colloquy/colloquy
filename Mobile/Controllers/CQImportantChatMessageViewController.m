@@ -7,7 +7,7 @@ enum {
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation CQImportantChatMessageViewController {
-	NSArray *_messages;
+	NSArray <NSDictionary *> *_messages;
 	id <CQImportantChatMessageDelegate> _delegate;
 }
 
@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return nil;
 }
 
-- (instancetype) initWithMessages:(NSArray *) messages delegate:(id <CQImportantChatMessageDelegate>) delegate {
+- (instancetype) initWithMessages:(NSArray <NSDictionary *> *) messages delegate:(id <CQImportantChatMessageDelegate>) delegate {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 

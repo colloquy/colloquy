@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 	UIImageView *_iconImageView;
 	UILabel *_nameLabel;
 	CQUnreadCountView *_unreadCountView;
-	NSMutableArray *_chatPreviewLabels;
+	NSMutableArray <UILabel *> *_chatPreviewLabels;
 	NSUInteger _maximumMessagePreviews;
 	BOOL _showsUserInMessagePreviews;
 	BOOL _available;

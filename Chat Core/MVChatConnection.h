@@ -202,12 +202,12 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSTimer *_reconnectTimer;
 	unsigned short _reconnectAttemptCount;
 
-	NSArray *_alternateNicks;
+	NSArray <NSString *> *_alternateNicks;
 	unsigned short _nextAltNickIndex;
 	NSUInteger _hash;
 }
 + (BOOL) supportsURLScheme:(NSString *) scheme;
-+ (NSArray *) defaultServerPortsForType:(MVChatConnectionType) type;
++ (NSArray <NSNumber *> *) defaultServerPortsForType:(MVChatConnectionType) type;
 
 #pragma mark -
 
@@ -237,7 +237,7 @@ extern NSString *MVChatConnectionErrorDomain;
 @property(copy) NSString *nickname;
 @property(copy) NSString *preferredNickname;
 
-@property(copy) NSArray *alternateNicknames;
+@property(copy) NSArray <NSString *> *alternateNicknames;
 @property(strong, readonly) NSString *nextAlternateNickname;
 
 @property(copy, null_resettable) NSString *nicknamePassword;
@@ -345,7 +345,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-- (void) joinChatRoomsNamed:(NSArray *) rooms;
+- (void) joinChatRoomsNamed:(NSArray <NSString *> *) rooms;
 - (void) joinChatRoomNamed:(NSString *) room;
 - (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString * __nullable) passphrase;
 

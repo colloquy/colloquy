@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface CQChatUserListViewController : CQPreferencesTableViewController
-- (void) setRoomUsers:(NSArray *) roomUsers;
+- (void) setRoomUsers:(NSArray <MVChatUser *> *) roomUsers;
 
 @property (nonatomic, strong) MVChatRoom *room;
 @property (nonatomic, assign) QChatUserListMode listMode;

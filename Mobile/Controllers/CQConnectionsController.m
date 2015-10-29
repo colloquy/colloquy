@@ -171,7 +171,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	if (url.fragment.length) target = [@"#" stringByAppendingString:[url.fragment stringByDecodingIllegalURLCharacters]];
 	else if (url.path.length > 1) target = [[url.path substringFromIndex:1] stringByDecodingIllegalURLCharacters];
 
-	NSArray *possibleConnections = [self connectionsForServerAddress:url.host];
+	NSArray <MVChatConnection *> *possibleConnections = [self connectionsForServerAddress:url.host];
 
 	for (MVChatConnection *connection in possibleConnections) {
 		if (url.user.length && (![url.user isEqualToString:connection.preferredNickname] || ![url.user isEqualToString:connection.nickname]))
@@ -947,11 +947,11 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 	[connection removePersistentInformationObjectForKey:@"pushState"];
 
-	NSMutableArray *rooms = [connection.automaticJoinedRooms mutableCopy];
+	NSMutableArray <NSString *> *rooms = [connection.automaticJoinedRooms mutableCopy];
 	if (!rooms)
 		rooms = [[NSMutableArray alloc] init];
 
-	NSArray *previousRooms = [connection persistentInformationObjectForKey:@"previousRooms"];
+	NSArray <NSString *> *previousRooms = [connection persistentInformationObjectForKey:@"previousRooms"];
 	if (previousRooms.count) {
 		[rooms addObjectsFromArray:previousRooms];
 		[connection removePersistentInformationObjectForKey:@"previousRooms"];
@@ -1513,9 +1513,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	_loadedConnections = YES;
 
 #if !defined(CQ_GENERATING_SCREENSHOTS)
-	NSArray *bouncers = [[CQSettingsController settingsController] arrayForKey:@"CQChatBouncers"];
+	NSArray <NSDictionary *> *bouncers = [[CQSettingsController settingsController] arrayForKey:@"CQChatBouncers"];
 #else
-	NSArray *bouncers = nil; // don't show any bouncers in app store screenshots
+	NSArray <NSDictionary *> *bouncers = nil; // don't show any bouncers in app store screenshots
 #endif
 	for (NSDictionary *info in bouncers) {
 		CQBouncerSettings *settings = [[CQBouncerSettings alloc] initWithDictionaryRepresentation:info];
@@ -1527,7 +1527,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		NSMutableArray *bouncerChatConnections = [[NSMutableArray alloc] initWithCapacity:10];
 		_bouncerChatConnections[settings.identifier] = bouncerChatConnections;
 
-		NSArray *connections = info[@"connections"];
+		NSArray <MVChatConnection *> *connections = info[@"connections"];
 		for (NSDictionary *connectionInfo in connections) {
 			MVChatConnection *connection = [self _chatConnectionWithDictionaryRepresentation:connectionInfo];
 			if (!connection)
@@ -1542,10 +1542,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	}
 
 #if !defined(CQ_GENERATING_SCREENSHOTS)
-	NSArray *connections = [[CQSettingsController settingsController] arrayForKey:@"MVChatBookmarks"];
+	NSArray <NSDictionary *> *connections = [[CQSettingsController settingsController] arrayForKey:@"MVChatBookmarks"];
 #else
 	static NSString *const demoText = @"[{\"automatic\": 1,\"chatState\": {\"chatControllers\": [{\"active\": true,\"class\": \"CQChatRoomController\",\"joined\": true,\"messages\": [{\"identifier\": \"3\",\"message\": \"hi colloquyUser\",\"type\": \"message\",\"user\": \"kijiro\",},{\"identifier\": \"4\",\"message\": \"Hello!\",\"type\": \"message\",\"user\": \"colloquyUser\",}],\"room\": \"#colloquy-mobile\",},{\"active\": false,\"class\": \"CQChatRoomController\",\"joined\": false,\"messages\": [{\"identifier\": \"5\",\"message\": \"[#colloquy] Welcome to\",\"type\": \"message\",\"user\": \"ChanServ\",}],\"room\": \"#colloquy\",},{\"class\": \"CQDirectChatController\",\"user\": \"jane\"}],},\"description\": \"Freenode\",\"encoding\": 4,\"multitasking\": true,\"nickname\": \"colloquyUser\",\"persistentInformation\": {\"tryBouncerFirst\": false,},\"port\": 6667,\"previousRooms\": [\"#colloquy-mobile\"],\"proxy\": 1852796485,\"realName\": \"Colloquy User\",\"requestsSASL\": false,\"secure\": 0,\"server\": \"localhost\",\"type\": \"irc\",\"uniqueIdentifier\": \"SNJNFA95N55\",\"username\": \"colloquyUser\",\"wasConnected\": true,},{\"automatic\": 1,\"chatState\": {\"chatControllers\": [{\"active\": true,\"class\": \"CQChatRoomController\",\"joined\": true,\"messages\": [{\"identifier\": \"7\",\"message\": \"Everyone: I'm doing this thing...\",\"type\": \"message\",\"user\": \"Someone\",},{\"identifier\": \"8\",\"message\": \"Someone: uh\",\"type\": \"message\",\"user\": \"Everyone\",},],\"room\": \"#chris\",},{\"active\": false,\"class\": \"CQChatRoomController\",\"joined\": false,\"messages\": [],\"room\": \"#theshed\",},],},\"description\": \"GeekShed\",\"encoding\": 4,\"multitasking\": true,\"nickname\": \"colloquyUser\",\"persistentInformation\": {\"tryBouncerFirst\": false,},\"port\": 6667,\"previousRooms\": [\"#chris\",\"theshed\"],\"proxy\": 1852796485,\"realName\": \"Colloquy User\",\"requestsSASL\": false,\"secure\": 0,\"server\": \"localhost\",\"type\": \"irc\",\"uniqueIdentifier\": \"SNJNFA95N55\",\"username\": \"colloquyUser\",\"wasConnected\": true,}]";
-	NSArray *connections = [NSJSONSerialization JSONObjectWithData:[demoText dataUsingEncoding:4] options:0 error:nil];
+	NSArray <NSDictionary *> *connections = [NSJSONSerialization JSONObjectWithData:[demoText dataUsingEncoding:4] options:0 error:nil];
 #endif
 	for (NSDictionary *info in connections) {
 		MVChatConnection *connection = [self _chatConnectionWithDictionaryRepresentation:info];
@@ -1759,14 +1759,12 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 }
 
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address {
-	NSArray *connections = [self connectionsForServerAddress:address];
-	if (connections.count)
-		return connections[0];
-	return nil;
+	NSArray <MVChatConnection *> *connections = [self connectionsForServerAddress:address];
+	return connections.firstObject;
 }
 
-- (NSArray *) connectionsForServerAddress:(NSString *) address {
-	NSMutableArray *result = [NSMutableArray arrayWithCapacity:_connections.count];
+- (NSArray <MVChatConnection *> *) connectionsForServerAddress:(NSString *) address {
+	NSMutableArray <MVChatConnection *> *result = [NSMutableArray arrayWithCapacity:_connections.count];
 
 	address = [address stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@". \t\n"]];
 
@@ -1888,7 +1886,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	return nil;
 }
 
-- (NSArray *) bouncerChatConnectionsForIdentifier:(NSString *) identifier {
+- (NSArray <MVChatConnection *> *) bouncerChatConnectionsForIdentifier:(NSString *) identifier {
 	return _bouncerChatConnections[identifier];
 }
 
@@ -1924,7 +1922,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 - (void) removeBouncerSettingsAtIndex:(NSUInteger) index {
 	CQBouncerSettings *bouncer = _bouncers[index];
 
-	NSArray *connections = [self bouncerChatConnectionsForIdentifier:bouncer.identifier];
+	NSArray <MVChatConnection *> *connections = [self bouncerChatConnectionsForIdentifier:bouncer.identifier];
 	for (MVChatConnection *connection in connections) {
 		NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:[MVChatConnection defaultQuitMessage]];
 		[connection disconnectWithReason:quitMessageString];
@@ -1959,7 +1957,7 @@ NS_ASSUME_NONNULL_BEGIN
 	static NSString *generatedNickname;
 	if (!generatedNickname) {
 		NSCharacterSet *badCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"] invertedSet];
-		NSArray *components = [[UIDevice currentDevice].name componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+		NSArray <NSString *> *components = [[UIDevice currentDevice].name componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 		for (__strong NSString *compontent in components) {
 			if ([compontent isCaseInsensitiveEqualToString:@"iPhone"] || [compontent isCaseInsensitiveEqualToString:@"iPod"] || [compontent isCaseInsensitiveEqualToString:@"iPad"])
 				continue;
@@ -2036,25 +2034,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setAutomaticJoinedRooms:(NSArray *) rooms {
+- (void) setAutomaticJoinedRooms:(NSArray <NSString *> *) rooms {
 	NSParameterAssert(rooms != nil);
 
 	[self setPersistentInformationObject:rooms forKey:@"rooms"];
 }
 
-- (NSArray *) automaticJoinedRooms {
+- (NSArray <NSString *> *) automaticJoinedRooms {
 	return [self persistentInformationObjectForKey:@"rooms"];
 }
 
 #pragma mark -
 
-- (void) setAutomaticCommands:(NSArray *) commands {
+- (void) setAutomaticCommands:(NSArray <NSString *> *) commands {
 	NSParameterAssert(commands != nil);
 
 	[self setPersistentInformationObject:commands forKey:@"commands"];
 }
 
-- (NSArray *) automaticCommands {
+- (NSArray <NSString *> *) automaticCommands {
 	return [self persistentInformationObjectForKey:@"commands"];
 }
 
@@ -2215,7 +2213,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 		[self sendRawMessageWithFormat:@"PUSH connection %@ :%@", self.uniqueIdentifier, self.displayName];
 
-		NSArray *highlightWords = [CQColloquyApplication sharedApplication].highlightWords;
+		NSArray <NSString *> *highlightWords = [CQColloquyApplication sharedApplication].highlightWords;
 		for (NSString *highlightWord in highlightWords)
 			[self sendRawMessageWithFormat:@"PUSH highlight-word :%@", highlightWord];
 

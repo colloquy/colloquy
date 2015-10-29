@@ -48,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) chatInputBarDidChangeSelection:(CQChatInputBar *) chatInputBar;
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(MVChatString *) text;
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar shouldAutocorrectWordWithPrefix:(NSString *) word;
-- (NSArray *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range;
+- (NSArray <NSString *> *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range;
 - (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) chatInputBar;
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar shouldChangeHeightBy:(CGFloat) difference;
 @end

@@ -285,7 +285,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) pushEnabled:(CQPreferencesSwitchCell *) sender {
 	_settings.pushNotifications = sender.on;
 
-	NSArray *connections = [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:_settings.identifier];
+	NSArray <MVChatConnection *> *connections = [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:_settings.identifier];
 	for (MVChatConnection *connection in connections)
 		[connection sendPushNotificationCommands]; 
 }

@@ -535,8 +535,8 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
-+ (NSArray *) knownEmoticons {
-	static NSMutableArray *knownEmoticons;
++ (NSArray <NSString *> *) knownEmoticons {
+	static NSMutableArray <NSString *> *knownEmoticons;
 	if( ! knownEmoticons ) {
 		knownEmoticons = [[NSMutableArray alloc] initWithCapacity:350];
 		for (const struct EmojiEmoticonPair *entry = emoticonToEmojiList; entry && entry->emoticon; ++entry)
@@ -1034,7 +1034,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	BOOL ipAddress = ( sscanf( [self UTF8String], "%u.%u.%u.%u", &ip, &ip, &ip, &ip ) == 4 );
 
 	if( ! ipAddress ) {
-		NSArray *parts = [self componentsSeparatedByString:@"."];
+		NSArray <NSString *> *parts = [self componentsSeparatedByString:@"."];
 		NSUInteger count = parts.count;
 		if( count > 2 )
 			ret = [NSString stringWithFormat:@"%@.%@", parts[(count - 2)], parts[(count - 1)]];
@@ -1054,8 +1054,8 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
-- (NSArray *) _IRCComponents {
-	NSArray *components = [self componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"!@ "]];
+- (NSArray <NSString *> *) _IRCComponents {
+	NSArray <NSString *> *components = [self componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"!@ "]];
 
 	// given "nickname!username@hostmask realname", we want to get "nickname", "username", "hostmask" and "realname" back
 	if (components.count == 3 || components.count == 4)
@@ -1081,7 +1081,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 }
 
 - (NSString *) IRCRealname {
-	NSArray *components = self._IRCComponents;
+	NSArray <NSString *> *components = self._IRCComponents;
 	if (components.count == 4)
 		return components[3];
 	return nil;
@@ -1175,14 +1175,14 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	return [self substringWithRange:resultRange];
 }
 
-- (NSArray *) captureComponentsMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options range:(NSRange) range error:(NSError **) error {
+- (NSArray <NSString *> *) captureComponentsMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options range:(NSRange) range error:(NSError **) error {
 	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:range];
 
 	if (result == nil)
 		return nil;
 
-	NSMutableArray *results = [NSMutableArray array];
+	NSMutableArray <NSString *> *results = [NSMutableArray array];
 
 	for (NSUInteger i = 1; i < (result.numberOfRanges - 1); i++)
 		[results addObject:[self substringWithRange:[result rangeAtIndex:i]]];

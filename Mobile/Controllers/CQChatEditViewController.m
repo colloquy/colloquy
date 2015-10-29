@@ -13,7 +13,7 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation CQChatEditViewController {
-	NSMutableArray *_sortedConnections;
+	NSMutableArray <MVChatConnection *> *_sortedConnections;
 }
 
 - (instancetype) init {
@@ -103,7 +103,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
 
 		NSUInteger selectedConnectionIndex = [_sortedConnections indexOfObjectIdenticalTo:_selectedConnection];
-		NSMutableArray *connectionTitles = [[NSMutableArray alloc] init];
+		NSMutableArray <NSString *> *connectionTitles = [[NSMutableArray alloc] init];
 		for (MVChatConnection *connection in _sortedConnections) {
 			if (connection.directConnection)
 				[connectionTitles addObject:connection.displayName];

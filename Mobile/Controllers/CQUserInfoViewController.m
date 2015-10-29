@@ -158,7 +158,7 @@ NS_ASSUME_NONNULL_BEGIN
 		} else if (row == 1) { // Rooms
 			cell.textLabel.text = NSLocalizedString(@"rooms", "Rooms user info label");
 
-			NSArray *rooms = [_user attributeForKey:MVChatUserKnownRoomsAttribute];
+			NSArray <NSString *> *rooms = [_user attributeForKey:MVChatUserKnownRoomsAttribute];
 			if (rooms) {
 				if (rooms.count) {
 					NSString *separator = [[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator];

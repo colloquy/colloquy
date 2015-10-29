@@ -16,8 +16,8 @@ static NSString *membersFilteredCountFormat;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CQChatUserListViewController () <UIActionSheetDelegate, UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating>
-@property (atomic, strong) NSMutableArray *users;
-@property (atomic, strong) NSMutableArray *matchedUsers;
+@property (atomic, strong) NSMutableArray <MVChatUser *> *users;
+@property (atomic, strong) NSMutableArray <MVChatUser *> *matchedUsers;
 @end
 
 @implementation CQChatUserListViewController {
@@ -94,7 +94,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setRoomUsers:(NSArray *) users {
+- (void) setRoomUsers:(NSArray <MVChatUser *> *) users {
 	[self.users setArray:users];
 	self.title = [NSString stringWithFormat:membersSingleCountFormat, self.users.count];
 
@@ -114,7 +114,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSUInteger) _indexForInsertedMatchUser:(MVChatUser *) user withOriginalIndex:(NSUInteger) index {
 	return NSNotFound;
 //	unsigned long insertionUserStatus = userStatus(user, _room);
-//	NSArray *matchedUsers = [self.matchedUsers copy];
+//	NSArray <MVChatUser *> *matchedUsers = [self.matchedUsers copy];
 //
 //	for (NSUInteger i = 0; i < matchedUsers.count; i++) {
 //		MVChatUser *matchedUser = matchedUsers[i];
@@ -136,7 +136,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSUInteger) _indexForRemovedMatchUser:(MVChatUser *) user {
 	return NSNotFound;
-//	NSArray *matchedUsers = [self.matchedUsers copy];
+//	NSArray <MVChatUser *> *matchedUsers = [self.matchedUsers copy];
 //	for (NSUInteger i = 0; i < matchedUsers.count; i++) {
 //		if (user == matchedUsers[i])
 //			return i;
@@ -177,7 +177,7 @@ NS_ASSUME_NONNULL_BEGIN
 //
 //		[self.matchedUsers insertObject:user atIndex:matchesIndex];
 //
-//		NSArray *indexPaths = @[[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
+//		NSArray <NSIndexPath *> *indexPaths = @[[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
 //		[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 //	}
 //
@@ -197,7 +197,7 @@ NS_ASSUME_NONNULL_BEGIN
 //	if (matchesIndex != NSNotFound) {
 //		[self.matchedUsers removeObjectAtIndex:matchesIndex];
 //
-//		NSArray *indexPaths = @[[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
+//		NSArray <NSIndexPath *> *indexPaths = @[[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
 //		[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 //	}
 //	if (self.users.count == self.matchedUsers.count)
@@ -303,12 +303,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) filterUsersWithSearchString:(NSString *) searchString {
-	NSArray *previousUsersArray = self.matchedUsers;
+	NSArray <MVChatUser *> *previousUsersArray = self.matchedUsers;
 
 	if (searchString.length) {
 		self.matchedUsers = [[NSMutableArray alloc] init];
 
-		NSArray *searchArray = (_currentSearchString && [searchString hasPrefix:_currentSearchString] ? previousUsersArray : self.users);
+		NSArray <MVChatUser *> *searchArray = (_currentSearchString && [searchString hasPrefix:_currentSearchString] ? previousUsersArray : self.users);
 		for (MVChatUser *user in searchArray) {
 			if (![user.nickname hasCaseInsensitiveSubstring:searchString])
 				continue;
@@ -325,7 +325,7 @@ NS_ASSUME_NONNULL_BEGIN
 //		[_searchController.searchResultsTableView beginUpdates];
 //
 //		NSUInteger index = 0;
-//		NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+//		NSMutableArray <NSIndexPath *> *indexPaths = [[NSMutableArray alloc] init];
 //
 //		for (MVChatUser *user in previousUsersArray) {
 //			if (![matchedUsersSet containsObject:user])

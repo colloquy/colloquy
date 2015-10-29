@@ -90,7 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setRooms:(NSArray *) rooms {
+- (void) setRooms:(NSArray <NSString *> *) rooms {
 	_rooms = rooms;
 
 	[self.tableView reloadData];

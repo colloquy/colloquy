@@ -2,16 +2,17 @@
 
 #import <CoreText/CoreText.h>
 
-#import "NSNotificationAdditions.h"
+NSString *const CQRemoteFontCourierFontLoadingDidSucceedNotification = @"CQRemoteFontCourierFontLoadingDidSucceedNotification";
+NSString *const CQRemoteFontCourierFontLoadingDidFailNotification = @"CQRemoteFontCourierFontLoadingDidFailNotification";
 
-NSString *CQRemoteFontCourierFontLoadingDidSucceedNotification = @"CQRemoteFontCourierFontLoadingDidSucceedNotification";
-NSString *CQRemoteFontCourierFontLoadingDidFailNotification = @"CQRemoteFontCourierFontLoadingDidFailNotification";
+NSString *const CQRemoteFontCourierFontLoadingFontNameKey = @"CQRemoteFontCourierFontLoadingFontNameKey";
+NSString *const CQRemoteFontCourierFontLoadingFontKey = @"CQRemoteFontCourierFontLoadingFontKey";
 
-NSString *CQRemoteFontCourierFontLoadingFontNameKey = @"CQRemoteFontCourierFontLoadingFontNameKey";
-NSString *CQRemoteFontCourierFontLoadingFontKey = @"CQRemoteFontCourierFontLoadingFontKey";
+NSString *const CQRemoteFontCourierDidLoadFontListNotification = @"CQRemoteFontCourierDidLoadFontListNotification";
+NSString *const CQRemoteFontCourierFontListKey = @"CQRemoteFontCourierFontListKey";
 
-NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingState state);
-NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingState state) {
+
+static NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingState state) {
 	switch (state) {
 		case kCTFontDescriptorMatchingDidBegin: return @"kCTFontDescriptorMatchingDidBegin";
 		case kCTFontDescriptorMatchingDidFinish: return @"kCTFontDescriptorMatchingDidFinish";
@@ -25,59 +26,219 @@ NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatchingStat
 	}
 }
 
-
 NS_ASSUME_NONNULL_BEGIN
 
-@implementation UIFont (Additions)
-+ (NSArray *) cq_availableRemoteFontNames {
-	static NSArray *availableRemoteFontNames = nil;
+@interface CQRemoteFontSessionDelegate : NSObject <NSURLSessionDataDelegate>
+@property (copy) void (^completionBlock)(NSData *, NSError *);
+@end
+
+@implementation CQRemoteFontSessionDelegate {
+	NSMutableData *_data;
+	NSHTTPURLResponse *_response;
+}
+
++ (void) load {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		// postscript names
-		availableRemoteFontNames = @[ @"HannotateSC-W5", @"HannotateTC-W5", @"HannotateSC-W7", @"HannotateTC-W7", @"KannadaMN", @"KannadaMN-Bold", @"STIXSizeTwoSym-Bold", @"Arial-ItalicMT", @"YuppySC-Regular", @"STIXSizeFiveSym-Regular", @"STIXIntegralsUp-Regular", @"BookAntiqua", @"BookAntiqua-Bold", @"BookAntiqua-Italic", @"BookAntiqua-BoldItalic", @"STIXNonUnicode-BoldItalic", @"ArialNarrow-BoldItalic", @"JazzLetPlain", @"MshtakanBoldOblique", @"NewPeninimMT", @"NewPeninimMT-Inclined", @"NewPeninimMT-BoldInclined", @"NewPeninimMT-Bold", @"NanumBrush", @"NanumPen", @"STHeiti", @"InaiMathi", @"MalayalamMN", @"MalayalamMN-Bold", @"STIXIntegralsUpD-Regular", @"Zawra-Bold", @"Zawra-Heavy", @"STYuanti-SC-Bold", @"STYuanti-SC-Light", @"STYuanti-SC-Regular", @"Garamond", @"Garamond-Bold", @"Garamond-Italic", @"Garamond-BoldItalic", @"HiraginoSansGB-W3", @"Kokonor", @"YuGo-Bold", @"HanziPenSC-W3", @"HanziPenTC-W3", @"HanziPenSC-W5", @"HanziPenTC-W5", @"STIXGeneral-BoldItalic", @"Sana", @"DiwanThuluth", @"STBaoli-SC-Regular", @"HiraMaruProN-W4", @"Waseem", @"WaseemLight", @"AppleSDGothicNeo-Bold", @"Laimoon", @"PlantagenetCherokee", @"AlTarikh", @"STLibian-SC-Regular", @"DearJoeFour-Regular", @"IowanOldStyle-Black", @"IowanOldStyle-BlackItalic", @"IowanOldStyle-Bold", @"IowanOldStyle-BoldItalic", @"IowanOldStyle-Italic", @"IowanOldStyle-Roman", @"IowanOldStyle-Titling", @"FZLTZHK--GBK1-0", @"FZLTXHK--GBK1-0", @"FZLTTHK--GBK1-0", @"FZLTZHB--B51-0", @"FZLTXHB--B51-0", @"FZLTTHB--B51-0", @"AppleMyungjo", @"CapitalsRegular", @"HiraginoSansGB-W6", @"DecoTypeNaskh", @".DecoTypeNaskhPUA", @"GujaratiMT-Bold", @"Impact", @"Luminari-Regular", @"STIXSizeOneSym-Regular", @"STIXIntegralsSm-Bold", @"YuGo-Medium", @"Basra-Bold", @"Basra", @"TamilMN", @"TamilMN-Bold", @"STKaiti-SC-Bold", @"STKaiti-SC-Regular", @"DFWaWaSC-W5", @"STIXIntegralsUpSm-Bold", @"Impact", @"MonotypeGurmukhi", @"Raanana", @"TwCenMT-Regular", @"TwCenMT-Bold", @"TwCenMT-Italic", @"TwCenMT-BoldItalic", @"MyanmarMN", @"MyanmarMN-Bold", @"StoneSansITCTT-Semi", @"StoneSansITCTT-SemiIta", @"StoneSansITCTT-Bold", @"YuGo-Medium", @"STIXIntegralsUp-Bold", @"BigCaslon-Medium", @"STIXIntegralsD-Regular", @"Farisi", @"AppleBraille-Outline8Dot", @"Kefa-Regular", @"Kefa-Bold", @"YuppySC-Regular", @"STKaiti-SC-Black", @"STKaiti-SC-Bold", @"STKaiTi-TC-Bold", @"STKaiti-SC-Regular", @"STKaiti", @"STKaiTi-TC-Regular", @"BraganzaITCTT", @"GujaratiMT-Bold", @"STFangsong", @"PTSerif-Regular", @"PTSerif-Italic", @"PTSerif-BoldItalic", @"PTSerif-Bold", @"Beirut", @"AppleSDGothicNeo-Heavy", @"Trattatello", @"SinhalaMN", @"SinhalaMN-Bold", @"ShreeDev0714", @"ShreeDev0714-Bold", @"ShreeDev0714-Italic", @"ShreeDev0714-Bold-Italic", @"Tahoma-Bold", @"FZLTZHK--GBK1-0", @"FZLTXHK--GBK1-0", @"FZLTTHK--GBK1-0", @"FZLTZHB--B51-0", @"FZLTXHB--B51-0", @"FZLTTHB--B51-0", @"KoufiAbjadi", @"KhmerSangamMN", @"NanumBrush", @"NanumPen", @"Osaka", @"YuGo-Bold", @"AppleSDGothicNeo-Regular", @"Kefa-Regular", @"Kefa-Bold", @"Raya", @"STIXSizeFourSym-Bold", @"HiraMaruProN-W4", @"BradleyHandITCTT-Bold", @"Damascus", @".DamascusPUA", @"DamascusLight", @".DamascusPUALight", @"DamascusMedium", @".DamascusPUAMedium", @"DamascusBold", @".DamascusPUABold", @"DamascusSemiBold", @".DamascusPUASemiBold", @"HiraginoSansGB-W3", @"HiraMinPro-W6", @"LiSongPro", @"ComicSansMS", @"ITFDevanagari-Book", @"ITFDevanagari-Bold", @"ITFDevanagari-Demi", @"ITFDevanagari-Light", @"ITFDevanagari-Medium", @"Raanana", @"RaananaBold", @"STIXVariants-Regular", @"MshtakanBold", @"Skia-Regular", @"Skia-Regular_Black", @"Skia-Regular_Extended", @"Skia-Regular_Condensed", @"Skia-Regular_Light", @"Skia-Regular_Black-Extended", @"Skia-Regular_Light-Extended", @"Skia-Regular_Black-Condensed", @"Skia-Regular_Light-Condensed", @"Skia-Regular_Bold", @"TwCenMT-Regular", @"TwCenMT-Bold", @"TwCenMT-Italic", @"TwCenMT-BoldItalic", @"STSongti-SC-Bold", @"STSongti-SC-Regular", @"STXihei", @"BrushScriptMT", @"JCsmPC", @"ArialMT", @"Farisi", @"GurmukhiSangamMN", @"GurmukhiSangamMN-Bold", @"JCsmPC", @"AppleSDGothicNeo-Heavy", @"ComicSansMS", @"STIXSizeTwoSym-Regular", @"AppleSDGothicNeo-UltraLight", @"Nisan", @"BlackmoorLetPlain", @"AppleSDGothicNeo-SemiBold", @"SchoolHouseCursiveB", @"SukhumvitSet-Thin", @"SukhumvitSet-Light", @"SukhumvitSet-Text", @"SukhumvitSet-Medium", @"SukhumvitSet-SemiBold", @"SukhumvitSet-Bold", @"CharcoalCY", @"MicrosoftSansSerif", @"MyanmarMN", @"MyanmarMN-Bold", @"STSongti-SC-Black", @"STSongti-SC-Light", @"STSongti-TC-Light", @"Wingdings2", @"JCkg", @"YuppyTC-Regular", @"STIXIntegralsSm-Regular", @"HiraKakuStd-W8", @"Yaziji", @"ComicSansMS-Bold", @"AlBayan-Bold", @"DiwanKufi", @"ArialNarrow-Italic", @"HannotateSC-W5", @"HannotateTC-W5", @"HannotateSC-W7", @"HannotateTC-W7", @"SavoyeLetPlain", @".SavoyeLetPlainCC", @"Chalkboard", @"Chalkboard-Bold", @"STIXIntegralsUpSm-Regular", @"AppleSDGothicNeo-ExtraBold", @"ArialNarrow-Bold", @"AlRafidainAlFanni", @"Herculanum", @"DFWaWaTC-W5", @"GenevaCyr", @"JCfg", @"STIXIntegralsD-Regular", @"BankGothic-Light", @"BankGothic-Medium", @"Waseem", @"WaseemLight", @"STXingkai-SC-Bold", @"STXingkai-SC-Light", @"YuMin-Demibold", @"STIXIntegralsUpD-Regular", @"Mshtakan", @"Basra", @"Basra-Bold", @"Nadeem", @"AppleSDGothicNeo-Heavy", @"CenturyGothic", @"CenturyGothic-Bold", @"CenturyGothic-Italic", @"CenturyGothic-BoldItalic", @"STIXGeneral-Regular", @"JCHEadA", @"AppleMyungjo", @"STIXSizeFourSym-Regular", @"YuMin-Demibold", @"Farah", @".FarahPUA", @"KannadaMN", @"KannadaMN-Bold", @"SignPainter-HouseScript", @"BigCaslon-Medium", @"GujaratiMT", @"Wingdings-Regular", @"AppleGothic", @"PTSerif-Caption", @"PTSerif-CaptionItalic", @"Webdings", @"Arial-Black", @"DevanagariMT", @"Sana", @"STIXIntegralsUpD-Bold", @"AppleBraille", @"AppleSDGothicNeo-Light", @"Arial-Black", @"AlBayan", @"STXingkai-SC-Bold", @"STXingkai-SC-Light", @"HopperScript-Regular", @"MonaLisaSolidITCTT", @"Somer", @"STLibian-SC-Regular", @"STIXIntegralsUp-Bold", @"Muna", @"MunaBold", @"MunaBlack", @"BordeauxRomanBoldLetPlain", @"Somer", @"DevanagariMT", @"NanumGothic", @"NanumGothicBold", @"NanumGothicExtraBold", @"STIXVariants-Bold", @"BookmanOldStyle", @"BookmanOldStyle-Bold", @"BookmanOldStyle-Italic", @"BookmanOldStyle-BoldItalic", @"Arial-BoldItalicMT", @"AcademyEngravedLetPlain", @"STSongti-SC-Black", @"STSongti-SC-Light", @"STSongti-SC-Bold", @"STSongti-TC-Bold", @"STSongti-SC-Regular", @"STSongti-TC-Regular", @"ArialNarrow-BoldItalic", @"STIXNonUnicode-Regular", @"STHeiti", @"AppleBraille-Pinpoint8Dot", @"CenturyGothic", @"CenturyGothic-Bold", @"CenturyGothic-Italic", @"CenturyGothic-BoldItalic", @"ArialHebrewScholar", @"ArialHebrewScholar-Bold", @"ArialHebrewScholar-Light", @"HiraKakuStdN-W8", @"STIXGeneral-Bold", @"NanumBrush", @"NanumPen", @"DearJoeFour-Small", @"STBaoli-SC-Regular", @"HopperScript-Regular", @"STIXIntegralsUp-Regular", @"AppleBraille", @"TeluguMN", @"TeluguMN-Bold", @"OriyaMN", @"OriyaMN-Bold", @"DevanagariMT-Bold", @"AppleSDGothicNeo-Thin", @"SantaFeLetPlain", @"Trattatello", @"Phosphate-Inline", @"Phosphate-Solid", @"LaoMN", @"LaoMN-Bold", @"Sathu", @"NewPeninimMT-BoldInclined", @"HiraKakuPro-W3", @"KufiStandardGK", @"Phosphate-Inline", @"Phosphate-Solid", @"AlTarikh", @"Apple-Chancery", @"DecoTypeNaskh", @"GujaratiMT", @"BanglaMN", @"BanglaMN-Bold", @"STIXVariants-Regular", @"HiraKakuStdN-W8", @"LiHeiPro", @"STBaoli-SC-Regular", @"GurmukhiSangamMN", @"GurmukhiSangamMN-Bold", @"Beirut", @"Apple-Chancery", @"STIXSizeThreeSym-Regular", @"CenturySchoolbook", @"CenturySchoolbook-Bold", @"CenturySchoolbook-Italic", @"CenturySchoolbook-BoldItalic", @"ArialNarrow-Bold", @"Algiers", @"STIXSizeOneSym-Bold", @"STKaiti-SC-Bold", @"STKaiTi-TC-Bold", @"STKaiti-SC-Regular", @"STKaiTi-TC-Regular", @"BanglaMN", @"BanglaMN-Bold", @"STIXNonUnicode-Bold", @"LaoSangamMN", @"Raya", @"MshtakanBold", @"AndaleMono", @"LiSongPro", @"STIXIntegralsUpD-Bold", @"Silom", @"Muna", @"MunaBold", @"MunaBlack", @"STIXIntegralsSm-Bold", @"STIXNonUnicode-Italic", @"Tahoma", @"JCHEadA", @"Sathu", @"Ayuthaya", @"Tahoma-Bold", @"AppleSDGothicNeo-Medium", @"PTSans-Regular", @"PTSans-Italic", @"PTSans-NarrowBold", @"PTSans-Narrow", @"PTSans-CaptionBold", @"PTSans-Caption", @"PTSans-BoldItalic", @"PTSans-Bold", @"BankGothic-Light", @"BankGothic-Medium", @"SignPainter-HouseScript", @"TamilMN", @"TamilMN-Bold", @"JCkg", @"MshtakanBoldOblique", @"STIXSizeFourSym-Bold", @"AppleSDGothicNeo-Thin", @"YuMin-Medium", @"YuGo-Bold", @"Dijla", @"Wingdings2", @"YuppyTC-Regular", @"MshtakanOblique", @"Silom", @"STIXSizeFiveSym-Regular", @"NanumGothic", @"NanumGothicBold", @"NanumGothicExtraBold", @"KufiStandardGK", @"STYuanti-SC-Bold", @"STYuanti-SC-Light", @"STYuanti-SC-Regular", @"SinhalaMN", @"SinhalaMN-Bold", @"LucidaGrande", @"LucidaGrande-Bold", @".LucidaGrandeUI", @".LucidaGrandeUI-Bold", @"STIXIntegralsD-Bold", @"NewPeninimMT-Inclined", @"AppleMyungjo", @"RaananaBold", @"Al-KhalilBold", @"Al-Khalil", @"CorsivaHebrew", @"CorsivaHebrew-Bold", @"CenturySchoolbook", @"CenturySchoolbook-Bold", @"CenturySchoolbook-Italic", @"CenturySchoolbook-BoldItalic", @"Zawra-Bold", @"Zawra-Heavy", @"HiraMinPro-W3", @"DFWaWaSC-W5", @"ArialNarrow", @"InaiMathi", @"STYuanti-SC-Bold", @"STYuanti-SC-Light", @"STYuanti-SC-Regular", @"NanumMyeongjo", @"NanumMyeongjoBold", @"NanumMyeongjoExtraBold", @"AppleGothic", @"HiraMaruPro-W4", @"ITFDevanagari-Book", @"ITFDevanagari-Bold", @"ITFDevanagari-Demi", @"ITFDevanagari-Light", @"ITFDevanagari-Medium", @"MonotypeGurmukhi", @"STIXNonUnicode-Italic", @"Weibei-TC-Bold", @"STIXSizeOneSym-Regular", @"Herculanum", @"Kokonor", @"OriyaMN", @"OriyaMN-Bold", @"Athelas-Regular", @"Athelas-Italic", @"Athelas-BoldItalic", @"Athelas-Bold", @"Al-Rafidain", @"STIXSizeTwoSym-Bold", @"DFWaWaTC-W5", @"Ayuthaya", @"Yaziji", @"STIXGeneral-Italic", @"Laimoon", @"NewPeninimMT-Bold", @"STIXNonUnicode-BoldItalic", @"HiraginoSansGB-W6", @"Krungthep", @"MicrosoftSansSerif", @"Osaka-Mono", @"AlRafidainAlFanni", @"AndaleMono", @"STSongti-SC-Black", @"STSongti-SC-Bold", @"STSongti-TC-Bold", @"STSongti-SC-Light", @"STSong", @"STSongti-TC-Light", @"STSongti-SC-Regular", @"STSongti-TC-Regular", @"ShreeDev0714", @"ShreeDev0714-Bold", @"ShreeDev0714-Italic", @"ShreeDev0714-Bold-Italic", @"Al-KhalilBold", @"Al-Khalil", @"ArialUnicodeMS", @"AppleBraille-Pinpoint6Dot", @"HiraKakuStd-W8", @"BraganzaITCTT", @"HiraginoSansGB-W3", @"DearJoeFour-Regular", @"Dijla", @"HoeflerText-Ornaments", @"NewPeninimMT", @"Tahoma", @"ArialNarrow", @"YuMin-Medium", @"JCfg", @"AlBayan", @"AlBayan-Bold", @"PrincetownLET", @"Weibei-SC-Bold", @"STIXIntegralsUpSm-Regular", @"Baghdad", @"HoeflerText-Ornaments", @"Osaka-Mono", @"TeluguMN", @"TeluguMN-Bold", @"HiraKakuPro-W6", @"SIL-Kai-Reg-Jian", @"PortagoITCTT", @"HiraMinPro-W3", @"Luminari-Regular", @"SchoolHousePrintedA", @"DearJoeFour-Small", @"SynchroLET", @"Baghdad", @"STIXVariants-Bold", @"BlairMdITCTT-Medium", @"AppleSDGothicNeo-ExtraBold", @"STLibian-SC-Regular", @"AppleSDGothicNeo-UltraLight", @"PTMono-Bold", @"PTMono-Regular", @"DFKaiShu-SB-Estd-BF", @"KoufiAbjadi", @"YuppySC-Regular", @"NanumGothic", @"NanumGothicBold", @"NanumGothicExtraBold", @"ForgottenFuturist-Regular", @"ForgottenFuturist-Italic", @"ForgottenFuturist-Bold", @"ForgottenFuturist-BoldItalic", @"ForgottenFuturist-Shadow", @"HelveticaCY-Bold", @"HelveticaCY-BoldOblique", @"HelveticaCY-Oblique", @"HelveticaCY-Plain", @"STIXIntegralsUpSm-Bold", @"KhmerMN", @"KhmerMN-Bold", @"KhmerMN", @"KhmerMN-Bold", @"MyanmarSangamMN", @"Nisan", @"AppleBraille-Outline6Dot", @"Algiers", @"Wingdings3", @"Al-Rafidain", @"HiraMinPro-W6", @"MyanmarSangamMN", @"HiraginoSansGB-W6", @"BookmanOldStyle", @"BookmanOldStyle-Bold", @"BookmanOldStyle-Italic", @"BookmanOldStyle-BoldItalic", @"STFangsong", @"ComicSansMS-Bold", @"HanziPenSC-W3", @"HanziPenTC-W3", @"HanziPenSC-W5", @"HanziPenTC-W5", @"HiraMaruProN-W4", @"LiHeiPro", @"STIXSizeTwoSym-Regular", @"Arial-BoldMT", @"NanumMyeongjo", @"NanumMyeongjoBold", @"NanumMyeongjoExtraBold", @"Al-Firat", @"LiHeiPro", @"AppleSymbols", @"ArialNarrow-Italic", @"STFangsong", @"STIXGeneral-BoldItalic", @"Krungthep", @"AppleSymbols", @"LiSungLight", @"STIXIntegralsSm-Regular", @"AppleBraille-Outline8Dot", @"CorsivaHebrew", @"AppleSDGothicNeo-ExtraBold", @"ArialUnicodeMS", @"Al-Firat", @"Chalkboard", @"Chalkboard-Bold", @"STIXSizeThreeSym-Regular", @"DFWaWaTC-W5", @"STIXGeneral-Italic", @"SukhumvitSet-Thin", @"SukhumvitSet-Light", @"SukhumvitSet-Text", @"SukhumvitSet-Medium", @"SukhumvitSet-SemiBold", @"SukhumvitSet-Bold", @"STIXNonUnicode-Bold", @"Webdings", @"PlantagenetCherokee", @"AppleBraille-Pinpoint8Dot", @"DiwanThuluth", @"LaoMN", @"LaoMN-Bold", @"JCsmPC", @"MshtakanOblique", @"PTSans-Regular", @"PTSans-Italic", @"PTSans-Bold", @"PTSans-BoldItalic", @"PTSans-Caption", @"PTSans-CaptionBold", @"PTSans-Narrow", @"PTSans-NarrowBold", @"SIL-Hei-Med-Jian", @"Wingdings-Regular", @"STIXNonUnicode-Regular", @"STIXSizeThreeSym-Bold", @"YuppyTC-Regular", @"HiraMaruPro-W4", @"LucidaGrande", @"LucidaGrande-Bold", @".LucidaGrandeUI", @".LucidaGrandeUI-Bold", @"CorsivaHebrew-Bold", @"JCHEadA", @"GurmukhiMN", @"GurmukhiMN-Bold", @"STIXGeneral-Regular", @"Wingdings3", @"STKaiti-SC-Black", @"AppleSDGothicNeo-SemiBold", @"Weibei-SC-Bold", @"MalayalamMN", @"MalayalamMN-Bold", @"STXingkai-SC-Bold", @"STXingkai-SC-Light", @"LiGothicMed", @"DiwanKufi", @"STIXIntegralsD-Bold", @"AppleBraille-Pinpoint6Dot", @"STIXSizeOneSym-Bold", @"YuMin-Medium", @"BrushScriptMT", @"Weibei-SC-Bold", @"DevanagariMT-Bold", @"Osaka", @"AppleSDGothicNeo-Regular", @"AppleBraille-Outline6Dot", @"Seravek", @"Seravek-Italic", @"Seravek-MediumItalic", @"Seravek-Medium", @"Seravek-LightItalic", @"Seravek-Light", @"Seravek-ExtraLightItalic", @"Seravek-ExtraLight", @"Seravek-BoldItalic", @"Seravek-Bold", @"HiraKakuPro-W3", @"JCfg", @"Mshtakan", @"YuGo-Medium", @"YuMin-Demibold", @"STIXSizeFourSym-Regular", @"HiraKakuPro-W6", @"Weibei-TC-Bold", @"Garamond", @"Garamond-Bold", @"Garamond-Italic", @"Garamond-BoldItalic", @"FZLTZHK--GBK1-0", @"FZLTXHK--GBK1-0", @"FZLTTHK--GBK1-0", @"FZLTZHB--B51-0", @"FZLTXHB--B51-0", @"FZLTTHB--B51-0", @"STIXGeneral-Bold", @"Weibei-TC-Bold", @"Charter-Roman", @"Charter-Italic", @"Charter-BoldItalic", @"Charter-Bold", @"Charter-BlackItalic", @"Charter-Black", @"NanumMyeongjo", @"NanumMyeongjoBold", @"NanumMyeongjoExtraBold", @"HiraKakuStdN-W8", @"AppleSDGothicNeo-Light", @"TypeEmbellishmentsOneLetPlain", @"LiSongPro", @"Nadeem", @"STIXSizeThreeSym-Bold", @"STXihei", @"DFKaiShu-SB-Estd-BF", @"STKaiti-SC-Black", @"BookAntiqua", @"BookAntiqua-Bold", @"BookAntiqua-Italic", @"BookAntiqua-BoldItalic", @"DFWaWaSC-W5" ];
-		availableRemoteFontNames = [[NSSet setWithArray:availableRemoteFontNames].allObjects sortedArrayUsingSelector:@selector(compare:)];
+/* // full set of headers, at the time of writing this code
+	 ~ % curl -I http://mesu.apple.com/assets/com_apple_MobileAsset_Font/com_apple_MobileAsset_Font.xml
+	 HTTP/1.1 200 OK
+	 Server: Apache
+	 ETag: "bf45098c8cb9a94fefed33ed61d7ea19:1407171245"
+	 Content-MD5: v0UJjIy5qU/v7TPtYdfqGQ==
+	 Last-Modified: Mon, 04 Aug 2014 16:02:13 GMT
+	 Accept-Ranges: bytes
+	 Content-Length: 1211520
+	 Content-Type: application/xml
+	 Cache-Control: max-age=348
+	 Expires: Mon, 19 Oct 2015 12:16:50 GMT
+	 Date: Mon, 19 Oct 2015 12:11:02 GMT
+	 Connection: keep-alive
+*/
+		// https://en.wikipedia.org/wiki/HTTP_ETag
+		NSDictionary *CQRemoteFontDefaults = @{ @"CQRemoteFont-ETag": @"\"bf45098c8cb9a94fefed33ed61d7ea19:1407171245\"" };
+
+		[[NSUserDefaults standardUserDefaults] registerDefaults:CQRemoteFontDefaults];
+	});
+}
+
+- (void) URLSession:(NSURLSession *) session dataTask:(NSURLSessionDataTask *) dataTask didReceiveResponse:(NSURLResponse *)response  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition)) completionHandler {
+	if (![response isKindOfClass:[NSHTTPURLResponse class]]) {
+		completionHandler(NSURLSessionResponseCancel);
+
+		return;
+	}
+
+	NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
+	if ((HTTPResponse.statusCode / 100) != 2) {
+		completionHandler(NSURLSessionResponseCancel);
+
+		return;
+	}
+
+	NSString *newETag = HTTPResponse.allHeaderFields[@"ETag"];
+	NSString *lastKnownETag = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQRemoteFont-ETag"];
+	BOOL isSameETag = newETag.length && [newETag isEqualToString:lastKnownETag];
+
+	if (!isSameETag) {
+		_data = [NSMutableData data];
+		_response = [HTTPResponse copy];
+
+		completionHandler(NSURLSessionResponseAllow);
+	} else {
+		completionHandler(NSURLSessionResponseCancel);
+	}
+}
+
+- (void) URLSession:(NSURLSession *) session dataTask:(NSURLSessionDataTask *) dataTask didReceiveData:(NSData *) data {
+	[_data appendData:data];
+}
+
+- (void) URLSession:(NSURLSession *) session task:(NSURLSessionTask *) task didCompleteWithError:(NSError *__nullable) error {
+	if (_completionBlock) {
+		_completionBlock(_data, error);
+	}
+
+	if (_data.length && !error) {
+		[[NSUserDefaults standardUserDefaults] setObject:_response.allHeaderFields[@"Content-MD5"] forKey:@"CQRemoteFont-Content-MD5"];
+		[[NSUserDefaults standardUserDefaults] setObject:_response.allHeaderFields[@"Last-Modified"] forKey:@"CQRemoteFont-Last-Modified"];
+	}
+}
+@end
+
+#pragma mark -
+
+@implementation UIFont (Additions)
+static NSArray *availableRemoteFontNames = nil;
+
+static BOOL loadedRemoteFontList = NO;
++ (void) cq_availableRemoteFontNames:(void (^)(NSArray *fontNames)) completion {
+	static dispatch_once_t loadedStaleRemoteFontNamesList;
+	dispatch_once(&loadedStaleRemoteFontNamesList, ^{
+		availableRemoteFontNames = [[NSUserDefaults standardUserDefaults] arrayForKey:@"CQAvailableRemoteFontNames"];
+
+		if (!availableRemoteFontNames.count) { // as of Mon, 04 Aug 2014 16:02:13 GMT
+			availableRemoteFontNames = @[ @".DamascusPUA", @".DamascusPUABold", @".DamascusPUALight", @".DamascusPUAMedium", @".DamascusPUASemiBold", @".DecoTypeNaskhPUA", @".FarahPUA", @".LucidaGrandeUI", @".LucidaGrandeUI-Bold", @"AcademyEngravedLetPlain", @"Al-Firat", @"Al-Khalil", @"Al-KhalilBold", @"Al-Rafidain", @"AlBayan", @"AlBayan-Bold", @"AlRafidainAlFanni", @"AlTarikh", @"Algiers", @"AndaleMono", @"Apple-Chancery", @"AppleBraille", @"AppleBraille-Outline6Dot", @"AppleBraille-Outline8Dot", @"AppleBraille-Pinpoint6Dot", @"AppleBraille-Pinpoint8Dot", @"AppleMyungjo", @"AppleSDGothicNeo-ExtraBold", @"AppleSDGothicNeo-Heavy", @"AppleSymbols", @"Arial-Black", @"ArialHebrewScholar", @"ArialHebrewScholar-Bold", @"ArialHebrewScholar-Light", @"ArialNarrow", @"ArialNarrow-Bold", @"ArialNarrow-BoldItalic", @"ArialNarrow-Italic", @"ArialUnicodeMS", @"Athelas-Bold", @"Athelas-BoldItalic", @"Athelas-Italic", @"Athelas-Regular", @"Ayuthaya", @"Baghdad", @"BanglaMN", @"BanglaMN-Bold", @"BankGothic-Light", @"BankGothic-Medium", @"Basra", @"Basra-Bold", @"Beirut", @"BigCaslon-Medium", @"BlackmoorLetPlain", @"BlairMdITCTT-Medium", @"BookAntiqua", @"BookAntiqua-Bold", @"BookAntiqua-BoldItalic", @"BookAntiqua-Italic", @"BookmanOldStyle", @"BookmanOldStyle-Bold", @"BookmanOldStyle-BoldItalic", @"BookmanOldStyle-Italic", @"BordeauxRomanBoldLetPlain", @"BradleyHandITCTT-Bold", @"BraganzaITCTT", @"BrushScriptMT", @"CapitalsRegular", @"CenturyGothic", @"CenturyGothic-Bold", @"CenturyGothic-BoldItalic", @"CenturyGothic-Italic", @"CenturySchoolbook", @"CenturySchoolbook-Bold", @"CenturySchoolbook-BoldItalic", @"CenturySchoolbook-Italic", @"Chalkboard", @"Chalkboard-Bold", @"CharcoalCY", @"Charter-Black", @"Charter-BlackItalic", @"Charter-Bold", @"Charter-BoldItalic", @"Charter-Italic", @"Charter-Roman", @"ComicSansMS", @"ComicSansMS-Bold", @"CorsivaHebrew", @"CorsivaHebrew-Bold", @"DFWaWaSC-W5", @"DFWaWaTC-W5", @"Damascus", @"DamascusBold", @"DamascusLight", @"DamascusMedium", @"DamascusSemiBold", @"DearJoeFour-Regular", @"DearJoeFour-Small", @"DecoTypeNaskh", @"DevanagariMT", @"DevanagariMT-Bold", @"Dijla", @"DiwanKufi", @"DiwanThuluth", @"FZLTTHB--B51-0", @"FZLTTHK--GBK1-0", @"FZLTXHB--B51-0", @"FZLTXHK--GBK1-0", @"FZLTZHB--B51-0", @"FZLTZHK--GBK1-0", @"Farah", @"Farisi", @"ForgottenFuturist-Bold", @"ForgottenFuturist-BoldItalic", @"ForgottenFuturist-Italic", @"ForgottenFuturist-Regular", @"ForgottenFuturist-Shadow", @"Garamond", @"Garamond-Bold", @"Garamond-BoldItalic", @"Garamond-Italic", @"GenevaCyr", @"GujaratiMT", @"GujaratiMT-Bold", @"GurmukhiSangamMN", @"GurmukhiSangamMN-Bold", @"HannotateSC-W5", @"HannotateSC-W7", @"HannotateTC-W5", @"HannotateTC-W7", @"HanziPenSC-W3", @"HanziPenSC-W5", @"HanziPenTC-W3", @"HanziPenTC-W5", @"HelveticaCY-Bold", @"HelveticaCY-BoldOblique", @"HelveticaCY-Oblique", @"HelveticaCY-Plain", @"Herculanum", @"HiraKakuPro-W3", @"HiraKakuPro-W6", @"HiraKakuStd-W8", @"HiraKakuStdN-W8", @"HiraMaruPro-W4", @"HiraMaruProN-W4", @"HiraMinPro-W3", @"HiraMinPro-W6", @"HiraginoSansGB-W3", @"HiraginoSansGB-W6", @"HoeflerText-Ornaments", @"HopperScript-Regular", @"ITFDevanagari-Bold", @"ITFDevanagari-Book", @"ITFDevanagari-Demi", @"ITFDevanagari-Light", @"ITFDevanagari-Medium", @"Impact", @"InaiMathi", @"JCHEadA", @"JCfg", @"JCkg", @"JCsmPC", @"JazzLetPlain", @"KannadaMN", @"KannadaMN-Bold", @"Kefa-Bold", @"Kefa-Regular", @"KhmerMN", @"KhmerMN-Bold", @"Kokonor", @"KoufiAbjadi", @"Krungthep", @"KufiStandardGK", @"Laimoon", @"LaoMN", @"LaoMN-Bold", @"LiHeiPro", @"LiSongPro", @"LucidaGrande", @"LucidaGrande-Bold", @"Luminari-Regular", @"MalayalamMN", @"MalayalamMN-Bold", @"MicrosoftSansSerif", @"MonaLisaSolidITCTT", @"MonotypeGurmukhi", @"Mshtakan", @"MshtakanBold", @"MshtakanBoldOblique", @"MshtakanOblique", @"Muna", @"MunaBlack", @"MunaBold", @"MyanmarMN", @"MyanmarMN-Bold", @"MyanmarSangamMN", @"Nadeem", @"NanumBrush", @"NanumGothic", @"NanumGothicBold", @"NanumGothicExtraBold", @"NanumMyeongjo", @"NanumMyeongjoBold", @"NanumMyeongjoExtraBold", @"NanumPen", @"NewPeninimMT", @"NewPeninimMT-Bold", @"NewPeninimMT-BoldInclined", @"NewPeninimMT-Inclined", @"Nisan", @"OriyaMN", @"OriyaMN-Bold", @"Osaka", @"Osaka-Mono", @"PTMono-Bold", @"PTMono-Regular", @"PTSans-Bold", @"PTSans-BoldItalic", @"PTSans-Caption", @"PTSans-CaptionBold", @"PTSans-Italic", @"PTSans-Narrow", @"PTSans-NarrowBold", @"PTSans-Regular", @"PTSerif-Bold", @"PTSerif-BoldItalic", @"PTSerif-Caption", @"PTSerif-CaptionItalic", @"PTSerif-Italic", @"PTSerif-Regular", @"Phosphate-Inline", @"Phosphate-Solid", @"PlantagenetCherokee", @"PortagoITCTT", @"PrincetownLET", @"Raanana", @"RaananaBold", @"Raya", @"STBaoli-SC-Regular", @"STFangsong", @"STHeiti", @"STIXGeneral-Bold", @"STIXGeneral-BoldItalic", @"STIXGeneral-Italic", @"STIXGeneral-Regular", @"STIXIntegralsD-Bold", @"STIXIntegralsD-Regular", @"STIXIntegralsSm-Bold", @"STIXIntegralsSm-Regular", @"STIXIntegralsUp-Bold", @"STIXIntegralsUp-Regular", @"STIXIntegralsUpD-Bold", @"STIXIntegralsUpD-Regular", @"STIXIntegralsUpSm-Bold", @"STIXIntegralsUpSm-Regular", @"STIXNonUnicode-Bold", @"STIXNonUnicode-BoldItalic", @"STIXNonUnicode-Italic", @"STIXNonUnicode-Regular", @"STIXSizeFiveSym-Regular", @"STIXSizeFourSym-Bold", @"STIXSizeFourSym-Regular", @"STIXSizeOneSym-Bold", @"STIXSizeOneSym-Regular", @"STIXSizeThreeSym-Bold", @"STIXSizeThreeSym-Regular", @"STIXSizeTwoSym-Bold", @"STIXSizeTwoSym-Regular", @"STIXVariants-Bold", @"STIXVariants-Regular", @"STKaiTi-TC-Bold", @"STKaiTi-TC-Regular", @"STKaiti", @"STKaiti-SC-Black", @"STKaiti-SC-Bold", @"STKaiti-SC-Regular", @"STLibian-SC-Regular", @"STSong", @"STSongti-SC-Black", @"STSongti-SC-Bold", @"STSongti-SC-Light", @"STSongti-SC-Regular", @"STSongti-TC-Bold", @"STSongti-TC-Light", @"STSongti-TC-Regular", @"STXihei", @"STXingkai-SC-Bold", @"STXingkai-SC-Light", @"STYuanti-SC-Bold", @"STYuanti-SC-Light", @"STYuanti-SC-Regular", @"Sana", @"SantaFeLetPlain", @"Sathu", @"SchoolHouseCursiveB", @"SchoolHousePrintedA", @"Seravek", @"Seravek-Bold", @"Seravek-BoldItalic", @"Seravek-ExtraLight", @"Seravek-ExtraLightItalic", @"Seravek-Italic", @"Seravek-Light", @"Seravek-LightItalic", @"Seravek-Medium", @"Seravek-MediumItalic", @"ShreeDev0714", @"ShreeDev0714-Bold", @"ShreeDev0714-Bold-Italic", @"ShreeDev0714-Italic", @"SignPainter-HouseScript", @"Silom", @"SinhalaMN", @"SinhalaMN-Bold", @"Skia-Regular", @"Skia-Regular_Black", @"Skia-Regular_Black-Condensed", @"Skia-Regular_Black-Extended", @"Skia-Regular_Bold", @"Skia-Regular_Condensed", @"Skia-Regular_Extended", @"Skia-Regular_Light", @"Skia-Regular_Light-Condensed", @"Skia-Regular_Light-Extended", @"Somer", @"StoneSansITCTT-Bold", @"StoneSansITCTT-Semi", @"StoneSansITCTT-SemiIta", @"SukhumvitSet-Bold", @"SukhumvitSet-Light", @"SukhumvitSet-Medium", @"SukhumvitSet-SemiBold", @"SukhumvitSet-Text", @"SukhumvitSet-Thin", @"SynchroLET", @"Tahoma", @"Tahoma-Bold", @"TamilMN", @"TamilMN-Bold", @"TeluguMN", @"TeluguMN-Bold", @"Trattatello", @"TwCenMT-Bold", @"TwCenMT-BoldItalic", @"TwCenMT-Italic", @"TwCenMT-Regular", @"TypeEmbellishmentsOneLetPlain", @"Waseem", @"WaseemLight", @"Webdings", @"Weibei-SC-Bold", @"Weibei-TC-Bold", @"Wingdings-Regular", @"Wingdings2", @"Wingdings3", @"Yaziji", @"YuGo-Bold", @"YuGo-Medium", @"YuMin-Demibold", @"YuMin-Medium", @"YuppySC-Regular", @"YuppyTC-Regular", @"Zawra-Bold", @"Zawra-Heavy" ];
+		}
 	});
 
-	return availableRemoteFontNames;
+	if (loadedRemoteFontList && completion) {
+		completion(availableRemoteFontNames);
+
+		return;
+	}
+
+	static dispatch_once_t loadedFreshRemoteFontNamesList;
+	dispatch_once(&loadedFreshRemoteFontNamesList, ^{
+		NSURL *URL = [NSURL URLWithString:@"http://mesu.apple.com/assets/com_apple_MobileAsset_Font/com_apple_MobileAsset_Font.xml"];
+
+		__block CQRemoteFontSessionDelegate *delegate = [[CQRemoteFontSessionDelegate alloc] init];
+		delegate.completionBlock = ^(NSData *requestData, NSError *requestError) {
+			NSData *data = [requestData copy];
+			NSError *error = [requestError copy];
+
+			delegate = nil;
+
+			if (!data.length || error) {
+				if (completion) {
+					completion(availableRemoteFontNames);
+				}
+
+				if (error.code != NSURLErrorCancelled) {
+					NSLog(@"Error fetching font list %@", error);
+				}
+
+				return;
+			}
+
+			NSPropertyListFormat format = NSPropertyListXMLFormat_v1_0;
+			NSError *plistParseError = nil;
+			NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:data options:0 format:&format error:&plistParseError];
+			if (!plist || plistParseError) {
+				if (completion) {
+					completion(availableRemoteFontNames);
+				}
+
+				NSLog(@"Error parsing font list %@", plistParseError);
+
+				return;
+			}
+
+			NSMutableSet *postscriptNames = [NSMutableSet set];
+			for (NSDictionary *fontAssets in plist[@"Assets"]) {
+				for (NSDictionary *fontAsset in fontAssets[@"FontInfo3"]) {
+					NSString *postscriptName = fontAsset[@"PostScriptFontName"];
+
+					if (postscriptName.length) {
+						[postscriptNames addObject:postscriptName];
+					}
+				}
+			}
+
+			NSArray *sortedPostScriptNames = [postscriptNames sortedArrayUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES] ]];
+			if (!sortedPostScriptNames.count) {
+				if (completion) {
+					completion(availableRemoteFontNames);
+				}
+
+				NSLog(@"Refusing to use new list of fonts that contains 0 elements");
+
+				return;
+			}
+
+			availableRemoteFontNames = [sortedPostScriptNames copy];
+			loadedRemoteFontList = YES;
+
+			[[NSUserDefaults standardUserDefaults] setObject:availableRemoteFontNames forKey:@"CQAvailableRemoteFontNames"];
+			[[NSNotificationCenter defaultCenter] postNotificationName:CQRemoteFontCourierDidLoadFontListNotification object:nil userInfo:@{ CQRemoteFontCourierFontListKey: [availableRemoteFontNames copy] }];
+
+			if (completion) {
+				completion(availableRemoteFontNames);
+			}
+		};
+
+		NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration] delegate:delegate delegateQueue:nil];
+		[[session dataTaskWithURL:URL] resume];
+	});
 }
 
-+ (void) cq_loadAllAvailableFonts {
-	[[UIFont cq_availableRemoteFontNames] enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(id fontName, NSUInteger index, BOOL *stop) {
-		// without the dispatch_after, CoreText will cause the CPU to spin at 100% for awhile
-		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(index * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-			[UIFont cq_loadFontWithName:fontName withCompletionHandler:NULL];
-		});
-	}];
-}
-
-+ (void) cq_loadFontWithName:(NSString *) fontName withCompletionHandler:(__nullable CQRemoteFontCompletionHandler)completionHandler {
++ (void) cq_loadRemoteFontWithName:(NSString *) fontName completionHandler:(__nullable CQRemoteFontCompletionHandler) completionHandler {
 	void (^postSuccessNotification)(NSString *, UIFont *) = ^(NSString *loadedFontName, UIFont *loadedFont) {
 		dispatch_async(dispatch_get_main_queue(), ^{
 			NSDictionary *userInfo = nil;
-			if (loadedFontName && loadedFont) userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: loadedFontName, CQRemoteFontCourierFontLoadingFontKey: loadedFont };
-			else if (loadedFontName) userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: loadedFontName };
-			else if (loadedFont) userInfo = @{ CQRemoteFontCourierFontLoadingFontKey: loadedFont };
-			[[NSNotificationCenter chatCenter] postNotificationName:CQRemoteFontCourierFontLoadingDidSucceedNotification object:nil userInfo:userInfo];
+			if (loadedFontName && loadedFont) {
+				userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: loadedFontName, CQRemoteFontCourierFontLoadingFontKey: loadedFont };
+			} else if (loadedFontName) {
+				userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: loadedFontName };
+			} else if (loadedFont) {
+				userInfo = @{ CQRemoteFontCourierFontLoadingFontKey: loadedFont };
+			}
+
+			[[NSNotificationCenter defaultCenter] postNotificationName:CQRemoteFontCourierFontLoadingDidSucceedNotification object:nil userInfo:userInfo];
 		});
 	};
 
 	void (^postFailureNotification)(NSString *) = ^(NSString *failedFont) {
 		dispatch_async(dispatch_get_main_queue(), ^{
 			NSDictionary *userInfo = failedFont ? userInfo = @{ CQRemoteFontCourierFontLoadingFontNameKey: failedFont } : nil;
-			[[NSNotificationCenter chatCenter] postNotificationName:CQRemoteFontCourierFontLoadingDidFailNotification object:nil userInfo:userInfo];
+
+			[[NSNotificationCenter defaultCenter] postNotificationName:CQRemoteFontCourierFontLoadingDidFailNotification object:nil userInfo:userInfo];
 		});
 	};
 
 	UIFont *font = [UIFont fontWithName:fontName size:12.];
-	if (font && ([font.fontName compare:fontName] == NSOrderedSame || [font.familyName compare:fontName] == NSOrderedSame)) {
-		if (completionHandler)
+	if (font && ([font.fontName caseInsensitiveCompare:fontName] == NSOrderedSame || [font.familyName caseInsensitiveCompare:fontName] == NSOrderedSame)) {
+		if (completionHandler) {
 			completionHandler(fontName, font);
+		}
+
 		postSuccessNotification(fontName, font);
+
 		return;
 	}
 
 	NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:fontName, kCTFontNameAttribute, nil];
-//	NSMutableDictionary *attributes = [@{ (__bridge id)kCTFontAttributeName: fontName } mutableCopy]; // this will cause downloads to fail and only return the system font (Helvetica on iOS)
+//	NSMutableDictionary *attributes = [@{ (__bridge id)kCTFontAttributeName: fontName } mutableCopy]; // this will cause downloads to fail and only return the system font (Helvetica Neue or San Francisco on iOS)
 
 	CTFontDescriptorRef fontDescriptorRef = CFAutorelease(CTFontDescriptorCreateWithAttributes((__bridge CFDictionaryRef)attributes));
 	NSArray *descriptors = @[ (__bridge id)fontDescriptorRef ];
@@ -90,16 +251,26 @@ NS_ASSUME_NONNULL_BEGIN
 		);
 
 		if (state == kCTFontDescriptorMatchingDidFinish) {
-			if (errorEncountered)
-				return false;;
+			if (errorEncountered) {
+				return false;
+			}
 
 			dispatch_async(dispatch_get_main_queue(), ^{
 				CTFontRef fontRef = CFAutorelease(CTFontCreateWithName((__bridge CFStringRef)fontName, 0., NULL));
 				if (fontRef) {
 					CFURLRef fontURL = CFAutorelease(CTFontCopyAttribute(fontRef, kCTFontURLAttribute));
 
-					if (fontURL)
-						CTFontManagerRegisterFontsForURL(fontURL, kCTFontManagerScopeUser, NULL); // This scope is documented as unavailable on iOS. But, it still seems to work.
+					if (fontURL) {
+						bool registeredForUserScope = CTFontManagerRegisterFontsForURL(fontURL, kCTFontManagerScopeUser, NULL); // This scope is documented as unavailable on iOS. But, it's still defined, so, lets give it a try
+						if (!registeredForUserScope) {
+							bool registeredForCurrentProcess = CTFontManagerRegisterFontsForURL(fontURL, kCTFontManagerScopeProcess, NULL); // This scope is documented as available on iOS. But, it doesn't usually work, either
+							if (!registeredForCurrentProcess) {
+								NSLog(@"%@ = %@: Unable to register scope for user or process", fontName, fontURL);
+							} else {
+								NSLog(@"%@ = %@: Unable to register scope for user", fontURL, fontURL);
+							}
+						}
+					}
 
 					if (!errorEncountered && completionHandler) {
 						UIFont *loadedFont = [UIFont fontWithName:fontName size:12.];
@@ -119,8 +290,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 			errorEncountered = YES;
 
-			if (completionHandler)
+			if (completionHandler) {
 				completionHandler(fontName, NULL);
+			}
+
 			postFailureNotification(fontName);
 
 			return false;
@@ -130,8 +303,10 @@ NS_ASSUME_NONNULL_BEGIN
 	});
 
 	if (!didStartDownload) {
-		if (completionHandler)
+		if (completionHandler) {
 			completionHandler(fontName, NULL);
+		}
+
 		postFailureNotification(fontName);
 	}
 }

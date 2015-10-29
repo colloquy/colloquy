@@ -15,8 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation CQChatRoomListViewController {
 @protected
-	NSMutableArray *_rooms;
-	NSMutableArray *_matchedRooms;
+	NSMutableArray <NSString *> *_rooms;
+	NSMutableArray <NSString *> *_matchedRooms;
 	NSMutableSet *_processedRooms;
 	NSString *_currentSearchString;
 	UISearchBar *_searchBar;
@@ -148,12 +148,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) filterRoomsWithSearchString:(NSString *) searchString {
 	_searchBar.text = searchString;
 
-	NSArray *previousRoomsArray = _matchedRooms;
+	NSArray <NSString *> *previousRoomsArray = _matchedRooms;
 
 	if (searchString.length) {
 		_matchedRooms = [[NSMutableArray alloc] init];
 
-		NSArray *searchArray = (_currentSearchString && [searchString hasPrefix:_currentSearchString] ? previousRoomsArray : _rooms);
+		NSArray <NSString *> *searchArray = (_currentSearchString && [searchString hasPrefix:_currentSearchString] ? previousRoomsArray : _rooms);
 		for (NSString *room in searchArray) {
 			if (![room hasCaseInsensitiveSubstring:searchString])
 				continue;
@@ -170,7 +170,7 @@ NS_ASSUME_NONNULL_BEGIN
 		[self.tableView beginUpdates];
 
 		NSUInteger index = 0;
-		NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+		NSMutableArray <NSIndexPath *> *indexPaths = [[NSMutableArray alloc] init];
 
 		for (NSString *room in previousRoomsArray) {
 			if (![matchedRoomsSet containsObject:room])
@@ -412,7 +412,7 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 	}
 
 	if (animatedInsert) {
-		NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:_processedRooms.count];
+		NSMutableArray <NSIndexPath *> *indexPaths = [[NSMutableArray alloc] initWithCapacity:_processedRooms.count];
 
 		NSUInteger index = 0;
 		for (NSString *room in _matchedRooms) {

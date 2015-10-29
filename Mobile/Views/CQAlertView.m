@@ -9,7 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @implementation CQAlertView {
-	NSMutableArray *_textFieldInformation;
+	NSMutableArray <NSDictionary *> *_textFieldInformation;
 }
 
 - (instancetype) init {

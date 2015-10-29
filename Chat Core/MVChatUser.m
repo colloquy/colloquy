@@ -68,7 +68,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 #pragma mark -
 
 + (instancetype) wildcardUserFromString:(NSString *) mask {
-	NSArray *parts = [mask componentsSeparatedByString:@"!"];
+	NSArray <NSString *> *parts = [mask componentsSeparatedByString:@"!"];
 	if( parts.count == 1 )
 		return [self wildcardUserWithNicknameMask:parts[0] andHostMask:nil];
 	if( parts.count >= 2 )
@@ -80,7 +80,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	MVChatUser *ret = [[self alloc] init];
 	ret -> _type = MVChatWildcardUserType;
 
-	NSArray *parts = [nickname componentsSeparatedByString:@"@"];
+	NSArray <NSString *> *parts = [nickname componentsSeparatedByString:@"@"];
 	if( parts.count >= 1 )
 		ret -> _nickname = [parts[0] copy];
 	if( parts.count >= 2 )

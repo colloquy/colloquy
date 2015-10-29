@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[self layoutIfNeeded];
 }
 
-- (void) setColors:(NSArray *) colors {
+- (void) setColors:(NSArray <UIColor *> *) colors {
 	[self.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
 	_colors = [colors copy];

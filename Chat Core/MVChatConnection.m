@@ -134,7 +134,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		NO;
 }
 
-+ (NSArray *) defaultServerPortsForType:(MVChatConnectionType) type {
++ (NSArray <NSNumber *> *) defaultServerPortsForType:(MVChatConnectionType) type {
 #if ENABLE(ICB)
 	if( type == MVChatConnectionICBType )
 		return [MVICBChatConnection defaultServerPorts];
@@ -453,12 +453,12 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) setAlternateNicknames:(NSArray *) nicknames {
+- (void) setAlternateNicknames:(NSArray <NSString *> *) nicknames {
 	MVSafeCopyAssign( _alternateNicks, nicknames );
 	_nextAltNickIndex = 0;
 }
 
-- (NSArray *) alternateNicknames {
+- (NSArray <NSString *> *) alternateNicknames {
 	return [NSArray arrayWithArray:_alternateNicks];
 }
 
@@ -900,7 +900,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
-- (void) joinChatRoomsNamed:(NSArray *) rooms {
+- (void) joinChatRoomsNamed:(NSArray <NSString *> *) rooms {
 	NSParameterAssert( rooms != nil );
 
 	if( ! rooms.count ) return;
@@ -1450,7 +1450,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
-- (NSArray *) knownChatUsersArray {
+- (NSArray <MVChatUser *> *) knownChatUsersArray {
 	return [_knownUsers allValues];
 }
 
@@ -1472,7 +1472,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
-- (NSArray *) joinedChatRoomsArray {
+- (NSArray <MVChatRoom *> *) joinedChatRoomsArray {
 	return [[self joinedChatRooms] allObjects];
 }
 

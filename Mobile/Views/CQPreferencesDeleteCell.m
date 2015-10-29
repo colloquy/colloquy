@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (SEL) deleteAction {
-	NSArray *actions = [_deleteButton actionsForTarget:nil forControlEvent:UIControlEventTouchUpInside];
+	NSArray <NSString *> *actions = [_deleteButton actionsForTarget:nil forControlEvent:UIControlEventTouchUpInside];
 	if (!actions.count) return NULL;
 	return NSSelectorFromString(actions[0]);
 }

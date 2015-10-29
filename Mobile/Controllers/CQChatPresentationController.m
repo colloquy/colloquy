@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation CQChatPresentationController {
 	UIToolbar *_toolbar;
-	NSArray *_standardToolbarItems;
+	NSArray <UIBarButtonItem *> *_standardToolbarItems;
 	UIViewController <CQChatViewController> *_topChatViewController;
 }
 
@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (![UIDevice currentDevice].isPadModel)
 		return;
 
-	NSMutableArray *allItems = [_standardToolbarItems mutableCopy];
+	NSMutableArray <UIBarButtonItem *> *allItems = [_standardToolbarItems mutableCopy];
 
 	UIBarButtonItem *leftBarButtonItem = _topChatViewController.navigationItem.leftBarButtonItem;
 	if (leftBarButtonItem)
@@ -118,11 +118,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setStandardToolbarItems:(NSArray *) items {
+- (void) setStandardToolbarItems:(NSArray <UIBarButtonItem *> *) items {
 	[self setStandardToolbarItems:items animated:YES];
 }
 
-- (void) setStandardToolbarItems:(NSArray *) items animated:(BOOL) animated {
+- (void) setStandardToolbarItems:(NSArray <UIBarButtonItem *> *) items animated:(BOOL) animated {
 	NSParameterAssert(items);
 
 	_standardToolbarItems = [items copy];

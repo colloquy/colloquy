@@ -136,7 +136,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setCompletions:(NSArray *) completions {
+- (void) setCompletions:(NSArray <NSString *> *) completions {
 	UIFont *font = CompletionFont;
 
 	NSMutableSet *existingCompletions = [NSMutableSet set];

@@ -11,7 +11,7 @@ extern NSString *const CQIgnoreRulesNotSavedNotification;
 - (instancetype) init NS_UNAVAILABLE;
 - (instancetype) initWithConnection:(MVChatConnection *) connection NS_DESIGNATED_INITIALIZER;
 
-@property (nonatomic, readonly) NSArray *ignoreRules;
+@property (nonatomic, readonly) NSArray <KAIgnoreRule *> *ignoreRules;
 
 - (void) addIgnoreRule:(KAIgnoreRule *) ignoreRule;
 - (void) removeIgnoreRule:(KAIgnoreRule *) ignoreRule;

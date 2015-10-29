@@ -158,7 +158,7 @@ static id <CQChatViewController> chatControllerForIndexPath(NSIndexPath *indexPa
 	if (!indexPath)
 		return nil;
 
-	NSArray *controllers = [CQChatOrderingController defaultController].chatViewControllers;
+	NSArray <id <CQChatViewController>> *controllers = [CQChatOrderingController defaultController].chatViewControllers;
 	if (!controllers.count)
 		return nil;
 
@@ -166,7 +166,7 @@ static id <CQChatViewController> chatControllerForIndexPath(NSIndexPath *indexPa
 	if (!connection)
 		return nil;
 
-	NSArray *chatViewControllersForConnection = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
+	NSArray <id <CQChatViewController>> *chatViewControllersForConnection = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
 
 	if ((NSInteger)chatViewControllersForConnection.count > indexPath.row)
 		return chatViewControllersForConnection[indexPath.row];
@@ -184,7 +184,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		sectionIndex++;
 	NSInteger rowIndex = -1;
 
-	NSArray *chatViewControllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
+	NSArray <id <CQChatViewController>> *chatViewControllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
 	for (NSUInteger i = 0; i < chatViewControllers.count; i++) {
 		if (chatViewControllers[i] == controller) {
 			rowIndex = i;
@@ -209,7 +209,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (void) _closeFileTransferController:(CQFileTransferController *) fileTransferController withRowAnimation:(UITableViewRowAnimation) animation {
 	[[CQChatController defaultController] closeViewController:fileTransferController];
 
-	NSArray *allFileTransferControllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
+	NSArray <id <CQChatViewController>> *allFileTransferControllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
 
 	if (!allFileTransferControllers.count) {
 		[self.tableView beginUpdates];
@@ -219,7 +219,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		return;
 	}
 
-	NSMutableArray *rowsToDelete = [[NSMutableArray alloc] init];
+	NSMutableArray <NSIndexPath *> *rowsToDelete = [[NSMutableArray alloc] init];
 	[rowsToDelete addObject:indexPathForFileTransferController(fileTransferController)];
 
 	[self.tableView beginUpdates];
@@ -230,8 +230,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 #endif
 
-- (void) _closeChatViewControllers:(NSArray *) viewControllersToClose forConnection:(MVChatConnection *) connection withRowAnimation:(UITableViewRowAnimation) animation {
-	NSArray *allViewControllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
+- (void) _closeChatViewControllers:(NSArray <id <CQChatViewController>> *) viewControllersToClose forConnection:(MVChatConnection *) connection withRowAnimation:(UITableViewRowAnimation) animation {
+	NSArray <id <CQChatViewController>> *allViewControllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
 
 	if (!viewControllersToClose.count)
 		viewControllersToClose = allViewControllers;
@@ -244,7 +244,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			break;
 	}
 
-	NSMutableArray *rowsToDelete = [[NSMutableArray alloc] init];
+	NSMutableArray <NSIndexPath *> *rowsToDelete = [[NSMutableArray alloc] init];
 
 	for (id <CQChatViewController> chatViewController in viewControllersToClose) {
 		NSIndexPath *indexPath = indexPathForChatController(chatViewController, self.editing);
@@ -265,7 +265,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		return;
 	}
 
-	NSMutableArray *visibleIndexes = [self.tableView.indexPathsForVisibleRows mutableCopy];
+	NSMutableArray <NSIndexPath *> *visibleIndexes = [self.tableView.indexPathsForVisibleRows mutableCopy];
 	[visibleIndexes removeObjectsInArray:rowsToDelete];
 
 	[self.tableView beginUpdates];
@@ -504,7 +504,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	[self _refreshIndexPathForChatControllersCache];
 
-	NSMutableArray *indexPathPairs = [NSMutableArray array];
+	NSMutableArray <NSArray <NSIndexPath *> *> *indexPathPairs = [NSMutableArray array];
 
 	for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
 		NSIndexPath *lookupIndexPath = indexPath;
@@ -530,7 +530,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	if (indexPathPairs.count) {
 		[self.tableView beginUpdates];
-		for (NSArray *indexPathPair in indexPathPairs.reverseObjectEnumerator.allObjects)
+		for (NSArray <NSIndexPath *> *indexPathPair in indexPathPairs.reverseObjectEnumerator.allObjects)
 			[self.tableView moveRowAtIndexPath:indexPathPair[1] toIndexPath:indexPathPair[0]];
 		[self.tableView endUpdates];
 	}
@@ -797,7 +797,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	[self.tableView beginUpdates];
 	if (editing) {
-		NSMutableArray *rowsToInsert = [NSMutableArray array];
+		NSMutableArray <NSIndexPath *> *rowsToInsert = [NSMutableArray array];
 
 		for (NSInteger i = 1; i < [self numberOfSectionsInTableView:self.tableView]; i++) {
 			id connection = [[CQChatOrderingController defaultController] connectionAtIndex:(i - 1)];
@@ -808,7 +808,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
 		[self.tableView insertRowsAtIndexPaths:rowsToInsert withRowAnimation:UITableViewRowAnimationMiddle];
 	} else {
-		NSMutableArray *rowsToRemove = [NSMutableArray array];
+		NSMutableArray <NSIndexPath *> *rowsToRemove = [NSMutableArray array];
 
 		for (NSInteger i = 1; i < self.tableView.numberOfSections; i++) {
 			id connection = [[CQChatOrderingController defaultController] connectionAtIndex:(i - 1)];
@@ -988,10 +988,10 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 		if ([chatViewController isKindOfClass:[CQDirectChatController class]]) {
 			CQDirectChatController *directChatViewController = (CQDirectChatController *)chatViewController;
-			NSArray *recentMessages = directChatViewController.recentMessages;
+			NSArray <NSDictionary *> *recentMessages = directChatViewController.recentMessages;
 
 			NSUInteger capacity = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQPreviewLinesCount"];;
-			NSMutableArray *previewMessages = [[NSMutableArray alloc] initWithCapacity:capacity];
+			NSMutableArray <NSDictionary *> *previewMessages = [[NSMutableArray alloc] initWithCapacity:capacity];
 
 			for (NSInteger i = (recentMessages.count - 1); i >= 0 && previewMessages.count < capacity; --i) {
 				NSDictionary *message = recentMessages[i];
@@ -1007,7 +1007,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 #if ENABLE(FILE_TRANSFERS)
 	}
 
-	NSArray *controllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
+	NSArray <id <CQChatViewController>> *controllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
 	CQFileTransferController *controller = [controllers objectAtIndex:indexPath.row];
 
 	CQFileTransferTableCell *cell = (CQFileTransferTableCell *)[tableView dequeueReusableCellWithIdentifier:@"FileTransferTableCell"];
@@ -1050,7 +1050,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	return UITableViewCellEditingStyleDelete;
 }
 
-- (NSArray *__nullable) tableView:(UITableView *) tableView editActionsForRowAtIndexPath:(NSIndexPath *) indexPath {
+- (NSArray <UITableViewRowAction *> *__nullable) tableView:(UITableView *) tableView editActionsForRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (self.editing) {
 		if (indexPath.section == 0 || indexPath.row == 0)
 			return nil;
@@ -1087,7 +1087,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		return @[ leaveAction, closeAction ];
 	}
 
-	return @[closeAction];
+	return @[ closeAction ];
 }
 
 - (NSString *__nullable) tableView:(UITableView *) tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -1107,7 +1107,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 #if ENABLE(FILE_TRANSFERS)
 	}
 
-	NSArray *controllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
+	NSArray <id <CQChatViewController>> *controllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
 	CQFileTransferController *controller = [controllers objectAtIndex:indexPath.row];
 
 	MVFileTransferStatus status = controller.transfer.status;
@@ -1361,7 +1361,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-	NSArray *controllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
+	NSArray <id <CQChatViewController>> *controllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
 	CQFileTransferController *controller = [controllers objectAtIndex:indexPath.row];
 	if (controller.transfer.upload || controller.transfer.status != MVFileTransferDoneStatus)
 		return;

@@ -378,7 +378,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSMutableArray *messages = [[NSMutableArray alloc] init];
 
 	for (NSDictionary *message in _recentMessages) {
-		static NSArray *sameKeys = nil;
+		static NSArray <NSString *> *sameKeys = nil;
 		if (!sameKeys)
 			sameKeys = @[@"message", @"messagePlain", @"action", @"notice", @"highlighted", @"identifier", @"type"];
 
@@ -467,8 +467,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (NSArray *__nullable) keyCommands {
-	static NSArray *keyCommands = nil;
+- (NSArray <UIKeyCommand *> *__nullable) keyCommands {
+	static NSArray <UIKeyCommand *> *keyCommands = nil;
 	if (!keyCommands) {
 		UIKeyCommand *altTabKeyCommand = [UIKeyCommand keyCommandWithInput:@"\t" modifierFlags:UIKeyModifierAlternate action:@selector(_handleKeyCommand:)];
 		UIKeyCommand *shiftAltTabKeyCommand = [UIKeyCommand keyCommandWithInput:@"\t" modifierFlags:(UIKeyModifierAlternate | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
@@ -712,7 +712,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return YES;
 }
 
-- (NSArray *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
+- (NSArray <NSString *> *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
 	NSMutableArray *completions = [[NSMutableArray alloc] init];
 
 	if (word.length >= 2) {
@@ -724,7 +724,7 @@ NS_ASSUME_NONNULL_BEGIN
 		if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
 			[completions addObject:nickname];
 
-		static NSArray *services;
+		static NSArray <NSString *> *services;
 		if (!services) services = @[@"NickServ", @"ChanServ", @"MemoServ", @"OperServ"];
 
 		for (NSString *service in services) {
@@ -741,7 +741,7 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	if ([word hasPrefix:@"/"]) {
-		static NSArray *commands;
+		static NSArray <NSString *> *commands;
 		if (!commands) commands = @[@"/me", @"/msg", @"/nick", @"/join", @"/list", @"/away", @"/whois", @"/say", @"/raw", @"/quote", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/onotice", @"/umode", @"/globops",
 #if ENABLE(FILE_TRANSFERS)
 		@"/dcc",
@@ -1011,7 +1011,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleAmsgCommandWithArguments:(MVChatString *) arguments {
-	NSArray *rooms = [[CQChatOrderingController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
+	NSArray <id <CQChatViewController>> *rooms = [[CQChatOrderingController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
 	for (CQChatRoomController *controller in rooms) {
 		if (!controller.connection.connected)
 			continue;
@@ -1022,7 +1022,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleAmeCommandWithArguments:(MVChatString *) arguments {
-	NSArray *rooms = [[CQChatOrderingController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
+	NSArray <id <CQChatViewController>> *rooms = [[CQChatOrderingController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
 	for (CQChatRoomController *controller in rooms) {
 		if (!controller.connection.connected)
 			continue;
@@ -1041,7 +1041,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[self.connection connectAppropriately];
 
-	NSArray *rooms = [arguments.string componentsSeparatedByString:@","];
+	NSArray <NSString *> *rooms = [arguments.string componentsSeparatedByString:@","];
 	if (((NSString *)rooms.firstObject).length)
 		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:rooms.firstObject andConnection:self.connection];
 
@@ -1209,7 +1209,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (id) _findLocaleForQueryWithArguments:(MVChatString *) arguments {
-	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments.string];
+	NSScanner *argumentsScanner = [NSScanner scannerWithString:MVChatStringAsString(arguments)];
 	[argumentsScanner setCharactersToBeSkipped:nil];
 
 	NSString *languageCode = nil;
@@ -1259,7 +1259,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleWikipediaCommandWithArguments:(MVChatString *) arguments {
-	NSArray *results = [self _findLocaleForQueryWithArguments:arguments];
+	NSArray <NSString *> *results = [self _findLocaleForQueryWithArguments:arguments];
 	NSString *languageCode = results[0];
 	NSString *query = results[1];
 
@@ -1269,7 +1269,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleAmazonCommandWithArguments:(MVChatString *) arguments {
-	NSArray *results = [self _findLocaleForQueryWithArguments:arguments];
+	NSArray <NSString *> *results = [self _findLocaleForQueryWithArguments:arguments];
 	NSString *languageCode = results[0];
 	NSString *query = results[1];
 
@@ -1756,7 +1756,7 @@ NS_ASSUME_NONNULL_BEGIN
 		if (naturalChatActions && !action) {
 			static NSSet *actionVerbs;
 			if (!actionVerbs) {
-				NSArray *verbs = [[NSArray alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]];
+				NSArray <NSString *> *verbs = [[NSArray alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]];
 				actionVerbs = [[NSSet alloc] initWithArray:verbs];
 			}
 
@@ -1910,7 +1910,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) _showActivityViewControllerWithItems:(NSArray *) items activities:(NSArray *) activities {
+- (void) _showActivityViewControllerWithItems:(NSArray <UIActivity *> *) items activities:(NSArray <UIActivity *> *) activities {
 	_showingActivityViewController = YES;
 
 	UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:activities];
@@ -1919,7 +1919,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[self becomeFirstResponder];
 
 	__weak __typeof__((self)) weakSelf = self;
-	activityController.completionWithItemsHandler = ^(NSString *__nullable activityType, BOOL completed, NSArray *__nullable returnedItems, NSError *__nullable activityError) {
+	activityController.completionWithItemsHandler = ^(NSString *activityType, BOOL completed, NSArray <UIActivity *> *returnedItems, NSError *activityError) {
 		__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 		[strongSelf _endShowingActivityViewControllerWithInputBarAsResponder:inputBarWasFirstResponder];
 		[strongSelf.activityPopoverController dismissPopoverAnimated:YES];

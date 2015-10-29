@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protected
 	UIView *_backgroundView;
 	CQTextCompletionView *_completionView;
-	NSArray *_completions;
+	NSArray <NSString *> *_completions;
 	NSRange _completionRange;
 	BOOL _completionCapturedKeyboard;
 	BOOL _disableCompletionUntilNextWord;
@@ -328,7 +328,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (![strongDelegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)])
 		return;
 
-	NSArray *completions = [strongDelegate chatInputBar:self completionsForWordWithPrefix:text inRange:range];
+	NSArray <NSString *> *completions = [strongDelegate chatInputBar:self completionsForWordWithPrefix:text inRange:range];
 	if (completions.count)
 		[self showCompletions:completions forText:text inRange:range];
 	else [self hideCompletions];
@@ -376,7 +376,7 @@ NS_ASSUME_NONNULL_BEGIN
 		[self.superview addSubview:_completionView];
 	}
 
-	NSArray *completions = _completions;
+	NSArray <NSString *> *completions = _completions;
 	NSString *prefixText = [text substringToIndex:_completionRange.location];
 	CGSize textSize = [prefixText sizeWithAttributes:@{ NSFontAttributeName: _inputView.font }];
 
@@ -410,7 +410,7 @@ retry:
 	[_completionView.superview bringSubviewToFront:_completionView];
 }
 
-- (void) showCompletions:(NSArray *) completions forText:(NSString *) text inRange:(NSRange) textRange {
+- (void) showCompletions:(NSArray <NSString *> *) completions forText:(NSString *) text inRange:(NSRange) textRange {
 	_completionRange = textRange;
 
 	_completions = completions;
@@ -604,7 +604,7 @@ retry:
 			_disableCompletionUntilNextWord = NO;
 
 		NSString *word = [[text substringWithRange:wordRange] copy];
-		NSArray *completions = nil;
+		NSArray <NSString *> *completions = nil;
 		BOOL canShowCompletionForCurrentWord = textView.text.length;
 		if (canShowCompletionForCurrentWord) {
 			if (!((range.location + range.length) == textView.text.length)) { // if we're in the middle of a line, only show completions if the next letter is a space

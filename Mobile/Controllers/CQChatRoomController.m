@@ -291,7 +291,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleInviteCommandWithArguments:(MVChatString *) arguments {
-	NSArray *nicknames = [arguments.string componentsSeparatedByString:@" "];
+	NSArray <NSString *> *nicknames = [arguments.string componentsSeparatedByString:@" "];
 	if (nicknames.count == 0)
 		return NO;
 
@@ -312,11 +312,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (NSArray *) chatInputBar:(CQChatInputBar *) inputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
-	NSMutableArray *completions = [[NSMutableArray alloc] init];
+- (NSArray <NSString *> *) chatInputBar:(CQChatInputBar *) inputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
+	NSMutableArray <NSString *> *completions = [[NSMutableArray alloc] init];
 
 	if ([word hasPrefix:@"/"]) {
-		static NSArray *commands = nil;
+		static NSArray <NSString *> *commands = nil;
 		if (!commands) commands = @[@"/me", @"/msg", @"/nick", @"/join", @"/away", @"/topic", @"/kick", @"/ban", @"/kickban", @"/mode", @"/op", @"/voice", @"/halfop", @"/quiet", @"/deop", @"/devoice", @"/dehalfop", @"/dequiet", @"/unban", @"/bankick", @"/cycle", @"/hop", @"/invite"];
 
 		for (NSString *command in commands) {

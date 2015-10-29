@@ -41,7 +41,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 
 #pragma mark -
 
-- (NSArray *) ignoreRules {
+- (NSArray <KAIgnoreRule *> *) ignoreRules {
 	return [_ignoreRules copy];
 }
 

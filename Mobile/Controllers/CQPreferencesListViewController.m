@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (_editingViewController) {
 		NSIndexPath *changedIndexPath = [NSIndexPath indexPathForRow:_editingIndex inSection:0];
-		NSArray *changedIndexPaths = @[changedIndexPath];
+		NSArray <NSIndexPath *> *changedIndexPaths = @[changedIndexPath];
 
 #define validListItem(item) \
 	(([item isKindOfClass:[NSString class]] && [item length]) || (item && ![item isKindOfClass:[NSString class]]))
@@ -144,7 +144,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[self.tableView reloadData];
 }
 
-- (void) setItems:(NSArray *) items {
+- (void) setItems:(NSArray <NSString *> *) items {
 	_pendingChanges = NO;
 
 	[_items setArray:items];
@@ -230,7 +230,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[super setEditing:editing animated:animated];
 
 	if (_items.count) {
-		NSArray *indexPaths = @[[NSIndexPath indexPathForRow:_items.count inSection:0]];
+		NSArray <NSIndexPath *> *indexPaths = @[[NSIndexPath indexPathForRow:_items.count inSection:0]];
 		if (editing) [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
 		else [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
 	} else {
@@ -332,12 +332,12 @@ NS_ASSUME_NONNULL_BEGIN
 		cell.textLabel.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 
 		if (self.listType == CQPreferencesListTypeFont) {
-			UIFont *font = [UIFont fontWithName:self.values[indexPath.row] size:12.];
+			NSString *fontName = self.values[indexPath.row];
+			UIFont *font = [UIFont fontWithName:fontName size:12.];
 			UIFont *systemFont = [UIFont systemFontOfSize:12.];
-			if ((!font || [font.familyName isCaseInsensitiveEqualToString:systemFont.familyName]) && [[UIFont cq_availableRemoteFontNames] containsObject:self.values[indexPath.row]])
-			{
+			if (!font || (fontName.length && [font.familyName isCaseInsensitiveEqualToString:systemFont.familyName])) {
 				__weak __typeof__((self)) weakSelf = self;
-				[UIFont cq_loadFontWithName:self.values[indexPath.row] withCompletionHandler:^(NSString *fontName, UIFont *loadedFont) {
+				[UIFont cq_loadRemoteFontWithName:fontName completionHandler:^(NSString *loadedFontName, UIFont *loadedFont) {
 					__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 					[strongSelf.tableView beginUpdates];
 					[strongSelf.tableView reloadRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationFade];

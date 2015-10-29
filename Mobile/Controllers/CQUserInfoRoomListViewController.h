@@ -8,7 +8,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CQUserInfoRoomListViewController : CQTableViewController
-@property (nonatomic, strong) NSArray *rooms;
+@property (nonatomic, strong) NSArray <NSString *> *rooms;
 @property (nonatomic, strong) MVChatConnection *connection;
 @end
 
