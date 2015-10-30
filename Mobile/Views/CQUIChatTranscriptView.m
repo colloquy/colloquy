@@ -46,6 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 @synthesize fontSize = _fontSize;
 @synthesize styleIdentifier = _styleIdentifier;
 @synthesize readyForDisplay = _readyForDisplay;
+@synthesize scrollbackLimit = _scrollbackLimit;
 
 - (instancetype) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
@@ -172,6 +173,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL) canBecomeFirstResponder {
 	return !_scrolling;
+}
+
+- (void) setScrollbackLimit:(BOOL) scrollbackLimit {
+	_scrollbackLimit = scrollbackLimit;
+
+	[super stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setScrollbackLimit(%tu)", scrollbackLimit]];
 }
 
 - (void) willStartScrolling {

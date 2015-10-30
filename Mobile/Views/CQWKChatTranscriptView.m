@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 @synthesize fontSize = _fontSize;
 @synthesize styleIdentifier = _styleIdentifier;
 @synthesize readyForDisplay = _readyForDisplay;
+@synthesize scrollbackLimit = _scrollbackLimit;
 
 - (instancetype) initWithFrame:(CGRect) frame {
 	WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
@@ -163,6 +164,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL) canBecomeFirstResponder {
 	return !_scrolling;
+}
+
+- (void) setScrollbackLimit:(BOOL) scrollbackLimit {
+	_scrollbackLimit = scrollbackLimit;
+
+	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setScrollbackLimit(%tu)", scrollbackLimit]];
 }
 
 - (void) willStartScrolling {

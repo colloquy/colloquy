@@ -1618,7 +1618,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) setScrollbackLength:(NSUInteger) scrollbackLength {
-	[transcriptView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setScrollbackLimit(%tu)", scrollbackLength] completionHandler:NULL];
+	transcriptView.scrollbackLimit = scrollbackLength;
 }
 
 - (void) setMostRecentIncomingMessageTimestamp:(NSDate *) date {
