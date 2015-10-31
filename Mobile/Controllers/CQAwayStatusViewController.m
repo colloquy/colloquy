@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQPreferencesListViewController (Private) <CQPreferencesTextEditViewDelegate, UIActionSheetDelegate>
+@interface CQPreferencesListViewController (Private) <CQPreferencesTextEditViewDelegate, CQActionSheetDelegate>
 - (void) editItemAtIndex:(NSUInteger) index;
 @end
 
@@ -108,7 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if ([self statusIsDefaultAwayStatus:cell.textLabel.text])
 		return;
 
-	UIActionSheet *awayStatusActionSheet = [[UIActionSheet alloc] init];
+	CQActionSheet *awayStatusActionSheet = [[CQActionSheet alloc] init];
 	awayStatusActionSheet.delegate = self;
 	[awayStatusActionSheet associateObject:cell forKey:@"userInfo"];
 
@@ -181,7 +181,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.destructiveButtonIndex)
 		return;
 	

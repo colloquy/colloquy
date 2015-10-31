@@ -25,7 +25,7 @@ static BOOL pushAvailable = YES;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQBouncerEditViewController () <UIActionSheetDelegate, UIAlertViewDelegate>
+@interface CQBouncerEditViewController () <CQActionSheetDelegate, CQAlertViewDelegate>
 @end
 
 @implementation CQBouncerEditViewController
@@ -292,7 +292,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) deleteBouncer:(__nullable id) sender {
 	if ([[UIDevice currentDevice] isPadModel] && self.view.window.isFullscreen) {
-		UIAlertView *alert = [[CQAlertView alloc] init];
+		CQAlertView *alert = [[CQAlertView alloc] init];
 		alert.delegate = self;
 
 		alert.title = NSLocalizedString(@"Delete Bouncer", @"Delete Bouncer alert title");
@@ -305,7 +305,7 @@ NS_ASSUME_NONNULL_BEGIN
 		return;
 	}
 
-	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
 
 	sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Delete Bouncer", @"Delete Bouncer button title")];
@@ -316,7 +316,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == alertView.cancelButtonIndex)
 		return;
 	[[CQConnectionsController defaultController] removeBouncerSettings:_settings];
@@ -325,7 +325,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 	[[CQConnectionsController defaultController] removeBouncerSettings:_settings];

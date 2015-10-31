@@ -6,8 +6,6 @@
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
-#import "UIActionSheetAdditions.h"
-
 static NSString *membersSingleCountFormat;
 static NSString *membersFilteredCountFormat;
 
@@ -15,7 +13,7 @@ static NSString *membersFilteredCountFormat;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatUserListViewController () <UIActionSheetDelegate, UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating>
+@interface CQChatUserListViewController () <CQActionSheetDelegate, UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating>
 @property (atomic, strong) NSMutableArray <MVChatUser *> *users;
 @property (atomic, strong) NSMutableArray <MVChatUser *> *matchedUsers;
 @end
@@ -435,7 +433,7 @@ NS_ASSUME_NONNULL_BEGIN
 		UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 
 		BOOL showingUserInformation = _listMode == CQChatUserListModeRoom && !self.view.window.isFullscreen;
-		UIActionSheet *sheet = [UIActionSheet userActionSheetForUser:user inRoom:_room showingUserInformation:showingUserInformation];
+		CQActionSheet *sheet = [CQActionSheet userActionSheetForUser:user inRoom:_room showingUserInformation:showingUserInformation];
 		sheet.title = cell.textLabel.text;
 
 		[sheet associateObject:cell forKey:@"userInfo"];

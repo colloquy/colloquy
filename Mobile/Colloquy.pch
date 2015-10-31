@@ -34,6 +34,7 @@
 #import "NSScannerAdditions.h"
 #import "NSStringAdditions.h"
 
+#import "UIActionSheetAdditions.h"
 #import "UIDeviceAdditions.h"
 #import "UIImageAdditions.h"
 #import "UINavigationControllerAdditions.h"

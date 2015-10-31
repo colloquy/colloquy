@@ -13,8 +13,6 @@
 
 #import <ChatCore/MVChatUser.h>
 
-#import "UIActionSheetAdditions.h"
-
 #import "NSNotificationAdditions.h"
 
 #define NicknameActionSheet 1
@@ -28,7 +26,7 @@ static CQShowRoomTopic showRoomTopic;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQDirectChatController (CQDirectChatControllerPrivate) <UIAlertViewDelegate, UIActionSheetDelegate, UIPopoverControllerDelegate, CQChatInputBarDelegate>
+@interface CQDirectChatController (CQDirectChatControllerPrivate) <CQAlertViewDelegate, CQActionSheetDelegate, UIPopoverControllerDelegate, CQChatInputBarDelegate>
 - (void) _addPendingComponentsAnimated:(BOOL) animated;
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _didDisconnect:(NSNotification *) notification;
@@ -257,8 +255,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (UIActionSheet *) actionSheet {
-	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+- (CQActionSheet *) actionSheet {
+	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.tag = JoinActionSheet;
 
@@ -352,7 +350,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) transcriptView:(CQUIChatTranscriptView *) transcriptView handleNicknameTap:(NSString *) nickname atLocation:(CGPoint) location {
 	MVChatUser *user = [[self.connection chatUsersWithNickname:nickname] anyObject];
-	UIActionSheet *sheet = [UIActionSheet userActionSheetForUser:user inRoom:self.room showingUserInformation:YES];
+	CQActionSheet *sheet = [CQActionSheet userActionSheetForUser:user inRoom:self.room showingUserInformation:YES];
 	sheet.title = nickname;
 	sheet.tag = NicknameActionSheet;
 
@@ -511,7 +509,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		return;
 	}
 
-	UIAlertView *alert = [[CQAlertView alloc] init];
+	CQAlertView *alert = [[CQAlertView alloc] init];
 	alert.tag = RejoinRoomAlertTag;
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"Kicked from Room", "Kicked from room alert title");
@@ -1274,7 +1272,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 #pragma mark -
 
-- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == alertView.cancelButtonIndex)
 		return;
 
@@ -1289,7 +1287,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 #pragma mark -
 
-- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
@@ -1338,7 +1336,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 }
 
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
-	UIAlertView *alert = [[CQAlertView alloc] init];
+	CQAlertView *alert = [[CQAlertView alloc] init];
 	alert.delegate = self;
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];

@@ -54,7 +54,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 static NSString *const connectionInvalidSSLCertAction = nil;
 
-@interface CQConnectionsController () <UIActionSheetDelegate, UIAlertViewDelegate,
+@interface CQConnectionsController () <CQActionSheetDelegate, CQAlertViewDelegate,
 #if !SYSTEM(TV)
 CSSearchableIndexDelegate,
 #endif
@@ -226,7 +226,7 @@ CQBouncerConnectionDelegate>
 #pragma mark -
 
 - (void) showNewConnectionPromptFromPoint:(CGPoint) point {
-	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.tag = 1;
 
@@ -255,7 +255,7 @@ CQBouncerConnectionDelegate>
 
 #pragma mark -
 
-- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
@@ -267,7 +267,7 @@ CQBouncerConnectionDelegate>
 
 #pragma mark -
 
-- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
 	NSMapTable *errorToAlertMappingsForConnection = [_connectionToErrorToAlertMap objectForKey:[alertView associatedObjectForKey:@"connection"]];
 	[errorToAlertMappingsForConnection removeObjectForKey:[alertView associatedObjectForKey:@"error-code"]];
 	[errorToAlertMappingsForConnection removeObjectForKey:@"peerTrust"];
@@ -294,7 +294,7 @@ CQBouncerConnectionDelegate>
 	}
 
 	if (alertView.tag == NextAlertTag) {
-		UIAlertView *nextAlertView = [alertView associatedObjectForKey:@"userInfo"];
+		CQAlertView *nextAlertView = [alertView associatedObjectForKey:@"userInfo"];
 		[nextAlertView show];
 		return;
 	}
@@ -595,7 +595,7 @@ CQBouncerConnectionDelegate>
 	NSMutableArray *connections = _bouncerChatConnections[connection.settings.identifier];
 
 	if (error && (!connections.count || [connection.userInfo isEqual:@"manual-refresh"])) {
-		UIAlertView *alert = [[CQAlertView alloc] init];
+		CQAlertView *alert = [[CQAlertView alloc] init];
 
 		alert.tag = CannotConnectToBouncerTag;
 		alert.delegate = self;
@@ -662,7 +662,7 @@ CQBouncerConnectionDelegate>
 
 	if (self._anyConnectedOrConnectingConnections) {
 		if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-			UIAlertView *alertView = [[CQAlertView alloc] init];
+			CQAlertView *alertView = [[CQAlertView alloc] init];
 			alertView.title = NSLocalizedString(@"Disconnected", @"Disconnected alert title");
 			alertView.message = NSLocalizedString(@"You have been disconnected due to the loss of network connectivity", @"Disconnected due to network alert message");
 			alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
@@ -951,7 +951,7 @@ CQBouncerConnectionDelegate>
 - (void) _gotConnectionError:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
 
-	UIAlertView *alertView = [[CQAlertView alloc] init];
+	CQAlertView *alertView = [[CQAlertView alloc] init];
 	alertView.title = connection.displayName;
 	alertView.message = notification.userInfo[@"message"];
 	alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button title")];
@@ -1766,7 +1766,12 @@ CQBouncerConnectionDelegate>
 			NSString *title = NSLocalizedString(@"Unknown Error", @"Unknown Error error title");
 			NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Unable to remove index from Spotlight: %@", @"search deletion failed error message"), error.localizedDescription];
 			if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-				[[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay") otherButtonTitles:nil] show];
+				CQAlertView *alertView = [[CQAlertView alloc] init];
+				alertView.title = title;
+				alertView.message = message;
+				alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay")];
+
+				[alertView show];
 			} else {
 				UILocalNotification *notification = [[UILocalNotification alloc] init];
 				notification.alertTitle = title;

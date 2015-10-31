@@ -85,7 +85,7 @@ static BOOL showingKeyboard;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQDirectChatController () <CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate, CQChatInputStyleDelegate>
+@interface CQDirectChatController () <CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, CQAlertViewDelegate, CQActionSheetDelegate, CQChatInputStyleDelegate>
 @property (strong, nullable) UIPopoverController *activityPopoverController;
 @end
 
@@ -155,13 +155,13 @@ NS_ASSUME_NONNULL_BEGIN
 			[alertView show];
 		}
 	} else if (error.code == CQBookmarkingErrorServer) {
-		UIAlertView *alertView = [[CQAlertView alloc] init];
+		CQAlertView *alertView = [[CQAlertView alloc] init];
 		alertView.title = NSLocalizedString(@"Server Error", @"Server Error");
 		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@ due to a server error.", @"Unable to bookmark link server error message"), notification.object, [activeService serviceName]];
 		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
 		[alertView show];
 	} else {
-		UIAlertView *alertView = [[CQAlertView alloc] init];
+		CQAlertView *alertView = [[CQAlertView alloc] init];
 		alertView.title = NSLocalizedString(@"Unknown Error", @"Unknown Error");
 		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@.", @"Unable to bookmark link message"), notification.object, [activeService serviceName]];
 		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
@@ -409,8 +409,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (UIActionSheet *) actionSheet {
-	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+- (CQActionSheet *) actionSheet {
+	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.tag = InfoActionSheet;
 
@@ -1602,7 +1602,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) transcriptView:(id) transcriptView handleLongPressURL:(NSURL *) url atLocation:(CGPoint) location {
-	UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
+	CQActionSheet *actionSheet = [[CQActionSheet alloc] init];
 	actionSheet.delegate = self;
 	actionSheet.tag = URLActionSheet;
 	actionSheet.title = url.absoluteString;
@@ -1896,15 +1896,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) willPresentAlertView:(UIAlertView *) alertView {
+- (void) willPresentAlertView:(CQAlertView *) alertView {
 	_showingAlert = YES;
 }
 
-- (void) alertView:(UIAlertView *) alertView didDismissWithButtonIndex:(NSInteger) buttonIndex {
+- (void) alertView:(CQAlertView *) alertView didDismissWithButtonIndex:(NSInteger) buttonIndex {
 	_showingAlert = NO;
 }
 
-- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == alertView.cancelButtonIndex)
 		return;
 
@@ -1918,7 +1918,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
@@ -2034,7 +2034,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
-	UIAlertView *alert = [[CQAlertView alloc] init];
+	CQAlertView *alert = [[CQAlertView alloc] init];
 	alert.delegate = self;
 	alert.tag = CantSendMessageAlertView;
 

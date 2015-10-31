@@ -23,9 +23,9 @@ typedef NS_OPTIONS(NSInteger, CQAppIconOptions) {
 - (BOOL) isSpecialApplicationURL:(NSURL *) url;
 - (NSString *) applicationNameForURL:(NSURL *) url;
 
-- (void) showActionSheet:(UIActionSheet *) sheet;
-- (void) showActionSheet:(UIActionSheet *) sheet fromPoint:(CGPoint) point;
-- (void) showActionSheet:(UIActionSheet *) sheet forSender:(__nullable id) sender animated:(BOOL) animated;
+- (void) showActionSheet:(CQActionSheet *) sheet;
+- (void) showActionSheet:(CQActionSheet *) sheet fromPoint:(CGPoint) point;
+- (void) showActionSheet:(CQActionSheet *) sheet forSender:(__nullable id) sender animated:(BOOL) animated;
 
 @property (nonatomic, readonly) UIViewController *mainViewController;
 @property (nonatomic, readonly) UIViewController *modalViewController;

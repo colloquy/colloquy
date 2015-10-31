@@ -52,7 +52,7 @@ static CQSoundController *fileTransferSound;
 
 #pragma mark -
 
-@interface CQChatController () <UIActionSheetDelegate, UIAlertViewDelegate
+@interface CQChatController () <CQActionSheetDelegate, CQAlertViewDelegate
 #if !SYSTEM(TV)
 , UIImagePickerControllerDelegate
 #endif
@@ -220,7 +220,7 @@ static CQSoundController *fileTransferSound;
 	NSString *file = transfer.originalFileName;
 	NSString *user = transfer.user.displayName;
 
-	UIAlertView *alert = [[CQAlertView alloc] init];
+	CQAlertView *alert = [[CQAlertView alloc] init];
 	alert.tag = FileDownloadAlertTag;
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"File Download", "File Download alert title");
@@ -324,7 +324,7 @@ static CQSoundController *fileTransferSound;
 
 #pragma mark -
 
-- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
 	id userInfo = [alertView associatedObjectForKey:@"userInfo"];
 
 	if (buttonIndex == alertView.cancelButtonIndex) {
@@ -352,7 +352,7 @@ static CQSoundController *fileTransferSound;
 
 #pragma mark -
 
-- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.cancelButtonIndex) {
 		_fileUser = nil;
 		return;
@@ -422,7 +422,7 @@ static CQSoundController *fileTransferSound;
 - (void) imagePickerController:(UIImagePickerController *) picker didFinishPickingImage:(UIImage *) image editingInfo:(NSDictionary *) editingInfo {
 	NSString *behavior = [[CQSettingsController settingsController] stringForKey:@"CQImageFileTransferBehavior"];
 	if ([behavior isEqualToString:@"Ask"]) {
-		UIActionSheet *sheet = [[UIActionSheet alloc] init];
+		CQActionSheet *sheet = [[CQActionSheet alloc] init];
 		sheet.delegate = self;
 		sheet.tag = FileTypeActionSheetTag;
 		[sheet associateObject:image forKey:@"image"];
@@ -525,7 +525,7 @@ static CQSoundController *fileTransferSound;
 #pragma mark -
 
 - (void) showNewChatActionSheetForConnection:(MVChatConnection *) connection fromPoint:(CGPoint) point {
-	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
 
 	[sheet associateObject:connection forKey:@"userInfo"];
@@ -617,7 +617,7 @@ static CQSoundController *fileTransferSound;
 
 #if ENABLE(FILE_TRANSFERS)
 - (void) showFilePickerWithUser:(MVChatUser *) user {
-	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.tag = SendFileActionSheetTag;
 

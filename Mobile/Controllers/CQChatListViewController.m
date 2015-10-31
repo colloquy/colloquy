@@ -30,14 +30,14 @@ static BOOL showsChatIcons;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatListViewController () <UIActionSheetDelegate, UIViewControllerPreviewingDelegate>
+@interface CQChatListViewController () <CQActionSheetDelegate, UIViewControllerPreviewingDelegate>
 @end
 
 @implementation CQChatListViewController {
 	id <UIViewControllerPreviewing> _previewingContext;
-	UIActionSheet *_currentConnectionActionSheet;
-	UIActionSheet *_currentChatViewActionSheet;
-	id <UIActionSheetDelegate> _currentChatViewActionSheetDelegate;
+	CQActionSheet *_currentConnectionActionSheet;
+	CQActionSheet *_currentChatViewActionSheet;
+	id <CQActionSheetDelegate> _currentChatViewActionSheetDelegate;
 	id <CQChatViewController> _previousSelectedChatViewController;
 	BOOL _needsUpdate;
 	BOOL _ignoreNotifications;
@@ -826,7 +826,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 #pragma mark -
 
-- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (actionSheet == _currentChatViewActionSheet) {
 		if ([_currentChatViewActionSheetDelegate respondsToSelector:@selector(actionSheet:clickedButtonAtIndex:)])
 			[_currentChatViewActionSheetDelegate actionSheet:actionSheet clickedButtonAtIndex:buttonIndex];
@@ -1250,7 +1250,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		 return;
 
 	if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus) {
-		_currentConnectionActionSheet = [[UIActionSheet alloc] init];
+		_currentConnectionActionSheet = [[CQActionSheet alloc] init];
 		_currentConnectionActionSheet.delegate = self;
 		_currentConnectionActionSheet.tag = DisconnectSheetTag;
 
@@ -1271,7 +1271,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			else [_currentConnectionActionSheet addButtonWithTitle:NSLocalizedString(@"Set Away Status…", "Set Away Status… button title")];
 		}
 	} else {
-		_currentConnectionActionSheet = [[UIActionSheet alloc] init];
+		_currentConnectionActionSheet = [[CQActionSheet alloc] init];
 		_currentConnectionActionSheet.delegate = self;
 		_currentConnectionActionSheet.tag = ConnectSheetTag;
 
