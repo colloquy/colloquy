@@ -108,42 +108,28 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!_rooms.count || !target || (target && [target respondsToSelector:@selector(displayName)] && [target displayName])) {
 #endif
 		BOOL userFound = NO;
-		BOOL messageFound = NO;
-		BOOL maskFound = NO;
 		BOOL userRequired = (_userRegex || _ignoredUser.length);
-		BOOL maskRequired = (user.maskRepresentation.length && _maskRegex);
-		BOOL messageRequired = (_messageRegex || [_ignoredMessage length]);
-
-		if (_userRegex && [_userRegex firstMatchInString:user.nickname options:0 range:NSMakeRange(0, user.nickname.length)])
+		if (userRequired && user.nickname.length && [_userRegex firstMatchInString:user.nickname options:0 range:NSMakeRange(0, user.nickname.length)])
 			userFound = YES;
-		else if (_ignoredUser.length)
+		else if (userRequired && _ignoredUser.length)
 			userFound = [_ignoredUser isEqualToString:user.nickname];
 
-		if (_maskRegex && [_maskRegex firstMatchInString:user.maskRepresentation options:0 range:NSMakeRange(0, user.maskRepresentation.length)])
-			maskFound = YES;
+		if (userFound)
+			return JVUserIgnored;
 
-		if (_messageRegex && message && [_messageRegex firstMatchInString:message options:0 range:NSMakeRange(0, message.length)])
+		BOOL maskRequired = (user.maskRepresentation.length && _maskRegex);
+		if (maskRequired && user.maskRepresentation.length > 2 && [_maskRegex firstMatchInString:user.maskRepresentation options:0 range:NSMakeRange(0, user.maskRepresentation.length)])
+			return JVUserIgnored;
+
+		BOOL messageFound = NO;
+		BOOL messageRequired = (_messageRegex || [_ignoredMessage length]);
+		if (messageRequired && message.length && [_messageRegex firstMatchInString:message options:0 range:NSMakeRange(0, message.length)])
 			messageFound = YES;
-		else if ([_ignoredMessage length] && message)
+		else if (messageRequired && _ignoredMessage.length && message.length)
 			messageFound = ([message rangeOfString:_ignoredMessage options:NSCaseInsensitiveSearch].location != NSNotFound);
 
-		if (userRequired) {
-			if (!userFound)
-				return JVNotIgnored;
-			else return JVUserIgnored;
-		}
-
-		if (maskRequired) {
-			if (!maskFound)
-				return JVNotIgnored;
-			else return JVUserIgnored;
-		}
-
-		if (messageRequired) {
-			if (messageFound)
-				return JVMessageIgnored;
-			else return JVNotIgnored;
-		}
+		if (messageFound)
+			return JVMessageIgnored;
 	}
 
 	return JVNotIgnored;
