@@ -198,7 +198,6 @@
 		B6024FF31BCD2D44000A5058 /* CQRootContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6024FF21BCD2D44000A5058 /* CQRootContainerViewController.m */; };
 		B6831CC61BE425C300D3AC1D /* CQUITextChatTranscriptView.m in Sources */ = {isa = PBXBuildFile; fileRef = B6831CC51BE425C300D3AC1D /* CQUITextChatTranscriptView.m */; };
 		B6831CC81BE4321D00D3AC1D /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6831CC71BE4321D00D3AC1D /* JavaScriptCore.framework */; };
-		B6831CDA1BE44EC000D3AC1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6831CD81BE44EC000D3AC1D /* Main.storyboard */; };
 		B6831CE41BE44F2F00D3AC1D /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1CA718A90EF5F136006225CD /* Settings.bundle */; };
 		B6831CE51BE44F3B00D3AC1D /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C09313A0D80C8F600A2705D /* Defaults.plist */; };
 		B6831CE71BE44F3B00D3AC1D /* Servers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8900D7330FBFB2D900DE3E3B /* Servers.plist */; };
@@ -1538,7 +1537,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B6831CDA1BE44EC000D3AC1D /* Main.storyboard in Resources */,
 				B6831D141BE44FB800D3AC1D /* Localizable.strings in Resources */,
 				B6831CE41BE44F2F00D3AC1D /* Settings.bundle in Resources */,
 				B6831D131BE44FA200D3AC1D /* OpenDyslexic-Regular.otf in Resources */,
