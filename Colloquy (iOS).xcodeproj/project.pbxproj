@@ -196,6 +196,8 @@
 		92F99FB819D14034004A7A22 /* UIViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F99FB719D14034004A7A22 /* UIViewAdditions.m */; };
 		9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
 		B6024FF31BCD2D44000A5058 /* CQRootContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6024FF21BCD2D44000A5058 /* CQRootContainerViewController.m */; };
+		B6831CC61BE425C300D3AC1D /* CQUITextChatTranscriptView.m in Sources */ = {isa = PBXBuildFile; fileRef = B6831CC51BE425C300D3AC1D /* CQUITextChatTranscriptView.m */; };
+		B6831CC81BE4321D00D3AC1D /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6831CC71BE4321D00D3AC1D /* JavaScriptCore.framework */; };
 		B68725B11B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B68725B01B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m */; };
 		B68725B41B8E7FF60003D4F8 /* CQPrinterPage.m in Sources */ = {isa = PBXBuildFile; fileRef = B68725B31B8E7FF60003D4F8 /* CQPrinterPage.m */; };
 		B6BFA5431BBDA3B6000C3BBC /* UIWindowAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B6BFA5421BBDA3B6000C3BBC /* UIWindowAdditions.m */; };
@@ -535,6 +537,9 @@
 		97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQFileTransferTableCell.m; sourceTree = "<group>"; };
 		B6024FF11BCD2D44000A5058 /* CQRootContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQRootContainerViewController.h; path = Mobile/Controllers/CQRootContainerViewController.h; sourceTree = "<group>"; };
 		B6024FF21BCD2D44000A5058 /* CQRootContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQRootContainerViewController.m; path = Mobile/Controllers/CQRootContainerViewController.m; sourceTree = "<group>"; };
+		B6831CC41BE425C300D3AC1D /* CQUITextChatTranscriptView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQUITextChatTranscriptView.h; sourceTree = "<group>"; };
+		B6831CC51BE425C300D3AC1D /* CQUITextChatTranscriptView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQUITextChatTranscriptView.m; sourceTree = "<group>"; };
+		B6831CC71BE4321D00D3AC1D /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		B68725AF1B8E3E320003D4F8 /* UIPrintPageRendererAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIPrintPageRendererAdditions.h; path = Additions/UIPrintPageRendererAdditions.h; sourceTree = "<group>"; };
 		B68725B01B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIPrintPageRendererAdditions.m; path = Additions/UIPrintPageRendererAdditions.m; sourceTree = "<group>"; };
 		B68725B21B8E7FF60003D4F8 /* CQPrinterPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPrinterPage.h; sourceTree = "<group>"; };
@@ -551,6 +556,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6831CC81BE4321D00D3AC1D /* JavaScriptCore.framework in Frameworks */,
 				B6F99EE61BA0FAB5000F4929 /* CoreSpotlight.framework in Frameworks */,
 				B6C921061B812F350049622C /* libc++.dylib in Frameworks */,
 				19C7F58B1B26C1E3000F5AAE /* MobileCoreServices.framework in Frameworks */,
@@ -900,6 +906,8 @@
 				926678FC19C041B000CCE5BE /* CQChatTranscriptViewDelegate.h */,
 				1CAE8BC70EE6111900CE1AF8 /* CQUIChatTranscriptView.m */,
 				1CAE8BC60EE6111900CE1AF8 /* CQUIChatTranscriptView.h */,
+				B6831CC51BE425C300D3AC1D /* CQUITextChatTranscriptView.m */,
+				B6831CC41BE425C300D3AC1D /* CQUITextChatTranscriptView.h */,
 				926678F819C03C8500CCE5BE /* CQWKChatTranscriptView.m */,
 				926678F719C03C8500CCE5BE /* CQWKChatTranscriptView.h */,
 				922AF5DD1A42BD4B00B2A966 /* CQColorPickerTableCell.m */,
@@ -1080,6 +1088,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B6831CC71BE4321D00D3AC1D /* JavaScriptCore.framework */,
 				B6C921051B812F350049622C /* libc++.dylib */,
 				19C7F58A1B26C1E3000F5AAE /* MobileCoreServices.framework */,
 				19C7F5881B26BE04000F5AAE /* CoreSpotlight.framework */,
@@ -1407,6 +1416,7 @@
 				1C15B2681311838C006FA16B /* CQAnalyticsController.m in Sources */,
 				924108D615A5605A001F7681 /* NSFileManagerMoreAdditions.m in Sources */,
 				92F1C9E3161D936D0035A9AF /* UIActionSheetAdditions.m in Sources */,
+				B6831CC61BE425C300D3AC1D /* CQUITextChatTranscriptView.m in Sources */,
 				922C1630163BDBCE00B01C3D /* NSDateAdditions.m in Sources */,
 				9215E175168AE04100E7E77F /* GCDAsyncSocket.m in Sources */,
 				92823CEC168FE6CB000EC36E /* CQIgnoreRulesController.m in Sources */,
@@ -1462,16 +1472,17 @@
 				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
-				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				LLVM_VECTORIZE_LOOPS = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1632,18 +1643,19 @@
 				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
-				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				LLVM_VECTORIZE_LOOPS = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1661,16 +1673,17 @@
 				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
-				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				LLVM_VECTORIZE_LOOPS = YES;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
