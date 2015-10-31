@@ -22,13 +22,16 @@
 #import "NSDateAdditions.h"
 #import "NSNotificationAdditions.h"
 #import "UIViewAdditions.h"
+#import "CQUITextChatTranscriptView.h"
 
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatUserWatchRule.h>
 
+#if !SYSTEM(TV)
 #import <MediaPlayer/MPMusicPlayerController.h>
 
 #import <Social/Social.h>
+#endif
 
 #import <objc/message.h>
 
@@ -213,8 +216,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (instancetype) initWithTarget:(__nullable id) target {
+#if !SYSTEM(TV)
 	if (!(self = [super initWithNibName:@"CQUIChatView" bundle:nil]))
 		return nil;
+#else
+	if (!(self = [super initWithNibName:nil bundle:nil]))
+#endif
 
 	_target = target;
 
@@ -407,8 +414,10 @@ NS_ASSUME_NONNULL_BEGIN
 	sheet.delegate = self;
 	sheet.tag = InfoActionSheet;
 
+#if !SYSTEM(TV)
 	if (!([UIDevice currentDevice].isPadModel && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		sheet.title = self.user.displayName;
+#endif
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
 
@@ -516,14 +525,14 @@ NS_ASSUME_NONNULL_BEGIN
 	[super viewDidLoad];
 
 	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
-//	CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
-//	webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
-//	webkitChatTranscriptView.transcriptDelegate = self;
-//
-//	[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
-//
-//	[transcriptView removeFromSuperview];
-//	transcriptView = webkitChatTranscriptView;
+	CQUITextChatTranscriptView *webkitChatTranscriptView = [[CQUITextChatTranscriptView alloc] initWithFrame:transcriptView.frame];
+	webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
+	webkitChatTranscriptView.transcriptDelegate = self;
+
+	[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
+
+	[transcriptView removeFromSuperview];
+	transcriptView = webkitChatTranscriptView;
 
 	[self _updateRightBarButtonItemAnimated:NO];
 
@@ -608,7 +617,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewDidDisappear:(BOOL) animated {
 	[super viewDidDisappear:animated];
 
+#if !SYSTEM(TV)
 	[UIMenuController sharedMenuController].menuItems = nil;
+#endif
 
 	if (!self.view.window.isFullscreen)
 		[chatInputBar resignFirstResponder];
@@ -658,6 +669,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) chatInputBarTextDidChange:(CQChatInputBar *) theChatInputBar {
+#if !SYSTEM(TV)
 	if (chatInputBar.textView.text.length || chatInputBar.textView.attributedText.length) {
 		chatInputBar.textView.allowsEditingTextAttributes = YES;
 		[UIMenuController sharedMenuController].menuItems = @[ [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Style", @"Style text menu item") action:@selector(style:)] ];
@@ -665,6 +677,7 @@ NS_ASSUME_NONNULL_BEGIN
 		chatInputBar.textView.allowsEditingTextAttributes = NO;
 		[UIMenuController sharedMenuController].menuItems = nil;
 	}
+#endif
 }
 
 - (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) theChatInputBar {
@@ -933,7 +946,9 @@ NS_ASSUME_NONNULL_BEGIN
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
 
+#if !SYSTEM(TV)
 	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
+#endif
 }
 
 #pragma mark -
@@ -1131,6 +1146,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleMusicCommandWithArguments:(MVChatString *) arguments {
+#if !SYSTEM(TV)
 	MPMusicPlayerController *musicController = [MPMusicPlayerController systemMusicPlayer];
 	MPMediaItem *nowPlayingItem = musicController.nowPlayingItem;
 
@@ -1167,6 +1183,7 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	[self sendMessage:[[NSAttributedString alloc] initWithString:message] asAction:YES];
+#endif
 
 	return YES;
 }
@@ -1321,6 +1338,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleTweetCommandWithArguments:(MVChatString *) arguments {
+#if !SYSTEM(TV)
 	SLComposeViewController *composeViewController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
 	if ([UIPasteboard generalPasteboard].string.length)
 		[composeViewController setInitialText:[UIPasteboard generalPasteboard].string];
@@ -1333,13 +1351,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 	composeViewController.completionHandler = ^(SLComposeViewControllerResult result) { /* do nothing */ };
 	[self.navigationController presentViewController:composeViewController animated:YES completion:NULL];
+#endif
 
 	return YES;
 }
 
 - (BOOL) handleSysinfoCommandWithArguments:(MVChatString *) arguments {
 	NSString *version = [[CQSettingsController settingsController] stringForKey:@"CQCurrentVersion"];
+#if !SYSTEM(TV)
 	NSString *orientation = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? NSLocalizedString(@"landscape", @"landscape orientation") : NSLocalizedString(@"portrait", @"portrait orientation");
+#else
+	NSString *orientation = NSLocalizedString(@"landscape", @"landscape orientation");
+#endif
 	NSString *model = [UIDevice currentDevice].localizedModel;
 	NSString *systemVersion = [NSProcessInfo processInfo].operatingSystemVersionString;
 	NSString *systemUptime = humanReadableTimeInterval([NSProcessInfo processInfo].systemUptime, YES);
@@ -1373,13 +1396,18 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 	NSString *systemMemory = [NSString stringWithFormat:@"%zd %@", physicalMemory, memoryUnit];
 
+	NSString *message = nil;
+#if !SYSTEM(TV)
 	BOOL batteryMonitoringEnabled = [UIDevice currentDevice].batteryMonitoringEnabled;
 	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
-	NSString *message = nil;
 	if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateUnplugged)
 		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %d processors, %@ RAM, %.0f%% battery life remaining and a system uptime of %@.", @"System info message with battery level"), version, orientation, model, systemVersion, processorsInTotal, systemMemory, [UIDevice currentDevice].batteryLevel * 100., systemUptime];
-	else message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %d processors, %@ RAM and a system uptime of %@.", @"System info message"), version, orientation, model, systemVersion, processorsInTotal, systemMemory, systemUptime];
+	else
+#endif
+		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %d processors, %@ RAM and a system uptime of %@.", @"System info message"), version, orientation, model, systemVersion, processorsInTotal, systemMemory, systemUptime];
+#if !SYSTEM(TV)
 	[UIDevice currentDevice].batteryMonitoringEnabled = batteryMonitoringEnabled;
+#endif
 
 	[self sendMessage:[[NSAttributedString alloc] initWithString:message] asAction:YES];
 
@@ -1469,7 +1497,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) handleResetbadgeCommandWithArguments:(MVChatString *) arguments {
+#if !SYSTEM(TV)
 	[CQColloquyApplication sharedApplication].applicationIconBadgeNumber = 0;
+#endif
 }
 
 #pragma mark -
@@ -1911,6 +1941,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) _showActivityViewControllerWithItems:(NSArray <UIActivity *> *) items activities:(NSArray <UIActivity *> *) activities {
+#if !SYSTEM(TV)
 	_showingActivityViewController = YES;
 
 	UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:activities];
@@ -1936,6 +1967,7 @@ NS_ASSUME_NONNULL_BEGIN
 		CGRect frame = [self.view convertRect:chatInputBar.accessoryButton.frame fromView:chatInputBar];
 		[_activityPopoverController presentPopoverFromRect:frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 	}
+#endif
 }
 
 - (void) _endShowingActivityViewControllerWithInputBarAsResponder:(BOOL) inputBarAsResponder {
@@ -2215,6 +2247,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
 		return;
 
+#if !SYSTEM(TV)
 	UILocalNotification *notification = [[UILocalNotification alloc] init];
 
 	notification.alertBody = [self _localNotificationBodyForMessage:message];
@@ -2222,6 +2255,7 @@ NS_ASSUME_NONNULL_BEGIN
 	notification.soundName = [soundName stringByAppendingPathExtension:@"aiff"];
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+#endif
 }
 
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo {

@@ -54,7 +54,11 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 static NSString *const connectionInvalidSSLCertAction = nil;
 
-@interface CQConnectionsController () <UIActionSheetDelegate, UIAlertViewDelegate, CSSearchableIndexDelegate, CQBouncerConnectionDelegate>
+@interface CQConnectionsController () <UIActionSheetDelegate, UIAlertViewDelegate,
+#if !SYSTEM(TV)
+CSSearchableIndexDelegate,
+#endif
+CQBouncerConnectionDelegate>
 @end
 
 @implementation CQConnectionsController {
@@ -69,7 +73,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	BOOL _loadedConnections;
 	NSUInteger _connectingCount;
 	NSUInteger _connectedCount;
+#if !SYSTEM(TV)
 	UILocalNotification *_timeRemainingLocalNotifiction;
+#endif
 	UIBackgroundTaskIdentifier _backgroundTask;
 	NSTimeInterval _allowedBackgroundTime;
 	NSMutableSet *_automaticallySetConnectionAwayStatus;
@@ -106,7 +112,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_errorOccurred:) name:MVChatConnectionErrorNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_deviceTokenRecieved:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+#if !SYSTEM(TV)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batteryStateChanged) name:UIDeviceBatteryStateDidChangeNotification object:nil];
+#endif
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_peerTrustFeedbackNotification:) name:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_nicknamePasswordRequested:) name:MVChatConnectionNeedNicknamePasswordNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_serverPasswordRequested:) name:MVChatConnectionNeedServerPasswordNotification object:nil];
@@ -122,7 +130,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
 
+#if !SYSTEM(TV)
 	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
+#endif
 
 	_connectionsNavigationController = [[CQConnectionsNavigationController alloc] init];
 
@@ -142,8 +152,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	_shouldLogRawMessagesToConsole = [[CQSettingsController settingsController] boolForKey:@"CQLogRawMessagesToConsole"];
 #endif
 
+#if !SYSTEM(TV)
 	if (NSClassFromString(@"CSSearchableIndex"))
 		[CSSearchableIndex defaultSearchableIndex].indexDelegate = self;
+#endif
 
 	return self;
 }
@@ -391,6 +403,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 #pragma mark -
 
+#if !SYSTEM(TV)
 - (void) searchableIndex:(CSSearchableIndex *) searchableIndex reindexSearchableItemsWithIdentifiers:(NSArray <NSString *> *) identifiers acknowledgementHandler:(void (^)(void)) acknowledgementHandler {
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"])
 		[self indexConnectionsInSpotlight];
@@ -402,6 +415,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		[self indexConnectionsInSpotlight];
 	acknowledgementHandler();
 }
+#endif
 
 #pragma mark -
 
@@ -654,6 +668,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 			alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 			[alertView show];
 		} else {
+#if !SYSTEM(TV)
 			UILocalNotification *notification = [[UILocalNotification alloc] init];
 
 			notification.alertBody = NSLocalizedString(@"You have been disconnected due to the loss of network connectivity", @"Disconnected due to network local notification body");
@@ -661,6 +676,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 			notification.hasAction = NO;
 
 			[[CQColloquyApplication sharedApplication] presentLocalNotificationNow:notification];
+#endif
 		}
 	}
 
@@ -737,6 +753,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	if (![self _anyConnectedOrConnectingConnections])
 		return;
 
+#if !SYSTEM(TV)
 	UILocalNotification *notification = [[UILocalNotification alloc] init];
 
 	notification.alertBody = NSLocalizedString(@"No multitasking time remaining, so you have been disconnected.", "No multitasking time remaining alert message");
@@ -744,6 +761,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	notification.soundName = UILocalNotificationDefaultSoundName;
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+#endif
 }
 
 - (void) _showDisconnectedAlert {
@@ -759,6 +777,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	if (![self _anyConnectedOrConnectingConnections])
 		return;
 
+#if !SYSTEM(TV)
 	UILocalNotification *notification = [[UILocalNotification alloc] init];
 
 	NSUInteger minutes = ceil(_allowedBackgroundTime / 60.);
@@ -773,7 +792,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	notification.soundName = UILocalNotificationDefaultSoundName;
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
-
+#endif
 }
 
 - (void) _showRemainingTimeAlert {
@@ -786,6 +805,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	if (![self _anyConnectedOrConnectingConnections])
 		return;
 
+#if !SYSTEM(TV)
 	if (_timeRemainingLocalNotifiction) {
 		[[UIApplication sharedApplication] cancelLocalNotification:_timeRemainingLocalNotifiction];
 	}
@@ -797,8 +817,8 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	notification.soundName = UILocalNotificationDefaultSoundName;
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
-
 	_timeRemainingLocalNotifiction = notification;
+#endif
 }
 
 - (void) _disconnectNonMultitaskingConnections {
@@ -817,10 +837,12 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 - (void) _disconnectForSuspend {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
 
+#if !SYSTEM(TV)
 	if (_timeRemainingLocalNotifiction) {
 		[[UIApplication sharedApplication] cancelLocalNotification:_timeRemainingLocalNotifiction];
 		_timeRemainingLocalNotifiction = nil;
 	}
+#endif
 
 	[self _showDisconnectedAlert];
 
@@ -889,7 +911,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_disconnectForSuspend) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_showRemainingTimeAlert) object:nil];
 
+#if !SYSTEM(TV)
 	_timeRemainingLocalNotifiction = nil;
+#endif
 
 	_automaticallySetConnectionAwayStatus = nil;
 }
@@ -915,9 +939,13 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 }
 
 - (BOOL) _shouldDisableIdleTimer {
+#if !SYSTEM(TV)
 	if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateCharging)
 		return YES;
 	return ([self _anyConnectedOrConnectingConnections] && [[CQSettingsController settingsController] boolForKey:@"CQIdleTimerDisabled"]);
+#else
+	return YES;
+#endif
 }
 
 - (void) _gotConnectionError:(NSNotification *) notification {
@@ -938,7 +966,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		(void)[[CQChatOrderingController defaultController] consoleViewControllerForConnection:connection ifExists:NO];
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
+#if !SYSTEM(TV)
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+#endif
 
 	if ([UIDevice currentDevice].multitaskingSupported) {
 		if (_backgroundTask == UIBackgroundTaskInvalid)
@@ -1025,8 +1055,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 }
 
 - (void) _didConnectOrDidNotConnect:(NSNotification *) notification {
+#if !SYSTEM(TV)
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
+#endif
 }
 
 - (void) _didNotConnect:(NSNotification *) notification {
@@ -1143,9 +1175,11 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 
+#if !SYSTEM(TV)
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"])
 		[self indexConnectionsInSpotlight];
 	else [self removeConnectionsIndexfromSpotlight];
+#endif
 }
 
 - (void) _batteryStateChanged {
@@ -1428,8 +1462,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	if (connection.temporaryDirectConnection)
 		connection.bouncerType = MVChatConnectionNoBouncer;
 
+#if !SYSTEM(TV)
 	if ((!bouncerSettings || bouncerSettings.pushNotifications) && connection.pushNotifications)
 		[[CQColloquyApplication sharedApplication] registerForPushNotifications];
+#endif
 
 	return connection;
 }
@@ -1613,8 +1649,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 	NSMutableArray *connections = [[NSMutableArray alloc] initWithCapacity:_directConnections.count];
 	for (MVChatConnection *connection in _directConnections) {
+#if !SYSTEM(TV)
 		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"])
 			[self _indexConnetionInSpotlight:connection];
+#endif
 
 		NSMutableDictionary *connectionInfo = [self _dictionaryRepresentationForConnection:connection];
 		if (!connectionInfo)
@@ -1676,6 +1714,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 #pragma mark -
 
+#if !SYSTEM(TV)
 - (void) _indexConnetionInSpotlight:(MVChatConnection *) connection {
 	if (NSClassFromString(@"CSSearchableIndex") == nil)
 		return;
@@ -1738,6 +1777,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		}
 	}];
 }
+#endif
 
 #pragma mark -
 

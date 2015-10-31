@@ -223,7 +223,9 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!selectedCell)
 		return;
 
+#if !SYSTEM(TV)
 	[UIPasteboard generalPasteboard].string = selectedCell.detailTextLabel.text;
+#endif
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {

@@ -15,7 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 		return nil;
 
 	_textView = [[CQTextView alloc] initWithFrame:CGRectZero];
+#if !SYSTEM(TV)
 	_textView.editable = YES;
+#endif
 	_textView.scrollEnabled = !self.window.isFullscreen;
 	_textView.font = [UIFont systemFontOfSize:17.];
 	_textView.keyboardType = UIKeyboardTypeDefault;
@@ -47,7 +49,9 @@ NS_ASSUME_NONNULL_BEGIN
 	[super prepareForReuse];
 
 	_textView.text = @"";
+#if !SYSTEM(TV)
 	_textView.editable = YES;
+#endif
 	_textView.scrollEnabled = !self.window.isFullscreen;
 	_textView.textColor = [UIColor blackColor];
 	_textView.textAlignment = NSTextAlignmentLeft;
@@ -73,7 +77,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (CGFloat) height {
 	CGSize size = [UIScreen mainScreen].bounds.size;
+#if !SYSTEM(TV)
 	BOOL landscapeOrientation = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation);
+#else
+	BOOL landscapeOrientation = YES;
+#endif
 
 	if ([UIApplication sharedApplication].keyWindow.isFullscreen) {
 		if (landscapeOrientation)

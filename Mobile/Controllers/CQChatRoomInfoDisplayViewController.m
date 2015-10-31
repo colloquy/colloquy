@@ -148,7 +148,9 @@ NS_ASSUME_NONNULL_BEGIN
 		textViewCell.textView.text = [[NSString alloc] initWithData:_room.topic encoding:_room.encoding];
 		textViewCell.textView.placeholder = NSLocalizedString(@"Enter Room Topic", @"Enter Room Topic");
 		textViewCell.textView.delegate = self;
+#if !SYSTEM(TV)
 		textViewCell.textView.dataDetectorTypes = UIDataDetectorTypeNone;
+#endif
 
 		return textViewCell;
 	}

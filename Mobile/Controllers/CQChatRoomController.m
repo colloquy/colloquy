@@ -262,8 +262,10 @@ NS_ASSUME_NONNULL_BEGIN
 	sheet.delegate = self;
 	sheet.tag = JoinActionSheet;
 
+#if !SYSTEM(TV)
 	if (!(self.view.window.isFullscreen && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		sheet.title = self.room.displayName;
+#endif
 
 	if (self.available)
 		sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Leave Chat Room", @"Leave Chat Room button title")];

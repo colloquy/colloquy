@@ -49,8 +49,10 @@ NS_ASSUME_NONNULL_BEGIN
 		return [CQPinboardController class];
 	if ([bookmarkingService isEqualToString:CQBookmarkingServicePocket])
 		return [CQPocketController class];
+#if !SYSTEM(TV)
 	if ([bookmarkingService isEqualToString:CQBookmarkingServiceSafariReadingList])
 		return [CQSafariReadingListController class];
+#endif
 	return nil;
 }
 

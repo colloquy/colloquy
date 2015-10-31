@@ -79,7 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setDelegate:(id <UIWebViewDelegate> __nullable) delegate {
+- (void) setDelegate:(id <UITextViewDelegate> __nullable) delegate {
 	NSAssert(NO, @"Should not be called. Use _transcriptDelegate instead.");
 }
 
@@ -144,6 +144,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (self.isLoading)
 		return nil;
 
+#if !SYSTEM(TV)
 	UIPrintPageRenderer *renderer = [[UIPrintPageRenderer alloc] init];
 	[renderer addPrintFormatter:self.viewPrintFormatter startingAtPageAtIndex:0];
 
@@ -163,6 +164,9 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	return [renderer PDFRender];
+#else
+	return nil;
+#endif
 }
 
 - (UIScrollView *) scrollView {
@@ -273,6 +277,9 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (BOOL) textView:(UITextView *) textView shouldInteractWithURL:(NSURL *) URL inRange:(NSRange) characterRange {
+#if SYSTEM(TV)
+	return NO;
+#else
 	__strong __typeof__((_transcriptDelegate)) transcriptDelegate = _transcriptDelegate;
 	if ([URL.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
 		if ([transcriptDelegate respondsToSelector:@selector(transcriptView:handleNicknameTap:atLocation:)]) {
@@ -294,6 +301,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[[UIApplication sharedApplication] openURL:URL];
 
 	return NO;
+#endif
 }
 
 - (void) willMoveToSuperview:(UIView *__nullable) newSuperview {
@@ -458,30 +466,31 @@ NS_ASSUME_NONNULL_BEGIN
 		attributes[NSParagraphStyleAttributeName] = paragraphStyle;
 		attributes[NSFontAttributeName] = [UIFont fontWithName:self.fontFamily size:self.fontSize];
 
-//		.sender {
-//		display: inline;
-//		color: rgb(255, 128, 0);
-//		}
-//
-//		.sender.self {
-//		color: rgb(170, 34, 17);
-//		}
-
 		NSString *string = nil;
 		if (attributes[@"sender"]) {
 			if ([attributes[@"action"] boolValue])
 				string = [NSString stringWithFormat:@"• %@: ", attributes[@"sender"]];
 			else string = [NSString stringWithFormat:@"%@: ", attributes[@"sender"]];
 
+			UIColor *textColor = nil;
+			if ([attributes[@"self"] boolValue])
+				textColor = [UIColor colorWithRed:170. / 255. green:34. / 255. blue:17. / 255. alpha:1.];
+			else textColor =[UIColor colorWithRed:1. green:.5 blue:0. alpha:1.];
+
 			[componentsString appendAttributedString:[[NSAttributedString alloc] initWithString:string attributes:@{
 				NSFontAttributeName: attributes[NSFontAttributeName],
-				NSForegroundColorAttributeName: [attributes[@"self"] boolValue] ? [UIColor colorWithRed:170. / 255. green:34. / 255. blue:17. / 255. alpha:1.] : [UIColor colorWithRed:1. green:.5 blue:0. alpha:1.]
+				NSForegroundColorAttributeName: textColor
 			}]];
 		}
 
 		NSMutableAttributedString *messageAttributedString = [[NSMutableAttributedString alloc] initWithData:[messageString dataUsingEncoding:NSUTF8StringEncoding] options:@{
 			NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType
 		} documentAttributes:nil error:nil];
+#if SYSTEM(TV)
+		[[messageAttributedString copy] enumerateAttribute:NSLinkAttributeName inRange:NSMakeRange(0, messageAttributedString.length) options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:^(id value, NSRange range, BOOL *stop) {
+			[messageAttributedString removeAttribute:NSLinkAttributeName range:range];
+		}];
+#endif
 		[messageAttributedString addAttributes:attributes range:NSMakeRange(0, messageAttributedString.length)];
 		[componentsString appendAttributedString:messageAttributedString];
 		[componentsString appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
@@ -515,6 +524,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[self reset];
 
+#if !SYSTEM(TV)
 	_allowSingleSwipeGesture = YES;
 	_singleSwipeGestureRecognizers = [[NSMutableArray alloc] init];
 
@@ -535,6 +545,9 @@ NS_ASSUME_NONNULL_BEGIN
 		[self addGestureRecognizer:swipeGestureRecognizer];
 		[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
 	}
+#else
+	_allowSingleSwipeGesture = NO;
+#endif
 
 	UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureRecognizerRecognized:)];
 	longPressGestureRecognizer.delegate = self;

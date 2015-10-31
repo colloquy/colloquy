@@ -298,8 +298,10 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!selectedRoom)
 		return;
 
+#if !SYSTEM(TV)
 	if (action == @selector(copy:))
 		[UIPasteboard generalPasteboard].string = selectedRoom;
+#endif
 }
 
 #pragma mark -

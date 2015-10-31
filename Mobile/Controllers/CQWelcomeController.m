@@ -1,16 +1,20 @@
 #import "CQWelcomeController.h"
 
 #import "CQColloquyApplication.h"
+#if !SYSTEM(TV)
 #import "CQHelpTopicsViewController.h"
+#endif
 #import "CQWelcomeViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation CQWelcomeController
 - (void) viewDidLoad {
+#if !SYSTEM(TV)
 	if (_shouldShowOnlyHelpTopics && !_rootViewController)
 		_rootViewController = [[CQHelpTopicsViewController alloc] init];
 	else if (!_rootViewController)
+#endif
 		_rootViewController = [[CQWelcomeViewController alloc] init];
 
 	[super viewDidLoad];

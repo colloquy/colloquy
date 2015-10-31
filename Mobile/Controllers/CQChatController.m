@@ -52,7 +52,11 @@ static CQSoundController *fileTransferSound;
 
 #pragma mark -
 
-@interface CQChatController () <UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate>
+@interface CQChatController () <UIActionSheetDelegate, UIAlertViewDelegate
+#if !SYSTEM(TV)
+, UIImagePickerControllerDelegate
+#endif
+>
 @end
 
 @implementation CQChatController {
@@ -155,7 +159,9 @@ static CQSoundController *fileTransferSound;
 	CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:NO];
 	[controller addMessage:notification.userInfo];
 
+#if !SYSTEM(TV)
 	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
+#endif
 }
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {
@@ -176,7 +182,9 @@ static CQSoundController *fileTransferSound;
 	if (!hideFromUser) {
 		CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:NO userInitiated:NO];
 		[controller addMessage:notification.userInfo];
+#if !SYSTEM(TV)
 		[[CQColloquyApplication sharedApplication] updateAppShortcuts];
+#endif
 	}
 }
 
@@ -185,7 +193,9 @@ static CQSoundController *fileTransferSound;
 
 	CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForDirectChatConnection:connection ifExists:NO];
 	[controller addMessage:notification.userInfo];
+#if !SYSTEM(TV)
 	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
+#endif
 }
 
 #if ENABLE(FILE_TRANSFERS)
@@ -277,6 +287,7 @@ static CQSoundController *fileTransferSound;
 
 	NSString *message = [NSString stringWithFormat:NSLocalizedString(@"You are invited to \"%@\" by \"%@\" on \"%@\".", "Invited to join room alert message"), room.displayName, user.displayName, connection.displayName];
 
+#if !SYSTEM(TV)
 	if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
 		UILocalNotification *localNotification = [[UILocalNotification alloc] init];
 
@@ -289,6 +300,7 @@ static CQSoundController *fileTransferSound;
 
 		return;
 	}
+#endif
 
 	CQAlertView *alert = [[CQAlertView alloc] init];
 	alert.tag = ChatRoomInviteAlertTag;
@@ -439,8 +451,10 @@ static CQSoundController *fileTransferSound;
 
 	_totalImportantUnreadCount = count;
 
+#if !SYSTEM(TV)
 	if ([CQColloquyApplication sharedApplication].areNotificationBadgesAllowed)
 		[UIApplication sharedApplication].applicationIconBadgeNumber = count;
+#endif
 
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatControllerChangedTotalImportantUnreadCountNotification object:self];
 }

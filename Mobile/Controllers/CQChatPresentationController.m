@@ -21,7 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 	_standardToolbarItems = @[];
 
+#if !SYSTEM(TV)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applyiOS7NavigationBarSizing) name:UIApplicationWillChangeStatusBarFrameNotification object:nil];
+#endif
 
 	return self;
 }
@@ -52,17 +54,23 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
 	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 
+#if SYSTEM(TV)
+	[self updateToolbarAnimated:YES];
+#else
 	// 480. is an arbitrary value, this can be changed if a new value comes up that makes more sense
 	[self updateToolbarForInterfaceOrientation:size.width > 480. ? UIInterfaceOrientationLandscapeLeft : UIInterfaceOrientationPortrait animated:NO];
+#endif
 }
 
 #pragma mark -
 
 - (void) updateToolbarAnimated:(BOOL) animated {
+#if !SYSTEM(TV)
 	[self updateToolbarForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation animated:animated];
 }
 
 - (void) updateToolbarForInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation animated:(BOOL) animated {
+#endif
 	if (![UIDevice currentDevice].isPadModel)
 		return;
 
@@ -105,7 +113,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 	}
 
+#if !SYSTEM(TV)
 	[allItems addObjectsFromArray:_topChatViewController.toolbarItems];
+#endif
 
 	UIBarButtonItem *rightBarButtonItem = _topChatViewController.navigationItem.rightBarButtonItem;
 	if (rightBarButtonItem)
@@ -181,6 +191,7 @@ NS_ASSUME_NONNULL_BEGIN
 	CGRect frame = _toolbar.frame;
 	frame.size.width = self.view.frame.size.width;
 
+#if !SYSTEM(TV)
 	// If we are on iOS 7 or up, the statusbar is now part of the navigation bar, so, we need to fake its height
 	CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
 	// We can't do the following:
@@ -190,8 +201,11 @@ NS_ASSUME_NONNULL_BEGIN
 	CGFloat statusBarHeight = fmin(statusBarFrame.size.height, statusBarFrame.size.width);
 	frame.size.height += statusBarHeight;
 	_toolbar.frame = frame;
+#endif
 
+#if !SYSTEM(TV)
 	if (UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation))
+#endif
 		_topChatViewController.scrollView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(_toolbar.frame), 0., 0., 0.);
 }
 @end

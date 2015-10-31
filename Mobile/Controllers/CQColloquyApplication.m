@@ -329,7 +329,9 @@ static NSMutableArray <NSString *> *highlightWords;
 	if ([[CQChatController defaultController] hasPendingChatController])
 		[[CQChatController defaultController] showPendingChatControllerAnimated:NO];
 
+#if !SYSTEM(TV)
 	[self handleNotificationWithUserInfo:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
+#endif
 
 	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];
 
@@ -337,13 +339,16 @@ static NSMutableArray <NSString *> *highlightWords;
 }
 
 - (void) applicationWillEnterForeground:(UIApplication *) application {
+#if !SYSTEM(TV)
 	[self cancelAllLocalNotifications];
+#endif
 }
 
 - (void) applicationWillResignActive:(UIApplication *) application {
 	_oldSwipeOrientationValue = [[CQSettingsController settingsController] objectForKey:@"CQSplitSwipeOrientations"];
 }
 
+#if !SYSTEM(TV)
 - (void) application:(UIApplication *) application didReceiveLocalNotification:(UILocalNotification *) notification {
 	[self handleNotificationWithUserInfo:notification.userInfo];
 }
@@ -386,6 +391,7 @@ static NSMutableArray <NSString *> *highlightWords;
 - (void) application:(UIApplication *) application didFailToRegisterForRemoteNotificationsWithError:(NSError *) error {
 	NSLog(@"Error during remote notification registration. Error: %@", error);
 }
+#endif
 
 - (BOOL) application:(UIApplication *) application handleOpenURL:(NSURL *) url {
 	if ([url.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
@@ -398,9 +404,11 @@ static NSMutableArray <NSString *> *highlightWords;
 }
 
 - (void) applicationWillTerminate:(UIApplication *) application {
+#if !SYSTEM(TV)
 	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 
 	self.appIconOptions = CQAppIconOptionConnect;
+#endif
 
 	[self submitRunTime];
 }
@@ -472,7 +480,7 @@ static NSMutableArray <NSString *> *highlightWords;
 			strongSelf->_alertController = nil;
 			strongSelf->_overlappingPresentationViewController = nil;
 
-			[sheet.delegate actionSheet:sheet clickedButtonAtIndex:i];
+//			[sheet.delegate actionSheet:sheet clickedButtonAtIndex:i];
 		}];
 
 		[_alertController addAction:action];
@@ -667,6 +675,7 @@ static NSMutableArray <NSString *> *highlightWords;
 
 #pragma mark -
 
+#if !SYSTEM(TV)
 - (void) updateAppShortcuts {
 	CQAppIconOptions options = CQAppIconOptionNone;
 
@@ -757,6 +766,7 @@ static NSMutableArray <NSString *> *highlightWords;
 	}
 #endif
 }
+#endif
 @end
 
 NS_ASSUME_NONNULL_END

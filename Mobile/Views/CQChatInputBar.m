@@ -96,7 +96,9 @@ NS_ASSUME_NONNULL_BEGIN
 	_inputView = [[CQTextView alloc] initWithFrame:frame];
 	_inputView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
 	_inputView.textContainer.heightTracksTextView = YES;
+#if !SYSTEM(TV)
 	_inputView.dataDetectorTypes = UIDataDetectorTypeNone;
+#endif
 	_inputView.returnKeyType = UIReturnKeySend;
 	_inputView.autocapitalizationType = UITextAutocapitalizationTypeSentences;
 	_inputView.enablesReturnKeyAutomatically = YES;
@@ -125,7 +127,9 @@ NS_ASSUME_NONNULL_BEGIN
 	_autocorrect = NO;
 #endif
 
+#if !SYSTEM(TV)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideCompletions) name:UIDeviceOrientationDidChangeNotification object:nil];
+#endif
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
@@ -754,7 +758,11 @@ retry:
 #undef ButtonWidth
 #undef ButtonMargin
 
+#if !SYSTEM(TV)
 	_animationDuration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
+#else
+	_animationDuration = 0.25;
+#endif
 }
 
 #pragma mark -
