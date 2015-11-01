@@ -399,6 +399,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) reset {
 	_blockerView.hidden = NO;
 
+	self.attributedText = nil;
+
 	NSString *newBodyJS = [NSString stringWithFormat:@"document.body = '%@';", [self _contentHTML]];
 	[_javaScriptContext evaluateScript:newBodyJS withSourceURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 
@@ -407,6 +409,10 @@ NS_ASSUME_NONNULL_BEGIN
 		[transcriptDelegate transcriptViewWasReset:self];
 
 	_readyForDisplay = YES;
+}
+
+- (void) resetSoon {
+	[self reset];
 }
 
 #pragma mark -
