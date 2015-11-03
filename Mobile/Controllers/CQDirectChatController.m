@@ -488,10 +488,27 @@ NS_ASSUME_NONNULL_BEGIN
 
 		UIKeyCommand *cmdShiftCKeyCommand = [UIKeyCommand keyCommandWithInput:@"c" modifierFlags:(UIKeyModifierCommand | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
 		UIKeyCommand *cmdShiftKKeyCommand = [UIKeyCommand keyCommandWithInput:@"k" modifierFlags:(UIKeyModifierCommand | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *cmdShiftNKeyCommand = [UIKeyCommand keyCommandWithInput:@"n" modifierFlags:(UIKeyModifierCommand | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
 		UIKeyCommand *cmdNKeyCommand = [UIKeyCommand keyCommandWithInput:@"n" modifierFlags:(UIKeyModifierCommand) action:@selector(_handleKeyCommand:)];
 		UIKeyCommand *cmdJKeyCommand = [UIKeyCommand keyCommandWithInput:@"j" modifierFlags:(UIKeyModifierCommand) action:@selector(_handleKeyCommand:)];
-		UIKeyCommand *cmdShiftNKeyCommand = [UIKeyCommand keyCommandWithInput:@"n" modifierFlags:(UIKeyModifierCommand | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
 		UIKeyCommand *escCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputEscape modifierFlags:0 action:@selector(_handleKeyCommand:)];
+
+		if ([UIKeyCommand instancesRespondToSelector:@selector(setDiscoverabilityTitle:)]) {
+			NSString *nextRoomTitle = NSLocalizedString(@"Next Chat Room", @"Next Chat Room discoverability HUD title");
+			NSArray *nextRoomCommands = @[ altTabKeyCommand, cmdUpKeyCommand, optCmdUpKeyCommand ];
+			[nextRoomCommands makeObjectsPerformSelector:@selector(setDiscoverabilityTitle:) withObject:nextRoomTitle];
+
+			NSString *previousRoomTitle = NSLocalizedString(@"Previous Chat Room", @"Previous Chat Room discoverability HUD title");
+			NSArray *previousRoomCommands = @[ shiftAltTabKeyCommand, cmdDownKeyCommand, optCmdDownKeyCommand ];
+			[previousRoomCommands makeObjectsPerformSelector:@selector(setDiscoverabilityTitle:) withObject:previousRoomTitle];
+
+			cmdShiftCKeyCommand.discoverabilityTitle = NSLocalizedString(@"Style Message", @"Style Message discoverability HUD title");
+			cmdShiftKKeyCommand.discoverabilityTitle = NSLocalizedString(@"Clear Message", @"Clear Message discoverability HUD title");
+			cmdShiftNKeyCommand.discoverabilityTitle = NSLocalizedString(@"New Connection", @"New Connection discoverability HUD title");
+			cmdJKeyCommand.discoverabilityTitle = NSLocalizedString(@"New Colloquy", @"New Colloquy discoverability HUD title");
+			cmdNKeyCommand.discoverabilityTitle = NSLocalizedString(@"New Colloquy", @"New Colloquy discoverability HUD title");
+			escCommand.discoverabilityTitle = NSLocalizedString(@"Dismiss Topmost View", @"Dismiss Topmost View discoverability HUD title");
+		}
 
 		keyCommands = @[ altTabKeyCommand, shiftAltTabKeyCommand, cmdUpKeyCommand, cmdDownKeyCommand, optCmdUpKeyCommand, optCmdDownKeyCommand,
 						 cmdShiftCKeyCommand, cmdNKeyCommand, cmdShiftKKeyCommand, cmdJKeyCommand, cmdShiftNKeyCommand, escCommand ];
@@ -528,11 +545,11 @@ NS_ASSUME_NONNULL_BEGIN
 //	CQUITextChatTranscriptView *webkitChatTranscriptView = [[CQUITextChatTranscriptView alloc] initWithFrame:transcriptView.frame];
 //	webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
 //	webkitChatTranscriptView.transcriptDelegate = self;
-
-	[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
-
-	[transcriptView removeFromSuperview];
-	transcriptView = webkitChatTranscriptView;
+//
+//	[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
+//
+//	[transcriptView removeFromSuperview];
+//	transcriptView = webkitChatTranscriptView;
 
 	[self _updateRightBarButtonItemAnimated:NO];
 
