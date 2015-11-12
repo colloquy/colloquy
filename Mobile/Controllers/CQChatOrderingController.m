@@ -169,8 +169,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 - (void) removeViewController:(id <CQChatViewController>) controller {
 	[_chatControllers removeObject:controller];
-
-	[self _sortChatControllers];
 }
 
 #if ENABLE(FILE_TRANSFERS)

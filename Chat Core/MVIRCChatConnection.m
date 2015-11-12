@@ -850,6 +850,9 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionQueue socketQueue:_connectionQueue];
 	_chatConnection.IPv6Enabled = YES;
 	_chatConnection.IPv4PreferredOverIPv6 = YES;
+#if TARGET_OS_IPHONE
+	[_chatConnection enableExtendBackgroundIdleMode];
+#endif
 	[old setDelegate:nil];
 	[old disconnect];
 
@@ -2280,6 +2283,8 @@ end:
 - (NSString *) _stringFromPossibleData:(id) input {
 	if( [input isKindOfClass:[NSData class]] )
 		return [self _newStringWithBytes:[input bytes] length:[input length]];
+	if( [input isKindOfClass:[NSAttributedString class]] )
+		return [input string];
 	return input;
 }
 

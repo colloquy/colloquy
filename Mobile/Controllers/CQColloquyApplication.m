@@ -3,11 +3,9 @@
 #import "CQAlertView.h"
 #import "CQAnalyticsController.h"
 #import "CQChatController.h"
-#import "CQChatListViewController.h"
-#import "CQChatNavigationController.h"
-#import "CQChatPresentationController.h"
 #import "CQConnectionsController.h"
 #import "CQConnectionsNavigationController.h"
+#import "CQRootContainerViewController.h"
 #import "CQWelcomeController.h"
 
 #import "NSNotificationAdditions.h"
@@ -17,13 +15,6 @@
 
 #import <HockeySDK/HockeySDK.h>
 
-typedef NS_ENUM(NSInteger, CQSidebarOrientation) {
-	CQSidebarOrientationNone,
-	CQSidebarOrientationPortrait,
-	CQSidebarOrientationLandscape,
-	CQSidebarOrientationAll
-};
-
 NS_ASSUME_NONNULL_BEGIN
 
 NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyApplicationDidRecieveDeviceTokenNotification";
@@ -32,15 +23,13 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 static NSMutableArray *highlightWords;
 
-@interface CQColloquyApplication () <UIApplicationDelegate, UISplitViewControllerDelegate, UIAlertViewDelegate, BITHockeyManagerDelegate>
+@interface CQColloquyApplication () <UIApplicationDelegate, UIAlertViewDelegate, BITHockeyManagerDelegate>
 @end
 
 @implementation CQColloquyApplication {
 	UIWindow *_mainWindow;
-	UIViewController *_mainViewController;
+	CQRootContainerViewController *_rootContainerViewController;
 	UIViewController *_overlappingPresentationViewController;
-	UIPopoverController *_colloquiesPopoverController;
-	UIBarButtonItem *_colloquiesBarButtonItem;
 	UIToolbar *_toolbar;
 	NSDate *_launchDate;
 	NSDate *_resumeDate;
@@ -70,18 +59,6 @@ static NSMutableArray *highlightWords;
 
 - (UIWindow *__nullable) window {
 	return _mainWindow;
-}
-
-- (UISplitViewController *) splitViewController {
-	if ([_mainViewController isKindOfClass:[UISplitViewController class]])
-		return (UISplitViewController *)_mainViewController;
-	return nil;
-}
-
-- (UINavigationController *) navigationController {
-	if ([_mainViewController isKindOfClass:[UINavigationController class]])
-		return (UINavigationController *)_mainViewController;
-	return nil;
 }
 
 #pragma mark -
@@ -171,7 +148,7 @@ static NSMutableArray *highlightWords;
 			_userDefaultsChanged = YES;
 		else [self reloadSplitViewController];
 
-		BOOL disableSingleSwipe = [self splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:UIInterfaceOrientationLandscapeLeft] || [self splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:UIInterfaceOrientationPortrait];
+		BOOL disableSingleSwipe = (![[UIDevice currentDevice] isPadModel] && !(self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryHidden || self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryOverlay));
 		if (disableSingleSwipe)
 			[[CQSettingsController settingsController] setInteger:0 forKey:@"CQSingleFingerSwipe"];
 	}
@@ -180,6 +157,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) performDeferredLaunchWork {
+#if !TARGET_IPHONE_SIMULATOR
 	NSString *hockeyappIdentifier = @"Hockeyapp_App_Identifier";
 	// Hacky check to make sure the identifier was replaced with a string that isn't ""
 	if (![hockeyappIdentifier hasPrefix:@"Hockeyapp"]) {
@@ -188,6 +166,7 @@ static NSMutableArray *highlightWords;
 
 		[[BITHockeyManager sharedHockeyManager] startManager];
 	}
+#endif
 
 	[self cq_beginReachabilityMonitoring];
 
@@ -283,9 +262,6 @@ static NSMutableArray *highlightWords;
 			BOOL animationEnabled = [UIView areAnimationsEnabled];
 			[UIView setAnimationsEnabled:NO];
 
-			if (!self.navigationController.view.window.isFullscreen)
-				[self.navigationController popToRootViewControllerAnimated:NO];
-
 			if (roomName.length) {
 				if ([action isEqualToString:@"j"])
 					[connection joinChatRoomNamed:roomName];
@@ -302,19 +278,9 @@ static NSMutableArray *highlightWords;
 #pragma mark -
 
 - (void) reloadSplitViewController {
-	[_colloquiesPopoverController dismissPopoverAnimated:YES];
-	_colloquiesPopoverController = nil;
-	_colloquiesBarButtonItem = nil;
+	[_rootContainerViewController buildRootViewController];
 
-	UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
-
-	CQChatPresentationController *presentationController = [CQChatController defaultController].chatPresentationController;
-	[presentationController setStandardToolbarItems:@[] animated:NO];
-
-	splitViewController.viewControllers = @[[CQChatController defaultController].chatNavigationController, presentationController];
-	splitViewController.delegate = self;
-
-	_mainViewController = splitViewController;
+	_mainViewController = _rootContainerViewController;
 	_mainWindow.rootViewController = _mainViewController;
 }
 
@@ -337,6 +303,7 @@ static NSMutableArray *highlightWords;
 	[CQChatController defaultController];
 
 	_mainWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+	_rootContainerViewController = [[CQRootContainerViewController alloc] init];
 
 	return YES;
 }
@@ -439,82 +406,6 @@ static NSMutableArray *highlightWords;
 
 #pragma mark -
 
-- (void) splitViewController:(UISplitViewController *) splitViewController popoverController:(UIPopoverController *) popoverController willPresentViewController:(UIViewController *) viewController {
-	if (![viewController isKindOfClass:[CQChatNavigationController class]])
-		return;
-
-	CQChatNavigationController *navigationController = (CQChatNavigationController *)viewController;
-	((CQChatListViewController *)(navigationController.topViewController)).active = YES;
-}
-
-- (void) splitViewController:(UISplitViewController *) splitViewController willHideViewController:(UIViewController *) viewController withBarButtonItem:(UIBarButtonItem *) barButtonItem forPopoverController:(UIPopoverController *) popoverController {
-	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;
-	NSMutableArray *items = [chatPresentationController.standardToolbarItems mutableCopy];
-
-	if (items.count && items[0] == barButtonItem)
-		return;
-
-	if (viewController == [CQChatController defaultController].chatNavigationController) {
-		_colloquiesPopoverController = popoverController;
-		_colloquiesBarButtonItem = barButtonItem;
-
-		[barButtonItem setAction:@selector(toggleColloquies:)];
-		[barButtonItem setTarget:self];
-	}
-
-	[items insertObject:barButtonItem atIndex:0];
-
-	[chatPresentationController setStandardToolbarItems:items animated:NO];
-}
-
-- (void) splitViewController:(UISplitViewController *) splitViewController willShowViewController:(UIViewController *) viewController invalidatingBarButtonItem:(UIBarButtonItem *) barButtonItem {
-	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;
-	NSMutableArray *items = [chatPresentationController.standardToolbarItems mutableCopy];
-
-	if (viewController == [CQChatController defaultController].chatNavigationController) {
-		_colloquiesPopoverController = nil;
-
-		NSAssert(_colloquiesBarButtonItem == barButtonItem, @"Bar button item was not the known Colloquies bar button item.");
-		_colloquiesBarButtonItem = nil;
-	}
-
-	[items removeObjectIdenticalTo:barButtonItem];
-
-	[chatPresentationController setStandardToolbarItems:items animated:NO];
-}
-
-- (BOOL) splitViewController:(UISplitViewController *) splitViewController shouldHideViewController:(UIViewController *) viewController inOrientation:(UIInterfaceOrientation) interfaceOrientation {
-	NSUInteger allowedOrientation = [[CQSettingsController settingsController] integerForKey:@"CQSplitSwipeOrientations"];
-	if (allowedOrientation == CQSidebarOrientationNone)
-		return NO;
-
-	if (allowedOrientation == CQSidebarOrientationAll)
-		return YES;
-
-	if (UIInterfaceOrientationIsLandscape(interfaceOrientation) && (allowedOrientation == CQSidebarOrientationLandscape))
-		return YES;
-
-	if (UIInterfaceOrientationIsPortrait(interfaceOrientation) && (allowedOrientation == CQSidebarOrientationPortrait))
-		return YES;
-
-	return NO;
-}
-
-- (BOOL) splitViewController:(UISplitViewController *) splitViewController collapseSecondaryViewController:(UIViewController *) secondaryViewController ontoPrimaryViewController:(UIViewController *) primaryViewController {
-	if (!secondaryViewController)
-		return YES;
-
-	if ([secondaryViewController isKindOfClass:[CQChatPresentationController class]]) {
-		CQChatPresentationController *presentationController = (CQChatPresentationController *)secondaryViewController;
-		if (!presentationController.topChatViewController)
-			return YES;
-	}
-
-	return [secondaryViewController isFirstResponder];
-}
-
-#pragma mark -
-
 - (void) showActionSheet:(UIActionSheet *) sheet {
 	[self showActionSheet:sheet forSender:nil animated:YES];
 }
@@ -572,7 +463,7 @@ static NSMutableArray *highlightWords;
 
 		__weak __typeof__((self)) weakSelf = self;
 
-		[_alertController addAction:[UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *action) {
+		UIAlertAction *action = [UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *selectedAction) {
 			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 
 			[strongSelf->_alertController removeFromParentViewController];
@@ -581,7 +472,12 @@ static NSMutableArray *highlightWords;
 			strongSelf->_overlappingPresentationViewController = nil;
 
 			[sheet.delegate actionSheet:sheet clickedButtonAtIndex:i];
-		}]];
+		}];
+
+		[_alertController addAction:action];
+
+		if (i == sheet.cancelButtonIndex && [_alertController respondsToSelector:@selector(setPreferredAction:)])
+			_alertController.preferredAction = action;
 	}
 
 	[_overlappingPresentationViewController presentViewController:_alertController animated:YES completion:nil];
@@ -667,36 +563,10 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) showConnections:(__nullable id) sender {
-	if (![UIDevice currentDevice].isPadModel) {
-		[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
-		[self.navigationController popToRootViewControllerAnimated:NO];
-	}
-}
-
-- (void) toggleColloquies:(__nullable id) sender {
-	if (_colloquiesPopoverController.popoverVisible)
-		[_colloquiesPopoverController dismissPopoverAnimated:YES];
-	else [self showColloquies:sender];
-}
-
-- (void) showColloquies:(__nullable id) sender {
-	[self showColloquies:sender hidingTopViewController:YES];
-}
-
-- (void) showColloquies:(__nullable id) sender hidingTopViewController:(BOOL) hidingTopViewController {
-	if (self.navigationController.view.window.isFullscreen) {
-		if (!_colloquiesPopoverController.popoverVisible) {
-			[self dismissPopoversAnimated:NO];
-			[_colloquiesPopoverController presentPopoverFromBarButtonItem:_colloquiesBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-		}
-	} else {
-		[self.navigationController popToRootViewControllerAnimated:YES];
-	}
+	[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
 }
 
 - (void) dismissPopoversAnimated:(BOOL) animated {
-	[_colloquiesPopoverController dismissPopoverAnimated:animated];
-
 	id <CQChatViewController> controller = [CQChatController defaultController].visibleChatController;
 	if ([controller respondsToSelector:@selector(dismissPopoversAnimated:)])
 		[controller dismissPopoversAnimated:animated];
@@ -705,7 +575,7 @@ static NSMutableArray *highlightWords;
 - (void) submitRunTime {
 	NSTimeInterval runTime = ABS([_resumeDate timeIntervalSinceNow]);
 	[[CQAnalyticsController defaultController] setObject:@(runTime) forKey:@"run-time"];
-	[[CQAnalyticsController defaultController] synchronizeSynchronously];
+	[[CQAnalyticsController defaultController] synchronize];
 }
 
 #pragma mark -
@@ -880,7 +750,8 @@ static NSMutableArray *highlightWords;
 #if !TARGET_IPHONE_SIMULATOR
 	static BOOL registeredForPush;
 	if (!registeredForPush) {
-		[self registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+
+		[self registerForNotificationTypes:UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert];
 		registeredForPush = YES;
 	}
 #endif

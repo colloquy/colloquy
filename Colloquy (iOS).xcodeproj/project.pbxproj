@@ -199,6 +199,7 @@
 		92F77F641A3ECAE7005667FE /* CQChatInputStyleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F77F631A3ECAE7005667FE /* CQChatInputStyleViewController.m */; };
 		92F99FB819D14034004A7A22 /* UIViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F99FB719D14034004A7A22 /* UIViewAdditions.m */; };
 		9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
+		B6024FF31BCD2D44000A5058 /* CQRootContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6024FF21BCD2D44000A5058 /* CQRootContainerViewController.m */; settings = {ASSET_TAGS = (); }; };
 		B68725B11B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B68725B01B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m */; };
 		B68725B41B8E7FF60003D4F8 /* CQPrinterPage.m in Sources */ = {isa = PBXBuildFile; fileRef = B68725B31B8E7FF60003D4F8 /* CQPrinterPage.m */; };
 		B6BFA5431BBDA3B6000C3BBC /* UIWindowAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B6BFA5421BBDA3B6000C3BBC /* UIWindowAdditions.m */; settings = {ASSET_TAGS = (); }; };
@@ -540,6 +541,8 @@
 		9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIImageAdditions.m; path = Mobile/Additions/UIImageAdditions.m; sourceTree = "<group>"; };
 		97F85EBC0F2713CA008486E1 /* CQFileTransferTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQFileTransferTableCell.h; sourceTree = "<group>"; };
 		97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQFileTransferTableCell.m; sourceTree = "<group>"; };
+		B6024FF11BCD2D44000A5058 /* CQRootContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQRootContainerViewController.h; path = Mobile/Controllers/CQRootContainerViewController.h; sourceTree = "<group>"; };
+		B6024FF21BCD2D44000A5058 /* CQRootContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQRootContainerViewController.m; path = Mobile/Controllers/CQRootContainerViewController.m; sourceTree = "<group>"; };
 		B68725AF1B8E3E320003D4F8 /* UIPrintPageRendererAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIPrintPageRendererAdditions.h; path = Additions/UIPrintPageRendererAdditions.h; sourceTree = "<group>"; };
 		B68725B01B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIPrintPageRendererAdditions.m; path = Additions/UIPrintPageRendererAdditions.m; sourceTree = "<group>"; };
 		B68725B21B8E7FF60003D4F8 /* CQPrinterPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPrinterPage.h; sourceTree = "<group>"; };
@@ -783,6 +786,8 @@
 				1CFCBA331114FB2500EA5F10 /* CQWelcomeController.h */,
 				1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */,
 				1CA3DC561027984A008B1AD2 /* CQWelcomeViewController.h */,
+				B6024FF11BCD2D44000A5058 /* CQRootContainerViewController.h */,
+				B6024FF21BCD2D44000A5058 /* CQRootContainerViewController.m */,
 			);
 			name = General;
 			path = ../..;
@@ -822,8 +827,8 @@
 				1C9B60E80FFAE4C400B7BAC0 /* CQBouncerConnection.h */,
 				1C6341630FAF30B600BB5866 /* CQBouncerSettings.m */,
 				1C6341620FAF30B600BB5866 /* CQBouncerSettings.h */,
-				B68725B21B8E7FF60003D4F8 /* CQPrinterPage.h */,
 				B68725B31B8E7FF60003D4F8 /* CQPrinterPage.m */,
+				B68725B21B8E7FF60003D4F8 /* CQPrinterPage.h */,
 			);
 			name = Models;
 			path = Mobile/Models;
@@ -1362,6 +1367,7 @@
 				1C1254A40F0D8D7F008F181B /* CQChatCreationViewController.m in Sources */,
 				1C1255670F0EAA69008F181B /* CQChatEditViewController.m in Sources */,
 				9261B7011841AEA1001B14C3 /* UIApplicationAdditions.m in Sources */,
+				B6024FF31BCD2D44000A5058 /* CQRootContainerViewController.m in Sources */,
 				9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */,
 				89E87C090FA0450800B49230 /* CQSoundController.m in Sources */,
 				1C633C9C0FABD06C00BB5866 /* CQConnectionPushEditController.m in Sources */,

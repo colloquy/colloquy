@@ -11,8 +11,7 @@
 
 typedef NS_ENUM(NSInteger, CQMentionLinkService) {
 	CQMentionLinkServiceNone,
-	CQMentionLinkServiceTwitter,
-	CQMentionLinkServiceAppDotNet
+	CQMentionLinkServiceTwitter
 };
 
 NSString *const CQInlineGIFImageKey = @"CQInlineGIFImageKey";
@@ -50,10 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 	inlineAudio = [[CQSettingsController settingsController] boolForKey:@"CQInlineAudio"];
 
 	CQMentionLinkService mentionService = (CQMentionLinkService)[[CQSettingsController settingsController] integerForKey:@"CQMentionLinkService"];
-	if (mentionService == CQMentionLinkServiceAppDotNet) {
-		mentionServiceRegex = @"\\B@[a-zA-Z0-9_]{1,20}";
-		mentionServiceReplacementFormat = @"<a href=\"https://alpha.app.net/%@\">@%@</a>";
-	} else if (mentionService == CQMentionLinkServiceTwitter) {
+	if (mentionService == CQMentionLinkServiceTwitter) {
 		mentionServiceRegex = @"\\B@[a-zA-Z0-9_]{1,20}";
 		mentionServiceReplacementFormat = @"<a href=\"https://twitter.com/%@\">@%@</a>";
 	} else {
@@ -151,7 +147,11 @@ static void commonChatAndImageReplacment(NSMutableString *string, NSRangePointer
 			if (!fullURL.scheme.length)
 				fullURL = [NSURL URLWithString:[@"http://" stringByAppendingString:url]];
 
-			if ([[CQColloquyApplication sharedApplication] canOpenURL:fullURL]) {
+			NSString *regexForIPv4Addresses = @"\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b";
+			NSString *regexForIPv6Addresses = @"/^\\s*((([0-9A-Fa-f]{1,4}:){7}(([0-9A-Fa-f]{1,4})|:))|(([0-9A-Fa-f]{1,4}:){6}(:|((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})|(:[0-9A-Fa-f]{1,4})))|(([0-9A-Fa-f]{1,4}:){5}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){0,1}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){0,2}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){0,3}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:)(:[0-9A-Fa-f]{1,4}){0,4}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(:(:[0-9A-Fa-f]{1,4}){0,5}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})))(%.+)?\\s*$/";
+			BOOL canOpenURL = [url isMatchedByRegex:regexForIPv4Addresses] || [url isMatchedByRegex:regexForIPv6Addresses] || [[CQColloquyApplication sharedApplication] canOpenURL:fullURL];
+
+			if (canOpenURL) {
 				if (inlineImages && [NSFileManager isValidImageFormat:fullURL.pathExtension]) {
 					if ([fullURL.pathExtension isCaseInsensitiveEqualToString:@"gif"]) {
 						NSString *key = [NSString stringWithFormat:@"%zd-%d", fullURL.hash, arc4random()];

@@ -55,13 +55,11 @@
 			<array>
 				<integer>0</integer>
 				<integer>1</integer>
-				<integer>2</integer>
 			</array>
 			<key>Titles</key>
 			<array>
 				<string>None</string>
 				<string>Twitter</string>
-				<string>App.net</string>
 			</array>
 			<key>DefaultValue</key>
 			<integer>1</integer>

@@ -225,9 +225,6 @@ NS_ASSUME_NONNULL_BEGIN
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:UIContentSizeCategoryDidChangeNotification object:nil];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-
 	_showingKeyboard = showingKeyboard;
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_nicknameDidChange:) name:MVChatUserNicknameChangedNotification object:nil];
@@ -242,7 +239,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 		[self.connection addChatUserWatchRule:_watchRule];
 
-		_revealKeyboard = YES;
+		_showingKeyboard = YES;
 	}
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(scrollbackLengthDidChange:) name:CQScrollbackLengthDidChangeNotification object:nil];
@@ -255,7 +252,6 @@ NS_ASSUME_NONNULL_BEGIN
 	[self setScrollbackLength:scrollbackLength];
 
 	_sentMessages = [[NSMutableArray alloc] init];
-	_batchStorage = [NSMutableDictionary dictionary];
 	_batchTypeAssociation = [NSMutableDictionary dictionary];
 
 	return self;
@@ -276,8 +272,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (!(self = [self initWithTarget:user]))
 		return nil;
-
-	_revealKeyboard = NO;
 
 	[self restorePersistentState:state usingConnection:connection];
 
@@ -519,8 +513,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	self.scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
-
 	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
 //	CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
 //	webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
@@ -538,7 +530,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[self _userDefaultsChanged];
 
-	transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] || ![self.splitViewController.delegate splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
+	transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] && !(self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryHidden || self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryOverlay));
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clear.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateNormal];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clearPressed.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateHighlighted];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButton.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
@@ -546,16 +538,18 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) viewWillAppear:(BOOL) animated {
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+
+	if (_showingKeyboard || showingKeyboard || hardwareKeyboard)
+		[chatInputBar becomeFirstResponder];
+
 	[super viewWillAppear:animated];
 
 	[self _addPendingComponentsAnimated:NO];
 
 	if (self.connection.connected)
 		[_target setMostRecentUserActivity:[NSDate date]];
-
-	if (_showingKeyboard || showingKeyboard || hardwareKeyboard) {
-		_revealKeyboard = YES;
-	}
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(didNotBookmarkLink:) name:CQBookmarkingDidNotSaveLinkNotification object:nil];
 
@@ -579,11 +573,6 @@ NS_ASSUME_NONNULL_BEGIN
 	[self markAsRead];
 
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
-
-	if (_revealKeyboard) {
-		_revealKeyboard = NO;
-		[chatInputBar becomeFirstResponder];
-	}
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
@@ -634,13 +623,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
 	BOOL isShowingCompletionsBeforeRotation = chatInputBar.isShowingCompletions;
 
-//	transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:toInterfaceOrientation]);
-
 	[coordinator animateAlongsideTransition:nil completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
 		[transcriptView scrollToBottomAnimated:NO];
 
 		if (isShowingCompletionsBeforeRotation)
 			[self _showChatCompletions];
+
+		transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] && !(self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryHidden || self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryOverlay));
 	}];
 }
 
@@ -1057,10 +1046,8 @@ NS_ASSUME_NONNULL_BEGIN
 	[self.connection connectAppropriately];
 
 	NSArray *rooms = [arguments.string componentsSeparatedByString:@","];
-	if (rooms.count == 1 && ((NSString *)rooms[0]).length)
-		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:rooms[0] andConnection:self.connection];
-	else if (rooms.count > 1)
-		[[CQColloquyApplication sharedApplication] showColloquies:nil];
+	if (((NSString *)rooms.firstObject).length)
+		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:rooms.firstObject andConnection:self.connection];
 
 	// Return NO so the command is handled in ChatCore.
 	return NO;
@@ -1333,6 +1320,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL) handleTweetCommandWithArguments:(MVChatString *) arguments {
 	SLComposeViewController *composeViewController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+	if ([UIPasteboard generalPasteboard].string.length)
+		[composeViewController setInitialText:[UIPasteboard generalPasteboard].string];
+
+	if ([UIPasteboard generalPasteboard].URL)
+		[composeViewController addURL:[UIPasteboard generalPasteboard].URL];
+
+	if ([UIPasteboard generalPasteboard].image)
+		[composeViewController addImage:[UIPasteboard generalPasteboard].image];
+
 	composeViewController.completionHandler = ^(SLComposeViewControllerResult result) { /* do nothing */ };
 	[self.navigationController presentViewController:composeViewController animated:YES completion:NULL];
 
@@ -2066,7 +2062,7 @@ NS_ASSUME_NONNULL_BEGIN
 	transcriptView.fontFamily = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFont"];
 	transcriptView.fontSize = chatTranscriptFontSize;
 	transcriptView.timestampPosition = timestampEveryMessage ? (timestampOnLeft ? CQTimestampPositionLeft : CQTimestampPositionRight) : CQTimestampPositionCenter;
-	transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] || ![self.splitViewController.delegate splitViewController:self.splitViewController shouldHideViewController:self.splitViewController.viewControllers.lastObject inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
+	transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] && !(self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryHidden || self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryOverlay));
 
 	chatInputBar.font = [chatInputBar.font fontWithSize:chatTranscriptFontSize];
 	if ([self isViewLoaded] && transcriptView)
@@ -2078,7 +2074,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 	BOOL autocorrect = ![[CQSettingsController settingsController] boolForKey:@"CQDisableChatAutocorrection"];
 	chatInputBar.autocorrect = autocorrect;
-
 	chatInputBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
 	id capitalizationBehavior = [[CQSettingsController settingsController] objectForKey:@"CQChatAutocapitalizationBehavior"];
@@ -2093,7 +2088,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (![user.connection isEqual:[_target connection]])
 		return;
 
-	[transcriptView noteNicknameChangedFrom:(notification.userInfo)[@"oldNickname"] to:user.nickname];
+	[transcriptView noteNicknameChangedFrom:notification.userInfo[@"oldNickname"] to:user.nickname];
 
 	if (_target == user)
 		self.title = user.nickname;

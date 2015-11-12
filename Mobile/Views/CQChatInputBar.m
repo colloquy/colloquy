@@ -169,27 +169,22 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (BOOL) canBecomeFirstResponder {
-	[super canBecomeFirstResponder];
 	return [_inputView canBecomeFirstResponder];
 }
 
 - (BOOL) becomeFirstResponder {
-	[super becomeFirstResponder];
 	return [_inputView becomeFirstResponder];
 }
 
 - (BOOL) canResignFirstResponder {
-	[super canResignFirstResponder];
 	return [_inputView canResignFirstResponder];
 }
 
 - (BOOL) resignFirstResponder {
-	[super resignFirstResponder];
 	return [_inputView resignFirstResponder];
 }
 
 - (BOOL) isFirstResponder {
-	[super isFirstResponder];
 	return [_inputView isFirstResponder];
 }
 

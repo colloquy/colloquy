@@ -7103,12 +7103,16 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 	
 	// The kCFStreamPropertyShouldCloseNativeSocket property should be false by default (for our case).
 	// But let's not take any chances.
-	
+
 	if (readStream)
+	{
 		CFReadStreamSetProperty(readStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanFalse);
+	}
 	if (writeStream)
+	{
 		CFWriteStreamSetProperty(writeStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanFalse);
-	
+	}
+
 	if ((readStream == NULL) || (writeStream == NULL))
 	{
 		LogWarn(@"Unable to create read and write stream...");
@@ -7395,6 +7399,40 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 		[self createReadAndWriteStream];
 	
 	return writeStream;
+}
+
+- (BOOL)enableExtendBackgroundIdleMode
+{
+	if (![self createReadAndWriteStream])
+	{
+		// Error occured creating streams (perhaps socket isn't open)
+		return NO;
+	}
+
+	CFStreamStatus readStatus = CFReadStreamGetStatus(readStream);
+	CFStreamStatus writeStatus = CFWriteStreamGetStatus(writeStream);
+
+	if ((readStatus == kCFStreamStatusNotOpen) || (writeStatus == kCFStreamStatusNotOpen))
+	{
+		LogError(@"Unable to change state for delaying of socket reclaiming in background on opened sockets");
+		return NO;
+	}
+
+	if (&kCFStreamPropertySocketExtendedBackgroundIdleMode == NULL)
+	{
+		return NO;
+	}
+
+	BOOL r1 = CFReadStreamSetProperty(readStream, kCFStreamPropertySocketExtendedBackgroundIdleMode, kCFBooleanTrue);
+	BOOL r2 = CFWriteStreamSetProperty(writeStream, kCFStreamPropertySocketExtendedBackgroundIdleMode, kCFBooleanTrue);
+
+	if (!r1 || !r2)
+	{
+		LogError(@"Unable to delay socket reclaiming for read or write stream");
+		return NO;
+	}
+
+	return YES;
 }
 
 - (BOOL)enableBackgroundingOnSocketWithCaveat:(BOOL)caveat

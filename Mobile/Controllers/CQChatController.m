@@ -574,7 +574,7 @@ static CQSoundController *fileTransferSound;
 	UINavigationController *navigationController = ((UIViewController *)_visibleChatController).navigationController;
 	if (navigationController == nil) {
 		navigationController = [[UINavigationController alloc] initWithRootViewController:(UIViewController *)controller];
-		[[CQColloquyApplication sharedApplication].splitViewController showDetailViewController:navigationController sender:nil];
+		[_chatNavigationController.splitViewController showDetailViewController:navigationController sender:nil];
 	} else if (controller) navigationController.viewControllers = @[ controller ];
 
 	_visibleChatController = controller;
@@ -627,7 +627,7 @@ static CQSoundController *fileTransferSound;
 
 - (void) joinSupportRoom {
 	MVChatConnection *connection = [[CQConnectionsController defaultController] connectionForServerAddress:@"freenode.net"];
-	if (!connection) connection = [[CQConnectionsController defaultController] connectionForServerAddress:@"freenode.net"];
+	if (!connection) connection = [[CQConnectionsController defaultController] connectionForServerAddress:@"freenode.com"];
 
 	if (!connection) {
 		connection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
@@ -639,8 +639,8 @@ static CQSoundController *fileTransferSound;
 		connection.encoding = [MVChatConnection defaultEncoding];
 		connection.automaticallyConnect = NO;
 		connection.multitaskingSupported = YES;
-		connection.secure = NO;
-		connection.serverPort = 6667;
+		connection.secure = YES;
+		connection.serverPort = 6697;
 
 		[[CQConnectionsController defaultController] addConnection:connection];
 	}
@@ -650,8 +650,6 @@ static CQSoundController *fileTransferSound;
 	[self showChatControllerWhenAvailableForRoomNamed:@"#colloquy-mobile" andConnection:connection];
 
 	[connection joinChatRoomNamed:@"#colloquy-mobile"];
-
-	[[CQColloquyApplication sharedApplication] showColloquies:nil];
 }
 
 #pragma mark -

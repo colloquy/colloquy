@@ -141,6 +141,7 @@ static void generateDeviceIdentifier() {
 @implementation CQAnalyticsController {
 	NSMutableDictionary *_data;
 	BOOL _pendingSynchronize;
+	NSURLSession *_backgroundSession;
 }
 
 + (CQAnalyticsController *) defaultController {
@@ -171,6 +172,19 @@ static void generateDeviceIdentifier() {
 	}
 
 	_data = [[NSMutableDictionary alloc] initWithCapacity:10];
+
+	NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"info.colloquy.mobi.backgroundSession"];
+	configuration.discretionary = YES;
+	configuration.allowsCellularAccess = YES;
+	configuration.sessionSendsLaunchEvents = NO;
+	configuration.HTTPShouldUsePipelining = NO;
+	configuration.HTTPCookieAcceptPolicy = NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain;
+	configuration.HTTPMaximumConnectionsPerHost = 1;
+
+	if ([configuration respondsToSelector:@selector(setShouldUseExtendedBackgroundIdleMode:)])
+		configuration.shouldUseExtendedBackgroundIdleMode = YES;
+
+	_backgroundSession = [NSURLSession sessionWithConfiguration:configuration];
 
 	generateDeviceIdentifier();
 
@@ -289,25 +303,7 @@ static void generateDeviceIdentifier() {
 	_data[deviceIdentifierKey] = deviceIdentifier;
 	_data[applicationNameKey] = applicationName;
 
-	[NSURLConnection connectionWithRequest:[self _urlRequest] delegate:nil];
-
-	[_data removeAllObjects];
-}
-
-- (void) synchronizeSynchronously {
-	if (!_data.count)
-		return;
-
-	_pendingSynchronize = NO;
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
-
-	_data[deviceIdentifierKey] = deviceIdentifier;
-	_data[applicationNameKey] = applicationName;
-
-	NSMutableURLRequest *request = [self _urlRequest];
-	[request setTimeoutInterval:5.];
-
-	[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL];
+	[[_backgroundSession dataTaskWithRequest:[self _urlRequest]] resume];
 
 	[_data removeAllObjects];
 }
@@ -315,7 +311,7 @@ static void generateDeviceIdentifier() {
 #pragma mark -
 
 - (void) applicationWillTerminate {
-	[self synchronizeSynchronously];
+	[[_backgroundSession dataTaskWithRequest:[self _urlRequest]] resume];
 }
 @end
 

@@ -17,8 +17,6 @@ typedef NS_OPTIONS(NSInteger, CQAppIconOptions) {
 - (void) showHelp:(__nullable id) sender;
 - (void) showWelcome:(__nullable id) sender;
 - (void) showConnections:(__nullable id) sender;
-- (void) showColloquies:(__nullable id) sender;
-- (void) showColloquies:(__nullable id) sender hidingTopViewController:(BOOL) hidingTopViewController;
 
 - (void) dismissPopoversAnimated:(BOOL) animated;
 

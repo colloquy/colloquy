@@ -52,7 +52,6 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 	BOOL _showingAlert;
 	BOOL _allowEditingToEnd;
 	BOOL _didSendRecently;
-	BOOL _revealKeyboard;
 	BOOL _showingKeyboard;
 	BOOL _showDeviceTokenWhenRegistered;
 

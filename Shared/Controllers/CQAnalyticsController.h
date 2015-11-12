@@ -10,7 +10,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) synchronizeSoon;
 - (void) synchronize;
-- (void) synchronizeSynchronously;
 @end
 
 NS_ASSUME_NONNULL_END

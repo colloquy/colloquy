@@ -13,14 +13,6 @@ static NSString *membersFilteredCountFormat;
 
 #define UserIdleTime 600
 
-//static unsigned long userStatus(MVChatUser *user, MVChatRoom *room) {
-//	unsigned long modes = [room modesForMemberUser:user];
-//
-//	if (user.serverOperator)
-//		return (MVChatRoomMemberFounderMode * 2);
-//	return modes;
-//}
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CQChatUserListViewController () <UIActionSheetDelegate, UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating>
@@ -54,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) dealloc {
 	_chatUserDelegate = nil;
-	_searchController.searchBar.delegate = nil;
+	_searchController.searchResultsUpdater = nil;
 	_searchController.delegate = nil;
 }
 
@@ -66,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (_listMode == CQChatUserListModeBan)
 		return;
 
-	_searchController = [[UISearchController alloc] initWithSearchResultsController:self];
+	_searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
 	_searchController.delegate = self;
 	_searchController.searchResultsUpdater = self;
 
