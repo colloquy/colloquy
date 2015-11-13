@@ -1342,17 +1342,6 @@
 			name = Controllers;
 			sourceTree = "<group>";
 		};
-		55B0EF5418CE40F60000E4CA /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				CBF685320820190D00F498FB /* Info.plist */,
-				CBF685340820190D00F498FB /* schema.xml */,
-				CBF6852D0820190D00F498FB /* InfoPlist.strings */,
-				CBF6852F0820190D00F498FB /* schema.strings */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
 		55C8A2D5180735D100A7BB42 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -1368,12 +1357,23 @@
 				CBF685330820190D00F498FB /* main.c */,
 				5530388F171722A200652D45 /* GetMetadataForFile.h */,
 				CBF685310820190D00F498FB /* GetMetadataForFile.m */,
-				55B0EF5418CE40F60000E4CA /* Resources */,
+				CBF6852C0820190D00F498FB /* Resources */,
 			);
 			name = "Metadata Importer";
 			path = Importer;
 			sourceTree = "<group>";
 			usesTabs = 0;
+		};
+		CBF6852C0820190D00F498FB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CBF685320820190D00F498FB /* Info.plist */,
+				CBF685340820190D00F498FB /* schema.xml */,
+				CBF6852D0820190D00F498FB /* InfoPlist.strings */,
+				CBF6852F0820190D00F498FB /* schema.strings */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
 		};
 		F50B0A9F0170C89301A84BDE /* Sources & Headers */ = {
 			isa = PBXGroup;
@@ -2650,13 +2650,6 @@
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -2665,9 +2658,6 @@
 					DEBUG,
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SYMROOT = build;
 			};
@@ -2744,19 +2734,9 @@
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				SYMROOT = build;
 			};
 			name = Release;
