@@ -624,7 +624,7 @@ static BOOL applicationIsTerminating = NO;
 		return;
 	}
 
-	NSArray *invalidPlugins = notification.object;
+	NSArray<NSString*> *invalidPlugins = notification.object;
 
 	NSAlert *alert = [[NSAlert alloc] init];
 	alert.messageText = (invalidPlugins.count > 1) ? NSLocalizedString( @"Unable to load plugins", @"Unable to load plugins message text" ) : NSLocalizedString( @"Unable to load a plugin", @"Unable to load a plugin message text" );
