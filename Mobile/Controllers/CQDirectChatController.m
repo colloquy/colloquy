@@ -13,7 +13,6 @@
 #import "CQConnectionsController.h"
 #import "CQIgnoreRulesController.h"
 #import "CQImportantChatMessageViewController.h"
-#import "CQIntroductoryGIFFrameOperation.h"
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
 #import "CQUserInfoController.h"
@@ -2473,25 +2472,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (!user.localUser)
 		[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
-
-//	[operation.processedMessageInfo[CQInlineGIFImageKey] enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
-//		CQIntroductoryGIFFrameOperation *GIFOperation = [[CQIntroductoryGIFFrameOperation alloc] initWithURL:object];
-//		GIFOperation.userInfo = @{ @"id": key };
-//		GIFOperation.target = self;
-//		GIFOperation.action = @selector(_GIFProcessed:);
-//
-//		[[CQDirectChatController chatMessageProcessingQueue] addOperation:GIFOperation];
-//	}];
-}
-
-- (void) _GIFProcessed:(CQIntroductoryGIFFrameOperation *) operation {
-	NSString *base64Encoding = operation.introductoryFrameImageData.base64Encoding;
-	NSString *imageString = nil;
-	if (base64Encoding.length)
-		imageString = [NSString stringWithFormat:@"data:image;base64, %@", base64Encoding];
-	else imageString = operation.url.absoluteString;
-	[transcriptView insertImage:imageString forElementWithIdentifier:operation.userInfo[@"id"]];
-
 }
 @end
 

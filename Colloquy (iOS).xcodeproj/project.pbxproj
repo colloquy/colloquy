@@ -187,7 +187,6 @@
 		92B6661417ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 92B6661317ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf */; };
 		92B6661717ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B6661617ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m */; };
 		92B6670717F927E200BA3DD9 /* CQNavigationToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B6670617F927E200BA3DD9 /* CQNavigationToolbar.m */; };
-		92BB78BD17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */; };
 		92D30F2C116D2B020060EE33 /* UIViewControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */; };
 		92F1C9E3161D936D0035A9AF /* UIActionSheetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F1C9E2161D936D0035A9AF /* UIActionSheetAdditions.m */; };
 		92F3BE5011716FE700A4F554 /* CQPreferencesTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F3BE4F11716FE700A4F554 /* CQPreferencesTextViewCell.m */; };
@@ -336,7 +335,6 @@
 		B6831D771BE450C200D3AC1D /* CQActivities.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D085B51B8D6E8400734C96 /* CQActivities.m */; };
 		B6831D781BE450C200D3AC1D /* CQBouncerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B60E90FFAE4C400B7BAC0 /* CQBouncerConnection.m */; };
 		B6831D791BE450C200D3AC1D /* CQBouncerSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6341630FAF30B600BB5866 /* CQBouncerSettings.m */; };
-		B6831D7B1BE450D500D3AC1D /* CQIntroductoryGIFFrameOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */; };
 		B6831D7C1BE450D500D3AC1D /* CQProcessChatMessageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0DBCA81005A57A003BEEF3 /* CQProcessChatMessageOperation.m */; };
 		B6831D7D1BE450D500D3AC1D /* CQProcessConsoleMessageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */; };
 		B6831D7E1BE450DC00D3AC1D /* CQAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBEA7341002CC5C00546847 /* CQAlertView.m */; };
@@ -697,8 +695,6 @@
 		92B6661617ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesTextViewController.m; path = Controllers/CQPreferencesTextViewController.m; sourceTree = "<group>"; };
 		92B6670517F927E200BA3DD9 /* CQNavigationToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQNavigationToolbar.h; sourceTree = "<group>"; };
 		92B6670617F927E200BA3DD9 /* CQNavigationToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQNavigationToolbar.m; sourceTree = "<group>"; };
-		92BB78BB17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQIntroductoryGIFFrameOperation.h; sourceTree = "<group>"; };
-		92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQIntroductoryGIFFrameOperation.m; sourceTree = "<group>"; };
 		92D30F2A116D2B020060EE33 /* UIViewControllerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIViewControllerAdditions.h; path = Mobile/Additions/UIViewControllerAdditions.h; sourceTree = "<group>"; };
 		92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIViewControllerAdditions.m; path = Mobile/Additions/UIViewControllerAdditions.m; sourceTree = "<group>"; };
 		92E2E65415BFD6740013B032 /* FileTransferTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileTransferTableCell.xib; sourceTree = "<group>"; };
@@ -838,8 +834,6 @@
 		1C0DBCA41005A538003BEEF3 /* Operations */ = {
 			isa = PBXGroup;
 			children = (
-				92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */,
-				92BB78BB17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.h */,
 				1C0DBCA81005A57A003BEEF3 /* CQProcessChatMessageOperation.m */,
 				1C0DBCA71005A57A003BEEF3 /* CQProcessChatMessageOperation.h */,
 				92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */,
@@ -1683,7 +1677,6 @@
 				1CFCB9BA1114EED200EA5F10 /* UINavigationControllerAdditions.m in Sources */,
 				1CFCBA2A1114F9FE00EA5F10 /* CQUserInfoRoomListViewController.m in Sources */,
 				1CFCBA2B1114F9FE00EA5F10 /* CQUserInfoViewController.m in Sources */,
-				92BB78BD17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m in Sources */,
 				1CFCBA301114FAFA00EA5F10 /* CQUserInfoController.m in Sources */,
 				1CFCBA351114FB2500EA5F10 /* CQWelcomeController.m in Sources */,
 				1CFCC0C511172B2A00EA5F10 /* CQChatPresentationController.m in Sources */,
@@ -1828,7 +1821,6 @@
 				B6831D771BE450C200D3AC1D /* CQActivities.m in Sources */,
 				B6831D781BE450C200D3AC1D /* CQBouncerConnection.m in Sources */,
 				B6831D791BE450C200D3AC1D /* CQBouncerSettings.m in Sources */,
-				B6831D7B1BE450D500D3AC1D /* CQIntroductoryGIFFrameOperation.m in Sources */,
 				B6831D7C1BE450D500D3AC1D /* CQProcessChatMessageOperation.m in Sources */,
 				B6831D7D1BE450D500D3AC1D /* CQProcessConsoleMessageOperation.m in Sources */,
 				B6831D7E1BE450DC00D3AC1D /* CQAlertView.m in Sources */,
