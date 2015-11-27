@@ -92,7 +92,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 @implementation CQChatOrderingController {
-	NSMutableArray <id <CQChatViewController>> *_chatControllers;
+	NSArray <id <CQChatViewController>> *_chatControllers;
 }
 
 @synthesize chatViewControllers = _chatControllers;
@@ -120,7 +120,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if (!(self = [super init]))
 		return nil;
 
-	_chatControllers = [[NSMutableArray alloc] init];
+	_chatControllers = @[];
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_asyncSortChatControllers) name:CQChatViewControllerHandledMessageNotification object:nil];
 
@@ -137,7 +137,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 - (void) _sortChatControllers {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_sortChatControllers) object:nil];
-	[_chatControllers sortUsingFunction:sortControllersAscending context:NULL];
+	_chatControllers = [[_chatControllers copy] sortedArrayUsingFunction:sortControllersAscending context:NULL];
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatOrderingControllerDidChangeOrderingNotification object:nil];
 }
 
@@ -146,7 +146,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 - (void) _addViewController:(id <CQChatViewController>) controller resortingRightAway:(BOOL) resortingRightAway {
-	[_chatControllers addObject:controller];
+	_chatControllers = [_chatControllers arrayByAddingObject:controller];
 
 	NSDictionary *notificationInfo = @{@"controller": controller};
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatControllerAddedChatViewControllerNotification object:self userInfo:notificationInfo];
@@ -169,7 +169,13 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 - (void) removeViewController:(id <CQChatViewController>) controller {
-	[_chatControllers removeObject:controller];
+	NSMutableArray *copy = [_chatControllers mutableCopy];
+	NSUInteger index = [copy indexOfObjectIdenticalTo:controller];
+	if (index != NSNotFound) {
+		[copy removeObjectAtIndex:index];
+
+		_chatControllers = [copy copy];
+	}
 }
 
 #if ENABLE(FILE_TRANSFERS)
