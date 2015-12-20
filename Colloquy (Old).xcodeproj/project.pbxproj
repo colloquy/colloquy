@@ -289,6 +289,7 @@
 		92C70D191A5E88CE00080E45 /* super-op.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D111A5E88CE00080E45 /* super-op.pdf */; };
 		92C70D1B1A5E898100080E45 /* console.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D1A1A5E898100080E45 /* console.pdf */; };
 		92C70D1D1A5E89A000080E45 /* messageUser.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D1C1A5E89A000080E45 /* messageUser.pdf */; };
+		C207B61F1BC96B6A00921E60 /* JVInterfacePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C207B61E1BC96B6A00921E60 /* JVInterfacePreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
 		C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; };
 		C22A35571BC00BB7001757D7 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C22A35781BC0378A001757D7 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */; settings = {ASSET_TAGS = (); }; };
@@ -997,6 +998,7 @@
 		A18BCA2108FF588E0005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Languages/Dutch.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
 		A18BCA2208FF589D0005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Languages/German.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
 		A1E1610309228E4F004920E8 /* French */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = French; path = Languages/French.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C207B61E1BC96B6A00921E60 /* JVInterfacePreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVInterfacePreferencesViewController.xib; sourceTree = "<group>"; };
 		C22A35761BC0378A001757D7 /* JVGeneralPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVGeneralPreferences.h; sourceTree = "<group>"; };
 		C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVGeneralPreferences.m; sourceTree = "<group>"; };
 		C2BD72E31BC31162004C1EBD /* JVInterfacePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVInterfacePreferences.h; sourceTree = "<group>"; };
@@ -1328,6 +1330,7 @@
 				C2BE9F0F1BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib */,
 				1C6A40C7083FF6C600572AB6 /* JVInterfacePreferencesViewController.h */,
 				1C6A40C8083FF6C600572AB6 /* JVInterfacePreferencesViewController.m */,
+				C207B61E1BC96B6A00921E60 /* JVInterfacePreferencesViewController.xib */,
 				1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */,
 				1CC6FC500549FCD70075807C /* JVAppearancePreferences.h */,
 				1C9982010603EFD6006C6417 /* JVNotificationPreferences.m */,
@@ -2046,6 +2049,7 @@
 				1C1AFE8E09C3D92E00BF3E2A /* roomTopicBanner.js in Resources */,
 				1CB2CD17052DDC560094AAA4 /* encoding.png in Resources */,
 				1CB2CD18052DDC560094AAA4 /* info.colloquy.plist in Resources */,
+				C207B61F1BC96B6A00921E60 /* JVInterfacePreferencesViewController.xib in Resources */,
 				1CB2CD19052DDC560094AAA4 /* info.png in Resources */,
 				1CB2CD1A052DDC560094AAA4 /* download.png in Resources */,
 				1CB2CD1B052DDC560094AAA4 /* upload.png in Resources */,
