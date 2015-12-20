@@ -1,0 +1,18 @@
+
+/* Class = "NSButtonCell"; title = "Send anonymous system profile"; ObjectID = "721-dp-qrR"; */
+"721-dp-qrR.title" = "Send anonymous system profile";
+
+/* Class = "NSTextFieldCell"; title = "Quit Message:"; ObjectID = "NlP-Sh-2l1"; */
+"NlP-Sh-2l1.title" = "Quit Message:";
+
+/* Class = "NSTextFieldCell"; title = "Check online for newer versions when you launch the application"; ObjectID = "Stn-fH-bkd"; */
+"Stn-fH-bkd.title" = "在您開啟這個應用程式的時候，自動檢查是否有新版軟體。";
+
+/* Class = "NSTextFieldCell"; title = "Default Encoding:"; ObjectID = "gtQ-h3-3nn"; */
+"gtQ-h3-3nn.title" = "預設文字編碼:";
+
+/* Class = "NSTextFieldCell"; title = "Sleep Message:"; ObjectID = "pBD-Nb-S4U"; */
+"pBD-Nb-S4U.title" = "Sleep Message:";
+
+/* Class = "NSButtonCell"; title = "Automatically check for new versions"; ObjectID = "uCF-5N-OYF"; */
+"uCF-5N-OYF.title" = "自動檢查是否有新版的軟體";

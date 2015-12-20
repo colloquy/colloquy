@@ -1,0 +1,18 @@
+
+/* Class = "NSButtonCell"; title = "Send anonymous system profile"; ObjectID = "721-dp-qrR"; */
+"721-dp-qrR.title" = "Send anonymous system profile";
+
+/* Class = "NSTextFieldCell"; title = "Quit Message:"; ObjectID = "NlP-Sh-2l1"; */
+"NlP-Sh-2l1.title" = "Mensagem de saída:";
+
+/* Class = "NSTextFieldCell"; title = "Check online for newer versions when you launch the application"; ObjectID = "Stn-fH-bkd"; */
+"Stn-fH-bkd.title" = "Verificar online se há novas versões do programa quando este é iniciado";
+
+/* Class = "NSTextFieldCell"; title = "Default Encoding:"; ObjectID = "gtQ-h3-3nn"; */
+"gtQ-h3-3nn.title" = "Encoding por defeito:";
+
+/* Class = "NSTextFieldCell"; title = "Sleep Message:"; ObjectID = "pBD-Nb-S4U"; */
+"pBD-Nb-S4U.title" = "Sleep Message:";
+
+/* Class = "NSButtonCell"; title = "Automatically check for new versions"; ObjectID = "uCF-5N-OYF"; */
+"uCF-5N-OYF.title" = "Verificar automaticamente se existem novas versões";
