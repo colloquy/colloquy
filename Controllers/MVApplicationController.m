@@ -28,6 +28,7 @@
 #import "PFMoveApplicationController.h"
 
 #import "MASPreferences.h"
+#import "JVGeneralPreferencesViewController.h"
 
 #import <Sparkle/SUUpdater.h>
 
@@ -186,7 +187,10 @@ static BOOL applicationIsTerminating = NO;
 	if( setupAlready ) return;
 	
 	
-	NSArray<NSViewController<MASPreferencesViewController> *> *viewControllers = @[];
+	NSArray<NSViewController<MASPreferencesViewController> *> *viewControllers
+	= @[
+		[[JVGeneralPreferencesViewController alloc] init]
+		];
 	MASPreferencesWindowController *preferencesWC = [[MASPreferencesWindowController alloc] initWithViewControllers:viewControllers];
 	self.preferencesWC = preferencesWC;
 	

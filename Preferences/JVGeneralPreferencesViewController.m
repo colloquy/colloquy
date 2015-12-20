@@ -1,28 +1,85 @@
-#import "JVGeneralPreferences.h"
+#import "JVGeneralPreferencesViewController.h"
 #import "JVBuddy.h"
 
 extern const NSStringEncoding JVAllowedTextEncodings[];
 
-@implementation JVGeneralPreferences
-- (NSString *) preferencesNibName {
+/*
+@protocol MASPreferencesViewController <NSObject>
+
+@optional
+
+- (void)viewWillAppear;
+- (void)viewDidDisappear;
+- (NSView *)initialKeyView;
+
+@property (nonatomic, readonly) BOOL hasResizableWidth;
+@property (nonatomic, readonly) BOOL hasResizableHeight;
+
+@required
+
+@property (nonatomic, readonly) NSString *identifier;
+@property (nonatomic, readonly) NSImage *toolbarItemImage;
+@property (nonatomic, readonly) NSString *toolbarItemLabel;
+
+@end
+
+*/
+
+@interface JVGeneralPreferencesViewController()
+
+@property(nonatomic, weak) IBOutlet NSPopUpButton *encoding;
+
+- (void) buildEncodingMenu;
+
+@end
+
+
+@implementation JVGeneralPreferencesViewController
+
+- (instancetype)init {
+	self = [super initWithNibName:@"JVGeneralPreferences" bundle:nil];
+//	if ( self != nil ) {
+//		
+//	}
+	return self;
+}
+
+- (void) awakeFromNib {
+	[self buildEncodingMenu];
+}
+
+- (void) setPreferencesView:(NSView *)view {
+	self.view = view;
+}
+
+- (void) set_preferencesView:(NSView *)view {
+	self.view = view;
+}
+
+#pragma mark MASPreferencesViewController
+
+- (NSString *) identifier {
 	return @"JVGeneralPreferences";
 }
 
-- (BOOL) hasChangesPending {
-	return NO;
-}
-
-- (NSImage *) imageForPreferenceNamed:(NSString *) name {
+- (NSImage *) toolbarItemImage {
 	return [NSImage imageNamed:@"GeneralPreferences"];
 }
 
-- (BOOL) isResizable {
+
+- (NSString *) toolbarItemLabel {
+	return NSLocalizedString( @"General", "general preference pane name" );
+}
+
+- (BOOL)hasResizableWidth {
 	return NO;
 }
 
-- (void) initializeFromDefaults {
-	[self buildEncodingMenu];
+- (BOOL)hasResizableHeight {
+	return NO;
 }
+
+#pragma mark Private
 
 - (void) buildEncodingMenu {
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
@@ -43,6 +100,7 @@ extern const NSStringEncoding JVAllowedTextEncodings[];
 	}
 
 	[menu setAutoenablesItems:NO];
-	[encoding setMenu:menu];
+	[self.encoding setMenu:menu];
 }
+
 @end

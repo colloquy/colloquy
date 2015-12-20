@@ -1,7 +1,8 @@
-#import "NSPreferences.h"
+#import <Cocoa/Cocoa.h>
 
-@interface JVGeneralPreferences : NSPreferencesModule {
-	IBOutlet NSPopUpButton *encoding;
-}
-- (void) buildEncodingMenu;
+#import <MASPreferences.h>
+
+
+@interface JVGeneralPreferencesViewController : NSViewController <MASPreferencesViewController>
+
 @end
