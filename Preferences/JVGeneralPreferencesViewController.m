@@ -29,6 +29,7 @@ extern const NSStringEncoding JVAllowedTextEncodings[];
 	self.view = view;
 }
 
+
 #pragma mark MASPreferencesViewController
 
 - (NSString *) identifier {
@@ -51,6 +52,7 @@ extern const NSStringEncoding JVAllowedTextEncodings[];
 - (BOOL)hasResizableHeight {
 	return NO;
 }
+
 
 #pragma mark - Private
 

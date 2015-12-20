@@ -27,7 +27,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <view id="cXD-3y-f4D">
+        <view id="cXD-3y-f4D" userLabel="Interface Preferences">
             <rect key="frame" x="0.0" y="0.0" width="525" height="464"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>

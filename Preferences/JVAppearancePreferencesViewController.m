@@ -1,4 +1,7 @@
-#import "JVAppearancePreferences.h"
+#import "JVAppearancePreferencesViewController.h"
+
+#import <WebKit/WebKit.h>
+
 #import "JVStyle.h"
 #import "JVStyleView.h"
 #import "JVEmoticonSet.h"
@@ -17,71 +20,127 @@
 
 #pragma mark -
 
-@implementation JVAppearancePreferences
+@interface JVAppearancePreferencesViewController () <WebPolicyDelegate, WebUIDelegate>
+
+@property(nonatomic, strong) IBOutlet JVStyleView *preview;
+@property(nonatomic, strong) IBOutlet NSPopUpButton *styles;
+@property(nonatomic, strong) IBOutlet NSPopUpButton *emoticons;
+@property(nonatomic, strong) IBOutlet JVFontPreviewField *standardFont;
+@property(nonatomic, strong) IBOutlet NSTextField *minimumFontSize;
+@property(nonatomic, strong) IBOutlet NSStepper *minimumFontSizeStepper;
+@property(nonatomic, strong) IBOutlet NSTextField *baseFontSize;
+@property(nonatomic, strong) IBOutlet NSStepper *baseFontSizeStepper;
+@property(nonatomic, strong) IBOutlet NSDrawer *optionsDrawer;
+@property(nonatomic, strong) IBOutlet NSTableView *optionsTable;
+@property(nonatomic, strong) IBOutlet NSPanel *addVariantPanel;
+@property(nonatomic, strong) IBOutlet NSTextField *variantName;
+
+@property(nonatomic, assign) BOOL variantLocked;
+@property(nonatomic, assign) BOOL alertDisplayed;
+@property(nonatomic, strong) JVStyle *style;
+@property(nonatomic, strong) NSMutableArray *styleOptions;
+@property(nonatomic, strong) NSString *userStyle;
+
+
+- (void) selectStyleWithIdentifier:(NSString *) identifier;
+- (void) selectEmoticonsWithIdentifier:(NSString *) identifier;
+
+- (void) setStyle:(JVStyle *) style;
+
+- (void) changePreferences;
+
+- (IBAction) changeBaseFontSize:(id) sender;
+- (IBAction) changeMinimumFontSize:(id) sender;
+
+- (IBAction) changeDefaultChatStyle:(id) sender;
+- (IBAction) changeDefaultEmoticons:(id) sender;
+
+- (IBAction) showOptions:(id) sender;
+
+- (void) updateChatStylesMenu;
+- (void) updateEmoticonsMenu;
+- (void) updateVariant;
+
+- (void) parseStyleOptions;
+- (NSString *) valueOfProperty:(NSString *) property forSelector:(NSString *) selector inStyle:(NSString *) style;
+- (void) setStyleProperty:(NSString *) property forSelector:(NSString *) selector toValue:(NSString *) value;
+- (void) setUserStyle:(NSString *) style;
+- (void) saveStyleOptions;
+
+- (void) showNewVariantSheet;
+- (IBAction) closeNewVariantSheet:(id) sender;
+- (IBAction) createNewVariant:(id) sender;
+
+@end
+
+
+@implementation JVAppearancePreferencesViewController
 - (id) init {
 	if( ( self = [super init] ) ) {
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( colorWellDidChangeColor: ) name:JVColorWellCellColorDidChangeNotification object:nil];
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( updateChatStylesMenu ) name:JVStylesScannedNotification object:nil];
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( updateEmoticonsMenu ) name:JVEmoticonSetsScannedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( reloadStyles: ) name:NSApplicationDidBecomeActiveNotification object:[NSApplication sharedApplication]];
-
-		_style = nil;
-		_styleOptions = nil;
-		_userStyle = nil;
 	}
 	return self;
+}
+
+- (void)awakeFromNib {
+	[self initializeFromDefaults];
 }
 
 - (void) dealloc {
 	[[NSNotificationCenter chatCenter] removeObserver:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+	[_optionsDrawer setDelegate:nil];
 
-	[optionsTable setDataSource:nil];
-	[optionsTable setDelegate:nil];
-
-	[optionsDrawer setDelegate:nil];
-
-	[preview setUIDelegate:nil];
-	[preview setResourceLoadDelegate:nil];
-	[preview setDownloadDelegate:nil];
-	[preview setFrameLoadDelegate:nil];
-	[preview setPolicyDelegate:nil];
-
-	_style = nil;
-
-}
-
-- (NSString *) preferencesNibName {
-	return @"JVAppearancePreferences";
-}
-
-- (BOOL) hasChangesPending {
-	return NO;
-}
-
-- (NSImage *) imageForPreferenceNamed:(NSString *) name {
-	return [NSImage imageNamed:@"AppearancePreferences"];
-}
-
-- (BOOL) isResizable {
-	return NO;
+	[_preview setUIDelegate:nil];
+	[_preview setResourceLoadDelegate:nil];
+	[_preview setDownloadDelegate:nil];
+	[_preview setFrameLoadDelegate:nil];
+	[_preview setPolicyDelegate:nil];
 }
 
 - (void) moduleWillBeRemoved {
-	[optionsDrawer close];
+	[self.optionsDrawer close];
 }
+
+
+#pragma mark MASPreferencesViewController
+
+- (NSString *) identifier {
+	return @"JVAppearancePreferencesViewController";
+}
+
+- (NSImage *) toolbarItemImage {
+	return [NSImage imageNamed:@"AppearancePreferences"];
+}
+
+- (NSString *) toolbarItemLabel {
+	return NSLocalizedString( @"Appearance", "appearance preference pane name" );
+}
+
+- (BOOL)hasResizableWidth {
+	return NO;
+}
+
+- (BOOL)hasResizableHeight {
+	return NO;
+}
+
 
 #pragma mark -
 
 - (void) selectStyleWithIdentifier:(NSString *) identifier {
-	[self setStyle:[JVStyle styleWithIdentifier:identifier]];
+	self.style = [JVStyle styleWithIdentifier:identifier];
 	[self changePreferences];
 }
 
 - (void) selectEmoticonsWithIdentifier:(NSString *) identifier {
 	JVEmoticonSet *emoticonSet = [JVEmoticonSet emoticonSetWithIdentifier:identifier];
-	[_style setDefaultEmoticonSet:emoticonSet];
-	[preview setEmoticons:emoticonSet];
+	[self.style setDefaultEmoticonSet:emoticonSet];
+	[self.preview setEmoticons:emoticonSet];
 	[self updateEmoticonsMenu];
 }
 
@@ -91,10 +150,10 @@
 	_style = style;
 
 	JVChatTranscript *transcript = [JVChatTranscript chatTranscriptWithContentsOfURL:[_style previewTranscriptLocation]];
-	[preview setTranscript:transcript];
+	[self.preview setTranscript:transcript];
 
-	[preview setEmoticons:[_style defaultEmoticonSet]];
-	[preview setStyle:_style];
+	[self.preview setEmoticons:[_style defaultEmoticonSet]];
+	[self.preview setStyle:_style];
 
 	[[NSNotificationCenter chatCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( updateVariant ) name:JVStyleVariantChangedNotification object:_style];
@@ -103,56 +162,56 @@
 #pragma mark -
 
 - (void) initializeFromDefaults {
-	[preview setPolicyDelegate:self];
-	[preview setUIDelegate:self];
-	[optionsTable setRefusesFirstResponder:YES];
+	[self.preview setPolicyDelegate:self];
+	[self.preview setUIDelegate:self];
+	[self.optionsTable setRefusesFirstResponder:YES];
 
-	NSTableColumn *column = [optionsTable tableColumnWithIdentifier:@"key"];
+	NSTableColumn *column = [self.optionsTable tableColumnWithIdentifier:@"key"];
 	JVDetailCell *prototypeCell = [JVDetailCell new];
 	[prototypeCell setFont:[NSFont boldSystemFontOfSize:11.]];
 	[prototypeCell setAlignment:NSRightTextAlignment];
 	[column setDataCell:prototypeCell];
 
 	[JVStyle scanForStyles];
-	[self setStyle:[JVStyle defaultStyle]];
+	self.style = [JVStyle defaultStyle];
 
 	[self changePreferences];
 }
 
 - (IBAction) changeBaseFontSize:(id) sender {
 	NSInteger size = [sender intValue];
-	[baseFontSize setIntValue:size];
-	[baseFontSizeStepper setIntValue:size];
-	[[preview preferences] setDefaultFontSize:size];
+	[self.baseFontSize setIntValue:size];
+	[self.baseFontSizeStepper setIntValue:size];
+	[[self.preview preferences] setDefaultFontSize:size];
 }
 
 - (IBAction) changeMinimumFontSize:(id) sender {
 	NSInteger size = [sender intValue];
-	[minimumFontSize setIntValue:size];
-	[minimumFontSizeStepper setIntValue:size];
-	[[preview preferences] setMinimumFontSize:size];
+	[self.minimumFontSize setIntValue:size];
+	[self.minimumFontSizeStepper setIntValue:size];
+	[[self.preview preferences] setMinimumFontSize:size];
 }
 
 - (IBAction) changeDefaultChatStyle:(id) sender {
 	JVStyle *style = [[sender representedObject] objectForKey:@"style"];
 	NSString *variant = [[sender representedObject] objectForKey:@"variant"];
 
-	if( style == _style ) {
-		[_style setDefaultVariantName:variant];
+	if( style == self.style ) {
+		[self.style setDefaultVariantName:variant];
 
-		_styleOptions = [[_style styleSheetOptions] mutableCopy];
+		self.styleOptions = [[self.style styleSheetOptions] mutableCopy];
 
 		[self updateChatStylesMenu];
 
-		if( _variantLocked ) [optionsTable deselectAll:nil];
+		if( self.variantLocked ) [self.optionsTable deselectAll:nil];
 
 		[self updateVariant];
 		[self parseStyleOptions];
 	} else {
-		[self setStyle:style];
+		self.style = style;
 
-		[JVStyle setDefaultStyle:_style];
-		[_style setDefaultVariantName:variant];
+		[JVStyle setDefaultStyle:self.style];
+		[self.style setDefaultVariantName:variant];
 
 		[self changePreferences];
 	}
@@ -162,26 +221,26 @@
 	[self updateChatStylesMenu];
 	[self updateEmoticonsMenu];
 
-	_styleOptions = [[_style styleSheetOptions] mutableCopy];
+	self.styleOptions = [[self.style styleSheetOptions] mutableCopy];
 
-	[preview setPreferencesIdentifier:[_style identifier]];
+	[self.preview setPreferencesIdentifier:[self.style identifier]];
 
-	WebPreferences *prefs = [preview preferences];
+	WebPreferences *prefs = [self.preview preferences];
 	[prefs setAutosaves:YES];
 
 	// disable the user style sheet for users of 2C4 who got this
 	// turned on, we do this different now and the user style can interfere
 	[prefs setUserStyleSheetEnabled:NO];
 
-	[standardFont setFont:[NSFont fontWithName:[prefs standardFontFamily] size:[prefs defaultFontSize]]];
+	[self.standardFont setFont:[NSFont fontWithName:[prefs standardFontFamily] size:[prefs defaultFontSize]]];
 
-	[minimumFontSize setIntValue:[prefs minimumFontSize]];
-	[minimumFontSizeStepper setIntValue:[prefs minimumFontSize]];
+	[self.minimumFontSize setIntValue:[prefs minimumFontSize]];
+	[self.minimumFontSizeStepper setIntValue:[prefs minimumFontSize]];
 
-	[baseFontSize setIntValue:[prefs defaultFontSize]];
-	[baseFontSizeStepper setIntValue:[prefs defaultFontSize]];
+	[self.baseFontSize setIntValue:[prefs defaultFontSize]];
+	[self.baseFontSizeStepper setIntValue:[prefs defaultFontSize]];
 
-	if( _variantLocked ) [optionsTable deselectAll:nil];
+	if( self.variantLocked ) [self.optionsTable deselectAll:nil];
 
 	[self parseStyleOptions];
 }
@@ -193,9 +252,9 @@
 #pragma mark -
 
 - (void) updateChatStylesMenu {
-	NSString *variant = [_style defaultVariantName];
+	NSString *variant = [self.style defaultVariantName];
 
-	_variantLocked = ! [_style isUserVariantName:variant];
+	self.variantLocked = ! [self.style isUserVariantName:variant];
 
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""], *subMenu = nil;
 	NSMenuItem *menuItem = nil, *subMenuItem = nil;
@@ -205,7 +264,7 @@
 		menuItem = [[NSMenuItem alloc] initWithTitle:[style displayName] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""];
 		[menuItem setTarget:self];
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", nil]];
-		if( [_style isEqualTo:style] ) [menuItem setState:NSOnState];
+		if( [self.style isEqualTo:style] ) [menuItem setState:NSOnState];
 		[menu addItem:menuItem];
 
 		NSArray *variants = [style variantStyleSheetNames];
@@ -217,14 +276,14 @@
 			subMenuItem = [[NSMenuItem alloc] initWithTitle:[style mainVariantDisplayName] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""];
 			[subMenuItem setTarget:self];
 			[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", nil]];
-			if( [_style isEqualTo:style] && ! variant ) [subMenuItem setState:NSOnState];
+			if( [self.style isEqualTo:style] && ! variant ) [subMenuItem setState:NSOnState];
 			[subMenu addItem:subMenuItem];
 
 			for( item in variants ) {
 				subMenuItem = [[NSMenuItem alloc] initWithTitle:item action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""];
 				[subMenuItem setTarget:self];
 				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
-				if( [_style isEqualTo:style] && [variant isEqualToString:item] )
+				if( [self.style isEqualTo:style] && [variant isEqualToString:item] )
 					[subMenuItem setState:NSOnState];
 				[subMenu addItem:subMenuItem];
 			}
@@ -235,7 +294,7 @@
 				subMenuItem = [[NSMenuItem alloc] initWithTitle:item action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""];
 				[subMenuItem setTarget:self];
 				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
-				if( [_style isEqualTo:style] && [variant isEqualToString:item] )
+				if( [self.style isEqualTo:style] && [variant isEqualToString:item] )
 					[subMenuItem setState:NSOnState];
 				[subMenu addItem:subMenuItem];
 			}
@@ -246,13 +305,13 @@
 		subMenu = nil;
 	}
 
-	[styles setMenu:menu];
+	[self.styles setMenu:menu];
 }
 
 - (void) updateEmoticonsMenu {
 	NSMenu *menu = nil;
 	NSMenuItem *menuItem = nil;
-	JVEmoticonSet *defaultEmoticon = [_style defaultEmoticonSet];
+	JVEmoticonSet *defaultEmoticon = [self.style defaultEmoticonSet];
 
 	menu = [[NSMenu alloc] initWithTitle:@""];
 
@@ -274,21 +333,21 @@
 		[menu addItem:menuItem];
 	}
 
-	[emoticons setMenu:menu];
+	[self.emoticons setMenu:menu];
 }
 
 - (void) updateVariant {
-	[preview setStyleVariant:[_style defaultVariantName]];
-	[preview reloadCurrentStyle];
+	[self.preview setStyleVariant:[self.style defaultVariantName]];
+	[self.preview reloadCurrentStyle];
 }
 
 #pragma mark -
 
 - (void) fontPreviewField:(JVFontPreviewField *) field didChangeToFont:(NSFont *) font {
-	[[preview preferences] setStandardFontFamily:[font familyName]];
-	[[preview preferences] setFixedFontFamily:[font familyName]];
-	[[preview preferences] setSerifFontFamily:[font familyName]];
-	[[preview preferences] setSansSerifFontFamily:[font familyName]];
+	[[self.preview preferences] setStandardFontFamily:[font familyName]];
+	[[self.preview preferences] setFixedFontFamily:[font familyName]];
+	[[self.preview preferences] setSerifFontFamily:[font familyName]];
+	[[self.preview preferences] setSansSerifFontFamily:[font familyName]];
 }
 
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
@@ -317,8 +376,8 @@
 	[menuItem setRepresentedObject:@"none"];
 	[menu addItem:menuItem];
 
-	NSArray *files = [[_style bundle] pathsForResourcesOfType:nil inDirectory:[options objectForKey:@"folder"]];
-	NSString *resourcePath = [[_style bundle] resourcePath];
+	NSArray *files = [[self.style bundle] pathsForResourcesOfType:nil inDirectory:[options objectForKey:@"folder"]];
+	NSString *resourcePath = [[self.style bundle] resourcePath];
 	BOOL matched = NO;
 
 	if( [files count] ) [menu addItem:[NSMenuItem separatorItem]];
@@ -380,30 +439,30 @@
 
 	[cell setMenu:menu];
 	[cell synchronizeTitleAndSelectedItem];
-	[optionsTable performSelector:@selector( reloadData ) withObject:nil afterDelay:0.];
+	[self.optionsTable performSelector:@selector( reloadData ) withObject:nil afterDelay:0.];
 }
 
 #pragma mark -
 
 // Called when Colloquy reactivates.
 - (void) reloadStyles:(NSNotification *) notification {
-	if( ! [[preview window] isVisible] ) return;
+	if( ! [[self.preview window] isVisible] ) return;
 	[JVStyle scanForStyles];
 
-	if( ! [_userStyle length] ) return;
+	if( ! [self.userStyle length] ) return;
 	[self parseStyleOptions];
 	[self updateVariant];
 }
 
 // Parses the style options plist and reads the CSS files to figure out the current selected values.
 - (void) parseStyleOptions {
-	[self setUserStyle:[_style contentsOfVariantStyleSheetWithName:[_style defaultVariantName]]];
+	self.userStyle = [self.style contentsOfVariantStyleSheetWithName:[self.style defaultVariantName]];
 
-	NSString *css = _userStyle;
-	css = [css stringByAppendingString:[_style contentsOfMainStyleSheet]];
+	NSString *css = self.userStyle;
+	css = [css stringByAppendingString:[self.style contentsOfMainStyleSheet]];
 
 	// Step through each options.
-	for( NSMutableDictionary *info in _styleOptions ) {
+	for( NSMutableDictionary *info in self.styleOptions ) {
 		NSMutableArray *styleLayouts = [NSMutableArray array];
 		NSArray *sarray = nil;
 		if( ! [info objectForKey:@"style"] ) continue;
@@ -494,7 +553,7 @@
 		[info setObject:styleLayouts forKey:@"layouts"];
 	}
 
-	[optionsTable reloadData];
+	[self.optionsTable reloadData];
 }
 
 // reads a value form a CSS file for the property and selector provided.
@@ -518,14 +577,14 @@
 //
 //	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[NSString stringWithFormat:@"(%@\\s*\\{[^\\}]*?\\s%@:\\s*)(?:.*?)(;.*?\\})", rselector, rproperty] options:NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators error:nil];
 //	AGRegex *regex = [AGRegex regexWithPattern: options:( AGRegexCaseInsensitive | AGRegexDotAll )];
-//	if( [[regex findInString:_userStyle] count] ) { // Change existing property in selector block
-//		[self setUserStyle:[regex replaceWithString:[NSString stringWithFormat:@"$1%@$2", value] inString:_userStyle]];
+//	if( [[regex findInString:self.userStyle] count] ) { // Change existing property in selector block
+//		[self setUserStyle:[regex replaceWithString:[NSString stringWithFormat:@"$1%@$2", value] inString:self.userStyle]];
 //	} else {
 //		regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"(\\s%@\\s*\\{)(\\s*)", rselector] options:AGRegexCaseInsensitive];
-//		if( [[regex findInString:_userStyle] count] ) { // Append to existing selector block
-//			[self setUserStyle:[regex replaceWithString:[NSString stringWithFormat:@"$1$2%@: %@;$2", rproperty, value] inString:_userStyle]];
+//		if( [[regex findInString:self.userStyle] count] ) { // Append to existing selector block
+//			[self setUserStyle:[regex replaceWithString:[NSString stringWithFormat:@"$1$2%@: %@;$2", rproperty, value] inString:self.userStyle]];
 //		} else { // Create new selector block
-//			[self setUserStyle:[_userStyle stringByAppendingFormat:@"%@%@ {\n\t%@: %@;\n}", ( [_userStyle length] ? @"\n\n": @"" ), selector, property, value]];
+//			[self setUserStyle:[self.userStyle stringByAppendingFormat:@"%@%@ {\n\t%@: %@;\n}", ( [self.userStyle length] ? @"\n\n": @"" ), selector, property, value]];
 //		}
 //	}
 }
@@ -537,43 +596,43 @@
 
 // Saves the custom variant to the user's area.
 - (void) saveStyleOptions {
-	if( _variantLocked ) return;
+	if( self.variantLocked ) return;
 
-	[_userStyle writeToURL:[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+	[self.userStyle writeToURL:[self.style variantStyleSheetLocationWithName:[self.style defaultVariantName]] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
 
-	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[_style defaultVariantName], @"variant", nil];
-	NSNotification *notification = [NSNotification notificationWithName:JVStyleVariantChangedNotification object:_style userInfo:info];
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[self.style defaultVariantName], @"variant", nil];
+	NSNotification *notification = [NSNotification notificationWithName:JVStyleVariantChangedNotification object:self.style userInfo:info];
 	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
 }
 
 // Shows the drawer, option clicking the button will open the custom variant CSS file.
 - (IBAction) showOptions:(id) sender {
-	if( ! _variantLocked && [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSAlternateKeyMask ) {
-		[[NSWorkspace sharedWorkspace] openURL:[_style variantStyleSheetLocationWithName:[_style defaultVariantName]]];
+	if( ! self.variantLocked && [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSAlternateKeyMask ) {
+		[[NSWorkspace sharedWorkspace] openURL:[self.style variantStyleSheetLocationWithName:[self.style defaultVariantName]]];
 		return;
 	}
 
-	if( _variantLocked && [optionsDrawer state] == NSDrawerClosedState )
+	if( self.variantLocked && [self.optionsDrawer state] == NSDrawerClosedState )
 		[self showNewVariantSheet];
 
-	[optionsDrawer setParentWindow:[sender window]];
-	[optionsDrawer setPreferredEdge:NSMaxXEdge];
-	if( [optionsDrawer contentSize].width < [optionsDrawer minContentSize].width )
-		[optionsDrawer setContentSize:[optionsDrawer minContentSize]];
-	[optionsDrawer toggle:sender];
+	[self.optionsDrawer setParentWindow:[sender window]];
+	[self.optionsDrawer setPreferredEdge:NSMaxXEdge];
+	if( [self.optionsDrawer contentSize].width < [self.optionsDrawer minContentSize].width )
+		[self.optionsDrawer setContentSize:[self.optionsDrawer minContentSize]];
+	[self.optionsDrawer toggle:sender];
 }
 
 #pragma mark -
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView *) view {
-	return [_styleOptions count];
+	return [self.styleOptions count];
 }
 
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( [[column identifier] isEqualToString:@"key"] ) {
-		return NSLocalizedString( [[_styleOptions objectAtIndex:row] objectForKey:@"description"], "description of style options, appearance preferences" );
+		return NSLocalizedString( [[self.styleOptions objectAtIndex:row] objectForKey:@"description"], "description of style options, appearance preferences" );
 	} else if( [[column identifier] isEqualToString:@"value"] ) {
-		NSDictionary *info = [_styleOptions objectAtIndex:row];
+		NSDictionary *info = [self.styleOptions objectAtIndex:row];
 		id value = [info objectForKey:@"value"];
 		if( value ) return value;
 		return [info objectForKey:@"default"];
@@ -582,10 +641,10 @@
 }
 
 - (void) tableView:(NSTableView *) view setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
-	if( _variantLocked ) return;
+	if( self.variantLocked ) return;
 
 	if( [[column identifier] isEqualToString:@"value"] ) {
-		NSMutableDictionary *info = [_styleOptions objectAtIndex:row];
+		NSMutableDictionary *info = [self.styleOptions objectAtIndex:row];
 		if( [[info objectForKey:@"type"] isEqualToString:@"list"] ) {
 			[info setObject:object forKey:@"value"];
 
@@ -613,13 +672,13 @@
 
 // Called when JVColorWell's color changes.
 - (void) colorWellDidChangeColor:(NSNotification *) notification {
-	if( _variantLocked ) return;
+	if( self.variantLocked ) return;
 
 	JVColorWellCell *cell = [notification object];
 	if( ! [[cell representedObject] isKindOfClass:[NSNumber class]] ) return;
 	NSInteger row = [[cell representedObject] intValue];
 
-	NSMutableDictionary *info = [_styleOptions objectAtIndex:row];
+	NSMutableDictionary *info = [self.styleOptions objectAtIndex:row];
 	[info setObject:[cell color] forKey:@"value"];
 
 	NSArray *style = [[info objectForKey:@"layouts"] objectAtIndex:0];
@@ -636,8 +695,8 @@
 
 - (IBAction) selectImageFile:(id) sender {
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-	NSInteger index = [optionsTable selectedRow];
-	NSMutableDictionary *info = [_styleOptions objectAtIndex:index];
+	NSInteger index = [self.optionsTable selectedRow];
+	NSMutableDictionary *info = [self.styleOptions objectAtIndex:index];
 
 	[openPanel setAllowsMultipleSelection:NO];
 	[openPanel setTreatsFilePackagesAsDirectories:NO];
@@ -664,23 +723,23 @@
 
 	[self saveStyleOptions];
 
-	NSMutableDictionary *options = [_styleOptions objectAtIndex:index];
+	NSMutableDictionary *options = [self.styleOptions objectAtIndex:index];
 	[self buildFileMenuForCell:[options objectForKey:@"cell"] andOptions:options];
 }
 
 - (BOOL) tableView:(NSTableView *) view shouldSelectRow:(NSInteger) row {
 	static NSTimeInterval lastTime = 0;
-	if( _variantLocked && ( [NSDate timeIntervalSinceReferenceDate] - lastTime ) > 1. ) {
+	if( self.variantLocked && ( [NSDate timeIntervalSinceReferenceDate] - lastTime ) > 1. ) {
 		[self showNewVariantSheet];
 	}
 
 	lastTime = [NSDate timeIntervalSinceReferenceDate];
-	return ( ! _variantLocked );
+	return ( ! self.variantLocked );
 }
 
 - (id) tableView:(NSTableView *) view dataCellForRow:(NSInteger) row tableColumn:(NSTableColumn *) column {
 	if( [[column identifier] isEqualToString:@"value"] ) {
-		NSMutableDictionary *options = [_styleOptions objectAtIndex:row];
+		NSMutableDictionary *options = [self.styleOptions objectAtIndex:row];
 		if( [options objectForKey:@"cell"] ) {
 			return [options objectForKey:@"cell"];
 		} else if( [[options objectForKey:@"type"] isEqualToString:@"color"] ) {
@@ -716,32 +775,32 @@
 
 // Shows the new variant sheet asking for a name.
 - (void) showNewVariantSheet {
-	[newVariantName setStringValue:NSLocalizedString( @"Untitled Variant", "new variant name" )];
-	[[NSApplication sharedApplication] beginSheet:newVariantPanel modalForWindow:[preview window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[self.variantName setStringValue:NSLocalizedString( @"Untitled Variant", "new variant name" )];
+	[[NSApplication sharedApplication] beginSheet:self.addVariantPanel modalForWindow:[self.preview window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
 
 - (IBAction) closeNewVariantSheet:(id) sender {
-	[newVariantPanel orderOut:nil];
-	[[NSApplication sharedApplication] endSheet:newVariantPanel];
+	[self.addVariantPanel orderOut:nil];
+	[[NSApplication sharedApplication] endSheet:self.addVariantPanel];
 }
 
 // Creates the new variant, making the proper folder and copying the current CSS settings.
 - (IBAction) createNewVariant:(id) sender {
 	[self closeNewVariantSheet:sender];
 
-	NSMutableString *name = [[newVariantName stringValue] mutableCopy];
+	NSMutableString *name = [[self.variantName stringValue] mutableCopy];
 	[name replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [name length] )];
 	[name replaceOccurrencesOfString:@":" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [name length] )];
 
-	[[NSFileManager defaultManager] createDirectoryAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [_style identifier]] stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
+	[[NSFileManager defaultManager] createDirectoryAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [self.style identifier]] stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
 
-	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", [_style identifier], name] stringByExpandingTildeInPath];
+	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", [self.style identifier], name] stringByExpandingTildeInPath];
 
-	[_userStyle writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+	[self.userStyle writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:NULL];
 
-	[_style setDefaultVariantName:name];
+	[self.style setDefaultVariantName:name];
 
-	[[NSNotificationCenter chatCenter] postNotificationName:JVNewStyleVariantAddedNotification object:_style];
+	[[NSNotificationCenter chatCenter] postNotificationName:JVNewStyleVariantAddedNotification object:self.style];
 
 	[self updateChatStylesMenu];
 	[self updateVariant];
