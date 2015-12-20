@@ -1,9 +1,8 @@
-#import "NSPreferences.h"
+#import <Cocoa/Cocoa.h>
 
-@interface JVBehaviorPreferences : NSPreferencesModule {
-	IBOutlet NSPopUpButton *returnKeyAction;
-	IBOutlet NSPopUpButton *enterKeyAction;
-}
-- (IBAction) changeSendOnReturnAction:(id) sender;
-- (IBAction) changeSendOnEnterAction:(id) sender;
+#import <MASPreferences.h>
+
+
+@interface JVBehaviorPreferencesViewController : NSViewController <MASPreferencesViewController>
+
 @end
