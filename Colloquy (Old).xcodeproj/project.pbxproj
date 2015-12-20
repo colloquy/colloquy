@@ -1020,6 +1020,7 @@
 		C261265E1BD300B400B7AF87 /* JVTranscriptPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVTranscriptPreferences.m; sourceTree = "<group>"; };
 		C26B7A7A1BCA51D10085846F /* JVAppearancePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppearancePreferences.h; sourceTree = "<group>"; };
 		C26B7A7B1BCA51D10085846F /* JVAppearancePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppearancePreferences.m; sourceTree = "<group>"; };
+		C27B6C1A1BDC21470017EDAF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
 		C29654111BDB9FE900F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVGeneralPreferencesViewController.xib; sourceTree = "<group>"; };
 		C29654141BDB9FF500F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVInterfacePreferencesViewController.xib; sourceTree = "<group>"; };
 		C29654171BDB9FFD00F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVAppearancePreferencesViewController.xib; sourceTree = "<group>"; };
@@ -1027,7 +1028,6 @@
 		C296541D1BDBA00D00F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVFileTransferPreferencesViewController.xib; sourceTree = "<group>"; };
 		C29654201BDBA01900F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVTranscriptPreferencesViewController.xib; sourceTree = "<group>"; };
 		C29654231BDBA02100F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVBehaviorPreferencesViewController.xib; sourceTree = "<group>"; };
-		C29654261BDBA06C00F28873 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
 		C29654281BDBA07400F28873 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
 		C296542A1BDBA07D00F28873 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
 		C296542C1BDBA08300F28873 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
@@ -2878,7 +2878,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				C29654111BDB9FE900F28873 /* Base */,
-				C29654261BDBA06C00F28873 /* en */,
+				C27B6C1A1BDC21470017EDAF /* en */,
 			);
 			name = JVGeneralPreferencesViewController.xib;
 			sourceTree = "<group>";
