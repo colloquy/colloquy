@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-#import <MASPreferences.h>
+#import <MASPreferences/MASPreferences.h>
 
 @class JVGeneralPreferencesViewController;
 @class JVInterfacePreferencesViewController;
@@ -20,6 +20,7 @@
 
 
 @interface CQMPreferencesWindowController : MASPreferencesWindowController
+NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong, readonly) JVGeneralPreferencesViewController *generalPreferences;
 @property(nonatomic, strong, readonly) JVInterfacePreferencesViewController *interfacePreferences;
@@ -31,4 +32,5 @@
 
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
 
+NS_ASSUME_NONNULL_END
 @end
