@@ -192,7 +192,7 @@ static BOOL applicationIsTerminating = NO;
 	static BOOL setupAlready = NO;
 	if( setupAlready ) return;
 	
-	
+	// Set up built in preferences view controllers.
 	NSArray<NSViewController<MASPreferencesViewController> *> *viewControllers
 	= @[
 		[[JVGeneralPreferencesViewController alloc] init],
@@ -203,10 +203,20 @@ static BOOL applicationIsTerminating = NO;
 		[[JVTranscriptPreferencesViewController alloc] init],
 		[[JVBehaviorPreferencesViewController alloc] init]
 		];
+	
+	// Add plugin preferences view controllers.
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSViewController<MASPreferencesViewController> * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	[invocation setSelector:@selector( preferencesViewController )];
+	
+	NSArray<NSViewController<MASPreferencesViewController> *> *pluginPreferencesVCs	= [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+	viewControllers = [viewControllers arrayByAddingObjectsFromArray:pluginPreferencesVCs];
+	
+	// Create preferences window controller.
 	MASPreferencesWindowController *preferencesWC = [[MASPreferencesWindowController alloc] initWithViewControllers:viewControllers];
 	self.preferencesWC = preferencesWC;
 	
-	
+	// old prefs:
 
 	[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"NSToolbar Configuration NSPreferences"];
 
@@ -220,14 +230,6 @@ static BOOL applicationIsTerminating = NO;
 	[controller addPreferenceNamed:NSLocalizedString( @"Transfers", "file transfers preference pane name" ) owner:[JVFileTransferPreferences sharedInstance]];
 	[controller addPreferenceNamed:NSLocalizedString( @"Transcripts", "chat transcript preference pane name" ) owner:[JVTranscriptPreferences sharedInstance]];
 	[controller addPreferenceNamed:NSLocalizedString( @"Behavior", "behavior preference pane name" ) owner:[JVBehaviorPreferences sharedInstance]];
-
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( id ), nil];
-	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-
-	[invocation setSelector:@selector( setupPreferencesWithController: )];
-	MVAddUnsafeUnretainedAddress(controller, 2);
-
-	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
 	setupAlready = YES;
 }

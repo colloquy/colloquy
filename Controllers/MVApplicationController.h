@@ -5,6 +5,7 @@ extern NSString *JVMachineStoppedIdlingNotification;
 
 @class JVPreferencesController;
 @class SUUpdater;
+@protocol MASPreferencesViewController;
 
 @interface MVApplicationController : NSObject {
 	io_registry_entry_t _hidEntry;
@@ -44,5 +45,5 @@ extern NSString *JVMachineStoppedIdlingNotification;
 
 @interface NSObject (MVChatPluginContextualMenuSupport)
 - (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view;
-- (void) setupPreferencesWithController:(JVPreferencesController *) controller;
+- (NSViewController<MASPreferencesViewController> *) preferencesViewController;
 @end
