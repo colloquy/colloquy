@@ -297,6 +297,7 @@
 		C26126571BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26126561BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
 		C261265A1BD2E9AF00B7AF87 /* JVFileTransferPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26126591BD2E9AF00B7AF87 /* JVFileTransferPreferences.m */; settings = {ASSET_TAGS = (); }; };
 		C261265C1BD2EAC400B7AF87 /* JVFileTransferPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C261265B1BD2EAC400B7AF87 /* JVFileTransferPreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
+		C261265F1BD300B400B7AF87 /* JVTranscriptPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C261265E1BD300B400B7AF87 /* JVTranscriptPreferences.m */; settings = {ASSET_TAGS = (); }; };
 		C26B7A7C1BCA51D10085846F /* JVAppearancePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26B7A7B1BCA51D10085846F /* JVAppearancePreferences.m */; settings = {ASSET_TAGS = (); }; };
 		C26B7A7E1BCA55B00085846F /* JVAppearancePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26B7A7D1BCA55B00085846F /* JVAppearancePreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
 		C2BD72E51BC31162004C1EBD /* JVInterfacePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C2BD72E41BC31162004C1EBD /* JVInterfacePreferences.m */; settings = {ASSET_TAGS = (); }; };
@@ -1013,6 +1014,8 @@
 		C26126581BD2E9AF00B7AF87 /* JVFileTransferPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVFileTransferPreferences.h; sourceTree = "<group>"; };
 		C26126591BD2E9AF00B7AF87 /* JVFileTransferPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFileTransferPreferences.m; sourceTree = "<group>"; };
 		C261265B1BD2EAC400B7AF87 /* JVFileTransferPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVFileTransferPreferencesViewController.xib; sourceTree = "<group>"; };
+		C261265D1BD300B400B7AF87 /* JVTranscriptPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVTranscriptPreferences.h; sourceTree = "<group>"; };
+		C261265E1BD300B400B7AF87 /* JVTranscriptPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVTranscriptPreferences.m; sourceTree = "<group>"; };
 		C26B7A7A1BCA51D10085846F /* JVAppearancePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppearancePreferences.h; sourceTree = "<group>"; };
 		C26B7A7B1BCA51D10085846F /* JVAppearancePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppearancePreferences.m; sourceTree = "<group>"; };
 		C26B7A7D1BCA55B00085846F /* JVAppearancePreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVAppearancePreferencesViewController.xib; sourceTree = "<group>"; };
@@ -1346,6 +1349,8 @@
 				C26126541BD2B92F00B7AF87 /* JVNotificationPreferences.m */,
 				C26126581BD2E9AF00B7AF87 /* JVFileTransferPreferences.h */,
 				C26126591BD2E9AF00B7AF87 /* JVFileTransferPreferences.m */,
+				C261265D1BD300B400B7AF87 /* JVTranscriptPreferences.h */,
+				C261265E1BD300B400B7AF87 /* JVTranscriptPreferences.m */,
 				1CBC630905489484009E59E1 /* JVGeneralPreferencesViewController.h */,
 				1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */,
 				C2BE9F0F1BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib */,
@@ -2383,6 +2388,7 @@
 				1CB2CD6B052DDC560094AAA4 /* MVConnectionsController.m in Sources */,
 				1CB2CD6C052DDC560094AAA4 /* MVColorPanel.m in Sources */,
 				1CB2CD6D052DDC560094AAA4 /* JVChatWindowController.m in Sources */,
+				C261265F1BD300B400B7AF87 /* JVTranscriptPreferences.m in Sources */,
 				1CB2CD6E052DDC560094AAA4 /* JVChatRoomPanel.m in Sources */,
 				1CB2CD6F052DDC560094AAA4 /* JVChatController.m in Sources */,
 				1CB2CD71052DDC560094AAA4 /* JVChatRoomMember.m in Sources */,
