@@ -180,11 +180,11 @@
                 <constraint firstItem="YSf-4o-yE3" firstAttribute="trailing" secondItem="Cut-cn-ZRo" secondAttribute="trailing" id="R0p-P0-RiW"/>
                 <constraint firstItem="dLV-eS-VOD" firstAttribute="leading" secondItem="Cut-cn-ZRo" secondAttribute="leading" id="Rm4-iD-rEm"/>
                 <constraint firstItem="kca-Eg-VPY" firstAttribute="trailing" secondItem="iIN-eV-gsO" secondAttribute="trailing" id="SWN-oh-4Gy"/>
+                <constraint firstItem="iIN-eV-gsO" firstAttribute="top" secondItem="GI1-g6-Jjm" secondAttribute="top" constant="20" symbolic="YES" id="SZ3-Qk-KpR"/>
                 <constraint firstItem="Rp5-yL-CD9" firstAttribute="leading" secondItem="u8i-Ae-TPC" secondAttribute="leading" constant="18" id="WZd-8b-uOZ"/>
                 <constraint firstItem="YSf-4o-yE3" firstAttribute="baseline" secondItem="iZD-D6-0bD" secondAttribute="baseline" id="X6Q-Ph-K7g"/>
                 <constraint firstItem="Cut-cn-ZRo" firstAttribute="baseline" secondItem="iIN-eV-gsO" secondAttribute="baseline" id="XtJ-YJ-4bq"/>
                 <constraint firstItem="Rp5-yL-CD9" firstAttribute="trailing" secondItem="Cut-cn-ZRo" secondAttribute="trailing" id="YH7-Cl-7iE"/>
-                <constraint firstItem="Cut-cn-ZRo" firstAttribute="top" secondItem="GI1-g6-Jjm" secondAttribute="top" constant="20" symbolic="YES" id="Z6i-dk-4BP"/>
                 <constraint firstAttribute="bottom" secondItem="Xd8-ho-Gzl" secondAttribute="bottom" constant="20" symbolic="YES" id="ZoC-hT-0HD"/>
                 <constraint firstItem="iZD-D6-0bD" firstAttribute="leading" secondItem="iIN-eV-gsO" secondAttribute="leading" id="eRE-cK-b1L"/>
                 <constraint firstItem="dLV-eS-VOD" firstAttribute="baseline" secondItem="kca-Eg-VPY" secondAttribute="baseline" id="ex2-HP-Hew"/>
