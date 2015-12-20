@@ -1,7 +1,8 @@
-#import "NSPreferences.h"
+#import <Cocoa/Cocoa.h>
 
-@interface JVTranscriptPreferences : NSPreferencesModule {
-	IBOutlet NSPopUpButton *transcriptFolder;
-}
-- (IBAction) changeTranscriptFolder:(id) sender;
+#import <MASPreferences.h>
+
+
+@interface JVTranscriptPreferencesViewController : NSViewController <MASPreferencesViewController>
+
 @end

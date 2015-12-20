@@ -1,25 +1,50 @@
-#import "JVTranscriptPreferences.h"
+#import "JVTranscriptPreferencesViewController.h"
 
-@interface JVTranscriptPreferences (Private)
-- (void) saveDownloadsOpenPanelDidEnd:(NSOpenPanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
+
+@interface JVTranscriptPreferencesViewController ()
+
+@property(nonatomic, strong) IBOutlet NSPopUpButton *transcriptFolder;
+
+- (IBAction) changeTranscriptFolder:(id) sender;
+
+- (void) saveDownloadsOpenPanelDidEnd:(NSOpenPanel *) sheet
+						   returnCode:(int) returnCode
+						  contextInfo:(void *) contextInfo;
+
 @end
 
-@implementation JVTranscriptPreferences
-- (NSString *) preferencesNibName {
-	return @"JVTranscriptPreferences";
+
+@implementation JVTranscriptPreferencesViewController
+
+- (void)awakeFromNib {
+	[self initializeFromDefaults];
 }
 
-- (BOOL) hasChangesPending {
-	return NO;
+
+#pragma mark - MASPreferencesViewController
+
+- (NSString *) identifier {
+	return @"JVTranscriptPreferencesViewController";
 }
 
-- (NSImage *) imageForPreferenceNamed:(NSString *) name {
+- (NSImage *) toolbarItemImage {
 	return [NSImage imageNamed:@"TranscriptPreferences"];
 }
 
-- (BOOL) isResizable {
+- (NSString *)toolbarItemLabel {
+	return NSLocalizedString( @"Transcripts", "chat transcript preference pane name" );
+}
+
+- (BOOL)hasResizableWidth {
 	return NO;
 }
+
+- (BOOL)hasResizableHeight {
+	return NO;
+}
+
+
+#pragma mark - Private
 
 - (void) initializeFromDefaults {
 	NSString *path = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
@@ -27,7 +52,7 @@
 	if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] )
 		[[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
 
-	NSMenuItem *menuItem = [transcriptFolder itemAtIndex:[transcriptFolder indexOfItemWithTag:2]];
+	NSMenuItem *menuItem = [self.transcriptFolder itemAtIndex:[self.transcriptFolder indexOfItemWithTag:2]];
 	NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
 	[icon setSize:NSMakeSize( 16., 16. )];
 
@@ -35,7 +60,7 @@
 	[menuItem setImage:icon];
 	[menuItem setRepresentedObject:path];
 
-	[transcriptFolder selectItem:menuItem];
+	[self.transcriptFolder selectItem:menuItem];
 }
 
 #pragma mark -
@@ -57,7 +82,7 @@
 
 - (void) saveDownloadsOpenPanelDidEnd:(NSOpenPanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	if( returnCode == NSOKButton ) {
-		NSMenuItem *menuItem = [transcriptFolder itemAtIndex:[transcriptFolder indexOfItemWithTag:2]];
+		NSMenuItem *menuItem = [self.transcriptFolder itemAtIndex:[self.transcriptFolder indexOfItemWithTag:2]];
 		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[[sheet directoryURL] path]];
 		[icon setSize:NSMakeSize( 16., 16. )];
 
@@ -68,6 +93,6 @@
 		[[NSUserDefaults standardUserDefaults] setObject:[[sheet directoryURL] path] forKey:@"JVChatTranscriptFolder"];
 	}
 
-	[transcriptFolder selectItemAtIndex:[transcriptFolder indexOfItemWithTag:2]];
+	[self.transcriptFolder selectItemAtIndex:[self.transcriptFolder indexOfItemWithTag:2]];
 }
 @end

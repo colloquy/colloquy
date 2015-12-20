@@ -33,6 +33,7 @@
 #import "JVAppearancePreferencesViewController.h"
 #import "JVNotificationPreferencesViewController.h"
 #import "JVFileTransferPreferencesViewController.h"
+#import "JVTranscriptPreferencesViewController.h"
 
 #import <Sparkle/SUUpdater.h>
 
@@ -198,6 +199,7 @@ static BOOL applicationIsTerminating = NO;
 		[[JVAppearancePreferencesViewController alloc] init],
 		[[JVNotificationPreferencesViewController alloc] init],
 		[[JVFileTransferPreferencesViewController alloc] init],
+		[[JVTranscriptPreferencesViewController alloc] init],
 		];
 	MASPreferencesWindowController *preferencesWC = [[MASPreferencesWindowController alloc] initWithViewControllers:viewControllers];
 	self.preferencesWC = preferencesWC;
