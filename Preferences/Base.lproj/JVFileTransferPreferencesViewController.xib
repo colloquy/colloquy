@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A282a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="JVFileTransferPreferencesViewController">
@@ -24,7 +24,6 @@
                 <textField verticalHuggingPriority="750" id="5xU-yH-03d">
                     <rect key="frame" x="13" y="327" width="211" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Auto accept files from:" id="cOx-pj-7fV">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -34,11 +33,10 @@
                 <popUpButton verticalHuggingPriority="750" id="DQu-SP-PbS">
                     <rect key="frame" x="226" y="321" width="247" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                    <animations/>
                     <popUpButtonCell key="cell" type="push" title="Nobody" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="Ed2-Aq-H9o" id="6MK-Dj-djJ">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
-                        <menu key="menu" title="OtherViews" id="pJg-06-LzN">
+                        <menu key="menu" id="pJg-06-LzN">
                             <items>
                                 <menuItem title="Nobody" state="on" tag="1" id="Ed2-Aq-H9o"/>
                                 <menuItem title="Buddies in my Buddy List" tag="2" id="DWS-HZ-6QY"/>
@@ -64,7 +62,6 @@
                 <textField verticalHuggingPriority="750" id="jxe-Oi-O13">
                     <rect key="frame" x="13" y="295" width="211" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="If files already exist:" id="crQ-ds-MM5">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -74,11 +71,10 @@
                 <popUpButton verticalHuggingPriority="750" id="9Ul-65-IA6">
                     <rect key="frame" x="226" y="289" width="247" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                    <animations/>
                     <popUpButtonCell key="cell" type="push" title="Ask Every Time" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="4" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="MDy-cK-h3Q" id="knU-2d-bEy">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
-                        <menu key="menu" title="OtherViews" id="eDs-TI-3bK">
+                        <menu key="menu" id="eDs-TI-3bK">
                             <items>
                                 <menuItem title="Ask Every Time" state="on" tag="4" id="MDy-cK-h3Q"/>
                                 <menuItem title="Overwrite Every Time" tag="3" id="MeG-B9-hc8"/>
@@ -105,7 +101,6 @@
                 <textField verticalHuggingPriority="750" id="M2q-wB-ogj">
                     <rect key="frame" x="13" y="263" width="211" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Save downloaded files to:" id="WCK-qb-Mqs">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -115,11 +110,10 @@
                 <popUpButton verticalHuggingPriority="750" id="MRh-Gf-QeM">
                     <rect key="frame" x="226" y="257" width="247" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                    <animations/>
                     <popUpButtonCell key="cell" type="push" title="Ask Every Time" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="Xwu-lJ-YF3" id="3QQ-ss-Pv0">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
-                        <menu key="menu" title="OtherViews" id="5Tj-XT-SEK">
+                        <menu key="menu" id="5Tj-XT-SEK">
                             <items>
                                 <menuItem title="Ask Every Time" state="on" tag="1" id="Xwu-lJ-YF3">
                                     <connections>
@@ -129,7 +123,7 @@
                                 <menuItem isSeparatorItem="YES" id="nz7-gV-qkp">
                                     <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                 </menuItem>
-                                <menuItem title=" " tag="2" id="U5H-gP-MWO">
+                                <menuItem tag="2" id="U5H-gP-MWO">
                                     <connections>
                                         <action selector="changeSaveDownloads:" target="-2" id="YjQ-aO-iHl"/>
                                     </connections>
@@ -149,7 +143,6 @@
                 <textField verticalHuggingPriority="750" id="i9S-pg-1lR">
                     <rect key="frame" x="13" y="231" width="211" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Remove transferred items:" id="dh9-nC-zhV">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -159,11 +152,10 @@
                 <popUpButton verticalHuggingPriority="750" id="fJP-fW-WJt">
                     <rect key="frame" x="226" y="225" width="247" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                    <animations/>
                     <popUpButtonCell key="cell" type="push" title="When Colloquy Quits" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="Cve-pv-DRB" id="u2C-u6-x6X">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
-                        <menu key="menu" title="OtherViews" id="xNH-fW-ECk">
+                        <menu key="menu" id="xNH-fW-ECk">
                             <items>
                                 <menuItem title="When Colloquy Quits" state="on" tag="1" id="Cve-pv-DRB"/>
                                 <menuItem title="Upon Successful Transfer" tag="2" id="Fb7-FF-obo"/>
@@ -188,7 +180,6 @@
                 <button id="5bY-xX-dkL">
                     <rect key="frame" x="227" y="202" width="284" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <buttonCell key="cell" type="check" title="Open &quot;safe&quot; files after downloading" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="wtZ-ek-f8M">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -211,17 +202,15 @@
                 <textField verticalHuggingPriority="750" id="ksr-KD-i39">
                     <rect key="frame" x="246" y="162" width="226" height="39"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="“Safe” files include movies, pictures, sounds, PDF and text documents, disk images and other archive formats." id="OM2-Wq-fbw">
                         <font key="font" metaFont="label"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="GgS-KG-JIR">
+                <box verticalHuggingPriority="750" boxType="separator" titlePosition="noTitle" id="GgS-KG-JIR">
                     <rect key="frame" x="12" y="150" width="501" height="5"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <font key="titleFont" metaFont="system"/>
@@ -229,7 +218,6 @@
                 <textField verticalHuggingPriority="750" id="b5V-Gv-2fU">
                     <rect key="frame" x="13" y="119" width="211" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="File transfer port range:" id="eqU-Nn-bv5">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -239,8 +227,7 @@
                 <textField verticalHuggingPriority="750" id="Z6W-s1-NRW">
                     <rect key="frame" x="229" y="117" width="46" height="22"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" title="1024" drawsBackground="YES" id="Bbb-hk-qQs">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="Bbb-hk-qQs">
                         <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="#" negativeFormat="#" localizesFormat="NO" hasThousandSeparators="NO" thousandSeparator="," id="1Of-7p-ybg">
                             <attributedString key="attributedStringForZero">
                                 <fragment content="0"/>
@@ -260,7 +247,6 @@
                 <textField verticalHuggingPriority="750" id="9d4-SY-QFs">
                     <rect key="frame" x="280" y="119" width="17" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="to" id="bxk-I1-QAg">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -270,8 +256,7 @@
                 <textField verticalHuggingPriority="750" id="spa-BW-28g">
                     <rect key="frame" x="302" y="117" width="46" height="22"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" title="1048" drawsBackground="YES" id="pPX-Zf-ZfD">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="pPX-Zf-ZfD">
                         <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="#" negativeFormat="#" localizesFormat="NO" hasThousandSeparators="NO" thousandSeparator="," id="DhL-On-Mhd">
                             <attributedString key="attributedStringForZero">
                                 <fragment content="0"/>
@@ -291,7 +276,6 @@
                 <button id="uMh-0M-due">
                     <rect key="frame" x="227" y="93" width="284" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <buttonCell key="cell" type="check" title="Automatically open ports in router" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="5DW-mg-u7k">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -303,7 +287,6 @@
                 <textField verticalHuggingPriority="750" id="dZl-CQ-p9x">
                     <rect key="frame" x="245" y="79" width="264" height="13"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Requires a router that supports NAT-PMP or UPnP." id="tqu-1q-aXX">
                         <font key="font" metaFont="label"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -313,7 +296,6 @@
                 <button id="5FD-6y-Ydh">
                     <rect key="frame" x="227" y="55" width="284" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <buttonCell key="cell" type="check" title="Send files passively by default" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="YcT-g2-fHv">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -336,7 +318,6 @@
                 <textField verticalHuggingPriority="750" id="F8y-e5-iVv">
                     <rect key="frame" x="245" y="15" width="257" height="39"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="u9L-og-Bev">
                         <font key="font" metaFont="label"/>
                         <string key="title">Passive transfers allow files to be sent without the need to open up ports in your firewall or router—the receiver will need to.</string>
@@ -345,7 +326,6 @@
                     </textFieldCell>
                 </textField>
             </subviews>
-            <animations/>
         </view>
     </objects>
 </document>
