@@ -27,6 +27,8 @@
 
 #import "PFMoveApplicationController.h"
 
+#import "MASPreferences.h"
+
 #import <Sparkle/SUUpdater.h>
 
 @interface WebCoreCache
@@ -47,6 +49,11 @@ NSString *JVMachineBecameIdleNotification = @"JVMachineBecameIdleNotification";
 NSString *JVMachineStoppedIdlingNotification = @"JVMachineStoppedIdlingNotification";
 
 static BOOL applicationIsTerminating = NO;
+
+@interface MVApplicationController()
+@property(nonatomic, strong) MASPreferencesWindowController* preferencesWC;
+@end
+
 
 @interface MVApplicationController (Private)
 - (void) openDocumentPanelDidEnd:(NSOpenPanel *) panel returnCode:(int) returnCode contextInfo:(void *) contextInfo;
@@ -177,6 +184,13 @@ static BOOL applicationIsTerminating = NO;
 - (void) setupPreferences {
 	static BOOL setupAlready = NO;
 	if( setupAlready ) return;
+	
+	
+	NSArray<NSViewController<MASPreferencesViewController> *> *viewControllers = @[];
+	MASPreferencesWindowController *preferencesWC = [[MASPreferencesWindowController alloc] initWithViewControllers:viewControllers];
+	self.preferencesWC = preferencesWC;
+	
+	
 
 	[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"NSToolbar Configuration NSPreferences"];
 
@@ -230,6 +244,7 @@ static BOOL applicationIsTerminating = NO;
 
 - (IBAction) showPreferences:(id) sender {
 	[self setupPreferences];
+	[self.preferencesWC showWindow:sender];
 	[[JVPreferencesController sharedPreferences] showPreferencesPanel];
 }
 
