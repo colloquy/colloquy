@@ -173,12 +173,12 @@
                 <popUpButton verticalHuggingPriority="750" id="GtW-ZF-XH9">
                     <rect key="frame" x="204" y="105" width="263" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                    <popUpButtonCell key="cell" type="push" title=" " bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="2" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="0Hg-BG-W2z" id="mAx-aB-hk0">
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="2" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="0Hg-BG-W2z" id="mAx-aB-hk0">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
                         <menu key="menu" id="HkQ-7v-VOb">
                             <items>
-                                <menuItem title=" " state="on" tag="2" id="0Hg-BG-W2z"/>
+                                <menuItem state="on" tag="2" id="0Hg-BG-W2z"/>
                                 <menuItem isSeparatorItem="YES" id="MF3-LA-LaG">
                                     <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                 </menuItem>
