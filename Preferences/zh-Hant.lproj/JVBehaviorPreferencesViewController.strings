@@ -1,0 +1,60 @@
+
+/* Class = "NSTextFieldCell"; title = "Press Enter key to:"; ObjectID = "2Xv-k4-rwc"; */
+"2Xv-k4-rwc.title" = "按下 Enter 時:";
+
+/* Class = "NSTextFieldCell"; title = "Send History:"; ObjectID = "3L3-IE-DmA"; */
+"3L3-IE-DmA.title" = "傳送紀錄:";
+
+/* Class = "NSTextFieldCell"; title = "Message Scrollback:"; ObjectID = "4aK-ze-JKp"; */
+"4aK-ze-JKp.title" = "訊息回捲緩衝區:";
+
+/* Class = "NSTextFieldCell"; title = "Also available by pressing F5 while typing.\nNickname tab completion is supported without this preference."; ObjectID = "4jp-UJ-tUu"; */
+"4jp-UJ-tUu.title" = "您在打字的時候，也可以按下 F5 進行文字自動完成。而就算您不在這裡做任何設置，也可以用 Tab 按鍵，將局部的文字自動拼成使用者的代號。";
+
+/* Class = "NSMenuItem"; title = "Insert a new line"; ObjectID = "BFs-hq-DTa"; */
+"BFs-hq-DTa.title" = "插入新行";
+
+/* Class = "NSButtonCell"; title = "Auto rejoin when kicked from room"; ObjectID = "Db8-WZ-PVh"; */
+"Db8-WZ-PVh.title" = "在被踢出聊天室之後自動重新加入";
+
+/* Class = "NSButtonCell"; title = "Auto join chat rooms on invite"; ObjectID = "JQs-X4-QSI"; */
+"JQs-X4-QSI.title" = "Auto join chat rooms on invite";
+
+/* Class = "NSButtonCell"; title = "Check spelling as you type"; ObjectID = "LkH-sq-XsW"; */
+"LkH-sq-XsW.title" = "在輸入時同步檢查拼字";
+
+/* Class = "NSTextFieldCell"; title = "Press Return key to:"; ObjectID = "UnW-il-L99"; */
+"UnW-il-L99.title" = "按下 Return 時:";
+
+/* Class = "NSMenuItem"; title = "Send an action message"; ObjectID = "Unv-0w-acR"; */
+"Unv-0w-acR.title" = "送出動作";
+
+/* Class = "NSTextFieldCell"; title = "After:"; ObjectID = "ZtQ-oR-of1"; */
+"ZtQ-oR-of1.title" = "在";
+
+/* Class = "NSTextFieldCell"; title = "Automatically sends messages that begin with common action verbs as actions"; ObjectID = "dc5-nK-lqg"; */
+"dc5-nK-lqg.title" = "如果您的句子是以某些動詞開頭，就會自動將這個句子判斷成是一個動作。";
+
+/* Class = "NSButtonCell"; title = "Detect natural language actions"; ObjectID = "fbp-R6-UMD"; */
+"fbp-R6-UMD.title" = "根據自然語言偵測是否是一個動作";
+
+/* Class = "NSMenuItem"; title = "Send an action message"; ObjectID = "hKk-jz-VLy"; */
+"hKk-jz-VLy.title" = "送出動作";
+
+/* Class = "NSMenuItem"; title = "Send a chat message"; ObjectID = "kel-Q4-KwP"; */
+"kel-Q4-KwP.title" = "送出聊天訊息";
+
+/* Class = "NSButtonCell"; title = "Tab key triggers word completion"; ObjectID = "nbo-5A-7Fd"; */
+"nbo-5A-7Fd.title" = "使用 Tab 按鍵自動完成文字";
+
+/* Class = "NSTextFieldCell"; title = "seconds"; ObjectID = "o2F-B5-aW5"; */
+"o2F-B5-aW5.title" = "秒之後";
+
+/* Class = "NSMenuItem"; title = "Send a chat message"; ObjectID = "pGD-vP-UM1"; */
+"pGD-vP-UM1.title" = "送出聊天訊息";
+
+/* Class = "NSTextFieldCell"; title = "Use the ⌥↑ & ⌥↓ keys to cycle through sent messages"; ObjectID = "tWP-5e-QKx"; */
+"tWP-5e-QKx.title" = "您可以使用 ⌥↑ 與 ⌥↓ 循環切換之前輸入過的訊息。";
+
+/* Class = "NSMenuItem"; title = "Insert a new line"; ObjectID = "tvB-6R-Fg6"; */
+"tvB-6R-Fg6.title" = "插入新行";

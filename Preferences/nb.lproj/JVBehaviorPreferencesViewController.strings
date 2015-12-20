@@ -1,0 +1,60 @@
+
+/* Class = "NSTextFieldCell"; title = "Press Enter key to:"; ObjectID = "2Xv-k4-rwc"; */
+"2Xv-k4-rwc.title" = "Press Enter for å:";
+
+/* Class = "NSTextFieldCell"; title = "Send History:"; ObjectID = "3L3-IE-DmA"; */
+"3L3-IE-DmA.title" = "Sendt-historikk:";
+
+/* Class = "NSTextFieldCell"; title = "Message Scrollback:"; ObjectID = "4aK-ze-JKp"; */
+"4aK-ze-JKp.title" = "Scrollback av beskjeder:";
+
+/* Class = "NSTextFieldCell"; title = "Also available by pressing F5 while typing.\nNickname tab completion is supported without this preference."; ObjectID = "4jp-UJ-tUu"; */
+"4jp-UJ-tUu.title" = "Også tilgjengelig ved å trykke F5 mens du skriver.\nFullføring av kallenavn med Tab er også støttet uten denne preferansen.";
+
+/* Class = "NSMenuItem"; title = "Insert a new line"; ObjectID = "BFs-hq-DTa"; */
+"BFs-hq-DTa.title" = "Sett inn en ny linje";
+
+/* Class = "NSButtonCell"; title = "Auto rejoin when kicked from room"; ObjectID = "Db8-WZ-PVh"; */
+"Db8-WZ-PVh.title" = "Koble til igjen hvis du blir sparket fra et rom";
+
+/* Class = "NSButtonCell"; title = "Auto join chat rooms on invite"; ObjectID = "JQs-X4-QSI"; */
+"JQs-X4-QSI.title" = "Auto join chat rooms on invite";
+
+/* Class = "NSButtonCell"; title = "Check spelling as you type"; ObjectID = "LkH-sq-XsW"; */
+"LkH-sq-XsW.title" = "Sjekk staving mens du skriver";
+
+/* Class = "NSTextFieldCell"; title = "Press Return key to:"; ObjectID = "UnW-il-L99"; */
+"UnW-il-L99.title" = "Press Return for å:";
+
+/* Class = "NSMenuItem"; title = "Send an action message"; ObjectID = "Unv-0w-acR"; */
+"Unv-0w-acR.title" = "Send hadlingsbeskjed";
+
+/* Class = "NSTextFieldCell"; title = "After:"; ObjectID = "ZtQ-oR-of1"; */
+"ZtQ-oR-of1.title" = "Etter:";
+
+/* Class = "NSTextFieldCell"; title = "Automatically sends messages that begin with common action verbs as actions"; ObjectID = "dc5-nK-lqg"; */
+"dc5-nK-lqg.title" = "Sender automatisk beskjeder som begynner med vanlige handlingsverb som handling";
+
+/* Class = "NSButtonCell"; title = "Detect natural language actions"; ObjectID = "fbp-R6-UMD"; */
+"fbp-R6-UMD.title" = "Oppdag naturlige språkhandlinger";
+
+/* Class = "NSMenuItem"; title = "Send an action message"; ObjectID = "hKk-jz-VLy"; */
+"hKk-jz-VLy.title" = "Send hadlingsbeskjed";
+
+/* Class = "NSMenuItem"; title = "Send a chat message"; ObjectID = "kel-Q4-KwP"; */
+"kel-Q4-KwP.title" = "Send en samtalebeskjed";
+
+/* Class = "NSButtonCell"; title = "Tab key triggers word completion"; ObjectID = "nbo-5A-7Fd"; */
+"nbo-5A-7Fd.title" = "Tab fullfører ord";
+
+/* Class = "NSTextFieldCell"; title = "seconds"; ObjectID = "o2F-B5-aW5"; */
+"o2F-B5-aW5.title" = "sekunder";
+
+/* Class = "NSMenuItem"; title = "Send a chat message"; ObjectID = "pGD-vP-UM1"; */
+"pGD-vP-UM1.title" = "Send en samtalebeskjed";
+
+/* Class = "NSTextFieldCell"; title = "Use the ⌥↑ & ⌥↓ keys to cycle through sent messages"; ObjectID = "tWP-5e-QKx"; */
+"tWP-5e-QKx.title" = "Bruk ⌥↑ & ⌥↓ knapper for å bla igjennom sendte beskjeder";
+
+/* Class = "NSMenuItem"; title = "Insert a new line"; ObjectID = "tvB-6R-Fg6"; */
+"tvB-6R-Fg6.title" = "Sett inn en ny linje";
