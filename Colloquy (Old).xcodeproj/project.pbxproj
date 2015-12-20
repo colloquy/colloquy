@@ -292,6 +292,7 @@
 		C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; };
 		C22A35571BC00BB7001757D7 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C22A35781BC0378A001757D7 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */; settings = {ASSET_TAGS = (); }; };
+		C2BD72E51BC31162004C1EBD /* JVInterfacePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C2BD72E41BC31162004C1EBD /* JVInterfacePreferences.m */; settings = {ASSET_TAGS = (); }; };
 		C2BE9F101BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2BE9F0F1BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
@@ -998,6 +999,8 @@
 		A1E1610309228E4F004920E8 /* French */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = French; path = Languages/French.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C22A35761BC0378A001757D7 /* JVGeneralPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVGeneralPreferences.h; sourceTree = "<group>"; };
 		C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVGeneralPreferences.m; sourceTree = "<group>"; };
+		C2BD72E31BC31162004C1EBD /* JVInterfacePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVInterfacePreferences.h; sourceTree = "<group>"; };
+		C2BD72E41BC31162004C1EBD /* JVInterfacePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVInterfacePreferences.m; sourceTree = "<group>"; };
 		C2BE9F0F1BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVGeneralPreferencesViewController.xib; sourceTree = "<group>"; };
 		C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MASPreferences.xcodeproj; path = Frameworks/MASPreferences/MASPreferences.xcodeproj; sourceTree = "<group>"; };
 		CB66DEA00631F8160034F76E /* Keychain.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Keychain.png; path = Resources/Keychain.png; sourceTree = "<group>"; };
@@ -1316,13 +1319,15 @@
 		1CBC62F405488D5A009E59E1 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
+				C22A35761BC0378A001757D7 /* JVGeneralPreferences.h */,
+				C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */,
+				C2BD72E31BC31162004C1EBD /* JVInterfacePreferences.h */,
+				C2BD72E41BC31162004C1EBD /* JVInterfacePreferences.m */,
 				1CBC630905489484009E59E1 /* JVGeneralPreferencesViewController.h */,
 				1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */,
 				C2BE9F0F1BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib */,
 				1C6A40C7083FF6C600572AB6 /* JVInterfacePreferencesViewController.h */,
 				1C6A40C8083FF6C600572AB6 /* JVInterfacePreferencesViewController.m */,
-				C22A35761BC0378A001757D7 /* JVGeneralPreferences.h */,
-				C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */,
 				1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */,
 				1CC6FC500549FCD70075807C /* JVAppearancePreferences.h */,
 				1C9982010603EFD6006C6417 /* JVNotificationPreferences.m */,
@@ -2396,6 +2401,7 @@
 				1C0A4CAC0799BDD00093B702 /* JVTranscriptCriterionController.m in Sources */,
 				1C0A4CBA0799BE000093B702 /* JVTabbedChatWindowController.m in Sources */,
 				1C0A4CE50799BE660093B702 /* JVTranscriptFindWindowController.m in Sources */,
+				C2BD72E51BC31162004C1EBD /* JVInterfacePreferences.m in Sources */,
 				1C0A4CF70799BEA70093B702 /* JVViewCell.m in Sources */,
 				1C9014C107A2D798002942A7 /* MVChatUserAdditions.m in Sources */,
 				1CF79CBF07AC77E600696918 /* JVChatTranscript.m in Sources */,
