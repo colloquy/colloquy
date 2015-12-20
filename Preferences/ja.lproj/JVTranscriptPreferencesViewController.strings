@@ -1,45 +1,45 @@
 
 /* Class = "NSMenuItem"; title = "Folder For Each Server"; ObjectID = "2QZ-yS-hqI"; */
-"2QZ-yS-hqI.title" = "Folder For Each Server";
+"2QZ-yS-hqI.title" = "サーバごとにフォルダ分け";
 
 /* Class = "NSMenuItem"; title = "Multiple Sessions in One File"; ObjectID = "6z0-W1-z1K"; */
-"6z0-W1-z1K.title" = "Multiple Sessions in One File";
+"6z0-W1-z1K.title" = "一つのファイルに複数セッション";
 
 /* Class = "NSMenuItem"; title = "Same Folder"; ObjectID = "ApN-wZ-phP"; */
-"ApN-wZ-phP.title" = "Same Folder";
+"ApN-wZ-phP.title" = "フォルダ分けしない";
 
 /* Class = "NSButtonCell"; title = "Log Private Chat sessions"; ObjectID = "D2f-TO-UZg"; */
-"D2f-TO-UZg.title" = "Log Private Chat sessions";
+"D2f-TO-UZg.title" = "プライベートチャットのセッションのログを取る";
 
 /* Class = "NSTextFieldCell"; title = "Transcripts Folder:"; ObjectID = "DSw-dm-Icu"; */
-"DSw-dm-Icu.title" = "Transcripts Folder:";
+"DSw-dm-Icu.title" = "チャット記録フォルダ：";
 
 /* Class = "NSButtonCell"; title = "Log Chat Room sessions"; ObjectID = "NwH-Dh-Sbn"; */
-"NwH-Dh-Sbn.title" = "Log Chat Room sessions";
+"NwH-Dh-Sbn.title" = "チャットルームのセッションのログを取る";
 
 /* Class = "NSTextFieldCell"; title = "Folder Organization:"; ObjectID = "OD1-jj-0et"; */
-"OD1-jj-0et.title" = "Folder Organization:";
+"OD1-jj-0et.title" = "フォルダ構成：";
 
 /* Class = "NSMenuItem"; title = "Folder For Each Chat under Server"; ObjectID = "Se5-az-yMX"; */
-"Se5-az-yMX.title" = "Folder For Each Chat under Server";
+"Se5-az-yMX.title" = "サーバの下に各チャットのフォルダ";
 
 /* Class = "NSMenuItem"; title = "Other…"; ObjectID = "U9k-NY-Sp1"; */
-"U9k-NY-Sp1.title" = "Other…";
+"U9k-NY-Sp1.title" = "その他…";
 
 /* Class = "NSMenuItem"; title = "Folder For Each Chat and Server"; ObjectID = "cjT-zd-FvA"; */
-"cjT-zd-FvA.title" = "Folder For Each Chat and Server";
+"cjT-zd-FvA.title" = "チャットとサーバでフォルダ分け";
 
 /* Class = "NSTextFieldCell"; title = "Session Handling:"; ObjectID = "eSk-IS-AQA"; */
-"eSk-IS-AQA.title" = "Session Handling:";
+"eSk-IS-AQA.title" = "セッションの取り扱い：";
 
 /* Class = "NSTextFieldCell"; title = "Automatically:"; ObjectID = "kTL-SI-EfW"; */
-"kTL-SI-EfW.title" = "Automatically:";
+"kTL-SI-EfW.title" = "自動的に：";
 
 /* Class = "NSMenuItem"; title = "One File Per Session"; ObjectID = "mPP-iU-L0F"; */
-"mPP-iU-L0F.title" = "One File Per Session";
+"mPP-iU-L0F.title" = "セッションごとに一つのファイル";
 
 /* Class = "NSMenuItem"; title = "One File Per Session Day"; ObjectID = "zL5-p9-oz2"; */
-"zL5-p9-oz2.title" = "One File Per Session Day";
+"zL5-p9-oz2.title" = "一日のセッションにつき一つのファイル";
 
 /* Class = "NSButtonCell"; title = "Human-readable file formatting"; ObjectID = "zr8-mI-XtE"; */
-"zr8-mI-XtE.title" = "Human-readable file formatting";
+"zr8-mI-XtE.title" = "人間が読めるファイル形式";

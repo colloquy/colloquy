@@ -1,45 +1,45 @@
 
 /* Class = "NSMenuItem"; title = "Folder For Each Server"; ObjectID = "2QZ-yS-hqI"; */
-"2QZ-yS-hqI.title" = "Folder For Each Server";
+"2QZ-yS-hqI.title" = "Mappe for hver server";
 
 /* Class = "NSMenuItem"; title = "Multiple Sessions in One File"; ObjectID = "6z0-W1-z1K"; */
-"6z0-W1-z1K.title" = "Multiple Sessions in One File";
+"6z0-W1-z1K.title" = "Flere sesjoner i samme til";
 
 /* Class = "NSMenuItem"; title = "Same Folder"; ObjectID = "ApN-wZ-phP"; */
-"ApN-wZ-phP.title" = "Same Folder";
+"ApN-wZ-phP.title" = "Samme mappe";
 
 /* Class = "NSButtonCell"; title = "Log Private Chat sessions"; ObjectID = "D2f-TO-UZg"; */
-"D2f-TO-UZg.title" = "Log Private Chat sessions";
+"D2f-TO-UZg.title" = "Logg private samtaler";
 
 /* Class = "NSTextFieldCell"; title = "Transcripts Folder:"; ObjectID = "DSw-dm-Icu"; */
-"DSw-dm-Icu.title" = "Transcripts Folder:";
+"DSw-dm-Icu.title" = "Transkripsjons-mappe:";
 
 /* Class = "NSButtonCell"; title = "Log Chat Room sessions"; ObjectID = "NwH-Dh-Sbn"; */
-"NwH-Dh-Sbn.title" = "Log Chat Room sessions";
+"NwH-Dh-Sbn.title" = "Logg sesjoner i samtalerom";
 
 /* Class = "NSTextFieldCell"; title = "Folder Organization:"; ObjectID = "OD1-jj-0et"; */
-"OD1-jj-0et.title" = "Folder Organization:";
+"OD1-jj-0et.title" = "Mappeorganisering:";
 
 /* Class = "NSMenuItem"; title = "Folder For Each Chat under Server"; ObjectID = "Se5-az-yMX"; */
-"Se5-az-yMX.title" = "Folder For Each Chat under Server";
+"Se5-az-yMX.title" = "Mappe for hver samtale i server";
 
 /* Class = "NSMenuItem"; title = "Other…"; ObjectID = "U9k-NY-Sp1"; */
-"U9k-NY-Sp1.title" = "Other…";
+"U9k-NY-Sp1.title" = "Andre...";
 
 /* Class = "NSMenuItem"; title = "Folder For Each Chat and Server"; ObjectID = "cjT-zd-FvA"; */
-"cjT-zd-FvA.title" = "Folder For Each Chat and Server";
+"cjT-zd-FvA.title" = "Egne mapper for hver samtale og server";
 
 /* Class = "NSTextFieldCell"; title = "Session Handling:"; ObjectID = "eSk-IS-AQA"; */
-"eSk-IS-AQA.title" = "Session Handling:";
+"eSk-IS-AQA.title" = "Håndtering av sesjon:";
 
 /* Class = "NSTextFieldCell"; title = "Automatically:"; ObjectID = "kTL-SI-EfW"; */
-"kTL-SI-EfW.title" = "Automatically:";
+"kTL-SI-EfW.title" = "Automatisk:";
 
 /* Class = "NSMenuItem"; title = "One File Per Session"; ObjectID = "mPP-iU-L0F"; */
-"mPP-iU-L0F.title" = "One File Per Session";
+"mPP-iU-L0F.title" = "En fil pr. sesjon";
 
 /* Class = "NSMenuItem"; title = "One File Per Session Day"; ObjectID = "zL5-p9-oz2"; */
-"zL5-p9-oz2.title" = "One File Per Session Day";
+"zL5-p9-oz2.title" = "En fil pr. sesjonsdag";
 
 /* Class = "NSButtonCell"; title = "Human-readable file formatting"; ObjectID = "zr8-mI-XtE"; */
-"zr8-mI-XtE.title" = "Human-readable file formatting";
+"zr8-mI-XtE.title" = "Filformat leselig for mennesker";

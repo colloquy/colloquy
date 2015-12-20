@@ -1045,6 +1045,15 @@
 		C296542E1BDBA08B00F28873 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
 		C29654301BDBA09700F28873 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
 		C29654321BDBA0A100F28873 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AD11C10D3BC005CA86A /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AD31C10D3BF005CA86A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AD51C10D3C2005CA86A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AD71C10D3C4005CA86A /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AD91C10D3C7005CA86A /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1ADB1C10D3C9005CA86A /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1ADD1C10D3CC005CA86A /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVTranscriptPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C29B1ADF1C10D3CE005CA86A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AE11C10D3D0005CA86A /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVTranscriptPreferencesViewController.strings"; sourceTree = "<group>"; };
 		C2BD72E31BC31162004C1EBD /* JVInterfacePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVInterfacePreferences.h; sourceTree = "<group>"; };
 		C2BD72E41BC31162004C1EBD /* JVInterfacePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVInterfacePreferences.m; sourceTree = "<group>"; };
 		C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MASPreferences.xcodeproj; path = Frameworks/MASPreferences/MASPreferences.xcodeproj; sourceTree = "<group>"; };
@@ -2958,6 +2967,15 @@
 			children = (
 				C29654201BDBA01900F28873 /* Base */,
 				C29654301BDBA09700F28873 /* en */,
+				C29B1AD11C10D3BC005CA86A /* nl */,
+				C29B1AD31C10D3BF005CA86A /* fr */,
+				C29B1AD51C10D3C2005CA86A /* de */,
+				C29B1AD71C10D3C4005CA86A /* it */,
+				C29B1AD91C10D3C7005CA86A /* ja */,
+				C29B1ADB1C10D3C9005CA86A /* nb */,
+				C29B1ADD1C10D3CC005CA86A /* pt-PT */,
+				C29B1ADF1C10D3CE005CA86A /* es */,
+				C29B1AE11C10D3D0005CA86A /* zh-Hant */,
 			);
 			name = JVTranscriptPreferencesViewController.xib;
 			sourceTree = "<group>";
