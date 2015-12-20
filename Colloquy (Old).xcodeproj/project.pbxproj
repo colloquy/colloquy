@@ -292,6 +292,8 @@
 		C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; };
 		C22A35571BC00BB7001757D7 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C22A35781BC0378A001757D7 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */; };
+		C236F65C1BDCE8E400E64469 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C236F6551BDCE81200E64469 /* InfoPlist.strings */; };
+		C236F65D1BDCE8E600E64469 /* schema.strings in Resources */ = {isa = PBXBuildFile; fileRef = C236F6581BDCE81F00E64469 /* schema.strings */; };
 		C2505D8B1BD3A6F400F663F3 /* JVBehaviorPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C2505D8A1BD3A6F400F663F3 /* JVBehaviorPreferences.m */; };
 		C26126551BD2B92F00B7AF87 /* JVNotificationPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26126541BD2B92F00B7AF87 /* JVNotificationPreferences.m */; };
 		C261265A1BD2E9AF00B7AF87 /* JVFileTransferPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26126591BD2E9AF00B7AF87 /* JVFileTransferPreferences.m */; };
@@ -307,8 +309,6 @@
 		C2BD72E51BC31162004C1EBD /* JVInterfacePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C2BD72E41BC31162004C1EBD /* JVInterfacePreferences.m */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
-		CBF6855D08201B7300F498FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CBF6852D0820190D00F498FB /* InfoPlist.strings */; };
-		CBF6855E08201B7300F498FB /* schema.strings in Resources */ = {isa = PBXBuildFile; fileRef = CBF6852F0820190D00F498FB /* schema.strings */; };
 		CBF6855F08201B7300F498FB /* schema.xml in Resources */ = {isa = PBXBuildFile; fileRef = CBF685340820190D00F498FB /* schema.xml */; };
 		CBF6856208201B7A00F498FB /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF685310820190D00F498FB /* GetMetadataForFile.m */; };
 		CBF6856308201B7A00F498FB /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = CBF685330820190D00F498FB /* main.c */; };
@@ -1010,6 +1010,8 @@
 		A1E1610309228E4F004920E8 /* French */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = French; path = Languages/French.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C22A35761BC0378A001757D7 /* JVGeneralPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVGeneralPreferences.h; sourceTree = "<group>"; };
 		C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVGeneralPreferences.m; sourceTree = "<group>"; };
+		C236F6561BDCE81200E64469 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = Importer/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		C236F6591BDCE81F00E64469 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = Importer/English.lproj/schema.strings; sourceTree = "<group>"; };
 		C2505D891BD3A6F400F663F3 /* JVBehaviorPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVBehaviorPreferences.h; sourceTree = "<group>"; };
 		C2505D8A1BD3A6F400F663F3 /* JVBehaviorPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVBehaviorPreferences.m; sourceTree = "<group>"; };
 		C26126531BD2B92F00B7AF87 /* JVNotificationPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVNotificationPreferences.h; sourceTree = "<group>"; };
@@ -1049,8 +1051,6 @@
 		CB66DEA00631F8160034F76E /* Keychain.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Keychain.png; path = Resources/Keychain.png; sourceTree = "<group>"; };
 		CB66DEA10631F8160034F76E /* Stickies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Stickies.png; path = Resources/Stickies.png; sourceTree = "<group>"; };
 		CBF685150820186F00F498FB /* Colloquy.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Colloquy.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
-		CBF6852E0820190D00F498FB /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = InfoPlist.strings; sourceTree = "<group>"; };
-		CBF685300820190D00F498FB /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = schema.strings; sourceTree = "<group>"; };
 		CBF685310820190D00F498FB /* GetMetadataForFile.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 30; name = GetMetadataForFile.m; path = Importer/GetMetadataForFile.m; sourceTree = "<group>"; };
 		CBF685320820190D00F498FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; name = Info.plist; path = Importer/Info.plist; sourceTree = "<group>"; };
 		CBF685330820190D00F498FB /* main.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = main.c; path = Importer/main.c; sourceTree = "<group>"; };
@@ -1624,21 +1624,12 @@
 			children = (
 				CBF685320820190D00F498FB /* Info.plist */,
 				CBF685340820190D00F498FB /* schema.xml */,
-				CBF6852C0820190D00F498FB /* English.lproj */,
+				C236F6551BDCE81200E64469 /* InfoPlist.strings */,
+				C236F6581BDCE81F00E64469 /* schema.strings */,
 				CBF685330820190D00F498FB /* main.c */,
 				CBF685310820190D00F498FB /* GetMetadataForFile.m */,
 			);
 			name = "Metadata Importer";
-			sourceTree = "<group>";
-		};
-		CBF6852C0820190D00F498FB /* English.lproj */ = {
-			isa = PBXGroup;
-			children = (
-				CBF6852D0820190D00F498FB /* InfoPlist.strings */,
-				CBF6852F0820190D00F498FB /* schema.strings */,
-			);
-			name = English.lproj;
-			path = Importer/English.lproj;
 			sourceTree = "<group>";
 		};
 		F50B0A9F0170C89301A84BDE /* Sources & Headers */ = {
@@ -2268,8 +2259,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CBF6855D08201B7300F498FB /* InfoPlist.strings in Resources */,
-				CBF6855E08201B7300F498FB /* schema.strings in Resources */,
+				C236F65C1BDCE8E400E64469 /* InfoPlist.strings in Resources */,
+				C236F65D1BDCE8E600E64469 /* schema.strings in Resources */,
 				CBF6855F08201B7300F498FB /* schema.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2892,6 +2883,22 @@
 			name = MVFileTransfer.nib;
 			sourceTree = "<group>";
 		};
+		C236F6551BDCE81200E64469 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C236F6561BDCE81200E64469 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		C236F6581BDCE81F00E64469 /* schema.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C236F6591BDCE81F00E64469 /* English */,
+			);
+			name = schema.strings;
+			sourceTree = "<group>";
+		};
 		C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2962,22 +2969,6 @@
 				C29654321BDBA0A100F28873 /* en */,
 			);
 			name = JVBehaviorPreferencesViewController.xib;
-			sourceTree = "<group>";
-		};
-		CBF6852D0820190D00F498FB /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CBF6852E0820190D00F498FB /* English */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		CBF6852F0820190D00F498FB /* schema.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CBF685300820190D00F498FB /* English */,
-			);
-			name = schema.strings;
 			sourceTree = "<group>";
 		};
 		F5394BEB0378E23701A35792 /* Colloquy.nib */ = {
