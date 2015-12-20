@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A282a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="JVTranscriptPreferencesViewController">
@@ -21,11 +21,10 @@
                 <popUpButton verticalHuggingPriority="750" id="NgN-ms-5om">
                     <rect key="frame" x="204" y="41" width="263" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <popUpButtonCell key="cell" type="push" title="One File Per Session" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="mPP-iU-L0F" id="TSu-yE-TiX">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
-                        <menu key="menu" title="OtherViews" id="Bq4-SG-zD6">
+                        <menu key="menu" id="Bq4-SG-zD6">
                             <items>
                                 <menuItem title="One File Per Session" state="on" id="mPP-iU-L0F"/>
                                 <menuItem title="Multiple Sessions in One File" tag="1" id="6z0-W1-z1K"/>
@@ -51,7 +50,6 @@
                 <button id="EGV-2M-9Jc">
                     <rect key="frame" x="205" y="164" width="306" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <buttonCell key="cell" type="check" title="Log Chat Room sessions" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="NwH-Dh-Sbn">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -74,7 +72,6 @@
                 <button id="WAC-uW-6CB">
                     <rect key="frame" x="205" y="140" width="306" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <buttonCell key="cell" type="check" title="Log Private Chat sessions" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="D2f-TO-UZg">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -97,11 +94,10 @@
                 <popUpButton verticalHuggingPriority="750" id="pGG-Iw-Bhw">
                     <rect key="frame" x="204" y="73" width="263" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <popUpButtonCell key="cell" type="push" title="Same Folder" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="ApN-wZ-phP" id="cXC-Jn-M6d">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
-                        <menu key="menu" title="OtherViews" id="20b-4p-QwA">
+                        <menu key="menu" id="20b-4p-QwA">
                             <items>
                                 <menuItem title="Same Folder" state="on" id="ApN-wZ-phP"/>
                                 <menuItem title="Folder For Each Server" tag="1" id="2QZ-yS-hqI"/>
@@ -128,7 +124,6 @@
                 <textField verticalHuggingPriority="750" id="Rbu-It-OCF">
                     <rect key="frame" x="13" y="47" width="189" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Session Handling:" id="eSk-IS-AQA">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -138,7 +133,6 @@
                 <textField verticalHuggingPriority="750" id="OUu-Gl-I1j">
                     <rect key="frame" x="13" y="79" width="189" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Folder Organization:" id="OD1-jj-0et">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -148,7 +142,6 @@
                 <button id="IdG-03-hqG">
                     <rect key="frame" x="205" y="15" width="306" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <buttonCell key="cell" type="check" title="Human-readable file formatting" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="zr8-mI-XtE">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -171,7 +164,6 @@
                 <textField verticalHuggingPriority="750" id="E1z-sg-3es">
                     <rect key="frame" x="13" y="111" width="189" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Transcripts Folder:" id="DSw-dm-Icu">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -181,11 +173,10 @@
                 <popUpButton verticalHuggingPriority="750" id="GtW-ZF-XH9">
                     <rect key="frame" x="204" y="105" width="263" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                    <animations/>
                     <popUpButtonCell key="cell" type="push" title=" " bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="2" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="0Hg-BG-W2z" id="mAx-aB-hk0">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
-                        <menu key="menu" title="OtherViews" id="HkQ-7v-VOb">
+                        <menu key="menu" id="HkQ-7v-VOb">
                             <items>
                                 <menuItem title=" " state="on" tag="2" id="0Hg-BG-W2z"/>
                                 <menuItem isSeparatorItem="YES" id="MF3-LA-LaG">
@@ -203,7 +194,6 @@
                 <textField verticalHuggingPriority="750" id="KbX-l9-qC6">
                     <rect key="frame" x="13" y="165" width="189" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Automatically:" id="kTL-SI-EfW">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -211,7 +201,6 @@
                     </textFieldCell>
                 </textField>
             </subviews>
-            <animations/>
         </view>
     </objects>
 </document>
