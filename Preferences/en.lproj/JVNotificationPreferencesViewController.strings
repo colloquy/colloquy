@@ -2,14 +2,8 @@
 /* Class = "NSButtonCell"; title = "Play sound:"; ObjectID = "Bd8-TT-Cxx"; */
 "Bd8-TT-Cxx.title" = "Play sound:";
 
-/* Class = "NSBox"; title = "Box"; ObjectID = "CFr-Tf-j1R"; */
-"CFr-Tf-j1R.title" = "Box";
-
 /* Class = "NSButtonCell"; title = "Bounce Colloquy icon in the Dock"; ObjectID = "DRC-qm-Xc8"; */
 "DRC-qm-Xc8.title" = "Bounce Colloquy icon in the Dock";
-
-/* Class = "NSMenu"; title = "OtherViews"; ObjectID = "Kte-b4-JZ6"; */
-"Kte-b4-JZ6.title" = "OtherViews";
 
 /* Class = "NSButtonCell"; title = "Mute all notification sounds"; ObjectID = "OPA-kQ-uIg"; */
 "OPA-kQ-uIg.title" = "Mute all notification sounds";
@@ -20,9 +14,6 @@
 /* Class = "NSButtonCell"; title = "…only if Colloquy is in the background"; ObjectID = "bTZ-EJ-wQ0"; */
 "bTZ-EJ-wQ0.title" = "…only if Colloquy is in the background";
 
-/* Class = "NSBox"; title = "Box"; ObjectID = "g8n-9y-waq"; */
-"g8n-9y-waq.title" = "Box";
-
 /* Class = "NSButtonCell"; title = "Show event bubble"; ObjectID = "p8P-tX-okn"; */
 "p8P-tX-okn.title" = "Show event bubble";
 
@@ -31,9 +22,6 @@
 
 /* Class = "NSButtonCell"; title = "…and keep on screen until activated"; ObjectID = "qco-MY-Hl2"; */
 "qco-MY-Hl2.title" = "…and keep on screen until activated";
-
-/* Class = "NSMenu"; title = "OtherViews"; ObjectID = "rcg-D1-Fe0"; */
-"rcg-D1-Fe0.title" = "OtherViews";
 
 /* Class = "NSButtonCell"; title = "…repeatedly until Colloquy is in the front"; ObjectID = "wUY-9y-jdb"; */
 "wUY-9y-jdb.title" = "…repeatedly until Colloquy is in the front";
