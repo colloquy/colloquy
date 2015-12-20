@@ -289,6 +289,8 @@
 		92C70D191A5E88CE00080E45 /* super-op.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D111A5E88CE00080E45 /* super-op.pdf */; };
 		92C70D1B1A5E898100080E45 /* console.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D1A1A5E898100080E45 /* console.pdf */; };
 		92C70D1D1A5E89A000080E45 /* messageUser.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D1C1A5E89A000080E45 /* messageUser.pdf */; };
+		C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; };
+		C22A35571BC00BB7001757D7 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
 		CBF6855D08201B7300F498FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CBF6852D0820190D00F498FB /* InfoPlist.strings */; };
@@ -392,6 +394,20 @@
 			remoteGlobalIDString = 92F4A22914FDEF0D001A177E;
 			remoteInfo = "Chat Core (Static Library)";
 		};
+		C22A35531BC009FA001757D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F16AF7F41BA279F10022155C;
+			remoteInfo = MASPreferences;
+		};
+		C22A35581BC00BB7001757D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F16AF7F31BA279F10022155C;
+			remoteInfo = MASPreferences;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -414,6 +430,7 @@
 			files = (
 				1CEEAB1A095BD25500166A54 /* ChatCore.framework in Copy Frameworks */,
 				1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */,
+				C22A35571BC00BB7001757D7 /* MASPreferences.framework in Copy Frameworks */,
 				1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */,
 				1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */,
 				1C8444A30F26C7D600701E36 /* Sparkle.framework in Copy Frameworks */,
@@ -977,6 +994,7 @@
 		A18BCA2108FF588E0005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Languages/Dutch.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
 		A18BCA2208FF589D0005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Languages/German.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
 		A1E1610309228E4F004920E8 /* French */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = French; path = Languages/French.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MASPreferences.xcodeproj; path = Frameworks/MASPreferences/MASPreferences.xcodeproj; sourceTree = "<group>"; };
 		CB66DEA00631F8160034F76E /* Keychain.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Keychain.png; path = Resources/Keychain.png; sourceTree = "<group>"; };
 		CB66DEA10631F8160034F76E /* Stickies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Stickies.png; path = Resources/Stickies.png; sourceTree = "<group>"; };
 		CBF685150820186F00F498FB /* Colloquy.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Colloquy.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1069,6 +1087,7 @@
 				1CB2CD7B052DDC560094AAA4 /* Security.framework in Frameworks */,
 				1CB2CD7C052DDC560094AAA4 /* WebKit.framework in Frameworks */,
 				1CD0201F05758F26000F93B4 /* AddressBook.framework in Frameworks */,
+				C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */,
 				1C3B290806529E720066197C /* ChatCore.framework in Frameworks */,
 				1CF8030E070C893500C9B54C /* libsilc.framework in Frameworks */,
 				1CF8030F070C893500C9B54C /* libsilcclient.framework in Frameworks */,
@@ -1102,6 +1121,7 @@
 				F5185C82018626F701EE70DE /* Interfaces */,
 				F50B0AA10170C89301A84BDE /* Resources */,
 				1C6A13E608666DDC009EE6D2 /* Configurations */,
+				C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */,
 				089C1671FE841209C02AAC07 /* Frameworks & Libraries */,
 				1CB2C8CC052DDA360094AAA4 /* Products */,
 			);
@@ -1519,6 +1539,14 @@
 			name = Controllers;
 			sourceTree = "<group>";
 		};
+		C22A354F1BC009FA001757D7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C22A35541BC009FA001757D7 /* MASPreferences.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		CBF684F00820174000F498FB /* Metadata Importer */ = {
 			isa = PBXGroup;
 			children = (
@@ -1849,6 +1877,7 @@
 			);
 			dependencies = (
 				1CEEAB19095BD24100166A54 /* PBXTargetDependency */,
+				C22A35591BC00BB7001757D7 /* PBXTargetDependency */,
 			);
 			name = "Colloquy (Application)";
 			productName = "Massinova (Application)";
@@ -1903,6 +1932,7 @@
 				Dutch,
 				pt_PT,
 				nb,
+				en,
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
 			productRefGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
@@ -1923,6 +1953,10 @@
 				{
 					ProductGroup = 1CEF8F7C0A3AB7BB0054298A /* Products */;
 					ProjectRef = 1CEF8F7B0A3AB7BB0054298A /* JavaScript Support.xcodeproj */;
+				},
+				{
+					ProductGroup = C22A354F1BC009FA001757D7 /* Products */;
+					ProjectRef = C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */;
 				},
 				{
 					ProductGroup = 1C0A19A308B0418600324E25 /* Products */;
@@ -1980,6 +2014,13 @@
 			fileType = archive.ar;
 			path = "libChat Core.a";
 			remoteRef = 92F4A23614FDEF10001A177E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C22A35541BC009FA001757D7 /* MASPreferences.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MASPreferences.framework;
+			remoteRef = C22A35531BC009FA001757D7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -2415,6 +2456,11 @@
 			isa = PBXTargetDependency;
 			target = 1C51B4BB052DE14B00BB459B /* Standard Commands (Plug-In) */;
 			targetProxy = 9295C9DA16784597009F9014 /* PBXContainerItemProxy */;
+		};
+		C22A35591BC00BB7001757D7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MASPreferences;
+			targetProxy = C22A35581BC00BB7001757D7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
