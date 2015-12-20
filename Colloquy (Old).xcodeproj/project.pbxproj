@@ -291,6 +291,7 @@
 		92C70D1D1A5E89A000080E45 /* messageUser.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D1C1A5E89A000080E45 /* messageUser.pdf */; };
 		C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; };
 		C22A35571BC00BB7001757D7 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C22A35781BC0378A001757D7 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */; settings = {ASSET_TAGS = (); }; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
 		CBF6855D08201B7300F498FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CBF6852D0820190D00F498FB /* InfoPlist.strings */; };
@@ -994,6 +995,8 @@
 		A18BCA2108FF588E0005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Languages/Dutch.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
 		A18BCA2208FF589D0005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Languages/German.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
 		A1E1610309228E4F004920E8 /* French */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = French; path = Languages/French.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C22A35761BC0378A001757D7 /* JVGeneralPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVGeneralPreferences.h; sourceTree = "<group>"; };
+		C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVGeneralPreferences.m; sourceTree = "<group>"; };
 		C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MASPreferences.xcodeproj; path = Frameworks/MASPreferences/MASPreferences.xcodeproj; sourceTree = "<group>"; };
 		CB66DEA00631F8160034F76E /* Keychain.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Keychain.png; path = Resources/Keychain.png; sourceTree = "<group>"; };
 		CB66DEA10631F8160034F76E /* Stickies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Stickies.png; path = Resources/Stickies.png; sourceTree = "<group>"; };
@@ -1311,8 +1314,10 @@
 		1CBC62F405488D5A009E59E1 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
-				1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */,
 				1CBC630905489484009E59E1 /* JVGeneralPreferencesViewController.h */,
+				1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */,
+				C22A35761BC0378A001757D7 /* JVGeneralPreferences.h */,
+				C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */,
 				1C6A40C8083FF6C600572AB6 /* JVInterfacePreferences.m */,
 				1C6A40C7083FF6C600572AB6 /* JVInterfacePreferences.h */,
 				1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */,
@@ -2361,6 +2366,7 @@
 				1CD733CC05A0E2470080F952 /* JVChatMessage.m in Sources */,
 				1C6EA24405A738DD006A559F /* JVChatRoomBrowser.m in Sources */,
 				1C2462A505F9205900505752 /* JVStyleView.m in Sources */,
+				C22A35781BC0378A001757D7 /* JVGeneralPreferences.m in Sources */,
 				1C9982030603EFD6006C6417 /* JVNotificationPreferences.m in Sources */,
 				1C9982B90604D94C006C6417 /* JVNotificationController.m in Sources */,
 				1CB37172060CC7E200F6A81F /* KABubbleWindowController.m in Sources */,
