@@ -1,0 +1,57 @@
+
+/* Class = "NSTextFieldCell"; title = "You are trying to modify a locked style or variant. Would you like to make a new variant based on the current style settings?"; ObjectID = "394"; */
+"394.title" = "ロックされたスタイルかバリアントを修正しようとしています。現在のスタイル設定をもとに新しいバリアントを作成しますか？";
+
+/* Class = "NSButtonCell"; title = "Cancel"; ObjectID = "395"; */
+"395.title" = "キャンセル";
+
+/* Class = "NSButtonCell"; title = "Create"; ObjectID = "396"; */
+"396.title" = "作成";
+
+/* Class = "NSTextFieldCell"; title = "This is a locked Style Variant."; ObjectID = "397"; */
+"397.title" = "これはロックされたスタイルバリアントです。";
+
+/* Class = "NSTextFieldCell"; title = "Variant Name:"; ObjectID = "398"; */
+"398.title" = "バリアント名：";
+
+/* Class = "NSButtonCell"; title = "Select Font…"; ObjectID = "4qc-yb-aCE"; */
+"4qc-yb-aCE.title" = "フォントを選択…";
+
+/* Class = "NSTextFieldCell"; title = "Incoming Messages:"; ObjectID = "721-e2-eFY"; */
+"721-e2-eFY.title" = "受信メッセージ：";
+
+/* Class = "NSTextFieldCell"; title = "Some Styles don't honor these settings, and use built-in values."; ObjectID = "8ez-8R-0k2"; */
+"8ez-8R-0k2.title" = "いくつかのスタイルはこれらの設定を尊重せず、内蔵されている値を使用します。";
+
+/* Class = "NSTextFieldCell"; title = "Font Family:"; ObjectID = "CRt-sH-ITp"; */
+"CRt-sH-ITp.title" = "フォント：";
+
+/* Class = "NSTextFieldCell"; title = "Minimum Font Size:"; ObjectID = "DK2-6W-8PU"; */
+"DK2-6W-8PU.title" = "最小フォントサイズ：";
+
+/* Class = "NSTextFieldCell"; title = "Default Style:"; ObjectID = "FEc-32-Qeq"; */
+"FEc-32-Qeq.title" = "デフォルトのスタイル：";
+
+/* Class = "NSButtonCell"; title = "Strip message colors"; ObjectID = "R9j-pe-q5N"; */
+"R9j-pe-q5N.title" = "メッセージの色を使用しない";
+
+/* Class = "NSButtonCell"; title = "Use the active Style's base font"; ObjectID = "eVG-sc-0WR"; */
+"eVG-sc-0WR.title" = "アクティブなスタイルのベースフォントを使う";
+
+/* Class = "NSButtonCell"; title = "Retain colors & formatting after sending"; ObjectID = "evr-oy-lkG"; */
+"evr-oy-lkG.title" = "送信後も色と書式を保つ";
+
+/* Class = "NSButtonCell"; title = "Customize Style…"; ObjectID = "fN5-9h-c8n"; */
+"fN5-9h-c8n.title" = "スタイルをカスタマイズ…";
+
+/* Class = "NSButtonCell"; title = "Strip message text formatting"; ObjectID = "ph5-8Q-adB"; */
+"ph5-8Q-adB.title" = "メッセージの書式を使用しない";
+
+/* Class = "NSTextFieldCell"; title = "Chat Input Boxes:"; ObjectID = "r6b-yk-1K1"; */
+"r6b-yk-1K1.title" = "チャット入力ボックス：";
+
+/* Class = "NSTextFieldCell"; title = "Base Font Size:"; ObjectID = "seZ-92-AGg"; */
+"seZ-92-AGg.title" = "ベースフォントサイズ：";
+
+/* Class = "NSTextFieldCell"; title = "Emoticons:"; ObjectID = "yFb-BB-fPV"; */
+"yFb-BB-fPV.title" = "絵文字アイコンセット：";
