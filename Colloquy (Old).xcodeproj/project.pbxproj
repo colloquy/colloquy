@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -289,22 +289,22 @@
 		92C70D191A5E88CE00080E45 /* super-op.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D111A5E88CE00080E45 /* super-op.pdf */; };
 		92C70D1B1A5E898100080E45 /* console.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D1A1A5E898100080E45 /* console.pdf */; };
 		92C70D1D1A5E89A000080E45 /* messageUser.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D1C1A5E89A000080E45 /* messageUser.pdf */; };
-		C207B61F1BC96B6A00921E60 /* JVInterfacePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C207B61E1BC96B6A00921E60 /* JVInterfacePreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
+		C207B61F1BC96B6A00921E60 /* JVInterfacePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C207B61E1BC96B6A00921E60 /* JVInterfacePreferencesViewController.xib */; };
 		C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; };
 		C22A35571BC00BB7001757D7 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C22A35781BC0378A001757D7 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */; settings = {ASSET_TAGS = (); }; };
-		C2505D8B1BD3A6F400F663F3 /* JVBehaviorPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C2505D8A1BD3A6F400F663F3 /* JVBehaviorPreferences.m */; settings = {ASSET_TAGS = (); }; };
-		C2505D8D1BD3AC1E00F663F3 /* JVBehaviorPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2505D8C1BD3AC1E00F663F3 /* JVBehaviorPreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
-		C26126551BD2B92F00B7AF87 /* JVNotificationPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26126541BD2B92F00B7AF87 /* JVNotificationPreferences.m */; settings = {ASSET_TAGS = (); }; };
-		C26126571BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26126561BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
-		C261265A1BD2E9AF00B7AF87 /* JVFileTransferPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26126591BD2E9AF00B7AF87 /* JVFileTransferPreferences.m */; settings = {ASSET_TAGS = (); }; };
-		C261265C1BD2EAC400B7AF87 /* JVFileTransferPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C261265B1BD2EAC400B7AF87 /* JVFileTransferPreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
-		C261265F1BD300B400B7AF87 /* JVTranscriptPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C261265E1BD300B400B7AF87 /* JVTranscriptPreferences.m */; settings = {ASSET_TAGS = (); }; };
-		C26126611BD309A200B7AF87 /* JVTranscriptPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26126601BD309A200B7AF87 /* JVTranscriptPreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
-		C26B7A7C1BCA51D10085846F /* JVAppearancePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26B7A7B1BCA51D10085846F /* JVAppearancePreferences.m */; settings = {ASSET_TAGS = (); }; };
-		C26B7A7E1BCA55B00085846F /* JVAppearancePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26B7A7D1BCA55B00085846F /* JVAppearancePreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
-		C2BD72E51BC31162004C1EBD /* JVInterfacePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C2BD72E41BC31162004C1EBD /* JVInterfacePreferences.m */; settings = {ASSET_TAGS = (); }; };
-		C2BE9F101BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2BE9F0F1BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
+		C22A35781BC0378A001757D7 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */; };
+		C2505D8B1BD3A6F400F663F3 /* JVBehaviorPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C2505D8A1BD3A6F400F663F3 /* JVBehaviorPreferences.m */; };
+		C2505D8D1BD3AC1E00F663F3 /* JVBehaviorPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2505D8C1BD3AC1E00F663F3 /* JVBehaviorPreferencesViewController.xib */; };
+		C26126551BD2B92F00B7AF87 /* JVNotificationPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26126541BD2B92F00B7AF87 /* JVNotificationPreferences.m */; };
+		C26126571BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26126561BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib */; };
+		C261265A1BD2E9AF00B7AF87 /* JVFileTransferPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26126591BD2E9AF00B7AF87 /* JVFileTransferPreferences.m */; };
+		C261265C1BD2EAC400B7AF87 /* JVFileTransferPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C261265B1BD2EAC400B7AF87 /* JVFileTransferPreferencesViewController.xib */; };
+		C261265F1BD300B400B7AF87 /* JVTranscriptPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C261265E1BD300B400B7AF87 /* JVTranscriptPreferences.m */; };
+		C26126611BD309A200B7AF87 /* JVTranscriptPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26126601BD309A200B7AF87 /* JVTranscriptPreferencesViewController.xib */; };
+		C26B7A7C1BCA51D10085846F /* JVAppearancePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26B7A7B1BCA51D10085846F /* JVAppearancePreferences.m */; };
+		C26B7A7E1BCA55B00085846F /* JVAppearancePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26B7A7D1BCA55B00085846F /* JVAppearancePreferencesViewController.xib */; };
+		C2BD72E51BC31162004C1EBD /* JVInterfacePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C2BD72E41BC31162004C1EBD /* JVInterfacePreferences.m */; };
+		C2BE9F101BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2BE9F0F1BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
 		CBF6855D08201B7300F498FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CBF6852D0820190D00F498FB /* InfoPlist.strings */; };
@@ -1967,8 +1967,8 @@
 				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = 1C041A700854E97700A5A5BA /* Build configuration list for PBXProject "Colloquy (Old)" */;
-			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
+			compatibilityVersion = "Xcode 6.3";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
