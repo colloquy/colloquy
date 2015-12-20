@@ -1,0 +1,69 @@
+
+/* Class = "NSButtonCell"; title = "Automatically open ports in router"; ObjectID = "5DW-mg-u7k"; */
+"5DW-mg-u7k.title" = "Stel poorten automatisch in";
+
+/* Class = "NSMenuItem"; title = "When Colloquy Quits"; ObjectID = "Cve-pv-DRB"; */
+"Cve-pv-DRB.title" = "Bij het Stoppen van Colloquy";
+
+/* Class = "NSMenuItem"; title = "Buddies in my Buddy List"; ObjectID = "DWS-HZ-6QY"; */
+"DWS-HZ-6QY.title" = "Vrienden in mijn Vriendenlijst";
+
+/* Class = "NSMenuItem"; title = "Nobody"; ObjectID = "Ed2-Aq-H9o"; */
+"Ed2-Aq-H9o.title" = "Niemand";
+
+/* Class = "NSMenuItem"; title = "Upon Successful Transfer"; ObjectID = "Fb7-FF-obo"; */
+"Fb7-FF-obo.title" = "Na een Succesvolle Overdracht";
+
+/* Class = "NSMenuItem"; title = "Other…"; ObjectID = "HFh-yb-3cg"; */
+"HFh-yb-3cg.title" = "Andere…";
+
+/* Class = "NSMenuItem"; title = "Anyone"; ObjectID = "IF5-Ha-6bv"; */
+"IF5-Ha-6bv.title" = "Iedereen";
+
+/* Class = "NSMenuItem"; title = "Ask Every Time"; ObjectID = "MDy-cK-h3Q"; */
+"MDy-cK-h3Q.title" = "Vraag Altijd";
+
+/* Class = "NSMenuItem"; title = "Overwrite Every Time"; ObjectID = "MeG-B9-hc8"; */
+"MeG-B9-hc8.title" = "Vervang Altijd";
+
+/* Class = "NSTextFieldCell"; title = "“Safe” files include movies, pictures, sounds, PDF and text documents, disk images and other archive formats."; ObjectID = "OM2-Wq-fbw"; */
+"OM2-Wq-fbw.title" = "“Veilige” bestanden zijn films, afbeeldingen, geluidsbestanden, PDF- en tekstdocumenten, schijfkopieën en andere archiefbestanden.";
+
+/* Class = "NSTextFieldCell"; title = "Save downloaded files to:"; ObjectID = "WCK-qb-Mqs"; */
+"WCK-qb-Mqs.title" = "Locatie gedownloade bestanden:";
+
+/* Class = "NSMenuItem"; title = "Ask Every Time"; ObjectID = "Xwu-lJ-YF3"; */
+"Xwu-lJ-YF3.title" = "Vraag Altijd";
+
+/* Class = "NSButtonCell"; title = "Send files passively by default"; ObjectID = "YcT-g2-fHv"; */
+"YcT-g2-fHv.title" = "Passieve overdrachten als standaard";
+
+/* Class = "NSTextFieldCell"; title = "to"; ObjectID = "bxk-I1-QAg"; */
+"bxk-I1-QAg.title" = "naar";
+
+/* Class = "NSTextFieldCell"; title = "Auto accept files from:"; ObjectID = "cOx-pj-7fV"; */
+"cOx-pj-7fV.title" = "Accepteer automatisch bestanden van:";
+
+/* Class = "NSTextFieldCell"; title = "If files already exist:"; ObjectID = "crQ-ds-MM5"; */
+"crQ-ds-MM5.title" = "Indien bestanden reeds bestaan:";
+
+/* Class = "NSTextFieldCell"; title = "Remove transferred items:"; ObjectID = "dh9-nC-zhV"; */
+"dh9-nC-zhV.title" = "Verwijder overgedragen items:";
+
+/* Class = "NSTextFieldCell"; title = "File transfer port range:"; ObjectID = "eqU-Nn-bv5"; */
+"eqU-Nn-bv5.title" = "Poortbereik voor bestandsoverdrachten:";
+
+/* Class = "NSMenuItem"; title = "Cancel Every Time"; ObjectID = "gIz-oi-5n1"; */
+"gIz-oi-5n1.title" = "Annuleer Atijd";
+
+/* Class = "NSMenuItem"; title = "Resume if Possible"; ObjectID = "i8b-Gd-NsL"; */
+"i8b-Gd-NsL.title" = "Herneem Indien Mogelijk";
+
+/* Class = "NSTextFieldCell"; title = "Requires a router that supports NAT-PMP or UPnP."; ObjectID = "tqu-1q-aXX"; */
+"tqu-1q-aXX.title" = "Vereist een router die NAT-PMP of UPnP ondersteunt.";
+
+/* Class = "NSTextFieldCell"; title = "Passive transfers allow files to be sent without the need to open up ports in your firewall or router—the receiver will need to."; ObjectID = "u9L-og-Bev"; */
+"u9L-og-Bev.title" = "Passieve overdrachten zorgen ervoor dat u bestanden kunt verzenden zonder configuratie van poorten in uw firewall of router. De ontvanger moet deze daarentegen wel correct instellen.";
+
+/* Class = "NSButtonCell"; title = "Open \"safe\" files after downloading"; ObjectID = "wtZ-ek-f8M"; */
+"wtZ-ek-f8M.title" = "Open \"veilige\" bestanden na downloaden";

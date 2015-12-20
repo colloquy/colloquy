@@ -1,0 +1,69 @@
+
+/* Class = "NSButtonCell"; title = "Automatically open ports in router"; ObjectID = "5DW-mg-u7k"; */
+"5DW-mg-u7k.title" = "Automatically open ports in router";
+
+/* Class = "NSMenuItem"; title = "When Colloquy Quits"; ObjectID = "Cve-pv-DRB"; */
+"Cve-pv-DRB.title" = "在結束 Colloquy 時";
+
+/* Class = "NSMenuItem"; title = "Buddies in my Buddy List"; ObjectID = "DWS-HZ-6QY"; */
+"DWS-HZ-6QY.title" = "在我的好友名單中的好友";
+
+/* Class = "NSMenuItem"; title = "Nobody"; ObjectID = "Ed2-Aq-H9o"; */
+"Ed2-Aq-H9o.title" = "任何人的檔案傳輸都不自動接受";
+
+/* Class = "NSMenuItem"; title = "Upon Successful Transfer"; ObjectID = "Fb7-FF-obo"; */
+"Fb7-FF-obo.title" = "在成功完成傳輸時";
+
+/* Class = "NSMenuItem"; title = "Other…"; ObjectID = "HFh-yb-3cg"; */
+"HFh-yb-3cg.title" = "其他…";
+
+/* Class = "NSMenuItem"; title = "Anyone"; ObjectID = "IF5-Ha-6bv"; */
+"IF5-Ha-6bv.title" = "任何人";
+
+/* Class = "NSMenuItem"; title = "Ask Every Time"; ObjectID = "MDy-cK-h3Q"; */
+"MDy-cK-h3Q.title" = "每次都詢問我";
+
+/* Class = "NSMenuItem"; title = "Overwrite Every Time"; ObjectID = "MeG-B9-hc8"; */
+"MeG-B9-hc8.title" = "每次都覆蓋";
+
+/* Class = "NSTextFieldCell"; title = "“Safe” files include movies, pictures, sounds, PDF and text documents, disk images and other archive formats."; ObjectID = "OM2-Wq-fbw"; */
+"OM2-Wq-fbw.title" = "所謂「安全」的檔案包括電影、圖片、聲音、 PDF 以及文字檔案、磁碟影像以及其他壓縮檔案。";
+
+/* Class = "NSTextFieldCell"; title = "Save downloaded files to:"; ObjectID = "WCK-qb-Mqs"; */
+"WCK-qb-Mqs.title" = "將下載的檔案儲存到:";
+
+/* Class = "NSMenuItem"; title = "Ask Every Time"; ObjectID = "Xwu-lJ-YF3"; */
+"Xwu-lJ-YF3.title" = "每次都詢問我";
+
+/* Class = "NSButtonCell"; title = "Send files passively by default"; ObjectID = "YcT-g2-fHv"; */
+"YcT-g2-fHv.title" = "根據預設值傳送檔案";
+
+/* Class = "NSTextFieldCell"; title = "to"; ObjectID = "bxk-I1-QAg"; */
+"bxk-I1-QAg.title" = "到";
+
+/* Class = "NSTextFieldCell"; title = "Auto accept files from:"; ObjectID = "cOx-pj-7fV"; */
+"cOx-pj-7fV.title" = "自動接受檔案:";
+
+/* Class = "NSTextFieldCell"; title = "If files already exist:"; ObjectID = "crQ-ds-MM5"; */
+"crQ-ds-MM5.title" = "如果已經有了相同的檔案:";
+
+/* Class = "NSTextFieldCell"; title = "Remove transferred items:"; ObjectID = "dh9-nC-zhV"; */
+"dh9-nC-zhV.title" = "移除已經完成傳輸的項目:";
+
+/* Class = "NSTextFieldCell"; title = "File transfer port range:"; ObjectID = "eqU-Nn-bv5"; */
+"eqU-Nn-bv5.title" = "檔案傳輸連接埠的範圍:";
+
+/* Class = "NSMenuItem"; title = "Cancel Every Time"; ObjectID = "gIz-oi-5n1"; */
+"gIz-oi-5n1.title" = "每次都取消";
+
+/* Class = "NSMenuItem"; title = "Resume if Possible"; ObjectID = "i8b-Gd-NsL"; */
+"i8b-Gd-NsL.title" = "如果可以的話，續傳檔案";
+
+/* Class = "NSTextFieldCell"; title = "Requires a router that supports NAT-PMP or UPnP."; ObjectID = "tqu-1q-aXX"; */
+"tqu-1q-aXX.title" = "Requires a router that supports NAT-PMP or UPnP.";
+
+/* Class = "NSTextFieldCell"; title = "Passive transfers allow files to be sent without the need to open up ports in your firewall or router—the receiver will need to."; ObjectID = "u9L-og-Bev"; */
+"u9L-og-Bev.title" = "所謂的「被動式傳輸」（Passive transfers），就是您可以不用打開您的防火牆或路由器的連接埠，就可以傳送檔案—不過，接受檔案的一方，就必須打開連接埠。";
+
+/* Class = "NSButtonCell"; title = "Open \"safe\" files after downloading"; ObjectID = "wtZ-ek-f8M"; */
+"wtZ-ek-f8M.title" = "在下載完成後打開「安全」的檔案";
