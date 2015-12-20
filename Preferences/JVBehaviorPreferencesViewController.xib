@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A282a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment version="1050" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9059"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="JVBehaviorPreferencesViewController">
@@ -257,7 +257,6 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <binding destination="443" name="enabled" keyPath="values.JVAutoRejoinRoomsOnKick" id="yzz-sr-VdH"/>
                         <binding destination="443" name="value" keyPath="values.JVAutoRejoinRoomsDelay" id="Rv7-eA-0Yv">
                             <dictionary key="options">
                                 <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
@@ -266,6 +265,7 @@
                                 <bool key="NSValidatesImmediately" value="YES"/>
                             </dictionary>
                         </binding>
+                        <binding destination="443" name="enabled" keyPath="values.JVAutoRejoinRoomsOnKick" id="yzz-sr-VdH"/>
                     </connections>
                 </textField>
                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" id="yRR-Go-xBl">
@@ -274,7 +274,6 @@
                     <animations/>
                     <stepperCell key="cell" continuous="YES" alignment="left" maxValue="59" valueWraps="YES" id="7vB-9e-frw"/>
                     <connections>
-                        <binding destination="443" name="enabled" keyPath="values.JVAutoRejoinRoomsOnKick" id="bDp-RH-6ED"/>
                         <binding destination="443" name="value" keyPath="values.JVAutoRejoinRoomsDelay" id="l10-8D-SmM">
                             <dictionary key="options">
                                 <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
@@ -283,6 +282,7 @@
                                 <bool key="NSValidatesImmediately" value="YES"/>
                             </dictionary>
                         </binding>
+                        <binding destination="443" name="enabled" keyPath="values.JVAutoRejoinRoomsOnKick" id="bDp-RH-6ED"/>
                     </connections>
                 </stepper>
                 <textField verticalHuggingPriority="750" id="8XZ-dK-IOa">
