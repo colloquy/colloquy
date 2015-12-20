@@ -29,6 +29,7 @@
 
 #import "MASPreferences.h"
 #import "JVGeneralPreferencesViewController.h"
+#import "JVInterfacePreferencesViewController.h"
 
 #import <Sparkle/SUUpdater.h>
 
@@ -189,7 +190,8 @@ static BOOL applicationIsTerminating = NO;
 	
 	NSArray<NSViewController<MASPreferencesViewController> *> *viewControllers
 	= @[
-		[[JVGeneralPreferencesViewController alloc] init]
+		[[JVGeneralPreferencesViewController alloc] init],
+		[[JVInterfacePreferencesViewController alloc] init],
 		];
 	MASPreferencesWindowController *preferencesWC = [[MASPreferencesWindowController alloc] initWithViewControllers:viewControllers];
 	self.preferencesWC = preferencesWC;

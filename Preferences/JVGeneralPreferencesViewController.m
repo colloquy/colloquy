@@ -1,29 +1,10 @@
 #import "JVGeneralPreferencesViewController.h"
+
 #import "JVBuddy.h"
+
 
 extern const NSStringEncoding JVAllowedTextEncodings[];
 
-/*
-@protocol MASPreferencesViewController <NSObject>
-
-@optional
-
-- (void)viewWillAppear;
-- (void)viewDidDisappear;
-- (NSView *)initialKeyView;
-
-@property (nonatomic, readonly) BOOL hasResizableWidth;
-@property (nonatomic, readonly) BOOL hasResizableHeight;
-
-@required
-
-@property (nonatomic, readonly) NSString *identifier;
-@property (nonatomic, readonly) NSImage *toolbarItemImage;
-@property (nonatomic, readonly) NSString *toolbarItemLabel;
-
-@end
-
-*/
 
 @interface JVGeneralPreferencesViewController()
 
@@ -51,7 +32,7 @@ extern const NSStringEncoding JVAllowedTextEncodings[];
 #pragma mark MASPreferencesViewController
 
 - (NSString *) identifier {
-	return @"JVGeneralPreferences";
+	return @"JVGeneralPreferencesViewController";
 }
 
 - (NSImage *) toolbarItemImage {
@@ -71,7 +52,7 @@ extern const NSStringEncoding JVAllowedTextEncodings[];
 	return NO;
 }
 
-#pragma mark Private
+#pragma mark - Private
 
 - (void) buildEncodingMenu {
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
