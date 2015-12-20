@@ -99,7 +99,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 }
 
 
-#pragma mark MASPreferencesViewController
+#pragma mark - MASPreferencesViewController
 
 - (NSString *) identifier {
 	return @"JVInterfacePreferencesViewController";

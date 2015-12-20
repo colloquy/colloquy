@@ -49,7 +49,7 @@
 }
 
 
-#pragma mark MASPreferencesViewController
+#pragma mark - MASPreferencesViewController
 
 - (NSString *) identifier {
 	return @"JVNotificationPreferencesViewController";

@@ -27,7 +27,8 @@
 	[self initializeFromDefaults];
 }
 
-#pragma mark MASPreferencesViewController
+
+#pragma mark - MASPreferencesViewController
 
 - (NSString *) identifier {
 	return @"JVFileTransferPreferencesViewController";
