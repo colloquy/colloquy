@@ -209,7 +209,7 @@
 		1CBA56ED058D202200257832 /* emoticon.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E98659018CB25601EE70DE /* emoticon.png */; };
 		1CBAB8B00884BF49005D1CDD /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBF687A508202F3F00F498FB /* CoreServices.framework */; };
 		1CBC62E505488C73009E59E1 /* JVPreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBC62E305488C73009E59E1 /* JVPreferencesController.m */; };
-		1CBC630C05489484009E59E1 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */; };
+		1CBC630C05489484009E59E1 /* JVGeneralPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */; };
 		1CBC63190548975E009E59E1 /* GeneralPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBC63180548975E009E59E1 /* GeneralPreferences.png */; };
 		1CBC634905489BEE009E59E1 /* JVGeneralPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CBC634705489BEE009E59E1 /* JVGeneralPreferences.nib */; };
 		1CC5650708F0CFEE00B8E333 /* Colloquy.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */; };
@@ -714,8 +714,8 @@
 		1CBC62E205488C73009E59E1 /* JVPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVPreferencesController.h; path = Controllers/JVPreferencesController.h; sourceTree = "<group>"; };
 		1CBC62E305488C73009E59E1 /* JVPreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVPreferencesController.m; path = Controllers/JVPreferencesController.m; sourceTree = "<group>"; };
 		1CBC62E605488CBA009E59E1 /* NSPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSPreferences.h; path = Controllers/NSPreferences.h; sourceTree = "<group>"; };
-		1CBC630905489484009E59E1 /* JVGeneralPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVGeneralPreferences.h; sourceTree = "<group>"; };
-		1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVGeneralPreferences.m; sourceTree = "<group>"; };
+		1CBC630905489484009E59E1 /* JVGeneralPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVGeneralPreferencesViewController.h; sourceTree = "<group>"; };
+		1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVGeneralPreferencesViewController.m; sourceTree = "<group>"; };
 		1CBC63180548975E009E59E1 /* GeneralPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = GeneralPreferences.png; path = "Resources/Preference Related/GeneralPreferences.png"; sourceTree = "<group>"; };
 		1CBC634805489BEE009E59E1 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVGeneralPreferences.nib; sourceTree = "<group>"; };
 		1CBECD660508C61B000001C8 /* showdrawer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = showdrawer.png; path = "Resources/Toolbar Icons/showdrawer.png"; sourceTree = SOURCE_ROOT; };
@@ -1311,8 +1311,8 @@
 		1CBC62F405488D5A009E59E1 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
-				1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */,
-				1CBC630905489484009E59E1 /* JVGeneralPreferences.h */,
+				1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */,
+				1CBC630905489484009E59E1 /* JVGeneralPreferencesViewController.h */,
 				1C6A40C8083FF6C600572AB6 /* JVInterfacePreferences.m */,
 				1C6A40C7083FF6C600572AB6 /* JVInterfacePreferences.h */,
 				1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */,
@@ -2350,7 +2350,7 @@
 				1CB4DCB10536282B0080D36F /* JVChatRoomInspector.m in Sources */,
 				1C8BDCF4054345160035B84A /* JVChatUserInspector.m in Sources */,
 				1CBC62E505488C73009E59E1 /* JVPreferencesController.m in Sources */,
-				1CBC630C05489484009E59E1 /* JVGeneralPreferences.m in Sources */,
+				1CBC630C05489484009E59E1 /* JVGeneralPreferencesViewController.m in Sources */,
 				1CC6FC530549FCD80075807C /* JVAppearancePreferences.m in Sources */,
 				1CC6FC570549FDD70075807C /* JVBehaviorPreferences.m in Sources */,
 				1CC6FD65054B70BC0075807C /* JVFontPreviewField.m in Sources */,
