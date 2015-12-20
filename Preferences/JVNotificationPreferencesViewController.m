@@ -18,6 +18,7 @@
 @property(nonatomic, strong) IBOutlet NSButton *onlyIfBackground;
 @property(nonatomic, strong) IBOutlet NSButton *keepOnScreen;
 
+- (void) initializeFromDefaults;
 
 - (IBAction) switchEvent:(id) sender;
 

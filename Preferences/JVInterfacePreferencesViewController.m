@@ -40,6 +40,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 @property(nonatomic, strong) IBOutlet NSPopUpButton *ruleOperation;
 @property(nonatomic, strong) IBOutlet NSButton *ignoreCase;
 
+- (void) initializeFromDefaults;
 
 - (NSMutableArray *) selectedRules;
 - (NSMutableArray *) editingCriterion;

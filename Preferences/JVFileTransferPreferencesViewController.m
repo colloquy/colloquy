@@ -10,6 +10,8 @@
 @property(nonatomic, strong) IBOutlet NSTextField *maxRate;
 @property(nonatomic, strong) IBOutlet NSButton *autoOpenPorts;
 
+- (void) initializeFromDefaults;
+
 - (IBAction) changePortRange:(id) sender;
 - (IBAction) changeAutoOpenPorts:(id) sender;
 - (IBAction) changeSaveDownloads:(id) sender;

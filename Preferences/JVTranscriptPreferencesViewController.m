@@ -5,6 +5,8 @@
 
 @property(nonatomic, strong) IBOutlet NSPopUpButton *transcriptFolder;
 
+- (void) initializeFromDefaults;
+
 - (IBAction) changeTranscriptFolder:(id) sender;
 
 - (void) saveDownloadsOpenPanelDidEnd:(NSOpenPanel *) sheet
@@ -63,6 +65,7 @@
 	[self.transcriptFolder selectItem:menuItem];
 }
 
+
 #pragma mark -
 
 - (IBAction) changeTranscriptFolder:(id) sender {
@@ -95,4 +98,5 @@
 
 	[self.transcriptFolder selectItemAtIndex:[self.transcriptFolder indexOfItemWithTag:2]];
 }
+
 @end

@@ -47,6 +47,8 @@
 
 - (void) setStyle:(JVStyle *) style;
 
+- (void) initializeFromDefaults;
+
 - (void) changePreferences;
 
 - (IBAction) changeBaseFontSize:(id) sender;
