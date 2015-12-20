@@ -293,6 +293,7 @@
 		C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; };
 		C22A35571BC00BB7001757D7 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C22A35781BC0378A001757D7 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */; settings = {ASSET_TAGS = (); }; };
+		C2505D8B1BD3A6F400F663F3 /* JVBehaviorPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C2505D8A1BD3A6F400F663F3 /* JVBehaviorPreferences.m */; settings = {ASSET_TAGS = (); }; };
 		C26126551BD2B92F00B7AF87 /* JVNotificationPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26126541BD2B92F00B7AF87 /* JVNotificationPreferences.m */; settings = {ASSET_TAGS = (); }; };
 		C26126571BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26126561BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
 		C261265A1BD2E9AF00B7AF87 /* JVFileTransferPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26126591BD2E9AF00B7AF87 /* JVFileTransferPreferences.m */; settings = {ASSET_TAGS = (); }; };
@@ -1009,6 +1010,8 @@
 		C207B61E1BC96B6A00921E60 /* JVInterfacePreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVInterfacePreferencesViewController.xib; sourceTree = "<group>"; };
 		C22A35761BC0378A001757D7 /* JVGeneralPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVGeneralPreferences.h; sourceTree = "<group>"; };
 		C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVGeneralPreferences.m; sourceTree = "<group>"; };
+		C2505D891BD3A6F400F663F3 /* JVBehaviorPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVBehaviorPreferences.h; sourceTree = "<group>"; };
+		C2505D8A1BD3A6F400F663F3 /* JVBehaviorPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVBehaviorPreferences.m; sourceTree = "<group>"; };
 		C26126531BD2B92F00B7AF87 /* JVNotificationPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVNotificationPreferences.h; sourceTree = "<group>"; };
 		C26126541BD2B92F00B7AF87 /* JVNotificationPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVNotificationPreferences.m; sourceTree = "<group>"; };
 		C26126561BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVNotificationPreferencesViewController.xib; sourceTree = "<group>"; };
@@ -1353,6 +1356,8 @@
 				C26126591BD2E9AF00B7AF87 /* JVFileTransferPreferences.m */,
 				C261265D1BD300B400B7AF87 /* JVTranscriptPreferences.h */,
 				C261265E1BD300B400B7AF87 /* JVTranscriptPreferences.m */,
+				C2505D891BD3A6F400F663F3 /* JVBehaviorPreferences.h */,
+				C2505D8A1BD3A6F400F663F3 /* JVBehaviorPreferences.m */,
 				1CBC630905489484009E59E1 /* JVGeneralPreferencesViewController.h */,
 				1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */,
 				C2BE9F0F1BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib */,
@@ -2438,6 +2443,7 @@
 				1C2391AA0677E6B7000E89A7 /* JVChatTabItem.m in Sources */,
 				1C96E93F06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m in Sources */,
 				1C6A112B06BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m in Sources */,
+				C2505D8B1BD3A6F400F663F3 /* JVBehaviorPreferences.m in Sources */,
 				C26B7A7C1BCA51D10085846F /* JVAppearancePreferences.m in Sources */,
 				1C4671E606D7759100071DC6 /* NSTextStorageAdditions.m in Sources */,
 				1CF803F1070C948000C9B54C /* NSURLAdditions.m in Sources */,
