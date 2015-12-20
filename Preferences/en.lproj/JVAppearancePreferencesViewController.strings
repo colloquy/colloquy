@@ -17,9 +17,6 @@
 /* Class = "NSButtonCell"; title = "Select Font…"; ObjectID = "4qc-yb-aCE"; */
 "4qc-yb-aCE.title" = "Select Font…";
 
-/* Class = "NSMenu"; title = "OtherViews"; ObjectID = "5ff-Ef-vDK"; */
-"5ff-Ef-vDK.title" = "OtherViews";
-
 /* Class = "NSTextFieldCell"; title = "Incoming Messages:"; ObjectID = "721-e2-eFY"; */
 "721-e2-eFY.title" = "Incoming Messages:";
 
@@ -38,15 +35,6 @@
 /* Class = "NSButtonCell"; title = "Strip message colors"; ObjectID = "R9j-pe-q5N"; */
 "R9j-pe-q5N.title" = "Strip message colors";
 
-/* Class = "NSBox"; title = "Box"; ObjectID = "WKL-Jk-9UL"; */
-"WKL-Jk-9UL.title" = "Box";
-
-/* Class = "NSBox"; title = "Box"; ObjectID = "cCl-sv-ahN"; */
-"cCl-sv-ahN.title" = "Box";
-
-/* Class = "NSTextFieldCell"; title = "9"; ObjectID = "du4-6h-VHv"; */
-"du4-6h-VHv.title" = "9";
-
 /* Class = "NSButtonCell"; title = "Use the active Style's base font"; ObjectID = "eVG-sc-0WR"; */
 "eVG-sc-0WR.title" = "Use the active Style's base font";
 
@@ -56,23 +44,14 @@
 /* Class = "NSButtonCell"; title = "Customize Style…"; ObjectID = "fN5-9h-c8n"; */
 "fN5-9h-c8n.title" = "Customize Style…";
 
-/* Class = "NSTextFieldCell"; title = "9"; ObjectID = "fqq-Bd-670"; */
-"fqq-Bd-670.title" = "9";
-
 /* Class = "NSButtonCell"; title = "Strip message text formatting"; ObjectID = "ph5-8Q-adB"; */
 "ph5-8Q-adB.title" = "Strip message text formatting";
-
-/* Class = "NSBox"; title = "Box"; ObjectID = "qit-ud-DNv"; */
-"qit-ud-DNv.title" = "Box";
 
 /* Class = "NSTextFieldCell"; title = "Chat Input Boxes:"; ObjectID = "r6b-yk-1K1"; */
 "r6b-yk-1K1.title" = "Chat Input Boxes:";
 
 /* Class = "NSTextFieldCell"; title = "Base Font Size:"; ObjectID = "seZ-92-AGg"; */
 "seZ-92-AGg.title" = "Base Font Size:";
-
-/* Class = "NSMenu"; title = "OtherViews"; ObjectID = "xhT-Au-Dar"; */
-"xhT-Au-Dar.title" = "OtherViews";
 
 /* Class = "NSTextFieldCell"; title = "Emoticons:"; ObjectID = "yFb-BB-fPV"; */
 "yFb-BB-fPV.title" = "Emoticons:";
