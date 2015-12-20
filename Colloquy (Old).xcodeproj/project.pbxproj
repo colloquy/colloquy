@@ -234,7 +234,7 @@
 		1CD4BD9D05AA773800F72EE6 /* favorites.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD4BD9B05AA773800F72EE6 /* favorites.png */; };
 		1CD4BD9E05AA773800F72EE6 /* favoritesPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD4BD9C05AA773800F72EE6 /* favoritesPressed.png */; };
 		1CD733CC05A0E2470080F952 /* JVChatMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD733CA05A0E2470080F952 /* JVChatMessage.m */; };
-		1CDEE25E05823C26000B9075 /* JVFileTransferPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE25605823C13000B9075 /* JVFileTransferPreferences.m */; };
+		1CDEE25E05823C26000B9075 /* JVFileTransferPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE25605823C13000B9075 /* JVFileTransferPreferencesViewController.m */; };
 		1CDEE47A0583DC58000B9075 /* JVBuddyInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE4780583DC58000B9075 /* JVBuddyInspector.m */; };
 		1CDEE48D0583E268000B9075 /* JVBuddyInspector.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEE48B0583E268000B9075 /* JVBuddyInspector.nib */; };
 		1CDEE8C505878D30000B9075 /* InterfacePreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEE8260586C723000B9075 /* InterfacePreferences.png */; };
@@ -796,8 +796,8 @@
 		1CD9DF6507D934F70006BB99 /* Colloquy.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Colloquy.sdef; path = Resources/Colloquy.sdef; sourceTree = "<group>"; };
 		1CDDCF830716208300FE11C3 /* MVChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatRoom.h; path = "Chat Core/MVChatRoom.h"; sourceTree = "<group>"; };
 		1CDDCF840716208300FE11C3 /* MVChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUser.h; path = "Chat Core/MVChatUser.h"; sourceTree = "<group>"; };
-		1CDEE25505823C13000B9075 /* JVFileTransferPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVFileTransferPreferences.h; sourceTree = "<group>"; };
-		1CDEE25605823C13000B9075 /* JVFileTransferPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFileTransferPreferences.m; sourceTree = "<group>"; };
+		1CDEE25505823C13000B9075 /* JVFileTransferPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVFileTransferPreferencesViewController.h; sourceTree = "<group>"; };
+		1CDEE25605823C13000B9075 /* JVFileTransferPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFileTransferPreferencesViewController.m; sourceTree = "<group>"; };
 		1CDEE4770583DC58000B9075 /* JVBuddyInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVBuddyInspector.h; path = Inspectors/JVBuddyInspector.h; sourceTree = "<group>"; };
 		1CDEE4780583DC58000B9075 /* JVBuddyInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVBuddyInspector.m; path = Inspectors/JVBuddyInspector.m; sourceTree = "<group>"; };
 		1CDEE48C0583E268000B9075 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVBuddyInspector.nib; sourceTree = "<group>"; };
@@ -1351,8 +1351,8 @@
 				1C9982000603EFD6006C6417 /* JVNotificationPreferencesViewController.h */,
 				1C9982010603EFD6006C6417 /* JVNotificationPreferencesViewController.m */,
 				C26126561BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib */,
-				1CDEE25605823C13000B9075 /* JVFileTransferPreferences.m */,
-				1CDEE25505823C13000B9075 /* JVFileTransferPreferences.h */,
+				1CDEE25505823C13000B9075 /* JVFileTransferPreferencesViewController.h */,
+				1CDEE25605823C13000B9075 /* JVFileTransferPreferencesViewController.m */,
 				1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferences.m */,
 				1C96E93C06AADBBD0013B0A9 /* JVTranscriptPreferences.h */,
 				1CC6FC550549FDD70075807C /* JVBehaviorPreferences.m */,
@@ -2392,7 +2392,7 @@
 				1CC6FD65054B70BC0075807C /* JVFontPreviewField.m in Sources */,
 				1CD0201305758CE7000F93B4 /* MVBuddyListController.m in Sources */,
 				1CEE3F06057AEC0200AD6DE2 /* JVBuddy.m in Sources */,
-				1CDEE25E05823C26000B9075 /* JVFileTransferPreferences.m in Sources */,
+				1CDEE25E05823C26000B9075 /* JVFileTransferPreferencesViewController.m in Sources */,
 				1CDEE47A0583DC58000B9075 /* JVBuddyInspector.m in Sources */,
 				1CD733CC05A0E2470080F952 /* JVChatMessage.m in Sources */,
 				1C6EA24405A738DD006A559F /* JVChatRoomBrowser.m in Sources */,
