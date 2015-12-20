@@ -122,7 +122,7 @@
 		1C9014C107A2D798002942A7 /* MVChatUserAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9014BF07A2D798002942A7 /* MVChatUserAdditions.m */; };
 		1C94370B0639F86700618CD9 /* JVMarkedScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9437090639F86700618CD9 /* JVMarkedScroller.m */; };
 		1C96E93306AAD81B0013B0A9 /* JVTranscriptPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C96E93106AAD81B0013B0A9 /* JVTranscriptPreferences.nib */; };
-		1C96E93F06AADBBD0013B0A9 /* JVTranscriptPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferences.m */; };
+		1C96E93F06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m */; };
 		1C96E95906AAEC280013B0A9 /* TranscriptPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C96E95806AAEC280013B0A9 /* TranscriptPreferences.png */; };
 		1C9981FA0603EF2F006C6417 /* NotificationPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9981F90603EF2F006C6417 /* NotificationPreferences.png */; };
 		1C9982030603EFD6006C6417 /* JVNotificationPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9982010603EFD6006C6417 /* JVNotificationPreferencesViewController.m */; };
@@ -637,8 +637,8 @@
 		1C9437080639F86700618CD9 /* JVMarkedScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVMarkedScroller.h; path = Views/JVMarkedScroller.h; sourceTree = "<group>"; };
 		1C9437090639F86700618CD9 /* JVMarkedScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVMarkedScroller.m; path = Views/JVMarkedScroller.m; sourceTree = "<group>"; };
 		1C96E93206AAD81B0013B0A9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVTranscriptPreferences.nib; sourceTree = "<group>"; };
-		1C96E93C06AADBBD0013B0A9 /* JVTranscriptPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVTranscriptPreferences.h; sourceTree = "<group>"; };
-		1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVTranscriptPreferences.m; sourceTree = "<group>"; };
+		1C96E93C06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVTranscriptPreferencesViewController.h; sourceTree = "<group>"; };
+		1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVTranscriptPreferencesViewController.m; sourceTree = "<group>"; };
 		1C96E95806AAEC280013B0A9 /* TranscriptPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TranscriptPreferences.png; path = "Resources/Preference Related/TranscriptPreferences.png"; sourceTree = "<group>"; };
 		1C9981F90603EF2F006C6417 /* NotificationPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NotificationPreferences.png; path = "Resources/Preference Related/NotificationPreferences.png"; sourceTree = "<group>"; };
 		1C9982000603EFD6006C6417 /* JVNotificationPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVNotificationPreferencesViewController.h; sourceTree = "<group>"; };
@@ -1361,8 +1361,8 @@
 				1CDEE25505823C13000B9075 /* JVFileTransferPreferencesViewController.h */,
 				1CDEE25605823C13000B9075 /* JVFileTransferPreferencesViewController.m */,
 				C261265B1BD2EAC400B7AF87 /* JVFileTransferPreferencesViewController.xib */,
-				1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferences.m */,
-				1C96E93C06AADBBD0013B0A9 /* JVTranscriptPreferences.h */,
+				1C96E93C06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.h */,
+				1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m */,
 				1CC6FC550549FDD70075807C /* JVBehaviorPreferences.m */,
 				1CC6FC540549FDD70075807C /* JVBehaviorPreferences.h */,
 			);
@@ -2426,7 +2426,7 @@
 				1C0730D406777678008D8AD9 /* ESFloater.m in Sources */,
 				1C0730E50677A63B008D8AD9 /* NSImageAdditions.m in Sources */,
 				1C2391AA0677E6B7000E89A7 /* JVChatTabItem.m in Sources */,
-				1C96E93F06AADBBD0013B0A9 /* JVTranscriptPreferences.m in Sources */,
+				1C96E93F06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m in Sources */,
 				1C6A112B06BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m in Sources */,
 				C26B7A7C1BCA51D10085846F /* JVAppearancePreferences.m in Sources */,
 				1C4671E606D7759100071DC6 /* NSTextStorageAdditions.m in Sources */,
