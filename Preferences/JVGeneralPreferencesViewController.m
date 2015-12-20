@@ -27,7 +27,7 @@ extern const NSStringEncoding JVAllowedTextEncodings[];
 
 @interface JVGeneralPreferencesViewController()
 
-@property(nonatomic, weak) IBOutlet NSPopUpButton *encoding;
+@property(nonatomic, weak) IBOutlet NSPopUpButton *encodingPopUpButton;
 
 - (void) buildEncodingMenu;
 
@@ -92,7 +92,7 @@ extern const NSStringEncoding JVAllowedTextEncodings[];
 	}
 
 	[menu setAutoenablesItems:NO];
-	[self.encoding setMenu:menu];
+	[self.encodingPopUpButton setMenu:menu];
 }
 
 @end
