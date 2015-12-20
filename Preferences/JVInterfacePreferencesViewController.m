@@ -21,24 +21,24 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 @property(nonatomic, assign) BOOL makingNewRuleSet;
 
 
-@property(nonatomic, weak) IBOutlet NSTableView *windowSetsTable;
-@property(nonatomic, weak) IBOutlet NSTableView *rulesTable;
-@property(nonatomic, weak) IBOutlet NSButton *deleteWindowButton;
-@property(nonatomic, weak) IBOutlet NSButton *editWindowButton;
-@property(nonatomic, weak) IBOutlet NSButton *deleteRuleButton;
-@property(nonatomic, weak) IBOutlet NSButton *editRuleButton;
-@property(nonatomic, weak) IBOutlet NSPopUpButton *drawerSide;
-@property(nonatomic, weak) IBOutlet NSPopUpButton *interfaceStyle;
+@property(nonatomic, strong) IBOutlet NSTableView *windowSetsTable;
+@property(nonatomic, strong) IBOutlet NSTableView *rulesTable;
+@property(nonatomic, strong) IBOutlet NSButton *deleteWindowButton;
+@property(nonatomic, strong) IBOutlet NSButton *editWindowButton;
+@property(nonatomic, strong) IBOutlet NSButton *deleteRuleButton;
+@property(nonatomic, strong) IBOutlet NSButton *editRuleButton;
+@property(nonatomic, strong) IBOutlet NSPopUpButton *drawerSide;
+@property(nonatomic, strong) IBOutlet NSPopUpButton *interfaceStyle;
 
-@property(nonatomic, weak) IBOutlet NSPanel *windowEditPanel;
-@property(nonatomic, weak) IBOutlet NSTextField *windowTitle;
-@property(nonatomic, weak) IBOutlet NSButton *rememberPanels;
-@property(nonatomic, weak) IBOutlet NSButton *windowEditSaveButton;
+@property(nonatomic, strong) IBOutlet NSPanel *windowEditPanel;
+@property(nonatomic, strong) IBOutlet NSTextField *windowTitle;
+@property(nonatomic, strong) IBOutlet NSButton *rememberPanels;
+@property(nonatomic, strong) IBOutlet NSButton *windowEditSaveButton;
 
-@property(nonatomic, weak) IBOutlet NSWindow *ruleEditPanel;
-@property(nonatomic, weak) IBOutlet NSTableView *ruleEditTable;
-@property(nonatomic, weak) IBOutlet NSPopUpButton *ruleOperation;
-@property(nonatomic, weak) IBOutlet NSButton *ignoreCase;
+@property(nonatomic, strong) IBOutlet NSWindow *ruleEditPanel;
+@property(nonatomic, strong) IBOutlet NSTableView *ruleEditTable;
+@property(nonatomic, strong) IBOutlet NSPopUpButton *ruleOperation;
+@property(nonatomic, strong) IBOutlet NSButton *ignoreCase;
 
 
 - (NSMutableArray *) selectedRules;
