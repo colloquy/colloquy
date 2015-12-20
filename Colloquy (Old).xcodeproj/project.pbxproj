@@ -1030,6 +1030,15 @@
 		C26126591BD2E9AF00B7AF87 /* JVFileTransferPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFileTransferPreferences.m; sourceTree = "<group>"; };
 		C261265D1BD300B400B7AF87 /* JVTranscriptPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVTranscriptPreferences.h; sourceTree = "<group>"; };
 		C261265E1BD300B400B7AF87 /* JVTranscriptPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVTranscriptPreferences.m; sourceTree = "<group>"; };
+		C26756161C2173CF0039BB6E /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C26756181C2173D30039BB6E /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C267561A1C2173E80039BB6E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C267561C1C2173EB0039BB6E /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C267561E1C2173EE0039BB6E /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C26756201C2173F10039BB6E /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C26756221C2173F30039BB6E /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVNotificationPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C26756241C2173F60039BB6E /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C26756261C2173F90039BB6E /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVNotificationPreferencesViewController.strings"; sourceTree = "<group>"; };
 		C26B7A7A1BCA51D10085846F /* JVAppearancePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppearancePreferences.h; sourceTree = "<group>"; };
 		C26B7A7B1BCA51D10085846F /* JVAppearancePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppearancePreferences.m; sourceTree = "<group>"; };
 		C27B6C081BDC0BD90017EDAF /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
@@ -2985,6 +2994,15 @@
 			children = (
 				C296541A1BDBA00400F28873 /* Base */,
 				C296542C1BDBA08300F28873 /* en */,
+				C26756161C2173CF0039BB6E /* nl */,
+				C26756181C2173D30039BB6E /* fr */,
+				C267561A1C2173E80039BB6E /* de */,
+				C267561C1C2173EB0039BB6E /* it */,
+				C267561E1C2173EE0039BB6E /* ja */,
+				C26756201C2173F10039BB6E /* nb */,
+				C26756221C2173F30039BB6E /* pt-PT */,
+				C26756241C2173F60039BB6E /* es */,
+				C26756261C2173F90039BB6E /* zh-Hant */,
 			);
 			name = JVNotificationPreferencesViewController.xib;
 			sourceTree = "<group>";
