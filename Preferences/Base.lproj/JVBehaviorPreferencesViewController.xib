@@ -19,7 +19,7 @@
             <rect key="frame" x="0.0" y="0.0" width="525" height="404"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jr3-PE-D0P">
-                    <rect key="frame" x="79.5" y="366" width="129" height="17"/>
+                    <rect key="frame" x="79" y="366" width="129" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="Press Return key to:" usesSingleLineMode="YES" id="UnW-il-L99">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -27,7 +27,7 @@
                     </textFieldCell>
                 </textField>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sOj-xs-7ry">
-                    <rect key="frame" x="212.5" y="360" width="234" height="26"/>
+                    <rect key="frame" x="212" y="360" width="234" height="26"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="rJ4-df-XaB"/>
                     </constraints>
@@ -47,7 +47,7 @@
                     </connections>
                 </popUpButton>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="We2-Qn-JpT">
-                    <rect key="frame" x="79.5" y="335" width="129" height="17"/>
+                    <rect key="frame" x="79" y="335" width="129" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="Press Enter key to:" usesSingleLineMode="YES" id="2Xv-k4-rwc">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -55,7 +55,7 @@
                     </textFieldCell>
                 </textField>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TpM-Ft-KD7">
-                    <rect key="frame" x="212.5" y="329" width="234" height="26"/>
+                    <rect key="frame" x="212" y="329" width="234" height="26"/>
                     <popUpButtonCell key="cell" type="push" title="Send a chat message" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingMiddle" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="kel-Q4-KwP" id="QSI-kG-5PV">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
@@ -72,7 +72,7 @@
                     </connections>
                 </popUpButton>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8Db-be-zmp">
-                    <rect key="frame" x="79.5" y="305" width="129" height="17"/>
+                    <rect key="frame" x="79" y="305" width="129" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="Send History:" usesSingleLineMode="YES" id="3L3-IE-DmA">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -80,7 +80,7 @@
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UHz-eX-dnM">
-                    <rect key="frame" x="214.5" y="302" width="25" height="22"/>
+                    <rect key="frame" x="214" y="302" width="25" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="25" id="Be7-T5-7WB"/>
                         <constraint firstAttribute="width" priority="500" constant="25" id="Jnh-9H-I4J"/>
@@ -109,7 +109,7 @@
                     </connections>
                 </textField>
                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6VO-T3-B5B">
-                    <rect key="frame" x="244.5" y="299" width="19" height="27"/>
+                    <rect key="frame" x="244" y="299" width="19" height="27"/>
                     <stepperCell key="cell" continuous="YES" alignment="left" maxValue="200" id="h2a-CX-Qzd"/>
                     <connections>
                         <binding destination="443" name="value" keyPath="values.JVChatMaximumHistory" id="7pa-Xr-gzc">
@@ -123,7 +123,7 @@
                     </connections>
                 </stepper>
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="41r-N3-XSB">
-                    <rect key="frame" x="287.5" y="296" width="158" height="28"/>
+                    <rect key="frame" x="287" y="296" width="158" height="28"/>
                     <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="left" title="Use the ⌥↑ &amp; ⌥↓ keys to cycle through sent messages" id="tWP-5e-QKx">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -131,7 +131,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="DL3-Ob-o1w">
-                    <rect key="frame" x="79.5" y="273" width="129" height="17"/>
+                    <rect key="frame" x="79" y="273" width="129" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="Message Scrollback:" usesSingleLineMode="YES" id="4aK-ze-JKp">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -139,7 +139,7 @@
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="B3H-bH-h9e" userLabel="Message Scrollback">
-                    <rect key="frame" x="214.5" y="270" width="40" height="22"/>
+                    <rect key="frame" x="214" y="270" width="40" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" priority="500" constant="40" id="EYo-Xq-R0l"/>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="THG-CJ-nak"/>
@@ -168,7 +168,7 @@
                     </connections>
                 </textField>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="7dm-Wx-rU1">
-                    <rect key="frame" x="212.5" y="246" width="233" height="18"/>
+                    <rect key="frame" x="212" y="246" width="233" height="18"/>
                     <buttonCell key="cell" type="check" title="Auto join chat rooms on invite" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="JQs-X4-QSI">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -188,7 +188,7 @@
                     </connections>
                 </button>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="ntx-rd-WOY">
-                    <rect key="frame" x="212.5" y="226" width="233" height="18"/>
+                    <rect key="frame" x="212" y="226" width="233" height="18"/>
                     <buttonCell key="cell" type="check" title="Auto rejoin when kicked from room" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="Db8-WZ-PVh">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -208,7 +208,7 @@
                     </connections>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="v8K-pM-zGz">
-                    <rect key="frame" x="230.5" y="201" width="38" height="17"/>
+                    <rect key="frame" x="230" y="201" width="38" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" title="After:" usesSingleLineMode="YES" id="ZtQ-oR-of1">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -216,7 +216,7 @@
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Sc0-RS-gSZ">
-                    <rect key="frame" x="274.5" y="198" width="25" height="22"/>
+                    <rect key="frame" x="274" y="198" width="25" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" priority="500" constant="25" id="902-0L-ZHK"/>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="25" id="XZn-gG-kmj"/>
@@ -239,7 +239,7 @@
                     </connections>
                 </textField>
                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yRR-Go-xBl">
-                    <rect key="frame" x="304.5" y="195" width="19" height="27"/>
+                    <rect key="frame" x="304" y="195" width="19" height="27"/>
                     <stepperCell key="cell" continuous="YES" alignment="left" maxValue="59" valueWraps="YES" id="7vB-9e-frw"/>
                     <connections>
                         <binding destination="443" name="value" keyPath="values.JVAutoRejoinRoomsDelay" id="l10-8D-SmM">
@@ -254,7 +254,7 @@
                     </connections>
                 </stepper>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8XZ-dK-IOa">
-                    <rect key="frame" x="326.5" y="201" width="56" height="17"/>
+                    <rect key="frame" x="326" y="201" width="56" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" title="seconds" usesSingleLineMode="YES" id="o2F-B5-aW5">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -262,7 +262,7 @@
                     </textFieldCell>
                 </textField>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="f2v-6P-mk9">
-                    <rect key="frame" x="212.5" y="174" width="233" height="18"/>
+                    <rect key="frame" x="212" y="174" width="233" height="18"/>
                     <buttonCell key="cell" type="check" title="Check spelling as you type" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="LkH-sq-XsW">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -282,7 +282,7 @@
                     </connections>
                 </button>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="IHa-rF-hY6">
-                    <rect key="frame" x="212.5" y="154" width="233" height="18"/>
+                    <rect key="frame" x="212" y="154" width="233" height="18"/>
                     <buttonCell key="cell" type="check" title="Detect natural language actions" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="fbp-R6-UMD">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -302,7 +302,7 @@
                     </connections>
                 </button>
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sez-Fr-ktd">
-                    <rect key="frame" x="230.5" y="106" width="215" height="42"/>
+                    <rect key="frame" x="230" y="106" width="215" height="42"/>
                     <textFieldCell key="cell" controlSize="small" enabled="NO" sendsActionOnEndEditing="YES" alignment="left" title="Automatically sends messages that begin with common action verbs as actions" id="dc5-nK-lqg">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -310,7 +310,7 @@
                     </textFieldCell>
                 </textField>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="aAh-lo-km8">
-                    <rect key="frame" x="212.5" y="82" width="233" height="18"/>
+                    <rect key="frame" x="212" y="82" width="233" height="18"/>
                     <buttonCell key="cell" type="check" title="Tab key triggers word completion" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="nbo-5A-7Fd">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -330,7 +330,7 @@
                     </connections>
                 </button>
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fBy-mt-i6g">
-                    <rect key="frame" x="230.5" y="20" width="215" height="56"/>
+                    <rect key="frame" x="230" y="20" width="215" height="56"/>
                     <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="left" id="4jp-UJ-tUu">
                         <font key="font" metaFont="smallSystem"/>
                         <string key="title">Also available by pressing F5 while typing.
@@ -346,13 +346,13 @@ Nickname tab completion is supported without this preference.</string>
                     </constraints>
                 </customView>
                 <customView horizontalCompressionResistancePriority="200" verticalCompressionResistancePriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="nW3-aJ-hsj">
-                    <rect key="frame" x="443.5" y="363" width="61.5" height="21"/>
+                    <rect key="frame" x="443" y="363" width="61.5" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="jne-8N-Mwl"/>
                     </constraints>
                 </customView>
                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Q2n-XT-BLx">
-                    <rect key="frame" x="259.5" y="267" width="19" height="27"/>
+                    <rect key="frame" x="259" y="267" width="19" height="27"/>
                     <stepperCell key="cell" continuous="YES" alignment="left" increment="25" maxValue="50000" id="05c-Ib-s3k"/>
                     <connections>
                         <binding destination="443" name="value" keyPath="values.JVChatScrollbackLimit" id="KGG-z3-DVO">

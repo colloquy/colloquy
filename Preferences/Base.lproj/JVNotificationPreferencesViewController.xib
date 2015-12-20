@@ -54,14 +54,6 @@
                         <action selector="saveHighlightWords:" target="-2" id="Kvc-PG-JoC"/>
                     </connections>
                 </textField>
-                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R0P-ep-A25">
-                    <rect key="frame" x="164" y="231" width="304" height="28"/>
-                    <textFieldCell key="cell" enabled="NO" sendsActionOnEndEditing="YES" alignment="left" title="Messages containing any of your typed words will be highlighted (if the active style supports highlights)." id="wu5-IV-6xo">
-                        <font key="font" metaFont="smallSystem"/>
-                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
                 <button horizontalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="a4X-hz-pMN">
                     <rect key="frame" x="164" y="207" width="304" height="18"/>
                     <buttonCell key="cell" type="check" title="Mute all notification sounds" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="OPA-kQ-uIg">
@@ -209,6 +201,14 @@
                         <constraint firstAttribute="height" constant="21" id="vyI-6y-ooA"/>
                     </constraints>
                 </customView>
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R0P-ep-A25">
+                    <rect key="frame" x="164" y="231" width="304" height="28"/>
+                    <textFieldCell key="cell" controlSize="small" enabled="NO" sendsActionOnEndEditing="YES" alignment="left" title="Messages containing any of your typed words will be highlighted (if the active style supports highlights)." id="wu5-IV-6xo">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
             <constraints>
                 <constraint firstItem="R1c-9i-m39" firstAttribute="leading" secondItem="HRj-Di-g8t" secondAttribute="trailing" constant="8" symbolic="YES" id="1yE-uZ-b7V"/>

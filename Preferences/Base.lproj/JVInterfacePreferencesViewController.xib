@@ -28,7 +28,7 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <view translatesAutoresizingMaskIntoConstraints="NO" id="cXD-3y-f4D" userLabel="Interface Preferences">
-            <rect key="frame" x="0.0" y="0.0" width="525" height="492"/>
+            <rect key="frame" x="0.0" y="0.0" width="525" height="494"/>
             <subviews>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3kZ-4n-JGL">
                     <rect key="frame" x="239" y="180" width="239" height="26"/>
@@ -124,9 +124,9 @@
                     </connections>
                 </button>
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KEM-st-9i2">
-                    <rect key="frame" x="18" y="446" width="489" height="26"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="Hkt-sW-eRK">
-                        <font key="font" metaFont="label"/>
+                    <rect key="frame" x="18" y="446" width="489" height="28"/>
+                    <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" id="Hkt-sW-eRK">
+                        <font key="font" metaFont="smallSystem"/>
                         <string key="title">Panels will be grouped in windows based on the rule sets below.
 A new window will be opened if no rule sets apply.</string>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -513,7 +513,7 @@ A new window will be opened if no rule sets apply.</string>
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="507" y="292" width="382" height="125"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="76">
                 <rect key="frame" x="0.0" y="0.0" width="382" height="125"/>
@@ -594,7 +594,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="233" y="313" width="514" height="122"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="90">
                 <rect key="frame" x="0.0" y="0.0" width="514" height="122"/>

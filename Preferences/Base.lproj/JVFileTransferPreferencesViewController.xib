@@ -18,10 +18,10 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <userDefaultsController representsSharedInstance="YES" id="138" userLabel="Shared Defaults"/>
         <view translatesAutoresizingMaskIntoConstraints="NO" id="fld-7a-KxG">
-            <rect key="frame" x="0.0" y="0.0" width="525" height="387"/>
+            <rect key="frame" x="0.0" y="0.0" width="525" height="409"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5xU-yH-03d">
-                    <rect key="frame" x="60" y="349" width="164" height="17"/>
+                    <rect key="frame" x="60" y="371" width="164" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="Auto accept files from:" usesSingleLineMode="YES" id="cOx-pj-7fV">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -29,7 +29,7 @@
                     </textFieldCell>
                 </textField>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="DQu-SP-PbS">
-                    <rect key="frame" x="228" y="343" width="238" height="26"/>
+                    <rect key="frame" x="228" y="365" width="238" height="26"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="W6N-0h-mRd"/>
                     </constraints>
@@ -60,7 +60,7 @@
                     </connections>
                 </popUpButton>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jxe-Oi-O13">
-                    <rect key="frame" x="60" y="318" width="164" height="17"/>
+                    <rect key="frame" x="60" y="340" width="164" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="If files already exist:" usesSingleLineMode="YES" id="crQ-ds-MM5">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -68,7 +68,7 @@
                     </textFieldCell>
                 </textField>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9Ul-65-IA6">
-                    <rect key="frame" x="228" y="312" width="238" height="26"/>
+                    <rect key="frame" x="228" y="334" width="238" height="26"/>
                     <popUpButtonCell key="cell" type="push" title="Ask Every Time" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="4" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="MDy-cK-h3Q" id="knU-2d-bEy">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
@@ -97,7 +97,7 @@
                     </connections>
                 </popUpButton>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="M2q-wB-ogj">
-                    <rect key="frame" x="60" y="287" width="164" height="17"/>
+                    <rect key="frame" x="60" y="309" width="164" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="Save downloaded files to:" usesSingleLineMode="YES" id="WCK-qb-Mqs">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -105,7 +105,7 @@
                     </textFieldCell>
                 </textField>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MRh-Gf-QeM">
-                    <rect key="frame" x="228" y="281" width="238" height="26"/>
+                    <rect key="frame" x="228" y="303" width="238" height="26"/>
                     <popUpButtonCell key="cell" type="push" title="Ask Every Time" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="Xwu-lJ-YF3" id="3QQ-ss-Pv0">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
@@ -137,7 +137,7 @@
                     </popUpButtonCell>
                 </popUpButton>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="i9S-pg-1lR">
-                    <rect key="frame" x="60" y="256" width="164" height="17"/>
+                    <rect key="frame" x="60" y="278" width="164" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="Remove transferred items:" usesSingleLineMode="YES" id="dh9-nC-zhV">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -145,7 +145,7 @@
                     </textFieldCell>
                 </textField>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fJP-fW-WJt">
-                    <rect key="frame" x="228" y="250" width="238" height="26"/>
+                    <rect key="frame" x="228" y="272" width="238" height="26"/>
                     <popUpButtonCell key="cell" type="push" title="When Colloquy Quits" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="Cve-pv-DRB" id="u2C-u6-x6X">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
@@ -172,7 +172,7 @@
                     </connections>
                 </popUpButton>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="5bY-xX-dkL">
-                    <rect key="frame" x="228" y="229" width="237" height="18"/>
+                    <rect key="frame" x="228" y="251" width="237" height="18"/>
                     <buttonCell key="cell" type="check" title="Open &quot;safe&quot; files after downloading" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="wtZ-ek-f8M">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -193,21 +193,21 @@
                     </connections>
                 </button>
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ksr-KD-i39">
-                    <rect key="frame" x="246" y="184" width="219" height="39"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="“Safe” files include movies, pictures, sounds, PDF and text documents, disk images and other archive formats." id="OM2-Wq-fbw">
-                        <font key="font" metaFont="label"/>
+                    <rect key="frame" x="246" y="203" width="219" height="42"/>
+                    <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="left" title="“Safe” files include movies, pictures, sounds, PDF and text documents, disk images and other archive formats." id="OM2-Wq-fbw">
+                        <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
                 <box verticalHuggingPriority="750" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="GgS-KG-JIR">
-                    <rect key="frame" x="20" y="173" width="485" height="5"/>
+                    <rect key="frame" x="20" y="192" width="485" height="5"/>
                     <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <font key="titleFont" metaFont="system"/>
                 </box>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="b5V-Gv-2fU">
-                    <rect key="frame" x="60" y="148" width="164" height="17"/>
+                    <rect key="frame" x="60" y="167" width="164" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="File transfer port range:" usesSingleLineMode="YES" id="eqU-Nn-bv5">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -215,7 +215,7 @@
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Z6W-s1-NRW">
-                    <rect key="frame" x="230" y="145" width="40" height="22"/>
+                    <rect key="frame" x="230" y="164" width="40" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="MOq-pA-U3E"/>
                         <constraint firstAttribute="width" priority="500" constant="40" id="roe-Up-dDN"/>
@@ -238,7 +238,7 @@
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9d4-SY-QFs">
-                    <rect key="frame" x="276" y="148" width="17" height="17"/>
+                    <rect key="frame" x="276" y="167" width="17" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="left" title="to" usesSingleLineMode="YES" id="bxk-I1-QAg">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -246,7 +246,7 @@
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="spa-BW-28g">
-                    <rect key="frame" x="299" y="145" width="40" height="22"/>
+                    <rect key="frame" x="299" y="164" width="40" height="22"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="pPX-Zf-ZfD">
                         <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="#" negativeFormat="#" localizesFormat="NO" hasThousandSeparators="NO" thousandSeparator="," id="DhL-On-Mhd">
                             <attributedString key="attributedStringForZero">
@@ -265,7 +265,7 @@
                     </connections>
                 </textField>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="uMh-0M-due">
-                    <rect key="frame" x="228" y="121" width="237" height="18"/>
+                    <rect key="frame" x="228" y="140" width="237" height="18"/>
                     <buttonCell key="cell" type="check" title="Automatically open ports in router" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="5DW-mg-u7k">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -275,15 +275,15 @@
                     </connections>
                 </button>
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dZl-CQ-p9x">
-                    <rect key="frame" x="246" y="89" width="219" height="26"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Requires a router that supports NAT-PMP or UPnP." id="tqu-1q-aXX">
-                        <font key="font" metaFont="label"/>
+                    <rect key="frame" x="246" y="106" width="219" height="28"/>
+                    <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" title="Requires a router that supports NAT-PMP or UPnP." id="tqu-1q-aXX">
+                        <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="5FD-6y-Ydh">
-                    <rect key="frame" x="228" y="65" width="237" height="18"/>
+                    <rect key="frame" x="228" y="82" width="237" height="18"/>
                     <buttonCell key="cell" type="check" title="Send files passively by default" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="YcT-g2-fHv">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -304,9 +304,9 @@
                     </connections>
                 </button>
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F8y-e5-iVv">
-                    <rect key="frame" x="246" y="20" width="219" height="39"/>
-                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="u9L-og-Bev">
-                        <font key="font" metaFont="label"/>
+                    <rect key="frame" x="246" y="20" width="219" height="56"/>
+                    <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="left" id="u9L-og-Bev">
+                        <font key="font" metaFont="smallSystem"/>
                         <string key="title">Passive transfers allow files to be sent without the need to open up ports in your firewall or router—the receiver will need to.</string>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -319,13 +319,13 @@
                     <font key="titleFont" metaFont="system"/>
                 </box>
                 <customView horizontalCompressionResistancePriority="200" verticalCompressionResistancePriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="87R-ta-zwl">
-                    <rect key="frame" x="463" y="346" width="42" height="21"/>
+                    <rect key="frame" x="463" y="368" width="42" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="cbf-Qm-JYu"/>
                     </constraints>
                 </customView>
                 <customView horizontalCompressionResistancePriority="200" verticalCompressionResistancePriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="M3i-UM-Iqa">
-                    <rect key="frame" x="20" y="346" width="42" height="21"/>
+                    <rect key="frame" x="20" y="368" width="42" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="nU6-cC-yaR"/>
                     </constraints>
