@@ -1,12 +1,8 @@
-#import "NSPreferences.h"
+#import <Cocoa/Cocoa.h>
 
-@interface JVFileTransferPreferences : NSPreferencesModule <NSOpenSavePanelDelegate> {
-	IBOutlet NSPopUpButton *saveDownloads;
-	IBOutlet NSTextField *minRate;
-	IBOutlet NSTextField *maxRate;
-	IBOutlet NSButton *autoOpenPorts;
-}
-- (IBAction) changePortRange:(id) sender;
-- (IBAction) changeAutoOpenPorts:(id) sender;
-- (IBAction) changeSaveDownloads:(id) sender;
+#import <MASPreferences.h>
+
+
+@interface JVFileTransferPreferencesViewController : NSViewController <MASPreferencesViewController>
+
 @end
