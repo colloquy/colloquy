@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
@@ -27,7 +27,7 @@
                 </textField>
                 <button allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="u8i-Ae-TPC">
                     <rect key="frame" x="168" y="74" width="304" height="18"/>
-                    <buttonCell key="cell" type="check" title="Automatically check for new versions" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingTail" inset="2" id="uCF-5N-OYF">
+                    <buttonCell key="cell" type="check" title="Automatically check for new versions" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="uCF-5N-OYF">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -108,7 +108,7 @@
                 </textField>
                 <button allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xd8-ho-Gzl">
                     <rect key="frame" x="168" y="18" width="304" height="18"/>
-                    <buttonCell key="cell" type="check" title="Send anonymous system profile" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingTail" inset="2" id="721-dp-qrR">
+                    <buttonCell key="cell" type="check" title="Send anonymous system profile" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="721-dp-qrR">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -132,7 +132,7 @@
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="cFq-gs-njY"/>
                     </constraints>
-                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" id="jSO-Op-49l">
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingMiddle" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" id="jSO-Op-49l">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
                         <menu key="menu" id="55l-CR-5IJ"/>
@@ -183,7 +183,6 @@
                 <constraint firstItem="Rp5-yL-CD9" firstAttribute="leading" secondItem="u8i-Ae-TPC" secondAttribute="leading" constant="18" id="WZd-8b-uOZ"/>
                 <constraint firstItem="YSf-4o-yE3" firstAttribute="baseline" secondItem="iZD-D6-0bD" secondAttribute="baseline" id="X6Q-Ph-K7g"/>
                 <constraint firstItem="Cut-cn-ZRo" firstAttribute="baseline" secondItem="iIN-eV-gsO" secondAttribute="baseline" id="XtJ-YJ-4bq"/>
-                <constraint firstItem="Rp5-yL-CD9" firstAttribute="trailing" secondItem="Cut-cn-ZRo" secondAttribute="trailing" id="YH7-Cl-7iE"/>
                 <constraint firstAttribute="bottom" secondItem="Xd8-ho-Gzl" secondAttribute="bottom" constant="20" symbolic="YES" id="ZoC-hT-0HD"/>
                 <constraint firstItem="iZD-D6-0bD" firstAttribute="leading" secondItem="iIN-eV-gsO" secondAttribute="leading" id="eRE-cK-b1L"/>
                 <constraint firstItem="dLV-eS-VOD" firstAttribute="baseline" secondItem="kca-Eg-VPY" secondAttribute="baseline" id="ex2-HP-Hew"/>
