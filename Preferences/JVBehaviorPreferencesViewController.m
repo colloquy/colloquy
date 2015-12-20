@@ -27,7 +27,7 @@
 #pragma mark - MASPreferencesViewController
 
 - (NSString *) identifier {
-	return @"JVBehaviorPreferences";
+	return @"JVBehaviorPreferencesViewController";
 }
 
 - (NSImage *) toolbarItemImage {
