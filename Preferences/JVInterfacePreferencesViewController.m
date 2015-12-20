@@ -10,15 +10,16 @@
 static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePreferencesWindowDragPboardType";
 
 
-@interface JVInterfacePreferencesViewController() <NSTableViewDataSource, NSTableViewDelegate> {
-    NSMutableArray *_windowSets;
-    NSMutableArray *_editingRuleCriterion;
-    NSUInteger _selectedWindowSet;
-    NSUInteger _selectedRuleSet;
-    NSUInteger _origRuleEditHeight;
-    BOOL _makingNewWindowSet;
-    BOOL _makingNewRuleSet;
-}
+@interface JVInterfacePreferencesViewController() <NSTableViewDataSource, NSTableViewDelegate>
+
+@property(nonatomic, strong) NSMutableArray *windowSets;
+@property(nonatomic, strong) NSMutableArray *editingRuleCriterion;
+@property(nonatomic, assign) NSUInteger selectedWindowSet;
+@property(nonatomic, assign) NSUInteger selectedRuleSet;
+@property(nonatomic, assign) NSUInteger origRuleEditHeight;
+@property(nonatomic, assign) BOOL makingNewWindowSet;
+@property(nonatomic, assign) BOOL makingNewRuleSet;
+
 
 @property(nonatomic, weak) IBOutlet NSTableView *windowSetsTable;
 @property(nonatomic, weak) IBOutlet NSTableView *rulesTable;
@@ -86,7 +87,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	[self.rulesTable setTarget:self];
 	[self.rulesTable setDoubleAction:@selector( editRuleSet: )];
 	
-	_origRuleEditHeight = NSHeight( [[self.ruleEditPanel contentView] frame] ) - 30;
+	self.origRuleEditHeight = NSHeight( [[self.ruleEditPanel contentView] frame] ) - 30;
 	[self.ruleEditTable setDataSource:self];
 	[self.ruleEditTable setDelegate:self];
 	[self.ruleEditTable setRefusesFirstResponder:YES];
@@ -97,20 +98,6 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	[self initializeFromDefaults];
 }
 
-- (void) dealloc {
-	[_windowSetsTable setDataSource:nil];
-	[_windowSetsTable setDelegate:nil];
-
-	[_rulesTable setDataSource:nil];
-	[_rulesTable setDelegate:nil];
-
-	[_ruleEditTable setDataSource:nil];
-	[_ruleEditTable setDelegate:nil];
-
-
-	_windowSets = nil;
-	_editingRuleCriterion = nil;
-}
 
 #pragma mark MASPreferencesViewController
 
@@ -140,14 +127,14 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 - (void) initializeFromDefaults {
 	NSData *data = [[NSUserDefaults standardUserDefaults] dataForKey:@"JVChatWindowRuleSets"];
 
-	_windowSets = ( [data length] ? [NSKeyedUnarchiver unarchiveObjectWithData:data] : [NSMutableArray array] );
+	self.windowSets = ( [data length] ? [NSKeyedUnarchiver unarchiveObjectWithData:data] : [NSMutableArray array] );
 
 	NSMutableDictionary *info = nil;
 	BOOL haveCurrentWindow = NO;
 	BOOL haveNewWindow = NO;
 	BOOL haveServerWindow = NO;
 
-	for( info in _windowSets ) {
+	for( info in self.windowSets ) {
 		NSString *value = [info objectForKey:@"special"];
 		if( [[info objectForKey:@"currentWindow"] boolValue] ) { // old method
 			[info setObject:@"currentWindow" forKey:@"special"]; // add new method of identifying
@@ -160,7 +147,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 	if( ! haveCurrentWindow ) {
 		info = [NSMutableDictionary dictionary];
-		[_windowSets addObject:info];
+		[self.windowSets addObject:info];
 
 		[info setObject:@"currentWindow" forKey:@"special"];
 		[info setObject:[NSString locallyUniqueString] forKey:@"identifier"];
@@ -169,7 +156,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 	if( ! haveNewWindow ) {
 		info = [NSMutableDictionary dictionary];
-		[_windowSets addObject:info];
+		[self.windowSets addObject:info];
 
 		[info setObject:@"newWindow" forKey:@"special"];
 		[info setObject:[NSString locallyUniqueString] forKey:@"identifier"];
@@ -178,7 +165,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 	if( ! haveServerWindow ) {
 		info = [NSMutableDictionary dictionary];
-		[_windowSets addObject:info];
+		[self.windowSets addObject:info];
 
 		[info setObject:@"serverWindow" forKey:@"special"];
 		[info setObject:[NSString locallyUniqueString] forKey:@"identifier"];
@@ -191,7 +178,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 
 - (void) saveWindowRules {
-	NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_windowSets];
+	NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.windowSets];
 	[[NSUserDefaults standardUserDefaults] setObject:data forKey:@"JVChatWindowRuleSets"];
 }
 
@@ -234,10 +221,10 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 #pragma mark -
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView *) view {
-	if( view == self.windowSetsTable ) return [_windowSets count];
+	if( view == self.windowSetsTable ) return [self.windowSets count];
 	else if( view == self.rulesTable ) {
-		if( [_windowSets count] < _selectedWindowSet ) return 0;
-		NSDictionary *info = [_windowSets objectAtIndex:_selectedWindowSet];
+		if( [self.windowSets count] < self.selectedWindowSet ) return 0;
+		NSDictionary *info = [self.windowSets objectAtIndex:self.selectedWindowSet];
 		return [(NSArray *)[info objectForKey:@"rules"] count];
 	} else if( view == self.ruleEditTable ) {
 		return [[self editingCriterion] count];
@@ -248,7 +235,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == self.windowSetsTable ) {
-		NSDictionary *info = [_windowSets objectAtIndex:row];
+		NSDictionary *info = [self.windowSets objectAtIndex:row];
 		if( [[info objectForKey:@"special"] isEqualToString:@"currentWindow"] ) return [NSImage imageNamed:@"targetWindow"];
 		else if( [[info objectForKey:@"special"] isEqualToString:@"newWindow"] ) return [NSImage imageNamed:@"newWindow"];
 		else if( [[info objectForKey:@"special"] isEqualToString:@"serverWindow"] ) return [NSImage imageNamed:@"serverWindow"];
@@ -262,7 +249,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 - (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == self.windowSetsTable ) {
-		NSDictionary *info = [_windowSets objectAtIndex:row];
+		NSDictionary *info = [self.windowSets objectAtIndex:row];
 		if( [[info objectForKey:@"special"] isEqualToString:@"currentWindow"] )
 			[(JVDetailCell *) cell setMainText:NSLocalizedString( @"Focused Window", "focused window label, interface preferences" )];
 		else if( [[info objectForKey:@"special"] isEqualToString:@"newWindow"] )
@@ -301,15 +288,15 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
 	id view = [notification object];
 	if( view == self.windowSetsTable ) {
-		_selectedWindowSet = [[self.windowSetsTable selectedRowIndexes] firstIndex];
-		NSDictionary *info = [_windowSets objectAtIndex:_selectedWindowSet];
+		self.selectedWindowSet = [[self.windowSetsTable selectedRowIndexes] firstIndex];
+		NSDictionary *info = [self.windowSets objectAtIndex:self.selectedWindowSet];
 		[self.editWindowButton setEnabled:( ! [info objectForKey:@"special"] )];
 		[self.deleteWindowButton setEnabled:( ! [info objectForKey:@"special"] )];
 		[self.rulesTable reloadData];
 	} else if( view == self.rulesTable ) {
-		_selectedRuleSet = [[self.rulesTable selectedRowIndexes] firstIndex];
-		[self.editRuleButton setEnabled:( _selectedRuleSet != NSNotFound )];
-		[self.deleteRuleButton setEnabled:( _selectedRuleSet != NSNotFound )];
+		self.selectedRuleSet = [[self.rulesTable selectedRowIndexes] firstIndex];
+		[self.editRuleButton setEnabled:( self.selectedRuleSet != NSNotFound )];
+		[self.deleteRuleButton setEnabled:( self.selectedRuleSet != NSNotFound )];
 	} else if( view == self.ruleEditTable ) {
 		[self.ruleEditTable deselectAll:nil];
 	}
@@ -352,9 +339,9 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 		[[[info draggingPasteboard] dataForType:JVInterfacePreferencesWindowDragPboardType] getBytes:&index];
 		if( row > index ) row--;
 
-		id item = [_windowSets objectAtIndex:index];
-		[_windowSets removeObjectAtIndex:index];
-		[_windowSets insertObject:item atIndex:row];
+		id item = [self.windowSets objectAtIndex:index];
+		[self.windowSets removeObjectAtIndex:index];
+		[self.windowSets insertObject:item atIndex:row];
 
 		[self.windowSetsTable selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
 		[view reloadData];
@@ -368,32 +355,32 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 - (IBAction) clear:(id) sender {
 	if( sender == self.windowSetsTable || sender == self.deleteWindowButton ) {
-		NSDictionary *info = [_windowSets objectAtIndex:_selectedWindowSet];
+		NSDictionary *info = [self.windowSets objectAtIndex:self.selectedWindowSet];
 		if( [info objectForKey:@"special"] ) {
 			NSBeep();
 			return;
 		}
 
-		[_windowSets removeObjectAtIndex:_selectedWindowSet];
+		[self.windowSets removeObjectAtIndex:self.selectedWindowSet];
 		[self.windowSetsTable reloadData];
 
-		_selectedWindowSet = [[self.windowSetsTable selectedRowIndexes] firstIndex];
+		self.selectedWindowSet = [[self.windowSetsTable selectedRowIndexes] firstIndex];
 		[self.rulesTable reloadData];
 
-		info = [_windowSets objectAtIndex:_selectedWindowSet];
+		info = [self.windowSets objectAtIndex:self.selectedWindowSet];
 		[self.editWindowButton setEnabled:( ! [info objectForKey:@"special"] )];
 		[self.deleteWindowButton setEnabled:( ! [info objectForKey:@"special"] )];
 
 		[self saveWindowRules];
 	} else if( sender == self.rulesTable || sender == self.deleteRuleButton ) {
-		[[self selectedRules] removeObjectAtIndex:_selectedRuleSet];
+		[[self selectedRules] removeObjectAtIndex:self.selectedRuleSet];
 
 		[self.rulesTable reloadData];
 		[self.windowSetsTable reloadData];
 
-		_selectedRuleSet = [[self.rulesTable selectedRowIndexes] firstIndex];
-		[self.editRuleButton setEnabled:( _selectedRuleSet != NSNotFound )];
-		[self.deleteRuleButton setEnabled:( _selectedRuleSet != NSNotFound )];
+		self.selectedRuleSet = [[self.rulesTable selectedRowIndexes] firstIndex];
+		[self.editRuleButton setEnabled:( self.selectedRuleSet != NSNotFound )];
+		[self.deleteRuleButton setEnabled:( self.selectedRuleSet != NSNotFound )];
 
 		[self saveWindowRules];
 	}
@@ -402,25 +389,25 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 #pragma mark -
 
 - (IBAction) addWindowSet:(id) sender {
-	NSString *title = [NSString stringWithFormat:NSLocalizedString( @"Window %d", "starting window title, window and a number" ), [_windowSets count]];
+	NSString *title = [NSString stringWithFormat:NSLocalizedString( @"Window %d", "starting window title, window and a number" ), [self.windowSets count]];
 	[self.windowTitle setStringValue:title];
 	[self.rememberPanels setState:NSOnState];
 	[self.windowEditSaveButton setEnabled:YES];
 
-	_makingNewWindowSet = YES;
+	self.makingNewWindowSet = YES;
 
 	[[NSApplication sharedApplication] beginSheet:self.windowEditPanel modalForWindow:[self.windowSetsTable window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
 
 - (IBAction) editWindowSet:(id) sender {
-	NSDictionary *info = [_windowSets objectAtIndex:[[self.windowSetsTable selectedRowIndexes] firstIndex]];
+	NSDictionary *info = [self.windowSets objectAtIndex:[[self.windowSetsTable selectedRowIndexes] firstIndex]];
 	if( [info objectForKey:@"special"] ) return;
 
 	[self.windowTitle setStringValue:[info objectForKey:@"title"]];
 	[self.rememberPanels setState:[[info objectForKey:@"rememberPanels"] boolValue]];
 	[self.windowEditSaveButton setEnabled:YES];
 
-	_makingNewWindowSet = NO;
+	self.makingNewWindowSet = NO;
 
 	[[NSApplication sharedApplication] beginSheet:self.windowEditPanel modalForWindow:[self.windowSetsTable window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
@@ -428,13 +415,13 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 - (IBAction) saveWindowSet:(id) sender {
 	NSMutableDictionary *info = nil;
 
-	if( _makingNewWindowSet ) {
+	if( self.makingNewWindowSet ) {
 		info = [NSMutableDictionary dictionary];
-		[_windowSets addObject:info];
+		[self.windowSets addObject:info];
 
 		[info setObject:[NSString locallyUniqueString] forKey:@"identifier"];
 		[info setObject:[NSMutableArray array] forKey:@"rules"];
-	} else info = [_windowSets objectAtIndex:_selectedWindowSet];
+	} else info = [self.windowSets objectAtIndex:self.selectedWindowSet];
 
 	[info setObject:[self.windowTitle stringValue] forKey:@"title"];
 	[info setObject:[NSNumber numberWithBool:[self.rememberPanels state]] forKey:@"rememberPanels"];
@@ -444,10 +431,10 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 	[self.windowSetsTable reloadData];
 
-	if( _makingNewWindowSet ) {
-		[self.windowSetsTable scrollRowToVisible:( [_windowSets count] - 1 )];
-		[self.windowSetsTable selectRowIndexes:[NSIndexSet indexSetWithIndex:( [_windowSets count] - 1 )] byExtendingSelection:NO];
-		_makingNewWindowSet = NO;
+	if( self.makingNewWindowSet ) {
+		[self.windowSetsTable scrollRowToVisible:( [self.windowSets count] - 1 )];
+		[self.windowSetsTable selectRowIndexes:[NSIndexSet indexSetWithIndex:( [self.windowSets count] - 1 )] byExtendingSelection:NO];
+		self.makingNewWindowSet = NO;
 	}
 
 	[self saveWindowRules];
@@ -461,18 +448,18 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 #pragma mark -
 
 - (NSMutableArray *) selectedRules {
-	if( [_windowSets count] < _selectedWindowSet ) return [NSMutableArray array];
-	NSDictionary *info = [_windowSets objectAtIndex:_selectedWindowSet];
+	if( [self.windowSets count] < self.selectedWindowSet ) return [NSMutableArray array];
+	NSDictionary *info = [self.windowSets objectAtIndex:self.selectedWindowSet];
 	return [info objectForKey:@"rules"];
 }
 
 - (NSMutableArray *) editingCriterion {
-	return _editingRuleCriterion;
+	return self.editingRuleCriterion;
 }
 
 - (void) updateRuleEditPanelSize {
 	NSRect frame = [[self.ruleEditPanel contentView] frame];
-	frame.size.height = _origRuleEditHeight + ( [[self editingCriterion] count] * 30 );
+	frame.size.height = self.origRuleEditHeight + ( [[self editingCriterion] count] * 30 );
 	[self.ruleEditPanel setContentSize:frame.size];
 
 	frame.size.width = 514;
@@ -559,9 +546,9 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 #pragma mark -
 
 - (IBAction) addRuleSet:(id) sender {
-	_makingNewRuleSet = YES;
+	self.makingNewRuleSet = YES;
 
-	_editingRuleCriterion = [NSMutableArray array];
+	self.editingRuleCriterion = [NSMutableArray array];
 
 	[self addRuleCriterionRow:nil];
 	[self updateRuleEditPanelSize];
@@ -569,13 +556,13 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 }
 
 - (IBAction) editRuleSet:(id) sender {
-	if( _selectedRuleSet == NSNotFound ) return;
+	if( self.selectedRuleSet == NSNotFound ) return;
 
-	_makingNewRuleSet = NO;
+	self.makingNewRuleSet = NO;
 
-	NSMutableDictionary *info = [[self selectedRules] objectAtIndex:_selectedRuleSet];
+	NSMutableDictionary *info = [[self selectedRules] objectAtIndex:self.selectedRuleSet];
 
-	_editingRuleCriterion = [info objectForKey:@"criterion"];
+	self.editingRuleCriterion = [info objectForKey:@"criterion"];
 
 	[self.ignoreCase setState:[[info objectForKey:@"ignoreCase"] boolValue]];
 
@@ -591,10 +578,10 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 - (IBAction) saveRuleSet:(id) sender {
 	NSMutableDictionary *info = nil;
 
-	if( _makingNewRuleSet ) {
+	if( self.makingNewRuleSet ) {
 		info = [NSMutableDictionary dictionary];
 		[[self selectedRules] addObject:info];
-	} else info = [[self selectedRules] objectAtIndex:_selectedRuleSet];
+	} else info = [[self selectedRules] objectAtIndex:self.selectedRuleSet];
 
 	[info setObject:[self editingCriterion] forKey:@"criterion"];
 	[info setObject:[NSNumber numberWithLong:[self.ruleOperation selectedTag]] forKey:@"operation"];
@@ -606,21 +593,21 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	[self.rulesTable reloadData];
 	[self.windowSetsTable reloadData];
 
-	_editingRuleCriterion = nil;
+	self.editingRuleCriterion = nil;
 
-	if( _makingNewRuleSet ) {
+	if( self.makingNewRuleSet ) {
 		[self.rulesTable scrollRowToVisible:( [[self selectedRules] count] - 1 )];
 		[self.rulesTable selectRowIndexes:[NSIndexSet indexSetWithIndex:( [[self selectedRules] count] - 1 )] byExtendingSelection:NO];
-		_makingNewRuleSet = NO;
+		self.makingNewRuleSet = NO;
 	}
 
 	[self saveWindowRules];
 }
 
 - (IBAction) cancelRuleSet:(id) sender {
-	_makingNewRuleSet = NO;
+	self.makingNewRuleSet = NO;
 
-	_editingRuleCriterion = nil;
+	self.editingRuleCriterion = nil;
 
 	[self.ruleEditPanel orderOut:nil];
 	[[NSApplication sharedApplication] endSheet:self.ruleEditPanel];
