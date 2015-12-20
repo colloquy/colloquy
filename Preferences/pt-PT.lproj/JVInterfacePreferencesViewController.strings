@@ -1,105 +1,105 @@
 
 /* Class = "NSMenuItem"; title = "all"; ObjectID = "101"; */
-"101.title" = "all";
+"101.title" = "todos";
 
 /* Class = "NSMenuItem"; title = "any"; ObjectID = "102"; */
-"102.title" = "any";
+"102.title" = "qualquer";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Ignore UPPPERCASE and lowercase"; ObjectID = "106"; */
-"106.ibShadowedToolTip" = "Ignore UPPPERCASE and lowercase";
+"106.ibShadowedToolTip" = "Ignorar MAIÚSCULAS e minúsculas";
 
 /* Class = "NSButtonCell"; title = "OK"; ObjectID = "317"; */
 "317.title" = "OK";
 
 /* Class = "NSButtonCell"; title = "Cancel"; ObjectID = "318"; */
-"318.title" = "Cancel";
+"318.title" = "Cancelar";
 
 /* Class = "NSTextFieldCell"; title = "Window Name:"; ObjectID = "319"; */
-"319.title" = "Window Name:";
+"319.title" = "Nome da janela:";
 
 /* Class = "NSButtonCell"; title = "Remember manually attached panels"; ObjectID = "321"; */
-"321.title" = "Remember manually attached panels";
+"321.title" = "Recordar painéis anexados manualmente";
 
 /* Class = "NSTextFieldCell"; title = "Include panels that meet"; ObjectID = "322"; */
-"322.title" = "Include panels that meet";
+"322.title" = "Incluir paineis que cumpram";
 
 /* Class = "NSTextFieldCell"; title = "of the following conditions:"; ObjectID = "324"; */
-"324.title" = "of the following conditions:";
+"324.title" = "das seguintes condições:";
 
 /* Class = "NSButtonCell"; title = "OK"; ObjectID = "325"; */
 "325.title" = "OK";
 
 /* Class = "NSButtonCell"; title = "Cancel"; ObjectID = "326"; */
-"326.title" = "Cancel";
+"326.title" = "Cancelar";
 
 /* Class = "NSButtonCell"; title = "Ignore Case"; ObjectID = "327"; */
-"327.title" = "Ignore Case";
+"327.title" = "Ignorar capitalização";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Add rule"; ObjectID = "0lE-bY-T3x"; */
-"0lE-bY-T3x.ibShadowedToolTip" = "Add rule";
+"0lE-bY-T3x.ibShadowedToolTip" = "Adicionar regra";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Edit window"; ObjectID = "16s-kX-eR3"; */
-"16s-kX-eR3.ibShadowedToolTip" = "Edit window";
+"16s-kX-eR3.ibShadowedToolTip" = "Editar janela";
 
 /* Class = "NSMenuItem"; title = "Auto"; ObjectID = "2Og-Dg-Vgi"; */
-"2Og-Dg-Vgi.title" = "Automatic";
+"2Og-Dg-Vgi.title" = "Automático";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Delete window"; ObjectID = "4dc-gg-ELR"; */
-"4dc-gg-ELR.ibShadowedToolTip" = "Delete window";
+"4dc-gg-ELR.ibShadowedToolTip" = "Apagar janela";
 
 /* Class = "NSMenuItem"; title = "None"; ObjectID = "5Gf-hO-OGq"; */
 "5Gf-hO-OGq.title" = "None";
 
 /* Class = "NSMenuItem"; title = "Right"; ObjectID = "DUg-aN-y1L"; */
-"DUg-aN-y1L.title" = "Right";
+"DUg-aN-y1L.title" = "Direita";
 
 /* Class = "NSTextFieldCell"; title = "Panels will be grouped in windows based on the rule sets below.\nA new window will be opened if no rule sets apply."; ObjectID = "Hkt-sW-eRK"; */
-"Hkt-sW-eRK.title" = "Panels will be grouped in windows based on the rule sets below.\nA new window will be opened if no rule sets apply.";
+"Hkt-sW-eRK.title" = "Os painéis serão agrupados em janelas segundo os conjuntos de regras abaixo descritas.\nSe nenhuma regra se aplicar abrir-se-á uma nova janela.";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Add window"; ObjectID = "Oec-2h-wvG"; */
-"Oec-2h-wvG.ibShadowedToolTip" = "Add window";
+"Oec-2h-wvG.ibShadowedToolTip" = "Adicionar janela";
 
 /* Class = "NSTextFieldCell"; title = "Drawer Side:"; ObjectID = "PQN-3f-sSG"; */
-"PQN-3f-sSG.title" = "Drawer Side:";
+"PQN-3f-sSG.title" = "Lado da gaveta:";
 
 /* Class = "NSMenuItem"; title = "Tabbed Window"; ObjectID = "UKJ-o0-Xnf"; */
-"UKJ-o0-Xnf.title" = "Tabbed Window";
+"UKJ-o0-Xnf.title" = "Janela com telhas";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Edit rule"; ObjectID = "VrK-V3-91k"; */
-"VrK-V3-91k.ibShadowedToolTip" = "Edit rule";
+"VrK-V3-91k.ibShadowedToolTip" = "Editar regra";
 
 /* Class = "NSMenuItem"; title = "Sidebar List"; ObjectID = "ZFz-f9-FZQ"; */
-"ZFz-f9-FZQ.title" = "Sidebar List";
+"ZFz-f9-FZQ.title" = "Lista da barra lateral";
 
 /* Class = "NSButtonCell"; title = "Show full Chat Room names"; ObjectID = "ftU-Cn-45H"; */
-"ftU-Cn-45H.title" = "Show full Chat Room names";
+"ftU-Cn-45H.title" = "Mostrar os nomes completos das salas de conversa";
 
 /* Class = "NSTextFieldCell"; title = "Show Notices as Private Chat:"; ObjectID = "gU0-QK-lxt"; */
 "gU0-QK-lxt.title" = "Show Notices as Private Chat:";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Delete rule"; ObjectID = "guZ-k9-84S"; */
-"guZ-k9-84S.ibShadowedToolTip" = "Delete rule";
+"guZ-k9-84S.ibShadowedToolTip" = "Apagar regra";
 
 /* Class = "NSButtonCell"; title = "Always show tab bar"; ObjectID = "hBj-zd-jba"; */
-"hBj-zd-jba.title" = "Always show tab bar";
+"hBj-zd-jba.title" = "Mostrar sempre a barra de telhas";
 
 /* Class = "NSTextFieldCell"; title = "Window Interface:"; ObjectID = "ngY-2l-q9i"; */
-"ngY-2l-q9i.title" = "Window Interface:";
+"ngY-2l-q9i.title" = "Interface da janela:";
 
 /* Class = "NSMenuItem"; title = "Automatic"; ObjectID = "oOl-3Z-zNT"; */
-"oOl-3Z-zNT.title" = "Automatic";
+"oOl-3Z-zNT.title" = "Automático";
 
 /* Class = "NSTextFieldCell"; title = "The badge will reflect the number of unread highlights and private messages."; ObjectID = "qFO-Zh-cVm"; */
 "qFO-Zh-cVm.title" = "The badge will reflect the number of unread highlights and private messages.";
 
 /* Class = "NSMenuItem"; title = "Left"; ObjectID = "qkG-Zn-QEG"; */
-"qkG-Zn-QEG.title" = "Left";
+"qkG-Zn-QEG.title" = "Esquerda";
 
 /* Class = "NSMenuItem"; title = "All"; ObjectID = "swI-NA-TAm"; */
 "swI-NA-TAm.title" = "All";
 
 /* Class = "NSButtonCell"; title = "Sort Chat Room members by status"; ObjectID = "woO-2w-Ltx"; */
-"woO-2w-Ltx.title" = "Sort Chat Room members by status";
+"woO-2w-Ltx.title" = "Arrumar membros da sala de conversas por estatuto";
 
 /* Class = "NSButtonCell"; title = "Show Badge on Dock Icon"; ObjectID = "yw7-i8-neX"; */
 "yw7-i8-neX.title" = "Show Badge on Dock Icon";

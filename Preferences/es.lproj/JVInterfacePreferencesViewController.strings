@@ -12,7 +12,7 @@
 "317.title" = "OK";
 
 /* Class = "NSButtonCell"; title = "Cancel"; ObjectID = "318"; */
-"318.title" = "Cancel";
+"318.title" = "Cancelar";
 
 /* Class = "NSTextFieldCell"; title = "Window Name:"; ObjectID = "319"; */
 "319.title" = "Window Name:";
@@ -30,19 +30,19 @@
 "325.title" = "OK";
 
 /* Class = "NSButtonCell"; title = "Cancel"; ObjectID = "326"; */
-"326.title" = "Cancel";
+"326.title" = "Cancelar";
 
 /* Class = "NSButtonCell"; title = "Ignore Case"; ObjectID = "327"; */
 "327.title" = "Ignore Case";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Add rule"; ObjectID = "0lE-bY-T3x"; */
-"0lE-bY-T3x.ibShadowedToolTip" = "Add rule";
+"0lE-bY-T3x.ibShadowedToolTip" = "Añadir regla";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Edit window"; ObjectID = "16s-kX-eR3"; */
 "16s-kX-eR3.ibShadowedToolTip" = "Edit window";
 
 /* Class = "NSMenuItem"; title = "Auto"; ObjectID = "2Og-Dg-Vgi"; */
-"2Og-Dg-Vgi.title" = "Automatic";
+"2Og-Dg-Vgi.title" = "Automático";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Delete window"; ObjectID = "4dc-gg-ELR"; */
 "4dc-gg-ELR.ibShadowedToolTip" = "Delete window";
@@ -57,7 +57,7 @@
 "Hkt-sW-eRK.title" = "Panels will be grouped in windows based on the rule sets below.\nA new window will be opened if no rule sets apply.";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Add window"; ObjectID = "Oec-2h-wvG"; */
-"Oec-2h-wvG.ibShadowedToolTip" = "Add window";
+"Oec-2h-wvG.ibShadowedToolTip" = "Añadir ventana";
 
 /* Class = "NSTextFieldCell"; title = "Drawer Side:"; ObjectID = "PQN-3f-sSG"; */
 "PQN-3f-sSG.title" = "Drawer Side:";
@@ -87,7 +87,7 @@
 "ngY-2l-q9i.title" = "Window Interface:";
 
 /* Class = "NSMenuItem"; title = "Automatic"; ObjectID = "oOl-3Z-zNT"; */
-"oOl-3Z-zNT.title" = "Automatic";
+"oOl-3Z-zNT.title" = "Automático";
 
 /* Class = "NSTextFieldCell"; title = "The badge will reflect the number of unread highlights and private messages."; ObjectID = "qFO-Zh-cVm"; */
 "qFO-Zh-cVm.title" = "The badge will reflect the number of unread highlights and private messages.";

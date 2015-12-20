@@ -374,7 +374,7 @@ A new window will be opened if no rule sets apply.</string>
                                 <menuItem title="All" tag="1" id="swI-NA-TAm">
                                     <modifierMask key="keyEquivalentModifierMask"/>
                                 </menuItem>
-                                <menuItem title="Auto" tag="2" id="2Og-Dg-Vgi">
+                                <menuItem title="Automatic" tag="2" id="2Og-Dg-Vgi">
                                     <modifierMask key="keyEquivalentModifierMask"/>
                                 </menuItem>
                                 <menuItem title="None" state="on" id="5Gf-hO-OGq">
