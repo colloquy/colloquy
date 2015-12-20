@@ -289,22 +289,22 @@
 		92C70D191A5E88CE00080E45 /* super-op.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D111A5E88CE00080E45 /* super-op.pdf */; };
 		92C70D1B1A5E898100080E45 /* console.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D1A1A5E898100080E45 /* console.pdf */; };
 		92C70D1D1A5E89A000080E45 /* messageUser.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D1C1A5E89A000080E45 /* messageUser.pdf */; };
-		C207B61F1BC96B6A00921E60 /* JVInterfacePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C207B61E1BC96B6A00921E60 /* JVInterfacePreferencesViewController.xib */; };
 		C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; };
 		C22A35571BC00BB7001757D7 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C22A35781BC0378A001757D7 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */; };
 		C2505D8B1BD3A6F400F663F3 /* JVBehaviorPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C2505D8A1BD3A6F400F663F3 /* JVBehaviorPreferences.m */; };
-		C2505D8D1BD3AC1E00F663F3 /* JVBehaviorPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2505D8C1BD3AC1E00F663F3 /* JVBehaviorPreferencesViewController.xib */; };
 		C26126551BD2B92F00B7AF87 /* JVNotificationPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26126541BD2B92F00B7AF87 /* JVNotificationPreferences.m */; };
-		C26126571BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26126561BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib */; };
 		C261265A1BD2E9AF00B7AF87 /* JVFileTransferPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26126591BD2E9AF00B7AF87 /* JVFileTransferPreferences.m */; };
-		C261265C1BD2EAC400B7AF87 /* JVFileTransferPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C261265B1BD2EAC400B7AF87 /* JVFileTransferPreferencesViewController.xib */; };
 		C261265F1BD300B400B7AF87 /* JVTranscriptPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C261265E1BD300B400B7AF87 /* JVTranscriptPreferences.m */; };
-		C26126611BD309A200B7AF87 /* JVTranscriptPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26126601BD309A200B7AF87 /* JVTranscriptPreferencesViewController.xib */; };
 		C26B7A7C1BCA51D10085846F /* JVAppearancePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26B7A7B1BCA51D10085846F /* JVAppearancePreferences.m */; };
-		C26B7A7E1BCA55B00085846F /* JVAppearancePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26B7A7D1BCA55B00085846F /* JVAppearancePreferencesViewController.xib */; };
+		C29654101BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */; };
+		C29654131BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654151BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib */; };
+		C29654161BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654181BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib */; };
+		C29654191BDBA00400F28873 /* JVNotificationPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C296541B1BDBA00400F28873 /* JVNotificationPreferencesViewController.xib */; };
+		C296541C1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C296541E1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib */; };
+		C296541F1BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654211BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib */; };
+		C29654221BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654241BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib */; };
 		C2BD72E51BC31162004C1EBD /* JVInterfacePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C2BD72E41BC31162004C1EBD /* JVInterfacePreferences.m */; };
-		C2BE9F101BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2BE9F0F1BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
 		CBF6855D08201B7300F498FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CBF6852D0820190D00F498FB /* InfoPlist.strings */; };
@@ -1008,27 +1008,27 @@
 		A18BCA2108FF588E0005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Languages/Dutch.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
 		A18BCA2208FF589D0005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Languages/German.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
 		A1E1610309228E4F004920E8 /* French */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = French; path = Languages/French.lproj/Localizable.strings; sourceTree = "<group>"; };
-		C207B61E1BC96B6A00921E60 /* JVInterfacePreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVInterfacePreferencesViewController.xib; sourceTree = "<group>"; };
 		C22A35761BC0378A001757D7 /* JVGeneralPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVGeneralPreferences.h; sourceTree = "<group>"; };
 		C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVGeneralPreferences.m; sourceTree = "<group>"; };
 		C2505D891BD3A6F400F663F3 /* JVBehaviorPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVBehaviorPreferences.h; sourceTree = "<group>"; };
 		C2505D8A1BD3A6F400F663F3 /* JVBehaviorPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVBehaviorPreferences.m; sourceTree = "<group>"; };
-		C2505D8C1BD3AC1E00F663F3 /* JVBehaviorPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVBehaviorPreferencesViewController.xib; sourceTree = "<group>"; };
 		C26126531BD2B92F00B7AF87 /* JVNotificationPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVNotificationPreferences.h; sourceTree = "<group>"; };
 		C26126541BD2B92F00B7AF87 /* JVNotificationPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVNotificationPreferences.m; sourceTree = "<group>"; };
-		C26126561BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVNotificationPreferencesViewController.xib; sourceTree = "<group>"; };
 		C26126581BD2E9AF00B7AF87 /* JVFileTransferPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVFileTransferPreferences.h; sourceTree = "<group>"; };
 		C26126591BD2E9AF00B7AF87 /* JVFileTransferPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFileTransferPreferences.m; sourceTree = "<group>"; };
-		C261265B1BD2EAC400B7AF87 /* JVFileTransferPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVFileTransferPreferencesViewController.xib; sourceTree = "<group>"; };
 		C261265D1BD300B400B7AF87 /* JVTranscriptPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVTranscriptPreferences.h; sourceTree = "<group>"; };
 		C261265E1BD300B400B7AF87 /* JVTranscriptPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVTranscriptPreferences.m; sourceTree = "<group>"; };
-		C26126601BD309A200B7AF87 /* JVTranscriptPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVTranscriptPreferencesViewController.xib; sourceTree = "<group>"; };
 		C26B7A7A1BCA51D10085846F /* JVAppearancePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppearancePreferences.h; sourceTree = "<group>"; };
 		C26B7A7B1BCA51D10085846F /* JVAppearancePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppearancePreferences.m; sourceTree = "<group>"; };
-		C26B7A7D1BCA55B00085846F /* JVAppearancePreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVAppearancePreferencesViewController.xib; sourceTree = "<group>"; };
+		C29654111BDB9FE900F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVGeneralPreferencesViewController.xib; sourceTree = "<group>"; };
+		C29654141BDB9FF500F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVInterfacePreferencesViewController.xib; sourceTree = "<group>"; };
+		C29654171BDB9FFD00F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVAppearancePreferencesViewController.xib; sourceTree = "<group>"; };
+		C296541A1BDBA00400F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVNotificationPreferencesViewController.xib; sourceTree = "<group>"; };
+		C296541D1BDBA00D00F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVFileTransferPreferencesViewController.xib; sourceTree = "<group>"; };
+		C29654201BDBA01900F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVTranscriptPreferencesViewController.xib; sourceTree = "<group>"; };
+		C29654231BDBA02100F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVBehaviorPreferencesViewController.xib; sourceTree = "<group>"; };
 		C2BD72E31BC31162004C1EBD /* JVInterfacePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVInterfacePreferences.h; sourceTree = "<group>"; };
 		C2BD72E41BC31162004C1EBD /* JVInterfacePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVInterfacePreferences.m; sourceTree = "<group>"; };
-		C2BE9F0F1BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVGeneralPreferencesViewController.xib; sourceTree = "<group>"; };
 		C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MASPreferences.xcodeproj; path = Frameworks/MASPreferences/MASPreferences.xcodeproj; sourceTree = "<group>"; };
 		CB66DEA00631F8160034F76E /* Keychain.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Keychain.png; path = Resources/Keychain.png; sourceTree = "<group>"; };
 		CB66DEA10631F8160034F76E /* Stickies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Stickies.png; path = Resources/Stickies.png; sourceTree = "<group>"; };
@@ -1362,25 +1362,25 @@
 				C2505D8A1BD3A6F400F663F3 /* JVBehaviorPreferences.m */,
 				1CBC630905489484009E59E1 /* JVGeneralPreferencesViewController.h */,
 				1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */,
-				C2BE9F0F1BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib */,
+				C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */,
 				1C6A40C7083FF6C600572AB6 /* JVInterfacePreferencesViewController.h */,
 				1C6A40C8083FF6C600572AB6 /* JVInterfacePreferencesViewController.m */,
-				C207B61E1BC96B6A00921E60 /* JVInterfacePreferencesViewController.xib */,
+				C29654151BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib */,
 				1CC6FC500549FCD70075807C /* JVAppearancePreferencesViewController.h */,
 				1CC6FC510549FCD70075807C /* JVAppearancePreferencesViewController.m */,
-				C26B7A7D1BCA55B00085846F /* JVAppearancePreferencesViewController.xib */,
+				C29654181BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib */,
 				1C9982000603EFD6006C6417 /* JVNotificationPreferencesViewController.h */,
 				1C9982010603EFD6006C6417 /* JVNotificationPreferencesViewController.m */,
-				C26126561BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib */,
+				C296541B1BDBA00400F28873 /* JVNotificationPreferencesViewController.xib */,
 				1CDEE25505823C13000B9075 /* JVFileTransferPreferencesViewController.h */,
 				1CDEE25605823C13000B9075 /* JVFileTransferPreferencesViewController.m */,
-				C261265B1BD2EAC400B7AF87 /* JVFileTransferPreferencesViewController.xib */,
+				C296541E1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib */,
 				1C96E93C06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.h */,
 				1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m */,
-				C26126601BD309A200B7AF87 /* JVTranscriptPreferencesViewController.xib */,
+				C29654211BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib */,
 				1CC6FC540549FDD70075807C /* JVBehaviorPreferencesViewController.h */,
 				1CC6FC550549FDD70075807C /* JVBehaviorPreferencesViewController.m */,
-				C2505D8C1BD3AC1E00F663F3 /* JVBehaviorPreferencesViewController.xib */,
+				C29654241BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -2073,11 +2073,11 @@
 				1C1AFE8E09C3D92E00BF3E2A /* roomTopicBanner.js in Resources */,
 				1CB2CD17052DDC560094AAA4 /* encoding.png in Resources */,
 				1CB2CD18052DDC560094AAA4 /* info.colloquy.plist in Resources */,
-				C207B61F1BC96B6A00921E60 /* JVInterfacePreferencesViewController.xib in Resources */,
+				C29654131BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib in Resources */,
 				1CB2CD19052DDC560094AAA4 /* info.png in Resources */,
 				1CB2CD1A052DDC560094AAA4 /* download.png in Resources */,
 				1CB2CD1B052DDC560094AAA4 /* upload.png in Resources */,
-				C2BE9F101BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib in Resources */,
+				C29654101BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib in Resources */,
 				1CB2CD1C052DDC560094AAA4 /* error.png in Resources */,
 				1CB2CD1D052DDC560094AAA4 /* pending.png in Resources */,
 				1CB2CD1E052DDC560094AAA4 /* done.png in Resources */,
@@ -2119,7 +2119,7 @@
 				1CB2CD5D052DDC560094AAA4 /* newHighlightMessage.png in Resources */,
 				1CB2CD5E052DDC560094AAA4 /* JVChatTranscript.nib in Resources */,
 				92C70D121A5E88CE00080E45 /* half-op.pdf in Resources */,
-				C2505D8D1BD3AC1E00F663F3 /* JVBehaviorPreferencesViewController.xib in Resources */,
+				C29654221BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib in Resources */,
 				92C70D191A5E88CE00080E45 /* super-op.pdf in Resources */,
 				1CB2CD60052DDC560094AAA4 /* JVChatConsole.nib in Resources */,
 				1C1AD00B053487ED00F71D4E /* JVConnectionInspector.nib in Resources */,
@@ -2201,16 +2201,16 @@
 				1CF16CE2083ADE590037F222 /* editWidgetPressed.png in Resources */,
 				1CF16D11083ADECF0037F222 /* JVInterfacePreferences.nib in Resources */,
 				1C6A429608400BEA00572AB6 /* window.png in Resources */,
-				C261265C1BD2EAC400B7AF87 /* JVFileTransferPreferencesViewController.xib in Resources */,
+				C296541C1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib in Resources */,
 				1C6A42A708400E7900572AB6 /* targetWindow.png in Resources */,
 				1C6A455908417C5300572AB6 /* JVChatViewCriterion.nib in Resources */,
 				1C45BFA5086F4BD80079E014 /* newWindow.png in Resources */,
-				C26B7A7E1BCA55B00085846F /* JVAppearancePreferencesViewController.xib in Resources */,
+				C29654161BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib in Resources */,
 				1CE6916808B183C2006D9CA0 /* Styles in Resources */,
 				1CE6916908B183C2006D9CA0 /* ChatCore.scriptTerminology in Resources */,
 				1CE6916A08B183C3006D9CA0 /* ChatCore.scriptSuite in Resources */,
 				1CE6916B08B183C4006D9CA0 /* ChatPlugIn.scriptTerminology in Resources */,
-				C26126571BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib in Resources */,
+				C29654191BDBA00400F28873 /* JVNotificationPreferencesViewController.xib in Resources */,
 				1CE6916C08B183C5006D9CA0 /* ChatPlugIn.scriptSuite in Resources */,
 				1CE6916D08B183C6006D9CA0 /* Colloquy.scriptTerminology in Resources */,
 				1CE6916E08B183C7006D9CA0 /* Colloquy.scriptSuite in Resources */,
@@ -2227,7 +2227,7 @@
 				1C710ABF09F23D9C007B4515 /* sidebarActionWidgetPressed.png in Resources */,
 				1C710AC009F23D9D007B4515 /* sidebarResizeWidget.png in Resources */,
 				1C710AC109F23D9D007B4515 /* sidebarStatusAreaBackground.png in Resources */,
-				C26126611BD309A200B7AF87 /* JVTranscriptPreferencesViewController.xib in Resources */,
+				C296541F1BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib in Resources */,
 				1C710B4C09F247AC007B4515 /* sidebarFavoritesWidget.png in Resources */,
 				1C710B4D09F247AC007B4515 /* sidebarFavoritesWidgetPressed.png in Resources */,
 				1C710C4F09F323F8007B4515 /* splitviewDimple.png in Resources */,
@@ -2865,6 +2865,62 @@
 				9200339E13D9258A005B69BA /* zh_TW */,
 			);
 			name = MVFileTransfer.nib;
+			sourceTree = "<group>";
+		};
+		C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C29654111BDB9FE900F28873 /* Base */,
+			);
+			name = JVGeneralPreferencesViewController.xib;
+			sourceTree = "<group>";
+		};
+		C29654151BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C29654141BDB9FF500F28873 /* Base */,
+			);
+			name = JVInterfacePreferencesViewController.xib;
+			sourceTree = "<group>";
+		};
+		C29654181BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C29654171BDB9FFD00F28873 /* Base */,
+			);
+			name = JVAppearancePreferencesViewController.xib;
+			sourceTree = "<group>";
+		};
+		C296541B1BDBA00400F28873 /* JVNotificationPreferencesViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C296541A1BDBA00400F28873 /* Base */,
+			);
+			name = JVNotificationPreferencesViewController.xib;
+			sourceTree = "<group>";
+		};
+		C296541E1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C296541D1BDBA00D00F28873 /* Base */,
+			);
+			name = JVFileTransferPreferencesViewController.xib;
+			sourceTree = "<group>";
+		};
+		C29654211BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C29654201BDBA01900F28873 /* Base */,
+			);
+			name = JVTranscriptPreferencesViewController.xib;
+			sourceTree = "<group>";
+		};
+		C29654241BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C29654231BDBA02100F28873 /* Base */,
+			);
+			name = JVBehaviorPreferencesViewController.xib;
 			sourceTree = "<group>";
 		};
 		CBF6852D0820190D00F498FB /* InfoPlist.strings */ = {
