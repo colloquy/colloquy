@@ -11,17 +11,11 @@
 /* Class = "NSTextFieldCell"; title = "Also available by pressing F5 while typing.\nNickname tab completion is supported without this preference."; ObjectID = "4jp-UJ-tUu"; */
 "4jp-UJ-tUu.title" = "Also available by pressing F5 while typing.\nNickname tab completion is supported without this preference.";
 
-/* Class = "NSMenu"; title = "OtherViews"; ObjectID = "7Gc-wB-7Mn"; */
-"7Gc-wB-7Mn.title" = "OtherViews";
-
 /* Class = "NSMenuItem"; title = "Insert a new line"; ObjectID = "BFs-hq-DTa"; */
 "BFs-hq-DTa.title" = "Insert a new line";
 
 /* Class = "NSButtonCell"; title = "Auto rejoin when kicked from room"; ObjectID = "Db8-WZ-PVh"; */
 "Db8-WZ-PVh.title" = "Auto rejoin when kicked from room";
-
-/* Class = "NSMenu"; title = "OtherViews"; ObjectID = "Enw-hf-wQi"; */
-"Enw-hf-wQi.title" = "OtherViews";
 
 /* Class = "NSButtonCell"; title = "Auto join chat rooms on invite"; ObjectID = "JQs-X4-QSI"; */
 "JQs-X4-QSI.title" = "Auto join chat rooms on invite";
