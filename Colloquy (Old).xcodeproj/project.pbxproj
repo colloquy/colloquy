@@ -84,7 +84,7 @@
 		1C6268E5103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem in Resources */ = {isa = PBXBuildFile; fileRef = 1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */; };
 		1C66913A07BFA76D008400F7 /* JVEmoticonSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C66913807BFA76D008400F7 /* JVEmoticonSet.m */; };
 		1C6A112B06BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A112906BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m */; };
-		1C6A40CA083FF6C600572AB6 /* JVInterfacePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A40C8083FF6C600572AB6 /* JVInterfacePreferences.m */; };
+		1C6A40CA083FF6C600572AB6 /* JVInterfacePreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A40C8083FF6C600572AB6 /* JVInterfacePreferencesViewController.m */; };
 		1C6A429608400BEA00572AB6 /* window.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6A429508400BEA00572AB6 /* window.png */; };
 		1C6A42A708400E7900572AB6 /* targetWindow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6A42A608400E7900572AB6 /* targetWindow.png */; };
 		1C6A45210841746500572AB6 /* JVChatViewCriterionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A451F0841746500572AB6 /* JVChatViewCriterionController.m */; };
@@ -570,8 +570,8 @@
 		1C6A112806BC0C9E00A66340 /* NSAttributedStringMoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSAttributedStringMoreAdditions.h; path = Additions/NSAttributedStringMoreAdditions.h; sourceTree = "<group>"; };
 		1C6A112906BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSAttributedStringMoreAdditions.m; path = Additions/NSAttributedStringMoreAdditions.m; sourceTree = "<group>"; };
 		1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
-		1C6A40C7083FF6C600572AB6 /* JVInterfacePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVInterfacePreferences.h; sourceTree = "<group>"; };
-		1C6A40C8083FF6C600572AB6 /* JVInterfacePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVInterfacePreferences.m; sourceTree = "<group>"; };
+		1C6A40C7083FF6C600572AB6 /* JVInterfacePreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVInterfacePreferencesViewController.h; sourceTree = "<group>"; };
+		1C6A40C8083FF6C600572AB6 /* JVInterfacePreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVInterfacePreferencesViewController.m; sourceTree = "<group>"; };
 		1C6A429508400BEA00572AB6 /* window.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = window.png; path = Resources/window.png; sourceTree = "<group>"; };
 		1C6A42A608400E7900572AB6 /* targetWindow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = targetWindow.png; path = Resources/targetWindow.png; sourceTree = "<group>"; };
 		1C6A451E0841746500572AB6 /* JVChatViewCriterionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatViewCriterionController.h; path = Controllers/JVChatViewCriterionController.h; sourceTree = "<group>"; };
@@ -1319,10 +1319,10 @@
 				1CBC630905489484009E59E1 /* JVGeneralPreferencesViewController.h */,
 				1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */,
 				C2BE9F0F1BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib */,
+				1C6A40C7083FF6C600572AB6 /* JVInterfacePreferencesViewController.h */,
+				1C6A40C8083FF6C600572AB6 /* JVInterfacePreferencesViewController.m */,
 				C22A35761BC0378A001757D7 /* JVGeneralPreferences.h */,
 				C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */,
-				1C6A40C8083FF6C600572AB6 /* JVInterfacePreferences.m */,
-				1C6A40C7083FF6C600572AB6 /* JVInterfacePreferences.h */,
 				1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */,
 				1CC6FC500549FCD70075807C /* JVAppearancePreferences.h */,
 				1C9982010603EFD6006C6417 /* JVNotificationPreferences.m */,
@@ -2403,7 +2403,7 @@
 				1C5EF36C07B45FBF004E66D3 /* JVChatSession.m in Sources */,
 				1C66913A07BFA76D008400F7 /* JVEmoticonSet.m in Sources */,
 				1C70377F07E49F25005CEA40 /* JVSmartTranscriptPanel.m in Sources */,
-				1C6A40CA083FF6C600572AB6 /* JVInterfacePreferences.m in Sources */,
+				1C6A40CA083FF6C600572AB6 /* JVInterfacePreferencesViewController.m in Sources */,
 				1C6A45210841746500572AB6 /* JVChatViewCriterionController.m in Sources */,
 				1C7780DE08FA1D82006AD8E5 /* JVSpeechController.m in Sources */,
 				1C710A0209F23730007B4515 /* JVSidebarChatWindowController.m in Sources */,
