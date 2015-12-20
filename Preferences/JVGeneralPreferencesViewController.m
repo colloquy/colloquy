@@ -36,14 +36,6 @@ extern const NSStringEncoding JVAllowedTextEncodings[];
 
 @implementation JVGeneralPreferencesViewController
 
-- (instancetype)init {
-	self = [super initWithNibName:@"JVGeneralPreferences" bundle:nil];
-//	if ( self != nil ) {
-//		
-//	}
-	return self;
-}
-
 - (void) awakeFromNib {
 	[self buildEncodingMenu];
 }
