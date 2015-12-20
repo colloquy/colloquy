@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A282a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="JVInterfacePreferencesViewController">
@@ -34,11 +34,10 @@
                 <popUpButton verticalHuggingPriority="750" id="3kZ-4n-JGL">
                     <rect key="frame" x="178" y="168" width="190" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <popUpButtonCell key="cell" type="push" title="Sidebar List" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="2" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="ZFz-f9-FZQ" id="0RH-iP-evV">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
-                        <menu key="menu" title="OtherViews" id="NDu-ne-Pmt">
+                        <menu key="menu" id="NDu-ne-Pmt">
                             <items>
                                 <menuItem title="Sidebar List" state="on" tag="2" id="ZFz-f9-FZQ"/>
                                 <menuItem title="Tabbed Window" tag="1" id="UKJ-o0-Xnf"/>
@@ -63,7 +62,6 @@
                 <textField verticalHuggingPriority="750" id="xVS-yP-JZ4">
                     <rect key="frame" x="15" y="175" width="161" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Window Interface:" id="ngY-2l-q9i">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -73,7 +71,6 @@
                 <button hidden="YES" id="y8V-WO-FBl">
                     <rect key="frame" x="179" y="14" width="332" height="18"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <buttonCell key="cell" type="check" title="Always show tab bar" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingTail" inset="2" id="hBj-zd-jba">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -105,7 +102,6 @@
                 <button hidden="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" id="JDO-pf-HEG">
                     <rect key="frame" x="14" y="13" width="21" height="23"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <animations/>
                     <buttonCell key="cell" type="help" bezelStyle="helpButton" alignment="center" borderStyle="border" inset="2" id="pUw-0i-O41">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
@@ -114,7 +110,6 @@
                 <button id="94F-kf-no6">
                     <rect key="frame" x="179" y="146" width="332" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                    <animations/>
                     <buttonCell key="cell" type="check" title="Sort Chat Room members by status" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingTail" inset="2" id="woO-2w-Ltx">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -137,7 +132,6 @@
                 <textField verticalHuggingPriority="750" id="KEM-st-9i2">
                     <rect key="frame" x="18" y="423" width="416" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="Hkt-sW-eRK">
                         <font key="font" metaFont="label"/>
                         <string key="title">Panels will be grouped in windows based on the rule sets below.
@@ -156,7 +150,6 @@ A new window will be opened if no rule sets apply.</string>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" rowHeight="36" id="8Hg-pr-0B1" customClass="MVTableView">
                                 <rect key="frame" x="0.0" y="0.0" width="153" height="38"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <animations/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -181,25 +174,20 @@ A new window will be opened if no rule sets apply.</string>
                                 </connections>
                             </tableView>
                         </subviews>
-                        <animations/>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
-                    <animations/>
                     <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="gjs-az-vE3">
                         <rect key="frame" x="-100" y="-100" width="150" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                     </scroller>
                     <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="3Vx-LH-fev">
                         <rect key="frame" x="-30" y="1" width="15" height="153"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                     </scroller>
                 </scrollView>
                 <button toolTip="Add window" id="Oec-2h-wvG">
                     <rect key="frame" x="17" y="234" width="23" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <animations/>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" inset="2" id="XTx-ff-AMF">
                         <behavior key="behavior" lightByContents="YES"/>
                         <font key="font" metaFont="label"/>
@@ -218,7 +206,6 @@ A new window will be opened if no rule sets apply.</string>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" id="nB9-B3-0vi" customClass="MVTableView">
                                 <rect key="frame" x="0.0" y="0.0" width="258" height="20"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <animations/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -242,25 +229,20 @@ A new window will be opened if no rule sets apply.</string>
                                 </connections>
                             </tableView>
                         </subviews>
-                        <animations/>
                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
-                    <animations/>
                     <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Swt-ou-9UW">
                         <rect key="frame" x="-100" y="-100" width="253" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                     </scroller>
                     <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="NGU-SS-pWe">
                         <rect key="frame" x="-30" y="1" width="15" height="153"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                     </scroller>
                 </scrollView>
                 <button toolTip="Add rule" id="0lE-bY-T3x">
                     <rect key="frame" x="180" y="234" width="23" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <animations/>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" inset="2" id="aRT-2I-VEK">
                         <behavior key="behavior" lightByContents="YES"/>
                         <font key="font" metaFont="label"/>
@@ -272,7 +254,6 @@ A new window will be opened if no rule sets apply.</string>
                 <button toolTip="Edit rule" id="VrK-V3-91k">
                     <rect key="frame" x="232" y="234" width="23" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <animations/>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="editWidget" imagePosition="only" alignment="center" alternateImage="editWidgetPressed" enabled="NO" inset="2" id="VeP-pA-fHf">
                         <behavior key="behavior" lightByContents="YES"/>
                         <font key="font" metaFont="label"/>
@@ -284,7 +265,6 @@ A new window will be opened if no rule sets apply.</string>
                 <button toolTip="Edit window" id="16s-kX-eR3">
                     <rect key="frame" x="69" y="234" width="23" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <animations/>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="editWidget" imagePosition="only" alignment="center" alternateImage="editWidgetPressed" enabled="NO" inset="2" id="l2A-pq-Vnt">
                         <behavior key="behavior" lightByContents="YES"/>
                         <font key="font" metaFont="label"/>
@@ -296,7 +276,6 @@ A new window will be opened if no rule sets apply.</string>
                 <button id="smX-c1-C1E">
                     <rect key="frame" x="179" y="122" width="332" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                    <animations/>
                     <buttonCell key="cell" type="check" title="Show full Chat Room names" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingTail" inset="2" id="ftU-Cn-45H">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -319,7 +298,6 @@ A new window will be opened if no rule sets apply.</string>
                 <textField verticalHuggingPriority="750" id="QB3-ch-uC1">
                     <rect key="frame" x="15" y="204" width="161" height="17"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Drawer Side:" id="PQN-3f-sSG">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -329,15 +307,14 @@ A new window will be opened if no rule sets apply.</string>
                 <popUpButton verticalHuggingPriority="750" id="e8X-lq-TqE">
                     <rect key="frame" x="178" y="198" width="190" height="26"/>
                     <autoresizingMask key="autoresizingMask"/>
-                    <animations/>
-                    <popUpButtonCell key="cell" type="push" title="Automatic" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="oOl-3Z-zNT" id="wd0-s8-8KC">
+                    <popUpButtonCell key="cell" type="push" title="Right" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="DUg-aN-y1L" id="wd0-s8-8KC">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
-                        <menu key="menu" title="OtherViews" id="6Ag-As-pnd">
+                        <menu key="menu" id="6Ag-As-pnd">
                             <items>
-                                <menuItem title="Automatic" state="on" id="oOl-3Z-zNT"/>
+                                <menuItem title="Automatic" id="oOl-3Z-zNT"/>
                                 <menuItem title="Left" tag="-1" id="qkG-Zn-QEG"/>
-                                <menuItem title="Right" tag="1" id="DUg-aN-y1L"/>
+                                <menuItem title="Right" state="on" tag="1" id="DUg-aN-y1L"/>
                             </items>
                         </menu>
                     </popUpButtonCell>
@@ -358,7 +335,6 @@ A new window will be opened if no rule sets apply.</string>
                 <button toolTip="Delete window" id="4dc-gg-ELR">
                     <rect key="frame" x="43" y="234" width="23" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <animations/>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" inset="2" id="Uvh-mo-LcR">
                         <behavior key="behavior" lightByContents="YES"/>
                         <font key="font" metaFont="label"/>
@@ -370,7 +346,6 @@ A new window will be opened if no rule sets apply.</string>
                 <button toolTip="Delete rule" id="guZ-k9-84S">
                     <rect key="frame" x="206" y="234" width="23" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <animations/>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" inset="2" id="BKf-87-upk">
                         <behavior key="behavior" lightByContents="YES"/>
                         <font key="font" metaFont="label"/>
@@ -382,7 +357,6 @@ A new window will be opened if no rule sets apply.</string>
                 <textField verticalHuggingPriority="750" id="Meq-y1-57z">
                     <rect key="frame" x="40" y="96" width="192" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                    <animations/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Show Notices as Private Chat:" id="gU0-QK-lxt">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -392,11 +366,10 @@ A new window will be opened if no rule sets apply.</string>
                 <popUpButton verticalHuggingPriority="750" id="rYW-KA-hVi">
                     <rect key="frame" x="234" y="92" width="134" height="26"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <animations/>
                     <popUpButtonCell key="cell" type="push" title="None" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="5Gf-hO-OGq" id="9sE-0W-YBK">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
-                        <menu key="menu" title="OtherViews" id="Hta-yv-053">
+                        <menu key="menu" id="Hta-yv-053">
                             <items>
                                 <menuItem title="All" tag="1" id="swI-NA-TAm">
                                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -427,7 +400,6 @@ A new window will be opened if no rule sets apply.</string>
                 <button id="C4N-3e-9ta">
                     <rect key="frame" x="179" y="72" width="185" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <animations/>
                     <buttonCell key="cell" type="check" title="Show Badge on Dock Icon" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="yw7-i8-neX">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
@@ -446,7 +418,6 @@ A new window will be opened if no rule sets apply.</string>
                 <textField verticalHuggingPriority="750" id="Rws-q7-AaA">
                     <rect key="frame" x="197" y="38" width="243" height="28"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <animations/>
                     <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" title="The badge will reflect the number of unread highlights and private messages." id="qFO-Zh-cVm">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -454,7 +425,6 @@ A new window will be opened if no rule sets apply.</string>
                     </textFieldCell>
                 </textField>
             </subviews>
-            <animations/>
             <point key="canvasLocation" x="274.5" y="181"/>
         </view>
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="75" userLabel="New/Edit Window Set" customClass="NSPanel">
@@ -470,7 +440,6 @@ A new window will be opened if no rule sets apply.</string>
                     <button verticalHuggingPriority="750" id="77">
                         <rect key="frame" x="190" y="12" width="88" height="32"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                         <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" inset="2" id="317">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -485,7 +454,6 @@ DQ
                     <button verticalHuggingPriority="750" id="78">
                         <rect key="frame" x="102" y="12" width="88" height="32"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="318">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -500,7 +468,6 @@ Gw
                     <textField verticalHuggingPriority="750" id="79">
                         <rect key="frame" x="17" y="84" width="98" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Window Name:" id="319">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -510,7 +477,6 @@ Gw
                     <textField verticalHuggingPriority="750" id="80">
                         <rect key="frame" x="120" y="82" width="152" height="22"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="320">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -520,14 +486,12 @@ Gw
                     <button id="81">
                         <rect key="frame" x="19" y="55" width="255" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                         <buttonCell key="cell" type="check" title="Remember manually attached panels" bezelStyle="regularSquare" imagePosition="left" alignment="left" enabled="NO" inset="2" id="321">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
                 </subviews>
-                <animations/>
             </view>
             <point key="canvasLocation" x="158" y="564"/>
         </window>
@@ -552,7 +516,6 @@ Gw
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="28" id="92">
                                     <rect key="frame" x="0.0" y="0.0" width="472" height="30"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <animations/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -601,25 +564,20 @@ Gw
                                     </tableColumns>
                                 </tableView>
                             </subviews>
-                            <animations/>
                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </clipView>
-                        <animations/>
                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="336">
                             <rect key="frame" x="-100" y="-100" width="423" height="15"/>
                             <autoresizingMask key="autoresizingMask"/>
-                            <animations/>
                         </scroller>
                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="335">
                             <rect key="frame" x="-100" y="-100" width="15" height="209"/>
                             <autoresizingMask key="autoresizingMask"/>
-                            <animations/>
                         </scroller>
                     </scrollView>
                     <textField verticalHuggingPriority="750" id="98">
                         <rect key="frame" x="18" y="86" width="136" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <animations/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Include panels that meet" id="322">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -629,14 +587,13 @@ Gw
                     <popUpButton verticalHuggingPriority="750" id="99">
                         <rect key="frame" x="156" y="81" width="65" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <animations/>
-                        <popUpButtonCell key="cell" type="push" title="any" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="102" id="323">
+                        <popUpButtonCell key="cell" type="push" title="all" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="2" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="101" id="323">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="smallSystem"/>
-                            <menu key="menu" title="OtherViews" id="100">
+                            <menu key="menu" id="100">
                                 <items>
-                                    <menuItem title="any" state="on" tag="1" id="102"/>
-                                    <menuItem title="all" tag="2" id="101"/>
+                                    <menuItem title="any" tag="1" id="102"/>
+                                    <menuItem title="all" state="on" tag="2" id="101"/>
                                 </items>
                             </menu>
                         </popUpButtonCell>
@@ -644,7 +601,6 @@ Gw
                     <textField verticalHuggingPriority="750" id="103">
                         <rect key="frame" x="223" y="86" width="151" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <animations/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="of the following conditions:" id="324">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -654,7 +610,6 @@ Gw
                     <button verticalHuggingPriority="750" id="104">
                         <rect key="frame" x="418" y="13" width="81" height="28"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="325">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="smallSystem"/>
@@ -670,7 +625,6 @@ DQ
                     <button verticalHuggingPriority="750" id="105">
                         <rect key="frame" x="339" y="13" width="81" height="28"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="326">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="smallSystem"/>
@@ -686,7 +640,6 @@ Gw
                     <button toolTip="Ignore UPPPERCASE and lowercase" id="106">
                         <rect key="frame" x="247" y="20" width="86" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <animations/>
                         <buttonCell key="cell" type="check" title="Ignore Case" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="327">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="smallSystem"/>
@@ -696,7 +649,6 @@ Gw
                         </connections>
                     </button>
                 </subviews>
-                <animations/>
             </view>
             <point key="canvasLocation" x="269" y="783"/>
         </window>
