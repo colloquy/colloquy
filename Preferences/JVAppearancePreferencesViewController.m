@@ -42,9 +42,6 @@
 @property(nonatomic, strong) NSString *userStyle;
 
 
-- (void) selectStyleWithIdentifier:(NSString *) identifier;
-- (void) selectEmoticonsWithIdentifier:(NSString *) identifier;
-
 - (void) setStyle:(JVStyle *) style;
 
 - (void) initializeFromDefaults;
@@ -77,6 +74,7 @@
 
 
 @implementation JVAppearancePreferencesViewController
+
 - (id) init {
 	if( ( self = [super init] ) ) {
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( colorWellDidChangeColor: ) name:JVColorWellCellColorDidChangeNotification object:nil];
@@ -104,7 +102,7 @@
 	[_preview setPolicyDelegate:nil];
 }
 
-- (void) moduleWillBeRemoved {
+- (void) viewDidDisappear {
 	[self.optionsDrawer close];
 }
 

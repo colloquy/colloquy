@@ -5,4 +5,7 @@
 
 @interface JVAppearancePreferencesViewController : NSViewController <MASPreferencesViewController>
 
+- (void) selectStyleWithIdentifier:(NSString *) identifier;
+- (void) selectEmoticonsWithIdentifier:(NSString *) identifier;
+
 @end

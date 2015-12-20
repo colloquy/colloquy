@@ -11,8 +11,8 @@
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
 #import "MVMenuButton.h"
-#import "NSPreferences.h"
-#import "JVAppearancePreferences.h"
+#import "CQMPreferencesWindowController.h"
+#import "JVAppearancePreferencesViewController.h"
 #import "JVMarkedScroller.h"
 #import "NSBundleAdditions.h"
 #import "NSURLAdditions.h"
@@ -959,7 +959,10 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (IBAction) _openAppearancePreferences:(id) sender {
-	[[NSPreferences sharedPreferences] showPreferencesPanelForOwner:[JVAppearancePreferences sharedInstance]];
+	MVApplicationController *applicationController = (MVApplicationController *)NSApp.delegate;
+	[applicationController showPreferences:sender];
+	CQMPreferencesWindowController *preferencesWindowController = [applicationController preferencesWindowController];
+	[preferencesWindowController selectControllerWithIdentifier:preferencesWindowController.appearancePreferences.identifier];
 }
 
 - (BOOL) _usingSpecificEmoticons {

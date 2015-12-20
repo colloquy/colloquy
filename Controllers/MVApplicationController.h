@@ -3,7 +3,7 @@ extern NSString *JVChatEmoticonSetInstalledNotification;
 extern NSString *JVMachineBecameIdleNotification;
 extern NSString *JVMachineStoppedIdlingNotification;
 
-@class JVPreferencesController;
+@class CQMPreferencesWindowController;
 @class SUUpdater;
 @protocol MASPreferencesViewController;
 
@@ -17,6 +17,9 @@ extern NSString *JVMachineStoppedIdlingNotification;
 	NSDate *_launchDate;
 	NSMutableArray *_previouslyConnectedConnections;
 }
+
+@property(nonatomic, strong, readonly) CQMPreferencesWindowController *preferencesWindowController;
+
 - (IBAction) checkForUpdate:(id) sender;
 - (IBAction) helpWebsite:(id) sender;
 - (IBAction) connectToSupportRoom:(id) sender;

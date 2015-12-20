@@ -292,6 +292,7 @@
 		C296541C1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C296541E1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib */; };
 		C296541F1BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654211BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib */; };
 		C29654221BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654241BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib */; };
+		C2B9D0ED1C258BA200C2B4C4 /* CQMPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
 		CBF6855F08201B7300F498FB /* schema.xml in Resources */ = {isa = PBXBuildFile; fileRef = CBF685340820190D00F498FB /* schema.xml */; };
@@ -989,6 +990,8 @@
 		C29B1ADD1C10D3CC005CA86A /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVTranscriptPreferencesViewController.strings"; sourceTree = "<group>"; };
 		C29B1ADF1C10D3CE005CA86A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
 		C29B1AE11C10D3D0005CA86A /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVTranscriptPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C2B9D0EB1C258BA200C2B4C4 /* CQMPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQMPreferencesWindowController.h; sourceTree = "<group>"; };
+		C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQMPreferencesWindowController.m; sourceTree = "<group>"; };
 		C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MASPreferences.xcodeproj; path = Frameworks/MASPreferences/MASPreferences.xcodeproj; sourceTree = "<group>"; };
 		C2EB205F1C1EA95F00CB88B2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
 		C2EB20611C1EAA0A00CB88B2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
@@ -1314,6 +1317,8 @@
 		1CBC62F405488D5A009E59E1 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
+				C2B9D0EB1C258BA200C2B4C4 /* CQMPreferencesWindowController.h */,
+				C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */,
 				1CBC630905489484009E59E1 /* JVGeneralPreferencesViewController.h */,
 				1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */,
 				C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */,
@@ -2354,6 +2359,7 @@
 				1C06077C064A5DE8002438AF /* JVColorWellCell.m in Sources */,
 				1CABF8780656414100801C15 /* NSBundleAdditions.m in Sources */,
 				1CABFCB20657F10900801C15 /* JVSplitView.m in Sources */,
+				C2B9D0ED1C258BA200C2B4C4 /* CQMPreferencesWindowController.m in Sources */,
 				1CABFD0F0658629200801C15 /* JVStyle.m in Sources */,
 				1C0730CA0677765B008D8AD9 /* AICustomTabCell.m in Sources */,
 				1C0730CC0677765B008D8AD9 /* AICustomTabDragging.m in Sources */,
