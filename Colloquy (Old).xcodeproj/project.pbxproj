@@ -295,6 +295,7 @@
 		C22A35781BC0378A001757D7 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */; settings = {ASSET_TAGS = (); }; };
 		C26126551BD2B92F00B7AF87 /* JVNotificationPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26126541BD2B92F00B7AF87 /* JVNotificationPreferences.m */; settings = {ASSET_TAGS = (); }; };
 		C26126571BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26126561BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
+		C261265A1BD2E9AF00B7AF87 /* JVFileTransferPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26126591BD2E9AF00B7AF87 /* JVFileTransferPreferences.m */; settings = {ASSET_TAGS = (); }; };
 		C26B7A7C1BCA51D10085846F /* JVAppearancePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26B7A7B1BCA51D10085846F /* JVAppearancePreferences.m */; settings = {ASSET_TAGS = (); }; };
 		C26B7A7E1BCA55B00085846F /* JVAppearancePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26B7A7D1BCA55B00085846F /* JVAppearancePreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
 		C2BD72E51BC31162004C1EBD /* JVInterfacePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C2BD72E41BC31162004C1EBD /* JVInterfacePreferences.m */; settings = {ASSET_TAGS = (); }; };
@@ -1008,6 +1009,8 @@
 		C26126531BD2B92F00B7AF87 /* JVNotificationPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVNotificationPreferences.h; sourceTree = "<group>"; };
 		C26126541BD2B92F00B7AF87 /* JVNotificationPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVNotificationPreferences.m; sourceTree = "<group>"; };
 		C26126561BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVNotificationPreferencesViewController.xib; sourceTree = "<group>"; };
+		C26126581BD2E9AF00B7AF87 /* JVFileTransferPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVFileTransferPreferences.h; sourceTree = "<group>"; };
+		C26126591BD2E9AF00B7AF87 /* JVFileTransferPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFileTransferPreferences.m; sourceTree = "<group>"; };
 		C26B7A7A1BCA51D10085846F /* JVAppearancePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppearancePreferences.h; sourceTree = "<group>"; };
 		C26B7A7B1BCA51D10085846F /* JVAppearancePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppearancePreferences.m; sourceTree = "<group>"; };
 		C26B7A7D1BCA55B00085846F /* JVAppearancePreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVAppearancePreferencesViewController.xib; sourceTree = "<group>"; };
@@ -1339,6 +1342,8 @@
 				C26B7A7B1BCA51D10085846F /* JVAppearancePreferences.m */,
 				C26126531BD2B92F00B7AF87 /* JVNotificationPreferences.h */,
 				C26126541BD2B92F00B7AF87 /* JVNotificationPreferences.m */,
+				C26126581BD2E9AF00B7AF87 /* JVFileTransferPreferences.h */,
+				C26126591BD2E9AF00B7AF87 /* JVFileTransferPreferences.m */,
 				1CBC630905489484009E59E1 /* JVGeneralPreferencesViewController.h */,
 				1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */,
 				C2BE9F0F1BC0AB380094A4BD /* JVGeneralPreferencesViewController.xib */,
@@ -2381,6 +2386,7 @@
 				1CB2CD73052DDC560094AAA4 /* MVTableView.m in Sources */,
 				1CB2CD74052DDC560094AAA4 /* JVChatTranscriptPanel.m in Sources */,
 				1CB2CD77052DDC560094AAA4 /* JVChatConsolePanel.m in Sources */,
+				C261265A1BD2E9AF00B7AF87 /* JVFileTransferPreferences.m in Sources */,
 				1C1ACE440533943900F71D4E /* JVInspectorController.m in Sources */,
 				1C1ACFB805344FCC00F71D4E /* JVConnectionInspector.m in Sources */,
 				1CB4DCB10536282B0080D36F /* JVChatRoomInspector.m in Sources */,
