@@ -405,7 +405,7 @@
                 <constraint firstAttribute="trailing" secondItem="WKL-Jk-9UL" secondAttribute="trailing" constant="20" symbolic="YES" id="QiA-J6-sRu"/>
                 <constraint firstItem="2F9-mo-XcW" firstAttribute="top" secondItem="gAw-5k-kdo" secondAttribute="bottom" constant="8" symbolic="YES" id="QuA-wa-HQP"/>
                 <constraint firstItem="mky-5T-A7Y" firstAttribute="top" secondItem="2F9-mo-XcW" secondAttribute="bottom" constant="8" symbolic="YES" id="T7u-b7-lpc"/>
-                <constraint firstItem="2Ws-f4-kLm" firstAttribute="width" secondItem="Duj-x1-1ak" secondAttribute="width" id="TcK-7D-QKa"/>
+                <constraint firstItem="2Ws-f4-kLm" firstAttribute="width" secondItem="Duj-x1-1ak" secondAttribute="width" priority="500" id="TcK-7D-QKa"/>
                 <constraint firstItem="3wo-wo-0NU" firstAttribute="leading" secondItem="bBe-bs-xIE" secondAttribute="leading" id="Ubj-TR-kJs"/>
                 <constraint firstItem="4Cb-4P-Apd" firstAttribute="trailing" secondItem="gAw-5k-kdo" secondAttribute="trailing" id="WZy-9Y-WEc"/>
                 <constraint firstItem="mky-5T-A7Y" firstAttribute="centerY" secondItem="4aL-Jd-Gfz" secondAttribute="centerY" id="WlS-bx-Ehd"/>

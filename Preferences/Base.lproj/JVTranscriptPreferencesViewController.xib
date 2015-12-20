@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
@@ -208,7 +208,7 @@
             <constraints>
                 <constraint firstItem="GtW-ZF-XH9" firstAttribute="leading" secondItem="EGV-2M-9Jc" secondAttribute="leading" id="10t-01-TmK"/>
                 <constraint firstItem="NgN-ms-5om" firstAttribute="baseline" secondItem="Rbu-It-OCF" secondAttribute="baseline" id="3SU-Qc-YI4"/>
-                <constraint firstItem="pGQ-YJ-49N" firstAttribute="width" secondItem="53X-HH-IyF" secondAttribute="width" id="4Ps-DZ-rCW"/>
+                <constraint firstItem="pGQ-YJ-49N" firstAttribute="width" secondItem="53X-HH-IyF" secondAttribute="width" priority="500" id="4Ps-DZ-rCW"/>
                 <constraint firstItem="NgN-ms-5om" firstAttribute="trailing" secondItem="EGV-2M-9Jc" secondAttribute="trailing" id="5t1-zB-fgY"/>
                 <constraint firstItem="WAC-uW-6CB" firstAttribute="top" secondItem="EGV-2M-9Jc" secondAttribute="bottom" symbolic="YES" id="6Wc-td-hdA"/>
                 <constraint firstItem="KbX-l9-qC6" firstAttribute="leading" secondItem="53X-HH-IyF" secondAttribute="trailing" id="8dd-Dg-6P1"/>
@@ -220,8 +220,8 @@
                 <constraint firstItem="WAC-uW-6CB" firstAttribute="trailing" secondItem="EGV-2M-9Jc" secondAttribute="trailing" id="Fzy-vn-XET"/>
                 <constraint firstItem="EGV-2M-9Jc" firstAttribute="leading" secondItem="KbX-l9-qC6" secondAttribute="trailing" symbolic="YES" id="HBm-Tr-2eL"/>
                 <constraint firstItem="IdG-03-hqG" firstAttribute="leading" secondItem="EGV-2M-9Jc" secondAttribute="leading" id="KHD-FN-IfD"/>
-                <constraint firstAttribute="trailing" secondItem="pGQ-YJ-49N" secondAttribute="trailing" symbolic="YES" id="KNB-2l-u58"/>
-                <constraint firstItem="53X-HH-IyF" firstAttribute="leading" secondItem="HnK-Et-t37" secondAttribute="leading" symbolic="YES" id="MUq-CC-na7"/>
+                <constraint firstAttribute="trailing" secondItem="pGQ-YJ-49N" secondAttribute="trailing" constant="20" symbolic="YES" id="KNB-2l-u58"/>
+                <constraint firstItem="53X-HH-IyF" firstAttribute="leading" secondItem="HnK-Et-t37" secondAttribute="leading" constant="20" symbolic="YES" id="MUq-CC-na7"/>
                 <constraint firstItem="IdG-03-hqG" firstAttribute="top" secondItem="NgN-ms-5om" secondAttribute="bottom" symbolic="YES" id="MuX-yO-XJO"/>
                 <constraint firstItem="pGG-Iw-Bhw" firstAttribute="leading" secondItem="EGV-2M-9Jc" secondAttribute="leading" id="OaD-Xg-R1E"/>
                 <constraint firstItem="EGV-2M-9Jc" firstAttribute="baseline" secondItem="KbX-l9-qC6" secondAttribute="baseline" id="PUp-dH-I2s"/>
@@ -229,7 +229,7 @@
                 <constraint firstItem="Rbu-It-OCF" firstAttribute="trailing" secondItem="KbX-l9-qC6" secondAttribute="trailing" id="Sjf-Xc-nfE"/>
                 <constraint firstItem="NgN-ms-5om" firstAttribute="leading" secondItem="EGV-2M-9Jc" secondAttribute="leading" id="ToE-ES-hel"/>
                 <constraint firstItem="pGG-Iw-Bhw" firstAttribute="baseline" secondItem="OUu-Gl-I1j" secondAttribute="baseline" id="WJM-e1-Pkr"/>
-                <constraint firstItem="pGQ-YJ-49N" firstAttribute="top" secondItem="HnK-Et-t37" secondAttribute="top" symbolic="YES" id="c14-jV-KJg"/>
+                <constraint firstItem="pGQ-YJ-49N" firstAttribute="top" secondItem="HnK-Et-t37" secondAttribute="top" constant="20" symbolic="YES" id="c14-jV-KJg"/>
                 <constraint firstItem="IdG-03-hqG" firstAttribute="trailing" secondItem="EGV-2M-9Jc" secondAttribute="trailing" id="cE9-1b-PN4"/>
                 <constraint firstItem="NgN-ms-5om" firstAttribute="top" secondItem="pGG-Iw-Bhw" secondAttribute="bottom" symbolic="YES" id="dtq-ZN-lb8"/>
                 <constraint firstItem="GtW-ZF-XH9" firstAttribute="baseline" secondItem="E1z-sg-3es" secondAttribute="baseline" id="g4N-cY-zBC"/>
@@ -237,7 +237,7 @@
                 <constraint firstItem="GtW-ZF-XH9" firstAttribute="trailing" secondItem="EGV-2M-9Jc" secondAttribute="trailing" id="qYv-H7-pVa"/>
                 <constraint firstItem="pGG-Iw-Bhw" firstAttribute="trailing" secondItem="EGV-2M-9Jc" secondAttribute="trailing" id="sgY-H1-HJ4"/>
                 <constraint firstItem="OUu-Gl-I1j" firstAttribute="trailing" secondItem="KbX-l9-qC6" secondAttribute="trailing" id="ttV-Kw-lca"/>
-                <constraint firstItem="53X-HH-IyF" firstAttribute="top" secondItem="HnK-Et-t37" secondAttribute="top" symbolic="YES" id="xaS-k5-Hsv"/>
+                <constraint firstItem="53X-HH-IyF" firstAttribute="top" secondItem="HnK-Et-t37" secondAttribute="top" constant="20" symbolic="YES" id="xaS-k5-Hsv"/>
                 <constraint firstItem="Rbu-It-OCF" firstAttribute="leading" secondItem="KbX-l9-qC6" secondAttribute="leading" id="yyd-et-uRK"/>
                 <constraint firstItem="WAC-uW-6CB" firstAttribute="leading" secondItem="EGV-2M-9Jc" secondAttribute="leading" id="zMb-Lf-DtB"/>
             </constraints>

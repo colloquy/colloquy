@@ -483,7 +483,7 @@ A new window will be opened if no rule sets apply.</string>
                 <constraint firstItem="Rws-q7-AaA" firstAttribute="trailing" secondItem="C4N-3e-9ta" secondAttribute="trailing" id="cFm-9o-gjQ"/>
                 <constraint firstItem="y8V-WO-FBl" firstAttribute="trailing" secondItem="e8X-lq-TqE" secondAttribute="trailing" id="cTy-D1-3s0"/>
                 <constraint firstItem="y8V-WO-FBl" firstAttribute="top" secondItem="Rws-q7-AaA" secondAttribute="bottom" constant="8" symbolic="YES" id="d0L-6w-dmV"/>
-                <constraint firstItem="iot-Pe-t6D" firstAttribute="width" secondItem="qEg-NF-Juw" secondAttribute="width" id="dMa-HY-Rk0"/>
+                <constraint firstItem="iot-Pe-t6D" firstAttribute="width" secondItem="qEg-NF-Juw" secondAttribute="width" priority="500" id="dMa-HY-Rk0"/>
                 <constraint firstItem="e8X-lq-TqE" firstAttribute="top" secondItem="0lE-bY-T3x" secondAttribute="bottom" constant="20" symbolic="YES" id="dYZ-mv-ANa"/>
                 <constraint firstItem="4dc-gg-ELR" firstAttribute="bottom" secondItem="Oec-2h-wvG" secondAttribute="bottom" id="e6K-ep-q9L"/>
                 <constraint firstItem="xVS-yP-JZ4" firstAttribute="trailing" secondItem="QB3-ch-uC1" secondAttribute="trailing" id="gHJ-5x-lD1"/>
@@ -514,7 +514,7 @@ A new window will be opened if no rule sets apply.</string>
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="507" y="292" width="382" height="125"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="76">
                 <rect key="frame" x="0.0" y="0.0" width="382" height="125"/>
@@ -595,7 +595,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="233" y="313" width="514" height="122"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="90">
                 <rect key="frame" x="0.0" y="0.0" width="514" height="122"/>
