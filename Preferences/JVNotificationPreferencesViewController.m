@@ -1,70 +1,125 @@
-#import "JVNotificationPreferences.h"
+#import "JVNotificationPreferencesViewController.h"
+
 #import "NSRegularExpressionAdditions.h"
 
-@implementation JVNotificationPreferences
 
-- (NSString *) preferencesNibName {
-	return @"JVNotificationPreferences";
+@interface JVNotificationPreferencesViewController ()
+
+@property(nonatomic, strong) NSMutableDictionary *eventPrefs;
+
+@property(nonatomic, strong) IBOutlet NSTextField *highlightWords;
+@property(nonatomic, strong) IBOutlet NSPopUpButton *chatActions;
+@property(nonatomic, strong) IBOutlet NSButton *playSound;
+@property(nonatomic, strong) IBOutlet NSButton *soundOnlyIfBackground;
+@property(nonatomic, strong) IBOutlet NSPopUpButton *sounds;
+@property(nonatomic, strong) IBOutlet NSButton *bounceIcon;
+@property(nonatomic, strong) IBOutlet NSButton *untilAttention;
+@property(nonatomic, strong) IBOutlet NSButton *showBubble;
+@property(nonatomic, strong) IBOutlet NSButton *onlyIfBackground;
+@property(nonatomic, strong) IBOutlet NSButton *keepOnScreen;
+
+
+- (IBAction) switchEvent:(id) sender;
+
+- (void) saveEventSettings;
+- (IBAction) saveHighlightWords:(id) sender;
+
+- (void) buildEventsMenu;
+- (void) buildSoundsMenu;
+
+- (void) selectSoundWithPath:(NSString *) path;
+- (IBAction) playSound:(id) sender;
+- (IBAction) playSoundIfBackground:(id) sender;
+- (IBAction) switchSound:(id) sender;
+
+- (IBAction) bounceIcon:(id) sender;
+- (IBAction) bounceIconUntilFront:(id) sender;
+
+- (IBAction) showBubble:(id) sender;
+- (IBAction) showBubbleIfBackground:(id) sender;
+- (IBAction) keepBubbleOnScreen:(id) sender;
+
+@end
+
+
+@implementation JVNotificationPreferencesViewController
+
+- (void)awakeFromNib {
+	[self initializeFromDefaults];
 }
 
-- (BOOL) hasChangesPending {
-	return YES;
+
+#pragma mark MASPreferencesViewController
+
+- (NSString *) identifier {
+	return @"JVNotificationPreferencesViewController";
 }
 
-- (NSImage *) imageForPreferenceNamed:(NSString *) name {
+- (NSImage *) toolbarItemImage {
 	return [NSImage imageNamed:@"NotificationPreferences"];
 }
 
-- (BOOL) isResizable {
+- (NSString *) toolbarItemLabel {
+	return NSLocalizedString( @"Alerts", "alerts preference pane name" );
+}
+
+- (BOOL)hasResizableWidth {
 	return NO;
 }
 
-- (void) initializeFromDefaults {
-	_eventPrefs = nil;
-	[self buildEventsMenu];
-	[self buildSoundsMenu];
-	[self switchEvent:chatActions];
-	[highlightWords setStringValue:[[[NSUserDefaults standardUserDefaults] arrayForKey:@"MVChatHighlightNames"] componentsJoinedByString:@" "]];
+- (BOOL)hasResizableHeight {
+	return NO;
 }
 
-- (void) switchEvent:(id) sender {
-	_eventPrefs = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[NSString stringWithFormat:@"JVNotificationSettings %@", [[chatActions selectedItem] representedObject]]]];
 
-	BOOL boolValue = [[_eventPrefs objectForKey:@"playSound"] boolValue];
-	[playSound setState:boolValue];
-	[soundOnlyIfBackground setEnabled:boolValue];
-	[sounds setEnabled:boolValue];
-	if( ! boolValue ) [soundOnlyIfBackground setState:NSOffState];
-	else [soundOnlyIfBackground setState:[[_eventPrefs objectForKey:@"playSoundOnlyIfBackground"] boolValue]];
-	[self selectSoundWithPath:[_eventPrefs objectForKey:@"soundPath"]];
+#pragma mark - Private
 
-	boolValue = [[_eventPrefs objectForKey:@"bounceIcon"] boolValue];
-	[bounceIcon setState:boolValue];
-	[untilAttention setEnabled:boolValue];
-	if( ! boolValue ) [untilAttention setState:NSOffState];
-	else [untilAttention setState:[[_eventPrefs objectForKey:@"bounceIconUntilFront"] boolValue]];
+- (void) initializeFromDefaults {
+	self.eventPrefs = nil;
+	[self buildEventsMenu];
+	[self buildSoundsMenu];
+	[self switchEvent:self.chatActions];
+	[self.highlightWords setStringValue:[[[NSUserDefaults standardUserDefaults] arrayForKey:@"MVChatHighlightNames"] componentsJoinedByString:@" "]];
+}
 
-	boolValue = [[_eventPrefs objectForKey:@"showBubble"] boolValue];
-	[showBubble setState:boolValue];
-	[onlyIfBackground setEnabled:boolValue];
-	[keepOnScreen setEnabled:boolValue];
+- (IBAction) switchEvent:(id) sender {
+	self.eventPrefs = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[NSString stringWithFormat:@"JVNotificationSettings %@", [[self.chatActions selectedItem] representedObject]]]];
+
+	BOOL boolValue = [[self.eventPrefs objectForKey:@"playSound"] boolValue];
+	[self.playSound setState:boolValue];
+	[self.soundOnlyIfBackground setEnabled:boolValue];
+	[self.sounds setEnabled:boolValue];
+	if( ! boolValue ) [self.soundOnlyIfBackground setState:NSOffState];
+	else [self.soundOnlyIfBackground setState:[[self.eventPrefs objectForKey:@"playSoundOnlyIfBackground"] boolValue]];
+	[self selectSoundWithPath:[self.eventPrefs objectForKey:@"soundPath"]];
+
+	boolValue = [[self.eventPrefs objectForKey:@"bounceIcon"] boolValue];
+	[self.bounceIcon setState:boolValue];
+	[self.untilAttention setEnabled:boolValue];
+	if( ! boolValue ) [self.untilAttention setState:NSOffState];
+	else [self.untilAttention setState:[[self.eventPrefs objectForKey:@"bounceIconUntilFront"] boolValue]];
+
+	boolValue = [[self.eventPrefs objectForKey:@"showBubble"] boolValue];
+	[self.showBubble setState:boolValue];
+	[self.onlyIfBackground setEnabled:boolValue];
+	[self.keepOnScreen setEnabled:boolValue];
 	if( ! boolValue ) {
-		[onlyIfBackground setState:NSOffState];
-		[keepOnScreen setState:NSOffState];
+		[self.onlyIfBackground setState:NSOffState];
+		[self.keepOnScreen setState:NSOffState];
 	} else {
-		[onlyIfBackground setState:[[_eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue]];
-		[keepOnScreen setState:[[_eventPrefs objectForKey:@"keepBubbleOnScreen"] boolValue]];
+		[self.onlyIfBackground setState:[[self.eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue]];
+		[self.keepOnScreen setState:[[self.eventPrefs objectForKey:@"keepBubbleOnScreen"] boolValue]];
 	}
 }
 
 - (void) saveEventSettings {
-	[[NSUserDefaults standardUserDefaults] setObject:_eventPrefs forKey:[NSString stringWithFormat:@"JVNotificationSettings %@", [[chatActions selectedItem] representedObject]]];
+	[[NSUserDefaults standardUserDefaults] setObject:self.eventPrefs forKey:[NSString stringWithFormat:@"JVNotificationSettings %@", [[self.chatActions selectedItem] representedObject]]];
 }
 
-- (void) saveHighlightWords:(id) sender {
+- (IBAction) saveHighlightWords:(id) sender {
 	// We want to be able to let highlights contain spaces, so lets split intelligently
 	NSMutableArray *components = [NSMutableArray array];
-	NSString *words = [highlightWords stringValue];
+	NSString *words = [self.highlightWords stringValue];
 
 	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(?<=\\s|^)([/\"'].*?[/\"'])(?=\\s|$)" options:0 error:nil];
 
@@ -90,7 +145,7 @@
 		} else [availableEvents addItem:[NSMenuItem separatorItem]];
 	}
 
-	[chatActions setMenu:availableEvents];
+	[self.chatActions setMenu:availableEvents];
 }
 
 - (void) buildSoundsMenu {
@@ -163,77 +218,78 @@
 		}
 	}
 
-	[sounds setMenu:availableSounds];
+	[self.sounds setMenu:availableSounds];
 }
 
 - (void) selectSoundWithPath:(NSString *) path {
-	NSInteger index = [sounds indexOfItemWithRepresentedObject:path];
-	if( index != -1 ) [sounds selectItemAtIndex:index];
-	else [sounds selectItemAtIndex:0];
+	NSInteger index = [self.sounds indexOfItemWithRepresentedObject:path];
+	if( index != -1 ) [self.sounds selectItemAtIndex:index];
+	else [self.sounds selectItemAtIndex:0];
 }
 
-- (void) playSound:(id) sender {
-	[sounds setEnabled:(BOOL)[sender state]];
-	[soundOnlyIfBackground setEnabled:(BOOL)[sender state]];
-	if( [sender state] == NSOffState ) [soundOnlyIfBackground setState:NSOffState];
-	else [soundOnlyIfBackground setState:[[_eventPrefs objectForKey:@"playSoundOnlyIfBackground"] boolValue]];
-	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"playSound"];
-	[self switchSound:sounds];
+- (IBAction) playSound:(id) sender {
+	[self.sounds setEnabled:(BOOL)[sender state]];
+	[self.soundOnlyIfBackground setEnabled:(BOOL)[sender state]];
+	if( [sender state] == NSOffState ) [self.soundOnlyIfBackground setState:NSOffState];
+	else [self.soundOnlyIfBackground setState:[[self.eventPrefs objectForKey:@"playSoundOnlyIfBackground"] boolValue]];
+	[self.eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"playSound"];
+	[self switchSound:self.sounds];
 	[self saveEventSettings];
 }
 
-- (void) playSoundIfBackground:(id) sender {
-	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"playSoundOnlyIfBackground"];
+- (IBAction) playSoundIfBackground:(id) sender {
+	[self.eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"playSoundOnlyIfBackground"];
 	[self saveEventSettings];
 }
 
-- (void) switchSound:(id) sender {
-	NSString *path = [[sounds selectedItem] representedObject];
+- (IBAction) switchSound:(id) sender {
+	NSString *path = [[self.sounds selectedItem] representedObject];
 
-	[_eventPrefs setObject:[[sounds selectedItem] representedObject] forKey:@"soundPath"];
+	[self.eventPrefs setObject:[[self.sounds selectedItem] representedObject] forKey:@"soundPath"];
 	[self saveEventSettings];
 
-	if( [playSound state] == NSOnState ) {
+	if( [self.playSound state] == NSOnState ) {
 		if( ! [path isAbsolutePath] ) path = [[NSString stringWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:path];
 		NSSound *sound = [[NSSound alloc] initWithContentsOfFile:path byReference:YES];
 		[sound play];
 	}
 }
 
-- (void) bounceIcon:(id) sender {
-	[untilAttention setEnabled:(BOOL)[sender state]];
-	if( [sender state] == NSOffState ) [untilAttention setState:NSOffState];
-	else [untilAttention setState:[[_eventPrefs objectForKey:@"bounceIconUntilAttention"] boolValue]];
-	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"bounceIcon"];
+- (IBAction) bounceIcon:(id) sender {
+	[self.untilAttention setEnabled:(BOOL)[sender state]];
+	if( [sender state] == NSOffState ) [self.untilAttention setState:NSOffState];
+	else [self.untilAttention setState:[[self.eventPrefs objectForKey:@"bounceIconUntilAttention"] boolValue]];
+	[self.eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"bounceIcon"];
 	[self saveEventSettings];
 }
 
-- (void) bounceIconUntilFront:(id) sender {
-	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"bounceIconUntilFront"];
+- (IBAction) bounceIconUntilFront:(id) sender {
+	[self.eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"bounceIconUntilFront"];
 	[self saveEventSettings];
 }
 
-- (void) showBubble:(id) sender {
-	[onlyIfBackground setEnabled:(BOOL)[sender state]];
-	[keepOnScreen setEnabled:(BOOL)[sender state]];
+- (IBAction) showBubble:(id) sender {
+	[self.onlyIfBackground setEnabled:(BOOL)[sender state]];
+	[self.keepOnScreen setEnabled:(BOOL)[sender state]];
 	if( [sender state] == NSOffState ) {
-		[onlyIfBackground setState:NSOffState];
-		[keepOnScreen setState:NSOffState];
+		[self.onlyIfBackground setState:NSOffState];
+		[self.keepOnScreen setState:NSOffState];
 	} else {
-		[onlyIfBackground setState:[[_eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue]];
-		[keepOnScreen setState:[[_eventPrefs objectForKey:@"keepBubbleOnScreen"] boolValue]];
+		[self.onlyIfBackground setState:[[self.eventPrefs objectForKey:@"showBubbleOnlyIfBackground"] boolValue]];
+		[self.keepOnScreen setState:[[self.eventPrefs objectForKey:@"keepBubbleOnScreen"] boolValue]];
 	}
-	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"showBubble"];
+	[self.eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"showBubble"];
 	[self saveEventSettings];
 }
 
-- (void) showBubbleIfBackground:(id) sender {
-	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"showBubbleOnlyIfBackground"];
+- (IBAction) showBubbleIfBackground:(id) sender {
+	[self.eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"showBubbleOnlyIfBackground"];
 	[self saveEventSettings];
 }
 
-- (void) keepBubbleOnScreen:(id) sender {
-	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"keepBubbleOnScreen"];
+- (IBAction) keepBubbleOnScreen:(id) sender {
+	[self.eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"keepBubbleOnScreen"];
 	[self saveEventSettings];
 }
+
 @end

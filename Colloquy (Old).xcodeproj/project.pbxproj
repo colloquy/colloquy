@@ -294,6 +294,7 @@
 		C22A35571BC00BB7001757D7 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C22A35781BC0378A001757D7 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */; settings = {ASSET_TAGS = (); }; };
 		C26126551BD2B92F00B7AF87 /* JVNotificationPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26126541BD2B92F00B7AF87 /* JVNotificationPreferences.m */; settings = {ASSET_TAGS = (); }; };
+		C26126571BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26126561BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
 		C26B7A7C1BCA51D10085846F /* JVAppearancePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C26B7A7B1BCA51D10085846F /* JVAppearancePreferences.m */; settings = {ASSET_TAGS = (); }; };
 		C26B7A7E1BCA55B00085846F /* JVAppearancePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C26B7A7D1BCA55B00085846F /* JVAppearancePreferencesViewController.xib */; settings = {ASSET_TAGS = (); }; };
 		C2BD72E51BC31162004C1EBD /* JVInterfacePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = C2BD72E41BC31162004C1EBD /* JVInterfacePreferences.m */; settings = {ASSET_TAGS = (); }; };
@@ -1006,6 +1007,7 @@
 		C22A35771BC0378A001757D7 /* JVGeneralPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVGeneralPreferences.m; sourceTree = "<group>"; };
 		C26126531BD2B92F00B7AF87 /* JVNotificationPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVNotificationPreferences.h; sourceTree = "<group>"; };
 		C26126541BD2B92F00B7AF87 /* JVNotificationPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVNotificationPreferences.m; sourceTree = "<group>"; };
+		C26126561BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVNotificationPreferencesViewController.xib; sourceTree = "<group>"; };
 		C26B7A7A1BCA51D10085846F /* JVAppearancePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppearancePreferences.h; sourceTree = "<group>"; };
 		C26B7A7B1BCA51D10085846F /* JVAppearancePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppearancePreferences.m; sourceTree = "<group>"; };
 		C26B7A7D1BCA55B00085846F /* JVAppearancePreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVAppearancePreferencesViewController.xib; sourceTree = "<group>"; };
@@ -1348,6 +1350,7 @@
 				C26B7A7D1BCA55B00085846F /* JVAppearancePreferencesViewController.xib */,
 				1C9982000603EFD6006C6417 /* JVNotificationPreferencesViewController.h */,
 				1C9982010603EFD6006C6417 /* JVNotificationPreferencesViewController.m */,
+				C26126561BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib */,
 				1CDEE25605823C13000B9075 /* JVFileTransferPreferences.m */,
 				1CDEE25505823C13000B9075 /* JVFileTransferPreferences.h */,
 				1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferences.m */,
@@ -2197,6 +2200,7 @@
 				1CE6916908B183C2006D9CA0 /* ChatCore.scriptTerminology in Resources */,
 				1CE6916A08B183C3006D9CA0 /* ChatCore.scriptSuite in Resources */,
 				1CE6916B08B183C4006D9CA0 /* ChatPlugIn.scriptTerminology in Resources */,
+				C26126571BD2BBED00B7AF87 /* JVNotificationPreferencesViewController.xib in Resources */,
 				1CE6916C08B183C5006D9CA0 /* ChatPlugIn.scriptSuite in Resources */,
 				1CE6916D08B183C6006D9CA0 /* Colloquy.scriptTerminology in Resources */,
 				1CE6916E08B183C7006D9CA0 /* Colloquy.scriptSuite in Resources */,

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="15A282a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="JVNotificationPreferencesViewController">
+            <connections>
+                <outlet property="bounceIcon" destination="MRW-p9-2h4" id="FxC-Em-laF"/>
+                <outlet property="chatActions" destination="lsd-8h-BQa" id="hUu-hu-ieD"/>
+                <outlet property="highlightWords" destination="OkL-Ka-IaK" id="IlJ-71-5OW"/>
+                <outlet property="keepOnScreen" destination="Ezp-6f-stH" id="7fc-lb-flN"/>
+                <outlet property="onlyIfBackground" destination="O3w-Fb-j2j" id="RTt-5a-B9w"/>
+                <outlet property="playSound" destination="HRj-Di-g8t" id="G0T-7K-0Z0"/>
+                <outlet property="showBubble" destination="fwE-L4-0oW" id="hti-B1-MSO"/>
+                <outlet property="soundOnlyIfBackground" destination="PlS-o5-5UQ" id="6aQ-eZ-jX8"/>
+                <outlet property="sounds" destination="R1c-9i-m39" id="RLo-3O-NKp"/>
+                <outlet property="untilAttention" destination="UbL-eA-NaN" id="wgU-1e-lpq"/>
+                <outlet property="view" destination="74V-8t-vhz" id="dt9-VJ-CW5"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <userDefaultsController representsSharedInstance="YES" id="141" userLabel="Shared Defaults"/>
+        <view id="74V-8t-vhz">
+            <rect key="frame" x="0.0" y="0.0" width="525" height="321"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textField verticalHuggingPriority="750" id="5Cy-dq-s0i">
+                    <rect key="frame" x="13" y="284" width="150" height="17"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Highlight words:" id="pCL-vU-SBR">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField verticalHuggingPriority="750" id="OkL-Ka-IaK">
+                    <rect key="frame" x="168" y="282" width="326" height="22"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="Zpi-Yh-0Bg">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <action selector="saveHighlightWords:" target="-2" id="Kvc-PG-JoC"/>
+                    </connections>
+                </textField>
+                <textField verticalHuggingPriority="750" id="R0P-ep-A25">
+                    <rect key="frame" x="165" y="247" width="332" height="33"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <textFieldCell key="cell" enabled="NO" sendsActionOnEndEditing="YES" alignment="left" title="Messages containing any of your typed words will be highlighted (if the active style supports highlights)." id="wu5-IV-6xo">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button id="a4X-hz-pMN">
+                    <rect key="frame" x="166" y="223" width="330" height="18"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <buttonCell key="cell" type="check" title="Mute all notification sounds" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="OPA-kQ-uIg">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <binding destination="141" name="value" keyPath="values.JVChatNotificationsMuted" id="xdX-7B-7z5">
+                            <dictionary key="options">
+                                <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                <integer key="NSMultipleValuesPlaceholder" value="1"/>
+                                <integer key="NSNoSelectionPlaceholder" value="0"/>
+                                <integer key="NSNotApplicablePlaceholder" value="0"/>
+                                <integer key="NSNullPlaceholder" value="0"/>
+                                <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                <bool key="NSValidatesImmediately" value="YES"/>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </button>
+                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="g8n-9y-waq">
+                    <rect key="frame" x="12" y="198" width="70" height="5"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <font key="titleFont" metaFont="system"/>
+                </box>
+                <textField verticalHuggingPriority="750" id="k1X-Ao-SuK">
+                    <rect key="frame" x="84" y="192" width="79" height="17"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Chat Event:" id="Zbd-h5-L1K">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <popUpButton verticalHuggingPriority="750" id="lsd-8h-BQa">
+                    <rect key="frame" x="165" y="186" width="264" height="26"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" id="FzO-0J-Bg4">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" title="OtherViews" id="rcg-D1-Fe0"/>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="switchEvent:" target="-2" id="SsF-tN-Ctn"/>
+                    </connections>
+                </popUpButton>
+                <box verticalHuggingPriority="750" title="Box" boxType="separator" titlePosition="noTitle" id="CFr-Tf-j1R">
+                    <rect key="frame" x="434" y="198" width="79" height="5"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                    <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <font key="titleFont" metaFont="system"/>
+                </box>
+                <button id="HRj-Di-g8t">
+                    <rect key="frame" x="166" y="161" width="95" height="18"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <buttonCell key="cell" type="check" title="Play sound:" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Bd8-TT-Cxx">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="playSound:" target="-2" id="ftG-BM-zG2"/>
+                    </connections>
+                </button>
+                <popUpButton verticalHuggingPriority="750" id="R1c-9i-m39">
+                    <rect key="frame" x="264" y="157" width="165" height="22"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" enabled="NO" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" id="RYw-oi-rVj">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="smallSystem"/>
+                        <menu key="menu" title="OtherViews" id="Kte-b4-JZ6"/>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="switchSound:" target="-2" id="MXa-1W-qPe"/>
+                    </connections>
+                </popUpButton>
+                <button id="PlS-o5-5UQ">
+                    <rect key="frame" x="184" y="137" width="312" height="18"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <buttonCell key="cell" type="check" title="…only if Colloquy is in the background" bezelStyle="regularSquare" imagePosition="left" alignment="left" enabled="NO" inset="2" id="bTZ-EJ-wQ0">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="playSoundIfBackground:" target="-2" id="fdt-zq-G5g"/>
+                    </connections>
+                </button>
+                <button id="MRW-p9-2h4">
+                    <rect key="frame" x="166" y="109" width="330" height="18"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <buttonCell key="cell" type="check" title="Bounce Colloquy icon in the Dock" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="DRC-qm-Xc8">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="bounceIcon:" target="-2" id="rI7-Xw-oyc"/>
+                        <outlet property="nextKeyView" destination="UbL-eA-NaN" id="3Qm-na-eOb"/>
+                    </connections>
+                </button>
+                <button id="UbL-eA-NaN">
+                    <rect key="frame" x="184" y="87" width="312" height="18"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <buttonCell key="cell" type="check" title="…repeatedly until Colloquy is in the front" bezelStyle="regularSquare" imagePosition="left" alignment="left" enabled="NO" inset="2" id="wUY-9y-jdb">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="bounceIconUntilFront:" target="-2" id="xvz-4Q-xzT"/>
+                        <outlet property="nextKeyView" destination="OkL-Ka-IaK" id="SOW-ea-UJm"/>
+                    </connections>
+                </button>
+                <button id="fwE-L4-0oW">
+                    <rect key="frame" x="166" y="59" width="330" height="18"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <buttonCell key="cell" type="check" title="Show event bubble" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="p8P-tX-okn">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="showBubble:" target="-2" id="GgC-4B-gYh"/>
+                    </connections>
+                </button>
+                <button id="O3w-Fb-j2j">
+                    <rect key="frame" x="184" y="37" width="312" height="18"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <buttonCell key="cell" type="check" title="…only if Colloquy is in the background" bezelStyle="regularSquare" imagePosition="left" alignment="left" enabled="NO" inset="2" id="xXL-ca-iPs">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="showBubbleIfBackground:" target="-2" id="d00-07-lyZ"/>
+                    </connections>
+                </button>
+                <button id="Ezp-6f-stH">
+                    <rect key="frame" x="184" y="15" width="312" height="18"/>
+                    <autoresizingMask key="autoresizingMask"/>
+                    <animations/>
+                    <buttonCell key="cell" type="check" title="…and keep on screen until activated" bezelStyle="regularSquare" imagePosition="left" alignment="left" enabled="NO" inset="2" id="qco-MY-Hl2">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="keepBubbleOnScreen:" target="-2" id="RaM-TQ-xUP"/>
+                    </connections>
+                </button>
+            </subviews>
+            <animations/>
+        </view>
+    </objects>
+</document>
