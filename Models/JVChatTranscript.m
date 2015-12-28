@@ -143,14 +143,14 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 - (id) initWithContentsOfURL:(NSURL *) url {
 	if( ( self = [self init] ) ) {
 		NSData *contents = [NSData dataWithContentsOfURL:url];
-		if( ! contents || ! [contents length] ) {
+		if( ! contents || ! [contents length] || [contents length] > INT_MAX ) {
 			 // URL failed to return content, return nil
 			return nil;
 		}
 
 		@synchronized( self ) {
 			xmlFreeDoc( _xmlLog ); // release the empty document we made in [self init]
-			if( ! ( _xmlLog = xmlParseMemory( [contents bytes], [contents length] ) ) ) {
+			if( ! ( _xmlLog = xmlParseMemory( [contents bytes], (int)[contents length] ) ) ) {
 				return nil;
 			}
 		}

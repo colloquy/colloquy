@@ -158,9 +158,9 @@ static void generateUniqueMachineIdentifier() {
 	[_data setObject:@"unknown" forKey:@"machine-class"];
 #endif
 
-	[_data setObject:[NSNumber numberWithUnsignedInt:hardwareInfoAsNumber("hw.ncpu")] forKey:@"machine-cpu-count"];
-	[_data setObject:[NSNumber numberWithUnsignedInt:hardwareInfoAsLargeNumber("hw.cpufrequency") / 1000000] forKey:@"machine-cpu-frequency"];
-	[_data setObject:[NSNumber numberWithUnsignedLongLong:hardwareInfoAsLargeNumber("hw.memsize") / 1024 / 1024] forKey:@"machine-memory"];
+	[_data setObject:@(hardwareInfoAsNumber("hw.ncpu")) forKey:@"machine-cpu-count"];
+	[_data setObject:@(hardwareInfoAsLargeNumber("hw.cpufrequency") / 1000000) forKey:@"machine-cpu-frequency"];
+	[_data setObject:@(hardwareInfoAsLargeNumber("hw.memsize") / 1024 / 1024) forKey:@"machine-memory"];
 	[_data setObject:(hardwareInfoAsNumber("hw.cpu64bit_capable") ? @"yes" : @"no") forKey:@"machine-cpu-64bit"];
 	[_data setObject:[systemVersion objectForKey:@"ProductName"] forKey:@"machine-system-name"];
 	[_data setObject:[systemVersion objectForKey:@"ProductVersion"] forKey:@"machine-system-version"];
