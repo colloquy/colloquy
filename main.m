@@ -4,7 +4,7 @@
 #import <libexslt/exslt.h>
 
 int main( int count, const char *arg[] ) {
-	srandom( time( NULL ) );
+	srandom( (unsigned int)time( NULL ) );
 
 	xmlInitParser();
 	exsltRegisterAll();
