@@ -40,14 +40,14 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	val = (NSUInteger) ( secs / (float) stop );
 	use = ( val > 1 ? plural : desc );
-	retval = [NSString stringWithFormat:@"%u %@", val, [use objectForKey:[NSNumber numberWithUnsignedLong:stop]]];
+	retval = [NSString stringWithFormat:@"%lu %@", (unsigned long)val, [use objectForKey:[NSNumber numberWithUnsignedLong:stop]]];
 	if( longFormat && i > 0 ) {
 		NSUInteger rest = (NSUInteger) ( (NSUInteger) secs % stop );
 		stop = [[breaks objectAtIndex:--i] unsignedIntValue];
 		rest = (NSUInteger) ( rest / (float) stop );
 		if( rest > 0 ) {
 			use = ( rest > 1 ? plural : desc );
-			retval = [retval stringByAppendingFormat:@" %u %@", rest, [use objectForKey:[breaks objectAtIndex:i]]];
+			retval = [retval stringByAppendingFormat:@" %lu %@", (unsigned long)rest, [use objectForKey:[breaks objectAtIndex:i]]];
 		}
 	}
 
