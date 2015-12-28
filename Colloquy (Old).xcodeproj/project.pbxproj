@@ -803,9 +803,9 @@
 		9200339413D92557005B69BA /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Languages/it.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
 		9200339613D92565005B69BA /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Languages/ja.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
 		9200339813D9256F005B69BA /* nb */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nb; path = Languages/nb.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
-		9200339A13D92578005B69BA /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
+		9200339A13D92578005B69BA /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/MVFileTransfer.nib"; sourceTree = "<group>"; };
 		9200339C13D92581005B69BA /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Languages/es.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
-		9200339E13D9258A005B69BA /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
+		9200339E13D9258A005B69BA /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/MVFileTransfer.nib"; sourceTree = "<group>"; };
 		9220565C11018298005CD72D /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		9220565D11018298005CD72D /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDateAdditions.m; path = Additions/NSDateAdditions.m; sourceTree = "<group>"; };
 		92823CF0168FFA0A000EC36E /* KAIgnoreRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KAIgnoreRule.h; path = Shared/Models/KAIgnoreRule.h; sourceTree = "<group>"; };
@@ -842,41 +842,41 @@
 		A1429C860901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Languages/it.lproj/MVCrashCatcher.nib; sourceTree = "<group>"; };
 		A1429C880901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Languages/it.lproj/MVSoftwareUpdate.nib; sourceTree = "<group>"; };
 		A1429C890901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Languages/it.lproj/TSCustomBan.nib; sourceTree = "<group>"; };
-		A1429C8A0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/Colloquy.nib; sourceTree = "<group>"; };
-		A1429C8D0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/JVBuddyInspector.nib; sourceTree = "<group>"; };
-		A1429C8E0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/JVChatMemberInspector.nib; sourceTree = "<group>"; };
-		A1429C8F0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/JVChatRoomBrowser.nib; sourceTree = "<group>"; };
-		A1429C900901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/JVChatTranscriptBrowserPanel.nib; sourceTree = "<group>"; };
-		A1429C910901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/JVChatViewCriterion.nib; sourceTree = "<group>"; };
-		A1429C920901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/JVConnectionInspector.nib; sourceTree = "<group>"; };
-		A1429C940901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/JVFind.nib; sourceTree = "<group>"; };
-		A1429C980901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/JVRoomInspector.nib; sourceTree = "<group>"; };
-		A1429C990901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
-		A1429C9A0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/JVTranscriptCriterion.nib; sourceTree = "<group>"; };
-		A1429C9C0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/MVBuddyList.nib; sourceTree = "<group>"; };
-		A1429C9D0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/MVConnections.nib; sourceTree = "<group>"; };
-		A1429C9E0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/MVCrashCatcher.nib; sourceTree = "<group>"; };
-		A1429CA00901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/MVSoftwareUpdate.nib; sourceTree = "<group>"; };
-		A1429CA10901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt-PT.lproj/TSCustomBan.nib; sourceTree = "<group>"; };
+		A1429C8A0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/Colloquy.nib"; sourceTree = "<group>"; };
+		A1429C8D0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/JVBuddyInspector.nib"; sourceTree = "<group>"; };
+		A1429C8E0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/JVChatMemberInspector.nib"; sourceTree = "<group>"; };
+		A1429C8F0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/JVChatRoomBrowser.nib"; sourceTree = "<group>"; };
+		A1429C900901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/JVChatTranscriptBrowserPanel.nib"; sourceTree = "<group>"; };
+		A1429C910901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/JVChatViewCriterion.nib"; sourceTree = "<group>"; };
+		A1429C920901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/JVConnectionInspector.nib"; sourceTree = "<group>"; };
+		A1429C940901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/JVFind.nib"; sourceTree = "<group>"; };
+		A1429C980901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/JVRoomInspector.nib"; sourceTree = "<group>"; };
+		A1429C990901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/JVSmartTranscriptFilterSheet.nib"; sourceTree = "<group>"; };
+		A1429C9A0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/JVTranscriptCriterion.nib"; sourceTree = "<group>"; };
+		A1429C9C0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/MVBuddyList.nib"; sourceTree = "<group>"; };
+		A1429C9D0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/MVConnections.nib"; sourceTree = "<group>"; };
+		A1429C9E0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/MVCrashCatcher.nib"; sourceTree = "<group>"; };
+		A1429CA00901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/MVSoftwareUpdate.nib"; sourceTree = "<group>"; };
+		A1429CA10901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = "Languages/pt-PT.lproj/TSCustomBan.nib"; sourceTree = "<group>"; };
 		A1429CA40901F5C400A7BEEE /* Italian */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = Italian; path = Languages/it.lproj/Localizable.strings; sourceTree = "<group>"; };
-		A1429CA70901F5E000A7BEEE /* pt_PT */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = pt_PT; path = Languages/pt-PT.lproj/Localizable.strings; sourceTree = "<group>"; };
-		A15DE0420957E1490040042E /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = Languages/zh-Hant.lproj/Localizable.strings; sourceTree = "<group>"; };
-		A15DE0F60957E1B10040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/Colloquy.nib; sourceTree = "<group>"; };
-		A15DE0F90957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/JVBuddyInspector.nib; sourceTree = "<group>"; };
-		A15DE0FA0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/JVChatMemberInspector.nib; sourceTree = "<group>"; };
-		A15DE0FB0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/JVChatRoomBrowser.nib; sourceTree = "<group>"; };
-		A15DE0FC0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/JVChatTranscriptBrowserPanel.nib; sourceTree = "<group>"; };
-		A15DE0FD0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/JVChatViewCriterion.nib; sourceTree = "<group>"; };
-		A15DE0FE0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/JVConnectionInspector.nib; sourceTree = "<group>"; };
-		A15DE1000957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/JVFind.nib; sourceTree = "<group>"; };
-		A15DE1040957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/JVRoomInspector.nib; sourceTree = "<group>"; };
-		A15DE1050957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
-		A15DE1060957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/JVTranscriptCriterion.nib; sourceTree = "<group>"; };
-		A15DE1080957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/MVBuddyList.nib; sourceTree = "<group>"; };
-		A15DE1090957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/MVConnections.nib; sourceTree = "<group>"; };
-		A15DE10A0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/MVCrashCatcher.nib; sourceTree = "<group>"; };
-		A15DE10C0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/MVSoftwareUpdate.nib; sourceTree = "<group>"; };
-		A15DE10D0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh-Hant.lproj/TSCustomBan.nib; sourceTree = "<group>"; };
+		A1429CA70901F5E000A7BEEE /* pt_PT */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = pt_PT; path = "Languages/pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		A15DE0420957E1490040042E /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = "Languages/zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		A15DE0F60957E1B10040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/Colloquy.nib"; sourceTree = "<group>"; };
+		A15DE0F90957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVBuddyInspector.nib"; sourceTree = "<group>"; };
+		A15DE0FA0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVChatMemberInspector.nib"; sourceTree = "<group>"; };
+		A15DE0FB0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVChatRoomBrowser.nib"; sourceTree = "<group>"; };
+		A15DE0FC0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVChatTranscriptBrowserPanel.nib"; sourceTree = "<group>"; };
+		A15DE0FD0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVChatViewCriterion.nib"; sourceTree = "<group>"; };
+		A15DE0FE0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVConnectionInspector.nib"; sourceTree = "<group>"; };
+		A15DE1000957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVFind.nib"; sourceTree = "<group>"; };
+		A15DE1040957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVRoomInspector.nib"; sourceTree = "<group>"; };
+		A15DE1050957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVSmartTranscriptFilterSheet.nib"; sourceTree = "<group>"; };
+		A15DE1060957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVTranscriptCriterion.nib"; sourceTree = "<group>"; };
+		A15DE1080957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/MVBuddyList.nib"; sourceTree = "<group>"; };
+		A15DE1090957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/MVConnections.nib"; sourceTree = "<group>"; };
+		A15DE10A0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/MVCrashCatcher.nib"; sourceTree = "<group>"; };
+		A15DE10C0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/MVSoftwareUpdate.nib"; sourceTree = "<group>"; };
+		A15DE10D0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Languages/zh-Hant.lproj/TSCustomBan.nib"; sourceTree = "<group>"; };
 		A16C57F40921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Languages/fr.lproj/Colloquy.nib; sourceTree = "<group>"; };
 		A16C57F70921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Languages/fr.lproj/JVBuddyInspector.nib; sourceTree = "<group>"; };
 		A16C57F80921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Languages/fr.lproj/JVChatMemberInspector.nib; sourceTree = "<group>"; };
@@ -1904,7 +1904,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0720;
 			};
 			buildConfigurationList = 1C041A700854E97700A5A5BA /* Build configuration list for PBXProject "Colloquy (Old)" */;
 			compatibilityVersion = "Xcode 6.3";
@@ -2925,6 +2925,7 @@
 					Shared/Models,
 				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.standard-commands";
 				PRODUCT_NAME = "Standard Commands";
 				WRAPPER_EXTENSION = plugin;
 			};
@@ -2953,6 +2954,7 @@
 					"-lxslt",
 					"-lexslt",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy;
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2967,6 +2969,7 @@
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Importer/Info.plist;
 				OTHER_LDFLAGS = "-lxml2";
+				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.metadata-importer";
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = mdimporter;
 			};
@@ -2977,11 +2980,21 @@
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					DEBUG,
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SYMROOT = build;
 			};
@@ -2999,6 +3012,7 @@
 					Shared/Models,
 				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.standard-commands";
 				PRODUCT_NAME = "Standard Commands";
 				WRAPPER_EXTENSION = plugin;
 			};
@@ -3027,6 +3041,7 @@
 					"-lxslt",
 					"-lexslt",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy;
 				PRODUCT_NAME = Colloquy;
 				SECTORDER_FLAGS = (
 					"-sectorder",
@@ -3049,6 +3064,7 @@
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Importer/Info.plist;
 				OTHER_LDFLAGS = "-lxml2";
+				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.metadata-importer";
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = mdimporter;
 			};
@@ -3059,6 +3075,15 @@
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				SYMROOT = build;
 			};
 			name = Release;
