@@ -179,14 +179,16 @@
 }
 
 - (IBAction) changeBaseFontSize:(id) sender {
-	NSInteger size = [sender intValue];
+	// WebPreferences is the limiting factor in keeping this variable as int.
+	int size = [sender intValue];
 	[self.baseFontSize setIntValue:size];
 	[self.baseFontSizeStepper setIntValue:size];
 	[[self.preview preferences] setDefaultFontSize:size];
 }
 
 - (IBAction) changeMinimumFontSize:(id) sender {
-	NSInteger size = [sender intValue];
+	// WebPreferences is the limiting factor in keeping this variable as int.
+	int size = [sender intValue];
 	[self.minimumFontSize setIntValue:size];
 	[self.minimumFontSizeStepper setIntValue:size];
 	[[self.preview preferences] setMinimumFontSize:size];
