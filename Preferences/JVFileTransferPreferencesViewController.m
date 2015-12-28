@@ -17,7 +17,7 @@
 - (IBAction) changeSaveDownloads:(id) sender;
 
 - (void) saveDownloadsOpenPanelDidEnd:(NSOpenPanel *) sheet
-						   returnCode:(int) returnCode
+						   returnCode:(NSInteger) returnCode
 						  contextInfo:(void *) contextInfo;
 
 @end
@@ -109,8 +109,8 @@
 	}
 }
 
-- (void) saveDownloadsOpenPanelDidEnd:(NSOpenPanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	if( returnCode == NSOKButton ) {
+- (void) saveDownloadsOpenPanelDidEnd:(NSOpenPanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo {
+	if( returnCode == NSFileHandlingPanelOKButton ) {
 		NSMenuItem *menuItem = [self.saveDownloads itemAtIndex:[self.saveDownloads indexOfItemWithTag:2]];
 		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[[sheet directoryURL] path]];
 		[icon setSize:NSMakeSize( 16., 16. )];

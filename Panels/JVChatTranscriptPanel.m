@@ -45,7 +45,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 @end
 
 @interface JVChatTranscriptPanel (Private)
-- (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
+- (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo;
 @end
 
 #pragma mark -
@@ -345,8 +345,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	}];
 }
 
-- (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	if( returnCode == NSOKButton ) {
+- (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo {
+	if( returnCode == NSFileHandlingPanelOKButton ) {
 		[[self transcript] writeToURL:[sheet URL] atomically:YES];
 		[[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:[sheet isExtensionHidden]], NSFileExtensionHidden, nil] ofItemAtPath:[[sheet URL] absoluteString] error:nil];
 		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[sheet URL]];
