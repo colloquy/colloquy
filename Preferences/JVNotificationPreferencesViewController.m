@@ -124,7 +124,7 @@
 
 	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(?<=\\s|^)([/\"'].*?[/\"'])(?=\\s|$)" options:0 error:nil];
 
-	for( NSTextCheckingResult *match in [regex matchesInString:words options:NSMatchingCompleted range:NSMakeRange( 0, words.length )] )
+	for( NSTextCheckingResult *match in [regex matchesInString:words options:0 range:NSMakeRange( 0, words.length )] )
 		[components addObject:[words substringWithRange:[match rangeAtIndex:1]]];
 
 	words = [words stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)([/\"'].*?[/\"'])(?=\\s|$)" withString:@""];

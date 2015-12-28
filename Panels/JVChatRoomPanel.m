@@ -397,7 +397,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"^(.*?)[:;,-]" options:NSRegularExpressionCaseInsensitive error:nil];
 	NSString *bodyAsPlainText = [message bodyAsPlainText];
-	NSTextCheckingResult *match = [regex firstMatchInString:bodyAsPlainText options:NSMatchingCompleted range:NSMakeRange( 0, bodyAsPlainText.length) ];
+	NSTextCheckingResult *match = [regex firstMatchInString:bodyAsPlainText options:0 range:NSMakeRange( 0, bodyAsPlainText.length) ];
 	if( match && [match numberOfRanges] ) {
 		JVChatRoomMember *mbr = [self firstChatRoomMemberWithName:[bodyAsPlainText substringWithRange:[match rangeAtIndex:1]]];
 		if( mbr ) [_nextMessageAlertMembers addObject:mbr];

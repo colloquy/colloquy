@@ -482,13 +482,13 @@
 			[styleLayouts addObject:styleLayout];
 
 			// Step through the selectors.
-			for( NSTextCheckingResult *selector in [regex matchesInString:style options:NSMatchingCompleted range:NSMakeRange( 0, style.length )] ) {
+			for( NSTextCheckingResult *selector in [regex matchesInString:style options:0 range:NSMakeRange( 0, style.length )] ) {
 				// Parse all the properties for the selector.
 				regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(\\S*?):\\s*(.*?);" options:(NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators) error:nil];
 
 				// Step through all the properties and build a dictionary on this selector/property/value combo.
 				NSString *matchedText = [style substringWithRange:[selector rangeAtIndex:2]];
-				for( NSTextCheckingResult *property in [regex matchesInString:matchedText options:NSMatchingCompleted range:NSMakeRange( 0, matchedText.length )] ) {
+				for( NSTextCheckingResult *property in [regex matchesInString:matchedText options:0 range:NSMakeRange( 0, matchedText.length )] ) {
 					NSMutableDictionary *propertyInfo = [NSMutableDictionary dictionary];
 					NSString *p = [matchedText substringWithRange:[property rangeAtIndex:1]];
 					NSString *s = [style substringWithRange:[selector rangeAtIndex:1]];
@@ -519,7 +519,7 @@
 
 							// Store the color value if we found one.
 							regex = [NSRegularExpression cachedRegularExpressionWithPattern:expression options:NSRegularExpressionCaseInsensitive error:nil];
-							NSTextCheckingResult *vmatch = [regex firstMatchInString:value options:NSMatchingCompleted range:NSMakeRange( 0, value.length )];
+							NSTextCheckingResult *vmatch = [regex firstMatchInString:value options:0 range:NSMakeRange( 0, value.length )];
 							if( [vmatch numberOfRanges] ) [info setObject:[value substringWithRange:[vmatch rangeAtIndex:1]] forKey:@"value"];
 						}
 					} else if( [[info objectForKey:@"type"] isEqualToString:@"file"] ) {
@@ -534,7 +534,7 @@
 
 							// Store the path value if we found one.
 							regex = [NSRegularExpression cachedRegularExpressionWithPattern:expression options:NSRegularExpressionCaseInsensitive error:nil];
-							NSTextCheckingResult *vmatch = [regex firstMatchInString:value options:NSMatchingCompleted range:NSMakeRange( 0, value.length )];
+							NSTextCheckingResult *vmatch = [regex firstMatchInString:value options:0 range:NSMakeRange( 0, value.length )];
 							if( [vmatch numberOfRanges] ) {
 								if( ! [[value substringWithRange:[vmatch rangeAtIndex:1]] isEqualToString:@"none"] )
 									[info setObject:[value substringWithRange:[vmatch rangeAtIndex:1]] forKey:@"path"];
@@ -563,7 +563,7 @@
 	property = [property stringByEscapingCharactersInSet:escapeSet];
 
 	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[NSString stringWithFormat:@"%@\\s*\\{[^\\}]*?\\s%@:\\s*(.*?)(?:\\s*!\\s*important\\s*)?;.*?\\}", selector, property] options:NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators error:nil];
-	NSTextCheckingResult *match = [regex firstMatchInString:style options:NSMatchingCompleted range:NSMakeRange( 0, style.length ) ];
+	NSTextCheckingResult *match = [regex firstMatchInString:style options:0 range:NSMakeRange( 0, style.length ) ];
 	if( [match numberOfRanges] > 1 ) return [style substringWithRange:[match rangeAtIndex:1]];
 
 	return nil;

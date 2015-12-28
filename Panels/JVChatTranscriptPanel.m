@@ -258,7 +258,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	if( ! message || ! _searchQueryRegex ) return;
 	NSString *bodyAsPlainText = [message bodyAsPlainText];
 	NSColor *markColor = [NSColor orangeColor];
-	NSArray *matches = [_searchQueryRegex matchesInString:bodyAsPlainText options:NSMatchingCompleted range:NSMakeRange( 0, bodyAsPlainText.length )];
+	NSArray *matches = [_searchQueryRegex matchesInString:bodyAsPlainText options:0 range:NSMakeRange( 0, bodyAsPlainText.length )];
 	for (NSTextCheckingResult *match in matches) {
 		[display markScrollbarForMessage:message usingMarkIdentifier:@"quick find" andColor:markColor];
 		[display highlightString:[bodyAsPlainText substringWithRange:match.range] inMessage:message];
