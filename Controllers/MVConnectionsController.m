@@ -1,5 +1,4 @@
 #import "CQKeychain.h"
-#import "NSURLAdditions.h"
 #import "MVApplicationController.h"
 #import "MVConnectionsController.h"
 #import "JVConnectionInspector.h"

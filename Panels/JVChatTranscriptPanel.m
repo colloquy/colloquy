@@ -15,7 +15,6 @@
 #import "JVAppearancePreferencesViewController.h"
 #import "JVMarkedScroller.h"
 #import "NSBundleAdditions.h"
-#import "NSURLAdditions.h"
 #import "NSDateAdditions.h"
 
 NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";

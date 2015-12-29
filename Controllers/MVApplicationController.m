@@ -1,4 +1,3 @@
-#import "NSURLAdditions.h"
 #import "MVColorPanel.h"
 #import "MVApplicationController.h"
 #import "JVChatWindowController.h"
