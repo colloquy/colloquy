@@ -6,8 +6,6 @@
 	NSUInteger delegateRectOfRow:1;
 	NSUInteger delegateRowsInRect:1;
 }
-+ (NSImage *) ascendingSortIndicator;
-+ (NSImage *) descendingSortIndicator;
 
 - (BOOL) autosaveTableColumnHighlight;
 - (void) setAutosaveTableColumnHighlight:(BOOL) flag;
