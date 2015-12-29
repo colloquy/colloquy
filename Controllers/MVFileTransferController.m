@@ -614,7 +614,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			NSString *path = [[[self class] userPreferredDownloadFolder] stringByAppendingPathComponent:[transfer originalFileName]];
 			[sheet close];
 			[transfer setDestination:path renameIfFileExists:NO];
-			[self _incomingFileSavePanelDidEnd:nil returnCode:NSFileHandlingPanelOKButton contextInfo:(void *)transfer];
+			[self _incomingFileSavePanelDidEnd:nil returnCode:NSOKButton contextInfo:(void *)transfer];
 		} else {
 			NSSavePanel *savePanel = [NSSavePanel savePanel];
 			[sheet close];
@@ -631,7 +631,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	MVDownloadFileTransfer *transfer = (__bridge MVDownloadFileTransfer *)contextInfo;
 	[sheet setDelegate:nil];
 
-	if( returnCode == NSFileHandlingPanelOKButton ) {
+	if( returnCode == NSOKButton ) {
 		NSURL *fileURL = [sheet URL];
 		NSString *filename = ( [[fileURL pathExtension] hasSuffix:@"colloquyFake"] ? [[fileURL path] stringByDeletingPathExtension] : [fileURL path] );
 		if( ! filename ) filename = [transfer destination];
@@ -641,15 +641,15 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		NSInteger result = NSOKButton;
 
 		if( resumePossible ) {
-			if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVFileExists"] == 1 ) result = NSFileHandlingPanelOKButton; // auto resume
-			else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVFileExists"] == 2 ) result = NSFileHandlingPanelCancelButton; // auto cancel
+			if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVFileExists"] == 1 ) result = NSOKButton; // auto resume
+			else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVFileExists"] == 2 ) result = NSCancelButton; // auto cancel
 			else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVFileExists"] == 3 ) { // auto overwrite
 				resumePossible = NO;
-				result = NSFileHandlingPanelOKButton;
+				result = NSOKButton;
 			} else result = NSRunAlertPanel( NSLocalizedString( @"Save", "save dialog title" ), NSLocalizedString( @"The file %@ in %@ already exists. Would you like to resume from where a previous transfer stopped or replace it?", "replace or resume transfer save dialog message" ), NSLocalizedString( @"Resume", "resume button name" ), ( sheet ? NSLocalizedString( @"Cancel", "cancel button" ) : NSLocalizedString( @"Save As...", "save as button name" ) ), NSLocalizedString( @"Replace", "replace button name" ), [[NSFileManager defaultManager] displayNameAtPath:filename], [filename stringByDeletingLastPathComponent] );
 		} else if( fileExists ) result = NSRunAlertPanel( NSLocalizedString( @"Save", "save dialog title" ), NSLocalizedString( @"The file %@ in %@ already exists and can't be resumed. Replace it?", "replace transfer save dialog message" ), NSLocalizedString( @"Replace", "replace button name" ), ( sheet ? NSLocalizedString( @"Cancel", "cancel button" ) : NSLocalizedString( @"Save As...", "save as button name" ) ), nil, [[NSFileManager defaultManager] displayNameAtPath:filename], [filename stringByDeletingLastPathComponent] );
 
-		if( result == NSFileHandlingPanelCancelButton ) {
+		if( result == NSCancelButton ) {
 			NSSavePanel *savePanel = [NSSavePanel savePanel];
 			[sheet close];
 			[savePanel setDelegate:self];
@@ -658,7 +658,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 				[self _incomingFileSavePanelDidEnd:savePanel returnCode:result contextInfo:(void *)transfer];
 			}];
 		} else {
-			BOOL resume = ( resumePossible && result == NSFileHandlingPanelOKButton );
+			BOOL resume = ( resumePossible && result == NSOKButton );
 			[transfer setDestination:filename renameIfFileExists:NO];
 			[transfer acceptByResumingIfPossible:resume];
 			[self addFileTransfer:transfer];
@@ -673,7 +673,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	WebDownload *download = (__bridge WebDownload *)contextInfo;
 	[sheet setDelegate:nil];
 
-	if( returnCode == NSFileHandlingPanelOKButton ) {
+	if( returnCode == NSOKButton ) {
 		NSMutableDictionary *info = nil;
 		for( info in _transferStorage ) {
 			if( [info objectForKey:@"controller"] == download ) {
