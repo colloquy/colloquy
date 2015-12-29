@@ -55,7 +55,7 @@
 #pragma mark -
 
 - (NSView *) view {
-	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVRoomInspector" owner:self];
+	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"JVRoomInspector" owner:self topLevelObjects:NULL];
 	return view;
 }
 

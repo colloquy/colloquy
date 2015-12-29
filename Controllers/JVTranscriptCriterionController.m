@@ -115,7 +115,7 @@
 #pragma mark -
 
 - (NSView *) view {
-	if( ! subview ) [NSBundle loadNibNamed:@"JVTranscriptCriterion" owner:self];
+	if( ! subview ) [[NSBundle mainBundle] loadNibNamed:@"JVTranscriptCriterion" owner:self topLevelObjects:NULL];
 	return subview;
 }
 

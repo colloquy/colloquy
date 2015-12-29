@@ -290,7 +290,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 #pragma mark -
 
 - (NSView *) view {
-	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVDirectChat" owner:self];
+	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"JVDirectChat" owner:self topLevelObjects:NULL];
 	return contents;
 }
 

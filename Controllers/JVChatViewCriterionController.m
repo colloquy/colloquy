@@ -94,7 +94,7 @@
 #pragma mark -
 
 - (NSView *) view {
-	if( ! subview ) [NSBundle loadNibNamed:@"JVChatViewCriterion" owner:self];
+	if( ! subview ) [[NSBundle mainBundle] loadNibNamed:@"JVChatViewCriterion" owner:self topLevelObjects:NULL];
 	return subview;
 }
 

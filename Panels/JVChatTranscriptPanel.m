@@ -197,7 +197,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (NSView *) view {
-	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVChatTranscript" owner:self];
+	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"JVChatTranscript" owner:self topLevelObjects:NULL];
 	return contents;
 }
 
