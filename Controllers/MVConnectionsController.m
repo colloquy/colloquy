@@ -176,27 +176,24 @@ static NSMenu *favoritesMenu = nil;
 
 		[self _loadBookmarkList];
 
-		 // this can likely be removed when 3.0 starts, if we even keep MVConnectionsController around
+		// this can likely be removed when 3.0 starts, if we even keep MVConnectionsController around (zach)
+		// agreed. and once we do, we should document it in a list of "retired user defaults keys". (alex)
 		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVFavoritesMigrated"] ) {
 			NSString *path = [@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath];
 
-			NSMutableArray *favorites = [NSMutableArray array];
-
 			NSArray *directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
-			for( NSString *item in directoryContents ) {
-				if( ! [[item pathExtension] isEqualToString:@"inetloc"] )
+			for ( NSString *item in directoryContents ) {
+				if ( ![[item pathExtension] isEqualToString:@"inetloc"] ) {
 					continue;
-
-				NSURL *url = [NSURL URLWithInternetLocationFile:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@", item] stringByExpandingTildeInPath]];
-				if( url ) {
-					[favorites addObject:[NSDictionary dictionaryWithObjectsAndKeys:[url.path lastPathComponent], @"target", url.host, @"server", url.scheme, @"scheme", nil]];
-
-					[[NSFileManager defaultManager] removeItemAtPath:item error:nil];
 				}
+
+				// This code previously migrated favorites from being resource fork based (.inetloc files) to the newer
+				// plist (shipped 4 versions with it from 2012 to at least 2015), now it just deletes the old files.
+
+				[[NSFileManager defaultManager] removeItemAtPath:item error:nil];
 			}
 
-			if ([favorites writeToFile:[@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath] atomically:YES])
-				[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVFavoritesMigrated"];
+			[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVFavoritesMigrated"];
 		}
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_peerTrustFeedbackNotification:) name:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:nil];
 	}
