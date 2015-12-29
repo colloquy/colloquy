@@ -10,9 +10,10 @@
 #import "MVChatUserAdditions.h"
 
 @interface JVChatRoomMember (JVChatMemberPrivate)
-- (NSString *) _selfStoredNickname;
-- (NSString *) _selfCompositeName;
 - (void) _detach;
+- (void) _refreshIcon:(NSNotification *) notification;
+- (NSString *) _selfCompositeName;
+- (NSString *) _selfStoredNickname;
 @end
 
 #pragma mark -
