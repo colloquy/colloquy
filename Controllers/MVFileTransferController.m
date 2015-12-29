@@ -57,10 +57,16 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 #pragma mark -
 
 @interface MVFileTransferController (MVFileTransferControllerPrivate)
-- (void) _updateProgress:(id) sender;
+#pragma mark ChatCore File Transfer Support
+- (void) _fileTransferError:(NSNotification *) notification;
+- (void) _fileTransferStarted:(NSNotification *) notification;
+- (void) _fileTransferFinished:(NSNotification *) notification;
+- (void) _incomingFile:(NSNotification *) notification;
 - (void) _incomingFileSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
 - (void) _incomingFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo;
+#pragma mark URL Web Download Support
 - (void) _downloadFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo;
+- (void) _updateProgress:(id) sender;
 - (NSMutableDictionary *) _infoForTransferAtIndex:(NSUInteger) index;
 - (void) _startUpdateTimerIfNeeded;
 - (void) _stopUpdateTimerIfFinished;
