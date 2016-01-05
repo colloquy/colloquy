@@ -13,6 +13,17 @@ NSString *JVBuddyActiveUserChangedNotification = @"JVBuddyActiveUserChangedNotif
 
 static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
+@interface JVBuddy (Private)
+- (void) _addUser:(MVChatUser *) user;
+- (void) _removeUser:(MVChatUser *) user;
+- (void) _buddyIdleUpdate:(NSNotification *) notification;
+- (void) _buddyStatusChanged:(NSNotification *) notification;
+- (void) _registerWithConnection:(NSNotification *) notification;
+- (void) _disconnected:(NSNotification *) notification;
+- (void) _ruleMatched:(NSNotification *) notification;
+- (void) _ruleUserRemoved:(NSNotification *) notification;
+@end
+
 @implementation JVBuddy
 + (JVBuddyName) preferredName {
 	return _mainPreferredName;
@@ -490,7 +501,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 #pragma mark -
 
-@implementation JVBuddy (JVBuddyPrivate)
+@implementation JVBuddy (Private)
 - (void) _addUser:(MVChatUser *) user {
 	if( [_users containsObject:user] )
 		return;

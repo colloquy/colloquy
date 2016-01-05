@@ -100,30 +100,7 @@ NSString *JVToolbarMarkItemIdentifier = @"JVToolbarMarkItem";
 NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNotification";
 NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasProcessedNotification";
 
-@interface JVDirectChatPanel (JVDirectChatPrivate) <ABImageClient, MVTextViewDelegate>
-- (NSString *) _selfCompositeName;
-- (NSString *) _selfStoredNickname;
-- (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message;
-- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
-- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont;
-- (void) _saveSelfIcon;
-- (void) _saveBuddyIcon:(JVBuddy *) buddy;
-- (void) _setCurrentMessage:(JVMutableChatMessage *) message;
-@end
-
-#pragma mark -
-
-@interface JVChatTranscriptPanel (JVChatTranscriptPrivate)
-- (void) _refreshWindowFileProxy;
-- (void) _changeEmoticonsMenuSelection;
-- (void) _didSwitchStyles:(NSNotification *) notification;
-@end
-
-#pragma mark -
-
-@interface JVStyleView (JVStyleViewPrivate)
-- (NSUInteger) _visibleMessageCount;
-- (NSUInteger) _locationOfElementAtIndex:(NSUInteger) index;
+@interface JVDirectChatPanel () <ABImageClient, MVTextViewDelegate>
 @end
 
 #pragma mark -
@@ -1567,11 +1544,18 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	return ret;
 }
+
+#pragma mark - ABImageClient
+
+- (void) consumeImageData:(NSData *) data forTag:(NSInteger) tag {
+	_personImageData = data;
+	_loadingPersonImage = NO;
+}
 @end
 
 #pragma mark -
 
-@implementation JVDirectChatPanel (JVDirectChatPrivate)
+@implementation JVDirectChatPanel (Private)
 - (NSString *) _selfCompositeName {
 	ABPerson *_person = [[ABAddressBook sharedAddressBook] me];
 	NSString *firstName = [_person valueForProperty:kABFirstNameProperty];
@@ -1790,7 +1774,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[self _changeEmoticonsMenuSelection];
 }
 
-- (IBAction) _insertEmoticon:(id) sender {
+- (void) _insertEmoticon:(id) sender {
 	if( [[send string] length] )
 		[send replaceCharactersInRange:NSMakeRange( [[send string] length], 0 ) withString:@" "];
 	[send replaceCharactersInRange:NSMakeRange( [[send string] length], 0 ) withString:[NSString stringWithFormat:@"%@ ", [sender representedObject]]];
@@ -1818,11 +1802,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	}
 
 	[send setBaseFont:baseFont];
-}
-
-- (void) consumeImageData:(NSData *) data forTag:(NSInteger) tag {
-	_personImageData = data;
-	_loadingPersonImage = NO;
 }
 
 - (void) _saveSelfIcon {
@@ -1893,6 +1872,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	else if ([(MVChatUser *)_target status] == MVChatUserAvailableStatus)
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> is now available.", "User available event message" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"userAvailable" andAttributes:nil];
 }
+
 @end
 
 #pragma mark -

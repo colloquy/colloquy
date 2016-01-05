@@ -16,29 +16,27 @@
 
 NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdateNotification";
 
-@interface JVChatRoomPanel (JVChatRoomPrivate)
+@interface JVChatRoomPanel (Private)
+// TODO: This method is overwriting a method of superclass category JVDirectChatPanel+Private, undefined behavior.
+- (void) _didDisconnect:(NSNotification *) notification; // overwrite
+- (void) _partedRoom:(NSNotification *) notification;
+- (void) _roomModeChanged:(NSNotification *) notification;
+- (void) _selfNicknameChanged:(NSNotification *) notification;
+- (void) _memberNicknameChanged:(NSNotification *) notification;
+- (void) _memberJoined:(NSNotification *) notification;
+- (void) _memberParted:(NSNotification *) notification;
+- (void) _userBricked:(NSNotification *) notification;
+- (void) _kicked:(NSNotification *) notification;
+- (void) _memberKicked:(NSNotification *) notification;
+- (void) _memberBanned:(NSNotification *) notification;
+- (void) _memberBanRemoved:(NSNotification *) notification;
+- (void) _memberModeChanged:(NSNotification *) notification;
+- (void) _membersSynced:(NSNotification *) notification;
+- (void) _bannedMembersSynced:(NSNotification *) notification;
 - (void) _topicChanged:(id) sender;
+- (void) _didClearDisplay:(NSNotification *) notification;
+
 - (NSInteger) _roomIndexInFavoritesMenu;
-@end
-
-#pragma mark -
-
-@interface JVDirectChatPanel (JVDirectChatPrivate)
-- (NSString *) _selfCompositeName;
-- (NSString *) _selfStoredNickname;
-- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
-- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont;
-- (void) _didConnect:(NSNotification *) notification;
-- (void) _didDisconnect:(NSNotification *) notification;
-- (void) _didSwitchStyles:(NSNotification *) notification;
-@end
-
-#pragma mark -
-
-@interface JVChatRoomMember (JVChatMemberPrivate)
-- (NSString *) _selfStoredNickname;
-- (NSString *) _selfCompositeName;
-- (void) _detach;
 @end
 
 #pragma mark -
@@ -745,7 +743,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 #pragma mark -
 
-@implementation JVChatRoomPanel (JVChatRoomPrivate)
+@implementation JVChatRoomPanel (Private)
 
 - (void) _didDisconnect:(NSNotification *) notification {
 	_kickedFromRoom = NO;

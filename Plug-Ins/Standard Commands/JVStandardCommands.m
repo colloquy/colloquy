@@ -19,12 +19,6 @@
 
 #pragma mark -
 
-@interface JVChatTranscriptPanel (JVChatTranscriptPanelPrivate)
-- (void) _reloadCurrentStyle:(id) sender;
-@end
-
-#pragma mark -
-
 @interface MVChatConnection (MVChatConnectionPrivate)
 - (NSCharacterSet *) _nicknamePrefixes;
 @end

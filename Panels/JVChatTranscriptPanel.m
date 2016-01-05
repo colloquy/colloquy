@@ -28,22 +28,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 #pragma mark -
 
-@interface JVChatTranscriptPanel (JVChatTranscriptPrivate)
-- (void) _refreshWindowFileProxy;
-- (void) _refreshSearch;
-
-- (void) _changeStyleMenuSelection;
-- (void) _updateStylesMenu;
-
-- (void) _changeEmoticonsMenuSelection;
-- (void) _updateEmoticonsMenu;
-- (NSMenu *) _emoticonsMenu;
-
-- (BOOL) _usingSpecificStyle;
-- (BOOL) _usingSpecificEmoticons;
-@end
-
-@interface JVChatTranscriptPanel (Private)
+@interface JVChatTranscriptPanel ()
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo;
 @end
 
@@ -756,9 +741,9 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 @end
 
 #pragma mark -
-#pragma mark Style Support
 
-@implementation JVChatTranscriptPanel (JVChatTranscriptPrivate)
+@implementation JVChatTranscriptPanel (Private)
+#pragma mark Style Support
 - (void) _refreshWindowFileProxy {
 	if(	[[self windowController] activeChatViewController] != self ) return;
 	if( ! [[NSFileManager defaultManager] fileExistsAtPath:[[self transcript] filePath]] ) {
@@ -957,14 +942,17 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	[self _changeEmoticonsMenuSelection];
 }
 
-- (IBAction) _openAppearancePreferences:(id) sender {
+- (BOOL) _usingSpecificEmoticons {
+	return NO;
+}
+
+#pragma mark -
+
+- (void) _openAppearancePreferences:(id) sender {
 	MVApplicationController *applicationController = (MVApplicationController *)NSApp.delegate;
 	[applicationController showPreferences:sender];
 	CQMPreferencesWindowController *preferencesWindowController = [applicationController preferencesWindowController];
 	[preferencesWindowController selectControllerWithIdentifier:preferencesWindowController.appearancePreferences.identifier];
 }
 
-- (BOOL) _usingSpecificEmoticons {
-	return NO;
-}
 @end

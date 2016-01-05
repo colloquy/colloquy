@@ -110,22 +110,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
-@interface JVStyleView (JVStyleViewPrivate)
-- (void) _resetDisplay;
-- (void) _switchStyle;
-- (void) _appendMessage:(NSString *) message;
-- (void) _prependMessages:(NSString *) messages;
-- (void) _styleError;
-- (NSString *) _contentHTMLWithBody:(NSString *) html;
-- (NSURL *) _baseURL;
-- (NSUInteger) _visibleMessageCount;
-- (NSUInteger) _locationOfMessage:(JVChatMessage *) message;
-- (NSUInteger) _locationOfElementAtIndex:(NSUInteger) index;
-- (void) _setupMarkedScroller;
-@end
-
-#pragma mark -
-
 @implementation JVStyleView
 + (void) emptyCache {
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"] )
@@ -716,7 +700,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
-@implementation JVStyleView (JVStyleViewPrivate)
+@implementation JVStyleView (Private)
 - (void) _checkForTransparantStyle {
 	DOMCSSStyleDeclaration *style = [self computedStyleForElement:_body pseudoElement:nil];
 	DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];

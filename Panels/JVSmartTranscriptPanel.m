@@ -11,6 +11,10 @@
 
 static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsItem";
 
+@interface JVSmartTranscriptPanel (Private)
+- (void) _messageDisplayed:(NSNotification *) notification;
+@end
+
 @implementation JVSmartTranscriptPanel
 - (id) init {
 	if( ( self = [super init] ) ) {
@@ -449,7 +453,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 #pragma mark -
 
-@implementation JVSmartTranscriptPanel (JVSmartTranscriptPanelPrivate)
+@implementation JVSmartTranscriptPanel (Private)
 - (void) _messageDisplayed:(NSNotification *) notification {
 	JVChatMessage *origMessage = [[notification userInfo] objectForKey:@"message"];
 	[self matchMessage:origMessage fromView:[notification object]];

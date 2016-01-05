@@ -3,17 +3,6 @@
 #import "JVDirectChatPanel.h"
 #import "JVChatTranscriptPanel.h"
 
-@interface JVChatTranscriptPanel (JVChatTranscriptPrivate)
-- (NSMenu *) _stylesMenu;
-- (NSMenu *) _emoticonsMenu;
-@end
-
-#pragma mark -
-
-@interface JVDirectChatPanel (JVDirectChatPrivate)
-- (NSMenu *) _encodingMenu;
-@end
-
 #pragma mark -
 
 @interface JVChatRoomInspector (JVChatRoomInspectorPrivate)

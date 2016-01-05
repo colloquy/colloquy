@@ -12,12 +12,17 @@
 
 static MVBuddyListController *sharedInstance = nil;
 
-@interface MVBuddyListController (MVBuddyListControllerPrivate)
-- (void) _loadBuddyList;
-- (void) _sortBuddies;
+@interface MVBuddyListController (Private)
+- (void) _animateStep:(NSTimer *) timer;
 - (void) _manuallySortAndUpdate;
+- (void) _sortBuddies;
 - (void) _setBuddiesNeedSortAnimated;
 - (void) _sortBuddiesAnimated:(id) sender;
+- (void) _buddyChanged:(NSNotification *) notification;
+- (void) _buddyOnline:(NSNotification *) notification;
+- (void) _buddyOffline:(NSNotification *) notification;
+- (void) _importOldBuddyList;
+- (void) _loadBuddyList;
 - (NSMenu *) _menuForBuddy:(JVBuddy *) buddy;
 @end
 
@@ -785,7 +790,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 #pragma mark -
 
-@implementation MVBuddyListController (MVBuddyListControllerPrivate)
+@implementation MVBuddyListController (Private)
 - (void) _animateStep:(NSTimer *) timer {
 	static NSDate *start = nil;
 	if( ! _animationPosition ) {

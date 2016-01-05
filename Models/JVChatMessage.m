@@ -9,13 +9,6 @@
 #import "NSAttributedStringMoreAdditions.h"
 #import "NSDateAdditions.h"
 
-@interface JVChatTranscript (JVChatTranscriptPrivate)
-- (void) _loadMessage:(JVChatMessage *) message;
-- (void) _loadSenderForMessage:(JVChatMessage *) message;
-- (void) _loadBodyForMessage:(JVChatMessage *) message;
-@end
-
-#pragma mark -
 
 @implementation JVChatMessage
 + (void) initialize {

@@ -2,15 +2,6 @@
 #import "JVSideSplitView.h"
 #import "JVDetailCell.h"
 
-#pragma mark -
-
-@interface JVChatWindowController (JVChatWindowControllerPrivate)
-- (void) _refreshToolbar;
-- (void) _refreshWindowTitle;
-@end
-
-#pragma mark -
-
 @implementation JVSidebarChatWindowController
 - (id) init {
 	return [self initWithWindowNibName:@"JVSidebarChatWindow"];

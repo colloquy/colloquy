@@ -7,10 +7,11 @@
 #import "JVChatMessage.h"
 #import "NSBundleAdditions.h"
 
-@interface JVStyle (JVStylePrivate)
+@interface JVStyle (Private)
 + (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
 + (void) _freeXsltParamArray:(const char **) params;
 
+- (void) _clearVariantCache;
 - (void) _setBundle:(NSBundle *) bundle;
 - (void) _setXSLStyle:(NSURL *) location;
 - (void) _setStyleOptions:(NSArray *) options;
@@ -505,7 +506,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 #pragma mark -
 
-@implementation JVStyle (JVStylePrivate)
+@implementation JVStyle (Private)
 + (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary {
 	const char **temp = NULL, **ret = NULL;
 

@@ -66,11 +66,29 @@ extern NSString *JVChatViewPboardType;
 - (IBAction) toggleViewsDrawer:(id) sender;
 - (IBAction) openViewsDrawer:(id) sender;
 - (IBAction) closeViewsDrawer:(id) sender;
+- (IBAction) toggleSmallDrawerIcons:(id) sender;
 
 - (void) reloadListItem:(id <JVChatListItem>) controller andChildren:(BOOL) children;
 - (BOOL) isListItemExpanded:(id <JVChatListItem>) item;
 - (void) expandListItem:(id <JVChatListItem>) item;
 - (void) collapseListItem:(id <JVChatListItem>) item;
+@end
+
+@interface JVChatWindowController (Private)
+- (void) _claimMenuCommands;
+- (void) _resignMenuCommands;
+- (void) _doubleClickedListItem:(id) sender;
+- (void) _deferRefreshSelectionMenu;
+- (void) _refreshSelectionMenu;
+- (void) _refreshMenuWithItem:(id) item;
+- (void) _refreshWindow;
+- (void) _refreshToolbar;
+- (void) _refreshWindowTitle;
+- (void) _refreshList;
+- (void) _refreshPreferences;
+- (void) _saveWindowFrame;
+- (void) _switchViews:(id) sender;
+- (void) _favoritesListDidUpdate:(NSNotification *) notification;
 @end
 
 @interface JVChatWindowController (JVChatWindowControllerScripting)

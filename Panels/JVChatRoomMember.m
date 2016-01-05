@@ -9,14 +9,6 @@
 #import "MVConnectionsController.h"
 #import "MVChatUserAdditions.h"
 
-@interface JVChatRoomMember (JVChatMemberPrivate)
-- (void) _detach;
-- (void) _refreshIcon:(NSNotification *) notification;
-- (NSString *) _selfCompositeName;
-- (NSString *) _selfStoredNickname;
-@end
-
-#pragma mark -
 
 @implementation JVChatRoomMember
 + (void) initialize {
@@ -696,7 +688,7 @@
 
 #pragma mark -
 
-@implementation JVChatRoomMember (JVChatMemberPrivate)
+@implementation JVChatRoomMember (Private)
 - (void) _detach {
 	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserInformationUpdatedNotification object:_user];
 	[[NSNotificationCenter chatCenter] removeObserver:self name:MVChatUserStatusChangedNotification object:_user];

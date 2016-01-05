@@ -31,17 +31,36 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 static NSMenu *favoritesMenu = nil;
 
-@interface MVConnectionsController (MVConnectionsControllerPrivate)
-- (void) _didIdentify:(NSNotification *) notification;
-- (IBAction)_connect:(id) sender;
-- (void) _refresh:(NSNotification *) notification;
+@interface MVConnectionsController (Private)
 - (void) _loadInterfaceIfNeeded;
+- (void) _registerNotificationsForConnection:(MVChatConnection *) connection;
+- (void) _deregisterNotificationsForConnection:(MVChatConnection *) connection;
+- (void) _refresh:(NSNotification *) notification;
+- (void) _applicationQuitting:(NSNotification *) notification;
+- (void) _errorOccurred:(NSNotification *) notification;
 - (void) _saveBookmarkList;
 - (void) _loadBookmarkList;
 - (void) _validateToolbar;
+- (void) _requestPassword:(NSNotification *) notification;
+- (void) _requestCertificatePassword:(NSNotification *) notification;
+- (void) _requestPublicKeyVerification:(NSNotification *) notification;
+- (void) _autoJoinRoomsForConnection:(MVChatConnection *) connection;
+- (void) _didIdentify:(NSNotification *) notification;
+- (void) _connect:(id) sender;
+- (void) _willConnect:(NSNotification *) notification;
+- (void) _didConnect:(NSNotification *) notification;
+- (void) _didDisconnect:(NSNotification *) notification;
+- (void) _gotConnectionError:(NSNotification *) notification;
+- (NSString *) _idleMessageString;
+- (void) _machineDidBecomeIdle:(NSNotification *) notification;
+- (void) _machineDidStopIdling:(NSNotification *) notification;
+- (void) _disconnect:(id) sender;
 - (void) _delete:(id) sender;
-- (void) _registerNotificationsForConnection:(MVChatConnection *) connection;
-- (void) _deregisterNotificationsForConnection:(MVChatConnection *) connection;
+- (void) _deleteConnectionSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
+- (void) _messageUser:(id) sender;
+- (void) _openConsole:(id) sender;
++ (void) _openFavoritesFolder:(id) sender;
++ (void) _connectToFavorite:(id) sender;
 @end
 
 #pragma mark -
@@ -1470,7 +1489,7 @@ static NSMenu *favoritesMenu = nil;
 
 #pragma mark -
 
-@implementation MVConnectionsController (MVConnectionsControllerPrivate)
+@implementation MVConnectionsController (Private)
 - (void) _loadInterfaceIfNeeded {
 	if( ! [self isWindowLoaded] ) [self window];
 }
@@ -2043,7 +2062,7 @@ static NSMenu *favoritesMenu = nil;
 		[self _autoJoinRoomsForConnection:connection];
 }
 
-- (IBAction) _connect:(id) sender {
+- (void) _connect:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
 	MVChatConnection *connection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
 	[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
@@ -2173,7 +2192,7 @@ static NSMenu *favoritesMenu = nil;
 		 [connection setAwayStatusMessage:nil];
 }
 
-- (IBAction) _disconnect:(id) sender {
+- (void) _disconnect:(id) sender {
 	NSInteger row = [connections selectedRow];
 	if( row == -1 ) return;
 	
@@ -2203,22 +2222,22 @@ static NSMenu *favoritesMenu = nil;
 	[self removeConnectionAtIndex:row];
 }
 
-- (IBAction) _messageUser:(id) sender {
+- (void) _messageUser:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
 	[[NSApplication sharedApplication] beginSheet:messageUser modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
 
-- (IBAction) _openConsole:(id) sender {
+- (void) _openConsole:(id) sender {
 	NSInteger row = [connections selectedRow];
 	if( row == -1 ) return;
 	[[JVChatController defaultController] chatConsoleForConnection:[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] ifExists:NO];
 }
 
-+ (void /*IBAction*/) _openFavoritesFolder:(id) sender {
++ (void) _openFavoritesFolder:(id) sender {
 	[[NSWorkspace sharedWorkspace] openFile:[@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath]];
 }
 
-+ (void /*IBAction*/) _connectToFavorite:(id) sender {
++ (void) _connectToFavorite:(id) sender {
 	if( ! [sender representedObject] ) return;
 	[[MVConnectionsController defaultController] handleURL:[sender representedObject] andConnectIfPossible:YES];
 }

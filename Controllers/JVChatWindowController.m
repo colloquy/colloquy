@@ -32,22 +32,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 #pragma mark -
 
-@interface JVChatWindowController (JVChatWindowControllerPrivate)
-- (void) _claimMenuCommands;
-- (void) _deferRefreshSelectionMenu;
-- (void) _resignMenuCommands;
-- (void) _refreshMenuWithItem:(id) item;
-- (void) _refreshSelectionMenu;
-- (void) _refreshToolbar;
-- (void) _refreshWindow;
-- (void) _refreshWindowTitle;
-- (void) _refreshList;
-- (void) _refreshPreferences;
-- (void) _saveWindowFrame;
-@end
-
-#pragma mark -
-
 @interface NSOutlineView (ASEntendedOutlineView)
 - (void) redisplayItemEqualTo:(id) item;
 @end
@@ -973,7 +957,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 #pragma mark -
 
-@implementation JVChatWindowController (JVChatWindowControllerPrivate)
+@implementation JVChatWindowController (Private)
 - (void) _claimMenuCommands {
 	NSMenuItem *closeItem = [[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:1];
 	[closeItem setKeyEquivalentModifierMask:NSCommandKeyMask];
@@ -994,7 +978,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[closeItem setKeyEquivalent:@""];
 }
 
-- (IBAction) _doubleClickedListItem:(id) sender {
+- (void) _doubleClickedListItem:(id) sender {
 	id item = [self selectedListItem];
 	if( [item respondsToSelector:@selector( doubleClicked: )] )
 		[item doubleClicked:sender];

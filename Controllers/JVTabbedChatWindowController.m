@@ -3,20 +3,6 @@
 #import "AICustomTabsView.h"
 #import "JVChatTabItem.h"
 
-@interface JVChatWindowController (JVChatWindowControllerPrivate)
-- (void) _claimMenuCommands;
-- (void) _resignMenuCommands;
-- (void) _deferRefreshSelectionMenu;
-- (void) _refreshSelectionMenu;
-- (void) _refreshToolbar;
-- (void) _refreshWindow;
-- (void) _refreshWindowTitle;
-- (void) _refreshList;
-- (void) _refreshPreferences;
-@end
-
-#pragma mark -
-
 @interface JVTabbedChatWindowController (JVTabbedChatWindowControllerPrivate)
 - (void) _supressTabBarHiding:(BOOL) supress;
 - (void) _resizeTabBarTimer:(NSTimer *) inTimer;

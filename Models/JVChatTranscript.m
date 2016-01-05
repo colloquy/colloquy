@@ -55,14 +55,6 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-@interface JVChatTranscript (JVChatTranscriptPrivate)
-- (void) _enforceElementLimit;
-- (void) _incrementalWriteToLog:(xmlNodePtr) node continuation:(BOOL) cont;
-- (void) _changeFileAttributesAtPath:(NSString *) path;
-@end
-
-#pragma mark -
-
 @implementation JVChatTranscript
 + (id) chatTranscript {
 	return [[self alloc] init];
@@ -941,7 +933,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-@implementation JVChatTranscript (JVChatTranscriptPrivate)
+@implementation JVChatTranscript (Private)
 - (void) _enforceElementLimit {
 	if( ! [self elementLimit] ) return;
 

@@ -7,8 +7,15 @@ static NSString *JVToolbarToggleVerboseItemIdentifier = @"JVToolbarToggleVerbose
 static NSString *JVToolbarTogglePrivateMessagesItemIdentifier = @"JVToolbarTogglePrivateMessagesItem";
 static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
-@interface JVChatConsolePanel (Private)
+@interface JVChatConsolePanel ()
 - (void) textDidChange:(NSNotification *) notification;
+@end
+
+@interface JVChatConsolePanel (Private)
+- (void) _gotImportantMessage:(NSNotification *) notification;
+- (void) _gotInformationalMessage:(NSNotification *) notification;
+- (void) _gotRawMessage:(NSNotification *) notification;
+- (void) _refreshIcon:(NSNotification *) notification;
 @end
 
 @implementation JVChatConsolePanel
@@ -640,7 +647,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 #pragma mark -
 
-@implementation JVChatConsolePanel (JVChatConsolePanelPrivate)
+@implementation JVChatConsolePanel (Private)
 - (void) _gotImportantMessage:(NSNotification *) notification {
 	if( _paused ) return;
 	[self addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] asOutboundMessage:NO];
