@@ -230,7 +230,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 		}
 
 		NSString *scriptTitle = [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension];
-		int result = NSOKButton;
+		NSInteger result = NSOKButton;
 
 		_errorShown = YES;
 		if( functionName ) result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python script error title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while calling the \"%@\" function.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "Python script plugin error message" ), nil, ( filename ? NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ) : nil ), nil, scriptTitle, functionName, errorDesc );
@@ -271,7 +271,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 	PyObject *func = PyDict_GetItemString( dict, [functionName UTF8String] );
 
 	if( func && PyCallable_Check( func ) ) {
-		unsigned i = 0, count = [arguments count];
+		NSUInteger i = 0, count = [arguments count];
 		PyObject *args = PyTuple_New( count );
 		if( ! args ) return nil;
 
