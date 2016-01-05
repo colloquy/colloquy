@@ -662,7 +662,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (NSArray *) memberUsersArray {
+- (NSArray <MVChatUser *> *) memberUsersArray {
 	return [[self memberUsers] allObjects];
 }
 
@@ -690,7 +690,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (NSArray *) bannedUsersArray {
+- (NSArray <MVChatUser *> *) bannedUsersArray {
 	return [[self bannedUsers] allObjects];
 }
 

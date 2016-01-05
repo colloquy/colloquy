@@ -5,13 +5,17 @@
 #import "CQHelpTopicsViewController.h"
 
 #define NewConnectionsTableSection 0
+#if !SYSTEM(TV)
 #define WhatsNewTableSection 1
 #define HelpTableSection 2
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation CQWelcomeViewController {
+#if !SYSTEM(TV)
 	CQHelpTopicsViewController *_helpTopicsController;
+#endif
 }
 
 - (instancetype) init {
@@ -20,10 +24,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 	self.title = NSLocalizedString(@"Welcome to Colloquy", @"Welcome view title");
 
+#if !SYSTEM(TV)
 	UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Welcome", @"Welcome back button label") style:UIBarButtonItemStylePlain target:nil action:nil];
 	self.navigationItem.backBarButtonItem = backButton;
 
 	_helpTopicsController = [[CQHelpTopicsViewController alloc] init];
+#endif
 
 	return self;
 }
@@ -38,10 +44,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
 	if (section == NewConnectionsTableSection)
 		return 2;
+#if !SYSTEM(TV)
 	if (section == WhatsNewTableSection)
 		return 1;
 	if (section == HelpTableSection)
 		return 1;
+#endif
 	return 0;
 }
 
@@ -68,7 +76,9 @@ NS_ASSUME_NONNULL_BEGIN
 			cell.textLabel.text = NSLocalizedString(@"Add a Colloquy Bouncer...", @"Add a Colloquy bouncer button label");
 			cell.imageView.image = [UIImage imageNamed:@"bouncer.png"];
 		}
-	} else if (indexPath.section == WhatsNewTableSection && indexPath.row == 0) {
+	}
+#if !SYSTEM(TV)
+	else if (indexPath.section == WhatsNewTableSection && indexPath.row == 0) {
 		cell.textLabel.text = NSLocalizedString(@"What's New in Colloquy", @"What's New in Colloquy button label");
 		cell.imageView.image = [UIImage imageNamed:@"new.png"];
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -77,6 +87,7 @@ NS_ASSUME_NONNULL_BEGIN
 		cell.imageView.image = [UIImage imageNamed:@"help.png"];
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
+#endif
 
 	return cell;
 }
@@ -87,7 +98,9 @@ NS_ASSUME_NONNULL_BEGIN
 			[[CQConnectionsController defaultController] showConnectionCreationView:nil];
 		else if (indexPath.row == 1)
 			[[CQConnectionsController defaultController] showBouncerCreationView:nil];
-	} else if (indexPath.section == WhatsNewTableSection && indexPath.row == 0) {
+	}
+#if !SYSTEM(TV)
+	else if (indexPath.section == WhatsNewTableSection && indexPath.row == 0) {
 		NSString *whatsNewContentPath = [[NSBundle mainBundle] pathForResource:@"whats-new" ofType:@"html"];
 		NSString *whatsNewContent = [[NSString alloc] initWithContentsOfFile:whatsNewContentPath encoding:NSUTF8StringEncoding error:NULL];
 
@@ -96,11 +109,12 @@ NS_ASSUME_NONNULL_BEGIN
 		whatsNewController.title = NSLocalizedString(@"What's New", @"What's New view title");
 
 		[self.navigationController pushViewController:whatsNewController animated:YES];
-
-	} else if (indexPath.section == HelpTableSection && indexPath.row == 0) {
+	}
+	else if (indexPath.section == HelpTableSection && indexPath.row == 0) {
 		_helpTopicsController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
 		[self.navigationController pushViewController:_helpTopicsController animated:YES];
 	}
+#endif
 }
 @end
 

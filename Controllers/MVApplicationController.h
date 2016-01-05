@@ -3,8 +3,9 @@ extern NSString *JVChatEmoticonSetInstalledNotification;
 extern NSString *JVMachineBecameIdleNotification;
 extern NSString *JVMachineStoppedIdlingNotification;
 
-@class JVPreferencesController;
+@class CQMPreferencesWindowController;
 @class SUUpdater;
+@protocol MASPreferencesViewController;
 
 @interface MVApplicationController : NSObject {
 	io_registry_entry_t _hidEntry;
@@ -16,6 +17,9 @@ extern NSString *JVMachineStoppedIdlingNotification;
 	NSDate *_launchDate;
 	NSMutableArray *_previouslyConnectedConnections;
 }
+
+@property(nonatomic, strong, readonly) CQMPreferencesWindowController *preferencesWindowController;
+
 - (IBAction) checkForUpdate:(id) sender;
 - (IBAction) helpWebsite:(id) sender;
 - (IBAction) connectToSupportRoom:(id) sender;
@@ -45,5 +49,5 @@ extern NSString *JVMachineStoppedIdlingNotification;
 @protocol MVChatPluginContextualMenuSupport <NSObject>
 @optional
 - (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view;
-- (void) setupPreferencesWithController:(JVPreferencesController *) controller;
+- (NSViewController<MASPreferencesViewController> *) preferencesViewController;
 @end

@@ -3,19 +3,19 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CQAlertView ()
-@property (atomic, nullable, strong) UIViewController *overlappingPresentationViewController;
-@property (atomic, nullable, strong) UIAlertController *alertController;
-
+@property (nullable, strong) UIViewController *overlappingPresentationViewController;
+@property (nullable, strong) UIAlertController *alertController;
+@property (nullable, strong) NSMutableArray <NSString *> *buttonTitles;
+@property (nullable, strong) NSMutableArray <NSDictionary *> *textFieldInformation;
 @end
 
-@implementation CQAlertView {
-	NSMutableArray *_textFieldInformation;
-}
-
+@implementation CQAlertView
 - (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
 
+	_buttonTitles = [NSMutableArray array];
+	_cancelButtonIndex = -1;
 	_textFieldInformation = [[NSMutableArray alloc] init];
 
 	return self;
@@ -52,6 +52,18 @@ NS_ASSUME_NONNULL_BEGIN
 	return self.alertController.textFields[textFieldIndex];
 }
 
+- (NSInteger) addButtonWithTitle:(nullable NSString *) title {
+	if (title)
+		[_buttonTitles addObject:title];
+	return _buttonTitles.count - 1;
+}
+
+- (nullable NSString *) buttonTitleAtIndex:(NSInteger) buttonIndex {
+	if (buttonIndex < (NSInteger)_buttonTitles.count)
+		return _buttonTitles[buttonIndex];
+	return nil;
+}
+
 - (void) show {
 	// The overlapping view is needed to work around the following iOS 8(.1-only?) bug on iPad:
 	// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
@@ -73,7 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
 		}];
 	}
 
-	for (NSInteger i = 0; i < self.numberOfButtons; i++) {
+	for (NSInteger i = 0; i < (NSInteger)_buttonTitles.count; i++) {
 		NSString *title = [self buttonTitleAtIndex:i];
 		UIAlertActionStyle style = UIAlertActionStyleDefault;
 		if (i == self.cancelButtonIndex) style = UIAlertActionStyleCancel;
@@ -116,7 +128,7 @@ NS_ASSUME_NONNULL_BEGIN
 		[strongSelf.overlappingPresentationViewController removeFromParentViewController];
 		strongSelf.overlappingPresentationViewController = nil;
 
-		__strong id <UIAlertViewDelegate> delegate = strongSelf.delegate;
+		__strong id <CQAlertViewDelegate> delegate = strongSelf.delegate;
 		if ([delegate respondsToSelector:@selector(alertView:clickedButtonAtIndex:)])
 			[delegate alertView:strongSelf clickedButtonAtIndex:buttonIndex];
 

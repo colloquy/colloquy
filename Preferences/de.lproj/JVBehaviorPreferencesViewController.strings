@@ -1,0 +1,60 @@
+
+/* Class = "NSTextFieldCell"; title = "Press Enter key to:"; ObjectID = "2Xv-k4-rwc"; */
+"2Xv-k4-rwc.title" = "Eingabetaste (⌤) bewirkt:";
+
+/* Class = "NSTextFieldCell"; title = "Send History:"; ObjectID = "3L3-IE-DmA"; */
+"3L3-IE-DmA.title" = "Verlauf gesendeter Nachrichten:";
+
+/* Class = "NSTextFieldCell"; title = "Message Scrollback:"; ObjectID = "4aK-ze-JKp"; */
+"4aK-ze-JKp.title" = "Nachrichtenverlauf:";
+
+/* Class = "NSTextFieldCell"; title = "Also available by pressing F5 while typing.\nNickname tab completion is supported without this preference."; ObjectID = "4jp-UJ-tUu"; */
+"4jp-UJ-tUu.title" = "Auch verfügbar durch Drücken von F5. Spitznamenvervollständigung durch Tabulator ist auch ohne diese Einstellung aktiviert.";
+
+/* Class = "NSMenuItem"; title = "Insert a new line"; ObjectID = "BFs-hq-DTa"; */
+"BFs-hq-DTa.title" = "Zeilenumbruch einfügen";
+
+/* Class = "NSButtonCell"; title = "Auto rejoin when kicked from room"; ObjectID = "Db8-WZ-PVh"; */
+"Db8-WZ-PVh.title" = "Raum nach einem Kick automatisch erneut betreten";
+
+/* Class = "NSButtonCell"; title = "Auto join chat rooms on invite"; ObjectID = "JQs-X4-QSI"; */
+"JQs-X4-QSI.title" = "Räume bei einer Einladung automatisch betreten";
+
+/* Class = "NSButtonCell"; title = "Check spelling as you type"; ObjectID = "LkH-sq-XsW"; */
+"LkH-sq-XsW.title" = "Rechtschreibprüfung beim Schreiben";
+
+/* Class = "NSTextFieldCell"; title = "Press Return key to:"; ObjectID = "UnW-il-L99"; */
+"UnW-il-L99.title" = "Zeilenschalter (↵) bewirkt:";
+
+/* Class = "NSMenuItem"; title = "Send an action message"; ObjectID = "Unv-0w-acR"; */
+"Unv-0w-acR.title" = "Nachricht als Aktion senden";
+
+/* Class = "NSTextFieldCell"; title = "After:"; ObjectID = "ZtQ-oR-of1"; */
+"ZtQ-oR-of1.title" = "Nach:";
+
+/* Class = "NSTextFieldCell"; title = "Automatically sends messages that begin with common action verbs as actions"; ObjectID = "dc5-nK-lqg"; */
+"dc5-nK-lqg.title" = "Schickt Nachrichten, die mit einem bekannten Verb beginnen, als Aktionen";
+
+/* Class = "NSButtonCell"; title = "Detect natural language actions"; ObjectID = "fbp-R6-UMD"; */
+"fbp-R6-UMD.title" = "Aktionen in normaler Sprache erkennen";
+
+/* Class = "NSMenuItem"; title = "Send an action message"; ObjectID = "hKk-jz-VLy"; */
+"hKk-jz-VLy.title" = "Nachricht als Aktion senden";
+
+/* Class = "NSMenuItem"; title = "Send a chat message"; ObjectID = "kel-Q4-KwP"; */
+"kel-Q4-KwP.title" = "Nachricht senden";
+
+/* Class = "NSButtonCell"; title = "Tab key triggers word completion"; ObjectID = "nbo-5A-7Fd"; */
+"nbo-5A-7Fd.title" = "Tabulator vervollständigt Wörter";
+
+/* Class = "NSTextFieldCell"; title = "seconds"; ObjectID = "o2F-B5-aW5"; */
+"o2F-B5-aW5.title" = "Sekunden";
+
+/* Class = "NSMenuItem"; title = "Send a chat message"; ObjectID = "pGD-vP-UM1"; */
+"pGD-vP-UM1.title" = "Nachricht senden";
+
+/* Class = "NSTextFieldCell"; title = "Use the ⌥↑ & ⌥↓ keys to cycle through sent messages"; ObjectID = "tWP-5e-QKx"; */
+"tWP-5e-QKx.title" = "Benutzen Sie die Tasten ⌥↑ & ⌥↓ um zwischen gesendeten Nachrichten zu wählen";
+
+/* Class = "NSMenuItem"; title = "Insert a new line"; ObjectID = "tvB-6R-Fg6"; */
+"tvB-6R-Fg6.title" = "Zeilenumbruch einfügen";

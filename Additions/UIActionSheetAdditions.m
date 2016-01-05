@@ -15,12 +15,113 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UIActionSheet () <UIActionSheetDelegate>
+@interface CQActionSheet () <CQActionSheetDelegate>
+@property (nullable, strong) NSMutableArray <NSString *> *buttonTitles;
+@property (nullable, strong) UIViewController *overlappingPresentationViewController;
+@property (nullable, strong) UIAlertController *alertController;
+
+@property (nonatomic, readonly) NSInteger numberOfButtons;
 @end
 
-@implementation UIActionSheet (Additions)
-+ (UIActionSheet *) userActionSheetForUser:(MVChatUser *) user inRoom:(MVChatRoom *) room showingUserInformation:(BOOL) showingUserInformation {
-	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+@implementation CQActionSheet
+- (instancetype) init {
+	if (!(self = [super init]))
+		return nil;
+
+	_buttonTitles = [NSMutableArray array];
+	_cancelButtonIndex = -1;
+	_destructiveButtonIndex = -1;
+
+	return self;
+}
+
+- (NSInteger) numberOfButtons {
+	return _buttonTitles.count;
+}
+
+- (NSInteger) addButtonWithTitle:(nullable NSString *) title {
+	if (title)
+		[_buttonTitles addObject:title];
+	return _buttonTitles.count - 1;
+}
+
+- (nullable NSString *) buttonTitleAtIndex:(NSInteger) buttonIndex {
+	if (buttonIndex < (NSInteger)_buttonTitles.count)
+		return _buttonTitles[buttonIndex];
+	return nil;
+}
+
+- (void) showforSender:(__nullable id) sender orFromPoint:(CGPoint) point animated:(BOOL) animated {
+	[_overlappingPresentationViewController.view removeFromSuperview];
+	_overlappingPresentationViewController = nil;
+	[_alertController dismissViewControllerAnimated:NO completion:nil];
+	_alertController = nil;
+
+	_alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+	if ([_alertController.popoverPresentationController respondsToSelector:@selector(canOverlapSourceViewRect)])
+		_alertController.popoverPresentationController.canOverlapSourceViewRect = YES;
+
+	// The overlapping view is needed to work around the following iOS 8(.1-only?) bug on iPad:
+	// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
+	// present an action sheet from a point on screen that results in the popover rect overlapping the main view,
+	// the z-index will be incorrect and the action sheet will be clipped by the main view.
+	_overlappingPresentationViewController = [[UIViewController alloc] init];
+	_overlappingPresentationViewController.view.backgroundColor = [UIColor clearColor];
+
+	UIWindow *mainWindow = [UIApplication sharedApplication].keyWindow;
+
+	if ([sender isKindOfClass:[UIView class]] && [UIDevice currentDevice].isPadModel && !mainWindow) {
+		_overlappingPresentationViewController.view.frame = [sender bounds];
+
+		[sender addSubview:_overlappingPresentationViewController.view];
+
+		_alertController.popoverPresentationController.sourceRect = [sender bounds];
+		_alertController.popoverPresentationController.sourceView = sender;
+	} else {
+		_overlappingPresentationViewController.view.frame = mainWindow.frame;
+
+		[mainWindow addSubview:_overlappingPresentationViewController.view];
+
+		CGRect rect = CGRectZero;
+		rect.size = CGSizeMake(1., 1.);
+		rect.origin = CGPointEqualToPoint(point, CGPointZero) ? mainWindow.center : point;
+
+		_alertController.popoverPresentationController.sourceRect = rect;
+		_alertController.popoverPresentationController.sourceView = _overlappingPresentationViewController.view;
+	}
+
+	for (NSInteger i = 0; i < (NSInteger)_buttonTitles.count; i++) {
+		NSString *title = [self buttonTitleAtIndex:i];
+		UIAlertActionStyle style = UIAlertActionStyleDefault;
+		if (i == self.cancelButtonIndex) style = UIAlertActionStyleCancel;
+		else if (i == self.destructiveButtonIndex) style = UIAlertActionStyleDestructive;
+
+		__weak __typeof__((self)) weakSelf = self;
+
+		UIAlertAction *action = [UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *selectedAction) {
+			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+
+			[strongSelf->_alertController removeFromParentViewController];
+			[strongSelf->_overlappingPresentationViewController.view removeFromSuperview];
+			strongSelf->_alertController = nil;
+			strongSelf->_overlappingPresentationViewController = nil;
+
+			[self.delegate actionSheet:self clickedButtonAtIndex:i];
+		}];
+
+		[_alertController addAction:action];
+
+		if (i == self.cancelButtonIndex && [_alertController respondsToSelector:@selector(setPreferredAction:)])
+			_alertController.preferredAction = action;
+	}
+
+	[_overlappingPresentationViewController presentViewController:_alertController animated:YES completion:nil];
+}
+@end
+
+@implementation CQActionSheet (Additions)
++ (CQActionSheet *) userActionSheetForUser:(MVChatUser *) user inRoom:(MVChatRoom *) room showingUserInformation:(BOOL) showingUserInformation {
+	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.tag = UserActionSheetTag;
 	sheet.delegate = sheet;
 
@@ -53,10 +154,10 @@ NS_ASSUME_NONNULL_BEGIN
 	return sheet;
 }
 
-+ (UIActionSheet *) operatorActionSheetWithLocalUserModes:(NSUInteger) localUserModes targetingUserWithModes:(NSUInteger) selectedUserModes disciplineModes:(NSUInteger) disciplineModes onRoomWithFeatures:(NSSet *) features {
++ (CQActionSheet *) operatorActionSheetWithLocalUserModes:(NSUInteger) localUserModes targetingUserWithModes:(NSUInteger) selectedUserModes disciplineModes:(NSUInteger) disciplineModes onRoomWithFeatures:(NSSet *) features {
 	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 
-	UIActionSheet *operatorSheet = [[UIActionSheet alloc] init];
+	CQActionSheet *operatorSheet = [[CQActionSheet alloc] init];
 	operatorSheet.delegate = operatorSheet;
 	operatorSheet.tag = OperatorActionSheetTag;
 
@@ -135,7 +236,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
@@ -161,7 +262,7 @@ NS_ASSUME_NONNULL_BEGIN
 			NSUInteger localUserModes = (room.connection.localUser ? [room modesForMemberUser:room.connection.localUser] : 0);
 			NSUInteger selectedUserModes = (user ? [room modesForMemberUser:user] : 0);
 
-			UIActionSheet *operatorSheet = [UIActionSheet operatorActionSheetWithLocalUserModes:localUserModes targetingUserWithModes:selectedUserModes disciplineModes:[room disciplineModesForMemberUser:user] onRoomWithFeatures:room.connection.supportedFeatures];
+			CQActionSheet *operatorSheet = [CQActionSheet operatorActionSheetWithLocalUserModes:localUserModes targetingUserWithModes:selectedUserModes disciplineModes:[room disciplineModesForMemberUser:user] onRoomWithFeatures:room.connection.supportedFeatures];
 			operatorSheet.delegate = operatorSheet;
 			operatorSheet.title = actionSheet.title;
 
@@ -195,21 +296,21 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (NSInteger) userInfoButtonIndex {
-	if ([self associatedObjectForKey:@"showing-user-information"] || self.window.isFullscreen)
+	if ([self associatedObjectForKey:@"showing-user-information"])
 		return 1;
 	return NSNotFound;
 }
 
 #if ENABLE(FILE_TRANSFERS)
 - (NSInteger) sendFileButtonIndex {
-	if ([self associatedObjectForKey:@"showing-user-information"] || self.window.isFullscreen)
+	if ([self associatedObjectForKey:@"showing-user-information"])
 		return 2;
 	return 1;
 }
 #endif
 
 - (NSInteger) ignoreButtonIndex {
-	if ([self associatedObjectForKey:@"showing-user-information"] || self.window.isFullscreen)
+	if ([self associatedObjectForKey:@"showing-user-information"])
 		return 2;
 	return 1;
 }

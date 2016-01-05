@@ -20,7 +20,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	NSString *_username;
 	NSString *_address;
 	NSData *_publicKey;
-	NSArray *_applicableServerDomains;
+	NSArray <NSString *> *_applicableServerDomains;
 	BOOL _nicknameIsRegex;
 	BOOL _realNameIsRegex;
 	BOOL _usernameIsRegex;

@@ -1,0 +1,33 @@
+
+/* Class = "NSButtonCell"; title = "Play sound:"; ObjectID = "Bd8-TT-Cxx"; */
+"Bd8-TT-Cxx.title" = "Tocar som:";
+
+/* Class = "NSButtonCell"; title = "Bounce Colloquy icon in the Dock"; ObjectID = "DRC-qm-Xc8"; */
+"DRC-qm-Xc8.title" = "Fazer saltitar o ícone do Colloquy na Dock";
+
+/* Class = "NSButtonCell"; title = "Mute all notification sounds"; ObjectID = "OPA-kQ-uIg"; */
+"OPA-kQ-uIg.title" = "Desligar todos os sons de notificação";
+
+/* Class = "NSTextFieldCell"; title = "Chat Event:"; ObjectID = "Zbd-h5-L1K"; */
+"Zbd-h5-L1K.title" = "Evento na conversa:";
+
+/* Class = "NSButtonCell"; title = "…only if Colloquy is in the background"; ObjectID = "bTZ-EJ-wQ0"; */
+"bTZ-EJ-wQ0.title" = "…apenas se o Colloquy estiver no fundo";
+
+/* Class = "NSButtonCell"; title = "Show event bubble"; ObjectID = "p8P-tX-okn"; */
+"p8P-tX-okn.title" = "Mostrar bolha de eventos";
+
+/* Class = "NSTextFieldCell"; title = "Highlight words:"; ObjectID = "pCL-vU-SBR"; */
+"pCL-vU-SBR.title" = "Destacar palavras:";
+
+/* Class = "NSButtonCell"; title = "…and keep on screen until activated"; ObjectID = "qco-MY-Hl2"; */
+"qco-MY-Hl2.title" = "…e deixá-la no ecrã até que seja activada";
+
+/* Class = "NSButtonCell"; title = "…repeatedly until Colloquy is in the front"; ObjectID = "wUY-9y-jdb"; */
+"wUY-9y-jdb.title" = "…repetidamente até que o Colloquy venha para a frente";
+
+/* Class = "NSTextFieldCell"; title = "Messages containing any of your typed words will be highlighted (if the active style supports highlights)."; ObjectID = "wu5-IV-6xo"; */
+"wu5-IV-6xo.title" = "As mensagens que tiverem qualquer uma das suas palavras escritas serão destacadas (se o estilo actual suportar destaques).";
+
+/* Class = "NSButtonCell"; title = "…only if Colloquy is in the background"; ObjectID = "xXL-ca-iPs"; */
+"xXL-ca-iPs.title" = "…apenas se o Colloquy estiver no fundo";

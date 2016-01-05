@@ -307,7 +307,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	GCDAsyncSocket *_chatConnection;
 	NSDate *_queueWait;
 	NSDate *_lastCommand;
-	NSMutableArray *_sendQueue;
+	NSMutableArray <NSData *> *_sendQueue;
 	NSMutableSet *_pendingJoinRoomNames;
 	NSMutableSet *_pendingWhoisUsers;
 	NSMutableSet *_directClientConnections;
@@ -327,12 +327,12 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	BOOL _sentEndCapabilityCommand;
 	NSTimeInterval _sendEndCapabilityCommandAtTime;
 	BOOL _pendingIdentificationAttempt;
-	NSMutableArray *_umichNoIdentdCaptcha;
+	NSMutableArray <NSMutableString *> *_umichNoIdentdCaptcha;
 	BOOL _gamesurgeGlobalBotMOTD;
 	NSString *_failedNickname;
 	short _failedNicknameCount;
 	BOOL _nicknameShortened;
-	NSMutableArray *_pendingMonitorList;
+	NSMutableArray <NSString *> *_pendingMonitorList;
 	BOOL _fetchingMonitorList;
 	BOOL _monitorListFull;
 	BOOL _hasRequestedPlaybackList;
@@ -342,7 +342,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	NSTimeInterval _nextPingTimeInterval;
 }
 
-+ (NSArray *) defaultServerPorts {
++ (NSArray <NSNumber *> *) defaultServerPorts {
 	return @[@(6667), @(6660), @(6669), @(6697), @(7000), @(7001), @(994)];
 }
 
@@ -581,7 +581,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 #pragma mark -
 
-- (void) joinChatRoomsNamed:(NSArray *) rooms {
+- (void) joinChatRoomsNamed:(NSArray <NSString *> *) rooms {
 	NSParameterAssert( rooms != nil );
 
 	if( ! rooms.count ) return;
@@ -589,7 +589,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	if( !_pendingJoinRoomNames )
 		_pendingJoinRoomNames = [[NSMutableSet alloc] initWithCapacity:10];
 
-	NSMutableArray *roomList = [[NSMutableArray alloc] initWithCapacity:rooms.count];
+	NSMutableArray <NSString *> *roomList = [[NSMutableArray alloc] initWithCapacity:rooms.count];
 
 	for( __strong NSString *room in rooms ) {
 		room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -611,7 +611,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 			}
 
 			NSString *password = nil;
-			NSArray *components = [room componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+			NSArray <NSString *> *components = [room componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 			if (components.count) {
 				password = [[components subarrayWithRange:NSMakeRange(1, (components.count - 1))] componentsJoinedByString:@""];
 				components = [components subarrayWithRange:NSMakeRange(0, 1)];
@@ -1068,18 +1068,18 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	{ // schedule an end to the capability negotiation in case it stalls the connection
 		[self _sendEndCapabilityCommandAfterTimeout];
 
-		NSArray *IRCv31Required = nil;
+		NSArray <NSString *> *IRCv31Required = nil;
 		if ( _requestsSASL && self.nicknamePassword.length )
 			IRCv31Required = @[ @"sasl", @"multi-prefix", @" " ];
 		else IRCv31Required = @[ @"multi-prefix", @" " ];
 
-		NSArray *IRCv31Optional = @[ @"tls", @"away-notify", @"extended-join", @"account-notify", @" " ];
-		NSArray *IRCv32Required = @[ @"account-tag", @"intent", @" " ];
-		NSArray *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time", @"userhost-in-names", @"batch", @" " ];
+		NSArray <NSString *> *IRCv31Optional = @[ @"tls", @"away-notify", @"extended-join", @"account-notify", @" " ];
+		NSArray <NSString *> *IRCv32Required = @[ @"account-tag", @"intent", @" " ];
+		NSArray <NSString *> *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time", @"userhost-in-names", @"batch", @" " ];
 
 		// In theory, IRCv3.2 isn't finalized yet and may change, so ZNC prefixes their capabilities. In practice,
 		// the official spec is pretty stable, and their behavior matches the official spec at this time.
-		NSArray *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message", @"znc.in/batch", @"znc.in/playback", @" " ];
+		NSArray <NSString *> *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message", @"znc.in/batch", @"znc.in/playback", @" " ];
 
 		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
 
@@ -1241,7 +1241,7 @@ end:
 		NSString *intentOrTagsString = [self _newStringWithBytes:intentOrTags length:intentOrTagsLength];
 		NSMutableDictionary *intentOrTagsDictionary = [NSMutableDictionary dictionary];
 		for( NSString *anIntentOrTag in [intentOrTagsString componentsSeparatedByString:@";"] ) {
-			NSArray *intentOrTagPair = [anIntentOrTag componentsSeparatedByString:@"="];
+			NSArray <NSString *> *intentOrTagPair = [anIntentOrTag componentsSeparatedByString:@"="];
 			if (intentOrTagPair.count != 2) continue;
 			intentOrTagsDictionary[intentOrTagPair[0]] = intentOrTagPair[1];
 		}
@@ -1617,7 +1617,7 @@ end:
 				return;
 			}
 		} else if( [command isCaseInsensitiveEqualToString:@"op"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
+			NSArray <NSString *> *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 			for( NSString *userString in users ) {
 				if( userString.length ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
@@ -1628,7 +1628,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"deop"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
+			NSArray <NSString *> *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
@@ -1640,7 +1640,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"halfop"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
+			NSArray <NSString *> *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
@@ -1652,7 +1652,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"dehalfop"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
+			NSArray <NSString *> *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
@@ -1664,7 +1664,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"voice"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
+			NSArray <NSString *> *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
@@ -1676,7 +1676,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"devoice"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
+			NSArray <NSString *> *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
@@ -1688,7 +1688,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"quiet"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
+			NSArray <NSString *> *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
@@ -1700,7 +1700,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"dequiet"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
+			NSArray <NSString *> *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
@@ -1712,7 +1712,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"ban"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
+			NSArray <NSString *> *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( __strong NSString *userString in users ) {
 				if( userString.length ) {
@@ -1730,7 +1730,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"unban"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
+			NSArray <NSString *> *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( __strong NSString *userString in users ) {
 				if( userString.length ) {
@@ -1755,7 +1755,7 @@ end:
 		MVChatString *msg = nil;
 
 		[argumentsScanner scanUpToCharactersFromSet:whitespaceCharacters intoString:&targetName];
-		if( [whitespaceCharacters characterIsMember:[argumentsScanner.string characterAtIndex:argumentsScanner.scanLocation]] )
+		if( ![argumentsScanner isAtEnd] && [whitespaceCharacters characterIsMember:[argumentsScanner.string characterAtIndex:argumentsScanner.scanLocation]] )
 			argumentsScanner.scanLocation++;
 
 		if( !targetName.length ) return;
@@ -1799,8 +1799,8 @@ end:
 		return;
 	} else if( [command isCaseInsensitiveEqualToString:@"j"] || [command isCaseInsensitiveEqualToString:@"join"] ) {
 		NSString *roomsString = MVChatStringAsString(arguments);
-		NSArray *roomStrings = [roomsString componentsSeparatedByString:@","];
-		NSMutableArray *roomsToJoin = [[NSMutableArray alloc] initWithCapacity:roomStrings.count];
+		NSArray <NSString *> *roomStrings = [roomsString componentsSeparatedByString:@","];
+		NSMutableArray <NSString *> *roomsToJoin = [[NSMutableArray alloc] initWithCapacity:roomStrings.count];
 
 		for( __strong NSString *room in roomStrings ) {
 			room = [room stringByTrimmingCharactersInSet:whitespaceCharacters];
@@ -1828,7 +1828,7 @@ end:
 #endif
 		}
 
-		NSArray *rooms = [roomsString componentsSeparatedByString:@","];
+		NSArray <NSString *> *rooms = [roomsString componentsSeparatedByString:@","];
 		if( !rooms.count || [roomsString isEqualToString:@"-"] ) {
 			if( isRoom ) [target partWithReason:reason];
 			return;
@@ -2402,7 +2402,7 @@ end:
 			if( [capabilitiesString isCaseInsensitiveEqualToString:@"*"] && parameters.count >= 4 )
 				capabilitiesString = [self _stringFromPossibleData:parameters[3]];
 
-			NSArray *capabilities = [capabilitiesString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+			NSArray <NSString *> *capabilities = [capabilitiesString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 			for( __strong NSString *capability in capabilities ) {
 				BOOL sendCapReqForFeature = YES;
 
@@ -2518,7 +2518,7 @@ end:
 			}
 		} else if( [subCommand isCaseInsensitiveEqualToString:@"DEL"] ) {
 			NSString *capabilitiesString = [self _stringFromPossibleData:parameters[2]];
-			NSArray *capabilities = [capabilitiesString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+			NSArray <NSString *> *capabilities = [capabilitiesString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 
 			for( NSString *capability in capabilities ) {
 				if( [capability isCaseInsensitiveEqualToString:@"sasl"] ) {
@@ -2606,7 +2606,7 @@ end:
 		[authenticateData appendData:[self.nicknamePassword dataUsingEncoding:self.encoding allowLossyConversion:YES]];
 
 		NSString *authString = [authenticateData base64EncodingWithLineLength:400];
-		NSArray *authStrings = [authString componentsSeparatedByString:@"\n"];
+		NSArray <NSString *> *authStrings = [authString componentsSeparatedByString:@"\n"];
 		for( NSString *string in authStrings )
 			[self sendRawMessageImmediatelyWithComponents:@"AUTHENTICATE ", string, nil];
 
@@ -2987,7 +2987,7 @@ end:
 			// components[0] = buffer chat room/person name. components[1] = earliest timestamp. components[2] = latest timestamp
 
 			if (parameters.count == 2) {
-				NSArray *components = [[self _stringFromPossibleData:parameters[1]] componentsSeparatedByString:@" "];
+				NSArray <NSString *> *components = [[self _stringFromPossibleData:parameters[1]] componentsSeparatedByString:@" "];
 				if (components.count == 3) {
 					// 1. Find out if we have a channel or a query item. If we have a channel, we can stop doing any work,
 					// because we make a *playback PLAY request for channels in response to JOINs.
@@ -3369,7 +3369,7 @@ end:
 	arguments = nil;
 	sender = nil;
 
-	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
+	NSArray <NSNumber *> *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 	if( [[results lastObject] boolValue] ) {
 		return;
 	}
@@ -3741,8 +3741,7 @@ end:
 		NSData *reason = ( parameters.count >= 2 ? parameters[1] : nil );
 		if( ! [reason isKindOfClass:[NSData class]] ) reason = nil;
 
-		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-		[userInfo addEntriesFromDictionary:tags];
+		NSMutableDictionary *userInfo = [tags mutableCopy];
 
 		if( [sender isLocalUser] ) {
 			[room _setDateParted:[NSDate date]];
@@ -3872,7 +3871,7 @@ end:
 	NSUInteger oldModes = [room modes];
 	NSUInteger argModes = 0;
 	NSInteger value = 0;
-	NSMutableArray *argsNeeded = [[NSMutableArray alloc] initWithCapacity:10];
+	NSMutableArray <NSNumber *> *argsNeeded = [[NSMutableArray alloc] initWithCapacity:10];
 	NSUInteger i = 0, count = parameters.count;
 	NSMutableString *unsupportedModes = [NSMutableString string];
 	BOOL previousUnknownMode = YES;
@@ -4141,7 +4140,7 @@ end:
 		_isonSentCount--;
 
 		NSString *names = [self _stringFromPossibleData:parameters[1]];
-		NSArray *users = [names componentsSeparatedByString:@" "];
+		NSArray <NSString *> *users = [names componentsSeparatedByString:@" "];
 
 		for( NSString *nick in users ) {
 			if( ! nick.length ) continue;
@@ -4168,7 +4167,7 @@ end:
 		}
 	} else if( parameters.count == 2 ) {
 		NSString *names = [self _stringFromPossibleData:parameters[1]];
-		NSArray *users = [names componentsSeparatedByString:@" "];
+		NSArray <NSString *> *users = [names componentsSeparatedByString:@" "];
 
 		for( NSString *nick in users ) {
 			if( ! nick.length ) continue;
@@ -4221,7 +4220,7 @@ end:
 		if( room && ! [room _namesSynced] ) {
 			@autoreleasepool {
 				NSString *names = [self _stringFromPossibleData:parameters[3]];
-				NSArray *members = [names componentsSeparatedByString:@" "];
+				NSArray <NSString *> *members = [names componentsSeparatedByString:@" "];
 
 				for( NSString *aMember in members ) {
 					if( ! aMember.length ) break;
@@ -4230,11 +4229,11 @@ end:
 					NSString *memberName = nil;
 					NSString *memberUser = nil;
 					NSString *memberHost = nil;
-					NSArray *nickUserhostComponents = [aMember componentsSeparatedByString:@"!"];
+					NSArray <NSString *> *nickUserhostComponents = [aMember componentsSeparatedByString:@"!"];
 					if (nickUserhostComponents.count == 2) {
 						memberName = nickUserhostComponents[0];
 
-						NSArray *userHostComponents = [nickUserhostComponents[1] componentsSeparatedByString:@"@"];
+						NSArray <NSString *> *userHostComponents = [nickUserhostComponents[1] componentsSeparatedByString:@"@"];
 						if (userHostComponents.count == 2) {
 							memberUser = userHostComponents[0];
 							memberHost = userHostComponents[1];
@@ -4458,8 +4457,8 @@ end:
 - (void) _handle319WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISCHANNELS
 	if( parameters.count == 3 ) {
 		NSString *rooms = [self _stringFromPossibleData:parameters[2]];
-		NSArray *chanArray = [[rooms stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
-		NSMutableArray *results = [[NSMutableArray alloc] initWithCapacity:chanArray.count];
+		NSArray <NSString *> *chanArray = [[rooms stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
+		NSMutableArray <NSString *> *results = [[NSMutableArray alloc] initWithCapacity:chanArray.count];
 
 		NSCharacterSet *nicknamePrefixes = [self _nicknamePrefixes];
 		for( __strong NSString *room in chanArray ) {

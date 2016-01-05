@@ -283,7 +283,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 #pragma mark -
 
 - (NSView *) view {
-	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVDirectChat" owner:self];
+	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"JVDirectChat" owner:self topLevelObjects:NULL];
 	return contents;
 }
 
@@ -825,7 +825,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 				regex = [NSRegularExpression cachedRegularExpressionWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
 			}
 
-			NSArray *matches = [regex matchesInString:[messageString string] options:NSMatchingReportCompletion range:NSMakeRange( 0, [messageString string].length ) ];
+			NSArray *matches = [regex matchesInString:[messageString string] options:0 range:NSMakeRange( 0, [messageString string].length ) ];
 			for( NSTextCheckingResult *match in matches ) {
 				NSRange foundRange = [match range];
 				NSMutableSet *classes = [NSMutableSet setWithSet:[messageString attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL]];
@@ -1597,7 +1597,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	// catch IRC rooms like "#room" but not HTML colors like "#ab12ef" nor HTML entities like "&#135;" or "&amp;"
 	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"\\B(?<!&)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&#]{2,}\\b" options:NSRegularExpressionCaseInsensitive error:nil];
-	NSArray *matches = [regex matchesInString:[message string] options:NSMatchingReportCompletion range:NSMakeRange( 0, [message string].length )];
+	NSArray *matches = [regex matchesInString:[message string] options:0 range:NSMakeRange( 0, [message string].length )];
 
 	for( NSTextCheckingResult *match in matches ) {
 		NSRange foundRange = [match range];

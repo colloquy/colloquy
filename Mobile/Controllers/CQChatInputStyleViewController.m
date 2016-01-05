@@ -36,7 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
 	self.tableView.layer.cornerRadius = (scale > 1. ? 4.5 : 5.);
 	self.tableView.layer.borderWidth = 1. / scale;
 	self.tableView.layer.borderColor = [UIApplication sharedApplication].keyWindow.tintColor.CGColor;
+#if !SYSTEM(TV)
 	self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+#endif
 	self.tableView.showsVerticalScrollIndicator = NO;
 
 	self.navigationItem.leftBarButtonItem.target = self;

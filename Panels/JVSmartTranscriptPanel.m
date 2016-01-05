@@ -29,7 +29,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 - (instancetype) initWithSettings:(NSDictionary *) settings {
 	if( ( self = [self init] ) ) {
-		_settingsNibLoaded = [NSBundle loadNibNamed:@"JVSmartTranscriptFilterSheet" owner:self];
+		_settingsNibLoaded = [[NSBundle mainBundle] loadNibNamed:@"JVSmartTranscriptFilterSheet" owner:self topLevelObjects:NULL];
 
 		_rules = [settings[@"rules"] mutableCopyWithZone:nil];
 		_title = [settings[@"title"] copyWithZone:nil];

@@ -10,9 +10,10 @@
 #import "MVChatUserAdditions.h"
 
 @interface JVChatRoomMember (JVChatMemberPrivate)
-@property (readonly, copy) NSString *_selfStoredNickname;
-@property (readonly, copy) NSString *_selfCompositeName;
 - (void) _detach;
+- (void) _refreshIcon:(NSNotification *) notification;
+- (NSString *) _selfCompositeName;
+- (NSString *) _selfStoredNickname;
 @end
 
 #pragma mark -
@@ -547,7 +548,7 @@
 }
 
 - (IBAction) customKick:(id) sender {
-	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"TSCustomBan" owner:self];
+	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"TSCustomBan" owner:self topLevelObjects:NULL];
 	if( ! _nibLoaded ) { NSLog( @"Can't load TSCustomBan.nib" ); return; }
 
 	[banTitle setStringValue:[NSString stringWithFormat:NSLocalizedString( @"Kick %@ from the %@ room.", "kick user from room" ), [self title], [_room title]]];
@@ -571,7 +572,7 @@
 }
 
 - (IBAction) customBan:(id) sender {
-	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"TSCustomBan" owner:self];
+	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"TSCustomBan" owner:self topLevelObjects:NULL];
 	if( ! _nibLoaded ) { NSLog( @"Can't load TSCustomBan.nib" ); return; }
 
 	[banTitle setStringValue:[NSString stringWithFormat:NSLocalizedString( @"Ban %@ from the %@ room.", "ban user from room label" ), [self title], [_room title]]];
@@ -603,7 +604,7 @@
 }
 
 - (IBAction) customKickban:(id) sender {
-	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"TSCustomBan" owner:self];
+	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"TSCustomBan" owner:self topLevelObjects:NULL];
 	if( ! _nibLoaded ) { NSLog(@"Can't load TSCustomBan.nib"); return; }
 
 	[banTitle setStringValue:[NSString stringWithFormat:NSLocalizedString( @"Kick and ban %@ from the %@ room.", "kickban user from room" ), [self title], [_room title]]];

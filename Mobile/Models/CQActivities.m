@@ -24,7 +24,7 @@ static id __weak cq_currentFirstResponder;
 #pragma mark -
 
 @implementation CQActivitiesProvider
-+ (NSArray *) activities {
++ (NSArray <CQActivity *> *) activities {
 	return @[ [[CQRecentMessagesActivity alloc] init], [[CQSaveChatLogToPDFActivity alloc] init],
 			  [[CQChatRoomTopicActivity alloc] init], [[CQChatRoomBansActivity alloc] init], [[CQChatRoomModesActivity alloc] init] ];
 }
@@ -37,7 +37,7 @@ static id __weak cq_currentFirstResponder;
 	return NSStringFromClass([self class]);
 }
 
-- (BOOL) canPerformWithActivityItems:(NSArray *) activityItems {
+- (BOOL) canPerformWithActivityItems:(NSArray <UIActivity *> *) activityItems {
 	UIResponder *responder = [UIResponder cq_currentFirstResponder];
 	do {
 		BOOL canPerformAction = [responder canPerformAction:[[self class] responderAction] withSender:nil];

@@ -145,7 +145,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 			[search escapeCharactersInSet:escapeSet];
 
 			NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"(?<=\\s|^)%@(?=\\s|$)", search] options:0 error:nil];
-			NSArray *matches = [regex matchesInString:[string string] options:NSMatchingReportCompletion range:NSMakeRange( 0, [string string].length )];
+			NSArray *matches = [regex matchesInString:[string string] options:0 range:NSMakeRange( 0, [string string].length )];
 
 			for( NSTextCheckingResult *match in matches ) {
 				NSRange foundRange = [match range];

@@ -125,7 +125,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 - (instancetype) initWithContentsOfURL:(NSURL *) url {
 	if( ( self = [self init] ) ) {
 		NSData *contents = [NSData dataWithContentsOfURL:url];
-		if( ! contents || ! [contents length] ) {
+		if( ! contents || ! [contents length] || [contents length] > INT_MAX ) {
 			 // URL failed to return content, return nil
 			return nil;
 		}

@@ -182,12 +182,12 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 #pragma mark -
 
 - (IBAction) showBrowser:(id) sender {
-	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVChatTranscriptBrowserPanel" owner:self];
+	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"JVChatTranscriptBrowserPanel" owner:self topLevelObjects:NULL];
 	[window makeKeyAndOrderFront:self];
 }
 
 - (NSView *) view {
-	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVChatTranscriptBrowserPanel" owner:self];
+	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"JVChatTranscriptBrowserPanel" owner:self topLevelObjects:NULL];
 	return [window contentView];
 }
 

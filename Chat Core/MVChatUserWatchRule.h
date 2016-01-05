@@ -34,7 +34,7 @@ extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
 
 @property(getter=isInterim) BOOL interim;
 
-@property(copy) NSArray *applicableServerDomains;
+@property(copy) NSArray <NSString *> *applicableServerDomains;
 
 @end
 

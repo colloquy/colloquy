@@ -158,7 +158,7 @@ NS_ASSUME_NONNULL_BEGIN
 		} else if (row == 1) { // Rooms
 			cell.textLabel.text = NSLocalizedString(@"rooms", "Rooms user info label");
 
-			NSArray *rooms = [_user attributeForKey:MVChatUserKnownRoomsAttribute];
+			NSArray <NSString *> *rooms = [_user attributeForKey:MVChatUserKnownRoomsAttribute];
 			if (rooms) {
 				if (rooms.count) {
 					NSString *separator = [[NSLocale currentLocale] objectForKey:NSLocaleGroupingSeparator];
@@ -223,7 +223,9 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!selectedCell)
 		return;
 
+#if !SYSTEM(TV)
 	[UIPasteboard generalPasteboard].string = selectedCell.detailTextLabel.text;
+#endif
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {

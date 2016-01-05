@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>${EXECUTABLE_NAME}</string>
+	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleGetInfoString</key>
 	<string>AppleScript Support Plugin 1.0; Copyright © 2003-2007, Timothy Hatcher</string>
 	<key>CFBundleIconFile</key>

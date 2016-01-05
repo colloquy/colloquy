@@ -1,0 +1,33 @@
+
+/* Class = "NSButtonCell"; title = "Play sound:"; ObjectID = "Bd8-TT-Cxx"; */
+"Bd8-TT-Cxx.title" = "Spill lyd:";
+
+/* Class = "NSButtonCell"; title = "Bounce Colloquy icon in the Dock"; ObjectID = "DRC-qm-Xc8"; */
+"DRC-qm-Xc8.title" = "Sprett Colloquy-ikonet i Dock'en";
+
+/* Class = "NSButtonCell"; title = "Mute all notification sounds"; ObjectID = "OPA-kQ-uIg"; */
+"OPA-kQ-uIg.title" = "Skru av alle varslingslyder";
+
+/* Class = "NSTextFieldCell"; title = "Chat Event:"; ObjectID = "Zbd-h5-L1K"; */
+"Zbd-h5-L1K.title" = "Samtalehendelse:";
+
+/* Class = "NSButtonCell"; title = "…only if Colloquy is in the background"; ObjectID = "bTZ-EJ-wQ0"; */
+"bTZ-EJ-wQ0.title" = "…kun hvis Colloquy er i bakgrunnen";
+
+/* Class = "NSButtonCell"; title = "Show event bubble"; ObjectID = "p8P-tX-okn"; */
+"p8P-tX-okn.title" = "Vis hendelsesboble";
+
+/* Class = "NSTextFieldCell"; title = "Highlight words:"; ObjectID = "pCL-vU-SBR"; */
+"pCL-vU-SBR.title" = "Framhevede ord:";
+
+/* Class = "NSButtonCell"; title = "…and keep on screen until activated"; ObjectID = "qco-MY-Hl2"; */
+"qco-MY-Hl2.title" = "…og behold på skjermen til den blir aktivert";
+
+/* Class = "NSButtonCell"; title = "…repeatedly until Colloquy is in the front"; ObjectID = "wUY-9y-jdb"; */
+"wUY-9y-jdb.title" = "…igjen og igjen til Colloquy er foran";
+
+/* Class = "NSTextFieldCell"; title = "Messages containing any of your typed words will be highlighted (if the active style supports highlights)."; ObjectID = "wu5-IV-6xo"; */
+"wu5-IV-6xo.title" = "Beskjeder som inneholder noen av dine innskrevne ord vil bli framhevet (hvis den aktive stilen støtter framheving).";
+
+/* Class = "NSButtonCell"; title = "…only if Colloquy is in the background"; ObjectID = "xXL-ca-iPs"; */
+"xXL-ca-iPs.title" = "…kun hvis Colloquy er i bakgrunnen";

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -69,7 +69,7 @@
 		1C6268E5103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem in Resources */ = {isa = PBXBuildFile; fileRef = 1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */; };
 		1C66913A07BFA76D008400F7 /* JVEmoticonSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C66913807BFA76D008400F7 /* JVEmoticonSet.m */; };
 		1C6A112B06BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A112906BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m */; };
-		1C6A40CA083FF6C600572AB6 /* JVInterfacePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A40C8083FF6C600572AB6 /* JVInterfacePreferences.m */; };
+		1C6A40CA083FF6C600572AB6 /* JVInterfacePreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A40C8083FF6C600572AB6 /* JVInterfacePreferencesViewController.m */; };
 		1C6A45210841746500572AB6 /* JVChatViewCriterionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A451F0841746500572AB6 /* JVChatViewCriterionController.m */; };
 		1C6A455908417C5300572AB6 /* JVChatViewCriterion.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C6A455708417C5300572AB6 /* JVChatViewCriterion.xib */; };
 		1C6EA23E05A735D6006A559F /* JVChatRoomBrowser.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C6EA23C05A735D6006A559F /* JVChatRoomBrowser.xib */; };
@@ -92,10 +92,8 @@
 		1C8BDD2205436A030035B84A /* JVChatMemberInspector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C8BDD2005436A020035B84A /* JVChatMemberInspector.xib */; };
 		1C9014C107A2D798002942A7 /* MVChatUserAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9014BF07A2D798002942A7 /* MVChatUserAdditions.m */; };
 		1C94370B0639F86700618CD9 /* JVMarkedScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9437090639F86700618CD9 /* JVMarkedScroller.m */; };
-		1C96E93306AAD81B0013B0A9 /* JVTranscriptPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C96E93106AAD81B0013B0A9 /* JVTranscriptPreferences.xib */; };
-		1C96E93F06AADBBD0013B0A9 /* JVTranscriptPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferences.m */; };
-		1C9982030603EFD6006C6417 /* JVNotificationPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9982010603EFD6006C6417 /* JVNotificationPreferences.m */; };
-		1C9982060603F097006C6417 /* JVNotificationPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C9982040603F097006C6417 /* JVNotificationPreferences.xib */; };
+		1C96E93F06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m */; };
+		1C9982030603EFD6006C6417 /* JVNotificationPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9982010603EFD6006C6417 /* JVNotificationPreferencesViewController.m */; };
 		1C9982AA0604B979006C6417 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = F520458E01B1D37701EBB4B5 /* Sounds */; };
 		1C9982B00604BEAA006C6417 /* notifications.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C9982AF0604BEAA006C6417 /* notifications.plist */; };
 		1C9982B90604D94C006C6417 /* JVNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA7D0F106015DBA00887614 /* JVNotificationController.m */; };
@@ -148,21 +146,17 @@
 		1CB4DCAB053627C00080D36F /* JVRoomInspector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CB4DCA9053627C00080D36F /* JVRoomInspector.xib */; };
 		1CB4DCB10536282B0080D36F /* JVChatRoomInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB4DCAF0536282B0080D36F /* JVChatRoomInspector.m */; };
 		1CBAB8B00884BF49005D1CDD /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBF687A508202F3F00F498FB /* CoreServices.framework */; };
-		1CBC62E505488C73009E59E1 /* JVPreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBC62E305488C73009E59E1 /* JVPreferencesController.m */; };
-		1CBC630C05489484009E59E1 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */; };
-		1CBC634905489BEE009E59E1 /* JVGeneralPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CBC634705489BEE009E59E1 /* JVGeneralPreferences.xib */; };
+		1CBC630C05489484009E59E1 /* JVGeneralPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */; };
 		1CC5650708F0CFEE00B8E333 /* Colloquy.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */; };
-		1CC6FC530549FCD80075807C /* JVAppearancePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */; };
-		1CC6FC570549FDD70075807C /* JVBehaviorPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FC550549FDD70075807C /* JVBehaviorPreferences.m */; };
-		1CC6FC67054A003C0075807C /* JVAppearancePreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CC6FC62054A003C0075807C /* JVAppearancePreferences.xib */; };
-		1CC6FC68054A003C0075807C /* JVFileTransferPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CC6FC64054A003C0075807C /* JVFileTransferPreferences.xib */; };
+		1CC6FC530549FCD80075807C /* JVAppearancePreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FC510549FCD70075807C /* JVAppearancePreferencesViewController.m */; };
+		1CC6FC570549FDD70075807C /* JVBehaviorPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FC550549FDD70075807C /* JVBehaviorPreferencesViewController.m */; };
 		1CC6FD39054AF1940075807C /* preview.colloquyTranscript in Resources */ = {isa = PBXBuildFile; fileRef = 1CC6FD38054AF1940075807C /* preview.colloquyTranscript */; };
 		1CC6FD65054B70BC0075807C /* JVFontPreviewField.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FD63054B70BC0075807C /* JVFontPreviewField.m */; };
 		1CD0201005758A33000F93B4 /* MVBuddyList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CC7CAAE03C48E8B001C0D62 /* MVBuddyList.xib */; };
 		1CD0201305758CE7000F93B4 /* MVBuddyListController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FB4D200393F70E01000102 /* MVBuddyListController.m */; };
 		1CD0201F05758F26000F93B4 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5FB4CE60393C15601000102 /* AddressBook.framework */; };
 		1CD733CC05A0E2470080F952 /* JVChatMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD733CA05A0E2470080F952 /* JVChatMessage.m */; };
-		1CDEE25E05823C26000B9075 /* JVFileTransferPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE25605823C13000B9075 /* JVFileTransferPreferences.m */; };
+		1CDEE25E05823C26000B9075 /* JVFileTransferPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE25605823C13000B9075 /* JVFileTransferPreferencesViewController.m */; };
 		1CDEE47A0583DC58000B9075 /* JVBuddyInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE4780583DC58000B9075 /* JVBuddyInspector.m */; };
 		1CDEE48D0583E268000B9075 /* JVBuddyInspector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEE48B0583E268000B9075 /* JVBuddyInspector.xib */; };
 		1CE009840FC7B16700F5AB04 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C397390082D4ADA00DCF3CF /* IOKit.framework */; };
@@ -176,11 +170,9 @@
 		1CE6916F08B183C7006D9CA0 /* NSTextSuite.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 1C7C76E807DBA1C100FB5F83 /* NSTextSuite.scriptTerminology */; };
 		1CE6917008B183C8006D9CA0 /* NSTextSuite.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1C7C76E707DBA1C100FB5F83 /* NSTextSuite.scriptSuite */; };
 		1CEC004F0A20EF99004C2B86 /* transcriptSchema.sql in Resources */ = {isa = PBXBuildFile; fileRef = 1CEC004D0A20EF95004C2B86 /* transcriptSchema.sql */; };
-		1CECE26006A37BEC00350564 /* JVBehaviorPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CECE22F06A37A8300350564 /* JVBehaviorPreferences.xib */; };
 		1CEE3F06057AEC0200AD6DE2 /* JVBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEE3F04057AEC0200AD6DE2 /* JVBuddy.m */; };
 		1CEEAB17095BD23500166A54 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
 		1CEEAB1A095BD25500166A54 /* ChatCore.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		1CF16D11083ADECF0037F222 /* JVInterfacePreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CF16D0F083ADECF0037F222 /* JVInterfacePreferences.xib */; };
 		1CF5F8D207D537E50019DC13 /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF5F8D107D537E50019DC13 /* Growl.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF5F8D107D537E50019DC13 /* Growl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1CF79CBF07AC77E600696918 /* JVChatTranscript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF79CBD07AC77E600696918 /* JVChatTranscript.m */; };
@@ -188,7 +180,6 @@
 		1CF8030F070C893500C9B54C /* libsilcclient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; };
 		1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		1CF803F1070C948000C9B54C /* NSURLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */; };
 		556CEBE51BCB795600F00EAA /* Tabs Interface Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 556CEBE41BCB795600F00EAA /* Tabs Interface Images.xcassets */; };
 		5575C7BF1AFAB53D001EEF98 /* widgets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5575C7BE1AFAB53D001EEF98 /* widgets.xcassets */; };
 		558EF2371AEC356800619BDE /* Room Member Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 558EF2361AEC356800619BDE /* Room Member Icons.xcassets */; };
@@ -212,6 +203,16 @@
 		92823CF2168FFA0A000EC36E /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CF1168FFA0A000EC36E /* KAIgnoreRule.m */; };
 		9295C85D1675E227009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
 		92A711951A4A5166009E80F0 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A711941A4A5166009E80F0 /* SecurityInterface.framework */; };
+		C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; };
+		C22A35571BC00BB7001757D7 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C29654101BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */; };
+		C29654131BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654151BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib */; };
+		C29654161BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654181BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib */; };
+		C29654191BDBA00400F28873 /* JVNotificationPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C296541B1BDBA00400F28873 /* JVNotificationPreferencesViewController.xib */; };
+		C296541C1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C296541E1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib */; };
+		C296541F1BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654211BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib */; };
+		C29654221BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654241BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib */; };
+		C2B9D0ED1C258BA200C2B4C4 /* CQMPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */; };
 		CBF6855D08201B7300F498FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CBF6852D0820190D00F498FB /* InfoPlist.strings */; };
 		CBF6855E08201B7300F498FB /* schema.strings in Resources */ = {isa = PBXBuildFile; fileRef = CBF6852F0820190D00F498FB /* schema.strings */; };
 		CBF6855F08201B7300F498FB /* schema.xml in Resources */ = {isa = PBXBuildFile; fileRef = CBF685340820190D00F498FB /* schema.xml */; };
@@ -320,6 +321,20 @@
 			remoteGlobalIDString = 92F4A22914FDEF0D001A177E;
 			remoteInfo = "Chat Core (Static Library)";
 		};
+		C22A35531BC009FA001757D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F16AF7F41BA279F10022155C;
+			remoteInfo = MASPreferences;
+		};
+		C22A35581BC00BB7001757D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F16AF7F31BA279F10022155C;
+			remoteInfo = MASPreferences;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -342,6 +357,7 @@
 			files = (
 				1CEEAB1A095BD25500166A54 /* ChatCore.framework in Copy Frameworks */,
 				1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */,
+				C22A35571BC00BB7001757D7 /* MASPreferences.framework in Copy Frameworks */,
 				1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */,
 				1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */,
 				1C8444A30F26C7D600701E36 /* Sparkle.framework in Copy Frameworks */,
@@ -366,7 +382,7 @@
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
-		0A3187FB067ECEB600271E42 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
+		0A3187FB067ECEB600271E42 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
 		0A5B683E0810EC9700398D5A /* default.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = default.css; sourceTree = "<group>"; };
 		0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "Chat Core.xcodeproj"; sourceTree = "<group>"; };
 		0AA811220826DB8800A3BF2D /* default.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = default.js; sourceTree = "<group>"; };
@@ -375,7 +391,7 @@
 		19937ADA1AEAAC71005D6C44 /* CQKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQKeychain.m; path = Shared/Controllers/CQKeychain.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1C018BF90A26930500C18024 /* Basic.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Basic.pch; sourceTree = "<group>"; };
 		1C04394607CAFC7D00304949 /* AppleScript Support.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "AppleScript Support.xcodeproj"; path = "Plug-Ins/AppleScript Support/AppleScript Support.xcodeproj"; sourceTree = "<group>"; };
-		1C043B4A13DC8B7200B8FD9E /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = Languages/English.lproj/Credits.rtf; sourceTree = SOURCE_ROOT; };
+		1C043B4A13DC8B7200B8FD9E /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = Languages/en.lproj/Credits.rtf; sourceTree = SOURCE_ROOT; };
 		1C06052306471FFB002438AF /* JVMixedTableColumn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVMixedTableColumn.h; path = Views/JVMixedTableColumn.h; sourceTree = "<group>"; };
 		1C06052406471FFB002438AF /* JVMixedTableColumn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVMixedTableColumn.m; path = Views/JVMixedTableColumn.m; sourceTree = "<group>"; };
 		1C060779064A5DE8002438AF /* JVColorWellCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVColorWellCell.h; path = Views/JVColorWellCell.h; sourceTree = "<group>"; };
@@ -393,13 +409,13 @@
 		1C0730E20677A63B008D8AD9 /* NSImageAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSImageAdditions.h; path = Additions/NSImageAdditions.h; sourceTree = "<group>"; };
 		1C0730E30677A63B008D8AD9 /* NSImageAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSImageAdditions.m; path = Additions/NSImageAdditions.m; sourceTree = "<group>"; };
 		1C088A0E04FCFEE700A8FE6E /* JVChatRoomMember.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatRoomMember.h; path = Panels/JVChatRoomMember.h; sourceTree = "<group>"; };
-		1C088A0F04FCFEE700A8FE6E /* JVChatRoomMember.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatRoomMember.m; path = Panels/JVChatRoomMember.m; sourceTree = "<group>"; };
+		1C088A0F04FCFEE700A8FE6E /* JVChatRoomMember.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = JVChatRoomMember.m; path = Panels/JVChatRoomMember.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1C0A19A208B0418600324E25 /* Python Support.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Python Support.xcodeproj"; path = "Plug-Ins/Python Support/Python Support.xcodeproj"; sourceTree = "<group>"; };
-		1C0A4C990799BDAF0093B702 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVFind.xib; sourceTree = "<group>"; };
-		1C0A4C9B0799BDB00093B702 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
+		1C0A4C990799BDAF0093B702 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/JVFind.xib; sourceTree = "<group>"; };
+		1C0A4C9B0799BDB00093B702 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
 		1C0A4CA50799BDD00093B702 /* JVTabbedChatWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVTabbedChatWindowController.h; path = Controllers/JVTabbedChatWindowController.h; sourceTree = "<group>"; };
 		1C0A4CA70799BDD00093B702 /* JVTranscriptCriterionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVTranscriptCriterionController.h; path = Controllers/JVTranscriptCriterionController.h; sourceTree = "<group>"; };
-		1C0A4CA80799BDD00093B702 /* JVTranscriptCriterionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVTranscriptCriterionController.m; path = Controllers/JVTranscriptCriterionController.m; sourceTree = "<group>"; };
+		1C0A4CA80799BDD00093B702 /* JVTranscriptCriterionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = JVTranscriptCriterionController.m; path = Controllers/JVTranscriptCriterionController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1C0A4CB90799BE000093B702 /* JVTabbedChatWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVTabbedChatWindowController.m; path = Controllers/JVTabbedChatWindowController.m; sourceTree = "<group>"; };
 		1C0A4CC50799BE110093B702 /* JVTranscriptFindWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVTranscriptFindWindowController.h; path = Controllers/JVTranscriptFindWindowController.h; sourceTree = "<group>"; };
 		1C0A4CE40799BE660093B702 /* JVTranscriptFindWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVTranscriptFindWindowController.m; path = Controllers/JVTranscriptFindWindowController.m; sourceTree = "<group>"; };
@@ -411,7 +427,7 @@
 		1C1ACE420533943900F71D4E /* JVInspectorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVInspectorController.m; path = Controllers/JVInspectorController.m; sourceTree = "<group>"; };
 		1C1ACFB505344FCC00F71D4E /* JVConnectionInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVConnectionInspector.h; path = Inspectors/JVConnectionInspector.h; sourceTree = "<group>"; };
 		1C1ACFB605344FCC00F71D4E /* JVConnectionInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVConnectionInspector.m; path = Inspectors/JVConnectionInspector.m; sourceTree = "<group>"; };
-		1C1AD00A053487ED00F71D4E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
+		1C1AD00A053487ED00F71D4E /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
 		1C1AFB3C09C295D900BF3E2A /* base.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = base.html; sourceTree = "<group>"; };
 		1C1AFDAA09C3BC4F00BF3E2A /* roomTopicBanner.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = roomTopicBanner.html; sourceTree = "<group>"; };
 		1C1AFE8109C3D8C900BF3E2A /* roomTopicBanner.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = roomTopicBanner.js; sourceTree = "<group>"; };
@@ -426,8 +442,8 @@
 		1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatPluginManager.h; path = "Chat Core/MVChatPluginManager.h"; sourceTree = "<group>"; };
 		1C386FA91032471F00660864 /* TCMPortMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TCMPortMapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C3972DB082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatTranscriptBrowserPanel.h; path = Panels/JVChatTranscriptBrowserPanel.h; sourceTree = "<group>"; };
-		1C3972DC082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatTranscriptBrowserPanel.m; path = Panels/JVChatTranscriptBrowserPanel.m; sourceTree = "<group>"; };
-		1C397369082D3ED000DCF3CF /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
+		1C3972DC082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = JVChatTranscriptBrowserPanel.m; path = Panels/JVChatTranscriptBrowserPanel.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		1C397369082D3ED000DCF3CF /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
 		1C397390082D4ADA00DCF3CF /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		1C3B290706529E720066197C /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C3B4D560427BD5200000102 /* JVStandardCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVStandardCommands.h; path = "Plug-Ins/Standard Commands/JVStandardCommands.h"; sourceTree = "<group>"; };
@@ -463,17 +479,17 @@
 		1C6A112806BC0C9E00A66340 /* NSAttributedStringMoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSAttributedStringMoreAdditions.h; path = Additions/NSAttributedStringMoreAdditions.h; sourceTree = "<group>"; };
 		1C6A112906BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSAttributedStringMoreAdditions.m; path = Additions/NSAttributedStringMoreAdditions.m; sourceTree = "<group>"; };
 		1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
-		1C6A40C7083FF6C600572AB6 /* JVInterfacePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVInterfacePreferences.h; sourceTree = "<group>"; };
-		1C6A40C8083FF6C600572AB6 /* JVInterfacePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVInterfacePreferences.m; sourceTree = "<group>"; };
+		1C6A40C7083FF6C600572AB6 /* JVInterfacePreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVInterfacePreferencesViewController.h; sourceTree = "<group>"; };
+		1C6A40C8083FF6C600572AB6 /* JVInterfacePreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVInterfacePreferencesViewController.m; sourceTree = "<group>"; };
 		1C6A451E0841746500572AB6 /* JVChatViewCriterionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatViewCriterionController.h; path = Controllers/JVChatViewCriterionController.h; sourceTree = "<group>"; };
 		1C6A451F0841746500572AB6 /* JVChatViewCriterionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatViewCriterionController.m; path = Controllers/JVChatViewCriterionController.m; sourceTree = "<group>"; };
-		1C6A455808417C5300572AB6 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
-		1C6EA23D05A735D6006A559F /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
+		1C6A455808417C5300572AB6 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
+		1C6EA23D05A735D6006A559F /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
 		1C6EA24105A738DD006A559F /* JVChatRoomBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatRoomBrowser.h; path = Controllers/JVChatRoomBrowser.h; sourceTree = "<group>"; };
 		1C6EA24205A738DD006A559F /* JVChatRoomBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatRoomBrowser.m; path = Controllers/JVChatRoomBrowser.m; sourceTree = "<group>"; };
 		1C70377C07E49F25005CEA40 /* JVSmartTranscriptPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVSmartTranscriptPanel.h; path = Panels/JVSmartTranscriptPanel.h; sourceTree = "<group>"; };
 		1C70377D07E49F25005CEA40 /* JVSmartTranscriptPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVSmartTranscriptPanel.m; path = Panels/JVSmartTranscriptPanel.m; sourceTree = "<group>"; };
-		1C703EF407E4B956005CEA40 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
+		1C703EF407E4B956005CEA40 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
 		1C7109FF09F23730007B4515 /* JVSidebarChatWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVSidebarChatWindowController.h; path = Controllers/JVSidebarChatWindowController.h; sourceTree = "<group>"; };
 		1C710A0009F23730007B4515 /* JVSidebarChatWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVSidebarChatWindowController.m; path = Controllers/JVSidebarChatWindowController.m; sourceTree = "<group>"; };
 		1C710A1F09F2396C007B4515 /* JVSidebarChatWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = JVSidebarChatWindow.xib; path = Resources/JVSidebarChatWindow.xib; sourceTree = "<group>"; };
@@ -498,64 +514,48 @@
 		1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; path = ColloquyScripting.r; sourceTree = "<group>"; };
 		1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.rez; path = Colloquy.r; sourceTree = "<group>"; };
 		1C8BDCF1054345160035B84A /* JVChatUserInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatUserInspector.h; path = Inspectors/JVChatUserInspector.h; sourceTree = "<group>"; };
-		1C8BDCF2054345160035B84A /* JVChatUserInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatUserInspector.m; path = Inspectors/JVChatUserInspector.m; sourceTree = "<group>"; };
-		1C8BDD2105436A020035B84A /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
+		1C8BDCF2054345160035B84A /* JVChatUserInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = JVChatUserInspector.m; path = Inspectors/JVChatUserInspector.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		1C8BDD2105436A020035B84A /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
 		1C8CE1EB05A921A00020D841 /* iTunes.scpt */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunes.scpt; path = "Plug-Ins/iTunes/iTunes.scpt"; sourceTree = "<group>"; };
 		1C8CF8E1066530D60080A2F5 /* MVFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVFileTransfer.h; path = "Chat Core/MVFileTransfer.h"; sourceTree = "<group>"; };
 		1C9014BE07A2D798002942A7 /* MVChatUserAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUserAdditions.h; path = Panels/MVChatUserAdditions.h; sourceTree = "<group>"; };
 		1C9014BF07A2D798002942A7 /* MVChatUserAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatUserAdditions.m; path = Panels/MVChatUserAdditions.m; sourceTree = "<group>"; };
 		1C9437080639F86700618CD9 /* JVMarkedScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVMarkedScroller.h; path = Views/JVMarkedScroller.h; sourceTree = "<group>"; };
 		1C9437090639F86700618CD9 /* JVMarkedScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVMarkedScroller.m; path = Views/JVMarkedScroller.m; sourceTree = "<group>"; };
-		1C96E93206AAD81B0013B0A9 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVTranscriptPreferences.xib; sourceTree = "<group>"; };
-		1C96E93C06AADBBD0013B0A9 /* JVTranscriptPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVTranscriptPreferences.h; sourceTree = "<group>"; };
-		1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVTranscriptPreferences.m; sourceTree = "<group>"; };
-		1C9982000603EFD6006C6417 /* JVNotificationPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVNotificationPreferences.h; sourceTree = "<group>"; };
-		1C9982010603EFD6006C6417 /* JVNotificationPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVNotificationPreferences.m; sourceTree = "<group>"; };
-		1C9982050603F097006C6417 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVNotificationPreferences.xib; sourceTree = "<group>"; };
+		1C96E93C06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVTranscriptPreferencesViewController.h; sourceTree = "<group>"; };
+		1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVTranscriptPreferencesViewController.m; sourceTree = "<group>"; };
+		1C9982000603EFD6006C6417 /* JVNotificationPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVNotificationPreferencesViewController.h; sourceTree = "<group>"; };
+		1C9982010603EFD6006C6417 /* JVNotificationPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVNotificationPreferencesViewController.m; sourceTree = "<group>"; };
 		1C9982AF0604BEAA006C6417 /* notifications.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = notifications.plist; sourceTree = "<group>"; };
-		1C9D851E0C9869F000BB6C58 /* Japanese */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Japanese; path = Languages/Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
-		1C9D85230C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/Colloquy.xib; sourceTree = "<group>"; };
-		1C9D85240C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVAppearancePreferences.xib; sourceTree = "<group>"; };
-		1C9D85250C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVBehaviorPreferences.xib; sourceTree = "<group>"; };
-		1C9D85260C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
-		1C9D85270C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
-		1C9D85280C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
-		1C9D85290C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
-		1C9D852A0C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
-		1C9D852B0C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
-		1C9D852C0C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVFileTransferPreferences.xib; sourceTree = "<group>"; };
-		1C9D852D0C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVFind.xib; sourceTree = "<group>"; };
-		1C9D852E0C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVGeneralPreferences.xib; sourceTree = "<group>"; };
-		1C9D852F0C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVInterfacePreferences.xib; sourceTree = "<group>"; };
-		1C9D85300C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVNotificationPreferences.xib; sourceTree = "<group>"; };
-		1C9D85310C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
-		1C9D85320C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
-		1C9D85330C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
-		1C9D85340C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/JVTranscriptPreferences.xib; sourceTree = "<group>"; };
-		1C9D85350C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
-		1C9D85360C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/MVConnections.xib; sourceTree = "<group>"; };
-		1C9D85370C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
-		1C9D85390C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		1C9D853A0C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
+		1C9D851E0C9869F000BB6C58 /* Japanese */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Japanese; path = Languages/ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		1C9D85230C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/Colloquy.xib; sourceTree = "<group>"; };
+		1C9D85260C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
+		1C9D85270C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
+		1C9D85280C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
+		1C9D85290C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
+		1C9D852A0C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
+		1C9D852B0C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
+		1C9D852D0C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/JVFind.xib; sourceTree = "<group>"; };
+		1C9D85310C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
+		1C9D85320C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
+		1C9D85330C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
+		1C9D85350C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
+		1C9D85360C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/MVConnections.xib; sourceTree = "<group>"; };
+		1C9D85370C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
+		1C9D85390C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
+		1C9D853A0C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
 		1C9D85400C986A2000BB6C58 /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = Languages/nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1C9D85450C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/Colloquy.xib; sourceTree = "<group>"; };
-		1C9D85460C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVAppearancePreferences.xib; sourceTree = "<group>"; };
-		1C9D85470C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVBehaviorPreferences.xib; sourceTree = "<group>"; };
 		1C9D85480C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
 		1C9D85490C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
 		1C9D854A0C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
 		1C9D854B0C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
 		1C9D854C0C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
 		1C9D854D0C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
-		1C9D854E0C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVFileTransferPreferences.xib; sourceTree = "<group>"; };
 		1C9D854F0C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVFind.xib; sourceTree = "<group>"; };
-		1C9D85500C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVGeneralPreferences.xib; sourceTree = "<group>"; };
-		1C9D85510C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVInterfacePreferences.xib; sourceTree = "<group>"; };
-		1C9D85520C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVNotificationPreferences.xib; sourceTree = "<group>"; };
 		1C9D85530C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
 		1C9D85540C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
 		1C9D85550C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
-		1C9D85560C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVTranscriptPreferences.xib; sourceTree = "<group>"; };
 		1C9D85570C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
 		1C9D85580C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/MVConnections.xib; sourceTree = "<group>"; };
 		1C9D85590C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
@@ -575,72 +575,52 @@
 		1CB37170060CC7E200F6A81F /* KABubbleWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KABubbleWindowController.m; path = Controllers/KABubbleWindowController.m; sourceTree = "<group>"; };
 		1CB37177060CC81C00F6A81F /* KABubbleWindowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KABubbleWindowView.h; path = Views/KABubbleWindowView.h; sourceTree = "<group>"; };
 		1CB37178060CC81C00F6A81F /* KABubbleWindowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KABubbleWindowView.m; path = Views/KABubbleWindowView.m; sourceTree = "<group>"; };
-		1CB4DCAA053627C00080D36F /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
+		1CB4DCAA053627C00080D36F /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
 		1CB4DCAE0536282B0080D36F /* JVChatRoomInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatRoomInspector.h; path = Inspectors/JVChatRoomInspector.h; sourceTree = "<group>"; };
 		1CB4DCAF0536282B0080D36F /* JVChatRoomInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatRoomInspector.m; path = Inspectors/JVChatRoomInspector.m; sourceTree = "<group>"; };
 		1CBB23D904F03CA7000001C8 /* JVDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVDetailCell.h; path = Views/JVDetailCell.h; sourceTree = "<group>"; };
 		1CBB23DA04F03CA7000001C8 /* JVDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVDetailCell.m; path = Views/JVDetailCell.m; sourceTree = "<group>"; };
-		1CBC62E205488C73009E59E1 /* JVPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVPreferencesController.h; path = Controllers/JVPreferencesController.h; sourceTree = "<group>"; };
-		1CBC62E305488C73009E59E1 /* JVPreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVPreferencesController.m; path = Controllers/JVPreferencesController.m; sourceTree = "<group>"; };
-		1CBC62E605488CBA009E59E1 /* NSPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSPreferences.h; path = Controllers/NSPreferences.h; sourceTree = "<group>"; };
-		1CBC630905489484009E59E1 /* JVGeneralPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVGeneralPreferences.h; sourceTree = "<group>"; };
-		1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVGeneralPreferences.m; sourceTree = "<group>"; };
-		1CBC634805489BEE009E59E1 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVGeneralPreferences.xib; sourceTree = "<group>"; };
+		1CBC630905489484009E59E1 /* JVGeneralPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVGeneralPreferencesViewController.h; sourceTree = "<group>"; };
+		1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVGeneralPreferencesViewController.m; sourceTree = "<group>"; };
 		1CBECDCF0508C8AB000001C8 /* default.xsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = default.xsl; sourceTree = "<group>"; };
 		1CBECE390508D58F000001C8 /* JVChatWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = JVChatWindow.xib; path = Resources/JVChatWindow.xib; sourceTree = "<group>"; };
 		1CBECE3A0508D58F000001C8 /* JVDirectChat.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = JVDirectChat.xib; path = Resources/JVDirectChat.xib; sourceTree = SOURCE_ROOT; };
-		1CC6FC500549FCD70075807C /* JVAppearancePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppearancePreferences.h; sourceTree = "<group>"; };
-		1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppearancePreferences.m; sourceTree = "<group>"; };
-		1CC6FC540549FDD70075807C /* JVBehaviorPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVBehaviorPreferences.h; sourceTree = "<group>"; };
-		1CC6FC550549FDD70075807C /* JVBehaviorPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVBehaviorPreferences.m; sourceTree = "<group>"; };
-		1CC6FC63054A003C0075807C /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVAppearancePreferences.xib; sourceTree = "<group>"; };
-		1CC6FC65054A003C0075807C /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVFileTransferPreferences.xib; sourceTree = "<group>"; };
+		1CC6FC500549FCD70075807C /* JVAppearancePreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppearancePreferencesViewController.h; sourceTree = "<group>"; };
+		1CC6FC510549FCD70075807C /* JVAppearancePreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppearancePreferencesViewController.m; sourceTree = "<group>"; };
+		1CC6FC540549FDD70075807C /* JVBehaviorPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVBehaviorPreferencesViewController.h; sourceTree = "<group>"; };
+		1CC6FC550549FDD70075807C /* JVBehaviorPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVBehaviorPreferencesViewController.m; sourceTree = "<group>"; };
 		1CC6FD38054AF1940075807C /* preview.colloquyTranscript */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = preview.colloquyTranscript; path = Resources/preview.colloquyTranscript; sourceTree = SOURCE_ROOT; };
 		1CC6FD62054B70BC0075807C /* JVFontPreviewField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVFontPreviewField.h; path = Views/JVFontPreviewField.h; sourceTree = "<group>"; };
 		1CC6FD63054B70BC0075807C /* JVFontPreviewField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVFontPreviewField.m; path = Views/JVFontPreviewField.m; sourceTree = "<group>"; };
-		1CC7CAAF03C48E8B001C0D62 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
+		1CC7CAAF03C48E8B001C0D62 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
 		1CCA510D0598108000F0A4CD /* Colloquy.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.scriptSuite; path = Colloquy.scriptSuite; sourceTree = "<group>"; };
 		1CCA510E0598108000F0A4CD /* Colloquy.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.scriptTerminology; path = Colloquy.scriptTerminology; sourceTree = "<group>"; };
 		1CCB279D04FE93FE00A8FE6E /* JVDirectChatPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVDirectChatPanel.h; path = Panels/JVDirectChatPanel.h; sourceTree = "<group>"; };
 		1CCB279E04FE93FE00A8FE6E /* JVDirectChatPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVDirectChatPanel.m; path = Panels/JVDirectChatPanel.m; sourceTree = "<group>"; };
-		1CD4B719078209990003620F /* German */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = German; path = Languages/German.lproj/Localizable.strings; sourceTree = "<group>"; };
-		1CD4B71B078209A20003620F /* Dutch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Dutch; path = Languages/Dutch.lproj/Localizable.strings; sourceTree = "<group>"; };
-		1CD4B71D078209B10003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/Colloquy.xib; sourceTree = "<group>"; };
-		1CD4B71F078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVAppearancePreferences.xib; sourceTree = "<group>"; };
-		1CD4B720078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVBehaviorPreferences.xib; sourceTree = "<group>"; };
-		1CD4B721078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
-		1CD4B722078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
-		1CD4B723078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
-		1CD4B724078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
-		1CD4B725078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVFileTransferPreferences.xib; sourceTree = "<group>"; };
-		1CD4B726078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVGeneralPreferences.xib; sourceTree = "<group>"; };
-		1CD4B727078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVNotificationPreferences.xib; sourceTree = "<group>"; };
-		1CD4B728078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
-		1CD4B729078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVTranscriptPreferences.xib; sourceTree = "<group>"; };
-		1CD4B72B078209CC0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
-		1CD4B72C078209CC0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/MVConnections.xib; sourceTree = "<group>"; };
-		1CD4B72D078209CC0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
-		1CD4B72F078209CC0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		1CD4B730078209CC0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
-		1CD4B732078209D60003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/Colloquy.xib; sourceTree = "<group>"; };
-		1CD4B734078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVAppearancePreferences.xib; sourceTree = "<group>"; };
-		1CD4B735078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVBehaviorPreferences.xib; sourceTree = "<group>"; };
-		1CD4B736078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
-		1CD4B737078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
-		1CD4B738078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
-		1CD4B739078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
-		1CD4B73A078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVFileTransferPreferences.xib; sourceTree = "<group>"; };
-		1CD4B73B078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVGeneralPreferences.xib; sourceTree = "<group>"; };
-		1CD4B73C078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVNotificationPreferences.xib; sourceTree = "<group>"; };
-		1CD4B73D078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
-		1CD4B73E078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVTranscriptPreferences.xib; sourceTree = "<group>"; };
-		1CD4B73F078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
-		1CD4B740078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/MVConnections.xib; sourceTree = "<group>"; };
-		1CD4B741078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
-		1CD4B743078209E10003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		1CD4B744078209E10003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
-		1CD4BD9305AA309A00F72EE6 /* NSURLAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSURLAdditions.h; path = Additions/NSURLAdditions.h; sourceTree = "<group>"; };
-		1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSURLAdditions.m; path = Additions/NSURLAdditions.m; sourceTree = "<group>"; };
+		1CD4B719078209990003620F /* German */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = German; path = Languages/de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		1CD4B71B078209A20003620F /* Dutch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Dutch; path = Languages/nl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		1CD4B71D078209B10003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/Colloquy.xib; sourceTree = "<group>"; };
+		1CD4B721078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
+		1CD4B722078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
+		1CD4B723078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
+		1CD4B724078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
+		1CD4B728078209BD0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
+		1CD4B72B078209CC0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
+		1CD4B72C078209CC0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/MVConnections.xib; sourceTree = "<group>"; };
+		1CD4B72D078209CC0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
+		1CD4B72F078209CC0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
+		1CD4B730078209CC0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
+		1CD4B732078209D60003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/Colloquy.xib; sourceTree = "<group>"; };
+		1CD4B736078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
+		1CD4B737078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
+		1CD4B738078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
+		1CD4B739078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
+		1CD4B73D078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
+		1CD4B73F078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
+		1CD4B740078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/MVConnections.xib; sourceTree = "<group>"; };
+		1CD4B741078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
+		1CD4B743078209E10003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
+		1CD4B744078209E10003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
 		1CD6C413051DFA1C00A8FE10 /* JVChatTranscriptPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatTranscriptPanel.h; path = Panels/JVChatTranscriptPanel.h; sourceTree = "<group>"; };
 		1CD6C414051DFA1D00A8FE10 /* JVChatTranscriptPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatTranscriptPanel.m; path = Panels/JVChatTranscriptPanel.m; sourceTree = "<group>"; };
 		1CD6C417051E0B3000A8FE10 /* JVChatTranscript.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = JVChatTranscript.xib; path = Resources/JVChatTranscript.xib; sourceTree = SOURCE_ROOT; };
@@ -649,11 +629,11 @@
 		1CD9DF6507D934F70006BB99 /* Colloquy.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Colloquy.sdef; sourceTree = "<group>"; };
 		1CDDCF830716208300FE11C3 /* MVChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatRoom.h; path = "Chat Core/MVChatRoom.h"; sourceTree = "<group>"; };
 		1CDDCF840716208300FE11C3 /* MVChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUser.h; path = "Chat Core/MVChatUser.h"; sourceTree = "<group>"; };
-		1CDEE25505823C13000B9075 /* JVFileTransferPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVFileTransferPreferences.h; sourceTree = "<group>"; };
-		1CDEE25605823C13000B9075 /* JVFileTransferPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFileTransferPreferences.m; sourceTree = "<group>"; };
+		1CDEE25505823C13000B9075 /* JVFileTransferPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVFileTransferPreferencesViewController.h; sourceTree = "<group>"; };
+		1CDEE25605823C13000B9075 /* JVFileTransferPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFileTransferPreferencesViewController.m; sourceTree = "<group>"; };
 		1CDEE4770583DC58000B9075 /* JVBuddyInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVBuddyInspector.h; path = Inspectors/JVBuddyInspector.h; sourceTree = "<group>"; };
 		1CDEE4780583DC58000B9075 /* JVBuddyInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVBuddyInspector.m; path = Inspectors/JVBuddyInspector.m; sourceTree = "<group>"; };
-		1CDEE48C0583E268000B9075 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
+		1CDEE48C0583E268000B9075 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
 		1CE2BC1D042F4AD300000102 /* JVChatWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatWindowController.h; path = Controllers/JVChatWindowController.h; sourceTree = "<group>"; };
 		1CE2BC1E042F4AD300000102 /* JVChatWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatWindowController.m; path = Controllers/JVChatWindowController.m; sourceTree = "<group>"; };
 		1CE2BC49042F53AD00000102 /* JVChatRoomPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatRoomPanel.h; path = Panels/JVChatRoomPanel.h; sourceTree = "<group>"; };
@@ -665,11 +645,9 @@
 		1CE72A96052C745400A8FE6E /* JVChatConsolePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatConsolePanel.m; path = Panels/JVChatConsolePanel.m; sourceTree = "<group>"; };
 		1CE72A99052C79E700A8FE6E /* JVChatConsole.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = JVChatConsole.xib; path = Resources/JVChatConsole.xib; sourceTree = "<group>"; };
 		1CEC004D0A20EF95004C2B86 /* transcriptSchema.sql */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = transcriptSchema.sql; sourceTree = "<group>"; };
-		1CECE23006A37A8300350564 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVBehaviorPreferences.xib; sourceTree = "<group>"; };
 		1CEE3F03057AEC0200AD6DE2 /* JVBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVBuddy.h; path = Models/JVBuddy.h; sourceTree = "<group>"; };
 		1CEE3F04057AEC0200AD6DE2 /* JVBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVBuddy.m; path = Models/JVBuddy.m; sourceTree = "<group>"; };
 		1CEF8F7B0A3AB7BB0054298A /* JavaScript Support.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "JavaScript Support.xcodeproj"; path = "Plug-Ins/JavaScript Support/JavaScript Support.xcodeproj"; sourceTree = "<group>"; };
-		1CF16D10083ADECF0037F222 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/JVInterfacePreferences.xib; sourceTree = "<group>"; };
 		1CF4E51D0698E9FB00986498 /* NSDataAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDataAdditions.h; path = Additions/NSDataAdditions.h; sourceTree = "<group>"; };
 		1CF5F8D107D537E50019DC13 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Growl.framework; path = Frameworks/Growl.framework; sourceTree = SOURCE_ROOT; };
 		1CF6511406EA22480073DEA8 /* Colloquy.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colloquy.pch; sourceTree = "<group>"; };
@@ -704,16 +682,16 @@
 		895BCD3812BD39400082AB5A /* CQActivityWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = CQActivityWindow.xib; path = Resources/CQActivityWindow.xib; sourceTree = "<group>"; };
 		89EB91A90F269BEF0028B3E3 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Less Common Settings.xcconfig"; path = "Settings/Less Common Settings.xcconfig"; sourceTree = "<group>"; };
-		9200338C13D92515005B69BA /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
-		9200338E13D92530005B69BA /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
-		9200339013D92543005B69BA /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
-		9200339213D9254D005B69BA /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
-		9200339413D92557005B69BA /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
-		9200339613D92565005B69BA /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/Japanese.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
+		9200338C13D92515005B69BA /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
+		9200338E13D92530005B69BA /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
+		9200339013D92543005B69BA /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
+		9200339213D9254D005B69BA /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
+		9200339413D92557005B69BA /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
+		9200339613D92565005B69BA /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
 		9200339813D9256F005B69BA /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
-		9200339A13D92578005B69BA /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
-		9200339C13D92581005B69BA /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
-		9200339E13D9258A005B69BA /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
+		9200339A13D92578005B69BA /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/MVFileTransfer.xib"; sourceTree = "<group>"; };
+		9200339C13D92581005B69BA /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/en.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
+		9200339E13D9258A005B69BA /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/MVFileTransfer.xib"; sourceTree = "<group>"; };
 		9220565C11018298005CD72D /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		9220565D11018298005CD72D /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDateAdditions.m; path = Additions/NSDateAdditions.m; sourceTree = "<group>"; };
 		92823CF0168FFA0A000EC36E /* KAIgnoreRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KAIgnoreRule.h; path = Shared/Models/KAIgnoreRule.h; sourceTree = "<group>"; };
@@ -722,138 +700,181 @@
 		928FB03013EE643E00A0DF4B /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSStringAdditions.m; path = Additions/NSStringAdditions.m; sourceTree = "<group>"; };
 		9295C84E1675E10A009F9014 /* Colloquy.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; name = Colloquy.exp; path = ../Colloquy.exp; sourceTree = "<group>"; };
 		92A711941A4A5166009E80F0 /* SecurityInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityInterface.framework; path = System/Library/Frameworks/SecurityInterface.framework; sourceTree = SDKROOT; };
-		A1429C720901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/Colloquy.xib; sourceTree = "<group>"; };
-		A1429C730901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVAppearancePreferences.xib; sourceTree = "<group>"; };
-		A1429C740901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVBehaviorPreferences.xib; sourceTree = "<group>"; };
-		A1429C750901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
-		A1429C760901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
-		A1429C770901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
-		A1429C780901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
-		A1429C790901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
-		A1429C7A0901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
-		A1429C7B0901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVFileTransferPreferences.xib; sourceTree = "<group>"; };
-		A1429C7C0901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVFind.xib; sourceTree = "<group>"; };
-		A1429C7D0901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVGeneralPreferences.xib; sourceTree = "<group>"; };
-		A1429C7E0901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVInterfacePreferences.xib; sourceTree = "<group>"; };
-		A1429C7F0901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVNotificationPreferences.xib; sourceTree = "<group>"; };
-		A1429C800901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
-		A1429C810901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
-		A1429C820901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
-		A1429C830901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/JVTranscriptPreferences.xib; sourceTree = "<group>"; };
-		A1429C840901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
-		A1429C850901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/MVConnections.xib; sourceTree = "<group>"; };
-		A1429C860901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
-		A1429C880901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		A1429C890901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/Italian.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
-		A1429C8A0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/Colloquy.xib; sourceTree = "<group>"; };
-		A1429C8B0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVAppearancePreferences.xib; sourceTree = "<group>"; };
-		A1429C8C0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVBehaviorPreferences.xib; sourceTree = "<group>"; };
-		A1429C8D0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
-		A1429C8E0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
-		A1429C8F0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
-		A1429C900901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
-		A1429C910901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
-		A1429C920901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
-		A1429C930901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVFileTransferPreferences.xib; sourceTree = "<group>"; };
-		A1429C940901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVFind.xib; sourceTree = "<group>"; };
-		A1429C950901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVGeneralPreferences.xib; sourceTree = "<group>"; };
-		A1429C960901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVInterfacePreferences.xib; sourceTree = "<group>"; };
-		A1429C970901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVNotificationPreferences.xib; sourceTree = "<group>"; };
-		A1429C980901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
-		A1429C990901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
-		A1429C9A0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
-		A1429C9B0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/JVTranscriptPreferences.xib; sourceTree = "<group>"; };
-		A1429C9C0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
-		A1429C9D0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/MVConnections.xib; sourceTree = "<group>"; };
-		A1429C9E0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
-		A1429CA00901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		A1429CA10901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = Languages/pt_PT.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
-		A1429CA40901F5C400A7BEEE /* Italian */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Italian; path = Languages/Italian.lproj/Localizable.strings; sourceTree = "<group>"; };
-		A1429CA70901F5E000A7BEEE /* pt_PT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = pt_PT; path = Languages/pt_PT.lproj/Localizable.strings; sourceTree = "<group>"; };
-		A15DE0420957E1490040042E /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = zh_TW; path = Languages/zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
-		A15DE0F60957E1B10040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/Colloquy.xib; sourceTree = "<group>"; };
-		A15DE0F70957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVAppearancePreferences.xib; sourceTree = "<group>"; };
-		A15DE0F80957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVBehaviorPreferences.xib; sourceTree = "<group>"; };
-		A15DE0F90957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
-		A15DE0FA0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
-		A15DE0FB0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
-		A15DE0FC0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
-		A15DE0FD0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
-		A15DE0FE0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
-		A15DE0FF0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVFileTransferPreferences.xib; sourceTree = "<group>"; };
-		A15DE1000957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVFind.xib; sourceTree = "<group>"; };
-		A15DE1010957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVGeneralPreferences.xib; sourceTree = "<group>"; };
-		A15DE1020957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVInterfacePreferences.xib; sourceTree = "<group>"; };
-		A15DE1030957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVNotificationPreferences.xib; sourceTree = "<group>"; };
-		A15DE1040957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
-		A15DE1050957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
-		A15DE1060957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
-		A15DE1070957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/JVTranscriptPreferences.xib; sourceTree = "<group>"; };
-		A15DE1080957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
-		A15DE1090957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/MVConnections.xib; sourceTree = "<group>"; };
-		A15DE10A0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
-		A15DE10C0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		A15DE10D0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = Languages/zh_TW.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
-		A16C57F40921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/Colloquy.xib; sourceTree = "<group>"; };
-		A16C57F50921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVAppearancePreferences.xib; sourceTree = "<group>"; };
-		A16C57F60921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVBehaviorPreferences.xib; sourceTree = "<group>"; };
-		A16C57F70921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
-		A16C57F80921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
-		A16C57F90921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
-		A16C57FA0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
-		A16C57FB0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
-		A16C57FC0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
-		A16C57FD0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVFileTransferPreferences.xib; sourceTree = "<group>"; };
-		A16C57FE0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVFind.xib; sourceTree = "<group>"; };
-		A16C57FF0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVGeneralPreferences.xib; sourceTree = "<group>"; };
-		A16C58000921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVInterfacePreferences.xib; sourceTree = "<group>"; };
-		A16C58010921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVNotificationPreferences.xib; sourceTree = "<group>"; };
-		A16C58020921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
-		A16C58030921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
-		A16C58040921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
-		A16C58050921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/JVTranscriptPreferences.xib; sourceTree = "<group>"; };
-		A16C58060921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
-		A16C58070921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/MVConnections.xib; sourceTree = "<group>"; };
-		A16C58080921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
-		A16C580A0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		A16C580B0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/French.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
-		A18BC9D708FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/Colloquy.xib; sourceTree = "<group>"; };
-		A18BC9DC08FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVAppearancePreferences.xib; sourceTree = "<group>"; };
-		A18BC9DD08FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVBehaviorPreferences.xib; sourceTree = "<group>"; };
-		A18BC9DE08FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
-		A18BC9DF08FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
-		A18BC9E008FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
-		A18BC9E108FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
-		A18BC9E208FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
-		A18BC9E308FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
-		A18BC9E408FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVFileTransferPreferences.xib; sourceTree = "<group>"; };
-		A18BC9E508FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVFind.xib; sourceTree = "<group>"; };
-		A18BC9E608FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVGeneralPreferences.xib; sourceTree = "<group>"; };
-		A18BC9E708FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVInterfacePreferences.xib; sourceTree = "<group>"; };
-		A18BC9E808FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVNotificationPreferences.xib; sourceTree = "<group>"; };
-		A18BC9E908FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
-		A18BC9EA08FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
-		A18BC9EB08FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
-		A18BC9EC08FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/JVTranscriptPreferences.xib; sourceTree = "<group>"; };
-		A18BC9EF08FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
-		A18BC9F008FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/MVConnections.xib; sourceTree = "<group>"; };
-		A18BC9F108FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
-		A18BC9F308FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		A18BC9F408FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/Spanish.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
-		A18BC9FE08FF57060005DC2D /* Spanish */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Spanish; path = Languages/Spanish.lproj/Localizable.strings; sourceTree = "<group>"; };
-		A18BC9FF08FF57480005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVFind.xib; sourceTree = "<group>"; };
-		A18BCA1808FF57A20005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
-		A18BCA1908FF57BD0005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
-		A18BCA1A08FF57D40005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVFind.xib; sourceTree = "<group>"; };
-		A18BCA1B08FF57EF0005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
-		A18BCA1C08FF58000005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
-		A18BCA1D08FF581B0005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
-		A18BCA1E08FF582A0005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
-		A18BCA1F08FF58500005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVInterfacePreferences.xib; sourceTree = "<group>"; };
-		A18BCA2008FF58610005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVInterfacePreferences.xib; sourceTree = "<group>"; };
-		A18BCA2108FF588E0005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/Dutch.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
-		A18BCA2208FF589D0005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/German.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
-		A1E1610309228E4F004920E8 /* French */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = French; path = Languages/French.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A1429C720901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/Colloquy.xib; sourceTree = "<group>"; };
+		A1429C750901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
+		A1429C760901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
+		A1429C770901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
+		A1429C780901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
+		A1429C790901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
+		A1429C7A0901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
+		A1429C7C0901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/JVFind.xib; sourceTree = "<group>"; };
+		A1429C800901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
+		A1429C810901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
+		A1429C820901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
+		A1429C840901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
+		A1429C850901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/MVConnections.xib; sourceTree = "<group>"; };
+		A1429C860901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
+		A1429C880901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
+		A1429C890901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
+		A1429C8A0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/Colloquy.xib"; sourceTree = "<group>"; };
+		A1429C8D0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/JVBuddyInspector.xib"; sourceTree = "<group>"; };
+		A1429C8E0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/JVChatMemberInspector.xib"; sourceTree = "<group>"; };
+		A1429C8F0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/JVChatRoomBrowser.xib"; sourceTree = "<group>"; };
+		A1429C900901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/JVChatTranscriptBrowserPanel.xib"; sourceTree = "<group>"; };
+		A1429C910901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/JVChatViewCriterion.xib"; sourceTree = "<group>"; };
+		A1429C920901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/JVConnectionInspector.xib"; sourceTree = "<group>"; };
+		A1429C940901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/JVFind.xib"; sourceTree = "<group>"; };
+		A1429C980901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/JVRoomInspector.xib"; sourceTree = "<group>"; };
+		A1429C990901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/JVSmartTranscriptFilterSheet.xib"; sourceTree = "<group>"; };
+		A1429C9A0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/JVTranscriptCriterion.xib"; sourceTree = "<group>"; };
+		A1429C9C0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/MVBuddyList.xib"; sourceTree = "<group>"; };
+		A1429C9D0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/MVConnections.xib"; sourceTree = "<group>"; };
+		A1429C9E0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/MVCrashCatcher.xib"; sourceTree = "<group>"; };
+		A1429CA00901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/MVSoftwareUpdate.xib"; sourceTree = "<group>"; };
+		A1429CA10901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/TSCustomBan.xib"; sourceTree = "<group>"; };
+		A1429CA40901F5C400A7BEEE /* Italian */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Italian; path = Languages/it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A1429CA70901F5E000A7BEEE /* pt_PT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = pt_PT; path = "Languages/pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		A15DE0420957E1490040042E /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = zh_TW; path = "Languages/zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		A15DE0F60957E1B10040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/Colloquy.xib"; sourceTree = "<group>"; };
+		A15DE0F90957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVBuddyInspector.xib"; sourceTree = "<group>"; };
+		A15DE0FA0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVChatMemberInspector.xib"; sourceTree = "<group>"; };
+		A15DE0FB0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVChatRoomBrowser.xib"; sourceTree = "<group>"; };
+		A15DE0FC0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVChatTranscriptBrowserPanel.xib"; sourceTree = "<group>"; };
+		A15DE0FD0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVChatViewCriterion.xib"; sourceTree = "<group>"; };
+		A15DE0FE0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVConnectionInspector.xib"; sourceTree = "<group>"; };
+		A15DE1000957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVFind.xib"; sourceTree = "<group>"; };
+		A15DE1040957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVRoomInspector.xib"; sourceTree = "<group>"; };
+		A15DE1050957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVSmartTranscriptFilterSheet.xib"; sourceTree = "<group>"; };
+		A15DE1060957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/JVTranscriptCriterion.xib"; sourceTree = "<group>"; };
+		A15DE1080957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/MVBuddyList.xib"; sourceTree = "<group>"; };
+		A15DE1090957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/MVConnections.xib"; sourceTree = "<group>"; };
+		A15DE10A0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/MVCrashCatcher.xib"; sourceTree = "<group>"; };
+		A15DE10C0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/MVSoftwareUpdate.xib"; sourceTree = "<group>"; };
+		A15DE10D0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/TSCustomBan.xib"; sourceTree = "<group>"; };
+		A16C57F40921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/Colloquy.xib; sourceTree = "<group>"; };
+		A16C57F70921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
+		A16C57F80921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
+		A16C57F90921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
+		A16C57FA0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
+		A16C57FB0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
+		A16C57FC0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
+		A16C57FE0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/JVFind.xib; sourceTree = "<group>"; };
+		A16C58020921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
+		A16C58030921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
+		A16C58040921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
+		A16C58060921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
+		A16C58070921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/MVConnections.xib; sourceTree = "<group>"; };
+		A16C58080921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
+		A16C580A0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
+		A16C580B0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
+		A18BC9D708FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/Colloquy.xib; sourceTree = "<group>"; };
+		A18BC9DE08FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
+		A18BC9DF08FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
+		A18BC9E008FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
+		A18BC9E108FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
+		A18BC9E208FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
+		A18BC9E308FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
+		A18BC9E508FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/JVFind.xib; sourceTree = "<group>"; };
+		A18BC9E908FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
+		A18BC9EA08FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
+		A18BC9EB08FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
+		A18BC9EF08FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
+		A18BC9F008FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/MVConnections.xib; sourceTree = "<group>"; };
+		A18BC9F108FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
+		A18BC9F308FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
+		A18BC9F408FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
+		A18BC9FE08FF57060005DC2D /* Spanish */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Spanish; path = Languages/es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A18BC9FF08FF57480005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/JVFind.xib; sourceTree = "<group>"; };
+		A18BCA1808FF57A20005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
+		A18BCA1908FF57BD0005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
+		A18BCA1A08FF57D40005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/JVFind.xib; sourceTree = "<group>"; };
+		A18BCA1B08FF57EF0005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
+		A18BCA1C08FF58000005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
+		A18BCA1D08FF581B0005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
+		A18BCA1E08FF582A0005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/JVChatViewCriterion.xib; sourceTree = "<group>"; };
+		A18BCA2108FF588E0005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
+		A18BCA2208FF589D0005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
+		A1E1610309228E4F004920E8 /* French */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = French; path = Languages/fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C25154471C22063900551BB4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C25154491C2207A200551BB4 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C251544B1C2207A900551BB4 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C251544D1C2207B400551BB4 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C251544F1C2207B900551BB4 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C25154511C2207E500551BB4 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C25154531C2207E900551BB4 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C25154551C2207EE00551BB4 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVFileTransferPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C25154571C2207F300551BB4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C25154591C2207F600551BB4 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVFileTransferPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C257417A1C12F4570069B4C8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C257417C1C12F5280069B4C8 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C257417E1C12F52B0069B4C8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C25741801C12F52E0069B4C8 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C25741821C12F5310069B4C8 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C25741841C12F5340069B4C8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C25741861C12F5380069B4C8 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C25741881C12F53B0069B4C8 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVInterfacePreferencesViewController.strings"; sourceTree = "<group>"; };
+		C257418A1C12F53E0069B4C8 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C257418C1C12F5410069B4C8 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVInterfacePreferencesViewController.strings"; sourceTree = "<group>"; };
+		C26756161C2173CF0039BB6E /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C26756181C2173D30039BB6E /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C267561A1C2173E80039BB6E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C267561C1C2173EB0039BB6E /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C267561E1C2173EE0039BB6E /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C26756201C2173F10039BB6E /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C26756221C2173F30039BB6E /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVNotificationPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C26756241C2173F60039BB6E /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C26756261C2173F90039BB6E /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVNotificationPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C2784FED1C255BA200AE399E /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C2784FEF1C255BA400AE399E /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C2784FF11C255BA900AE399E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C2784FF31C255BAC00AE399E /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C2784FF51C255BB000AE399E /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C2784FF71C255BB400AE399E /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C2784FF91C255BB700AE399E /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVBehaviorPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C2784FFB1C255BBC00AE399E /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C2784FFD1C255BC000AE399E /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVBehaviorPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C27B6C081BDC0BD90017EDAF /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
+		C27B6C0A1BDC0BDB0017EDAF /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
+		C27B6C0C1BDC0BDF0017EDAF /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
+		C27B6C0E1BDC0BEE0017EDAF /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
+		C27B6C101BDC0BF10017EDAF /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
+		C27B6C121BDC0BF70017EDAF /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
+		C27B6C141BDC0BFA0017EDAF /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVGeneralPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C27B6C161BDC0BFD0017EDAF /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
+		C27B6C181BDC0C010017EDAF /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVGeneralPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C27B6C1A1BDC21470017EDAF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29654111BDB9FE900F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVGeneralPreferencesViewController.xib; sourceTree = "<group>"; };
+		C29654141BDB9FF500F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVInterfacePreferencesViewController.xib; sourceTree = "<group>"; };
+		C29654171BDB9FFD00F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVAppearancePreferencesViewController.xib; sourceTree = "<group>"; };
+		C296541A1BDBA00400F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVNotificationPreferencesViewController.xib; sourceTree = "<group>"; };
+		C296541D1BDBA00D00F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVFileTransferPreferencesViewController.xib; sourceTree = "<group>"; };
+		C29654201BDBA01900F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVTranscriptPreferencesViewController.xib; sourceTree = "<group>"; };
+		C29654231BDBA02100F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVBehaviorPreferencesViewController.xib; sourceTree = "<group>"; };
+		C296542C1BDBA08300F28873 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29654301BDBA09700F28873 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29654321BDBA0A100F28873 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AD11C10D3BC005CA86A /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AD31C10D3BF005CA86A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AD51C10D3C2005CA86A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AD71C10D3C4005CA86A /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AD91C10D3C7005CA86A /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1ADB1C10D3C9005CA86A /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1ADD1C10D3CC005CA86A /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVTranscriptPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C29B1ADF1C10D3CE005CA86A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AE11C10D3D0005CA86A /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVTranscriptPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C2B9D0EB1C258BA200C2B4C4 /* CQMPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQMPreferencesWindowController.h; sourceTree = "<group>"; };
+		C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQMPreferencesWindowController.m; sourceTree = "<group>"; };
+		C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MASPreferences.xcodeproj; path = Frameworks/MASPreferences/MASPreferences.xcodeproj; sourceTree = "<group>"; };
+		C2EB205F1C1EA95F00CB88B2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB20611C1EAA0A00CB88B2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB20631C1EAA0F00CB88B2 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB20651C1EAA1300CB88B2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB20671C1EAA1E00CB88B2 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB20691C1EAA2300CB88B2 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB206B1C1EAA2800CB88B2 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB206D1C1EAA3000CB88B2 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVAppearancePreferencesViewController.strings"; sourceTree = "<group>"; };
+		C2EB206F1C1EAA5300CB88B2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB20711C1EAA5800CB88B2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVAppearancePreferencesViewController.strings"; sourceTree = "<group>"; };
 		CBF685150820186F00F498FB /* Colloquy.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Colloquy.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
 		CBF6852E0820190D00F498FB /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CBF685300820190D00F498FB /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/schema.strings; sourceTree = "<group>"; };
@@ -869,13 +890,13 @@
 		F51F91F103796FCD01A35792 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 		F520458E01B1D37701EBB4B5 /* Sounds */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
 		F52BA284037C13C201A35792 /* GPL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GPL.txt; sourceTree = "<group>"; };
-		F5394BEC0378E23701A35792 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/Colloquy.xib; sourceTree = "<group>"; };
-		F5394BF00378E23701A35792 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
-		F5394BF20378E23701A35792 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		F5394C0C0378E44D01A35792 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = Languages/English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F5394BEC0378E23701A35792 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/Colloquy.xib; sourceTree = "<group>"; };
+		F5394BF00378E23701A35792 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
+		F5394BF20378E23701A35792 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
+		F5394C0C0378E44D01A35792 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = Languages/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F551EE490209FB3301EE70DE /* MVKeyChain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVKeyChain.m; path = Models/MVKeyChain.m; sourceTree = "<group>"; };
 		F551EE4A0209FB3301EE70DE /* MVKeyChain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVKeyChain.h; path = Models/MVKeyChain.h; sourceTree = "<group>"; };
-		F555208701F0DC2B01EE70DE /* MVCrashCatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVCrashCatcher.m; path = Controllers/MVCrashCatcher.m; sourceTree = "<group>"; };
+		F555208701F0DC2B01EE70DE /* MVCrashCatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MVCrashCatcher.m; path = Controllers/MVCrashCatcher.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		F555208801F0DC2B01EE70DE /* MVCrashCatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVCrashCatcher.h; path = Controllers/MVCrashCatcher.h; sourceTree = "<group>"; };
 		F5675B8601DB767601EE70DE /* verbs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = verbs.plist; sourceTree = "<group>"; };
 		F56CD5440191182601EE70DE /* NSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSStringAdditions.h; path = Additions/NSStringAdditions.h; sourceTree = "<group>"; };
@@ -886,8 +907,8 @@
 		F5BC17DD019655DC01A35792 /* info.colloquy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = info.colloquy.plist; sourceTree = "<group>"; };
 		F5C497740385713801000102 /* MVConnectionsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVConnectionsController.h; path = Controllers/MVConnectionsController.h; sourceTree = "<group>"; };
 		F5C497750385713801000102 /* MVConnectionsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVConnectionsController.m; path = Controllers/MVConnectionsController.m; sourceTree = "<group>"; };
-		F5C4977C0385785401000102 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/English.lproj/MVConnections.xib; sourceTree = "<group>"; };
-		F5DD34730382E5E501000102 /* Colloquy.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Colloquy.icns; sourceTree = "<group>"; };
+		F5C4977C0385785401000102 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/MVConnections.xib; sourceTree = "<group>"; };
+		F5DD34730382E5E501000102 /* Colloquy.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Colloquy.icns; path = Resources/Colloquy.icns; sourceTree = SOURCE_ROOT; };
 		F5E2538403882A8501000102 /* MVColorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVColorPanel.h; path = Views/MVColorPanel.h; sourceTree = "<group>"; };
 		F5E2538503882A8501000102 /* MVColorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVColorPanel.m; path = Views/MVColorPanel.m; sourceTree = "<group>"; };
 		F5E98623018B412B01EE70DE /* NSAttributedStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSAttributedStringAdditions.h; path = Additions/NSAttributedStringAdditions.h; sourceTree = "<group>"; };
@@ -922,6 +943,7 @@
 				1CB2CD7B052DDC560094AAA4 /* Security.framework in Frameworks */,
 				1CB2CD7C052DDC560094AAA4 /* WebKit.framework in Frameworks */,
 				1CD0201F05758F26000F93B4 /* AddressBook.framework in Frameworks */,
+				C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */,
 				1C3B290806529E720066197C /* ChatCore.framework in Frameworks */,
 				1CF8030E070C893500C9B54C /* libsilc.framework in Frameworks */,
 				1CF8030F070C893500C9B54C /* libsilcclient.framework in Frameworks */,
@@ -964,6 +986,7 @@
 				F5185C82018626F701EE70DE /* Interfaces */,
 				F50B0AA10170C89301A84BDE /* Resources */,
 				1C6A13E608666DDC009EE6D2 /* Configurations */,
+				C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */,
 				089C1671FE841209C02AAC07 /* Frameworks */,
 				1CB2C8CC052DDA360094AAA4 /* Products */,
 			);
@@ -1124,20 +1147,29 @@
 		1CBC62F405488D5A009E59E1 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
-				1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */,
-				1CBC630905489484009E59E1 /* JVGeneralPreferences.h */,
-				1C6A40C8083FF6C600572AB6 /* JVInterfacePreferences.m */,
-				1C6A40C7083FF6C600572AB6 /* JVInterfacePreferences.h */,
-				1CC6FC510549FCD70075807C /* JVAppearancePreferences.m */,
-				1CC6FC500549FCD70075807C /* JVAppearancePreferences.h */,
-				1C9982010603EFD6006C6417 /* JVNotificationPreferences.m */,
-				1C9982000603EFD6006C6417 /* JVNotificationPreferences.h */,
-				1CDEE25605823C13000B9075 /* JVFileTransferPreferences.m */,
-				1CDEE25505823C13000B9075 /* JVFileTransferPreferences.h */,
-				1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferences.m */,
-				1C96E93C06AADBBD0013B0A9 /* JVTranscriptPreferences.h */,
-				1CC6FC550549FDD70075807C /* JVBehaviorPreferences.m */,
-				1CC6FC540549FDD70075807C /* JVBehaviorPreferences.h */,
+				C2B9D0EB1C258BA200C2B4C4 /* CQMPreferencesWindowController.h */,
+				C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */,
+				1CBC630905489484009E59E1 /* JVGeneralPreferencesViewController.h */,
+				1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */,
+				C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */,
+				1C6A40C7083FF6C600572AB6 /* JVInterfacePreferencesViewController.h */,
+				1C6A40C8083FF6C600572AB6 /* JVInterfacePreferencesViewController.m */,
+				C29654151BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib */,
+				1CC6FC500549FCD70075807C /* JVAppearancePreferencesViewController.h */,
+				1CC6FC510549FCD70075807C /* JVAppearancePreferencesViewController.m */,
+				C29654181BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib */,
+				1C9982000603EFD6006C6417 /* JVNotificationPreferencesViewController.h */,
+				1C9982010603EFD6006C6417 /* JVNotificationPreferencesViewController.m */,
+				C296541B1BDBA00400F28873 /* JVNotificationPreferencesViewController.xib */,
+				1CDEE25505823C13000B9075 /* JVFileTransferPreferencesViewController.h */,
+				1CDEE25605823C13000B9075 /* JVFileTransferPreferencesViewController.m */,
+				C296541E1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib */,
+				1C96E93C06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.h */,
+				1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m */,
+				C29654211BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib */,
+				1CC6FC540549FDD70075807C /* JVBehaviorPreferencesViewController.h */,
+				1CC6FC550549FDD70075807C /* JVBehaviorPreferencesViewController.m */,
+				C29654241BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -1331,9 +1363,6 @@
 				1C7780DB08FA1D81006AD8E5 /* JVSpeechController.h */,
 				1C1ACE420533943900F71D4E /* JVInspectorController.m */,
 				1C1ACE410533943900F71D4E /* JVInspectorController.h */,
-				1CBC62E605488CBA009E59E1 /* NSPreferences.h */,
-				1CBC62E305488C73009E59E1 /* JVPreferencesController.m */,
-				1CBC62E205488C73009E59E1 /* JVPreferencesController.h */,
 				F555208701F0DC2B01EE70DE /* MVCrashCatcher.m */,
 				F555208801F0DC2B01EE70DE /* MVCrashCatcher.h */,
 				891EF3D0106426CB00CCEA35 /* PFMoveApplicationController.m */,
@@ -1349,6 +1378,14 @@
 				55C8A2D7180735D100A7BB42 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C22A354F1BC009FA001757D7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C22A35541BC009FA001757D7 /* MASPreferences.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		CBF684F00820174000F498FB /* Metadata Importer */ = {
@@ -1414,8 +1451,6 @@
 				928FB02F13EE643E00A0DF4B /* NSStringAdditions.h */,
 				1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */,
 				1C4671E306D7759100071DC6 /* NSTextStorageAdditions.h */,
-				1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */,
-				1CD4BD9305AA309A00F72EE6 /* NSURLAdditions.h */,
 				55B748191AD2E957001459F7 /* RunOnMainThread.h */,
 			);
 			indentWidth = 4;
@@ -1506,14 +1541,7 @@
 				1CB4DCA9053627C00080D36F /* JVRoomInspector.xib */,
 				1C8BDD2005436A020035B84A /* JVChatMemberInspector.xib */,
 				1CDEE48B0583E268000B9075 /* JVBuddyInspector.xib */,
-				1CBC634705489BEE009E59E1 /* JVGeneralPreferences.xib */,
-				1CECE22F06A37A8300350564 /* JVBehaviorPreferences.xib */,
-				1CC6FC62054A003C0075807C /* JVAppearancePreferences.xib */,
-				1CF16D0F083ADECF0037F222 /* JVInterfacePreferences.xib */,
-				1CC6FC64054A003C0075807C /* JVFileTransferPreferences.xib */,
-				1C96E93106AAD81B0013B0A9 /* JVTranscriptPreferences.xib */,
 				1C6EA23C05A735D6006A559F /* JVChatRoomBrowser.xib */,
-				1C9982040603F097006C6417 /* JVNotificationPreferences.xib */,
 				0A3187FA067ECEB600271E42 /* TSCustomBan.xib */,
 				1C703EF307E4B956005CEA40 /* JVSmartTranscriptFilterSheet.xib */,
 				895BCD3812BD39400082AB5A /* CQActivityWindow.xib */,
@@ -1611,6 +1639,7 @@
 			);
 			dependencies = (
 				1CEEAB19095BD24100166A54 /* PBXTargetDependency */,
+				C22A35591BC00BB7001757D7 /* PBXTargetDependency */,
 			);
 			name = "Colloquy (Application)";
 			productName = "Massinova (Application)";
@@ -1659,36 +1688,24 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
-				LastTestingUpgradeCheck = 0510;
-				LastUpgradeCheck = 0700;
-				TargetAttributes = {
-					55C8A2CF180735D100A7BB42 = {
-						TestTargetID = 1CB2CCF5052DDC560094AAA4;
-					};
-				};
+				LastUpgradeCheck = 0720;
 			};
 			buildConfigurationList = 1C041A700854E97700A5A5BA /* Build configuration list for PBXProject "Colloquy (Old)" */;
-			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			compatibilityVersion = "Xcode 6.3";
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
 			knownRegions = (
-				English,
-				Japanese,
-				French,
-				German,
-				zh_CN,
-				Danish,
-				Finnish,
-				Italian,
-				Korean,
-				pt_BR,
-				Spanish,
-				zh_TW,
-				Norwegian,
-				Dutch,
-				pt_PT,
+				Base,
 				en,
+				nl,
+				fr,
+				de,
+				it,
+				ja,
 				nb,
+				"pt-PT",
+				es,
+				"zh-Hant",
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
 			productRefGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
@@ -1709,6 +1726,10 @@
 				{
 					ProductGroup = 1CEF8F7C0A3AB7BB0054298A /* Products */;
 					ProjectRef = 1CEF8F7B0A3AB7BB0054298A /* JavaScript Support.xcodeproj */;
+				},
+				{
+					ProductGroup = C22A354F1BC009FA001757D7 /* Products */;
+					ProjectRef = C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */;
 				},
 				{
 					ProductGroup = 1C0A19A308B0418600324E25 /* Products */;
@@ -1769,6 +1790,13 @@
 			remoteRef = 92F4A23614FDEF10001A177E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		C22A35541BC009FA001757D7 /* MASPreferences.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MASPreferences.framework;
+			remoteRef = C22A35531BC009FA001757D7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1779,6 +1807,8 @@
 				1C1AFE8E09C3D92E00BF3E2A /* roomTopicBanner.js in Resources */,
 				1CB2CD18052DDC560094AAA4 /* info.colloquy.plist in Resources */,
 				55F42AC21AEC3A930085CA56 /* Shared Toolbar.xcassets in Resources */,
+				C29654131BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib in Resources */,
+				C29654101BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib in Resources */,
 				1CB2CD24052DDC560094AAA4 /* verbs.plist in Resources */,
 				1CB2CD2A052DDC560094AAA4 /* Colloquy.xib in Resources */,
 				1CB2CD2B052DDC560094AAA4 /* MVCrashCatcher.xib in Resources */,
@@ -1797,13 +1827,11 @@
 				1CB2CD59052DDC560094AAA4 /* Emoticons in Resources */,
 				1CB2CD5A052DDC560094AAA4 /* emoticons.plist in Resources */,
 				1CB2CD5E052DDC560094AAA4 /* JVChatTranscript.xib in Resources */,
+				C29654221BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib in Resources */,
 				1CB2CD60052DDC560094AAA4 /* JVChatConsole.xib in Resources */,
 				1C1AD00B053487ED00F71D4E /* JVConnectionInspector.xib in Resources */,
 				1CB4DCAB053627C00080D36F /* JVRoomInspector.xib in Resources */,
 				1C8BDD2205436A030035B84A /* JVChatMemberInspector.xib in Resources */,
-				1CBC634905489BEE009E59E1 /* JVGeneralPreferences.xib in Resources */,
-				1CC6FC67054A003C0075807C /* JVAppearancePreferences.xib in Resources */,
-				1CC6FC68054A003C0075807C /* JVFileTransferPreferences.xib in Resources */,
 				556CEBE51BCB795600F00EAA /* Tabs Interface Images.xcassets in Resources */,
 				55B56A921B0693C9008DC039 /* Preferences.xcassets in Resources */,
 				1CC6FD39054AF1940075807C /* preview.colloquyTranscript in Resources */,
@@ -1812,26 +1840,25 @@
 				1CDEE48D0583E268000B9075 /* JVBuddyInspector.xib in Resources */,
 				55B56AA01B069524008DC039 /* OS X toolbars.xcassets in Resources */,
 				1C6EA23E05A735D6006A559F /* JVChatRoomBrowser.xib in Resources */,
-				1C9982060603F097006C6417 /* JVNotificationPreferences.xib in Resources */,
 				1C9982AA0604B979006C6417 /* Sounds in Resources */,
 				1C9982B00604BEAA006C6417 /* notifications.plist in Resources */,
 				1CA75A270652537A000141D5 /* styleOptions.plist in Resources */,
 				1C238F050677B5E5000E89A7 /* JVTabbedChatWindow.xib in Resources */,
 				0A3187FC067ECEB600271E42 /* TSCustomBan.xib in Resources */,
-				1CECE26006A37BEC00350564 /* JVBehaviorPreferences.xib in Resources */,
-				1C96E93306AAD81B0013B0A9 /* JVTranscriptPreferences.xib in Resources */,
 				1C0A4C9C0799BDB00093B702 /* JVFind.xib in Resources */,
 				1C0A4C9D0799BDB00093B702 /* JVTranscriptCriterion.xib in Resources */,
 				1C703EF507E4B956005CEA40 /* JVSmartTranscriptFilterSheet.xib in Resources */,
 				0A5B683F0810EC9700398D5A /* default.css in Resources */,
 				0AA8117B0826E08000A3BF2D /* default.js in Resources */,
 				1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.xib in Resources */,
-				1CF16D11083ADECF0037F222 /* JVInterfacePreferences.xib in Resources */,
+				C296541C1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib in Resources */,
 				1C6A455908417C5300572AB6 /* JVChatViewCriterion.xib in Resources */,
+				C29654161BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib in Resources */,
 				1CE6916808B183C2006D9CA0 /* Styles in Resources */,
 				1CE6916908B183C2006D9CA0 /* ChatCore.scriptTerminology in Resources */,
 				1CE6916A08B183C3006D9CA0 /* ChatCore.scriptSuite in Resources */,
 				1CE6916B08B183C4006D9CA0 /* ChatPlugIn.scriptTerminology in Resources */,
+				C29654191BDBA00400F28873 /* JVNotificationPreferencesViewController.xib in Resources */,
 				1CE6916C08B183C5006D9CA0 /* ChatPlugIn.scriptSuite in Resources */,
 				1CE6916D08B183C6006D9CA0 /* Colloquy.scriptTerminology in Resources */,
 				1CE6916E08B183C7006D9CA0 /* Colloquy.scriptSuite in Resources */,
@@ -1845,6 +1872,7 @@
 				1C710AC009F23D9D007B4515 /* sidebarResizeWidget.png in Resources */,
 				1C710AC109F23D9D007B4515 /* sidebarStatusAreaBackground.png in Resources */,
 				558EF2371AEC356800619BDE /* Room Member Icons.xcassets in Resources */,
+				C296541F1BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib in Resources */,
 				1CEC004F0A20EF99004C2B86 /* transcriptSchema.sql in Resources */,
 				1C6268E5103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem in Resources */,
 				9200338D13D92515005B69BA /* MVFileTransfer.xib in Resources */,
@@ -2003,19 +2031,18 @@
 				1C1ACFB805344FCC00F71D4E /* JVConnectionInspector.m in Sources */,
 				1CB4DCB10536282B0080D36F /* JVChatRoomInspector.m in Sources */,
 				1C8BDCF4054345160035B84A /* JVChatUserInspector.m in Sources */,
-				1CBC62E505488C73009E59E1 /* JVPreferencesController.m in Sources */,
-				1CBC630C05489484009E59E1 /* JVGeneralPreferences.m in Sources */,
-				1CC6FC530549FCD80075807C /* JVAppearancePreferences.m in Sources */,
-				1CC6FC570549FDD70075807C /* JVBehaviorPreferences.m in Sources */,
+				1CBC630C05489484009E59E1 /* JVGeneralPreferencesViewController.m in Sources */,
+				1CC6FC530549FCD80075807C /* JVAppearancePreferencesViewController.m in Sources */,
+				1CC6FC570549FDD70075807C /* JVBehaviorPreferencesViewController.m in Sources */,
 				1CC6FD65054B70BC0075807C /* JVFontPreviewField.m in Sources */,
 				1CD0201305758CE7000F93B4 /* MVBuddyListController.m in Sources */,
 				1CEE3F06057AEC0200AD6DE2 /* JVBuddy.m in Sources */,
-				1CDEE25E05823C26000B9075 /* JVFileTransferPreferences.m in Sources */,
+				1CDEE25E05823C26000B9075 /* JVFileTransferPreferencesViewController.m in Sources */,
 				1CDEE47A0583DC58000B9075 /* JVBuddyInspector.m in Sources */,
 				1CD733CC05A0E2470080F952 /* JVChatMessage.m in Sources */,
 				1C6EA24405A738DD006A559F /* JVChatRoomBrowser.m in Sources */,
 				1C2462A505F9205900505752 /* JVStyleView.m in Sources */,
-				1C9982030603EFD6006C6417 /* JVNotificationPreferences.m in Sources */,
+				1C9982030603EFD6006C6417 /* JVNotificationPreferencesViewController.m in Sources */,
 				1C9982B90604D94C006C6417 /* JVNotificationController.m in Sources */,
 				1CB37172060CC7E200F6A81F /* KABubbleWindowController.m in Sources */,
 				1CB3717A060CC81C00F6A81F /* KABubbleWindowView.m in Sources */,
@@ -2025,6 +2052,7 @@
 				1C06077C064A5DE8002438AF /* JVColorWellCell.m in Sources */,
 				1CABF8780656414100801C15 /* NSBundleAdditions.m in Sources */,
 				1CABFCB20657F10900801C15 /* JVSplitView.m in Sources */,
+				C2B9D0ED1C258BA200C2B4C4 /* CQMPreferencesWindowController.m in Sources */,
 				1CABFD0F0658629200801C15 /* JVStyle.m in Sources */,
 				1C0730CA0677765B008D8AD9 /* AICustomTabCell.m in Sources */,
 				1C0730CC0677765B008D8AD9 /* AICustomTabDragging.m in Sources */,
@@ -2033,10 +2061,9 @@
 				1C0730D406777678008D8AD9 /* ESFloater.m in Sources */,
 				1C0730E50677A63B008D8AD9 /* NSImageAdditions.m in Sources */,
 				1C2391AA0677E6B7000E89A7 /* JVChatTabItem.m in Sources */,
-				1C96E93F06AADBBD0013B0A9 /* JVTranscriptPreferences.m in Sources */,
+				1C96E93F06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m in Sources */,
 				1C6A112B06BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m in Sources */,
 				1C4671E606D7759100071DC6 /* NSTextStorageAdditions.m in Sources */,
-				1CF803F1070C948000C9B54C /* NSURLAdditions.m in Sources */,
 				1C0A4CAC0799BDD00093B702 /* JVTranscriptCriterionController.m in Sources */,
 				1C0A4CBA0799BE000093B702 /* JVTabbedChatWindowController.m in Sources */,
 				1C0A4CE50799BE660093B702 /* JVTranscriptFindWindowController.m in Sources */,
@@ -2047,7 +2074,7 @@
 				1C5EF36C07B45FBF004E66D3 /* JVChatSession.m in Sources */,
 				1C66913A07BFA76D008400F7 /* JVEmoticonSet.m in Sources */,
 				1C70377F07E49F25005CEA40 /* JVSmartTranscriptPanel.m in Sources */,
-				1C6A40CA083FF6C600572AB6 /* JVInterfacePreferences.m in Sources */,
+				1C6A40CA083FF6C600572AB6 /* JVInterfacePreferencesViewController.m in Sources */,
 				1C6A45210841746500572AB6 /* JVChatViewCriterionController.m in Sources */,
 				1C7780DE08FA1D82006AD8E5 /* JVSpeechController.m in Sources */,
 				1C710A0209F23730007B4515 /* JVSidebarChatWindowController.m in Sources */,
@@ -2123,6 +2150,11 @@
 			isa = PBXTargetDependency;
 			target = 1C51B4BB052DE14B00BB459B /* Standard Commands (Plug-In) */;
 			targetProxy = 9295C9DA16784597009F9014 /* PBXContainerItemProxy */;
+		};
+		C22A35591BC00BB7001757D7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MASPreferences;
+			targetProxy = C22A35581BC00BB7001757D7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2288,40 +2320,6 @@
 			name = JVChatMemberInspector.xib;
 			sourceTree = "<group>";
 		};
-		1C96E93106AAD81B0013B0A9 /* JVTranscriptPreferences.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1C96E93206AAD81B0013B0A9 /* English */,
-				1CD4B729078209BD0003620F /* Dutch */,
-				1CD4B73E078209E00003620F /* German */,
-				A18BC9EC08FF569A0005DC2D /* Spanish */,
-				A1429C830901F57A00A7BEEE /* Italian */,
-				A1429C9B0901F59900A7BEEE /* pt_PT */,
-				A16C58050921F63F007812B2 /* French */,
-				A15DE1070957E1B20040042E /* zh_TW */,
-				1C9D85340C986A0700BB6C58 /* Japanese */,
-				1C9D85560C986A2C00BB6C58 /* nb */,
-			);
-			name = JVTranscriptPreferences.xib;
-			sourceTree = "<group>";
-		};
-		1C9982040603F097006C6417 /* JVNotificationPreferences.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1C9982050603F097006C6417 /* English */,
-				1CD4B727078209BD0003620F /* Dutch */,
-				1CD4B73C078209E00003620F /* German */,
-				A18BC9E808FF569A0005DC2D /* Spanish */,
-				A1429C7F0901F57A00A7BEEE /* Italian */,
-				A1429C970901F59900A7BEEE /* pt_PT */,
-				A16C58010921F63F007812B2 /* French */,
-				A15DE1030957E1B20040042E /* zh_TW */,
-				1C9D85300C986A0700BB6C58 /* Japanese */,
-				1C9D85520C986A2C00BB6C58 /* nb */,
-			);
-			name = JVNotificationPreferences.xib;
-			sourceTree = "<group>";
-		};
 		1CB4DCA9053627C00080D36F /* JVRoomInspector.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2337,57 +2335,6 @@
 				1C9D85530C986A2C00BB6C58 /* nb */,
 			);
 			name = JVRoomInspector.xib;
-			sourceTree = "<group>";
-		};
-		1CBC634705489BEE009E59E1 /* JVGeneralPreferences.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1CBC634805489BEE009E59E1 /* English */,
-				1CD4B726078209BD0003620F /* Dutch */,
-				1CD4B73B078209E00003620F /* German */,
-				A18BC9E608FF569A0005DC2D /* Spanish */,
-				A1429C7D0901F57A00A7BEEE /* Italian */,
-				A1429C950901F59900A7BEEE /* pt_PT */,
-				A16C57FF0921F63F007812B2 /* French */,
-				A15DE1010957E1B20040042E /* zh_TW */,
-				1C9D852E0C986A0700BB6C58 /* Japanese */,
-				1C9D85500C986A2C00BB6C58 /* nb */,
-			);
-			name = JVGeneralPreferences.xib;
-			sourceTree = "<group>";
-		};
-		1CC6FC62054A003C0075807C /* JVAppearancePreferences.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1CC6FC63054A003C0075807C /* English */,
-				1CD4B71F078209BD0003620F /* Dutch */,
-				1CD4B734078209E00003620F /* German */,
-				A18BC9DC08FF569A0005DC2D /* Spanish */,
-				A1429C730901F57A00A7BEEE /* Italian */,
-				A1429C8B0901F59900A7BEEE /* pt_PT */,
-				A16C57F50921F63F007812B2 /* French */,
-				A15DE0F70957E1B20040042E /* zh_TW */,
-				1C9D85240C986A0700BB6C58 /* Japanese */,
-				1C9D85460C986A2C00BB6C58 /* nb */,
-			);
-			name = JVAppearancePreferences.xib;
-			sourceTree = "<group>";
-		};
-		1CC6FC64054A003C0075807C /* JVFileTransferPreferences.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1CC6FC65054A003C0075807C /* English */,
-				1CD4B725078209BD0003620F /* Dutch */,
-				1CD4B73A078209E00003620F /* German */,
-				A18BC9E408FF569A0005DC2D /* Spanish */,
-				A1429C7B0901F57A00A7BEEE /* Italian */,
-				A1429C930901F59900A7BEEE /* pt_PT */,
-				A16C57FD0921F63F007812B2 /* French */,
-				A15DE0FF0957E1B20040042E /* zh_TW */,
-				1C9D852C0C986A0700BB6C58 /* Japanese */,
-				1C9D854E0C986A2C00BB6C58 /* nb */,
-			);
-			name = JVFileTransferPreferences.xib;
 			sourceTree = "<group>";
 		};
 		1CC7CAAE03C48E8B001C0D62 /* MVBuddyList.xib */ = {
@@ -2424,40 +2371,6 @@
 			name = JVBuddyInspector.xib;
 			sourceTree = "<group>";
 		};
-		1CECE22F06A37A8300350564 /* JVBehaviorPreferences.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1CECE23006A37A8300350564 /* English */,
-				1CD4B720078209BD0003620F /* Dutch */,
-				1CD4B735078209E00003620F /* German */,
-				A18BC9DD08FF569A0005DC2D /* Spanish */,
-				A1429C740901F57A00A7BEEE /* Italian */,
-				A1429C8C0901F59900A7BEEE /* pt_PT */,
-				A16C57F60921F63F007812B2 /* French */,
-				A15DE0F80957E1B20040042E /* zh_TW */,
-				1C9D85250C986A0700BB6C58 /* Japanese */,
-				1C9D85470C986A2C00BB6C58 /* nb */,
-			);
-			name = JVBehaviorPreferences.xib;
-			sourceTree = "<group>";
-		};
-		1CF16D0F083ADECF0037F222 /* JVInterfacePreferences.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1CF16D10083ADECF0037F222 /* English */,
-				A18BC9E708FF569A0005DC2D /* Spanish */,
-				A18BCA1F08FF58500005DC2D /* German */,
-				A18BCA2008FF58610005DC2D /* Dutch */,
-				A1429C7E0901F57A00A7BEEE /* Italian */,
-				A1429C960901F59900A7BEEE /* pt_PT */,
-				A16C58000921F63F007812B2 /* French */,
-				A15DE1020957E1B20040042E /* zh_TW */,
-				1C9D852F0C986A0700BB6C58 /* Japanese */,
-				1C9D85510C986A2C00BB6C58 /* nb */,
-			);
-			name = JVInterfacePreferences.xib;
-			sourceTree = "<group>";
-		};
 		55C8A2D7180735D100A7BB42 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2481,6 +2394,132 @@
 				9200339E13D9258A005B69BA /* zh_TW */,
 			);
 			name = MVFileTransfer.xib;
+			sourceTree = "<group>";
+		};
+		C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C29654111BDB9FE900F28873 /* Base */,
+				C27B6C081BDC0BD90017EDAF /* nl */,
+				C27B6C0A1BDC0BDB0017EDAF /* fr */,
+				C27B6C0C1BDC0BDF0017EDAF /* de */,
+				C27B6C0E1BDC0BEE0017EDAF /* it */,
+				C27B6C101BDC0BF10017EDAF /* ja */,
+				C27B6C121BDC0BF70017EDAF /* nb */,
+				C27B6C141BDC0BFA0017EDAF /* pt-PT */,
+				C27B6C161BDC0BFD0017EDAF /* es */,
+				C27B6C181BDC0C010017EDAF /* zh-Hant */,
+				C27B6C1A1BDC21470017EDAF /* en */,
+			);
+			name = JVGeneralPreferencesViewController.xib;
+			sourceTree = "<group>";
+		};
+		C29654151BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C29654141BDB9FF500F28873 /* Base */,
+				C257417A1C12F4570069B4C8 /* en */,
+				C257417C1C12F5280069B4C8 /* nl */,
+				C257417E1C12F52B0069B4C8 /* fr */,
+				C25741801C12F52E0069B4C8 /* de */,
+				C25741821C12F5310069B4C8 /* it */,
+				C25741841C12F5340069B4C8 /* ja */,
+				C25741861C12F5380069B4C8 /* nb */,
+				C25741881C12F53B0069B4C8 /* pt-PT */,
+				C257418A1C12F53E0069B4C8 /* es */,
+				C257418C1C12F5410069B4C8 /* zh-Hant */,
+			);
+			name = JVInterfacePreferencesViewController.xib;
+			sourceTree = "<group>";
+		};
+		C29654181BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C29654171BDB9FFD00F28873 /* Base */,
+				C2EB205F1C1EA95F00CB88B2 /* en */,
+				C2EB20611C1EAA0A00CB88B2 /* nl */,
+				C2EB20631C1EAA0F00CB88B2 /* fr */,
+				C2EB20651C1EAA1300CB88B2 /* de */,
+				C2EB20671C1EAA1E00CB88B2 /* it */,
+				C2EB20691C1EAA2300CB88B2 /* ja */,
+				C2EB206B1C1EAA2800CB88B2 /* nb */,
+				C2EB206D1C1EAA3000CB88B2 /* pt-PT */,
+				C2EB206F1C1EAA5300CB88B2 /* es */,
+				C2EB20711C1EAA5800CB88B2 /* zh-Hant */,
+			);
+			name = JVAppearancePreferencesViewController.xib;
+			sourceTree = "<group>";
+		};
+		C296541B1BDBA00400F28873 /* JVNotificationPreferencesViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C296541A1BDBA00400F28873 /* Base */,
+				C296542C1BDBA08300F28873 /* en */,
+				C26756161C2173CF0039BB6E /* nl */,
+				C26756181C2173D30039BB6E /* fr */,
+				C267561A1C2173E80039BB6E /* de */,
+				C267561C1C2173EB0039BB6E /* it */,
+				C267561E1C2173EE0039BB6E /* ja */,
+				C26756201C2173F10039BB6E /* nb */,
+				C26756221C2173F30039BB6E /* pt-PT */,
+				C26756241C2173F60039BB6E /* es */,
+				C26756261C2173F90039BB6E /* zh-Hant */,
+			);
+			name = JVNotificationPreferencesViewController.xib;
+			sourceTree = "<group>";
+		};
+		C296541E1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C296541D1BDBA00D00F28873 /* Base */,
+				C25154471C22063900551BB4 /* en */,
+				C25154491C2207A200551BB4 /* nl */,
+				C251544B1C2207A900551BB4 /* fr */,
+				C251544D1C2207B400551BB4 /* de */,
+				C251544F1C2207B900551BB4 /* it */,
+				C25154511C2207E500551BB4 /* ja */,
+				C25154531C2207E900551BB4 /* nb */,
+				C25154551C2207EE00551BB4 /* pt-PT */,
+				C25154571C2207F300551BB4 /* es */,
+				C25154591C2207F600551BB4 /* zh-Hant */,
+			);
+			name = JVFileTransferPreferencesViewController.xib;
+			sourceTree = "<group>";
+		};
+		C29654211BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C29654201BDBA01900F28873 /* Base */,
+				C29654301BDBA09700F28873 /* en */,
+				C29B1AD11C10D3BC005CA86A /* nl */,
+				C29B1AD31C10D3BF005CA86A /* fr */,
+				C29B1AD51C10D3C2005CA86A /* de */,
+				C29B1AD71C10D3C4005CA86A /* it */,
+				C29B1AD91C10D3C7005CA86A /* ja */,
+				C29B1ADB1C10D3C9005CA86A /* nb */,
+				C29B1ADD1C10D3CC005CA86A /* pt-PT */,
+				C29B1ADF1C10D3CE005CA86A /* es */,
+				C29B1AE11C10D3D0005CA86A /* zh-Hant */,
+			);
+			name = JVTranscriptPreferencesViewController.xib;
+			sourceTree = "<group>";
+		};
+		C29654241BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C29654231BDBA02100F28873 /* Base */,
+				C29654321BDBA0A100F28873 /* en */,
+				C2784FED1C255BA200AE399E /* nl */,
+				C2784FEF1C255BA400AE399E /* fr */,
+				C2784FF11C255BA900AE399E /* de */,
+				C2784FF31C255BAC00AE399E /* it */,
+				C2784FF51C255BB000AE399E /* ja */,
+				C2784FF71C255BB400AE399E /* nb */,
+				C2784FF91C255BB700AE399E /* pt-PT */,
+				C2784FFB1C255BBC00AE399E /* es */,
+				C2784FFD1C255BC000AE399E /* zh-Hant */,
+			);
+			name = JVBehaviorPreferencesViewController.xib;
 			sourceTree = "<group>";
 		};
 		CBF6852D0820190D00F498FB /* InfoPlist.strings */ = {
@@ -2650,6 +2689,12 @@
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -2658,6 +2703,8 @@
 					DEBUG,
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SYMROOT = build;
 			};
@@ -2734,9 +2781,17 @@
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				SYMROOT = build;
 			};
 			name = Release;

@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (SEL) switchAction {
-	NSArray *actions = [_switchControl actionsForTarget:nil forControlEvent:UIControlEventValueChanged];
+	NSArray <NSString *> *actions = [_switchControl actionsForTarget:nil forControlEvent:UIControlEventValueChanged];
 	if (!actions.count) return NULL;
 	return NSSelectorFromString(actions[0]);
 }

@@ -1,0 +1,57 @@
+
+/* Class = "NSTextFieldCell"; title = "You are trying to modify a locked style or variant. Would you like to make a new variant based on the current style settings?"; ObjectID = "394"; */
+"394.title" = "Está intentando modificar una variante bloqueada. ¿Quiere hacer una nueva basada en la configuración de estilos actual?";
+
+/* Class = "NSButtonCell"; title = "Cancel"; ObjectID = "395"; */
+"395.title" = "Cancelar";
+
+/* Class = "NSButtonCell"; title = "Create"; ObjectID = "396"; */
+"396.title" = "Crear";
+
+/* Class = "NSTextFieldCell"; title = "This is a locked Style Variant."; ObjectID = "397"; */
+"397.title" = "Esta variante está bloqueada.";
+
+/* Class = "NSTextFieldCell"; title = "Variant Name:"; ObjectID = "398"; */
+"398.title" = "Nombre:";
+
+/* Class = "NSButtonCell"; title = "Select Font…"; ObjectID = "4qc-yb-aCE"; */
+"4qc-yb-aCE.title" = "Elegir letra…";
+
+/* Class = "NSTextFieldCell"; title = "Incoming Messages:"; ObjectID = "721-e2-eFY"; */
+"721-e2-eFY.title" = "Mensajes Entrantes:";
+
+/* Class = "NSTextFieldCell"; title = "Some Styles don't honor these settings, and use built-in values."; ObjectID = "8ez-8R-0k2"; */
+"8ez-8R-0k2.title" = "Some Styles don't honor these settings, and use built-in values.";
+
+/* Class = "NSTextFieldCell"; title = "Font Family:"; ObjectID = "CRt-sH-ITp"; */
+"CRt-sH-ITp.title" = "Familia:";
+
+/* Class = "NSTextFieldCell"; title = "Minimum Font Size:"; ObjectID = "DK2-6W-8PU"; */
+"DK2-6W-8PU.title" = "Tamaño mínimo:";
+
+/* Class = "NSTextFieldCell"; title = "Default Style:"; ObjectID = "FEc-32-Qeq"; */
+"FEc-32-Qeq.title" = "Default Style:";
+
+/* Class = "NSButtonCell"; title = "Strip message colors"; ObjectID = "R9j-pe-q5N"; */
+"R9j-pe-q5N.title" = "Eliminar colores del mensaje";
+
+/* Class = "NSButtonCell"; title = "Use the active Style's base font"; ObjectID = "eVG-sc-0WR"; */
+"eVG-sc-0WR.title" = "Usar mismo tipo en escritura";
+
+/* Class = "NSButtonCell"; title = "Retain colors & formatting after sending"; ObjectID = "evr-oy-lkG"; */
+"evr-oy-lkG.title" = "Retener colores y formato después del envío";
+
+/* Class = "NSButtonCell"; title = "Customize Style…"; ObjectID = "fN5-9h-c8n"; */
+"fN5-9h-c8n.title" = "Customizar variante…";
+
+/* Class = "NSButtonCell"; title = "Strip message text formatting"; ObjectID = "ph5-8Q-adB"; */
+"ph5-8Q-adB.title" = "Eliminar formato del mensaje";
+
+/* Class = "NSTextFieldCell"; title = "Chat Input Boxes:"; ObjectID = "r6b-yk-1K1"; */
+"r6b-yk-1K1.title" = "Chat Input Boxes:";
+
+/* Class = "NSTextFieldCell"; title = "Base Font Size:"; ObjectID = "seZ-92-AGg"; */
+"seZ-92-AGg.title" = "Tamaño:";
+
+/* Class = "NSTextFieldCell"; title = "Emoticons:"; ObjectID = "yFb-BB-fPV"; */
+"yFb-BB-fPV.title" = "Emoticones:";

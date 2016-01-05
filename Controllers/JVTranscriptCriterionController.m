@@ -106,7 +106,7 @@
 #pragma mark -
 
 - (NSView *) view {
-	if( ! subview ) [NSBundle loadNibNamed:@"JVTranscriptCriterion" owner:self];
+	if( ! subview ) [[NSBundle mainBundle] loadNibNamed:@"JVTranscriptCriterion" owner:self topLevelObjects:NULL];
 	return subview;
 }
 
@@ -251,7 +251,7 @@
 		JVTranscriptCriterionOperation oper = [self operation];
 		if( oper == JVTranscriptTextMatchCriterionOperation || oper == JVTranscriptTextDoesNotMatchCriterionOperation ) {
 			NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[self query] options:( ignoreCase ? NSRegularExpressionCaseInsensitive : 0) error:nil];
-			NSTextCheckingResult *result = [regex firstMatchInString:value options:NSMatchingReportCompletion range:NSMakeRange( 0, value.length )];
+			NSTextCheckingResult *result = [regex firstMatchInString:value options:0 range:NSMakeRange( 0, value.length )];
 			if( result ) match = YES;
 			if( oper == JVTranscriptTextDoesNotMatchCriterionOperation ) match = ! match;
 		} else if( oper >= 3 && oper <= 6 ) {
@@ -307,7 +307,7 @@
 		case JVTranscriptMessageNotAddressedToMeCriterionKind: {
 			if( ! chatView || ! [chatView connection] ) return NO;
 			NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[NSString stringWithFormat:@"^%@[:;,-]", [[[chatView connection] localUser] nickname]] options:( ignoreCase ? NSRegularExpressionCaseInsensitive : 0) error:nil];
-			NSTextCheckingResult *match = [regex firstMatchInString:[message bodyAsPlainText] options:NSMatchingReportCompletion range:NSMakeRange( 0, [message bodyAsPlainText].length )];
+			NSTextCheckingResult *match = [regex firstMatchInString:[message bodyAsPlainText] options:0 range:NSMakeRange( 0, [message bodyAsPlainText].length )];
 			if( [match numberOfRanges] && [self kind] == JVTranscriptMessageAddressedToMeCriterionKind ) return YES;
 			else if( ! [match numberOfRanges] && [self kind] == JVTranscriptMessageNotAddressedToMeCriterionKind ) return YES;
 			return NO; }

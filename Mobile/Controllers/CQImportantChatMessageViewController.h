@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype) initWithStyle:(UITableViewStyle) style NS_UNAVAILABLE;
 - (instancetype) initWithCoder:(NSCoder *) aDecoder NS_UNAVAILABLE;
 
-- (instancetype) initWithMessages:(NSArray *) messages delegate:(id <CQImportantChatMessageDelegate>) delegate NS_DESIGNATED_INITIALIZER;
+- (instancetype) initWithMessages:(NSArray <NSDictionary *> *) messages delegate:(id <CQImportantChatMessageDelegate>) delegate NS_DESIGNATED_INITIALIZER;
 @end
 
 NS_ASSUME_NONNULL_END

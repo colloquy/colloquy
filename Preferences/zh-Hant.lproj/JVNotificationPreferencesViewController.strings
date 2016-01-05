@@ -1,0 +1,33 @@
+
+/* Class = "NSButtonCell"; title = "Play sound:"; ObjectID = "Bd8-TT-Cxx"; */
+"Bd8-TT-Cxx.title" = "播放聲音:";
+
+/* Class = "NSButtonCell"; title = "Bounce Colloquy icon in the Dock"; ObjectID = "DRC-qm-Xc8"; */
+"DRC-qm-Xc8.title" = "讓 Colloquy 圖示在 Dock 上跳動";
+
+/* Class = "NSButtonCell"; title = "Mute all notification sounds"; ObjectID = "OPA-kQ-uIg"; */
+"OPA-kQ-uIg.title" = "關閉所有的提示音效";
+
+/* Class = "NSTextFieldCell"; title = "Chat Event:"; ObjectID = "Zbd-h5-L1K"; */
+"Zbd-h5-L1K.title" = "聊天事件:";
+
+/* Class = "NSButtonCell"; title = "…only if Colloquy is in the background"; ObjectID = "bTZ-EJ-wQ0"; */
+"bTZ-EJ-wQ0.title" = "…只有在 Colloquy 在背景的時候";
+
+/* Class = "NSButtonCell"; title = "Show event bubble"; ObjectID = "p8P-tX-okn"; */
+"p8P-tX-okn.title" = "顯示訊息氣泡";
+
+/* Class = "NSTextFieldCell"; title = "Highlight words:"; ObjectID = "pCL-vU-SBR"; */
+"pCL-vU-SBR.title" = "提示關鍵字:";
+
+/* Class = "NSButtonCell"; title = "…and keep on screen until activated"; ObjectID = "qco-MY-Hl2"; */
+"qco-MY-Hl2.title" = "…而且在將移回前景前，都一直保持在螢幕上。";
+
+/* Class = "NSButtonCell"; title = "…repeatedly until Colloquy is in the front"; ObjectID = "wUY-9y-jdb"; */
+"wUY-9y-jdb.title" = "…而且在將 Colloquy 移回前景前，一直如此";
+
+/* Class = "NSTextFieldCell"; title = "Messages containing any of your typed words will be highlighted (if the active style supports highlights)."; ObjectID = "wu5-IV-6xo"; */
+"wu5-IV-6xo.title" = "如果有人提到您在這裡設定的關鍵字，就會對您發出提示通知。（不過，您所指定的樣式也支援必須這個功能）";
+
+/* Class = "NSButtonCell"; title = "…only if Colloquy is in the background"; ObjectID = "xXL-ca-iPs"; */
+"xXL-ca-iPs.title" = "…只有在 Colloquy 在背景的時候";

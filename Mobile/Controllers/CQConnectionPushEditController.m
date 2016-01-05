@@ -8,6 +8,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface CQConnectionPushEditController () <CQAlertViewDelegate>
+@end
+
 @implementation CQConnectionPushEditController
 - (instancetype) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
@@ -64,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
 	[self.tableView beginUpdates];
 	[self.tableView reloadRowsAtIndexPaths:self.tableView.indexPathsForVisibleRows withRowAnimation:UITableViewRowAnimationAutomatic];
 	[self.tableView endUpdates];
@@ -76,7 +79,11 @@ NS_ASSUME_NONNULL_BEGIN
 	if (_connection.connected || self.newConnection)
 		_connection.pushNotifications = sender.on;
 	else {
-		UIAlertView *alertView = [[CQAlertView alloc] initWithTitle:@"Connection Required" message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay button title") otherButtonTitles:nil];
+		CQAlertView *alertView = [[CQAlertView alloc] init];
+		alertView.title = @"Connection Required";
+		alertView.delegate = self;
+		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button title")];
+
 		if (_connection.pushNotifications)
 			alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to disable push notifications for %@. Please connect and try again." , @"Unable to turn push notifications off message"), _connection.displayName];
 		else alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to enable push notifications for %@. Please connect and try again." , @"Unable to turn push notifications off message"), _connection.displayName];

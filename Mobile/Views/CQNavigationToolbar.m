@@ -49,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 		if (view != _bottomLineView && CGRectGetWidth(frame) == CGRectGetWidth(self.frame))
 			continue;
 
+#if !SYSTEM(TV)
 		CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
 		statusBarFrame = [[UIApplication sharedApplication].delegate.window convertRect:statusBarFrame toView:self];
 
@@ -56,6 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 		frame.size.height = CGRectGetHeight(self.frame);
 		frame.origin.y = floorf((((CGRectGetHeight(self.frame) + offset) / 2.) - (CGRectGetHeight(frame) / 2.)));
 		view.frame = frame;
+#endif
 	}
 
 	CGFloat height = _bottomLineView.image.size.height / [UIScreen mainScreen].scale;

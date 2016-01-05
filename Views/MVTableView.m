@@ -8,19 +8,6 @@
 @end
 
 @implementation MVTableView
-+ (NSImage *) ascendingSortIndicator {
-	NSImage *result = [NSImage imageNamed:@"NSAscendingSortIndicator"];
-	if( ! result && [[NSTableView class] respondsToSelector:@selector( _defaultTableHeaderSortImage )])
-		result = [NSTableView performSelector:@selector( _defaultTableHeaderSortImage )];
-	return result;
-}
-
-+ (NSImage *) descendingSortIndicator {
-	NSImage *result = [NSImage imageNamed:@"NSDescendingSortIndicator"];
-	if( ! result && [[NSTableView class] respondsToSelector:@selector( _defaultTableHeaderReverseSortImage )] )
-		result = [NSTableView performSelector:@selector( _defaultTableHeaderReverseSortImage )];
-	return result;
-}
 
 - (void) setDelegate:(id) delegate {
 	[super setDelegate:delegate];

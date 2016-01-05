@@ -1,19 +1,10 @@
-#import "NSURLAdditions.h"
 #import "MVColorPanel.h"
 #import "MVApplicationController.h"
 #import "JVChatWindowController.h"
 #import "MVCrashCatcher.h"
 #import "JVInspectorController.h"
-#import "JVPreferencesController.h"
-#import "JVGeneralPreferences.h"
-#import "JVInterfacePreferences.h"
-#import "JVAppearancePreferences.h"
-#import "JVNotificationPreferences.h"
-#import "JVFileTransferPreferences.h"
-#import "JVBehaviorPreferences.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
-#import "JVTranscriptPreferences.h"
 #import "MVBuddyListController.h"
 #import "JVChatController.h"
 #import "JVChatRoomBrowser.h"
@@ -26,6 +17,9 @@
 #import "MVKeyChain.h"
 
 #import "PFMoveApplicationController.h"
+
+#import "CQMPreferencesWindowController.h"
+#import "JVAppearancePreferencesViewController.h"
 
 #import <Sparkle/SUUpdater.h>
 
@@ -48,11 +42,15 @@ NSString *JVMachineStoppedIdlingNotification = @"JVMachineStoppedIdlingNotificat
 
 static BOOL applicationIsTerminating = NO;
 
+
 @interface MVApplicationController (Private)
 - (void) openDocumentPanelDidEnd:(NSOpenPanel *) panel returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo;
 @end
 
 @implementation MVApplicationController
+
+@synthesize preferencesWindowController = _preferencesWindowController;
+
 - (instancetype) init {
 	if( ( self = [super init] ) ) {
 		mach_port_t masterPort = 0;
@@ -172,32 +170,24 @@ static BOOL applicationIsTerminating = NO;
 
 #pragma mark -
 
-- (void) setupPreferences {
-	static BOOL setupAlready = NO;
-	if( setupAlready ) return;
-
-	[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"NSToolbar Configuration NSPreferences"];
-
-	[JVPreferencesController setDefaultPreferencesClass:[JVPreferencesController class]];
-
-	JVPreferencesController *controller = [JVPreferencesController sharedPreferences];
-	[controller addPreferenceNamed:NSLocalizedString( @"General", "general preference pane name" ) owner:[JVGeneralPreferences sharedInstance]];
-	[controller addPreferenceNamed:NSLocalizedString( @"Interface", "interface preference pane name" ) owner:[JVInterfacePreferences sharedInstance]];
-	[controller addPreferenceNamed:NSLocalizedString( @"Appearance", "appearance preference pane name" ) owner:[JVAppearancePreferences sharedInstance]];
-	[controller addPreferenceNamed:NSLocalizedString( @"Alerts", "alerts preference pane name" ) owner:[JVNotificationPreferences sharedInstance]];
-	[controller addPreferenceNamed:NSLocalizedString( @"Transfers", "file transfers preference pane name" ) owner:[JVFileTransferPreferences sharedInstance]];
-	[controller addPreferenceNamed:NSLocalizedString( @"Transcripts", "chat transcript preference pane name" ) owner:[JVTranscriptPreferences sharedInstance]];
-	[controller addPreferenceNamed:NSLocalizedString( @"Behavior", "behavior preference pane name" ) owner:[JVBehaviorPreferences sharedInstance]];
-
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( id ), nil];
-	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-
-	[invocation setSelector:@selector( setupPreferencesWithController: )];
-	MVAddUnsafeUnretainedAddress(controller, 2);
-
-	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
-
-	setupAlready = YES;
+- (CQMPreferencesWindowController *)preferencesWindowController {
+	if (_preferencesWindowController == nil) {
+		// Create preferences window controller with the built-in preferences view controllers.
+		_preferencesWindowController = [[CQMPreferencesWindowController alloc] init];
+		
+		
+		// Add plugin preferences view controllers.
+		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSViewController<MASPreferencesViewController> * ), nil];
+		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+		[invocation setSelector:@selector( preferencesViewController )];
+		
+		NSArray<NSViewController<MASPreferencesViewController> *> *pluginPreferencesVCs = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+		
+		for (NSViewController<MASPreferencesViewController> *pluginPreferencesVC in pluginPreferencesVCs) {
+			[_preferencesWindowController addViewController:pluginPreferencesVC];
+		}
+	}
+	return _preferencesWindowController;
 }
 
 - (void) setupFolders {
@@ -227,8 +217,7 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) showPreferences:(id) sender {
-	[self setupPreferences];
-	[[JVPreferencesController sharedPreferences] showPreferencesPanel];
+	[self.preferencesWindowController showWindow:sender];
 }
 
 - (IBAction) showTransferManager:(id) sender {
@@ -351,9 +340,9 @@ static BOOL applicationIsTerminating = NO;
 			[[NSNotificationCenter chatCenter] postNotificationName:JVChatStyleInstalledNotification object:style];
 
 			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"%@ Successfully Installed", "style installed title" ), [style displayName]], [NSString stringWithFormat:NSLocalizedString( @"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?", "would you like to view the style in the Appearance Preferences" ), [style displayName], [style displayName]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil) == NSOKButton ) {
-				[self setupPreferences];
-				[[JVPreferencesController sharedPreferences] showPreferencesPanelForOwner:[JVAppearancePreferences sharedInstance]];
-				[[JVAppearancePreferences sharedInstance] selectStyleWithIdentifier:[style identifier]];
+				[self showPreferences:nil];
+				[self.preferencesWindowController selectControllerWithIdentifier:self.preferencesWindowController.appearancePreferences.identifier];
+				[self.preferencesWindowController.appearancePreferences selectStyleWithIdentifier:[style identifier]];
 			}
 
 
@@ -376,9 +365,9 @@ static BOOL applicationIsTerminating = NO;
 			[[NSNotificationCenter chatCenter] postNotificationName:JVChatEmoticonSetInstalledNotification object:emoticon];
 
 			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"%@ Successfully Installed", "emoticon installed title" ), [emoticon displayName]], [NSString stringWithFormat:NSLocalizedString( @"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?", "would you like to view the emoticons in the Appearance Preferences" ), [emoticon displayName], [emoticon displayName]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil ) == NSOKButton ) {
-				[self setupPreferences];
-				[[JVPreferencesController sharedPreferences] showPreferencesPanelForOwner:[JVAppearancePreferences sharedInstance]];
-				[[JVAppearancePreferences sharedInstance] selectEmoticonsWithIdentifier:[emoticon bundleIdentifier]];
+				[self showPreferences:nil];
+				[self.preferencesWindowController selectControllerWithIdentifier:self.preferencesWindowController.appearancePreferences.identifier];
+				[self.preferencesWindowController.appearancePreferences selectEmoticonsWithIdentifier:[emoticon bundleIdentifier]];
 			}
 
 			return YES;

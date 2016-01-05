@@ -54,7 +54,11 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 static NSString *const connectionInvalidSSLCertAction = nil;
 
-@interface CQConnectionsController () <UIActionSheetDelegate, UIAlertViewDelegate, CSSearchableIndexDelegate, CQBouncerConnectionDelegate>
+@interface CQConnectionsController () <CQActionSheetDelegate, CQAlertViewDelegate,
+#if !SYSTEM(TV)
+CSSearchableIndexDelegate,
+#endif
+CQBouncerConnectionDelegate>
 @end
 
 @implementation CQConnectionsController {
@@ -69,7 +73,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	BOOL _loadedConnections;
 	NSUInteger _connectingCount;
 	NSUInteger _connectedCount;
+#if !SYSTEM(TV)
 	UILocalNotification *_timeRemainingLocalNotifiction;
+#endif
 	UIBackgroundTaskIdentifier _backgroundTask;
 	NSTimeInterval _allowedBackgroundTime;
 	NSMutableSet *_automaticallySetConnectionAwayStatus;
@@ -106,7 +112,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_errorOccurred:) name:MVChatConnectionErrorNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_deviceTokenRecieved:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+#if !SYSTEM(TV)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batteryStateChanged) name:UIDeviceBatteryStateDidChangeNotification object:nil];
+#endif
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_peerTrustFeedbackNotification:) name:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_nicknamePasswordRequested:) name:MVChatConnectionNeedNicknamePasswordNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_serverPasswordRequested:) name:MVChatConnectionNeedServerPasswordNotification object:nil];
@@ -122,7 +130,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
 
+#if !SYSTEM(TV)
 	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
+#endif
 
 	_connectionsNavigationController = [[CQConnectionsNavigationController alloc] init];
 
@@ -142,8 +152,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	_shouldLogRawMessagesToConsole = [[CQSettingsController settingsController] boolForKey:@"CQLogRawMessagesToConsole"];
 #endif
 
+#if !SYSTEM(TV)
 	if (NSClassFromString(@"CSSearchableIndex"))
 		[CSSearchableIndex defaultSearchableIndex].indexDelegate = self;
+#endif
 
 	return self;
 }
@@ -171,7 +183,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	if (url.fragment.length) target = [@"#" stringByAppendingString:[url.fragment stringByDecodingIllegalURLCharacters]];
 	else if (url.path.length > 1) target = [[url.path substringFromIndex:1] stringByDecodingIllegalURLCharacters];
 
-	NSArray *possibleConnections = [self connectionsForServerAddress:url.host];
+	NSArray <MVChatConnection *> *possibleConnections = [self connectionsForServerAddress:url.host];
 
 	for (MVChatConnection *connection in possibleConnections) {
 		if (url.user.length && (![url.user isEqualToString:connection.preferredNickname] || ![url.user isEqualToString:connection.nickname]))
@@ -214,7 +226,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 #pragma mark -
 
 - (void) showNewConnectionPromptFromPoint:(CGPoint) point {
-	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.tag = 1;
 
@@ -243,7 +255,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 #pragma mark -
 
-- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
@@ -255,7 +267,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 #pragma mark -
 
-- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
 	NSMapTable *errorToAlertMappingsForConnection = [_connectionToErrorToAlertMap objectForKey:[alertView associatedObjectForKey:@"connection"]];
 	[errorToAlertMappingsForConnection removeObjectForKey:[alertView associatedObjectForKey:@"error-code"]];
 	[errorToAlertMappingsForConnection removeObjectForKey:@"peerTrust"];
@@ -282,7 +294,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	}
 
 	if (alertView.tag == NextAlertTag) {
-		UIAlertView *nextAlertView = [alertView associatedObjectForKey:@"userInfo"];
+		CQAlertView *nextAlertView = [alertView associatedObjectForKey:@"userInfo"];
 		[nextAlertView show];
 		return;
 	}
@@ -391,6 +403,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 #pragma mark -
 
+#if !SYSTEM(TV)
 - (void) searchableIndex:(CSSearchableIndex *) searchableIndex reindexSearchableItemsWithIdentifiers:(NSArray <NSString *> *) identifiers acknowledgementHandler:(void (^)(void)) acknowledgementHandler {
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"])
 		[self indexConnectionsInSpotlight];
@@ -402,6 +415,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		[self indexConnectionsInSpotlight];
 	acknowledgementHandler();
 }
+#endif
 
 #pragma mark -
 
@@ -581,7 +595,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	NSMutableArray *connections = _bouncerChatConnections[connection.settings.identifier];
 
 	if (error && (!connections.count || [connection.userInfo isEqual:@"manual-refresh"])) {
-		UIAlertView *alert = [[CQAlertView alloc] init];
+		CQAlertView *alert = [[CQAlertView alloc] init];
 
 		alert.tag = CannotConnectToBouncerTag;
 		alert.delegate = self;
@@ -648,12 +662,13 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 	if (self._anyConnectedOrConnectingConnections) {
 		if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-			UIAlertView *alertView = [[CQAlertView alloc] init];
+			CQAlertView *alertView = [[CQAlertView alloc] init];
 			alertView.title = NSLocalizedString(@"Disconnected", @"Disconnected alert title");
 			alertView.message = NSLocalizedString(@"You have been disconnected due to the loss of network connectivity", @"Disconnected due to network alert message");
 			alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 			[alertView show];
 		} else {
+#if !SYSTEM(TV)
 			UILocalNotification *notification = [[UILocalNotification alloc] init];
 
 			notification.alertBody = NSLocalizedString(@"You have been disconnected due to the loss of network connectivity", @"Disconnected due to network local notification body");
@@ -661,6 +676,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 			notification.hasAction = NO;
 
 			[[CQColloquyApplication sharedApplication] presentLocalNotificationNow:notification];
+#endif
 		}
 	}
 
@@ -737,6 +753,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	if (![self _anyConnectedOrConnectingConnections])
 		return;
 
+#if !SYSTEM(TV)
 	UILocalNotification *notification = [[UILocalNotification alloc] init];
 
 	notification.alertBody = NSLocalizedString(@"No multitasking time remaining, so you have been disconnected.", "No multitasking time remaining alert message");
@@ -744,6 +761,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	notification.soundName = UILocalNotificationDefaultSoundName;
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+#endif
 }
 
 - (void) _showDisconnectedAlert {
@@ -759,6 +777,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	if (![self _anyConnectedOrConnectingConnections])
 		return;
 
+#if !SYSTEM(TV)
 	UILocalNotification *notification = [[UILocalNotification alloc] init];
 
 	NSUInteger minutes = ceil(_allowedBackgroundTime / 60.);
@@ -773,7 +792,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	notification.soundName = UILocalNotificationDefaultSoundName;
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
-
+#endif
 }
 
 - (void) _showRemainingTimeAlert {
@@ -786,6 +805,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	if (![self _anyConnectedOrConnectingConnections])
 		return;
 
+#if !SYSTEM(TV)
 	if (_timeRemainingLocalNotifiction) {
 		[[UIApplication sharedApplication] cancelLocalNotification:_timeRemainingLocalNotifiction];
 	}
@@ -797,8 +817,8 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	notification.soundName = UILocalNotificationDefaultSoundName;
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
-
 	_timeRemainingLocalNotifiction = notification;
+#endif
 }
 
 - (void) _disconnectNonMultitaskingConnections {
@@ -817,10 +837,12 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 - (void) _disconnectForSuspend {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
 
+#if !SYSTEM(TV)
 	if (_timeRemainingLocalNotifiction) {
 		[[UIApplication sharedApplication] cancelLocalNotification:_timeRemainingLocalNotifiction];
 		_timeRemainingLocalNotifiction = nil;
 	}
+#endif
 
 	[self _showDisconnectedAlert];
 
@@ -889,7 +911,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_disconnectForSuspend) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_showRemainingTimeAlert) object:nil];
 
+#if !SYSTEM(TV)
 	_timeRemainingLocalNotifiction = nil;
+#endif
 
 	_automaticallySetConnectionAwayStatus = nil;
 }
@@ -915,15 +939,19 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 }
 
 - (BOOL) _shouldDisableIdleTimer {
+#if !SYSTEM(TV)
 	if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateCharging)
 		return YES;
 	return ([self _anyConnectedOrConnectingConnections] && [[CQSettingsController settingsController] boolForKey:@"CQIdleTimerDisabled"]);
+#else
+	return YES;
+#endif
 }
 
 - (void) _gotConnectionError:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
 
-	UIAlertView *alertView = [[CQAlertView alloc] init];
+	CQAlertView *alertView = [[CQAlertView alloc] init];
 	alertView.title = connection.displayName;
 	alertView.message = notification.userInfo[@"message"];
 	alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button title")];
@@ -938,7 +966,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		(void)[[CQChatOrderingController defaultController] consoleViewControllerForConnection:connection ifExists:NO];
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
+#if !SYSTEM(TV)
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+#endif
 
 	if ([UIDevice currentDevice].multitaskingSupported) {
 		if (_backgroundTask == UIBackgroundTaskInvalid)
@@ -947,11 +977,11 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 	[connection removePersistentInformationObjectForKey:@"pushState"];
 
-	NSMutableArray *rooms = [connection.automaticJoinedRooms mutableCopy];
+	NSMutableArray <NSString *> *rooms = [connection.automaticJoinedRooms mutableCopy];
 	if (!rooms)
 		rooms = [[NSMutableArray alloc] init];
 
-	NSArray *previousRooms = [connection persistentInformationObjectForKey:@"previousRooms"];
+	NSArray <NSString *> *previousRooms = [connection persistentInformationObjectForKey:@"previousRooms"];
 	if (previousRooms.count) {
 		[rooms addObjectsFromArray:previousRooms];
 		[connection removePersistentInformationObjectForKey:@"previousRooms"];
@@ -1025,8 +1055,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 }
 
 - (void) _didConnectOrDidNotConnect:(NSNotification *) notification {
+#if !SYSTEM(TV)
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
+#endif
 }
 
 - (void) _didNotConnect:(NSNotification *) notification {
@@ -1143,9 +1175,11 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 
+#if !SYSTEM(TV)
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"])
 		[self indexConnectionsInSpotlight];
 	else [self removeConnectionsIndexfromSpotlight];
+#endif
 }
 
 - (void) _batteryStateChanged {
@@ -1428,8 +1462,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	if (connection.temporaryDirectConnection)
 		connection.bouncerType = MVChatConnectionNoBouncer;
 
+#if !SYSTEM(TV)
 	if ((!bouncerSettings || bouncerSettings.pushNotifications) && connection.pushNotifications)
 		[[CQColloquyApplication sharedApplication] registerForPushNotifications];
+#endif
 
 	return connection;
 }
@@ -1513,9 +1549,9 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	_loadedConnections = YES;
 
 #if !defined(CQ_GENERATING_SCREENSHOTS)
-	NSArray *bouncers = [[CQSettingsController settingsController] arrayForKey:@"CQChatBouncers"];
+	NSArray <NSDictionary *> *bouncers = [[CQSettingsController settingsController] arrayForKey:@"CQChatBouncers"];
 #else
-	NSArray *bouncers = nil; // don't show any bouncers in app store screenshots
+	NSArray <NSDictionary *> *bouncers = nil; // don't show any bouncers in app store screenshots
 #endif
 	for (NSDictionary *info in bouncers) {
 		CQBouncerSettings *settings = [[CQBouncerSettings alloc] initWithDictionaryRepresentation:info];
@@ -1527,7 +1563,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		NSMutableArray *bouncerChatConnections = [[NSMutableArray alloc] initWithCapacity:10];
 		_bouncerChatConnections[settings.identifier] = bouncerChatConnections;
 
-		NSArray *connections = info[@"connections"];
+		NSArray <MVChatConnection *> *connections = info[@"connections"];
 		for (NSDictionary *connectionInfo in connections) {
 			MVChatConnection *connection = [self _chatConnectionWithDictionaryRepresentation:connectionInfo];
 			if (!connection)
@@ -1542,10 +1578,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	}
 
 #if !defined(CQ_GENERATING_SCREENSHOTS)
-	NSArray *connections = [[CQSettingsController settingsController] arrayForKey:@"MVChatBookmarks"];
+	NSArray <NSDictionary *> *connections = [[CQSettingsController settingsController] arrayForKey:@"MVChatBookmarks"];
 #else
 	static NSString *const demoText = @"[{\"automatic\": 1,\"chatState\": {\"chatControllers\": [{\"active\": true,\"class\": \"CQChatRoomController\",\"joined\": true,\"messages\": [{\"identifier\": \"3\",\"message\": \"hi colloquyUser\",\"type\": \"message\",\"user\": \"kijiro\",},{\"identifier\": \"4\",\"message\": \"Hello!\",\"type\": \"message\",\"user\": \"colloquyUser\",}],\"room\": \"#colloquy-mobile\",},{\"active\": false,\"class\": \"CQChatRoomController\",\"joined\": false,\"messages\": [{\"identifier\": \"5\",\"message\": \"[#colloquy] Welcome to\",\"type\": \"message\",\"user\": \"ChanServ\",}],\"room\": \"#colloquy\",},{\"class\": \"CQDirectChatController\",\"user\": \"jane\"}],},\"description\": \"Freenode\",\"encoding\": 4,\"multitasking\": true,\"nickname\": \"colloquyUser\",\"persistentInformation\": {\"tryBouncerFirst\": false,},\"port\": 6667,\"previousRooms\": [\"#colloquy-mobile\"],\"proxy\": 1852796485,\"realName\": \"Colloquy User\",\"requestsSASL\": false,\"secure\": 0,\"server\": \"localhost\",\"type\": \"irc\",\"uniqueIdentifier\": \"SNJNFA95N55\",\"username\": \"colloquyUser\",\"wasConnected\": true,},{\"automatic\": 1,\"chatState\": {\"chatControllers\": [{\"active\": true,\"class\": \"CQChatRoomController\",\"joined\": true,\"messages\": [{\"identifier\": \"7\",\"message\": \"Everyone: I'm doing this thing...\",\"type\": \"message\",\"user\": \"Someone\",},{\"identifier\": \"8\",\"message\": \"Someone: uh\",\"type\": \"message\",\"user\": \"Everyone\",},],\"room\": \"#chris\",},{\"active\": false,\"class\": \"CQChatRoomController\",\"joined\": false,\"messages\": [],\"room\": \"#theshed\",},],},\"description\": \"GeekShed\",\"encoding\": 4,\"multitasking\": true,\"nickname\": \"colloquyUser\",\"persistentInformation\": {\"tryBouncerFirst\": false,},\"port\": 6667,\"previousRooms\": [\"#chris\",\"theshed\"],\"proxy\": 1852796485,\"realName\": \"Colloquy User\",\"requestsSASL\": false,\"secure\": 0,\"server\": \"localhost\",\"type\": \"irc\",\"uniqueIdentifier\": \"SNJNFA95N55\",\"username\": \"colloquyUser\",\"wasConnected\": true,}]";
-	NSArray *connections = [NSJSONSerialization JSONObjectWithData:[demoText dataUsingEncoding:4] options:0 error:nil];
+	NSArray <NSDictionary *> *connections = [NSJSONSerialization JSONObjectWithData:[demoText dataUsingEncoding:4] options:0 error:nil];
 #endif
 	for (NSDictionary *info in connections) {
 		MVChatConnection *connection = [self _chatConnectionWithDictionaryRepresentation:info];
@@ -1613,8 +1649,10 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 	NSMutableArray *connections = [[NSMutableArray alloc] initWithCapacity:_directConnections.count];
 	for (MVChatConnection *connection in _directConnections) {
+#if !SYSTEM(TV)
 		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"])
 			[self _indexConnetionInSpotlight:connection];
+#endif
 
 		NSMutableDictionary *connectionInfo = [self _dictionaryRepresentationForConnection:connection];
 		if (!connectionInfo)
@@ -1676,6 +1714,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 
 #pragma mark -
 
+#if !SYSTEM(TV)
 - (void) _indexConnetionInSpotlight:(MVChatConnection *) connection {
 	if (NSClassFromString(@"CSSearchableIndex") == nil)
 		return;
@@ -1727,7 +1766,12 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 			NSString *title = NSLocalizedString(@"Unknown Error", @"Unknown Error error title");
 			NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Unable to remove index from Spotlight: %@", @"search deletion failed error message"), error.localizedDescription];
 			if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-				[[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay") otherButtonTitles:nil] show];
+				CQAlertView *alertView = [[CQAlertView alloc] init];
+				alertView.title = title;
+				alertView.message = message;
+				alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay")];
+
+				[alertView show];
 			} else {
 				UILocalNotification *notification = [[UILocalNotification alloc] init];
 				notification.alertTitle = title;
@@ -1738,6 +1782,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 		}
 	}];
 }
+#endif
 
 #pragma mark -
 
@@ -1759,14 +1804,12 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 }
 
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address {
-	NSArray *connections = [self connectionsForServerAddress:address];
-	if (connections.count)
-		return connections[0];
-	return nil;
+	NSArray <MVChatConnection *> *connections = [self connectionsForServerAddress:address];
+	return connections.firstObject;
 }
 
-- (NSArray *) connectionsForServerAddress:(NSString *) address {
-	NSMutableArray *result = [NSMutableArray arrayWithCapacity:_connections.count];
+- (NSArray <MVChatConnection *> *) connectionsForServerAddress:(NSString *) address {
+	NSMutableArray <MVChatConnection *> *result = [NSMutableArray arrayWithCapacity:_connections.count];
 
 	address = [address stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@". \t\n"]];
 
@@ -1888,7 +1931,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 	return nil;
 }
 
-- (NSArray *) bouncerChatConnectionsForIdentifier:(NSString *) identifier {
+- (NSArray <MVChatConnection *> *) bouncerChatConnectionsForIdentifier:(NSString *) identifier {
 	return _bouncerChatConnections[identifier];
 }
 
@@ -1924,7 +1967,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 - (void) removeBouncerSettingsAtIndex:(NSUInteger) index {
 	CQBouncerSettings *bouncer = _bouncers[index];
 
-	NSArray *connections = [self bouncerChatConnectionsForIdentifier:bouncer.identifier];
+	NSArray <MVChatConnection *> *connections = [self bouncerChatConnectionsForIdentifier:bouncer.identifier];
 	for (MVChatConnection *connection in connections) {
 		NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:[MVChatConnection defaultQuitMessage]];
 		[connection disconnectWithReason:quitMessageString];
@@ -1959,7 +2002,7 @@ NS_ASSUME_NONNULL_BEGIN
 	static NSString *generatedNickname;
 	if (!generatedNickname) {
 		NSCharacterSet *badCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"] invertedSet];
-		NSArray *components = [[UIDevice currentDevice].name componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+		NSArray <NSString *> *components = [[UIDevice currentDevice].name componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 		for (__strong NSString *compontent in components) {
 			if ([compontent isCaseInsensitiveEqualToString:@"iPhone"] || [compontent isCaseInsensitiveEqualToString:@"iPod"] || [compontent isCaseInsensitiveEqualToString:@"iPad"])
 				continue;
@@ -2036,25 +2079,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setAutomaticJoinedRooms:(NSArray *) rooms {
+- (void) setAutomaticJoinedRooms:(NSArray <NSString *> *) rooms {
 	NSParameterAssert(rooms != nil);
 
 	[self setPersistentInformationObject:rooms forKey:@"rooms"];
 }
 
-- (NSArray *) automaticJoinedRooms {
+- (NSArray <NSString *> *) automaticJoinedRooms {
 	return [self persistentInformationObjectForKey:@"rooms"];
 }
 
 #pragma mark -
 
-- (void) setAutomaticCommands:(NSArray *) commands {
+- (void) setAutomaticCommands:(NSArray <NSString *> *) commands {
 	NSParameterAssert(commands != nil);
 
 	[self setPersistentInformationObject:commands forKey:@"commands"];
 }
 
-- (NSArray *) automaticCommands {
+- (NSArray <NSString *> *) automaticCommands {
 	return [self persistentInformationObjectForKey:@"commands"];
 }
 
@@ -2215,7 +2258,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 		[self sendRawMessageWithFormat:@"PUSH connection %@ :%@", self.uniqueIdentifier, self.displayName];
 
-		NSArray *highlightWords = [CQColloquyApplication sharedApplication].highlightWords;
+		NSArray <NSString *> *highlightWords = [CQColloquyApplication sharedApplication].highlightWords;
 		for (NSString *highlightWord in highlightWords)
 			[self sendRawMessageWithFormat:@"PUSH highlight-word :%@", highlightWord];
 

@@ -1,0 +1,45 @@
+
+/* Class = "NSMenuItem"; title = "Folder For Each Server"; ObjectID = "2QZ-yS-hqI"; */
+"2QZ-yS-hqI.title" = "為每個伺服器設立個別的檔案夾";
+
+/* Class = "NSMenuItem"; title = "Multiple Sessions in One File"; ObjectID = "6z0-W1-z1K"; */
+"6z0-W1-z1K.title" = "在同一檔案中包含多個聊天階段";
+
+/* Class = "NSMenuItem"; title = "Same Folder"; ObjectID = "ApN-wZ-phP"; */
+"ApN-wZ-phP.title" = "放置在同一個檔案夾中";
+
+/* Class = "NSButtonCell"; title = "Log Private Chat sessions"; ObjectID = "D2f-TO-UZg"; */
+"D2f-TO-UZg.title" = "紀錄私人聊天的聊天內容";
+
+/* Class = "NSTextFieldCell"; title = "Transcripts Folder:"; ObjectID = "DSw-dm-Icu"; */
+"DSw-dm-Icu.title" = "聊天紀錄檔案夾:";
+
+/* Class = "NSButtonCell"; title = "Log Chat Room sessions"; ObjectID = "NwH-Dh-Sbn"; */
+"NwH-Dh-Sbn.title" = "紀錄聊天室的聊天內容";
+
+/* Class = "NSTextFieldCell"; title = "Folder Organization:"; ObjectID = "OD1-jj-0et"; */
+"OD1-jj-0et.title" = "檔案夾組織方式:";
+
+/* Class = "NSMenuItem"; title = "Folder For Each Chat under Server"; ObjectID = "Se5-az-yMX"; */
+"Se5-az-yMX.title" = "在為伺服器建立個別檔案夾之下，為每個聊天室建立個別的檔案夾";
+
+/* Class = "NSMenuItem"; title = "Other…"; ObjectID = "U9k-NY-Sp1"; */
+"U9k-NY-Sp1.title" = "其他…";
+
+/* Class = "NSMenuItem"; title = "Folder For Each Chat and Server"; ObjectID = "cjT-zd-FvA"; */
+"cjT-zd-FvA.title" = "為每個聊天室與伺服器建立檔案夾";
+
+/* Class = "NSTextFieldCell"; title = "Session Handling:"; ObjectID = "eSk-IS-AQA"; */
+"eSk-IS-AQA.title" = "檔案處理方式:";
+
+/* Class = "NSTextFieldCell"; title = "Automatically:"; ObjectID = "kTL-SI-EfW"; */
+"kTL-SI-EfW.title" = "自動:";
+
+/* Class = "NSMenuItem"; title = "One File Per Session"; ObjectID = "mPP-iU-L0F"; */
+"mPP-iU-L0F.title" = "一個人一個檔案";
+
+/* Class = "NSMenuItem"; title = "One File Per Session Day"; ObjectID = "zL5-p9-oz2"; */
+"zL5-p9-oz2.title" = "將每天的聊天內容，分別儲存在個別檔案中";
+
+/* Class = "NSButtonCell"; title = "Human-readable file formatting"; ObjectID = "zr8-mI-XtE"; */
+"zr8-mI-XtE.title" = "使用人性化、容易閱讀的檔案格式";

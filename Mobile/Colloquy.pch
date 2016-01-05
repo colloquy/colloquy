@@ -6,10 +6,19 @@
 #define LIKELY(x) __builtin_expect((x) ? 1 : 0, 1)
 #define UNLIKELY(x) __builtin_expect((x) ? 1 : 0, 0)
 
+
 #define SYSTEM_IOS 1
 
+#if defined(TARGET_OS_TV) && TARGET_OS_TV
+	#define SYSTEM_TV 1
+#endif
+
 #if TARGET_IPHONE_SIMULATOR
-#define SYSTEM_IOS_SIMULATOR 1
+	#define SYSTEM_IOS_SIMULATOR 1
+
+	#if SYSTEM(TV)
+		#define SYSTEM_TV_SIMULATOR 1
+	#endif
 #endif
 
 #ifdef __OBJC__
@@ -25,6 +34,7 @@
 #import "NSScannerAdditions.h"
 #import "NSStringAdditions.h"
 
+#import "UIActionSheetAdditions.h"
 #import "UIDeviceAdditions.h"
 #import "UIImageAdditions.h"
 #import "UINavigationControllerAdditions.h"

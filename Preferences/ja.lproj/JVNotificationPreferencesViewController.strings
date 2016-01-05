@@ -1,0 +1,33 @@
+
+/* Class = "NSButtonCell"; title = "Play sound:"; ObjectID = "Bd8-TT-Cxx"; */
+"Bd8-TT-Cxx.title" = "サウンドを再生：";
+
+/* Class = "NSButtonCell"; title = "Bounce Colloquy icon in the Dock"; ObjectID = "DRC-qm-Xc8"; */
+"DRC-qm-Xc8.title" = "Dock で Colloquy アイコンを飛び跳ねさせる";
+
+/* Class = "NSButtonCell"; title = "Mute all notification sounds"; ObjectID = "OPA-kQ-uIg"; */
+"OPA-kQ-uIg.title" = "すべての通知用サウンドを消音";
+
+/* Class = "NSTextFieldCell"; title = "Chat Event:"; ObjectID = "Zbd-h5-L1K"; */
+"Zbd-h5-L1K.title" = "チャットイベント：";
+
+/* Class = "NSButtonCell"; title = "…only if Colloquy is in the background"; ObjectID = "bTZ-EJ-wQ0"; */
+"bTZ-EJ-wQ0.title" = "…Colloquy が背面にある時のみ";
+
+/* Class = "NSButtonCell"; title = "Show event bubble"; ObjectID = "p8P-tX-okn"; */
+"p8P-tX-okn.title" = "イベントバブルを表示";
+
+/* Class = "NSTextFieldCell"; title = "Highlight words:"; ObjectID = "pCL-vU-SBR"; */
+"pCL-vU-SBR.title" = "ハイライトする単語：";
+
+/* Class = "NSButtonCell"; title = "…and keep on screen until activated"; ObjectID = "qco-MY-Hl2"; */
+"qco-MY-Hl2.title" = "…アクティブになるまで表示し続ける";
+
+/* Class = "NSButtonCell"; title = "…repeatedly until Colloquy is in the front"; ObjectID = "wUY-9y-jdb"; */
+"wUY-9y-jdb.title" = "…Colloquy が手前に来るまで繰り返す";
+
+/* Class = "NSTextFieldCell"; title = "Messages containing any of your typed words will be highlighted (if the active style supports highlights)."; ObjectID = "wu5-IV-6xo"; */
+"wu5-IV-6xo.title" = "半角スペースで区切って単語を入力してください。これらの単語が一つでも含まれるメッセージは、すべてハイライトされます（アクティブなスタイルがハイライトをサポートしている時のみ）。";
+
+/* Class = "NSButtonCell"; title = "…only if Colloquy is in the background"; ObjectID = "xXL-ca-iPs"; */
+"xXL-ca-iPs.title" = "…Colloquy が背面にある時のみ";

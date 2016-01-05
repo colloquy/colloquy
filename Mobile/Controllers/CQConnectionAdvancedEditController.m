@@ -251,7 +251,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
 
 		NSUInteger selectedEncodingIndex = 0;
-		NSMutableArray *encodings = [[NSMutableArray alloc] init];
+		NSMutableArray <NSString *> *encodings = [[NSMutableArray alloc] init];
 		const NSStringEncoding *supportedEncodings = [_connection supportedStringEncodings];
 		for (unsigned i = 0; supportedEncodings[i]; ++i) {
 			NSStringEncoding encoding = supportedEncodings[i];
@@ -430,7 +430,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		cell.textLabel.text = NSLocalizedString(@"Auto Commands", @"Auto Commands connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-		NSArray *commands = _connection.automaticCommands;
+		NSArray <NSString *> *commands = _connection.automaticCommands;
 		if (commands.count) cell.detailTextLabel.text = [NSString stringWithFormat:@"%tu", commands.count];
 		else cell.detailTextLabel.text = NSLocalizedString(@"None", @"None label");
 

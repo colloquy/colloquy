@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 		return nil;
 
 	_room = room;
+	_infoType = infoType;
 
 	return self;
 }

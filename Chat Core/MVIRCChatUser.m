@@ -44,7 +44,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	BOOL _hasPendingRefreshInformationRequest;
 }
 
-+ (NSArray *) servicesNicknames {
++ (NSArray <NSString *> *) servicesNicknames {
 	return @[
 		@"nickserv", @"chanserv", @"memoserv", @"operserv", @"botserv", // common services
 		@"q", @"quakenet", @"x", @"undernet", @"authserv", @"gamesurge", // network-specific services

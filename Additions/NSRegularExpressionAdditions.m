@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return regularExpression;
 }
 
-- (NSArray *) cq_matchesInString:(NSString *) string {
+- (NSArray <NSTextCheckingResult *> *) cq_matchesInString:(NSString *) string {
 	return [self matchesInString:string options:NSMatchingReportCompletion range:NSMakeRange(0, string.length)];
 }
 @end

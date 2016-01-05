@@ -13,7 +13,6 @@
 #import "CQConnectionsController.h"
 #import "CQIgnoreRulesController.h"
 #import "CQImportantChatMessageViewController.h"
-#import "CQIntroductoryGIFFrameOperation.h"
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
 #import "CQUserInfoController.h"
@@ -22,13 +21,16 @@
 #import "NSDateAdditions.h"
 #import "NSNotificationAdditions.h"
 #import "UIViewAdditions.h"
+#import "CQUITextChatTranscriptView.h"
 
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatUserWatchRule.h>
 
+#if !SYSTEM(TV)
 #import <MediaPlayer/MPMusicPlayerController.h>
 
 #import <Social/Social.h>
+#endif
 
 #import <objc/message.h>
 
@@ -82,7 +84,7 @@ static BOOL showingKeyboard;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQDirectChatController () <CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate, CQChatInputStyleDelegate>
+@interface CQDirectChatController () <CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, CQAlertViewDelegate, CQActionSheetDelegate, CQChatInputStyleDelegate>
 @property (strong, nullable) UIPopoverController *activityPopoverController;
 @end
 
@@ -152,13 +154,13 @@ NS_ASSUME_NONNULL_BEGIN
 			[alertView show];
 		}
 	} else if (error.code == CQBookmarkingErrorServer) {
-		UIAlertView *alertView = [[CQAlertView alloc] init];
+		CQAlertView *alertView = [[CQAlertView alloc] init];
 		alertView.title = NSLocalizedString(@"Server Error", @"Server Error");
 		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@ due to a server error.", @"Unable to bookmark link server error message"), notification.object, [activeService serviceName]];
 		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
 		[alertView show];
 	} else {
-		UIAlertView *alertView = [[CQAlertView alloc] init];
+		CQAlertView *alertView = [[CQAlertView alloc] init];
 		alertView.title = NSLocalizedString(@"Unknown Error", @"Unknown Error");
 		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@.", @"Unable to bookmark link message"), notification.object, [activeService serviceName]];
 		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
@@ -187,10 +189,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (NSOperationQueue *) chatMessageProcessingQueue {
-	if (!chatMessageProcessingQueue) {
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
 		chatMessageProcessingQueue = [[NSOperationQueue alloc] init];
 		chatMessageProcessingQueue.maxConcurrentOperationCount = 1;
-	}
+		chatMessageProcessingQueue.qualityOfService = NSQualityOfServiceUserInitiated;
+	});
 
 	return chatMessageProcessingQueue;
 }
@@ -211,8 +215,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (instancetype) initWithTarget:(__nullable id) target {
+#if !SYSTEM(TV)
 	if (!(self = [super initWithNibName:@"CQUIChatView" bundle:nil]))
 		return nil;
+#else
+	if (!(self = [super initWithNibName:nil bundle:nil]))
+#endif
 
 	_target = target;
 
@@ -376,7 +384,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSMutableArray *messages = [[NSMutableArray alloc] init];
 
 	for (NSDictionary *message in _recentMessages) {
-		static NSArray *sameKeys = nil;
+		static NSArray <NSString *> *sameKeys = nil;
 		if (!sameKeys)
 			sameKeys = @[@"message", @"messagePlain", @"action", @"notice", @"highlighted", @"identifier", @"type"];
 
@@ -400,13 +408,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (UIActionSheet *) actionSheet {
-	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+- (CQActionSheet *) actionSheet {
+	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.tag = InfoActionSheet;
 
+#if !SYSTEM(TV)
 	if (!([UIDevice currentDevice].isPadModel && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		sheet.title = self.user.displayName;
+#endif
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
 
@@ -465,8 +475,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (NSArray *__nullable) keyCommands {
-	static NSArray *keyCommands = nil;
+- (NSArray <UIKeyCommand *> *__nullable) keyCommands {
+	static NSArray <UIKeyCommand *> *keyCommands = nil;
 	if (!keyCommands) {
 		UIKeyCommand *altTabKeyCommand = [UIKeyCommand keyCommandWithInput:@"\t" modifierFlags:UIKeyModifierAlternate action:@selector(_handleKeyCommand:)];
 		UIKeyCommand *shiftAltTabKeyCommand = [UIKeyCommand keyCommandWithInput:@"\t" modifierFlags:(UIKeyModifierAlternate | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
@@ -477,10 +487,27 @@ NS_ASSUME_NONNULL_BEGIN
 
 		UIKeyCommand *cmdShiftCKeyCommand = [UIKeyCommand keyCommandWithInput:@"c" modifierFlags:(UIKeyModifierCommand | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
 		UIKeyCommand *cmdShiftKKeyCommand = [UIKeyCommand keyCommandWithInput:@"k" modifierFlags:(UIKeyModifierCommand | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
+		UIKeyCommand *cmdShiftNKeyCommand = [UIKeyCommand keyCommandWithInput:@"n" modifierFlags:(UIKeyModifierCommand | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
 		UIKeyCommand *cmdNKeyCommand = [UIKeyCommand keyCommandWithInput:@"n" modifierFlags:(UIKeyModifierCommand) action:@selector(_handleKeyCommand:)];
 		UIKeyCommand *cmdJKeyCommand = [UIKeyCommand keyCommandWithInput:@"j" modifierFlags:(UIKeyModifierCommand) action:@selector(_handleKeyCommand:)];
-		UIKeyCommand *cmdShiftNKeyCommand = [UIKeyCommand keyCommandWithInput:@"n" modifierFlags:(UIKeyModifierCommand | UIKeyModifierShift) action:@selector(_handleKeyCommand:)];
 		UIKeyCommand *escCommand = [UIKeyCommand keyCommandWithInput:UIKeyInputEscape modifierFlags:0 action:@selector(_handleKeyCommand:)];
+
+		if ([UIKeyCommand instancesRespondToSelector:@selector(setDiscoverabilityTitle:)]) {
+			NSString *nextRoomTitle = NSLocalizedString(@"Next Chat Room", @"Next Chat Room discoverability HUD title");
+			NSArray *nextRoomCommands = @[ altTabKeyCommand, cmdUpKeyCommand, optCmdUpKeyCommand ];
+			[nextRoomCommands makeObjectsPerformSelector:@selector(setDiscoverabilityTitle:) withObject:nextRoomTitle];
+
+			NSString *previousRoomTitle = NSLocalizedString(@"Previous Chat Room", @"Previous Chat Room discoverability HUD title");
+			NSArray *previousRoomCommands = @[ shiftAltTabKeyCommand, cmdDownKeyCommand, optCmdDownKeyCommand ];
+			[previousRoomCommands makeObjectsPerformSelector:@selector(setDiscoverabilityTitle:) withObject:previousRoomTitle];
+
+			cmdShiftCKeyCommand.discoverabilityTitle = NSLocalizedString(@"Style Message", @"Style Message discoverability HUD title");
+			cmdShiftKKeyCommand.discoverabilityTitle = NSLocalizedString(@"Clear Message", @"Clear Message discoverability HUD title");
+			cmdShiftNKeyCommand.discoverabilityTitle = NSLocalizedString(@"New Connection", @"New Connection discoverability HUD title");
+			cmdJKeyCommand.discoverabilityTitle = NSLocalizedString(@"New Colloquy", @"New Colloquy discoverability HUD title");
+			cmdNKeyCommand.discoverabilityTitle = NSLocalizedString(@"New Colloquy", @"New Colloquy discoverability HUD title");
+			escCommand.discoverabilityTitle = NSLocalizedString(@"Dismiss Topmost View", @"Dismiss Topmost View discoverability HUD title");
+		}
 
 		keyCommands = @[ altTabKeyCommand, shiftAltTabKeyCommand, cmdUpKeyCommand, cmdDownKeyCommand, optCmdUpKeyCommand, optCmdDownKeyCommand,
 						 cmdShiftCKeyCommand, cmdNKeyCommand, cmdShiftKKeyCommand, cmdJKeyCommand, cmdShiftNKeyCommand, escCommand ];
@@ -514,7 +541,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[super viewDidLoad];
 
 	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
-//	CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
+//	CQUITextChatTranscriptView *webkitChatTranscriptView = [[CQUITextChatTranscriptView alloc] initWithFrame:transcriptView.frame];
 //	webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
 //	webkitChatTranscriptView.transcriptDelegate = self;
 //
@@ -606,7 +633,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewDidDisappear:(BOOL) animated {
 	[super viewDidDisappear:animated];
 
+#if !SYSTEM(TV)
 	[UIMenuController sharedMenuController].menuItems = nil;
+#endif
 
 	if (!self.view.window.isFullscreen)
 		[chatInputBar resignFirstResponder];
@@ -656,6 +685,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) chatInputBarTextDidChange:(CQChatInputBar *) theChatInputBar {
+#if !SYSTEM(TV)
 	if (chatInputBar.textView.text.length || chatInputBar.textView.attributedText.length) {
 		chatInputBar.textView.allowsEditingTextAttributes = YES;
 		[UIMenuController sharedMenuController].menuItems = @[ [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Style", @"Style text menu item") action:@selector(style:)] ];
@@ -663,6 +693,7 @@ NS_ASSUME_NONNULL_BEGIN
 		chatInputBar.textView.allowsEditingTextAttributes = NO;
 		[UIMenuController sharedMenuController].menuItems = nil;
 	}
+#endif
 }
 
 - (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) theChatInputBar {
@@ -710,7 +741,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return YES;
 }
 
-- (NSArray *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
+- (NSArray <NSString *> *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
 	NSMutableArray *completions = [[NSMutableArray alloc] init];
 
 	if (word.length >= 2) {
@@ -722,7 +753,7 @@ NS_ASSUME_NONNULL_BEGIN
 		if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
 			[completions addObject:nickname];
 
-		static NSArray *services;
+		static NSArray <NSString *> *services;
 		if (!services) services = @[@"NickServ", @"ChanServ", @"MemoServ", @"OperServ"];
 
 		for (NSString *service in services) {
@@ -739,7 +770,7 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	if ([word hasPrefix:@"/"]) {
-		static NSArray *commands;
+		static NSArray <NSString *> *commands;
 		if (!commands) commands = @[@"/me", @"/msg", @"/nick", @"/join", @"/list", @"/away", @"/whois", @"/say", @"/raw", @"/quote", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/onotice", @"/umode", @"/globops",
 #if ENABLE(FILE_TRANSFERS)
 		@"/dcc",
@@ -931,7 +962,9 @@ NS_ASSUME_NONNULL_BEGIN
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
 
+#if !SYSTEM(TV)
 	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
+#endif
 }
 
 #pragma mark -
@@ -1009,7 +1042,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleAmsgCommandWithArguments:(MVChatString *) arguments {
-	NSArray *rooms = [[CQChatOrderingController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
+	NSArray <id <CQChatViewController>> *rooms = [[CQChatOrderingController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
 	for (CQChatRoomController *controller in rooms) {
 		if (!controller.connection.connected)
 			continue;
@@ -1020,7 +1053,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleAmeCommandWithArguments:(MVChatString *) arguments {
-	NSArray *rooms = [[CQChatOrderingController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
+	NSArray <id <CQChatViewController>> *rooms = [[CQChatOrderingController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
 	for (CQChatRoomController *controller in rooms) {
 		if (!controller.connection.connected)
 			continue;
@@ -1032,20 +1065,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL) handleJoinCommandWithArguments:(MVChatString *__nullable) arguments {
 	if (![arguments.string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
-		CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
-		creationViewController.roomTarget = YES;
-		creationViewController.selectedConnection = self.connection;
-
-		[self _forceResignKeyboard];
-
-		[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
+		[self _showChatCreationViewController];
 
 		return YES;
 	}
 
 	[self.connection connectAppropriately];
 
-	NSArray *rooms = [arguments.string componentsSeparatedByString:@","];
+	NSArray <NSString *> *rooms = [arguments.string componentsSeparatedByString:@","];
 	if (((NSString *)rooms.firstObject).length)
 		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:rooms.firstObject andConnection:self.connection];
 
@@ -1058,6 +1085,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleMsgCommandWithArguments:(MVChatString *) arguments {
+	if (!arguments.length) {
+		[self _showChatCreationViewController];
+
+		return YES;
+	}
+
 	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments.string];
 	[argumentsScanner setCharactersToBeSkipped:nil];
 
@@ -1066,17 +1099,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (targetName.length > 1 && [[self.connection chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]]) {
 		MVChatRoom *room = [self.connection chatRoomWithUniqueIdentifier:targetName];
-		CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:YES];
+		CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:NO];
 		if (controller) [[CQChatController defaultController] showChatController:controller animated:YES];
 	} else {
 		MVChatUser *user = [[self.connection chatUsersWithNickname:targetName] anyObject];
-		CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:YES];
+		CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:NO];
 		[[CQChatController defaultController] showChatController:controller animated:YES];
 		if (controller) [[CQChatController defaultController] showChatController:controller animated:YES];
 	}
 
-	// Return NO so the command is handled in ChatCore.
-	return NO;
+	// If we have a message, return NO so the command is handled in ChatCore.
+	return [argumentsScanner isAtEnd];
 }
 
 - (BOOL) handleNoticeCommandWithArguments:(MVChatString *) arguments {
@@ -1129,6 +1162,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleMusicCommandWithArguments:(MVChatString *) arguments {
+#if !SYSTEM(TV)
 	MPMusicPlayerController *musicController = [MPMusicPlayerController systemMusicPlayer];
 	MPMediaItem *nowPlayingItem = musicController.nowPlayingItem;
 
@@ -1165,6 +1199,7 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	[self sendMessage:[[NSAttributedString alloc] initWithString:message] asAction:YES];
+#endif
 
 	return YES;
 }
@@ -1207,7 +1242,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (id) _findLocaleForQueryWithArguments:(MVChatString *) arguments {
-	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments.string];
+	NSScanner *argumentsScanner = [NSScanner scannerWithString:MVChatStringAsString(arguments)];
 	[argumentsScanner setCharactersToBeSkipped:nil];
 
 	NSString *languageCode = nil;
@@ -1257,7 +1292,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleWikipediaCommandWithArguments:(MVChatString *) arguments {
-	NSArray *results = [self _findLocaleForQueryWithArguments:arguments];
+	NSArray <NSString *> *results = [self _findLocaleForQueryWithArguments:arguments];
 	NSString *languageCode = results[0];
 	NSString *query = results[1];
 
@@ -1267,7 +1302,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleAmazonCommandWithArguments:(MVChatString *) arguments {
-	NSArray *results = [self _findLocaleForQueryWithArguments:arguments];
+	NSArray <NSString *> *results = [self _findLocaleForQueryWithArguments:arguments];
 	NSString *languageCode = results[0];
 	NSString *query = results[1];
 
@@ -1319,6 +1354,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleTweetCommandWithArguments:(MVChatString *) arguments {
+#if !SYSTEM(TV)
 	SLComposeViewController *composeViewController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
 	if ([UIPasteboard generalPasteboard].string.length)
 		[composeViewController setInitialText:[UIPasteboard generalPasteboard].string];
@@ -1331,13 +1367,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 	composeViewController.completionHandler = ^(SLComposeViewControllerResult result) { /* do nothing */ };
 	[self.navigationController presentViewController:composeViewController animated:YES completion:NULL];
+#endif
 
 	return YES;
 }
 
 - (BOOL) handleSysinfoCommandWithArguments:(MVChatString *) arguments {
 	NSString *version = [[CQSettingsController settingsController] stringForKey:@"CQCurrentVersion"];
+#if !SYSTEM(TV)
 	NSString *orientation = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? NSLocalizedString(@"landscape", @"landscape orientation") : NSLocalizedString(@"portrait", @"portrait orientation");
+#else
+	NSString *orientation = NSLocalizedString(@"landscape", @"landscape orientation");
+#endif
 	NSString *model = [UIDevice currentDevice].localizedModel;
 	NSString *systemVersion = [NSProcessInfo processInfo].operatingSystemVersionString;
 	NSString *systemUptime = humanReadableTimeInterval([NSProcessInfo processInfo].systemUptime, YES);
@@ -1371,13 +1412,18 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 	NSString *systemMemory = [NSString stringWithFormat:@"%zd %@", physicalMemory, memoryUnit];
 
+	NSString *message = nil;
+#if !SYSTEM(TV)
 	BOOL batteryMonitoringEnabled = [UIDevice currentDevice].batteryMonitoringEnabled;
 	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
-	NSString *message = nil;
 	if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateUnplugged)
 		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %d processors, %@ RAM, %.0f%% battery life remaining and a system uptime of %@.", @"System info message with battery level"), version, orientation, model, systemVersion, processorsInTotal, systemMemory, [UIDevice currentDevice].batteryLevel * 100., systemUptime];
-	else message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %d processors, %@ RAM and a system uptime of %@.", @"System info message"), version, orientation, model, systemVersion, processorsInTotal, systemMemory, systemUptime];
+	else
+#endif
+		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %d processors, %@ RAM and a system uptime of %@.", @"System info message"), version, orientation, model, systemVersion, processorsInTotal, systemMemory, systemUptime];
+#if !SYSTEM(TV)
 	[UIDevice currentDevice].batteryMonitoringEnabled = batteryMonitoringEnabled;
+#endif
 
 	[self sendMessage:[[NSAttributedString alloc] initWithString:message] asAction:YES];
 
@@ -1467,7 +1513,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) handleResetbadgeCommandWithArguments:(MVChatString *) arguments {
+#if !SYSTEM(TV)
 	[CQColloquyApplication sharedApplication].applicationIconBadgeNumber = 0;
+#endif
 }
 
 #pragma mark -
@@ -1570,7 +1618,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) transcriptView:(id) transcriptView handleLongPressURL:(NSURL *) url atLocation:(CGPoint) location {
-	UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
+	CQActionSheet *actionSheet = [[CQActionSheet alloc] init];
 	actionSheet.delegate = self;
 	actionSheet.tag = URLActionSheet;
 	actionSheet.title = url.absoluteString;
@@ -1616,7 +1664,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) setScrollbackLength:(NSUInteger) scrollbackLength {
-	[transcriptView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setScrollbackLimit(%tu)", scrollbackLength] completionHandler:NULL];
+	transcriptView.scrollbackLimit = scrollbackLength;
 }
 
 - (void) setMostRecentIncomingMessageTimestamp:(NSDate *) date {
@@ -1754,7 +1802,7 @@ NS_ASSUME_NONNULL_BEGIN
 		if (naturalChatActions && !action) {
 			static NSSet *actionVerbs;
 			if (!actionVerbs) {
-				NSArray *verbs = [[NSArray alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]];
+				NSArray <NSString *> *verbs = [[NSArray alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]];
 				actionVerbs = [[NSSet alloc] initWithArray:verbs];
 			}
 
@@ -1864,15 +1912,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) willPresentAlertView:(UIAlertView *) alertView {
+- (void) willPresentAlertView:(CQAlertView *) alertView {
 	_showingAlert = YES;
 }
 
-- (void) alertView:(UIAlertView *) alertView didDismissWithButtonIndex:(NSInteger) buttonIndex {
+- (void) alertView:(CQAlertView *) alertView didDismissWithButtonIndex:(NSInteger) buttonIndex {
 	_showingAlert = NO;
 }
 
-- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == alertView.cancelButtonIndex)
 		return;
 
@@ -1886,7 +1934,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
@@ -1908,7 +1956,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) _showActivityViewControllerWithItems:(NSArray *) items activities:(NSArray *) activities {
+- (void) _showActivityViewControllerWithItems:(NSArray <UIActivity *> *) items activities:(NSArray <UIActivity *> *) activities {
+#if !SYSTEM(TV)
 	_showingActivityViewController = YES;
 
 	UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:activities];
@@ -1917,7 +1966,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[self becomeFirstResponder];
 
 	__weak __typeof__((self)) weakSelf = self;
-	activityController.completionWithItemsHandler = ^(NSString *__nullable activityType, BOOL completed, NSArray *__nullable returnedItems, NSError *__nullable activityError) {
+	activityController.completionWithItemsHandler = ^(NSString *activityType, BOOL completed, NSArray <UIActivity *> *returnedItems, NSError *activityError) {
 		__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 		[strongSelf _endShowingActivityViewControllerWithInputBarAsResponder:inputBarWasFirstResponder];
 		[strongSelf.activityPopoverController dismissPopoverAnimated:YES];
@@ -1934,6 +1983,7 @@ NS_ASSUME_NONNULL_BEGIN
 		CGRect frame = [self.view convertRect:chatInputBar.accessoryButton.frame fromView:chatInputBar];
 		[_activityPopoverController presentPopoverFromRect:frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 	}
+#endif
 }
 
 - (void) _endShowingActivityViewControllerWithInputBarAsResponder:(BOOL) inputBarAsResponder {
@@ -1944,6 +1994,18 @@ NS_ASSUME_NONNULL_BEGIN
 	if (inputBarAsResponder)
 		[chatInputBar becomeFirstResponder];
 	else [transcriptView becomeFirstResponder];
+}
+
+#pragma mark -
+
+- (void) _showChatCreationViewController {
+	CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
+	creationViewController.roomTarget = YES;
+	creationViewController.selectedConnection = self.connection;
+
+	[self _forceResignKeyboard];
+
+	[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
 }
 
 #pragma mark -
@@ -1988,7 +2050,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
-	UIAlertView *alert = [[CQAlertView alloc] init];
+	CQAlertView *alert = [[CQAlertView alloc] init];
 	alert.delegate = self;
 	alert.tag = CantSendMessageAlertView;
 
@@ -2201,6 +2263,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
 		return;
 
+#if !SYSTEM(TV)
 	UILocalNotification *notification = [[UILocalNotification alloc] init];
 
 	notification.alertBody = [self _localNotificationBodyForMessage:message];
@@ -2208,6 +2271,7 @@ NS_ASSUME_NONNULL_BEGIN
 	notification.soundName = [soundName stringByAppendingPathExtension:@"aiff"];
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+#endif
 }
 
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo {
@@ -2408,25 +2472,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (!user.localUser)
 		[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
-
-//	[operation.processedMessageInfo[CQInlineGIFImageKey] enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
-//		CQIntroductoryGIFFrameOperation *GIFOperation = [[CQIntroductoryGIFFrameOperation alloc] initWithURL:object];
-//		GIFOperation.userInfo = @{ @"id": key };
-//		GIFOperation.target = self;
-//		GIFOperation.action = @selector(_GIFProcessed:);
-//
-//		[[CQDirectChatController chatMessageProcessingQueue] addOperation:GIFOperation];
-//	}];
-}
-
-- (void) _GIFProcessed:(CQIntroductoryGIFFrameOperation *) operation {
-	NSString *base64Encoding = operation.introductoryFrameImageData.base64Encoding;
-	NSString *imageString = nil;
-	if (base64Encoding.length)
-		imageString = [NSString stringWithFormat:@"data:image;base64, %@", base64Encoding];
-	else imageString = operation.url.absoluteString;
-	[transcriptView insertImage:imageString forElementWithIdentifier:operation.userInfo[@"id"]];
-
 }
 @end
 

@@ -4,7 +4,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation NSDictionary (NSDictionaryAdditions)
-+ (NSDictionary *) dictionaryWithKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary {
++ (NSDictionary *) dictionaryWithKeys:(NSArray <id <NSCopying>> *) keys fromDictionary:(NSDictionary *) dictionary {
 	return [[NSMutableDictionary alloc] initWithKeys:keys fromDictionary:dictionary];
 }
 
@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @implementation NSMutableDictionary (NSDictionaryAdditions)
-- (instancetype) initWithKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary {
+- (instancetype) initWithKeys:(NSArray <id <NSCopying>> *) keys fromDictionary:(NSDictionary *) dictionary {
 	if (!(self = [self init]))
 		return nil;
 
@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return self;
 }
 
-- (void) setObjectsForKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary {
+- (void) setObjectsForKeys:(NSArray <id <NSCopying>> *) keys fromDictionary:(NSDictionary *) dictionary {
 	for (id key in keys) {
 		id value = dictionary[key];
 		if (value) self[key] = value;

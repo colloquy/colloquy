@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protected
 	UIView *_backgroundView;
 	CQTextCompletionView *_completionView;
-	NSArray *_completions;
+	NSArray <NSString *> *_completions;
 	NSRange _completionRange;
 	BOOL _completionCapturedKeyboard;
 	BOOL _disableCompletionUntilNextWord;
@@ -96,7 +96,9 @@ NS_ASSUME_NONNULL_BEGIN
 	_inputView = [[CQTextView alloc] initWithFrame:frame];
 	_inputView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
 	_inputView.textContainer.heightTracksTextView = YES;
+#if !SYSTEM(TV)
 	_inputView.dataDetectorTypes = UIDataDetectorTypeNone;
+#endif
 	_inputView.returnKeyType = UIReturnKeySend;
 	_inputView.autocapitalizationType = UITextAutocapitalizationTypeSentences;
 	_inputView.enablesReturnKeyAutomatically = YES;
@@ -125,7 +127,9 @@ NS_ASSUME_NONNULL_BEGIN
 	_autocorrect = NO;
 #endif
 
+#if !SYSTEM(TV)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideCompletions) name:UIDeviceOrientationDidChangeNotification object:nil];
+#endif
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
@@ -252,7 +256,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 		// Work around iOS 7 bug where the input view frame doesn't update right away after being set, causing text to be clipped.
 		_inputView.frame = _inputView.frame;
-		_inputView.contentSize = CGSizeMake(floorf((_inputView.frame.size.width - (_inputView.frame.origin.x * 2))), (numberOfLines * self._lineHeight));
+
+		CGFloat contentWidth = floorf((_inputView.frame.size.width - (_inputView.frame.origin.x * 2)));
+		CGFloat contentHeight = ceilf((numberOfLines * self._lineHeight));
+		contentHeight += (fabs(_inputView.contentInset.top) * numberOfLines + 1);
+		_inputView.contentSize = CGSizeMake(contentWidth, height);
+		_inputView.scrollEnabled = (contentHeight >= CGRectGetHeight(_inputView.frame));
+
+		if (_inputView.scrollEnabled)
+			_inputView.contentOffset = CGPointMake(_inputView.contentOffset.x, _inputView.contentOffset.y + fabs(_inputView.contentInset.top));
 	}
 }
 
@@ -320,7 +332,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (![strongDelegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)])
 		return;
 
-	NSArray *completions = [strongDelegate chatInputBar:self completionsForWordWithPrefix:text inRange:range];
+	NSArray <NSString *> *completions = [strongDelegate chatInputBar:self completionsForWordWithPrefix:text inRange:range];
 	if (completions.count)
 		[self showCompletions:completions forText:text inRange:range];
 	else [self hideCompletions];
@@ -368,7 +380,7 @@ NS_ASSUME_NONNULL_BEGIN
 		[self.superview addSubview:_completionView];
 	}
 
-	NSArray *completions = _completions;
+	NSArray <NSString *> *completions = _completions;
 	NSString *prefixText = [text substringToIndex:_completionRange.location];
 	CGSize textSize = [prefixText sizeWithAttributes:@{ NSFontAttributeName: _inputView.font }];
 
@@ -402,7 +414,7 @@ retry:
 	[_completionView.superview bringSubviewToFront:_completionView];
 }
 
-- (void) showCompletions:(NSArray *) completions forText:(NSString *) text inRange:(NSRange) textRange {
+- (void) showCompletions:(NSArray <NSString *> *) completions forText:(NSString *) text inRange:(NSRange) textRange {
 	_completionRange = textRange;
 
 	_completions = completions;
@@ -438,7 +450,6 @@ retry:
 	if (_inputView.hasText || self._hasMarkedText) {
 		NSUInteger numberOfLines = self._numberOfLines;
 		CGFloat contentHeight = fminf(numberOfLines * self._lineHeight, self._maxLineHeight);
-		_inputView.scrollEnabled = (contentHeight >= self._maxLineHeight);
 		[self setHeight:contentHeight numberOfLines:numberOfLines];
 	} else {
 		[self _resetTextViewHeight];
@@ -597,7 +608,7 @@ retry:
 			_disableCompletionUntilNextWord = NO;
 
 		NSString *word = [[text substringWithRange:wordRange] copy];
-		NSArray *completions = nil;
+		NSArray <NSString *> *completions = nil;
 		BOOL canShowCompletionForCurrentWord = textView.text.length;
 		if (canShowCompletionForCurrentWord) {
 			if (!((range.location + range.length) == textView.text.length)) { // if we're in the middle of a line, only show completions if the next letter is a space
@@ -747,7 +758,11 @@ retry:
 #undef ButtonWidth
 #undef ButtonMargin
 
+#if !SYSTEM(TV)
 	_animationDuration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
+#else
+	_animationDuration = 0.25;
+#endif
 }
 
 #pragma mark -
@@ -821,9 +836,7 @@ retry:
 }
 
 - (void) _resetTextViewHeight {
-	[self setHeight:self._lineHeight numberOfLines:0];
-
-	_inputView.scrollEnabled = NO;
+	[self setHeight:self._lineHeight numberOfLines:1];
 }
 
 - (void) _resetTextAttributes {
@@ -871,18 +884,14 @@ retry:
 - (void) _updateImagesForResponderState {
 	CQChatInputBarResponderState activeResponderState = _responderState;
 	if (!_inputView.hasText)
-	{
 		activeResponderState = CQChatInputBarNotResponder;
-	}
 
 	UIImage *defaultImage = _accessoryImages[@(activeResponderState)][@(UIControlStateNormal)];
 	if (defaultImage)
 		[_accessoryButton setImage:defaultImage forState:UIControlStateNormal];
 
 	UIImage *pressedImage = _accessoryImages[@(activeResponderState)][@(UIControlStateHighlighted)];
-	if (pressedImage)
-		[_accessoryButton setImage:pressedImage forState:UIControlStateHighlighted];
-	else [_accessoryButton setImage:nil forState:UIControlStateHighlighted];
+	[_accessoryButton setImage:pressedImage forState:UIControlStateHighlighted];
 }
 
 #pragma mark -
@@ -894,7 +903,7 @@ retry:
 - (CGFloat) _lineHeight {
 	if (!_inputView.font)
 		return CQLineHeight;
-	return fmaxf(CQLineHeight, [@"Jy" sizeWithAttributes:@{ NSFontAttributeName: _inputView.font }].height);
+	return ceilf(fmaxf(CQLineHeight, _inputView.font.lineHeight));
 }
 
 - (CGFloat) _inactiveLineHeight {

@@ -9,7 +9,7 @@ extern NSString *MVMetadataKeyForAttributeName(NSString *attributeName);
 extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey);
 
 @interface MVIRCChatUser : MVChatUser
-+ (NSArray *) servicesNicknames;
++ (NSArray <NSString *> *) servicesNicknames;
 
 - (instancetype) initLocalUserWithConnection:(MVIRCChatConnection *) connection;
 - (instancetype) initWithNickname:(NSString *) nickname andConnection:(MVIRCChatConnection *) connection;

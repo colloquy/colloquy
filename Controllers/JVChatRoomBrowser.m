@@ -361,12 +361,12 @@
 
 	[[view window] makeFirstResponder:view];
 
-	BOOL ascending = [[view indicatorImageInTableColumn:column] isEqual:[MVTableView ascendingSortIndicator]];
+	BOOL ascending = [[view indicatorImageInTableColumn:column] isEqual:[NSImage imageNamed:@"NSDescendingSortIndicator"]];
 
 	[view setIndicatorImage:nil inTableColumn:[view highlightedTableColumn]];
 
-	if( ascending ) [view setIndicatorImage:[MVTableView descendingSortIndicator] inTableColumn:column];
-	else [view setIndicatorImage:[MVTableView ascendingSortIndicator] inTableColumn:column];
+	if( ascending ) [view setIndicatorImage:[NSImage imageNamed:@"NSDescendingSortIndicator"] inTableColumn:column];
+	else [view setIndicatorImage:[NSImage imageNamed:@"NSAscendingSortIndicator"] inTableColumn:column];
 
 	[view setHighlightedTableColumn:column];
 

@@ -284,9 +284,9 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 #pragma mark -
 
 - (void) main {
-	NSArray *highlightWords = [CQColloquyApplication sharedApplication].highlightWords;
+	NSArray <NSString *> *highlightWords = [CQColloquyApplication sharedApplication].highlightWords;
 	if (_highlightNickname.length && ![highlightWords containsObject:_highlightNickname]) {
-		NSMutableArray *mutableHighlightWords = [highlightWords mutableCopy];
+		NSMutableArray <NSString *> *mutableHighlightWords = [highlightWords mutableCopy];
 		[mutableHighlightWords insertObject:_highlightNickname atIndex:0];
 
 		highlightWords = mutableHighlightWords;
@@ -307,8 +307,8 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	if (user && !regex && !user.localUser && highlightWords.count) {
 		NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 
-		NSMutableArray *processedHighlightWords = [NSMutableArray array];
-		NSMutableArray *processedHighlightCommands = [NSMutableArray array];
+		NSMutableArray <NSString *> *processedHighlightWords = [NSMutableArray array];
+		NSMutableArray <NSString *> *processedHighlightCommands = [NSMutableArray array];
 		for (NSString *highlightWord in highlightWords) {
 			if (!highlightWord.length)
 				continue;
@@ -348,7 +348,7 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 
 	[self _processMessageString:messageString];
 
-	static NSArray *sameKeys = nil;
+	static NSArray <NSString *> *sameKeys = nil;
 	if (!sameKeys)
 		sameKeys = @[@"user", @"action", @"notice", @"identifier"];
 

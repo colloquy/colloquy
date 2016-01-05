@@ -52,7 +52,11 @@ static CQSoundController *fileTransferSound;
 
 #pragma mark -
 
-@interface CQChatController () <UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate>
+@interface CQChatController () <CQActionSheetDelegate, CQAlertViewDelegate
+#if !SYSTEM(TV)
+, UIImagePickerControllerDelegate
+#endif
+>
 @end
 
 @implementation CQChatController {
@@ -155,7 +159,9 @@ static CQSoundController *fileTransferSound;
 	CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:NO];
 	[controller addMessage:notification.userInfo];
 
+#if !SYSTEM(TV)
 	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
+#endif
 }
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {
@@ -176,7 +182,9 @@ static CQSoundController *fileTransferSound;
 	if (!hideFromUser) {
 		CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:NO userInitiated:NO];
 		[controller addMessage:notification.userInfo];
+#if !SYSTEM(TV)
 		[[CQColloquyApplication sharedApplication] updateAppShortcuts];
+#endif
 	}
 }
 
@@ -185,7 +193,9 @@ static CQSoundController *fileTransferSound;
 
 	CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForDirectChatConnection:connection ifExists:NO];
 	[controller addMessage:notification.userInfo];
+#if !SYSTEM(TV)
 	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
+#endif
 }
 
 #if ENABLE(FILE_TRANSFERS)
@@ -210,7 +220,7 @@ static CQSoundController *fileTransferSound;
 	NSString *file = transfer.originalFileName;
 	NSString *user = transfer.user.displayName;
 
-	UIAlertView *alert = [[CQAlertView alloc] init];
+	CQAlertView *alert = [[CQAlertView alloc] init];
 	alert.tag = FileDownloadAlertTag;
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"File Download", "File Download alert title");
@@ -277,6 +287,7 @@ static CQSoundController *fileTransferSound;
 
 	NSString *message = [NSString stringWithFormat:NSLocalizedString(@"You are invited to \"%@\" by \"%@\" on \"%@\".", "Invited to join room alert message"), room.displayName, user.displayName, connection.displayName];
 
+#if !SYSTEM(TV)
 	if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
 		UILocalNotification *localNotification = [[UILocalNotification alloc] init];
 
@@ -289,6 +300,7 @@ static CQSoundController *fileTransferSound;
 
 		return;
 	}
+#endif
 
 	CQAlertView *alert = [[CQAlertView alloc] init];
 	alert.tag = ChatRoomInviteAlertTag;
@@ -312,7 +324,7 @@ static CQSoundController *fileTransferSound;
 
 #pragma mark -
 
-- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
 	id userInfo = [alertView associatedObjectForKey:@"userInfo"];
 
 	if (buttonIndex == alertView.cancelButtonIndex) {
@@ -340,7 +352,7 @@ static CQSoundController *fileTransferSound;
 
 #pragma mark -
 
-- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.cancelButtonIndex) {
 		_fileUser = nil;
 		return;
@@ -410,7 +422,7 @@ static CQSoundController *fileTransferSound;
 - (void) imagePickerController:(UIImagePickerController *) picker didFinishPickingImage:(UIImage *) image editingInfo:(NSDictionary *) editingInfo {
 	NSString *behavior = [[CQSettingsController settingsController] stringForKey:@"CQImageFileTransferBehavior"];
 	if ([behavior isEqualToString:@"Ask"]) {
-		UIActionSheet *sheet = [[UIActionSheet alloc] init];
+		CQActionSheet *sheet = [[CQActionSheet alloc] init];
 		sheet.delegate = self;
 		sheet.tag = FileTypeActionSheetTag;
 		[sheet associateObject:image forKey:@"image"];
@@ -439,8 +451,10 @@ static CQSoundController *fileTransferSound;
 
 	_totalImportantUnreadCount = count;
 
+#if !SYSTEM(TV)
 	if ([CQColloquyApplication sharedApplication].areNotificationBadgesAllowed)
 		[UIApplication sharedApplication].applicationIconBadgeNumber = count;
+#endif
 
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatControllerChangedTotalImportantUnreadCountNotification object:self];
 }
@@ -462,12 +476,12 @@ static CQSoundController *fileTransferSound;
 #pragma mark -
 
 - (NSDictionary *) persistentStateForConnection:(MVChatConnection *) connection {
-	NSArray *controllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
+	NSArray <id <CQChatViewController>> *controllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
 	if (!controllers.count)
 		return nil;
 
 	NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
-	NSMutableArray *controllerStates = [[NSMutableArray alloc] init];
+	NSMutableArray <NSDictionary *> *controllerStates = [[NSMutableArray alloc] init];
 
 	for (id <CQChatViewController> controller in controllers) {
 		if (![controller respondsToSelector:@selector(persistentState)])
@@ -487,7 +501,7 @@ static CQSoundController *fileTransferSound;
 }
 
 - (void) restorePersistentState:(NSDictionary *) state forConnection:(MVChatConnection *) connection {
-	NSMutableArray *viewControllers = [NSMutableArray array];
+	NSMutableArray <id <CQChatViewController>> *viewControllers = [NSMutableArray array];
 
 	for (NSDictionary *controllerState in state[@"chatControllers"]) {
 		NSString *className = controllerState[@"class"];
@@ -511,7 +525,7 @@ static CQSoundController *fileTransferSound;
 #pragma mark -
 
 - (void) showNewChatActionSheetForConnection:(MVChatConnection *) connection fromPoint:(CGPoint) point {
-	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
 
 	[sheet associateObject:connection forKey:@"userInfo"];
@@ -585,7 +599,7 @@ static CQSoundController *fileTransferSound;
 	if (!connection)
 		return;
 
-	NSArray *chatViewControllersForConnection = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
+	NSArray <id <CQChatViewController>> *chatViewControllersForConnection = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
 	_nextController = chatViewControllersForConnection.firstObject;
 }
 
@@ -603,7 +617,7 @@ static CQSoundController *fileTransferSound;
 
 #if ENABLE(FILE_TRANSFERS)
 - (void) showFilePickerWithUser:(MVChatUser *) user {
-	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.tag = SendFileActionSheetTag;
 

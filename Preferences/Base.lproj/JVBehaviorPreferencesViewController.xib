@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="JVBehaviorPreferencesViewController">
+            <connections>
+                <outlet property="enterKeyAction" destination="TpM-Ft-KD7" id="2DC-dN-H6c"/>
+                <outlet property="returnKeyAction" destination="sOj-xs-7ry" id="gda-WO-lMM"/>
+                <outlet property="view" destination="fCf-ev-44x" id="dck-25-eGm"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <userDefaultsController representsSharedInstance="YES" id="443" userLabel="Shared Defaults"/>
+        <view translatesAutoresizingMaskIntoConstraints="NO" id="fCf-ev-44x">
+            <rect key="frame" x="0.0" y="0.0" width="525" height="404"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jr3-PE-D0P">
+                    <rect key="frame" x="79" y="366" width="129" height="17"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="Press Return key to:" usesSingleLineMode="YES" id="UnW-il-L99">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sOj-xs-7ry">
+                    <rect key="frame" x="212" y="360" width="234" height="26"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="rJ4-df-XaB"/>
+                    </constraints>
+                    <popUpButtonCell key="cell" type="push" title="Send a chat message" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingMiddle" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="pGD-vP-UM1" id="FvQ-Xn-XAf">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" id="Enw-hf-wQi">
+                            <items>
+                                <menuItem title="Send a chat message" state="on" id="pGD-vP-UM1"/>
+                                <menuItem title="Send an action message" tag="1" id="hKk-jz-VLy"/>
+                                <menuItem title="Insert a new line" tag="2" id="tvB-6R-Fg6"/>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="changeSendOnReturnAction:" target="-2" id="3zv-20-KeR"/>
+                    </connections>
+                </popUpButton>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="We2-Qn-JpT">
+                    <rect key="frame" x="79" y="335" width="129" height="17"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="Press Enter key to:" usesSingleLineMode="YES" id="2Xv-k4-rwc">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TpM-Ft-KD7">
+                    <rect key="frame" x="212" y="329" width="234" height="26"/>
+                    <popUpButtonCell key="cell" type="push" title="Send a chat message" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingMiddle" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="kel-Q4-KwP" id="QSI-kG-5PV">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" id="7Gc-wB-7Mn">
+                            <items>
+                                <menuItem title="Send a chat message" state="on" id="kel-Q4-KwP"/>
+                                <menuItem title="Send an action message" tag="1" id="Unv-0w-acR"/>
+                                <menuItem title="Insert a new line" tag="2" id="BFs-hq-DTa"/>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="changeSendOnEnterAction:" target="-2" id="G48-6o-Pyg"/>
+                    </connections>
+                </popUpButton>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8Db-be-zmp">
+                    <rect key="frame" x="79" y="305" width="129" height="17"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="Send History:" usesSingleLineMode="YES" id="3L3-IE-DmA">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UHz-eX-dnM">
+                    <rect key="frame" x="214" y="302" width="25" height="22"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="25" id="Be7-T5-7WB"/>
+                        <constraint firstAttribute="width" priority="500" constant="25" id="Jnh-9H-I4J"/>
+                    </constraints>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="6Av-L5-qSF">
+                        <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="#" negativeFormat="#" localizesFormat="NO" hasThousandSeparators="NO" thousandSeparator="," id="ftX-s0-LeZ">
+                            <attributedString key="attributedStringForZero">
+                                <fragment content="0"/>
+                            </attributedString>
+                            <decimal key="minimum" value="0"/>
+                            <decimal key="maximum" value="200"/>
+                        </numberFormatter>
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="443" name="value" keyPath="values.JVChatMaximumHistory" id="42m-Pc-izA">
+                            <dictionary key="options">
+                                <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                <bool key="NSConditionallySetsEditable" value="NO"/>
+                                <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                <bool key="NSValidatesImmediately" value="YES"/>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </textField>
+                <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6VO-T3-B5B">
+                    <rect key="frame" x="244" y="299" width="19" height="27"/>
+                    <stepperCell key="cell" continuous="YES" alignment="left" maxValue="200" id="h2a-CX-Qzd"/>
+                    <connections>
+                        <binding destination="443" name="value" keyPath="values.JVChatMaximumHistory" id="7pa-Xr-gzc">
+                            <dictionary key="options">
+                                <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                <bool key="NSValidatesImmediately" value="YES"/>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </stepper>
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="41r-N3-XSB">
+                    <rect key="frame" x="287" y="296" width="158" height="28"/>
+                    <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="left" title="Use the ⌥↑ &amp; ⌥↓ keys to cycle through sent messages" id="tWP-5e-QKx">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="DL3-Ob-o1w">
+                    <rect key="frame" x="79" y="273" width="129" height="17"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="Message Scrollback:" usesSingleLineMode="YES" id="4aK-ze-JKp">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="B3H-bH-h9e" userLabel="Message Scrollback">
+                    <rect key="frame" x="214" y="270" width="40" height="22"/>
+                    <constraints>
+                        <constraint firstAttribute="width" priority="500" constant="40" id="EYo-Xq-R0l"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="THG-CJ-nak"/>
+                    </constraints>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="EFC-0X-S2v">
+                        <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="0" negativeFormat="-0" hasThousandSeparators="NO" thousandSeparator="." id="ll0-6Q-Ft1">
+                            <attributedString key="attributedStringForZero">
+                                <fragment content="0"/>
+                            </attributedString>
+                            <decimal key="minimum" value="0"/>
+                            <decimal key="maximum" value="50000"/>
+                        </numberFormatter>
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="443" name="value" keyPath="values.JVChatScrollbackLimit" id="2hK-50-Szx">
+                            <dictionary key="options">
+                                <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                <bool key="NSConditionallySetsEditable" value="NO"/>
+                                <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                <bool key="NSValidatesImmediately" value="YES"/>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </textField>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="7dm-Wx-rU1">
+                    <rect key="frame" x="212" y="246" width="233" height="18"/>
+                    <buttonCell key="cell" type="check" title="Auto join chat rooms on invite" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="JQs-X4-QSI">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <binding destination="443" name="value" keyPath="values.JVAutoJoinChatRoomOnInvite" id="N1O-VF-4ea">
+                            <dictionary key="options">
+                                <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                <integer key="NSMultipleValuesPlaceholder" value="1"/>
+                                <integer key="NSNoSelectionPlaceholder" value="0"/>
+                                <integer key="NSNotApplicablePlaceholder" value="0"/>
+                                <integer key="NSNullPlaceholder" value="0"/>
+                                <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </button>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="ntx-rd-WOY">
+                    <rect key="frame" x="212" y="226" width="233" height="18"/>
+                    <buttonCell key="cell" type="check" title="Auto rejoin when kicked from room" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="Db8-WZ-PVh">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <binding destination="443" name="value" keyPath="values.JVAutoRejoinRoomsOnKick" id="V3f-T4-nTO">
+                            <dictionary key="options">
+                                <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                <integer key="NSMultipleValuesPlaceholder" value="0"/>
+                                <integer key="NSNoSelectionPlaceholder" value="0"/>
+                                <integer key="NSNotApplicablePlaceholder" value="0"/>
+                                <integer key="NSNullPlaceholder" value="0"/>
+                                <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </button>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="v8K-pM-zGz">
+                    <rect key="frame" x="230" y="201" width="38" height="17"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" title="After:" usesSingleLineMode="YES" id="ZtQ-oR-of1">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Sc0-RS-gSZ">
+                    <rect key="frame" x="274" y="198" width="25" height="22"/>
+                    <constraints>
+                        <constraint firstAttribute="width" priority="500" constant="25" id="902-0L-ZHK"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="25" id="XZn-gG-kmj"/>
+                    </constraints>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="SLV-zR-e1z">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="443" name="value" keyPath="values.JVAutoRejoinRoomsDelay" id="Rv7-eA-0Yv">
+                            <dictionary key="options">
+                                <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                <bool key="NSConditionallySetsEditable" value="NO"/>
+                                <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                <bool key="NSValidatesImmediately" value="YES"/>
+                            </dictionary>
+                        </binding>
+                        <binding destination="443" name="enabled" keyPath="values.JVAutoRejoinRoomsOnKick" id="yzz-sr-VdH"/>
+                    </connections>
+                </textField>
+                <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yRR-Go-xBl">
+                    <rect key="frame" x="304" y="195" width="19" height="27"/>
+                    <stepperCell key="cell" continuous="YES" alignment="left" maxValue="59" valueWraps="YES" id="7vB-9e-frw"/>
+                    <connections>
+                        <binding destination="443" name="value" keyPath="values.JVAutoRejoinRoomsDelay" id="l10-8D-SmM">
+                            <dictionary key="options">
+                                <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                <bool key="NSValidatesImmediately" value="YES"/>
+                            </dictionary>
+                        </binding>
+                        <binding destination="443" name="enabled" keyPath="values.JVAutoRejoinRoomsOnKick" id="bDp-RH-6ED"/>
+                    </connections>
+                </stepper>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8XZ-dK-IOa">
+                    <rect key="frame" x="326" y="201" width="56" height="17"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" title="seconds" usesSingleLineMode="YES" id="o2F-B5-aW5">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="f2v-6P-mk9">
+                    <rect key="frame" x="212" y="174" width="233" height="18"/>
+                    <buttonCell key="cell" type="check" title="Check spelling as you type" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="LkH-sq-XsW">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <binding destination="443" name="value" keyPath="values.JVChatSpellChecking" id="7u0-La-bHF">
+                            <dictionary key="options">
+                                <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                <integer key="NSMultipleValuesPlaceholder" value="0"/>
+                                <integer key="NSNoSelectionPlaceholder" value="0"/>
+                                <integer key="NSNotApplicablePlaceholder" value="0"/>
+                                <integer key="NSNullPlaceholder" value="0"/>
+                                <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </button>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="IHa-rF-hY6">
+                    <rect key="frame" x="212" y="154" width="233" height="18"/>
+                    <buttonCell key="cell" type="check" title="Detect natural language actions" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="fbp-R6-UMD">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <binding destination="443" name="value" keyPath="values.MVChatNaturalActions" id="Mfv-sC-r1C">
+                            <dictionary key="options">
+                                <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                <integer key="NSMultipleValuesPlaceholder" value="1"/>
+                                <integer key="NSNoSelectionPlaceholder" value="0"/>
+                                <integer key="NSNotApplicablePlaceholder" value="0"/>
+                                <integer key="NSNullPlaceholder" value="0"/>
+                                <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </button>
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sez-Fr-ktd">
+                    <rect key="frame" x="230" y="106" width="215" height="42"/>
+                    <textFieldCell key="cell" controlSize="small" enabled="NO" sendsActionOnEndEditing="YES" alignment="left" title="Automatically sends messages that begin with common action verbs as actions" id="dc5-nK-lqg">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="aAh-lo-km8">
+                    <rect key="frame" x="212" y="82" width="233" height="18"/>
+                    <buttonCell key="cell" type="check" title="Tab key triggers word completion" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingMiddle" inset="2" id="nbo-5A-7Fd">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <binding destination="443" name="value" keyPath="values.JVUsePantherTextCompleteOnTab" id="k8x-mk-eJ0">
+                            <dictionary key="options">
+                                <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                <integer key="NSMultipleValuesPlaceholder" value="1"/>
+                                <integer key="NSNoSelectionPlaceholder" value="0"/>
+                                <integer key="NSNotApplicablePlaceholder" value="0"/>
+                                <integer key="NSNullPlaceholder" value="0"/>
+                                <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </button>
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fBy-mt-i6g">
+                    <rect key="frame" x="230" y="20" width="215" height="56"/>
+                    <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="left" id="4jp-UJ-tUu">
+                        <font key="font" metaFont="smallSystem"/>
+                        <string key="title">Also available by pressing F5 while typing.
+Nickname tab completion is supported without this preference.</string>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <customView horizontalCompressionResistancePriority="200" verticalCompressionResistancePriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="IV4-Lf-QYc">
+                    <rect key="frame" x="20" y="363" width="62" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="1sj-yt-8de"/>
+                    </constraints>
+                </customView>
+                <customView horizontalCompressionResistancePriority="200" verticalCompressionResistancePriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="nW3-aJ-hsj">
+                    <rect key="frame" x="443" y="363" width="61.5" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="jne-8N-Mwl"/>
+                    </constraints>
+                </customView>
+                <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Q2n-XT-BLx">
+                    <rect key="frame" x="259" y="267" width="19" height="27"/>
+                    <stepperCell key="cell" continuous="YES" alignment="left" increment="25" maxValue="50000" id="05c-Ib-s3k"/>
+                    <connections>
+                        <binding destination="443" name="value" keyPath="values.JVChatScrollbackLimit" id="KGG-z3-DVO">
+                            <dictionary key="options">
+                                <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                <bool key="NSValidatesImmediately" value="YES"/>
+                            </dictionary>
+                        </binding>
+                    </connections>
+                </stepper>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="fBy-mt-i6g" secondAttribute="bottom" constant="20" symbolic="YES" id="1SI-Wc-aNF"/>
+                <constraint firstItem="aAh-lo-km8" firstAttribute="trailing" secondItem="sOj-xs-7ry" secondAttribute="trailing" id="2Fs-Su-Jns"/>
+                <constraint firstItem="fBy-mt-i6g" firstAttribute="top" secondItem="aAh-lo-km8" secondAttribute="bottom" constant="8" symbolic="YES" id="4gN-Uo-8wy"/>
+                <constraint firstItem="Sc0-RS-gSZ" firstAttribute="baseline" secondItem="8XZ-dK-IOa" secondAttribute="baseline" id="50i-wI-xNg"/>
+                <constraint firstItem="yRR-Go-xBl" firstAttribute="leading" secondItem="Sc0-RS-gSZ" secondAttribute="trailing" constant="8" symbolic="YES" id="5ft-MN-yfV"/>
+                <constraint firstItem="Sc0-RS-gSZ" firstAttribute="centerY" secondItem="yRR-Go-xBl" secondAttribute="centerY" id="61Y-Lu-Kho"/>
+                <constraint firstItem="We2-Qn-JpT" firstAttribute="leading" secondItem="Jr3-PE-D0P" secondAttribute="leading" id="7a0-cV-W0a"/>
+                <constraint firstItem="ntx-rd-WOY" firstAttribute="trailing" secondItem="sOj-xs-7ry" secondAttribute="trailing" id="7gA-26-pEW"/>
+                <constraint firstItem="v8K-pM-zGz" firstAttribute="leading" secondItem="ntx-rd-WOY" secondAttribute="leading" constant="18" id="8b4-xH-Lnn"/>
+                <constraint firstItem="7dm-Wx-rU1" firstAttribute="trailing" secondItem="sOj-xs-7ry" secondAttribute="trailing" id="8xW-hS-pdr"/>
+                <constraint firstItem="Q2n-XT-BLx" firstAttribute="leading" secondItem="B3H-bH-h9e" secondAttribute="trailing" constant="8" symbolic="YES" id="92I-xH-6xq"/>
+                <constraint firstItem="nW3-aJ-hsj" firstAttribute="width" secondItem="IV4-Lf-QYc" secondAttribute="width" priority="500" id="A0c-eJ-tPa"/>
+                <constraint firstItem="8XZ-dK-IOa" firstAttribute="leading" secondItem="yRR-Go-xBl" secondAttribute="trailing" constant="8" symbolic="YES" id="AAO-W0-SfP"/>
+                <constraint firstItem="sOj-xs-7ry" firstAttribute="top" secondItem="fCf-ev-44x" secondAttribute="top" constant="20" symbolic="YES" id="BM1-up-EGL"/>
+                <constraint firstItem="IHa-rF-hY6" firstAttribute="top" secondItem="f2v-6P-mk9" secondAttribute="bottom" constant="6" symbolic="YES" id="EdF-es-SCL"/>
+                <constraint firstItem="sOj-xs-7ry" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="8XZ-dK-IOa" secondAttribute="trailing" id="Eyi-yn-iGg"/>
+                <constraint firstItem="f2v-6P-mk9" firstAttribute="leading" secondItem="sOj-xs-7ry" secondAttribute="leading" id="GHG-Dj-aRe"/>
+                <constraint firstItem="Jr3-PE-D0P" firstAttribute="leading" secondItem="IV4-Lf-QYc" secondAttribute="trailing" id="Gx2-3l-bsh"/>
+                <constraint firstItem="UHz-eX-dnM" firstAttribute="leading" secondItem="sOj-xs-7ry" secondAttribute="leading" id="H7b-3p-7Hr"/>
+                <constraint firstItem="TpM-Ft-KD7" firstAttribute="top" secondItem="sOj-xs-7ry" secondAttribute="bottom" constant="10" symbolic="YES" id="I4l-SY-uZu"/>
+                <constraint firstItem="We2-Qn-JpT" firstAttribute="trailing" secondItem="Jr3-PE-D0P" secondAttribute="trailing" id="I8n-0a-9gJ"/>
+                <constraint firstItem="f2v-6P-mk9" firstAttribute="trailing" secondItem="sOj-xs-7ry" secondAttribute="trailing" id="Icq-Zd-BuI"/>
+                <constraint firstItem="sOj-xs-7ry" firstAttribute="leading" secondItem="Jr3-PE-D0P" secondAttribute="trailing" constant="8" symbolic="YES" id="JXZ-L0-mYz"/>
+                <constraint firstItem="sOj-xs-7ry" firstAttribute="trailing" secondItem="Sez-Fr-ktd" secondAttribute="trailing" id="JxV-Oj-jnX"/>
+                <constraint firstItem="nW3-aJ-hsj" firstAttribute="top" secondItem="fCf-ev-44x" secondAttribute="top" constant="20" symbolic="YES" id="KmV-FM-r2T"/>
+                <constraint firstItem="IHa-rF-hY6" firstAttribute="trailing" secondItem="sOj-xs-7ry" secondAttribute="trailing" id="Kmt-zC-Yz3"/>
+                <constraint firstItem="Sez-Fr-ktd" firstAttribute="top" secondItem="IHa-rF-hY6" secondAttribute="bottom" constant="8" symbolic="YES" id="Miu-2b-YF3"/>
+                <constraint firstItem="7dm-Wx-rU1" firstAttribute="top" secondItem="B3H-bH-h9e" secondAttribute="bottom" constant="8" symbolic="YES" id="R23-7E-5DL"/>
+                <constraint firstItem="TpM-Ft-KD7" firstAttribute="trailing" secondItem="sOj-xs-7ry" secondAttribute="trailing" id="RJX-ls-s2V"/>
+                <constraint firstItem="7dm-Wx-rU1" firstAttribute="leading" secondItem="sOj-xs-7ry" secondAttribute="leading" id="RYJ-1Q-52Y"/>
+                <constraint firstItem="sOj-xs-7ry" firstAttribute="baseline" secondItem="Jr3-PE-D0P" secondAttribute="baseline" id="Rpi-YJ-8iV"/>
+                <constraint firstItem="B3H-bH-h9e" firstAttribute="centerY" secondItem="Q2n-XT-BLx" secondAttribute="centerY" id="SFG-zj-rcj"/>
+                <constraint firstItem="41r-N3-XSB" firstAttribute="top" secondItem="TpM-Ft-KD7" secondAttribute="bottom" constant="8" symbolic="YES" id="TaE-4f-leF"/>
+                <constraint firstItem="6VO-T3-B5B" firstAttribute="leading" secondItem="UHz-eX-dnM" secondAttribute="trailing" constant="8" symbolic="YES" id="VsU-ea-iNG"/>
+                <constraint firstItem="DL3-Ob-o1w" firstAttribute="leading" secondItem="Jr3-PE-D0P" secondAttribute="leading" id="ZwU-Gw-3qi"/>
+                <constraint firstItem="B3H-bH-h9e" firstAttribute="top" secondItem="UHz-eX-dnM" secondAttribute="bottom" constant="10" symbolic="YES" id="cCq-ea-O2V"/>
+                <constraint firstItem="UHz-eX-dnM" firstAttribute="top" secondItem="TpM-Ft-KD7" secondAttribute="bottom" constant="8" symbolic="YES" id="dfe-hK-8us"/>
+                <constraint firstItem="Sc0-RS-gSZ" firstAttribute="top" secondItem="ntx-rd-WOY" secondAttribute="bottom" constant="8" symbolic="YES" id="eCj-Pv-WEY"/>
+                <constraint firstItem="ntx-rd-WOY" firstAttribute="top" secondItem="7dm-Wx-rU1" secondAttribute="bottom" constant="6" symbolic="YES" id="epl-wy-HqS"/>
+                <constraint firstItem="IV4-Lf-QYc" firstAttribute="leading" secondItem="fCf-ev-44x" secondAttribute="leading" constant="20" symbolic="YES" id="f2P-o0-DDw"/>
+                <constraint firstItem="41r-N3-XSB" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Q2n-XT-BLx" secondAttribute="trailing" constant="8" symbolic="YES" id="fvW-0Y-NBk"/>
+                <constraint firstItem="We2-Qn-JpT" firstAttribute="baseline" secondItem="TpM-Ft-KD7" secondAttribute="baseline" id="gpO-q9-k7U"/>
+                <constraint firstAttribute="trailing" secondItem="nW3-aJ-hsj" secondAttribute="trailing" constant="20" symbolic="YES" id="hfW-pZ-dY0"/>
+                <constraint firstItem="v8K-pM-zGz" firstAttribute="baseline" secondItem="Sc0-RS-gSZ" secondAttribute="baseline" id="kcW-1b-hKu"/>
+                <constraint firstItem="Sc0-RS-gSZ" firstAttribute="leading" secondItem="v8K-pM-zGz" secondAttribute="trailing" constant="8" symbolic="YES" id="keb-GP-gy9"/>
+                <constraint firstItem="v8K-pM-zGz" firstAttribute="leading" secondItem="fBy-mt-i6g" secondAttribute="leading" id="l5c-81-Vf7"/>
+                <constraint firstItem="v8K-pM-zGz" firstAttribute="leading" secondItem="Sez-Fr-ktd" secondAttribute="leading" id="lVl-GB-1yM"/>
+                <constraint firstItem="sOj-xs-7ry" firstAttribute="trailing" secondItem="fBy-mt-i6g" secondAttribute="trailing" id="nu9-ow-SKt"/>
+                <constraint firstItem="nW3-aJ-hsj" firstAttribute="leading" secondItem="sOj-xs-7ry" secondAttribute="trailing" id="oK2-69-cYb"/>
+                <constraint firstItem="IV4-Lf-QYc" firstAttribute="top" secondItem="fCf-ev-44x" secondAttribute="top" constant="20" symbolic="YES" id="pVo-As-Fwk"/>
+                <constraint firstItem="IHa-rF-hY6" firstAttribute="leading" secondItem="sOj-xs-7ry" secondAttribute="leading" id="pj0-jI-Qbq"/>
+                <constraint firstItem="aAh-lo-km8" firstAttribute="top" secondItem="Sez-Fr-ktd" secondAttribute="bottom" constant="8" symbolic="YES" id="pzw-p7-jlg"/>
+                <constraint firstItem="UHz-eX-dnM" firstAttribute="centerY" secondItem="6VO-T3-B5B" secondAttribute="centerY" id="qtP-dY-7Yf"/>
+                <constraint firstItem="8Db-be-zmp" firstAttribute="trailing" secondItem="Jr3-PE-D0P" secondAttribute="trailing" id="s7m-t2-zWn"/>
+                <constraint firstItem="aAh-lo-km8" firstAttribute="leading" secondItem="sOj-xs-7ry" secondAttribute="leading" id="sY2-jW-OJp"/>
+                <constraint firstItem="DL3-Ob-o1w" firstAttribute="trailing" secondItem="Jr3-PE-D0P" secondAttribute="trailing" id="saO-db-AJO"/>
+                <constraint firstItem="ntx-rd-WOY" firstAttribute="leading" secondItem="sOj-xs-7ry" secondAttribute="leading" id="tBz-4M-FL0"/>
+                <constraint firstItem="sOj-xs-7ry" firstAttribute="trailing" secondItem="41r-N3-XSB" secondAttribute="trailing" id="tei-cF-gtb"/>
+                <constraint firstItem="B3H-bH-h9e" firstAttribute="leading" secondItem="sOj-xs-7ry" secondAttribute="leading" id="unp-ih-Hxi"/>
+                <constraint firstItem="TpM-Ft-KD7" firstAttribute="leading" secondItem="sOj-xs-7ry" secondAttribute="leading" id="wKM-Tn-V3k"/>
+                <constraint firstItem="8Db-be-zmp" firstAttribute="baseline" secondItem="UHz-eX-dnM" secondAttribute="baseline" id="xAO-tS-7Ro"/>
+                <constraint firstItem="8Db-be-zmp" firstAttribute="leading" secondItem="Jr3-PE-D0P" secondAttribute="leading" id="xZ6-Cl-j9L"/>
+                <constraint firstItem="DL3-Ob-o1w" firstAttribute="baseline" secondItem="B3H-bH-h9e" secondAttribute="baseline" id="yWM-g6-Rp8"/>
+                <constraint firstItem="f2v-6P-mk9" firstAttribute="top" secondItem="Sc0-RS-gSZ" secondAttribute="bottom" constant="8" symbolic="YES" id="yeX-7x-Shv"/>
+                <constraint firstItem="41r-N3-XSB" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6VO-T3-B5B" secondAttribute="trailing" constant="8" symbolic="YES" id="yxN-it-MWA"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

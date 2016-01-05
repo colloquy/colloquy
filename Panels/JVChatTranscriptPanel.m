@@ -11,11 +11,10 @@
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
 #import "MVMenuButton.h"
-#import "NSPreferences.h"
-#import "JVAppearancePreferences.h"
+#import "CQMPreferencesWindowController.h"
+#import "JVAppearancePreferencesViewController.h"
 #import "JVMarkedScroller.h"
 #import "NSBundleAdditions.h"
-#import "NSURLAdditions.h"
 #import "NSDateAdditions.h"
 
 NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
@@ -188,7 +187,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (NSView *) view {
-	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVChatTranscript" owner:self];
+	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"JVChatTranscript" owner:self topLevelObjects:NULL];
 	return contents;
 }
 
@@ -249,7 +248,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	if( ! message || ! _searchQueryRegex ) return;
 	NSString *bodyAsPlainText = [message bodyAsPlainText];
 	NSColor *markColor = [NSColor orangeColor];
-	NSArray *matches = [_searchQueryRegex matchesInString:bodyAsPlainText options:NSMatchingReportCompletion range:NSMakeRange( 0, bodyAsPlainText.length )];
+	NSArray *matches = [_searchQueryRegex matchesInString:bodyAsPlainText options:0 range:NSMakeRange( 0, bodyAsPlainText.length )];
 	for (NSTextCheckingResult *match in matches) {
 		[display markScrollbarForMessage:message usingMarkIdentifier:@"quick find" andColor:markColor];
 		[display highlightString:[bodyAsPlainText substringWithRange:match.range] inMessage:message];
@@ -948,7 +947,10 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (IBAction) _openAppearancePreferences:(id) sender {
-	[[NSPreferences sharedPreferences] showPreferencesPanelForOwner:[JVAppearancePreferences sharedInstance]];
+	MVApplicationController *applicationController = (MVApplicationController *)NSApp.delegate;
+	[applicationController showPreferences:sender];
+	CQMPreferencesWindowController *preferencesWindowController = [applicationController preferencesWindowController];
+	[preferencesWindowController selectControllerWithIdentifier:preferencesWindowController.appearancePreferences.identifier];
 }
 
 - (BOOL) _usingSpecificEmoticons {

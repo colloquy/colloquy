@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQUserInfoRoomListViewController () <UIActionSheetDelegate>
+@interface CQUserInfoRoomListViewController () <CQActionSheetDelegate>
 @end
 
 @implementation CQUserInfoRoomListViewController
@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
 
 	if (!self.view.window.isFullscreen)
@@ -67,13 +67,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(__nullable id) sender {
 	NSString *roomName = _rooms[indexPath.row];
 
+#if !SYSTEM(TV)
 	if (action == @selector(copy:))
 		[UIPasteboard generalPasteboard].string = roomName;
+#endif
 }
 
 #pragma mark -
 
-- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
 
 	[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
@@ -90,7 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setRooms:(NSArray *) rooms {
+- (void) setRooms:(NSArray <NSString *> *) rooms {
 	_rooms = rooms;
 
 	[self.tableView reloadData];

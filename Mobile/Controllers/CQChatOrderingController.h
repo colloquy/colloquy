@@ -16,11 +16,11 @@ extern NSString *const CQChatOrderingControllerDidChangeOrderingNotification;
 @interface CQChatOrderingController : NSObject
 + (CQChatOrderingController *) defaultController;
 
-@property (nonatomic, readonly) NSArray *chatViewControllers;
+@property (nonatomic, readonly) NSArray <id <CQChatViewController>> *chatViewControllers;
 
 - (NSUInteger) indexOfViewController:(id <CQChatViewController>) controller;
 - (void) addViewController:(id <CQChatViewController>) controller;
-- (void) addViewControllers:(NSArray *) controllers;
+- (void) addViewControllers:(NSArray <id <CQChatViewController>> *) controllers;
 - (void) removeViewController:(id <CQChatViewController>) controller;
 
 - (BOOL) connectionHasAnyChatRooms:(MVChatConnection *) connection;
@@ -31,10 +31,10 @@ extern NSString *const CQChatOrderingControllerDidChangeOrderingNotification;
 - (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists;
 
 - (CQChatRoomController *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists;
-- (NSArray *) chatViewControllersKindOfClass:(Class) class;
-- (NSArray *) chatViewControllersOfClass:(Class) class;
+- (NSArray <id <CQChatViewController>> *) chatViewControllersKindOfClass:(Class) class;
+- (NSArray <id <CQChatViewController>> *) chatViewControllersOfClass:(Class) class;
 
-- (NSArray *) chatViewControllersForConnection:(MVChatConnection *) connection;
+- (NSArray <id <CQChatViewController>> *) chatViewControllersForConnection:(MVChatConnection *) connection;
 - (CQConsoleController *) chatViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists userInitiated:(BOOL) initiated;
 - (CQConsoleController *) consoleViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 

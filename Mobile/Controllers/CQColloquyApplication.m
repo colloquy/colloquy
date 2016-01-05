@@ -21,24 +21,22 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #define BrowserAlertTag 1
 
-static NSMutableArray *highlightWords;
+static NSMutableArray <NSString *> *highlightWords;
 
-@interface CQColloquyApplication () <UIApplicationDelegate, UIAlertViewDelegate, BITHockeyManagerDelegate>
+@interface CQColloquyApplication () <UIApplicationDelegate, CQAlertViewDelegate, BITHockeyManagerDelegate>
 @end
 
 @implementation CQColloquyApplication {
 	UIWindow *_mainWindow;
 	CQRootContainerViewController *_rootContainerViewController;
-	UIViewController *_overlappingPresentationViewController;
 	UIToolbar *_toolbar;
 	NSDate *_launchDate;
 	NSDate *_resumeDate;
 	NSString *_deviceToken;
 	NSUInteger _networkIndicatorStack;
-	UIActionSheet *_visibleActionSheet;
+	CQActionSheet *_visibleActionSheet;
 	NSNumber *_oldSwipeOrientationValue;
 	BOOL _userDefaultsChanged;
-	UIAlertController *_alertController;
 }
 
 + (CQColloquyApplication *) sharedApplication {
@@ -68,9 +66,9 @@ static NSMutableArray *highlightWords;
 	if (!schemes) {
 		schemes = [[NSMutableSet alloc] init];
 
-		NSArray *urlTypes = [NSBundle mainBundle].infoDictionary[@"CFBundleURLTypes"];
+		NSArray <NSString *> *urlTypes = [NSBundle mainBundle].infoDictionary[@"CFBundleURLTypes"];
 		for (NSDictionary *type in urlTypes) {
-			NSArray *schemesForType = type[@"CFBundleURLSchemes"];
+			NSArray <NSString *> *schemesForType = type[@"CFBundleURLSchemes"];
 			for (NSString *scheme in schemesForType)
 				[schemes addObject:scheme.lowercaseString];
 		}
@@ -79,7 +77,7 @@ static NSMutableArray *highlightWords;
 	return schemes;
 }
 
-- (NSArray *) highlightWords {
+- (NSArray <NSString *> *) highlightWords {
 	if (!highlightWords) {
 		highlightWords = [[NSMutableArray alloc] init];
 
@@ -291,8 +289,9 @@ static NSMutableArray *highlightWords;
 	NSString *fontName = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptFont"];
 	UIFont *font = [UIFont fontWithName:fontName size:12.];
 	UIFont *systemFont = [UIFont systemFontOfSize:12.];
-	if ((!font || [font.familyName isCaseInsensitiveEqualToString:systemFont.familyName]) && [[UIFont cq_availableRemoteFontNames] containsObject:fontName])
-		[UIFont cq_loadFontWithName:fontName withCompletionHandler:NULL];
+
+	if (!font || [font.familyName isCaseInsensitiveEqualToString:systemFont.familyName])
+		[UIFont cq_loadRemoteFontWithName:fontName completionHandler:NULL];
 
 	if ([[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"] == 600.)
 		[[NSUserDefaults standardUserDefaults] setDouble:300. forKey:@"CQMultitaskingTimeout"];
@@ -328,7 +327,9 @@ static NSMutableArray *highlightWords;
 	if ([[CQChatController defaultController] hasPendingChatController])
 		[[CQChatController defaultController] showPendingChatControllerAnimated:NO];
 
+#if !SYSTEM(TV)
 	[self handleNotificationWithUserInfo:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
+#endif
 
 	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];
 
@@ -336,13 +337,16 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) applicationWillEnterForeground:(UIApplication *) application {
+#if !SYSTEM(TV)
 	[self cancelAllLocalNotifications];
+#endif
 }
 
 - (void) applicationWillResignActive:(UIApplication *) application {
 	_oldSwipeOrientationValue = [[CQSettingsController settingsController] objectForKey:@"CQSplitSwipeOrientations"];
 }
 
+#if !SYSTEM(TV)
 - (void) application:(UIApplication *) application didReceiveLocalNotification:(UILocalNotification *) notification {
 	[self handleNotificationWithUserInfo:notification.userInfo];
 }
@@ -385,6 +389,7 @@ static NSMutableArray *highlightWords;
 - (void) application:(UIApplication *) application didFailToRegisterForRemoteNotificationsWithError:(NSError *) error {
 	NSLog(@"Error during remote notification registration. Error: %@", error);
 }
+#endif
 
 - (BOOL) application:(UIApplication *) application handleOpenURL:(NSURL *) url {
 	if ([url.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
@@ -397,90 +402,31 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) applicationWillTerminate:(UIApplication *) application {
+#if !SYSTEM(TV)
 	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 
 	self.appIconOptions = CQAppIconOptionConnect;
+#endif
 
 	[self submitRunTime];
 }
 
 #pragma mark -
 
-- (void) showActionSheet:(UIActionSheet *) sheet {
+- (void) showActionSheet:(CQActionSheet *) sheet {
 	[self showActionSheet:sheet forSender:nil animated:YES];
 }
 
-- (void) showActionSheet:(UIActionSheet *) sheet fromPoint:(CGPoint) point {
+- (void) showActionSheet:(CQActionSheet *) sheet fromPoint:(CGPoint) point {
 	[self showActionSheet:sheet forSender:nil orFromPoint:point animated:YES];
 }
 
-- (void) showActionSheet:(UIActionSheet *) sheet forSender:(__nullable id) sender animated:(BOOL) animated {
+- (void) showActionSheet:(CQActionSheet *) sheet forSender:(__nullable id) sender animated:(BOOL) animated {
 	[self showActionSheet:sheet forSender:sender orFromPoint:CGPointZero animated:animated];
 }
 
-- (void) showActionSheet:(UIActionSheet *) sheet forSender:(__nullable id) sender orFromPoint:(CGPoint) point animated:(BOOL) animated {
-	[_overlappingPresentationViewController.view removeFromSuperview];
-	_overlappingPresentationViewController = nil;
-	[_alertController dismissViewControllerAnimated:NO completion:nil];
-	_alertController = nil;
-
-	_alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-	if ([_alertController.popoverPresentationController respondsToSelector:@selector(canOverlapSourceViewRect)])
-		_alertController.popoverPresentationController.canOverlapSourceViewRect = YES;
-
-	// The overlapping view is needed to work around the following iOS 8(.1-only?) bug on iPad:
-	// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
-	// present an action sheet from a point on screen that results in the popover rect overlapping the main view,
-	// the z-index will be incorrect and the action sheet will be clipped by the main view.
-	_overlappingPresentationViewController = [[UIViewController alloc] init];
-	_overlappingPresentationViewController.view.backgroundColor = [UIColor clearColor];
-
-	if ([sender isKindOfClass:[UIView class]] && [UIDevice currentDevice].isPadModel && !_mainWindow.isFullscreen) {
-		_overlappingPresentationViewController.view.frame = [sender bounds];
-
-		[sender addSubview:_overlappingPresentationViewController.view];
-
-		_alertController.popoverPresentationController.sourceRect = [sender bounds];
-		_alertController.popoverPresentationController.sourceView = sender;
-	} else {
-		_overlappingPresentationViewController.view.frame = _mainWindow.frame;
-
-		[_mainWindow addSubview:_overlappingPresentationViewController.view];
-
-		CGRect rect = CGRectZero;
-		rect.size = CGSizeMake(1., 1.);
-		rect.origin = CGPointEqualToPoint(point, CGPointZero) ? _mainWindow.center : point;
-
-		_alertController.popoverPresentationController.sourceRect = rect;
-		_alertController.popoverPresentationController.sourceView = _overlappingPresentationViewController.view;
-	}
-
-	for (NSInteger i = 0; i < sheet.numberOfButtons; i++) {
-		NSString *title = [sheet buttonTitleAtIndex:i];
-		UIAlertActionStyle style = UIAlertActionStyleDefault;
-		if (i == sheet.cancelButtonIndex) style = UIAlertActionStyleCancel;
-		else if (i == sheet.destructiveButtonIndex) style = UIAlertActionStyleDestructive;
-
-		__weak __typeof__((self)) weakSelf = self;
-
-		UIAlertAction *action = [UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *selectedAction) {
-			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
-
-			[strongSelf->_alertController removeFromParentViewController];
-			[strongSelf->_overlappingPresentationViewController.view removeFromSuperview];
-			strongSelf->_alertController = nil;
-			strongSelf->_overlappingPresentationViewController = nil;
-
-			[sheet.delegate actionSheet:sheet clickedButtonAtIndex:i];
-		}];
-
-		[_alertController addAction:action];
-
-		if (i == sheet.cancelButtonIndex && [_alertController respondsToSelector:@selector(setPreferredAction:)])
-			_alertController.preferredAction = action;
-	}
-
-	[_overlappingPresentationViewController presentViewController:_alertController animated:YES completion:nil];
+- (void) showActionSheet:(CQActionSheet *) sheet forSender:(__nullable id) sender orFromPoint:(CGPoint) point animated:(BOOL) animated {
+	[sheet showforSender:sender orFromPoint:point animated:animated];
 }
 
 #pragma mark -
@@ -644,7 +590,7 @@ static NSMutableArray *highlightWords;
 
 #pragma mark -
 
-- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (alertView.tag != BrowserAlertTag || alertView.cancelButtonIndex == buttonIndex)
 		return;
 	[super openURL:[alertView associatedObjectForKey:@"userInfo"]];
@@ -666,6 +612,7 @@ static NSMutableArray *highlightWords;
 
 #pragma mark -
 
+#if !SYSTEM(TV)
 - (void) updateAppShortcuts {
 	CQAppIconOptions options = CQAppIconOptionNone;
 
@@ -685,7 +632,7 @@ static NSMutableArray *highlightWords;
 
 	_appIconOptions = appIconOptions;
 
-	NSMutableArray *options = [NSMutableArray array];
+	NSMutableArray <UIMutableApplicationShortcutItem *> *options = [NSMutableArray array];
 	if ((appIconOptions & CQAppIconOptionConnect) == CQAppIconOptionConnect)
 		[options addObject:[[UIMutableApplicationShortcutItem alloc] initWithType:@"CQAppShortcutConnect" localizedTitle:NSLocalizedString(@"Connect", @"Connect")]];
 
@@ -756,6 +703,7 @@ static NSMutableArray *highlightWords;
 	}
 #endif
 }
+#endif
 @end
 
 NS_ASSUME_NONNULL_END

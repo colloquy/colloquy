@@ -86,7 +86,7 @@
 #pragma mark -
 
 - (NSView *) view {
-	if( ! subview ) [NSBundle loadNibNamed:@"JVChatViewCriterion" owner:self];
+	if( ! subview ) [[NSBundle mainBundle] loadNibNamed:@"JVChatViewCriterion" owner:self topLevelObjects:NULL];
 	return subview;
 }
 
@@ -243,7 +243,7 @@
 		JVChatViewCriterionOperation oper = [self operation];
 		if( oper == JVChatViewTextMatchCriterionOperation || oper == JVChatViewTextDoesNotMatchCriterionOperation ) {
 			NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[self query] options:( ignoreCase ? NSRegularExpressionCaseInsensitive : 0 ) error:nil];
-			NSTextCheckingResult *result = [regex firstMatchInString:value options:NSMatchingReportCompletion range:NSMakeRange( 0, value.length )];
+			NSTextCheckingResult *result = [regex firstMatchInString:value options:0 range:NSMakeRange( 0, value.length )];
 			if( result ) match = YES;
 			if( oper == JVChatViewTextDoesNotMatchCriterionOperation ) match = ! match;
 		} else if( oper >= 3 && oper <= 6 ) {

@@ -69,7 +69,7 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 
 @property (nonatomic, readonly) MVChatUser *user;
 
-@property (nonatomic, readonly) NSArray *recentMessages;
+@property (nonatomic, readonly) NSArray <NSDictionary *> *recentMessages;
 
 @property (nonatomic, copy) NSDate *mostRecentIncomingMessageTimestamp;
 @property (nonatomic, copy) NSDate *mostRecentOutgoingMessageTimestamp;

@@ -40,7 +40,7 @@
 #pragma mark -
 
 - (NSView *) view {
-	if( ! _nibLoaded ) _nibLoaded = [NSBundle loadNibNamed:@"JVConnectionInspector" owner:self];
+	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"JVConnectionInspector" owner:self topLevelObjects:NULL];
 	return view;
 }
 

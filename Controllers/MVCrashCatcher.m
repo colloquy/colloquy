@@ -34,7 +34,7 @@
 		}
 	}
 
-	if( logPath.length ) [NSBundle loadNibNamed:@"MVCrashCatcher" owner:self];
+	if( logPath.length ) [[NSBundle mainBundle] loadNibNamed:@"MVCrashCatcher" owner:self topLevelObjects:NULL];
 	else return nil;
 
 	return self;

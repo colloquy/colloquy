@@ -3,7 +3,7 @@
 @class CQChatUserListViewController;
 
 typedef NS_ENUM(NSInteger, CQChatRoomBatchType) {
-	CQBatchTypeJoins = CQBatchTypeBuffer + 1,
+	CQBatchTypeJoins = 1000,
 	CQBatchTypeParts
 };
 
@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CQChatRoomController : CQDirectChatController {
 	@protected
-	NSMutableArray *_orderedMembers;
+	NSMutableArray <MVChatUser *> *_orderedMembers;
 	BOOL _showingMembersInModalController;
 	BOOL _membersNeedSorted;
 	BOOL _banListSynced;

@@ -19,7 +19,7 @@ extern NSString *NSChatCTCPTwoFormatType;
 - (NSAttributedString *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set;
 
 - (NSAttributedString *) attributedSubstringFromIndex:(NSUInteger) index;
-- (NSArray *) cq_componentsSeparatedByCharactersInSet:(NSCharacterSet *) characterSet;
+- (NSArray <NSAttributedString *> *) cq_componentsSeparatedByCharactersInSet:(NSCharacterSet *) characterSet;
 - (NSAttributedString *) cq_stringByTrimmingCharactersInSet:(NSCharacterSet *) characterSet;
 @end
 

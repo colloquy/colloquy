@@ -19,6 +19,16 @@ static JVChatController *sharedInstance = nil;
 static NSMenu *smartTranscriptMenu = nil;
 
 @interface JVChatController (JVChatControllerPrivate)
+- (void) _joinedRoom:(NSNotification *) notification;
+- (void) _invitedToRoom:(NSNotification *) notification;
+- (void) _invitedToDirectChat:(NSNotification *) notification;
+- (void) _gotBeep:(NSNotification *) notification;
+- (void) _gotDirectChatMessage:(NSNotification *) notification;
+- (void) _gotRoomMessage:(NSNotification *) notification;
+- (void) _gotPrivateMessage:(NSNotification *) notification;
+- (void) _errorOccurred:(NSNotification *) notification;
+- (IBAction) _checkMemos:(id) sender;
+- (IBAction) _newSmartTranscript:(id) sender;
 - (void) _reloadPreferedWindowRuleSets;
 @end
 

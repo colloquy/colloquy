@@ -1,18 +1,21 @@
+#import <UIKit/UIKit.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^CQRemoteFontCompletionHandler)(NSString *, UIFont *__nullable); // font is nil on failure
 
-extern NSString *CQRemoteFontCourierFontLoadingDidSucceedNotification;
-extern NSString *CQRemoteFontCourierFontLoadingDidFailNotification;
+extern NSString *const CQRemoteFontCourierDidLoadFontListNotification;
+	extern NSString *const CQRemoteFontCourierFontListKey;
 
-extern NSString *CQRemoteFontCourierFontLoadingFontNameKey;
-extern NSString *CQRemoteFontCourierFontLoadingFontKey;
+extern NSString *const CQRemoteFontCourierFontLoadingDidSucceedNotification;
+extern NSString *const CQRemoteFontCourierFontLoadingDidFailNotification;
+	extern NSString *const CQRemoteFontCourierFontLoadingFontNameKey;
+	extern NSString *const CQRemoteFontCourierFontLoadingFontKey;
 
 @interface UIFont (Additions)
-+ (NSArray *) cq_availableRemoteFontNames;
-+ (void) cq_loadAllAvailableFonts; // You probably don't want to use this unless you're debugging/testing something
++ (void) cq_availableRemoteFontNames:(void (^)(NSArray *fontNames)) completion; // usually synchronous. might not be if the cache expires (and needs updating)
 
-+ (void) cq_loadFontWithName:(NSString *) fontName withCompletionHandler:(__nullable CQRemoteFontCompletionHandler)completionHandler;
++ (void) cq_loadRemoteFontWithName:(NSString *) fontName completionHandler:(CQRemoteFontCompletionHandler __nullable) completionHandler;
 @end
 
 NS_ASSUME_NONNULL_END

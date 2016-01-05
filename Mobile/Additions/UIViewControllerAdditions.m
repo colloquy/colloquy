@@ -8,6 +8,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation UIViewController (UIViewControllerAdditions)
 - (void) resizeForViewInPopoverUsingTableView:(UITableView *) tableView {
+#if !SYSTEM(TV)
 	if (![[UIDevice currentDevice] isPadModel])
 		return;
 
@@ -32,8 +33,10 @@ NS_ASSUME_NONNULL_BEGIN
 	} else height = CQMinimumPopoverHeight;
 
 	self.preferredContentSize = CGSizeMake(width, height);
+#endif
 }
 
+#if !SYSTEM(TV)
 - (BOOL) shouldAutorotate {
 	return YES;
 }
@@ -52,6 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	return supportedOrientations;
 }
+#endif
 @end
 
 NS_ASSUME_NONNULL_END

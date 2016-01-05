@@ -63,7 +63,7 @@
 
 - (NSView *) view {
 	if( ! _nibLoaded ) {
-		_nibLoaded = [[NSBundle bundleForClass:[self class]] loadNibFile:@"F-ScriptConsole" externalNameTable:@{@"NSOwner": self} withZone:[self zone]];
+		_nibLoaded = [[NSBundle bundleForClass:[self class]] loadNibNamed:@"F-ScriptConsole" owner:self topLevelObjects:NULL];
 	}
 
 	return contents;

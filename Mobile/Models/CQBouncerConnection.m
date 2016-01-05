@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSString *_password;
 	NSString *_nickname;
 	NSString *_nicknamePassword;
-	NSArray *_alternateNicknames;
+	NSArray <NSString *> *_alternateNicknames;
 	NSStringEncoding _encoding;
 	NSTimeInterval _connectedTime;
 	NSError *_error;
@@ -231,7 +231,7 @@ end:
 	_connectedTime = 0.0;
 }
 
-- (void) _handle801WithParameters:(NSArray *) parameters {
+- (void) _handle801WithParameters:(NSArray <NSString *> *) parameters {
 	if (parameters.count < 3) {
 		[self disconnect];
 		return;
@@ -245,7 +245,7 @@ end:
 	_secure = (parameters.count > 3 ? [parameters[3] isCaseInsensitiveEqualToString:@"SSL"] : NO);
 }
 
-- (void) _handle802WithParameters:(NSArray *) parameters {
+- (void) _handle802WithParameters:(NSArray <NSString *> *) parameters {
 	if (parameters.count < 2) {
 		[self disconnect];
 		return;
@@ -255,7 +255,7 @@ end:
 	MVSafeRetainAssign( _realName, parameters[1] );
 }
 
-- (void) _handle803WithParameters:(NSArray *) parameters {
+- (void) _handle803WithParameters:(NSArray <NSString *> *) parameters {
 	if (parameters.count < 1) {
 		[self disconnect];
 		return;
@@ -264,7 +264,7 @@ end:
 	MVSafeRetainAssign( _password, parameters[0] );
 }
 
-- (void) _handle804WithParameters:(NSArray *) parameters {
+- (void) _handle804WithParameters:(NSArray <NSString *> *) parameters {
 	if (!parameters.count) {
 		[self disconnect];
 		return;
@@ -274,7 +274,7 @@ end:
 	MVSafeRetainAssign( _nicknamePassword, (parameters.count > 1 ? parameters[1] : nil) );
 }
 
-- (void) _handle805WithParameters:(NSArray *) parameters {
+- (void) _handle805WithParameters:(NSArray <NSString *> *) parameters {
 	if (!parameters.count) {
 		[self disconnect];
 		return;
@@ -283,7 +283,7 @@ end:
 	MVSafeRetainAssign( _alternateNicknames, parameters );
 }
 
-- (void) _handle806WithParameters:(NSArray *) parameters {
+- (void) _handle806WithParameters:(NSArray <NSString *> *) parameters {
 	if (!parameters.count) {
 		[self disconnect];
 		return;
@@ -292,7 +292,7 @@ end:
 	_encoding = [parameters[0] integerValue];
 }
 
-- (void) _handle807WithParameters:(NSArray *) parameters {
+- (void) _handle807WithParameters:(NSArray <NSString *> *) parameters {
 	if (!parameters.count) {
 		[self disconnect];
 		return;
@@ -301,7 +301,7 @@ end:
 	_connectedTime = [parameters[0] doubleValue];
 }
 
-- (void) _handle810WithParameters:(NSArray *) parameters {
+- (void) _handle810WithParameters:(NSArray <NSString *> *) parameters {
 	__strong __typeof__((_delegate)) delegate = _delegate;
 
 	if ([delegate respondsToSelector:@selector(bouncerConnection:didRecieveConnectionInfo:)]) {
@@ -338,7 +338,7 @@ end:
 	[self _resetState];
 }
 
-- (void) _handle811WithParameters:(NSArray *) parameters {
+- (void) _handle811WithParameters:(NSArray <NSString *> *) parameters {
 	__strong __typeof__((_delegate)) delegate = _delegate;
 	if ([delegate respondsToSelector:@selector(bouncerConnectionDidFinishConnectionList:)])
 		[delegate bouncerConnectionDidFinishConnectionList:self];

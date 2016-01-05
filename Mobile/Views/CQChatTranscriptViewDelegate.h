@@ -33,16 +33,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSUInteger fontSize;
 @property (nonatomic, assign) CQTimestampPosition timestampPosition;
 @property (nonatomic, assign) BOOL allowSingleSwipeGesture;
+@property (nonatomic, assign) BOOL scrollbackLimit;
 
 @property (nonatomic, readonly) BOOL readyForDisplay;
 @property (nonatomic, readonly) UIScrollView *scrollView;
 
 @property (nonatomic, readonly) NSData *PDFRepresentation;
 
-- (void) stringByEvaluatingJavaScriptFromString:(NSString *) script completionHandler:(void (^__nullable)(NSString *))completionHandler;
-
-- (void) addPreviousSessionComponents:(NSArray *) components;
-- (void) addComponents:(NSArray *) components animated:(BOOL) animated;
+- (void) addPreviousSessionComponents:(NSArray <NSDictionary *> *) components;
+- (void) addComponents:(NSArray <NSDictionary *> *) components animated:(BOOL) animated;
 - (void) addComponent:(NSDictionary *) component animated:(BOOL) animated;
 
 - (void) noteNicknameChangedFrom:(NSString *) oldNickname to:(NSString *) newNickname;

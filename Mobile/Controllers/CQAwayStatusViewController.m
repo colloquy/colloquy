@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQPreferencesListViewController (Private) <CQPreferencesTextEditViewDelegate, UIActionSheetDelegate>
+@interface CQPreferencesListViewController (Private) <CQPreferencesTextEditViewDelegate, CQActionSheetDelegate>
 - (void) editItemAtIndex:(NSUInteger) index;
 @end
 
@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	self.title = NSLocalizedString(@"Create Away Status…", @"Create Away Status title");
 
-	NSMutableArray *awayStatuses = [[[CQSettingsController settingsController] arrayForKey:@"CQAwayStatuses"] mutableCopy];
+	NSMutableArray <NSString *> *awayStatuses = [[[CQSettingsController settingsController] arrayForKey:@"CQAwayStatuses"] mutableCopy];
 	if (!awayStatuses)
 		awayStatuses = [[NSMutableArray alloc] init];
 
@@ -108,7 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if ([self statusIsDefaultAwayStatus:cell.textLabel.text])
 		return;
 
-	UIActionSheet *awayStatusActionSheet = [[UIActionSheet alloc] init];
+	CQActionSheet *awayStatusActionSheet = [[CQActionSheet alloc] init];
 	awayStatusActionSheet.delegate = self;
 	[awayStatusActionSheet associateObject:cell forKey:@"userInfo"];
 
@@ -153,7 +153,7 @@ NS_ASSUME_NONNULL_BEGIN
 		if (!self.items.count)
 			return;
 
-		_connection.awayStatusMessage = self.items[indexPath.row];
+		_connection.awayStatusMessage = [[NSAttributedString alloc] initWithString:self.items[indexPath.row]];
 
 		[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 	}
@@ -181,7 +181,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+- (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.destructiveButtonIndex)
 		return;
 	
@@ -215,7 +215,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) updateAwayStatuses:(CQPreferencesListViewController *) sender {
-	NSMutableArray *awayStatuses = [[NSMutableArray alloc] initWithCapacity:sender.items.count];
+	NSMutableArray <NSString *> *awayStatuses = [[NSMutableArray alloc] initWithCapacity:sender.items.count];
 
 	for (__strong NSString *awayStatus in sender.items) {
 		awayStatus = [awayStatus stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];

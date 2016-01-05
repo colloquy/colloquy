@@ -1,0 +1,45 @@
+
+/* Class = "NSMenuItem"; title = "Folder For Each Server"; ObjectID = "2QZ-yS-hqI"; */
+"2QZ-yS-hqI.title" = "Afzonderlijke Map Voor Elke Server";
+
+/* Class = "NSMenuItem"; title = "Multiple Sessions in One File"; ObjectID = "6z0-W1-z1K"; */
+"6z0-W1-z1K.title" = "Meerdere Sessies per Bestand";
+
+/* Class = "NSMenuItem"; title = "Same Folder"; ObjectID = "ApN-wZ-phP"; */
+"ApN-wZ-phP.title" = "Dezelfde Map";
+
+/* Class = "NSButtonCell"; title = "Log Private Chat sessions"; ObjectID = "D2f-TO-UZg"; */
+"D2f-TO-UZg.title" = "Log Privé Chat sessies";
+
+/* Class = "NSTextFieldCell"; title = "Transcripts Folder:"; ObjectID = "DSw-dm-Icu"; */
+"DSw-dm-Icu.title" = "Locatie Transcripten:";
+
+/* Class = "NSButtonCell"; title = "Log Chat Room sessions"; ObjectID = "NwH-Dh-Sbn"; */
+"NwH-Dh-Sbn.title" = "Log Chat Kanaal sessies";
+
+/* Class = "NSTextFieldCell"; title = "Folder Organization:"; ObjectID = "OD1-jj-0et"; */
+"OD1-jj-0et.title" = "Organisatie van Mappen:";
+
+/* Class = "NSMenuItem"; title = "Folder For Each Chat under Server"; ObjectID = "Se5-az-yMX"; */
+"Se5-az-yMX.title" = "Afzonderlijke Map Voor Elke Chat per Server";
+
+/* Class = "NSMenuItem"; title = "Other…"; ObjectID = "U9k-NY-Sp1"; */
+"U9k-NY-Sp1.title" = "Andere…";
+
+/* Class = "NSMenuItem"; title = "Folder For Each Chat and Server"; ObjectID = "cjT-zd-FvA"; */
+"cjT-zd-FvA.title" = "Afzonderlijke Map Voor Elke Chat en Server";
+
+/* Class = "NSTextFieldCell"; title = "Session Handling:"; ObjectID = "eSk-IS-AQA"; */
+"eSk-IS-AQA.title" = "Organisatie van Sessies:";
+
+/* Class = "NSTextFieldCell"; title = "Automatically:"; ObjectID = "kTL-SI-EfW"; */
+"kTL-SI-EfW.title" = "Automatisch:";
+
+/* Class = "NSMenuItem"; title = "One File Per Session"; ObjectID = "mPP-iU-L0F"; */
+"mPP-iU-L0F.title" = "Een Bestand Per Sessie";
+
+/* Class = "NSMenuItem"; title = "One File Per Session Day"; ObjectID = "zL5-p9-oz2"; */
+"zL5-p9-oz2.title" = "Een bestand per Sessiedag";
+
+/* Class = "NSButtonCell"; title = "Human-readable file formatting"; ObjectID = "zr8-mI-XtE"; */
+"zr8-mI-XtE.title" = "Leesbaar formaat hanteren";

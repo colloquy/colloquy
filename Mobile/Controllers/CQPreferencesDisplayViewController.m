@@ -5,7 +5,9 @@
 #import "CQPreferencesSwitchCell.h"
 #import "CQPreferencesTextCell.h"
 
+#if !SYSTEM(TV)
 #import <MessageUI/MessageUI.h>
+#endif
 #import <objc/runtime.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -58,7 +60,10 @@ static NSString *const CQPSListTypeAudio = @"Audio";
 static NSString *const CQPSListTypeImage = @"Image";
 static NSString *const CQPSListTypeFont = @"Font";
 
-@interface CQPreferencesDisplayViewController () <MFMailComposeViewControllerDelegate>
+@interface CQPreferencesDisplayViewController ()
+#if !SYSTEM(TV)
+<MFMailComposeViewControllerDelegate>
+#endif
 @end
 
 @implementation CQPreferencesDisplayViewController {
@@ -166,7 +171,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 				[strongPreferences addObject:workingSection];
 			}
 
-			NSArray *supportedInterfaceIdioms = object[CQPSSupportedUserInterfaceIdioms];
+			NSArray <NSString *> *supportedInterfaceIdioms = object[CQPSSupportedUserInterfaceIdioms];
 			BOOL supportsCurrentInterfaceIdiom = YES;
 			if (supportedInterfaceIdioms) {
 				supportsCurrentInterfaceIdiom = NO;
@@ -373,12 +378,14 @@ static NSString *const CQPSListTypeFont = @"Font";
 		if ([rowDictionary[CQPSAction] isEqualToString:CQPSLink])
 			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:address]];
 		else if ([rowDictionary[CQPSAction] isEqualToString:CQPSEmail]) {
+#if !SYSTEM(TV)
 			MFMailComposeViewController *mailComposeViewController = [[MFMailComposeViewController alloc] init];
 			mailComposeViewController.mailComposeDelegate = self;
 			mailComposeViewController.toRecipients = @[address];
 			mailComposeViewController.subject = NSLocalizedString(@"Mobile Colloquy Support", @"Mobile Colloquy Support subject header");
 
 			[self.navigationController presentViewController:mailComposeViewController animated:[UIView areAnimationsEnabled] completion:NULL];
+#endif
 		}
 
 		[tableView deselectRowAtIndexPath:indexPath animated:[UIView areAnimationsEnabled]];
@@ -395,9 +402,11 @@ static NSString *const CQPSListTypeFont = @"Font";
 	}
 }
 
+#if !SYSTEM(TV)
 - (void) mailComposeController:(MFMailComposeViewController *) controller didFinishWithResult:(MFMailComposeResult) result error:(NSError *__nullable) error {
 	[controller dismissViewControllerAnimated:[UIView areAnimationsEnabled] completion:NULL];
 }
+#endif
 @end
 
 NS_ASSUME_NONNULL_END

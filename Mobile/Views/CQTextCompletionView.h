@@ -3,7 +3,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CQTextCompletionView : UIView
-@property (nonatomic, copy) NSArray *completions;
+@property (nonatomic, copy) NSArray <NSString *> *completions;
 @property (nonatomic) NSUInteger selectedCompletion;
 @property (nonatomic, getter=isCloseSelected) BOOL closeSelected;
 

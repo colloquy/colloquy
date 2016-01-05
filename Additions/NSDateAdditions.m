@@ -80,7 +80,7 @@ NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFormat) {
 		@(31536000U): NSLocalizedString(@"years", "Plural years")
 	};
 
-	NSArray *breaks = @[ @(1U), @(60U), @(3600U), @(86400U), @(604800U), @(2628000U), @(31536000U) ];
+	NSArray <NSNumber *> *breaks = @[ @(1U), @(60U), @(3600U), @(86400U), @(604800U), @(2628000U), @(31536000U) ];
 
 	NSTimeInterval seconds = ABS(interval);
 

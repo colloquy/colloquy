@@ -1,0 +1,45 @@
+
+/* Class = "NSMenuItem"; title = "Folder For Each Server"; ObjectID = "2QZ-yS-hqI"; */
+"2QZ-yS-hqI.title" = "Carpeta Para Cada Servidor";
+
+/* Class = "NSMenuItem"; title = "Multiple Sessions in One File"; ObjectID = "6z0-W1-z1K"; */
+"6z0-W1-z1K.title" = "Múltiples Sesiones en Un Fichero";
+
+/* Class = "NSMenuItem"; title = "Same Folder"; ObjectID = "ApN-wZ-phP"; */
+"ApN-wZ-phP.title" = "Misma carpeta";
+
+/* Class = "NSButtonCell"; title = "Log Private Chat sessions"; ObjectID = "D2f-TO-UZg"; */
+"D2f-TO-UZg.title" = "Monitorizar sesiones de mensajes privados";
+
+/* Class = "NSTextFieldCell"; title = "Transcripts Folder:"; ObjectID = "DSw-dm-Icu"; */
+"DSw-dm-Icu.title" = "Carpeta de Transcripciones:";
+
+/* Class = "NSButtonCell"; title = "Log Chat Room sessions"; ObjectID = "NwH-Dh-Sbn"; */
+"NwH-Dh-Sbn.title" = "Monitorizar sesiones de canales de chat";
+
+/* Class = "NSTextFieldCell"; title = "Folder Organization:"; ObjectID = "OD1-jj-0et"; */
+"OD1-jj-0et.title" = "Organización de carpetas:";
+
+/* Class = "NSMenuItem"; title = "Folder For Each Chat under Server"; ObjectID = "Se5-az-yMX"; */
+"Se5-az-yMX.title" = "Carpeta Para Cada Charla bajo Servidor";
+
+/* Class = "NSMenuItem"; title = "Other…"; ObjectID = "U9k-NY-Sp1"; */
+"U9k-NY-Sp1.title" = "Otros…";
+
+/* Class = "NSMenuItem"; title = "Folder For Each Chat and Server"; ObjectID = "cjT-zd-FvA"; */
+"cjT-zd-FvA.title" = "Carpeta Para Cada Charla y Servidor";
+
+/* Class = "NSTextFieldCell"; title = "Session Handling:"; ObjectID = "eSk-IS-AQA"; */
+"eSk-IS-AQA.title" = "Manejo de Sesión:";
+
+/* Class = "NSTextFieldCell"; title = "Automatically:"; ObjectID = "kTL-SI-EfW"; */
+"kTL-SI-EfW.title" = "Automáticamente:";
+
+/* Class = "NSMenuItem"; title = "One File Per Session"; ObjectID = "mPP-iU-L0F"; */
+"mPP-iU-L0F.title" = "Un Fichero Por Sesión";
+
+/* Class = "NSMenuItem"; title = "One File Per Session Day"; ObjectID = "zL5-p9-oz2"; */
+"zL5-p9-oz2.title" = "Un archivo por día de sesión";
+
+/* Class = "NSButtonCell"; title = "Human-readable file formatting"; ObjectID = "zr8-mI-XtE"; */
+"zr8-mI-XtE.title" = "Formateo de archivo humanamente-legible";
