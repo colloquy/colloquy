@@ -71,7 +71,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 }
 
 - (oneway void) release {
-	int retainCount = [self retainCount] - 1;
+	NSUInteger retainCount = [self retainCount] - 1;
 	if( retainCount == 1 ) {
 		id temp = _scriptInterpreter;
 		_scriptInterpreter = nil;
@@ -158,7 +158,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 		if( ! arguments ) arguments = [NSArray arrayWithObject:[NSNull null]];
 		if( (unsigned)[(Block *)object argumentCount] > [arguments count] ) {
 			NSMutableArray *newArgs = [[arguments mutableCopy] autorelease];
-			for( unsigned i = [arguments count]; i < (unsigned)[(Block *)object argumentCount]; i++ )
+			for( NSUInteger i = [arguments count]; i < (NSUInteger)[(Block *)object argumentCount]; i++ )
 				[newArgs addObject:[NSNull null]];
 			arguments = newArgs;
 		}
@@ -178,7 +178,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 				if( stack ) locationError = [NSString stringWithFormat:@" The error occured near character %d inside the block.", [stack firstCharIndex]];
 
 				_errorShown = YES;
-				int result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"F-Script Plugin Error", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error title" ), NSLocalizedStringFromTableInBundle( @"The F-Script plugin \"%@\" had an error while calling the \"%@\" block.%@\n\n%@", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error message" ), nil, NSLocalizedStringFromTableInBundle( @"Inspect", nil, [NSBundle bundleForClass:[self class]], "inspect button title" ), NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], blockName, locationError, [exception reason] );
+				NSInteger result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"F-Script Plugin Error", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error title" ), NSLocalizedStringFromTableInBundle( @"The F-Script plugin \"%@\" had an error while calling the \"%@\" block.%@\n\n%@", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error message" ), nil, NSLocalizedStringFromTableInBundle( @"Inspect", nil, [NSBundle bundleForClass:[self class]], "inspect button title" ), NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], blockName, locationError, [exception reason] );
 				_errorShown = NO;
 
 				if( result == NSCancelButton ) {
