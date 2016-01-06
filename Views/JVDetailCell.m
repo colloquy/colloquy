@@ -163,7 +163,7 @@
 	if( ! [self isEnabled] && [self image] ) {
 		NSImage *fadedImage = [[NSImage alloc] initWithSize:[[self image] size]];
 		[fadedImage lockFocus];
-		[[self image] cq_dissolveToPoint:NSMakePoint( 0., 0. ) fraction:0.5];
+		[[self image] drawAtPoint:NSZeroPoint fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:0.5];
 		[fadedImage unlockFocus];
 		curImage = [self image]; // curImage is autoreleased 9 lines down, analyzer is just confused by the ifs
 		[self setImage:fadedImage];
@@ -303,7 +303,8 @@
 	}
 
 	if( _statusImage && NSHeight( cellFrame ) >= [_statusImage size].height ) {
-		  [_statusImage cq_compositeToPoint:NSMakePoint( NSMaxX( cellFrame ) - statusWidth, NSMaxY( cellFrame ) - ( ( NSHeight( cellFrame ) / 2 ) - ( [_statusImage size].height / 2 ) ) ) operation:NSCompositeSourceAtop fraction:( [self isEnabled] ? 1. : 0.5)];
+		NSPoint point = NSMakePoint( NSMaxX( cellFrame ) - statusWidth, NSMaxY( cellFrame ) - ( ( NSHeight( cellFrame ) / 2 ) - ( [_statusImage size].height / 2 ) ) );
+		[_statusImage drawAtPoint:point fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:( [self isEnabled] ? 1. : 0.5)];
 	}
 }
 

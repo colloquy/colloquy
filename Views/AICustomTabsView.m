@@ -553,7 +553,7 @@ static  NSImage			*tabDivider = nil;
 				if((ignoreSelection ||
 					(tabCell != selectedCustomTabCell && (!nextTabCell || nextTabCell != selectedCustomTabCell)))
 				   && [tabCellArray indexOfObject:tabCell] != tabGapIndex - 1){
-					[tabDivider cq_compositeToPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y) operation:NSCompositeSourceOver];
+					[tabDivider drawAtPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
 				}
 			}
 		}
