@@ -17,6 +17,7 @@
 #import "AICustomTabCell.h"
 #import "AICustomTabDragging.h"
 #import "NSImageAdditions.h"
+#import "NSWindow+CQMCoordinateSpaceConversion.h"
 
 #define TAB_DRAG_DISTANCE 		3					//Distance required before a drag kicks in
 #define CUSTOM_TABS_FPS			30.0				//Animation speed
@@ -843,7 +844,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 
 		if(outIndex) *outIndex = hoverIndex;
 
-		return([[self window] convertBaseToScreen:[self convertPoint:NSMakePoint(lastLocation,0) toView:nil]]);
+		return([[self window] cqm_convertPointToScreen:[self convertPoint:NSMakePoint(lastLocation,0) toView:nil]]);
 	}else{
 		NSTabViewItem		*tabViewItem = [[AICustomTabDragging sharedInstance] draggedTabViewItem];
 		int					hover;
@@ -860,7 +861,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		}else{
 			hover = NSMaxX([[tabCellArray objectAtIndex:desiredIndex-1] frame]) + CUSTOM_TABS_GAP;
 		}
-		return([[self window] convertBaseToScreen:[self convertPoint:NSMakePoint(hover,0) toView:nil]]);
+		return([[self window] cqm_convertPointToScreen:[self convertPoint:NSMakePoint(hover,0) toView:nil]]);
 	}
 }
 
@@ -884,7 +885,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
         NSPoint			localPoint;
 
         //Local mouse location
-		localPoint = [[self window] convertScreenToBase:[NSEvent mouseLocation]];
+		localPoint = [[self window] cqm_convertPointToScreen:[NSEvent mouseLocation]];
 
         //Install tracking rects for each tab
         enumerator = [tabCellArray objectEnumerator];

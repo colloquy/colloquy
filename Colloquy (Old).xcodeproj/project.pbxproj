@@ -282,6 +282,7 @@
 		92C70D1D1A5E89A000080E45 /* messageUser.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D1C1A5E89A000080E45 /* messageUser.pdf */; };
 		C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; };
 		C22A35571BC00BB7001757D7 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C23298991C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = C23298981C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m */; };
 		C236F65C1BDCE8E400E64469 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C236F6551BDCE81200E64469 /* InfoPlist.strings */; };
 		C236F65D1BDCE8E600E64469 /* schema.strings in Resources */ = {isa = PBXBuildFile; fileRef = C236F6581BDCE81F00E64469 /* schema.strings */; };
 		C29654101BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */; };
@@ -918,6 +919,8 @@
 		A18BCA2108FF588E0005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Languages/nl.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
 		A18BCA2208FF589D0005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Languages/de.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
 		A1E1610309228E4F004920E8 /* French */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = French; path = Languages/fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C23298971C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSWindow+CQMCoordinateSpaceConversion.h"; path = "Additions/NSWindow+CQMCoordinateSpaceConversion.h"; sourceTree = "<group>"; };
+		C23298981C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSWindow+CQMCoordinateSpaceConversion.m"; path = "Additions/NSWindow+CQMCoordinateSpaceConversion.m"; sourceTree = "<group>"; };
 		C236F6561BDCE81200E64469 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = Importer/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C236F6591BDCE81F00E64469 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = Importer/English.lproj/schema.strings; sourceTree = "<group>"; };
 		C25154471C22063900551BB4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
@@ -1608,6 +1611,8 @@
 				928FB02F13EE643E00A0DF4B /* NSStringAdditions.h */,
 				1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */,
 				1C4671E306D7759100071DC6 /* NSTextStorageAdditions.h */,
+				C23298971C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.h */,
+				C23298981C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m */,
 			);
 			indentWidth = 4;
 			name = "Other Sources & Additions";
@@ -2380,6 +2385,7 @@
 				1C6A45210841746500572AB6 /* JVChatViewCriterionController.m in Sources */,
 				1C7780DE08FA1D82006AD8E5 /* JVSpeechController.m in Sources */,
 				1C710A0209F23730007B4515 /* JVSidebarChatWindowController.m in Sources */,
+				C23298991C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m in Sources */,
 				1C710A6C09F23AF0007B4515 /* JVSideSplitView.m in Sources */,
 				1C710A6E09F23AF0007B4515 /* JVSideStatusView.m in Sources */,
 				1C710A7009F23AF0007B4515 /* JVSideOutlineView.m in Sources */,
