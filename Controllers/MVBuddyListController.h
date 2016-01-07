@@ -7,12 +7,12 @@
 @class ABPeoplePickerController;
 @class MVChatConnection;
 
-typedef enum {
+typedef NS_ENUM(NSInteger, MVBuddyListSortOrder) {
 	MVAvailabilitySortOrder = 'avlY',
 	MVFirstNameSortOrder = 'fSnM',
 	MVLastNameSortOrder = 'lSnM',
 	MVServerSortOrder = 'serV'
-} MVBuddyListSortOrder;
+};
 
 @interface MVBuddyListController : NSWindowController <JVInspectionDelegator> {
 	@private

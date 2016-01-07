@@ -435,7 +435,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		if( replaceElement ) _requiresFullMessage = NO; // a full message was assumed, but we can do a consecutive one
 	}
 
-	unsigned consecutiveOffset = [message consecutiveOffset];
+	NSUInteger consecutiveOffset = [message consecutiveOffset];
 	NSString *result = nil;
 
 	if( _requiresFullMessage && consecutiveOffset > 0 ) {
@@ -827,8 +827,8 @@ quickEnd:
 - (void) _appendMessage:(NSString *) message {
 	if( ! _body ) return;
 
-	unsigned messageCount = [self _visibleMessageCount] + 1;
-	unsigned scrollbackLimit = [self scrollbackLimit];
+	NSUInteger messageCount = [self _visibleMessageCount] + 1;
+	NSUInteger scrollbackLimit = [self scrollbackLimit];
 	JVMarkedScroller *scroller = [self verticalMarkedScroller];
 	BOOL consecutive = ( [message rangeOfString:@"<?message type=\"consecutive\"?>"].location != NSNotFound );
 	if( ! consecutive ) consecutive = ( [message rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );

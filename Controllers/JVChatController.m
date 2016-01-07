@@ -1084,7 +1084,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 			// Accept backwards ranges gracefully
 			if( endIndex < startIndex ) {
-				unsigned temp = endIndex;
+				NSUInteger temp = endIndex;
 				endIndex = startIndex;
 				startIndex = temp;
 			}

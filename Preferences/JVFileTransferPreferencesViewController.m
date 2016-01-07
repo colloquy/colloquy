@@ -57,8 +57,8 @@
 
 - (void) initializeFromDefaults {
 	NSRange range = [MVFileTransfer fileTransferPortRange];
-	[self.minRate setIntValue:range.location];
-	[self.maxRate setIntValue:( range.location + range.length )];
+	[self.minRate setIntegerValue:range.location];
+	[self.maxRate setIntegerValue:( range.location + range.length )];
 
 	BOOL autoOpen = [MVFileTransfer isAutoPortMappingEnabled];
 	[self.autoOpenPorts setState:( autoOpen ? NSOnState: NSOffState )];

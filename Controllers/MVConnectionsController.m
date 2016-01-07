@@ -865,7 +865,7 @@ static NSMenu *favoritesMenu = nil;
 		if( ! handled && ! [[url user] length] ) {
 			[newAddress setObjectValue:[url host]];
 
-			unsigned index = [newType indexOfItemWithTag:( [[url scheme] isEqualToString:@"silc"] ? 2 : 1 )];
+			NSInteger index = [newType indexOfItemWithTag:( [[url scheme] isEqualToString:@"silc"] ? 2 : 1 )];
 			[newType selectItemAtIndex:index];
 
 			[self newConnectionWithJoinRooms:( target ? [NSArray arrayWithObject:target] : nil )];

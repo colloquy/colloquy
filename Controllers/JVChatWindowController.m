@@ -291,8 +291,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (IBAction) selectNextPanel:(id) sender {
-	unsigned currentIndex = [_views indexOfObject:_activeViewController];
-	unsigned index = 0;
+	NSUInteger currentIndex = [_views indexOfObject:_activeViewController];
+	NSUInteger index = 0;
 
 	if( currentIndex + 1 < [_views count] ) index = ( currentIndex + 1 );
 	else index = 0;
@@ -301,8 +301,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (IBAction) selectNextActivePanel:(id) sender {
-	unsigned currentIndex = [_views indexOfObject:_activeViewController];
-	unsigned index = currentIndex;
+	NSUInteger currentIndex = [_views indexOfObject:_activeViewController];
+	NSUInteger index = currentIndex;
 	BOOL done = NO;
 
 	do {
@@ -1204,7 +1204,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[[self windowController] addChatViewController:view];
 }
 
-- (void) insertInChatViews:(id <JVChatViewController>) view atIndex:(int) index {
+- (void) insertInChatViews:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
 	[[self windowController] insertChatViewController:view atIndex:index];
 }
@@ -1508,7 +1508,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 			// Accept backwards ranges gracefully
 			if( endIndex < startIndex ) {
-				unsigned temp = endIndex;
+				NSUInteger temp = endIndex;
 				endIndex = startIndex;
 				startIndex = temp;
 			}
@@ -1562,7 +1562,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 			id baseObject = [baseSpec objectsByEvaluatingWithContainers:self];
 			if( [baseObject isKindOfClass:[NSArray class]] ) {
-				unsigned baseCount = [(NSArray *)baseObject count];
+				NSUInteger baseCount = [(NSArray *)baseObject count];
 				if( baseCount ) {
 					if( relPos == NSRelativeBefore ) baseObject = [baseObject objectAtIndex:0];
 					else baseObject = [baseObject objectAtIndex:( baseCount - 1 )];

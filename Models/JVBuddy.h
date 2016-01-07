@@ -10,11 +10,11 @@ extern NSString *JVBuddyActiveUserChangedNotification;
 
 @class ABPerson;
 
-typedef enum {
+typedef NS_ENUM(NSInteger, JVBuddyName) {
 	JVBuddyActiveNickname = 0x0,
 	JVBuddyGivenNickname = 0x1,
 	JVBuddyFullName = 0x2
-} JVBuddyName;
+};
 
 @interface JVBuddy : NSObject {
 	ABPerson *_person;

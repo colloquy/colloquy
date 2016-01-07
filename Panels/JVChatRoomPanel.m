@@ -320,7 +320,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 - (IBAction) changeEncoding:(id) sender {
 	[super changeEncoding:sender];
-	[[self target] setValue:[NSNumber numberWithInt:[self encoding]] forKey:@"encoding"];
+	[[self target] setValue:@([self encoding]) forKey:@"encoding"];
 	if( sender ) [self _topicChanged:nil];
 }
 

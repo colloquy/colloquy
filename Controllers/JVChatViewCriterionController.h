@@ -6,16 +6,18 @@ typedef enum JVChatViewCriterionFormat { // cooresponds to the nib tab view iden
 	JVChatViewListCriterionFormat
 } JVChatViewCriterionFormat;
 
-typedef enum JVChatViewCriterionKind { // corresponds to the nib menu tags
+/// corresponds to the nib menu tags
+typedef NS_ENUM(NSInteger, JVChatViewCriterionKind) {
 	JVChatViewTitleCriterionKind = 1,
 	JVChatViewTypeCriterionKind,
 	JVChatViewConnectionAddressCriterionKind,
 	JVChatViewConnectionTypeCriterionKind,
 	JVChatViewOpenMethodCriterionKind,
 	JVChatViewEveryPanelCriterionKind
-} JVChatViewCriterionKind;
+};
 
-typedef enum JVChatViewCriterionOperation { // corresponds to the nib menu tags
+/// corresponds to the nib menu tags
+typedef NS_ENUM(NSInteger, JVChatViewCriterionOperation) {
 	JVChatViewNoCriterionOperation = 0,
 	JVChatViewTextMatchCriterionOperation = 1,
 	JVChatViewTextDoesNotMatchCriterionOperation,
@@ -27,7 +29,7 @@ typedef enum JVChatViewCriterionOperation { // corresponds to the nib menu tags
 	JVChatViewIsLessThanCriterionOperation,
 	JVChatViewIsGreaterThanCriterionOperation,
 	JVChatViewIsNotEqualCriterionOperation
-} JVChatViewCriterionOperation;
+};
 
 @interface JVChatViewCriterionController : NSObject <NSCopying, NSMutableCopying, NSCoding> {
 	@private
