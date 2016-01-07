@@ -169,7 +169,7 @@ Boolean GetMetadataForFile( void *thisInterface, CFMutableDictionaryRef attribut
 	NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:file];
 
 	unsigned long long fileSize = [[[fm attributesOfItemAtPath:(NSString *) pathToFile error:nil] objectForKey:NSFileSize] unsignedLongLongValue];
-	unsigned capacity = ( fileSize ? fileSize / 3 : 5000 ); // the message content takes up about a third of the XML file's size
+	NSUInteger capacity = (NSUInteger)( fileSize ? fileSize / 3 : 5000 ); // the message content takes up about a third of the XML file's size
 
 	JVChatTranscriptMetadataExtractor *extractor = [[JVChatTranscriptMetadataExtractor alloc] initWithCapacity:capacity];
 
