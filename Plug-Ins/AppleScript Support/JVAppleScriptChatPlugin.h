@@ -21,7 +21,7 @@
 - (NSString *) scriptFilePath;
 - (void) setScriptFilePath:(NSString *) path;
 
-- (id) callScriptHandler:(unsigned long) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector;
+- (id) callScriptHandler:(FourCharCode) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector;
 
 - (BOOL) respondsToSelector:(SEL) selector;
 - (void) doesNotRespondToSelector:(SEL) selector;

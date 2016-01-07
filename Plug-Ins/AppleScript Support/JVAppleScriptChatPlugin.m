@@ -39,14 +39,14 @@
 #pragma mark -
 
 @interface NSString (NSStringFourCharCode)
-- (unsigned long) fourCharCode;
+- (FourCharCode) fourCharCode;
 @end
 
 #pragma mark -
 
 @implementation NSString (NSStringFourCharCode)
-- (unsigned long) fourCharCode {
-	unsigned long ret = 0, length = [self length];
+- (FourCharCode) fourCharCode {
+	FourCharCode ret = 0, length = (FourCharCode)[self length];
 
 	if( length >= 1 ) ret |= ( [self characterAtIndex:0] & 0x00ff ) << 24;
 	else ret |= ' ' << 24;
@@ -185,7 +185,7 @@
 
 #pragma mark -
 
-- (id) callScriptHandler:(unsigned long) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector {
+- (id) callScriptHandler:(FourCharCode) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector {
 	if( ! _script ) return nil;
 
 	int pid = [[NSProcessInfo processInfo] processIdentifier];
