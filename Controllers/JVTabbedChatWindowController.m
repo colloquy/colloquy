@@ -210,7 +210,7 @@
 	[[JVChatController defaultController] disposeViewController:[(JVChatTabItem *)tabViewItem chatViewController]];
 }
 
-- (void) customTabView:(AICustomTabsView *) view didMoveTabViewItem:(NSTabViewItem *) tabViewItem toCustomTabView:(AICustomTabsView *) destTabView index:(int) index screenPoint:(NSPoint) screenPoint {
+- (void) customTabView:(AICustomTabsView *) view didMoveTabViewItem:(NSTabViewItem *) tabViewItem toCustomTabView:(AICustomTabsView *) destTabView index:(NSInteger) index screenPoint:(NSPoint) screenPoint {
 	id <JVChatViewController> chatController = [(JVChatTabItem *)tabViewItem chatViewController];
 	id oldWindowController = [chatController windowController];
 	id newWindowController = [[destTabView window] windowController];

@@ -153,7 +153,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 }
 
 //End a drag
-- (void)acceptDragIntoTabView:(AICustomTabsView *)destTabView atIndex:(int)destIndex
+- (void)acceptDragIntoTabView:(AICustomTabsView *)destTabView atIndex:(NSInteger)destIndex
 {
 	if(destTabView == sourceTabBar){
 		//Tab re-arranging we handle internally

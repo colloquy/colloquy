@@ -36,7 +36,7 @@ static  NSImage			*tabDivider = nil;
 //Positioning
 - (void)arrangeTabs;
 - (void)smoothlyArrangeTabs;
-- (void)smoothlyArrangeTabsWithGapOfWidth:(int)width atIndex:(int)index;
+- (void)smoothlyArrangeTabsWithGapOfWidth:(int)width atIndex:(NSInteger)index;
 - (void)_arrangeCellTimer:(NSTimer *)inTimer;
 - (BOOL)_arrangeCellsAbsolute:(BOOL)absolute;
 
@@ -179,7 +179,7 @@ static  NSImage			*tabDivider = nil;
 }
 
 //Returns number of tab view items
-- (int)numberOfTabViewItems
+- (NSInteger)numberOfTabViewItems
 {
 	return([tabView numberOfTabViewItems]);
 }
@@ -211,7 +211,7 @@ static  NSImage			*tabDivider = nil;
 }
 
 //Reposition a tab
-- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index selectTab:(BOOL)shouldSelect animate:(BOOL)animate
+- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(NSInteger)index selectTab:(BOOL)shouldSelect animate:(BOOL)animate
 {
 	//Ignore the move request if the tab is already at the proper index
 	if([tabView indexOfTabViewItem:tabViewItem] != index){
@@ -221,8 +221,8 @@ static  NSImage			*tabDivider = nil;
 		if(tabViewItem == [tabView selectedTabViewItem]) shouldSelect = YES;
 
 		//Move the tab cell
-		int	currentIndex = [tabCellArray indexOfObject:tabCell];
-		int	newIndex = index;
+		NSUInteger	currentIndex = [tabCellArray indexOfObject:tabCell];
+		NSUInteger	newIndex = index;
 
 		//Account for shifting
 		if(currentIndex < newIndex) newIndex--;
@@ -394,7 +394,7 @@ static  NSImage			*tabDivider = nil;
 }
 
 //Slowly move our tabs to make a gap
-- (void)smoothlyArrangeTabsWithGapOfWidth:(int)width atIndex:(int)index
+- (void)smoothlyArrangeTabsWithGapOfWidth:(int)width atIndex:(NSInteger)index
 {
 	tabGapWidth = width;
 	tabGapIndex = index;
@@ -827,7 +827,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		NSEnumerator 	*enumerator;
 		AICustomTabCell	*tabCell;
 		float			lastLocation = CUSTOM_TABS_INDENT;
-		unsigned 		hoverIndex = 0;
+		NSUInteger 		hoverIndex = 0;
 
 		//Figure out where the user is hovering the tabcell item
 		enumerator = [tabCellArray objectEnumerator];

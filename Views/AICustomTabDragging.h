@@ -32,7 +32,7 @@
 
 - (void)setDestinationHoverPoint:(NSPoint)inPoint;
 - (NSSize)sizeOfDraggedCell;
-- (void)acceptDragIntoTabView:(AICustomTabsView *)destTabView atIndex:(int)destIndex;
+- (void)acceptDragIntoTabView:(AICustomTabsView *)destTabView atIndex:(NSInteger)destIndex;
 - (NSTabViewItem *)draggedTabViewItem;
 
 @end

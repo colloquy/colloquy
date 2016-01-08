@@ -23,7 +23,7 @@
 - (void)customTabView:(AICustomTabsView *)tabView closeTabViewItem:(NSTabViewItem *)tabViewItem;
 - (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)tabView;
 - (void)customTabViewDidChangeOrderOfTabViewItems:(AICustomTabsView *)tabView;
-- (void)customTabView:(AICustomTabsView *)tabView didMoveTabViewItem:(NSTabViewItem *)tabViewItem toCustomTabView:(AICustomTabsView *)destTabView index:(int)index screenPoint:(NSPoint)point;
+- (void)customTabView:(AICustomTabsView *)tabView didMoveTabViewItem:(NSTabViewItem *)tabViewItem toCustomTabView:(AICustomTabsView *)destTabView index:(NSInteger)index screenPoint:(NSPoint)point;
 - (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem;
 - (NSString *)customTabView:(AICustomTabsView *)tabView toolTipForTabViewItem:(NSTabViewItem *)tabViewItem;
 - (BOOL)customTabView:(AICustomTabsView *)tabView didAcceptDragPasteboard:(NSPasteboard *)pasteboard onTabViewItem:(NSTabViewItem *)tabViewItem;
@@ -44,7 +44,7 @@
 	//Tab Dragging
     BOOL                removingLastTabHidesWindow;	//Removing the last tab hides our window
 	unsigned 			tabGapWidth;				//Gap in our tabs
-	unsigned 			tabGapIndex;				//Location of the gap
+	NSInteger 			tabGapIndex;				//Location of the gap
     NSPoint				lastClickLocation;			//Last click location
     NSTimer             *arrangeCellTimer;			//Timer for tab animations
 
@@ -76,14 +76,13 @@
 - (void)redisplayTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
 - (void)resizeTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
 - (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index;
-- (int)numberOfTabViewItems;
+- (NSInteger)numberOfTabViewItems;
 
 //Private
 - (void)rebuildTabCells;
 - (AICustomTabCell *)tabAtPoint:(NSPoint)clickLocation;
 - (int)totalWidthOfTabs;
-- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index selectTab:(BOOL)shouldSelect animate:(BOOL)animate;
-- (int)numberOfTabViewItems;
+- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(NSInteger)index selectTab:(BOOL)shouldSelect animate:(BOOL)animate;
 - (void)closeTab:(AICustomTabCell *)tabCell;
 - (void)closeAllTabsExceptFor:(AICustomTabCell *)targetCell;
 - (void)drawBackgroundInRect:(NSRect)rect withFrame:(NSRect)viewFrame selectedTabRect:(NSRect)tabFrame;
