@@ -553,7 +553,7 @@ static  NSImage			*tabDivider = nil;
 				//We also don't draw it for the index behind hovered
 				if((ignoreSelection ||
 					(tabCell != selectedCustomTabCell && (!nextTabCell || nextTabCell != selectedCustomTabCell)))
-				   && [tabCellArray indexOfObject:tabCell] != tabGapIndex - 1){
+				   && (NSInteger)[tabCellArray indexOfObject:tabCell] != tabGapIndex - 1){
 					[tabDivider drawAtPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
 				}
 			}
