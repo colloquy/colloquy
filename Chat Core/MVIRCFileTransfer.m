@@ -7,9 +7,9 @@
 #import "MVIRCChatConnection.h"
 #import "MVUtilities.h"
 #import "NSNotificationAdditions.h"
-#import "Transmission.h"
 
 #import <arpa/inet.h>
+
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -2263,7 +2263,6 @@
 			);
 			name = "Unarchive Frameworks";
 			outputPaths = (
-				"$(SRCROOT)/Frameworks/libtransmission.a",
 				"$(SRCROOT)/Frameworks/Sparkle.framework",
 				"$(SRCROOT)/Frameworks/Growl.framework",
 				"$(SRCROOT)/Frameworks/libsilc.framework",
@@ -2271,7 +2270,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/Frameworks\"\nrm -rf *.{framework,a}\ntar xzf frameworks.tar.gz\nranlib *.a\n";
+			shellScript = "cd \"$SRCROOT/Frameworks\"\nrm -rf *.{framework,a}\ntar xzf frameworks.tar.gz\n";
 			showEnvVarsInLog = 0;
 		};
 		1CB5A8F10BAB7E3700C1BDE2 /* Strip Localizations */ = {
