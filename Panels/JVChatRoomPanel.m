@@ -44,9 +44,9 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 @implementation JVChatRoomPanel
 - (id) initWithTarget:(id) target {
 	if( ( self = [super initWithTarget:target] ) ) {
-		_sortedMembers = [[NSMutableArray allocWithZone:nil] initWithCapacity:100];
-		_preferredTabCompleteNicknames = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
-		_nextMessageAlertMembers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
+		_sortedMembers = [[NSMutableArray alloc] initWithCapacity:100];
+		_preferredTabCompleteNicknames = [[NSMutableArray alloc] initWithCapacity:10];
+		_nextMessageAlertMembers = [[NSMutableSet alloc] initWithCapacity:5];
 		_cantSendMessages = YES;
 		_kickedFromRoom = NO;
 		_banListSynced = NO;

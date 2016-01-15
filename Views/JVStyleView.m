@@ -237,7 +237,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	_style = style;
 
-	_styleVariant = [variant copyWithZone:nil];
+	_styleVariant = [variant copy];
 
 	// add single-quotes so that these are not interpreted as XPath expressions
 	[_styleParameters setObject:@"'/tmp/'" forKey:@"buddyIconDirectory"];
@@ -264,7 +264,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) setStyleVariant:(NSString *) variant {
-	_styleVariant = [variant copyWithZone:nil];
+	_styleVariant = [variant copy];
 
 	if( _contentFrameReady ) {
 		[[self class] emptyCache];
@@ -297,7 +297,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) setStyleParameters:(NSDictionary *) parameters {
-	_styleParameters = [parameters mutableCopyWithZone:nil];
+	_styleParameters = [parameters mutableCopy];
 }
 
 - (NSDictionary *) styleParameters {
@@ -439,7 +439,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	NSString *result = nil;
 
 	if( _requiresFullMessage && consecutiveOffset > 0 ) {
-		NSArray *elements = [[NSArray allocWithZone:nil] initWithObjects:message, nil];
+		NSArray *elements = [[NSArray alloc] initWithObjects:message, nil];
 		result = [[self style] transformChatTranscriptElements:elements withParameters:_styleParameters];
 	} else {
 		if( ! _requiresFullMessage && consecutiveOffset > 0 )
@@ -783,8 +783,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 		JVStyle *style = [self style];
 		JVChatTranscript *transcript = [self transcript];
-		NSMutableArray *highlightedMsgs = [[NSMutableArray allocWithZone:nil] initWithCapacity:( [self scrollbackLimit] / 8 )];
-		NSMutableDictionary *parameters = [[NSMutableDictionary allocWithZone:nil] initWithDictionary:_styleParameters copyItems:NO];
+		NSMutableArray *highlightedMsgs = [[NSMutableArray alloc] initWithCapacity:( [self scrollbackLimit] / 8 )];
+		NSMutableDictionary *parameters = [[NSMutableDictionary alloc] initWithDictionary:_styleParameters copyItems:NO];
 		unsigned long elementCount = [transcript elementCount];
 
 		[parameters setObject:@"'yes'" forKey:@"bulkTransform"];
@@ -836,7 +836,7 @@ quickEnd:
 	// check if we are near the bottom of the chat area, and if we should scroll down later
 	BOOL scrollToBottomNeeded = [self scrolledNearBottom];
 
-	NSMutableString *transformedMessage = [message mutableCopyWithZone:nil];
+	NSMutableString *transformedMessage = [message mutableCopy];
 	[transformedMessage replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
 
 	DOMHTMLElement *consecutiveReplaceElement = (DOMHTMLElement *)[_domDocument getElementById:@"consecutiveInsert"];

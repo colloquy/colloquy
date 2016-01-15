@@ -37,7 +37,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 @implementation JVChatTranscriptPanel
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_transcript = [[JVChatTranscript allocWithZone:nil] init];
+		_transcript = [[JVChatTranscript alloc] init];
 
 		id classDescription = [NSClassDescription classDescriptionForClass:[JVChatTranscriptPanel class]];
 		id specifier = [[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"transcript"];
@@ -57,7 +57,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 			return nil;
 		}
 
-		_transcript = [[JVChatTranscript allocWithZone:nil] initWithContentsOfFile:filename];
+		_transcript = [[JVChatTranscript alloc] initWithContentsOfFile:filename];
 
 		if( ! _transcript ) {
 			return nil;
@@ -253,7 +253,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	if( query == _searchQuery || [query isEqualToString:_searchQuery] ) return;
 
 	_searchQueryRegex = nil;
-	_searchQuery = ( [query length] ? [query copyWithZone:nil] : nil );
+	_searchQuery = ( [query length] ? [query copy] : nil );
 
 	if( [_searchQuery length] ) {
 		// we simply convert this to a regex and not allow patterns. later we will allow user supplied patterns

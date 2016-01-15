@@ -187,8 +187,8 @@ static NSMenu *favoritesMenu = nil;
 		_passConnection = nil;
 
 		_connectionToErrorToAlertMap = [NSMapTable strongToStrongObjectsMapTable];
-		_joinRooms = [[NSMutableArray allocWithZone:nil] init];
-		_publicKeyRequestQueue = [[NSMutableSet allocWithZone:nil] init];
+		_joinRooms = [[NSMutableArray alloc] init];
+		_publicKeyRequestQueue = [[NSMutableSet alloc] init];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationQuitting: ) name:NSApplicationWillTerminateNotification object:nil];
 

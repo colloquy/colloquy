@@ -83,9 +83,9 @@
 #pragma mark -
 
 - (IBAction) addIdentifier:(id) sender {
-	_currentRule = [[MVChatUserWatchRule allocWithZone:nil] init];
+	_currentRule = [[MVChatUserWatchRule alloc] init];
 
-	_editDomains = [[NSMutableArray allocWithZone:nil] init];
+	_editDomains = [[NSMutableArray alloc] init];
 
 	[identifierDomainsTable reloadData];
 
@@ -111,7 +111,7 @@
 
 	_currentRule = [[_buddy watchRules] objectAtIndex:index];
 
-	_editDomains = [[NSMutableArray allocWithZone:nil] init];
+	_editDomains = [[NSMutableArray alloc] init];
 	if( [[_currentRule applicableServerDomains] count] ) {
 		[_editDomains setArray:[_currentRule applicableServerDomains]];
 		[identifierDomainsTable setEnabled:YES];

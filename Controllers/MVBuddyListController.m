@@ -50,9 +50,9 @@ static MVBuddyListController *sharedInstance = nil;
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyUserStatusChangedNotification object:nil];
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _buddyChanged: ) name:JVBuddyUserIdleTimeUpdatedNotification object:nil];
 
-		_onlineBuddies = [[NSMutableSet allocWithZone:nil] initWithCapacity:20];
-		_buddyList = [[NSMutableSet allocWithZone:nil] initWithCapacity:40];
-		_buddyOrder = [[NSMutableArray allocWithZone:nil] initWithCapacity:40];
+		_onlineBuddies = [[NSMutableSet alloc] initWithCapacity:20];
+		_buddyList = [[NSMutableSet alloc] initWithCapacity:40];
+		_buddyOrder = [[NSMutableArray alloc] initWithCapacity:40];
 
 		[self _loadBuddyList];
 
@@ -131,7 +131,7 @@ static MVBuddyListController *sharedInstance = nil;
 #pragma mark -
 
 - (void) save {
-	NSMutableArray *list = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_buddyList count]];
+	NSMutableArray *list = [[NSMutableArray alloc] initWithCapacity:[_buddyList count]];
 
 	for( JVBuddy *buddy in _buddyList ) {
 		NSDictionary *buddyRep = [buddy dictionaryRepresentation];
@@ -209,7 +209,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 	_addPerson = nil;
 
-	_addServers = [[NSMutableSet allocWithZone:nil] init];
+	_addServers = [[NSMutableSet alloc] init];
 
 	[[NSApplication sharedApplication] beginSheet:pickerWindow modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
@@ -291,7 +291,7 @@ static MVBuddyListController *sharedInstance = nil;
 		[[[self window] attachedSheet] orderOut:nil];
 	}
 
-	JVBuddy *buddy = [[JVBuddy allocWithZone:nil] init];
+	JVBuddy *buddy = [[JVBuddy alloc] init];
 
 	[buddy setGivenNickname:[nickname stringValue]];
 	[buddy setFirstName:[firstName stringValue]];
@@ -304,10 +304,10 @@ static MVBuddyListController *sharedInstance = nil;
 		if( person ) [buddy setAddressBookPersonRecord:person];
 	}
 
-	MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:nil] init];
+	MVChatUserWatchRule *rule = [[MVChatUserWatchRule alloc] init];
 	[rule setNickname:[nickname stringValue]];
 
-	NSMutableArray *newServers = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_addServers count]];
+	NSMutableArray *newServers = [[NSMutableArray alloc] initWithCapacity:[_addServers count]];
 
 	for( __strong NSString *server in _addServers ) {
 		server = [server stringWithDomainNameSegmentOfAddress];
@@ -618,7 +618,7 @@ static MVBuddyListController *sharedInstance = nil;
 		NSSet *users = [buddy users];
 
 		if( [users count] >= 2 ) {
-			NSMutableArray *ordered = [[users allObjects] mutableCopyWithZone:nil];
+			NSMutableArray *ordered = [[users allObjects] mutableCopy];
 			[ordered sortUsingSelector:@selector( compareByNickname: )];
 
 			NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
@@ -670,7 +670,7 @@ static MVBuddyListController *sharedInstance = nil;
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 	NSSet *users = [buddy users];
 
-	NSMutableArray *ordered = [[users allObjects] mutableCopyWithZone:nil];
+	NSMutableArray *ordered = [[users allObjects] mutableCopy];
 	[ordered sortUsingSelector:@selector( compareByNickname: )];
 
 	[buddy setActiveUser:[ordered objectAtIndex:[object unsignedIntValue]]];
@@ -939,7 +939,7 @@ static MVBuddyListController *sharedInstance = nil;
 		ABPerson *person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:identifier];
 		if( ! person ) continue;
 
-		JVBuddy *buddy = [[JVBuddy allocWithZone:nil] init];
+		JVBuddy *buddy = [[JVBuddy alloc] init];
 
 		[buddy setPicture:[[NSImage alloc] initWithData:[person imageData]]];
 		[buddy setGivenNickname:[person valueForProperty:kABNicknameProperty]];
@@ -961,7 +961,7 @@ static MVBuddyListController *sharedInstance = nil;
 			if( ! [nick length] || ! [server length] )
 				continue;
 
-			MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:nil] init];
+			MVChatUserWatchRule *rule = [[MVChatUserWatchRule alloc] init];
 			[rule setNickname:nick];
 			[rule setApplicableServerDomains:[NSArray arrayWithObject:server]];
 
@@ -980,11 +980,11 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) _loadBuddyList {
-	NSArray *list = [[NSArray allocWithZone:nil] initWithContentsOfFile:[@"~/Library/Application Support/Colloquy/Buddy List.plist" stringByExpandingTildeInPath]];
+	NSArray *list = [[NSArray alloc] initWithContentsOfFile:[@"~/Library/Application Support/Colloquy/Buddy List.plist" stringByExpandingTildeInPath]];
 	if( ! [list count] ) [self _importOldBuddyList];
 
 	for( NSDictionary *buddyDictionary in list ) {
-		JVBuddy *buddy = [[JVBuddy allocWithZone:nil] initWithDictionaryRepresentation:buddyDictionary];
+		JVBuddy *buddy = [[JVBuddy alloc] initWithDictionaryRepresentation:buddyDictionary];
 		if( buddy ) [self addBuddy:buddy];
 	}
 

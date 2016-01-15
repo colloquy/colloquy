@@ -34,7 +34,7 @@ static MVKeyChain *sharedInstance = nil;
 	ret = SecKeychainFindGenericPassword( NULL, MVStringByteLength( service ), [service UTF8String], MVStringByteLength( account ), [account UTF8String], &len, &p, NULL );
 	if( ret == noErr ) {
 		if ( p )
-			string = [[NSString allocWithZone:nil] initWithBytes:(const void *) p length:len encoding:NSUTF8StringEncoding];
+			string = [[NSString alloc] initWithBytes:(const void *) p length:len encoding:NSUTF8StringEncoding];
 	}
 	if( p ) {
 		SecKeychainItemFreeContent( NULL, p );
@@ -74,7 +74,7 @@ static MVKeyChain *sharedInstance = nil;
 	ret = SecKeychainFindInternetPassword( NULL, MVStringByteLength( server ), [server UTF8String], MVStringByteLength( domain ), [domain UTF8String], MVStringByteLength( account ), [account UTF8String], MVStringByteLength( path ), [path UTF8String], port, protocol, authType, &len, &p, NULL );
 	if( ret == noErr ) {
 		if ( p ) {
-			string = [[NSString allocWithZone:nil] initWithBytes:(const void *) p length:len encoding:NSUTF8StringEncoding];
+			string = [[NSString alloc] initWithBytes:(const void *) p length:len encoding:NSUTF8StringEncoding];
 		}
 	}
 	if ( p ) {

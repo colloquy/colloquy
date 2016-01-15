@@ -137,7 +137,7 @@
 
 	if( _boldAndWhiteOnHighlight && [self isHighlighted] ) {
 		NSFont *boldFont = [[NSFontManager sharedFontManager] fontWithFamily:@"Lucida Grande" traits:0 weight:15 size:11.];
-		NSShadow *shadow = [[NSShadow allocWithZone:nil] init];
+		NSShadow *shadow = [[NSShadow alloc] init];
 		NSColor *whiteColor = [NSColor whiteColor];
 		if( ! [self isEnabled] ) whiteColor = [whiteColor colorWithAlphaComponent:0.5];
 

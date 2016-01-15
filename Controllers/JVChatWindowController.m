@@ -45,8 +45,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (id) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
-		_views = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
-		_settings = [[NSMutableDictionary allocWithZone:nil] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]];
+		_views = [[NSMutableArray alloc] initWithCapacity:10];
+		_settings = [[NSMutableDictionary alloc] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]];
 	}
 
 	return self;
@@ -54,7 +54,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (void) windowDidLoad {
 	NSTableColumn *column = [chatViewsOutlineView outlineTableColumn];
-	JVDetailCell *prototypeCell = [[JVDetailCell allocWithZone:nil] init];
+	JVDetailCell *prototypeCell = [[JVDetailCell alloc] init];
 	[prototypeCell setFont:[NSFont toolTipsFontOfSize:11.]];
 	[column setDataCell:prototypeCell];
 
@@ -155,8 +155,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) setIdentifier:(NSString *) identifier {
-	_identifier = [identifier copyWithZone:nil];
-	_settings = [[NSMutableDictionary allocWithZone:nil] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]];
+	_identifier = [identifier copy];
+	_settings = [[NSMutableDictionary alloc] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]];
 
 	if( [[self identifier] length] ) {
 		[[self window] setDelegate:nil]; // so we don't act on the windowDidResize notification
@@ -839,7 +839,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSImage *org = [item icon];
 
 	if( [org size].width > maxSideSize || [org size].height > maxSideSize ) {
-		NSImage *ret = [[item icon] copyWithZone:nil];
+		NSImage *ret = [[item icon] copy];
 		[ret setSize:NSMakeSize( maxSideSize, maxSideSize )];
 		org = ret;
 	}
@@ -1006,7 +1006,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	NSMenu *newMenu = ( [item respondsToSelector:@selector( menu )] ? [item menu] : nil );
 
-	for( menuItem in [[newMenu itemArray] copyWithZone:nil] ) {
+	for( menuItem in [[newMenu itemArray] copy] ) {
 		[newMenu removeItem:menuItem];
 		[menu addItem:menuItem];
 	}

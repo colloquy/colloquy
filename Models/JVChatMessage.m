@@ -24,7 +24,7 @@
 }
 
 + (id) coerceString:(id) value toMessage:(Class) class {
-	return [[JVMutableChatMessage allocWithZone:nil] initWithText:value sender:nil];
+	return [[JVMutableChatMessage alloc] initWithText:value sender:nil];
 }
 
 + (id) coerceMessage:(id) value toString:(Class) class {
@@ -32,7 +32,7 @@
 }
 
 + (id) coerceTextStorage:(id) value toMessage:(Class) class {
-	return [[JVMutableChatMessage allocWithZone:nil] initWithText:value sender:nil];
+	return [[JVMutableChatMessage alloc] initWithText:value sender:nil];
 }
 
 + (id) coerceMessage:(id) value toTextStorage:(Class) class {
@@ -380,7 +380,7 @@
 }
 
 + (id) messageWithText:(id) body sender:(id) sender {
-	return [[self allocWithZone:nil] initWithText:body sender:sender];
+	return [[self alloc] initWithText:body sender:sender];
 }
 
 #pragma mark -
@@ -415,7 +415,7 @@
 
 - (void) setDate:(NSDate *) date {
 	[self _setNode:NULL];
-	_date = [date copyWithZone:nil];
+	_date = [date copy];
 }
 
 #pragma mark -
@@ -496,13 +496,13 @@
 - (void) setBody:(id) message {
 	[self _setNode:NULL];
 	if( ! _attributedMessage ) {
-		if( [message isKindOfClass:[NSTextStorage class]] ) _attributedMessage = [message mutableCopyWithZone:nil];
-		else if( [message isKindOfClass:[NSAttributedString class]] ) _attributedMessage = [[NSTextStorage allocWithZone:nil] initWithAttributedString:message];
-		else if( [message isKindOfClass:[NSString class]] ) _attributedMessage = [[NSTextStorage allocWithZone:nil] initWithString:(NSString *)message];
+		if( [message isKindOfClass:[NSTextStorage class]] ) _attributedMessage = [message mutableCopy];
+		else if( [message isKindOfClass:[NSAttributedString class]] ) _attributedMessage = [[NSTextStorage alloc] initWithAttributedString:message];
+		else if( [message isKindOfClass:[NSString class]] ) _attributedMessage = [[NSTextStorage alloc] initWithString:(NSString *)message];
 	} else if( _attributedMessage && [message isKindOfClass:[NSAttributedString class]] ) {
 		[_attributedMessage setAttributedString:message];
 	} else if( _attributedMessage && [message isKindOfClass:[NSString class]] ) {
-		id string = [[NSAttributedString allocWithZone:nil] initWithString:(NSString *)message];
+		id string = [[NSAttributedString alloc] initWithString:(NSString *)message];
 		[_attributedMessage setAttributedString:string];
 	}
 }
@@ -541,12 +541,12 @@
 
 - (void) setSource:(NSURL *) source {
 	[self _setNode:NULL];
-	_source = [source copyWithZone:nil];
+	_source = [source copy];
 }
 
 - (void) setMessageIdentifier:(NSString *) identifier {
 	[self _setNode:NULL];
-	_messageIdentifier = [identifier copyWithZone:nil];
+	_messageIdentifier = [identifier copy];
 }
 
 - (NSMutableDictionary *) attributes {
@@ -556,7 +556,7 @@
 
 - (void) setAttributes:(NSDictionary *) attributes {
 	[self _setNode:NULL];
-	_attributes = [attributes mutableCopyWithZone:nil];
+	_attributes = [attributes mutableCopy];
 }
 
 - (void) setAttribute:(id) object forKey:(id) key {

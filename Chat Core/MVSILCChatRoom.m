@@ -28,11 +28,11 @@ NS_ASSUME_NONNULL_BEGIN
 	if( _uniqueIdentifier )
 		[_connection _removeKnownRoom:self];
 
-	_name = [[NSString allocWithZone:nil] initWithUTF8String:channelEntry -> channel_name];
+	_name = [[NSString alloc] initWithUTF8String:channelEntry -> channel_name];
 
 	unsigned char *identifier = silc_id_id2str( channelEntry -> id, SILC_ID_CHANNEL );
 	SilcUInt32 len = silc_id_get_len( channelEntry -> id, SILC_ID_CHANNEL );
-	_uniqueIdentifier = [[NSData allocWithZone:nil] initWithBytes:identifier length:len];
+	_uniqueIdentifier = [[NSData alloc] initWithBytes:identifier length:len];
 
 	_channelEntry = channelEntry;
 

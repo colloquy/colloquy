@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 		// a list of recievers
 		if( [subject isKindOfClass:[NSArray class]] ) {
-			NSMutableArray *results = [[NSMutableArray allocWithZone:nil] initWithCapacity:[subject count]];
+			NSMutableArray *results = [[NSMutableArray alloc] initWithCapacity:[subject count]];
 			for( id subj in subject ) {
 				id result = nil;
 				if( [subj respondsToSelector:selector] )

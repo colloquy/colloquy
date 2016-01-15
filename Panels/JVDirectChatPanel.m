@@ -1069,7 +1069,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && ! action ) {
 					if( ! actionVerbs ) {
 						NSArray *verbs = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]];
-						actionVerbs = [[NSSet allocWithZone:nil] initWithArray:verbs];
+						actionVerbs = [[NSSet alloc] initWithArray:verbs];
 					}
 
 					NSScanner *scanner = [[NSScanner alloc] initWithString:[subMsg string]];

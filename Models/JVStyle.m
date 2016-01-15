@@ -235,7 +235,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 - (NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters {
-	JVChatTranscript *transcript = [[JVChatTranscript allocWithZone:nil] initWithElements:elements];
+	JVChatTranscript *transcript = [[JVChatTranscript alloc] initWithElements:elements];
 	NSString *ret = [self transformChatTranscript:transcript withParameters:parameters];
 	return ret;
 }

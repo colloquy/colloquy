@@ -37,8 +37,8 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_rules = [[NSMutableArray allocWithZone:nil] initWithCapacity:5];
-		_users = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
+		_rules = [[NSMutableArray alloc] initWithCapacity:5];
+		_users = [[NSMutableSet alloc] initWithCapacity:5];
 		_uniqueIdentifier = [NSString locallyUniqueString];
 
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _registerWithConnection: ) name:MVChatConnectionDidConnectNotification object:nil];
@@ -56,27 +56,27 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 		NSString *string = [dictionary objectForKey:@"firstName"];
 		if( [string isKindOfClass:[NSString class]] )
-			_firstName = [string copyWithZone:nil];
+			_firstName = [string copy];
 
 		string = [dictionary objectForKey:@"lastName"];
 		if( [string isKindOfClass:[NSString class]] )
-			_lastName = [string copyWithZone:nil];
+			_lastName = [string copy];
 
 		string = [dictionary objectForKey:@"primaryEmail"];
 		if( [string isKindOfClass:[NSString class]] )
-			_primaryEmail = [string copyWithZone:nil];
+			_primaryEmail = [string copy];
 
 		string = [dictionary objectForKey:@"givenNickname"];
 		if( [string isKindOfClass:[NSString class]] )
-			_givenNickname = [string copyWithZone:nil];
+			_givenNickname = [string copy];
 
 		string = [dictionary objectForKey:@"speechVoice"];
 		if( [string isKindOfClass:[NSString class]] )
-			_speechVoice = [string copyWithZone:nil];
+			_speechVoice = [string copy];
 
 		string = [dictionary objectForKey:@"uniqueIdentifier"];
 		if( [string isKindOfClass:[NSString class]] ) {
-			_uniqueIdentifier = [string copyWithZone:nil];
+			_uniqueIdentifier = [string copy];
 		}
 
 		if( ! [_uniqueIdentifier length] ) {
@@ -88,7 +88,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 			_person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:string];
 
 		for( NSDictionary *ruleDictionary in [dictionary objectForKey:@"rules"] ) {
-			MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:nil] initWithDictionaryRepresentation:ruleDictionary];
+			MVChatUserWatchRule *rule = [[MVChatUserWatchRule alloc] initWithDictionaryRepresentation:ruleDictionary];
 			if( rule ) [self addWatchRule:rule];
 		}
 	}
@@ -119,9 +119,9 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 #pragma mark -
 
 - (NSDictionary *) dictionaryRepresentation {
-	NSMutableDictionary *dictionary = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:8];
+	NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:8];
 
-	NSMutableArray *rules = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_rules count]];
+	NSMutableArray *rules = [[NSMutableArray alloc] initWithCapacity:[_rules count]];
 
 	for( MVChatUserWatchRule *rule in _rules ) {
 		NSDictionary *dictRep = [rule dictionaryRepresentation];
@@ -312,7 +312,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 - (void) setPicture:(NSImage *) picture {
-	_picture = [picture copyWithZone:nil];
+	_picture = [picture copy];
 }
 
 #pragma mark -
@@ -375,23 +375,23 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 #pragma mark -
 
 - (void) setFirstName:(NSString *) name {
-	_firstName = [name copyWithZone:nil];
+	_firstName = [name copy];
 }
 
 - (void) setLastName:(NSString *) name {
-	_lastName = [name copyWithZone:nil];
+	_lastName = [name copy];
 }
 
 - (void) setPrimaryEmail:(NSString *) email {
-	_primaryEmail = [email copyWithZone:nil];
+	_primaryEmail = [email copy];
 }
 
 - (void) setGivenNickname:(NSString *) name {
-	_givenNickname = [name copyWithZone:nil];
+	_givenNickname = [name copy];
 }
 
 - (void) setSpeechVoice:(NSString *) voice {
-	_speechVoice = [voice copyWithZone:nil];
+	_speechVoice = [voice copy];
 }
 
 #pragma mark -

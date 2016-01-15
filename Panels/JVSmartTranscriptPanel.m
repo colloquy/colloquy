@@ -35,8 +35,8 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	if( ( self = [self init] ) ) {
 		_settingsNibLoaded = [[NSBundle mainBundle] loadNibNamed:@"JVSmartTranscriptFilterSheet" owner:self topLevelObjects:NULL];
 
-		_rules = [[settings objectForKey:@"rules"] mutableCopyWithZone:nil];
-		_title = [[settings objectForKey:@"title"] copyWithZone:nil];
+		_rules = [[settings objectForKey:@"rules"] mutableCopy];
+		_title = [[settings objectForKey:@"title"] copy];
 		_operation = [[settings objectForKey:@"operation"] intValue];
 		_ignoreCase = [[settings objectForKey:@"ignoreCase"] boolValue];
 
