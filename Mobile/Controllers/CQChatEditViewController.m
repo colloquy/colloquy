@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setSelectedConnection:(MVChatConnection *) connection {
+- (void) setSelectedConnection:(MVChatConnection *__nullable) connection {
 	_selectedConnection = connection;
 
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] withAnimation:UITableViewRowAnimationNone];

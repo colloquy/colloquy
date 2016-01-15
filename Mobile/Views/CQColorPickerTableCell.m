@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return self;
 }
 
-- (void) setActiveColor:(UIColor *) activeColor {
+- (void) setActiveColor:(UIColor *__nullable) activeColor {
 	_activeColor = [activeColor copy];
 
 	[self setNeedsLayout];

@@ -110,9 +110,10 @@ NS_ASSUME_NONNULL_BEGIN
 		return;
 
 	__strong __typeof__((_target)) strongTarget = _target;
-	if (!strongTarget || [strongTarget respondsToSelector:_action])
+	if (_action && (!strongTarget || [strongTarget respondsToSelector:_action])) {
 		if ([[UIApplication sharedApplication] sendAction:_action to:strongTarget from:self forEvent:nil])
 			_pendingChanges = NO;
+	}
 
 	if (self.preferencesListBlock) {
 		self.preferencesListBlock(self);

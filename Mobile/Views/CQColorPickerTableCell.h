@@ -4,7 +4,7 @@ typedef void (^CQColorSelected)(UIColor *);
 
 @interface CQColorPickerTableCell : UITableViewCell
 @property (atomic, copy) CQColorSelected colorSelectedBlock;
-@property (nonatomic, copy) UIColor *activeColor;
+@property (nonatomic, copy, null_resettable) UIColor *activeColor;
 @property (nonatomic, copy) NSArray <UIColor *> *colors;
 @end
 

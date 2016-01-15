@@ -1129,7 +1129,8 @@ static NSMenu *favoritesMenu = nil;
 			} else {
 				title = NSLocalizedString(@"Not connected", "VoiceOver title for not connected image");
 			}
-			[cell setImage:[NSImage imageNamed:imageName]];
+			if( imageName )
+				[cell setImage:[NSImage imageNamed:imageName]];
 			[cell accessibilitySetOverrideValue:title forAttribute:NSAccessibilityValueDescriptionAttribute];
 		}
 	}
@@ -2031,7 +2032,7 @@ static NSMenu *favoritesMenu = nil;
 			if( [command hasPrefix:@"\\"] ) {
 				command = (NSMutableString *)[command substringFromIndex:1];
 
-				NSString *arguments = nil;
+				NSString *arguments = @"";
 				NSRange range = [command rangeOfString:@" "];
 				if( range.location != NSNotFound ) {
 					if( ( range.location + 1 ) < [command length] )
@@ -2086,7 +2087,7 @@ static NSMenu *favoritesMenu = nil;
 			if( [command hasPrefix:@"/"] ) {
 				command = (NSMutableString *)[command substringFromIndex:1];
 
-				NSString *arguments = nil;
+				NSString *arguments = @"";
 				NSRange range = [command rangeOfString:@" "];
 				if( range.location != NSNotFound ) {
 					if( ( range.location + 1 ) < [command length] )

@@ -259,6 +259,9 @@ NS_ASSUME_NONNULL_BEGIN
 			[[CQChatController defaultController] showFilePickerWithUser:user];
 #endif
 		} else if (buttonIndex == [self operatorActionsButtonIndex]) {
+			if (!user) return;
+			if (!room) return;
+
 			NSUInteger localUserModes = (room.connection.localUser ? [room modesForMemberUser:room.connection.localUser] : 0);
 			NSUInteger selectedUserModes = (user ? [room modesForMemberUser:user] : 0);
 

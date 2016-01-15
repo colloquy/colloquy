@@ -115,9 +115,7 @@ static const NSStringEncoding supportedEncodings[] = {
 };
 
 @implementation MVChatConnection
-+ (BOOL) supportsURLScheme:(NSString *) scheme {
-	if( ! scheme ) return NO;
-
++ (BOOL) supportsURLScheme:(NSString *__nullable) scheme {
 	return
 #if ENABLE(ICB)
 		[scheme isEqualToString:@"icb"] ||

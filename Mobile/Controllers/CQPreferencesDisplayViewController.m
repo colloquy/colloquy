@@ -312,9 +312,11 @@ static NSString *const CQPSListTypeFont = @"Font";
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		cell.textLabel.text = [[NSBundle mainBundle] localizedStringForKey:rowDictionary[CQPSTitle] value:@"" table:nil];
 
-		NSUInteger index = [rowDictionary[CQPSValues] indexOfObject:value];
-		if (index != NSNotFound)
-			cell.detailTextLabel.text = rowDictionary[CQPSTitles][index];
+		if (value) {
+			NSUInteger index = [rowDictionary[CQPSValues] indexOfObject:value];
+			if (index != NSNotFound)
+				cell.detailTextLabel.text = rowDictionary[CQPSTitles][index];
+		}
 
 		return cell;
 	} else if ([rowDictionary[CQPSType] isEqualToString:CQPSTitleValueSpecifier]) {

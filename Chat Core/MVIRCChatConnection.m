@@ -3963,6 +3963,9 @@ end:
 						[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomUserModeChangedNotification object:room userInfo:userInfo];
 					} else if( mode == banMode ) {
 						MVChatUser *user = [MVChatUser wildcardUserFromString:param];
+						if ( !user )
+							return;
+
 						NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 						if (user) userInfo[@"user"] = user;
 						if (sender) userInfo[@"byUser"] = sender;
@@ -3991,7 +3994,6 @@ end:
 #undef banMode
 #undef banExcludeMode
 #undef inviteExcludeMode
-
 
 	NSUInteger changedModes = ( oldModes ^ [room modes] ) | argModes;
 	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
@@ -4350,7 +4352,7 @@ end:
 	if( parameters.count == 3 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:parameters[1]];
 		NSData *topic = parameters[2];
-		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
+		if( ! [topic isKindOfClass:[NSData class]] ) topic = [NSData data];
 		[room _setTopic:topic];
 	}
 }

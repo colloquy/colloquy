@@ -15,13 +15,13 @@
 
 #import <HockeySDK/HockeySDK.h>
 
+static NSMutableArray <NSString *> *highlightWords;
+
 NS_ASSUME_NONNULL_BEGIN
 
 NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyApplicationDidRecieveDeviceTokenNotification";
 
 #define BrowserAlertTag 1
-
-static NSMutableArray <NSString *> *highlightWords;
 
 @interface CQColloquyApplication () <UIApplicationDelegate, CQAlertViewDelegate, BITHockeyManagerDelegate>
 @end
