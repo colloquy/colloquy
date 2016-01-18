@@ -4656,7 +4656,6 @@ end:
 	userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"You can't change your nickname to \"%@\" on \"%@\".", "cant change nick because of server error" ), identifier, [self server]];
 
 	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionErroneusNicknameError userInfo:userInfo]];
-
 }
 
 - (void) _handle435WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BANONCHAN Bahamut (also ERR_SERVICECONFUSED on Unreal, not implemented here)

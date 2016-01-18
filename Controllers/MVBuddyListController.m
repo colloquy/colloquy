@@ -77,14 +77,12 @@ static MVBuddyListController *sharedInstance = nil;
 		sharedInstance = nil;
 	}
 
-
 	_onlineBuddies = nil;
 	_buddyList = nil;
 	_buddyOrder = nil;
 	_oldPositions = nil;
 	_addPerson = nil;
 	_addServers = nil;
-
 }
 
 - (void) windowDidLoad {
@@ -876,7 +874,6 @@ static MVBuddyListController *sharedInstance = nil;
 	_viewingTop = NSMaxRange( visibleRows ) < 0.6 * [_buddyOrder count];
 
 	[NSTimer scheduledTimerWithTimeInterval:( 1. / 240. ) target:self selector:@selector( _animateStep: ) userInfo:nil repeats:YES];
-
 }
 
 - (void) _buddyChanged:(NSNotification *) notification {

@@ -73,11 +73,9 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	[subviewTableView setDataSource:nil];
 	[subviewTableView setDelegate:nil];
 
-
 	_rules = nil;
 	_editingRules = nil;
 	_title = nil;
-
 }
 
 - (void) awakeFromNib {

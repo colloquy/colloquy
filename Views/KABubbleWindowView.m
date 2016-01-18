@@ -14,12 +14,10 @@ static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat
 
 @implementation KABubbleWindowView
 - (void) dealloc {
-
 	_icon = nil;
 	_title = nil;
 	_text = nil;
 	_target = nil;
-
 }
 
 - (void) drawRect:(NSRect) rect {

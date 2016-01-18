@@ -45,10 +45,8 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	[subviewTableView setDataSource:nil];
 	[subviewTableView setDelegate:nil];
 
-
 	_rules = nil;
 	_results = nil;
-
 }
 
 - (void) windowDidLoad {

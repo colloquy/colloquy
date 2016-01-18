@@ -315,7 +315,6 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	} else [rooms addObject:[_target name]];
 
 	[[MVConnectionsController defaultController] setJoinRooms:rooms forConnection:[self connection]];
-
 }
 
 - (IBAction) changeEncoding:(id) sender {
@@ -998,7 +997,6 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	[context setObject:self forKey:@"target"];
 	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 	[self performNotification:@"JVChatMemberJoinedRoom" withContextInfo:context];
-
 }
 
 - (void) _memberParted:(NSNotification *) notification {
@@ -1175,7 +1173,6 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	[context setObject:self forKey:@"target"];
 	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 	[self performNotification:@"JVChatMemberKicked" withContextInfo:context];
-
 }
 
 - (void) _memberBanned:(NSNotification *) notification {

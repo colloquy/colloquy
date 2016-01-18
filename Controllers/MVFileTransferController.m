@@ -137,12 +137,10 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	if( [self isWindowLoaded] )
 		[[[self window] toolbar] setDelegate:nil];
 
-
 	_transferStorage = nil;
 	_safeFileExtentions = nil;
 	_calculationItems = nil;
 	_updateTimer = nil;
-
 }
 
 - (void) windowDidLoad {

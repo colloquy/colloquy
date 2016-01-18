@@ -165,7 +165,6 @@ static void generateUniqueMachineIdentifier() {
 	[_data setObject:[systemVersion objectForKey:@"ProductName"] forKey:@"machine-system-name"];
 	[_data setObject:[systemVersion objectForKey:@"ProductVersion"] forKey:@"machine-system-version"];
 
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:NSApplicationWillTerminateNotification object:nil];
 
 	return self;
@@ -173,8 +172,6 @@ static void generateUniqueMachineIdentifier() {
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-
 }
 
 #pragma mark -

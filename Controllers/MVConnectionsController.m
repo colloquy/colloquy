@@ -235,12 +235,10 @@ static NSMenu *favoritesMenu = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
-
 	_bookmarks = nil;
 	_joinRooms = nil;
 	_passConnection = nil;
 	_publicKeyRequestQueue = nil;
-
 }
 
 - (void) windowDidLoad {
@@ -2008,7 +2006,6 @@ static NSMenu *favoritesMenu = nil;
 
 	if( [roomIdentifiers count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
 		[connection joinChatRoomsNamed:roomIdentifiers];
-
 }
 
 - (void) _didIdentify:(NSNotification *) notification {

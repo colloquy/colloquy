@@ -46,7 +46,6 @@ static JVNotificationController *sharedInstance = nil;
 
 	_bubbles = nil;
 	_sounds = nil;
-
 }
 
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context {

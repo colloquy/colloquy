@@ -22,10 +22,8 @@
 }
 
 - (void) dealloc {
-
 	_speechQueue = nil;
 	_synthesizers = nil;
-
 }
 
 - (void) startSpeakingString:(NSString *) string usingVoice:(NSString *) voice {
