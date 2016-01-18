@@ -550,12 +550,10 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	NSParameterAssert(bundle);
 
 	NSString *file = [bundle pathForResource:@"parameters" ofType:@"plist"];
-	NSParameterAssert(file);
-	if (!file) return;
 
 	_bundle = bundle;
 
-	[self setMainParameters:[NSDictionary dictionaryWithContentsOfFile:file]];
+	[self setMainParameters:(file ? [NSDictionary dictionaryWithContentsOfFile:file] : @{})];
 
 	[self reload];
 }
