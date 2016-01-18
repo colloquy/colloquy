@@ -1,6 +1,6 @@
 #import "MVKeyChain.h"
 
-#define MVStringByteLength(a) (( [a UTF8String] ? strlen( [a UTF8String] ) : 0 ))
+#define MVStringByteLength(a) (( [a UTF8String] ? (UInt32)strlen( [a UTF8String] ) : 0 ))
 
 static MVKeyChain *sharedInstance = nil;
 

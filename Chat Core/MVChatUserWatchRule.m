@@ -181,11 +181,11 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	}
 }
 
-- (NSString *) nickname {
+- (NSString *__nullable) nickname {
 	return (_nicknameIsRegex && _nickname ? [NSString stringWithFormat:@"/%@/", _nickname] : _nickname);
 }
 
-- (void) setNickname:(NSString *) newNickname {
+- (void) setNickname:(NSString *__nullable) newNickname {
 	_nicknameIsRegex = ( newNickname.length > 2 && [newNickname hasPrefix:@"/"] && [newNickname hasSuffix:@"/"] );
 
 	if( _nicknameIsRegex )
@@ -198,11 +198,11 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	return _nicknameIsRegex;
 }
 
-- (NSString *) realName {
+- (NSString *__nullable) realName {
 	return (_realNameIsRegex && _realName ? [NSString stringWithFormat:@"/%@/", _realName] : _realName);
 }
 
-- (void) setRealName:(NSString *) newRealName {
+- (void) setRealName:(NSString *__nullable) newRealName {
 	_realNameIsRegex = ( newRealName.length > 2 && [newRealName hasPrefix:@"/"] && [newRealName hasSuffix:@"/"] );
 
 	if( _realNameIsRegex )
@@ -215,11 +215,11 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	return _realNameIsRegex;
 }
 
-- (NSString *) username {
+- (NSString *__nullable) username {
 	return (_usernameIsRegex && _username ? [NSString stringWithFormat:@"/%@/", _username] : _username);
 }
 
-- (void) setUsername:(NSString *) newUsername {
+- (void) setUsername:(NSString *__nullable) newUsername {
 	_usernameIsRegex = ( newUsername.length > 2 && [newUsername hasPrefix:@"/"] && [newUsername hasSuffix:@"/"] );
 
 	if( _usernameIsRegex )
@@ -232,11 +232,11 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	return _usernameIsRegex;
 }
 
-- (NSString *) address {
+- (NSString *__nullable) address {
 	return (_addressIsRegex && _address ? [NSString stringWithFormat:@"/%@/", _address] : _address);
 }
 
-- (void) setAddress:(NSString *) newAddress {
+- (void) setAddress:(NSString *__nullable) newAddress {
 	_addressIsRegex = ( newAddress.length > 2 && [newAddress hasPrefix:@"/"] && [newAddress hasSuffix:@"/"] );
 
 	if( _addressIsRegex )

@@ -198,6 +198,7 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 - (void) acceptByResumingIfPossible:(BOOL) resume {
 	if( ! [[NSFileManager defaultManager] isReadableFileAtPath:[self destination]] )
 		resume = NO;
+	(void)resume;
 }
 @end
 

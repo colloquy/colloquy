@@ -547,9 +547,15 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 - (void) _setBundle:(NSBundle *) bundle {
+	NSParameterAssert(bundle);
+
+	NSString *file = [bundle pathForResource:@"parameters" ofType:@"plist"];
+	NSParameterAssert(file);
+	if (!file) return;
+
 	_bundle = bundle;
 
-	[self setMainParameters:[NSDictionary dictionaryWithContentsOfFile:[_bundle pathForResource:@"parameters" ofType:@"plist"]]];
+	[self setMainParameters:[NSDictionary dictionaryWithContentsOfFile:file]];
 
 	[self reload];
 }

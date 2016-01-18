@@ -200,7 +200,7 @@
 				aPath = newPath;
 				if( first ) [availableSounds addItem:[NSMenuItem separatorItem]];
 				first = NO;
-				menuItem = [[NSMenuItem alloc] initWithTitle:sound action:@selector( aRandomSelector:of:no:consequence: ) keyEquivalent:@""];
+				menuItem = [[NSMenuItem alloc] initWithTitle:sound action:@selector( play /* SEL should exist, but, doesn't matter (?) */ ) keyEquivalent:@""];
 				[menuItem setEnabled:NO];
 				[menuItem setImage:[NSImage imageNamed:@"folder"]];
 				[availableSounds addItem:menuItem];

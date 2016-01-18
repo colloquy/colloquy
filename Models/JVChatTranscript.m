@@ -530,7 +530,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 				NSString *msgSource = [[message source] absoluteString];
 
 				xmlChar *sourceStr = xmlGetProp( lastChild, (xmlChar *) "source" );
-				NSString *source = ( sourceStr ? [NSString stringWithUTF8String:(char *) sourceStr] : nil );
+				NSString *source = ( sourceStr ? [NSString stringWithUTF8String:(char *) sourceStr] : @"" );
 				xmlFree( sourceStr );
 
 				if( ( ! msgSource && ! source ) || [msgSource isEqualToString:source] ) { // same chat source, proceed to sender check
@@ -791,7 +791,8 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	}
 
 	filePath = [filePath stringByStandardizingPath];
-	if( [filePath isEqualToString:_filePath] ) return;
+	if( ! filePath ) return;
+	if( [_filePath isEqualToString:filePath] ) return;
 
 	_filePath = [filePath copy];
 

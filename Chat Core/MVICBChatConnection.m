@@ -637,14 +637,15 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 	size_t maxlen = 250 - who.length;
 
+    NSString *msg = message;
 	do {
 		NSString *part;
-		if( message.length < maxlen ) {
-			part = message;
-			message = nil;
+		if( msg.length < maxlen ) {
+			part = msg;
+			msg = nil;
 		} else {
-			part = [message substringToIndex:maxlen - 1];
-			message = [message substringFromIndex:maxlen - 1];
+			part = [msg substringToIndex:maxlen - 1];
+			msg = [msg substringFromIndex:maxlen - 1];
 		}
 
 		ICBPacket *packet = [[ICBPacket alloc] initWithPacketType:'h'];
@@ -652,7 +653,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 		[packet addFields:@"m", cmd, nil];
 		[self _sendPacket:packet immediately:NO];
 		[packet release];
-	} while( message );
+	} while( msg );
 }
 
 - (void) ctsCommandTopic {
@@ -687,21 +688,22 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 - (void) ctsOpenPacket:(NSString *) message {
 	NSParameterAssert( message );
 
+    NSString *msg = message;
 	do {
 		NSString *part;
-		if( message.length < 255 ) {
-			part = message;
-			message = nil;
+		if( msg.length < 255 ) {
+			part = msg;
+			msg = nil;
 		} else {
-			part = [message substringToIndex:254];
-			message = [message substringFromIndex:254];
+			part = [msg substringToIndex:254];
+			msg = [msg substringFromIndex:254];
 		}
 
 		ICBPacket *packet = [[ICBPacket alloc] initWithPacketType:'b'];
 		[packet addFields:part, nil];
 		[self _sendPacket:packet immediately:NO];
 		[packet release];
-	} while( message );
+	} while( msg );
 }
 
 - (void) ctsPongPacket {

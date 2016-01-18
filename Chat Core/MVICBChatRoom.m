@@ -47,8 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
        andConnection:(MVICBChatConnection *) connection {
 	if( ( self = [self init] ) ) {
 		_connection = connection;
-		_name = name;
-		_uniqueIdentifier = [name lowercaseString];
+		_name = [name copy];
+		_uniqueIdentifier = [[name lowercaseString] copy];
 		[_connection _addKnownRoom:self];
 	}
 	return self;

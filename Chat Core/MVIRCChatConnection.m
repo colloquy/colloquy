@@ -161,7 +161,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 - (void) _handleNoticeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender;
 
 - (void) _handleCTCP:(NSDictionary *) ctcpInfo;
-- (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender toTarget:(id) target forRoom:(MVChatRoom *) room withTags:(NSDictionary *) tags;
+- (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender toTarget:(id) target forRoom:(MVChatRoom *__nullable) room withTags:(NSDictionary *) tags;
 
 #pragma mark Room Replies
 
@@ -3656,7 +3656,7 @@ end:
 
 }
 
-- (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender toTarget:(id) target forRoom:(MVChatRoom *) room withTags:(NSDictionary *) tags {
+- (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender toTarget:(id) target forRoom:(MVChatRoom *__nullable) room withTags:(NSDictionary *) tags {
 	NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:4];
 
 	if( tags )[info addEntriesFromDictionary:tags];
