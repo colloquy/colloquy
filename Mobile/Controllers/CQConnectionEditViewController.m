@@ -295,7 +295,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		if (indexPath.row == 1) {
 			cell.textLabel.text = NSLocalizedString(@"Address", @"Address connection setting label");
 			cell.textField.text = (isPlaceholderValue(_connection.server) ? @"" : _connection.server);
-			cell.textField.placeholder = (_newConnection ? @"irc.example.com" : @"");
+			cell.textField.placeholder = (_newConnection ? NSLocalizedString(@"irc.example.com", @"example IRC server placeholder text") : @"");
 
 			if (_connection.directConnection) {
 				cell.textField.keyboardType = UIKeyboardTypeURL;

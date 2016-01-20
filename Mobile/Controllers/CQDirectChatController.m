@@ -928,7 +928,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (isAction) {
 		NSDictionary *attributes = [message attributesAtIndex:0 effectiveRange:NULL];
-		NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"/me" attributes:attributes];
+		NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"/me " attributes:attributes];
 		[attributedString appendAttributedString:message];
 
 		chatInputBar.textView.attributedText = message;
@@ -1432,7 +1432,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) handleZncCommandWithArguments:(MVChatString *) arguments {
 	NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"*status "];
-	[attributedString appendAttributedString:arguments];
+	[attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:MVChatStringAsString(arguments)]];
 	[self handleMsgCommandWithArguments:attributedString];
 }
 
