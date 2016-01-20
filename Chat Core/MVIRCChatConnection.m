@@ -1063,8 +1063,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		NSArray <NSString *> *IRCv32Required = @[ @"account-tag", @"intent", @" " ];
 		NSArray <NSString *> *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time", @"userhost-in-names", @"batch", @" " ];
 
-		// In theory, IRCv3.2 isn't finalized yet and may change, so ZNC prefixes their capabilities. In practice,
-		// the official spec is pretty stable, and their behavior matches the official spec at this time.
+		// Older versions of ZNC prefixes their capabilities (from when IRCv3.2 wasn't finished).
 		NSArray <NSString *> *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message", @"znc.in/batch", @"znc.in/playback", @" " ];
 
 		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
