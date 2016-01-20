@@ -949,8 +949,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	});
 
 	if( _status == MVChatConnectionConnectingStatus ) {
-		if( !_lastError )
-			[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
+		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
 	} else {
 		if( _lastError && !_userDisconnected )
 			_status = MVChatConnectionServerDisconnectedStatus;
@@ -972,8 +971,6 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 }
 
 - (void) socket:(GCDAsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
-	MVSafeRetainAssign( _lastError, nil );
-
 	//	if( [[self proxyServer] length] && [self proxyServerPort] ) {
 	//		if( _proxy == MVChatConnectionHTTPSProxy || _proxy == MVChatConnectionHTTPProxy ) {
 	//			NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
