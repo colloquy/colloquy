@@ -29,7 +29,3 @@
 #ifndef ENABLE_XMPP
 #define ENABLE_XMPP 1
 #endif
-
-#ifndef ENABLE_CHAT_CENTER
-#define ENABLE_CHAT_CENTER 1
-#endif
