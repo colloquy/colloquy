@@ -71,7 +71,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 }
 
 - (oneway void) release {
-	NSInteger retainCount = [self retainCount] - 1;
+	NSUInteger retainCount = [self retainCount] - 1;
 	if( retainCount == 1 ) {
 		id temp = _scriptInterpreter;
 		_scriptInterpreter = nil;
@@ -158,7 +158,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 		if( ! arguments ) arguments = @[[NSNull null]];
 		if( (unsigned)[(Block *)object argumentCount] > [arguments count] ) {
 			NSMutableArray *newArgs = [[arguments mutableCopy] autorelease];
-			for( NSUInteger i = [arguments count]; i < (unsigned)[(Block *)object argumentCount]; i++ )
+			for( NSUInteger i = [arguments count]; i < (NSUInteger)[(Block *)object argumentCount]; i++ )
 				[newArgs addObject:[NSNull null]];
 			arguments = newArgs;
 		}

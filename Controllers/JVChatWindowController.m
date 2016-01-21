@@ -33,22 +33,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 #pragma mark -
 
-@interface JVChatWindowController (JVChatWindowControllerPrivate)
-- (void) _claimMenuCommands;
-- (void) _deferRefreshSelectionMenu;
-- (void) _resignMenuCommands;
-- (void) _refreshMenuWithItem:(id) item;
-- (void) _refreshSelectionMenu;
-- (void) _refreshToolbar;
-- (void) _refreshWindow;
-- (void) _refreshWindowTitle;
-- (void) _refreshList;
-- (void) _refreshPreferences;
-- (void) _saveWindowFrame;
-@end
-
-#pragma mark -
-
 @interface NSOutlineView (ASEntendedOutlineView)
 - (void) redisplayItemEqualTo:(id) item;
 @end
@@ -62,8 +46,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (instancetype) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
-		_views = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
-		_settings = [[NSMutableDictionary allocWithZone:nil] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]];
+		_views = [[NSMutableArray alloc] initWithCapacity:10];
+		_settings = [[NSMutableDictionary alloc] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]];
 	}
 
 	return self;
@@ -71,7 +55,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (void) windowDidLoad {
 	NSTableColumn *column = [chatViewsOutlineView outlineTableColumn];
-	JVDetailCell *prototypeCell = [[JVDetailCell allocWithZone:nil] init];
+	JVDetailCell *prototypeCell = [[JVDetailCell alloc] init];
 	[prototypeCell setFont:[NSFont toolTipsFontOfSize:11.]];
 	[column setDataCell:prototypeCell];
 
@@ -167,8 +151,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) setIdentifier:(NSString *) identifier {
-	_identifier = [identifier copyWithZone:nil];
-	_settings = [[NSMutableDictionary allocWithZone:nil] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]];
+	_identifier = [identifier copy];
+	_settings = [[NSMutableDictionary alloc] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]];
 
 	if( [[self identifier] length] ) {
 		[[self window] setDelegate:nil]; // so we don't act on the windowDidResize notification
@@ -849,7 +833,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSImage *org = [item icon];
 
 	if( [org size].width > maxSideSize || [org size].height > maxSideSize ) {
-		NSImage *ret = [[item icon] copyWithZone:nil];
+		NSImage *ret = [[item icon] copy];
 		[ret setSize:NSMakeSize( maxSideSize, maxSideSize )];
 		org = ret;
 	}
@@ -963,9 +947,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( [item respondsToSelector:@selector( setPreference:forKey: )] )
 		[(id)item setPreference:@YES forKey:@"expanded"];
 }
+@end
 
 #pragma mark -
 
+@implementation JVChatWindowController (Private)
 - (void) _claimMenuCommands {
 	NSMenuItem *closeItem = [[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:1];
 	[closeItem setKeyEquivalentModifierMask:NSCommandKeyMask];
@@ -986,7 +972,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[closeItem setKeyEquivalent:@""];
 }
 
-- (IBAction) _doubleClickedListItem:(id) sender {
+- (void) _doubleClickedListItem:(id) sender {
 	id item = [self selectedListItem];
 	if( [item respondsToSelector:@selector( doubleClicked: )] )
 		[item doubleClicked:sender];
@@ -1014,7 +1000,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	NSMenu *newMenu = ( [item respondsToSelector:@selector( menu )] ? [item menu] : nil );
 
-	for( menuItem in [[newMenu itemArray] copyWithZone:nil] ) {
+	for( menuItem in [[newMenu itemArray] copy] ) {
 		[newMenu removeItem:menuItem];
 		[menu addItem:menuItem];
 	}
@@ -1212,7 +1198,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[[self windowController] addChatViewController:view];
 }
 
-- (void) insertInChatViews:(id <JVChatViewController>) view atIndex:(NSInteger) index {
+- (void) insertInChatViews:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
 	[[self windowController] insertChatViewController:view atIndex:index];
 }

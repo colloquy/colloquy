@@ -125,9 +125,7 @@ static const NSStringEncoding supportedEncodings[] = {
 @synthesize proxyType = _proxy;
 @synthesize bouncerType = _bouncer;
 
-+ (BOOL) supportsURLScheme:(NSString *) scheme {
-	if( ! scheme ) return NO;
-
++ (BOOL) supportsURLScheme:(NSString *__nullable) scheme {
 	return
 #if ENABLE(ICB)
 		[scheme isEqualToString:@"icb"] ||

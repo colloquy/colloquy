@@ -224,13 +224,16 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 #pragma mark -
 
 - (void) _setBundle:(NSBundle *) bundle {
-	_bundle = bundle;
-
-	NSString *path = [[self bundle] pathForResource:@"emoticons" ofType:@"plist"];
+	NSString *path = [_bundle pathForResource:@"emoticons" ofType:@"plist"];
 	if( ! path ) path = [[NSBundle mainBundle] pathForResource:@"emoticons" ofType:@"plist"];
+	if( ! path ) return;
 
+	_bundle = bundle;
 	_emoticonMappings = [NSDictionary dictionaryWithContentsOfFile:path];
 
-	_emoticonMenu = [NSArray arrayWithContentsOfFile:[[self bundle] pathForResource:@"menu" ofType:@"plist"]];
+	NSString *file = [_bundle pathForResource:@"menu" ofType:@"plist"];
+	if( ! file ) return;
+
+	_emoticonMenu = [NSArray arrayWithContentsOfFile:file];
 }
 @end

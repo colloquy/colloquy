@@ -18,16 +18,16 @@ extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
 
 @property(strong, readonly) NSSet *matchedChatUsers;
 
-@property(copy) NSString *nickname;
+@property(copy, nullable) NSString *nickname;
 @property(readonly) BOOL nicknameIsRegularExpression;
 
-@property(copy) NSString *realName;
+@property(copy, nullable) NSString *realName;
 @property(readonly) BOOL realNameIsRegularExpression;
 
-@property(copy) NSString *username;
+@property(copy, nullable) NSString *username;
 @property(readonly) BOOL usernameIsRegularExpression;
 
-@property(copy) NSString *address;
+@property(copy, nullable) NSString *address;
 @property(readonly) BOOL addressIsRegularExpression;
 
 @property(copy) NSData *publicKey;

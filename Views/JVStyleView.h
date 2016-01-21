@@ -86,3 +86,25 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 
 @property (strong) NSTextView *nextTextView;
 @end
+
+@interface JVStyleView (Private)
+- (void) _checkForTransparantStyle;
+- (void) _contentFrameIsReady;
+- (void) _reallyAwakeFromNib;
+- (void) _resetDisplay;
+- (void) _switchStyle;
+- (void) _switchingStyleFinished:(id) sender;
+- (void) _appendMessage:(NSString *) message;
+- (void) _prependMessages:(NSString *) messages;
+- (void) _styleError;
+- (void) _styleVariantChanged:(NSNotification *) notification;
+- (void) _setupMarkedScroller;
+
+- (NSString *) _contentHTMLWithBody:(NSString *) html;
+- (NSURL *) _baseURL;
+
+- (NSUInteger) _locationOfMessageWithIdentifier:(NSString *) identifier;
+- (NSUInteger) _locationOfMessage:(JVChatMessage *) message;
+- (NSUInteger) _locationOfElementAtIndex:(NSUInteger) index;
+- (NSUInteger) _visibleMessageCount;
+@end

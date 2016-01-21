@@ -84,8 +84,8 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (instancetype) init {
 	if( ( self = [super init] ) ) {
-		_chatWindows = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
-		_chatControllers = [[NSMutableSet allocWithZone:nil] initWithCapacity:50];
+		_chatWindows = [[NSMutableSet alloc] initWithCapacity:5];
+		_chatControllers = [[NSMutableSet alloc] initWithCapacity:50];
 
 		[self _reloadPreferedWindowRuleSets];
 

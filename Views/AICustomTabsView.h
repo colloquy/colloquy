@@ -29,7 +29,7 @@
 - (NSString *)customTabView:(AICustomTabsView *)tabView toolTipForTabViewItem:(NSTabViewItem *)tabViewItem;
 - (BOOL)customTabView:(AICustomTabsView *)tabView didAcceptDragPasteboard:(NSPasteboard *)pasteboard onTabViewItem:(NSTabViewItem *)tabViewItem;
 - (NSArray *)customTabViewAcceptableDragTypes:(AICustomTabsView *)tabView;
-- (NSInteger)customTabView:(AICustomTabsView *)tabView indexForInsertingTabViewItem:(NSTabViewItem *)tabViewItem;
+- (int)customTabView:(AICustomTabsView *)tabView indexForInsertingTabViewItem:(NSTabViewItem *)tabViewItem;
 @end
 
 @interface AICustomTabsView : NSView {
@@ -43,8 +43,8 @@
 
 	//Tab Dragging
     BOOL                removingLastTabHidesWindow;	//Removing the last tab hides our window
-	NSUInteger 			tabGapWidth;				//Gap in our tabs
-	NSUInteger 			tabGapIndex;				//Location of the gap
+	unsigned 			tabGapWidth;				//Gap in our tabs
+	NSInteger 			tabGapIndex;				//Location of the gap
     NSPoint				lastClickLocation;			//Last click location
     NSTimer             *arrangeCellTimer;			//Timer for tab animations
 
@@ -71,7 +71,7 @@
 //Misc
 - (void)redisplayTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
 - (void)resizeTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
-- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(NSInteger)index;
+- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index;
 @property (readonly) NSInteger numberOfTabViewItems;
 
 //Private
@@ -79,7 +79,6 @@
 - (AICustomTabCell *)tabAtPoint:(NSPoint)clickLocation;
 @property (readonly) int totalWidthOfTabs;
 - (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(NSInteger)index selectTab:(BOOL)shouldSelect animate:(BOOL)animate;
-//- (NSInteger)numberOfTabViewItems;
 - (void)closeTab:(AICustomTabCell *)tabCell;
 - (void)closeAllTabsExceptFor:(AICustomTabCell *)targetCell;
 - (void)drawBackgroundInRect:(NSRect)rect withFrame:(NSRect)viewFrame selectedTabRect:(NSRect)tabFrame;

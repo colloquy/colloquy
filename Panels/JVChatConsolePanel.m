@@ -11,6 +11,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) textDidChange:(NSNotification *) notification;
 @end
 
+@interface JVChatConsolePanel (Private)
+- (void) _gotImportantMessage:(NSNotification *) notification;
+- (void) _gotInformationalMessage:(NSNotification *) notification;
+- (void) _gotRawMessage:(NSNotification *) notification;
+- (void) _refreshIcon:(NSNotification *) notification;
+@end
+
 @implementation JVChatConsolePanel
 - (instancetype) initWithConnection:(MVChatConnection *) connection {
 	if( ( self = [self init] ) ) {
@@ -631,9 +638,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[[send enclosingScrollView] setFrame:sendFrame];
 	[[display enclosingScrollView] setFrame:displayFrame];
 }
+@end
 
 #pragma mark -
 
+@implementation JVChatConsolePanel (Private)
 - (void) _gotImportantMessage:(NSNotification *) notification {
 	if( _paused ) return;
 	[self addMessageToDisplay:[notification userInfo][@"message"] asOutboundMessage:NO];

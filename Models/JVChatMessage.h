@@ -6,7 +6,35 @@ typedef NS_ENUM(OSType, JVChatMessageType) {
 	JVChatMessageNoticeType = 'nTMt'
 };
 
-@interface JVChatMessage : NSObject <NSMutableCopying, JVChatTranscriptElement>
+@interface JVChatMessage : NSObject <NSMutableCopying, JVChatTranscriptElement> {
+	@public
+	struct _xmlNode *_node;
+	struct _xmlDoc *_doc;
+	NSString *_messageIdentifier;
+	NSScriptObjectSpecifier *_objectSpecifier;
+	__weak JVChatTranscript *_transcript;
+
+	id _senderIdentifier;
+	NSString *_senderName;
+	NSString *_senderNickname;
+	NSString *_senderHostmask;
+	NSString *_senderClass;
+	NSString *_senderBuddyIdentifier;
+
+	NSTextStorage *_attributedMessage;
+	NSDate *_date;
+	NSURL *_source;
+	JVIgnoreMatchResult _ignoreStatus;
+	JVChatMessageType _type;
+	NSUInteger _consecutiveOffset;
+	BOOL _senderIsLocalUser;
+	BOOL _action;
+	BOOL _highlighted;
+	BOOL _loaded;
+	BOOL _bodyLoaded;
+	BOOL _senderLoaded;
+	NSMutableDictionary *_attributes;
+}
 - (struct _xmlNode*) node;
 
 @property (readonly, strong) NSDate *date;

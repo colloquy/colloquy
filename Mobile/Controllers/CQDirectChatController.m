@@ -2259,7 +2259,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return @{@"c": user.connection.uniqueIdentifier, @"n": user.nickname};
 }
 
-- (void) _showLocalNotificationForMessage:(NSDictionary *) message withSoundName:(NSString *) soundName {
+- (void) _showLocalNotificationForMessage:(NSDictionary *) message withSoundName:(NSString *__nullable) soundName {
 	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
 		return;
 

@@ -22,6 +22,8 @@
 
 #import "NSNotificationAdditions.h"
 
+static CQSoundController *highlightSound;
+
 NS_ASSUME_NONNULL_BEGIN
 
 NSString *CQChatControllerAddedChatViewControllerNotification = @"CQChatControllerAddedChatViewControllerNotification";
@@ -43,7 +45,6 @@ NSString *CQChatControllerChangedTotalImportantUnreadCountNotification = @"CQCha
 static NSInteger alwaysShowNotices;
 static NSString *chatRoomInviteAction;
 static BOOL vibrateOnHighlight;
-static CQSoundController *highlightSound;
 
 #if ENABLE(FILE_TRANSFERS)
 static BOOL vibrateOnFileTransfer;
@@ -316,7 +317,6 @@ static CQSoundController *fileTransferSound;
 	if (vibrateOnHighlight)
 		[CQSoundController vibrate];
 
-	if (highlightSound)
 		[highlightSound playSound];
 
 	[alert show];

@@ -58,7 +58,7 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 		case SILC_CLIENT_FILE_UNKNOWN_SESSION:
 		case SILC_CLIENT_FILE_ERROR: {
 			NSDictionary *info = @{NSLocalizedDescriptionKey: @"The file transfer terminated unexpectedly."};
-			NSError *error = [[NSError allocWithZone:nil] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferUnexpectedlyEndedError userInfo:info];
+			NSError *error = [[NSError alloc] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferUnexpectedlyEndedError userInfo:info];
 			RunOnMainThreadAsync(^{
 				[self _postError:error];
 			});
@@ -66,7 +66,7 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 
 		case SILC_CLIENT_FILE_ALREADY_STARTED: {
 			NSDictionary *info = @{NSLocalizedDescriptionKey: @"The file %@ is already being offerend to %@."};
-			NSError *error = [[NSError allocWithZone:nil] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferAlreadyExistsError userInfo:info];
+			NSError *error = [[NSError alloc] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferAlreadyExistsError userInfo:info];
 			RunOnMainThreadAsync(^{
 				[self _postError:error];
 			});
@@ -75,7 +75,7 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 		case SILC_CLIENT_FILE_NO_SUCH_FILE:
 		case SILC_CLIENT_FILE_PERMISSION_DENIED: {
 			NSDictionary *info = @{NSLocalizedDescriptionKey: @"The file %@ could not be created, please make sure you have write permissions in the %@ folder."};
-			NSError *error = [[NSError allocWithZone:nil] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileCreationError userInfo:info];
+			NSError *error = [[NSError alloc] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileCreationError userInfo:info];
 			RunOnMainThreadAsync(^{
 				[self _postError:error];
 			});
@@ -83,7 +83,7 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 
 		case SILC_CLIENT_FILE_KEY_AGREEMENT_FAILED: {
 			NSDictionary *info = @{NSLocalizedDescriptionKey: @"Key agreement failed. Either your key was rejected by the other user or some other error happend during key negotiation."};
-			NSError *error = [[NSError allocWithZone:nil] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferKeyAgreementError userInfo:info];
+			NSError *error = [[NSError alloc] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferKeyAgreementError userInfo:info];
 			RunOnMainThreadAsync(^{
 				[self _postError:error];
 			});
@@ -108,8 +108,8 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 	NSMutableData *result = [[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL] mutableCopy];
 	[result appendBytes:"\0" length:1];
 
-	MVSILCUploadFileTransfer *transfer = [[MVSILCUploadFileTransfer allocWithZone:nil] initWithSessionID:0 toUser:user];
-	transfer -> _source = [[path stringByStandardizingPath] copyWithZone:nil];
+	MVSILCUploadFileTransfer *transfer = [[MVSILCUploadFileTransfer alloc] initWithSessionID:0 toUser:user];
+	transfer -> _source = [[path stringByStandardizingPath] copy];
 
 	SilcClientID *clientID = silc_id_str2id( [(NSData *)[user uniqueIdentifier] bytes], [(NSData *)[user uniqueIdentifier] length], SILC_ID_CLIENT );
 	if( clientID ) {
@@ -207,6 +207,7 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 - (void) acceptByResumingIfPossible:(BOOL) resume {
 	if( ! [[NSFileManager defaultManager] isReadableFileAtPath:[self destination]] )
 		resume = NO;
+	(void)resume;
 }
 @end
 

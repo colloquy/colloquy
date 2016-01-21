@@ -205,6 +205,7 @@
 		92A711951A4A5166009E80F0 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A711941A4A5166009E80F0 /* SecurityInterface.framework */; };
 		C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; };
 		C22A35571BC00BB7001757D7 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C23298991C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = C23298981C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m */; };
 		C29654101BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */; };
 		C29654131BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654151BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib */; };
 		C29654161BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654181BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib */; };
@@ -655,10 +656,6 @@
 		1CF79CBD07AC77E600696918 /* JVChatTranscript.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatTranscript.m; path = Models/JVChatTranscript.m; sourceTree = "<group>"; };
 		1CF8030C070C893500C9B54C /* libsilc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilc.framework; path = Frameworks/libsilc.framework; sourceTree = SOURCE_ROOT; };
 		1CF8030D070C893500C9B54C /* libsilcclient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilcclient.framework; path = Frameworks/libsilcclient.framework; sourceTree = SOURCE_ROOT; };
-		550C974B1AD44D5E00B590A6 /* JVChatEvent_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatEvent_Private.h; path = Models/JVChatEvent_Private.h; sourceTree = "<group>"; };
-		550C974E1AD4543200B590A6 /* JVChatSession_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatSession_Private.h; path = Models/JVChatSession_Private.h; sourceTree = "<group>"; };
-		550C974F1AD455BA00B590A6 /* JVChatMessage_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatMessage_Private.h; path = Models/JVChatMessage_Private.h; sourceTree = "<group>"; };
-		550C97501AD45A4800B590A6 /* JVChatTranscript_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatTranscript_Private.h; path = Models/JVChatTranscript_Private.h; sourceTree = "<group>"; };
 		5530388F171722A200652D45 /* GetMetadataForFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetMetadataForFile.h; sourceTree = "<group>"; };
 		556CEBE41BCB795600F00EAA /* Tabs Interface Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Tabs Interface Images.xcassets"; sourceTree = "<group>"; };
 		5575C7BE1AFAB53D001EEF98 /* widgets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = widgets.xcassets; sourceTree = "<group>"; };
@@ -795,6 +792,8 @@
 		A18BCA2108FF588E0005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
 		A18BCA2208FF589D0005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
 		A1E1610309228E4F004920E8 /* French */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = French; path = Languages/fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C23298971C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSWindow+CQMCoordinateSpaceConversion.h"; path = "Additions/NSWindow+CQMCoordinateSpaceConversion.h"; sourceTree = "<group>"; };
+		C23298981C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSWindow+CQMCoordinateSpaceConversion.m"; path = "Additions/NSWindow+CQMCoordinateSpaceConversion.m"; sourceTree = "<group>"; };
 		C25154471C22063900551BB4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
 		C25154491C2207A200551BB4 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
 		C251544B1C2207A900551BB4 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
@@ -1293,16 +1292,12 @@
 				1C66913707BFA76D008400F7 /* JVEmoticonSet.h */,
 				1CF79CBD07AC77E600696918 /* JVChatTranscript.m */,
 				1CF79CBC07AC77E600696918 /* JVChatTranscript.h */,
-				550C97501AD45A4800B590A6 /* JVChatTranscript_Private.h */,
 				1C5EF36A07B45FBF004E66D3 /* JVChatSession.m */,
 				1C5EF36907B45FBF004E66D3 /* JVChatSession.h */,
-				550C974E1AD4543200B590A6 /* JVChatSession_Private.h */,
 				1CD733CA05A0E2470080F952 /* JVChatMessage.m */,
 				1CD733C905A0E2470080F952 /* JVChatMessage.h */,
-				550C974F1AD455BA00B590A6 /* JVChatMessage_Private.h */,
 				1C5EF35907B45C1F004E66D3 /* JVChatEvent.m */,
 				1C5EF35807B45C1F004E66D3 /* JVChatEvent.h */,
-				550C974B1AD44D5E00B590A6 /* JVChatEvent_Private.h */,
 				92823CF1168FFA0A000EC36E /* KAIgnoreRule.m */,
 				92823CF0168FFA0A000EC36E /* KAIgnoreRule.h */,
 				F551EE490209FB3301EE70DE /* MVKeyChain.m */,
@@ -1452,6 +1447,8 @@
 				1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */,
 				1C4671E306D7759100071DC6 /* NSTextStorageAdditions.h */,
 				55B748191AD2E957001459F7 /* RunOnMainThread.h */,
+				C23298971C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.h */,
+				C23298981C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m */,
 			);
 			indentWidth = 4;
 			name = "Other Sources & Additions";
@@ -1971,7 +1968,6 @@
 			);
 			name = "Unarchive Frameworks";
 			outputPaths = (
-				"$(SRCROOT)/Frameworks/libtransmission.a",
 				"$(SRCROOT)/Frameworks/Sparkle.framework",
 				"$(SRCROOT)/Frameworks/Growl.framework",
 				"$(SRCROOT)/Frameworks/libsilc.framework",
@@ -1979,7 +1975,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/Frameworks\"\nrm -rf *.{framework,a}\ntar xzf frameworks.tar.gz\nranlib *.a\n";
+			shellScript = "cd \"$SRCROOT/Frameworks\"\nrm -rf *.{framework,a}\ntar xzf frameworks.tar.gz\n";
 			showEnvVarsInLog = 0;
 		};
 		9295C9D116784584009F9014 /* ShellScript */ = {
@@ -2078,6 +2074,7 @@
 				1C6A45210841746500572AB6 /* JVChatViewCriterionController.m in Sources */,
 				1C7780DE08FA1D82006AD8E5 /* JVSpeechController.m in Sources */,
 				1C710A0209F23730007B4515 /* JVSidebarChatWindowController.m in Sources */,
+				C23298991C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m in Sources */,
 				1C710A6C09F23AF0007B4515 /* JVSideSplitView.m in Sources */,
 				1C710A6E09F23AF0007B4515 /* JVSideStatusView.m in Sources */,
 				1C710A7009F23AF0007B4515 /* JVSideOutlineView.m in Sources */,

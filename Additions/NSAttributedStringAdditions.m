@@ -117,8 +117,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	// we suround the fragment in the #01FE02 green color so we can later key it out and strip it
 	// this will result in colorless areas of our string, letting the color be defined by the interface
 
-	NSString *render = [[NSString allocWithZone:nil] initWithFormat:@"<span style=\"color: #01FE02\">%@</span>", fragment];
-	NSMutableAttributedString *result = [[NSMutableAttributedString allocWithZone:nil] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] options:options documentAttributes:NULL];
+	NSString *render = [[NSString alloc] initWithFormat:@"<span style=\"color: #01FE02\">%@</span>", fragment];
+	NSMutableAttributedString *result = [[NSMutableAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] options:options documentAttributes:NULL];
 
 	NSRange limitRange, effectiveRange;
 	limitRange = NSMakeRange( 0, result.length );
@@ -129,7 +129,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
 
-	NSAttributedString *ret = [[self allocWithZone:nil] initWithAttributedString:result];
+	NSAttributedString *ret = [[self alloc] initWithAttributedString:result];
 
 	return ret;
 }
@@ -237,7 +237,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 #if SYSTEM(MAC)
 + (instancetype) attributedStringWithChatFormat:(NSData *) data options:(NSDictionary *) options {
-	return [[self allocWithZone:nil] initWithChatFormat:data options:options];
+	return [[self alloc] initWithChatFormat:data options:options];
 }
 #endif
 
@@ -262,7 +262,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			if( i == j ) continue;
 
 			if( bytes[j++] == 'E' ) {
-				NSString *encodingStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + j ) length:( i - j ) encoding:NSASCIIStringEncoding];
+				NSString *encodingStr = [[NSString alloc] initWithBytes:( bytes + j ) length:( i - j ) encoding:NSASCIIStringEncoding];
 				NSStringEncoding newEncoding = 0;
 				if( ! encodingStr.length ) { // if no encoding is declared, go back to user default
 					newEncoding = encoding;
@@ -308,11 +308,11 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 					if( ( end - start ) > 0 ) {
 						NSData *subData = nil;
 						if( currentEncoding != NSUTF8StringEncoding ) {
-							NSString *tempStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + start ) length:( end - start ) encoding:currentEncoding];
+							NSString *tempStr = [[NSString alloc] initWithBytes:( bytes + start ) length:( end - start ) encoding:currentEncoding];
 							NSData *utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
 							if( utf8Data ) subData = utf8Data;
 						} else {
-							subData = [[NSData allocWithZone:nil] initWithBytesNoCopy:(void *)( bytes + start ) length:( end - start ) freeWhenDone:NO];
+							subData = [[NSData alloc] initWithBytesNoCopy:(void *)( bytes + start ) length:( end - start ) freeWhenDone:NO];
 						}
 
 						if( subData ) [newData appendData:subData];
@@ -329,11 +329,11 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		if( start < length ) {
 			NSData *subData = nil;
 			if( currentEncoding != NSUTF8StringEncoding ) {
-				NSString *tempStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + start ) length:( length - start ) encoding:currentEncoding];
+				NSString *tempStr = [[NSString alloc] initWithBytes:( bytes + start ) length:( length - start ) encoding:currentEncoding];
 				NSData *utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
 				if( utf8Data ) subData = utf8Data;
 			} else {
-				subData = [[NSData allocWithZone:nil] initWithBytesNoCopy:(void *)( bytes + start ) length:( length - start )freeWhenDone:NO];
+				subData = [[NSData alloc] initWithBytesNoCopy:(void *)( bytes + start ) length:( length - start )freeWhenDone:NO];
 			}
 
 			if( subData ) [newData appendData:subData];
@@ -346,7 +346,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	if( encoding != NSUTF8StringEncoding && isValidUTF8( [data bytes], data.length ) )
 		encoding = NSUTF8StringEncoding;
 
-	NSString *message = [[NSString allocWithZone:nil] initWithBytes:[data bytes] length:data.length encoding:encoding];
+	NSString *message = [[NSString alloc] initWithBytes:[data bytes] length:data.length encoding:encoding];
 	if( ! message ) {
 		return nil;
 	}
@@ -362,7 +362,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	if( [message rangeOfCharacterFromSet:formatCharacters].location == NSNotFound )
 		return [self initWithString:message attributes:attributes];
 
-	NSMutableAttributedString *ret = [[NSMutableAttributedString allocWithZone:nil] init];
+	NSMutableAttributedString *ret = [[NSMutableAttributedString alloc] init];
 	NSScanner *scanner = [NSScanner scannerWithString:message];
 	[scanner setCharactersToBeSkipped:nil]; // don't skip leading whitespace!
 
@@ -587,7 +587,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		NSString *text = nil;
  		[scanner scanUpToCharactersFromSet:formatCharacters intoString:&text];
 		if( text.length ) {
-			id new = [[[self class] allocWithZone:nil] initWithString:text attributes:attributes];
+			id new = [[[self class] alloc] initWithString:text attributes:attributes];
 			[ret appendAttributedString:new];
 		}
 	}
@@ -598,7 +598,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 - (NSData *) _mIRCFormatWithOptions:(NSDictionary *) options {
 	NSRange limitRange, effectiveRange;
-	NSMutableData *ret = [[NSMutableData allocWithZone:nil] initWithCapacity:( self.length + 20 )];
+	NSMutableData *ret = [[NSMutableData alloc] initWithCapacity:( self.length + 20 )];
 	NSStringEncoding encoding = [options[@"StringEncoding"] unsignedLongValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
@@ -695,7 +695,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 #if SYSTEM(MAC)
 - (NSData *) _CTCP2FormatWithOptions:(NSDictionary *) options {
 	NSRange limitRange, effectiveRange;
-	NSMutableData *ret = [[NSMutableData allocWithZone:nil] initWithCapacity:( self.length + 40 )];
+	NSMutableData *ret = [[NSMutableData alloc] initWithCapacity:( self.length + 40 )];
 	NSStringEncoding encoding = [options[@"StringEncoding"] unsignedLongValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 

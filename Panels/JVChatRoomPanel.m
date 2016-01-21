@@ -16,30 +16,27 @@
 
 NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdateNotification";
 
-@interface JVChatRoomPanel (JVChatRoomPrivate)
+@interface JVChatRoomPanel (Private)
+// TODO: This method is overwriting a method of superclass category JVDirectChatPanel+Private, undefined behavior.
+- (void) _didDisconnect:(NSNotification *) notification; // overwrite
+- (void) _partedRoom:(NSNotification *) notification;
+- (void) _roomModeChanged:(NSNotification *) notification;
+- (void) _selfNicknameChanged:(NSNotification *) notification;
+- (void) _memberNicknameChanged:(NSNotification *) notification;
+- (void) _memberJoined:(NSNotification *) notification;
+- (void) _memberParted:(NSNotification *) notification;
+- (void) _userBricked:(NSNotification *) notification;
+- (void) _kicked:(NSNotification *) notification;
+- (void) _memberKicked:(NSNotification *) notification;
+- (void) _memberBanned:(NSNotification *) notification;
+- (void) _memberBanRemoved:(NSNotification *) notification;
+- (void) _memberModeChanged:(NSNotification *) notification;
+- (void) _membersSynced:(NSNotification *) notification;
+- (void) _bannedMembersSynced:(NSNotification *) notification;
 - (void) _topicChanged:(id) sender;
-@property (readonly) NSInteger _roomIndexInFavoritesMenu;
-@end
+- (void) _didClearDisplay:(NSNotification *) notification;
 
-#pragma mark -
-
-@interface JVDirectChatPanel (JVDirectChatPrivate)
-@property (readonly, copy) NSString *_selfCompositeName;
-@property (readonly, copy) NSString *_selfStoredNickname;
-- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
-- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont;
-- (void) _didConnect:(NSNotification *) notification;
-- (void) _didDisconnect:(NSNotification *) notification;
-- (void) _didSwitchStyles:(NSNotification *) notification;
-- (void) toggleNotifications:(id) sender;
-@end
-
-#pragma mark -
-
-@interface JVChatRoomMember (JVChatMemberPrivate)
-@property (readonly, copy) NSString *_selfStoredNickname;
-@property (readonly, copy) NSString *_selfCompositeName;
-- (void) _detach;
+- (NSInteger) _roomIndexInFavoritesMenu;
 @end
 
 #pragma mark -
@@ -47,9 +44,9 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 @implementation JVChatRoomPanel
 - (instancetype) initWithTarget:(id) target {
 	if( ( self = [super initWithTarget:target] ) ) {
-		_sortedMembers = [[NSMutableArray allocWithZone:nil] initWithCapacity:100];
-		_preferredTabCompleteNicknames = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
-		_nextMessageAlertMembers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
+		_sortedMembers = [[NSMutableArray alloc] initWithCapacity:100];
+		_preferredTabCompleteNicknames = [[NSMutableArray alloc] initWithCapacity:10];
+		_nextMessageAlertMembers = [[NSMutableSet alloc] initWithCapacity:5];
 		_cantSendMessages = YES;
 		_kickedFromRoom = NO;
 		_banListSynced = NO;
@@ -736,8 +733,11 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	[list addObject:JVToolbarQuickSearchItemIdentifier];
 	return list;
 }
+@end
 
 #pragma mark -
+
+@implementation JVChatRoomPanel (Private)
 
 - (void) _didDisconnect:(NSNotification *) notification {
 	_kickedFromRoom = NO;

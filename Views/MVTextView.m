@@ -11,7 +11,7 @@
 @implementation MVTextView
 - (instancetype)initWithFrame:(NSRect)frameRect textContainer:(NSTextContainer *)aTextContainer {
 	if( (self = [super initWithFrame:frameRect textContainer:aTextContainer] ) )
-		defaultTypingAttributes = [[NSDictionary allocWithZone:nil] init];
+		defaultTypingAttributes = [[NSDictionary alloc] init];
 	return self;
 }
 
@@ -28,7 +28,7 @@
 #pragma mark -
 
 - (void) interpretKeyEvents:(NSArray *) eventArray {
-	NSMutableArray *newArray = [[NSMutableArray allocWithZone:nil] init];
+	NSMutableArray *newArray = [[NSMutableArray alloc] init];
 
 	if( ! [self isEditable] ) {
 		[super interpretKeyEvents:eventArray];
@@ -118,7 +118,7 @@
 - (void) setBaseFont:(NSFont *) font {
 	if( ! font ) {
 		font = [NSFont userFontOfSize:0.];
-		defaultTypingAttributes = [[NSDictionary allocWithZone:nil] init];
+		defaultTypingAttributes = [[NSDictionary alloc] init];
 	} else defaultTypingAttributes = @{NSFontAttributeName: font};
 	[self setTypingAttributes:defaultTypingAttributes];
 	[self setFont:font];
@@ -152,7 +152,7 @@
 	NSRange limitRange, effectiveRange;
 	NSUInteger count = 0, i = 0;
 	NSRectArray rects = NULL;
-	NSCursor *linkCursor = [[NSCursor allocWithZone:nil] initWithImage:[NSImage imageNamed:@"MVLinkCursor"] hotSpot:NSMakePoint( 6., 0. )];
+	NSCursor *linkCursor = [[NSCursor alloc] initWithImage:[NSImage imageNamed:@"MVLinkCursor"] hotSpot:NSMakePoint( 6., 0. )];
 
 	[super resetCursorRects];
 	limitRange = NSMakeRange( 0, [[self string] length] );
@@ -199,7 +199,7 @@
 			limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 		}
 	} else {
-		NSMutableDictionary *attributes = [[self typingAttributes] mutableCopyWithZone:nil];
+		NSMutableDictionary *attributes = [[self typingAttributes] mutableCopy];
 		NSFont *font = attributes[NSFontAttributeName];
 		if( ! font ) font = [NSFont userFontOfSize:0.];
 		if( [[NSFontManager sharedFontManager] traitsOfFont:font] & NSBoldFontMask )
@@ -231,7 +231,7 @@
 			limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 		}
 	} else {
-		NSMutableDictionary *attributes = [[self typingAttributes] mutableCopyWithZone:nil];
+		NSMutableDictionary *attributes = [[self typingAttributes] mutableCopy];
 		NSFont *font = attributes[NSFontAttributeName];
 		if( ! font ) font = [NSFont userFontOfSize:0.];
 		if( [[NSFontManager sharedFontManager] traitsOfFont:font] & NSItalicFontMask )
@@ -250,7 +250,7 @@
 	if( ! [self isEditable] ) return;
 	if( [color alphaComponent] == 0. ) color = nil;
 	if( color && ! range.length ) {
-		NSMutableDictionary *attributes = [[self typingAttributes] mutableCopyWithZone:nil];
+		NSMutableDictionary *attributes = [[self typingAttributes] mutableCopy];
 		attributes[NSBackgroundColorAttributeName] = color;
 		[self setTypingAttributes:attributes];
 	} else [[self textStorage] addAttribute:NSBackgroundColorAttributeName value:color range:range];
@@ -333,7 +333,7 @@
 		NSRange wordRange;
 		BOOL full = YES;
 
-		_lastCompletionPrefix = [partialCompletion copyWithZone:nil];
+		_lastCompletionPrefix = [partialCompletion copy];
 
 		if( curPos.location == [[self string] length] || [illegalCharacters characterIsMember:[[self string] characterAtIndex:curPos.location]] ) {
 			wordRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
@@ -358,7 +358,7 @@
 			full = NO;
 		}
 
-		_lastCompletionMatch = [name copyWithZone:nil];
+		_lastCompletionMatch = [name copy];
 
 		if ( suffix && wordRange.location == 0 )	{
 			if ( [tabCompletion length] ) name = [name stringByAppendingString:tabCompletion];

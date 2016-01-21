@@ -11,6 +11,10 @@
 
 static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsItem";
 
+@interface JVSmartTranscriptPanel (Private)
+- (void) _messageDisplayed:(NSNotification *) notification;
+@end
+
 @implementation JVSmartTranscriptPanel
 - (instancetype) init {
 	if( ( self = [super init] ) ) {
@@ -31,8 +35,8 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	if( ( self = [self init] ) ) {
 		_settingsNibLoaded = [[NSBundle mainBundle] loadNibNamed:@"JVSmartTranscriptFilterSheet" owner:self topLevelObjects:NULL];
 
-		_rules = [settings[@"rules"] mutableCopyWithZone:nil];
-		_title = [settings[@"title"] copyWithZone:nil];
+		_rules = [settings[@"rules"] mutableCopy];
+		_title = [settings[@"title"] copy];
 		_operation = [settings[@"operation"] intValue];
 		_ignoreCase = [settings[@"ignoreCase"] boolValue];
 
@@ -439,9 +443,11 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	[list addObject:JVToolbarClearScrollbackItemIdentifier];
 	return list;
 }
+@end
 
 #pragma mark -
 
+@implementation JVSmartTranscriptPanel (Private)
 - (void) _messageDisplayed:(NSNotification *) notification {
 	JVChatMessage *origMessage = [notification userInfo][@"message"];
 	[self matchMessage:origMessage fromView:[notification object]];

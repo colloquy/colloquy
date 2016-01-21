@@ -18,7 +18,8 @@
 
 	if( splitView ) {
 		NSImage *resizeImage = [NSImage imageNamed:@"sidebarResizeWidget"];
-		 [resizeImage cq_compositeToPoint:NSMakePoint( NSWidth( [self bounds] ) - [resizeImage size].width, 0. ) operation:NSCompositeCopy]; 
+		NSPoint point = NSMakePoint( NSWidth( [self bounds] ) - [resizeImage size].width, 0. );
+		[resizeImage drawAtPoint:point fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
 	}
 }
 

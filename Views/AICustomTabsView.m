@@ -17,6 +17,7 @@
 #import "AICustomTabCell.h"
 #import "AICustomTabDragging.h"
 #import "NSImageAdditions.h"
+#import "NSWindow+CQMCoordinateSpaceConversion.h"
 
 #define TAB_DRAG_DISTANCE 		3					//Distance required before a drag kicks in
 #define CUSTOM_TABS_FPS			30.0				//Animation speed
@@ -29,19 +30,20 @@
 static  NSImage			*tabBackground = nil;
 static  NSImage			*tabDivider = nil;
 
-@interface AICustomTabsView ()
+@interface AICustomTabsView (PRIVATE)
 - (instancetype)initWithFrame:(NSRect)frameRect;
 
 //Positioning
 - (void)arrangeTabs;
 - (void)smoothlyArrangeTabs;
-- (void)smoothlyArrangeTabsWithGapOfWidth:(NSInteger)width atIndex:(NSInteger)index;
+- (void)smoothlyArrangeTabsWithGapOfWidth:(int)width atIndex:(NSInteger)index;
 - (void)_arrangeCellTimer:(NSTimer *)inTimer;
 - (BOOL)_arrangeCellsAbsolute:(BOOL)absolute;
 
 //Dragging
 @property (readonly, copy) NSArray *acceptableDragTypes;
-- (NSPoint)_dropPointForTabOfWidth:(NSInteger)dragTabWidth hoveredAtScreenPoint:(NSPoint)inPoint dropIndex:(NSInteger *)outIndex;
+- (NSPoint)_dropPointForTabOfWidth:(int)dragTabWidth hoveredAtScreenPoint:(NSPoint)inPoint dropIndex:(NSInteger *)outIndex;
+- (BOOL)allowsTabRearranging;
 
 //Tab Data Access (Guarded)
 - (void)removeTabCell:(AICustomTabCell *)inCell;
@@ -53,16 +55,6 @@ static  NSImage			*tabDivider = nil;
 @end
 
 @implementation AICustomTabsView
-
-- (NSArray*)tabCellArray
-{
-	return tabCellArray;
-}
-
-- (void)removeTabCell:(AICustomTabCell *)inCell
-{
-	//Currently a no-op
-}
 
 //Create a new custom tab view
 + (id)customTabViewWithFrame:(NSRect)frameRect
@@ -178,7 +170,7 @@ static  NSImage			*tabDivider = nil;
 }
 
 //Move a tab
-- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(NSInteger)index
+- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index
 {
 	[self moveTab:tabViewItem toIndex:index selectTab:NO animate:YES];
 }
@@ -226,8 +218,8 @@ static  NSImage			*tabDivider = nil;
 		if(tabViewItem == [tabView selectedTabViewItem]) shouldSelect = YES;
 
 		//Move the tab cell
-		NSInteger	currentIndex = [tabCellArray indexOfObject:tabCell];
-		NSInteger	newIndex = index;
+		NSUInteger	currentIndex = [tabCellArray indexOfObject:tabCell];
+		NSUInteger	newIndex = index;
 
 		//Account for shifting
 		if(currentIndex < newIndex) newIndex--;
@@ -399,7 +391,7 @@ static  NSImage			*tabDivider = nil;
 }
 
 //Slowly move our tabs to make a gap
-- (void)smoothlyArrangeTabsWithGapOfWidth:(NSInteger)width atIndex:(NSInteger)index
+- (void)smoothlyArrangeTabsWithGapOfWidth:(int)width atIndex:(NSInteger)index
 {
 	tabGapWidth = width;
 	tabGapIndex = index;
@@ -430,7 +422,7 @@ static  NSImage			*tabDivider = nil;
     int				xLocation;
     BOOL			finished = YES;
     int				tabExtraWidth;
-    NSInteger		totalTabWidth;
+    int				totalTabWidth;
     int				reducedWidth = 0;
     int				reduceThreshold = 1000000;
 
@@ -558,8 +550,8 @@ static  NSImage			*tabDivider = nil;
 				//We also don't draw it for the index behind hovered
 				if((ignoreSelection ||
 					(tabCell != selectedCustomTabCell && (!nextTabCell || nextTabCell != selectedCustomTabCell)))
-				   && [tabCellArray indexOfObject:tabCell] != tabGapIndex - 1){
-					[tabDivider cq_compositeToPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y) operation:NSCompositeSourceOver];
+				   && (NSInteger)[tabCellArray indexOfObject:tabCell] != tabGapIndex - 1){
+					[tabDivider drawAtPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width, cellFrame.origin.y) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
 				}
 			}
 		}
@@ -780,7 +772,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
     NSDragOperation	operation = NSDragOperationNone;
 
     if(type && [type isEqualToString:TAB_CELL_IDENTIFIER]){ //Dragging a tab
-		NSInteger	draggedCellWidth = [[AICustomTabDragging sharedInstance] sizeOfDraggedCell].width;
+		int			draggedCellWidth = [[AICustomTabDragging sharedInstance] sizeOfDraggedCell].width;
 		NSInteger	dropIndex;
 
 		//Snap the hovered tab to it's drop location, and slide our tabs out of the way to make room
@@ -826,7 +818,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 //Determines the correct drop index for a hovered tab, and returns the desired screen location and index for it
 //We ignore frame origins in here, since they are being slid all around and relying on them will cause jiggyness.
 //Instead, we step through each cell and use only it's width.
-- (NSPoint)_dropPointForTabOfWidth:(NSInteger)dragTabWidth hoveredAtScreenPoint:(NSPoint)inPoint dropIndex:(NSInteger *)outIndex
+- (NSPoint)_dropPointForTabOfWidth:(int)dragTabWidth hoveredAtScreenPoint:(NSPoint)inPoint dropIndex:(NSInteger *)outIndex
 {
 	if(allowsTabRearranging){
 		NSEnumerator 	*enumerator;
@@ -849,13 +841,13 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 
 		if(outIndex) *outIndex = hoverIndex;
 
-		return([[self window] convertBaseToScreen:[self convertPoint:NSMakePoint(lastLocation,0) toView:nil]]);
+		return([[self window] cqm_convertPointToScreen:[self convertPoint:NSMakePoint(lastLocation,0) toView:nil]]);
 	}else{
 		NSTabViewItem		*tabViewItem = [[AICustomTabDragging sharedInstance] draggedTabViewItem];
 		int					hover;
 
 		//If dragging is disallowed, ask our delegate where this tab should go
-		NSUInteger desiredIndex = [delegate customTabView:self indexForInsertingTabViewItem:tabViewItem];
+		unsigned desiredIndex = [delegate customTabView:self indexForInsertingTabViewItem:tabViewItem];
 		if(outIndex) *outIndex = desiredIndex;
 
 		//Position the hover tab
@@ -866,7 +858,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		}else{
 			hover = NSMaxX([tabCellArray[desiredIndex-1] frame]) + CUSTOM_TABS_GAP;
 		}
-		return([[self window] convertBaseToScreen:[self convertPoint:NSMakePoint(hover,0) toView:nil]]);
+		return([[self window] cqm_convertPointToScreen:[self convertPoint:NSMakePoint(hover,0) toView:nil]]);
 	}
 }
 
@@ -890,7 +882,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
         NSPoint			localPoint;
 
         //Local mouse location
-		localPoint = [[self window] convertScreenToBase:[NSEvent mouseLocation]];
+		localPoint = [[self window] cqm_convertPointToScreen:[NSEvent mouseLocation]];
 
         //Install tracking rects for each tab
         enumerator = [tabCellArray objectEnumerator];

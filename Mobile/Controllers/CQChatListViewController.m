@@ -154,7 +154,7 @@ static NSInteger sectionIndexForTransfers() {
 }
 #endif
 
-static id <CQChatViewController> chatControllerForIndexPath(NSIndexPath *indexPath) {
+static id <CQChatViewController> __nullable chatControllerForIndexPath(NSIndexPath *indexPath) {
 	if (!indexPath)
 		return nil;
 
@@ -174,7 +174,7 @@ static id <CQChatViewController> chatControllerForIndexPath(NSIndexPath *indexPa
 	return nil;
 }
 
-static NSIndexPath *indexPathForChatController(id <CQChatViewController> controller, BOOL isEditing) {
+static NSIndexPath * __nullable indexPathForChatController(id <CQChatViewController> controller, BOOL isEditing) {
 	if (!controller)
 		return nil;
 

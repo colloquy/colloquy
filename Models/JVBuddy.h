@@ -11,7 +11,7 @@ extern NSString *JVBuddyActiveUserChangedNotification;
 @class ABPerson;
 @class MVChatUser;
 
-typedef NS_OPTIONS(unsigned int, JVBuddyName) {
+typedef NS_ENUM(NSInteger, JVBuddyName) {
 	JVBuddyActiveNickname = 0x0,
 	JVBuddyGivenNickname = 0x1,
 	JVBuddyFullName = 0x2

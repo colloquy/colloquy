@@ -143,8 +143,6 @@ static BOOL GetMetadataForNSURL(void* thisInterface, NSMutableDictionary *attrib
 	NSXMLParser *parser;
 	JVChatTranscriptMetadataExtractor *extractor;
 	NSNumber *fileSizeClass;
-	unsigned long long fileSize = 0;
-	unsigned long long capacity = 0;
 	
 	if (![urlForFile checkResourceIsReachableAndReturnError:NULL])
 		goto badend;
@@ -154,9 +152,9 @@ static BOOL GetMetadataForNSURL(void* thisInterface, NSMutableDictionary *attrib
 	if (![urlForFile getResourceValue:&fileSizeClass forKey:NSURLFileSizeKey error:NULL])
 		goto badend;
 	
-	fileSize = [fileSizeClass unsignedLongLongValue];
+	unsigned long long fileSize = [fileSizeClass unsignedLongLongValue];
 	fileSizeClass = nil;
-	capacity = (fileSize ? fileSize / 3 : 5000); // the message content takes up about a third of the XML file's size
+	NSUInteger capacity = (NSUInteger)( fileSize ? fileSize / 3 : 5000 ); // the message content takes up about a third of the XML file's size
 	
 	extractor = [[JVChatTranscriptMetadataExtractor alloc] initWithCapacity:capacity];
 	
@@ -165,7 +163,8 @@ static BOOL GetMetadataForNSURL(void* thisInterface, NSMutableDictionary *attrib
 	
 	[attributes addEntriesFromDictionary:[extractor metadataAttributes]];
 	
-	xmlSetStructuredErrorFunc(NULL, NULL);
+    parser = nil;
+	xmlSetStructuredErrorFunc( NULL, NULL );
 	return YES;
 	
 badend:

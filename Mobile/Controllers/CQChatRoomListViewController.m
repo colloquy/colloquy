@@ -251,7 +251,7 @@ NS_ASSUME_NONNULL_BEGIN
 		[self _processTopicData:topicData room:room];
 	}
 
-	cell.topic = topicDisplayString;
+	cell.topic = topicDisplayString ?: @"";
 
 	return cell;
 }

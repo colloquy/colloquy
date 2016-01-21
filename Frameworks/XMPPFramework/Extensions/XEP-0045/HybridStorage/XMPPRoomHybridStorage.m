@@ -824,7 +824,7 @@ static XMPPRoomHybridStorage *sharedInstance;
 		
 		if (shouldCopy)
 		{
-			NSArray *temp = results;
+			NSArray *temp = results ?: @[];
 			results = [[NSArray alloc] initWithArray:temp copyItems:YES];
 		}
 	}};

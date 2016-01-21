@@ -6,7 +6,8 @@ typedef NS_ENUM(NSInteger, JVChatViewCriterionFormat) { // cooresponds to the ni
 	JVChatViewListCriterionFormat
 };
 
-typedef NS_ENUM(NSInteger, JVChatViewCriterionKind) { // corresponds to the nib menu tags
+/// corresponds to the nib menu tags
+typedef NS_ENUM(NSInteger, JVChatViewCriterionKind) {
 	JVChatViewTitleCriterionKind = 1,
 	JVChatViewTypeCriterionKind,
 	JVChatViewConnectionAddressCriterionKind,
@@ -15,7 +16,8 @@ typedef NS_ENUM(NSInteger, JVChatViewCriterionKind) { // corresponds to the nib 
 	JVChatViewEveryPanelCriterionKind
 };
 
-typedef NS_ENUM(NSInteger, JVChatViewCriterionOperation) { // corresponds to the nib menu tags
+/// corresponds to the nib menu tags
+typedef NS_ENUM(NSInteger, JVChatViewCriterionOperation) {
 	JVChatViewNoCriterionOperation = 0,
 	JVChatViewTextMatchCriterionOperation = 1,
 	JVChatViewTextDoesNotMatchCriterionOperation,

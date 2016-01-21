@@ -29,21 +29,6 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #pragma mark -
 
 @interface JVChatTranscriptPanel ()
-- (void) _refreshWindowFileProxy;
-- (void) _refreshSearch;
-
-- (void) _changeStyleMenuSelection;
-- (void) _updateStylesMenu;
-
-- (void) _changeEmoticonsMenuSelection;
-- (void) _updateEmoticonsMenu;
-@property (readonly, copy) NSMenu *_emoticonsMenu;
-
-@property (readonly) BOOL _usingSpecificStyle;
-@property (readonly) BOOL _usingSpecificEmoticons;
-@end
-
-@interface JVChatTranscriptPanel ()
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo;
 @end
 
@@ -52,7 +37,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 @implementation JVChatTranscriptPanel
 - (instancetype) init {
 	if( ( self = [super init] ) ) {
-		_transcript = [[JVChatTranscript allocWithZone:nil] init];
+		_transcript = [[JVChatTranscript alloc] init];
 
 		id classDescription = [NSClassDescription classDescriptionForClass:[JVChatTranscriptPanel class]];
 		id specifier = [[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"transcript"];
@@ -72,7 +57,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 			return nil;
 		}
 
-		_transcript = [[JVChatTranscript allocWithZone:nil] initWithContentsOfFile:filename];
+		_transcript = [[JVChatTranscript alloc] initWithContentsOfFile:filename];
 
 		if( ! _transcript ) {
 			return nil;
@@ -259,7 +244,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	if( query == _searchQuery || [query isEqualToString:_searchQuery] ) return;
 
 	_searchQueryRegex = nil;
-	_searchQuery = ( [query length] ? [query copyWithZone:nil] : nil );
+	_searchQuery = ( [query length] ? [query copy] : nil );
 
 	if( [_searchQuery length] ) {
 		// we simply convert this to a regex and not allow patterns. later we will allow user supplied patterns
@@ -744,10 +729,12 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	[[sender window] setShowsResizeIndicator:resizable];
 	[[[sender window] standardWindowButton:NSWindowZoomButton] setEnabled:resizable];
 }
+@end
 
 #pragma mark -
-#pragma mark Style Support
 
+@implementation JVChatTranscriptPanel (Private)
+#pragma mark Style Support
 - (void) _refreshWindowFileProxy {
 	if(	[[self windowController] activeChatViewController] != self ) return;
 	if( ! [[NSFileManager defaultManager] fileExistsAtPath:[[self transcript] filePath]] ) {
@@ -946,14 +933,17 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	[self _changeEmoticonsMenuSelection];
 }
 
-- (IBAction) _openAppearancePreferences:(id) sender {
+- (BOOL) _usingSpecificEmoticons {
+	return NO;
+}
+
+#pragma mark -
+
+- (void) _openAppearancePreferences:(id) sender {
 	MVApplicationController *applicationController = (MVApplicationController *)NSApp.delegate;
 	[applicationController showPreferences:sender];
 	CQMPreferencesWindowController *preferencesWindowController = [applicationController preferencesWindowController];
 	[preferencesWindowController selectControllerWithIdentifier:preferencesWindowController.appearancePreferences.identifier];
 }
 
-- (BOOL) _usingSpecificEmoticons {
-	return NO;
-}
 @end

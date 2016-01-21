@@ -10,6 +10,7 @@
 #import "AICustomTabDragWindow.h"
 #import "AICustomTabsView.h"
 #import "AICustomTabCell.h"
+#import "NSWindow+CQMCoordinateSpaceConversion.h"
 
 #define CUSTOM_TABS_INDENT		3					//Indent on left and right of tabbar
 
@@ -117,7 +118,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	[tabDragWindow setDisplayingFullWindow:sourceWindowWillHide animate:NO];
 
 	//Position the drag window
-	startPoint = [[inEvent window] convertBaseToScreen:[inEvent locationInWindow]];
+	startPoint = [[inEvent window] cqm_convertPointToScreen:[inEvent locationInWindow]];
 	startPoint = NSMakePoint(startPoint.x + dragOffset.width, startPoint.y + dragOffset.height);
 	[tabDragWindow moveToPoint:startPoint];
 

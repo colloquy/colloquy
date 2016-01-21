@@ -15,6 +15,17 @@ NSString *JVBuddyActiveUserChangedNotification = @"JVBuddyActiveUserChangedNotif
 
 static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
+@interface JVBuddy (Private)
+- (void) _addUser:(MVChatUser *) user;
+- (void) _removeUser:(MVChatUser *) user;
+- (void) _buddyIdleUpdate:(NSNotification *) notification;
+- (void) _buddyStatusChanged:(NSNotification *) notification;
+- (void) _registerWithConnection:(NSNotification *) notification;
+- (void) _disconnected:(NSNotification *) notification;
+- (void) _ruleMatched:(NSNotification *) notification;
+- (void) _ruleUserRemoved:(NSNotification *) notification;
+@end
+
 @implementation JVBuddy {
 	NSMutableArray *_rules;
 	NSMutableSet *_users;
@@ -32,8 +43,8 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 - (instancetype) init {
 	if( ( self = [super init] ) ) {
-		_rules = [[NSMutableArray allocWithZone:nil] initWithCapacity:5];
-		_users = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
+		_rules = [[NSMutableArray alloc] initWithCapacity:5];
+		_users = [[NSMutableSet alloc] initWithCapacity:5];
 		_uniqueIdentifier = [NSString locallyUniqueString];
 
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _registerWithConnection: ) name:MVChatConnectionDidConnectNotification object:nil];
@@ -51,27 +62,27 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 		NSString *string = dictionary[@"firstName"];
 		if( [string isKindOfClass:[NSString class]] )
-			_firstName = [string copyWithZone:nil];
+			_firstName = [string copy];
 
 		string = dictionary[@"lastName"];
 		if( [string isKindOfClass:[NSString class]] )
-			_lastName = [string copyWithZone:nil];
+			_lastName = [string copy];
 
 		string = dictionary[@"primaryEmail"];
 		if( [string isKindOfClass:[NSString class]] )
-			_primaryEmail = [string copyWithZone:nil];
+			_primaryEmail = [string copy];
 
 		string = dictionary[@"givenNickname"];
 		if( [string isKindOfClass:[NSString class]] )
-			_givenNickname = [string copyWithZone:nil];
+			_givenNickname = [string copy];
 
 		string = dictionary[@"speechVoice"];
 		if( [string isKindOfClass:[NSString class]] )
-			_speechVoice = [string copyWithZone:nil];
+			_speechVoice = [string copy];
 
 		string = dictionary[@"uniqueIdentifier"];
 		if( [string isKindOfClass:[NSString class]] ) {
-			_uniqueIdentifier = [string copyWithZone:nil];
+			_uniqueIdentifier = [string copy];
 		}
 
 		if( ! [_uniqueIdentifier length] ) {
@@ -83,7 +94,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 			_person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:string];
 
 		for( NSDictionary *ruleDictionary in dictionary[@"rules"] ) {
-			MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:nil] initWithDictionaryRepresentation:ruleDictionary];
+			MVChatUserWatchRule *rule = [[MVChatUserWatchRule alloc] initWithDictionaryRepresentation:ruleDictionary];
 			if( rule ) [self addWatchRule:rule];
 		}
 	}
@@ -100,9 +111,9 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 #pragma mark -
 
 - (NSDictionary *) dictionaryRepresentation {
-	NSMutableDictionary *dictionary = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:8];
+	NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:8];
 
-	NSMutableArray *rules = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_rules count]];
+	NSMutableArray *rules = [[NSMutableArray alloc] initWithCapacity:[_rules count]];
 
 	for( MVChatUserWatchRule *rule in _rules ) {
 		NSDictionary *dictRep = [rule dictionaryRepresentation];
@@ -434,9 +445,11 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	NSString *name2 = [[buddy activeUser] nickname];
 	return [name1 caseInsensitiveCompare:name2];
 }
+@end
 
 #pragma mark -
 
+@implementation JVBuddy (Private)
 - (void) _addUser:(MVChatUser *) user {
 	if( [_users containsObject:user] )
 		return;

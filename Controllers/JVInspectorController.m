@@ -4,10 +4,11 @@ static JVInspectorController *sharedInstance = nil;
 static NSPoint inspectorLastPoint = { 100., 800. };
 static NSMutableSet *inspectors = nil;
 
-@interface JVInspectorController (JVInspectionControllerPrivate)
+@interface JVInspectorController (Private)
 - (void) _loadInspector;
 - (void) _resizeWindowForContentSize:(NSSize) size;
 - (void) _inspectWindow:(NSWindow *) window;
+- (void) _applicationQuitting:(NSNotification *) notification;
 @end
 
 #pragma mark -
@@ -161,9 +162,11 @@ static NSMutableSet *inspectors = nil;
 	if( ! _locked )
 		[self _inspectWindow:[notification object]];
 }
+@end
 
 #pragma mark -
 
+@implementation JVInspectorController (Private)
 - (void) _loadInspector {
 	NSView *view = [_inspector view];
 

@@ -72,3 +72,10 @@
 - (IBAction) closeKickbanSheet:(id) sender;
 - (IBAction) cancelSheet:(id) sender;
 @end
+
+@interface JVChatRoomMember (Private)
+- (void) _detach;
+- (void) _refreshIcon:(NSNotification *) notification;
+- (NSString *) _selfCompositeName;
+- (NSString *) _selfStoredNickname;
+@end

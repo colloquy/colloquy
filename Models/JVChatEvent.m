@@ -2,25 +2,14 @@
 #import "NSAttributedStringMoreAdditions.h"
 #import "NSDateAdditions.h"
 #import "JVChatRoomMember.h"
-#import "JVChatEvent_Private.h"
 
 #include <libxml/tree.h>
 
-@implementation JVChatEvent {
-@protected
-	xmlNode *_node;
-	xmlDoc *_doc;
-	NSString *_eventIdentifier;
-	NSScriptObjectSpecifier *_objectSpecifier;
-	__weak JVChatTranscript *_transcript;
-	NSDate *_date;
-	NSString *_name;
-	NSTextStorage *_message;
-	NSDictionary *_attributes;
-	BOOL _loadedMessage;
-	BOOL _loadedAttributes;
-	BOOL _loadedSmall;
-}
+@interface JVChatEvent ()
+@property (readwrite, setter=_setNode:) xmlNode *node;
+@end
+
+@implementation JVChatEvent
 
 @synthesize node = _node;
 
@@ -42,7 +31,7 @@
 		xmlFree( prop );
 
 		prop = xmlGetProp( (xmlNode *) _node, (xmlChar *) "occurred" );
-		_date = ( prop ? [[NSDate allocWithZone:nil] initWithString:@((char *) prop)] : nil );
+		_date = ( prop ? [[NSDate alloc] initWithString:@((char *) prop)] : nil );
 		xmlFree( prop );
 	}
 
@@ -57,7 +46,7 @@
 
 		do {
 			if( subNode -> type == XML_ELEMENT_NODE && ! strcmp( "message", (char *) subNode -> name ) ) {
-				_message = [[NSTextStorage allocWithZone:nil] initWithXHTMLTree:subNode baseURL:nil defaultAttributes:nil];
+				_message = [[NSTextStorage alloc] initWithXHTMLTree:subNode baseURL:nil defaultAttributes:nil];
 				break;
 			}
 		} while( ( subNode = subNode -> next ) );
@@ -288,12 +277,12 @@
 
 - (void) setDate:(NSDate *) date {
 	[self _setNode:NULL];
-	_date = [date copyWithZone:nil];
+	_date = [date copy];
 }
 
 - (void) setName:(NSString *) name {
 	[self _setNode:NULL];
-	_name = [name copyWithZone:nil];
+	_name = [name copy];
 }
 
 #pragma mark -
@@ -324,13 +313,13 @@
 
 - (void) setAttributes:(NSDictionary *) attributes {
 	[self _setNode:NULL];
-	_attributes = [attributes copyWithZone:nil];
+	_attributes = [attributes copy];
 }
 
 #pragma mark -
 
 - (void) setEventIdentifier:(NSString *) identifier {
 	[self _setNode:NULL];
-	_eventIdentifier = [identifier copyWithZone:nil];
+	_eventIdentifier = [identifier copy];
 }
 @end

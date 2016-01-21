@@ -71,6 +71,7 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 - (void) addMessageToHistory:(NSAttributedString *)message;
 
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context;
+- (IBAction) toggleNotifications:(id) sender;
 
 @property (readonly) NSUInteger newMessagesWaiting;
 @property (readonly) NSUInteger newHighlightMessagesWaiting;
@@ -89,4 +90,33 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 @interface NSObject (MVChatPluginDirectChatSupport)
 - (void) processIncomingMessage:(JVMutableChatMessage *) message inView:(id <JVChatViewController>) view;
 - (void) processOutgoingMessage:(JVMutableChatMessage *) message inView:(id <JVChatViewController>) view;
+@end
+
+@interface JVDirectChatPanel (Private)
+- (NSString *) _selfCompositeName;
+- (NSString *) _selfStoredNickname;
+- (NSMenu *) _encodingMenu;
+- (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message;
+- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
+- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont;
+- (void) _alertSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
+- (void) _didConnect:(NSNotification *) notification;
+- (void) _didDisconnect:(NSNotification *) notification;
+- (void) _errorOccurred:(NSNotification *) notification;
+- (void) _awayStatusChanged:(NSNotification *) notification;
+// TODO: This method is overwriting a method of superclass category JVChatTranscriptPanel+Private, undefined behavior.
+- (void) _updateEmoticonsMenu; // overwrite
+- (void) _insertEmoticon:(id) sender;
+// TODO: This method is overwriting a method of superclass category JVChatTranscriptPanel+Private, undefined behavior.
+- (BOOL) _usingSpecificStyle; // overwrite
+// TODO: This method is overwriting a method of superclass category JVChatTranscriptPanel+Private, undefined behavior.
+- (BOOL) _usingSpecificEmoticons; // overwrite
+// TODO: This method is overwriting a method of superclass category JVChatTranscriptPanel+Private, undefined behavior.
+- (void) _didSwitchStyles:(NSNotification *) notification; // overwrite
+- (void) _saveSelfIcon;
+- (void) _saveBuddyIcon:(JVBuddy *) buddy;
+- (void) _refreshIcon:(NSNotification *) notification;
+- (void) _setCurrentMessage:(JVMutableChatMessage *) message;
+- (void) _userNicknameDidChange:(NSNotification *) notification;
+- (void) _userStatusChanged:(NSNotification *) notification;
 @end

@@ -144,7 +144,7 @@ static BOOL applicationIsTerminating = NO;
 		return;
 	}
 
-	if( ! _updater ) _updater = [[SUUpdater allocWithZone:nil] init];
+	if( ! _updater ) _updater = [[SUUpdater alloc] init];
 	[_updater checkForUpdates:sender];
 }
 
@@ -455,7 +455,7 @@ static BOOL applicationIsTerminating = NO;
 	_launchDate = [[NSDate alloc] init];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"] && NSAppKitVersionNumber >= NSAppKitVersionNumber10_4 ) {
-		_updater = [[SUUpdater allocWithZone:nil] init];
+		_updater = [[SUUpdater alloc] init];
 		[_updater checkForUpdatesInBackground];
 		[_updater setUpdateCheckInterval:60. * 60. * 12.]; // check every 12 hours
 	}
@@ -560,7 +560,7 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (NSMenu *) applicationDockMenu:(NSApplication *) sender {
-	NSMenu *menu = [[NSMenu allocWithZone:nil] initWithTitle:@""];
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];

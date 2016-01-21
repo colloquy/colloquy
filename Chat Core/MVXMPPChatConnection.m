@@ -67,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 		localId = [XMPPJID jidWithUser:_username domain:_server resource:@"colloquy"];
 	else localId = [XMPPJID jidWithString:_username resource:@"colloquy"];
 
-	MVChatUser *localUser = [[MVXMPPChatUser allocWithZone:nil] initWithJabberID:localId andConnection:self];
+	MVChatUser *localUser = [[MVXMPPChatUser alloc] initWithJabberID:localId andConnection:self];
 	[localUser _setType:MVChatLocalUserType];
 
 	MVSafeAdoptAssign( _localID, localId );
@@ -193,7 +193,7 @@ NS_ASSUME_NONNULL_BEGIN
 		user = [_knownUsers objectForKey:[identifier full]];
 		if( user ) return user;
 
-		user = [[MVXMPPChatUser allocWithZone:nil] initWithJabberID:identifier andConnection:self];
+		user = [[MVXMPPChatUser alloc] initWithJabberID:identifier andConnection:self];
 	}
 
 	return user;
@@ -218,7 +218,7 @@ NS_ASSUME_NONNULL_BEGIN
 		return;
 	}
 
-	NSString *localUserStringId = [[NSString allocWithZone:nil] initWithFormat:@"%@/%@", room, [self nickname]];
+	NSString *localUserStringId = [[NSString alloc] initWithFormat:@"%@/%@", room, [self nickname]];
 //	[XMLQName construct:@"presence" withURI:@"jabber:client"];
 	XMPPPresence *presence = [XMPPPresence presence];
 	[presence addAttributeWithName:@"to" objectValue:localUserStringId];
@@ -237,7 +237,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[localUser _setType:MVChatLocalUserType];
 
 	if( ! joiningRoom )
-		joiningRoom = [[MVXMPPChatRoom allocWithZone:nil] initWithJabberID:roomId andConnection:self];
+		joiningRoom = [[MVXMPPChatRoom alloc] initWithJabberID:roomId andConnection:self];
 	[joiningRoom _setLocalMemberUser:localUser];
 	[joiningRoom _setDateJoined:nil];
 	[joiningRoom _setDateParted:nil];
@@ -301,10 +301,10 @@ NS_ASSUME_NONNULL_BEGIN
 		sender = [self chatUserWithUniqueIdentifier:[message from]];
 	}
 
-	NSMutableData *msgData = [[[message body] dataUsingEncoding:NSUTF8StringEncoding] mutableCopyWithZone:nil];
+	NSMutableData *msgData = [[[message body] dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
 	__unsafe_unretained NSMutableData *unsafeMsgData = msgData;
 
-	NSMutableDictionary *msgAttributes = [[NSMutableDictionary allocWithZone:nil] init];
+	NSMutableDictionary *msgAttributes = [[NSMutableDictionary alloc] init];
 	__unsafe_unretained NSMutableDictionary *unsafeMsgAttributes = msgAttributes;
 	[msgAttributes setObject:sender forKey:@"user"];
 	[msgAttributes setObject:msgData forKey:@"message"];

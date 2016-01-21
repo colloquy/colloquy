@@ -246,7 +246,6 @@
 		19A7ADE21B28E7AA0022172F /* idn-int.h in Headers */ = {isa = PBXBuildFile; fileRef = 19A7A96B1B28E7A90022172F /* idn-int.h */; };
 		19A7ADE41B28E7AA0022172F /* stringprep.h in Headers */ = {isa = PBXBuildFile; fileRef = 19A7A96D1B28E7A90022172F /* stringprep.h */; };
 		1C0FE8AB0B4F647D00855B9C /* MVDirectClientConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0FE8A90B4F647D00855B9C /* MVDirectClientConnection.m */; };
-		1C11689A0B45F98700F57D2C /* libtransmission.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C1168990B45F98700F57D2C /* libtransmission.a */; };
 		1C11B7A109C27AC800789814 /* BSD License.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1C11B7A009C27AC800789814 /* BSD License.txt */; };
 		1C18955A0E29CC19003CFED0 /* MVAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C1895590E29CC19003CFED0 /* MVAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C3560060B4CCE95008A93FA /* MVUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C3560050B4CCE95008A93FA /* MVUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -372,7 +371,6 @@
 		92417D7E149C019A0009B06E /* MVDirectClientConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */; settings = {ATTRIBUTES = (); }; };
 		92417D7F149C019A0009B06E /* MVDirectChatConnectionPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C9C14170B50B3AB005F9F28 /* MVDirectChatConnectionPrivate.h */; };
 		92417D81149C019A0009B06E /* InterThreadMessaging.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CD6290C096118B900BD1DD2 /* InterThreadMessaging.h */; };
-		92417D82149C019A0009B06E /* Transmission.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C1168CC0B45FA4700F57D2C /* Transmission.h */; };
 		92417D8A149C019A0009B06E /* MVIRCChatConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C5A1A2206F8F4A000A51F10 /* MVIRCChatConnection.h */; };
 		92417D8B149C019A0009B06E /* MVIRCChatRoom.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C914D330706148800CBA5F1 /* MVIRCChatRoom.h */; };
 		92417D8C149C019A0009B06E /* MVIRCChatUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C914B130705BFE100CBA5F1 /* MVIRCChatUser.h */; };
@@ -387,7 +385,6 @@
 		DD0A301B0BD8812D0054443A /* MVDirectClientConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DD0A301E0BD881560054443A /* MVDirectChatConnectionPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C9C14170B50B3AB005F9F28 /* MVDirectChatConnectionPrivate.h */; };
 		DD0A30200BD881590054443A /* InterThreadMessaging.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CD6290C096118B900BD1DD2 /* InterThreadMessaging.h */; };
-		DD0A30210BD881590054443A /* Transmission.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C1168CC0B45FA4700F57D2C /* Transmission.h */; };
 		DD0A30220BD8815D0054443A /* MVXMPPChatUser.h in Headers */ = {isa = PBXBuildFile; fileRef = DDF64E170BD2CABE009E8FF6 /* MVXMPPChatUser.h */; };
 		DD0A30230BD8815E0054443A /* MVXMPPChatRoom.h in Headers */ = {isa = PBXBuildFile; fileRef = DD47412E0BD35A2E00D93AB9 /* MVXMPPChatRoom.h */; };
 		DD0A30240BD8815F0054443A /* MVXMPPChatConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = DDF64CE30BD29E41009E8FF6 /* MVXMPPChatConnection.h */; };
@@ -668,8 +665,6 @@
 		19A7AE541B28EB200022172F /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = text; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectClientConnection.h; path = "Chat Core/MVDirectClientConnection.h"; sourceTree = "<group>"; };
 		1C0FE8A90B4F647D00855B9C /* MVDirectClientConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDirectClientConnection.m; path = "Chat Core/MVDirectClientConnection.m"; sourceTree = "<group>"; };
-		1C1168990B45F98700F57D2C /* libtransmission.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtransmission.a; path = Frameworks/libtransmission.a; sourceTree = "<group>"; };
-		1C1168CC0B45FA4700F57D2C /* Transmission.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transmission.h; path = "Chat Core/Transmission.h"; sourceTree = "<group>"; };
 		1C11B7A009C27AC800789814 /* BSD License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "BSD License.txt"; path = "Resources/BSD License.txt"; sourceTree = "<group>"; };
 		1C1895590E29CC19003CFED0 /* MVAvailability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVAvailability.h; path = "Chat Core/MVAvailability.h"; sourceTree = "<group>"; };
 		1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatPluginManager.h; path = "Chat Core/MVChatPluginManager.h"; sourceTree = "<group>"; };
@@ -788,7 +783,6 @@
 				1C5A233F06FA4FEE00A51F10 /* libsilc.framework in Frameworks */,
 				1C5A234006FA4FEE00A51F10 /* libsilcclient.framework in Frameworks */,
 				1CEEB173095BE3A000166A54 /* CoreServices.framework in Frameworks */,
-				1C11689A0B45F98700F57D2C /* libtransmission.a in Frameworks */,
 				1C9FFB140FA1958300748177 /* libicucore.dylib in Frameworks */,
 				1C386E8E103246B500660864 /* TCMPortMapper.framework in Frameworks */,
 			);
@@ -842,7 +836,6 @@
 				1C5A233D06FA4FEE00A51F10 /* libsilc.framework */,
 				1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */,
 				1C386E8D103246B500660864 /* TCMPortMapper.framework */,
-				1C1168990B45F98700F57D2C /* libtransmission.a */,
 				1C9FFB130FA1958300748177 /* libicucore.dylib */,
 			);
 			name = "Linked Frameworks";
@@ -1746,7 +1739,6 @@
 				922453B91689057200BFF3FF /* GCDAsyncSocket.h */,
 				1CD6290D096118B900BD1DD2 /* InterThreadMessaging.m */,
 				1CD6290C096118B900BD1DD2 /* InterThreadMessaging.h */,
-				1C1168CC0B45FA4700F57D2C /* Transmission.h */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -1921,7 +1913,6 @@
 				DD0A301B0BD8812D0054443A /* MVDirectClientConnection.h in Headers */,
 				DD0A301E0BD881560054443A /* MVDirectChatConnectionPrivate.h in Headers */,
 				DD0A30200BD881590054443A /* InterThreadMessaging.h in Headers */,
-				DD0A30210BD881590054443A /* Transmission.h in Headers */,
 				DD0A30220BD8815D0054443A /* MVXMPPChatUser.h in Headers */,
 				19A7A9C01B28E7A90022172F /* XMPPRosterPrivate.h in Headers */,
 				19A7ADE21B28E7AA0022172F /* idn-int.h in Headers */,
@@ -2018,7 +2009,6 @@
 				92417D90149C019A0009B06E /* MVAvailability.h in Headers */,
 				92417D7F149C019A0009B06E /* MVDirectChatConnectionPrivate.h in Headers */,
 				92417D81149C019A0009B06E /* InterThreadMessaging.h in Headers */,
-				92417D82149C019A0009B06E /* Transmission.h in Headers */,
 				92417D8A149C019A0009B06E /* MVIRCChatConnection.h in Headers */,
 				92417D8B149C019A0009B06E /* MVIRCChatRoom.h in Headers */,
 				92417D8C149C019A0009B06E /* MVIRCChatUser.h in Headers */,

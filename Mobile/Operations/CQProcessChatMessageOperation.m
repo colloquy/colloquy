@@ -132,7 +132,7 @@ static void commonChatAndImageReplacment(NSMutableString *string, NSRangePointer
 		SubstringFromGroup(string, 3, email);
 #undef SubstringFromGroup
 
-		NSString *linkHTMLString = nil;
+		NSString *linkHTMLString = @"";
 		if (room.length) {
 			linkHTMLString = [NSString stringWithFormat:@"<a href=\"irc:///%@\">%@</a>", room, room];
 		} else if (url.length) {
@@ -175,7 +175,7 @@ static void commonChatAndImageReplacment(NSMutableString *string, NSRangePointer
 			linkHTMLString = [NSString stringWithFormat:@"<a href=\"mailto:%@\">%@</a>", email, email];
 		}
 
-		if (linkHTMLString || (url && linkHTMLString.length != url.length)) {
+		if (linkHTMLString.length || (url && linkHTMLString.length != url.length)) {
 			[string replaceCharactersInRange:matchedRange withString:linkHTMLString];
 
 			textRange->length += (linkHTMLString.length - matchedRange.length);

@@ -73,6 +73,23 @@ extern NSString *JVChatViewPboardType;
 - (void) collapseListItem:(id <JVChatListItem>) item;
 @end
 
+@interface JVChatWindowController (Private)
+- (void) _claimMenuCommands;
+- (void) _resignMenuCommands;
+- (void) _doubleClickedListItem:(id) sender;
+- (void) _deferRefreshSelectionMenu;
+- (void) _refreshSelectionMenu;
+- (void) _refreshMenuWithItem:(id) item;
+- (void) _refreshWindow;
+- (void) _refreshToolbar;
+- (void) _refreshWindowTitle;
+- (void) _refreshList;
+- (void) _refreshPreferences;
+- (void) _saveWindowFrame;
+- (void) _switchViews:(id) sender;
+- (void) _favoritesListDidUpdate:(NSNotification *) notification;
+@end
+
 @interface JVChatWindowController (JVChatWindowControllerScripting)
 @property (readonly, copy) NSNumber *uniqueIdentifier;
 @end

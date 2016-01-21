@@ -39,13 +39,13 @@
 #pragma mark -
 
 @interface NSString (NSStringFourCharCode)
-@property (readonly) OSType fourCharCode;
+@property (readonly) FourCharCode fourCharCode;
 @end
 
 #pragma mark -
 
 @implementation NSString (NSStringFourCharCode)
-- (OSType) fourCharCode {
+- (FourCharCode) fourCharCode {
 	return UTGetOSTypeFromString((CFStringRef)self);
 }
 @end
@@ -152,7 +152,7 @@
 
 #pragma mark -
 
-- (id) callScriptHandler:(OSType) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector {
+- (id) callScriptHandler:(FourCharCode) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector {
 	if( ! _script ) return nil;
 
 	int pid = [[NSProcessInfo processInfo] processIdentifier];

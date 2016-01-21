@@ -137,8 +137,8 @@ static void generateUniqueMachineIdentifier() {
 
 	generateUniqueMachineIdentifier();
 
-	NSDictionary *systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/ServerVersion.plist"];
-	if ( !systemVersion ) systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+	NSDictionary *systemVersion = [[NSDictionary alloc] initWithContentsOfFile:@"/System/Library/CoreServices/ServerVersion.plist"];
+	if ( !systemVersion ) systemVersion = [[NSDictionary alloc] initWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
 
 	_data = [[NSMutableDictionary alloc] initWithCapacity:10];
 

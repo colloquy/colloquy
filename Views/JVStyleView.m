@@ -103,22 +103,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
-@interface JVStyleView ()
-- (void) _resetDisplay;
-- (void) _switchStyle;
-- (void) _appendMessage:(NSString *) message;
-- (void) _prependMessages:(NSString *) messages;
-- (void) _styleError;
-- (NSString *) _contentHTMLWithBody:(NSString *) html;
-@property (readonly, copy) NSURL *_baseURL;
-@property (readonly) NSUInteger _visibleMessageCount;
-- (NSUInteger) _locationOfMessage:(JVChatMessage *) message;
-- (NSUInteger) _locationOfElementAtIndex:(NSUInteger) index;
-- (void) _setupMarkedScroller;
-@end
-
-#pragma mark -
-
 @implementation JVStyleView
 + (void) emptyCache {
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"] )
@@ -236,7 +220,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	_style = style;
 
-	_styleVariant = [variant copyWithZone:nil];
+	_styleVariant = [variant copy];
 
 	// add single-quotes so that these are not interpreted as XPath expressions
 	_styleParameters[@"buddyIconDirectory"] = @"'/tmp/'";
@@ -263,7 +247,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) setStyleVariant:(NSString *) variant {
-	_styleVariant = [variant copyWithZone:nil];
+	_styleVariant = [variant copy];
 
 	if( _contentFrameReady ) {
 		[[self class] emptyCache];
@@ -296,7 +280,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) setStyleParameters:(NSDictionary *) parameters {
-	_styleParameters = [parameters mutableCopyWithZone:nil];
+	_styleParameters = [parameters mutableCopy];
 }
 
 - (NSDictionary *) styleParameters {
@@ -695,9 +679,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) scrollToEndOfDocument:(id) sender {
 	[self scrollToBottom];
 }
+@end
 
 #pragma mark -
 
+@implementation JVStyleView (Private)
 - (void) _checkForTransparantStyle {
 	DOMCSSStyleDeclaration *style = [self computedStyleForElement:_body pseudoElement:nil];
 	DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
@@ -780,8 +766,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 		JVStyle *style = [self style];
 		JVChatTranscript *transcript = [self transcript];
-		NSMutableArray *highlightedMsgs = [[NSMutableArray allocWithZone:nil] initWithCapacity:( [self scrollbackLimit] / 8 )];
-		NSMutableDictionary *parameters = [[NSMutableDictionary allocWithZone:nil] initWithDictionary:_styleParameters copyItems:NO];
+		NSMutableArray *highlightedMsgs = [[NSMutableArray alloc] initWithCapacity:( [self scrollbackLimit] / 8 )];
+		NSMutableDictionary *parameters = [[NSMutableDictionary alloc] initWithDictionary:_styleParameters copyItems:NO];
 		unsigned long elementCount = [transcript elementCount];
 
 		parameters[@"bulkTransform"] = @"'yes'";
@@ -841,7 +827,7 @@ quickEnd:
 	// check if we are near the bottom of the chat area, and if we should scroll down later
 	BOOL scrollToBottomNeeded = [self scrolledNearBottom];
 
-	NSMutableString *transformedMessage = [message mutableCopyWithZone:nil];
+	NSMutableString *transformedMessage = [message mutableCopy];
 	[transformedMessage replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
 
 	DOMHTMLElement *consecutiveReplaceElement = (DOMHTMLElement *)[_domDocument getElementById:@"consecutiveInsert"];

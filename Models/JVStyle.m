@@ -7,10 +7,11 @@
 #import "JVChatMessage.h"
 #import "NSBundleAdditions.h"
 
-@interface JVStyle ()
+@interface JVStyle (Private)
 + (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
 + (void) _freeXsltParamArray:(const char **) params;
 
+- (void) _clearVariantCache;
 - (void) _setBundle:(NSBundle *) bundle;
 - (void) _setXSLStyle:(NSURL *) location;
 - (void) _setStyleOptions:(NSArray *) options;
@@ -233,7 +234,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 - (NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters {
-	JVChatTranscript *transcript = [[JVChatTranscript allocWithZone:nil] initWithElements:elements];
+	JVChatTranscript *transcript = [[JVChatTranscript alloc] initWithElements:elements];
 	NSString *ret = [self transformChatTranscript:transcript withParameters:parameters];
 	return ret;
 }
@@ -500,9 +501,11 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 - (NSString *) description {
 	return [self identifier];
 }
+@end
 
 #pragma mark -
 
+@implementation JVStyle (Private)
 + (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary {
 	const char **temp = NULL, **ret = NULL;
 
@@ -543,9 +546,15 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 - (void) _setBundle:(NSBundle *) bundle {
+	NSParameterAssert(bundle);
+
+	NSString *file = [bundle pathForResource:@"parameters" ofType:@"plist"];
+	NSParameterAssert(file);
+	if (!file) return;
+
 	_bundle = bundle;
 
-	[self setMainParameters:[NSDictionary dictionaryWithContentsOfFile:[_bundle pathForResource:@"parameters" ofType:@"plist"]]];
+	[self setMainParameters:[NSDictionary dictionaryWithContentsOfFile:file]];
 
 	[self reload];
 }

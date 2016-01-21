@@ -17,7 +17,7 @@ NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatP
 @implementation MVChatPluginManager
 + (MVChatPluginManager *) defaultManager {
 	if( ! sharedInstance ) {
-		sharedInstance = [self allocWithZone:nil];
+		sharedInstance = [self alloc];
 		sharedInstance = [sharedInstance init];
 	}
 
@@ -26,7 +26,7 @@ NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatP
 
 + (NSArray *) pluginSearchPaths {
 	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-	NSMutableArray *paths = [[NSMutableArray allocWithZone:nil] initWithCapacity:5];
+	NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:5];
 
 	BOOL directory = NO;
 	NSString *pluginsPath = [[NSString stringWithFormat:@"~/Library/Application Support/%@/Plugins", bundleName] stringByExpandingTildeInPath];
@@ -47,8 +47,8 @@ NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatP
 	if( ! ( self = [super init] ) )
 		return nil;
 
-	_plugins = [[NSMutableArray allocWithZone:nil] init];
-	_invalidPlugins = [[NSMutableDictionary allocWithZone:nil] init];
+	_plugins = [[NSMutableArray alloc] init];
+	_invalidPlugins = [[NSMutableDictionary alloc] init];
 	[self reloadPlugins];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
@@ -98,7 +98,7 @@ NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatP
 				}
 
 				if( [bundle load] && [[bundle principalClass] conformsToProtocol:@protocol( MVChatPlugin )] ) {
-					id plugin = [[[bundle principalClass] allocWithZone:nil] initWithManager:self];
+					id plugin = [[[bundle principalClass] alloc] initWithManager:self];
 					if( plugin ) [self addPlugin:plugin];
 				}
 			}
@@ -148,7 +148,7 @@ NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatP
 - (nullable NSArray *) pluginsOfClass:(Class __nullable) class thatRespondToSelector:(SEL) selector {
 	NSParameterAssert( selector != NULL );
 
-	NSMutableArray *qualified = [[NSMutableArray allocWithZone:nil] init];
+	NSMutableArray *qualified = [[NSMutableArray alloc] init];
 
 	for( id plugin in _plugins )
 		if( ( ! class || ( class && [plugin isKindOfClass:class] ) ) && [plugin respondsToSelector:selector] )
@@ -175,7 +175,7 @@ NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatP
 
 	if( ! plugins ) return nil;
 
-	NSMutableArray *results = [[NSMutableArray allocWithZone:nil] init];
+	NSMutableArray *results = [[NSMutableArray alloc] init];
 	NSMethodSignature *sig = [invocation methodSignature];
 
 	for ( id plugin in plugins ) {

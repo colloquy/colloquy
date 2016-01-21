@@ -171,7 +171,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	if( ! newPassword )
 		_password = @"";
 	else
-		_password = [newPassword copyWithZone:nil];
+		_password = [newPassword copy];
 }
 
 - (void) setServer:(NSString *) newServer {
@@ -181,7 +181,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	NSParameterAssert( newServer.length > 0 );
 
 	id old = _server;
-	_server = [newServer copyWithZone:nil];
+	_server = [newServer copy];
 	[old release];
 
 	[super setServer:newServer];
@@ -199,7 +199,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	NSParameterAssert( newUsername.length > 0 );
 
 	id old = _username;
-	_username = [newUsername copyWithZone:nil];
+	_username = [newUsername copy];
 	[old release];
 }
 
@@ -290,7 +290,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 			      withObject:raw inThread:_connectionThread];
 	} else {
 		if( ! _sendQueue )
-			_sendQueue = [[NSMutableArray allocWithZone:nil]
+			_sendQueue = [[NSMutableArray alloc]
 						  initWithCapacity:20];
 
 		@synchronized( _sendQueue ) {
@@ -349,7 +349,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 - (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
 	MVChatUser *user = [super chatUserWithUniqueIdentifier:[identifier lowercaseString]];
-	if( ! user ) user = [[[MVICBChatUser allocWithZone:nil] initWithNickname:identifier andConnection:self] autorelease];
+	if( ! user ) user = [[[MVICBChatUser alloc] initWithNickname:identifier andConnection:self] autorelease];
 	return user;
 }
 
@@ -479,15 +479,15 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 	if( [raw isKindOfClass:[NSMutableData class]] ) {
 		data = [raw retain];
-		string = [[NSString allocWithZone:nil]
+		string = [[NSString alloc]
 		          initWithData:data encoding:[self encoding]];
 	} else if( [raw isKindOfClass:[NSData class]] ) {
-		data = [raw mutableCopyWithZone:nil];
-		string = [[NSString allocWithZone:nil]
+		data = [raw mutableCopy];
+		string = [[NSString alloc]
 				  initWithData:data encoding:[self encoding]];
 	} else if( [raw isKindOfClass:[NSString class]] ) {
 		data = [[raw dataUsingEncoding:[self encoding]
-		             allowLossyConversion:YES] mutableCopyWithZone:nil];
+		             allowLossyConversion:YES] mutableCopy];
 		string = [raw retain];
 	}
 
@@ -624,14 +624,15 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 	size_t maxlen = 250 - who.length;
 
+    NSString *msg = message;
 	do {
 		NSString *part;
-		if( message.length < maxlen ) {
-			part = message;
-			message = nil;
+		if( msg.length < maxlen ) {
+			part = msg;
+			msg = nil;
 		} else {
-			part = [message substringToIndex:maxlen - 1];
-			message = [message substringFromIndex:maxlen - 1];
+			part = [msg substringToIndex:maxlen - 1];
+			msg = [msg substringFromIndex:maxlen - 1];
 		}
 
 		ICBPacket *packet = [[ICBPacket alloc] initWithPacketType:'h'];
@@ -639,7 +640,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 		[packet addFields:@"m", cmd, nil];
 		[self _sendPacket:packet immediately:NO];
 		[packet release];
-	} while( message );
+	} while( msg );
 }
 
 - (void) ctsCommandTopic {
@@ -674,21 +675,22 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 - (void) ctsOpenPacket:(NSString *) message {
 	NSParameterAssert( message );
 
+    NSString *msg = message;
 	do {
 		NSString *part;
-		if( message.length < 255 ) {
-			part = message;
-			message = nil;
+		if( msg.length < 255 ) {
+			part = msg;
+			msg = nil;
 		} else {
-			part = [message substringToIndex:254];
-			message = [message substringFromIndex:254];
+			part = [msg substringToIndex:254];
+			msg = [msg substringFromIndex:254];
 		}
 
 		ICBPacket *packet = [[ICBPacket alloc] initWithPacketType:'b'];
 		[packet addFields:part, nil];
 		[self _sendPacket:packet immediately:NO];
 		[packet release];
-	} while( message );
+	} while( msg );
 }
 
 - (void) ctsPongPacket {

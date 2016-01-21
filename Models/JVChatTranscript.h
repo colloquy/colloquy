@@ -91,3 +91,16 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 
 - (void) setObjectSpecifier:(NSScriptObjectSpecifier *) objectSpecifier;
 @end
+
+#pragma mark -
+
+typedef struct _xmlNode xmlNode;
+typedef xmlNode *xmlNodePtr;
+@interface JVChatTranscript (Private)
+- (void) _enforceElementLimit;
+- (void) _incrementalWriteToLog:(xmlNodePtr) node continuation:(BOOL) cont;
+- (void) _changeFileAttributesAtPath:(NSString *) path;
+- (void) _loadMessage:(JVChatMessage *) message;
+- (void) _loadSenderForMessage:(JVChatMessage *) message;
+- (void) _loadBodyForMessage:(JVChatMessage *) message;
+@end

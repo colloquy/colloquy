@@ -1,6 +1,6 @@
 #import "MVFileTransfer.h"
 #import "MVFileTransferPrivate.h"
-#import "Transmission.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
 

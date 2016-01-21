@@ -32,8 +32,10 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 	_connection = connection;
 	_ignoreRules = [[NSMutableArray alloc] init];
 
-	for (NSData *data in [NSKeyedUnarchiver unarchiveObjectWithFile:self._ignoreFilePath])
-		[_ignoreRules addObject:[NSKeyedUnarchiver unarchiveObjectWithData:data]];
+	if (self._ignoreFilePath.length) {
+		for (NSData *data in [NSKeyedUnarchiver unarchiveObjectWithFile:self._ignoreFilePath])
+			[_ignoreRules addObject:[NSKeyedUnarchiver unarchiveObjectWithData:data]];
+	}
 
 	return self;
 }
@@ -113,7 +115,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 		if (rule.isPermanent)
 			[permanentIgnores addObject:[NSKeyedArchiver archivedDataWithRootObject:rule]];
 
-	if (!permanentIgnores.count) {
+	if (!permanentIgnores.count && self._ignoreFilePath.length) {
 		[[NSFileManager defaultManager] removeItemAtPath:self._ignoreFilePath error:nil];
 
 		return;

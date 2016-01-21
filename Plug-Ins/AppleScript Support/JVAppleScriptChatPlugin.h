@@ -19,7 +19,7 @@
 
 @property (copy) NSString *scriptFilePath;
 
-- (id) callScriptHandler:(OSType) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector;
+- (id) callScriptHandler:(FourCharCode) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector;
 
 - (BOOL) respondsToSelector:(SEL) selector;
 - (void) doesNotRespondToSelector:(SEL) selector;

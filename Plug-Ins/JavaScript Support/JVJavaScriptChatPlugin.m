@@ -209,7 +209,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 }
 
 - (void) webView:(WebView *) sender failedToParseSource:(NSString *) source baseLineNumber:(unsigned) lineNumber fromURL:(NSURL *) url withError:(NSError *) error forWebFrame:(WebFrame *) webFrame {
-	NSDictionary *errorInfo = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:NSLocalizedStringFromTableInBundle( @"Failed to parse script.", nil, [NSBundle bundleForClass:[self class]], "failed to parse JavaScript error message" ), @"message", ( [url isFileURL] ? [url path] : nil ), @"sourceURL", nil];
+	NSDictionary *errorInfo = [[NSDictionary alloc] initWithObjectsAndKeys:NSLocalizedStringFromTableInBundle( @"Failed to parse script.", nil, [NSBundle bundleForClass:[self class]], "failed to parse JavaScript error message" ), @"message", ( [url isFileURL] ? [url path] : nil ), @"sourceURL", nil];
 	[self reportError:errorInfo inFunction:_currentFunction whileLoading:_loading];
 	[errorInfo release];
 }
@@ -266,7 +266,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 #pragma mark -
 
 - (id) allocInstance:(NSString *) class {
-	return [[NSClassFromString(class) allocWithZone:nil] autorelease]; // Clang warning can be ignored, it is caused by the improper but necessary use of "alloc" in the name
+	return [[NSClassFromString(class) alloc] autorelease]; // Clang warning can be ignored, it is caused by the improper but necessary use of "alloc" in the name
 }
 
 #pragma mark -
@@ -285,7 +285,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	_loading = YES;
 
 	if (!_webview) {
-		_webview = [[WebView allocWithZone:nil] initWithFrame:NSZeroRect];
+		_webview = [[WebView alloc] initWithFrame:NSZeroRect];
 
 		[_webview setPolicyDelegate:self];
 		[_webview setFrameLoadDelegate:self];
@@ -348,7 +348,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 			@try { message = [exception valueForKey:@"message"]; } @catch( NSException *e ) { message = exception; }
 		}
 
-		NSDictionary *error = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:message, @"message", lineNumber, @"lineNumber", sourceURL, @"sourceURL", nil];
+		NSDictionary *error = [[NSDictionary alloc] initWithObjectsAndKeys:message, @"message", lineNumber, @"lineNumber", sourceURL, @"sourceURL", nil];
 		[self reportError:error inFunction:_currentFunction whileLoading:_loading];
 		[error release];
 	}
@@ -398,7 +398,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 		_currentFunction = nil;
 		return result;
 	} @catch (NSException *exception) {
-		NSDictionary *error = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[exception reason], @"message", nil];
+		NSDictionary *error = [[NSDictionary alloc] initWithObjectsAndKeys:[exception reason], @"message", nil];
 		[self reportError:error inFunction:functionName whileLoading:NO];
 		[error release];
 	}

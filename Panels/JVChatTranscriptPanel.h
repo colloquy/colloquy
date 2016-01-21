@@ -62,3 +62,27 @@ extern NSString *JVToolbarQuickSearchItemIdentifier;
 @interface NSObject (MVChatPluginLinkClickSupport)
 - (BOOL) handleClickedLink:(NSURL *) url inView:(id <JVChatViewController>) view;
 @end
+
+#pragma mark -
+
+@interface JVChatTranscriptPanel (Private)
+// Style Support.
+- (void) _refreshWindowFileProxy;
+- (void) _refreshSearch;
+- (void) _didSwitchStyles:(NSNotification *) notification;
+
+- (void) _reloadCurrentStyle:(id) sender;
+- (NSMenu *) _stylesMenu;
+- (void) _changeStyleMenuSelection;
+- (void) _updateStylesMenu;
+- (BOOL) _usingSpecificStyle;
+
+// Emoticons Support.
+- (NSMenu *) _emoticonsMenu;
+- (void) _changeEmoticonsMenuSelection;
+- (void) _updateEmoticonsMenu;
+- (BOOL) _usingSpecificEmoticons;
+
+- (void) _openAppearancePreferences:(id) sender;
+
+@end
