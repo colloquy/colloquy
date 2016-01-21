@@ -295,7 +295,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	[[currentFiles selectedRowIndexes] enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop) {
 		[array addObject:[self _infoForTransferAtIndex:i][@"path"]];
 		[string appendString:[[self _infoForTransferAtIndex:i][@"path"] lastPathComponent]];
-		if ( ! ( [[currentFiles selectedRowIndexes] lastIndex] == i ) ) [string appendString:@"\n"];
+		if ( ! ( [[self->currentFiles selectedRowIndexes] lastIndex] == i ) ) [string appendString:@"\n"];
 	}];
 
 	[[NSPasteboard generalPasteboard] setPropertyList:array forType:NSFilenamesPboardType];
