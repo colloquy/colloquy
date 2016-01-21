@@ -38,9 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class MVICBChatConnection;
 
-@interface MVICBChatUser : MVChatUser {
-
-}
+@interface MVICBChatUser : MVChatUser
 
 - (instancetype) initLocalUserWithConnection:(MVICBChatConnection *) connection;
 - (instancetype) initWithNickname:(NSString *) nickname

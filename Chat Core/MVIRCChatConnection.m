@@ -887,11 +887,8 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	MVAssertMainThreadRequired();
 
 	if( _status == MVChatConnectionServerDisconnectedStatus ) {
-		if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. ) {
-			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-				[self connect];
-			});
-		}
+		if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
+			[self performSelector:@selector( connect ) withObject:nil afterDelay:5.];
 		[self scheduleReconnectAttempt];
 	}
 
@@ -3798,7 +3795,7 @@ end:
 		if( ! room || ! user ) return;
 
 		NSData *reason = ( parameters.count == 3 ? parameters[2] : nil );
-		if( ! [reason isKindOfClass:[NSData class]] ) reason = [NSData data];
+		if( ! [reason isKindOfClass:[NSData class]] ) reason = nil;
 		if( [user isLocalUser] ) {
 			[room _setDateParted:[NSDate date]];
 			NSDictionary *userInfo = reason ? @{ @"byUser": sender, @"reason": reason } : @{ @"byUser": sender };

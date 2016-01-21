@@ -38,8 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class MVICBChatConnection;
 
-@interface MVICBChatRoom : MVChatRoom {
-}
+@interface MVICBChatRoom : MVChatRoom
 
 - (instancetype) initWithName:(NSString *) name
        andConnection:(MVICBChatConnection *) connection;

@@ -6,8 +6,8 @@ extern NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification;
 
 @interface MVChatPluginManager : NSObject {
 	@private
-	NSMutableArray *_plugins;
-	NSMutableDictionary *_invalidPlugins;
+	NSMutableArray<NSBundle*> *_plugins;
+	NSMutableDictionary<NSString*,NSString*> *_invalidPlugins;
 	BOOL _reloadingPlugins;
 }
 + (MVChatPluginManager *) defaultManager;
@@ -30,6 +30,7 @@ extern NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification;
 @protocol MVChatPlugin
 - (instancetype) initWithManager:(MVChatPluginManager *) manager;
 
+#pragma mark MVChatPluginReloadSupport
 @optional
 - (void) load;
 - (void) unload;

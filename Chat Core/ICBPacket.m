@@ -37,7 +37,7 @@
 #import "ICBPacket.h"
 
 @implementation ICBPacket
-
+@synthesize type = _type;
 //
 // An ICB packet has the following format:
 //
@@ -182,11 +182,12 @@
 	return [NSData dataWithBytes:raw length:length + 3];
 }
 
-- (char) type {
-	return _type;
-}
-
 #pragma mark Modifiers
+
+- (void) addFieldsFromArray:(NSArray<NSString*>*)newFields
+{
+	[_fields addObjectsFromArray:newFields];
+}
 
 - (void) addFields:(NSString *) first, ... {
 	[_fields addObject:first];

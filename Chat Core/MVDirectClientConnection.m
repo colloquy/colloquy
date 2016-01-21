@@ -279,7 +279,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 			_portMapping = nil;
 		}
 
-		_portMapping = [[TCMPortMapping alloc] initWithLocalPort:(int)port desiredExternalPort:(int)port transportProtocol:TCMPortMappingTransportProtocolTCP userInfo:nil];
+		_portMapping = [[TCMPortMapping alloc] initWithLocalPort:port desiredExternalPort:port transportProtocol:TCMPortMappingTransportProtocolTCP userInfo:nil];
 
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_portMappingStatusChanged:) name:TCMPortMappingDidChangeMappingStatusNotification object:_portMapping];
 
