@@ -10,7 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MVSILCChatRoom : MVChatRoom {
 	SilcChannelEntry _channelEntry;
 }
-- (id) initWithChannelEntry:(SilcChannelEntry) channelEntry andConnection:(MVSILCChatConnection *) connection;
+- (instancetype) initWithChannelEntry:(SilcChannelEntry) channelEntry andConnection:(MVSILCChatConnection *) connection;
 
 - (SilcChannelEntry) _getChannelEntry;
 

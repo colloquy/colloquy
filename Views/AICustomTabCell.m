@@ -96,8 +96,6 @@ static NSSize		rightCapSize;
     return(self);
 }
 
-//dealloc
-
 //Return the desired size of this tab
 - (NSSize)size
 {

@@ -78,7 +78,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	if( _publicKey ) dictionary[@"publicKey"] = _publicKey;
 	if( _interim ) dictionary[@"interim"] = @(_interim);
 	if( _applicableServerDomains ) dictionary[@"applicableServerDomains"] = _applicableServerDomains;
-	return dictionary;
+	return [dictionary copy];
 }
 
 - (BOOL) isEqual:(id) object {

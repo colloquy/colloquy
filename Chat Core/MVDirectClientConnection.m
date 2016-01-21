@@ -42,7 +42,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 #pragma mark -
 
 @implementation MVDirectClientConnection {
-	NSObject <MVDirectClientConnectionDelegate> *_delegate;
+	__weak NSObject <MVDirectClientConnectionDelegate> *_delegate;
 	GCDAsyncSocket *_connection;
 	GCDAsyncSocket *_acceptConnection;
 #if ENABLE(AUTO_PORT_MAPPING)
@@ -54,6 +54,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	unsigned short _port;
 	BOOL _done;
 }
+@synthesize delegate = _delegate;
 
 - (void) dealloc {
 	[[NSNotificationCenter chatCenter] removeObserver:self];
@@ -135,16 +136,6 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 - (void) writeData:(NSData *) data withTimeout:(NSTimeInterval) timeout withTag:(long) tag {
 	[_connection writeData:data withTimeout:timeout tag:tag];
-}
-
-#pragma mark -
-
-- (void) setDelegate:(id __nullable) delegate {
-	_delegate = delegate;
-}
-
-- (id) delegate {
-	return _delegate;
 }
 
 #pragma mark -
