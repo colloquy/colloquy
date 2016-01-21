@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
@@ -257,7 +257,7 @@ A new window will be opened if no rule sets apply.</string>
                 </button>
                 <button toolTip="Edit rule" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VrK-V3-91k">
                     <rect key="frame" x="283" y="254" width="22" height="22"/>
-                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="editWidget" imagePosition="only" alignment="center" alternateImage="editWidgetPressed" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="VeP-pA-fHf">
+                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSActionTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="VeP-pA-fHf">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -267,7 +267,7 @@ A new window will be opened if no rule sets apply.</string>
                 </button>
                 <button toolTip="Edit window" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="16s-kX-eR3">
                     <rect key="frame" x="62" y="254" width="22" height="22"/>
-                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="editWidget" imagePosition="only" alignment="center" alternateImage="editWidgetPressed" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="l2A-pq-Vnt">
+                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSActionTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="l2A-pq-Vnt">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -513,7 +513,7 @@ A new window will be opened if no rule sets apply.</string>
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="507" y="292" width="382" height="125"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="76">
                 <rect key="frame" x="0.0" y="0.0" width="382" height="125"/>
@@ -594,7 +594,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="233" y="313" width="514" height="122"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="90">
                 <rect key="frame" x="0.0" y="0.0" width="514" height="122"/>
@@ -763,9 +763,8 @@ Gw
         <userDefaultsController representsSharedInstance="YES" id="138" userLabel="Shared Defaults"/>
     </objects>
     <resources>
+        <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="editWidget" width="22" height="22"/>
-        <image name="editWidgetPressed" width="22" height="22"/>
     </resources>
 </document>

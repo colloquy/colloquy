@@ -18,9 +18,9 @@ extern NSString *JVStyleVariantChangedNotification;
 	void *_XSLStyle; /* xsltStylesheet */
 }
 + (void) scanForStyles;
-+ (NSSet *) styles;
++ (NSSet<JVStyle*> *) styles;
 + (instancetype) styleWithIdentifier:(NSString *) identifier;
-+ (id) newWithBundle:(NSBundle *) bundle;
++ (instancetype) newWithBundle:(NSBundle *) bundle;
 
 + (JVStyle*) defaultStyle;
 + (void) setDefaultStyle:(JVStyle *) style;

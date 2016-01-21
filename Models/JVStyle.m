@@ -35,10 +35,10 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	if( ! allStyles ) allStyles = styles;
 
 	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:5];
+	NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:5];
 	[paths addObject:[NSString stringWithFormat:@"%@/Styles", [[NSBundle bundleForClass:[self class]] resourcePath]]];
 	if( ! [[NSBundle mainBundle] isEqual:[NSBundle bundleForClass:[self class]]] )
-		[paths addObject:[NSString stringWithFormat:@"%@/Styles", [[NSBundle mainBundle] resourcePath]]];
+		[paths addObject:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Styles"]];
 	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles", bundleName] stringByExpandingTildeInPath]];
 	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Styles", bundleName]];
 	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Styles", bundleName]];
@@ -85,7 +85,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 + (void) initialize {
-	[super initialize];
+	//[super initialize];
 	static BOOL tooLate = NO;
 	if( ! tooLate ) {
 		[self scanForStyles];
@@ -177,9 +177,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 #pragma mark -
 
-- (NSBundle *) bundle {
-	return _bundle;
-}
+@synthesize bundle = _bundle;
 
 - (NSString *) identifier {
 	return [_bundle bundleIdentifier];
@@ -404,30 +402,25 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 #pragma mark -
 
-- (void) setMainParameters:(NSDictionary *) parameters {
-	_parameters = parameters;
-}
-
-- (NSDictionary *) mainParameters {
-	return _parameters;
-}
+@synthesize mainParameters = _parameters;
 
 #pragma mark -
 
 - (NSURL *) baseLocation {
-	return [NSURL fileURLWithPath:[_bundle resourcePath]];
+	return [_bundle resourceURL];
 }
 
 - (NSURL *) mainStyleSheetLocation {
-	return [NSURL fileURLWithPath:[_bundle pathForResource:@"main" ofType:@"css"]];
+	return [_bundle URLForResource:@"main" withExtension:@"css"];
 }
 
 - (NSURL *) variantStyleSheetLocationWithName:(NSString *) name {
 	if( ! [name length] ) return nil;
 
-	NSString *path = [_bundle pathForResource:name ofType:@"css" inDirectory:@"Variants"];
-	if( path ) return [NSURL fileURLWithPath:path];
+	NSURL *URLpath = [_bundle URLForResource:name withExtension:@"css" subdirectory:@"Variants"];
+	if( URLpath ) return URLpath;
 
+	NSString *path;
 	NSString *root = [[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles/Variants/", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByStandardizingPath];
 	path = [[NSString stringWithFormat:@"%@/%@/%@.css", root, [self identifier], name] stringByExpandingTildeInPath];
 	if( [path hasPrefix:root] && [[NSFileManager defaultManager] isReadableFileAtPath:path] )
@@ -549,12 +542,10 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	NSParameterAssert(bundle);
 
 	NSString *file = [bundle pathForResource:@"parameters" ofType:@"plist"];
-	NSParameterAssert(file);
-	if (!file) return;
 
 	_bundle = bundle;
 
-	[self setMainParameters:[NSDictionary dictionaryWithContentsOfFile:file]];
+	[self setMainParameters:(file ? [NSDictionary dictionaryWithContentsOfFile:file] : @{})];
 
 	[self reload];
 }
