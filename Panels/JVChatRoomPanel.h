@@ -7,7 +7,7 @@ extern NSString *const MVFavoritesListDidUpdateNotification;
 
 @interface JVChatRoomPanel : JVDirectChatPanel {
 	@protected
-	NSMutableArray *_sortedMembers;
+	NSMutableArray<JVChatRoomMember *> *_sortedMembers;
 	NSMutableArray *_preferredTabCompleteNicknames;
 	NSMutableSet *_nextMessageAlertMembers;
 	BOOL _kickedFromRoom;
