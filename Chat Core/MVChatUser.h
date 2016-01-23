@@ -138,8 +138,6 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 @property(strong, readonly) NSSet *supportedAttributes;
 @property(strong, readonly) NSDictionary *attributes;
 
-@property NSUInteger roomCount;
-
 - (BOOL) isEqual:(id) object;
 - (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser;
 

@@ -27,7 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) _addKnownUser:(MVChatUser *) user;
 - (void) _removeKnownUser:(MVChatUser *) user;
-- (void) _pruneKnownUsers;
 
 - (void) _addKnownRoom:(MVChatRoom *) room;
 - (void) _removeKnownRoom:(MVChatRoom *) room;

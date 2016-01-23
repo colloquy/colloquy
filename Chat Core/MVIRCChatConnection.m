@@ -756,9 +756,9 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		}
 	} else {
 		@synchronized( _knownUsers ) {
-			[_knownUsers enumerateKeysAndObjectsUsingBlock:^(id key, MVChatUser *user, BOOL *stop) {
+			for (MVChatUser *user in [_knownUsers objectEnumerator]) {
 				[rule matchChatUser:user];
-			}];
+			}
 		}
 	}
 }
@@ -830,8 +830,6 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 - (void) purgeCaches {
 	[super purgeCaches];
-
-	[self _pruneKnownUsers];
 }
 @end
 
@@ -957,9 +955,9 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	}
 
 	@synchronized( _knownUsers ) {
-		[_knownUsers enumerateKeysAndObjectsUsingBlock:^(id key, MVChatUser *user, BOOL *stop) {
+		for (MVChatUser *user in [_knownUsers objectEnumerator]) {
 			[user _setStatus:MVChatUserUnknownStatus];
-		}];
+		}
 	}
 
 	@synchronized( _chatUserWatchRules ) {
@@ -1887,7 +1885,7 @@ end:
 		[_knownUsers removeObjectForKey:[user uniqueIdentifier]];
 		[user _setUniqueIdentifier:[newNickname lowercaseString]];
 		[user _setNickname:newNickname];
-		_knownUsers[[user uniqueIdentifier]] = user;
+		[_knownUsers setObject:user forKey:[user uniqueIdentifier]];
 		strongUser = nil;
 	}
 }
@@ -2008,8 +2006,6 @@ end:
 - (void) _periodicEvents {
 	MVAssertMainThreadRequired();
 	[_pendingJoinRoomNames removeAllObjects];
-
-	[self _pruneKnownUsers];
 
 #if !ENABLE(BOUNCER_MODE)
 	@synchronized( _joinedRooms ) {
