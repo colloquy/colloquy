@@ -987,7 +987,6 @@
 				F5185C82018626F701EE70DE /* Interfaces */,
 				F50B0AA10170C89301A84BDE /* Resources */,
 				1C6A13E608666DDC009EE6D2 /* Configurations */,
-				C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */,
 				089C1671FE841209C02AAC07 /* Frameworks */,
 				1CB2C8CC052DDA360094AAA4 /* Products */,
 			);
@@ -997,6 +996,7 @@
 		089C1671FE841209C02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */,
 				92A711941A4A5166009E80F0 /* SecurityInterface.framework */,
 				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
 				1C397390082D4ADA00DCF3CF /* IOKit.framework */,

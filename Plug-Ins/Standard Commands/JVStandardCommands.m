@@ -11,12 +11,13 @@
 #import "JVStyle.h"
 #import "JVEmoticonSet.h"
 #import "JVStyleView.h"
+#import "JVConnectionInspector.h"
 
 #import <WebKit/WebKit.h>
 
-@interface MVChatConnection (MVChatConnectionInspection) <JVInspection>
-- (id <JVInspector>) inspector;
-@end
+//@interface MVChatConnection (MVChatConnectionInspection) <JVInspection>
+//- (id <JVInspector>) inspector;
+//@end
 
 #pragma mark -
 
