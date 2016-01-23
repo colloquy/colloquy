@@ -7,7 +7,7 @@
 
 @interface JVChatRoomMember : NSObject <JVChatListItem, JVChatListItemScripting> {
 	__weak JVChatRoomPanel *_room;
-	__weak MVChatUser *_user;
+	MVChatUser *_user;
 
 	// Custom ban ivars
 	BOOL _nibLoaded;
