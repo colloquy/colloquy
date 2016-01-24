@@ -25,16 +25,16 @@ NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatP
 }
 
 + (NSArray *) pluginSearchPaths {
+	NSFileManager *fm = [NSFileManager defaultManager];
 	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-	NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:5];
-
-	BOOL directory = NO;
-	NSString *pluginsPath = [[NSString stringWithFormat:@"~/Library/Application Support/%@/Plugins", bundleName] stringByExpandingTildeInPath];
-	if( [[NSFileManager defaultManager] fileExistsAtPath:pluginsPath isDirectory:&directory] && directory )
-		[paths addObject:pluginsPath];
-	else [paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/PlugIns", bundleName] stringByExpandingTildeInPath]];
-	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/PlugIns", bundleName]];
-	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/PlugIns", bundleName]];
+	NSArray *appSupports = [fm URLsForDirectory:NSApplicationSupportDirectory inDomains:NSAllDomainsMask & ~NSSystemDomainMask];
+	NSMutableArray<NSString*> *paths = [[NSMutableArray alloc] initWithCapacity:appSupports.count + 2];
+	for (NSURL *support in appSupports) {
+		NSString *newDir = [support path];
+		newDir = [newDir stringByAppendingPathComponent:bundleName];
+		newDir = [newDir stringByAppendingPathComponent:@"PlugIns"];
+		[paths addObject:newDir];
+	}
 	[paths addObject:[[NSBundle bundleForClass:[self class]] builtInPlugInsPath]];
 	if( ! [[NSBundle mainBundle] isEqual:[NSBundle bundleForClass:[self class]]] )
 		[paths addObject:[[NSBundle mainBundle] builtInPlugInsPath]];
