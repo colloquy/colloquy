@@ -1,3 +1,5 @@
+#import <Foundation/NSAttributedString.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *NSChatWindowsIRCFormatType;
@@ -6,7 +8,7 @@ extern NSString *NSChatCTCPTwoFormatType;
 #define JVItalicObliquenessValue 0.16
 
 @interface NSAttributedString (NSAttributedStringHTMLAdditions)
-#if SYSTEM(MAC)
+#if !defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE
 + (instancetype) attributedStringWithHTMLFragment:(NSString *) fragment;
 
 + (instancetype) attributedStringWithChatFormat:(NSData *) data options:(NSDictionary *) options;

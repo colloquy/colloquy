@@ -1,6 +1,8 @@
 #ifndef __MVFILETRANSFER__
 #define __MVFILETRANSFER__
 
+#import <Foundation/Foundation.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 @class MVChatUser;

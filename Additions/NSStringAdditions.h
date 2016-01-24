@@ -1,6 +1,8 @@
 #ifndef ColloquyNSSTRINGADDITIONS
 #define ColloquyNSSTRINGADDITIONS
 
+#import <Foundation/NSString.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 BOOL isValidUTF8( const char *string, NSUInteger length );
@@ -76,13 +78,13 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 - (NSRange) rangeOfRegex:(NSString *) regex inRange:(NSRange) range;
 - (NSRange) rangeOfRegex:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error;
 
-- (NSString *) stringByMatching:(NSString *) regex capture:(NSInteger) capture;
-- (NSString *) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error;
+- (nullable NSString *) stringByMatching:(NSString *) regex capture:(NSInteger) capture;
+- (nullable NSString *) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error;
 
-- (NSArray <NSString *> *) captureComponentsMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options range:(NSRange) range error:(NSError **) error;
+- (nullable NSArray <NSString *> *) captureComponentsMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options range:(NSRange) range error:(NSError **) error;
 
-- (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement;
-- (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error;
+- (nullable NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement;
+- (nullable NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error;
 
 - (NSString *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set;
 @end

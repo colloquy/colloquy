@@ -1,0 +1,13 @@
+framework module ChatCore {
+	umbrella header "ChatCore.h"
+	
+	export *
+	module * { export * }
+
+	explicit module MVDirectClientConnection {
+		header "MVDirectClientConnection.h"
+	}
+	
+	textual header "MVUtilities.h"
+	textual header "MVChatString.h"
+}

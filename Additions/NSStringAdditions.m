@@ -1156,11 +1156,11 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	return foundRange;
 }
 
-- (NSString *) stringByMatching:(NSString *) regex capture:(NSInteger) capture {
+- (nullable NSString *) stringByMatching:(NSString *) regex capture:(NSInteger) capture {
 	return [self stringByMatching:regex options:0 inRange:NSMakeRange(0, self.length) capture:capture error:nil];
 }
 
-- (NSString *) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error {
+- (nullable NSString *) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error {
 	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:range];
 
@@ -1175,7 +1175,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	return [self substringWithRange:resultRange];
 }
 
-- (NSArray <NSString *> *) captureComponentsMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options range:(NSRange) range error:(NSError **) error {
+- (nullable NSArray <NSString *> *) captureComponentsMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options range:(NSRange) range error:(NSError **) error {
 	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:range];
 
@@ -1190,11 +1190,11 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	return [results copy];
 }
 
-- (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement {
+- (nullable NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement {
 	return [self stringByReplacingOccurrencesOfRegex:regex withString:replacement options:0 range:NSMakeRange(0, self.length) error:nil];
 }
 
-- (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
+- (nullable NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
 	NSMutableString *replacementString = [self mutableCopy];
 	[replacementString replaceOccurrencesOfRegex:regex withString:replacement options:options range:searchRange error:error];
 	return [replacementString copy];

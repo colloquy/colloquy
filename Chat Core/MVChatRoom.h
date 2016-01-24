@@ -1,5 +1,6 @@
 #import <ChatCore/MVAvailability.h>
 #import <ChatCore/MVChatString.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -150,9 +151,9 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 - (void) setMode:(MVChatRoomMode) mode withAttribute:(id __nullable) attribute;
 - (void) removeMode:(MVChatRoomMode) mode;
 
-- (NSSet *) memberUsersWithModes:(NSUInteger) modes;
-- (NSSet *) memberUsersWithNickname:(NSString *) nickname;
-- (NSSet *) memberUsersWithFingerprint:(NSString *) fingerprint;
+- (NSSet<MVChatUser*> *) memberUsersWithModes:(NSUInteger) modes;
+- (NSSet<MVChatUser*> *) memberUsersWithNickname:(NSString *) nickname;
+- (NSSet<MVChatUser*> *) memberUsersWithFingerprint:(NSString *) fingerprint;
 - (MVChatUser *) memberUserWithUniqueIdentifier:(id) identifier;
 - (BOOL) hasUser:(MVChatUser *) user;
 

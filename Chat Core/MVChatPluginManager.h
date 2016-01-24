@@ -1,3 +1,5 @@
+#import <Foundation/Foundation.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const MVChatPluginManagerWillReloadPluginsNotification;
@@ -16,8 +18,8 @@ extern NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification;
 @property(strong, readonly) NSArray<NSBundle*> *plugins;
 
 - (void) reloadPlugins;
-- (void) addPlugin:(id) plugin;
-- (void) removePlugin:(id) plugin;
+- (void) addPlugin:(NSBundle *) plugin;
+- (void) removePlugin:(NSBundle *) plugin;
 
 - (nullable NSArray<NSBundle*> *) pluginsThatRespondToSelector:(SEL) selector;
 - (nullable NSArray<NSBundle*> *) pluginsOfClass:(Class __nullable) class thatRespondToSelector:(SEL) selector;
