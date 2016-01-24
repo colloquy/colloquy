@@ -12,7 +12,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 @interface JVInterfacePreferencesViewController() <NSTableViewDataSource, NSTableViewDelegate>
 
-@property(nonatomic, strong) NSMutableArray *windowSets;
+@property(nonatomic, strong) NSMutableArray<NSDictionary*> *windowSets;
 @property(nonatomic, strong) NSMutableArray *editingRuleCriterion;
 @property(nonatomic, assign) NSUInteger selectedWindowSet;
 @property(nonatomic, assign) NSUInteger selectedRuleSet;

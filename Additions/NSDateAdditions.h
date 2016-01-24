@@ -1,7 +1,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSDate (NSDateAdditions)
-+ (NSString *) formattedStringWithDate:(NSDate *) date dateStyle:(int /*NSDateFormatterStyle*/) dateStyle timeStyle:(int /*NSDateFormatterStyle*/) timeStyle;
++ (NSString *) formattedStringWithDate:(NSDate *) date dateStyle:(NSDateFormatterStyle) dateStyle timeStyle:(NSDateFormatterStyle) timeStyle;
 + (NSString *) formattedStringWithDate:(NSDate *) date dateFormat:(NSString *) format;
 
 + (NSString *) formattedShortDateStringForDate:(NSDate *) date;
