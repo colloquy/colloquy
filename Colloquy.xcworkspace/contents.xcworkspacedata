@@ -5,6 +5,6 @@
       location = "container:Colloquy (iOS).xcodeproj">
    </FileRef>
    <FileRef
-      location = "container:Colloquy (Mac).xcodeproj">
+      location = "group:mac-app/mac-app.xcodeproj">
    </FileRef>
 </Workspace>
