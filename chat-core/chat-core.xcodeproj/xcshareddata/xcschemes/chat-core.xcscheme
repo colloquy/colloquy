@@ -15,10 +15,10 @@
             hideIssues = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C265DFBE1C55254B00140D24"
-               BuildableName = "Colloquy3.app"
-               BlueprintName = "mac-app"
-               ReferencedContainer = "container:mac-app.xcodeproj">
+               BlueprintIdentifier = "C2E4C9721C5538E1007A4FA5"
+               BuildableName = "ChatCore.framework"
+               BlueprintName = "chat-core"
+               ReferencedContainer = "container:chat-core.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -30,15 +30,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C265DFBE1C55254B00140D24"
-            BuildableName = "Colloquy3.app"
-            BlueprintName = "mac-app"
-            ReferencedContainer = "container:mac-app.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -52,16 +43,15 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C265DFBE1C55254B00140D24"
-            BuildableName = "Colloquy3.app"
-            BlueprintName = "mac-app"
-            ReferencedContainer = "container:mac-app.xcodeproj">
+            BlueprintIdentifier = "C2E4C9721C5538E1007A4FA5"
+            BuildableName = "ChatCore.framework"
+            BlueprintName = "chat-core"
+            ReferencedContainer = "container:chat-core.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -71,16 +61,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C265DFBE1C55254B00140D24"
-            BuildableName = "Colloquy3.app"
-            BlueprintName = "mac-app"
-            ReferencedContainer = "container:mac-app.xcodeproj">
+            BlueprintIdentifier = "C2E4C9721C5538E1007A4FA5"
+            BuildableName = "ChatCore.framework"
+            BlueprintName = "chat-core"
+            ReferencedContainer = "container:chat-core.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

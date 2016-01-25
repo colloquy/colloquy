@@ -1,3 +1,5 @@
+#import <Foundation/Foundation.h>
+
 #import "MVFileTransfer.h"
 #import "MVFileTransferPrivate.h"
 

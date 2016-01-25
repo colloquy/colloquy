@@ -7,4 +7,7 @@
    <FileRef
       location = "group:mac-app/mac-app.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:chat-core/chat-core.xcodeproj">
+   </FileRef>
 </Workspace>
