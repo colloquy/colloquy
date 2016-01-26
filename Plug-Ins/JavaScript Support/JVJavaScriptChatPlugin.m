@@ -296,8 +296,8 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 		[self removeScriptGlobalsForWebView:_webview];
 	}
 
-	NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"plugin" ofType:@"html"];
-	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:path] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:5.];
+	NSURL *path = [[NSBundle bundleForClass:[self class]] URLForResource:@"plugin" withExtension:@"html"];
+	NSURLRequest *request = [NSURLRequest requestWithURL:path cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:5.];
 	[[_webview mainFrame] loadRequest:request];
 }
 

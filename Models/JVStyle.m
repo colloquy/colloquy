@@ -263,7 +263,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return result;
 }
 
-- (NSString *) transformXMLDocument:(void *) document withParameters:(NSDictionary *) parameters {
+- (NSString *) transformXMLDocument:(xmlDocPtr) document withParameters:(NSDictionary *) parameters {
 	NSParameterAssert( document != NULL );
 
 	@synchronized( self ) {
@@ -428,10 +428,23 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	NSURL *URLpath = [_bundle URLForResource:name withExtension:@"css" subdirectory:@"Variants"];
 	if( URLpath ) return URLpath;
 
+	NSFileManager *fm = [NSFileManager defaultManager];
+	{
+		URLpath = [fm URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+		URLpath = [URLpath URLByAppendingPathComponent:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"] isDirectory:YES];
+		URLpath = [URLpath URLByAppendingPathComponent:@"Styles" isDirectory:YES];
+		URLpath = [URLpath URLByAppendingPathComponent:@"Variants" isDirectory:YES];
+		URLpath = [URLpath URLByAppendingPathComponent:[self identifier] isDirectory:YES];
+		URLpath = [URLpath URLByAppendingPathComponent:name isDirectory:NO];
+		URLpath = [URLpath URLByAppendingPathExtension:@"css"];
+		if ([URLpath checkResourceIsReachableAndReturnError:NULL]) {
+			return URLpath;
+		}
+	}
 	NSString *path;
 	NSString *root = [[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles/Variants/", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByStandardizingPath];
 	path = [[NSString stringWithFormat:@"%@/%@/%@.css", root, [self identifier], name] stringByExpandingTildeInPath];
-	if( [path hasPrefix:root] && [[NSFileManager defaultManager] isReadableFileAtPath:path] )
+	if( [path hasPrefix:root] && [fm isReadableFileAtPath:path] )
 		return [NSURL fileURLWithPath:path];
 
 	return nil;

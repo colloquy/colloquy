@@ -750,8 +750,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
 		[contentFrame loadHTMLString:[self _contentHTMLWithBody:@""] baseURL:[self _baseURL]];
 	} else {
-		NSString *path = [[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"];
-		NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:path] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:5.];
+		NSURL *path = [[NSBundle mainBundle] URLForResource:@"base" withExtension:@"html"];
+		NSURLRequest *request = [NSURLRequest requestWithURL:path cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:5.];
 		[[self mainFrame] loadRequest:request];
 	}
 }
@@ -954,13 +954,13 @@ quickEnd:
 		bodyTemplate = html;
 	}
 
-	NSString *baseURL = [[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]] absoluteString];
+	NSString *baseURL = [[[NSBundle mainBundle] resourceURL] absoluteString];
 
 	return [NSString stringWithFormat:shell, @"", @"", baseURL, [[[self emoticons] styleSheetLocation] absoluteString], [[[self style] mainStyleSheetLocation] absoluteString], variantStyleSheetLocation, [[[self style] baseLocation] absoluteString], bodyTemplate];
 }
 
 - (NSURL *) _baseURL {
-	return [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
+	return [[NSBundle mainBundle] URLForResource:@"template" withExtension:@"html"];
 }
 
 #pragma mark -

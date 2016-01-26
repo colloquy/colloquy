@@ -83,7 +83,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	NSString *preferredDownloadFolder = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVUserPreferredDownloadFolder"];
 
 	if (!preferredDownloadFolder.length)
-		return [@"~/Downloads" stringByExpandingTildeInPath];
+		return [NSHomeDirectory() stringByAppendingPathComponent:@"Downloads"];
 	return preferredDownloadFolder;
 }
 
