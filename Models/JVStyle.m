@@ -31,23 +31,31 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 @implementation JVStyle
 + (void) scanForStyles {
+	NSFileManager *fm = [NSFileManager defaultManager];
 	NSMutableSet *styles = [NSMutableSet set];
 	if( ! allStyles ) allStyles = styles;
 
 	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:5];
-	[paths addObject:[NSString stringWithFormat:@"%@/Styles", [[NSBundle bundleForClass:[self class]] resourcePath]]];
-	if( ! [[NSBundle mainBundle] isEqual:[NSBundle bundleForClass:[self class]]] )
-		[paths addObject:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Styles"]];
-	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles", bundleName] stringByExpandingTildeInPath]];
-	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Styles", bundleName]];
-	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Styles", bundleName]];
+	{
+		NSString *frameworkStyles = [[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:@"Styles"];
+		[paths addObject:frameworkStyles];
+		if( ! [[NSBundle mainBundle] isEqual:[NSBundle bundleForClass:[self class]]] )
+			[paths addObject:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Styles"]];
+		NSArray *arr = [fm URLsForDirectory:NSApplicationSupportDirectory inDomains:(NSAllDomainsMask & ~NSSystemDomainMask)];
+		for (NSURL *loc in arr) {
+			NSString *toAddDir = [loc path];
+			toAddDir = [toAddDir stringByAppendingPathComponent:bundleName];
+			toAddDir = [toAddDir stringByAppendingPathComponent:@"Styles"];
+			[paths addObject:toAddDir];
+		}
+	}
 
 	for( NSString *path in paths ) {
-		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
+		for( NSString *file in [fm contentsOfDirectoryAtPath:path error:nil] ) {
 			NSString *fullPath = [path stringByAppendingPathComponent:file];
-			NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:NO];
-			if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[file pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [attributes[NSFileHFSTypeCode] unsignedIntValue] == 'coSt' && [attributes[NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
+			NSDictionary *attributes = [fm attributesOfItemAtPath:fullPath error:NO];
+			if( /* [fm isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[file pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [attributes[NSFileHFSTypeCode] unsignedIntValue] == 'coSt' && [attributes[NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
 				NSBundle *bundle = nil;
 				JVStyle *style = nil;
 				if( ( bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]] ) ) {
@@ -432,37 +440,37 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 - (NSURL *) bodyTemplateLocationWithName:(NSString *) name {
 	if( ! [name length] ) name = @"generic";
 
-	NSString *path = [_bundle pathForResource:[name stringByAppendingString:@"Template"] ofType:@"html"];
-	if( path ) return [NSURL fileURLWithPath:path];
+	NSURL *path = [_bundle URLForResource:[name stringByAppendingString:@"Template"] withExtension:@"html"];
+	if( path ) return path;
 
-	path = [_bundle pathForResource:@"genericTemplate" ofType:@"html"];
-	if( path ) return [NSURL fileURLWithPath:path];
+	path = [_bundle URLForResource:@"genericTemplate" withExtension:@"html"];
+	if( path ) return path;
 
-	path = [[NSBundle mainBundle] pathForResource:[name stringByAppendingString:@"Template"] ofType:@"html"];
-	if( path ) return [NSURL fileURLWithPath:path];
+	path = [[NSBundle mainBundle] URLForResource:[name stringByAppendingString:@"Template"] withExtension:@"html"];
+	if( path ) return path;
 
-	path = [[NSBundle mainBundle] pathForResource:@"genericTemplate" ofType:@"html"];
-	if( path ) return [NSURL fileURLWithPath:path];
+	path = [[NSBundle mainBundle] URLForResource:@"genericTemplate" withExtension:@"html"];
+	if( path ) return path;
 
 	return nil;
 }
 
 - (NSURL *) XMLStyleSheetLocation {
-	NSString *path = [_bundle pathForResource:@"main" ofType:@"xsl"];
-	if( path ) return [NSURL fileURLWithPath:path];
+	NSURL *path = [_bundle URLForResource:@"main" withExtension:@"xsl"];
+	if( path ) return path;
 
-	path = [[NSBundle mainBundle] pathForResource:@"default" ofType:@"xsl"];
-	if( path ) return [NSURL fileURLWithPath:path];
+	path = [[NSBundle mainBundle] URLForResource:@"default" withExtension:@"xsl"];
+	if( path ) return path;
 
 	return nil;
 }
 
 - (NSURL *) previewTranscriptLocation {
-	NSString *path = [_bundle pathForResource:@"preview" ofType:@"colloquyTranscript"];
-	if( path ) return [NSURL fileURLWithPath:path];
+	NSURL *path = [_bundle URLForResource:@"preview" withExtension:@"colloquyTranscript"];
+	if( path ) return path;
 
-	path = [[NSBundle mainBundle] pathForResource:@"preview" ofType:@"colloquyTranscript"];
-	if( path ) return [NSURL fileURLWithPath:path];
+	path = [[NSBundle mainBundle] URLForResource:@"preview" withExtension:@"colloquyTranscript"];
+	if( path ) return path;
 
 	return nil;
 }
@@ -485,7 +493,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 	NSString *contents = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
 
-	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
+	NSURL *resources = [[NSBundle mainBundle] resourceURL];
 	return ( contents ? [NSString stringWithFormat:contents, [resources absoluteString], @""] : @"" );
 }
 
@@ -554,7 +562,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	@synchronized( self ) {
 		if( _XSLStyle ) xsltFreeStylesheet( _XSLStyle );
 		_XSLStyle = ( [[location absoluteString] length] ? xsltParseStylesheetFile( (const xmlChar *)[[location absoluteString] fileSystemRepresentation] ) : NULL );
-		if( _XSLStyle ) ((xsltStylesheetPtr) _XSLStyle) -> indent = 0; // this is done because our whitespace escaping causes problems otherwise
+		if( _XSLStyle ) _XSLStyle -> indent = 0; // this is done because our whitespace escaping causes problems otherwise
 	}
 }
 
