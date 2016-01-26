@@ -29,7 +29,9 @@
 #import "NSDateAdditions.h"
 #import "NSRegularExpressionAdditions.h"
 
-static NSSet *actionVerbs = nil;
+NS_ASSUME_NONNULL_BEGIN
+
+static NSSet *__null_unspecified actionVerbs = nil;
 
 const NSStringEncoding JVAllowedTextEncodings[] = {
 	/* Universal */
@@ -229,11 +231,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 #pragma mark -
 
-- (id) target {
+- (nullable id) target {
 	return _target;
 }
 
-- (MVChatUser *) user {
+- (nullable MVChatUser *) user {
 	if( [[self target] isKindOfClass:[MVChatUser class]] )
 		return [self target];
 	if( [[self target] isKindOfClass:[MVChatRoom class]] )
@@ -248,7 +250,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", server, [[[self user] nickname] stringByEncodingIllegalURLCharacters]]];
 }
 
-- (MVChatConnection *) connection {
+- (nullable MVChatConnection *) connection {
 	if( [[self target] respondsToSelector:@selector( connection )] )
 		return (MVChatConnection *)[[self target] connection];
 	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
@@ -296,7 +298,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	return [NSString stringWithFormat:@"%@ (%@)", [self title], [[self user] serverAddress]];
 }
 
-- (NSString *) information {
+- (nullable NSString *) information {
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname && ! [[self target] isEqualToString:[_buddy preferredName]] )
 		return [NSString stringWithFormat:@"%@ (%@)", [self target], [[self user] serverAddress]]; */
 	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] ) {
@@ -396,7 +398,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	return [NSImage imageNamed:@"directChatIcon"];
 }
 
-- (NSImage *) statusImage {
+- (nullable NSImage *) statusImage {
 	if( _isActive && [[[self view] window] isKeyWindow] ) {
 		_newMessageCount = 0;
 		_newHighlightMessageCount = 0;
@@ -474,7 +476,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 #pragma mark -
 
-- (void) showAlert:(NSPanel *) alert withName:(NSString *) name {
+- (void) showAlert:(NSPanel *) alert withName:(nullable NSString *) name {
 	if( _isActive && ! [[_windowController window] attachedSheet] ) {
 		if( alert ) [[NSApplication sharedApplication] beginSheet:alert modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( _alertSheetDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
 	} else {
@@ -506,7 +508,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[self checkTranscriptDirectoryState];
 }
 
-- (void) setPreference:(id) value forKey:(NSString *) key {
+- (void) setPreference:(nullable id) value forKey:(NSString *) key {
 	NSParameterAssert( key != nil );
 	NSParameterAssert( [key length] );
 
@@ -518,7 +520,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (id) preferenceForKey:(NSString *) key {
+- (nullable id) preferenceForKey:(NSString *) key {
 	NSParameterAssert( key != nil );
 	NSParameterAssert( [key length] );
 	return _settings[key];
@@ -610,7 +612,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 #pragma mark -
 #pragma mark Styles
 
-- (IBAction) changeStyle:(id) sender {
+- (IBAction) changeStyle:(nullable id) sender {
 	JVStyle *style = [sender representedObject];
 
 	[self setPreference:[style identifier] forKey:@"style"];
@@ -619,7 +621,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[super changeStyle:sender];
 }
 
-- (IBAction) changeStyleVariant:(id) sender {
+- (IBAction) changeStyleVariant:(nullable id) sender {
 	JVStyle *style = [sender representedObject][@"style"];
 	NSString *variant = [sender representedObject][@"variant"];
 
@@ -629,7 +631,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[super changeStyleVariant:sender];
 }
 
-- (IBAction) changeEmoticons:(id) sender {
+- (IBAction) changeEmoticons:(nullable id) sender {
 	JVEmoticonSet *emoticon = [sender representedObject];
 
 	[self setPreference:[emoticon identifier] forKey:@"emoticon"];
@@ -644,7 +646,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	return _encoding;
 }
 
-- (IBAction) changeEncoding:(id) sender {
+- (IBAction) changeEncoding:(nullable id) sender {
 	if( ! [[self connection] supportedStringEncodings] ) return;
 
 	NSMenuItem *menuItem = nil;
@@ -702,7 +704,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[[self emoticons] performEmoticonSubstitution:string];
 }
 
-- (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes {
+- (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(nullable NSDictionary *) attributes {
 	if( ! _nibLoaded ) [self view];
 
 	NSParameterAssert( name != nil );
@@ -989,7 +991,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 /**
  * Toggles notifications (this is for private, direct user-user chats)
  */
-- (IBAction) toggleNotifications:(id) sender {
+- (IBAction) toggleNotifications:(nullable id) sender {
 	if( [[self preferenceForKey:@"muted"] isEqual:@YES] )
 		[self setPreference:@NO forKey:@"muted"];
 	else [self setPreference:@YES forKey:@"muted"];
@@ -998,7 +1000,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 #pragma mark -
 #pragma mark Input Handling
 
-- (IBAction) send:(id) sender {
+- (IBAction) send:(nullable id) sender {
 	NSTextStorage *subMsg = nil;
 	__block BOOL action = NO;
 	NSRange range;
@@ -1148,15 +1150,15 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 #pragma mark -
 #pragma mark ScrollBack
 
-- (IBAction) clear:(id) sender {
+- (IBAction) clear:(nullable id) sender {
 	[send reset:nil];
 }
 
-- (IBAction) clearDisplay:(id) sender {
+- (IBAction) clearDisplay:(nullable id) sender {
 	[display clear];
 }
 
-- (IBAction) markDisplay:(id) sender {
+- (IBAction) markDisplay:(nullable id) sender {
 	[display mark];
 }
 
@@ -1297,7 +1299,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	return possibleCompletion;
 }
 
-- (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(NSInteger *) index {
+- (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(nullable NSInteger *) index {
 	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSString *search = [[[send textStorage] string] substringWithRange:charRange];
 	NSMutableArray *ret = [NSMutableArray array];
@@ -1318,7 +1320,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	return ret;
 }
 
-- (void) textDidChange:(NSNotification *) notification {
+- (void) textDidChange:(nullable NSNotification *) notification {
 	_historyIndex = 0;
 
 	if( ! [[send string] length] && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputRetainsFormatting"] )
@@ -1423,7 +1425,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	return @"Direct Chat";
 }
 
-- (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
+- (nullable NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
 	if( [identifier isEqual:JVToolbarTextEncodingItemIdentifier] ) {
 		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
@@ -1605,11 +1607,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	}
 }
 
-- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message {
+- (nullable NSMutableAttributedString *) _convertRawMessage:(NSData *) message {
 	return [self _convertRawMessage:message withBaseFont:nil];
 }
 
-- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont {
+- (nullable NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(nullable NSFont *) baseFont {
 	if( ! message || ! [message length] ) return nil;
 
 	if( ! baseFont ) baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[[display preferences] standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:[[display preferences] defaultFontSize]];
@@ -1850,7 +1852,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[_windowController reloadListItem:self andChildren:NO];
 }
 
-- (void) _setCurrentMessage:(JVMutableChatMessage *) message {
+- (void) _setCurrentMessage:(nullable JVMutableChatMessage *) message {
 	[_currentMessage setObjectSpecifier:nil];
 	_currentMessage = message;
 
@@ -1903,7 +1905,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[command performDefaultImplementation];
 }
 
-- (id) addEventMessageScriptCommand:(NSScriptCommand *) command {
+- (nullable id) addEventMessageScriptCommand:(NSScriptCommand *) command {
 	// if there is a subject, perform the default implementation
 	if( [command subjectSpecifier] ) {
 		[command performDefaultImplementation];
@@ -2007,7 +2009,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 @end
 
 @implementation JVAddEventMessageScriptCommand
-- (id) performDefaultImplementation {
+- (nullable id) performDefaultImplementation {
 	// check if the subject responds to the command directly, if so execute that implementation
 	if( [self subjectSupportsCommand] ) return [self executeCommandOnSubject];
 
@@ -2091,3 +2093,5 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	return nil;
 }
 @end
+
+NS_ASSUME_NONNULL_END

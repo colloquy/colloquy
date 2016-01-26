@@ -14,6 +14,8 @@
 #import "MVChatUserAdditions.h"
 #import "MVApplicationController.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdateNotification";
 
 @interface JVChatRoomPanel (Private)
@@ -33,7 +35,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 - (void) _memberModeChanged:(NSNotification *) notification;
 - (void) _membersSynced:(NSNotification *) notification;
 - (void) _bannedMembersSynced:(NSNotification *) notification;
-- (void) _topicChanged:(id) sender;
+- (void) _topicChanged:(nullable id) sender;
 - (void) _didClearDisplay:(NSNotification *) notification;
 
 - (NSInteger) _roomIndexInFavoritesMenu;
@@ -92,7 +94,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 #pragma mark -
 #pragma mark Chat View Protocol Support
 
-- (void) setWindowController:(JVChatWindowController *) controller {
+- (void) setWindowController:(nullable JVChatWindowController *) controller {
 	[super setWindowController:controller];
 	if( [[self preferenceForKey:@"expanded"] boolValue] )
 		[controller performSelector:@selector( expandListItem: ) withObject:self afterDelay:0.];
@@ -115,7 +117,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	return [NSString stringWithFormat:@"%@ (%@)", [self title], [[self connection] server]];
 }
 
-- (NSString *) information {
+- (nullable NSString *) information {
 	if( _kickedFromRoom )
 		return NSLocalizedString( @"kicked out", "chat room kicked status line in drawer" );
 	if( ! [_sortedMembers count] )
@@ -155,7 +157,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	return [NSImage imageNamed:@"roomIcon"];
 }
 
-- (NSImage *) statusImage {
+- (nullable NSImage *) statusImage {
 	if( [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] ) {
 		if( _isActive && [[[self view] window] isKeyWindow] ) {
 			_newMessageCount = 0;
@@ -184,7 +186,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	return _sortedMembers[index];
 }
 
-- (NSArray *) children {
+- (nullable NSArray *) children {
 	return _sortedMembers;
 }
 
@@ -276,11 +278,11 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 #pragma mark -
 #pragma mark Miscellaneous
 
-- (IBAction) clearDisplay:(id) sender {
+- (IBAction) clearDisplay:(nullable id) sender {
 	[display clear];
 }
 
-- (IBAction) toggleFavorites:(id) sender {
+- (IBAction) toggleFavorites:(nullable id) sender {
 	NSString *favoritesPath = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
 	NSMutableArray *favorites = [NSMutableArray arrayWithContentsOfFile:favoritesPath];
 	if (!favorites)
@@ -312,7 +314,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 }
 
-- (IBAction) changeEncoding:(id) sender {
+- (IBAction) changeEncoding:(nullable id) sender {
 	[super changeEncoding:sender];
 	[[self target] setValue:@([self encoding]) forKey:@"encoding"];
 	if( sender ) [self _topicChanged:nil];
@@ -461,13 +463,13 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 #pragma mark -
 
-- (void) joinChat:(id) sender {
+- (void) joinChat:(nullable id) sender {
 	if( ! [[self connection] isConnected] )
 		[[self connection] connect];
 	[[self target] join];
 }
 
-- (void) partChat:(id) sender {
+- (void) partChat:(nullable id) sender {
 	if( [[self target] isJoined] ) {
 		[self parting];
 		[[self target] part];
@@ -1481,7 +1483,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	_banListSynced = YES;
 }
 
-- (void) _topicChanged:(id) sender {
+- (void) _topicChanged:(nullable id) sender {
 	NSAttributedString *topic = [self _convertRawMessage:[[self target] topic]];
 	JVChatRoomMember *author = ( [[self target] topicAuthor] ? [self chatRoomMemberForUser:[[self target] topicAuthor]] : nil );
 	NSDictionary *options = @{@"IgnoreFonts": @YES, @"IgnoreFontSizes": @YES};
@@ -1580,9 +1582,11 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 #pragma mark -
 
 @implementation JVChatRoomMember (JVChatRoomMemberObjectSpecifier)
-- (NSScriptObjectSpecifier *) objectSpecifier {
+- (nullable NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatRoomPanel class]];
 	NSScriptObjectSpecifier *container = [[self room] objectSpecifier];
 	return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatMembers" uniqueID:[self uniqueIdentifier]];
 }
 @end
+
+NS_ASSUME_NONNULL_END

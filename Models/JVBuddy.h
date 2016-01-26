@@ -1,3 +1,5 @@
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *JVBuddyCameOnlineNotification;
 extern NSString *JVBuddyWentOfflineNotification;
 
@@ -21,6 +23,7 @@ typedef NS_ENUM(NSInteger, JVBuddyName) {
 + (JVBuddyName) preferredName;
 + (void) setPreferredName:(JVBuddyName) preferred;
 
+- (instancetype) init NS_DESIGNATED_INITIALIZER;
 - (instancetype) initWithDictionaryRepresentation:(NSDictionary *) dictionary;
 - (NSDictionary *) dictionaryRepresentation;
 
@@ -29,7 +32,7 @@ typedef NS_ENUM(NSInteger, JVBuddyName) {
 - (void) unregisterWithConnection:(MVChatConnection *) connection;
 - (void) unregisterWithConnections;
 
-@property (nonatomic, strong) MVChatUser *activeUser;
+@property (nonatomic, strong, nullable) MVChatUser *activeUser;
 
 @property (readonly) MVChatUserStatus status;
 @property (readonly) NSData *awayStatusMessage;
@@ -49,13 +52,13 @@ typedef NS_ENUM(NSInteger, JVBuddyName) {
 - (void) addWatchRule:(MVChatUserWatchRule *) rule;
 - (void) removeWatchRule:(MVChatUserWatchRule *) rule;
 
-@property (nonatomic, copy) NSImage *picture;
+@property (nonatomic, copy, nullable) NSImage *picture;
 @property (readonly, copy) NSString *compositeName;
-@property (nonatomic, copy) NSString *firstName;
-@property (nonatomic, copy) NSString *lastName;
-@property (nonatomic, copy) NSString *primaryEmail;
-@property (nonatomic, copy) NSString *givenNickname;
-@property (copy) NSString *speechVoice;
+@property (nonatomic, copy, nullable) NSString *firstName;
+@property (nonatomic, copy, nullable) NSString *lastName;
+@property (nonatomic, copy, nullable) NSString *primaryEmail;
+@property (nonatomic, copy, nullable) NSString *givenNickname;
+@property (copy, nullable) NSString *speechVoice;
 @property (readonly, copy) NSString *uniqueIdentifier;
 
 @property (strong) ABPerson *addressBookPersonRecord;
@@ -68,3 +71,5 @@ typedef NS_ENUM(NSInteger, JVBuddyName) {
 - (NSComparisonResult) serverCompare:(JVBuddy *) buddy;
 - (NSComparisonResult) nicknameCompare:(JVBuddy *) buddy;
 @end
+
+NS_ASSUME_NONNULL_END

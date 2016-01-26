@@ -3,6 +3,8 @@
 @class JVChatRoomMember;
 @class MVChatUser;
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *const MVFavoritesListDidUpdateNotification;
 
 @interface JVChatRoomPanel : JVDirectChatPanel {
@@ -18,10 +20,10 @@ extern NSString *const MVFavoritesListDidUpdateNotification;
 - (void) joined;
 - (void) parting;
 
-- (void) joinChat:(id) sender;
-- (void) partChat:(id) sender;
+- (void) joinChat:(nullable id) sender;
+- (void) partChat:(nullable id) sender;
 
-- (IBAction) toggleFavorites:(id) sender;
+- (IBAction) toggleFavorites:(nullable id) sender;
 
 - (NSSet *) chatRoomMembersWithName:(NSString *) name;
 - (JVChatRoomMember *) firstChatRoomMemberWithName:(NSString *) name;
@@ -45,3 +47,5 @@ extern NSString *const MVFavoritesListDidUpdateNotification;
 
 - (void) topicChangedTo:(NSAttributedString *) topic inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) member;
 @end
+
+NS_ASSUME_NONNULL_END

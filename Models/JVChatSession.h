@@ -1,5 +1,7 @@
 #import "JVChatTranscript.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface JVChatSession : NSObject <JVChatTranscriptElement> {
 	@protected
 	struct _xmlNode *_node;
@@ -7,8 +9,10 @@
 	__weak JVChatTranscript *_transcript;
 	NSDate *_startDate;
 }
-@property (readonly) struct _xmlNode *node;
-- (struct _xmlNode *) node;
+@property (readonly, nullable) struct _xmlNode *node;
+- (nullable struct _xmlNode *) node;
 @property (readonly, weak) JVChatTranscript *transcript;
-@property (readonly, copy) NSDate *startDate;
+@property (nullable, readonly, copy) NSDate *startDate;
 @end
+
+NS_ASSUME_NONNULL_END

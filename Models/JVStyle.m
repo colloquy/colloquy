@@ -7,21 +7,23 @@
 #import "JVChatMessage.h"
 #import "NSBundleAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface JVStyle (Private)
-+ (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
-+ (void) _freeXsltParamArray:(const char **) params;
++ (const char * _Nullable *) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
++ (void) _freeXsltParamArray:(const char *__nullable*) params;
 
 - (void) _clearVariantCache;
-- (void) _setBundle:(NSBundle *) bundle;
-- (void) _setXSLStyle:(NSURL *) location;
-- (void) _setStyleOptions:(NSArray *) options;
-- (void) _setVariants:(NSArray *) variants;
-- (void) _setUserVariants:(NSArray *) variants;
+- (void) _setBundle:(nullable NSBundle *) bundle;
+- (void) _setXSLStyle:(nullable NSURL *) location;
+- (void) _setStyleOptions:(nullable NSArray *) options;
+- (void) _setVariants:(nullable NSArray *) variants;
+- (void) _setUserVariants:(nullable NSArray *) variants;
 @end
 
 #pragma mark -
 
-static NSMutableSet *allStyles = nil;
+static NSMutableSet * __null_unspecified allStyles = nil;
 
 NSString *JVStylesScannedNotification = @"JVStylesScannedNotification";
 NSString *JVDefaultStyleChangedNotification = @"JVDefaultStyleChangedNotification";
@@ -75,7 +77,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return allStyles;
 }
 
-+ (instancetype) styleWithIdentifier:(NSString *) identifier {
++ (nullable instancetype) styleWithIdentifier:(NSString *) identifier {
 	for( JVStyle *style in allStyles )
 		if( [[style identifier] isEqualToString:identifier] )
 			return style;
@@ -86,7 +88,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return nil;
 }
 
-+ (id) newWithBundle:(NSBundle *) bundle {
++ (nullable id) newWithBundle:(NSBundle *) bundle {
 	id ret = [self styleWithIdentifier:[bundle bundleIdentifier]];
 	if( ! ret ) ret = [[JVStyle alloc] initWithBundle:bundle];
 	return ret;
@@ -112,7 +114,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return ret;
 }
 
-+ (void) setDefaultStyle:(JVStyle *) style {
++ (void) setDefaultStyle:(nullable JVStyle *) style {
 	JVStyle *oldDefault = [self defaultStyle];
 	if( style == oldDefault ) return;
 
@@ -125,7 +127,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 #pragma mark -
 
-- (instancetype) initWithBundle:(NSBundle *) bundle {
+- (nullable instancetype) initWithBundle:(NSBundle *) bundle {
 	if( ( self = [self init] ) ) {
 		if( ! bundle ) {
 			return nil;
@@ -193,14 +195,14 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 #pragma mark -
 
-- (NSString *) transformChatTranscript:(JVChatTranscript *) transcript withParameters:(NSDictionary *) parameters {
+- (nullable NSString *) transformChatTranscript:(JVChatTranscript *) transcript withParameters:(NSDictionary *) parameters {
 	@synchronized( transcript ) {
 		if( ! [transcript document] ) return nil;
 		return [self transformXMLDocument:[transcript document] withParameters:parameters];
 	}
 }
 
-- (NSString *) transformChatTranscriptElement:(id <JVChatTranscriptElement>) element withParameters:(NSDictionary *) parameters {
+- (nullable NSString *) transformChatTranscriptElement:(id <JVChatTranscriptElement>) element withParameters:(NSDictionary *) parameters {
 	@synchronized( ( [element transcript] ? (id) [element transcript] : (id) element ) ) {
 		xmlDoc *doc = xmlNewDoc( (xmlChar *) "1.0" );
 		if( ! doc ) return nil;
@@ -218,7 +220,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	}
 }
 
-- (NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary *) parameters {
+- (nullable NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary *) parameters {
 	@synchronized( ( [message transcript] ? (id) [message transcript] : (id) message ) ) {
 		// Styles depend on being passed all the messages in the same envelope.
 		// This lets them know it is a consecutive message.
@@ -239,7 +241,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	}
 }
 
-- (NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters {
+- (nullable NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters {
 	JVChatTranscript *transcript = [[JVChatTranscript alloc] initWithElements:elements];
 	NSString *ret = [self transformChatTranscript:transcript withParameters:parameters];
 	return ret;
@@ -247,7 +249,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 #pragma mark -
 
-- (NSString *) transformXML:(NSString *) xml withParameters:(NSDictionary *) parameters {
+- (nullable NSString *) transformXML:(NSString *) xml withParameters:(NSDictionary *) parameters {
 	NSParameterAssert( xml != nil );
 	if( ! [xml length] ) return @"";
 
@@ -263,7 +265,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return result;
 }
 
-- (NSString *) transformXMLDocument:(xmlDocPtr) document withParameters:(NSDictionary *) parameters {
+- (nullable NSString *) transformXMLDocument:(xmlDocPtr) document withParameters:(NSDictionary *) parameters {
 	NSParameterAssert( document != NULL );
 
 	@synchronized( self ) {
@@ -422,7 +424,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return [_bundle URLForResource:@"main" withExtension:@"css"];
 }
 
-- (NSURL *) variantStyleSheetLocationWithName:(NSString *) name {
+- (nullable NSURL *) variantStyleSheetLocationWithName:(NSString *) name {
 	if( ! [name length] ) return nil;
 
 	NSURL *URLpath = [_bundle URLForResource:name withExtension:@"css" subdirectory:@"Variants"];
@@ -450,7 +452,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return nil;
 }
 
-- (NSURL *) bodyTemplateLocationWithName:(NSString *) name {
+- (nullable NSURL *) bodyTemplateLocationWithName:(NSString *) name {
 	if( ! [name length] ) name = @"generic";
 
 	NSURL *path = [_bundle URLForResource:[name stringByAppendingString:@"Template"] withExtension:@"html"];
@@ -468,7 +470,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return nil;
 }
 
-- (NSURL *) XMLStyleSheetLocation {
+- (nullable NSURL *) XMLStyleSheetLocation {
 	NSURL *path = [_bundle URLForResource:@"main" withExtension:@"xsl"];
 	if( path ) return path;
 
@@ -478,7 +480,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return nil;
 }
 
-- (NSURL *) previewTranscriptLocation {
+- (nullable NSURL *) previewTranscriptLocation {
 	NSURL *path = [_bundle URLForResource:@"preview" withExtension:@"colloquyTranscript"];
 	if( path ) return path;
 
@@ -520,7 +522,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 #pragma mark -
 
 @implementation JVStyle (Private)
-+ (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary {
++ (const char * _Nullable *) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary {
 	const char **temp = NULL, **ret = NULL;
 
 	if( ! [dictionary count] ) return NULL;
@@ -539,7 +541,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return ret;
 }
 
-+ (void) _freeXsltParamArray:(const char **) params {
++ (void) _freeXsltParamArray:(const char * __nullable*) params {
 	const char **temp = params;
 
 	if( ! params ) return;
@@ -559,7 +561,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	[self _setUserVariants:nil];
 }
 
-- (void) _setBundle:(NSBundle *) bundle {
+- (void) _setBundle:(nullable NSBundle *) bundle {
 	NSParameterAssert(bundle);
 
 	NSString *file = [bundle pathForResource:@"parameters" ofType:@"plist"];
@@ -571,7 +573,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	[self reload];
 }
 
-- (void) _setXSLStyle:(NSURL *) location {
+- (void) _setXSLStyle:(nullable NSURL *) location {
 	@synchronized( self ) {
 		if( _XSLStyle ) xsltFreeStylesheet( _XSLStyle );
 		_XSLStyle = ( [[location absoluteString] length] ? xsltParseStylesheetFile( (const xmlChar *)[[location absoluteString] fileSystemRepresentation] ) : NULL );
@@ -579,15 +581,17 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	}
 }
 
-- (void) _setStyleOptions:(NSArray *) options {
+- (void) _setStyleOptions:(nullable NSArray *) options {
 	_styleOptions = options;
 }
 
-- (void) _setVariants:(NSArray *) variants {
+- (void) _setVariants:(nullable NSArray *) variants {
 	_variants = variants;
 }
 
-- (void) _setUserVariants:(NSArray *) variants {
+- (void) _setUserVariants:(nullable NSArray *) variants {
 	_userVariants = variants;
 }
 @end
+
+NS_ASSUME_NONNULL_END

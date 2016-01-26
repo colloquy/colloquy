@@ -5,13 +5,19 @@
 
 #include <libxml/tree.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface JVChatEvent ()
-@property (readwrite, setter=_setNode:) xmlNode *node;
+@property (nullable, readwrite, setter=_setNode:) xmlNode *node;
 @end
 
 @implementation JVChatEvent
 
 @synthesize node = _node;
+
+- (instancetype)init {
+	return self = [super init];
+}
 
 - (void) dealloc {
 	_node = NULL;
@@ -105,7 +111,7 @@
 
 #pragma mark -
 
-- (void *) node {
+- (nullable xmlNodePtr) node {
 	if( ! _node ) {
 		if( _doc ) xmlFreeDoc( _doc );
 		_doc = xmlNewDoc( (xmlChar *) "1.0" );
@@ -169,7 +175,7 @@
 	return _node;
 }
 
-- (void) _setNode:(xmlNode *) node {
+- (void) _setNode:(nullable xmlNode *) node {
 	if( _doc ) {
 		xmlFreeDoc( _doc );
 		_doc = NULL;
@@ -215,7 +221,7 @@
 
 #pragma mark - private
 
-- (instancetype) initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
+- (nullable instancetype) initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
 	if( ( self = [self init] ) ) {
 		_node = node;
 		_transcript = transcript; // weak reference
@@ -323,3 +329,5 @@
 	_eventIdentifier = [identifier copy];
 }
 @end
+
+NS_ASSUME_NONNULL_END

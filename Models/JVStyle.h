@@ -3,6 +3,8 @@
 @class JVChatMessage;
 @class JVEmoticonSet;
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *JVStylesScannedNotification;
 extern NSString *JVDefaultStyleChangedNotification;
 extern NSString *JVDefaultStyleVariantChangedNotification;
@@ -19,13 +21,13 @@ extern NSString *JVStyleVariantChangedNotification;
 }
 + (void) scanForStyles;
 + (NSSet<JVStyle*> *) styles;
-+ (instancetype) styleWithIdentifier:(NSString *) identifier;
-+ (instancetype) newWithBundle:(NSBundle *) bundle;
++ (nullable instancetype) styleWithIdentifier:(NSString *) identifier;
++ (nullable instancetype) newWithBundle:(NSBundle *) bundle;
 
 + (JVStyle*) defaultStyle;
-+ (void) setDefaultStyle:(JVStyle *) style;
++ (void) setDefaultStyle:(nullable JVStyle *) style;
 
-- (instancetype) initWithBundle:(NSBundle *) bundle;
+- (nullable instancetype) initWithBundle:(NSBundle *) bundle;
 
 - (void) unlink;
 - (void) reload;
@@ -34,12 +36,12 @@ extern NSString *JVStyleVariantChangedNotification;
 @property (readonly, strong) NSBundle *bundle;
 @property (readonly, copy) NSString *identifier;
 
-- (NSString *) transformChatTranscript:(JVChatTranscript *) transcript withParameters:(NSDictionary *) parameters;
-- (NSString *) transformChatTranscriptElement:(id <JVChatTranscriptElement>) element withParameters:(NSDictionary *) parameters;
-- (NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary *) parameters;
-- (NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters;
-- (NSString *) transformXML:(NSString *) xml withParameters:(NSDictionary *) parameters;
-- (NSString *) transformXMLDocument:(struct _xmlDoc *) document withParameters:(NSDictionary *) parameters;
+- (nullable NSString *) transformChatTranscript:(JVChatTranscript *) transcript withParameters:(NSDictionary *) parameters;
+- (nullable NSString *) transformChatTranscriptElement:(id <JVChatTranscriptElement>) element withParameters:(NSDictionary *) parameters;
+- (nullable NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary *) parameters;
+- (nullable NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters;
+- (nullable NSString *) transformXML:(NSString *) xml withParameters:(NSDictionary *) parameters;
+- (nullable NSString *) transformXMLDocument:(struct _xmlDoc *) document withParameters:(NSDictionary *) parameters;
 
 - (NSComparisonResult) compare:(JVStyle *) style;
 @property (readonly, copy) NSString *displayName;
@@ -58,12 +60,14 @@ extern NSString *JVStyleVariantChangedNotification;
 
 @property (readonly, copy) NSURL *baseLocation;
 @property (readonly, copy) NSURL *mainStyleSheetLocation;
-- (NSURL *) variantStyleSheetLocationWithName:(NSString *) name;
-- (NSURL *) bodyTemplateLocationWithName:(NSString *) name;
-@property (readonly, copy) NSURL *XMLStyleSheetLocation;
-@property (readonly, copy) NSURL *previewTranscriptLocation;
+- (nullable NSURL *) variantStyleSheetLocationWithName:(NSString *) name;
+- (nullable NSURL *) bodyTemplateLocationWithName:(NSString *) name;
+@property (readonly, copy, nullable) NSURL *XMLStyleSheetLocation;
+@property (readonly, copy, nullable) NSURL *previewTranscriptLocation;
 
 @property (readonly, copy) NSString *contentsOfMainStyleSheet;
 - (NSString *) contentsOfVariantStyleSheetWithName:(NSString *) name;
 - (NSString *) contentsOfBodyTemplateWithName:(NSString *) name;
 @end
+
+NS_ASSUME_NONNULL_END

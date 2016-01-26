@@ -9,6 +9,8 @@
 #import "JVStyleView.h"
 #import "JVViewCell.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsItem";
 
 @interface JVSmartTranscriptPanel (Private)
@@ -31,7 +33,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	return self;
 }
 
-- (instancetype) initWithSettings:(NSDictionary *) settings {
+- (nullable instancetype) initWithSettings:(nullable NSDictionary *) settings {
 	if( ( self = [self init] ) ) {
 		_settingsNibLoaded = [[NSBundle mainBundle] loadNibNamed:@"JVSmartTranscriptFilterSheet" owner:self topLevelObjects:NULL];
 
@@ -46,7 +48,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	return self;
 }
 
-- (instancetype) initWithCoder:(NSCoder *) coder {
+- (nullable instancetype) initWithCoder:(NSCoder *) coder {
 	if( [coder allowsKeyedCoding] ) {
 		NSMutableDictionary *settings = [NSMutableDictionary dictionary];
 		settings[@"rules"] = [coder decodeObjectForKey:@"rules"];
@@ -110,7 +112,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	return [NSString stringWithFormat:@"Smart Transcript %@", [self title]];
 }
 
-- (NSString *) information {
+- (nullable NSString *) information {
 	return nil;
 }
 
@@ -153,7 +155,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	return [NSImage imageNamed:@"smartTranscript"];
 }
 
-- (NSImage *) statusImage {
+- (nullable NSImage *) statusImage {
 	if( _isActive && [[[self view] window] isKeyWindow] ) {
 		_newMessages = 0;
 		return nil;
@@ -167,7 +169,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 #pragma mark -
 
-- (IBAction) dispose:(id) sender {
+- (IBAction) dispose:(nullable id) sender {
 	[[JVChatController defaultController] disposeSmartTranscript:self];
 }
 
@@ -232,7 +234,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 #pragma mark -
 
-- (IBAction) editSettings:(id) sender {
+- (IBAction) editSettings:(nullable id) sender {
 	[[self editingRules] removeAllObjects];
 
 	for( id rule in [self rules] )
@@ -250,7 +252,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	[[NSApplication sharedApplication] beginSheet:settingsSheet modalForWindow:[[self windowController] window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
 
-- (IBAction) closeEditSettingsSheet:(id) sender {
+- (IBAction) closeEditSettingsSheet:(nullable id) sender {
 	[settingsSheet orderOut:nil];
 	[[NSApplication sharedApplication] endSheet:settingsSheet];
 
@@ -261,7 +263,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 		[self dispose:nil];
 }
 
-- (IBAction) saveSettings:(id) sender {
+- (IBAction) saveSettings:(nullable id) sender {
 	[[self rules] setArray:[self editingRules]];
 	[self closeEditSettingsSheet:sender];
 
@@ -332,7 +334,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	[[previousRule lastKeyView] setNextKeyView:ignoreCase];
 }
 
-- (IBAction) addRow:(id) sender {
+- (IBAction) addRow:(nullable id) sender {
 	JVTranscriptCriterionController *criterion = [JVTranscriptCriterionController controller];
 	[criterion setUsesSmartTranscriptCriterion:YES];
 
@@ -354,7 +356,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	[self updateKeyViewLoop];
 }
 
-- (IBAction) removeRow:(id) sender {
+- (IBAction) removeRow:(nullable id) sender {
 	[self removeObjectFromCriterionControllersAtIndex:[[subviewTableView selectedRowIndexes] lastIndex]];
 
 	if( sender ) {
@@ -383,7 +385,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	[subviewTableView deselectAll:nil];
 }
 
-- (void) tableView:(NSTableView *) tableView willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) tableColumn row:(NSInteger) row {
+- (void) tableView:(NSTableView *) tableView willDisplayCell:(id) cell forTableColumn:(nullable NSTableColumn *) tableColumn row:(NSInteger) row {
 	if( [[tableColumn identifier] isEqualToString:@"criteria"] ) {
 		[(JVViewCell *)cell setView:[(JVTranscriptCriterionController *)[self editingRules][row] view]];
 	} else if( [[tableColumn identifier] isEqualToString:@"remove"] ) {
@@ -398,7 +400,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	return @"Smart Transcript";
 }
 
-- (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
+- (nullable NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
 	if( [identifier isEqual:JVToolbarRuleSettingsItemIdentifier] ) {
 		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
@@ -453,3 +455,5 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	[self matchMessage:origMessage fromView:[notification object]];
 }
 @end
+
+NS_ASSUME_NONNULL_END

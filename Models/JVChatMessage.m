@@ -9,10 +9,12 @@
 #import "NSAttributedStringMoreAdditions.h"
 #import "NSDateAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @implementation JVChatMessage
 
 @synthesize node = _node;
+@synthesize objectSpecifier = _objectSpecifier;
 
 + (void) initialize {
 	[super initialize];
@@ -70,7 +72,7 @@
 	return self;
 }
 
-- (id) mutableCopyWithZone:(NSZone *) zone {
+- (id) mutableCopyWithZone:(nullable NSZone *) zone {
 	JVMutableChatMessage *ret =  nil;
 
 	@synchronized( _transcript ) {
@@ -110,7 +112,7 @@
 
 #pragma mark -
 
-- (xmlNode *) node {
+- (nullable xmlNode *) node {
 	if( ! _node ) {
 		NSDictionary *options = @{@"IgnoreFonts": @YES, @"IgnoreFontSizes": @YES};
 		NSString *htmlMessage = ( [self body] ? [[self body] HTMLFormatWithOptions:options] : @"" );
@@ -181,7 +183,7 @@
 	return _node;
 }
 
-- (void) _setNode:(xmlNode *) node {
+- (void) _setNode:(nullable xmlNode *) node {
 	if( _doc ) {
 		xmlFreeDoc( _doc );
 		_doc = NULL;
@@ -286,22 +288,12 @@
 	return _source;
 }
 
-- (JVChatTranscript *) transcript {
+- (nullable JVChatTranscript *) transcript {
 	return _transcript;
 }
 
 - (NSString *) messageIdentifier {
 	return _messageIdentifier;
-}
-
-#pragma mark -
-
-- (NSScriptObjectSpecifier *) objectSpecifier {
-	return _objectSpecifier;
-}
-
-- (void) setObjectSpecifier:(NSScriptObjectSpecifier *) objectSpecifier {
-	_objectSpecifier = objectSpecifier;
 }
 
 #pragma mark -
@@ -315,7 +307,7 @@
 	return _attributes;
 }
 
-- (id) attributeForKey:(id) key {
+- (nullable id) attributeForKey:(id) key {
 	return _attributes[key];
 }
 
@@ -331,7 +323,7 @@
 
 #pragma mark -
 
-- (id) valueForUndefinedKey:(NSString *) key {
+- (nullable id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
 		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The message id %@ doesn't have the \"%@\" property.", [self messageIdentifier], key]];
@@ -341,7 +333,7 @@
 	return [super valueForUndefinedKey:key];
 }
 
-- (void) setValue:(id) value forUndefinedKey:(NSString *) key {
+- (void) setValue:(nullable id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		// this is a non-mutable message, give AppleScript a good error if this is a script command call
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
@@ -378,7 +370,7 @@
 	}
 }
 
-+ (instancetype) messageWithText:(id) body sender:(id) sender {
++ (instancetype) messageWithText:(id) body sender:(nullable id) sender {
 	return [[self alloc] initWithText:body sender:sender];
 }
 
@@ -396,7 +388,7 @@
 	return self;
 }
 
-- (instancetype) initWithText:(id) body sender:(id) sender {
+- (instancetype) initWithText:(id) body sender:(nullable id) sender {
 	if( ( self = [self init] ) ) {
 		[self setBody:body];
 		self.sender = sender;
@@ -439,7 +431,8 @@
 	}
 
 	if( [identifier isKindOfClass:[NSData class]] )
-		identifier = [identifier base64Encoding];
+		identifier = [identifier colBase64Encoding];
+	//identifier = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedData:identifier options:0] encoding:NSUTF8StringEncoding];
 
 	return ( identifier ? identifier : [super senderIdentifier] );
 }
@@ -561,7 +554,7 @@
 
 #pragma mark -
 
-- (void) setValue:(id) value forUndefinedKey:(NSString *) key {
+- (void) setValue:(nullable id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
 		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of message id %@ is read only.", key, [self messageIdentifier]]];
@@ -571,3 +564,5 @@
 	[super setValue:value forUndefinedKey:key];
 }
 @end
+
+NS_ASSUME_NONNULL_END

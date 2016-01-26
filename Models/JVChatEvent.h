@@ -1,5 +1,7 @@
 #import "JVChatTranscript.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface JVChatEvent : NSObject <JVChatTranscriptElement> {
 	@protected
 	struct _xmlNode *_node;
@@ -15,7 +17,8 @@
 	BOOL _loadedAttributes;
 	BOOL _loadedSmall;
 }
-- (/* xmlNode */ void *) node;
+
+@property (readonly, nullable) struct _xmlNode *node;
 
 @property (readonly, weak) JVChatTranscript *transcript;
 @property (readonly, copy) NSString *eventIdentifier;
@@ -28,9 +31,12 @@
 @property (readonly, copy) NSString *messageAsHTML;
 
 @property (readonly, copy) NSDictionary *attributes;
+- (instancetype) init NS_DESIGNATED_INITIALIZER;
+
 @end
 
 @interface JVMutableChatEvent : JVChatEvent
+- (instancetype) init NS_DESIGNATED_INITIALIZER;
 + (instancetype) chatEventWithName:(NSString *) name andMessage:(id) message;
 - (instancetype) initWithName:(NSString *) name andMessage:(id) message;
 
@@ -45,3 +51,5 @@
 
 @property (readwrite, copy) NSString *eventIdentifier;
 @end
+
+NS_ASSUME_NONNULL_END

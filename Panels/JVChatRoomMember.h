@@ -5,6 +5,8 @@
 @class MVChatUser;
 @class JVBuddy;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface JVChatRoomMember : NSObject <JVChatListItem, JVChatListItemScripting> {
 	__weak JVChatRoomPanel *_room;
 	MVChatUser *_user;
@@ -20,7 +22,7 @@
 	IBOutlet NSButton *cancelButton;
 	IBOutlet NSWindow *banWindow;
 }
-- (instancetype) initWithRoom:(JVChatRoomPanel *) room andUser:(MVChatUser *) user;
+- (instancetype) initWithRoom:(JVChatRoomPanel *) room andUser:(MVChatUser *) user NS_DESIGNATED_INITIALIZER;
 - (instancetype) initLocalMemberWithRoom:(JVChatRoomPanel *) room;
 
 - (NSComparisonResult) compare:(JVChatRoomMember *) member;
@@ -30,14 +32,14 @@
 @property (readonly, strong) JVChatRoomPanel *room;
 @property (readonly, strong) MVChatConnection *connection;
 @property (readonly, strong) MVChatUser *user;
-@property (readonly, strong) JVBuddy *buddy;
+@property (readonly, strong, nullable) JVBuddy *buddy;
 
 @property (readonly, copy) NSString *displayName;
 @property (readonly, copy) NSString *nickname;
 @property (readonly, copy) NSString *realName;
 @property (readonly, copy) NSString *username;
 @property (readonly, copy) NSString *address;
-@property (readonly, copy) NSString *hostmask;
+@property (readonly, copy, nullable) NSString *hostmask;
 
 @property (readonly) BOOL voice;
 @property (readonly) BOOL quieted;
@@ -51,26 +53,26 @@
 @property (readonly, copy) NSString *xmlDescription;
 - (NSString *) xmlDescriptionWithTagName:(NSString *) tag;
 
-- (IBAction) startChat:(id) sender;
-- (IBAction) sendFile:(id) sender;
-- (IBAction) addBuddy:(id) sender;
+- (IBAction) startChat:(nullable id) sender;
+- (IBAction) sendFile:(nullable id) sender;
+- (IBAction) addBuddy:(nullable id) sender;
 
-- (IBAction) toggleOperatorStatus:(id) sender;
-- (IBAction) toggleHalfOperatorStatus:(id) sender;
-- (IBAction) toggleVoiceStatus:(id) sender;
-- (IBAction) toggleQuietedStatus:(id) sender;
+- (IBAction) toggleOperatorStatus:(nullable id) sender;
+- (IBAction) toggleHalfOperatorStatus:(nullable id) sender;
+- (IBAction) toggleVoiceStatus:(nullable id) sender;
+- (IBAction) toggleQuietedStatus:(nullable id) sender;
 
-- (IBAction) kick:(id) sender;
-- (IBAction) ban:(id) sender;
-- (IBAction) customKick:(id) sender;
-- (IBAction) customBan:(id) sender;
-- (IBAction) kickban:(id) sender;
-- (IBAction) customKickban:(id) sender;
+- (IBAction) kick:(nullable id) sender;
+- (IBAction) ban:(nullable id) sender;
+- (IBAction) customKick:(nullable id) sender;
+- (IBAction) customBan:(nullable id) sender;
+- (IBAction) kickban:(nullable id) sender;
+- (IBAction) customKickban:(nullable id) sender;
 
-- (IBAction) closeKickSheet:(id) sender;
-- (IBAction) closeBanSheet:(id) sender;
-- (IBAction) closeKickbanSheet:(id) sender;
-- (IBAction) cancelSheet:(id) sender;
+- (IBAction) closeKickSheet:(nullable id) sender;
+- (IBAction) closeBanSheet:(nullable id) sender;
+- (IBAction) closeKickbanSheet:(nullable id) sender;
+- (IBAction) cancelSheet:(nullable id) sender;
 @end
 
 @interface JVChatRoomMember (Private)
@@ -79,3 +81,5 @@
 - (NSString *) _selfCompositeName;
 - (NSString *) _selfStoredNickname;
 @end
+
+NS_ASSUME_NONNULL_END

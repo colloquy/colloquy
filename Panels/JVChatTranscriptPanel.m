@@ -17,6 +17,8 @@
 #import "NSBundleAdditions.h"
 #import "NSDateAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
 NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
@@ -29,7 +31,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #pragma mark -
 
 @interface JVChatTranscriptPanel ()
-- (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo;
+- (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(nullable void *) contextInfo;
 @end
 
 #pragma mark -
@@ -54,7 +56,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	return self;
 }
 
-- (instancetype) initWithTranscript:(NSString *) filename {
+- (nullable instancetype) initWithTranscript:(NSString *) filename {
 	if( ( self = [self init] ) ) {
 		if( ! [[NSFileManager defaultManager] isReadableFileAtPath:filename] ) {
 			return nil;
@@ -111,11 +113,11 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #pragma mark -
 #pragma mark Window Controller and Proxy Icon Support
 
-- (JVChatWindowController *) windowController {
+- (nullable JVChatWindowController *) windowController {
 	return _windowController;
 }
 
-- (void) setWindowController:(JVChatWindowController *) controller {
+- (void) setWindowController:(nullable JVChatWindowController *) controller {
 	if( [[[_windowController window] representedFilename] isEqualToString:[[self transcript] filePath]] )
 		[[_windowController window] setRepresentedFilename:@""];
 
@@ -149,7 +151,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	return [NSString stringWithFormat:NSLocalizedString( @"%@ - %@ Transcript", "chat transcript/log - window title" ), [self title], ( date ? [NSDate formattedShortDateStringForDate:[NSDate date]] : @"" )];
 }
 
-- (NSString *) information {
+- (nullable NSString *) information {
 	return [NSDate formattedShortDateStringForDate:[NSDate date]];
 }
 
@@ -157,11 +159,11 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	return [NSString stringWithFormat:@"%@\n%@", [self title], [self information]];
 }
 
-- (IBAction) close:(id) sender {
+- (IBAction) close:(nullable id) sender {
 	[[JVChatController defaultController] disposeViewController:self];
 }
 
-- (IBAction) activate:(id) sender {
+- (IBAction) activate:(nullable id) sender {
 	[[self windowController] showChatViewController:self];
 	[[[self windowController] window] makeKeyAndOrderFront:nil];
 }
@@ -170,7 +172,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	return [NSString stringWithFormat:@"Transcript %@", [self title]];
 }
 
-- (MVChatConnection *) connection {
+- (nullable MVChatConnection *) connection {
 	return nil;
 }
 
@@ -186,11 +188,11 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #pragma mark -
 #pragma mark Drawer/Outline View Methods
 
-- (id <JVChatListItem>) parent {
+- (nullable id <JVChatListItem>) parent {
 	return nil;
 }
 
-- (NSArray *) children {
+- (nullable NSArray *) children {
 	return nil;
 }
 
@@ -221,7 +223,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #pragma mark -
 #pragma mark Search Support
 
-- (IBAction) performQuickSearch:(id) sender {
+- (IBAction) performQuickSearch:(nullable id) sender {
 	if( [sender isKindOfClass:[NSTextField class]] ) {
 		if( [[sender stringValue] length] >= 3 ) [self setSearchQuery:[sender stringValue]];
 		else [self setSearchQuery:nil];
@@ -232,7 +234,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	}
 }
 
-- (void) quickSearchMatchMessage:(JVChatMessage *) message {
+- (void) quickSearchMatchMessage:(nullable JVChatMessage *) message {
 	if( ! message || ! _searchQueryRegex ) return;
 	NSString *bodyAsPlainText = [message bodyAsPlainText];
 	NSColor *markColor = [NSColor orangeColor];
@@ -243,7 +245,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	}
 }
 
-- (void) setSearchQuery:(NSString *) query {
+- (void) setSearchQuery:(nullable NSString *) query {
 	if( query == _searchQuery || [query isEqualToString:_searchQuery] ) return;
 
 	_searchQueryRegex = nil;
@@ -259,7 +261,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	[self _refreshSearch];
 }
 
-- (NSString *) searchQuery {
+- (nullable NSString *) searchQuery {
 	return _searchQuery;
 }
 
@@ -289,7 +291,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	return [[self windowController] window];
 }
 
-- (id) valueForUndefinedKey:(NSString *) key {
+- (nullable id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
 		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The panel id %@ doesn't have the \"%@\" property.", [self uniqueIdentifier], key]];
@@ -299,7 +301,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	return [super valueForUndefinedKey:key];
 }
 
-- (void) setValue:(id) value forUndefinedKey:(NSString *) key {
+- (void) setValue:(nullable id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
 		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of panel id %@ is read only.", key, [self uniqueIdentifier]]];
@@ -323,7 +325,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	}];
 }
 
-- (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo {
+- (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(nullable void *) contextInfo {
 	if( returnCode == NSOKButton ) {
 		NSURL *sheetURL = [sheet URL];
 		[[self transcript] writeToURL:sheetURL atomically:YES];
@@ -340,7 +342,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #pragma mark -
 #pragma mark Styles
 
-- (IBAction) changeStyle:(id) sender {
+- (IBAction) changeStyle:(nullable id) sender {
 	JVStyle *style = [sender representedObject];
 	if( ! style ) style = [JVStyle defaultStyle];
 	[self setStyle:style withVariant:[style defaultVariantName]];
@@ -359,7 +361,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 #pragma mark -
 
-- (IBAction) changeStyleVariant:(id) sender {
+- (IBAction) changeStyleVariant:(nullable id) sender {
 	JVStyle *style = [sender representedObject][@"style"];
 	NSString *variant = [sender representedObject][@"variant"];
 	[self setStyle:style withVariant:variant];
@@ -377,7 +379,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #pragma mark -
 #pragma mark Emoticons
 
-- (IBAction) changeEmoticons:(id) sender {
+- (IBAction) changeEmoticons:(nullable id) sender {
 	JVEmoticonSet *emoticons = [sender representedObject];
 	[self setEmoticons:emoticons];
 }
@@ -414,7 +416,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	return @"Chat Transcript";
 }
 
-- (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
+- (nullable NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
 	if( [identifier isEqualToString:JVToolbarFindItemIdentifier] ) {
 		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 		[toolbarItem setLabel:NSLocalizedString( @"Find", "find toolbar item label" )];
@@ -757,7 +759,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 #pragma mark -
 
-- (void) _reloadCurrentStyle:(id) sender {
+- (void) _reloadCurrentStyle:(nullable id) sender {
 	[display reloadCurrentStyle];
 }
 
@@ -936,7 +938,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 #pragma mark -
 
-- (void) _openAppearancePreferences:(id) sender {
+- (void) _openAppearancePreferences:(nullable id) sender {
 	MVApplicationController *applicationController = (MVApplicationController *)NSApp.delegate;
 	[applicationController showPreferences:sender];
 	CQMPreferencesWindowController *preferencesWindowController = [applicationController preferencesWindowController];
@@ -944,3 +946,5 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

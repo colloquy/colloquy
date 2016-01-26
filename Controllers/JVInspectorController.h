@@ -1,3 +1,5 @@
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol JVInspection;
 
 @protocol JVInspector <NSObject>
@@ -38,9 +40,9 @@
 - (IBAction) showInspector:(id) sender;
 + (JVInspectorController *) inspectorOfObject:(id <JVInspection>) object NS_RETURNS_NOT_RETAINED;
 
-- (instancetype) initWithObject:(id <JVInspection>) object lockedOn:(BOOL) locked;
+- (instancetype) initWithObject:(nullable id <JVInspection>) object lockedOn:(BOOL) locked;
 
-- (IBAction) show:(id) sender;
+- (IBAction) show:(nullable id) sender;
 @property (readonly) BOOL locked;
 
 - (void) inspectObject:(id <JVInspection>) object;
@@ -48,3 +50,5 @@
 @property (readonly, strong) id<JVInspection> inspectedObject;
 @property (readonly, strong) id<JVInspector> inspector;
 @end
+
+NS_ASSUME_NONNULL_END

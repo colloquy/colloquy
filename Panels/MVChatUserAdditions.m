@@ -7,6 +7,8 @@
 #import "MVFileTransferController.h"
 #import "KAIgnoreRule.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation MVChatUser (MVChatUserAdditions)
 - (NSString *) xmlDescription {
 	return [self xmlDescriptionWithTagName:@"user"];
@@ -31,7 +33,7 @@
 
 	id uniqueId = [self uniqueIdentifier];
 	if( ! [uniqueId isEqual:[self nickname]] ) {
-		if( [uniqueId isKindOfClass:[NSData class]] ) uniqueId = [uniqueId base64Encoding];
+		if( [uniqueId isKindOfClass:[NSData class]] ) uniqueId = [uniqueId colBase64Encoding];
 		else if( [uniqueId isKindOfClass:[NSString class]] ) uniqueId = [uniqueId stringByEncodingXMLSpecialCharactersAsEntities];
 		[ret appendFormat:@" identifier=\"%@\"", uniqueId];
 	}
@@ -44,7 +46,7 @@
 	return [NSString stringWithString:ret];
 }
 
-- (KAIgnoreRule *) _tempIgnoreRule {
+- (nullable KAIgnoreRule *) _tempIgnoreRule {
 	NSString *ignoreSuffix = NSLocalizedString( @" (Temporary)", "temporary ignore title suffix" );
 	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:[self connection]];
 
@@ -96,16 +98,16 @@
 	return items;
 }
 
-- (IBAction) getInfo:(id) sender {
+- (IBAction) getInfo:(nullable id) sender {
 	[[JVInspectorController inspectorOfObject:self] show:sender];
 }
 
-- (IBAction) startChat:(id) sender {
+- (IBAction) startChat:(nullable id) sender {
 	if( [self isLocalUser] ) return;
 	[[JVChatController defaultController] chatViewControllerForUser:self ifExists:NO];
 }
 
-- (IBAction) startDirectChat:(id) sender {
+- (IBAction) startDirectChat:(nullable id) sender {
 	if( [self isLocalUser] ) return;
 
 	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
@@ -113,7 +115,7 @@
 	[[JVChatController defaultController] chatViewControllerForDirectChatConnection:connection ifExists:NO];
 }
 
-- (IBAction) sendFile:(id) sender {
+- (IBAction) sendFile:(nullable id) sender {
 	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
 	NSOpenPanel *panel = [NSOpenPanel openPanel];
 	[panel setResolvesAliases:YES];
@@ -146,14 +148,14 @@
 	}
 }
 
-- (IBAction) addBuddy:(id) sender {
+- (IBAction) addBuddy:(nullable id) sender {
 	[[MVBuddyListController sharedBuddyList] showBuddyPickerSheet:self];
 	[[MVBuddyListController sharedBuddyList] setNewBuddyNickname:[self nickname]];
 	[[MVBuddyListController sharedBuddyList] setNewBuddyFullname:[self realName]];
 	[[MVBuddyListController sharedBuddyList] setNewBuddyServer:[self connection]];
 }
 
-- (IBAction) toggleIgnore:(id) sender {
+- (IBAction) toggleIgnore:(nullable id) sender {
 	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:[self connection]];
 	KAIgnoreRule *rule = [self _tempIgnoreRule];
 	if( rule ) [rules removeObjectIdenticalTo:rule];
@@ -171,3 +173,5 @@
 	return YES;
 }
 @end
+
+NS_ASSUME_NONNULL_END

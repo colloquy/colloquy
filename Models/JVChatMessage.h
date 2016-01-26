@@ -1,6 +1,8 @@
 #import "JVChatTranscript.h"
 #import "KAIgnoreRule.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(OSType, JVChatMessageType) {
 	JVChatMessageNormalType = 'noMt',
 	JVChatMessageNoticeType = 'nTMt'
@@ -35,7 +37,7 @@ typedef NS_ENUM(OSType, JVChatMessageType) {
 	BOOL _senderLoaded;
 	NSMutableDictionary *_attributes;
 }
-- (struct _xmlNode*) node;
+@property (readonly, nullable) struct _xmlNode *node;
 
 @property (readonly, strong) NSDate *date;
 
@@ -62,18 +64,18 @@ typedef NS_ENUM(OSType, JVChatMessageType) {
 @property (readonly, weak) JVChatTranscript *transcript;
 @property (readonly, copy) NSString *messageIdentifier;
 
-@property (strong) NSScriptObjectSpecifier *objectSpecifier;
+@property (strong, nullable) NSScriptObjectSpecifier *objectSpecifier;
 
 - (NSDictionary *) attributes;
-- (id) attributeForKey:(id) key;
+- (nullable id) attributeForKey:(id) key;
 @end
 
 @interface JVMutableChatMessage : JVChatMessage {
 	@protected
 	id _sender;
 }
-+ (instancetype) messageWithText:(id) body sender:(id) sender;
-- (instancetype) initWithText:(id) body sender:(id) sender;
++ (instancetype) messageWithText:(id) body sender:(nullable id) sender;
+- (instancetype) initWithText:(id) body sender:(nullable id) sender;
 
 @property (readwrite, strong) NSDate *date;
 
@@ -95,3 +97,5 @@ typedef NS_ENUM(OSType, JVChatMessageType) {
 - (void) setAttributes:(NSDictionary *) attributes;
 - (void) setAttribute:(id) object forKey:(id) key;
 @end
+
+NS_ASSUME_NONNULL_END

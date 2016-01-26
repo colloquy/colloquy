@@ -3,6 +3,8 @@
 @class MVTextView;
 @class MVChatConnection;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface JVChatConsolePanel : NSObject <JVChatViewController, JVChatViewControllerScripting, NSLayoutManagerDelegate> {
 	@protected
 	IBOutlet NSView *contents;
@@ -28,5 +30,7 @@
 @property (getter=isPaused, readonly) BOOL paused;
 
 - (void) addMessageToDisplay:(NSString *) message asOutboundMessage:(BOOL) outbound;
-- (IBAction) send:(id) sender;
+- (IBAction) send:(nullable id) sender;
 @end
+
+NS_ASSUME_NONNULL_END

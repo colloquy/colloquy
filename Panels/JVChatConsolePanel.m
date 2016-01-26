@@ -3,12 +3,14 @@
 #import "MVTextView.h"
 #import "JVSplitView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 static NSString *JVToolbarToggleVerboseItemIdentifier = @"JVToolbarToggleVerboseItem";
 static NSString *JVToolbarTogglePrivateMessagesItemIdentifier = @"JVToolbarTogglePrivateMessagesItem";
 static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 @interface JVChatConsolePanel ()
-- (void) textDidChange:(NSNotification *) notification;
+- (void) textDidChange:(nullable NSNotification *) notification;
 @end
 
 @interface JVChatConsolePanel (Private)
@@ -77,29 +79,29 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 #pragma mark -
 
-- (IBAction) clearConsole:(id) sender {
+- (IBAction) clearConsole:(nullable id) sender {
 	[display setString:@""];
 }
 
-- (IBAction) toggleVerbose:(id) sender {
+- (IBAction) toggleVerbose:(nullable id) sender {
 	_verbose = ! _verbose;
 }
 
-- (IBAction) toggleMessages:(id) sender {
+- (IBAction) toggleMessages:(nullable id) sender {
 	_ignorePRIVMSG = ! _ignorePRIVMSG;
 }
 
-- (IBAction) close:(id) sender {
+- (IBAction) close:(nullable id) sender {
 	[[JVChatController defaultController] disposeViewController:self];
 }
 
 #pragma mark -
 
-- (JVChatWindowController *) windowController {
+- (nullable JVChatWindowController *) windowController {
 	return _windowController;
 }
 
-- (void) setWindowController:(JVChatWindowController *) controller {
+- (void) setWindowController:(nullable JVChatWindowController *) controller {
 	_windowController = controller;
 }
 
@@ -128,7 +130,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return [NSString stringWithFormat:NSLocalizedString( @"%@ - Console", "chat console - window title" ), [[self connection] server]];
 }
 
-- (NSString *) information {
+- (nullable NSString *) information {
 	if( ! [[self connection] isConnected] && [[self connection] status] != MVChatConnectionConnectingStatus )
 		return NSLocalizedString( @"disconnected", "disconnected status info line in drawer" );
 	return nil;
@@ -141,11 +143,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 #pragma mark -
 
-- (id <JVChatListItem>) parent {
+- (nullable id <JVChatListItem>) parent {
 	return nil;
 }
 
-- (NSArray *) children {
+- (nullable NSArray *) children {
 	return nil;
 }
 
@@ -189,7 +191,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return [NSString stringWithFormat:@"Console %@", [[self connection] server]];
 }
 
-- (MVChatConnection *) connection {
+- (nullable MVChatConnection *) connection {
 	return _connection;
 }
 
@@ -303,7 +305,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[scrollView reflectScrolledClipView:clipView];
 }
 
-- (void) layoutManager:(NSLayoutManager *) layoutManager didCompleteLayoutForTextContainer:(NSTextContainer *) textContainer atEnd:(BOOL) atEnd {
+- (void) layoutManager:(NSLayoutManager *) layoutManager didCompleteLayoutForTextContainer:(nullable NSTextContainer *) textContainer atEnd:(BOOL) atEnd {
 	NSUInteger length = [[display string] length];
 	if( _scrollerIsAtBottom && atEnd && length != _lastDisplayTextLength )
 		[self performScrollToBottom];
@@ -312,7 +314,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 #pragma mark -
 
-- (void) send:(id) sender {
+- (void) send:(nullable id) sender {
 	NSMutableAttributedString *subMsg = nil;
 	NSRange range;
 
@@ -440,7 +442,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return NO;
 }
 
-- (NSArray *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix {
+- (nullable NSArray *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix {
 	return nil;
 }
 
@@ -449,7 +451,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return YES;
 }
 
-- (void) textDidChange:(NSNotification *) notification {
+- (void) textDidChange:(nullable NSNotification *) notification {
 	_historyIndex = 0;
 
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
@@ -503,7 +505,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return [[self windowController] window];
 }
 
-- (id) valueForUndefinedKey:(NSString *) key {
+- (nullable id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
 		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The panel id %@ doesn't have the \"%@\" property.", [self uniqueIdentifier], key]];
@@ -513,7 +515,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return [super valueForUndefinedKey:key];
 }
 
-- (void) setValue:(id) value forUndefinedKey:(NSString *) key {
+- (void) setValue:(nullable id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
 		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of panel id %@ is read only.", key, [self uniqueIdentifier]]];
@@ -530,7 +532,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return @"Console";
 }
 
-- (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
+- (nullable NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
 	if( [identifier isEqual:JVToolbarClearItemIdentifier] ) {
 		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
@@ -662,3 +664,5 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[_windowController reloadListItem:self andChildren:NO];
 }
 @end
+
+NS_ASSUME_NONNULL_END

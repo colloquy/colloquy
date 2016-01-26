@@ -51,9 +51,9 @@ static NSMutableSet *inspectors = nil;
 		[panel setFrameUsingName:@"inspector"];
 		[panel setFrameAutosaveName:@"inspector"];
 	}
-	[panel setDelegate:self];
 
 	if( ( self = [self initWithWindow:panel] ) ) {
+		[panel setDelegate:self];
 		_self = self;
 		_locked = locked;
 		_object = object;

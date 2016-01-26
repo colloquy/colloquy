@@ -3,6 +3,8 @@
 
 #import <AddressBook/AddressBook.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *JVBuddyCameOnlineNotification = @"JVBuddyCameOnlineNotification";
 NSString *JVBuddyWentOfflineNotification = @"JVBuddyWentOfflineNotification";
 
@@ -204,7 +206,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 #pragma mark -
 
-- (void) setActiveUser:(MVChatUser *) user {
+- (void) setActiveUser:(nullable MVChatUser *) user {
 	if( [_activeUser isEqual:user] )
 		return;
 
@@ -291,7 +293,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 #pragma mark -
 
-- (NSImage *) picture {
+- (nullable NSImage *) picture {
 	if( _picture )
 		return _picture;
 	if( _person )
@@ -319,19 +321,19 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	return [[self activeUser] nickname];
 }
 
-- (NSString *) firstName {
+- (nullable NSString *) firstName {
 	if( _firstName ) return _firstName;
 	if( _person ) return [_person valueForProperty:kABFirstNameProperty];
 	return nil;
 }
 
-- (NSString *) lastName {
+- (nullable NSString *) lastName {
 	if( _lastName ) return _lastName;
 	if( _person ) return [_person valueForProperty:kABLastNameProperty];
 	return nil;
 }
 
-- (NSString *) primaryEmail {
+- (nullable NSString *) primaryEmail {
 	if( _primaryEmail ) return _primaryEmail;
 
 	if( _person ) {
@@ -342,7 +344,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	return nil;
 }
 
-- (NSString *) givenNickname {
+- (nullable NSString *) givenNickname {
 	if( _givenNickname ) return _givenNickname;
 	if( _person ) return [_person valueForProperty:kABNicknameProperty];
 	return nil;
@@ -582,3 +584,5 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	[self viewInAddressBook];
 }
 @end */
+
+NS_ASSUME_NONNULL_END

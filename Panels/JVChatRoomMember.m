@@ -9,6 +9,7 @@
 #import "MVConnectionsController.h"
 #import "MVChatUserAdditions.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
 @implementation JVChatRoomMember
 + (void) initialize {
@@ -27,7 +28,7 @@
 #pragma mark -
 
 - (instancetype) initWithRoom:(JVChatRoomPanel *) room andUser:(MVChatUser *) user {
-	if( ( self = [self init] ) ) {
+	if( ( self = [super init] ) ) {
 		_room = room; // prevent circular retain
 		_user = user;
 
@@ -105,7 +106,7 @@
 	return _user;
 }
 
-- (JVBuddy *) buddy {
+- (nullable JVBuddy *) buddy {
 	return [[MVBuddyListController sharedBuddyList] buddyForUser:_user];
 }
 
@@ -132,7 +133,7 @@
 	return [_user address];
 }
 
-- (NSString *) hostmask {
+- (nullable NSString *) hostmask {
 	if( ! [[_user username] length] || ! [[_user address] length] ) return nil;
 	return [NSString stringWithFormat:@"%@@%@", [_user username], [_user address]];
 }
@@ -199,7 +200,7 @@
 
 	id uniqueId = [_user uniqueIdentifier];
 	if( ! [uniqueId isEqual:[self nickname]] ) {
-		if( [uniqueId isKindOfClass:[NSData class]] ) uniqueId = [uniqueId base64Encoding];
+		if( [uniqueId isKindOfClass:[NSData class]] ) uniqueId = [uniqueId colBase64Encoding];
 		else if( [uniqueId isKindOfClass:[NSString class]] ) uniqueId = [uniqueId stringByEncodingXMLSpecialCharactersAsEntities];
 		[ret appendFormat:@" identifier=\"%@\"", uniqueId];
 	}
@@ -226,7 +227,7 @@
 #pragma mark -
 #pragma mark List Item Protocol Support
 
-- (id <JVChatListItem>) parent {
+- (nullable id <JVChatListItem>) parent {
 	return _room;
 }
 
@@ -244,7 +245,7 @@
 	return [NSImage imageFromPDF:iconName];
 }
 
-- (NSImage *) statusImage {
+- (nullable NSImage *) statusImage {
 	if( [self buddy] ) {
 		switch( [_user status] ) {
 			case MVChatUserAwayStatus:
@@ -282,7 +283,7 @@
 	return [self nickname];
 }
 
-- (NSString *) information {
+- (nullable NSString *) information {
 	return nil;
 }
 
@@ -468,30 +469,30 @@
 	return [NSNumber numberWithUnsignedLong:(intptr_t)self];
 }
 
-- (NSArray *) children {
+- (nullable NSArray *) children {
 	return nil;
 }
 
 #pragma mark -
 #pragma mark GUI Actions
 
-- (IBAction) doubleClicked:(id) sender {
+- (IBAction) doubleClicked:(nullable id) sender {
 	[_user startChat:sender];
 }
 
-- (IBAction) startChat:(id) sender {
+- (IBAction) startChat:(nullable id) sender {
 	[_user startChat:sender];
 }
 
-- (IBAction) sendFile:(id) sender {
+- (IBAction) sendFile:(nullable id) sender {
 	[_user sendFile:sender];
 }
 
-- (IBAction) addBuddy:(id) sender {
+- (IBAction) addBuddy:(nullable id) sender {
 	[_user addBuddy:sender];
 }
 
-- (IBAction) toggleIgnore:(id) sender {
+- (IBAction) toggleIgnore:(nullable id) sender {
 	[_user toggleIgnore:sender];
 }
 
@@ -508,38 +509,38 @@
 	else [[_room target] setMode:MVChatRoomMemberAdministratorMode forMemberUser:_user];
 }
 
-- (IBAction) toggleOperatorStatus:(id) sender {
+- (IBAction) toggleOperatorStatus:(nullable id) sender {
 	if( [self operator] ) [[_room target] removeMode:MVChatRoomMemberOperatorMode forMemberUser:_user];
 	else [[_room target] setMode:MVChatRoomMemberOperatorMode forMemberUser:_user];
 }
 
-- (IBAction) toggleHalfOperatorStatus:(id) sender {
+- (IBAction) toggleHalfOperatorStatus:(nullable id) sender {
 	if( [self halfOperator] ) [[_room target] removeMode:MVChatRoomMemberHalfOperatorMode forMemberUser:_user];
 	else [[_room target] setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:_user];
 }
 
-- (IBAction) toggleVoiceStatus:(id) sender {
+- (IBAction) toggleVoiceStatus:(nullable id) sender {
 	if( [self voice] ) [[_room target] removeMode:MVChatRoomMemberVoicedMode forMemberUser:_user];
 	else [[_room target] setMode:MVChatRoomMemberVoicedMode forMemberUser:_user];
 }
 
-- (IBAction) toggleQuietedStatus:(id) sender {
+- (IBAction) toggleQuietedStatus:(nullable id) sender {
 	if( [self quieted] ) [[_room target] removeDisciplineMode:MVChatRoomMemberDisciplineQuietedMode forMemberUser:_user];
 	else [[_room target] setDisciplineMode:MVChatRoomMemberDisciplineQuietedMode forMemberUser:_user];
 }
 
 #pragma mark -
 
-- (IBAction) kick:(id) sender {
+- (IBAction) kick:(nullable id) sender {
 	[[_room target] kickOutMemberUser:_user forReason:nil];
 }
 
-- (IBAction) ban:(id) sender {
+- (IBAction) ban:(nullable id) sender {
 	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nil andHostMask:[NSString stringWithFormat:@"*@%@", [self address]]];
 	[[_room target] addBanForUser:user];
 }
 
-- (IBAction) customKick:(id) sender {
+- (IBAction) customKick:(nullable id) sender {
 	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"TSCustomBan" owner:self topLevelObjects:NULL];
 	if( ! _nibLoaded ) { NSLog( @"Can't load TSCustomBan.nib" ); return; }
 
@@ -563,7 +564,7 @@
 	[[NSApplication sharedApplication] beginSheet:banWindow modalForWindow:[[_room view] window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 
-- (IBAction) customBan:(id) sender {
+- (IBAction) customBan:(nullable id) sender {
 	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"TSCustomBan" owner:self topLevelObjects:NULL];
 	if( ! _nibLoaded ) { NSLog( @"Can't load TSCustomBan.nib" ); return; }
 
@@ -590,12 +591,12 @@
 	[[NSApplication sharedApplication] beginSheet:banWindow modalForWindow:[[_room view] window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 
-- (IBAction) kickban:(id) sender {
+- (IBAction) kickban:(nullable id) sender {
 	[self ban:nil];
 	[self kick:nil];
 }
 
-- (IBAction) customKickban:(id) sender {
+- (IBAction) customKickban:(nullable id) sender {
 	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"TSCustomBan" owner:self topLevelObjects:NULL];
 	if( ! _nibLoaded ) { NSLog(@"Can't load TSCustomBan.nib"); return; }
 
@@ -626,7 +627,7 @@
 	[[NSApplication sharedApplication] beginSheet:banWindow modalForWindow:[[_room view] window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 
-- (IBAction) closeKickSheet:(id) sender {
+- (IBAction) closeKickSheet:(nullable id) sender {
 	[[NSApplication sharedApplication] endSheet:banWindow];
 	[banWindow orderOut:self];
 
@@ -634,7 +635,7 @@
 	[[_room target] kickOutMemberUser:_user forReason:reason];
 }
 
-- (IBAction) closeBanSheet:(id) sender {
+- (IBAction) closeBanSheet:(nullable id) sender {
 	[[NSApplication sharedApplication] endSheet:banWindow];
 	[banWindow orderOut:self];
 
@@ -642,7 +643,7 @@
 	[[_room target] addBanForUser:user];
 }
 
-- (IBAction) closeKickbanSheet:(id) sender {
+- (IBAction) closeKickbanSheet:(nullable id) sender {
 	[[NSApplication sharedApplication] endSheet:banWindow];
 	[banWindow orderOut:self];
 
@@ -653,14 +654,14 @@
 	[[_room target] kickOutMemberUser:_user forReason:reason];
 }
 
-- (IBAction) cancelSheet:(id) sender {
+- (IBAction) cancelSheet:(nullable id) sender {
 	[[NSApplication sharedApplication] endSheet:banWindow];
 	[banWindow orderOut:self];
 }
 
 #pragma mark -
 
-- (id) valueForUndefinedKey:(NSString *) key {
+- (nullable id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
 		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The member id %@ of chat room panel id %@ doesn't have the \"%@\" property.", [self uniqueIdentifier], [_room uniqueIdentifier], key]];
@@ -670,7 +671,7 @@
 	return [super valueForUndefinedKey:key];
 }
 
-- (void) setValue:(id) value forUndefinedKey:(NSString *) key {
+- (void) setValue:(nullable id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
 		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of member id %@ of chat room panel id %@ is read only.", key, [self uniqueIdentifier], [_room uniqueIdentifier]]];
@@ -720,3 +721,5 @@
 	return [[self connection] nickname];
 }
 @end
+
+NS_ASSUME_NONNULL_END

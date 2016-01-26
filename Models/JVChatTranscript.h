@@ -3,11 +3,13 @@
 @class JVChatEvent;
 @class JVChatSession;
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *JVChatTranscriptUpdatedNotification;
 
 @protocol JVChatTranscriptElement <NSObject>
-@property (readonly) struct _xmlNode *node;
-- (JVChatTranscript *) transcript;
+@property (nullable, readonly) struct _xmlNode *node;
+- (nullable JVChatTranscript *) transcript;
 @end
 
 @interface JVChatTranscript : NSObject {
@@ -24,14 +26,14 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 + (instancetype) chatTranscript;
 + (instancetype) chatTranscriptWithChatTranscript:(JVChatTranscript *) transcript;
 + (instancetype) chatTranscriptWithElements:(NSArray *) elements;
-+ (instancetype) chatTranscriptWithContentsOfFile:(NSString *) path;
-+ (instancetype) chatTranscriptWithContentsOfURL:(NSURL *) url;
++ (nullable instancetype) chatTranscriptWithContentsOfFile:(NSString *) path;
++ (nullable instancetype) chatTranscriptWithContentsOfURL:(NSURL *) url;
 
-- (instancetype) init;
+- (instancetype) init NS_DESIGNATED_INITIALIZER;
 - (instancetype) initWithChatTranscript:(JVChatTranscript *) transcript;
 - (instancetype) initWithElements:(NSArray *) elements;
-- (instancetype) initWithContentsOfFile:(NSString *) path;
-- (instancetype) initWithContentsOfURL:(NSURL *) url;
+- (nullable instancetype) initWithContentsOfFile:(NSString *) path;
+- (nullable instancetype) initWithContentsOfURL:(NSURL *) url;
 
 - (struct _xmlDoc *) document;
 
@@ -43,39 +45,39 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 
 @property NSUInteger elementLimit;
 
-@property (readonly, copy) NSArray *elements;
-- (NSArray *) elementsInRange:(NSRange) range;
-- (id) elementAtIndex:(NSUInteger) index;
-@property (readonly, strong) id lastElement;
+@property (readonly, copy, nullable) NSArray *elements;
+- (nullable NSArray *) elementsInRange:(NSRange) range;
+- (nullable id) elementAtIndex:(NSUInteger) index;
+@property (readonly, strong, nullable) id lastElement;
 
 - (NSArray *) appendElements:(NSArray *) elements;
 - (void) appendChatTranscript:(JVChatTranscript *) transcript;
 
-@property (readonly, copy) NSArray *messages;
-- (NSArray *) messagesInRange:(NSRange) range;
-- (JVChatMessage *) messageAtIndex:(NSUInteger) index;
-- (JVChatMessage *) messageWithIdentifier:(NSString *) identifier;
-@property (readonly, strong) JVChatMessage *lastMessage;
+@property (readonly, copy, nullable) NSArray<JVChatMessage*> *messages;
+- (nullable NSArray<JVChatMessage*> *) messagesInRange:(NSRange) range;
+- (nullable JVChatMessage *) messageAtIndex:(NSUInteger) index;
+- (nullable JVChatMessage *) messageWithIdentifier:(NSString *) identifier;
+@property (readonly, strong, nullable) JVChatMessage *lastMessage;
 
 - (BOOL) containsMessageWithIdentifier:(NSString *) identifier;
 
-- (JVChatMessage *) appendMessage:(JVChatMessage *) message;
-- (JVChatMessage *) appendMessage:(JVChatMessage *) message forceNewEnvelope:(BOOL) forceEnvelope;
-- (NSArray *) appendMessages:(NSArray *) messages;
-- (NSArray *) appendMessages:(NSArray *) messages forceNewEnvelope:(BOOL) forceEnvelope;
+- (nullable JVChatMessage *) appendMessage:(JVChatMessage *) message;
+- (nullable JVChatMessage *) appendMessage:(JVChatMessage *) message forceNewEnvelope:(BOOL) forceEnvelope;
+- (NSArray<JVChatMessage*> *) appendMessages:(NSArray *) messages;
+- (NSArray<JVChatMessage*> *) appendMessages:(NSArray *) messages forceNewEnvelope:(BOOL) forceEnvelope;
 
-@property (readonly, copy) NSArray *sessions;
-- (NSArray *) sessionsInRange:(NSRange) range;
+@property (readonly, copy) NSArray<JVChatSession*> *sessions;
+- (NSArray<JVChatSession*> *) sessionsInRange:(NSRange) range;
 - (JVChatSession *) sessionAtIndex:(NSUInteger) index;
 @property (readonly, strong) JVChatSession *lastSession;
 
-@property (readonly, strong) JVChatSession *startNewSession;
+- (JVChatSession *) startNewSession;
 - (JVChatSession *) appendSession:(JVChatSession *) session;
 
-@property (readonly, copy) NSArray *events;
-- (NSArray *) eventsInRange:(NSRange) range;
+@property (readonly, copy) NSArray<JVChatEvent*> *events;
+- (NSArray<JVChatEvent*> *) eventsInRange:(NSRange) range;
 - (JVChatEvent *) eventAtIndex:(NSUInteger) index;
-@property (readonly, strong) JVChatEvent *lastEvent;
+@property (readonly, strong, nullable) JVChatEvent *lastEvent;
 
 - (BOOL) containsEventWithIdentifier:(NSString *) identifier;
 
@@ -83,7 +85,7 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 
 @property (copy) NSString *filePath;
 @property (readonly, copy) NSCalendarDate *dateBegan;
-@property (strong) NSURL *source;
+@property (strong, null_unspecified) NSURL *source;
 @property BOOL automaticallyWritesChangesToFile;
 
 - (BOOL) writeToFile:(NSString *) path atomically:(BOOL) atomically;
@@ -104,3 +106,5 @@ typedef xmlNode *xmlNodePtr;
 - (void) _loadSenderForMessage:(JVChatMessage *) message;
 - (void) _loadBodyForMessage:(JVChatMessage *) message;
 @end
+
+NS_ASSUME_NONNULL_END

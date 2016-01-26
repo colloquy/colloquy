@@ -10,6 +10,8 @@
 @class JVMutableChatMessage;
 @class JVBuddy;
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *JVToolbarTextEncodingItemIdentifier;
 extern NSString *JVToolbarClearScrollbackItemIdentifier;
 extern NSString *JVToolbarSendFileItemIdentifier;
@@ -48,20 +50,21 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 	BOOL _loadingPersonImage;
 	NSData *_personImageData;
 }
+- (instancetype) init NS_DESIGNATED_INITIALIZER;
 - (instancetype) initWithTarget:(id) target;
-@property (readonly, assign) id target;
-@property (readonly, strong) MVChatUser *user;
+@property (readonly, assign, nullable) id target;
+@property (readonly, strong, nullable) MVChatUser *user;
 @property (readonly, copy) NSURL *url;
 
-- (void) showAlert:(NSPanel *) alert withName:(NSString *) name;
+- (void) showAlert:(NSPanel *) alert withName:(nullable NSString *) name;
 
-- (void) setPreference:(id) value forKey:(NSString *) key;
-- (id) preferenceForKey:(NSString *) key;
+- (void) setPreference:(nullable id) value forKey:(NSString *) key;
+- (nullable id) preferenceForKey:(NSString *) key;
 
 @property (readonly) NSStringEncoding encoding;
-- (IBAction) changeEncoding:(id) sender;
+- (IBAction) changeEncoding:(nullable id) sender;
 
-- (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes;
+- (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(nullable NSDictionary *) attributes;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier andType:(JVChatMessageType) type;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user withAttributes:(NSDictionary *) msgAttributes withIdentifier:(NSString *) identifier andType:(JVChatMessageType) type;
 - (void) processIncomingMessage:(JVMutableChatMessage *) message;
@@ -71,20 +74,20 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 - (void) addMessageToHistory:(NSAttributedString *)message;
 
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context;
-- (IBAction) toggleNotifications:(id) sender;
+- (IBAction) toggleNotifications:(nullable id) sender;
 
 @property (readonly) NSUInteger newMessagesWaiting;
 @property (readonly) NSUInteger newHighlightMessagesWaiting;
 
-- (IBAction) send:(id) sender;
+- (IBAction) send:(nullable id) sender;
 - (void) sendMessage:(JVMutableChatMessage *) message;
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments;
 
-- (IBAction) clear:(id) sender;
-- (IBAction) clearDisplay:(id) sender;
-- (IBAction) markDisplay:(id) sender;
+- (IBAction) clear:(nullable id) sender;
+- (IBAction) clearDisplay:(nullable id) sender;
+- (IBAction) markDisplay:(nullable id) sender;
 
-- (void) textDidChange:(NSNotification *) notification;
+- (void) textDidChange:(nullable NSNotification *) notification;
 @end
 
 @interface NSObject (MVChatPluginDirectChatSupport)
@@ -97,8 +100,8 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 - (NSString *) _selfStoredNickname;
 - (NSMenu *) _encodingMenu;
 - (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message;
-- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
-- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont;
+- (nullable NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
+- (nullable NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(nullable NSFont *) baseFont;
 - (void) _alertSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
 - (void) _didConnect:(NSNotification *) notification;
 - (void) _didDisconnect:(NSNotification *) notification;
@@ -116,7 +119,9 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 - (void) _saveSelfIcon;
 - (void) _saveBuddyIcon:(JVBuddy *) buddy;
 - (void) _refreshIcon:(NSNotification *) notification;
-- (void) _setCurrentMessage:(JVMutableChatMessage *) message;
+- (void) _setCurrentMessage:(nullable JVMutableChatMessage *) message;
 - (void) _userNicknameDidChange:(NSNotification *) notification;
 - (void) _userStatusChanged:(NSNotification *) notification;
 @end
+
+NS_ASSUME_NONNULL_END

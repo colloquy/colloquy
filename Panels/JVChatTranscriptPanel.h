@@ -9,6 +9,8 @@
 @class JVChatMessage;
 @class JVChatTranscript;
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *JVToolbarChooseStyleItemIdentifier;
 extern NSString *JVToolbarEmoticonsItemIdentifier;
 extern NSString *JVToolbarFindItemIdentifier;
@@ -31,28 +33,29 @@ extern NSString *JVToolbarQuickSearchItemIdentifier;
 	NSString *_searchQuery;
 	NSRegularExpression *_searchQueryRegex;
 }
-- (instancetype) initWithTranscript:(NSString *) filename;
+- (instancetype) init NS_DESIGNATED_INITIALIZER;
+- (nullable instancetype) initWithTranscript:(NSString *) filename;
 
-- (IBAction) changeStyle:(id) sender;
+- (IBAction) changeStyle:(nullable id) sender;
 - (void) setStyle:(JVStyle *) style withVariant:(NSString *) variant;
 @property (readonly, strong) JVStyle *style;
 
-- (IBAction) changeStyleVariant:(id) sender;
+- (IBAction) changeStyleVariant:(nullable id) sender;
 @property (copy) NSString *styleVariant;
 
-- (IBAction) changeEmoticons:(id) sender;
+- (IBAction) changeEmoticons:(nullable id) sender;
 @property (strong) JVEmoticonSet *emoticons;
 
 @property (readonly, strong) JVChatTranscript *transcript;
 - (void) jumpToMessage:(JVChatMessage *) message;
 
-- (IBAction) close:(id) sender;
-- (IBAction) activate:(id) sender;
+- (IBAction) close:(nullable id) sender;
+- (IBAction) activate:(nullable id) sender;
 
-- (IBAction) performQuickSearch:(id) sender;
-- (void) quickSearchMatchMessage:(JVChatMessage *) message;
+- (IBAction) performQuickSearch:(nullable id) sender;
+- (void) quickSearchMatchMessage:(nullable JVChatMessage *) message;
 
-@property (copy) NSString *searchQuery;
+@property (copy, nullable) NSString *searchQuery;
 
 @property (readonly, strong) JVStyleView *display;
 @end
@@ -71,7 +74,7 @@ extern NSString *JVToolbarQuickSearchItemIdentifier;
 - (void) _refreshSearch;
 - (void) _didSwitchStyles:(NSNotification *) notification;
 
-- (void) _reloadCurrentStyle:(id) sender;
+- (void) _reloadCurrentStyle:(nullable id) sender;
 - (NSMenu *) _stylesMenu;
 - (void) _changeStyleMenuSelection;
 - (void) _updateStylesMenu;
@@ -83,6 +86,8 @@ extern NSString *JVToolbarQuickSearchItemIdentifier;
 - (void) _updateEmoticonsMenu;
 - (BOOL) _usingSpecificEmoticons;
 
-- (void) _openAppearancePreferences:(id) sender;
+- (void) _openAppearancePreferences:(nullable id) sender;
 
 @end
+
+NS_ASSUME_NONNULL_END
