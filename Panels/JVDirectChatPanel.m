@@ -525,48 +525,55 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 }
 
 - (void) checkTranscriptDirectoryState {
-	BOOL loggingEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogChatRooms"] || [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogPrivateChats"];
-	NSString *logs = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	BOOL loggingEnabled = [defaults boolForKey:@"JVLogChatRooms"] || [defaults boolForKey:@"JVLogPrivateChats"];
+	NSURL *logs = [defaults URLForKey:@"JVChatTranscriptFolder"];
+	if (!logs) {
+		logs = [NSURL fileURLWithPath:[[defaults stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath] isDirectory:YES];
+		//Force the preference to be an NSURL entry
+		[defaults setURL:logs forKey:@"JVChatTranscriptFolder"];
+	}
+
 	if( !loggingEnabled )
 		return;
 
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 
-	if ( ! [fileManager fileExistsAtPath:logs])
-		[fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
+	if ( ! [logs checkResourceIsReachableAndReturnError:NULL])
+		[fileManager createDirectoryAtURL:logs withIntermediateDirectories:YES attributes:nil error:nil];
 
-	NSInteger org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
+	NSInteger org = [defaults integerForKey:@"JVChatTranscriptFolderOrganization"];
 	NSString *serverAddress = [[self user] serverAddress] ?: @"(Unknown)";
 	if( org == 1 ) {
-		logs = [logs stringByAppendingPathComponent:serverAddress];
-		if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
+		logs = [logs URLByAppendingPathComponent:serverAddress];
+		if( ! [logs checkResourceIsReachableAndReturnError:NULL] ) [fileManager createDirectoryAtURL:logs withIntermediateDirectories:YES attributes:nil error:nil];
 	} else if( org == 2 ) {
-		logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", [self target], serverAddress]];
-		if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
+		logs = [logs URLByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", [self target], serverAddress]];
+		if( ! [logs checkResourceIsReachableAndReturnError:NULL] ) [fileManager createDirectoryAtURL:logs withIntermediateDirectories:YES attributes:nil error:nil];
 	} else { // if( org == 3 ) {
-		logs = [logs stringByAppendingPathComponent:serverAddress];
-		if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
+		logs = [logs URLByAppendingPathComponent:serverAddress];
+		if( ! [logs checkResourceIsReachableAndReturnError:NULL] ) [fileManager createDirectoryAtURL:logs withIntermediateDirectories:YES attributes:nil error:nil];
 
-		logs = [logs stringByAppendingPathComponent:[self title]];
-		if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
+		logs = [logs URLByAppendingPathComponent:[self title]];
+		if( ! [logs checkResourceIsReachableAndReturnError:NULL] ) [fileManager createDirectoryAtURL:logs withIntermediateDirectories:YES attributes:nil error:nil];
 	}
 
 	NSString *logName = @"";
 	NSString *dateString = [NSDate formattedShortDateStringForDate:[NSDate date]];
 
-	NSInteger session = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptSessionHandling"];
+	NSInteger session = [defaults integerForKey:@"JVChatTranscriptSessionHandling"];
 	if( ! session ) {
 		BOOL nameFound = NO;
 		NSUInteger i = 1;
 
 		if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
 		else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self user] serverAddress]];
-		nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
+		nameFound = ! [[logs URLByAppendingPathComponent:logName] checkResourceIsReachableAndReturnError:NULL];
 
 		while( ! nameFound ) {
 			if( org ) logName = [NSString stringWithFormat:@"%@ %ld.colloquyTranscript", [self target], i++];
 			else logName = [NSString stringWithFormat:@"%@ (%@) %ld.colloquyTranscript", [self target], [[self user] serverAddress], i++];
-			nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
+			nameFound = ! [[logs URLByAppendingPathComponent:logName] checkResourceIsReachableAndReturnError:NULL];
 		}
 	} else if( session == 1 ) {
 		if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
@@ -578,12 +585,12 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[(NSMutableString *)logName replaceOccurrencesOfString:@":" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
 	}
 
-	logs = [logs stringByAppendingPathComponent:logName];
+	logs = [logs URLByAppendingPathComponent:logName];
 
-	if( [fileManager fileExistsAtPath:logs] )
+	if( [logs checkResourceIsReachableAndReturnError:NULL] )
 		[[self transcript] startNewSession];
 
-	[[self transcript] setFilePath:logs];
+	[[self transcript] setFilePath:[logs path]];
 	NSURL *connURL = [[self connection] url];
 	NSString *targetName = nil;
 

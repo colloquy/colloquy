@@ -1090,14 +1090,17 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	if( _logFile ) {
 		NSString *beganDateString = [[self dateBegan] localizedDescription];
 		NSString *lastDateString = [[[self lastMessage] date] localizedDescription];
-		NSString *target = [[self source] path];
+		NSURL *source = [self source];
+		NSString *target = [source path];
 		if( [target length] > 1 ) target = [target substringFromIndex:1];
+		int fd = [_logFile fileDescriptor];
 
-		fsetxattr( [_logFile fileDescriptor], "sourceAddress", [[[self source] absoluteString] UTF8String], [[[self source] absoluteString] length], 0, 0 );
-		fsetxattr( [_logFile fileDescriptor], "server", [[[self source] host] UTF8String], [[[self source] host] length], 0, 0 );
-		fsetxattr( [_logFile fileDescriptor], "target", [target UTF8String], [target length], 0, 0 );
-		fsetxattr( [_logFile fileDescriptor], "dateBegan", [beganDateString UTF8String], [beganDateString length], 0, 0 );
-		if( [lastDateString length] ) fsetxattr( [_logFile fileDescriptor], "lastMessageDate", [lastDateString UTF8String], [lastDateString length], 0, 0 );
+		fsetxattr( fd, "sourceAddress", [[source absoluteString] UTF8String], [[source absoluteString] lengthOfBytesUsingEncoding:NSUTF8StringEncoding], 0, 0 );
+		fsetxattr( fd, "server", [[source host] UTF8String], [[source host] lengthOfBytesUsingEncoding:NSUTF8StringEncoding], 0, 0 );
+		fsetxattr( fd, "target", [target UTF8String], [target lengthOfBytesUsingEncoding:NSUTF8StringEncoding], 0, 0 );
+		fsetxattr( fd, "dateBegan", [beganDateString UTF8String], [beganDateString lengthOfBytesUsingEncoding:NSUTF8StringEncoding], 0, 0 );
+		if( [lastDateString length] )
+			fsetxattr( fd, "lastMessageDate", [lastDateString UTF8String], [lastDateString lengthOfBytesUsingEncoding:NSUTF8StringEncoding], 0, 0 );
 	}
 }
 

@@ -49,10 +49,12 @@
 #pragma mark - Private
 
 - (void) initializeFromDefaults {
-	NSString *path = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
+	NSURL *url = [[NSUserDefaults standardUserDefaults] URLForKey:@"JVChatTranscriptFolder"];
+	//TODO: get properties via -resourceValuesForKeys:error:
+	NSString *path = [url path];
 
-	if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] )
-		[[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
+	if( ! [url checkResourceIsReachableAndReturnError:NULL] )
+		[[NSFileManager defaultManager] createDirectoryAtURL:url withIntermediateDirectories:YES attributes:nil error:nil];
 
 	NSMenuItem *menuItem = [self.transcriptFolder itemAtIndex:[self.transcriptFolder indexOfItemWithTag:2]];
 	NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
@@ -60,7 +62,7 @@
 
 	[menuItem setTitle:[[NSFileManager defaultManager] displayNameAtPath:path]];
 	[menuItem setImage:icon];
-	[menuItem setRepresentedObject:path];
+	[menuItem setRepresentedObject:url];
 
 	[self.transcriptFolder selectItem:menuItem];
 }
@@ -70,13 +72,16 @@
 
 - (IBAction) changeTranscriptFolder:(id) sender {
 	if( [sender tag] == 3 ) {
-		NSString *folder = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
+		NSURL *folder = [[NSUserDefaults standardUserDefaults] URLForKey:@"JVChatTranscriptFolder"];
+		if (!folder) {
+			folder = [NSURL fileURLWithPath:[[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath] isDirectory:YES];
+		}
 		NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 		[openPanel setCanChooseDirectories:YES];
 		[openPanel setCanChooseFiles:NO];
 		[openPanel setAllowsMultipleSelection:NO];
 		[openPanel setResolvesAliases:NO];
-		[openPanel setDirectoryURL:[NSURL fileURLWithPath:folder isDirectory:YES]];
+		[openPanel setDirectoryURL:folder];
 		[openPanel beginWithCompletionHandler:^(NSInteger result) {
 			[self saveDownloadsOpenPanelDidEnd:openPanel returnCode:result contextInfo:NULL];
 		}];
@@ -91,9 +96,9 @@
 
 		[menuItem setTitle:[[NSFileManager defaultManager] displayNameAtPath:[[sheet directoryURL] path]]];
 		[menuItem setImage:icon];
-		[menuItem setRepresentedObject:[[sheet directoryURL] path]];
+		[menuItem setRepresentedObject:[sheet directoryURL]];
 
-		[[NSUserDefaults standardUserDefaults] setObject:[[sheet directoryURL] path] forKey:@"JVChatTranscriptFolder"];
+		[[NSUserDefaults standardUserDefaults] setURL:[sheet directoryURL] forKey:@"JVChatTranscriptFolder"];
 	}
 
 	[self.transcriptFolder selectItemAtIndex:[self.transcriptFolder indexOfItemWithTag:2]];

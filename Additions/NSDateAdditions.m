@@ -9,9 +9,9 @@ NS_ASSUME_NONNULL_BEGIN
 		return cacheDictionary;
 
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && defined(__IPHONE_7_0) && __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_7_0
-	cacheDictionary = [NSMutableDictionary dictionary];
+	cacheDictionary = [[NSMutableDictionary alloc] init];
 #elif defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && defined(__MAC_10_9) && __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9 && (__LP64__ || NS_BUILD_32_LIKE_64)
-	cacheDictionary = [NSMutableDictionary dictionary];
+	cacheDictionary = [[NSMutableDictionary alloc] init];
 #else
 	cacheDictionary = [NSThread currentThread].threadDictionary;
 #endif

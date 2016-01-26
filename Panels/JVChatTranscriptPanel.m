@@ -35,6 +35,9 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #pragma mark -
 
 @implementation JVChatTranscriptPanel
+@synthesize transcript = _transcript;
+@synthesize searchQuery = _searchQuery;
+
 - (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_transcript = [[JVChatTranscript alloc] init];
@@ -322,9 +325,10 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo {
 	if( returnCode == NSOKButton ) {
-		[[self transcript] writeToURL:[sheet URL] atomically:YES];
-		[[NSFileManager defaultManager] setAttributes:@{NSFileExtensionHidden: @([sheet isExtensionHidden])} ofItemAtPath:[[sheet URL] absoluteString] error:nil];
-		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[sheet URL]];
+		NSURL *sheetURL = [sheet URL];
+		[[self transcript] writeToURL:sheetURL atomically:YES];
+		[sheetURL setResourceValue:@([sheet isExtensionHidden]) forKey:NSFileExtensionHidden error:NULL];
+		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:sheetURL];
 	}
 }
 
@@ -386,13 +390,6 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 - (JVEmoticonSet *) emoticons {
 	return [display emoticons];
-}
-
-#pragma mark -
-#pragma mark Transcript Access
-
-- (JVChatTranscript *) transcript {
-	return _transcript;
 }
 
 #pragma mark -

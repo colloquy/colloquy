@@ -243,7 +243,13 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) openDocument:(id) sender {
-	NSString *path = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSURL *path = [defaults URLForKey:@"JVChatTranscriptFolder"];
+	if (!path) {
+		path = [NSURL fileURLWithPath:[[defaults stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath] isDirectory:YES];
+		//Force the preference to be an NSURL entry
+		[defaults setURL:path forKey:@"JVChatTranscriptFolder"];
+	}
 
 	NSArray *fileTypes = @[@"colloquyTranscript"];
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
@@ -251,7 +257,7 @@ static BOOL applicationIsTerminating = NO;
 	[openPanel setCanChooseFiles:YES];
 	[openPanel setAllowsMultipleSelection:NO];
 	[openPanel setResolvesAliases:YES];
-	[openPanel setDirectoryURL:[NSURL fileURLWithPath:path isDirectory:YES]];
+	[openPanel setDirectoryURL:path];
 	[openPanel setAllowedFileTypes:fileTypes];
 	[openPanel beginWithCompletionHandler:^(NSInteger result) {
 		[self openDocumentPanelDidEnd:openPanel returnCode:result contextInfo:NULL];
