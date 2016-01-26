@@ -1,7 +1,7 @@
 #import "JVFScriptPluginLoader.h"
 #import "JVFScriptConsolePanel.h"
 #import "JVFScriptChatPlugin.h"
-#import "MVChatConnection.h"
+#import <ChatCore/MVChatConnection.h>
 #import "JVChatWindowController.h"
 
 #import <FScript/FScript.h>

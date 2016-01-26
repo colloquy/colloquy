@@ -1,6 +1,3 @@
-#ifndef __NSSCANNERADDITIONS__
-#define __NSSCANNERADDITIONS__
-
 //  Created by Kevin Ballard on 2/12/05.
 //  Copyright 2005 Kevin Ballard. All rights reserved.
 
@@ -13,5 +10,3 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif

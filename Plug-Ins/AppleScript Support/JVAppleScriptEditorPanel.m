@@ -1,6 +1,6 @@
 #import "JVAppleScriptEditorPanel.h"
 #import "JVAppleScriptChatPlugin.h"
-#import "JVChatController.h"
+#import <ChatCore/JVChatController.h>
 
 #include <OpenScripting/OSA.h>
 

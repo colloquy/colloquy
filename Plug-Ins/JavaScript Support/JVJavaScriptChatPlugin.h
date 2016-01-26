@@ -1,4 +1,4 @@
-#import "MVChatPluginManager.h"
+#import <ChatCore/MVChatPluginManager.h>
 
 #import <WebKit/WebKit.h>
 

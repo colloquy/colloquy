@@ -1,6 +1,3 @@
-#ifndef ColloquyNSSTRINGADDITIONS
-#define ColloquyNSSTRINGADDITIONS
-
 #import <Foundation/NSString.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -115,5 +112,3 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif

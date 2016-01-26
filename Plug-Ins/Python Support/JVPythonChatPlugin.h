@@ -1,4 +1,4 @@
-#import "MVChatPluginManager.h"
+#import <ChatCore/MVChatPluginManager.h>
 #import <Python.h>
 
 extern NSString *JVPythonErrorDomain;

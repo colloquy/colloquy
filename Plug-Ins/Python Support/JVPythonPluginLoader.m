@@ -1,6 +1,6 @@
 #import "JVPythonPluginLoader.h"
 #import "JVPythonChatPlugin.h"
-#import "MVChatConnection.h"
+#import <ChatCore/MVChatConnection.h>
 #import "JVChatWindowController.h"
 #import "pyobjc-api.h"
 

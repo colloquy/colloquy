@@ -1,6 +1,3 @@
-#ifndef __MVFILETRANSFER__
-#define __MVFILETRANSFER__
-
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -104,5 +101,3 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif

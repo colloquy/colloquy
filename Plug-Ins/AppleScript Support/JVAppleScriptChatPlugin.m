@@ -1,7 +1,7 @@
-#import "MVChatPluginManager.h"
+#import <ChatCore/MVChatPluginManager.h>
 #import "JVAppleScriptChatPlugin.h"
-#import "MVChatUser.h"
-#import "MVChatRoom.h"
+#import <ChatCore/MVChatUser.h>
+#import <ChatCore/MVChatRoom.h>
 #import "JVChatWindowController.h"
 #import "JVChatMessage.h"
 #import "JVChatRoomPanel.h"

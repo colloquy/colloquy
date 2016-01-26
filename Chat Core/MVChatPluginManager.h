@@ -6,6 +6,8 @@ extern NSString *const MVChatPluginManagerWillReloadPluginsNotification;
 extern NSString *const MVChatPluginManagerDidReloadPluginsNotification;
 extern NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification;
 
+@protocol MVChatPlugin;
+
 @interface MVChatPluginManager : NSObject {
 	@private
 	NSMutableArray<NSBundle*> *_plugins;
@@ -18,8 +20,8 @@ extern NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification;
 @property(strong, readonly) NSArray<NSBundle*> *plugins;
 
 - (void) reloadPlugins;
-- (void) addPlugin:(NSBundle *) plugin;
-- (void) removePlugin:(NSBundle *) plugin;
+- (void) addPlugin:(id <MVChatPlugin>) plugin;
+- (void) removePlugin:(id <MVChatPlugin>) plugin;
 
 - (nullable NSArray<NSBundle*> *) pluginsThatRespondToSelector:(SEL) selector;
 - (nullable NSArray<NSBundle*> *) pluginsOfClass:(Class __nullable) class thatRespondToSelector:(SEL) selector;
