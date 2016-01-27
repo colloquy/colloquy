@@ -23,13 +23,13 @@ NS_ASSUME_NONNULL_BEGIN
 @synthesize message = _ignoredMessage;
 @synthesize user = _ignoredUser;
 
-+ (instancetype) ruleForUser:(NSString *) user mask:(NSString *) mask message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
++ (instancetype) ruleForUser:(nullable NSString *) user mask:(nullable NSString *) mask message:(nullable NSString *) message inRooms:(nullable NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
 	KAIgnoreRule *ignoreRule = [[KAIgnoreRule alloc] initForUser:user mask:mask message:message inRooms:rooms isPermanent:permanent friendlyName:friendlyName];
 
 	MVAutoreleasedReturn(ignoreRule);
 }
 
-- (instancetype) initForUser:(NSString *) user mask:(NSString *) mask message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
+- (instancetype) initForUser:(nullable NSString *) user mask:(nullable NSString *) mask message:(nullable NSString *) message inRooms:(nullable NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
 	if (!(self = [super init]))
 		return nil;
 
@@ -44,11 +44,11 @@ NS_ASSUME_NONNULL_BEGIN
 	return self;
 }
 
-+ (KAIgnoreRule *) ruleForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
++ (KAIgnoreRule *) ruleForUser:(nullable NSString *) user message:(nullable NSString *) message inRooms:(nullable NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
 	return [self ruleForUser:user mask:nil message:message inRooms:rooms isPermanent:permanent friendlyName:friendlyName];
 }
 
-- (instancetype) initForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
+- (instancetype) initForUser:(nullable NSString *) user message:(nullable NSString *) message inRooms:(nullable NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
 	return [self initForUser:user mask:nil message:message inRooms:rooms isPermanent:permanent friendlyName:friendlyName];
 }
 
@@ -101,7 +101,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 #if SYSTEM(MAC)
-- (JVIgnoreMatchResult) matchUser:(MVChatUser *) user message:(NSString *) message inView:(id <JVChatViewController>) view {
+- (JVIgnoreMatchResult) matchUser:(MVChatUser *) user message:(nullable NSString *) message inView:(nullable id <JVChatViewController>) view {
 	if (!_rooms.count || !view || ([view isKindOfClass:[JVDirectChatPanel class]] && [_rooms containsObject:[[(JVDirectChatPanel *)view target] displayName]])) {
 #else
 - (JVIgnoreMatchResult) matchUser:(MVChatUser *) user message:(NSString *) message inTargetRoom:(id) target {
@@ -155,7 +155,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setMask:(NSString *) mask {
+- (void) setMask:(nullable NSString *) mask {
 	if (_ignoreMask != mask && mask.isValidIRCMask) {
 		_ignoreMask = [mask copy];
 	}
@@ -178,7 +178,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setMessage:(NSString *) message {
+- (void) setMessage:(nullable NSString *) message {
 	if (_ignoredMessage != message)
 		_ignoredMessage = [message copy];
 
@@ -191,7 +191,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setUser:(NSString *) user {
+- (void) setUser:(nullable NSString *) user {
 	if (_ignoredUser != user)
 		_ignoredUser = [user copy];
 
