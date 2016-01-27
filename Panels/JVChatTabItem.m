@@ -12,10 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 	return self;
 }
 
-- (id <JVChatViewController>) chatViewController {
-	return _controller;
-}
-
 - (NSString *) label {
 	return [_controller title];
 }
