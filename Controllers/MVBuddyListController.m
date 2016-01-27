@@ -876,7 +876,6 @@ static MVBuddyListController *sharedInstance = nil;
 	_viewingTop = NSMaxRange( visibleRows ) < 0.6 * [_buddyOrder count];
 
 	[NSTimer scheduledTimerWithTimeInterval:( 1. / 240. ) target:self selector:@selector( _animateStep: ) userInfo:nil repeats:YES];
-
 }
 
 - (void) _buddyChanged:(NSNotification *) notification {

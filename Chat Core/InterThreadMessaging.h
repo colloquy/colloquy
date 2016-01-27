@@ -3,6 +3,9 @@
  * Created by toby on Tue Jun 19 2001.
  */
 
+#import <Foundation/Foundation.h>
+
+
 @interface NSThread (InterThreadMessaging)
 + (void) prepareForInterThreadMessages;
 @end

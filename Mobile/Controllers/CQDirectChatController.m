@@ -11,6 +11,7 @@
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
+#import "CQGiphyController.h"
 #import "CQIgnoreRulesController.h"
 #import "CQImportantChatMessageViewController.h"
 #import "CQProcessChatMessageOperation.h"
@@ -775,7 +776,7 @@ NS_ASSUME_NONNULL_BEGIN
 #if ENABLE(FILE_TRANSFERS)
 		@"/dcc",
 #endif
-		@"/aaway", @"/anick", @"/aquit", @"/amsg", @"/ame", @"/google", @"/wikipedia", @"/amazon", @"/safari", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/ipod", @"/music", @"/squit", @"/welcome", @"/sysinfo", @"/ignore", @"/unignore"];
+		@"/aaway", @"/anick", @"/aquit", @"/amsg", @"/ame", @"/google", @"/wikipedia", @"/amazon", @"/safari", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/ipod", @"/music", @"/squit", @"/welcome", @"/sysinfo", @"/ignore", @"/unignore", @"/giphy", @"/gif" ];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -928,7 +929,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (isAction) {
 		NSDictionary *attributes = [message attributesAtIndex:0 effectiveRange:NULL];
-		NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"/me" attributes:attributes];
+		NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"/me " attributes:attributes];
 		[attributedString appendAttributedString:message];
 
 		chatInputBar.textView.attributedText = message;
@@ -1323,6 +1324,21 @@ NS_ASSUME_NONNULL_BEGIN
 	return YES;
 }
 
+- (BOOL) handleGifCommandWithArguments:(MVChatString *) arguments {
+	[[[CQGiphyController alloc] init] searchFor:MVChatStringAsString(arguments) completion:^(CQGiphyResult * _Nullable result) {
+		if (!result)
+			return;
+
+		[self sendMessage:[[NSAttributedString alloc] initWithString:result.GIFURL.absoluteString] asAction:NO];
+	}];
+
+	return YES;
+}
+
+- (BOOL) handleGiphyCommandWithArguments:(MVChatString *) arguments {
+	return [self handleGifCommandWithArguments:arguments];
+}
+
 - (BOOL) handleHelpCommandWithArguments:(MVChatString *) arguments {
 	[self _forceResignKeyboard];
 
@@ -1432,7 +1448,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) handleZncCommandWithArguments:(MVChatString *) arguments {
 	NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"*status "];
-	[attributedString appendAttributedString:arguments];
+	[attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:MVChatStringAsString(arguments)]];
 	[self handleMsgCommandWithArguments:attributedString];
 }
 

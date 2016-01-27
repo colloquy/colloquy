@@ -50,7 +50,6 @@
 
 	if( [newArray count] > 0 )
 		[super interpretKeyEvents:newArray];
-
 }
 
 - (BOOL) checkKeyEvent:(NSEvent *) event {

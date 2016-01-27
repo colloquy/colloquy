@@ -179,8 +179,8 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 			if (_roomTarget) {
 				cell.textLabel.text = NSLocalizedString(@"Name", @"Name setting label");
 				if ([_selectedConnection.server hasCaseInsensitiveSubstring:@"undernet"])
-					cell.textField.placeholder = @"#undernet";
-				else cell.textField.placeholder = @"#help";
+					cell.textField.placeholder = NSLocalizedString(@"#undernet", @"default chat room for receiving help on Undernet");
+				else cell.textField.placeholder = NSLocalizedString(@"#help", @"default chat room for receiving help");
 				cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
 				cell.accessibilityLabel = NSLocalizedString(@"Room to join.", @"Voiceover room to join label.");

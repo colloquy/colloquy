@@ -490,7 +490,6 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (void) _addMemberUser:(MVChatUser *) user {
 	@synchronized( _memberUsers ) {
 		[_memberUsers addObject:user];
-		user.roomCount++;
 	}
 }
 
@@ -499,7 +498,6 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 		[_memberModes removeObjectForKey:[user uniqueIdentifier]];
 	} @synchronized( _memberUsers ) {
 		[_memberUsers removeObject:user];
-		user.roomCount--;
 	} @synchronized( _disciplineMemberModes) {
 		[_disciplineMemberModes removeObjectForKey:[user uniqueIdentifier]];
 	}
@@ -509,8 +507,6 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	@synchronized( _memberModes ) {
 		[_memberModes removeAllObjects];
 	} @synchronized( _memberUsers ) {
-		for (MVChatUser *user in _memberUsers)
-			user.roomCount--;
 		[_memberUsers removeAllObjects];
 	} @synchronized( _disciplineMemberModes) {
 		[_disciplineMemberModes removeAllObjects];

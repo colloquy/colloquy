@@ -1,4 +1,7 @@
+#import <Foundation/Foundation.h>
+
 #import <ChatCore/MVAvailability.h>
+
 
 NS_ASSUME_NONNULL_BEGIN
 

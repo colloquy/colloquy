@@ -710,7 +710,6 @@ enum {
     [center removeObserver:self name:TCMUPNPPortMapperDidFailNotification object:_UPNPPortMapper];
     
     [self cleanupUPNPPortMapperTimer];
-
 }
 
 - (void)stop {

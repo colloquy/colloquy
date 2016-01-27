@@ -21,8 +21,6 @@
 		19A7A9771B28E7A90022172F /* XMPPPlainAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 19A7A3EF1B28E7A60022172F /* XMPPPlainAuthentication.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self -Wno-pointer-arith"; }; };
 		19A7A9781B28E7A90022172F /* XMPPSCRAMSHA1Authentication.h in Headers */ = {isa = PBXBuildFile; fileRef = 19A7A3F11B28E7A60022172F /* XMPPSCRAMSHA1Authentication.h */; };
 		19A7A9791B28E7A90022172F /* XMPPSCRAMSHA1Authentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 19A7A3F21B28E7A60022172F /* XMPPSCRAMSHA1Authentication.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self -Wno-pointer-arith"; }; };
-		19A7A97A1B28E7A90022172F /* XMPPXFacebookPlatformAuthentication.h in Headers */ = {isa = PBXBuildFile; fileRef = 19A7A3F41B28E7A60022172F /* XMPPXFacebookPlatformAuthentication.h */; };
-		19A7A97B1B28E7A90022172F /* XMPPXFacebookPlatformAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 19A7A3F51B28E7A60022172F /* XMPPXFacebookPlatformAuthentication.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self -Wno-pointer-arith"; }; };
 		19A7A97C1B28E7A90022172F /* XMPPXOAuth2Google.h in Headers */ = {isa = PBXBuildFile; fileRef = 19A7A3F71B28E7A60022172F /* XMPPXOAuth2Google.h */; };
 		19A7A97D1B28E7A90022172F /* XMPPXOAuth2Google.m in Sources */ = {isa = PBXBuildFile; fileRef = 19A7A3F81B28E7A60022172F /* XMPPXOAuth2Google.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self -Wno-pointer-arith"; }; };
 		19A7A97E1B28E7A90022172F /* XMPPCustomBinding.h in Headers */ = {isa = PBXBuildFile; fileRef = 19A7A3F91B28E7A60022172F /* XMPPCustomBinding.h */; };
@@ -436,8 +434,6 @@
 		19A7A3EF1B28E7A60022172F /* XMPPPlainAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPPlainAuthentication.m; sourceTree = "<group>"; };
 		19A7A3F11B28E7A60022172F /* XMPPSCRAMSHA1Authentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPSCRAMSHA1Authentication.h; sourceTree = "<group>"; };
 		19A7A3F21B28E7A60022172F /* XMPPSCRAMSHA1Authentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPSCRAMSHA1Authentication.m; sourceTree = "<group>"; };
-		19A7A3F41B28E7A60022172F /* XMPPXFacebookPlatformAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPXFacebookPlatformAuthentication.h; sourceTree = "<group>"; };
-		19A7A3F51B28E7A60022172F /* XMPPXFacebookPlatformAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPXFacebookPlatformAuthentication.m; sourceTree = "<group>"; };
 		19A7A3F71B28E7A60022172F /* XMPPXOAuth2Google.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPXOAuth2Google.h; sourceTree = "<group>"; };
 		19A7A3F81B28E7A60022172F /* XMPPXOAuth2Google.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPXOAuth2Google.m; sourceTree = "<group>"; };
 		19A7A3F91B28E7A60022172F /* XMPPCustomBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPCustomBinding.h; sourceTree = "<group>"; };
@@ -876,7 +872,6 @@
 				19A7A3EA1B28E7A60022172F /* Digest-MD5 */,
 				19A7A3ED1B28E7A60022172F /* Plain */,
 				19A7A3F01B28E7A60022172F /* SCRAM-SHA-1 */,
-				19A7A3F31B28E7A60022172F /* X-Facebook-Platform */,
 				19A7A3F61B28E7A60022172F /* X-OAuth2-Google */,
 				19A7A3F91B28E7A60022172F /* XMPPCustomBinding.h */,
 				19A7A3FA1B28E7A60022172F /* XMPPSASLAuthentication.h */,
@@ -937,15 +932,6 @@
 				19A7A3F21B28E7A60022172F /* XMPPSCRAMSHA1Authentication.m */,
 			);
 			path = "SCRAM-SHA-1";
-			sourceTree = "<group>";
-		};
-		19A7A3F31B28E7A60022172F /* X-Facebook-Platform */ = {
-			isa = PBXGroup;
-			children = (
-				19A7A3F41B28E7A60022172F /* XMPPXFacebookPlatformAuthentication.h */,
-				19A7A3F51B28E7A60022172F /* XMPPXFacebookPlatformAuthentication.m */,
-			);
-			path = "X-Facebook-Platform";
 			sourceTree = "<group>";
 		};
 		19A7A3F61B28E7A60022172F /* X-OAuth2-Google */ = {
@@ -1899,7 +1885,6 @@
 				19A7AA241B28E7A90022172F /* XMPPCapabilitiesCoreDataStorage.h in Headers */,
 				19A7A9E11B28E7A90022172F /* XMPPRoomMessageMemoryStorageObject.h in Headers */,
 				1CE4633C095ECE4F00AB7732 /* MVChatConnectionPrivate.h in Headers */,
-				19A7A97A1B28E7A90022172F /* XMPPXFacebookPlatformAuthentication.h in Headers */,
 				19A7A9D81B28E7A90022172F /* XMPPRoomHybridStorage.h in Headers */,
 				1C8AAEFE09D69F2700CF29EB /* MVChatUserWatchRule.h in Headers */,
 				1C3560060B4CCE95008A93FA /* MVUtilities.h in Headers */,
@@ -2252,7 +2237,6 @@
 				1CF6B82E07122672008ABEFA /* MVSILCChatRoom.m in Sources */,
 				19A7AA0C1B28E7A90022172F /* XMPPIQ+XEP_0060.m in Sources */,
 				1CF6B82F07122673008ABEFA /* MVSILCChatUser.m in Sources */,
-				19A7A97B1B28E7A90022172F /* XMPPXFacebookPlatformAuthentication.m in Sources */,
 				19A7AA561B28E7A90022172F /* XMPPMessage+XEP_0224.m in Sources */,
 				431261C3072EE37A00720AD1 /* MVSILCFileTransfer.m in Sources */,
 				1C668DBA07BF9C4C008400F7 /* NSScannerAdditions.m in Sources */,

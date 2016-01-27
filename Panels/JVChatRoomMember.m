@@ -29,8 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype) initWithRoom:(JVChatRoomPanel *) room andUser:(MVChatUser *) user {
 	if( ( self = [super init] ) ) {
-		_room = room; // prevent circular retain
-		_user = user;
+		_room = room; // prevent circular retain (__weak in .h)
+		_user = user; // intentionally strong referencex (no extra qualifier in .h)
 
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserInformationUpdatedNotification object:user];
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserStatusChangedNotification object:user];

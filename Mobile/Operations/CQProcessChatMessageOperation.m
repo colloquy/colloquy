@@ -153,12 +153,12 @@ static void commonChatAndImageReplacment(NSMutableString *string, NSRangePointer
 
 			if (canOpenURL) {
 				if (inlineImages && [NSFileManager isValidImageFormat:fullURL.pathExtension]) {
-					if ([fullURL.pathExtension isCaseInsensitiveEqualToString:@"gif"]) {
+					/* if ([fullURL.pathExtension isCaseInsensitiveEqualToString:@"gif"]) {
 						NSString *key = [NSString stringWithFormat:@"%zd-%d", fullURL.hash, arc4random()];
 						if (foundGIFs)
 							foundGIFs[key] = fullURL;
 						linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\"><img id=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></a>", [fullURL absoluteString], key];
-					} else linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\"><img src=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></a>", [fullURL absoluteString], [fullURL absoluteString]];
+					} else */ linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\"><img src=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></a>", [fullURL absoluteString], [fullURL absoluteString]];
 				} else if (inlineAudio && [NSFileManager isValidAudioFormat:fullURL.pathExtension]) {
 					linkHTMLString = [NSString stringWithFormat:@"<audio controls preload=\"metadata\" src=\"%@\" id=\"%@\" style=\"max-width: 100%%; max-height: 75%%\"></audio>", [fullURL absoluteString], [fullURL absoluteString]];
 				} else if (inlineVideo && [NSFileManager isValidVideoFormat:fullURL.pathExtension]) {

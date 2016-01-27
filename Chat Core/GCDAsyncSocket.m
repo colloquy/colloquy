@@ -2836,7 +2836,7 @@ enum GCDAsyncSocketConfig
 {
 	NSString *errMsg = NSLocalizedStringWithDefaultValue(@"GCDAsyncSocketConnectTimeoutError",
 	                                                     @"GCDAsyncSocket", [NSBundle mainBundle],
-	                                                     @"Attempt to connect to host timed out", nil);
+	                                                     @"Attempt to connect to host timed out", @"Host timeout error message");
 	
 	NSDictionary *userInfo = @{NSLocalizedDescriptionKey: errMsg};
 	
@@ -2850,7 +2850,7 @@ enum GCDAsyncSocketConfig
 {
 	NSString *errMsg = NSLocalizedStringWithDefaultValue(@"GCDAsyncSocketReadMaxedOutError",
 														 @"GCDAsyncSocket", [NSBundle mainBundle],
-														 @"Read operation reached set maximum length", nil);
+														 @"Read operation reached set maximum length", @"Read operation maxed out error message");
 	
 	NSDictionary *info = @{NSLocalizedDescriptionKey: errMsg};
 	
@@ -2864,7 +2864,7 @@ enum GCDAsyncSocketConfig
 {
 	NSString *errMsg = NSLocalizedStringWithDefaultValue(@"GCDAsyncSocketReadTimeoutError",
 	                                                     @"GCDAsyncSocket", [NSBundle mainBundle],
-	                                                     @"Read operation timed out", nil);
+	                                                     @"Read operation timed out", @"Read timeout error message");
 	
 	NSDictionary *userInfo = @{NSLocalizedDescriptionKey: errMsg};
 	
@@ -2878,7 +2878,7 @@ enum GCDAsyncSocketConfig
 {
 	NSString *errMsg = NSLocalizedStringWithDefaultValue(@"GCDAsyncSocketWriteTimeoutError",
 	                                                     @"GCDAsyncSocket", [NSBundle mainBundle],
-	                                                     @"Write operation timed out", nil);
+	                                                     @"Write operation timed out", @"Write timeout  error message");
 	
 	NSDictionary *userInfo = @{NSLocalizedDescriptionKey: errMsg};
 	
@@ -2889,7 +2889,7 @@ enum GCDAsyncSocketConfig
 {
 	NSString *errMsg = NSLocalizedStringWithDefaultValue(@"GCDAsyncSocketClosedError",
 	                                                     @"GCDAsyncSocket", [NSBundle mainBundle],
-	                                                     @"Socket closed by remote peer", nil);
+	                                                     @"Socket closed by remote peer", @"Socket closed error message");
 	
 	NSDictionary *userInfo = @{NSLocalizedDescriptionKey: errMsg};
 	

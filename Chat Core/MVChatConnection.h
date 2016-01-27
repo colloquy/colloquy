@@ -4,6 +4,7 @@
 #import <ChatCore/MVAvailability.h>
 #import <ChatCore/MVChatString.h>
 
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(OSType, MVChatConnectionType) {
@@ -159,7 +160,7 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSString *_uniqueIdentifier;
 
 	NSString *_npassword;
-	NSMutableDictionary *_knownUsers;
+	NSMapTable *_knownUsers;
 	NSMutableDictionary *_knownRooms;
 	NSMutableSet *_joinedRooms;
 	MVChatUser *_localUser;

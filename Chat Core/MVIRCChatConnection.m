@@ -759,9 +759,9 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		}
 	} else {
 		@synchronized( _knownUsers ) {
-			[_knownUsers enumerateKeysAndObjectsUsingBlock:^(id key, MVChatUser *user, BOOL *stop) {
+			for (MVChatUser *user in [_knownUsers objectEnumerator]) {
 				[rule matchChatUser:user];
-			}];
+			}
 		}
 	}
 }
@@ -833,8 +833,6 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 - (void) purgeCaches {
 	[super purgeCaches];
-
-	[self _pruneKnownUsers];
 }
 @end
 
@@ -955,11 +953,9 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	});
 
 	if( _status == MVChatConnectionConnectingStatus ) {
-		if( !_lastError ) {
-			RunOnMainThreadAsync(^{
-				[self _didNotConnect];
-			});
-		}
+		RunOnMainThreadAsync(^{
+			[self _didNotConnect];
+		});
 	} else {
 		if( _lastError && !_userDisconnected )
 			_status = MVChatConnectionServerDisconnectedStatus;
@@ -969,9 +965,9 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	}
 
 	@synchronized( _knownUsers ) {
-		[_knownUsers enumerateKeysAndObjectsUsingBlock:^(id key, MVChatUser *user, BOOL *stop) {
+		for (MVChatUser *user in [_knownUsers objectEnumerator]) {
 			[user _setStatus:MVChatUserUnknownStatus];
-		}];
+		}
 	}
 
 	@synchronized( _chatUserWatchRules ) {
@@ -983,8 +979,6 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 }
 
 - (void) socket:(GCDAsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
-	MVSafeRetainAssign( _lastError, nil );
-
 	//	if( [[self proxyServer] length] && [self proxyServerPort] ) {
 	//		if( _proxy == MVChatConnectionHTTPSProxy || _proxy == MVChatConnectionHTTPProxy ) {
 	//			NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
@@ -1074,8 +1068,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		NSArray <NSString *> *IRCv32Required = @[ @"account-tag", @"intent", @" " ];
 		NSArray <NSString *> *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time", @"userhost-in-names", @"batch", @" " ];
 
-		// In theory, IRCv3.2 isn't finalized yet and may change, so ZNC prefixes their capabilities. In practice,
-		// the official spec is pretty stable, and their behavior matches the official spec at this time.
+		// Older versions of ZNC prefixes their capabilities (from when IRCv3.2 wasn't finished).
 		NSArray <NSString *> *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message", @"znc.in/batch", @"znc.in/playback", @" " ];
 
 		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
@@ -1905,7 +1898,7 @@ end:
 		[_knownUsers removeObjectForKey:[user uniqueIdentifier]];
 		[user _setUniqueIdentifier:[newNickname lowercaseString]];
 		[user _setNickname:newNickname];
-		_knownUsers[[user uniqueIdentifier]] = user;
+		[_knownUsers setObject:user forKey:[user uniqueIdentifier]];
 		strongUser = nil;
 	}
 }
@@ -2026,8 +2019,6 @@ end:
 - (void) _periodicEvents {
 	MVAssertMainThreadRequired();
 	[_pendingJoinRoomNames removeAllObjects];
-
-	[self _pruneKnownUsers];
 
 #if !ENABLE(BOUNCER_MODE)
 	@synchronized( _joinedRooms ) {
@@ -4672,7 +4663,6 @@ end:
 	userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"You can't change your nickname to \"%@\" on \"%@\".", "cant change nick because of server error" ), identifier, [self server]];
 
 	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionErroneusNicknameError userInfo:userInfo]];
-
 }
 
 - (void) _handle435WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BANONCHAN Bahamut (also ERR_SERVICECONFUSED on Unreal, not implemented here)

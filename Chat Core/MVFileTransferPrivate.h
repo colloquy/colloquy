@@ -1,4 +1,7 @@
+#import <Foundation/Foundation.h>
+
 #import "MVFileTransfer.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
 

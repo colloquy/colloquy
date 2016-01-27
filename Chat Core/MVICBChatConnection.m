@@ -590,7 +590,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 		[_knownUsers removeObjectForKey:[user uniqueIdentifier]];
 		[user _setUniqueIdentifier:[newNickname lowercaseString]];
 		[user _setNickname:newNickname];
-		_knownUsers[[user uniqueIdentifier]] = user;
+		[_knownUsers setObject:user forKey:[user uniqueIdentifier]];
 		[user release];
 	}
 }

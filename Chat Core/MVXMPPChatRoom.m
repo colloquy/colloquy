@@ -69,30 +69,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setMode:(MVChatRoomMode) mode withAttribute:(id __nullable) attribute {
-	[super setMode:mode withAttribute:attribute];
-
-}
-
-- (void) removeMode:(MVChatRoomMode) mode {
-	[super removeMode:mode];
-
-}
-
-#pragma mark -
-
-- (void) setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user {
-	[super setMode:mode forMemberUser:user];
-
-}
-
-- (void) removeMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user {
-	[super removeMode:mode forMemberUser:user];
-
-}
-
-#pragma mark -
-
 - (MVChatUser *) localMemberUser {
 	return _localMemberUser;
 }
@@ -107,12 +83,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString * __nullable) reason {
 	[super kickOutMemberUser:user forReason:reason];
-
 }
 
 - (void) addBanForUser:(MVChatUser *) user {
 	[super addBanForUser:user];
-
 }
 
 - (void) removeBanForUser:(MVChatUser *) user {

@@ -1,6 +1,8 @@
+#import <Foundation/Foundation.h>
+
 #import "MVAvailability.h"
 #import "MVChatString.h"
-#import <Foundation/Foundation.h>
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -138,8 +140,6 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 
 @property(strong, readonly) NSSet<NSString*> *supportedAttributes;
 @property(strong, readonly) NSDictionary<NSString*,id> *attributes;
-
-@property NSUInteger roomCount;
 
 - (BOOL) isEqual:(id) object;
 - (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser;

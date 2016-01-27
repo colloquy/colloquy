@@ -193,7 +193,9 @@ static const NSStringEncoding supportedEncodings[] = {
 		CFDictionaryValueCallBacks valueCallbacks = { 0, NULL, NULL, kCFTypeDictionaryValueCallBacks.copyDescription, kCFTypeDictionaryValueCallBacks.equal };
 		_knownRooms = (NSMutableDictionary *)CFBridgingRelease(CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &valueCallbacks));
 
-		_knownUsers = [[NSMutableDictionary alloc] initWithCapacity:300];
+		_knownUsers = [[NSMapTable alloc] initWithKeyOptions:NSMapTableObjectPointerPersonality|NSMapTableCopyIn
+												valueOptions:NSMapTableObjectPointerPersonality|NSMapTableWeakMemory
+													capacity:300];
 
 #if (!defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE) && (!defined(COMMAND_LINE_UTILITY) || !COMMAND_LINE_UTILITY)
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
@@ -294,7 +296,9 @@ static const NSStringEncoding supportedEncodings[] = {
 		CFRelease(_reachability);
 	}
 
-	[[_knownUsers allValues] makeObjectsPerformSelector:@selector(_connectionDestroyed)];
+	for (MVChatUser *user in [_knownUsers objectEnumerator]) {
+		[user _connectionDestroyed];
+	}
 	[[_knownRooms allValues] makeObjectsPerformSelector:@selector(_connectionDestroyed)];
 	[_joinedRooms makeObjectsPerformSelector:@selector(_connectionDestroyed)];
 	[_localUser _connectionDestroyed];
@@ -781,7 +785,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (NSSet *) knownChatUsers {
 	@synchronized( _knownUsers ) {
-		return [NSSet setWithArray:[_knownUsers allValues]];
+		return [NSSet setWithArray:[[_knownUsers objectEnumerator] allObjects]];
 	}
 }
 
@@ -801,7 +805,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 		return [self localUser];
 
 	@synchronized( _knownUsers ) {
-		return _knownUsers[identifier];
+		return [_knownUsers objectForKey:identifier];
 	}
 }
 
@@ -1012,8 +1016,6 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	}
 
 	if( wasConnected ) [[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidDisconnectNotification object:self];
-
-	[self _pruneKnownUsers];
 }
 
 - (void) _postError:(NSError *) error {
@@ -1053,26 +1055,13 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (void) _addKnownUser:(MVChatUser *) user {
 	@synchronized( _knownUsers ) {
-		if( [user uniqueIdentifier] ) _knownUsers[[user uniqueIdentifier]] = user;
+		if( [user uniqueIdentifier] ) [_knownUsers setObject:user forKey:[user uniqueIdentifier]];
 	}
 }
 
 - (void) _removeKnownUser:(MVChatUser *) user {
 	@synchronized( _knownRooms ) {
 		if( [user uniqueIdentifier] ) [_knownUsers removeObjectForKey:[user uniqueIdentifier]];
-	}
-}
-
-- (void) _pruneKnownUsers {
-	@synchronized( _knownUsers ) {
-		NSMutableArray *removeList = [[NSMutableArray alloc] initWithCapacity:_knownUsers.count];
-
-		for( id key in _knownUsers ) {
-			MVChatUser *user = _knownUsers[key];
-			if( [user roomCount] == 1 ) [removeList addObject:key];
-		}
-
-		[_knownUsers removeObjectsForKeys:removeList];
 	}
 }
 
@@ -1226,10 +1215,16 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
+/**
+ @warning This is not particularily safe, since the order of the underlying array is not guaranteed to remain the same between calls.
+ */
 - (NSArray <MVChatUser *> *) knownChatUsersArray {
-	return [_knownUsers allValues];
+	return [[_knownUsers objectEnumerator] allObjects] ?: @[];
 }
 
+/**
+ @warning This is not particularily safe, since the order of the underlying array is not guaranteed to remain the same between calls.
+ */
 - (MVChatUser *) valueInKnownChatUsersArrayAtIndex:(NSUInteger) index {
 	return [self knownChatUsersArray][index];
 }

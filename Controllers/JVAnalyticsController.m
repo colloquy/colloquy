@@ -161,7 +161,6 @@ static void generateUniqueMachineIdentifier() {
 	_data[@"machine-system-name"] = systemVersion[@"ProductName"];
 	_data[@"machine-system-version"] = systemVersion[@"ProductVersion"];
 
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:NSApplicationWillTerminateNotification object:nil];
 
 	return self;

@@ -1,5 +1,8 @@
+#import <Foundation/Foundation.h>
+
 #import "MVChatUser.h"
 #import "MVChatUserPrivate.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
 

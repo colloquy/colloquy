@@ -57,6 +57,12 @@
 	[roomsTable setDataSource:nil];
 
 	[[NSNotificationCenter chatCenter] removeObserver:self];
+
+	_connection = nil;
+	_currentFilter = nil;
+	_roomResults = nil;
+	_roomOrder = nil;
+	_sortColumn = nil;
 }
 
 - (void) windowDidLoad {

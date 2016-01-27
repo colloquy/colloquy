@@ -1,10 +1,10 @@
-#import <Foundation/NSObject.h>
+#import <Foundation/Foundation.h>
+
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class MVChatUser;
 @class MVChatConnection;
-@class NSData;
 
 extern NSString *MVChatUserWatchRuleMatchedNotification;
 extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
