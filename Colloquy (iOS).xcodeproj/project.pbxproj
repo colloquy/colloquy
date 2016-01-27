@@ -382,6 +382,7 @@
 		B69FE8001BE4559900CA7B84 /* CQWelcomeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCBA341114FB2500EA5F10 /* CQWelcomeController.m */; };
 		B69FE8011BE4559900CA7B84 /* CQWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */; };
 		B69FE8031BE45BB000CA7B84 /* libSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B69FE8021BE45BB000CA7B84 /* libSystem.tbd */; };
+		B6AEBB441C58592400F7CF66 /* CQGiphyController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6AEBB431C58592400F7CF66 /* CQGiphyController.m */; };
 		B6BFA5431BBDA3B6000C3BBC /* UIWindowAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B6BFA5421BBDA3B6000C3BBC /* UIWindowAdditions.m */; };
 		B6C921061B812F350049622C /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B6C921051B812F350049622C /* libc++.dylib */; };
 		B6D085B61B8D6E8400734C96 /* CQActivities.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D085B51B8D6E8400734C96 /* CQActivities.m */; };
@@ -728,6 +729,8 @@
 		B68725B21B8E7FF60003D4F8 /* CQPrinterPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPrinterPage.h; sourceTree = "<group>"; };
 		B68725B31B8E7FF60003D4F8 /* CQPrinterPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPrinterPage.m; sourceTree = "<group>"; };
 		B69FE8021BE45BB000CA7B84 /* libSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.0.sdk/usr/lib/libSystem.tbd; sourceTree = DEVELOPER_DIR; };
+		B6AEBB421C58592400F7CF66 /* CQGiphyController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQGiphyController.h; sourceTree = "<group>"; };
+		B6AEBB431C58592400F7CF66 /* CQGiphyController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQGiphyController.m; sourceTree = "<group>"; };
 		B6BFA5411BBDA3B6000C3BBC /* UIWindowAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIWindowAdditions.h; path = Mobile/Additions/UIWindowAdditions.h; sourceTree = "<group>"; };
 		B6BFA5421BBDA3B6000C3BBC /* UIWindowAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIWindowAdditions.m; path = Mobile/Additions/UIWindowAdditions.m; sourceTree = "<group>"; };
 		B6C921051B812F350049622C /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
@@ -872,6 +875,8 @@
 				1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */,
 				92B257C9174023B300F303B5 /* CQSettingsController.m */,
 				92B257C8174023B300F303B5 /* CQSettingsController.h */,
+				B6AEBB421C58592400F7CF66 /* CQGiphyController.h */,
+				B6AEBB431C58592400F7CF66 /* CQGiphyController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1693,6 +1698,7 @@
 				1CDDE9C5118C8EB700C83EBE /* CQTableViewController.m in Sources */,
 				1CDDE9F6118CD2B800C83EBE /* NSObjectAdditions.m in Sources */,
 				891E84D4123F0C8C00EC3C0F /* NSCharacterSetAdditions.m in Sources */,
+				B6AEBB441C58592400F7CF66 /* CQGiphyController.m in Sources */,
 				1C716EDB13100F220088C737 /* MVIRCChatConnection.m in Sources */,
 				1C716EDC13100F220088C737 /* MVIRCChatRoom.m in Sources */,
 				1C716EDD13100F220088C737 /* MVIRCChatUser.m in Sources */,
@@ -1931,6 +1937,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Shared/Frameworks",
+					"$(PROJECT_DIR)/Mobile/Frameworks/OTRKit",
 				);
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1980,6 +1987,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Shared/Frameworks",
+					"$(PROJECT_DIR)/Mobile/Frameworks/OTRKit",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
@@ -2028,6 +2036,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Shared/Frameworks",
+					"$(PROJECT_DIR)/Mobile/Frameworks/OTRKit",
 				);
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
