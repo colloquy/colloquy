@@ -382,7 +382,6 @@
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
-		0A3187FB067ECEB600271E42 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
 		0A5B683E0810EC9700398D5A /* default.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = default.css; sourceTree = "<group>"; };
 		0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "Chat Core.xcodeproj"; sourceTree = "<group>"; };
 		0AA811220826DB8800A3BF2D /* default.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = default.js; sourceTree = "<group>"; };
@@ -542,7 +541,6 @@
 		1C9D85360C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/MVConnections.xib; sourceTree = "<group>"; };
 		1C9D85370C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
 		1C9D85390C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		1C9D853A0C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Japanese; path = Languages/ja.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
 		1C9D85400C986A2000BB6C58 /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = Languages/nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1C9D85450C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/Colloquy.xib; sourceTree = "<group>"; };
 		1C9D85480C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
@@ -559,7 +557,6 @@
 		1C9D85580C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/MVConnections.xib; sourceTree = "<group>"; };
 		1C9D85590C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
 		1C9D855B0C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		1C9D855C0C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = nb; path = Languages/nb.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
 		1CA75A260652537A000141D5 /* styleOptions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = styleOptions.plist; sourceTree = "<group>"; };
 		1CA7D0F006015DBA00887614 /* JVNotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVNotificationController.h; path = Controllers/JVNotificationController.h; sourceTree = "<group>"; };
 		1CA7D0F106015DBA00887614 /* JVNotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVNotificationController.m; path = Controllers/JVNotificationController.m; sourceTree = "<group>"; };
@@ -608,7 +605,6 @@
 		1CD4B72C078209CC0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/MVConnections.xib; sourceTree = "<group>"; };
 		1CD4B72D078209CC0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
 		1CD4B72F078209CC0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		1CD4B730078209CC0003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
 		1CD4B732078209D60003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/Colloquy.xib; sourceTree = "<group>"; };
 		1CD4B736078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
 		1CD4B737078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
@@ -619,7 +615,6 @@
 		1CD4B740078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/MVConnections.xib; sourceTree = "<group>"; };
 		1CD4B741078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
 		1CD4B743078209E10003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		1CD4B744078209E10003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
 		1CD6C413051DFA1C00A8FE10 /* JVChatTranscriptPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatTranscriptPanel.h; path = Panels/JVChatTranscriptPanel.h; sourceTree = "<group>"; };
 		1CD6C414051DFA1D00A8FE10 /* JVChatTranscriptPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatTranscriptPanel.m; path = Panels/JVChatTranscriptPanel.m; sourceTree = "<group>"; };
 		1CD6C417051E0B3000A8FE10 /* JVChatTranscript.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = JVChatTranscript.xib; path = Resources/JVChatTranscript.xib; sourceTree = SOURCE_ROOT; };
@@ -658,6 +653,17 @@
 		556CEBE41BCB795600F00EAA /* Tabs Interface Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Tabs Interface Images.xcassets"; sourceTree = "<group>"; };
 		5575C7BE1AFAB53D001EEF98 /* widgets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = widgets.xcassets; sourceTree = "<group>"; };
 		558EF2361AEC356800619BDE /* Room Member Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Room Member Icons.xcassets"; sourceTree = "<group>"; };
+		55AD12391C597212009F258C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Languages/Base.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
+		55AD123B1C597223009F258C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Languages/en.lproj/TSCustomBan.strings; sourceTree = "<group>"; };
+		55AD123C1C59722F009F258C /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = Languages/nl.lproj/TSCustomBan.strings; sourceTree = "<group>"; };
+		55AD123D1C59723C009F258C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = Languages/fr.lproj/TSCustomBan.strings; sourceTree = "<group>"; };
+		55AD123E1C597244009F258C /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = Languages/de.lproj/TSCustomBan.strings; sourceTree = "<group>"; };
+		55AD123F1C59724D009F258C /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = Languages/it.lproj/TSCustomBan.strings; sourceTree = "<group>"; };
+		55AD12401C597254009F258C /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = Languages/ja.lproj/TSCustomBan.strings; sourceTree = "<group>"; };
+		55AD12411C59725A009F258C /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = Languages/nb.lproj/TSCustomBan.strings; sourceTree = "<group>"; };
+		55AD12421C597260009F258C /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "Languages/pt-PT.lproj/TSCustomBan.strings"; sourceTree = "<group>"; };
+		55AD12431C597266009F258C /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Languages/es.lproj/TSCustomBan.strings; sourceTree = "<group>"; };
+		55AD12441C59726D009F258C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "Languages/zh-Hant.lproj/TSCustomBan.strings"; sourceTree = "<group>"; };
 		55B0EF2D18CE34850000E4CA /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AppIcon.xcassets; sourceTree = "<group>"; };
 		55B0EF3518CE3DE10000E4CA /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		55B0EF3818CE3E250000E4CA /* libexslt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libexslt.dylib; path = usr/lib/libexslt.dylib; sourceTree = SDKROOT; };
@@ -710,7 +716,6 @@
 		A1429C850901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/MVConnections.xib; sourceTree = "<group>"; };
 		A1429C860901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
 		A1429C880901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		A1429C890901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
 		A1429C8A0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/Colloquy.xib"; sourceTree = "<group>"; };
 		A1429C8D0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/JVBuddyInspector.xib"; sourceTree = "<group>"; };
 		A1429C8E0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/JVChatMemberInspector.xib"; sourceTree = "<group>"; };
@@ -726,7 +731,6 @@
 		A1429C9D0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/MVConnections.xib"; sourceTree = "<group>"; };
 		A1429C9E0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/MVCrashCatcher.xib"; sourceTree = "<group>"; };
 		A1429CA00901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/MVSoftwareUpdate.xib"; sourceTree = "<group>"; };
-		A1429CA10901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = pt_PT; path = "Languages/pt-PT.lproj/TSCustomBan.xib"; sourceTree = "<group>"; };
 		A1429CA40901F5C400A7BEEE /* Italian */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Italian; path = Languages/it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A1429CA70901F5E000A7BEEE /* pt_PT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = pt_PT; path = "Languages/pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A15DE0420957E1490040042E /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = zh_TW; path = "Languages/zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -745,7 +749,6 @@
 		A15DE1090957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/MVConnections.xib"; sourceTree = "<group>"; };
 		A15DE10A0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/MVCrashCatcher.xib"; sourceTree = "<group>"; };
 		A15DE10C0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/MVSoftwareUpdate.xib"; sourceTree = "<group>"; };
-		A15DE10D0957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "Languages/zh-Hant.lproj/TSCustomBan.xib"; sourceTree = "<group>"; };
 		A16C57F40921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/Colloquy.xib; sourceTree = "<group>"; };
 		A16C57F70921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
 		A16C57F80921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
@@ -761,7 +764,6 @@
 		A16C58070921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/MVConnections.xib; sourceTree = "<group>"; };
 		A16C58080921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
 		A16C580A0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		A16C580B0921F63F007812B2 /* French */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = French; path = Languages/fr.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
 		A18BC9D708FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/Colloquy.xib; sourceTree = "<group>"; };
 		A18BC9DE08FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
 		A18BC9DF08FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
@@ -777,7 +779,6 @@
 		A18BC9F008FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/MVConnections.xib; sourceTree = "<group>"; };
 		A18BC9F108FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
 		A18BC9F308FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
-		A18BC9F408FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Spanish; path = Languages/es.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
 		A18BC9FE08FF57060005DC2D /* Spanish */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Spanish; path = Languages/es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A18BC9FF08FF57480005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/JVFind.xib; sourceTree = "<group>"; };
 		A18BCA1808FF57A20005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
@@ -2155,16 +2156,17 @@
 		0A3187FA067ECEB600271E42 /* TSCustomBan.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				0A3187FB067ECEB600271E42 /* English */,
-				1CD4B730078209CC0003620F /* Dutch */,
-				1CD4B744078209E10003620F /* German */,
-				A18BC9F408FF569A0005DC2D /* Spanish */,
-				A1429C890901F57A00A7BEEE /* Italian */,
-				A1429CA10901F59900A7BEEE /* pt_PT */,
-				A16C580B0921F63F007812B2 /* French */,
-				A15DE10D0957E1B20040042E /* zh_TW */,
-				1C9D853A0C986A0700BB6C58 /* Japanese */,
-				1C9D855C0C986A2C00BB6C58 /* nb */,
+				55AD12391C597212009F258C /* Base */,
+				55AD123B1C597223009F258C /* en */,
+				55AD123C1C59722F009F258C /* nl */,
+				55AD123D1C59723C009F258C /* fr */,
+				55AD123E1C597244009F258C /* de */,
+				55AD123F1C59724D009F258C /* it */,
+				55AD12401C597254009F258C /* ja */,
+				55AD12411C59725A009F258C /* nb */,
+				55AD12421C597260009F258C /* pt-PT */,
+				55AD12431C597266009F258C /* es */,
+				55AD12441C59726D009F258C /* zh-Hant */,
 			);
 			name = TSCustomBan.xib;
 			sourceTree = "<group>";

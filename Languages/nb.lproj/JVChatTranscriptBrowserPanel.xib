@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
-        <plugIn identifier="com.apple.WebKitIBPlugin" version="8191"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+        <plugIn identifier="com.apple.WebKitIBPlugin" version="9531"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="JVChatTranscriptBrowserPanel">
@@ -24,10 +25,10 @@
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="6">
-                <rect key="frame" x="1" y="9" width="570" height="491"/>
+                <rect key="frame" x="0.0" y="0.0" width="570" height="491"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <searchField verticalHuggingPriority="750" id="13">
+                    <searchField wantsLayer="YES" verticalHuggingPriority="750" id="13">
                         <rect key="frame" x="20" y="463" width="530" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" bezelStyle="round" id="48">
@@ -48,17 +49,17 @@
                                 <rect key="frame" x="0.0" y="0.0" width="570" height="126"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <clipView key="contentView" id="de9-Zl-58A">
-                                    <rect key="frame" x="1" y="17" width="553" height="93"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <rect key="frame" x="1" y="0.0" width="568" height="125"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="55" id="8">
-                                            <rect key="frame" x="0.0" y="0.0" width="553" height="19"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="568" height="108"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn identifier="server" width="119" minWidth="40" maxWidth="1000" id="10">
+                                                <tableColumn identifier="server" width="123" minWidth="40" maxWidth="1000" id="10">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Server">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -72,7 +73,7 @@
                                                     <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="server"/>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                 </tableColumn>
-                                                <tableColumn identifier="target" width="138.81201171875" minWidth="117.81201171875" maxWidth="1000" id="9">
+                                                <tableColumn identifier="target" width="142.81201171875" minWidth="117.81201171875" maxWidth="1000" id="9">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Samtalerom eller kompis">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -86,7 +87,7 @@
                                                     <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="target"/>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                 </tableColumn>
-                                                <tableColumn identifier="session" width="195" minWidth="10" maxWidth="1000" id="11">
+                                                <tableColumn identifier="session" width="199" minWidth="10" maxWidth="1000" id="11">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Dato og/eller sesjon">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -100,7 +101,7 @@
                                                     <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="session" ascending="NO"/>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                 </tableColumn>
-                                                <tableColumn identifier="relevancy" width="88.16162109375" minWidth="75.16162109375" maxWidth="1000" id="12">
+                                                <tableColumn identifier="relevancy" width="91.16162109375" minWidth="75.16162109375" maxWidth="1000" id="12">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Hvor relevant">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -124,15 +125,15 @@
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </clipView>
                                 <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="54">
-                                    <rect key="frame" x="1" y="110" width="553" height="15"/>
+                                    <rect key="frame" x="1" y="109" width="568" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="56">
-                                    <rect key="frame" x="554" y="17" width="15" height="93"/>
+                                    <rect key="frame" x="553" y="17" width="16" height="108"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <tableHeaderView key="headerView" id="55">
-                                    <rect key="frame" x="0.0" y="0.0" width="553" height="17"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="568" height="17"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>
