@@ -13,9 +13,14 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@protocol AICustomTabViewItem
+#import <AppKit/AppKit.h>
+
+@protocol AICustomTabViewItem <NSObject>
+@property (readonly) NSString *label;
 - (NSString *)label;
+@property (readonly) NSImage *icon;
 - (NSImage *)icon;
+@property (readonly, getter=isEnabled) BOOL enabled;
 - (BOOL) isEnabled;
 @end
 

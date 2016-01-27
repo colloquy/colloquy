@@ -10,29 +10,29 @@ extern NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification;
 
 @interface MVChatPluginManager : NSObject {
 	@private
-	NSMutableArray<NSBundle*> *_plugins;
+	NSMutableArray<id<MVChatPlugin>> *_plugins;
 	NSMutableDictionary<NSString*,NSString*> *_invalidPlugins;
 	BOOL _reloadingPlugins;
 }
 + (MVChatPluginManager *) defaultManager;
 + (NSArray<NSString*> *) pluginSearchPaths;
 
-@property(strong, readonly) NSArray<NSBundle*> *plugins;
+@property(strong, readonly) NSArray<id<MVChatPlugin>> *plugins;
 
 - (void) reloadPlugins;
 - (void) addPlugin:(id <MVChatPlugin>) plugin;
 - (void) removePlugin:(id <MVChatPlugin>) plugin;
 
-- (nullable NSArray<NSBundle*> *) pluginsThatRespondToSelector:(SEL) selector;
-- (nullable NSArray<NSBundle*> *) pluginsOfClass:(Class __nullable) class thatRespondToSelector:(SEL) selector;
+- (nullable NSArray<id<MVChatPlugin>> *) pluginsThatRespondToSelector:(SEL) selector;
+- (nullable NSArray<id<MVChatPlugin>> *) pluginsOfClass:(Class __nullable) class thatRespondToSelector:(SEL) selector;
 
-- (NSArray<id> *) makePluginsPerformInvocation:(NSInvocation *) invocation;
-- (NSArray<id> *) makePluginsPerformInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop;
-- (NSArray<id> *) makePluginsOfClass:(Class __nullable) class performInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop;
+- (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation;
+- (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop;
+- (NSArray *) makePluginsOfClass:(Class __nullable) class performInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop;
 @end
 
-@protocol MVChatPlugin
-- (instancetype) initWithManager:(MVChatPluginManager *) manager;
+@protocol MVChatPlugin <NSObject>
+- (null_unspecified instancetype) initWithManager:(MVChatPluginManager *) manager;
 
 #pragma mark MVChatPluginReloadSupport
 @optional

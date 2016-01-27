@@ -14,11 +14,11 @@ typedef NS_ENUM(OSType, JVIgnoreMatchResult) {
 };
 
 @interface KAIgnoreRule : NSObject
-+ (instancetype) ruleForUser:(nullable NSString *) user mask:(nullable NSString *) mask message:(nullable NSString *) message inRooms:(nullable NSArray<NSString*> *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
-- (instancetype) initForUser:(nullable NSString *) user mask:(nullable NSString *) mask message:(nullable NSString *) message inRooms:(nullable NSArray<NSString*> *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
++ (instancetype) ruleForUser:(nullable NSString *) user mask:(nullable NSString *) mask message:(nullable NSString *) message inRooms:(nullable NSArray<NSString*> *) rooms isPermanent:(BOOL) permanent friendlyName:(nullable NSString *) friendlyName;
+- (instancetype) initForUser:(nullable NSString *) user mask:(nullable NSString *) mask message:(nullable NSString *) message inRooms:(nullable NSArray<NSString*> *) rooms isPermanent:(BOOL) permanent friendlyName:(nullable NSString *) friendlyName;
 
-+ (KAIgnoreRule *) ruleForUser:(nullable NSString *) user message:(nullable NSString *) message inRooms:(nullable NSArray<NSString*> *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
-- (instancetype) initForUser:(nullable NSString *) user message:(nullable NSString *) message inRooms:(nullable NSArray<NSString*> *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
++ (KAIgnoreRule *) ruleForUser:(nullable NSString *) user message:(nullable NSString *) message inRooms:(nullable NSArray<NSString*> *) rooms isPermanent:(BOOL) permanent friendlyName:(nullable NSString *) friendlyName;
+- (instancetype) initForUser:(nullable NSString *) user message:(nullable NSString *) message inRooms:(nullable NSArray<NSString*> *) rooms isPermanent:(BOOL) permanent friendlyName:(nullable NSString *) friendlyName;
 
 #if SYSTEM(MAC)
 - (JVIgnoreMatchResult) matchUser:(MVChatUser *) user message:(nullable NSString *) message inView:(nullable id <JVChatViewController>) view;

@@ -23,13 +23,13 @@ NS_ASSUME_NONNULL_BEGIN
 @synthesize message = _ignoredMessage;
 @synthesize user = _ignoredUser;
 
-+ (instancetype) ruleForUser:(nullable NSString *) user mask:(nullable NSString *) mask message:(nullable NSString *) message inRooms:(nullable NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
++ (instancetype) ruleForUser:(nullable NSString *) user mask:(nullable NSString *) mask message:(nullable NSString *) message inRooms:(nullable NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(nullable NSString *) friendlyName {
 	KAIgnoreRule *ignoreRule = [[KAIgnoreRule alloc] initForUser:user mask:mask message:message inRooms:rooms isPermanent:permanent friendlyName:friendlyName];
 
 	MVAutoreleasedReturn(ignoreRule);
 }
 
-- (instancetype) initForUser:(nullable NSString *) user mask:(nullable NSString *) mask message:(nullable NSString *) message inRooms:(nullable NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
+- (instancetype) initForUser:(nullable NSString *) user mask:(nullable NSString *) mask message:(nullable NSString *) message inRooms:(nullable NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(nullable NSString *) friendlyName {
 	if (!(self = [super init]))
 		return nil;
 
@@ -44,11 +44,11 @@ NS_ASSUME_NONNULL_BEGIN
 	return self;
 }
 
-+ (KAIgnoreRule *) ruleForUser:(nullable NSString *) user message:(nullable NSString *) message inRooms:(nullable NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
++ (KAIgnoreRule *) ruleForUser:(nullable NSString *) user message:(nullable NSString *) message inRooms:(nullable NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(nullable NSString *) friendlyName {
 	return [self ruleForUser:user mask:nil message:message inRooms:rooms isPermanent:permanent friendlyName:friendlyName];
 }
 
-- (instancetype) initForUser:(nullable NSString *) user message:(nullable NSString *) message inRooms:(nullable NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
+- (instancetype) initForUser:(nullable NSString *) user message:(nullable NSString *) message inRooms:(nullable NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(nullable NSString *) friendlyName {
 	return [self initForUser:user mask:nil message:message inRooms:rooms isPermanent:permanent friendlyName:friendlyName];
 }
 

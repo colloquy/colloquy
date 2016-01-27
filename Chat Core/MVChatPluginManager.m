@@ -111,7 +111,7 @@ NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatP
 	_reloadingPlugins = NO;
 }
 
-- (void) addPlugin:(NSBundle *) plugin {
+- (void) addPlugin:(id<MVChatPlugin>) plugin {
 	if( plugin ) {
 		[_plugins addObject:plugin];
 		if( [plugin respondsToSelector:@selector( load )] )
@@ -119,7 +119,7 @@ NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatP
 	}
 }
 
-- (void) removePlugin:(NSBundle *) plugin {
+- (void) removePlugin:(id<MVChatPlugin>) plugin {
 	if( plugin ) {
 		if( [plugin respondsToSelector:@selector( unload )] )
 			[plugin unload];
