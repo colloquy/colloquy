@@ -315,7 +315,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	}
 }
 
-- (id) attributeForKey:(NSString *) key {
+- (__nullable id) attributeForKey:(NSString *) key {
 	@synchronized( _attributes ) {
 		return _attributes[key];
 	}

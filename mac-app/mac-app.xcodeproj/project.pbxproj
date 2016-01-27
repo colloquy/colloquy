@@ -7,12 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		55AD12271C596704009F258C /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55AD12261C5966E4009F258C /* ChatCore.framework */; };
+		55AD12281C596704009F258C /* ChatCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 55AD12261C5966E4009F258C /* ChatCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C265DFC31C55254B00140D24 /* ApplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C265DFC21C55254B00140D24 /* ApplicationController.swift */; };
 		C265DFC51C55254B00140D24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C265DFC41C55254B00140D24 /* Assets.xcassets */; };
 		C265DFC81C55254B00140D24 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C265DFC61C55254B00140D24 /* MainMenu.xib */; };
-		C2E4C9DA1C554376007A4FA5 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E4C9D21C55433B007A4FA5 /* ChatCore.framework */; };
-		C2E4C9DB1C554376007A4FA5 /* ChatCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C2E4C9D21C55433B007A4FA5 /* ChatCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		55AD12251C5966E4009F258C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 55AD12211C5966E4009F258C /* chat-core.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C2E4C9731C5538E1007A4FA5;
+			remoteInfo = "chat-core";
+		};
+		55AD12291C596704009F258C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 55AD12211C5966E4009F258C /* chat-core.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C2E4C9721C5538E1007A4FA5;
+			remoteInfo = "chat-core";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		C2E4C9DC1C554377007A4FA5 /* Embed Frameworks */ = {
@@ -21,7 +38,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2E4C9DB1C554376007A4FA5 /* ChatCore.framework in Embed Frameworks */,
+				55AD12281C596704009F258C /* ChatCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -29,12 +46,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		55AD12211C5966E4009F258C /* chat-core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "chat-core.xcodeproj"; path = "../chat-core/chat-core.xcodeproj"; sourceTree = "<group>"; };
 		C265DFBF1C55254B00140D24 /* Colloquy3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C265DFC21C55254B00140D24 /* ApplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationController.swift; sourceTree = "<group>"; };
 		C265DFC41C55254B00140D24 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C265DFC71C55254B00140D24 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		C265DFC91C55254B00140D24 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C2E4C9D21C55433B007A4FA5 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,13 +59,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C2E4C9DA1C554376007A4FA5 /* ChatCore.framework in Frameworks */,
+				55AD12271C596704009F258C /* ChatCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		55AD12221C5966E4009F258C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				55AD12261C5966E4009F258C /* ChatCore.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		C265DFB61C55254A00140D24 = {
 			isa = PBXGroup;
 			children = (
@@ -80,7 +105,7 @@
 		C2E4C9671C55373C007A4FA5 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
-				C2E4C9D21C55433B007A4FA5 /* ChatCore.framework */,
+				55AD12211C5966E4009F258C /* chat-core.xcodeproj */,
 			);
 			name = Dependencies;
 			sourceTree = "<group>";
@@ -100,6 +125,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				55AD122A1C596704009F258C /* PBXTargetDependency */,
 			);
 			name = "mac-app";
 			productName = "mac-app";
@@ -132,12 +158,28 @@
 			mainGroup = C265DFB61C55254A00140D24;
 			productRefGroup = C265DFC01C55254B00140D24 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 55AD12221C5966E4009F258C /* Products */;
+					ProjectRef = 55AD12211C5966E4009F258C /* chat-core.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				C265DFBE1C55254B00140D24 /* mac-app */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		55AD12261C5966E4009F258C /* ChatCore.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ChatCore.framework;
+			remoteRef = 55AD12251C5966E4009F258C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		C265DFBD1C55254B00140D24 /* Resources */ = {
@@ -161,6 +203,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		55AD122A1C596704009F258C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "chat-core";
+			targetProxy = 55AD12291C596704009F258C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		C265DFC61C55254B00140D24 /* MainMenu.xib */ = {

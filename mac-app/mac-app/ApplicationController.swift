@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import ChatCore
 
 @NSApplicationMain
 class ApplicationController: NSObject, NSApplicationDelegate {

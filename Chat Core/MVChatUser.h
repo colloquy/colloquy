@@ -157,7 +157,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 - (void) refreshAttributeForKey:(NSString *) key;
 
 - (BOOL) hasAttributeForKey:(NSString *) key;
-- (id) attributeForKey:(NSString *) key;
+- (__nullable id) attributeForKey:(NSString *) key;
 - (void) setAttribute:(id __nullable) attribute forKey:(id) key;
 
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		55AD122C1C596747009F258C /* RunOnMainThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 55AD122B1C596747009F258C /* RunOnMainThread.h */; };
 		C2E4C9771C5538E1007A4FA5 /* ChatCore.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E4C9761C5538E1007A4FA5 /* ChatCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C2E4C9DF1C555069007A4FA5 /* MVChatString.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E4C9A31C55425A007A4FA5 /* MVChatString.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C2E4C9E01C555069007A4FA5 /* MVChatConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E4C99B1C55425A007A4FA5 /* MVChatConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -37,7 +38,7 @@
 		C2E4C9F91C555079007A4FA5 /* MVDelegateLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E4C9981C55425A007A4FA5 /* MVDelegateLogger.h */; };
 		C2E4C9FA1C555079007A4FA5 /* MVDelegateLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E4C9991C55425A007A4FA5 /* MVDelegateLogger.m */; };
 		C2E4CA421C5554CE007A4FA5 /* MVUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E4CA2B1C555466007A4FA5 /* MVUtilities.h */; };
-		C2E4CA441C556ECD007A4FA5 /* MVAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E4C99A1C55425A007A4FA5 /* MVAvailability.h */; };
+		C2E4CA441C556ECD007A4FA5 /* MVAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E4C99A1C55425A007A4FA5 /* MVAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C2E4CA461C557093007A4FA5 /* NSAttributedStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E4CA2D1C555466007A4FA5 /* NSAttributedStringAdditions.m */; };
 		C2E4CA471C5570BB007A4FA5 /* NSAttributedStringAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E4CA2C1C555466007A4FA5 /* NSAttributedStringAdditions.h */; };
 		C2E4CA481C55714D007A4FA5 /* MVIRCChatConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E4C9B71C55425A007A4FA5 /* MVIRCChatConnection.h */; };
@@ -72,6 +73,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		55AD122B1C596747009F258C /* RunOnMainThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunOnMainThread.h; sourceTree = "<group>"; };
 		C2E4C9731C5538E1007A4FA5 /* ChatCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2E4C9761C5538E1007A4FA5 /* ChatCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatCore.h; sourceTree = "<group>"; };
 		C2E4C9781C5538E1007A4FA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -251,6 +253,7 @@
 		C2E4C9FB1C5553B3007A4FA5 /* Additions (old location) */ = {
 			isa = PBXGroup;
 			children = (
+				55AD122B1C596747009F258C /* RunOnMainThread.h */,
 				C2E4CA2B1C555466007A4FA5 /* MVUtilities.h */,
 				C2E4CA2C1C555466007A4FA5 /* NSAttributedStringAdditions.h */,
 				C2E4CA2D1C555466007A4FA5 /* NSAttributedStringAdditions.m */,
@@ -299,6 +302,7 @@
 				C2E4C9DF1C555069007A4FA5 /* MVChatString.h in Headers */,
 				C2E4C9EE1C555069007A4FA5 /* MVDirectClientConnection.h in Headers */,
 				C2E4C9E31C555069007A4FA5 /* MVChatRoom.h in Headers */,
+				55AD122C1C596747009F258C /* RunOnMainThread.h in Headers */,
 				C2E4C9E91C555069007A4FA5 /* MVChatUserWatchRule.h in Headers */,
 				C2E4CA4E1C55714D007A4FA5 /* MVIRCFileTransfer.h in Headers */,
 				C2E4C9F71C555079007A4FA5 /* DDLog.h in Headers */,
