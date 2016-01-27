@@ -6,6 +6,8 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
+#import <Cocoa/Cocoa.h>
+
 @class ESFloater;
 @class AICustomTabsView;
 @class AICustomTabCell;

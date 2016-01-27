@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 @class MVChatConnection;
 
 @interface JVChatRoomBrowser : NSWindowController {

@@ -1,3 +1,4 @@
+#import <Cocoa/Cocoa.h>
 #import "JVChatWindowController.h"
 
 @class MVTextView;

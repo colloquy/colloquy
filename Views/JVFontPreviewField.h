@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 @protocol JVFontPreviewFieldDelegate;
 
 @interface JVFontPreviewField : NSTextField {

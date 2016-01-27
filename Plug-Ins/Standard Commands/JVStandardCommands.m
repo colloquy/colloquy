@@ -1,3 +1,4 @@
+#import <Cocoa/Cocoa.h>
 #import "JVStandardCommands.h"
 #import "JVChatController.h"
 #import "MVConnectionsController.h"

@@ -1,3 +1,5 @@
+#import <Foundation/Foundation.h>
+
 #import "JVChatTranscript.h"
 #import "KAIgnoreRule.h"
 

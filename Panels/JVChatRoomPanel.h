@@ -1,3 +1,4 @@
+#import <Cocoa/Cocoa.h>
 #import "JVDirectChatPanel.h"
 
 @class JVChatRoomMember;

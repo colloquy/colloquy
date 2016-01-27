@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 @protocol JVChatViewController;
 
 NS_ASSUME_NONNULL_BEGIN

@@ -1,3 +1,5 @@
+#import <Foundation/Foundation.h>
+
 @class JVChatTranscript;
 @class JVChatMessage;
 @class JVChatEvent;

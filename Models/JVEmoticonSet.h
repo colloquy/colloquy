@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import <AppKit/NSMenuItem.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

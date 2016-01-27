@@ -5,7 +5,7 @@
 //  Created by Evan Schoenberg on Wed Oct 08 2003.
 //
 
-#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 
 @interface ESFloater : NSObject {
     NSImageView			*staticView;

@@ -1,3 +1,4 @@
+#import <Cocoa/Cocoa.h>
 #import "JVBuddy.h"
 #import "JVInspectorController.h"
 

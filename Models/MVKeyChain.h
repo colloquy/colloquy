@@ -1,4 +1,5 @@
 #import <Security/Security.h>
+#import <Foundation/Foundation.h>
 
 typedef NS_ENUM(FourCharCode, MVKeyChainAuthenticationType) {
 	MVKeyChainAuthenticationTypeAny = 0,

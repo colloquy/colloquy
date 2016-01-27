@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 @interface MVColorPanel : NSColorPanel {
 	NSMatrix *destination;
 }

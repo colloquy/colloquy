@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 @protocol MVTextViewDelegate;
 
 @interface MVTextView : NSTextView {

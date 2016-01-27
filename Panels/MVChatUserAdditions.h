@@ -1,3 +1,6 @@
+#import <Foundation/Foundation.h>
+#import <ChatCore/MVChatUser.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MVChatUser (MVChatUserAdditions)

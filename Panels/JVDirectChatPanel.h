@@ -1,3 +1,4 @@
+#import <Cocoa/Cocoa.h>
 #import "JVChatTranscriptPanel.h"
 #import "KAIgnoreRule.h"
 #import "JVChatMessage.h"

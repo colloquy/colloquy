@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 @interface JVSplitView : NSSplitView {
 	long _mainSubviewIndex;
 }

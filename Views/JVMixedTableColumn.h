@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 @interface JVMixedTableColumn : NSTableColumn {
 	NSUInteger delegateDataCellForRow:1;
 }

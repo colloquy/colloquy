@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 #import "JVChatTranscript.h"
 
 @class JVChatMessage;
@@ -47,8 +48,8 @@ extern NSString *JVStyleVariantChangedNotification;
 @property (readonly, copy) NSString *displayName;
 
 @property (readonly, copy) NSString *mainVariantDisplayName;
-@property (readonly, copy) NSArray *variantStyleSheetNames;
-@property (readonly, copy) NSArray *userVariantStyleSheetNames;
+@property (readonly, copy) NSArray<NSString*> *variantStyleSheetNames;
+@property (readonly, copy) NSArray<NSString*> *userVariantStyleSheetNames;
 - (BOOL) isUserVariantName:(NSString *) name;
 @property (copy, nonatomic) NSString *defaultVariantName;
 

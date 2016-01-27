@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 NSString *MVPrettyFileSize( unsigned long long size );
 NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 

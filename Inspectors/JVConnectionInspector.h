@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 #import "JVInspectorController.h"
 #import "JVChatConsolePanel.h"
 
