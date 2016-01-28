@@ -155,6 +155,11 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 - (void) dealloc {
 	xmlFreeDoc( _xmlLog );
+
+	_objectSpecifier = nil;
+	_filePath = nil;
+	_logFile = nil;
+	_messages = nil;
 	_xmlLog = NULL;
 }
 
@@ -385,9 +390,9 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 				do {
 					if( subNode && subNode -> type == XML_ELEMENT_NODE && ! strcmp( "message", (char *) subNode -> name ) ) {
 						if( NSLocationInRange( i, range ) ) {
-							if( [_messages count] > i && [_messages[i] isKindOfClass:[JVChatMessage class]] ) {
-								msg = _messages[i];
-							} else if( [_messages count] > i && [_messages[i] isKindOfClass:[NSNull class]] ) {
+							if( [_messages count] > i && [[_messages objectAtIndex:i] isKindOfClass:[JVChatMessage class]] ) {
+								msg = [_messages objectAtIndex:i];
+							} else if( [_messages count] > i && [[_messages objectAtIndex:i] isKindOfClass:[NSNull class]] ) {
 								msg = [[JVChatMessage alloc] _initWithNode:subNode andTranscript:self];
 								id classDesc = [NSClassDescription classDescriptionForClass:[self class]];
 								[msg setObjectSpecifier:[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDesc containerSpecifier:[self objectSpecifier] key:@"messages" uniqueID:[msg messageIdentifier]]];

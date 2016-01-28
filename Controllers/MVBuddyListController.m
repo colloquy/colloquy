@@ -29,16 +29,6 @@ static MVBuddyListController *sharedInstance = nil;
 
 #pragma mark -
 
-@implementation JVBuddy (JVBuddyObjectSpecifier)
-- (NSScriptObjectSpecifier *) objectSpecifier {
-	id classDescription = [NSClassDescription classDescriptionForClass:[MVBuddyListController class]];
-	NSScriptObjectSpecifier *container = [[MVBuddyListController sharedBuddyList] objectSpecifier];
-	return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"buddies" uniqueID:[self uniqueIdentifier]];
-}
-@end
-
-#pragma mark -
-
 @implementation MVBuddyListController
 + (MVBuddyListController *) sharedBuddyList {
 	if( ! sharedInstance ) {
@@ -527,9 +517,11 @@ static MVBuddyListController *sharedInstance = nil;
 	}
 	return YES;
 }
+@end
 
 #pragma mark -
 
+@implementation MVBuddyListController (MVBuddyListControllerDelegate)
 - (void) clear:(id) sender {
 	if( [buddies selectedRow] == -1 ) return;
 	JVBuddy *buddy = _buddyOrder[[buddies selectedRow]];
@@ -1027,9 +1019,21 @@ static MVBuddyListController *sharedInstance = nil;
 
 	return menu;
 }
+@end
 
 #pragma mark -
 
+@implementation JVBuddy (JVBuddyObjectSpecifier)
+- (NSScriptObjectSpecifier *) objectSpecifier {
+	id classDescription = [NSClassDescription classDescriptionForClass:[MVBuddyListController class]];
+	NSScriptObjectSpecifier *container = [[MVBuddyListController sharedBuddyList] objectSpecifier];
+	return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"buddies" uniqueID:[self uniqueIdentifier]];
+}
+@end
+
+#pragma mark -
+
+@implementation MVBuddyListController (MVBuddyListControllerScripting)
 - (MVChatConnection *) valueInBuddiesAtIndex:(NSUInteger) index {
 	return _buddyOrder[index];
 }

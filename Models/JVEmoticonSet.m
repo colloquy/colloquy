@@ -2,8 +2,8 @@
 #import "NSBundleAdditions.h"
 #import "NSRegularExpressionAdditions.h"
 
-@interface JVEmoticonSet ()
-@property (readwrite, strong, nonatomic, null_resettable, setter=_setBundle:) NSBundle *bundle;
+@interface JVEmoticonSet (JVEmoticonSetPrivate)
+- (void) _setBundle:(NSBundle *) bundle;
 @end
 
 #pragma mark -
@@ -101,7 +101,8 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 	if( ( self = [self init] ) ) {
 		[allEmoticonSets addObject:self];
 
-		self.bundle = bundle;
+		_bundle = nil;
+		[self _setBundle:bundle];
 	}
 
 	return self;
@@ -220,9 +221,11 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 	NSString *contents = [NSString stringWithContentsOfURL:[self styleSheetLocation] encoding:NSUTF8StringEncoding error:NULL];
 	return ( contents ? contents : @"" );
 }
+@end
 
 #pragma mark -
 
+@implementation JVEmoticonSet (JVEmoticonSetPrivate)
 - (void) _setBundle:(NSBundle *) bundle {
 	NSString *path = [_bundle pathForResource:@"emoticons" ofType:@"plist"];
 	if( ! path ) path = [[NSBundle mainBundle] pathForResource:@"emoticons" ofType:@"plist"];

@@ -186,7 +186,7 @@
 			NSScriptCommandDescription *commandDesc = [[NSScriptSuiteRegistry sharedScriptSuiteRegistry] commandDescriptionWithAppleEventClass:'cplG' andAppleEventCode:handler];
 			NSString *scriptSuiteName = [[NSScriptSuiteRegistry sharedScriptSuiteRegistry] suiteForAppleEventCode:'cplG'];
 			NSTerminologyRegistry *term = [[[NSClassFromString( @"NSTerminologyRegistry" ) alloc] initWithSuiteName:scriptSuiteName bundle:[NSBundle mainBundle]] autorelease];
-			NSString *handlerName = [term commandTerminologyDictionary:[commandDesc commandName]][@"Name"];
+			NSString *handlerName = [[term commandTerminologyDictionary:[commandDesc commandName]] objectForKey:@"Name"];
 			if( ! handlerName ) handlerName = [commandDesc commandName];
 			if( NSRunCriticalAlertPanel( NSLocalizedString( @"AppleScript Plugin Error", "AppleScript plugin error title" ), NSLocalizedString( @"The AppleScript plugin \"%@\" had an error while calling the \"%@\" handler.\n\n%@", "AppleScript plugin error message" ), nil, NSLocalizedString( @"Edit...", "edit button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], handlerName, errorDesc ) == NSCancelButton ) {
 				[[NSWorkspace sharedWorkspace] openFile:[self scriptFilePath]];
@@ -487,7 +487,7 @@
 }
 
 - (void) processIncomingMessage:(JVMutableChatMessage *) message inView:(id <JVChatViewController>) view {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", @([message isAction]), @"piM1", [message sender], @"piM2", view, @"piM3", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:[message isAction]], @"piM1", [message sender], @"piM2", view, @"piM3", nil];
 	[self callScriptHandler:'piMX' withArguments:args forSelector:_cmd];
 }
 

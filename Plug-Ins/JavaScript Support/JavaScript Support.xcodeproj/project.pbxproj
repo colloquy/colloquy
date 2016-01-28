@@ -16,35 +16,28 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		5573AEF717DF14EF00B68127 /* PBXContainerItemProxy */ = {
+		92823D0B16900FA8000EC36E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92823D0416900FA8000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 1CB2CD8C052DDC570094AAA4;
 			remoteInfo = "Colloquy (Application)";
 		};
-		5573AEF917DF14EF00B68127 /* PBXContainerItemProxy */ = {
+		92823D0D16900FA8000EC36E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92823D0416900FA8000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 1C51B4CD052DE14B00BB459B;
 			remoteInfo = "Standard Commands (Plug-In)";
 		};
-		5573AEFB17DF14EF00B68127 /* PBXContainerItemProxy */ = {
+		92823D0F16900FA8000EC36E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92823D0416900FA8000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = CBF685150820186F00F498FB;
 			remoteInfo = "Colloquy (Metadata Importer)";
 		};
-		55C8A2EB18073A1600A7BB42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 92823D0416900FA8000EC36E /* Colloquy (Old).xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 55C8A2D0180735D100A7BB42;
-			remoteInfo = "Colloquy Tests";
-		};
-		55C8A41918077C0C00A7BB42 /* PBXContainerItemProxy */ = {
+		92823D1116900FB2000EC36E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92823D0416900FA8000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 1;
@@ -89,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				92823D0416900FA8000EC36E /* Colloquy (Old).xcodeproj */,
+				9295C95C16782FF1009F9014 /* ChatCore.framework */,
 				1C415F6A0B35126500239EB3 /* Template.js */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				089C167CFE841241C02AAC07 /* Resources */,
@@ -102,7 +96,6 @@
 		089C1671FE841209C02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9295C95C16782FF1009F9014 /* ChatCore.framework */,
 				9295C8501675E158009F9014 /* WebKit.framework */,
 				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
 				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
@@ -172,13 +165,12 @@
 			tabWidth = 4;
 			usesTabs = 1;
 		};
-		5573AEEF17DF14EF00B68127 /* Products */ = {
+		92823D0516900FA8000EC36E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5573AEF817DF14EF00B68127 /* Colloquy.app */,
-				5573AEFA17DF14EF00B68127 /* Standard Commands.plugin */,
-				5573AEFC17DF14EF00B68127 /* Colloquy.mdimporter */,
-				55C8A2EC18073A1600A7BB42 /* Colloquy Tests.xctest */,
+				92823D0C16900FA8000EC36E /* Colloquy.app */,
+				92823D0E16900FA8000EC36E /* Standard Commands.plugin */,
+				92823D1016900FA8000EC36E /* Colloquy.mdimporter */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -197,7 +189,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				55C8A41A18077C0C00A7BB42 /* PBXTargetDependency */,
+				92823D1216900FB2000EC36E /* PBXTargetDependency */,
 			);
 			name = "JavaScript Support Plugin";
 			productInstallPath = "$(HOME)/Library/Bundles";
@@ -228,7 +220,7 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 5573AEEF17DF14EF00B68127 /* Products */;
+					ProductGroup = 92823D0516900FA8000EC36E /* Products */;
 					ProjectRef = 92823D0416900FA8000EC36E /* Colloquy (Old).xcodeproj */;
 				},
 			);
@@ -240,32 +232,25 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		5573AEF817DF14EF00B68127 /* Colloquy.app */ = {
+		92823D0C16900FA8000EC36E /* Colloquy.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = Colloquy.app;
-			remoteRef = 5573AEF717DF14EF00B68127 /* PBXContainerItemProxy */;
+			remoteRef = 92823D0B16900FA8000EC36E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		5573AEFA17DF14EF00B68127 /* Standard Commands.plugin */ = {
+		92823D0E16900FA8000EC36E /* Standard Commands.plugin */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "Standard Commands.plugin";
-			remoteRef = 5573AEF917DF14EF00B68127 /* PBXContainerItemProxy */;
+			remoteRef = 92823D0D16900FA8000EC36E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		5573AEFC17DF14EF00B68127 /* Colloquy.mdimporter */ = {
+		92823D1016900FA8000EC36E /* Colloquy.mdimporter */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = Colloquy.mdimporter;
-			remoteRef = 5573AEFB17DF14EF00B68127 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		55C8A2EC18073A1600A7BB42 /* Colloquy Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "Colloquy Tests.xctest";
-			remoteRef = 55C8A2EB18073A1600A7BB42 /* PBXContainerItemProxy */;
+			remoteRef = 92823D0F16900FA8000EC36E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -294,10 +279,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		55C8A41A18077C0C00A7BB42 /* PBXTargetDependency */ = {
+		92823D1216900FB2000EC36E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Colloquy (Application)";
-			targetProxy = 55C8A41918077C0C00A7BB42 /* PBXContainerItemProxy */;
+			targetProxy = 92823D1116900FB2000EC36E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

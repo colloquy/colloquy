@@ -51,7 +51,7 @@ static void _IXSCNotificationCallback( SCDynamicStoreRef store, CFArrayRef chang
 		rlSrc = SCDynamicStoreCreateRunLoopSource(NULL,dynStore,0);
 		CFRunLoopAddSource([[NSRunLoop currentRunLoop] getCFRunLoop], rlSrc, kCFRunLoopCommonModes);
 		
-		[self setObservedKeys:nil regExes:@[@".*"]];
+		[self setObservedKeys:nil regExes:[NSArray arrayWithObject:@".*"]];
 	}
 	
 	return self;

@@ -167,7 +167,6 @@ static BOOL autoPortMapping = YES;
 
 #pragma mark -
 
-
 - (BOOL) isUpload {
 	return YES;
 }

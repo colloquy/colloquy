@@ -394,9 +394,8 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 }
 
 - (void) disconnectWithReason:(MVChatString * __nullable) reason {
-	RunOnMainThreadSync(^{
-		[self cancelPendingReconnectAttempts];
-	});
+	[self performSelectorOnMainThread:@selector( cancelPendingReconnectAttempts ) withObject:nil waitUntilDone:YES];
+
 	if( _status == MVChatConnectionConnectedStatus ) {
 		_userDisconnected = YES;
 		if( reason.length ) {
@@ -865,11 +864,8 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	NSString *server = (_bouncer != MVChatConnectionNoBouncer && _bouncerServer.length ? _bouncerServer : _server);
 	unsigned short serverPort = (_bouncer != MVChatConnectionNoBouncer ? (_bouncerServerPort ? _bouncerServerPort : 6667) : _serverPort);
 
-	if( ! [_chatConnection connectToHost:server onPort:serverPort error:NULL] ) {
-		RunOnMainThreadAsync(^{
-			[self _didNotConnect];
-		});
-	}
+	if( ! [_chatConnection connectToHost:server onPort:serverPort error:NULL] )
+		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
 	else [self _resetSendQueueInterval];
 }
 
@@ -953,15 +949,11 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	});
 
 	if( _status == MVChatConnectionConnectingStatus ) {
-		RunOnMainThreadAsync(^{
-			[self _didNotConnect];
-		});
+		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
 	} else {
 		if( _lastError && !_userDisconnected )
 			_status = MVChatConnectionServerDisconnectedStatus;
-		RunOnMainThreadAsync(^{
-			[self _didDisconnect];
-		});
+		[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
 	}
 
 	@synchronized( _knownUsers ) {
@@ -4315,9 +4307,7 @@ end:
 		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
 
 		NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@(users), @"users", [NSDate date], @"cached", room, @"room", topic, @"topic", nil];
-		RunOnMainThreadAsync(^{
-			[self _addRoomToCache:info];
-		});
+		[self performSelectorOnMainThread:@selector( _addRoomToCache: ) withObject:info waitUntilDone:NO];
 	}
 }
 

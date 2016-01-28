@@ -223,7 +223,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 				SilcClientEntry signoff_client = clients[i];
 
 				MVChatUser *member = [self _chatUserWithClientEntry:signoff_client];
-				NSDictionary *info = @{@"user": member, @"reason": reasonData};
+				NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:member, @"user", reasonData, @"reason", nil];
 
 				[self _markUserAsOffline:member];
 
@@ -438,7 +438,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 
 			NSData *reasonData = [[NSData alloc] initWithBytes:quitReasonString length:strlen( quitReasonString )];
 			MVChatUser *member = [self _chatUserWithClientEntry:killed];
-			NSDictionary *info = @{@"user": member, @"reason": reasonData};
+			NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:member, @"user", reasonData, @"reason", nil];
 
 			[self _markUserAsOffline:member];
 
@@ -570,7 +570,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 
 		NSString *r = @(channel_name);
 		NSData *t = [[NSData alloc] initWithBytes:channel_topic length:strlen( channel_topic )];
-		NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:@(user_count), @"users", t, @"topic", [NSDate date], @"cached", r, @"room", nil];
+		NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@(user_count), @"users", t, @"topic", [NSDate date], @"cached", r, @"room", nil];
 
 		RunOnMainThreadAsync(^{
 			[self _addRoomToCache:info];
@@ -874,7 +874,7 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-@interface MVSILCChatConnection ()
+@interface MVSILCChatConnection (Private)
 - (void) _silcRunloop;
 @end
 
@@ -1361,9 +1361,11 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 - (NSUInteger) lag {
 	return 0;
 }
+@end
 
 #pragma mark -
 
+@implementation MVSILCChatConnection (MVSILCChatConnectionPrivate)
 + (const char *) _flattenedSILCStringForMessage:(MVChatString *) message andChatFormat:(MVChatMessageFormat) format {
 	NSString *cformat = nil;
 

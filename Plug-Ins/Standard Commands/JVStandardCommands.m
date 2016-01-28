@@ -382,7 +382,7 @@
 			else [scanner scanUpToCharactersFromSet:whitespace intoString:&target];
 		}
 		prefixes = nil;
-		
+
 		[scanner scanCharactersFromSet:whitespace intoString:NULL];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n"] intoString:&message];
 

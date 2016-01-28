@@ -773,7 +773,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	while( changedModes ) {
 		NSString *message = nil;
 		NSString *mode = nil;
-		id parameter = [NSNull null];
+		id parameter = nil;
 
 		if( changedModes & MVChatRoomPrivateMode ) {
 			changedModes &= ~MVChatRoomPrivateMode;
@@ -923,7 +923,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 			}
 		}
 
-		if( message && mode ) [self addEventMessageToDisplay:message withName:@"modeChange" andAttributes:@{@"by": ( mbr ? (id) mbr : (id) user ), @"mode": mode, @"enabled": ( [[notification userInfo][@"enabled"] boolValue] ? @"yes" : @"no" ), @"parameter": parameter}];
+		if( message && mode ) [self addEventMessageToDisplay:message withName:@"modeChange" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? (id) mbr : (id) user ), @"by", mode, @"mode", ( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ? @"yes" : @"no" ), @"enabled", parameter, @"parameter", nil]];
 
 		NSString *unsupportedModes = (notification.userInfo)[@"unsupportedModes"];
 		if (unsupportedModes.length) {
@@ -938,7 +938,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 				else message = [NSString stringWithFormat:[NSLocalizedString(@"%@ set mode %@.", @"unknown mode changed") stringByEncodingXMLSpecialCharactersAsEntities], [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
 			}
 
-			[self addEventMessageToDisplay:message withName:@"unknownRoomModesSet" andAttributes:@{@"by": ( mbr ? (id) mbr : (id) user )}];
+			[self addEventMessageToDisplay:message withName:@"unknownRoomModesSet" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? (id) mbr : (id) user ), @"by", nil]];
 		}
 	}
 }
@@ -1018,7 +1018,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	NSString *name = [member title];
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> left the chat room.", "a user has left the chat room status message" ), [name stringByEncodingXMLSpecialCharactersAsEntities]];
 
-	[self addEventMessageToDisplay:message withName:@"memberParted" andAttributes:@{@"who": member, @"reason": ( rstring ? (id) rstring : (id) [NSNull null] )}];
+	[self addEventMessageToDisplay:message withName:@"memberParted" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:NSLocalizedString( @"Room Member Left", "member left title" ) forKey:@"title"];

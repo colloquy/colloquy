@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation MVXMPPChatConnection
 + (NSArray *) defaultServerPorts {
-	return @[[NSNumber numberWithUnsignedShort:5222], [NSNumber numberWithUnsignedShort:5223]];
+	return @[ @((unsigned short)5222), @((unsigned short)5223) ];
 }
 
 #pragma mark -

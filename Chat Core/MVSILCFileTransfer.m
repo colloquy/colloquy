@@ -2,7 +2,6 @@
 #import "MVSILCChatConnection.h"
 #import "MVChatUser.h"
 #import "NSNotificationAdditions.h"
-#import "RunOnMainThread.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -57,36 +56,28 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 	switch ( silcClientFileError ) {
 		case SILC_CLIENT_FILE_UNKNOWN_SESSION:
 		case SILC_CLIENT_FILE_ERROR: {
-			NSDictionary *info = @{NSLocalizedDescriptionKey: @"The file transfer terminated unexpectedly."};
+			NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:@"The file transfer terminated unexpectedly.", NSLocalizedDescriptionKey, nil];
 			NSError *error = [[NSError alloc] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferUnexpectedlyEndedError userInfo:info];
-			RunOnMainThreadAsync(^{
-				[self _postError:error];
-			});
+			[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 		}	break;
 
 		case SILC_CLIENT_FILE_ALREADY_STARTED: {
-			NSDictionary *info = @{NSLocalizedDescriptionKey: @"The file %@ is already being offerend to %@."};
+			NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:@"The file %@ is already being offerend to %@.", NSLocalizedDescriptionKey, nil];
 			NSError *error = [[NSError alloc] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferAlreadyExistsError userInfo:info];
-			RunOnMainThreadAsync(^{
-				[self _postError:error];
-			});
+			[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 		}	break;
 
 		case SILC_CLIENT_FILE_NO_SUCH_FILE:
 		case SILC_CLIENT_FILE_PERMISSION_DENIED: {
-			NSDictionary *info = @{NSLocalizedDescriptionKey: @"The file %@ could not be created, please make sure you have write permissions in the %@ folder."};
+			NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:@"The file %@ could not be created, please make sure you have write permissions in the %@ folder.", NSLocalizedDescriptionKey, nil];
 			NSError *error = [[NSError alloc] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileCreationError userInfo:info];
-			RunOnMainThreadAsync(^{
-				[self _postError:error];
-			});
+			[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 		}	break;
 
 		case SILC_CLIENT_FILE_KEY_AGREEMENT_FAILED: {
-			NSDictionary *info = @{NSLocalizedDescriptionKey: @"Key agreement failed. Either your key was rejected by the other user or some other error happend during key negotiation."};
+			NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:@"Key agreement failed. Either your key was rejected by the other user or some other error happend during key negotiation.", NSLocalizedDescriptionKey, nil];
 			NSError *error = [[NSError alloc] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferKeyAgreementError userInfo:info];
-			RunOnMainThreadAsync(^{
-				[self _postError:error];
-			});
+			[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
 		}	break;
 
 		case SILC_CLIENT_FILE_OK:

@@ -9,40 +9,33 @@
 /* Begin PBXBuildFile section */
 		1C0431BC07CAEC1700304949 /* JVAppleScriptChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0431BA07CAEC1700304949 /* JVAppleScriptChatPlugin.m */; };
 		1C4FD36807C6BC25000EA451 /* JVAppleScriptPluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FD36607C6BC25000EA451 /* JVAppleScriptPluginLoader.m */; };
-		55C8A2CB1807352C00A7BB42 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9295C94B16782FCE009F9014 /* ChatCore.framework */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
+		9295C94C16782FCE009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9295C94B16782FCE009F9014 /* ChatCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		55330CAA17DF114100D51A5F /* PBXContainerItemProxy */ = {
+		92823CFC16900F97000EC36E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92823CF516900F97000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 1CB2CD8C052DDC570094AAA4;
 			remoteInfo = "Colloquy (Application)";
 		};
-		55330CAC17DF114100D51A5F /* PBXContainerItemProxy */ = {
+		92823CFE16900F97000EC36E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92823CF516900F97000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 1C51B4CD052DE14B00BB459B;
 			remoteInfo = "Standard Commands (Plug-In)";
 		};
-		55330CAE17DF114100D51A5F /* PBXContainerItemProxy */ = {
+		92823D0016900F97000EC36E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92823CF516900F97000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = CBF685150820186F00F498FB;
 			remoteInfo = "Colloquy (Metadata Importer)";
 		};
-		55C8A37B18075CED00A7BB42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 92823CF516900F97000EC36E /* Colloquy (Old).xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 55C8A2D0180735D100A7BB42;
-			remoteInfo = "Colloquy Tests";
-		};
-		55C8A41718077BFF00A7BB42 /* PBXContainerItemProxy */ = {
+		92823D0216900F9A000EC36E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92823CF516900F97000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 1;
@@ -76,8 +69,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9295C94C16782FCE009F9014 /* ChatCore.framework in Frameworks */,
 				8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */,
-				55C8A2CB1807352C00A7BB42 /* ChatCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,13 +166,12 @@
 			tabWidth = 4;
 			usesTabs = 1;
 		};
-		55330CA417DF114100D51A5F /* Products */ = {
+		92823CF616900F97000EC36E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				55330CAB17DF114100D51A5F /* Colloquy.app */,
-				55330CAD17DF114100D51A5F /* Standard Commands.plugin */,
-				55330CAF17DF114100D51A5F /* Colloquy.mdimporter */,
-				55C8A37C18075CED00A7BB42 /* Colloquy Tests.xctest */,
+				92823CFD16900F97000EC36E /* Colloquy.app */,
+				92823CFF16900F97000EC36E /* Standard Commands.plugin */,
+				92823D0116900F97000EC36E /* Colloquy.mdimporter */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -198,7 +190,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				55C8A41818077BFF00A7BB42 /* PBXTargetDependency */,
+				92823D0316900F9A000EC36E /* PBXTargetDependency */,
 			);
 			name = "AppleScript Support Plugin";
 			productInstallPath = "$(HOME)/Library/Bundles";
@@ -225,7 +217,7 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 55330CA417DF114100D51A5F /* Products */;
+					ProductGroup = 92823CF616900F97000EC36E /* Products */;
 					ProjectRef = 92823CF516900F97000EC36E /* Colloquy (Old).xcodeproj */;
 				},
 			);
@@ -237,32 +229,25 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		55330CAB17DF114100D51A5F /* Colloquy.app */ = {
+		92823CFD16900F97000EC36E /* Colloquy.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = Colloquy.app;
-			remoteRef = 55330CAA17DF114100D51A5F /* PBXContainerItemProxy */;
+			remoteRef = 92823CFC16900F97000EC36E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		55330CAD17DF114100D51A5F /* Standard Commands.plugin */ = {
+		92823CFF16900F97000EC36E /* Standard Commands.plugin */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "Standard Commands.plugin";
-			remoteRef = 55330CAC17DF114100D51A5F /* PBXContainerItemProxy */;
+			remoteRef = 92823CFE16900F97000EC36E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		55330CAF17DF114100D51A5F /* Colloquy.mdimporter */ = {
+		92823D0116900F97000EC36E /* Colloquy.mdimporter */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = Colloquy.mdimporter;
-			remoteRef = 55330CAE17DF114100D51A5F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		55C8A37C18075CED00A7BB42 /* Colloquy Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "Colloquy Tests.xctest";
-			remoteRef = 55C8A37B18075CED00A7BB42 /* PBXContainerItemProxy */;
+			remoteRef = 92823D0016900F97000EC36E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -290,10 +275,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		55C8A41818077BFF00A7BB42 /* PBXTargetDependency */ = {
+		92823D0316900F9A000EC36E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Colloquy (Application)";
-			targetProxy = 55C8A41718077BFF00A7BB42 /* PBXContainerItemProxy */;
+			targetProxy = 92823D0216900F9A000EC36E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

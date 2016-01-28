@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 #define DCCPacketSize 4096
 
 @interface MVIRCUploadFileTransfer () <MVDirectClientConnectionDelegate>
-
 @end
 
 @implementation MVIRCUploadFileTransfer {

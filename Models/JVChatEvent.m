@@ -20,6 +20,13 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) dealloc {
+	_eventIdentifier = nil;
+	_date = nil;
+	_name = nil;
+	_message = nil;
+	_attributes = nil;
+
+	_transcript = nil; // weak reference
 	_node = NULL;
 
 	if( _doc ) xmlFreeDoc( _doc );
@@ -218,28 +225,6 @@ NS_ASSUME_NONNULL_BEGIN
 	[self loadAttributes];
 	return _attributes;
 }
-
-#pragma mark - private
-
-- (nullable instancetype) initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
-	if( ( self = [self init] ) ) {
-		_node = node;
-		_transcript = transcript; // weak reference
-		
-		if( ! _node || node -> type != XML_ELEMENT_NODE ) {
-			return nil;
-		}
-		
-		@synchronized( _transcript ) {
-			xmlChar *prop = xmlGetProp( (xmlNode *) _node, (xmlChar *) "id" );
-			_eventIdentifier = ( prop ? @((char *) prop) : nil );
-			xmlFree( prop );
-		}
-	}
-	
-	return self;
-}
-
 @end
 
 #pragma mark -

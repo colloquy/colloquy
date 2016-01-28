@@ -3,46 +3,46 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation NSNumber (NSNumberAdditions)
-+ (NSNumber *) numberWithBytes:(const void *) bytes objCType:(const char *) type {
++ (nullable NSNumber *) numberWithBytes:(const void *) bytes objCType:(const char *) type {
 	if( ! strcmp( type, @encode( char ) ) ) {
 		char *val = (char *) bytes;
-		return @(*val);
+		return [NSNumber numberWithChar:*val];
 	} else if( ! strcmp( type, @encode( unsigned char ) ) ) {
 		unsigned char *val = (unsigned char *) bytes;
-		return @(*val);
+		return [NSNumber numberWithUnsignedChar:*val];
 	} else if( ! strcmp( type, @encode( BOOL ) ) ) {
 		BOOL *val = (BOOL *) bytes;
-		return @(*val);
+		return [NSNumber numberWithBool:*val];
 	} else if( ! strcmp( type, @encode( short ) ) ) {
 		short *val = (short *) bytes;
-		return @(*val);
+		return [NSNumber numberWithShort:*val];
 	} else if( ! strcmp( type, @encode( unsigned short ) ) ) {
 		unsigned short *val = (unsigned short *) bytes;
-		return @(*val);
+		return [NSNumber numberWithUnsignedShort:*val];
 	} else if( ! strcmp( type, @encode( int ) ) ) {
 		int *val = (int *) bytes;
-		return @(*val);
+		return [NSNumber numberWithInt:*val];
 	} else if( ! strcmp( type, @encode( unsigned ) ) ) {
 		unsigned *val = (unsigned *) bytes;
-		return @(*val);
+		return [NSNumber numberWithUnsignedInt:*val];
 	} else if( ! strcmp( type, @encode( long ) ) ) {
 		long *val = (long *) bytes;
-		return @(*val);
+		return [NSNumber numberWithLong:*val];
 	} else if( ! strcmp( type, @encode( unsigned long ) ) ) {
 		unsigned long *val = (unsigned long *) bytes;
-		return @(*val);
+		return [NSNumber numberWithUnsignedLong:*val];
 	} else if( ! strcmp( type, @encode( long long ) ) ) {
 		long long *val = (long long *) bytes;
-		return @(*val);
+		return [NSNumber numberWithLongLong:*val];
 	} else if( ! strcmp( type, @encode( unsigned long long ) ) ) {
 		unsigned long long *val = (unsigned long long *) bytes;
-		return @(*val);
+		return [NSNumber numberWithUnsignedLongLong:*val];
 	} else if( ! strcmp( type, @encode( float ) ) ) {
 		float *val = (float *) bytes;
-		return @(*val);
+		return [NSNumber numberWithFloat:*val];
 	} else if( ! strcmp( type, @encode( double ) ) ) {
 		double *val = (double *) bytes;
-		return @(*val);
+		return [NSNumber numberWithDouble:*val];
 	} else return nil;
 }
 @end

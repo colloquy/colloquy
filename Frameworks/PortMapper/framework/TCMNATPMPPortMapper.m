@@ -47,7 +47,7 @@ static void readData (
     NSString *addressAsString = nil;
     if (socketAddress->sa_family == AF_INET) {
         if (inet_ntop(AF_INET, &(((struct sockaddr_in *)socketAddress)->sin_addr), stringBuffer, INET_ADDRSTRLEN)) {
-            addressAsString = @(stringBuffer);
+            addressAsString = [NSString stringWithUTF8String:stringBuffer];
         } else {
             addressAsString = @"IPv4 un-ntopable";
         }
@@ -55,7 +55,7 @@ static void readData (
             addressAsString = [addressAsString stringByAppendingFormat:@":%d", port];
     } else if (socketAddress->sa_family == AF_INET6) {
          if (inet_ntop(AF_INET6, &(((struct sockaddr_in6 *)socketAddress)->sin6_addr), stringBuffer, INET6_ADDRSTRLEN)) {
-            addressAsString = @(stringBuffer);
+            addressAsString = [NSString stringWithUTF8String:stringBuffer];
         } else {
             addressAsString = @"IPv6 un-ntopable";
         }
@@ -64,7 +64,7 @@ static void readData (
         // Suggested IPv6 format (see http://www.faqs.org/rfcs/rfc2732.html)
         char interfaceName[IF_NAMESIZE];
         if ([addressAsString hasPrefix:@"fe80"] && if_indextoname(((struct sockaddr_in6 *)socketAddress)->sin6_scope_id,interfaceName)) {
-            NSString *zoneID = @(interfaceName);
+            NSString *zoneID = [NSString stringWithUTF8String:interfaceName];
             addressAsString = [NSString stringWithFormat:@"[%@%%%@]:%d", addressAsString, zoneID, port];
         } else {
             addressAsString = [NSString stringWithFormat:@"[%@]:%d", addressAsString, port];
@@ -546,7 +546,7 @@ static void readData (
     TCMNATPMPPortMapper *natpmpMapper = (TCMNATPMPPortMapper *)anInfo;
     if ([data length]==12) {
         NSString *senderAddressAndPort = [NSString stringWithAddressData:(NSData *)anAddress];
-        NSString *senderAddress = [senderAddressAndPort componentsSeparatedByString:@":"][0];
+        NSString *senderAddress = [[senderAddressAndPort componentsSeparatedByString:@":"] objectAtIndex:0];
         // add UDP listener for public ip update packets
         //    0                   1                   2                   3
         //    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1

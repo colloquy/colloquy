@@ -333,7 +333,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				NSData *utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
 				if( utf8Data ) subData = utf8Data;
 			} else {
-				subData = [[NSData alloc] initWithBytesNoCopy:(void *)( bytes + start ) length:( length - start )freeWhenDone:NO];
+				subData = [[NSData alloc] initWithBytesNoCopy:(void *)( bytes + start ) length:( length - start ) freeWhenDone:NO];
 			}
 
 			if( subData ) [newData appendData:subData];
@@ -696,7 +696,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 - (NSData *) _CTCP2FormatWithOptions:(NSDictionary *) options {
 	NSRange limitRange, effectiveRange;
 	NSMutableData *ret = [[NSMutableData alloc] initWithCapacity:( self.length + 40 )];
-	NSStringEncoding encoding = [options[@"StringEncoding"] unsignedLongValue];
+	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedLongValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
 	NSCharacterSet *nonASCIISet = [[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 127 )] invertedSet];

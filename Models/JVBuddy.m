@@ -33,6 +33,8 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	NSMutableSet *_users;
 }
 
+@synthesize picture = _picture;
+
 + (JVBuddyName) preferredName {
 	return _mainPreferredName;
 }
@@ -95,7 +97,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		if( [string isKindOfClass:[NSString class]] )
 			_person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:string];
 
-		for( NSDictionary *ruleDictionary in dictionary[@"rules"] ) {
+		for( NSDictionary *ruleDictionary in [dictionary objectForKey:@"rules"] ) {
 			MVChatUserWatchRule *rule = [[MVChatUserWatchRule alloc] initWithDictionaryRepresentation:ruleDictionary];
 			if( rule ) [self addWatchRule:rule];
 		}
@@ -299,6 +301,10 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( _person )
 		return [[NSImage alloc] initWithData:[_person imageData]];
 	return nil;
+}
+
+- (void) setPicture:(nullable NSImage *) picture {
+	_picture = [picture copy];
 }
 
 #pragma mark -

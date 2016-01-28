@@ -105,6 +105,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) dealloc {
 	_node = NULL;
+	_transcript = nil;
+	_messageIdentifier = nil;
+	_attributedMessage = nil;
+	_date = nil;
+	_source = nil;
+	_objectSpecifier = nil;
+
+	_senderIdentifier = nil;
+	_senderName = nil;
+	_senderNickname = nil;
+	_senderHostmask = nil;
+	_senderClass = nil;
+	_senderBuddyIdentifier = nil;
 
 	if( _doc ) xmlFreeDoc( _doc );
 	_doc = NULL;

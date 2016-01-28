@@ -64,7 +64,7 @@ extern NSString *JVChatViewPboardType;
 - (IBAction) selectNextPanel:(nullable id) sender;
 - (IBAction) selectNextActivePanel:(nullable id) sender;
 
-@property (readonly, copy) NSToolbarItem *toggleChatDrawerToolbarItem;
+- (NSToolbarItem *) toggleChatDrawerToolbarItem;
 - (IBAction) toggleViewsDrawer:(nullable id) sender;
 - (IBAction) openViewsDrawer:(nullable id) sender;
 - (IBAction) closeViewsDrawer:(nullable id) sender;

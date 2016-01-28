@@ -422,7 +422,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	NSString *result = nil;
 
 	if( _requiresFullMessage && consecutiveOffset > 0 ) {
-		NSArray *elements = @[message];
+		NSArray *elements = [[NSArray alloc] initWithObjects:message, nil];
 		result = [[self style] transformChatTranscriptElements:elements withParameters:_styleParameters];
 	} else {
 		if( ! _requiresFullMessage && consecutiveOffset > 0 )

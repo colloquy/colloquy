@@ -301,9 +301,11 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	[[NSPasteboard generalPasteboard] setPropertyList:array forType:NSFilenamesPboardType];
 	[[NSPasteboard generalPasteboard] setString:string forType:NSStringPboardType];
 }
+@end
 
 #pragma mark -
 
+@implementation MVFileTransferController (MVFileTransferControllerDelegate)
 #pragma mark Table View Support
 - (NSInteger) numberOfRowsInTableView:(NSTableView *) view {
 	return [_transferStorage count];
@@ -542,9 +544,11 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		}
 	}
 }
+@end
 
 #pragma mark -
 
+@implementation MVFileTransferController (MVFileTransferControllerPrivate)
 #pragma mark ChatCore File Transfer Support
 - (void) _fileTransferError:(NSNotification *) notification {
 	[currentFiles reloadData];

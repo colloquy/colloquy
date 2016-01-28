@@ -1053,9 +1053,11 @@ static NSMenu *favoritesMenu = nil;
 - (IBAction) clear:(id) sender {
 	[self _delete:sender];
 }
+@end
 
 #pragma mark -
 
+@implementation MVConnectionsController (MVConnectionsControllerDelegate)
 - (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
 	if( [menuItem action] == @selector( cut: ) ) {
 		if( [connections selectedRow] == -1 ) return NO;
@@ -2231,15 +2233,6 @@ static NSMenu *favoritesMenu = nil;
 	NSInteger row = [connections selectedRow];
 	if( row == -1 ) return;
 	[[JVChatController defaultController] chatConsoleForConnection:_bookmarks[row][@"connection"] ifExists:NO];
-}
-
-- (IBAction) _openFavoritesFolder:(id) sender {
-	[[NSWorkspace sharedWorkspace] openFile:[@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath]];
-}
-
-- (IBAction) _connectToFavorite:(id) sender {
-	if( ! [sender representedObject] ) return;
-	[[MVConnectionsController defaultController] handleURL:[sender representedObject] andConnectIfPossible:YES];
 }
 
 + (void) _openFavoritesFolder:(id) sender {
