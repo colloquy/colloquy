@@ -16,12 +16,9 @@
 #import <AppKit/AppKit.h>
 
 @protocol AICustomTabViewItem <NSObject>
-@property (readonly) NSString *label;
-- (NSString *)label;
+@property (readonly, copy) NSString *label;
 @property (readonly) NSImage *icon;
-- (NSImage *)icon;
 @property (readonly, getter=isEnabled) BOOL enabled;
-- (BOOL) isEnabled;
 @end
 
 @class AICustomTabsView;

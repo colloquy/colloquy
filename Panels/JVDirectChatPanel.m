@@ -237,7 +237,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 - (nullable MVChatUser *) user {
 	if( [[self target] isKindOfClass:[MVChatUser class]] )
-		return [self target];
+		return (MVChatUser*)[self target];
 	if( [[self target] isKindOfClass:[MVChatRoom class]] )
 		return [(MVChatRoom *)[self target] localMemberUser];
 	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )

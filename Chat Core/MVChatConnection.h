@@ -161,7 +161,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 	NSString *_npassword;
 	NSMapTable *_knownUsers;
-	NSMutableDictionary *_knownRooms;
+	NSMutableDictionary<NSString*,MVChatRoom*> *_knownRooms;
 	NSMutableSet *_joinedRooms;
 	MVChatUser *_localUser;
 	NSMutableDictionary *_roomsCache;
@@ -224,7 +224,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property(nonatomic, copy) NSString *uniqueIdentifier;
 
-@property(strong, readonly) NSSet *supportedFeatures;
+@property(strong, readonly) NSSet<NSString*> *supportedFeatures;
 @property(readonly) const NSStringEncoding *supportedStringEncodings;
 
 @property(strong, readonly) NSError *lastError;
@@ -279,14 +279,14 @@ extern NSString *MVChatConnectionErrorDomain;
 @property(copy) NSString *bouncerDeviceIdentifier;
 @property(copy) NSString *bouncerConnectionIdentifier;
 
-@property(strong, readonly) NSSet *knownChatRooms;
-@property(strong, readonly) NSSet *joinedChatRooms;
+@property(strong, readonly) NSSet<__kindof MVChatRoom*> *knownChatRooms;
+@property(strong, readonly) NSSet<__kindof MVChatRoom*> *joinedChatRooms;
 @property(strong, readonly) NSCharacterSet *chatRoomNamePrefixes;
 
-@property(strong, readonly) NSSet *knownChatUsers;
+@property(strong, readonly) NSSet<__kindof MVChatUser*> *knownChatUsers;
 @property(strong, readonly) MVChatUser *localUser;
 
-@property(strong, readonly) NSSet *chatUserWatchRules;
+@property(strong, readonly) NSSet<MVChatUserWatchRule*> *chatUserWatchRules;
 
 @property(copy, nonatomic, null_resettable) MVChatString *awayStatusMessage;
 
@@ -372,8 +372,8 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-- (NSSet *) chatUsersWithNickname:(NSString *) nickname;
-- (NSSet *) chatUsersWithFingerprint:(NSString *) fingerprint;
+- (NSSet<__kindof MVChatUser*> *) chatUsersWithNickname:(NSString *) nickname;
+- (NSSet<__kindof MVChatUser*> *) chatUsersWithFingerprint:(NSString *) fingerprint;
 - (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier;
 
 #pragma mark -

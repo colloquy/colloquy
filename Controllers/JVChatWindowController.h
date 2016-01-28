@@ -31,8 +31,8 @@ extern NSString *JVChatViewPboardType;
 @property (copy) NSString *identifier;
 
 @property (readonly, copy) NSString *userDefaultsPreferencesKey;
-- (void) setPreference:(id) value forKey:(NSString *) key;
-- (id) preferenceForKey:(NSString *) key;
+- (void) setPreference:(nullable id) value forKey:(NSString *) key;
+- (nullable id) preferenceForKey:(NSString *) key;
 
 - (void) showChatViewController:(id <JVChatViewController>) controller;
 
@@ -111,7 +111,7 @@ extern NSString *JVChatViewPboardType;
 - (NSResponder *) firstResponder;
 - (NSString *) toolbarIdentifier;
 - (NSString *) windowTitle;
-- (NSString *) identifier;
+@property (readonly) NSString * identifier;
 
 @optional
 - (void) willSelect;

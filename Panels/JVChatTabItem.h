@@ -4,7 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface JVChatTabItem : NSTabViewItem 
+@interface JVChatTabItem : NSTabViewItem
 - (instancetype) initWithChatViewController:(id <JVChatViewController>) controller NS_DESIGNATED_INITIALIZER;
 @property (readonly, strong) id<JVChatViewController> chatViewController;
 @end

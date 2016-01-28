@@ -8,15 +8,6 @@
 
 #import "PFMoveApplicationController.h"
 
-@interface NSAlert (NSAlertLeopard)
-- (void) setShowsSuppressionButton:(BOOL) flag;
-@property (readonly, strong) NSButton *suppressionButton;
-@end
-
-@interface NSFileManager (NSFileManagerLeopard)
-- (BOOL) copyItemAtPath:(NSString *) src toPath:(NSString *) dest error:(NSError **) error;
-@end
-
 static NSString *AlertSuppressKey = @"moveToApplicationsFolderAlertSuppress";
 
 void showFailureAlert(void);
