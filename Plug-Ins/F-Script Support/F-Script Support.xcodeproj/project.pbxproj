@@ -19,6 +19,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		55BEC8CC1C5AC1CA00103B67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92823D1316900FC0000EC36E /* Colloquy (Old).xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55C8A2D0180735D100A7BB42;
+			remoteInfo = "Colloquy Tests";
+		};
 		92823D1A16900FC0000EC36E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92823D1316900FC0000EC36E /* Colloquy (Old).xcodeproj */;
@@ -65,6 +72,7 @@
 		1C91A7A207C7983900079B67 /* JVFScriptChatPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFScriptChatPlugin.m; sourceTree = "<group>"; };
 		1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
 		1CE3FB5407C7DFD50049A366 /* F-ScriptConsole.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = "F-ScriptConsole.nib"; sourceTree = "<group>"; };
+		55BEC8CE1C5AC1CA00103B67 /* ja */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ja; path = Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* F-Script Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "F-Script Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		92823D1316900FC0000EC36E /* Colloquy (Old).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Colloquy (Old).xcodeproj"; path = "../../Colloquy (Old).xcodeproj"; sourceTree = "<group>"; };
@@ -183,6 +191,7 @@
 				92823D1B16900FC0000EC36E /* Colloquy.app */,
 				92823D1D16900FC0000EC36E /* Standard Commands.plugin */,
 				92823D1F16900FC0000EC36E /* Colloquy.mdimporter */,
+				55BEC8CD1C5AC1CA00103B67 /* Colloquy Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -227,6 +236,7 @@
 				French,
 				German,
 				zh_TW,
+				ja,
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
 			projectDirPath = "";
@@ -244,6 +254,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		55BEC8CD1C5AC1CA00103B67 /* Colloquy Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Colloquy Tests.xctest";
+			remoteRef = 55BEC8CC1C5AC1CA00103B67 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		92823D1B16900FC0000EC36E /* Colloquy.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
@@ -307,6 +324,7 @@
 			children = (
 				0A61C7FF07E05F6000C326B4 /* English */,
 				A1F6107B0957E488001B65CD /* zh_TW */,
+				55BEC8CE1C5AC1CA00103B67 /* ja */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
