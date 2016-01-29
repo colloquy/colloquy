@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return sharedInstance;
 }
 
-static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *account) {
+static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *__nullable account) {
 	NSCParameterAssert(server);
 
 	NSMutableDictionary *query = [[NSMutableDictionary alloc] init];
@@ -65,12 +65,12 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	}
 }
 
-- (NSString *) passwordForServer:(NSString *) server area:(NSString *) area {
+- (nullable NSString *) passwordForServer:(NSString *) server area:(NSString *) area {
 	NSData *data = [self dataForServer:server area:area];
 	return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
-- (NSData *) dataForServer:(NSString *) server area:(NSString *) area {
+- (nullable NSData *) dataForServer:(NSString *) server area:(NSString *) area {
 	NSParameterAssert(server);
 
 	NSMutableDictionary *passwordQuery = createBaseDictionary(server, area);
