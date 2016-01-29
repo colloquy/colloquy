@@ -5,12 +5,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *) area;
 - (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *) area displayValue:(NSString *__nullable)displayValue;
-- (NSString *) passwordForServer:(NSString *) server area:(NSString *) area;
+- (NSString *__nullable) passwordForServer:(NSString *) server area:(NSString *) area;
 - (void) removePasswordForServer:(NSString *) server area:(NSString *) area;
 
 - (void) setData:(NSData *) passwordData forServer:(NSString *) server area:(NSString *) area;
 - (void) setData:(NSData *) passwordData forServer:(NSString *) server area:(NSString *) area displayValue:(NSString *__nullable)displayValue;
-- (NSData *) dataForServer:(NSString *) server area:(NSString *) area;
+- (NSData *__nullable) dataForServer:(NSString *) server area:(NSString *) area;
 - (void) removeDataForServer:(NSString *) server area:(NSString *) area;
 @end
 
