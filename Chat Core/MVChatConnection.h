@@ -46,7 +46,8 @@ typedef NS_ENUM(NSInteger, MVChatMessageFormat) {
 	MVChatConnectionDefaultMessageFormat = 'cDtF',
 	MVChatNoMessageFormat = 'nOcF',
 	MVChatWindowsIRCMessageFormat = 'mIrF',
-	MVChatCTCPTwoMessageFormat = 'ct2F'
+	MVChatCTCPTwoMessageFormat = 'ct2F',
+	MVChatJSONMessageFormat = 'jsoN'
 };
 
 typedef NS_ENUM(NSInteger, MVChatConnectionError) {
@@ -154,7 +155,6 @@ extern NSString *MVChatConnectionErrorDomain;
 @protected
 	NSMutableSet *_supportedFeatures;
 	MVChatConnectionStatus _status;
-	MVChatMessageFormat _outgoingChatFormat;
 	NSStringEncoding _encoding;
 
 	NSString *_uniqueIdentifier;
@@ -210,6 +210,7 @@ extern NSString *MVChatConnectionErrorDomain;
 }
 + (BOOL) supportsURLScheme:(NSString *__nullable) scheme;
 + (NSArray <NSNumber *> *) defaultServerPortsForType:(MVChatConnectionType) type;
++ (NSUInteger) maxMessageLengthForType:(MVChatConnectionType) type;
 
 #pragma mark -
 
@@ -255,7 +256,8 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property unsigned short serverPort;
 
-@property MVChatMessageFormat outgoingChatFormat;
+@property(nonatomic) MVChatMessageFormat incomingChatFormat;
+@property(nonatomic) MVChatMessageFormat outgoingChatFormat;
 
 @property(getter=didConnectSecurely) BOOL connectedSecurely; // IRCv3.1 + `tls` capability can indicate that the *next* connection will be secure, but not our current one
 @property(getter=isSecure) BOOL secure;

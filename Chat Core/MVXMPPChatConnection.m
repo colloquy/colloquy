@@ -17,6 +17,12 @@ NS_ASSUME_NONNULL_BEGIN
 	return @[ @(5222), @(5223) ];
 }
 
++ (NSUInteger) maxMessageLength {
+	// the actual stanza length varies per server: http://www.xmpp.org/extensions/inbox/stanzalimits.html#request
+	// todo: request stanza limit when we support OTR over XMPP
+	return 65536;
+}
+
 #pragma mark -
 
 - (id) init {

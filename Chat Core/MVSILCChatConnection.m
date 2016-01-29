@@ -882,7 +882,12 @@ static SilcClientOperations silcClientOps = {
 }
 
 + (NSArray *) defaultServerPorts {
-	return [NSArray arrayWithObject:[NSNumber numberWithUnsignedShort:706]];
+	return @[ @(706) ];
+}
+
++ (NSUInteger) maxMessageLength {
+	// 2^16 bytes, per https://tools.ietf.org/html/draft-riikonen-flags-payloads-01#section-3.4
+	return 65536;
 }
 
 #pragma mark -

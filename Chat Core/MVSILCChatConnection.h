@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 	BOOL _lookingUpUsers;
 }
 + (NSArray *) defaultServerPorts;
++ (NSUInteger) maxMessageLength;
 
 - (MVChatRoom *) joinedChatRoomWithChannel:(SilcChannelEntry) channel;
 @end

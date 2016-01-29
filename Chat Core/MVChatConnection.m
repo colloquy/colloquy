@@ -152,6 +152,26 @@ static const NSStringEncoding supportedEncodings[] = {
 	return nil;
 }
 
++ (NSUInteger) maxMessageLengthForType:(MVChatConnectionType) type {
+#if ENABLE(ICB)
+	if( type == MVChatConnectionICBType )
+		return [MVICBChatConnection maxMessageLength];
+#endif
+#if ENABLE(IRC)
+	if( type == MVChatConnectionIRCType )
+		return [MVIRCChatConnection maxMessageLength];
+#endif
+#if ENABLE(SILC)
+	if( type == MVChatConnectionSILCType )
+		return [MVSILCChatConnection maxMessageLength];
+#endif
+#if ENABLE(XMPP)
+	if( type == MVChatConnectionXMPPType )
+		return [MVXMPPChatConnection maxMessageLength];
+#endif
+	return 0;
+}
+
 #pragma mark -
 
 - (instancetype) init {
@@ -163,6 +183,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		_awayMessage = nil;
 		_encoding = NSUTF8StringEncoding;
 		_outgoingChatFormat = MVChatConnectionDefaultMessageFormat;
+		_incomingChatFormat = MVChatConnectionDefaultMessageFormat;
 		_nextAltNickIndex = 0;
 		_roomListDirty = NO;
 
@@ -589,8 +610,9 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	_outgoingChatFormat = format;
 }
 
-- (MVChatMessageFormat) outgoingChatFormat {
-	return _outgoingChatFormat;
+- (void) setIncomingChatFormat:(MVChatMessageFormat) format {
+	if( ! format ) format = MVChatConnectionDefaultMessageFormat;
+	_incomingChatFormat = format;
 }
 
 #pragma mark -

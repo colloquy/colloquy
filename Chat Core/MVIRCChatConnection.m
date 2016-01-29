@@ -36,7 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 //#define JVWatchedUserWHOISDelay 300.
 #define JVWatchedUserISONDelay 60.
 #define JVEndCapabilityTimeoutDelay 45.
-#define JVMaximumCommandLength 510
+#define JVMaximumMessageLength 512
+#define JVMaximumCommandLength 510 // minus trailing \r\n
 #define JVMaximumISONCommandLength JVMaximumCommandLength
 #define JVMaximumWatchCommandLength JVMaximumCommandLength
 #define JVMaximumMembersForWhoRequest 40
@@ -342,6 +343,10 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 + (NSArray <NSNumber *> *) defaultServerPorts {
 	return @[@(6667), @(6660), @(6669), @(6697), @(7000), @(7001), @(994)];
+}
+
++ (NSUInteger) maxMessageLength {
+	return JVMaximumMessageLength;
 }
 
 #pragma mark -
@@ -1131,7 +1136,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	// With support for IRCv3.2 extensions
 
 	if( len <= 2 )
-		goto end; // bad message
+		goto parsingFinished; // bad message
 
 #define checkAndMarkIfDone() if( line == end ) done = YES
 #define consumeWhitespace() while( *line == ' ' && line != end && ! done ) line++
@@ -1213,94 +1218,98 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 #undef consumeWhitespace
 #undef notEndOfLine
 
-end:
-	{
-		NSString *senderString = [self _newStringWithBytes:sender length:senderLength];
-		NSString *commandString = ((command && commandLength) ? [[NSString alloc] initWithBytes:command length:commandLength encoding:NSASCIIStringEncoding] : nil);
+parsingFinished: { // make a scope for this
+	NSString *senderString = [self _newStringWithBytes:sender length:senderLength];
+	NSString *commandString = ((command && commandLength) ? [[NSString alloc] initWithBytes:command length:commandLength encoding:NSASCIIStringEncoding] : nil);
 
-		NSString *intentOrTagsString = [self _newStringWithBytes:intentOrTags length:intentOrTagsLength];
-		NSMutableDictionary *intentOrTagsDictionary = [NSMutableDictionary dictionary];
-		for( NSString *anIntentOrTag in [intentOrTagsString componentsSeparatedByString:@";"] ) {
-			NSArray <NSString *> *intentOrTagPair = [anIntentOrTag componentsSeparatedByString:@"="];
-			if (intentOrTagPair.count != 2) continue;
-			intentOrTagsDictionary[intentOrTagPair[0]] = intentOrTagPair[1];
+	NSString *intentOrTagsString = [self _newStringWithBytes:intentOrTags length:intentOrTagsLength];
+	NSMutableDictionary *intentOrTagsDictionary = [NSMutableDictionary dictionary];
+	for( NSString *anIntentOrTag in [intentOrTagsString componentsSeparatedByString:@";"] ) {
+		NSArray <NSString *> *intentOrTagPair = [anIntentOrTag componentsSeparatedByString:@"="];
+		if (intentOrTagPair.count != 2) continue;
+		intentOrTagsDictionary[intentOrTagPair[0]] = intentOrTagPair[1];
+	}
+
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{ @"message": rawString, @"messageData": data, @"sender": (senderString ?: @""), @"command": (commandString ?: @""), @"parameters": parameters, @"outbound": @(NO), @"fromServer": @(fromServer), @"message-tags": intentOrTagsDictionary }];
+
+	MVChatUser *chatUser = nil;
+	// if user is not null that shows it was a user not a server sender.
+	// the sender was also a user if senderString equals the current local nickname (some bouncers will do this).
+	if( ( senderString.length && user && userLength ) || [senderString isEqualToString:_currentNickname] ) {
+		chatUser = [self chatUserWithUniqueIdentifier:senderString];
+		if( ! [chatUser address] && host && hostLength ) {
+			NSString *hostString = [self _newStringWithBytes:host length:hostLength];
+			[chatUser _setAddress:hostString];
 		}
 
-		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{ @"message": rawString, @"messageData": data, @"sender": (senderString ?: @""), @"command": (commandString ?: @""), @"parameters": parameters, @"outbound": @(NO), @"fromServer": @(fromServer), @"message-tags": intentOrTagsDictionary }];
-
-		BOOL hasTagsToSend = !!intentOrTagsDictionary.allKeys.count;
-		NSString *selectorString = nil;
-		SEL selector = NULL;
-		if( hasTagsToSend ) {
-			selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:tags:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
-			selector = NSSelectorFromString(selectorString);
-
-			NSString *timestampString = intentOrTagsDictionary[@"time"];
-			if (timestampString.length) {
-				// threadsafe as of iOS 7
-				NSDateFormatter *dateFormatter = [NSThread currentThread].threadDictionary[@"IRCv32ServerTimeDateFormatter"];
-				if (!dateFormatter) {
-					dateFormatter = [[NSDateFormatter alloc] init];
-					dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
-					dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-
-					[NSThread currentThread].threadDictionary[@"IRCv32ServerTimeDateFormatter"] = dateFormatter;
-				}
-
-				NSDate *timestamp = [dateFormatter dateFromString:timestampString];
-				if (timestamp)
-					intentOrTagsDictionary[@"time"] = timestamp;
-				else [intentOrTagsDictionary removeObjectForKey:@"time"]; // failed to convert string to date, drop any invalid data
-			}
+		if( ! [chatUser username] ) {
+			NSString *userString = [self _newStringWithBytes:user length:userLength];
+			[chatUser _setUsername:userString];
 		}
+	}
 
-		if( selector == NULL || ![self respondsToSelector:selector] ) {
-			selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
-			selector = NSSelectorFromString(selectorString);
-			hasTagsToSend = NO; // if we don't support sending tags to the command or numeric, pretend we don't have tags to send
-		}
+	id chatSender = ( chatUser ? (id) chatUser : (id) senderString );
 
-		if( [self respondsToSelector:selector] ) {
-			MVChatUser *chatUser = nil;
-			// if user is not null that shows it was a user not a server sender.
-			// the sender was also a user if senderString equals the current local nickname (some bouncers will do this).
-			if( ( senderString.length && user && userLength ) || [senderString isEqualToString:_currentNickname] ) {
-				chatUser = [self chatUserWithUniqueIdentifier:senderString];
-				if( ! [chatUser address] && host && hostLength ) {
-					NSString *hostString = [self _newStringWithBytes:host length:hostLength];
-					[chatUser _setAddress:hostString];
-				}
+	[self _processedCommand:commandString fromSender:chatSender withIntentOrTags:intentOrTagsDictionary parameters:parameters];
+	}
+}
 
-				if( ! [chatUser username] ) {
-					NSString *userString = [self _newStringWithBytes:user length:userLength];
-					[chatUser _setUsername:userString];
-				}
+- (void)_processedCommand:(NSString *) commandString fromSender:(id) chatSender withIntentOrTags:(NSMutableDictionary *) intentOrTagsDictionary parameters:(NSMutableArray *) parameters {
+	BOOL hasTagsToSend = !!intentOrTagsDictionary.allKeys.count;
+	NSString *selectorString = nil;
+	SEL selector = NULL;
+	if( hasTagsToSend ) {
+		selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:tags:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
+		selector = NSSelectorFromString(selectorString);
+
+		NSString *timestampString = intentOrTagsDictionary[@"time"];
+		if (timestampString.length) {
+			// threadsafe as of iOS 7
+			NSDateFormatter *dateFormatter = [NSThread currentThread].threadDictionary[@"IRCv32ServerTimeDateFormatter"];
+			if (!dateFormatter) {
+				dateFormatter = [[NSDateFormatter alloc] init];
+				dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+				dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+
+				[NSThread currentThread].threadDictionary[@"IRCv32ServerTimeDateFormatter"] = dateFormatter;
 			}
 
-			id chatSender = ( chatUser ? (id) chatUser : (id) senderString );
+			NSDate *timestamp = [dateFormatter dateFromString:timestampString];
+			if (timestamp)
+				intentOrTagsDictionary[@"time"] = timestamp;
+			else [intentOrTagsDictionary removeObjectForKey:@"time"]; // failed to convert string to date, drop any invalid data
+		}
+	}
 
-			@try {
-				if( hasTagsToSend ) {
-					NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:selector]];
-					invocation.target = self;
-					invocation.selector = selector;
-					[invocation setArgument:&parameters atIndex:2];
-					[invocation setArgument:&intentOrTagsDictionary atIndex:3];
-					[invocation setArgument:&chatSender atIndex:4];
-					[invocation invoke];
-				} else {
+	if( selector == NULL || ![self respondsToSelector:selector] ) {
+		selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
+		selector = NSSelectorFromString(selectorString);
+		hasTagsToSend = NO; // if we don't support sending tags to the command or numeric, pretend we don't have tags to send
+	}
+
+	if( [self respondsToSelector:selector] ) {
+
+		@try {
+			if( hasTagsToSend ) {
+				NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:selector]];
+				invocation.target = self;
+				invocation.selector = selector;
+				[invocation setArgument:&parameters atIndex:2];
+				[invocation setArgument:&intentOrTagsDictionary atIndex:3];
+				[invocation setArgument:&chatSender atIndex:4];
+				[invocation invoke];
+			} else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-					[self performSelector:selector withObject:parameters withObject:chatSender];
+				[self performSelector:selector withObject:parameters withObject:chatSender];
 #pragma clang diagnostic pop
-				}
-			} @catch (NSException *e) {
-				NSLog(@"Exception handling command %@: %@", NSStringFromSelector(selector), e);
 			}
+		} @catch (NSException *e) {
+			NSLog(@"Exception handling command %@: %@", NSStringFromSelector(selector), e);
 		}
-
-		[self _pingServerAfterInterval];
 	}
+
+	[self _pingServerAfterInterval];
 }
 
 #pragma mark -

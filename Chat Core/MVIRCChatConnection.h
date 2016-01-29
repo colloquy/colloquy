@@ -14,6 +14,7 @@ extern NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature;
 
 @interface MVIRCChatConnection : MVChatConnection
 + (NSArray <NSNumber *> *) defaultServerPorts;
++ (NSUInteger) maxMessageLength;
 @end
 
 #pragma mark -
