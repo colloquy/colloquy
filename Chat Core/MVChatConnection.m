@@ -482,7 +482,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSArray <NSString *> *) alternateNicknames {
-	return [NSArray arrayWithArray:_alternateNicks];
+	return [_alternateNicks copy];
 }
 
 - (NSString *) nextAlternateNickname {
@@ -785,7 +785,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 }
 
 - (NSDictionary *) persistentInformation {
-	return [NSDictionary dictionaryWithDictionary:_persistentInformation];
+	return [_persistentInformation copy];
 }
 
 - (id) persistentInformationObjectForKey:(id) key {
@@ -1384,7 +1384,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #if ENABLE(SCRIPTING)
 @implementation MVChatConnection (MVChatConnectionScripting)
 - (NSNumber *) scriptUniqueIdentifier {
-	return [NSNumber numberWithUnsignedLong:(intptr_t)self];
+	return @((intptr_t)self);
 }
 
 #pragma mark -
@@ -1653,14 +1653,14 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 					cformat = nil;
 			}
 
-			NSDictionary *options = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:realEncoding], @"StringEncoding", cformat, @"FormatType", nil];
+			NSDictionary *options = [[NSDictionary alloc] initWithObjectsAndKeys:@(realEncoding), @"StringEncoding", cformat, @"FormatType", nil];
 			NSData *msgData = [realMessage chatFormatWithOptions:options];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 			NSData *msgData = [realMessage dataUsingEncoding:realEncoding];
 #endif
 
 			if( [target isKindOfClass:[MVChatRoom class]] ) {
-				NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:[[(MVChatRoom *)target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:realAction], @"action", nil];
+				NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:[[(MVChatRoom *)target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", @(realAction), @"action", nil];
 				[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomGotMessageNotification object:target userInfo:info];
 			} // we can't really echo a private message with our current notifications
 		}

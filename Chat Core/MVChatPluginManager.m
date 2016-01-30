@@ -138,7 +138,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 #pragma mark -
 
 - (NSArray *) plugins {
-	return [NSArray arrayWithArray:_plugins];
+	return [_plugins copy];
 }
 
 - (NSArray *) pluginsThatRespondToSelector:(SEL) selector {

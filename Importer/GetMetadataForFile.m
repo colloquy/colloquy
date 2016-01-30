@@ -83,7 +83,7 @@
 			if( dateStarted ) {
 				// Set Duration
 				NSTimeInterval logDuration = [lastDate timeIntervalSinceDate:dateStarted];
-				[ret setObject:[NSNumber numberWithDouble:logDuration] forKey:(NSString *) kMDItemDurationSeconds];
+				[ret setObject:@(logDuration) forKey:(NSString *) kMDItemDurationSeconds];
 
 				// Set Coverage
 				NSDateFormatter *formatter = [[NSDateFormatter alloc] init];

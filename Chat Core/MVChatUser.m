@@ -377,7 +377,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (NSDictionary *) attributes {
 	@synchronized( _attributes ) {
-		return [NSDictionary dictionaryWithDictionary:_attributes];
+		return [_attributes copy];
 	}
 }
 

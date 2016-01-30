@@ -81,7 +81,7 @@ static void setItalicOrObliqueFont( NSMutableDictionary *attrs ) {
 	if( ! ( [fm traitsOfFont:font] & NSItalicFontMask ) ) {
 		NSFont *newFont = [fm convertFont:font toHaveTrait:NSItalicFontMask];
 		if( newFont == font ) { // font couldn't be made italic
-			[attrs setObject:[NSNumber numberWithFloat:JVItalicObliquenessValue] forKey:NSObliquenessAttributeName];
+			[attrs setObject:@(JVItalicObliquenessValue) forKey:NSObliquenessAttributeName];
 		} else { // we got an italic font
 			[attrs setObject:newFont forKey:NSFontAttributeName];
 			[attrs removeObjectForKey:NSObliquenessAttributeName];
@@ -112,7 +112,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 + (instancetype) attributedStringWithHTMLFragment:(NSString *) fragment {
 	NSParameterAssert( fragment != nil );
 
-	NSMutableDictionary *options = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:NSUTF8StringEncoding], NSCharacterEncodingDocumentOption, nil];
+	NSMutableDictionary *options = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@(NSUTF8StringEncoding), NSCharacterEncodingDocumentOption, nil];
 
 	// we suround the fragment in the #01FE02 green color so we can later key it out and strip it
 	// this will result in colorless areas of our string, letting the color be defined by the interface
@@ -411,7 +411,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				break;
 			case '\037': // toggle underline
 				underlineStack = ! underlineStack;
-				if( underlineStack && ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) [attributes setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
+				if( underlineStack && ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) [attributes setObject:@(1) forKey:NSUnderlineStyleAttributeName];
 				else [attributes removeObjectForKey:NSUnderlineStyleAttributeName];
 				break;
 			case '\003': // color
@@ -490,7 +490,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 						}
 
 						if( underlineStack == 1 && ! off && ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
-							[attributes setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
+							[attributes setObject:@(1) forKey:NSUnderlineStyleAttributeName];
 						} else if( ! underlineStack ) {
 							[attributes removeObjectForKey:NSUnderlineStyleAttributeName];
 						}
@@ -505,7 +505,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 						}
 
 						if( strikeStack == 1 && ! off && ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
-							[attributes setObject:[NSNumber numberWithInt:1] forKey:NSStrikethroughStyleAttributeName];
+							[attributes setObject:@(1) forKey:NSStrikethroughStyleAttributeName];
 						} else if( ! strikeStack ) {
 							[attributes removeObjectForKey:NSStrikethroughStyleAttributeName];
 						}

@@ -489,8 +489,8 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	 postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification
 	 object:self
 	 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-               [packet description],            @"message",
-               [NSNumber numberWithBool:YES],   @"outbound", nil]];
+               [packet description],    @"message",
+               @(YES),                  @"outbound", nil]];
 }
 
 - (void) _writeDataToServer:(id) raw {
@@ -752,8 +752,8 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	 postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification
 	 object:self
 	 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-               [packet description],            @"message",
-               [NSNumber numberWithBool:NO],    @"outbound", nil]];
+               [packet description], @"message",
+               @(NO),                @"outbound", nil]];
 
 	const struct info *i = &info[0];
 	while( i->type != '\0' ) {

@@ -986,10 +986,10 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	//			NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
 	//			if( _proxy == MVChatConnectionHTTPSProxy ) {
 	//				[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertyHTTPSProxyHost];
-	//				[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertyHTTPSProxyPort];
+	//				[settings setObject:@([self proxyServerPort]) forKey:(NSString *)kCFStreamPropertyHTTPSProxyPort];
 	//			} else {
 	//				[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertyHTTPProxyHost];
-	//				[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertyHTTPProxyPort];
+	//				[settings setObject:@([self proxyServerPort]) forKey:(NSString *)kCFStreamPropertyHTTPProxyPort];
 	//			}
 	//
 	//			CFReadStreamSetProperty( [sock readStream], kCFStreamPropertyHTTPProxy, (CFDictionaryRef) settings );
@@ -999,7 +999,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	//			NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
 	//
 	//			[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertySOCKSProxyHost];
-	//			[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertySOCKSProxyPort];
+	//			[settings setObject:@([self proxyServerPort]) forKey:(NSString *)kCFStreamPropertySOCKSProxyPort];
 	//
 	//			if( [[self proxyUsername] length] )
 	//				[settings setObject:[self proxyUsername] forKey:(NSString *)kCFStreamPropertySOCKSUser];
@@ -2776,7 +2776,7 @@ parsingFinished: { // make a scope for this
 						MVChatRoomMemberMode mode = [self _modeForNicknamePrefixCharacter:[prefixes characterAtIndex:i]];
 						if( mode != MVChatRoomMemberNoModes ) {
 							NSString *key = [[NSString alloc] initWithFormat:@"%c", [prefixes characterAtIndex:i]];
-							prefixTable[key] = [NSNumber numberWithUnsignedLong:mode];
+							prefixTable[key] = @(mode);
 						}
 					}
 
