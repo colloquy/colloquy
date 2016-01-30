@@ -90,30 +90,30 @@ extern NSString *MVChatConnectionSASLFeature;
 extern NSString *MVChatConnectionMultipleNicknamePrefixFeature;
 
 // IRC3v1 Optional
-extern NSString *MVChatConnectionAccountNotify;
-extern NSString *MVChatConnectionAwayNotify;
-extern NSString *MVChatConnectionExtendedJoin;
-extern NSString *MVChatConnectionTLS;
+extern NSString *MVChatConnectionAccountNotifyFeature;
+extern NSString *MVChatConnectionAwayNotifyFeature;
+extern NSString *MVChatConnectionExtendedJoinFeature;
+extern NSString *MVChatConnectionTLSFeature;
 
 // IRC3v2 Required
-extern NSString *MVChatConnectionMessageTags;
-extern NSString *MVChatConnectionMessageIntents;
-extern NSString *MVChatConnectionMetadata;
-extern NSString *MVChatConnectionMonitor;
+extern NSString *MVChatConnectionMessageTagsFeature;
+extern NSString *MVChatConnectionMessageIntentsFeature;
+extern NSString *MVChatConnectionMetadataFeature;
+extern NSString *MVChatConnectionMonitorFeature;
 
 // IRC3v2 Optional
-extern NSString *MVChatConnectionServerTime;
-extern NSString *MVChatConnectionBatch;
-extern NSString *MVChatConnectionUserhostInNames;
-extern NSString *MVChatConnectionChghost;
+extern NSString *MVChatConnectionServerTimeFeature;
+extern NSString *MVChatConnectionBatchFeature;
+extern NSString *MVChatConnectionUserhostInNamesFeature;
+extern NSString *MVChatConnectionChghostFeature;
 
-extern NSString *MVChatConnectionAccountTag;
-extern NSString *MVChatConnectionCapNotify;
-extern NSString *MVChatConnectionInvite;
-extern NSString *MVChatConnectionEchoMessage;
+extern NSString *MVChatConnectionAccountTagFeature;
+extern NSString *MVChatConnectionCapNotifyFeature;
+extern NSString *MVChatConnectionInviteFeature;
+extern NSString *MVChatConnectionEchoMessageFeature;
 
 // InspIRCd Enhancements
-extern NSString *MVChatConnectionNamesx;
+extern NSString *MVChatConnectionNamesxFeature;
 
 // Notifications
 extern NSString *MVChatConnectionWillConnectNotification;

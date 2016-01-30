@@ -752,7 +752,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[rule nickname]];
 		[rule matchChatUser:user];
 		if( [self isConnected] ) {
-			if( [self.supportedFeatures containsObject:MVChatConnectionMonitor] && !_monitorListFull ) {
+			if( [self.supportedFeatures containsObject:MVChatConnectionMonitorFeature] && !_monitorListFull ) {
 				if( !_fetchingMonitorList ) [self sendRawMessageWithFormat:@"MONITOR + %@", [rule nickname]];
 				else [_pendingMonitorList addObject:[rule nickname]];
 			}
@@ -772,7 +772,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	[super removeChatUserWatchRule:rule];
 
 	if( [self isConnected] && [rule nickname] && ! [rule nicknameIsRegularExpression] ) {
-		if( [self.supportedFeatures containsObject:MVChatConnectionMonitor] )
+		if( [self.supportedFeatures containsObject:MVChatConnectionMonitorFeature] )
 			[self sendRawMessageWithFormat:@"MONITOR - %@", [rule nickname]];
 		if( [self.supportedFeatures containsObject:MVChatConnectionWatchFeature] )
 			[self sendRawMessageWithFormat:@"WATCH -%@", [rule nickname]];
@@ -1429,7 +1429,7 @@ parsingFinished: { // make a scope for this
 
 	NSString *targetName = [target isKindOfClass:[MVChatRoom class]] ? [target name] : [target nickname];
 
-	BOOL usingIntentTags = ( [self.supportedFeatures containsObject:MVChatConnectionMessageIntents] );
+	BOOL usingIntentTags = ( [self.supportedFeatures containsObject:MVChatConnectionMessageIntentsFeature] );
 	NSString *accountName = self.localUser.account;
 	[self _stripModePrefixesFromNickname:&accountName];
 	if( [attributes[@"action"] boolValue] ) {
@@ -1438,7 +1438,7 @@ parsingFinished: { // make a scope for this
 
 		if( usingIntentTags ) {
 			NSString *messageTags = @"@intent=ACTION";
-			if ([self.supportedFeatures containsObject:MVChatConnectionAccountTag] && self.localUser.account)
+			if ([self.supportedFeatures containsObject:MVChatConnectionAccountTagFeature] && self.localUser.account)
 				messageTags = [messageTags stringByAppendingString:[NSString stringWithFormat:@";account=%@", accountName]];
 			messageTagLength = messageTags.length + 1; // space is not in the prefix formatter (due to \001 being sent if not using @intent)
 			prefix = [[NSString alloc] initWithFormat:@"%@ PRIVMSG %@%@ :", messageTags, targetPrefix, targetName];
@@ -1454,7 +1454,7 @@ parsingFinished: { // make a scope for this
 		NSString *messageTags = @"";
 		NSUInteger messageTagLength = 0;
 		NSString *prefix = nil;
-		if (usingIntentTags && [self.supportedFeatures containsObject:MVChatConnectionAccountTag] && self.localUser.account) {
+		if (usingIntentTags && [self.supportedFeatures containsObject:MVChatConnectionAccountTagFeature] && self.localUser.account) {
 			messageTags = [NSString stringWithFormat:@"@account=%@ ", accountName];
 			messageTagLength = messageTags.length; // space is in the tag substring since we don't have to worry about \001 for regular PRIVMSGs
 			prefix = [[NSString alloc] initWithFormat:@"%@PRIVMSG %@%@ :", messageTags, targetPrefix, targetName];
@@ -1979,7 +1979,7 @@ parsingFinished: { // make a scope for this
 - (void) _requestServerNotificationsOfUserConnectedState {
 	NSString *userObservationPrefix = nil;
 	NSString *appendFormat = nil;
-	if( [_supportedFeatures containsObject:MVChatConnectionMonitor] ) {
+	if( [_supportedFeatures containsObject:MVChatConnectionMonitorFeature] ) {
 		userObservationPrefix = @"MONITOR + ";
 		appendFormat = @"%@,";
 	} else if( [_supportedFeatures containsObject:MVChatConnectionWatchFeature] ) {
@@ -2175,7 +2175,7 @@ parsingFinished: { // make a scope for this
 - (void) _checkWatchedUsers {
 	MVAssertMainThreadRequired();
 	if( [self.supportedFeatures containsObject:MVChatConnectionWatchFeature] ) return; // we don't need to call this anymore, return before we reschedule
-	if( [self.supportedFeatures containsObject:MVChatConnectionMonitor] ) return; // we don't need to call this anymore, return before we reschedule
+	if( [self.supportedFeatures containsObject:MVChatConnectionMonitorFeature] ) return; // we don't need to call this anymore, return before we reschedule
 
 	[self performSelector:@selector( _checkWatchedUsers ) withObject:nil afterDelay:JVWatchedUserISONDelay];
 
@@ -2415,64 +2415,64 @@ parsingFinished: { // make a scope for this
 				// IRCv3.1 Optional
 				else if( [capability isCaseInsensitiveEqualToString:@"tls"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionTLS];
+						[_supportedFeatures addObject:MVChatConnectionTLSFeature];
 					}
 
 					self.secure = YES;
 					self.serverPort = 6697; // Charybdis defaults to 6697 for SSL connections. Theoretically, STARTTLS support makes this a non-issue, but, this seems safer.
 				} else if( [capability isCaseInsensitiveEqualToString:@"away-notify"]) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionAwayNotify];
+						[_supportedFeatures addObject:MVChatConnectionAwayNotifyFeature];
 					}
 
 				} else if( [capability isCaseInsensitiveEqualToString:@"extended-join"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionExtendedJoin];
+						[_supportedFeatures addObject:MVChatConnectionExtendedJoinFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"account-notify"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionAccountNotify];
+						[_supportedFeatures addObject:MVChatConnectionAccountNotifyFeature];
 					}
 				}
 
 				// IRCv3.2 Required
 				else if( [capability isCaseInsensitiveEqualToString:@"account-tag"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionAccountTag];
+						[_supportedFeatures addObject:MVChatConnectionAccountTagFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"intents"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionMessageIntents];
+						[_supportedFeatures addObject:MVChatConnectionMessageIntentsFeature];
 					}
 				}
 
 				// IRCv3.2 Optional
 				else if( [capability isCaseInsensitiveEqualToString:@"chghost"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionChghost];
+						[_supportedFeatures addObject:MVChatConnectionChghostFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"server-time"] || [capability isCaseInsensitiveEqualToString:@"znc.in/server-time-iso"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionServerTime];
+						[_supportedFeatures addObject:MVChatConnectionServerTimeFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"userhost-in-names"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionUserhostInNames];
+						[_supportedFeatures addObject:MVChatConnectionUserhostInNamesFeature];
 					}
 				}
 
 				// IRCv3.2 Proposed
 				else if( [capability isCaseInsensitiveEqualToString:@"cap-notify"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionCapNotify];
+						[_supportedFeatures addObject:MVChatConnectionCapNotifyFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] || [capability isCaseInsensitiveEqualToString:@"znc.in/self-message"] || [capability isCaseInsensitiveEqualToString:@"echo-message"] || [capability isCaseInsensitiveEqualToString:@"znc.in/echo-message"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionEchoMessage];
+						[_supportedFeatures addObject:MVChatConnectionEchoMessageFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"invite-notify"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionInvite];
+						[_supportedFeatures addObject:MVChatConnectionInviteFeature];
 					}
 				}
 
@@ -2515,53 +2515,53 @@ parsingFinished: { // make a scope for this
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"tls"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures removeObject:MVChatConnectionTLS];
+						[_supportedFeatures removeObject:MVChatConnectionTLSFeature];
 					}
 					self.secure = NO;
 					self.serverPort = 6667; // reset back to default
 				} else if( [capability isCaseInsensitiveEqualToString:@"away-notify"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures removeObject:MVChatConnectionAwayNotify];
+						[_supportedFeatures removeObject:MVChatConnectionAwayNotifyFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"extended-join"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures removeObject:MVChatConnectionExtendedJoin];
+						[_supportedFeatures removeObject:MVChatConnectionExtendedJoinFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"account-notify"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures removeObject:MVChatConnectionAccountNotify];
+						[_supportedFeatures removeObject:MVChatConnectionAccountNotifyFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"cap-notify"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures removeObject:MVChatConnectionAccountNotify];
+						[_supportedFeatures removeObject:MVChatConnectionAccountNotifyFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] || [capability isCaseInsensitiveEqualToString:@"znc.in/self-message"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures removeObject:MVChatConnectionEchoMessage];
+						[_supportedFeatures removeObject:MVChatConnectionEchoMessageFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"chghost"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures removeObject:MVChatConnectionChghost];
+						[_supportedFeatures removeObject:MVChatConnectionChghostFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"invite-notify"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures removeObject:MVChatConnectionInvite];
+						[_supportedFeatures removeObject:MVChatConnectionInviteFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"account-tag"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures removeObject:MVChatConnectionAccountTag];
+						[_supportedFeatures removeObject:MVChatConnectionAccountTagFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"intents"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures removeObject:MVChatConnectionMessageIntents];
+						[_supportedFeatures removeObject:MVChatConnectionMessageIntentsFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"server-time"] || [capability isCaseInsensitiveEqualToString:@"znc.in/server-time-iso"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures removeObject:MVChatConnectionServerTime];
+						[_supportedFeatures removeObject:MVChatConnectionServerTimeFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"userhost-in-names"] ) {
 					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures removeObject:MVChatConnectionUserhostInNames];
+						[_supportedFeatures removeObject:MVChatConnectionUserhostInNamesFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"znc.in/playback"] ) {
 					@synchronized( _supportedFeatures ) {
@@ -2676,27 +2676,27 @@ parsingFinished: { // make a scope for this
 	for( NSString *feature in parameters ) {
 		// IRCv3.x
 		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"STARTTLS"] ) {
-			[_supportedFeatures addObject:MVChatConnectionTLS];
+			[_supportedFeatures addObject:MVChatConnectionTLSFeature];
 		} else if ( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"METADATA"] ) {
-			[_supportedFeatures addObject:MVChatConnectionMetadata];
+			[_supportedFeatures addObject:MVChatConnectionMetadataFeature];
 		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"WATCH"] ) {
 			@synchronized(_supportedFeatures) {
 				[_supportedFeatures addObject:MVChatConnectionWatchFeature];
 			}
 		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"MONITOR"] ) {
 			@synchronized(_supportedFeatures) {
-				[_supportedFeatures addObject:MVChatConnectionMonitor];
+				[_supportedFeatures addObject:MVChatConnectionMonitorFeature];
 			}
 		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"UHNAMES"] ) {
 			@synchronized(_supportedFeatures) {
-				[_supportedFeatures addObject:MVChatConnectionUserhostInNames];
+				[_supportedFeatures addObject:MVChatConnectionUserhostInNamesFeature];
 			}
 		}
 
 		// InspIRCd
 		else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"NAMESX"] ) {
 			@synchronized(_supportedFeatures) {
-				[_supportedFeatures addObject:MVChatConnectionNamesx];
+				[_supportedFeatures addObject:MVChatConnectionNamesxFeature];
 			}
 
 			foundNAMESXCommand = YES;
@@ -2773,7 +2773,7 @@ parsingFinished: { // make a scope for this
 		}
 	}
 
-	if( !_fetchingMonitorList && [_supportedFeatures containsObject:MVChatConnectionMonitor] ) {
+	if( !_fetchingMonitorList && [_supportedFeatures containsObject:MVChatConnectionMonitorFeature] ) {
 		[self sendRawMessageImmediatelyWithFormat:@"MONITOR L"];
 		_fetchingMonitorList = YES;
 		_pendingMonitorList = [NSMutableArray array];
@@ -2782,13 +2782,13 @@ parsingFinished: { // make a scope for this
 	if( [_supportedFeatures containsObject:MVChatConnectionWatchFeature] )
 		[self _requestServerNotificationsOfUserConnectedState];
 
-	if( [_supportedFeatures containsObject:MVChatConnectionMetadata] ) {
+	if( [_supportedFeatures containsObject:MVChatConnectionMetadataFeature] ) {
 		NSBundle *bundle = [NSBundle mainBundle];
 		[self sendRawMessageImmediatelyWithFormat:@"METADATA SET client.name :%@", bundle.infoDictionary[(__bridge id)kCFBundleIdentifierKey]];
 		[self sendRawMessageImmediatelyWithFormat:@"METADATA SET client.version :%@ (%@)", bundle.infoDictionary[@"CFBundleShortVersionString"], bundle.infoDictionary[@"CFBundleVersion"]];
 	}
 
-	if( foundNAMESXCommand && [_supportedFeatures containsObject:MVChatConnectionNamesx] ) {
+	if( foundNAMESXCommand && [_supportedFeatures containsObject:MVChatConnectionNamesxFeature] ) {
 		[self sendRawMessageImmediatelyWithFormat:@"PROTOCTL NAMESX"];
 	}
 }
@@ -3168,7 +3168,7 @@ parsingFinished: { // make a scope for this
 
 				_pendingIdentificationAttempt = NO;
 
-				if( [self.supportedFeatures containsObject:MVChatConnectionAccountNotify] && self.localUser.isIdentified )
+				if( [self.supportedFeatures containsObject:MVChatConnectionAccountNotifyFeature] && self.localUser.isIdentified )
 					[self sendRawMessageImmediatelyWithFormat:@"ACCOUNT %@", self.localUser.account];
 
 				if( ![[self localUser] isIdentified] )

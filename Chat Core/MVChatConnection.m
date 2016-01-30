@@ -49,29 +49,29 @@ NSString *MVChatConnectionSASLFeature = @"MVChatConnectionSASLFeature";
 NSString *MVChatConnectionMultipleNicknamePrefixFeature = @"MVChatConnectionMultipleNicknamePrefixFeature";
 
 // IRC3v1 Optional
-NSString *MVChatConnectionAccountNotify = @"MVChatConnectionAccountNotify";
-NSString *MVChatConnectionAwayNotify = @"MVChatConnectionAwayNotify";
-NSString *MVChatConnectionExtendedJoin = @"MVChatConnectionExtendedJoin";
-NSString *MVChatConnectionTLS = @"MVChatConnectionTLS";
+NSString *MVChatConnectionAccountNotifyFeature = @"MVChatConnectionAccountNotifyFeature";
+NSString *MVChatConnectionAwayNotifyFeature = @"MVChatConnectionAwayNotifyFeature";
+NSString *MVChatConnectionExtendedJoinFeature = @"MVChatConnectionExtendedJoinFeature";
+NSString *MVChatConnectionTLSFeature = @"MVChatConnectionTLSFeature";
 
 // IRC3v2 Required
-NSString *MVChatConnectionMessageTags = @"MVChatConnectionMessageTags";
-NSString *MVChatConnectionMessageIntents = @"MVChatConnectionMessageIntents";
-NSString *MVChatConnectionMetadata = @"MVChatConnectionMetadata";
-NSString *MVChatConnectionMonitor = @"MVChatConnectionMonitor";
+NSString *MVChatConnectionMessageTagsFeature = @"MVChatConnectionMessageTagsFeature";
+NSString *MVChatConnectionMessageIntentsFeature = @"MVChatConnectionMessageIntentsFeature";
+NSString *MVChatConnectionMetadataFeature = @"MVChatConnectionMetadataFeature";
+NSString *MVChatConnectionMonitorFeature = @"MVChatConnectionMonitorFeature";
 
 // IRC3v2 Optional
-NSString *MVChatConnectionServerTime = @"MVChatConnectionServerTime";
-NSString *MVChatConnectionBatch = @"MVChatConnectionBatch";
-NSString *MVChatConnectionUserhostInNames = @"MVChatConnectionUserhostInNames";
-NSString *MVChatConnectionAccountTag = @"MVChatConnectionAccountTag";
-NSString *MVChatConnectionChghost = @"MVChatConnectionChghost";
-NSString *MVChatConnectionCapNotify = @"MVChatConnectionCapNotify";
-NSString *MVChatConnectionInvite = @"MVChatConnectionInvite";
-NSString *MVChatConnectionEchoMessage = @"MVChatConnectionEchoMessage";
+NSString *MVChatConnectionServerTimeFeature = @"MVChatConnectionServerTimeFeature";
+NSString *MVChatConnectionBatchFeature = @"MVChatConnectionBatchFeature";
+NSString *MVChatConnectionUserhostInNamesFeature = @"MVChatConnectionUserhostInNamesFeature";
+NSString *MVChatConnectionAccountTagFeature = @"MVChatConnectionAccountTagFeature";
+NSString *MVChatConnectionChghostFeature = @"MVChatConnectionChghostFeature";
+NSString *MVChatConnectionCapNotifyFeature = @"MVChatConnectionCapNotifyFeature";
+NSString *MVChatConnectionInviteFeature = @"MVChatConnectionInviteFeature";
+NSString *MVChatConnectionEchoMessageFeature = @"MVChatConnectionEchoMessageFeature";
 
 // InspIRCd Enhancements
-NSString *MVChatConnectionNamesx = @"MVChatConnectionNamesx";
+NSString *MVChatConnectionNamesxFeature = @"MVChatConnectionNamesxFeature";
 
 NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
 NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectNotification";
