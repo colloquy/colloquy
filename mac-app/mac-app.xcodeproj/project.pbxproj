@@ -7,9 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C21956BB1C5C1E2D0072D2F7 /* ChatListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21956B91C5C1E2D0072D2F7 /* ChatListViewController.swift */; };
+		C21956BC1C5C1E2D0072D2F7 /* ChatListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C21956BA1C5C1E2D0072D2F7 /* ChatListViewController.xib */; };
+		C23F44371C595DE2003EDD80 /* ChatWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C23F44351C595DE1003EDD80 /* ChatWindowController.swift */; };
+		C23F44381C595DE2003EDD80 /* ChatWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C23F44361C595DE2003EDD80 /* ChatWindowController.xib */; };
 		C265DFC31C55254B00140D24 /* ApplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C265DFC21C55254B00140D24 /* ApplicationController.swift */; };
 		C265DFC51C55254B00140D24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C265DFC41C55254B00140D24 /* Assets.xcassets */; };
 		C265DFC81C55254B00140D24 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C265DFC61C55254B00140D24 /* MainMenu.xib */; };
+		C2BEAC581C5CF9A700B1C78E /* UserListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BEAC561C5CF9A700B1C78E /* UserListViewController.swift */; };
+		C2BEAC591C5CF9A700B1C78E /* UserListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2BEAC571C5CF9A700B1C78E /* UserListViewController.xib */; };
+		C2BEAC5C1C5CFFE400B1C78E /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BEAC5A1C5CFFE400B1C78E /* ChatViewController.swift */; };
+		C2BEAC5D1C5CFFE400B1C78E /* ChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2BEAC5B1C5CFFE400B1C78E /* ChatViewController.xib */; };
 		C2E4C9DA1C554376007A4FA5 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E4C9D21C55433B007A4FA5 /* ChatCore.framework */; };
 		C2E4C9DB1C554376007A4FA5 /* ChatCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C2E4C9D21C55433B007A4FA5 /* ChatCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -29,11 +37,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C21956B91C5C1E2D0072D2F7 /* ChatListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatListViewController.swift; sourceTree = "<group>"; };
+		C21956BA1C5C1E2D0072D2F7 /* ChatListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatListViewController.xib; sourceTree = "<group>"; };
+		C23F44351C595DE1003EDD80 /* ChatWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatWindowController.swift; sourceTree = "<group>"; };
+		C23F44361C595DE2003EDD80 /* ChatWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatWindowController.xib; sourceTree = "<group>"; };
 		C265DFBF1C55254B00140D24 /* Colloquy3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C265DFC21C55254B00140D24 /* ApplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationController.swift; sourceTree = "<group>"; };
 		C265DFC41C55254B00140D24 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C265DFC71C55254B00140D24 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		C265DFC91C55254B00140D24 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C2BEAC561C5CF9A700B1C78E /* UserListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserListViewController.swift; sourceTree = "<group>"; };
+		C2BEAC571C5CF9A700B1C78E /* UserListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserListViewController.xib; sourceTree = "<group>"; };
+		C2BEAC5A1C5CFFE400B1C78E /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		C2BEAC5B1C5CFFE400B1C78E /* ChatViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatViewController.xib; sourceTree = "<group>"; };
 		C2E4C9D21C55433B007A4FA5 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -52,8 +68,8 @@
 		C265DFB61C55254A00140D24 = {
 			isa = PBXGroup;
 			children = (
-				C2E4C9671C55373C007A4FA5 /* Dependencies */,
 				C265DFC11C55254B00140D24 /* mac-app */,
+				C2E4C9671C55373C007A4FA5 /* Dependencies */,
 				C265DFC01C55254B00140D24 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -69,12 +85,28 @@
 		C265DFC11C55254B00140D24 /* mac-app */ = {
 			isa = PBXGroup;
 			children = (
-				C265DFC21C55254B00140D24 /* ApplicationController.swift */,
-				C265DFC41C55254B00140D24 /* Assets.xcassets */,
 				C265DFC61C55254B00140D24 /* MainMenu.xib */,
+				C265DFC41C55254B00140D24 /* Assets.xcassets */,
+				C265DFC21C55254B00140D24 /* ApplicationController.swift */,
+				C2BEAC511C5CE23300B1C78E /* chat-window */,
 				C265DFC91C55254B00140D24 /* Info.plist */,
 			);
 			path = "mac-app";
+			sourceTree = "<group>";
+		};
+		C2BEAC511C5CE23300B1C78E /* chat-window */ = {
+			isa = PBXGroup;
+			children = (
+				C23F44351C595DE1003EDD80 /* ChatWindowController.swift */,
+				C23F44361C595DE2003EDD80 /* ChatWindowController.xib */,
+				C21956B91C5C1E2D0072D2F7 /* ChatListViewController.swift */,
+				C21956BA1C5C1E2D0072D2F7 /* ChatListViewController.xib */,
+				C2BEAC5A1C5CFFE400B1C78E /* ChatViewController.swift */,
+				C2BEAC5B1C5CFFE400B1C78E /* ChatViewController.xib */,
+				C2BEAC561C5CF9A700B1C78E /* UserListViewController.swift */,
+				C2BEAC571C5CF9A700B1C78E /* UserListViewController.xib */,
+			);
+			path = "chat-window";
 			sourceTree = "<group>";
 		};
 		C2E4C9671C55373C007A4FA5 /* Dependencies */ = {
@@ -146,6 +178,10 @@
 			files = (
 				C265DFC51C55254B00140D24 /* Assets.xcassets in Resources */,
 				C265DFC81C55254B00140D24 /* MainMenu.xib in Resources */,
+				C2BEAC5D1C5CFFE400B1C78E /* ChatViewController.xib in Resources */,
+				C21956BC1C5C1E2D0072D2F7 /* ChatListViewController.xib in Resources */,
+				C23F44381C595DE2003EDD80 /* ChatWindowController.xib in Resources */,
+				C2BEAC591C5CF9A700B1C78E /* UserListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,6 +193,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C265DFC31C55254B00140D24 /* ApplicationController.swift in Sources */,
+				C2BEAC581C5CF9A700B1C78E /* UserListViewController.swift in Sources */,
+				C21956BB1C5C1E2D0072D2F7 /* ChatListViewController.swift in Sources */,
+				C2BEAC5C1C5CFFE400B1C78E /* ChatViewController.swift in Sources */,
+				C23F44371C595DE2003EDD80 /* ChatWindowController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
