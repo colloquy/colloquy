@@ -30,94 +30,11 @@
 	return cell;
 }
 
-- (void) dealloc {
-
-	_altImage = nil;
-	_statusImage = nil;
-	_mainText = nil;
-	_infoText = nil;
-
-}
-
 #pragma mark -
 
-- (void) setStatusImage:(NSImage *) image {
-	_statusImage = image;
-}
-
-- (NSImage *) statusImage {
-	return _statusImage;
-}
-
-#pragma mark -
-
-- (void) setStatusNumber:(NSUInteger) number {
-	_statusNumber = number;
-}
-
-- (NSUInteger) statusNumber {
-	return _statusNumber;
-}
-
-#pragma mark -
-
-- (void) setImportantStatusNumber:(NSUInteger) number {
-	_importantStatusNumber = number;
-}
-
-- (NSUInteger) importantStatusNumber {
-	return _importantStatusNumber;
-}
-
-#pragma mark -
-
-- (void) setHighlightedImage:(NSImage *) image {
-	_altImage = image;
-}
-
-- (NSImage *) highlightedImage {
-	return _altImage;
-}
-
-#pragma mark -
-
-- (void) setMainText:(NSString *) text {
-	_mainText = [text copy];
-}
-
-- (NSString *) mainText {
-	return _mainText;
-}
-
-#pragma mark -
-
-- (void) setInformationText:(NSString *) text {
-	_infoText = [text copy];
-}
-
-- (NSString *) informationText {
-	return _infoText;
-}
-
-#pragma mark -
-
-- (void) setBoldAndWhiteOnHighlight:(BOOL) boldAndWhite {
-	_boldAndWhiteOnHighlight = boldAndWhite;
-}
-
-- (BOOL) boldAndWhiteOnHighlight {
-	return _boldAndWhiteOnHighlight;
-}
-
-#pragma mark -
-
-- (void) setLeftMargin:(CGFloat) margin {
-	_leftMargin = margin;
-}
-
-- (CGFloat) leftMargin {
-	return _leftMargin;
-}
+@synthesize highlightedImage = _altImage;
+@synthesize informationText = _infoText;
+@synthesize lineBreakMode = _lineBreakMode; // needed to override superclass's line break mode, rather than to rename ivar
 
 #pragma mark -
 
@@ -316,14 +233,6 @@
 
 - (void) setImageAlignment:(NSImageAlignment) newAlign {
 	[super setImageAlignment:NSImageAlignLeft];
-}
-
-- (void) setLineBreakMode:(NSLineBreakMode) mode {
-	_lineBreakMode = mode;
-}
-
-- (NSLineBreakMode) lineBreakMode {
-	return _lineBreakMode;
 }
 
 - (void) setStringValue:(NSString *) string {

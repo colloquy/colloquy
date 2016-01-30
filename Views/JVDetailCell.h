@@ -1,39 +1,13 @@
-@interface JVDetailCell : NSImageCell {
-	@private
-	NSImage *_statusImage;
-	NSImage *_altImage;
-	NSString *_mainText;
-	NSString *_infoText;
-	NSLineBreakMode _lineBreakMode;
-	NSUInteger _statusNumber;
-	NSUInteger _importantStatusNumber;
-	CGFloat _leftMargin;
-	BOOL _boldAndWhiteOnHighlight;
-}
-- (void) setStatusImage:(NSImage *) image;
-- (NSImage *) statusImage;
+@interface JVDetailCell : NSImageCell
+@property (copy) NSImage *statusImage;
+@property NSUInteger statusNumber;
+@property NSUInteger importantStatusNumber;
 
-- (void) setHighlightedImage:(NSImage *) image;
-- (NSImage *) highlightedImage;
+@property (copy) NSImage *highlightedImage;
 
-- (void) setMainText:(NSString *) text;
-- (NSString *) mainText;
+@property (copy) NSString *mainText;
+@property (copy) NSString *informationText;
 
-- (void) setInformationText:(NSString *) text;
-- (NSString *) informationText;
-
-- (void) setLineBreakMode:(NSLineBreakMode) mode;
-- (NSLineBreakMode) lineBreakMode;
-
-- (void) setBoldAndWhiteOnHighlight:(BOOL) boldAndWhite;
-- (BOOL) boldAndWhiteOnHighlight;
-
-- (void) setStatusNumber:(NSUInteger) number;
-- (NSUInteger) statusNumber;
-
-- (void) setImportantStatusNumber:(NSUInteger) number;
-- (NSUInteger) importantStatusNumber;
-
-- (void) setLeftMargin:(CGFloat) margin;
-- (CGFloat) leftMargin;
+@property BOOL boldAndWhiteOnHighlight;
+@property CGFloat leftMargin;
 @end
