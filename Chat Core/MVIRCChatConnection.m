@@ -1064,7 +1064,11 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		NSArray <NSString *> *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time", @"userhost-in-names", @"batch", @" " ];
 
 		// Older versions of ZNC prefixes their capabilities (from when IRCv3.2 wasn't finished).
-		NSArray <NSString *> *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message", @"znc.in/batch", @"znc.in/playback", @" " ];
+		// ignore znc/self-message because it's variant interfers with server-supported self-message. basically, once we track that self-message is possible,
+		// clients can do things like query for it's existance, and then disable local echo's under the assumption that the server will replay messages for us.
+		// in the case where we are connected to znc, and znc is connected to a server that does not have self-message, this will result in us sending messages
+		// that are never replayed back (because the server doesn't echo things for us, and, znc only proxies traffic).
+		NSArray <NSString *> *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", /* @"znc.in/self-message", */ @"znc.in/batch", @"znc.in/playback", @" " ];
 
 		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
 
@@ -2466,7 +2470,7 @@ parsingFinished: { // make a scope for this
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionCapNotifyFeature];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] || [capability isCaseInsensitiveEqualToString:@"znc.in/self-message"] || [capability isCaseInsensitiveEqualToString:@"echo-message"] || [capability isCaseInsensitiveEqualToString:@"znc.in/echo-message"] ) {
+				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] || [capability isCaseInsensitiveEqualToString:@"echo-message"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionEchoMessageFeature];
 					}
