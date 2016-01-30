@@ -303,13 +303,13 @@ static NSMenu *favoritesMenu = nil;
 
 	NSRect frame = [sender frame];
 	NSScrollView *scrollView = [connections enclosingScrollView];
-	float displayedHeight = [[scrollView contentView] bounds].size.height;
-	float heightChange = [[scrollView documentView] bounds].size.height - displayedHeight;
-	float heightExcess = 0.;
+	CGFloat displayedHeight = [[scrollView contentView] bounds].size.height;
+	CGFloat heightChange = [[scrollView documentView] bounds].size.height - displayedHeight;
+	CGFloat heightExcess = 0.;
 
 	if( heightChange >= 0 && heightChange <= 1 ) {
 		// either the window is already optimal size, or it's too big
-		float rowHeight = [connections rowHeight] + [connections intercellSpacing].height;
+		CGFloat rowHeight = [connections rowHeight] + [connections intercellSpacing].height;
 		heightChange = (rowHeight * [connections numberOfRows]) - displayedHeight;
 	}
 
@@ -406,7 +406,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (IBAction) toggleNewConnectionDetails:(id) sender {
-	float offset = NSHeight( [detailsTabView frame] );
+	CGFloat offset = NSHeight( [detailsTabView frame] );
 	NSRect windowFrame = [openConnection frame];
 	NSRect newWindowFrame = NSMakeRect( NSMinX( windowFrame ), NSMinY( windowFrame ) + ( [sender state] ? offset * -1 : offset ), NSWidth( windowFrame ), ( [sender state] ? NSHeight( windowFrame ) + offset : NSHeight( windowFrame ) - offset ) );
 	if( ! [sender state] ) [detailsTabView selectTabViewItemAtIndex:0];

@@ -97,7 +97,7 @@ typedef NS_ENUM(NSInteger, JVTranscriptCriterionQueryUnits) {
 	BOOL _smartTranscriptCriterion;
 	BOOL _changed;
 }
-+ (JVTranscriptCriterionController*) controller;
++ (instancetype) controller;
 
 @property (readonly, strong) NSView *view;
 

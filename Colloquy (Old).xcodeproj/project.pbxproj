@@ -1551,10 +1551,10 @@
 		F52955590181EB5901EE70DE /* Misc. Icons */ = {
 			isa = PBXGroup;
 			children = (
+				1C6075E005138ED600A8FE6E /* colloquy-alpha.png */,
 				1C77822808FA4101006AD8E5 /* topicBackground.png */,
 				1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */,
 				1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */,
-				1C6075E005138ED600A8FE6E /* colloquy-alpha.png */,
 				55D0E36C1B86605A00DD27B9 /* Miscellaneous.xcassets */,
 			);
 			name = "Misc. Icons";

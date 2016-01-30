@@ -1,3 +1,4 @@
+#import <tgmath.h>
 #import "JVMarkedScroller.h"
 
 @interface JVMark : NSObject
@@ -36,12 +37,12 @@
 	[super drawRect:rect];
 
 	NSAffineTransform *transform = [NSAffineTransform transform];
-	float width = [[self class] scrollerWidthForControlSize:[self controlSize] scrollerStyle:NSScrollerStyleOverlay];
+	CGFloat width = [[self class] scrollerWidthForControlSize:[self controlSize] scrollerStyle:NSScrollerStyleOverlay];
 
-	float scale = [self scaleToContentView];
+	CGFloat scale = [self scaleToContentView];
 	[transform scaleXBy:( sFlags.isHoriz ? scale : 1. ) yBy:( sFlags.isHoriz ? 1. : scale )];
 
-	float offset = [self rectForPart:NSScrollerKnobSlot].origin.y;
+	CGFloat offset = [self rectForPart:NSScrollerKnobSlot].origin.y;
 	[transform translateXBy:( sFlags.isHoriz ? offset / scale : 0. ) yBy:( sFlags.isHoriz ? 0. : offset / scale )];
 
 	NSBezierPath *shades = [NSBezierPath bezierPath];
@@ -106,8 +107,8 @@
 
 		NSPoint point = NSMakePoint( ( sFlags.isHoriz ? value : 0. ), ( sFlags.isHoriz ? 0. : value ) );
 		point = [transform transformPoint:point];
-		point.x = ( sFlags.isHoriz ? roundf( point.x ) + 0.5 : point.x );
-		point.y = ( sFlags.isHoriz ? point.y : roundf( point.y ) + 0.5 );
+		point.x = ( sFlags.isHoriz ? round( point.x ) + 0.5 : point.x );
+		point.y = ( sFlags.isHoriz ? point.y : round( point.y ) + 0.5 );
 
 		if( ! NSPointInRect( point, knobRect ) ) {
 			if( mark.color ) {
@@ -236,7 +237,7 @@
 	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSPoint where = [self convertPoint:[event locationInWindow] fromView:nil];
 	NSRect slotRect = [self rectForPart:NSScrollerKnobSlot];
-	float scale = [self scaleToContentView];
+	CGFloat scale = [self scaleToContentView];
 	[self removeMarksLessThan:( ( sFlags.isHoriz ? where.x - NSMinX( slotRect ) : where.y - NSMinY( slotRect ) ) / scale )];
 }
 
@@ -244,7 +245,7 @@
 	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSPoint where = [self convertPoint:[event locationInWindow] fromView:nil];
 	NSRect slotRect = [self rectForPart:NSScrollerKnobSlot];
-	float scale = [self scaleToContentView];
+	CGFloat scale = [self scaleToContentView];
 	[self removeMarksGreaterThan:( ( sFlags.isHoriz ? where.x - NSMinX( slotRect ) : where.y - NSMinY( slotRect ) ) / scale )];
 }
 
@@ -267,7 +268,7 @@
 	if( _nearestPreviousMark != NSNotFound ) {
 		_currentMark = _nearestPreviousMark;
 		_jumpingToMark = YES;
-		float shift = [self shiftAmountToCenterAlign];
+		CGFloat shift = [self shiftAmountToCenterAlign];
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 		_jumpingToMark = NO;
 
@@ -279,7 +280,7 @@
 	if( _nearestNextMark != NSNotFound ) {
 		_currentMark = _nearestNextMark;
 		_jumpingToMark = YES;
-		float shift = [self shiftAmountToCenterAlign];
+		CGFloat shift = [self shiftAmountToCenterAlign];
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 		_jumpingToMark = NO;
 
@@ -301,7 +302,7 @@
 	}
 
 	if( foundMark ) {
-		float shift = [self shiftAmountToCenterAlign];
+		CGFloat shift = [self shiftAmountToCenterAlign];
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 	}
 
@@ -487,7 +488,7 @@
 }
 
 - (CGFloat) shiftAmountToCenterAlign {
-	float scale = [self scaleToContentView];
+	CGFloat scale = [self scaleToContentView];
 	if( sFlags.isHoriz ) return ( ( NSWidth( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
 	else return ( ( NSHeight( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
 }

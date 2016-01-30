@@ -414,14 +414,14 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				if( scanOneOrTwoDigits( scanner, &fcolor ) ) {
 					fcolor %= 16;
 
-					NSColor *foregroundColor = [NSColor colorWithCalibratedRed:( (float) mIRCColors[fcolor][0] / 255. ) green:( (float) mIRCColors[fcolor][1] / 255. ) blue:( (float) mIRCColors[fcolor][2] / 255. ) alpha:1.];
+					NSColor *foregroundColor = [NSColor colorWithCalibratedRed:( (CGFloat) mIRCColors[fcolor][0] / 255. ) green:( (CGFloat) mIRCColors[fcolor][1] / 255. ) blue:( (CGFloat) mIRCColors[fcolor][2] / 255. ) alpha:1.];
 					if( foregroundColor && ! [options[@"IgnoreFontColors"] boolValue] )
 						attributes[NSForegroundColorAttributeName] = foregroundColor;
 
 					NSUInteger bcolor = 0;
 					if( [scanner scanString:@"," intoString:NULL] && scanOneOrTwoDigits( scanner, &bcolor ) && bcolor != 99 ) {
 						bcolor %= 16;
-						NSColor *backgroundColor = [NSColor colorWithCalibratedRed:( (float) mIRCColors[bcolor][0] / 255. ) green:( (float) mIRCColors[bcolor][1] / 255. ) blue:( (float) mIRCColors[bcolor][2] / 255. ) alpha:1.];
+						NSColor *backgroundColor = [NSColor colorWithCalibratedRed:( (CGFloat) mIRCColors[bcolor][0] / 255. ) green:( (CGFloat) mIRCColors[bcolor][1] / 255. ) blue:( (CGFloat) mIRCColors[bcolor][2] / 255. ) alpha:1.];
 						if( backgroundColor && ! [options[@"IgnoreFontColors"] boolValue] )
 							attributes[NSBackgroundColorAttributeName] = backgroundColor;
 					}
@@ -521,7 +521,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 							NSUInteger index = [colorStr characterAtIndex:0];
 							if( index >= 'A' ) index -= ( 'A' - '9' - 1 );
 							index -= '0';
-							NSColor *foregroundColor = [NSColor colorWithCalibratedRed:( (float) CTCPColors[index][0] / 255. ) green:( (float) CTCPColors[index][1] / 255. ) blue:( (float) CTCPColors[index][2] / 255. ) alpha:1.];
+							NSColor *foregroundColor = [NSColor colorWithCalibratedRed:( (CGFloat) CTCPColors[index][0] / 255. ) green:( (CGFloat) CTCPColors[index][1] / 255. ) blue:( (CGFloat) CTCPColors[index][2] / 255. ) alpha:1.];
 							if( foregroundColor && ! [options[@"IgnoreFontColors"] boolValue] )
 								attributes[NSForegroundColorAttributeName] = foregroundColor;
 						} else if( [scanner scanString:@"." intoString:NULL] ) { // reset the foreground color
@@ -546,7 +546,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 								NSUInteger index = [colorStr characterAtIndex:0];
 								if( index >= 'A' ) index -= ( 'A' - '9' - 1 );
 								index -= '0';
-								NSColor *backgroundColor = [NSColor colorWithCalibratedRed:( (float) CTCPColors[index][0] / 255. ) green:( (float) CTCPColors[index][1] / 255. ) blue:( (float) CTCPColors[index][2] / 255. ) alpha:1.];
+								NSColor *backgroundColor = [NSColor colorWithCalibratedRed:( (CGFloat) CTCPColors[index][0] / 255. ) green:( (CGFloat) CTCPColors[index][1] / 255. ) blue:( (CGFloat) CTCPColors[index][2] / 255. ) alpha:1.];
 								if( backgroundColor && ! [options[@"IgnoreFontColors"] boolValue] )
 									attributes[NSBackgroundColorAttributeName] = backgroundColor;
 							} else if( [scanner scanString:@"." intoString:NULL] ) { // reset the background color

@@ -1,3 +1,4 @@
+#include <tgmath.h>
 #import "MVBuddyListController.h"
 
 #import "JVBuddy.h"
@@ -767,7 +768,7 @@ static MVBuddyListController *sharedInstance = nil;
 		CGFloat t = _animationPosition;
 
 		NSUInteger count = [_buddyOrder count];
-		CGFloat rowPos = ( (float) row / (float) count );
+		CGFloat rowPos = ( (CGFloat) row / (CGFloat) count );
 		CGFloat rowPosAdjusted = _viewingTop ? ( 1. - rowPos ) : rowPos;
 		CGFloat curve = 0.3;
 		CGFloat p = rowPosAdjusted * ( curve * 2. ) + 1. - curve;

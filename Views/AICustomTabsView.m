@@ -561,7 +561,7 @@ static  NSImage			*tabDivider = nil;
 }
 
 //Constrain a rect horizontally
-static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
+static NSRect AIConstrainRectWidth(NSRect rect, CGFloat left, CGFloat right)
 {
 	if(rect.origin.x < left){
 		rect.size.width -= left - rect.origin.x;

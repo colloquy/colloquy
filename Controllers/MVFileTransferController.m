@@ -41,13 +41,13 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	if( i > 0 ) i--;
 	stop = [breaks[i] unsignedIntValue];
 
-	val = (NSUInteger) ( secs / (float) stop );
+	val = (NSUInteger) ( secs / (CGFloat) stop );
 	use = ( val > 1 ? plural : desc );
 	retval = [NSString stringWithFormat:@"%lu %@", (unsigned long)val, [use objectForKey:[NSNumber numberWithUnsignedLong:stop]]];
 	if( longFormat && i > 0 ) {
 		NSUInteger rest = (NSUInteger) ( (NSUInteger) secs % stop );
 		stop = [breaks[--i] unsignedIntValue];
-		rest = (NSUInteger) ( rest / (float) stop );
+		rest = (NSUInteger) ( rest / (CGFloat) stop );
 		if( rest > 0 ) {
 			use = ( rest > 1 ? plural : desc );
 			retval = [retval stringByAppendingFormat:@" %lu %@", (unsigned long)rest, [use objectForKey:[breaks objectAtIndex:i]]];
@@ -759,7 +759,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	totalTransferred = totalTransferredDown + totalTransferredUp;
 	totalSize = totalSizeDown + totalSizeUp;
 	if( upCount && downCount ) {
-		upRate = upRate / (float) upCount;
+		upRate = upRate / (CGFloat) upCount;
 		if( ! totalTransferredUp || ! totalSizeUp ) {
 			str = NSLocalizedString( @"nothing uploaded yet", "status of pending upload file transfer" );
 		} else if( totalSizeUp != totalTransferredUp ) {
@@ -768,7 +768,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			str = [NSString stringWithFormat:NSLocalizedString( @"total of %@ uploaded, at %@ per second", "results final upload file transfer" ), MVPrettyFileSize( totalSizeUp ), MVPrettyFileSize( upRate )];
 		}
 		str = [str stringByAppendingString:@"\n"];
-		downRate = downRate / (float) downCount;
+		downRate = downRate / (CGFloat) downCount;
 		if( ! totalTransferredDown || ! totalSizeDown ) {
 			str = [str stringByAppendingString:NSLocalizedString( @"nothing downloaded yet", "status of pending download file transfer" )];
 		} else if( totalSizeDown != totalTransferredDown ) {
@@ -777,7 +777,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			str = [str stringByAppendingFormat:NSLocalizedString( @"total of %@ downloaded, at %@ per second", "results final download file transfer" ), MVPrettyFileSize( totalSizeDown ), MVPrettyFileSize( downRate )];
 		}
 	} else if( upCount || downCount ) {
-		avgRate = ( upRate + downRate ) / ( (float) upCount + (float) downCount );
+		avgRate = ( upRate + downRate ) / ( (CGFloat) upCount + (CGFloat) downCount );
 		if( ! totalTransferred || ! totalSize ) {
 			totalSize = 1;
 			if( downCount ) str = NSLocalizedString( @"nothing downloaded yet", "status of pending download file transfer" );
