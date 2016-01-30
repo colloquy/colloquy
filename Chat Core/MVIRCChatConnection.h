@@ -10,6 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class GCDAsyncSocket;
 @class MVChatUser;
 
+extern NSString *const MVIRCChatConnectionZNCEchoMessageFeature;
 extern NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature;
 
 @interface MVIRCChatConnection : MVChatConnection

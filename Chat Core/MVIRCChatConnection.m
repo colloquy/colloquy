@@ -122,6 +122,14 @@ static const NSStringEncoding supportedEncodings[] = {
 	0
 };
 
+// znc/self-message could have been better named; while it implies self-message semantics, the situations in which messages are echoed back differ:
+// - with self-message, all messages we send are echoed back to us.
+// - with znc/self-message, only messages we previously sent are echoed back to us when replaying query buffers.
+// this means that we can't track the two behaviors with the same feature flag. given:
+// we are connected to znc (which supports `znc/self-message`) and znc is connected to a server that does not support `self-message`,
+// - clients may choose to not echo messages locally, under the assumption that the server will echo them back for us, and we will display it then.
+// (so, if the server doesn't know how to echo messages back, and znc isn't going to echo them back because we aren't in a query buffer, we won't see outgoing messages).
+NSString *const MVIRCChatConnectionZNCEchoMessageFeature = @"MVIRCChatConnectionZNCEchoMessageFeature";
 NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnectionZNCPluginPlaybackFeature";
 
 @interface MVIRCChatConnection (MVIRCChatConnectionProtocolHandlers)
@@ -300,7 +308,6 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 - (void) _handle998WithParameters:(NSArray *) parameters fromSender:(id) sender;
 
 @end
-
 
 @implementation MVIRCChatConnection {
 	GCDAsyncSocket *_chatConnection;
@@ -1064,11 +1071,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		NSArray <NSString *> *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time", @"userhost-in-names", @"batch", @" " ];
 
 		// Older versions of ZNC prefixes their capabilities (from when IRCv3.2 wasn't finished).
-		// ignore znc/self-message because it's variant interfers with server-supported self-message. basically, once we track that self-message is possible,
-		// clients can do things like query for it's existance, and then disable local echo's under the assumption that the server will replay messages for us.
-		// in the case where we are connected to znc, and znc is connected to a server that does not have self-message, this will result in us sending messages
-		// that are never replayed back (because the server doesn't echo things for us, and, znc only proxies traffic).
-		NSArray <NSString *> *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", /* @"znc.in/self-message", */ @"znc.in/batch", @"znc.in/playback", @" " ];
+		NSArray <NSString *> *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message", @"znc.in/batch", @"znc.in/playback", @" " ];
 
 		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
 
@@ -2465,7 +2468,7 @@ parsingFinished: { // make a scope for this
 					}
 				}
 
-				// IRCv3.2 Proposed
+				// IRCv3.2
 				else if( [capability isCaseInsensitiveEqualToString:@"cap-notify"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionCapNotifyFeature];
@@ -2489,6 +2492,10 @@ parsingFinished: { // make a scope for this
 					if (!_hasRequestedPlaybackList) {
 						_hasRequestedPlaybackList = YES;
 						[self sendRawMessage:@"PRIVMSG *playback LIST" immediately:NO];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"znc/self-message"] || [capability isCaseInsensitiveEqualToString:@"znc/echo-message"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVIRCChatConnectionZNCEchoMessageFeature];
 					}
 				}
 
@@ -2571,8 +2578,11 @@ parsingFinished: { // make a scope for this
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVIRCChatConnectionZNCPluginPlaybackFeature];
 					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"znc/self-message"] || [capability isCaseInsensitiveEqualToString:@"znc/echo-message"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVIRCChatConnectionZNCEchoMessageFeature];
+					}
 				}
-
 			}
 		}
 	}
