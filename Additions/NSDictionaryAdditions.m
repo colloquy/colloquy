@@ -15,11 +15,17 @@ NS_ASSUME_NONNULL_BEGIN
 	NSData *ampersand = [@"&" dataUsingEncoding:NSUTF8StringEncoding];
 
 	[self enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
-		[body appendData:[key dataUsingEncoding:NSUTF8StringEncoding]];
+		NSData *keyData = [key dataUsingEncoding:NSUTF8StringEncoding];
+		if (!keyData) return;
+
+		[body appendData:keyData];
 		[body appendData:equals];
 
 		NSString *percentEncodedValue = [value stringByEncodingIllegalURLCharacters];
-		[body appendData:[percentEncodedValue dataUsingEncoding:NSUTF8StringEncoding]];
+		NSData *percentEncodedValueData = [percentEncodedValue dataUsingEncoding:NSUTF8StringEncoding];
+		if (!percentEncodedValueData) return;
+
+		[body appendData:percentEncodedValueData];
 		[body appendData:ampersand];
 	}];
 

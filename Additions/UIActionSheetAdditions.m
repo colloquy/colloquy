@@ -39,9 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 	return _buttonTitles.count;
 }
 
-- (NSInteger) addButtonWithTitle:(nullable NSString *) title {
-	if (title)
-		[_buttonTitles addObject:title];
+- (NSInteger) addButtonWithTitle:(NSString *) title {
+	[_buttonTitles addObject:title];
 	return _buttonTitles.count - 1;
 }
 
@@ -57,9 +56,9 @@ NS_ASSUME_NONNULL_BEGIN
 	[_alertController dismissViewControllerAnimated:NO completion:nil];
 	_alertController = nil;
 
-	_alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-	if ([_alertController.popoverPresentationController respondsToSelector:@selector(canOverlapSourceViewRect)])
-		_alertController.popoverPresentationController.canOverlapSourceViewRect = YES;
+	UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+	if ([alertController.popoverPresentationController respondsToSelector:@selector(canOverlapSourceViewRect)])
+		alertController.popoverPresentationController.canOverlapSourceViewRect = YES;
 
 	// The overlapping view is needed to work around the following iOS 8(.1-only?) bug on iPad:
 	// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
@@ -70,24 +69,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 	UIWindow *mainWindow = [UIApplication sharedApplication].keyWindow;
 
+	UIView *__nonnull presentingInView = (UIView *__nonnull)_overlappingPresentationViewController.view;
 	if ([sender isKindOfClass:[UIView class]] && [UIDevice currentDevice].isPadModel && !mainWindow) {
 		_overlappingPresentationViewController.view.frame = [sender bounds];
 
-		[sender addSubview:_overlappingPresentationViewController.view];
+		[sender addSubview:presentingInView];
 
-		_alertController.popoverPresentationController.sourceRect = [sender bounds];
-		_alertController.popoverPresentationController.sourceView = sender;
+		alertController.popoverPresentationController.sourceRect = [sender bounds];
+		alertController.popoverPresentationController.sourceView = sender;
 	} else {
 		_overlappingPresentationViewController.view.frame = mainWindow.frame;
 
-		[mainWindow addSubview:_overlappingPresentationViewController.view];
+		[mainWindow addSubview:presentingInView];
 
 		CGRect rect = CGRectZero;
 		rect.size = CGSizeMake(1., 1.);
 		rect.origin = CGPointEqualToPoint(point, CGPointZero) ? mainWindow.center : point;
 
-		_alertController.popoverPresentationController.sourceRect = rect;
-		_alertController.popoverPresentationController.sourceView = _overlappingPresentationViewController.view;
+		alertController.popoverPresentationController.sourceRect = rect;
+		alertController.popoverPresentationController.sourceView = _overlappingPresentationViewController.view;
 	}
 
 	for (NSInteger i = 0; i < (NSInteger)_buttonTitles.count; i++) {
@@ -101,21 +101,22 @@ NS_ASSUME_NONNULL_BEGIN
 		UIAlertAction *action = [UIAlertAction actionWithTitle:title style:style handler:^(UIAlertAction *selectedAction) {
 			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 
-			[strongSelf->_alertController removeFromParentViewController];
-			[strongSelf->_overlappingPresentationViewController.view removeFromSuperview];
-			strongSelf->_alertController = nil;
+			[strongSelf.alertController removeFromParentViewController];
+			[strongSelf.alertController.view removeFromSuperview];
+			strongSelf.alertController = nil;
 			strongSelf->_overlappingPresentationViewController = nil;
 
 			[self.delegate actionSheet:self clickedButtonAtIndex:i];
 		}];
 
-		[_alertController addAction:action];
+		[alertController addAction:action];
 
-		if (i == self.cancelButtonIndex && [_alertController respondsToSelector:@selector(setPreferredAction:)])
-			_alertController.preferredAction = action;
+		if (i == self.cancelButtonIndex && [alertController respondsToSelector:@selector(setPreferredAction:)])
+			alertController.preferredAction = action;
 	}
 
-	[_overlappingPresentationViewController presentViewController:_alertController animated:YES completion:nil];
+	[_overlappingPresentationViewController presentViewController:alertController animated:YES completion:nil];
+	_alertController = alertController;
 }
 @end
 

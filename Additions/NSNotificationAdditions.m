@@ -27,7 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (void) _postNotification:(NSDictionary *) info {
-	[info[@"center"] postNotification:info[@"notification"]];
+	NSNotification *__nonnull notification = (NSNotification *__nonnull)info[@"notification"];
+	[info[@"center"] postNotification:notification];
 }
 
 - (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id __nullable) object {
@@ -56,7 +57,8 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (void) _postNotificationName:(NSDictionary *) info {
-	[info[@"center"] postNotificationName:info[@"name"] object:info[@"object"] userInfo:info[@"userInfo"]];
+	NSString *__nonnull name = (NSString *__nonnull)info[@"name"];
+	[info[@"center"] postNotificationName:name object:info[@"object"] userInfo:info[@"userInfo"]];
 }
 @end
 

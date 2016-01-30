@@ -3,7 +3,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation NSMethodSignature (NSMethodSignatureAdditions)
-+ (id) methodSignatureWithReturnAndArgumentTypes:(const char *) retType, ... {
++ (id __nullable) methodSignatureWithReturnAndArgumentTypes:(const char *) retType, ... {
 	NSMutableString *types = [NSMutableString stringWithFormat:@"%s@:", retType];
 
 	char *type = NULL;
@@ -11,12 +11,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 	va_start( strings, retType );
 
-	while( ( type = va_arg( strings, char * ) ) )
-		[types appendString:[NSString stringWithUTF8String:type]];
+	while( ( type = va_arg( strings, char * ) ) ) {
+		NSString *typeString = [NSString stringWithUTF8String:type];
+		if( ! typeString.length ) abort();
+		[types appendString:typeString];
+	}
 
 	va_end( strings );
 
-	return [self signatureWithObjCTypes:[types UTF8String]];
+	const char *typesCString = [types UTF8String];
+	if( ! typesCString ) abort();
+	return [self signatureWithObjCTypes:typesCString];
 }
 @end
 

@@ -118,7 +118,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	// this will result in colorless areas of our string, letting the color be defined by the interface
 
 	NSString *render = [[NSString alloc] initWithFormat:@"<span style=\"color: #01FE02\">%@</span>", fragment];
-	NSMutableAttributedString *result = [[NSMutableAttributedString alloc] initWithHTML:[render dataUsingEncoding:NSUTF8StringEncoding] options:options documentAttributes:NULL];
+	NSData *HTMLData = [render dataUsingEncoding:NSUTF8StringEncoding];
+	NSMutableAttributedString *result = [[NSMutableAttributedString alloc] initWithHTML:HTMLData options:options documentAttributes:NULL];
 
 	NSRange limitRange, effectiveRange;
 	limitRange = NSMakeRange( 0, result.length );
@@ -376,7 +377,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			case '\017': // reset all
 			{
 				boldStack = italicStack = underlineStack = strikeStack = 0;
-				NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:NSBoldFontMask];
+				NSFont *oldFont = attributes[NSFontAttributeName];
+				NSFont *font = oldFont ? [[NSFontManager sharedFontManager] convertFont:oldFont toNotHaveTrait:NSBoldFontMask] : oldFont;
 				if( font ) [attributes setObject:font forKey:NSFontAttributeName];
 				removeItalicOrObliqueFont( attributes );
 				[attributes removeObjectForKey:NSStrikethroughStyleAttributeName];
@@ -386,15 +388,19 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				break;
 			}
 			case '\002': // toggle bold
+			{
 				boldStack = ! boldStack;
+
+				NSFont *oldFont = attributes[NSFontAttributeName];
 				if( boldStack && ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
-					NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask];
+					NSFont *font = oldFont ? [[NSFontManager sharedFontManager] convertFont:oldFont toHaveTrait:NSBoldFontMask] : oldFont;
 					if( font ) [attributes setObject:font forKey:NSFontAttributeName];
 				} else if( ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
-					NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:NSBoldFontMask];
+					NSFont *font = oldFont ? [[NSFontManager sharedFontManager] convertFont:oldFont toNotHaveTrait:NSBoldFontMask] : oldFont;
 					if( font ) [attributes setObject:font forKey:NSFontAttributeName];
 				}
 				break;
+			}
 			case '\026': // toggle italic
 				italicStack = ! italicStack;
 				if( italicStack && ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
@@ -440,6 +446,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 					switch( formatChar ) {
 					case 'B': // bold
+					{
 						if( [scanner scanString:@"-" intoString:NULL] ) {
 							if( boldStack >= 1 ) boldStack--;
 							off = YES;
@@ -448,14 +455,16 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 							boldStack++;
 						}
 
+						NSFont *oldFont = attributes[NSFontAttributeName];
 						if( boldStack == 1 && ! off && ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
-							NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask];
+							NSFont *font = oldFont ? [[NSFontManager sharedFontManager] convertFont:oldFont toHaveTrait:NSBoldFontMask] : oldFont;
 							if( font ) [attributes setObject:font forKey:NSFontAttributeName];
 						} else if( ! boldStack && ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
-							NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:NSBoldFontMask];
+							NSFont *font = oldFont ? [[NSFontManager sharedFontManager] convertFont:oldFont toNotHaveTrait:NSBoldFontMask] : oldFont;
 							if( font ) [attributes setObject:font forKey:NSFontAttributeName];
 						}
 						break;
+					}
 					case 'I': // italic
 						if( [scanner scanString:@"-" intoString:NULL] ) {
 							if( italicStack >= 1 ) italicStack--;
@@ -568,7 +577,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 						break;
 					case 'N': // normal (reset)
 						boldStack = italicStack = underlineStack = strikeStack = 0;
-						NSFont *font = [[NSFontManager sharedFontManager] convertFont:[attributes objectForKey:NSFontAttributeName] toNotHaveTrait:NSBoldFontMask];
+							NSFont *oldFont = attributes[NSFontAttributeName];
+							NSFont *font = oldFont ? [[NSFontManager sharedFontManager] convertFont:oldFont toNotHaveTrait:NSBoldFontMask] : oldFont;
 						if( font ) [attributes setObject:font forKey:NSFontAttributeName];
 						removeItalicOrObliqueFont( attributes );
 						[attributes removeObjectForKey:NSStrikethroughStyleAttributeName];

@@ -39,8 +39,8 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 - (NSString *) stringByEscapingCharactersInSet:(NSCharacterSet *) set;
 - (NSString *) stringByReplacingCharactersInSet:(NSCharacterSet *) set withString:(NSString *) string;
 
-@property (readonly, copy) NSString *stringByEncodingIllegalURLCharacters;
-@property (readonly, copy) NSString *stringByDecodingIllegalURLCharacters;
+@property (readonly, copy, nullable) NSString *stringByEncodingIllegalURLCharacters;
+@property (readonly, copy, nullable) NSString *stringByDecodingIllegalURLCharacters;
 
 @property (readonly, copy) NSString *stringByStrippingIllegalXMLCharacters;
 @property (readonly, copy) NSString *stringByStrippingXMLTags;

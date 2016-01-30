@@ -29,7 +29,7 @@ static NSString *NSStringFromCTFontDescriptorMatchingState(CTFontDescriptorMatch
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CQRemoteFontSessionDelegate : NSObject <NSURLSessionDataDelegate>
-@property (copy) void (^completionBlock)(NSData *, NSError *);
+@property (copy) void (^completionBlock)(NSData *, NSError *__nullable);
 @end
 
 @implementation CQRemoteFontSessionDelegate {
@@ -109,10 +109,10 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 @implementation UIFont (Additions)
-static NSArray *availableRemoteFontNames = nil;
+static NSArray *__nullable availableRemoteFontNames = nil;
 
 static BOOL loadedRemoteFontList = NO;
-+ (void) cq_availableRemoteFontNames:(void (^)(NSArray *fontNames)) completion {
++ (void) cq_availableRemoteFontNames:(void (^)(NSArray *__nullable fontNames)) completion {
 	static dispatch_once_t loadedStaleRemoteFontNamesList;
 	dispatch_once(&loadedStaleRemoteFontNamesList, ^{
 		availableRemoteFontNames = [[NSUserDefaults standardUserDefaults] arrayForKey:@"CQAvailableRemoteFontNames"];

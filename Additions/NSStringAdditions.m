@@ -996,11 +996,16 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
-- (NSString *) stringByEncodingIllegalURLCharacters {
-	return [self stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@",;:/?@&$=|^~`\{}[]"]];
+- (NSString *__nullable) stringByEncodingIllegalURLCharacters {
+	static NSCharacterSet *illegalURLCharacters = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		illegalURLCharacters = [NSCharacterSet characterSetWithCharactersInString:@",;:/?@&$=|^~`\{}[]"];
+	});
+	return [self stringByAddingPercentEncodingWithAllowedCharacters:illegalURLCharacters];
 }
 
-- (NSString *) stringByDecodingIllegalURLCharacters {
+- (NSString *__nullable) stringByDecodingIllegalURLCharacters {
 	return [self stringByRemovingPercentEncoding];
 }
 
@@ -1299,11 +1304,11 @@ static NSCharacterSet *typicalEmoticonCharacters;
 #pragma mark -
 
 - (void) encodeIllegalURLCharacters {
-	[self setString:[self stringByEncodingIllegalURLCharacters]];
+	[self setString:[self stringByEncodingIllegalURLCharacters] ?: @""];
 }
 
 - (void) decodeIllegalURLCharacters {
-	[self setString:[self stringByDecodingIllegalURLCharacters]];
+	[self setString:[self stringByDecodingIllegalURLCharacters] ?: @""];
 }
 
 #pragma mark -
