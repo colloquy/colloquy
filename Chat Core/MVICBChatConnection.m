@@ -100,8 +100,12 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 #pragma mark Class accessors
 
 + (NSArray *) defaultServerPorts {
-	id defaultPort = @((unsigned short)7326);
-	return @[defaultPort];
+	return @[ @(7326) ];
+}
+
++ (NSUInteger) maxMessageLength {
+    // the actual length varies from 253 to 255 bytes based on the command. undercount to be safe everywhere: http://www.icb.net/_jrudd/icb/protocol.html
+    return 250;
 }
 
 #pragma mark Constructors and finalizers

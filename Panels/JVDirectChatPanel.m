@@ -1095,7 +1095,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 					[cmessage setAction:action];
 
 					[self sendMessage:cmessage];
-					[self echoSentMessageToDisplay:cmessage]; // echo after the plugins process the message
+					if( ! [[[self connection] supportedFeatures] containsObject:MVChatConnectionEchoMessageFeature] )
+						[self echoSentMessageToDisplay:cmessage]; // echo after the plugins process the message, if the server won't echo it for us
 				}
 			}
 		}

@@ -1747,6 +1747,10 @@ NS_ASSUME_NONNULL_BEGIN
 	while (_sentMessages.count > 10)
 		[_sentMessages removeObjectAtIndex:0];
 
+	// if the server echos things back for us, we don't have to add it ourself
+	if ([self.connection.supportedFeatures containsObject:MVChatConnectionEchoMessageFeature])
+		return;
+
 	NSData *messageData = [message chatFormatWithOptions:@{
 		@"FormatType": NSChatWindowsIRCFormatType,
 		@"StringEncoding": @(_encoding),

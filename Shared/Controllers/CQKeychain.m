@@ -65,12 +65,12 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *__n
 	}
 }
 
-- (nullable NSString *) passwordForServer:(NSString *) server area:(NSString *__nullable) area {
+- (NSString *__nullable) passwordForServer:(NSString *) server area:(NSString *__nullable) area {
 	NSData *data = [self dataForServer:server area:area];
 	return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
-- (nullable NSData *) dataForServer:(NSString *) server area:(NSString *__nullable) area {
+- (NSData *__nullable) dataForServer:(NSString *) server area:(NSString *__nullable) area {
 	NSParameterAssert(server);
 
 	NSMutableDictionary *passwordQuery = createBaseDictionary(server, area);

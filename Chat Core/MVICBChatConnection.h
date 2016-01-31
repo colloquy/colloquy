@@ -60,6 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 	BOOL _sendQueueProcessing : 1;
 }
 + (NSArray<NSNumber*> *) defaultServerPorts;
++ (NSUInteger) maxMessageLength;
 
 - (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier;
 @end

@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSString *_password;
 }
 + (NSArray <NSNumber*> *) defaultServerPorts;
++ (NSUInteger) maxMessageLength;
 @end
 
 @interface MVXMPPChatConnection (MVXMPPChatConnectionPrivate)

@@ -9,6 +9,7 @@
 .objc_class_name_MVFileTransfer
 .objc_class_name_MVUploadFileTransfer
 _MVChatConnection*Notification
+_MVChatConnection*Feature
 _MVChatPluginManager*Notification
 _MVChatRoom*Notification
 _MVChatRoom*Feature

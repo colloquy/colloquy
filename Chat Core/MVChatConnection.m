@@ -49,29 +49,29 @@ NSString *MVChatConnectionSASLFeature = @"MVChatConnectionSASLFeature";
 NSString *MVChatConnectionMultipleNicknamePrefixFeature = @"MVChatConnectionMultipleNicknamePrefixFeature";
 
 // IRC3v1 Optional
-NSString *MVChatConnectionAccountNotify = @"MVChatConnectionAccountNotify";
-NSString *MVChatConnectionAwayNotify = @"MVChatConnectionAwayNotify";
-NSString *MVChatConnectionExtendedJoin = @"MVChatConnectionExtendedJoin";
-NSString *MVChatConnectionTLS = @"MVChatConnectionTLS";
+NSString *MVChatConnectionAccountNotifyFeature = @"MVChatConnectionAccountNotifyFeature";
+NSString *MVChatConnectionAwayNotifyFeature = @"MVChatConnectionAwayNotifyFeature";
+NSString *MVChatConnectionExtendedJoinFeature = @"MVChatConnectionExtendedJoinFeature";
+NSString *MVChatConnectionTLSFeature = @"MVChatConnectionTLSFeature";
 
 // IRC3v2 Required
-NSString *MVChatConnectionMessageTags = @"MVChatConnectionMessageTags";
-NSString *MVChatConnectionMessageIntents = @"MVChatConnectionMessageIntents";
-NSString *MVChatConnectionMetadata = @"MVChatConnectionMetadata";
-NSString *MVChatConnectionMonitor = @"MVChatConnectionMonitor";
+NSString *MVChatConnectionMessageTagsFeature = @"MVChatConnectionMessageTagsFeature";
+NSString *MVChatConnectionMessageIntentsFeature = @"MVChatConnectionMessageIntentsFeature";
+NSString *MVChatConnectionMetadataFeature = @"MVChatConnectionMetadataFeature";
+NSString *MVChatConnectionMonitorFeature = @"MVChatConnectionMonitorFeature";
 
 // IRC3v2 Optional
-NSString *MVChatConnectionServerTime = @"MVChatConnectionServerTime";
-NSString *MVChatConnectionBatch = @"MVChatConnectionBatch";
-NSString *MVChatConnectionUserhostInNames = @"MVChatConnectionUserhostInNames";
-NSString *MVChatConnectionAccountTag = @"MVChatConnectionAccountTag";
-NSString *MVChatConnectionChghost = @"MVChatConnectionChghost";
-NSString *MVChatConnectionCapNotify = @"MVChatConnectionCapNotify";
-NSString *MVChatConnectionInvite = @"MVChatConnectionInvite";
-NSString *MVChatConnectionEchoMessage = @"MVChatConnectionEchoMessage";
+NSString *MVChatConnectionServerTimeFeature = @"MVChatConnectionServerTimeFeature";
+NSString *MVChatConnectionBatchFeature = @"MVChatConnectionBatchFeature";
+NSString *MVChatConnectionUserhostInNamesFeature = @"MVChatConnectionUserhostInNamesFeature";
+NSString *MVChatConnectionAccountTagFeature = @"MVChatConnectionAccountTagFeature";
+NSString *MVChatConnectionChghostFeature = @"MVChatConnectionChghostFeature";
+NSString *MVChatConnectionCapNotifyFeature = @"MVChatConnectionCapNotifyFeature";
+NSString *MVChatConnectionInviteFeature = @"MVChatConnectionInviteFeature";
+NSString *MVChatConnectionEchoMessageFeature = @"MVChatConnectionEchoMessageFeature";
 
 // InspIRCd Enhancements
-NSString *MVChatConnectionNamesx = @"MVChatConnectionNamesx";
+NSString *MVChatConnectionNamesxFeature = @"MVChatConnectionNamesxFeature";
 
 NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
 NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectNotification";
@@ -162,6 +162,26 @@ static const NSStringEncoding supportedEncodings[] = {
 	return nil;
 }
 
++ (NSUInteger) maxMessageLengthForType:(MVChatConnectionType) type {
+#if ENABLE(ICB)
+	if( type == MVChatConnectionICBType )
+		return [MVICBChatConnection maxMessageLength];
+#endif
+#if ENABLE(IRC)
+	if( type == MVChatConnectionIRCType )
+		return [MVIRCChatConnection maxMessageLength];
+#endif
+#if ENABLE(SILC)
+	if( type == MVChatConnectionSILCType )
+		return [MVSILCChatConnection maxMessageLength];
+#endif
+#if ENABLE(XMPP)
+	if( type == MVChatConnectionXMPPType )
+		return [MVXMPPChatConnection maxMessageLength];
+#endif
+	return 0;
+}
+
 #pragma mark -
 
 - (instancetype) init {
@@ -173,6 +193,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		_awayMessage = nil;
 		_encoding = NSUTF8StringEncoding;
 		_outgoingChatFormat = MVChatConnectionDefaultMessageFormat;
+		_incomingChatFormat = MVChatConnectionDefaultMessageFormat;
 		_nextAltNickIndex = 0;
 		_roomListDirty = NO;
 
@@ -547,6 +568,11 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (void) setOutgoingChatFormat:(MVChatMessageFormat) format {
 	if( ! format ) format = MVChatConnectionDefaultMessageFormat;
 	_outgoingChatFormat = format;
+}
+
+- (void) setIncomingChatFormat:(MVChatMessageFormat) format {
+	if( ! format ) format = MVChatConnectionDefaultMessageFormat;
+	_incomingChatFormat = format;
 }
 
 #pragma mark -

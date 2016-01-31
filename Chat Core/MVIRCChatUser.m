@@ -157,7 +157,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	if( _hasPendingRefreshInformationRequest ) return;
 	_hasPendingRefreshInformationRequest = YES;
 	[[self connection] sendRawMessageWithFormat:@"WHOIS %@ %1$@", [self nickname]];
-	if( [[[self connection] supportedFeatures] containsObject:MVChatConnectionMetadata] )
+	if( [[[self connection] supportedFeatures] containsObject:MVChatConnectionMetadataFeature] )
 		[[self connection] sendRawMessageWithFormat:@"METADATA %@ LIST", [self nickname]];
 }
 
@@ -178,7 +178,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	} else if( [key isEqualToString:MVChatUserKnownRoomsAttribute] ) {
 		[self refreshInformation];
 	} else {
-		if( [[[self connection] supportedFeatures] containsObject:MVChatConnectionMetadata] )
+		if( [[[self connection] supportedFeatures] containsObject:MVChatConnectionMetadataFeature] )
 			[[self connection] sendRawMessageWithFormat:@"METADATA %@ LIST :%@", [self nickname], MVMetadataKeyForAttributeName(key)];
 	}
 }

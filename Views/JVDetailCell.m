@@ -2,9 +2,6 @@
 #import "NSImageAdditions.h"
 
 @implementation JVDetailCell
-@synthesize highlightedImage = _altImage;
-@synthesize informationText = _infoText;
-@synthesize lineBreakMode = _lineBreakMode;
 
 - (instancetype) init {
 	if( ( self = [super init] ) ) {
@@ -33,6 +30,12 @@
 	cell -> _leftMargin = _leftMargin;
 	return cell;
 }
+
+#pragma mark -
+
+@synthesize highlightedImage = _altImage;
+@synthesize informationText = _infoText;
+@synthesize lineBreakMode = _lineBreakMode; // needed to override superclass's line break mode, rather than to rename ivar
 
 #pragma mark -
 
