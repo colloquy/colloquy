@@ -143,8 +143,8 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 - (void) refreshAttributeForKey:(NSString *) key;
 
 - (BOOL) hasAttributeForKey:(NSString *) key;
-- (__nullable id) attributeForKey:(NSString *) key;
-- (void) setAttribute:(__nullable id) attribute forKey:(id) key;
+- (id __nullable) attributeForKey:(NSString *) key;
+- (void) setAttribute:(id __nullable) attribute forKey:(id) key;
 
 - (id) attributeForMode:(MVChatRoomMode) mode;
 
