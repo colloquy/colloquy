@@ -439,6 +439,11 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) stringByEvaluatingJavaScriptFromString:(NSString *) script {
+	if (!_readyForDisplay) {
+		NSLog(@"Refusing to evaluate script before WKWebView is ready for display: %@", script);
+		return;
+	}
+
 	[self stringByEvaluatingJavaScriptFromString:script completionHandler:NULL];
 }
 
@@ -596,6 +601,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) _reloadVariantStyle {
+	if (!_readyForDisplay)
+		return;
+
 	NSString *javascript = [NSString stringWithFormat:@"document.getElementById('custom').innerHTML = '%@';", [self _variantStyleString]];
 
 	[self stringByEvaluatingJavaScriptFromString:javascript];
@@ -615,6 +623,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 		_loading = NO;
 		_readyForDisplay = YES;
+
+		[self _reloadVariantStyle];
 
 		[self _addComponentsToTranscript:_pendingPreviousSessionComponents fromPreviousSession:YES animated:NO];
 
