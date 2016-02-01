@@ -2,12 +2,12 @@
 // Changes by Timothy Hatcher for Colloquy.
 // Copyright Graham Booker and Timothy Hatcher. All rights reserved.
 
+#include <libxml/tree.h>
+
 #import "NSAttributedStringMoreAdditions.h"
 #import "NSRegularExpressionAdditions.h"
 
 #import <ChatCore/NSStringAdditions.h>
-
-#include <libxml/tree.h>
 
 static void setItalicOrObliqueFont( NSMutableDictionary *attrs ) {
 	NSFontManager *fm = [NSFontManager sharedFontManager];
@@ -273,7 +273,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 #pragma mark -
 
 @implementation NSAttributedString (NSAttributedStringXMLAdditions)
-+ (id) attributedStringWithXHTMLTree:(void *) node baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
++ (id) attributedStringWithXHTMLTree:(struct _xmlNode *) node baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
 	return [[self alloc] initWithXHTMLTree:node baseURL:base defaultAttributes:attributes];
 }
 
@@ -281,11 +281,11 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 	return [[self alloc] initWithXHTMLFragment:fragment baseURL:base defaultAttributes:attributes];
 }
 
-- (instancetype) initWithXHTMLTree:(void *) node baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
+- (instancetype) initWithXHTMLTree:(struct _xmlNode *) node baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
 	NSMutableDictionary *attrs = [NSMutableDictionary dictionaryWithDictionary:attributes];
 	if( ! attrs[NSFontAttributeName] )
 		attrs[NSFontAttributeName] = [NSFont userFontOfSize:12.];
-	id ret = parseXHTMLTreeNode( (xmlNode *) node, attrs, base, YES );
+	id ret = parseXHTMLTreeNode( node, attrs, base, YES );
 	return [self initWithAttributedString:ret];
 }
 
