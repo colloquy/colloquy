@@ -23,6 +23,7 @@
 #import "NSNotificationAdditions.h"
 #import "UIViewAdditions.h"
 #import "CQUITextChatTranscriptView.h"
+#import "CQWKChatTranscriptView.h"
 
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatUserWatchRule.h>
@@ -538,18 +539,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) viewDidLoad {
-	[super viewDidLoad];
+- (void) loadView {
+	[super loadView];
+
+	if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion == 8)
+		return;
 
 	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
 //	CQUITextChatTranscriptView *webkitChatTranscriptView = [[CQUITextChatTranscriptView alloc] initWithFrame:transcriptView.frame];
-//	webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
-//	webkitChatTranscriptView.transcriptDelegate = self;
-//
-//	[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
-//
-//	[transcriptView removeFromSuperview];
-//	transcriptView = webkitChatTranscriptView;
+	CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
+	webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
+	webkitChatTranscriptView.transcriptDelegate = self;
+
+	[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
+
+	[transcriptView removeFromSuperview];
+	transcriptView = webkitChatTranscriptView;
+}
+
+- (void) viewDidLoad {
+	[super viewDidLoad];
 
 	[self _updateRightBarButtonItemAnimated:NO];
 
