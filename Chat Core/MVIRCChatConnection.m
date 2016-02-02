@@ -1226,10 +1226,10 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 #undef notEndOfLine
 
 parsingFinished: { // make a scope for this
-	NSString *senderString = [self _newStringWithBytes:sender length:senderLength];
+	NSString *senderString = ((sender && senderLength) ? [self _newStringWithBytes:sender length:senderLength] : nil);
 	NSString *commandString = ((command && commandLength) ? [[NSString alloc] initWithBytes:command length:commandLength encoding:NSASCIIStringEncoding] : nil);
+	NSString *intentOrTagsString = ((intentOrTags && intentOrTagsLength) ? [self _newStringWithBytes:intentOrTags length:intentOrTagsLength] : nil);
 
-	NSString *intentOrTagsString = [self _newStringWithBytes:intentOrTags length:intentOrTagsLength];
 	NSMutableDictionary *intentOrTagsDictionary = [NSMutableDictionary dictionary];
 	for( NSString *anIntentOrTag in [intentOrTagsString componentsSeparatedByString:@";"] ) {
 		NSArray <NSString *> *intentOrTagPair = [anIntentOrTag componentsSeparatedByString:@"="];
