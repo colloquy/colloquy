@@ -67,7 +67,7 @@
 	static NSMutableDictionary *images = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		images = [NSMutableDictionary dictionary];
+		images = [[NSMutableDictionary alloc] init];
 	});
 
 	NSImage *image = images[pdfName];

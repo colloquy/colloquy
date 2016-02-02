@@ -119,7 +119,6 @@ static NSSize		rightCapSize;
 
     }else{
         return(NSOrderedSame);
-
     }
 }
 
