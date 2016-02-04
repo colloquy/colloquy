@@ -312,4 +312,5 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 
 	return [[list retain] autorelease];
 }
+
 @end
