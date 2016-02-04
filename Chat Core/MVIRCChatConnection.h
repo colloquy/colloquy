@@ -61,7 +61,7 @@ extern NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature;
 - (MVChatRoomMemberMode) _modeForNicknamePrefixCharacter:(unichar) character;
 - (MVChatRoomMemberMode) _stripModePrefixesFromNickname:(NSString *__nonnull *__nonnull) nickname;
 
-- (NSString *) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length NS_RETURNS_RETAINED;
+- (nullable NSString *) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length NS_RETURNS_RETAINED;
 - (NSString *) _stringFromPossibleData:(id) input;
 
 - (void) _cancelScheduledSendEndCapabilityCommand;

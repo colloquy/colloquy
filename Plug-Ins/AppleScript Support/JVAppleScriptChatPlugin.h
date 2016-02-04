@@ -1,7 +1,7 @@
 #import <ChatCore/MVChatPluginManager.h>
 
 @interface JVAppleScriptChatPlugin : NSObject <MVChatPlugin> {
-	MVChatPluginManager *_manager;
+	__unsafe_unretained MVChatPluginManager *_manager;
 	NSAppleScript *_script;
 	NSString *_path;
 	NSMutableSet *_doseNotRespond;
@@ -15,7 +15,7 @@
 
 - (void) reloadFromDisk;
 
-@property (readonly, strong) MVChatPluginManager *pluginManager;
+@property (readonly, assign) MVChatPluginManager *pluginManager;
 
 @property (copy) NSString *scriptFilePath;
 

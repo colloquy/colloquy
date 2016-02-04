@@ -2258,7 +2258,7 @@ parsingFinished: { // make a scope for this
 
 #pragma mark -
 
-- (NSString *) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length NS_RETURNS_RETAINED {
+- (nullable NSString *) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length NS_RETURNS_RETAINED {
 	if( bytes && length ) {
 		NSStringEncoding encoding = [self encoding];
 		if( encoding != NSUTF8StringEncoding && isValidUTF8( bytes, length ) )

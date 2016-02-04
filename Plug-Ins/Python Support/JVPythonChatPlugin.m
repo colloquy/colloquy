@@ -29,6 +29,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 
 @implementation JVPythonChatPlugin
 @synthesize scriptFilePath = _path;
+@synthesize pluginManager = _manager;
 
 + (void) initialize {
 	static BOOL tooLate = NO;
@@ -43,7 +44,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 	if( ( self = [self init] ) ) {
 		_manager = manager;
 		_path = nil;
-		_modDate = [[NSDate date] retain];
+		_modDate = [NSDate date];
 	}
 
 	return self;
@@ -51,8 +52,8 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 
 - (instancetype) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
 	if( ( self = [self initWithManager:manager] ) ) {
-		_path = [path copyWithZone:[self zone]];
-		_uniqueModuleName = [[NSString locallyUniqueString] retain];
+		_path = [path copyWithZone:nil];
+		_uniqueModuleName = [NSString locallyUniqueString];
 		_firstLoad = YES;
 
 		[self reloadFromDisk];
@@ -60,7 +61,6 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 		_firstLoad = NO;
 
 		if( ! _scriptModule ) {
-			[self release];
 			return nil;
 		}
 
@@ -76,30 +76,17 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 	Py_XDECREF( _scriptModule );
 	_scriptModule = NULL;
 
-	[_path release];
-	[_uniqueModuleName release];
-	[_modDate release];
 
-	_path = nil;
 	_uniqueModuleName = nil;
 	_manager = nil;
 	_modDate = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
 
-- (MVChatPluginManager *) pluginManager {
-	return _manager;
-}
-
-- (NSString *) scriptFilePath {
-	return _path;
-}
-
 - (void) reloadFromDisk {
-	[self performSelector:@selector( unload )];
+	[self unload];
 
 	NSString *moduleName = [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension];
 	NSString *moduleFolder = [[self scriptFilePath] stringByDeletingLastPathComponent];
@@ -110,7 +97,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 	if( [self reportErrorIfNeededInFunction:nil] || ! _scriptModule )
 		return;
 
-	if( ! _firstLoad ) [self performSelector:@selector( load )];
+	if( ! _firstLoad ) [self load];
 }
 
 #pragma mark -
@@ -139,8 +126,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 		NSDictionary *info = [fm attributesOfItemAtPath:[self scriptFilePath] error:nil];
 		NSDate *fileModDate = [info fileModificationDate];
 		if( [fileModDate compare:_modDate] == NSOrderedDescending && [fileModDate compare:[NSDate date]] == NSOrderedAscending ) { // newer script file
-			[_modDate autorelease];
-			_modDate = [[NSDate date] retain];
+			_modDate = [NSDate date];
 			[self performSelector:@selector( promptForReload ) withObject:nil afterDelay:0.];
 		}
 	}
@@ -240,8 +226,6 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 		_errorShown = NO;
 
 		if( result == NSCancelButton && filename ) [[NSWorkspace sharedWorkspace] openFile:@(filename)];
-
-		[errorDesc release];
 
 		NSLog(@"Python plugin script error in %@:", scriptTitle);
 		PyErr_Restore( errType, errValue, errTrace );

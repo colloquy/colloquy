@@ -8,7 +8,7 @@ extern NSString *JVJavaScriptErrorDomain;
 @class WebView;
 
 @interface JVJavaScriptChatPlugin : NSObject <MVChatPlugin, WebUIDelegate, WebPolicyDelegate, WebFrameLoadDelegate> {
-	MVChatPluginManager *_manager;
+	__unsafe_unretained MVChatPluginManager *_manager;
 	NSString *_path;
 	NSDate *_modDate;
 	WebView *_webview;
@@ -20,7 +20,7 @@ extern NSString *JVJavaScriptErrorDomain;
 }
 - (instancetype) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 
-@property (readonly, strong) MVChatPluginManager *pluginManager;
+@property (readonly, assign) MVChatPluginManager *pluginManager;
 @property (readonly, copy) NSString *scriptFilePath;
 - (void) reloadFromDisk;
 

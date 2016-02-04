@@ -68,11 +68,12 @@
 
 @implementation JVAppleScriptChatPlugin
 @synthesize scriptFilePath = _path;
+@synthesize pluginManager = _manager;
 
 - (instancetype) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [self init] ) ) {
 		_manager = manager;
-		_doseNotRespond = [[NSMutableSet set] retain];
+		_doseNotRespond = [[NSMutableSet alloc] init];
 		_script = nil;
 		_path = nil;
 		_idleTimer = nil;
@@ -142,12 +143,6 @@
 
 	[self performSelector:@selector( load )];
 	[self performSelector:@selector( idle ) withObject:nil afterDelay:0.];
-}
-
-#pragma mark -
-
-- (MVChatPluginManager *) pluginManager {
-	return _manager;
 }
 
 #pragma mark -

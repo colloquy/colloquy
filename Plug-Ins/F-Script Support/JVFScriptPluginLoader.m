@@ -23,7 +23,6 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	_manager = nil;
-	[super dealloc];
 }
 
 - (void) displayInstallationWarning {
@@ -41,7 +40,7 @@
 		NSString *subcmd = ( [args count] ? args[0] : nil );
 		if( [args count] == 1 ) {
 			if( view && ! [subcmd caseInsensitiveCompare:@"console"] ) {
-				JVFScriptConsolePanel *console = [[[JVFScriptConsolePanel alloc] init] autorelease];
+				JVFScriptConsolePanel *console = [[JVFScriptConsolePanel alloc] init];
 				[[view windowController] addChatViewController:console];
 				[[view windowController] performSelector:@selector(showChatViewController:) withObject:console afterDelay:0];
 			} else if( ! [subcmd caseInsensitiveCompare:@"browse"] ) {
@@ -87,7 +86,7 @@
 						} else if( ! [subcmd caseInsensitiveCompare:@"unload"] ) {
 							[_manager removePlugin:plugin];
 						} else if( view && ! [subcmd caseInsensitiveCompare:@"console"] ) {
-							JVFScriptConsolePanel *console = [[[JVFScriptConsolePanel alloc] initWithFScriptChatPlugin:plugin] autorelease];
+							JVFScriptConsolePanel *console = [[JVFScriptConsolePanel alloc] initWithFScriptChatPlugin:plugin];
 							[[view windowController] addChatViewController:console];
 							[[view windowController] showChatViewController:console];
 						} else if( ! [subcmd caseInsensitiveCompare:@"edit"] ) {
@@ -114,9 +113,7 @@
 		NSArray *paths = [[_manager class] pluginSearchPaths];
 		NSFileManager *fm = [NSFileManager defaultManager];
 	
-		NSEnumerator *enumerator = [paths objectEnumerator];
-		NSString *path = nil;
-		while( ( path = [enumerator nextObject] ) ) {
+		for (__strong NSString *path in paths) {
 			path = [path stringByAppendingPathComponent:[name stringByDeletingPathExtension]];
 			path = [path stringByAppendingPathExtension:@"fscript"];
 			if( [fm fileExistsAtPath:path] ) {
@@ -125,14 +122,14 @@
 					return;
 				}
 
-				JVFScriptChatPlugin *plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:path withManager:_manager] autorelease];
+				JVFScriptChatPlugin *plugin = [[JVFScriptChatPlugin alloc] initWithScriptAtPath:path withManager:_manager];
 				if( plugin ) [_manager addPlugin:plugin];
 				return;
 			}
 		}
 	}
 
-	JVFScriptChatPlugin *plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:name withManager:_manager] autorelease];
+	JVFScriptChatPlugin *plugin = [[JVFScriptChatPlugin alloc] initWithScriptAtPath:name withManager:_manager];
 	if( plugin ) [_manager addPlugin:plugin];
 }
 
@@ -147,7 +144,7 @@
 					return;
 				}
 
-				JVFScriptChatPlugin *plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:[path stringByAppendingPathComponent:file] withManager:_manager] autorelease];
+				JVFScriptChatPlugin *plugin = [[JVFScriptChatPlugin alloc] initWithScriptAtPath:[path stringByAppendingPathComponent:file] withManager:_manager];
 				if( plugin ) [_manager addPlugin:plugin];
 			}
 		}

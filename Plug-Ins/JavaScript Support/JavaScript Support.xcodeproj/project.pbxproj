@@ -9,13 +9,20 @@
 /* Begin PBXBuildFile section */
 		1C4FD36807C6BC25000EA451 /* JVJavaScriptPluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FD36607C6BC25000EA451 /* JVJavaScriptPluginLoader.m */; };
 		1C8748F40B2A801800286F24 /* plugin.html in Resources */ = {isa = PBXBuildFile; fileRef = 1C8748F30B2A801800286F24 /* plugin.html */; };
-		1CEF8F1C0A3AB66F0054298A /* JVJavaScriptChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEF8E6B0A3AAF530054298A /* JVJavaScriptChatPlugin.m */; };
+		1CEF8F1C0A3AB66F0054298A /* JVJavaScriptChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEF8E6B0A3AAF530054298A /* JVJavaScriptChatPlugin.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		9295C8511675E158009F9014 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9295C8501675E158009F9014 /* WebKit.framework */; };
 		9295C95D16782FF1009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9295C95C16782FF1009F9014 /* ChatCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		55006EBD1C6357C1009AC42C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92823D0416900FA8000EC36E /* Colloquy (Old).xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55C8A2D0180735D100A7BB42;
+			remoteInfo = "Colloquy Tests";
+		};
 		92823D0B16900FA8000EC36E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 92823D0416900FA8000EC36E /* Colloquy (Old).xcodeproj */;
@@ -171,6 +178,7 @@
 				92823D0C16900FA8000EC36E /* Colloquy.app */,
 				92823D0E16900FA8000EC36E /* Standard Commands.plugin */,
 				92823D1016900FA8000EC36E /* Colloquy.mdimporter */,
+				55006EBE1C6357C1009AC42C /* Colloquy Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -232,6 +240,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		55006EBE1C6357C1009AC42C /* Colloquy Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Colloquy Tests.xctest";
+			remoteRef = 55006EBD1C6357C1009AC42C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		92823D0C16900FA8000EC36E /* Colloquy.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
@@ -291,6 +306,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -317,6 +333,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

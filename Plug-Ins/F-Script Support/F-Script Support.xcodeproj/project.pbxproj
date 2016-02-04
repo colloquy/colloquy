@@ -12,7 +12,7 @@
 		1C4FD36807C6BC25000EA451 /* JVFScriptPluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FD36607C6BC25000EA451 /* JVFScriptPluginLoader.m */; };
 		1C4FD3CF07C6BF1B000EA451 /* JVFScriptConsolePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FD3CD07C6BF1B000EA451 /* JVFScriptConsolePanel.m */; };
 		1C919D9E07C6DC2800079B67 /* console.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C919D9D07C6DC2800079B67 /* console.png */; };
-		1C91A7A407C7983900079B67 /* JVFScriptChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C91A7A207C7983900079B67 /* JVFScriptChatPlugin.m */; };
+		1C91A7A407C7983900079B67 /* JVFScriptChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C91A7A207C7983900079B67 /* JVFScriptChatPlugin.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		5598BC081C63EBC8000867B9 /* F-ScriptConsole.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5598BC071C63EBC8000867B9 /* F-ScriptConsole.xib */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		9295C96F16783011009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9295C96E16783011009F9014 /* ChatCore.framework */; };
@@ -59,7 +59,7 @@
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
-		0A61C7FF07E05F6000C326B4 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		0A61C7FF07E05F6000C326B4 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		1C415F750B35144900239EB3 /* Template.fscript */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = text; name = Template.fscript; path = "../SDK/F-Script/Template.fscript"; sourceTree = SOURCE_ROOT; tabWidth = 4; usesTabs = 1; };
 		1C4FD32907C6B9F5000EA451 /* FScript.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FScript.framework; path = /Library/Frameworks/FScript.framework; sourceTree = "<absolute>"; };
@@ -72,7 +72,7 @@
 		1C91A7A207C7983900079B67 /* JVFScriptChatPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFScriptChatPlugin.m; sourceTree = "<group>"; };
 		1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
 		5598BC071C63EBC8000867B9 /* F-ScriptConsole.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "F-ScriptConsole.xib"; sourceTree = "<group>"; };
-		55BEC8CE1C5AC1CA00103B67 /* ja */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ja; path = Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
+		55BEC8CE1C5AC1CA00103B67 /* ja */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* F-Script Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "F-Script Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		92823D1316900FC0000EC36E /* Colloquy (Old).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Colloquy (Old).xcodeproj"; path = "../../Colloquy (Old).xcodeproj"; sourceTree = "<group>"; };
@@ -322,7 +322,7 @@
 		0A61C80307E05F7200C326B4 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				0A61C7FF07E05F6000C326B4 /* English */,
+				0A61C7FF07E05F6000C326B4 /* en */,
 				A1F6107B0957E488001B65CD /* zh_TW */,
 				55BEC8CE1C5AC1CA00103B67 /* ja */,
 			);
@@ -336,6 +336,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -361,6 +362,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
