@@ -13,7 +13,7 @@
 		1C4FD3CF07C6BF1B000EA451 /* JVFScriptConsolePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FD3CD07C6BF1B000EA451 /* JVFScriptConsolePanel.m */; };
 		1C919D9E07C6DC2800079B67 /* console.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C919D9D07C6DC2800079B67 /* console.png */; };
 		1C91A7A407C7983900079B67 /* JVFScriptChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C91A7A207C7983900079B67 /* JVFScriptChatPlugin.m */; };
-		1CE3FB5507C7DFD50049A366 /* F-ScriptConsole.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CE3FB5407C7DFD50049A366 /* F-ScriptConsole.nib */; };
+		5598BC081C63EBC8000867B9 /* F-ScriptConsole.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5598BC071C63EBC8000867B9 /* F-ScriptConsole.xib */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		9295C96F16783011009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9295C96E16783011009F9014 /* ChatCore.framework */; };
 /* End PBXBuildFile section */
@@ -71,7 +71,7 @@
 		1C91A7A107C7983900079B67 /* JVFScriptChatPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVFScriptChatPlugin.h; sourceTree = "<group>"; };
 		1C91A7A207C7983900079B67 /* JVFScriptChatPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFScriptChatPlugin.m; sourceTree = "<group>"; };
 		1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
-		1CE3FB5407C7DFD50049A366 /* F-ScriptConsole.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = "F-ScriptConsole.nib"; sourceTree = "<group>"; };
+		5598BC071C63EBC8000867B9 /* F-ScriptConsole.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "F-ScriptConsole.xib"; sourceTree = "<group>"; };
 		55BEC8CE1C5AC1CA00103B67 /* ja */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ja; path = Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* F-Script Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "F-Script Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -122,7 +122,7 @@
 			children = (
 				0A61C80307E05F7200C326B4 /* Localizable.strings */,
 				1C919D9D07C6DC2800079B67 /* console.png */,
-				1CE3FB5407C7DFD50049A366 /* F-ScriptConsole.nib */,
+				5598BC071C63EBC8000867B9 /* F-ScriptConsole.xib */,
 				8D5B49B7048680CD000E48DA /* Info.plist */,
 			);
 			indentWidth = 4;
@@ -290,8 +290,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C919D9E07C6DC2800079B67 /* console.png in Resources */,
-				1CE3FB5507C7DFD50049A366 /* F-ScriptConsole.nib in Resources */,
 				0A61C80407E05F7200C326B4 /* Localizable.strings in Resources */,
+				5598BC081C63EBC8000867B9 /* F-ScriptConsole.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
