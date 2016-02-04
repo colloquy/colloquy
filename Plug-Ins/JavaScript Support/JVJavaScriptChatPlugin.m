@@ -72,6 +72,9 @@ static BOOL replacementIsSelectorExcludedFromWebScript( id self, SEL cmd, SEL se
 NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 
 @implementation JVJavaScriptChatPlugin
+@synthesize pluginManager = _manager;
+@synthesize scriptFilePath = _path;
+
 + (void) initialize {
 	static BOOL tooLate = NO;
 	if( ! tooLate ) {
@@ -270,14 +273,6 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 }
 
 #pragma mark -
-
-- (MVChatPluginManager *) pluginManager {
-	return _manager;
-}
-
-- (NSString *) scriptFilePath {
-	return _path;
-}
 
 - (void) reloadFromDisk {
 	[self performSelector:@selector( unload )];

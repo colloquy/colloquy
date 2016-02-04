@@ -21,7 +21,6 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	_manager = nil;
-	[super dealloc];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
@@ -105,7 +104,6 @@
 			if( [fm fileExistsAtPath:pathExt] ) {
 				JVJavaScriptChatPlugin *plugin = [[JVJavaScriptChatPlugin alloc] initWithScriptAtPath:pathExt withManager:_manager];
 				if( plugin ) [_manager addPlugin:plugin];
-				[plugin release];
 				return;
 			}
 		}
@@ -113,7 +111,6 @@
 
 	JVJavaScriptChatPlugin *plugin = [[JVJavaScriptChatPlugin alloc] initWithScriptAtPath:name withManager:_manager];
 	if( plugin ) [_manager addPlugin:plugin];
-	[plugin release];
 }
 
 - (void) reloadPlugins {
@@ -125,7 +122,6 @@
 				NSString *pathExt = [path stringByAppendingPathComponent:file];
 				JVJavaScriptChatPlugin *plugin = [[JVJavaScriptChatPlugin alloc] initWithScriptAtPath:pathExt withManager:_manager];
 				if( plugin ) [_manager addPlugin:plugin];
-				[plugin release];
 			}
 		}
 	}

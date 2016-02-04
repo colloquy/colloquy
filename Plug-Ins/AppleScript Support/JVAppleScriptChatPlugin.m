@@ -68,6 +68,7 @@
 
 @implementation JVAppleScriptChatPlugin
 @synthesize scriptFilePath = _path;
+@synthesize pluginManager = _manager;
 
 - (instancetype) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [self init] ) ) {
@@ -143,10 +144,6 @@
 	[self performSelector:@selector( load )];
 	[self performSelector:@selector( idle ) withObject:nil afterDelay:0.];
 }
-
-#pragma mark -
-
-@synthesize pluginManager = _manager;
 
 #pragma mark -
 

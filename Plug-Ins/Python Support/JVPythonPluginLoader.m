@@ -17,7 +17,6 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	_manager = nil;
-	[super dealloc];
 }
 
 - (void) displayInstallationWarning {
@@ -108,14 +107,14 @@
 					return;
 				}
 
-				JVPythonChatPlugin *plugin = [[[JVPythonChatPlugin alloc] initWithScriptAtPath:pathExt withManager:_manager] autorelease];
+				JVPythonChatPlugin *plugin = [[JVPythonChatPlugin alloc] initWithScriptAtPath:pathExt withManager:_manager];
 				if( plugin ) [_manager addPlugin:plugin];
 				return;
 			}
 		}
 	}
 
-	JVPythonChatPlugin *plugin = [[[JVPythonChatPlugin alloc] initWithScriptAtPath:name withManager:_manager] autorelease];
+	JVPythonChatPlugin *plugin = [[JVPythonChatPlugin alloc] initWithScriptAtPath:name withManager:_manager];
 	if( plugin ) [_manager addPlugin:plugin];
 }
 
@@ -126,7 +125,7 @@
 	NSFileManager *fm = [NSFileManager defaultManager];
 
 	for( NSString *path in [[_manager class] pluginSearchPaths] ) {
-		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
+		for( __strong NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			if( [[file pathExtension] isEqualToString:@"pyc"] || [[file pathExtension] isEqualToString:@"py"] || [[file pathExtension] isEqualToString:@"pyo"] ) {
 				if( ! _pyobjcInstalled ) {
 					[self displayInstallationWarning];
@@ -143,7 +142,7 @@
 				if( ! [fm fileExistsAtPath:pathExt] ) pathExt = [file stringByAppendingPathExtension:@"pyo"];
 				if( ! [fm fileExistsAtPath:pathExt] ) pathExt = [file stringByAppendingPathExtension:@"pyc"];
 
-				JVPythonChatPlugin *plugin = [[[JVPythonChatPlugin alloc] initWithScriptAtPath:pathExt withManager:_manager] autorelease];
+				JVPythonChatPlugin *plugin = [[JVPythonChatPlugin alloc] initWithScriptAtPath:pathExt withManager:_manager];
 				if( plugin ) [_manager addPlugin:plugin];
 			}
 		}

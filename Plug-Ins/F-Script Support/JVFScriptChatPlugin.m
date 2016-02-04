@@ -82,9 +82,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 
 #pragma mark -
 
-- (MVChatPluginManager *) pluginManager {
-	return _manager;
-}
+@synthesize pluginManager = _manager;
 
 - (FSInterpreter *) scriptInterpreter {
 	return _scriptInterpreter;
