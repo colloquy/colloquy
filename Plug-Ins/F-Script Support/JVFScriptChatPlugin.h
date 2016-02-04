@@ -5,7 +5,7 @@ extern NSString *JVFScriptErrorDomain;
 @class FSInterpreter;
 
 @interface JVFScriptChatPlugin : NSObject <MVChatPlugin> {
-	MVChatPluginManager *_manager;
+	__unsafe_unretained MVChatPluginManager *_manager;
 	FSInterpreter *_scriptInterpreter;
 	NSString *_path;
 	NSDate *_modDate;
@@ -13,7 +13,7 @@ extern NSString *JVFScriptErrorDomain;
 }
 - (instancetype) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 
-@property (readonly, strong) MVChatPluginManager *pluginManager;
+@property (readonly, assign) MVChatPluginManager *pluginManager;
 @property (readonly, strong) FSInterpreter *scriptInterpreter;
 @property (readonly, copy) NSString *scriptFilePath;
 - (void) reloadFromDisk;

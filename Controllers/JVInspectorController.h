@@ -26,8 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @protocol JVInspectionDelegator <NSObject>
-- (id <JVInspection>) objectToInspect;
-- (IBAction) getInfo:(id) sender;
+- (nullable id <JVInspection>) objectToInspect;
+- (IBAction) getInfo:(nullable id) sender;
 @end
 
 @interface JVInspectorController : NSWindowController <NSWindowDelegate> {

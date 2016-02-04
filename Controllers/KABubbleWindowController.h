@@ -16,6 +16,8 @@
 	NSTimer *_animationTimer;
 	NSUInteger _depth;
 }
+
+- (instancetype) init;
 + (KABubbleWindowController *) bubble;
 + (KABubbleWindowController *) bubbleWithTitle:(NSString *) title text:(id) text icon:(NSImage *) icon;
 

@@ -659,7 +659,7 @@
 	// /ignore -mn /eevyl.*/ /is listening .*/ #adium #colloquy #here
 	// /ignore -n /bunny.*/ - ignore users whose nick starts with bunny in all rooms
 
-	NSArray *argsArray = [args componentsSeparatedByString:@" "];
+	NSArray<NSString*> *argsArray = [args componentsSeparatedByString:@" "];
 	NSString *memberString = nil;
 	NSString *messageString = nil;
 	NSArray *rooms = nil;

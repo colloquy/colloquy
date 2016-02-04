@@ -1,7 +1,7 @@
 #import <ChatCore/MVChatPluginManager.h>
 
 @interface JVJavaScriptPluginLoader : NSObject <MVChatPlugin> {
-	MVChatPluginManager *_manager;
+	__unsafe_unretained MVChatPluginManager *_manager;
 }
 - (void) loadPluginNamed:(NSString *) name;
 @end

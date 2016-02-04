@@ -72,7 +72,7 @@
 - (instancetype) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [self init] ) ) {
 		_manager = manager;
-		_doseNotRespond = [[NSMutableSet set] retain];
+		_doseNotRespond = [[NSMutableSet alloc] init];
 		_script = nil;
 		_path = nil;
 		_idleTimer = nil;
