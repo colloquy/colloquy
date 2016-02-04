@@ -56,7 +56,7 @@
 		1C4FD3CC07C6BF1B000EA451 /* JVAppleScriptEditorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppleScriptEditorPanel.h; sourceTree = "<group>"; };
 		1C4FD3CD07C6BF1B000EA451 /* JVAppleScriptEditorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppleScriptEditorPanel.m; sourceTree = "<group>"; };
 		1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
-		1CE3FB5407C7DFD50049A366 /* AppleScriptPanel.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = AppleScriptPanel.nib; sourceTree = "<group>"; };
+		1CE3FB5407C7DFD50049A366 /* AppleScriptPanel.nib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AppleScriptPanel.xib; sourceTree = "<group>"; };
 		1CF7A61407CD661200965F52 /* compile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compile.png; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* AppleScript Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AppleScript Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };

@@ -146,9 +146,7 @@
 
 #pragma mark -
 
-- (MVChatPluginManager *) pluginManager {
-	return _manager;
-}
+@synthesize pluginManager = _manager;
 
 #pragma mark -
 
