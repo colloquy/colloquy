@@ -1,9 +1,10 @@
+#import <Cocoa/Cocoa.h>
 #import "JVChatWindowController.h"
 
 @class JVChatWindowController;
 @class JVAppleScriptChatPlugin;
 
-@interface JVAppleScriptEditorPanel : NSObject <JVChatViewController> {
+@interface JVAppleScriptEditorPanel : NSObject <JVChatViewController, NSToolbarDelegate> {
 	BOOL _nibLoaded;
 	JVChatWindowController *_windowController;
 	NSImage *_icon;
