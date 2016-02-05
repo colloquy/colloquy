@@ -104,7 +104,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 @property(strong, readonly) MVChatUser *topicAuthor;
 @property(copy, readonly) NSDate *dateTopicChanged;
 
-@property(strong, readonly) NSSet *supportedAttributes;
+@property(strong, readonly) NSSet<NSString*> *supportedAttributes;
 @property(strong, readonly) NSDictionary *attributes;
 
 @property(readonly) NSUInteger supportedModes;
@@ -113,8 +113,8 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 @property(readonly) NSUInteger modes;
 
 @property(strong, readonly) MVChatUser *localMemberUser;
-@property(strong, readonly) NSSet *memberUsers;
-@property(strong, readonly) NSSet *bannedUsers;
+@property(strong, readonly) NSSet<MVChatUser*> *memberUsers;
+@property(strong, readonly) NSSet<MVChatUser*> *bannedUsers;
 
 - (BOOL) isEqual:(id) object;
 - (BOOL) isEqualToChatRoom:(MVChatRoom *) anotherUser;

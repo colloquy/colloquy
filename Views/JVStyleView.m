@@ -104,6 +104,13 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 @implementation JVStyleView
+@synthesize scrollbackLimit = _scrollbackLimit;
+@synthesize transcript = _transcript;
+@synthesize style = _style;
+@synthesize nextTextView;
+@synthesize bodyTemplate = _bodyTemplate;
+@synthesize emoticons = _emoticons;
+
 + (void) emptyCache {
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"] )
 		return;
@@ -188,26 +195,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
-- (NSTextView *) nextTextView {
-	return nextTextView;
-}
-
-- (void) setNextTextView:(NSTextView *) textView {
-	nextTextView = textView;
-}
-
-#pragma mark -
-
-- (void) setTranscript:(JVChatTranscript *) transcript {
-	_transcript = transcript;
-}
-
-- (JVChatTranscript *) transcript {
-	return _transcript;
-}
-
-#pragma mark -
-
 - (void) setStyle:(JVStyle *) style {
 	[self setStyle:style withVariant:[style defaultVariantName]];
 }
@@ -269,16 +256,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
-- (void) setBodyTemplate:(NSString *) bodyTemplate {
-	_bodyTemplate = bodyTemplate;
-}
-
-- (NSString *) bodyTemplate {
-	return _bodyTemplate;
-}
-
-#pragma mark -
-
 - (void) setStyleParameters:(NSDictionary *) parameters {
 	_styleParameters = [parameters mutableCopy];
 }
@@ -306,16 +283,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (JVEmoticonSet *) emoticons {
 	return _emoticons;
-}
-
-#pragma mark -
-
-- (void) setScrollbackLimit:(NSUInteger) limit {
-	_scrollbackLimit = limit;
-}
-
-- (NSUInteger) scrollbackLimit {
-	return _scrollbackLimit;
 }
 
 #pragma mark -
