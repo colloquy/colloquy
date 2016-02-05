@@ -180,9 +180,18 @@ static JVNotificationController *sharedInstance = nil;
 
 - (void) _playSound:(NSString *) path {
 	if( ! path ) return;
+	NSString *oldPath = path;
 
-	if( ! [path isAbsolutePath] )
-		path = [[NSString stringWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:path];
+	if( ! [path isAbsolutePath] ) {
+		path = [[NSBundle mainBundle] pathForResource:path ofType:nil inDirectory:@"Sounds"];
+		if (!path) {
+			// fall-back in case the sound file isn't there.
+			// so the dictionary doesn't get sent nil.
+			path = [[NSString stringWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:oldPath];
+		}
+	}
+	
+	oldPath = nil;
 
 	NSSound *sound;
 	if( ! (sound = _sounds[path]) ) {
