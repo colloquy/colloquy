@@ -286,7 +286,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	NSString *favoritesPath = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
 	NSMutableArray *favorites = [NSMutableArray arrayWithContentsOfFile:favoritesPath];
 	if (!favorites)
-		favorites = [NSMutableArray array];
+		favorites = [[NSMutableArray alloc] init];
 
 	NSInteger favoriteIndex = [self _roomIndexInFavoritesMenu];
 	if (favoriteIndex != NSNotFound)
@@ -337,7 +337,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	}
 
 	if( [message ignoreStatus] == JVNotIgnored && [[message sender] respondsToSelector:@selector( isLocalUser )] && ! [[message sender] isLocalUser] ) {
-		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 		context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"%@ Room Activity", "room activity bubble title" ), [self title]];
 		if( [self newMessagesWaiting] == 1 ) context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"%@ has a message waiting\nfrom %@.", "new single room message bubble text" ), [self title], [member displayName]];
 		else context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"%@ has %d messages waiting.\nLast from %@", "new room messages bubble text" ), [self title], [self newMessagesWaiting], [member displayName]];
@@ -351,7 +351,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	}
 
 	if( [message ignoreStatus] == JVNotIgnored && [_nextMessageAlertMembers containsObject:[message sender]] ) {
-		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 		context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"%@ Replied", "member replied bubble title" ), [[message sender] title]];
 		context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@ has possibly replied to your message.", "new room messages bubble text" ), [[message sender] title]];
 		context[@"image"] = [NSImage imageNamed:@"activityNewImportant"];
@@ -481,7 +481,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 - (NSSet *) chatRoomMembersWithName:(NSString *) name {
 	if( ! [name length] ) return nil;
 
-	NSMutableSet *ret = [NSMutableSet set];
+	NSMutableSet *ret = [[NSMutableSet alloc] init];
 	JVChatRoomMember *member = nil;
 
 	for( member in _sortedMembers ) {
@@ -544,7 +544,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	if (!escapeSet)
 		escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 
-	NSMutableString *regexEscapedNicknames = [NSMutableString string];
+	NSMutableString *regexEscapedNicknames = [[NSMutableString alloc] init];
 	for( JVChatRoomMember *member in _sortedMembers ) {
 		NSMutableString *escapedName = [[member nickname] mutableCopy];
 		[escapedName escapeCharactersInSet:escapeSet];
@@ -580,7 +580,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		if( user ) mbr = [self chatRoomMemberForUser:user];
 		else mbr = [self firstChatRoomMemberWithName:nick];
 
-		NSMutableArray *ret = [NSMutableArray array];
+		NSMutableArray *ret = [[NSMutableArray alloc] init];
 		NSMenuItem *item = nil;
 
 		if( mbr ) {
@@ -652,7 +652,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 #pragma mark TextView/Input Support
 
 - (NSArray *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix {
-	NSMutableArray *possibleCompletion = [NSMutableArray array];
+	NSMutableArray *possibleCompletion = [[NSMutableArray alloc] init];
 
 	if( [prefix isEqualToString:@""] ) {
 		if( [_preferredTabCompleteNicknames count] )
@@ -697,7 +697,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 - (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(NSInteger *) index {
 	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSString *search = [[[send textStorage] string] substringWithRange:charRange];
-	NSMutableArray *ret = [NSMutableArray array];
+	NSMutableArray *ret = [[NSMutableArray alloc] init];
 	NSString *suffix = ( ! ( [event modifierFlags] & NSAlternateKeyMask ) ? ( charRange.location == 0 ? @": " : @" " ) : @"" );
 	NSUInteger length = [search length];
 
@@ -987,7 +987,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
-	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 	context[@"title"] = NSLocalizedString( @"Room Member Joined", "member joined title" );
 	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@ joined the chat room %@.", "bubble message member joined string" ), name, _target];
 	context[@"target"] = self;
@@ -1020,7 +1020,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	[self addEventMessageToDisplay:message withName:@"memberParted" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 
-	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 	[context setObject:NSLocalizedString( @"Room Member Left", "member left title" ) forKey:@"title"];
 	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@ left the chat room %@.", "bubble message member left string" ), name, _target];
 	context[@"target"] = self;
@@ -1069,7 +1069,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
-	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 	context[@"title"] = NSLocalizedString( @"Chat User Bricked", "user bricked title" );
 	context[@"description"] = ctxmessage;
 	context[@"target"] = self;
@@ -1108,7 +1108,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	_kickedFromRoom = YES;
 	_cantSendMessages = YES;
 
-	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 	[context setObject:NSLocalizedString( @"You Were Kicked", "member kicked title" ) forKey:@"title"];
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were kicked from %@ by %@.", "bubble message member kicked string" ), [self title], ( byMember ? [[byMember title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )] forKey:@"description"];
 	[context setObject:self forKey:@"target"];
@@ -1163,7 +1163,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	[self addEventMessageToDisplay:message withName:@"memberKicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( member ? (id) member : (id) user ), @"who", ( byMember ? (id) byMember : (id) byUser ), @"by", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 
-	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 	[context setObject:NSLocalizedString( @"Room Member Kicked", "member kicked title" ) forKey:@"title"];
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ was kicked from %@ by %@.", "bubble message member kicked string" ), ( member ? [[member title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [self title], ( byMember ? [[byMember title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )] forKey:@"description"];
 	[context setObject:self forKey:@"target"];
@@ -1437,7 +1437,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	[self addEventMessageToDisplay:message withName:name andAttributes:@{@"who": ( mbr ? (id) mbr : (id) user ), @"by": ( byMbr ? (id) byMbr : (id) byUser )}];
 
 	if( title && description && notificationKey ) {
-		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 		context[@"title"] = title;
 		context[@"description"] = description;
 		context[@"target"] = self;

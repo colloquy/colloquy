@@ -23,7 +23,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 @implementation JVChatConsolePanel
 - (instancetype) initWithConnection:(MVChatConnection *) connection {
 	if( ( self = [self init] ) ) {
-		_sendHistory = [NSMutableArray array];
+		_sendHistory = [[NSMutableArray alloc] init];
 		[_sendHistory insertObject:[[NSAttributedString alloc] initWithString:@""] atIndex:0];
 
 		_sendHeight = 25.;
@@ -221,7 +221,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) addMessageToDisplay:(NSString *) message asOutboundMessage:(BOOL) outbound {
 	NSAttributedString *msg = nil;
 	id strMsg = [message mutableCopy];
-	NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
+	NSMutableDictionary *attrs = [[NSMutableDictionary alloc] init];
 	NSMutableParagraphStyle *para = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	NSUInteger numeric = 0;
 

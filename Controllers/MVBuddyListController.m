@@ -682,7 +682,7 @@ static MVBuddyListController *sharedInstance = nil;
 - (NSString *) tableView:(MVTableView *) tableView toolTipForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( tableView != buddies || row == -1 || row >= (int)[_buddyOrder count] ) return nil;
 
-	NSMutableString *ret = [NSMutableString string];
+	NSMutableString *ret = [[NSMutableString alloc] init];
 	JVBuddy *buddy = _buddyOrder[row];
 	MVChatUser *user = [buddy activeUser];
 
@@ -888,7 +888,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 	[self _buddyChanged:notification];
 
-	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 	context[@"title"] = NSLocalizedString( @"Buddy Available", "available buddy bubble title" );
 	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now online.", "available buddy bubble text" ), [buddy displayName]];
 
@@ -911,7 +911,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 	MVChatConnection *buddyConnection = [[buddy activeUser] connection];
 	if( [buddyConnection isConnected] ) {
-		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 		context[@"title"] = NSLocalizedString( @"Buddy Unavailable", "unavailable buddy bubble title" );
 		context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now offline.", "unavailable buddy bubble text" ), [buddy displayName]];
 

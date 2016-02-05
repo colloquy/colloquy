@@ -270,7 +270,7 @@
 
 - (id) accessibilityAttributeValue:(NSString *) attribute {
 	if ([attribute isEqualToString:NSAccessibilityValueDescriptionAttribute]) {
-		NSMutableArray *bits = [NSMutableArray array];
+		NSMutableArray *bits = [[NSMutableArray alloc] init];
 		NSString *statusText = (!_statusImage && _statusNumber) ? [NSString stringWithFormat:NSLocalizedString(@"%d items", nil), _statusNumber]: nil;
 		NSString *importantStatusText = (!_statusImage && _importantStatusNumber) ? [NSString stringWithFormat:NSLocalizedString(@"%d important items", nil), _importantStatusNumber]: nil;
 #define NIL_TO_EMPTY_STRING(a) ((a) ? (a) : @"")

@@ -3,7 +3,7 @@
 
 @implementation JVSplitView
 - (NSString *) stringWithSavedPosition {
-	NSMutableString *result = [NSMutableString string];
+	NSMutableString *result = [[NSMutableString alloc] init];
 	for( NSView *subview in [self subviews]) {
 		if( [result length] ) [result appendString:@";"];
 		[result appendString:NSStringFromRect( [subview frame] )];

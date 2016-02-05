@@ -44,7 +44,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	}
 
 	if( ( self = [super initImageCell:nil] ) ) {
-		if( ! colorWellCells ) colorWellCells = [NSMutableSet set];
+		if( ! colorWellCells ) colorWellCells = [[NSMutableSet alloc] init];
 		[colorWellCells addObject:self];
 		_releasing = NO;
 
@@ -71,7 +71,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	ret -> _showsWebValue = _showsWebValue;
 	ret -> _releasing = NO;
 
-	if( ! colorWellCells ) colorWellCells = [NSMutableSet set];
+	if( ! colorWellCells ) colorWellCells = [[NSMutableSet alloc] init];
 	[colorWellCells addObject:ret];
 
 	return ret;

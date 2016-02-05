@@ -22,8 +22,8 @@
 @implementation JVMarkedScroller
 - (instancetype) initWithFrame:(NSRect) frame {
 	if( ( self = [super initWithFrame:frame] ) ) {
-		_marks = [NSMutableSet set];
-		_shades = [NSMutableArray array];
+		_marks = [[NSMutableSet alloc] init];
+		_shades = [[NSMutableArray alloc] init];
 		_nearestPreviousMark = NSNotFound;
 		_nearestNextMark = NSNotFound;
 		_currentMark = NSNotFound;
@@ -86,7 +86,7 @@
 	}
 
 	NSBezierPath *lines = [NSBezierPath bezierPath];
-	NSMutableArray *lineArray = [NSMutableArray array];
+	NSMutableArray *lineArray = [[NSMutableArray alloc] init];
 
 	unsigned long long currentPosition = ( _currentMark != NSNotFound ? _currentMark : [self floatValue] * [self contentViewLength] );
 	BOOL foundNext = NO, foundPrevious = NO;
@@ -313,7 +313,7 @@
 
 - (void) shiftMarksAndShadedAreasBy:(long long) displacement {
 	BOOL negative = ( displacement >= 0 ? NO : YES );
-	NSMutableSet *shiftedMarks = [NSMutableSet set];
+	NSMutableSet *shiftedMarks = [[NSMutableSet alloc] init];
 	unsigned long long unsignedDisplacement = (unsigned long long)ABS( displacement );
 
 	if( ! ( negative && _nearestPreviousMark < unsignedDisplacement ) ) _nearestPreviousMark += unsignedDisplacement;
@@ -334,7 +334,7 @@
 
 	[_marks setSet:shiftedMarks];
 
-	NSMutableArray *shiftedShades = [NSMutableArray array];
+	NSMutableArray *shiftedShades = [[NSMutableArray alloc] init];
 	NSNumber *start = nil;
 	NSNumber *stop = nil;
 

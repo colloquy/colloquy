@@ -72,12 +72,12 @@ NS_ASSUME_NONNULL_BEGIN
 	if( _loadedAttributes || ! _node ) return;
 
 	@synchronized( _transcript ) {
-		xmlNode *subNode = ((xmlNode *) _node) -> children;
-		NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+		xmlNode *subNode = _node -> children;
+		NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
 
 		do {
 			if( subNode -> type == XML_ELEMENT_NODE && strcmp( "message", (char *) subNode -> name ) ) { // everything but "message"
-				NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+				NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
 				xmlAttrPtr prop = NULL;
 				for( prop = subNode -> properties; prop; prop = prop -> next ) {
 					xmlChar *value = xmlGetProp( subNode, prop -> name );

@@ -302,7 +302,7 @@
 
 - (NSString *)base64EncodedFullResponse
 {
-	NSMutableString *buffer = [NSMutableString stringWithCapacity:100];
+	NSMutableString *buffer = [[NSMutableString alloc] initWithCapacity:100];
 	[buffer appendFormat:@"username=\"%@\",", username];
 	[buffer appendFormat:@"realm=\"%@\",", realm];
 	[buffer appendFormat:@"nonce=\"%@\",", nonce];

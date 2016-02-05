@@ -128,7 +128,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 - (void) initializeFromDefaults {
 	NSData *data = [[NSUserDefaults standardUserDefaults] dataForKey:@"JVChatWindowRuleSets"];
 
-	self.windowSets = ( [data length] ? [NSKeyedUnarchiver unarchiveObjectWithData:data] : [NSMutableArray array] );
+	self.windowSets = ( [data length] ? [NSKeyedUnarchiver unarchiveObjectWithData:data] : [[NSMutableArray alloc] init] );
 
 	NSMutableDictionary *info = nil;
 	BOOL haveCurrentWindow = NO;
@@ -147,30 +147,30 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	}
 
 	if( ! haveCurrentWindow ) {
-		info = [NSMutableDictionary dictionary];
+		info = [[NSMutableDictionary alloc] init];
 		[self.windowSets addObject:info];
 
 		[info setObject:@"currentWindow" forKey:@"special"];
 		[info setObject:[NSString locallyUniqueString] forKey:@"identifier"];
-		[info setObject:[NSMutableArray array] forKey:@"rules"];
+		[info setObject:[[NSMutableArray alloc] init] forKey:@"rules"];
 	}
 
 	if( ! haveNewWindow ) {
-		info = [NSMutableDictionary dictionary];
+		info = [[NSMutableDictionary alloc] init];
 		[self.windowSets addObject:info];
 
 		[info setObject:@"newWindow" forKey:@"special"];
 		[info setObject:[NSString locallyUniqueString] forKey:@"identifier"];
-		[info setObject:[NSMutableArray array] forKey:@"rules"];
+		[info setObject:[[NSMutableArray alloc] init] forKey:@"rules"];
 	}
 
 	if( ! haveServerWindow ) {
-		info = [NSMutableDictionary dictionary];
+		info = [[NSMutableDictionary alloc] init];
 		[self.windowSets addObject:info];
 
 		[info setObject:@"serverWindow" forKey:@"special"];
 		[info setObject:[NSString locallyUniqueString] forKey:@"identifier"];
-		[info setObject:[NSMutableArray array] forKey:@"rules"];
+		[info setObject:[[NSMutableArray alloc] init] forKey:@"rules"];
 	}
 
 	[self.windowSetsTable selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
@@ -186,7 +186,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 #pragma mark -
 
 - (NSString *) titleForRules:(NSArray *) rules booleanAndOperation:(BOOL) operation {
-	NSMutableString *title = [NSMutableString string];
+	NSMutableString *title = [[NSMutableString alloc] init];
 	BOOL first = YES;
 
 	for( id rule in rules ) {
@@ -417,11 +417,11 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	NSMutableDictionary *info = nil;
 
 	if( self.makingNewWindowSet ) {
-		info = [NSMutableDictionary dictionary];
+		info = [[NSMutableDictionary alloc] init];
 		[self.windowSets addObject:info];
 
 		[info setObject:[NSString locallyUniqueString] forKey:@"identifier"];
-		[info setObject:[NSMutableArray array] forKey:@"rules"];
+		[info setObject:[[NSMutableArray alloc] init] forKey:@"rules"];
 	} else info = [self.windowSets objectAtIndex:self.selectedWindowSet];
 
 	[info setObject:[self.windowTitle stringValue] forKey:@"title"];
@@ -449,7 +449,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 #pragma mark -
 
 - (NSMutableArray *) selectedRules {
-	if( [self.windowSets count] < self.selectedWindowSet ) return [NSMutableArray array];
+	if( [self.windowSets count] < self.selectedWindowSet ) return [[NSMutableArray alloc] init];
 	NSDictionary *info = [self.windowSets objectAtIndex:self.selectedWindowSet];
 	return [info objectForKey:@"rules"];
 }
@@ -549,7 +549,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 - (IBAction) addRuleSet:(id) sender {
 	self.makingNewRuleSet = YES;
 
-	self.editingRuleCriterion = [NSMutableArray array];
+	self.editingRuleCriterion = [[NSMutableArray alloc] init];
 
 	[self addRuleCriterionRow:nil];
 	[self updateRuleEditPanelSize];
@@ -580,7 +580,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	NSMutableDictionary *info = nil;
 
 	if( self.makingNewRuleSet ) {
-		info = [NSMutableDictionary dictionary];
+		info = [[NSMutableDictionary alloc] init];
 		[[self selectedRules] addObject:info];
 	} else info = [[self selectedRules] objectAtIndex:self.selectedRuleSet];
 

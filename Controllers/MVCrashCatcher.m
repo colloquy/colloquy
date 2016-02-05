@@ -74,7 +74,7 @@
 #pragma mark -
 
 - (IBAction) sendCrashLog:(id) sender {
-	NSMutableString *body = [NSMutableString stringWithCapacity:40960];
+	NSMutableString *body = [[NSMutableString alloc] initWithCapacity:40960];
 
 	NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/ServerVersion.plist"];
 	if( ! systemVersion.count ) systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];

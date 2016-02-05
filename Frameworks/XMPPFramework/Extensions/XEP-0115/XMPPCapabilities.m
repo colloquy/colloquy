@@ -500,9 +500,9 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 {
 	if (query == nil) return nil;
 	
-	NSMutableSet *set = [NSMutableSet set];
+	NSMutableSet *set = [[NSMutableSet alloc] init];
 	
-	NSMutableString *s = [NSMutableString string];
+	NSMutableString *s = [[NSMutableString alloc] init];
 	
 	NSArray *identities = [[query elementsForName:@"identity"] sortedArrayUsingFunction:sortIdentities context:NULL];
 	for (NSXMLElement *identity in identities)

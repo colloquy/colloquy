@@ -19,7 +19,7 @@
 
 - (instancetype) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
-		_tabItems = [NSMutableArray array];
+		_tabItems = [[NSMutableArray alloc] init];
 		_tabIsShowing = YES;
 		_supressHiding = NO;
 		_autoHideTabBar = YES;

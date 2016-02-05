@@ -737,7 +737,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) addConnection:(MVChatConnection *) connection keepBookmark:(BOOL) keep {
-	NSMutableDictionary *info = [NSMutableDictionary dictionary];
+	NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
 	info[@"created"] = [NSDate date];
 	info[@"connection"] = connection;
 	if( ! keep ) info[@"temporary"] = @YES;
@@ -755,7 +755,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) insertConnection:(MVChatConnection *) connection atIndex:(NSUInteger) index {
-	NSMutableDictionary *info = [NSMutableDictionary dictionary];
+	NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
 	info[@"created"] = [NSDate date];
 	info[@"connection"] = connection;
 
@@ -802,7 +802,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) replaceConnectionAtIndex:(NSUInteger) index withConnection:(MVChatConnection *) connection {
-	NSMutableDictionary *info = [NSMutableDictionary dictionary];
+	NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
 	info[@"created"] = [NSDate date];
 	info[@"connection"] = connection;
 
@@ -951,7 +951,7 @@ static NSMenu *favoritesMenu = nil;
 		if( info[@"connection"] == connection ) {
 			NSMutableArray *ret = info[@"rooms"];
 			if( ! ret ) {
-				ret = [NSMutableArray array];
+				ret = [[NSMutableArray alloc] init];
 				info[@"rooms"] = ret;
 			}
 			return ret;
@@ -1006,7 +1006,7 @@ static NSMenu *favoritesMenu = nil;
 		if( info[@"connection"] == connection ) {
 			NSMutableArray *ret = info[@"ignores"];
 			if( ! ret ) {
-				ret = [NSMutableArray array];
+				ret = [[NSMutableArray alloc] init];
 				info[@"ignores"] = ret;
 			}
 			return ret;
@@ -1587,7 +1587,7 @@ static NSMenu *favoritesMenu = nil;
 			break;
 	}
 
-	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 	context[@"title"] = errorTitle;
 	context[@"description"] = [[notification userInfo][@"error"] localizedDescription];
 	[[JVNotificationController defaultController] performNotification:@"JVChatError" withContextInfo:context];
@@ -1709,7 +1709,7 @@ static NSMenu *favoritesMenu = nil;
 			MVChatConnection *connection = info[@"connection"];
 			if( ! connection ) continue;
 
-			NSMutableDictionary *data = [NSMutableDictionary dictionary];
+			NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
 			data[@"automatic"] = @([info[@"automatic"] boolValue]);
 			data[@"showConsole"] = @([info[@"showConsole"] boolValue]);
 			data[@"secure"] = @([connection isSecure]);
@@ -1736,7 +1736,7 @@ static NSMenu *favoritesMenu = nil;
 			if( [[connection persistentInformation] count] )
 				data[@"persistentInformation"] = [connection persistentInformation];
 
-			NSMutableArray *permIgnores = [NSMutableArray array];
+			NSMutableArray *permIgnores = [[NSMutableArray alloc] init];
 
 			for( KAIgnoreRule *rule in info[@"ignores"] ) {
 				if( [rule isPermanent] ) {
@@ -1816,7 +1816,7 @@ static NSMenu *favoritesMenu = nil;
 		if( info[@"alternateNicknames"] )
 			connection.alternateNicknames = info[@"alternateNicknames"];
 
-		NSMutableArray *permIgnores = [NSMutableArray array];
+		NSMutableArray *permIgnores = [[NSMutableArray alloc] init];
 		for( NSData *rule in info[@"ignores"] ) {
 			NSData *archive = [NSKeyedUnarchiver unarchiveObjectWithData:rule];
 			if( archive ) [permIgnores addObject:archive];
@@ -2016,7 +2016,7 @@ static NSMenu *favoritesMenu = nil;
 	MVChatConnection *connection = [notification object];
 
 	if ( [[notification name] isEqualToString:MVChatConnectionDidIdentifyWithServicesNotification] ) {
-		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 		context[@"title"] = NSLocalizedString( @"You Have Been Identified", "identified bubble title" );
 		context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@ has identified you as %@ on %@.", "identified bubble message, server message and server name" ), [notification userInfo][@"user"], [notification userInfo][@"target"], [connection server]];
 		context[@"image"] = [NSImage imageNamed:@"Keychain"];
@@ -2123,7 +2123,7 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) _didConnect:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
-	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 	context[@"title"] = NSLocalizedString( @"Connected", "connected bubble title" );
 	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"You're now connected to %@ as %@.", "you are now connected bubble text" ), [connection server], [connection nickname]];
 	context[@"image"] = [NSImage imageNamed:@"connect"];
@@ -2136,7 +2136,7 @@ static NSMenu *favoritesMenu = nil;
 - (void) _didDisconnect:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
 	if( [connection status] == MVChatConnectionServerDisconnectedStatus ) {
-		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 		context[@"title"] = NSLocalizedString( @"Disconnected", "disconnected bubble title" );
 		context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"You're were disconnected from %@.", "you were disconnected bubble text" ), [connection server]];
 		context[@"image"] = [NSImage imageNamed:@"disconnect"];

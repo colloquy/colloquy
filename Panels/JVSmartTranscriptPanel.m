@@ -39,7 +39,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 		_rules = [settings[@"rules"] mutableCopy];
 		_title = [settings[@"title"] copy];
-		_operation = [settings[@"operation"] intValue];
+		_operation = [settings[@"operation"] integerValue];
 		_ignoreCase = [settings[@"ignoreCase"] boolValue];
 
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _messageDisplayed: ) name:JVChatMessageWasProcessedNotification object:nil];
@@ -50,7 +50,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 - (nullable instancetype) initWithCoder:(NSCoder *) coder {
 	if( [coder allowsKeyedCoding] ) {
-		NSMutableDictionary *settings = [NSMutableDictionary dictionary];
+		NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
 		settings[@"rules"] = [coder decodeObjectForKey:@"rules"];
 		settings[@"title"] = [coder decodeObjectForKey:@"title"];
 		settings[@"ignoreCase"] = @([coder decodeBoolForKey:@"ignoreCase"]);

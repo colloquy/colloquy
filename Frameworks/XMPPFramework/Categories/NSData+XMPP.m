@@ -33,7 +33,7 @@ static char encodingTable[64] = {
 
 - (NSString *)xmpp_hexStringValue
 {
-	NSMutableString *stringBuffer = [NSMutableString stringWithCapacity:([self length] * 2)];
+	NSMutableString *stringBuffer = [[NSMutableString alloc] initWithCapacity:([self length] * 2)];
 	
     const unsigned char *dataBuffer = [self bytes];
     NSUInteger i;
@@ -49,7 +49,7 @@ static char encodingTable[64] = {
 - (NSString *)xmpp_base64Encoded
 {
 	const unsigned char	*bytes = [self bytes];
-	NSMutableString *result = [NSMutableString stringWithCapacity:[self length]];
+	NSMutableString *result = [[NSMutableString alloc] initWithCapacity:[self length]];
 	unsigned long ixtext = 0;
 	unsigned long lentext = [self length];
 	long ctremaining = 0;

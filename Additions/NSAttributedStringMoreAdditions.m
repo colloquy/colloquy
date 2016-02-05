@@ -39,7 +39,7 @@ static void removeItalicOrObliqueFont( NSMutableDictionary *attrs ) {
 
 static NSString *parseCSSStyleAttribute( const char *style, NSMutableDictionary *currentAttributes ) {
 	NSScanner *scanner = [NSScanner scannerWithString:@(style)];
-	NSMutableString *unhandledStyles = [NSMutableString string];
+	NSMutableString *unhandledStyles = [[NSMutableString alloc] init];
 
 	while( ! [scanner isAtEnd] ) {
 		NSString *prop = nil;
@@ -243,7 +243,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 	} else if( ! skipTag && node -> type == XML_ELEMENT_NODE ) {
 		if( ! first ) {
 			NSMutableString *front = newAttributes[@"XHTMLStart"];
-			if( ! front ) front = [NSMutableString string];
+			if( ! front ) front = [[NSMutableString alloc] init];
 
 			xmlBufferPtr buf = xmlBufferCreate();
 			xmlNodeDump( buf, node -> doc, node, 0, 0 );

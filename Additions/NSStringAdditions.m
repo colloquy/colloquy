@@ -678,7 +678,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 		return self;
 	}
 
-	NSMutableString *ret = [NSMutableString string];
+	NSMutableString *ret = [[NSMutableString alloc] init];
 	NSScanner *scanner = [NSScanner scannerWithString:message];
 	[scanner setCharactersToBeSkipped:nil]; // don't skip leading whitespace!
 
@@ -1182,7 +1182,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	if (result == nil)
 		return nil;
 
-	NSMutableArray <NSString *> *results = [NSMutableArray array];
+	NSMutableArray <NSString *> *results = [[NSMutableArray alloc] init];
 
 	for (NSUInteger i = 1; i < (result.numberOfRanges - 1); i++)
 		[results addObject:[self substringWithRange:[result rangeAtIndex:i]]];

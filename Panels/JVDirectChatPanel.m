@@ -837,7 +837,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	if( [cmessage isHighlighted] && [cmessage ignoreStatus] == JVNotIgnored ) {
 		_newHighlightMessageCount++;
-		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 		context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"%@ Mentioned a Highlight Word", "mention bubble title" ), [user displayName]];
 		context[@"description"] = [messageString string];
 		context[@"image"] = [NSImage imageNamed:@"activityNewImportant"];
@@ -847,7 +847,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	}
 
 	if( [cmessage ignoreStatus] != JVNotIgnored ) {
-		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 		context[@"title"] = ( ( [cmessage ignoreStatus] == JVUserIgnored ) ? NSLocalizedString( @"User Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) );
 		if( [self isMemberOfClass:[JVChatRoomPanel class]] ) context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@'s message was ignored in %@.", "chat room user ignored bubble text" ), user, [self title]];
 		else context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@'s message was ignored.", "direct chat user ignored bubble text" ), user];
@@ -897,7 +897,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		if (!windowTitle) return;
 
 		if( [message ignoreStatus] == JVNotIgnored && _firstMessage ) {
-			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 			[context setObject:NSLocalizedString( @"New Private Message", "first message bubble title" ) forKey:@"title"];
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ wrote you a private message.", "first message bubble text" ), [self title]] forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
@@ -907,7 +907,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 			[context setObject:[NSString stringWithFormat:@"%@: %@", self.target, [message bodyAsPlainText]] forKey:@"subtitle"];
 			[self performNotification:@"JVChatFirstMessage" withContextInfo:context];
 		} else if( [message ignoreStatus] == JVNotIgnored ) {
-			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 			[context setObject:NSLocalizedString( @"Private Message", "new message bubble title" ) forKey:@"title"];
 			if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"You have 1 message waiting from %@.", "new single message bubble text" ), [self title]] forKey:@"description"];
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You have %d messages waiting from %@.", "new messages bubble text" ), [self newMessagesWaiting], [self title]] forKey:@"description"];
@@ -1275,7 +1275,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 }
 
 - (NSArray *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix {
-	NSMutableArray *possibleCompletion = [NSMutableArray array];
+	NSMutableArray *possibleCompletion = [[NSMutableArray alloc] init];
 
 	if( [[self title] rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
 		[possibleCompletion addObject:[self title]];
@@ -1303,7 +1303,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 - (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(nullable NSInteger *) index {
 	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSString *search = [[[send textStorage] string] substringWithRange:charRange];
-	NSMutableArray *ret = [NSMutableArray array];
+	NSMutableArray *ret = [[NSMutableArray alloc] init];
 	NSString *suffix = ( ! ( [event modifierFlags] & NSAlternateKeyMask ) ? ( charRange.location == 0 ? @": " : @" " ) : @"" );
 	NSString *comparison = [[[self user] nickname] substringToIndex:[search length]];
 
@@ -1523,7 +1523,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 #pragma mark WebKit Support
 
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
-	NSMutableArray *ret = [NSMutableArray array];
+	NSMutableArray *ret = [[NSMutableArray alloc] init];
 
 	BOOL found = NO;
 

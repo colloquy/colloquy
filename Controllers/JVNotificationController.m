@@ -25,7 +25,7 @@ static JVNotificationController *sharedInstance = nil;
 
 - (instancetype) init {
 	if( ( self = [super init] ) ) {
-		_bubbles = [NSMutableDictionary dictionary];
+		_bubbles = [[NSMutableDictionary alloc] init];
 		_sounds = [[NSMutableDictionary alloc] init];
 
 		if( floor( NSAppKitVersionNumber ) < NSAppKitVersionNumber10_8 )
@@ -209,7 +209,7 @@ static JVNotificationController *sharedInstance = nil;
 }
 
 - (NSDictionary *) registrationDictionaryForGrowl {
-	NSMutableArray *notifications = [NSMutableArray array];
+	NSMutableArray *notifications = [[NSMutableArray alloc] init];
 	for( NSDictionary *info in [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"notifications" ofType:@"plist"]] ) {
 		if( ! info[@"seperator"] )
 			[notifications addObject:info[@"identifier"]];

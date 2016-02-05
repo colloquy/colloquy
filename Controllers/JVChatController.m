@@ -219,7 +219,7 @@ static NSMenu *smartTranscriptMenu = nil;
 - (NSSet *) chatViewControllersWithConnection:(MVChatConnection *) connection {
 	NSParameterAssert( connection != nil );
 
-	NSMutableSet *ret = [NSMutableSet set];
+	NSMutableSet *ret = [[NSMutableSet alloc] init];
 	for( id <JVChatViewController> item in _chatControllers )
 		if( [item connection] == connection )
 			[ret addObject:item];
@@ -230,7 +230,7 @@ static NSMenu *smartTranscriptMenu = nil;
 - (NSSet *) chatViewControllersOfClass:(Class) class {
 	NSParameterAssert( class != nil );
 	
-	NSMutableSet *ret = [NSMutableSet set];
+	NSMutableSet *ret = [[NSMutableSet alloc] init];
 	for( id <JVChatViewController> item in _chatControllers )
 		if( [item isMemberOfClass:class] )
 			[ret addObject:item];
@@ -241,7 +241,7 @@ static NSMenu *smartTranscriptMenu = nil;
 - (NSSet *) chatViewControllersKindOfClass:(Class) class {
 	NSParameterAssert( class != nil );
 	
-	NSMutableSet *ret = [NSMutableSet set];
+	NSMutableSet *ret = [[NSMutableSet alloc] init];
 	for( id <JVChatViewController> item in _chatControllers )
 		if( [item isKindOfClass:class] )
 			[ret addObject:item];
@@ -344,7 +344,7 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (void) saveSmartTranscripts {
-	NSMutableArray *smartTranscripts = [NSMutableArray array];
+	NSMutableArray *smartTranscripts = [[NSMutableArray alloc] init];
 
 	for( JVSmartTranscriptPanel *smartTranscript in [self smartTranscripts] ) {
 		NSData *archived = [NSKeyedArchiver archivedDataWithRootObject:smartTranscript];
@@ -480,7 +480,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	NSString *title = NSLocalizedString( @"Chat Room Invite", "member invited to room title" );
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", "you were invited to join a chat room status message" ), room, [user nickname]];
 
-	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 	context[@"title"] = NSLocalizedString( @"Invited to Chat", "bubble title invited to room" );
 	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message invited to room" ), room, [user nickname]];
 	[[JVNotificationController defaultController] performNotification:@"JVChatRoomInvite" withContextInfo:context];
@@ -498,7 +498,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	NSString *title = NSLocalizedString( @"Direct Chat Invite", "invited to direct chat title" );
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to participate in a chat with %@. Would you like to accept this invitation?", "you were invited to a direct chat status message" ), [user nickname]];
 
-	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 	context[@"title"] = NSLocalizedString( @"Invited to Direct Chat", "bubble title invited to direct chat" );
 	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"You were invited to participate in a chat with %@.", "bubble message invited to participate in a direct chat" ), [user nickname]];
 	[[JVNotificationController defaultController] performNotification:@"JVDirectChatInvite" withContextInfo:context];
@@ -513,7 +513,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	NSDictionary *userInfo = [notification userInfo];
 	MVChatUser *user = userInfo[@"user"];
 
-	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 	context[@"title"] = NSLocalizedString( @"Beep received", "beep bubble title" );
 	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@ is reclaiming your attention by means of a beep.", "beep bubble text" ), [user nickname]];
 	context[@"image"] = [NSImage imageNamed:@"activityNewImportant"];
@@ -570,7 +570,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 		if( [[user nickname] isEqualToString:@"MemoServ"] && [[messageString string] rangeOfString:@"new memo" options:NSCaseInsensitiveSearch].location != NSNotFound && [[messageString string] rangeOfString:@" no " options:NSCaseInsensitiveSearch].location == NSNotFound ) {
 
-			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 			context[@"title"] = NSLocalizedString( @"You Have New Memos", "new memos bubble title" );
 			context[@"description"] = messageString;
 			context[@"image"] = [NSImage imageNamed:@"Stickies"];
@@ -580,7 +580,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			[[JVNotificationController defaultController] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
 
 		} else {
-			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 			context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"Notice from %@", "notice message from user title" ), [user displayName]];
 			context[@"description"] = messageString;
 			context[@"image"] = [NSImage imageNamed:@"activityNewImportant"];
@@ -1085,7 +1085,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			// Now startIndex and endIndex specify the end points of the range we want within the main array.
 			// We will traverse the range and pick the objects we want.
 			// We do this by getting each object and seeing if it actually appears in the real key that we are trying to evaluate in.
-			NSMutableArray *result = [NSMutableArray array];
+			NSMutableArray *result = [[NSMutableArray alloc] init];
 			BOOL keyIsGeneric = [key isEqualToString:@"chatViews"];
 			NSArray *rangeKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
 			NSUInteger curKeyIndex = 0;
@@ -1146,7 +1146,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			// Now baseIndex specifies the base object for the relative spec in the master array.
 			// We will start either right before or right after and look for an object that matches the type we want.
 			// We do this by getting each object and seeing if it actually appears in the real key that we are trying to evaluate in.
-			NSMutableArray *result = [NSMutableArray array];
+			NSMutableArray *result = [[NSMutableArray alloc] init];
 			BOOL keyIsGeneric = [key isEqualToString:@"chatViews"];
 			NSArray *relKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
 			NSUInteger curKeyIndex = 0, viewCount = [chatViews count];

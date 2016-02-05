@@ -809,7 +809,7 @@
     XMPPLogTrace();
 	AssertParentQueue();
 	
-    NSMutableArray *results = [NSMutableArray array];
+    NSMutableArray *results = [[NSMutableArray alloc] init];
     
 	for (XMPPUserMemoryStorageObject *user in [roster objectEnumerator])
 	{

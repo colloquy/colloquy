@@ -82,7 +82,7 @@
 
 - (NSArray *)elementsForXmlns:(NSString *)ns
 {
-	NSMutableArray *elements = [NSMutableArray array];
+	NSMutableArray *elements = [[NSMutableArray alloc] init];
 	
 	for (NSXMLNode *node in [self children])
 	{
@@ -102,7 +102,7 @@
 
 - (NSArray *)elementsForXmlnsPrefix:(NSString *)nsPrefix
 {
-    NSMutableArray *elements = [NSMutableArray array];
+    NSMutableArray *elements = [[NSMutableArray alloc] init];
 	
 	for (NSXMLNode *node in [self children])
 	{

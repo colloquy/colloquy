@@ -119,7 +119,7 @@
 
 - (IBAction) saveHighlightWords:(id) sender {
 	// We want to be able to let highlights contain spaces, so lets split intelligently
-	NSMutableArray *components = [NSMutableArray array];
+	NSMutableArray *components = [[NSMutableArray alloc] init];
 	NSString *words = [self.highlightWords stringValue];
 
 	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(?<=\\s|^)([/\"'].*?[/\"'])(?=\\s|$)" options:0 error:nil];

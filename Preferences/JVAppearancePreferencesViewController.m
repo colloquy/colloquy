@@ -464,7 +464,7 @@
 
 	// Step through each options.
 	for( NSMutableDictionary *info in self.styleOptions ) {
-		NSMutableArray *styleLayouts = [NSMutableArray array];
+		NSMutableArray *styleLayouts = [[NSMutableArray alloc] init];
 		NSArray *sarray = nil;
 		if( ! info[@"style"] ) continue;
 		if( [info[@"style"] isKindOfClass:[NSArray class]] && [info[@"type"] isEqualToString:@"list"] )
@@ -479,7 +479,7 @@
 			// Parse all the selectors in the style.
 			NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:@"(\\S.*?)\\s*\\{([^\\}]*?)\\}" options:(NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators) error:nil];
 
-			NSMutableArray *styleLayout = [NSMutableArray array];
+			NSMutableArray *styleLayout = [[NSMutableArray alloc] init];
 			[styleLayouts addObject:styleLayout];
 
 			// Step through the selectors.
@@ -490,7 +490,7 @@
 				// Step through all the properties and build a dictionary on this selector/property/value combo.
 				NSString *matchedText = [style substringWithRange:[selector rangeAtIndex:2]];
 				for( NSTextCheckingResult *property in [regex matchesInString:matchedText options:0 range:NSMakeRange( 0, matchedText.length )] ) {
-					NSMutableDictionary *propertyInfo = [NSMutableDictionary dictionary];
+					NSMutableDictionary *propertyInfo = [[NSMutableDictionary alloc] init];
 					NSString *p = [matchedText substringWithRange:[property rangeAtIndex:1]];
 					NSString *s = [style substringWithRange:[selector rangeAtIndex:1]];
 					NSString *v = [matchedText substringWithRange:[property rangeAtIndex:2]];
@@ -750,7 +750,7 @@
 			return cell;
 		} else if( [options[@"type"] isEqualToString:@"list"] ) {
 			NSPopUpButtonCell *cell = [NSPopUpButtonCell new];
-			NSMutableArray *localizedOptions = [NSMutableArray array];
+			NSMutableArray *localizedOptions = [[NSMutableArray alloc] init];
 
 			for( NSString *optionTitle in options[@"options"] )
 				[localizedOptions addObject:NSLocalizedString( optionTitle, "title of style option value" )];

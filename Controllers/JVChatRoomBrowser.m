@@ -254,7 +254,7 @@
 
 	_roomResults = [_connection chatRoomListResults];
 
-	_roomOrder = [NSMutableArray array];
+	_roomOrder = [[NSMutableArray alloc] init];
 
 	[self _refreshResults:nil];
 

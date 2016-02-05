@@ -1037,7 +1037,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		if( _bouncerUsername.length ) username = _bouncerUsername;
 	} else if( _bouncer == MVChatConnectionColloquyBouncer ) {
 		// PASS <account> [ '~' <device-identifier> ] ':' <account-pass> [ ':' <server-pass> ]
-		NSMutableString *mutablePassword = [NSMutableString string];
+		NSMutableString *mutablePassword = [[NSMutableString alloc] init];
 
 		[mutablePassword appendString:( _bouncerUsername.length ? _bouncerUsername : @"anonymous" )];
 		if( _bouncerDeviceIdentifier.length ) [mutablePassword appendFormat:@"~%@", _bouncerDeviceIdentifier];
@@ -1050,7 +1050,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		if( _bouncerConnectionIdentifier.length ) {
 			username = _bouncerConnectionIdentifier;
 		} else {
-			NSMutableString *mutableUsername = [NSMutableString string];
+			NSMutableString *mutableUsername = [[NSMutableString alloc] init];
 
 			if( _secure ) [mutableUsername appendString:@"ircs://"];
 			[mutableUsername appendFormat:@"%@@%@", username, _server];
@@ -1232,7 +1232,7 @@ parsingFinished: { // make a scope for this
 	NSString *commandString = ((command && commandLength) ? [[NSString alloc] initWithBytes:command length:commandLength encoding:NSASCIIStringEncoding] : nil);
 
 	NSString *intentOrTagsString = [self _newStringWithBytes:intentOrTags length:intentOrTagsLength];
-	NSMutableDictionary *intentOrTagsDictionary = [NSMutableDictionary dictionary];
+	NSMutableDictionary *intentOrTagsDictionary = [[NSMutableDictionary alloc] init];
 	for( NSString *anIntentOrTag in [intentOrTagsString componentsSeparatedByString:@";"] ) {
 		NSArray <NSString *> *intentOrTagPair = [anIntentOrTag componentsSeparatedByString:@"="];
 		if (intentOrTagPair.count != 2) continue;
@@ -1931,7 +1931,7 @@ parsingFinished: { // make a scope for this
 #pragma mark -
 
 - (void) _startTLS {
-	NSMutableDictionary *settings = [NSMutableDictionary dictionary];
+	NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
 	settings[GCDAsyncSocketSSLSessionOptionSendOneByteRecord] = @(0);
 	settings[GCDAsyncSocketSSLSessionOptionFalseStart] = @(0);
 	settings[GCDAsyncSocketManuallyEvaluateTrust] = @(1);
@@ -2169,7 +2169,7 @@ parsingFinished: { // make a scope for this
 //	MVAssertMainThreadRequired();
 //	[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
 //
-//	NSMutableSet *matchedUsers = [NSMutableSet set];
+//	NSMutableSet *matchedUsers = [[NSMutableSet alloc] init];
 //	@synchronized( _chatUserWatchRules ) {
 //		if( ! _chatUserWatchRules.count ) return; // nothing to do, return and wait until the next scheduled fire
 //
@@ -2190,7 +2190,7 @@ parsingFinished: { // make a scope for this
 
 	if( _lastSentIsonNicknames.count ) return; // there is already pending ISON requests, skip this round to catch up
 
-	NSMutableSet *matchedUsers = [NSMutableSet set];
+	NSMutableSet *matchedUsers = [[NSMutableSet alloc] init];
 	@synchronized( _chatUserWatchRules ) {
 		if( ! _chatUserWatchRules.count ) return; // nothing to do, return and wait until the next scheduled fire
 
@@ -2792,7 +2792,7 @@ parsingFinished: { // make a scope for this
 	if( !_fetchingMonitorList && [_supportedFeatures containsObject:MVChatConnectionMonitorFeature] ) {
 		[self sendRawMessageImmediatelyWithFormat:@"MONITOR L"];
 		_fetchingMonitorList = YES;
-		_pendingMonitorList = [NSMutableArray array];
+		_pendingMonitorList = [[NSMutableArray alloc] init];
 		return;
 	}
 	if( [_supportedFeatures containsObject:MVChatConnectionWatchFeature] )
@@ -2829,7 +2829,7 @@ parsingFinished: { // make a scope for this
 			NSString *usedNickname = [self _stringFromPossibleData:parameters[0]];
 			NSString *newNickname = [self _stringFromPossibleData:parameters[1]];
 
-			NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+			NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 			userInfo[@"connection"] = self;
 			userInfo[@"oldnickname"] = usedNickname;
 			userInfo[@"newnickname"] = newNickname;
@@ -3330,7 +3330,7 @@ parsingFinished: { // make a scope for this
 
 	if( [command isCaseInsensitiveEqualToString:@"ACTION"] && arguments ) {
 		// special case ACTION and send it out like a message with the action flag
-		NSMutableDictionary *msgInfo = [NSMutableDictionary dictionary];
+		NSMutableDictionary *msgInfo = [[NSMutableDictionary alloc] init];
 		if (ctcpInfo) [msgInfo addEntriesFromDictionary:ctcpInfo];
 		if (arguments) msgInfo[@"message"] = arguments;
 		if (sender) msgInfo[@"user"] = sender;
@@ -3346,7 +3346,7 @@ parsingFinished: { // make a scope for this
 		return;
 	}
 
-	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+	NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 	if (command) userInfo[@"command"] = command;
 	if (arguments) userInfo[@"arguments"] = arguments;
 
@@ -3707,7 +3707,7 @@ parsingFinished: { // make a scope for this
 			[self _markUserAsOnline:sender];
 			[room _addMemberUser:sender];
 
-			NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+			NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 			[userInfo addEntriesFromDictionary:tags];
 
 			userInfo[@"user"] = sender;
@@ -3873,7 +3873,7 @@ parsingFinished: { // make a scope for this
 	NSInteger value = 0;
 	NSMutableArray <NSNumber *> *argsNeeded = [[NSMutableArray alloc] initWithCapacity:10];
 	NSUInteger i = 0, count = parameters.count;
-	NSMutableString *unsupportedModes = [NSMutableString string];
+	NSMutableString *unsupportedModes = [[NSMutableString alloc] init];
 	BOOL previousUnknownMode = YES;
 	while( i < count ) {
 		NSString *param = [self _stringFromPossibleData:parameters[i++]];
@@ -3972,7 +3972,7 @@ parsingFinished: { // make a scope for this
 						MVChatUser *member = [self chatUserWithUniqueIdentifier:param];
 						if( enabled ) [room _setMode:mode forMemberUser:member];
 						else [room _removeMode:mode forMemberUser:member];
-						NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+						NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 						if (member) userInfo[@"who"] = member;
 						if (sender) userInfo[@"by"] = sender;
 						userInfo[@"enabled"] = @(enabled);
@@ -3983,7 +3983,7 @@ parsingFinished: { // make a scope for this
 						if ( !user )
 							return;
 
-						NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+						NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 						if (user) userInfo[@"user"] = user;
 						if (sender) userInfo[@"byUser"] = sender;
 						if( enabled ) {
@@ -4570,7 +4570,7 @@ parsingFinished: { // make a scope for this
 		if ( ( [[self server] hasCaseInsensitiveSubstring:@"quakenet"] && [[user nickname] isCaseInsensitiveEqualToString:@"Q@CServe.quakenet.org"] ) || ( [[self server] hasCaseInsensitiveSubstring:@"undernet"] && [[user nickname] isCaseInsensitiveEqualToString:@"X@channels.undernet.org"] ) ) {
 			_pendingIdentificationAttempt = NO;
 
-			NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+			NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 			userInfo[@"connection"] = self;
 			userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]];
 
@@ -4614,7 +4614,7 @@ parsingFinished: { // make a scope for this
 	if( parameters.count >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:parameters[1]];
 
-		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 		userInfo[@"connection"] = self;
 		userInfo[@"room"] = room;
 		userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"Can't send to room \"%@\" on \"%@\".", "cant send to room error" ), room, [self server]];
@@ -4639,7 +4639,7 @@ parsingFinished: { // make a scope for this
 
 	_pendingIdentificationAttempt = NO;
 
-	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+	NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 	userInfo[@"connection"] = self;
 	userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]];
 
@@ -4745,7 +4745,7 @@ parsingFinished: { // make a scope for this
 
 	_pendingIdentificationAttempt = NO;
 
-	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+	NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 	userInfo[@"connection"] = self;
 	userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]];
 
@@ -4781,7 +4781,7 @@ parsingFinished: { // make a scope for this
 	if( parameters.count >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:parameters[1]];
 
-		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 		userInfo[@"connection"] = self;
 		userInfo[@"room"] = room;
 		userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" is full.", "room is full error" ), room, [self server]];
@@ -4799,7 +4799,7 @@ parsingFinished: { // make a scope for this
 
 		[_pendingJoinRoomNames removeObject:room];
 
-		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 		userInfo[@"connection"] = self;
 		userInfo[@"room"] = room;
 		userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" is invite only.", "invite only room error" ), room, [self server]];
@@ -4814,7 +4814,7 @@ parsingFinished: { // make a scope for this
 
 		[_pendingJoinRoomNames removeObject:room];
 
-		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 		userInfo[@"connection"] = self;
 		userInfo[@"room"] = room;
 		userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"You are banned from the room \"%@\" on \"%@\".", "banned from room error" ), room, [self server]];
@@ -4832,7 +4832,7 @@ parsingFinished: { // make a scope for this
 
 		[_pendingJoinRoomNames removeObject:room];
 
-		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 		userInfo[@"connection"] = self;
 		userInfo[@"room"] = room;
 		userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" is password protected.", "room password protected error" ), room, [self server]];
@@ -4980,7 +4980,7 @@ parsingFinished: { // make a scope for this
 
 	_monitorListFull = YES;
 
-	if (!_pendingMonitorList) _pendingMonitorList = [NSMutableArray array];
+	if (!_pendingMonitorList) _pendingMonitorList = [[NSMutableArray alloc] init];
 	[_pendingMonitorList addObject:parameters.firstObject];
 
 	// move over to WATCH or ISON instead
@@ -5033,8 +5033,8 @@ parsingFinished: { // make a scope for this
 										  @"_\\     _ \\     \\ \\     \\ ||   _  _   / ||  / /   _ /    _/     ": @"Y",
 										  @" |   / __  /_ __ / _ __/ /_ _  /__ _ / __ _/   | ": @"Z"};
 
-			NSMutableString *testString = [NSMutableString string];
-			NSMutableString *captchaReply = [NSMutableString string];
+			NSMutableString *testString = [[NSMutableString alloc] init];
+			NSMutableString *captchaReply = [[NSMutableString alloc] init];
 			BOOL empty = NO;
 			while( !empty ) {
 				for( NSMutableString *row in _umichNoIdentdCaptcha ) {
@@ -5044,7 +5044,7 @@ parsingFinished: { // make a scope for this
 				}
 				if( captchaAlphabet[testString] ) {
 					[captchaReply appendString:captchaAlphabet[testString]];
-					testString = [NSMutableString string];
+					testString = [[NSMutableString alloc] init];
 				}
 			}
 			[self sendRawMessageImmediatelyWithFormat:@"PONG :%@", captchaReply];

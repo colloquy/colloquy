@@ -15,7 +15,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 @implementation JVEmoticonSet
 @synthesize bundle = _bundle;
 + (void) scanForEmoticonSets {
-	NSMutableSet *styles = [NSMutableSet set];
+	NSMutableSet *styles = [[NSMutableSet alloc] init];
 	if( ! allEmoticonSets ) allEmoticonSets = styles;
 
 	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
@@ -187,7 +187,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 #pragma mark -
 
 - (NSArray *) emoticonMenuItems {
-	NSMutableArray *ret = [NSMutableArray array];
+	NSMutableArray *ret = [[NSMutableArray alloc] init];
 	NSMenuItem *menuItem = nil;
 	NSDictionary *info = nil;
 

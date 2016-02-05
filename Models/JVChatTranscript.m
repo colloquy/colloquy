@@ -1009,7 +1009,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		xmlNode *root = xmlDocGetRootElement( _xmlLog );
 
 		// Save out the <log> element since this is a new file. build it by hand
-		NSMutableString *logElement = [NSMutableString string];
+		NSMutableString *logElement = [[NSMutableString alloc] init];
 		[logElement appendFormat:@"<%s", root -> name];
 
 		for( xmlAttrPtr prop = root -> properties; prop; prop = prop -> next ) {

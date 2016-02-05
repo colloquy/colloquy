@@ -1739,7 +1739,7 @@ enum XMPPStreamConfig
 		
 		NSString *username = [myJID_setByClient user];
 		
-		NSMutableArray *elements = [NSMutableArray array];
+		NSMutableArray *elements = [[NSMutableArray alloc] init];
 		[elements addObject:[NSXMLElement elementWithName:@"username" stringValue:username]];
 		[elements addObject:[NSXMLElement elementWithName:@"password" stringValue:password]];
         

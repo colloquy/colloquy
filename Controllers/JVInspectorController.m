@@ -59,7 +59,7 @@ static NSMutableSet *inspectors = nil;
 		_object = object;
 		_inspector = [_object inspector];
 		if( _locked ) {
-			if( ! inspectors ) inspectors = [NSMutableSet set];
+			if( ! inspectors ) inspectors = [[NSMutableSet alloc] init];
 			[inspectors addObject:self];
 		} else [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( keyWindowChanged: ) name:NSWindowDidBecomeKeyNotification object:nil];
 		if( _object == nil )

@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 	// Full format will look like:
 	// <user self="yes" nickname="..." hostmask="..." identifier="...">...</user>
 
-	NSMutableString *ret = [NSMutableString string];
+	NSMutableString *ret = [[NSMutableString alloc] init];
 	[ret appendFormat:@"<%@", tag];
 
 	if( [self isLocalUser] ) [ret appendString:@" self=\"yes\""];

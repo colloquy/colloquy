@@ -199,7 +199,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	if( path ) [download setDestination:path allowOverwrite:NO];
 
-	NSMutableDictionary *info = [NSMutableDictionary dictionary];
+	NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
 	info[@"transferred"] = @0ULL;
 	info[@"rate"] = @0.;
 	info[@"size"] = @0ULL;
@@ -223,7 +223,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		if( [info[@"controller"] isEqualTo:transfer] )
 			return;
 
-	info = [NSMutableDictionary dictionary];
+	info = [[NSMutableDictionary alloc] init];
 	info[@"controller"] = transfer;
 	info[@"rate"] = @0.;
 	info[@"status"] = @([transfer status]);
@@ -287,8 +287,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 #pragma mark -
 
 - (IBAction) copy:(id) sender {
-	NSMutableArray *array = [NSMutableArray array];
-	NSMutableString *string = [NSMutableString string];
+	NSMutableArray *array = [[NSMutableArray alloc] init];
+	NSMutableString *string = [[NSMutableString alloc] init];
 
 	[[NSPasteboard generalPasteboard] declareTypes:@[NSFilenamesPboardType,NSStringPboardType] owner:self];
 
@@ -372,7 +372,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 }
 
 - (BOOL) tableView:(NSTableView *) tableView writeRowsWithIndexes:(NSIndexSet *) rowIndexes toPasteboard:(NSPasteboard *) pboard {
-	NSMutableArray *array = [NSMutableArray array];
+	NSMutableArray *array = [[NSMutableArray alloc] init];
 
 	[pboard declareTypes:@[NSFilenamesPboardType] owner:self];
 

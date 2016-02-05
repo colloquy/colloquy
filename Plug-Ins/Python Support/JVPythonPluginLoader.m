@@ -121,7 +121,7 @@
 - (void) reloadPlugins {
 	if( ! _manager ) return;
 
-	NSMutableSet *foundModules = [NSMutableSet set];
+	NSMutableSet *foundModules = [[NSMutableSet alloc] init];
 	NSFileManager *fm = [NSFileManager defaultManager];
 
 	for( NSString *path in [[_manager class] pluginSearchPaths] ) {

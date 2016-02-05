@@ -349,7 +349,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	if ( organizationType != 0 ) {
 		SEL localizedCaseInsensitive = @selector(localizedCaseInsensitiveCompare:);
-		NSMutableArray* sortDescriptors = [NSMutableArray array];
+		NSMutableArray* sortDescriptors = [[NSMutableArray alloc] init];
 
 		switch ( organizationType ) {
 			case JVChatViewOrganizationTypeByNetworkAndRoom:
@@ -486,7 +486,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (NSArray *) chatViewControllersForConnection:(MVChatConnection *) connection {
 	NSParameterAssert( connection != nil );
 
-	NSMutableArray *ret = [NSMutableArray array];
+	NSMutableArray *ret = [[NSMutableArray alloc] init];
 	id <JVChatViewController> controller = nil;
 
 	for( controller in _views )
@@ -500,7 +500,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSParameterAssert( class != NULL );
 	NSAssert( [class conformsToProtocol:@protocol( JVChatViewController )], @"The tab controller class must conform to the JVChatViewController protocol." );
 
-	NSMutableArray *ret = [NSMutableArray array];
+	NSMutableArray *ret = [[NSMutableArray alloc] init];
 	id <JVChatViewController> controller = nil;
 
 	for( controller in _views )
@@ -1216,7 +1216,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (NSArray *) chatViewsWithClass:(Class) class {
-	NSMutableArray *ret = [NSMutableArray array];
+	NSMutableArray *ret = [[NSMutableArray alloc] init];
 
 	for( id <JVChatViewController> item in [self chatViews] )
 		if( [item isMemberOfClass:class] )
@@ -1510,7 +1510,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 			// Now startIndex and endIndex specify the end points of the range we want within the main array.
 			// We will traverse the range and pick the objects we want.
 			// We do this by getting each object and seeing if it actually appears in the real key that we are trying to evaluate in.
-			NSMutableArray *result = [NSMutableArray array];
+			NSMutableArray *result = [[NSMutableArray alloc] init];
 			BOOL keyIsGeneric = [key isEqualToString:@"chatViews"];
 			NSArray *rangeKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
 			NSUInteger curKeyIndex = 0;
@@ -1571,7 +1571,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 			// Now baseIndex specifies the base object for the relative spec in the master array.
 			// We will start either right before or right after and look for an object that matches the type we want.
 			// We do this by getting each object and seeing if it actually appears in the real key that we are trying to evaluate in.
-			NSMutableArray *result = [NSMutableArray array];
+			NSMutableArray *result = [[NSMutableArray alloc] init];
 			BOOL keyIsGeneric = [key isEqualToString:@"chatViews"];
 			NSArray *relKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
 			NSUInteger curKeyIndex = 0, viewCount = [chatViews count];
