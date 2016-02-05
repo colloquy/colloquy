@@ -95,8 +95,16 @@ static NSMenu *favoritesMenu = nil;
 		favoritesMenu = [[NSMenu alloc] initWithTitle:@""];
 	else [favoritesMenu removeAllItems];
 
-	NSString *path = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
-	NSArray *favorites = [NSArray arrayWithContentsOfFile:path];
+
+	NSURL *appSupport = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+	appSupport = [[appSupport URLByAppendingPathComponent:@"Colloquy"] URLByAppendingPathComponent:@"Favorites"];
+	appSupport = [appSupport URLByAppendingPathComponent:@"Favorites.plist" isDirectory:NO];
+	NSArray *favorites = [[NSArray alloc] initWithContentsOfURL:appSupport];
+	if (!favorites) {
+		NSString *path = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
+		favorites = [[NSArray alloc] initWithContentsOfFile:path];
+		[favorites writeToURL:appSupport atomically:YES];
+	}
 
 	NSMenuItem *menuItem = nil;
 	if( ! [favorites count] ) {
@@ -115,7 +123,7 @@ static NSMenu *favoritesMenu = nil;
 		menuItem = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", target, server] action:@selector( _connectToFavorite: ) keyEquivalent:@""];
 		[menuItem setImage:icon];
 		[menuItem setTarget:self];
-		[menuItem setRepresentedObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", item[@"scheme"], item[@"server"], item[@"target"]]]];
+		[menuItem setRepresentedObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", scheme, server, target]]];
 
 		for (MVChatConnection *connection in [[MVConnectionsController defaultController] connections]) {
 			if (!(connection.isConnected || connection.status == MVChatConnectionConnectingStatus))
@@ -677,7 +685,7 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark -
 
 - (NSArray *) connections {
-	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
+	NSMutableArray *ret = [[NSMutableArray alloc] initWithCapacity:[_bookmarks count]];
 
 	for( id info in _bookmarks ) {
 		MVChatConnection *connection = info[@"connection"];
@@ -688,7 +696,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (NSArray *) connectedConnections {
-	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
+	NSMutableArray *ret = [[NSMutableArray alloc] initWithCapacity:[_bookmarks count]];
 
 	for( id info in _bookmarks ) {
 		MVChatConnection *connection = info[@"connection"];
@@ -707,7 +715,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (NSArray *) connectionsForServerAddress:(NSString *) address {
-	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
+	NSMutableArray *ret = [[NSMutableArray alloc] initWithCapacity:[_bookmarks count]];
 
 	address = [address stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@". \t\n"]];
 
@@ -1702,7 +1710,7 @@ static NSMenu *favoritesMenu = nil;
 	if( ! _bookmarks ) return; // _loadBookmarkList hasn't fired yet, we have nothing to save
 
 	NSUInteger roomCount = 0;
-	NSMutableArray *saveList = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
+	NSMutableArray *saveList = [[NSMutableArray alloc] initWithCapacity:[_bookmarks count]];
 
 	for( id info in _bookmarks ) {
 		if( ! [info[@"temporary"] boolValue] ) {

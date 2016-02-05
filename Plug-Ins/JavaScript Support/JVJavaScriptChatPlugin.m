@@ -411,7 +411,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 			return nil;
 
 		unsigned length = [lengthObj unsignedIntValue];
-		NSMutableArray *result = [NSMutableArray arrayWithCapacity:length];
+		NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:length];
 		for( unsigned i = 0; i < length; ++i ) {
 			id item = [javaScriptArray webScriptValueAtIndex:i];
 			if( item ) [result addObject:item];

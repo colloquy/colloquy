@@ -141,7 +141,7 @@ NSString *const XMPPSRVResolverErrorDomain = @"XMPPSRVResolverErrorDomain";
 	XMPPLogTrace();
 	
 	// Sort results
-	NSMutableArray *sortedResults = [NSMutableArray arrayWithCapacity:[results count]];
+	NSMutableArray *sortedResults = [[NSMutableArray alloc] initWithCapacity:[results count]];
 	
 	// Sort the list by priority (lowest number first)
 	[results sortUsingSelector:@selector(compareByPriority:)];
@@ -186,7 +186,7 @@ NSString *const XMPPSRVResolverErrorDomain = @"XMPPSRVResolverErrorDomain";
 			 */
 			
 			NSUInteger runningSum = 0;
-			NSMutableArray *samePriorityRecords = [NSMutableArray arrayWithCapacity:srvResultsCount];
+			NSMutableArray *samePriorityRecords = [[NSMutableArray alloc] initWithCapacity:srvResultsCount];
 			
 			XMPPSRVRecord *srvRecord = results[0];
 			

@@ -126,10 +126,10 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		_encodingMenu = nil;
 		_spillEncodingMenu = nil;
 
-		_sendHistory = [NSMutableArray arrayWithCapacity:30];
+		_sendHistory = [[NSMutableArray alloc] initWithCapacity:30];
 		[_sendHistory insertObject:[[NSAttributedString alloc] initWithString:@""] atIndex:0];
 
-		_waitingAlerts = [NSMutableArray arrayWithCapacity:5];
+		_waitingAlerts = [[NSMutableArray alloc] initWithCapacity:5];
 		_waitingAlertNames = [NSMutableDictionary dictionaryWithCapacity:5];
 	}
 

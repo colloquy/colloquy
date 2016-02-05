@@ -131,7 +131,9 @@ static MVBuddyListController *sharedInstance = nil;
 		if( buddyRep ) [list addObject:buddyRep];
 	}
 
-	[list writeToFile:[@"~/Library/Application Support/Colloquy/Buddy List.plist" stringByExpandingTildeInPath] atomically:YES];
+	NSURL *saveURL = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+	saveURL = [[saveURL URLByAppendingPathComponent:@"Colloquy"] URLByAppendingPathComponent:@"Buddy List.plist" isDirectory:NO];
+	[list writeToURL:saveURL atomically:YES];
 }
 
 #pragma mark -
@@ -860,7 +862,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 	_animating = YES;
 
-	_oldPositions = [NSMutableArray arrayWithCapacity:[_buddyOrder count]];
+	_oldPositions = [[NSMutableArray alloc] initWithCapacity:[_buddyOrder count]];
 
 	for( id object in _buddyOrder )
 		[_oldPositions addObject:@([oldOrder indexOfObject:object])];
@@ -972,7 +974,10 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) _loadBuddyList {
-	NSArray *list = [[NSArray alloc] initWithContentsOfFile:[@"~/Library/Application Support/Colloquy/Buddy List.plist" stringByExpandingTildeInPath]];
+	NSURL *saveURL = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+	saveURL = [[saveURL URLByAppendingPathComponent:@"Colloquy"] URLByAppendingPathComponent:@"Buddy List.plist" isDirectory:NO];
+
+	NSArray *list = [[NSArray alloc] initWithContentsOfURL:saveURL];
 	if( ! [list count] ) [self _importOldBuddyList];
 
 	for( NSDictionary *buddyDictionary in list ) {

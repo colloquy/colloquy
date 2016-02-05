@@ -193,7 +193,7 @@
 	NSXMLElement *data = (NSXMLElement *)[arrayElement childAtIndex:0];
 	NSArray *children = [data children];
 	
-	NSMutableArray *array = [NSMutableArray arrayWithCapacity:[children count]];
+	NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:[children count]];
 	
 	for (NSXMLElement *child in children) {
 		[array addObject:[self objectFromElement:child]];

@@ -553,7 +553,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 - (NSArray *) nicknamesArray {
-	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_users count]];
+	NSMutableArray *ret = [[NSMutableArray alloc] initWithCapacity:[_users count]];
 	NSEnumerator *enumerator = [_users objectEnumerator];
 	NSURL *nick = nil;
 
@@ -568,7 +568,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 - (NSArray *) onlineNicknamesArray {
-	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_users count]];
+	NSMutableArray *ret = [[NSMutableArray alloc] initWithCapacity:[_users count]];
 	NSEnumerator *enumerator = [_users objectEnumerator];
 	NSURL *nick = nil;
 

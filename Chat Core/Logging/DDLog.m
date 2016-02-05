@@ -442,7 +442,7 @@ static unsigned int numProcessors;
 	
 	// We can now loop through the classes, and test each one to see if it is a DDLogging class.
 	
-	NSMutableArray *result = [NSMutableArray arrayWithCapacity:numClasses];
+	NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:numClasses];
 	
 	for (i = 0; i < numClasses; i++)
 	{
@@ -462,7 +462,7 @@ static unsigned int numProcessors;
 + (NSArray *)registeredClassNames
 {
 	NSArray *registeredClasses = [self registeredClasses];
-	NSMutableArray *result = [NSMutableArray arrayWithCapacity:[registeredClasses count]];
+	NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:[registeredClasses count]];
 	
 	for (Class class in registeredClasses)
 	{

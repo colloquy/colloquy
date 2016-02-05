@@ -559,7 +559,7 @@
 			diff = (uint32_t)[prev_unackedByServer count];
 		}
 		
-		NSMutableArray *stanzaIds = [NSMutableArray arrayWithCapacity:(NSUInteger)diff];
+		NSMutableArray *stanzaIds = [[NSMutableArray alloc] initWithCapacity:(NSUInteger)diff];
 		
 		for (uint32_t i = 0; i < diff; i++)
 		{
@@ -1025,7 +1025,7 @@
 	BOOL canProcessEntireAck = YES;
 	NSUInteger processed = 0;
 	
-	NSMutableArray *stanzaIds = [NSMutableArray arrayWithCapacity:(NSUInteger)diff];
+	NSMutableArray *stanzaIds = [[NSMutableArray alloc] initWithCapacity:(NSUInteger)diff];
 	
 	for (uint32_t i = 0; i < diff; i++)
 	{

@@ -161,7 +161,7 @@
 	
 	NSArray *allUsers = [roster allValues];
 	
-	NSMutableArray *result = [NSMutableArray arrayWithCapacity:[allUsers count]];
+	NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:[allUsers count]];
 	
 	for (id <XMPPUser> user in allUsers)
 	{
@@ -180,7 +180,7 @@
 	
 	NSArray *allUsers = [roster allValues];
 	
-	NSMutableArray *result = [NSMutableArray arrayWithCapacity:[allUsers count]];
+	NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:[allUsers count]];
 	
 	for (id <XMPPUser> user in allUsers)
 	{
@@ -231,7 +231,7 @@
 	
 	NSArray *availableUsers = [self unsortedAvailableUsers];
 	
-	NSMutableArray *result = [NSMutableArray arrayWithCapacity:[availableUsers count]];
+	NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:[availableUsers count]];
 	
 	for (id<XMPPUser> user in availableUsers)
 	{

@@ -283,8 +283,15 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 }
 
 - (IBAction) toggleFavorites:(nullable id) sender {
-	NSString *favoritesPath = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
-	NSMutableArray *favorites = [NSMutableArray arrayWithContentsOfFile:favoritesPath];
+	NSURL *appSupport = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+	appSupport = [[appSupport URLByAppendingPathComponent:@"Colloquy"] URLByAppendingPathComponent:@"Favorites"];
+	appSupport = [appSupport URLByAppendingPathComponent:@"Favorites.plist" isDirectory:NO];
+	NSMutableArray *favorites = [[NSMutableArray alloc] initWithContentsOfURL:appSupport];
+	if (!favorites) {
+		//fall-back to old location/method
+		NSString *favoritesPath = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
+		favorites = [[NSMutableArray alloc] initWithContentsOfFile:favoritesPath];
+	}
 	if (!favorites)
 		favorites = [[NSMutableArray alloc] init];
 
@@ -293,7 +300,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		[favorites removeObjectAtIndex:favoriteIndex];
 	else [favorites addObject:@{@"target": [_target description], @"server": [[self connection] server], @"scheme": [[self connection] urlScheme]}];
 
-	[favorites writeToFile:favoritesPath atomically:YES];
+	[favorites writeToURL:appSupport atomically:YES];
 
 	[MVConnectionsController refreshFavoritesMenu];
 
@@ -1520,8 +1527,10 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 }
 
 - (NSInteger) _roomIndexInFavoritesMenu {
-	NSString *favoritesPath = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
-	NSMutableArray *favorites = [NSMutableArray arrayWithContentsOfFile:favoritesPath];
+	NSURL *appSupport = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+	appSupport = [[appSupport URLByAppendingPathComponent:@"Colloquy"] URLByAppendingPathComponent:@"Favorites"];
+	appSupport = [appSupport URLByAppendingPathComponent:@"Favorites.plist" isDirectory:NO];
+	NSMutableArray *favorites = [[NSMutableArray alloc] initWithContentsOfURL:appSupport];
 	if (!favorites)
 		return NSNotFound;
 

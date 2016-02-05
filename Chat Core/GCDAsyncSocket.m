@@ -7546,7 +7546,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 		NSData *address4 = [NSData dataWithBytes:&nativeAddr4 length:sizeof(nativeAddr4)];
 		NSData *address6 = [NSData dataWithBytes:&nativeAddr6 length:sizeof(nativeAddr6)];
 		
-		addresses = [NSMutableArray arrayWithCapacity:2];
+		addresses = [[NSMutableArray alloc] initWithCapacity:2];
 		[addresses addObject:address4];
 		[addresses addObject:address6];
 	}
@@ -7577,7 +7577,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 				}
 			}
 			
-			addresses = [NSMutableArray arrayWithCapacity:capacity];
+			addresses = [[NSMutableArray alloc] initWithCapacity:capacity];
 			
 			for (res = res0; res; res = res->ai_next)
 			{

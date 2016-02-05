@@ -225,7 +225,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 - (IBAction) search:(id) sender {
 	if( [[searchField stringValue] length] ) {
 		if( criteria[_selectedTag] ) {
-			NSMutableArray *filtered = [NSMutableArray arrayWithCapacity:[_transcripts count]];
+			NSMutableArray *filtered = [[NSMutableArray alloc] initWithCapacity:[_transcripts count]];
 			for( NSDictionary *d in _transcripts ) {
 				if( [[d objectForKey:criteria[_selectedTag]] rangeOfString:[searchField stringValue]].location != NSNotFound ) {
 					[filtered addObject:d];
