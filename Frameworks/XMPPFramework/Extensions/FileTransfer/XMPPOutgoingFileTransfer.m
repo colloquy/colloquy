@@ -360,7 +360,7 @@ NSString *const XMPPOutgoingFileTransferErrorDomain = @"XMPPOutgoingFileTransfer
           // If there is a name provided, but a random one should be created, we'll keep the file ext.
           if (_shouldGenerateRandomName) {
             NSString *ext = [[_outgoingFileName componentsSeparatedByString:@"."] lastObject];
-            fileName = [NSString stringWithFormat:@"%@.%@", [xmppStream generateUUID], ext];
+            fileName = [[NSString alloc] initWithFormat:@"%@.%@", [xmppStream generateUUID], ext];
           } else {
             fileName = _outgoingFileName;
           }
@@ -596,7 +596,7 @@ NSString *const XMPPOutgoingFileTransferErrorDomain = @"XMPPOutgoingFileTransfer
       @autoreleasepool {
         if (_streamhosts.count < 1) {
           NSString *errMsg =
-              [NSString stringWithFormat:@"Unable to send streamhosts to %@", _recipientJID.full];
+              [[NSString alloc] initWithFormat:@"Unable to send streamhosts to %@", _recipientJID.full];
           [self failWithReason:errMsg error:nil];
           return;
         }
@@ -635,7 +635,7 @@ NSString *const XMPPOutgoingFileTransferErrorDomain = @"XMPPOutgoingFileTransfer
         NSError *error;
 
         if (![_asyncSocket acceptOnPort:_localPort error:&error]) {
-          NSString *errMsg = [NSString stringWithFormat:@"Failed to open port %d", _localPort];
+          NSString *errMsg = [[NSString alloc] initWithFormat:@"Failed to open port %d", _localPort];
           [self failWithReason:errMsg error:error];
         }
       }
@@ -733,7 +733,7 @@ NSString *const XMPPOutgoingFileTransferErrorDomain = @"XMPPOutgoingFileTransfer
 
           // Handle Example 3 and 5
           if ([errType isEqualToString:@"cancel"]) {
-            NSString *errMsg = [NSString stringWithFormat:@"Error initiating IBB: %@",
+            NSString *errMsg = [[NSString alloc] initWithFormat:@"Error initiating IBB: %@",
                                                           [errorElem childAtIndex:0].name];
             [self failWithReason:errMsg error:nil];
             return_from_block;
@@ -866,7 +866,7 @@ NSString *const XMPPOutgoingFileTransferErrorDomain = @"XMPPOutgoingFileTransfer
 
         // Handle dropped connection or recipient offline.
         if (errorElem) {
-          NSString *errMsg = [NSString stringWithFormat:@"Error transferring with IBB: %@",
+          NSString *errMsg = [[NSString alloc] initWithFormat:@"Error transferring with IBB: %@",
                                                         [errorElem childAtIndex:0]];
           NSError *err = [self localErrorWithMessage:errMsg code:-1];
 
@@ -1492,7 +1492,7 @@ NSString *const XMPPOutgoingFileTransferErrorDomain = @"XMPPOutgoingFileTransfer
 
 - (NSDictionary *)getIPAddresses
 {
-  NSMutableDictionary *addresses = [NSMutableDictionary dictionaryWithCapacity:8];
+  NSMutableDictionary *addresses = [[NSMutableDictionary alloc] initWithCapacity:8];
 
   // Retrieve the current interfaces — returns 0 on success
   struct ifaddrs *interfaces;
@@ -1509,7 +1509,7 @@ NSString *const XMPPOutgoingFileTransferErrorDomain = @"XMPPOutgoingFileTransfer
       char addr_buf[MAX(INET_ADDRSTRLEN, INET6_ADDRSTRLEN)];
 
       if (addr && (addr->sin_family == AF_INET || addr->sin_family == AF_INET6)) {
-        NSString *name = [NSString stringWithUTF8String:curr->ifa_name];
+        NSString *name = [[NSString alloc] initWithUTF8String:curr->ifa_name];
         NSString *type;
 
         if (addr->sin_family == AF_INET) {
@@ -1525,8 +1525,8 @@ NSString *const XMPPOutgoingFileTransferErrorDomain = @"XMPPOutgoingFileTransfer
         }
 
         if (type) {
-          NSString *key = [NSString stringWithFormat:@"%@/%@", name, type];
-          addresses[key] = [NSString stringWithUTF8String:addr_buf];
+          NSString *key = [[NSString alloc] initWithFormat:@"%@/%@", name, type];
+          addresses[key] = [[NSString alloc] initWithUTF8String:addr_buf];
         }
       }
     }
@@ -1558,7 +1558,7 @@ NSString *const XMPPOutgoingFileTransferErrorDomain = @"XMPPOutgoingFileTransfer
 - (NSData *)sha1Hash
 {
   NSString *hashMe =
-      [NSString stringWithFormat:@"%@%@%@", self.sid, xmppStream.myJID.full, _recipientJID.full];
+      [[NSString alloc] initWithFormat:@"%@%@%@", self.sid, xmppStream.myJID.full, _recipientJID.full];
   NSData *hashRaw = [[hashMe dataUsingEncoding:NSUTF8StringEncoding] xmpp_sha1Digest];
   NSData *hash = [[hashRaw xmpp_hexStringValue] dataUsingEncoding:NSUTF8StringEncoding];
 
@@ -1728,7 +1728,7 @@ shouldTimeoutReadWithTag:(long)tag
 {
   XMPPLogVerbose(@"%@: socket shouldTimeoutReadWithTag:%ld elapsed:%f bytesDone:%lu", THIS_FILE, tag, elapsed, (unsigned long)length);
 
-  NSString *reason = [NSString stringWithFormat:@"Read timeout. %lu bytes read.", (unsigned long)length];
+  NSString *reason = [[NSString alloc] initWithFormat:@"Read timeout. %lu bytes read.", (unsigned long)length];
   [self failWithReason:reason error:nil];
 
   return 0;
@@ -1742,7 +1742,7 @@ shouldTimeoutWriteWithTag:(long)tag
   XMPPLogVerbose(@"%@: socket shouldTimeoutWriteWithTag:%ld elapsed:%f bytesDone:%lu", THIS_FILE,
                  tag, elapsed, (unsigned long) length);
 
-  NSString *reason = [NSString stringWithFormat:@"Write timeout. %lu bytes written.",
+  NSString *reason = [[NSString alloc] initWithFormat:@"Write timeout. %lu bytes written.",
                                                 (unsigned long) length];
   [self failWithReason:reason error:nil];
 

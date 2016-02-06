@@ -109,7 +109,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 }
 
 - (NSString *) identifier {
-	return [NSString stringWithFormat:@"Smart Transcript %@", [self title]];
+	return [[NSString alloc] initWithFormat:@"Smart Transcript %@", [self title]];
 }
 
 - (nullable NSString *) information {
@@ -120,8 +120,8 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	NSString *messageCount = @"";
 	if( _newMessages == 0 ) messageCount = NSLocalizedString( @"no messages waiting", "no messages waiting room tooltip" );
 	else if( _newMessages == 1 ) messageCount = NSLocalizedString( @"1 message waiting", "one message waiting room tooltip" );
-	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), _newMessages];
-	return [NSString stringWithFormat:@"%@\n%@", [self title], messageCount];
+	else messageCount = [[NSString alloc] initWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), _newMessages];
+	return [[NSString alloc] initWithFormat:@"%@\n%@", [self title], messageCount];
 }
 
 - (NSMenu *) menu {
@@ -433,14 +433,14 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
+	NSMutableArray *list = [[NSMutableArray alloc] initWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
 	[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
 	[list addObject:JVToolbarRuleSettingsItemIdentifier];
 	return list;
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarAllowedItemIdentifiers:toolbar]];
+	NSMutableArray *list = [[NSMutableArray alloc] initWithArray:[super toolbarAllowedItemIdentifiers:toolbar]];
 	[list addObject:JVToolbarRuleSettingsItemIdentifier];
 	[list addObject:JVToolbarClearScrollbackItemIdentifier];
 	return list;

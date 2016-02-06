@@ -7,7 +7,7 @@ static NSString *const kMASPreferencesSelectedViewKey = @"MASPreferences Selecte
 
 static NSString * PreferencesKeyForViewBounds (NSString *identifier)
 {
-    return [NSString stringWithFormat:@"MASPreferences %@ Frame", identifier];
+    return [[NSString alloc] initWithFormat:@"MASPreferences %@ Frame", identifier];
 }
 
 @interface MASPreferencesWindowController () // Private
@@ -39,7 +39,7 @@ static NSString * PreferencesKeyForViewBounds (NSString *identifier)
     NSString *nibPath = [[NSBundle bundleForClass:MASPreferencesWindowController.class] pathForResource:@"MASPreferencesWindow" ofType:@"nib"];
     if ((self = [super initWithWindowNibPath:nibPath owner:self]))
     {
-		_viewControllers = [NSMutableArray arrayWithArray: viewControllers];
+		_viewControllers = [[NSMutableArray alloc] initWithArray: viewControllers];
 #if !__has_feature(objc_arc)
         _viewControllers = [_viewControllers retain];
 #endif
@@ -125,7 +125,7 @@ static NSString * PreferencesKeyForViewBounds (NSString *identifier)
 
 - (NSArray *)toolbarItemIdentifiers
 {
-    NSMutableArray *identifiers = [NSMutableArray arrayWithCapacity:_viewControllers.count];
+    NSMutableArray *identifiers = [[NSMutableArray alloc] initWithCapacity:_viewControllers.count];
     for (id viewController in _viewControllers)
         if (viewController == [NSNull null])
             [identifiers addObject:NSToolbarFlexibleSpaceItemIdentifier];

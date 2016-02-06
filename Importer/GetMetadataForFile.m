@@ -66,7 +66,7 @@ __private_extern @interface JVChatTranscriptMetadataExtractor : NSObject <NSXMLP
 				[formatter setDateStyle:NSDateFormatterShortStyle];
 				[formatter setTimeStyle:NSDateFormatterShortStyle];
 
-				NSString *coverageWording = [NSString stringWithFormat:@"%@ - %@", [formatter stringFromDate:dateStarted], [formatter stringFromDate:lastDate]];
+				NSString *coverageWording = [[NSString alloc] initWithFormat:@"%@ - %@", [formatter stringFromDate:dateStarted], [formatter stringFromDate:lastDate]];
 				ret[(NSString *) kMDItemCoverage] = coverageWording;
 			}
 		}

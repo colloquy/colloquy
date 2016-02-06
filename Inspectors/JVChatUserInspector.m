@@ -103,7 +103,7 @@
 	if( ! message || ! [message length] ) return nil;
 	if( ! baseFont ) baseFont = [NSFont labelFontOfSize:11.];
 
-	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:@([[_user connection] encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
+	NSMutableDictionary *options = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@([[_user connection] encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
 	NSMutableAttributedString *messageString = [NSMutableAttributedString attributedStringWithChatFormat:message options:options];
 
 	if( ! messageString ) {
@@ -164,7 +164,7 @@
 	NSString *key = [notification userInfo][@"attribute"];
 	if( [key isEqualToString:MVChatUserPingAttribute] ) {
 		NSTimeInterval pingSeconds = [[_user attributeForKey:key] doubleValue];
-		NSString *pingString = [NSString stringWithFormat:@"%.2f %@", pingSeconds, NSLocalizedString( @"seconds", "plural seconds" )];
+		NSString *pingString = [[NSString alloc] initWithFormat:@"%.2f %@", pingSeconds, NSLocalizedString( @"seconds", "plural seconds" )];
 		[ping setObjectValue:pingString];
 		[ping setToolTip:pingString];
 	} else if( [key isEqualToString:MVChatUserLocalTimeAttribute] ) {

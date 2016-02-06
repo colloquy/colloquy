@@ -61,7 +61,7 @@
 #pragma mark -
 
 - (void) awakeFromNib {
-	[tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%ld", (long)[self format]]];
+	[tabView selectTabViewItemWithIdentifier:[[NSString alloc] initWithFormat:@"%ld", (long)[self format]]];
 
 	if( [self format] == JVChatViewTextCriterionFormat ) {
 		[textKindButton selectItemAtIndex:[textKindButton indexOfItemWithTag:[self kind]]];
@@ -100,7 +100,7 @@
 	if( format != _format ) {
 		_format = format;
 
-		[tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%ld", (long)format]];
+		[tabView selectTabViewItemWithIdentifier:[[NSString alloc] initWithFormat:@"%ld", (long)format]];
 
 		if( [self format] == JVChatViewTextCriterionFormat ) {
 			[textKindButton selectItemAtIndex:[textKindButton indexOfItemWithTag:[self kind]]];
@@ -320,11 +320,11 @@
 - (NSString *) description {
 	[self view];
 	if( [self format] == JVChatViewTextCriterionFormat ) {
-		return [NSString stringWithFormat:NSLocalizedString( @"%@ %@ \"%@\"", "description format for kind, operation and query, JVChatViewCriterion" ), [textKindButton titleOfSelectedItem], [textOperationButton titleOfSelectedItem], [self query]];
+		return [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ %@ \"%@\"", "description format for kind, operation and query, JVChatViewCriterion" ), [textKindButton titleOfSelectedItem], [textOperationButton titleOfSelectedItem], [self query]];
 	} else if( [self format] == JVChatViewBooleanCriterionFormat ) {
 		return [booleanKindButton titleOfSelectedItem];
 	} else if( [self format] == JVChatViewListCriterionFormat ) {
-		return [NSString stringWithFormat:NSLocalizedString( @"%@ %@ %@", "description format for kind, operation and type, JVChatViewCriterion" ), [listKindButton titleOfSelectedItem], [listOperationButton titleOfSelectedItem], [listQuery titleOfSelectedItem]];
+		return [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ %@ %@", "description format for kind, operation and type, JVChatViewCriterion" ), [listKindButton titleOfSelectedItem], [listOperationButton titleOfSelectedItem], [listQuery titleOfSelectedItem]];
 	} else return [super description];
 }
 @end

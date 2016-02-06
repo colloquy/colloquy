@@ -114,7 +114,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 }
 
 - (NSString *) windowTitle {
-	return [NSString stringWithFormat:@"%@ (%@)", [self title], [[self connection] server]];
+	return [[NSString alloc] initWithFormat:@"%@ (%@)", [self title], [[self connection] server]];
 }
 
 - (nullable NSString *) information {
@@ -125,7 +125,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	if( [[self connection] isConnected] ) {
 		if( [[[MVConnectionsController defaultController] connectedConnections] count] == 1 ) {
 			if( [_sortedMembers count] > 1 )
-				return [NSString stringWithFormat:NSLocalizedString( @"%d members", "number of room members information line" ), [_sortedMembers count]];
+				return [[NSString alloc] initWithFormat:NSLocalizedString( @"%d members", "number of room members information line" ), [_sortedMembers count]];
 			else if( [_sortedMembers count] == 1 )
 				return NSLocalizedString( @"1 member", "one room member information line" );
 		} else return [[self connection] server];
@@ -139,16 +139,16 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	if( [self newMessagesWaiting] == 0 ) messageCount = NSLocalizedString( @"no messages waiting", "no messages waiting room tooltip" );
 	else if( [self newMessagesWaiting] == 1 ) messageCount = NSLocalizedString( @"1 message waiting", "one message waiting room tooltip" );
-	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), [self newMessagesWaiting]];
+	else messageCount = [[NSString alloc] initWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), [self newMessagesWaiting]];
 
 	if( [_sortedMembers count] == 1 ) memberCount = NSLocalizedString( @"1 member", "one member room status info tooltip" );
-	else memberCount = [NSString stringWithFormat:NSLocalizedString( @"%d members", "number of members room status info tooltip" ), [_sortedMembers count]];
+	else memberCount = [[NSString alloc] initWithFormat:NSLocalizedString( @"%d members", "number of members room status info tooltip" ), [_sortedMembers count]];
 
-	return [NSString stringWithFormat:@"%@ (%@)\n%@\n%@", _target, [[self connection] server], memberCount, messageCount];
+	return [[NSString alloc] initWithFormat:@"%@ (%@)\n%@\n%@", _target, [[self connection] server], memberCount, messageCount];
 }
 
 - (NSString *) identifier {
-	return [NSString stringWithFormat:@"Chat Room %@ (%@)", [self target], [[self connection] server]];
+	return [[NSString alloc] initWithFormat:@"Chat Room %@ (%@)", [self target], [[self connection] server]];
 }
 
 #pragma mark -
@@ -262,8 +262,8 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		NSInteger favoritesIndex = [self _roomIndexInFavoritesMenu];
 
 		if (favoritesIndex != NSNotFound)
-			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Remove \"%@ (%@)\"", "add to favorites contextual menu"), _target, [[self connection] server]]];
-		else [menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Add \"%@ (%@)\"", "add to favorites contextual menu"), _target, [[self connection] server]]];
+			[menuItem setTitle:[[NSString alloc] initWithFormat:NSLocalizedString( @"Remove \"%@ (%@)\"", "add to favorites contextual menu"), _target, [[self connection] server]]];
+		else [menuItem setTitle:[[NSString alloc] initWithFormat:NSLocalizedString( @"Add \"%@ (%@)\"", "add to favorites contextual menu"), _target, [[self connection] server]]];
 		[menuItem setTarget:self];
 	} else if( [menuItem action] == @selector( toggleAutoJoin: ) ) {
 		[menuItem setState:NSOffState];
@@ -345,26 +345,26 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	if( [message ignoreStatus] == JVNotIgnored && [[message sender] respondsToSelector:@selector( isLocalUser )] && ! [[message sender] isLocalUser] ) {
 		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
-		context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"%@ Room Activity", "room activity bubble title" ), [self title]];
-		if( [self newMessagesWaiting] == 1 ) context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"%@ has a message waiting\nfrom %@.", "new single room message bubble text" ), [self title], [member displayName]];
-		else context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"%@ has %d messages waiting.\nLast from %@", "new room messages bubble text" ), [self title], [self newMessagesWaiting], [member displayName]];
-		context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@", "room activity bubble message" ), [message bodyAsPlainText]];
+		context[@"title"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ Room Activity", "room activity bubble title" ), [self title]];
+		if( [self newMessagesWaiting] == 1 ) context[@"title"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ has a message waiting\nfrom %@.", "new single room message bubble text" ), [self title], [member displayName]];
+		else context[@"title"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ has %d messages waiting.\nLast from %@", "new room messages bubble text" ), [self title], [self newMessagesWaiting], [member displayName]];
+		context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@", "room activity bubble message" ), [message bodyAsPlainText]];
 		context[@"image"] = [NSImage imageNamed:@"roomIcon"];
 		context[@"coalesceKey"] = [[self windowTitle] stringByAppendingString:@"JVChatRoomActivity"];
 		context[@"target"] = self;
 		context[@"action"] = NSStringFromSelector( @selector( activate: ) );
-		context[@"subtitle"] = [NSString stringWithFormat:@"%@ — %@: %@", [member displayName], self.target, [message bodyAsPlainText]];
+		context[@"subtitle"] = [[NSString alloc] initWithFormat:@"%@ — %@: %@", [member displayName], self.target, [message bodyAsPlainText]];
 		[self performNotification:@"JVChatRoomActivity" withContextInfo:context];
 	}
 
 	if( [message ignoreStatus] == JVNotIgnored && [_nextMessageAlertMembers containsObject:[message sender]] ) {
 		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
-		context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"%@ Replied", "member replied bubble title" ), [[message sender] title]];
-		context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@ has possibly replied to your message.", "new room messages bubble text" ), [[message sender] title]];
+		context[@"title"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ Replied", "member replied bubble title" ), [[message sender] title]];
+		context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ has possibly replied to your message.", "new room messages bubble text" ), [[message sender] title]];
 		context[@"image"] = [NSImage imageNamed:@"activityNewImportant"];
 		context[@"target"] = self;
 		context[@"action"] = NSStringFromSelector( @selector( activate: ) );
-		context[@"subtitle"] = [NSString stringWithFormat:@"%@: %@", self.target, [message bodyAsPlainText]];
+		context[@"subtitle"] = [[NSString alloc] initWithFormat:@"%@: %@", self.target, [message bodyAsPlainText]];
 		[self performNotification:@"JVChatReplyAfterAddressing" withContextInfo:context];
 
 		[_nextMessageAlertMembers removeObject:[message sender]];
@@ -732,7 +732,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
+	NSMutableArray *list = [[NSMutableArray alloc] initWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
 	[list addObject:JVToolbarTextEncodingItemIdentifier];
 	[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
 	[list addObject:JVToolbarMarkItemIdentifier];
@@ -789,13 +789,13 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You made this room private.", "private room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room private.", "someone else private room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ made this room private.", "someone else private room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			} else {
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You made this room public.", "public room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room public.", "someone else public room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ made this room public.", "someone else public room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			}
 		} else if( changedModes & MVChatRoomSecretMode ) {
@@ -805,13 +805,13 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You made this room secret.", "secret room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room secret.", "someone else secret room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ made this room secret.", "someone else secret room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			} else {
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You made this room no longer a secret.", "no longer secret room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room no longer a secret.", "someone else no longer secret room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ made this room no longer a secret.", "someone else no longer secret room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			}
 		} else if( changedModes & MVChatRoomInviteOnlyMode ) {
@@ -821,13 +821,13 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You made this room invite only.", "invite only room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room invite only.", "someone else invite only room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ made this room invite only.", "someone else invite only room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			} else {
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You made this room no longer invite only.", "no longer invite only room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room no longer invite only.", "someone else no longer invite only room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ made this room no longer invite only.", "someone else no longer invite only room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			}
 		} else if( changedModes & MVChatRoomNormalUsersSilencedMode ) {
@@ -837,13 +837,13 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You made this room moderated for normal users.", "moderated for normal users room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room moderated for normal users.", "someone else moderated for normal users room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ made this room moderated for normal users.", "someone else moderated for normal users room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			} else {
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You made this room no longer moderated for normal users.", "no longer moderated for normal users room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room no longer moderated for normal users.", "someone else no longer moderated for normal users room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ made this room no longer moderated for normal users.", "someone else no longer moderated for normal users room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			}
 		} else if( changedModes & MVChatRoomOperatorsSilencedMode ) {
@@ -853,13 +853,13 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You made this room moderated for operators.", "moderated for operators room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room moderated for operators.", "someone else moderated for operators room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ made this room moderated for operators.", "someone else moderated for operators room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			} else {
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You made this room no longer moderated for operators.", "no longer moderated for operators room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ made this room no longer moderated for operators.", "someone else no longer moderated for operators room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ made this room no longer moderated for operators.", "someone else no longer moderated for operators room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			}
 		} else if( changedModes & MVChatRoomOperatorsOnlySetTopicMode ) {
@@ -869,13 +869,13 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You changed this room to require operator status to change the topic.", "require op to set topic room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ changed this room to require operator status to change the topic.", "someone else required op to set topic room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ changed this room to require operator status to change the topic.", "someone else required op to set topic room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			} else {
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You changed this room to allow anyone to change the topic.", "don't require op to set topic room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ changed this room to allow anyone to change the topic.", "someone else don't required op to set topic room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ changed this room to allow anyone to change the topic.", "someone else don't required op to set topic room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			}
 		} else if( changedModes & MVChatRoomNoOutsideMessagesMode ) {
@@ -885,13 +885,13 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You changed this room to prohibit outside messages.", "prohibit outside messages room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ changed this room to prohibit outside messages.", "someone else prohibit outside messages room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ changed this room to prohibit outside messages.", "someone else prohibit outside messages room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			} else {
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You changed this room to permit outside messages.", "permit outside messages room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ changed this room to permit outside messages.", "someone else permit outside messages room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ changed this room to permit outside messages.", "someone else permit outside messages room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			}
 		} else if( changedModes & MVChatRoomPassphraseToJoinMode ) {
@@ -900,15 +900,15 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 			if( newModes & MVChatRoomPassphraseToJoinMode ) {
 				parameter = [[self target] attributeForMode:MVChatRoomPassphraseToJoinMode];
 				if( [mbr isLocalUser] ) {
-					message = [NSString stringWithFormat:NSLocalizedString( @"You changed this room to require a password of \"%@\".", "password required room status message" ), parameter];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You changed this room to require a password of \"%@\".", "password required room status message" ), parameter];
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ changed this room to require a password of \"%@\".", "someone else password required room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), parameter];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ changed this room to require a password of \"%@\".", "someone else password required room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), parameter];
 				}
 			} else {
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You changed this room to no longer require a password.", "no longer passworded room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ changed this room to no longer require a password.", "someone else no longer passworded room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ changed this room to no longer require a password.", "someone else no longer passworded room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			}
 		} else if( changedModes & MVChatRoomLimitNumberOfMembersMode ) {
@@ -917,42 +917,42 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 			if( newModes & MVChatRoomLimitNumberOfMembersMode ) {
 				parameter = [[self target] attributeForMode:MVChatRoomLimitNumberOfMembersMode];
 				if( [mbr isLocalUser] ) {
-					message = [NSString stringWithFormat:NSLocalizedString( @"You set a limit on the number of room members to %@.", "member limit room status message" ), parameter];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You set a limit on the number of room members to %@.", "member limit room status message" ), parameter];
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ set a limit on the number of room members to %@.", "someone else member limit room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), parameter];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ set a limit on the number of room members to %@.", "someone else member limit room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), parameter];
 				}
 			} else {
 				if( [mbr isLocalUser] ) {
 					message = NSLocalizedString( @"You removed the room member limit.", "no member limit room status message" );
 				} else {
-					message = [NSString stringWithFormat:NSLocalizedString( @"%@ removed the room member limit", "someone else no member limit room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+					message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ removed the room member limit", "someone else no member limit room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 				}
 			}
 		}
 
-		if( message && mode ) [self addEventMessageToDisplay:message withName:@"modeChange" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? (id) mbr : (id) user ), @"by", mode, @"mode", ( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ? @"yes" : @"no" ), @"enabled", parameter, @"parameter", nil]];
+		if( message && mode ) [self addEventMessageToDisplay:message withName:@"modeChange" andAttributes:[[NSDictionary alloc] initWithObjectsAndKeys:( mbr ? (id) mbr : (id) user ), @"by", mode, @"mode", ( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ? @"yes" : @"no" ), @"enabled", parameter, @"parameter", nil]];
 
 		NSString *unsupportedModes = (notification.userInfo)[@"unsupportedModes"];
 		if (unsupportedModes.length) {
 			NSString *message = nil;
 			if (unsupportedModes.length > 2) {
 				if (user.localUser)
-					message = [NSString stringWithFormat:[NSLocalizedString(@"You set modes %@.", @"unknown modes changed") stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
-				else message = [NSString stringWithFormat:[NSLocalizedString(@"%@ set modes %@.", @"unknown modes changed") stringByEncodingXMLSpecialCharactersAsEntities], [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
+					message = [[NSString alloc] initWithFormat:[NSLocalizedString(@"You set modes %@.", @"unknown modes changed") stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
+				else message = [[NSString alloc] initWithFormat:[NSLocalizedString(@"%@ set modes %@.", @"unknown modes changed") stringByEncodingXMLSpecialCharactersAsEntities], [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
 			} else {
 				if (user.localUser)
-					message = [NSString stringWithFormat:[NSLocalizedString(@"You set mode %@.", @"unknown mode changed") stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
-				else message = [NSString stringWithFormat:[NSLocalizedString(@"%@ set mode %@.", @"unknown mode changed") stringByEncodingXMLSpecialCharactersAsEntities], [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
+					message = [[NSString alloc] initWithFormat:[NSLocalizedString(@"You set mode %@.", @"unknown mode changed") stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
+				else message = [[NSString alloc] initWithFormat:[NSLocalizedString(@"%@ set mode %@.", @"unknown mode changed") stringByEncodingXMLSpecialCharactersAsEntities], [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
 			}
 
-			[self addEventMessageToDisplay:message withName:@"unknownRoomModesSet" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? (id) mbr : (id) user ), @"by", nil]];
+			[self addEventMessageToDisplay:message withName:@"unknownRoomModesSet" andAttributes:[[NSDictionary alloc] initWithObjectsAndKeys:( mbr ? (id) mbr : (id) user ), @"by", nil]];
 		}
 	}
 }
 
 - (void) _selfNicknameChanged:(NSNotification *) notification {
 	[self resortMembers];
-	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as <span class=\"member\">%@</span>.", "you changed nicknames" ), [[[self connection] nickname] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"newNickname" andAttributes:@{@"who": [self localChatRoomMember]}];
+	[self addEventMessageToDisplay:[[NSString alloc] initWithFormat:NSLocalizedString( @"You are now known as <span class=\"member\">%@</span>.", "you changed nicknames" ), [[[self connection] nickname] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"newNickname" andAttributes:@{@"who": [self localChatRoomMember]}];
 }
 
 - (void) _memberNicknameChanged:(NSNotification *) notification {
@@ -968,7 +968,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	NSUInteger index = [_preferredTabCompleteNicknames indexOfObject:oldNickname];
 	if( index != NSNotFound ) _preferredTabCompleteNicknames[index] = [member nickname];
 
-	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as <span class=\"member\">%@</span>.", "user has changed nicknames" ), [oldNickname stringByEncodingXMLSpecialCharactersAsEntities], [[member nickname] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"memberNewNickname" andAttributes:@{@"old": oldNickname, @"who": member}];
+	[self addEventMessageToDisplay:[[NSString alloc] initWithFormat:NSLocalizedString( @"%@ is now known as <span class=\"member\">%@</span>.", "user has changed nicknames" ), [oldNickname stringByEncodingXMLSpecialCharactersAsEntities], [[member nickname] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"memberNewNickname" andAttributes:@{@"old": oldNickname, @"who": member}];
 }
 
 - (void) _memberJoined:(NSNotification *) notification {
@@ -982,8 +982,8 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	}
 
 	NSString *name = [member title];
-	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> joined the chat room.", "a user has join a chat room status message" ), [name stringByEncodingXMLSpecialCharactersAsEntities]];
-	[self addEventMessageToDisplay:message withName:@"memberJoined" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", nil]];
+	NSString *message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> joined the chat room.", "a user has join a chat room status message" ), [name stringByEncodingXMLSpecialCharactersAsEntities]];
+	[self addEventMessageToDisplay:message withName:@"memberJoined" andAttributes:[[NSDictionary alloc] initWithObjectsAndKeys:member, @"who", nil]];
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoomPanel * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -996,7 +996,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 	context[@"title"] = NSLocalizedString( @"Room Member Joined", "member joined title" );
-	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@ joined the chat room %@.", "bubble message member joined string" ), name, _target];
+	context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ joined the chat room %@.", "bubble message member joined string" ), name, _target];
 	context[@"target"] = self;
 	context[@"action"] = NSStringFromSelector( @selector( activate: ) );
 	[self performNotification:@"JVChatMemberJoinedRoom" withContextInfo:context];
@@ -1023,13 +1023,13 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		[_windowController showChatViewController:[_windowController activeChatViewController]];
 
 	NSString *name = [member title];
-	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> left the chat room.", "a user has left the chat room status message" ), [name stringByEncodingXMLSpecialCharactersAsEntities]];
+	NSString *message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> left the chat room.", "a user has left the chat room status message" ), [name stringByEncodingXMLSpecialCharactersAsEntities]];
 
-	[self addEventMessageToDisplay:message withName:@"memberParted" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+	[self addEventMessageToDisplay:message withName:@"memberParted" andAttributes:[[NSDictionary alloc] initWithObjectsAndKeys:member, @"who", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 
 	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 	[context setObject:NSLocalizedString( @"Room Member Left", "member left title" ) forKey:@"title"];
-	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@ left the chat room %@.", "bubble message member left string" ), name, _target];
+	context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ left the chat room %@.", "bubble message member left string" ), name, _target];
 	context[@"target"] = self;
 	context[@"action"] = NSStringFromSelector( @selector( activate: ) );
 	[self performNotification:@"JVChatMemberLeftRoom" withContextInfo:context];
@@ -1053,8 +1053,8 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 			ctxmessage = NSLocalizedString( @"You have been bricked.", "bubble message user bricked string" );
 		} else {
 			NSString *name = [user nickname];
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> has been bricked.", "a user has been bricked status message" ), [name stringByEncodingXMLSpecialCharactersAsEntities]];
-			ctxmessage = [NSString stringWithFormat:NSLocalizedString( @"%@ has been bricked.", "bubble message user bricked string" ), name];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> has been bricked.", "a user has been bricked status message" ), [name stringByEncodingXMLSpecialCharactersAsEntities]];
+			ctxmessage = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ has been bricked.", "bubble message user bricked string" ), name];
 		}
 
 		[self addEventMessageToDisplay:message withName:@"userBricked" andAttributes:@{@"who": user}];
@@ -1087,9 +1087,9 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	MVChatUser *byUser = [[notification userInfo] objectForKey:@"byUser"];
 	JVChatRoomMember *byMember = [self chatRoomMemberForUser:byUser];
 	NSMutableAttributedString *rstring = [self _convertRawMessage:[[notification userInfo] objectForKey:@"reason"]];
-	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were kicked from the chat room by %@.", "you were removed by force from a chat room status message" ), ( byMember ? [[byMember title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+	NSString *message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You were kicked from the chat room by %@.", "you were removed by force from a chat room status message" ), ( byMember ? [[byMember title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 
-	[self addEventMessageToDisplay:message withName:@"kicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( byMember ? (id) byMember : (id) byUser ), @"by", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+	[self addEventMessageToDisplay:message withName:@"kicked" andAttributes:[[NSDictionary alloc] initWithObjectsAndKeys:( byMember ? (id) byMember : (id) byUser ), @"by", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomPanel * ), @encode( JVChatRoomMember * ), @encode( NSAttributedString * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -1117,7 +1117,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 	[context setObject:NSLocalizedString( @"You Were Kicked", "member kicked title" ) forKey:@"title"];
-	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were kicked from %@ by %@.", "bubble message member kicked string" ), [self title], ( byMember ? [[byMember title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )] forKey:@"description"];
+	[context setObject:[[NSString alloc] initWithFormat:NSLocalizedString( @"You were kicked from %@ by %@.", "bubble message member kicked string" ), [self title], ( byMember ? [[byMember title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )] forKey:@"description"];
 	[context setObject:self forKey:@"target"];
 	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 	[self performNotification:@"JVChatMemberKicked" withContextInfo:context];
@@ -1163,16 +1163,16 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	NSString *message = nil;
 	if( [byMember isLocalUser] ) {
-		message = [NSString stringWithFormat:NSLocalizedString( @"You kicked %@ from the chat room.", "you removed a user by force from a chat room status message" ), ( member ? [[member title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+		message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You kicked %@ from the chat room.", "you removed a user by force from a chat room status message" ), ( member ? [[member title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 	} else {
-		message = [NSString stringWithFormat:NSLocalizedString( @"%@ was kicked from the chat room by <span class=\"member\">%@</span>.", "user has been removed by force from a chat room status message" ), ( member ? [[member title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMember ? [[byMember title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+		message = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ was kicked from the chat room by <span class=\"member\">%@</span>.", "user has been removed by force from a chat room status message" ), ( member ? [[member title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMember ? [[byMember title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 	}
 
-	[self addEventMessageToDisplay:message withName:@"memberKicked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( member ? (id) member : (id) user ), @"who", ( byMember ? (id) byMember : (id) byUser ), @"by", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+	[self addEventMessageToDisplay:message withName:@"memberKicked" andAttributes:[[NSDictionary alloc] initWithObjectsAndKeys:( member ? (id) member : (id) user ), @"who", ( byMember ? (id) byMember : (id) byUser ), @"by", ( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 
 	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 	[context setObject:NSLocalizedString( @"Room Member Kicked", "member kicked title" ) forKey:@"title"];
-	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ was kicked from %@ by %@.", "bubble message member kicked string" ), ( member ? [[member title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [self title], ( byMember ? [[byMember title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )] forKey:@"description"];
+	[context setObject:[[NSString alloc] initWithFormat:NSLocalizedString( @"%@ was kicked from %@ by %@.", "bubble message member kicked string" ), ( member ? [[member title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [self title], ( byMember ? [[byMember title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )] forKey:@"description"];
 	[context setObject:self forKey:@"target"];
 	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 	[self performNotification:@"JVChatMemberKicked" withContextInfo:context];
@@ -1198,9 +1198,9 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	}
 
 	if( [byMbr isLocalUser] ) {
-		message = [NSString stringWithFormat:NSLocalizedString( @"You set a ban on %@.", "you set a ban chat room status message" ), (banned ? banned : [[ban description] stringByEncodingXMLSpecialCharactersAsEntities])];
+		message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You set a ban on %@.", "you set a ban chat room status message" ), (banned ? banned : [[ban description] stringByEncodingXMLSpecialCharactersAsEntities])];
 	} else {
-		message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> set a ban on %@.", "user set a ban chat room status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), (banned ? banned : [[ban description] stringByEncodingXMLSpecialCharactersAsEntities])];
+		message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> set a ban on %@.", "user set a ban chat room status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), (banned ? banned : [[ban description] stringByEncodingXMLSpecialCharactersAsEntities])];
 	}
 
 	[self addEventMessageToDisplay:message withName:@"memberBanned" andAttributes:@{@"ban": [ban description], @"by": byMbr}];
@@ -1224,9 +1224,9 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	}
 
 	if( [byMbr isLocalUser] ) {
-		message = [NSString stringWithFormat:NSLocalizedString( @"You removed the ban on %@.", "you removed a ban chat room status message" ), (banned ? banned : [[ban description] stringByEncodingXMLSpecialCharactersAsEntities])];
+		message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You removed the ban on %@.", "you removed a ban chat room status message" ), (banned ? banned : [[ban description] stringByEncodingXMLSpecialCharactersAsEntities])];
 	} else {
-		message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> removed the ban on %@.", "user removed a ban chat room status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), (banned ? banned : [[ban description] stringByEncodingXMLSpecialCharactersAsEntities])];
+		message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> removed the ban on %@.", "user removed a ban chat room status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), (banned ? banned : [[ban description] stringByEncodingXMLSpecialCharactersAsEntities])];
 	}
 
 	[self addEventMessageToDisplay:message withName:@"banRemoved" andAttributes:@{@"ban": [ban description], @"by": byMbr}];
@@ -1259,12 +1259,12 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 			message = NSLocalizedString( @"You promoted yourself to room founder.", "we gave ourself the chat room founder privilege status message" );
 			name = @"promotedToFounder";
 		} else if( [mbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"You were promoted to room founder by <span class=\"member\">%@</span>.", "we are now a chat room founder status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You were promoted to room founder by <span class=\"member\">%@</span>.", "we are now a chat room founder status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 			name = @"promotedToFounder";
 		} else if( [byMbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to room founder by you.", "we gave user chat room founder status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to room founder by you.", "we gave user chat room founder status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		} else {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to room founder by <span class=\"member\">%@</span>.", "user is now a chat room founder status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to room founder by <span class=\"member\">%@</span>.", "user is now a chat room founder status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		}
 	} else if( mode == MVChatRoomMemberFounderMode && ! enabled ) {
 		name = @"memberDemotedFromFounder";
@@ -1272,172 +1272,172 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 			message = NSLocalizedString( @"You demoted yourself from room founder.", "we removed our chat room founder privilege status message" );
 			name = @"demotedFromFounder";
 		} else if( [mbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"You were demoted from room founder by <span class=\"member\">%@</span>.", "we are no longer a chat room founder status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You were demoted from room founder by <span class=\"member\">%@</span>.", "we are no longer a chat room founder status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 			name = @"demotedFromFounder";
 		} else if( [byMbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from room founder by you.", "we removed user's chat room founder status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from room founder by you.", "we removed user's chat room founder status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		} else {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from room founder by <span class=\"member\">%@</span>.", "user is no longer a chat room founder status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from room founder by <span class=\"member\">%@</span>.", "user is no longer a chat room founder status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		}
 	} else if( mode == MVChatRoomMemberAdministratorMode && enabled ) {
 		name = @"memberPromotedToAdministrator";
 		notificationKey = @"JVChatMemberPromotedAdministrator";
 		title = NSLocalizedString( @"New Room Administrator", "room administrator promoted title" );
-		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was promoted to administrator by %@ in %@.", "bubble message member administrator promotion string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
+		description = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ was promoted to administrator by %@ in %@.", "bubble message member administrator promotion string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
 		if( [mbr isLocalUser] && [byMbr isLocalUser] ) { // only server oppers would ever see this
 			message = NSLocalizedString( @"You promoted yourself to Administrator.", "we gave ourself the chat room administrator privilege status message" );
 			name = @"promotedToAdministrator";
 		} else if( [mbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"You were promoted to administrator by <span class=\"member\">%@</span>.", "we are now a chat room administrator status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You were promoted to administrator by <span class=\"member\">%@</span>.", "we are now a chat room administrator status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 			name = @"promotedToAdministrator";
 		} else if( [byMbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to administrator by you.", "we gave user chat room administrator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to administrator by you.", "we gave user chat room administrator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		} else {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to administrator by <span class=\"member\">%@</span>.", "user is now a chat room administrator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to administrator by <span class=\"member\">%@</span>.", "user is now a chat room administrator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		}
 	} else if( mode == MVChatRoomMemberAdministratorMode && ! enabled ) {
 		name = @"memberDemotedFromAdministrator";
 		notificationKey = @"JVChatMemberDemotedAdministrator";
 		title = NSLocalizedString( @"Room Administrator Demoted", "room administrator demoted title" );
-		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was demoted from administrator by %@ in %@.", "bubble message member administrator demotion string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
+		description = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ was demoted from administrator by %@ in %@.", "bubble message member administrator demotion string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
 		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
 			message = NSLocalizedString( @"You demoted yourself from administrator.", "we removed our chat room administrator privilege status message" );
 			name = @"demotedFromAdministrator";
 		} else if( [mbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"You were demoted from administrator by <span class=\"member\">%@</span>.", "we are no longer a chat room administrator status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You were demoted from administrator by <span class=\"member\">%@</span>.", "we are no longer a chat room administrator status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 			name = @"demotedFromAdministrator";
 		} else if( [byMbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from administrator by you.", "we removed user's chat room administrator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from administrator by you.", "we removed user's chat room administrator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		} else {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from administrator by <span class=\"member\">%@</span>.", "user is no longer a chat room administrator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from administrator by <span class=\"member\">%@</span>.", "user is no longer a chat room administrator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		}
 	} else if( mode == MVChatRoomMemberOperatorMode && enabled ) {
 		name = @"memberPromotedToOperator";
 		notificationKey = @"JVChatMemberPromotedOperator";
 		title = NSLocalizedString( @"New Room Operator", "member promoted title" );
-		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was promoted to operator by %@ in %@.", "bubble message member operator promotion string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
+		description = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ was promoted to operator by %@ in %@.", "bubble message member operator promotion string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
 		if( [mbr isLocalUser] && [byMbr isLocalUser] ) { // only server oppers would ever see this
 			message = NSLocalizedString( @"You promoted yourself to operator.", "we gave ourself the chat room operator privilege status message" );
 			name = @"promotedToOperator";
 		} else if( [mbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"You were promoted to operator by <span class=\"member\">%@</span>.", "we are now a chat room operator status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You were promoted to operator by <span class=\"member\">%@</span>.", "we are now a chat room operator status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 			name = @"promotedToOperator";
 		} else if( [byMbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to operator by you.", "we gave user chat room operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to operator by you.", "we gave user chat room operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		} else {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to operator by <span class=\"member\">%@</span>.", "user is now a chat room operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to operator by <span class=\"member\">%@</span>.", "user is now a chat room operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		}
 	} else if( mode == MVChatRoomMemberOperatorMode && ! enabled ) {
 		name = @"memberDemotedFromOperator";
 		notificationKey = @"JVChatMemberDemotedOperator";
 		title = NSLocalizedString( @"Room Operator Demoted", "room operator demoted title" );
-		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was demoted from operator by %@ in %@.", "bubble message member operator demotion string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
+		description = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ was demoted from operator by %@ in %@.", "bubble message member operator demotion string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
 		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
 			message = NSLocalizedString( @"You demoted yourself from operator.", "we removed our chat room operator privilege status message" );
 			name = @"demotedFromOperator";
 		} else if( [mbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"You were demoted from operator by <span class=\"member\">%@</span>.", "we are no longer a chat room operator status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You were demoted from operator by <span class=\"member\">%@</span>.", "we are no longer a chat room operator status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 			name = @"demotedFromOperator";
 		} else if( [byMbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from operator by you.", "we removed user's chat room operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from operator by you.", "we removed user's chat room operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		} else {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from operator by <span class=\"member\">%@</span>.", "user is no longer a chat room operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from operator by <span class=\"member\">%@</span>.", "user is no longer a chat room operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		}
 	} else if( mode == MVChatRoomMemberHalfOperatorMode && enabled ) {
 		name = @"memberPromotedToHalfOperator";
 		notificationKey = @"JVChatMemberPromotedHalfOperator";
 		title = NSLocalizedString( @"New Room Half-Operator", "member promoted to half-operator title" );
-		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was promoted to half-operator by %@ in %@.", "bubble message member half-operator promotion string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
+		description = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ was promoted to half-operator by %@ in %@.", "bubble message member half-operator promotion string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
 		if( [mbr isLocalUser] && [byMbr isLocalUser] ) { // only server oppers would ever see this
 			message = NSLocalizedString( @"You promoted yourself to half-operator.", "we gave ourself the chat room half-operator privilege status message" );
 			name = @"promotedToHalfOperator";
 		} else if( [mbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"You were promoted to half-operator by <span class=\"member\">%@</span>.", "we are now a chat room half-operator status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You were promoted to half-operator by <span class=\"member\">%@</span>.", "we are now a chat room half-operator status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 			name = @"promotedToHalfOperator";
 		} else if( [byMbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to half-operator by you.", "we gave user chat room half-operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to half-operator by you.", "we gave user chat room half-operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		} else {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to half-operator by <span class=\"member\">%@</span>.", "user is now a chat room half-operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to half-operator by <span class=\"member\">%@</span>.", "user is now a chat room half-operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		}
 	} else if( mode == MVChatRoomMemberHalfOperatorMode && ! enabled ) {
 		name = @"memberDemotedFromHalfOperator";
 		notificationKey = @"JVChatMemberDemotedHalfOperator";
 		title = NSLocalizedString( @"Room Half-Operator Demoted", "room half-operator demoted title" );
-		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was demoted from half-operator by %@ in %@.", "bubble message member operator demotion string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
+		description = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ was demoted from half-operator by %@ in %@.", "bubble message member operator demotion string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
 		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
 			message = NSLocalizedString( @"You demoted yourself from half-operator.", "we removed our chat room half-operator privilege status message" );
 			name = @"demotedFromHalfOperator";
 		} else if( [mbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"You were demoted from half-operator by <span class=\"member\">%@</span>.", "we are no longer a chat room half-operator status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You were demoted from half-operator by <span class=\"member\">%@</span>.", "we are no longer a chat room half-operator status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 			name = @"demotedFromHalfOperator";
 		} else if( [byMbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from half-operator by you.", "we removed user's chat room half-operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from half-operator by you.", "we removed user's chat room half-operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		} else {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from half-operator by <span class=\"member\">%@</span>.", "user is no longer a chat room half-operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from half-operator by <span class=\"member\">%@</span>.", "user is no longer a chat room half-operator status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		}
 	} else if( mode == MVChatRoomMemberVoicedMode && enabled ) {
 		name = @"memberVoiced";
 		notificationKey = @"JVChatMemberVoiced";
 		title = NSLocalizedString( @"Room Member Voiced", "member voiced title" );
-		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was granted voice by %@ in %@.", "bubble message member voiced string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
+		description = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ was granted voice by %@ in %@.", "bubble message member voiced string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
 		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
 			message = NSLocalizedString( @"You gave yourself voice.", "we gave ourself special voice status to talk in moderated rooms status message" );
 			name = @"voiced";
 		} else if( [mbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"You were granted voice by <span class=\"member\">%@</span>.", "we now have special voice status to talk in moderated rooms status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You were granted voice by <span class=\"member\">%@</span>.", "we now have special voice status to talk in moderated rooms status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 			name = @"voiced";
 		} else if( [byMbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was granted voice by you.", "we gave user special voice status to talk in moderated rooms status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was granted voice by you.", "we gave user special voice status to talk in moderated rooms status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		} else {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was granted voice by <span class=\"member\">%@</span>.", "user now has special voice status to talk in moderated rooms status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was granted voice by <span class=\"member\">%@</span>.", "user now has special voice status to talk in moderated rooms status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		}
 	} else if( mode == MVChatRoomMemberVoicedMode && ! enabled ) {
 		name = @"memberDevoiced";
 		notificationKey = @"JVChatMemberDevoiced";
 		title = NSLocalizedString( @"Room Member Lost Voice", "member devoiced title" );
-		description = [NSString stringWithFormat:NSLocalizedString( @"%@ had voice removed by %@ in %@.", "bubble message member lost voice string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
+		description = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ had voice removed by %@ in %@.", "bubble message member lost voice string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
 		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
 			message = NSLocalizedString( @"You removed voice from yourself.", "we removed our special voice status to talk in moderated rooms status message" );
 			name = @"devoiced";
 		} else if( [mbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"You had voice removed by <span class=\"member\">%@</span>.", "we no longer has special voice status and can't talk in moderated rooms status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You had voice removed by <span class=\"member\">%@</span>.", "we no longer has special voice status and can't talk in moderated rooms status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 			name = @"devoiced";
 		} else if( [byMbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> had voice removed by you.", "we removed user's special voice status and can't talk in moderated rooms status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> had voice removed by you.", "we removed user's special voice status and can't talk in moderated rooms status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		} else {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> had voice removed by <span class=\"member\">%@</span>.", "user no longer has special voice status and can't talk in moderated rooms status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> had voice removed by <span class=\"member\">%@</span>.", "user no longer has special voice status and can't talk in moderated rooms status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		}
 	} else if( mode == MVChatRoomMemberVoicedMode && enabled ) {
 		name = @"memberQuieted";
 		notificationKey = @"JVChatMemberQuieted";
 		title = NSLocalizedString( @"Room Member Quieted", "member quieted title" );
-		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was quieted by %@ in %@.", "bubble message member quieted string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
+		description = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ was quieted by %@ in %@.", "bubble message member quieted string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
 		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
 			message = NSLocalizedString( @"You quieted yourself.", "we quieted and can't talk ourself status message" );
 			name = @"quieted";
 		} else if( [mbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"You were quieted by <span class=\"member\">%@</span>.", "we are now quieted and can't talk status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You were quieted by <span class=\"member\">%@</span>.", "we are now quieted and can't talk status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 			name = @"quieted";
 		} else if( [byMbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was quieted by you.", "we quieted someone else in the room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was quieted by you.", "we quieted someone else in the room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		} else {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was quieted by <span class=\"member\">%@</span>.", "user was quieted by someone else in the room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was quieted by <span class=\"member\">%@</span>.", "user was quieted by someone else in the room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		}
 	} else if( mode == MVChatRoomMemberVoicedMode && ! enabled ) {
 		name = @"memberDequieted";
 		notificationKey = @"JVChatMemberDequieted";
 		title = NSLocalizedString( @"Quieted Room Member Annulled", "quieted member annulled title" );
-		description = [NSString stringWithFormat:NSLocalizedString( @"Quieted %@ was annulled by %@ in %@.", "bubble message quieted member annulled string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
+		description = [[NSString alloc] initWithFormat:NSLocalizedString( @"Quieted %@ was annulled by %@ in %@.", "bubble message quieted member annulled string" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[self title] stringByEncodingXMLSpecialCharactersAsEntities]];
 		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
 			message = NSLocalizedString( @"You made yourself no longer quieted.", "we are no longer quieted and can talk ourself status message" );
 			name = @"dequieted";
 		} else if( [mbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"You are no longer quieted, thanks to <span class=\"member\">%@</span>.", "we are no longer quieted and can talk status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You are no longer quieted, thanks to <span class=\"member\">%@</span>.", "we are no longer quieted and can talk status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 			name = @"dequieted";
 		} else if( [byMbr isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> is no longer quieted because of you.", "a user is no longer quieted because of us status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> is no longer quieted because of you.", "a user is no longer quieted because of us status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		} else {
-			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> is no longer quieted because of <span class=\"member\">%@</span>.", "user is no longer quieted because of someone else in the room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
+			message = [[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> is no longer quieted because of <span class=\"member\">%@</span>.", "user is no longer quieted because of someone else in the room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		}
 	}
 
@@ -1495,9 +1495,9 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	if( topic && [[self target] topicAuthor] && sender ) {
 		if( [[[self target] topicAuthor] isLocalUser] ) {
-			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You changed the topic to \"%@\".", "you changed the topic chat room status message" ), topicString] withName:@"topicChanged" andAttributes:@{@"by": ( author ? (id) author : (id) [[self target] topicAuthor] ), @"topic": topic}];
+			[self addEventMessageToDisplay:[[NSString alloc] initWithFormat:NSLocalizedString( @"You changed the topic to \"%@\".", "you changed the topic chat room status message" ), topicString] withName:@"topicChanged" andAttributes:@{@"by": ( author ? (id) author : (id) [[self target] topicAuthor] ), @"topic": topic}];
 		} else {
-			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"Topic changed to \"%@\" by <span class=\"member\">%@</span>.", "topic changed chat room status message" ), topicString, ( author ? [[author title] stringByEncodingXMLSpecialCharactersAsEntities] : [[[[self target] topicAuthor] displayName] stringByEncodingXMLSpecialCharactersAsEntities] )] withName:@"topicChanged" andAttributes:@{@"by": ( author ? (id) author : (id) [[self target] topicAuthor] ), @"topic": topic}];
+			[self addEventMessageToDisplay:[[NSString alloc] initWithFormat:NSLocalizedString( @"Topic changed to \"%@\" by <span class=\"member\">%@</span>.", "topic changed chat room status message" ), topicString, ( author ? [[author title] stringByEncodingXMLSpecialCharactersAsEntities] : [[[[self target] topicAuthor] displayName] stringByEncodingXMLSpecialCharactersAsEntities] )] withName:@"topicChanged" andAttributes:@{@"by": ( author ? (id) author : (id) [[self target] topicAuthor] ), @"topic": topic}];
 		}
 
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSAttributedString * ), @encode( JVChatRoomPanel * ), @encode( JVChatRoomMember * ), nil];

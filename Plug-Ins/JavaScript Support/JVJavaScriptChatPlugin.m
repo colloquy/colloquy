@@ -153,11 +153,12 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	if( sender == _webview ) {
 		_loading = NO;
 
-		NSString *contents = [NSString stringWithContentsOfFile:[self scriptFilePath] encoding:NSUTF8StringEncoding error:NULL];
+		NSString *contents = [[NSString alloc] initWithContentsOfFile:[self scriptFilePath] encoding:NSUTF8StringEncoding error:NULL];
 
 		[[sender windowScriptObject] evaluateWebScript:contents];
 
 		[self performSelector:@selector( load )];
+		[contents release];
 	}
 }
 
@@ -400,7 +401,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 
 	_currentFunction = nil;
 
-	NSDictionary *error = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Function named \"%@\" could not be found or is not callable", functionName]};
+	NSDictionary *error = @{NSLocalizedDescriptionKey: [[NSString alloc] initWithFormat:@"Function named \"%@\" could not be found or is not callable", functionName]};
 	return [NSError errorWithDomain:JVJavaScriptErrorDomain code:-1 userInfo:error];
 }
 

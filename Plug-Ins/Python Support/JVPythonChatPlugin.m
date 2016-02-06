@@ -285,7 +285,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 		return realRet;
 	}
 
-	NSDictionary *error = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Function named \"%@\" could not be found or is not callable", functionName]};
+	NSDictionary *error = @{NSLocalizedDescriptionKey: [[NSString alloc] initWithFormat:@"Function named \"%@\" could not be found or is not callable", functionName]};
 	return [NSError errorWithDomain:JVPythonErrorDomain code:-1 userInfo:error];
 }
 

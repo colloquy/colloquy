@@ -219,7 +219,7 @@ NSString *const XMPPProcessOneSessionDate = @"XMPPProcessOneSessionDate";
 	// keepalive is the max interval between keepalive events received by server
 	// before going out of reception (in seconds)
 	
-	NSString *maxStr = [NSString stringWithFormat:@"%.0f", max];
+	NSString *maxStr = [[NSString alloc] initWithFormat:@"%.0f", max];
 	
 	NSXMLElement *keepalive = [NSXMLElement elementWithName:@"keepalive"];
 	[keepalive addAttributeWithName:@"max" stringValue:maxStr];
@@ -237,7 +237,7 @@ NSString *const XMPPProcessOneSessionDate = @"XMPPProcessOneSessionDate";
 	
 	double durationInMinutes = durationInSeconds / 60.0;
 	
-	NSString *durationStr = [NSString stringWithFormat:@"%.0f", durationInMinutes];
+	NSString *durationStr = [[NSString alloc] initWithFormat:@"%.0f", durationInMinutes];
 	
 	NSXMLElement *session = [NSXMLElement elementWithName:@"session"];
 	[session addAttributeWithName:@"duration" stringValue:durationStr];

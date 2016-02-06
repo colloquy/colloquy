@@ -493,7 +493,7 @@
 
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"<XMPPUser[%p]: %@>", self, [jid bare]];
+	return [[NSString alloc] initWithFormat:@"<XMPPUser[%p]: %@>", self, [jid bare]];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

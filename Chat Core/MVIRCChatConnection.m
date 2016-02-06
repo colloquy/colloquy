@@ -920,7 +920,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:self userInfo:@{
 			@"completionHandler": completionHandler,
 			@"trust": (__bridge id)trust,
-			@"result": [NSString stringWithFormat:@"%d", result]
+			@"result": [[NSString alloc] initWithFormat:@"%d", result]
 		}];
 	});
 }
@@ -1430,7 +1430,7 @@ parsingFinished: { // make a scope for this
 	if( echo ) {
 		MVChatRoom *room = ([target isKindOfClass:[MVChatRoom class]] ? target : nil);
 		NSNumber *action = ([attributes[@"action"] boolValue] ? attributes[@"action"] : @(NO));
-		NSMutableDictionary *privmsgInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:msg, @"message", [self localUser], @"user", [NSString locallyUniqueString], @"identifier", action, @"action", target, @"target", room, @"room", nil];
+		NSMutableDictionary *privmsgInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:msg, @"message", [self localUser], @"user", [NSString locallyUniqueString], @"identifier", action, @"action", target, @"target", room, @"room", nil];
 		dispatch_async(_connectionQueue, ^{ @autoreleasepool {
 			[self performSelector:@selector(_handlePrivmsg:) withObject:privmsgInfo];
 		}});
@@ -1448,7 +1448,7 @@ parsingFinished: { // make a scope for this
 		if( usingIntentTags ) {
 			NSString *messageTags = @"@intent=ACTION";
 			if ([self.supportedFeatures containsObject:MVChatConnectionAccountTagFeature] && self.localUser.account)
-				messageTags = [messageTags stringByAppendingString:[NSString stringWithFormat:@";account=%@", accountName]];
+				messageTags = [messageTags stringByAppendingString:[[NSString alloc] initWithFormat:@";account=%@", accountName]];
 			messageTagLength = messageTags.length + 1; // space is not in the prefix formatter (due to \001 being sent if not using @intent)
 			prefix = [[NSString alloc] initWithFormat:@"%@ PRIVMSG %@%@ :", messageTags, targetPrefix, targetName];
 		} else {
@@ -1464,7 +1464,7 @@ parsingFinished: { // make a scope for this
 		NSUInteger messageTagLength = 0;
 		NSString *prefix = nil;
 		if (usingIntentTags && [self.supportedFeatures containsObject:MVChatConnectionAccountTagFeature] && self.localUser.account) {
-			messageTags = [NSString stringWithFormat:@"@account=%@ ", accountName];
+			messageTags = [[NSString alloc] initWithFormat:@"@account=%@ ", accountName];
 			messageTagLength = messageTags.length; // space is in the tag substring since we don't have to worry about \001 for regular PRIVMSGs
 			prefix = [[NSString alloc] initWithFormat:@"%@PRIVMSG %@%@ :", messageTags, targetPrefix, targetName];
 		} else {
@@ -1561,7 +1561,7 @@ parsingFinished: { // make a scope for this
 			if( !nick.length ) return;
 			if( ![argumentsScanner isAtEnd] ) [argumentsScanner scanUpToCharactersFromSet:whitespaceCharacters intoString:&roomName];
 
-			[self sendRawMessage:[NSString stringWithFormat:@"INVITE %@ %@", nick, ( roomName.length ? roomName : [room name] )]];
+			[self sendRawMessage:[[NSString alloc] initWithFormat:@"INVITE %@ %@", nick, ( roomName.length ? roomName : [room name] )]];
 			return;
 		} else if( [command isCaseInsensitiveEqualToString:@"topic"] || [command isCaseInsensitiveEqualToString:@"t"] ) {
 			if( arguments.length ) {
@@ -1601,7 +1601,7 @@ parsingFinished: { // make a scope for this
 				MVChatUser *user = nil;
 				if ( [member hasCaseInsensitiveSubstring:@"!"] || [member hasCaseInsensitiveSubstring:@"@"] ) {
 					if ( ! [member hasCaseInsensitiveSubstring:@"!"] && [member hasCaseInsensitiveSubstring:@"@"] )
-						member = [NSString stringWithFormat:@"*!*%@", member];
+						member = [[NSString alloc] initWithFormat:@"*!*%@", member];
 					user = [MVChatUser wildcardUserFromString:member];
 				} else user = [[room memberUsersWithNickname:member] anyObject];
 
@@ -1714,7 +1714,7 @@ parsingFinished: { // make a scope for this
 					MVChatUser *user = nil;
 					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] ) {
 						if ( ! [userString hasCaseInsensitiveSubstring:@"!"] && [userString hasCaseInsensitiveSubstring:@"@"] )
-							userString = [NSString stringWithFormat:@"*!*%@", userString];
+							userString = [[NSString alloc] initWithFormat:@"*!*%@", userString];
 						user = [MVChatUser wildcardUserFromString:userString];
 					} else user = [[room memberUsersWithNickname:userString] anyObject];
 
@@ -1732,7 +1732,7 @@ parsingFinished: { // make a scope for this
 					MVChatUser *user = nil;
 					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] ) {
 						if ( ! [userString hasCaseInsensitiveSubstring:@"!"] && [userString hasCaseInsensitiveSubstring:@"@"] )
-							userString = [NSString stringWithFormat:@"*!*%@", userString];
+							userString = [[NSString alloc] initWithFormat:@"*!*%@", userString];
 						user = [MVChatUser wildcardUserFromString:userString];
 					} else user = [[room memberUsersWithNickname:userString] anyObject];
 
@@ -1846,7 +1846,7 @@ parsingFinished: { // make a scope for this
 		[self setAwayStatusMessage:arguments];
 		return;
 	} else if ([command isCaseInsensitiveEqualToString:@"umode"]) {
-		[self sendRawMessage:[NSString stringWithFormat:@"MODE %@ %@", [self nickname], MVChatStringAsString(arguments)]];
+		[self sendRawMessage:[[NSString alloc] initWithFormat:@"MODE %@ %@", [self nickname], MVChatStringAsString(arguments)]];
 		return;
 	} else if ([command isCaseInsensitiveEqualToString:@"globops"]) {
 		NSData *argumentsData = [[self class] _flattenedIRCDataForMessage:arguments withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
@@ -1878,14 +1878,14 @@ parsingFinished: { // make a scope for this
 			MVChatUser *user = [self chatUserWithUniqueIdentifier:[self stringWithEncodedBytes:context]];
 			[user _setStatus:MVChatUserOfflineStatus];
 			[userInfo setObject:user forKey:@"user"];
-			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The user \"%@\" is no longer connected (or never was connected) to the \"%@\" server.", "user not on the server" ), [user nickname], [self server]] forKey:NSLocalizedDescriptionKey];
+			[userInfo setObject:[[NSString alloc] initWithFormat:NSLocalizedString( @"The user \"%@\" is no longer connected (or never was connected) to the \"%@\" server.", "user not on the server" ), [user nickname], [self server]] forKey:NSLocalizedDescriptionKey];
 			error = [NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionNoSuchUserError userInfo:userInfo];
 			break;
 		}
 		case ERR_UNKNOWNCOMMAND: {
 			NSString *command = [self stringWithEncodedBytes:context];
 			[userInfo setObject:command forKey:@"command"];
-			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The command \"%@\" is not a valid command on the \"%@\" server.", "user not on the server" ), command, [self server]] forKey:NSLocalizedDescriptionKey];
+			[userInfo setObject:[[NSString alloc] initWithFormat:NSLocalizedString( @"The command \"%@\" is not a valid command on the \"%@\" server.", "user not on the server" ), command, [self server]] forKey:NSLocalizedDescriptionKey];
 			error = [NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionUnknownCommandError userInfo:userInfo];
 			break;
 		}
@@ -1915,7 +1915,7 @@ parsingFinished: { // make a scope for this
 
 - (NSString *) _nextPossibleNicknameFromNickname:(NSString *) nickname {
 	if( ( _failedNickname && [_failedNickname isCaseInsensitiveEqualToString:nickname] ) || _nicknameShortened) {
-		NSString *nick = [NSString stringWithFormat:@"%@-%d", [nickname substringToIndex:(nickname.length - 2)], _failedNicknameCount];
+		NSString *nick = [[NSString alloc] initWithFormat:@"%@-%d", [nickname substringToIndex:(nickname.length - 2)], _failedNicknameCount];
 
 		_nicknameShortened = YES;
 
@@ -2322,7 +2322,7 @@ parsingFinished: { // make a scope for this
 	NSUInteger length = nickname.length;
 	for( i = 0; i < length; ++i ) {
 		if( prefixes.count ) {
-			NSNumber *prefix = prefixes[[NSString stringWithFormat:@"%c", [nickname characterAtIndex:i]]];
+			NSNumber *prefix = prefixes[[[NSString alloc] initWithFormat:@"%c", [nickname characterAtIndex:i]]];
 			if( prefix ) modes |= [prefix unsignedLongValue];
 			else break;
 		} else {
@@ -2835,10 +2835,10 @@ parsingFinished: { // make a scope for this
 			userInfo[@"newnickname"] = newNickname;
 
 			if ( ! [newNickname isCaseInsensitiveEqualToString:usedNickname] ) {
-				userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"Can't change nick from \"%@\" to \"%@\" because it is already taken on \"%@\".", "cannot change used nickname error" ), usedNickname, newNickname, [self server]];
+				userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"Can't change nick from \"%@\" to \"%@\" because it is already taken on \"%@\".", "cannot change used nickname error" ), usedNickname, newNickname, [self server]];
 				[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeUsedNickError userInfo:userInfo]];
 			} else {
-				userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"Your nickname is being changed by services on \"%@\" because it is registered and you did not supply the correct password to identify.", "nickname changed by services error" ), [self server]];
+				userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"Your nickname is being changed by services on \"%@\" because it is registered and you did not supply the correct password to identify.", "nickname changed by services error" ), [self server]];
 				[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionNickChangedByServicesError userInfo:userInfo]];
 			}
 		}
@@ -2996,7 +2996,7 @@ parsingFinished: { // make a scope for this
 						return;
 
 					// 2. Look up the most recent activity we have saved locally for the query buffer.
-					NSString *recentActivityDateKey = [NSString stringWithFormat:@"%@-%@", self.uniqueIdentifier, [components[0] lowercaseString]];
+					NSString *recentActivityDateKey = [[NSString alloc] initWithFormat:@"%@-%@", self.uniqueIdentifier, [components[0] lowercaseString]];
 					NSDate *mostRecentActivity = [[NSUserDefaults standardUserDefaults] objectForKey:recentActivityDateKey];
 
 					// 3. If we have any recent activity saved, request anything from the last timestamp we have saved. Otherwise,
@@ -3201,7 +3201,7 @@ parsingFinished: { // make a scope for this
 					  [msg hasCaseInsensitiveSubstring:@"nickname is owned"] ||
 					  [msg hasCaseInsensitiveSubstring:@"nick belongs to another user"] ||
 					  [msg hasCaseInsensitiveSubstring:@"if you do not change your nickname"] ||
-					  ( [[self server] hasCaseInsensitiveSubstring:@"oftc"] && ( [msg isCaseInsensitiveEqualToString:@"getting this message because you are not on the access list for the"] || [msg isCaseInsensitiveEqualToString:[NSString stringWithFormat:@"\002%@\002 nickname.", [self nickname]]] ) ) ) {
+					  ( [[self server] hasCaseInsensitiveSubstring:@"oftc"] && ( [msg isCaseInsensitiveEqualToString:@"getting this message because you are not on the access list for the"] || [msg isCaseInsensitiveEqualToString:[[NSString alloc] initWithFormat:@"\002%@\002 nickname.", [self nickname]]] ) ) ) {
 
 				[[self localUser] _setIdentified:NO];
 
@@ -3432,7 +3432,7 @@ parsingFinished: { // make a scope for this
 				if( [address rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@".:"]].location == NSNotFound ) {
 					unsigned ip4 = 0;
 					sscanf( [address UTF8String], "%u", &ip4 );
-					address = [NSString stringWithFormat:@"%d.%d.%d.%d", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
+					address = [[NSString alloc] initWithFormat:@"%d.%d.%d.%d", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
 				}
 
 				port %= 65536; // some clients use ports greater than 65535, mod with 65536 to get the real port
@@ -3562,7 +3562,7 @@ parsingFinished: { // make a scope for this
 				if( [address rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@".:"]].location == NSNotFound ) {
 					unsigned ip4 = 0;
 					sscanf( [address UTF8String], "%u", &ip4 );
-					address = [NSString stringWithFormat:@"%d.%d.%d.%d", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
+					address = [[NSString alloc] initWithFormat:@"%d.%d.%d.%d", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
 				}
 
 				port %= 65536; // some clients use ports greater than 65535, mod with 65536 to get the real port
@@ -3947,7 +3947,7 @@ parsingFinished: { // make a scope for this
 						default: {
 							NSMutableDictionary *supportedModes = _serverInformation[@"roomMemberModeTable"];
 							if( supportedModes.count ) {
-								value = [supportedModes[[NSString stringWithFormat:@"%c", chr]] unsignedLongValue];
+								value = [supportedModes[[[NSString alloc] initWithFormat:@"%c", chr]] unsignedLongValue];
 								if( value ) goto queue;
 								else {
 									if (!unsupportedModes.length || previousUnknownMode != enabled) {
@@ -4268,8 +4268,8 @@ parsingFinished: { // make a scope for this
 
 #if !ENABLE(BOUNCER_MODE)
 			if( [[room memberUsers] count] <= JVMaximumMembersForWhoRequest )
-				[self sendRawMessage:[NSString stringWithFormat:@"WHO %@", [room name]]];
-			[self sendRawMessage:[NSString stringWithFormat:@"MODE %@ b", [room name]]];
+				[self sendRawMessage:[[NSString alloc] initWithFormat:@"WHO %@", [room name]]];
+			[self sendRawMessage:[[NSString alloc] initWithFormat:@"MODE %@ b", [room name]]];
 #endif
 		}
 	}
@@ -4572,15 +4572,15 @@ parsingFinished: { // make a scope for this
 
 			NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 			userInfo[@"connection"] = self;
-			userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]];
+			userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]];
 
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionServicesDownError userInfo:userInfo]];
 		}
 
 		/* TODO
 		NSString *errorLiteralReason = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
-		NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:self, @"connection", user, @"user", @"401", @"errorCode", errorLiteralReason, @"errorLiteralReason", nil];
-		[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"There is no user called \"%@\" on \"%@\".", "no such user error" ), user, [self server]] forKey:NSLocalizedDescriptionKey];
+		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:self, @"connection", user, @"user", @"401", @"errorCode", errorLiteralReason, @"errorLiteralReason", nil];
+		[userInfo setObject:[[NSString alloc] initWithFormat:NSLocalizedString( @"There is no user called \"%@\" on \"%@\".", "no such user error" ), user, [self server]] forKey:NSLocalizedDescriptionKey];
 		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionNoSuchUserError userInfo:userInfo]];
 		*/
 	}
@@ -4617,7 +4617,7 @@ parsingFinished: { // make a scope for this
 		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 		userInfo[@"connection"] = self;
 		userInfo[@"room"] = room;
-		userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"Can't send to room \"%@\" on \"%@\".", "cant send to room error" ), room, [self server]];
+		userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"Can't send to room \"%@\" on \"%@\".", "cant send to room error" ), room, [self server]];
 
 		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantSendToRoomError userInfo:userInfo]];
 
@@ -4641,7 +4641,7 @@ parsingFinished: { // make a scope for this
 
 	NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 	userInfo[@"connection"] = self;
-	userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]];
+	userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]];
 
 	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionServicesDownError userInfo:userInfo]];
 }
@@ -4670,7 +4670,7 @@ parsingFinished: { // make a scope for this
 
 	NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:2];
 	userInfo[@"connection"] = self;
-	userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"You can't change your nickname to \"%@\" on \"%@\".", "cant change nick because of server error" ), identifier, [self server]];
+	userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"You can't change your nickname to \"%@\" on \"%@\".", "cant change nick because of server error" ), identifier, [self server]];
 
 	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionErroneusNicknameError userInfo:userInfo]];
 }
@@ -4685,7 +4685,7 @@ parsingFinished: { // make a scope for this
 			NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:3];
 			userInfo[@"connection"] = self;
 			userInfo[@"room"] = possibleRoom;
-			userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again.", "cant change nick because of chatroom error" ), possibleRoom, [self server]];
+			userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again.", "cant change nick because of chatroom error" ), possibleRoom, [self server]];
 
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeNickError userInfo:userInfo]];
 
@@ -4706,14 +4706,14 @@ parsingFinished: { // make a scope for this
 			NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:3];
 			userInfo[@"connection"] = self;
 			userInfo[@"room"] = identifier;
-			userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again.", "cant change nick because of chatroom error" ), identifier, [self server]];
+			userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again.", "cant change nick because of chatroom error" ), identifier, [self server]];
 
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeNickError userInfo:userInfo]];
 
 		} else {
 			NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:2];
 			userInfo[@"connection"] = self;
-			userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"Unable to change your nickname to \"%@\" on \"%@\".", "cant change nick because of server error" ), identifier, [self server]];
+			userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"Unable to change your nickname to \"%@\" on \"%@\".", "cant change nick because of server error" ), identifier, [self server]];
 
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeNickError userInfo:userInfo]];
 		}
@@ -4732,8 +4732,8 @@ parsingFinished: { // make a scope for this
 		NSString *possibleRoom = [self _stringFromPossibleData:parameters[2]];
 		if( [self joinedChatRoomWithUniqueIdentifier:possibleRoom] ) {
 			userInfo[@"room"] = possibleRoom;
-			userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again.", "cant change nick because of chatroom error" ), possibleRoom, [self server]];
-		} else userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"You changed your nickname too fast on \"%@\", please wait and try again.", "cant change nick too fast error" ), [self server]];
+			userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again.", "cant change nick because of chatroom error" ), possibleRoom, [self server]];
+		} else userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"You changed your nickname too fast on \"%@\", please wait and try again.", "cant change nick too fast error" ), [self server]];
 
 		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeNickError userInfo:userInfo]];
 	}
@@ -4747,7 +4747,7 @@ parsingFinished: { // make a scope for this
 
 	NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 	userInfo[@"connection"] = self;
-	userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]];
+	userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]];
 
 	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionServicesDownError userInfo:userInfo]];
 }
@@ -4784,7 +4784,7 @@ parsingFinished: { // make a scope for this
 		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 		userInfo[@"connection"] = self;
 		userInfo[@"room"] = room;
-		userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" is full.", "room is full error" ), room, [self server]];
+		userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" is full.", "room is full error" ), room, [self server]];
 
 		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionRoomIsFullError userInfo:userInfo]];
 	}
@@ -4802,7 +4802,7 @@ parsingFinished: { // make a scope for this
 		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 		userInfo[@"connection"] = self;
 		userInfo[@"room"] = room;
-		userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" is invite only.", "invite only room error" ), room, [self server]];
+		userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" is invite only.", "invite only room error" ), room, [self server]];
 
 		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionInviteOnlyRoomError userInfo:userInfo]];
 	}
@@ -4817,7 +4817,7 @@ parsingFinished: { // make a scope for this
 		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 		userInfo[@"connection"] = self;
 		userInfo[@"room"] = room;
-		userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"You are banned from the room \"%@\" on \"%@\".", "banned from room error" ), room, [self server]];
+		userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"You are banned from the room \"%@\" on \"%@\".", "banned from room error" ), room, [self server]];
 
 		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionBannedFromRoomError userInfo:userInfo]];
 	}
@@ -4835,7 +4835,7 @@ parsingFinished: { // make a scope for this
 		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
 		userInfo[@"connection"] = self;
 		userInfo[@"room"] = room;
-		userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" is password protected.", "room password protected error" ), room, [self server]];
+		userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" is password protected.", "room password protected error" ), room, [self server]];
 
 		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionRoomPasswordIncorrectError userInfo:userInfo]];
 	}
@@ -4851,17 +4851,17 @@ parsingFinished: { // make a scope for this
 		NSString *room = [self _stringFromPossibleData:parameters[1]];
 		NSString *errorLiteralReason = [self _stringFromPossibleData:parameters[2]];
 
-		NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:self, @"connection", room, @"room", @"477", @"errorCode", errorLiteralReason, @"errorLiteralReason", nil];
+		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:self, @"connection", room, @"room", @"477", @"errorCode", errorLiteralReason, @"errorLiteralReason", nil];
 		if( [_pendingJoinRoomNames containsObject:room] ) { // (probably II)
 			[_pendingJoinRoomNames removeObject:room];
-			userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"You need to identify with network services to join the room \"%@\" on \"%@\".", "identify to join room error" ), room, [self server]];
+			userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"You need to identify with network services to join the room \"%@\" on \"%@\".", "identify to join room error" ), room, [self server]];
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionIdentifyToJoinRoomError userInfo:userInfo]];
 		} else if( ![[self server] hasCaseInsensitiveSubstring:@"freenode"] ) { // ignore on freenode until they stop randomly sending 477s when joining a room
 			if( [errorLiteralReason hasCaseInsensitiveSubstring:@"modes"] ) { // (probably I)
-				userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" does not support modes.", "room does not support modes error" ), room, [self server]];
+				userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" does not support modes.", "room does not support modes error" ), room, [self server]];
 				[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionRoomDoesNotSupportModesError userInfo:userInfo]];
 			} else { // (could be either)
-				userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" encountered an unknown error, see server details for more information.", "room encountered unknown error" ), room, [self server]];
+				userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" encountered an unknown error, see server details for more information.", "room encountered unknown error" ), room, [self server]];
 				[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionUnknownError userInfo:userInfo]];
 			}
 		}
@@ -4893,7 +4893,7 @@ parsingFinished: { // make a scope for this
 		userInfo[@"room"] = room;
 		userInfo[@"errorCode"] = @"506";
 		userInfo[@"errorLiteralReason"] = errorLiteralReason;
-		userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:NSLocalizedString( @"Can't send to room \"%@\" on \"%@\".", "cant send to room error" ), room, [self server]];
+		userInfo[NSLocalizedDescriptionKey] = [[NSString alloc] initWithFormat:NSLocalizedString( @"Can't send to room \"%@\" on \"%@\".", "cant send to room error" ), room, [self server]];
 
 		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantSendToRoomError userInfo:userInfo]];
 	}

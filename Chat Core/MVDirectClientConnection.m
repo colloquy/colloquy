@@ -23,7 +23,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	if( result.length >= 6 && result.length <= 40 ) // should be a valid IPv4 or IPv6 address
 		address = [[NSString alloc] initWithData:result encoding:NSASCIIStringEncoding];
 	if( address && [address rangeOfString:@"."].location != NSNotFound )
-		return [NSString stringWithFormat:@"%u", ntohl( inet_addr( [address UTF8String] ) )];
+		return [[NSString alloc] initWithFormat:@"%u", ntohl( inet_addr( [address UTF8String] ) )];
 	return address;
 }
 
@@ -322,7 +322,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 		[_threadWaitLock lockWhenCondition:0];
 
 		NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
-		NSString *queueName = [NSString stringWithFormat:@"%@.connection-queue (%@)", bundleIdentifier, [self description]];
+		NSString *queueName = [[NSString alloc] initWithFormat:@"%@.connection-queue (%@)", bundleIdentifier, [self description]];
 		_connectionDelegateQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
 		_connectionThread = [NSThread currentThread];
 		[_connectionThread setName:[self description]];

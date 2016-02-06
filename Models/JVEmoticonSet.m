@@ -149,7 +149,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 			NSMutableString *search = [str mutableCopy];
 			[search escapeCharactersInSet:escapeSet];
 
-			NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"(?<=\\s|^)%@(?=\\s|$)", search] options:0 error:nil];
+			NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:[[NSString alloc] initWithFormat:@"(?<=\\s|^)%@(?=\\s|$)", search] options:0 error:nil];
 			NSArray *matches = [regex matchesInString:[string string] options:0 range:NSMakeRange( 0, [string string].length )];
 
 			for( NSTextCheckingResult *match in matches ) {
@@ -204,7 +204,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 		[ret addObject:menuItem];
 	}
 
-	return [NSArray arrayWithArray:ret];
+	return [[NSArray alloc] initWithArray:ret];
 }
 
 #pragma mark -
@@ -222,7 +222,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 #pragma mark -
 
 - (NSString *) contentsOfStyleSheet {
-	NSString *contents = [NSString stringWithContentsOfURL:[self styleSheetLocation] encoding:NSUTF8StringEncoding error:NULL];
+	NSString *contents = [[NSString alloc] initWithContentsOfURL:[self styleSheetLocation] encoding:NSUTF8StringEncoding error:NULL];
 	return ( contents ? contents : @"" );
 }
 @end
@@ -235,10 +235,10 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 	if( ! path ) path = [[NSBundle mainBundle] pathForResource:@"emoticons" ofType:@"plist"];
 
 	_bundle = bundle;
-	_emoticonMappings = path ? [NSDictionary dictionaryWithContentsOfFile:path] : @{};
+	_emoticonMappings = path ? [[NSDictionary alloc] initWithContentsOfFile:path] : @{};
 
 	NSString *file = [_bundle pathForResource:@"menu" ofType:@"plist"];
 
-	_emoticonMenu = [NSArray arrayWithContentsOfFile:file];
+	_emoticonMenu = [[NSArray alloc] initWithContentsOfFile:file];
 }
 @end

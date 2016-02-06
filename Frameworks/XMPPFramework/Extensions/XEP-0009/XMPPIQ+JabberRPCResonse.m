@@ -216,7 +216,7 @@
 	</struct>
 	*/
 	NSArray *children = [structElement children];
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:[children count]];
+	NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:[children count]];
 	
 	for (NSXMLElement *child in children) {
 		[dict addEntriesFromDictionary:[self parseMember:child]];

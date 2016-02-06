@@ -465,7 +465,7 @@
 	NSInteger tzoH = tzoInSeconds / (60 * 60);
 	NSInteger tzoS = tzoInSeconds % (60 * 60);
 	
-	NSString *tzoValue = [NSString stringWithFormat:@"%+03li:%02li", (long)tzoH, (long)tzoS];
+	NSString *tzoValue = [[NSString alloc] initWithFormat:@"%+03li:%02li", (long)tzoH, (long)tzoS];
 	
 	NSXMLElement *tzo = [NSXMLElement elementWithName:@"tzo" stringValue:tzoValue];
 	NSXMLElement *utc = [NSXMLElement elementWithName:@"utc" stringValue:utcValue];

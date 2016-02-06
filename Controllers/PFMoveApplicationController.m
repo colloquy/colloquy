@@ -94,11 +94,11 @@ void PFMoveToApplicationsFolderIfNecessary(void)
 		
 		// Relaunch
 		NSString *executableName = [[[NSBundle mainBundle] executablePath] lastPathComponent];
-		NSString *relaunchPath = [destinationPath stringByAppendingPathComponent:[NSString stringWithFormat:@"Contents/MacOS/%@", executableName]];
+		NSString *relaunchPath = [destinationPath stringByAppendingPathComponent:[[NSString alloc] initWithFormat:@"Contents/MacOS/%@", executableName]];
 		
 		[NSTask launchedTaskWithLaunchPath:relaunchPath
 								 arguments:@[destinationPath,
-											[NSString stringWithFormat:@"%d", [[NSProcessInfo processInfo] processIdentifier]]]]; // The %d is not a 64-bit bug. The call to processIdentifier returns an int
+											[[NSString alloc] initWithFormat:@"%d", [[NSProcessInfo processInfo] processIdentifier]]]]; // The %d is not a 64-bit bug. The call to processIdentifier returns an int
 		[NSApp terminate:nil];
 	}
 	else {

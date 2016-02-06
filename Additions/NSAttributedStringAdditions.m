@@ -156,8 +156,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		NSString *title = dict[@"LinkTitle"];
 		BOOL bold = NO, italic = NO, underline = NO, strikethrough = NO;
 
-		NSMutableString *spanString = [NSMutableString stringWithString:@"<span"];
-		NSMutableString *styleString = [NSMutableString stringWithString:( style ? style : @"" )];
+		NSMutableString *spanString = [[NSMutableString alloc] initWithString:@"<span"];
+		NSMutableString *styleString = [[NSMutableString alloc] initWithString:( style ? style : @"" )];
 
 		if( foregoundColor && ! [options[@"IgnoreFontColors"] boolValue] ) {
 			if( styleString.length && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
@@ -173,7 +173,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			if( styleString.length && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
 			NSString *family = [currentFont familyName];
 			if( [family rangeOfString:@" "].location != NSNotFound )
-				family = [NSString stringWithFormat:@"'%@'", family];
+				family = [[NSString alloc] initWithFormat:@"'%@'", family];
 			[styleString appendFormat:@"font-family: %@", family];
 		}
 

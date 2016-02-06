@@ -190,7 +190,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 }
 
 - (NSString *__nullable) nickname {
-	return (_nicknameIsRegex && _nickname ? [NSString stringWithFormat:@"/%@/", _nickname] : _nickname);
+	return (_nicknameIsRegex && _nickname ? [[NSString alloc] initWithFormat:@"/%@/", _nickname] : _nickname);
 }
 
 - (void) setNickname:(NSString *__nullable) newNickname {
@@ -203,7 +203,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 }
 
 - (NSString *__nullable) realName {
-	return (_realNameIsRegex && _realName ? [NSString stringWithFormat:@"/%@/", _realName] : _realName);
+	return (_realNameIsRegex && _realName ? [[NSString alloc] initWithFormat:@"/%@/", _realName] : _realName);
 }
 
 - (void) setRealName:(NSString *__nullable) newRealName {
@@ -216,7 +216,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 }
 
 - (NSString *__nullable) username {
-	return (_usernameIsRegex && _username ? [NSString stringWithFormat:@"/%@/", _username] : _username);
+	return (_usernameIsRegex && _username ? [[NSString alloc] initWithFormat:@"/%@/", _username] : _username);
 }
 
 - (void) setUsername:(NSString *__nullable) newUsername {
@@ -229,7 +229,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 }
 
 - (NSString *__nullable) address {
-	return (_addressIsRegex && _address ? [NSString stringWithFormat:@"/%@/", _address] : _address);
+	return (_addressIsRegex && _address ? [[NSString alloc] initWithFormat:@"/%@/", _address] : _address);
 }
 
 - (void) setAddress:(NSString *__nullable) newAddress {

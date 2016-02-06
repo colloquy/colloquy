@@ -255,7 +255,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 			newAttributes[@"XHTMLStart"] = front;
 
 			unichar attachmentChar = NSAttachmentCharacter;
-			NSString *attachment = [NSString stringWithCharacters:&attachmentChar length:1];
+			NSString *attachment = [[NSString alloc] initWithCharacters:&attachmentChar length:1];
 
 			NSAttributedString *new = [[NSAttributedString alloc] initWithString:attachment attributes:newAttributes];
 			[ret appendAttributedString:new];
@@ -282,7 +282,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 }
 
 - (instancetype) initWithXHTMLTree:(struct _xmlNode *) node baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
-	NSMutableDictionary *attrs = [NSMutableDictionary dictionaryWithDictionary:attributes];
+	NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:attributes];
 	if( ! attrs[NSFontAttributeName] )
 		attrs[NSFontAttributeName] = [NSFont userFontOfSize:12.];
 	id ret = parseXHTMLTreeNode( node, attrs, base, YES );
@@ -290,7 +290,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 }
 
 - (instancetype) initWithXHTMLFragment:(NSString *) fragment baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
-	const char *string = [[NSString stringWithFormat:@"<root>%@</root>", [fragment stringByStrippingIllegalXMLCharacters]] UTF8String];
+	const char *string = [[[NSString alloc] initWithFormat:@"<root>%@</root>", [fragment stringByStrippingIllegalXMLCharacters]] UTF8String];
 
 	if( string ) {
 		xmlDocPtr tempDoc = xmlParseMemory( string, (int)strlen( string ) );
@@ -329,7 +329,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		NSString *currentLink = [self attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
 		if( ! currentLink ) {
 			NSString *contents = [[self string] substringWithRange:foundRange];
-			NSString *link = [NSString stringWithFormat:@"mailto:%@", contents];
+			NSString *link = [[NSString alloc] initWithFormat:@"mailto:%@", contents];
 			[self addAttribute:NSLinkAttributeName value:link range:foundRange];
 		}
 	}

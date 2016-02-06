@@ -90,7 +90,7 @@ NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatP
 				}
 
 				if( ![[NSFileManager defaultManager] canExecutePluginAtPath:bundle.executablePath] ) {
-					[invalidPluginList addObject:[NSString stringWithFormat:@"%@/%@", path, file]];
+					[invalidPluginList addObject:[[NSString alloc] initWithFormat:@"%@/%@", path, file]];
 
 					_invalidPlugins[bundleIdentifier] = pluginVersion;
 
@@ -138,7 +138,7 @@ NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatP
 #pragma mark -
 
 - (NSArray *) plugins {
-	return [NSArray arrayWithArray:_plugins];
+	return [[NSArray alloc] initWithArray:_plugins];
 }
 
 - (nullable NSArray *) pluginsThatRespondToSelector:(SEL) selector {

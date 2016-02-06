@@ -269,7 +269,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 			} else if( ! range.location && ! scrollback ) {
 				hiddenMsgs++;
 				[hiddenResults setHidden:NO];
-				[hiddenResultsCount setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%u hidden", "number of hidden messages" ), hiddenMsgs]];
+				[hiddenResultsCount setStringValue:[[NSString alloc] initWithFormat:NSLocalizedString( @"%u hidden", "number of hidden messages" ), hiddenMsgs]];
 				[hiddenResults displayIfNeeded];
 			}
 		}
@@ -386,7 +386,7 @@ end:
 			} else if( ! range.location && ! scrollback ) {
 				hiddenMsgs++;
 				[hiddenResults setHidden:NO];
-				[hiddenResultsCount setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%u hidden", "number of hidden messages" ), hiddenMsgs]];
+				[hiddenResultsCount setStringValue:[[NSString alloc] initWithFormat:NSLocalizedString( @"%u hidden", "number of hidden messages" ), hiddenMsgs]];
 				[hiddenResults displayIfNeeded];
 			}
 		}

@@ -516,7 +516,7 @@
 							// Replace %@ with (.*) so we can pull the color value out.
 							NSString *expression = [v stringByReplacingOccurrencesOfRegex:@"\\s*!\\s*important\\s*$" withString:@"" options:NSRegularExpressionCaseInsensitive range:NSMakeRange( 0, v.length ) error:nil];
 							expression = [expression stringByEscapingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"]];
-							expression = [NSString stringWithFormat:expression, @"(.*)"];
+							expression = [[NSString alloc] initWithFormat:expression, @"(.*)"];
 
 							// Store the color value if we found one.
 							regex = [NSRegularExpression cachedRegularExpressionWithPattern:expression options:NSRegularExpressionCaseInsensitive error:nil];
@@ -531,7 +531,7 @@
 							// Replace %@ with (.*) so we can pull the path value out.
 							NSString *expression = [v stringByReplacingOccurrencesOfRegex:@"\\s*!\\s*important\\s*$" withString:@"" options:NSRegularExpressionCaseInsensitive range:NSMakeRange( 0, v.length ) error:nil];
 							expression = [expression stringByEscapingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"]];
-							expression = [NSString stringWithFormat:expression, @"(.*)"];
+							expression = [[NSString alloc] initWithFormat:expression, @"(.*)"];
 
 							// Store the path value if we found one.
 							regex = [NSRegularExpression cachedRegularExpressionWithPattern:expression options:NSRegularExpressionCaseInsensitive error:nil];
@@ -563,7 +563,7 @@
 	selector = [selector stringByEscapingCharactersInSet:escapeSet];
 	property = [property stringByEscapingCharactersInSet:escapeSet];
 
-	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[NSString stringWithFormat:@"%@\\s*\\{[^\\}]*?\\s%@:\\s*(.*?)(?:\\s*!\\s*important\\s*)?;.*?\\}", selector, property] options:NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators error:nil];
+	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[[NSString alloc] initWithFormat:@"%@\\s*\\{[^\\}]*?\\s%@:\\s*(.*?)(?:\\s*!\\s*important\\s*)?;.*?\\}", selector, property] options:NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators error:nil];
 	NSTextCheckingResult *match = [regex firstMatchInString:style options:0 range:NSMakeRange( 0, style.length ) ];
 	if( [match numberOfRanges] > 1 ) return [style substringWithRange:[match rangeAtIndex:1]];
 
@@ -576,14 +576,14 @@
 //	NSString *rselector = [selector stringByEscapingCharactersInSet:escapeSet];
 //	NSString *rproperty = [property stringByEscapingCharactersInSet:escapeSet];
 //
-//	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[NSString stringWithFormat:@"(%@\\s*\\{[^\\}]*?\\s%@:\\s*)(?:.*?)(;.*?\\})", rselector, rproperty] options:NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators error:nil];
+//	NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[[NSString alloc] initWithFormat:@"(%@\\s*\\{[^\\}]*?\\s%@:\\s*)(?:.*?)(;.*?\\})", rselector, rproperty] options:NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators error:nil];
 //	AGRegex *regex = [AGRegex regexWithPattern: options:( AGRegexCaseInsensitive | AGRegexDotAll )];
 //	if( [[regex findInString:self.userStyle] count] ) { // Change existing property in selector block
-//		[self setUserStyle:[regex replaceWithString:[NSString stringWithFormat:@"$1%@$2", value] inString:self.userStyle]];
+//		[self setUserStyle:[regex replaceWithString:[[NSString alloc] initWithFormat:@"$1%@$2", value] inString:self.userStyle]];
 //	} else {
-//		regex = [AGRegex regexWithPattern:[NSString stringWithFormat:@"(\\s%@\\s*\\{)(\\s*)", rselector] options:AGRegexCaseInsensitive];
+//		regex = [AGRegex regexWithPattern:[[NSString alloc] initWithFormat:@"(\\s%@\\s*\\{)(\\s*)", rselector] options:AGRegexCaseInsensitive];
 //		if( [[regex findInString:self.userStyle] count] ) { // Append to existing selector block
-//			[self setUserStyle:[regex replaceWithString:[NSString stringWithFormat:@"$1$2%@: %@;$2", rproperty, value] inString:self.userStyle]];
+//			[self setUserStyle:[regex replaceWithString:[[NSString alloc] initWithFormat:@"$1$2%@: %@;$2", rproperty, value] inString:self.userStyle]];
 //		} else { // Create new selector block
 //			[self setUserStyle:[self.userStyle stringByAppendingFormat:@"%@%@ {\n\t%@: %@;\n}", ( [self.userStyle length] ? @"\n\n": @"" ), selector, property, value]];
 //		}
@@ -662,7 +662,7 @@
 			info[@"value"] = object;
 
 			for( NSDictionary *styleInfo in info[@"layouts"][0] ) {
-				NSString *setting = [NSString stringWithFormat:styleInfo[@"value"], path];
+				NSString *setting = [[NSString alloc] initWithFormat:styleInfo[@"value"], path];
 				[self setStyleProperty:styleInfo[@"property"] forSelector:styleInfo[@"selector"] toValue:setting];
 			}
 
@@ -687,7 +687,7 @@
 	NSString *setting = nil;
 
 	for( NSDictionary *styleInfo in style ) {
-		setting = [NSString stringWithFormat:styleInfo[@"value"], value];
+		setting = [[NSString alloc] initWithFormat:styleInfo[@"value"], value];
 		[self setStyleProperty:styleInfo[@"property"] forSelector:styleInfo[@"selector"] toValue:setting];
 	}
 
@@ -718,7 +718,7 @@
 	NSArray *style = info[@"layouts"][0];
 
 	for( NSDictionary *styleInfo in style ) {
-		NSString *setting = [NSString stringWithFormat:styleInfo[@"value"], value];
+		NSString *setting = [[NSString alloc] initWithFormat:styleInfo[@"value"], value];
 		[self setStyleProperty:styleInfo[@"property"] forSelector:styleInfo[@"selector"] toValue:setting];
 	}
 
@@ -793,7 +793,7 @@
 	[name replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [name length] )];
 	[name replaceOccurrencesOfString:@":" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [name length] )];
 
-	NSString *varDir = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [self.style identifier]] stringByExpandingTildeInPath];
+	NSString *varDir = [[[NSString alloc] initWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [self.style identifier]] stringByExpandingTildeInPath];
 	[[NSFileManager defaultManager] createDirectoryAtPath:varDir withIntermediateDirectories:YES attributes:nil error:nil];
 
 	NSString *path = [[varDir stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"css"];

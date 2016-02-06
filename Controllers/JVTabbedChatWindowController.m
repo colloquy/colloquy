@@ -241,7 +241,7 @@
 			}
 
 			[[newWindowController window] setFrame:newFrame display:NO];
-			[[newWindowController window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [chatController identifier]]];
+			[[newWindowController window] saveFrameUsingName:[[NSString alloc] initWithFormat:@"Chat Window %@", [chatController identifier]]];
 		}
 
 		[[chatController windowController] removeChatViewController:chatController];
@@ -420,22 +420,22 @@
 	NSMenu *windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
 	NSInteger index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousPanel: )];
 	id item = [windowMenu itemAtIndex:index];
-	[item setKeyEquivalent:[NSString stringWithCharacters:&left length:1]];
+	[item setKeyEquivalent:[[NSString alloc] initWithCharacters:&left length:1]];
 
 	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
 	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousActivePanel: )];
 	item = [windowMenu itemAtIndex:index];
-	[item setKeyEquivalent:[NSString stringWithCharacters:&left length:1]];
+	[item setKeyEquivalent:[[NSString alloc] initWithCharacters:&left length:1]];
 
 	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
 	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectNextPanel: )];
 	item = [windowMenu itemAtIndex:index];
-	[item setKeyEquivalent:[NSString stringWithCharacters:&right length:1]];
+	[item setKeyEquivalent:[[NSString alloc] initWithCharacters:&right length:1]];
 
 	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
 	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectNextActivePanel: )];
 	item = [windowMenu itemAtIndex:index];
-	[item setKeyEquivalent:[NSString stringWithCharacters:&right length:1]];
+	[item setKeyEquivalent:[[NSString alloc] initWithCharacters:&right length:1]];
 }
 
 - (void) _resignMenuCommands {
@@ -447,22 +447,22 @@
 	NSMenu *windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
 	NSInteger index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousPanel: )];
 	id item = [windowMenu itemAtIndex:index];
-	[item setKeyEquivalent:[NSString stringWithCharacters:&up length:1]];
+	[item setKeyEquivalent:[[NSString alloc] initWithCharacters:&up length:1]];
 
 	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
 	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousActivePanel: )];
 	item = [windowMenu itemAtIndex:index];
-	[item setKeyEquivalent:[NSString stringWithCharacters:&up length:1]];
+	[item setKeyEquivalent:[[NSString alloc] initWithCharacters:&up length:1]];
 
 	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
 	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectNextPanel: )];
 	item = [windowMenu itemAtIndex:index];
-	[item setKeyEquivalent:[NSString stringWithCharacters:&down length:1]];
+	[item setKeyEquivalent:[[NSString alloc] initWithCharacters:&down length:1]];
 
 	windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
 	index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectNextActivePanel: )];
 	item = [windowMenu itemAtIndex:index];
-	[item setKeyEquivalent:[NSString stringWithCharacters:&down length:1]];
+	[item setKeyEquivalent:[[NSString alloc] initWithCharacters:&down length:1]];
 }
 
 - (void) _supressTabBarHiding:(BOOL) supress {

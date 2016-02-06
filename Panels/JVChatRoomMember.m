@@ -135,7 +135,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable NSString *) hostmask {
 	if( ! [[_user username] length] || ! [[_user address] length] ) return nil;
-	return [NSString stringWithFormat:@"%@@%@", [_user username], [_user address]];
+	return [[NSString alloc] initWithFormat:@"%@@%@", [_user username], [_user address]];
 }
 
 #pragma mark -
@@ -221,7 +221,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[ret appendFormat:@">%@</%@>", [[self displayName] stringByEncodingXMLSpecialCharactersAsEntities], tag];
 
 	[ret stripIllegalXMLCharacters];
-	return [NSString stringWithString:ret];
+	return [[NSString alloc] initWithString:ret];
 }
 
 #pragma mark -
@@ -290,13 +290,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *) toolTip {
 	if( ! [[self address] length] || ! [[self username] length] ) {
 		if( [[self realName] length] )
-			return [NSString stringWithFormat:@"%@ (%@)", [self nickname], [self realName]];
+			return [[NSString alloc] initWithFormat:@"%@ (%@)", [self nickname], [self realName]];
 		return [self nickname];
 	}
 
 	if( [[self realName] length] )
-		return [NSString stringWithFormat:@"%@ (%@)\n%@@%@", [self nickname], [self realName], [self username], [self address]];
-	return [NSString stringWithFormat:@"%@\n%@@%@", [self nickname], [self username], [self address]];
+		return [[NSString alloc] initWithFormat:@"%@ (%@)\n%@@%@", [self nickname], [self realName], [self username], [self address]];
+	return [[NSString alloc] initWithFormat:@"%@\n%@@%@", [self nickname], [self username], [self address]];
 }
 
 - (BOOL) isEnabled {
@@ -536,7 +536,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (IBAction) ban:(nullable id) sender {
-	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nil andHostMask:[NSString stringWithFormat:@"*@%@", [self address]]];
+	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nil andHostMask:[[NSString alloc] initWithFormat:@"*@%@", [self address]]];
 	[[_room target] addBanForUser:user];
 }
 
@@ -544,7 +544,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"TSCustomBan" owner:self topLevelObjects:NULL];
 	if( ! _nibLoaded ) { NSLog( @"Can't load TSCustomBan.nib" ); return; }
 
-	[banTitle setStringValue:[NSString stringWithFormat:NSLocalizedString( @"Kick %@ from the %@ room.", "kick user from room" ), [self title], [_room title]]];
+	[banTitle setStringValue:[[NSString alloc] initWithFormat:NSLocalizedString( @"Kick %@ from the %@ room.", "kick user from room" ), [self title], [_room title]]];
 	[firstTitle setStringValue:NSLocalizedString( @"With reason:", "kick reason label" )];
 
 	[firstField setStringValue:@""];
@@ -568,11 +568,11 @@ NS_ASSUME_NONNULL_BEGIN
 	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"TSCustomBan" owner:self topLevelObjects:NULL];
 	if( ! _nibLoaded ) { NSLog( @"Can't load TSCustomBan.nib" ); return; }
 
-	[banTitle setStringValue:[NSString stringWithFormat:NSLocalizedString( @"Ban %@ from the %@ room.", "ban user from room label" ), [self title], [_room title]]];
+	[banTitle setStringValue:[[NSString alloc] initWithFormat:NSLocalizedString( @"Ban %@ from the %@ room.", "ban user from room label" ), [self title], [_room title]]];
 	[firstTitle setStringValue:NSLocalizedString( @"With hostmask:", "ban hostmask label")];
 
 	if( [self username] && [self address] )
-		[firstField setStringValue:[NSString stringWithFormat:@"%@!%@@%@", [self nickname], [self username], [self address]]];
+		[firstField setStringValue:[[NSString alloc] initWithFormat:@"%@!%@@%@", [self nickname], [self username], [self address]]];
 	else [firstField setStringValue:@""];
 
 	[banWindow makeFirstResponder:firstField];
@@ -600,14 +600,14 @@ NS_ASSUME_NONNULL_BEGIN
 	if( ! _nibLoaded ) _nibLoaded = [[NSBundle mainBundle] loadNibNamed:@"TSCustomBan" owner:self topLevelObjects:NULL];
 	if( ! _nibLoaded ) { NSLog(@"Can't load TSCustomBan.nib"); return; }
 
-	[banTitle setStringValue:[NSString stringWithFormat:NSLocalizedString( @"Kick and ban %@ from the %@ room.", "kickban user from room" ), [self title], [_room title]]];
+	[banTitle setStringValue:[[NSString alloc] initWithFormat:NSLocalizedString( @"Kick and ban %@ from the %@ room.", "kickban user from room" ), [self title], [_room title]]];
 	[banTitle sizeToFit];
 
 	[firstTitle setStringValue:NSLocalizedString( @"With hostmask:", "ban hostmask" )];
 	[secondTitle setStringValue:NSLocalizedString( @"And reason:", "kick reason (secondary)" )];
 
 	if( [self username] && [self address] )
-		[firstField setStringValue:[NSString stringWithFormat:@"%@!%@@%@", [self nickname], [self username], [self address]]];
+		[firstField setStringValue:[[NSString alloc] initWithFormat:@"%@!%@@%@", [self nickname], [self username], [self address]]];
 	else [firstField setStringValue:@""];
 	[secondField setStringValue:@""];
 
@@ -664,7 +664,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The member id %@ of chat room panel id %@ doesn't have the \"%@\" property.", [self uniqueIdentifier], [_room uniqueIdentifier], key]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The member id %@ of chat room panel id %@ doesn't have the \"%@\" property.", [self uniqueIdentifier], [_room uniqueIdentifier], key]];
 		return nil;
 	}
 
@@ -674,7 +674,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setValue:(nullable id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of member id %@ of chat room panel id %@ is read only.", key, [self uniqueIdentifier], [_room uniqueIdentifier]]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The \"%@\" property of member id %@ of chat room panel id %@ is read only.", key, [self uniqueIdentifier], [_room uniqueIdentifier]]];
 		return;
 	}
 
@@ -706,7 +706,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if( ! firstName && lastName ) return lastName;
 	else if( firstName && ! lastName ) return firstName;
 	else if( firstName && lastName ) {
-		return [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+		return [[NSString alloc] initWithFormat:@"%@ %@", firstName, lastName];
 	}
 
 	firstName = [_person valueForProperty:kABNicknameProperty];

@@ -48,7 +48,7 @@ static JVNotificationController *sharedInstance = nil;
 }
 
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context {
-	NSDictionary *eventPrefs = [[NSUserDefaults standardUserDefaults] dictionaryForKey:[NSString stringWithFormat:@"JVNotificationSettings %@", identifier]];
+	NSDictionary *eventPrefs = [[NSUserDefaults standardUserDefaults] dictionaryForKey:[[NSString alloc] initWithFormat:@"JVNotificationSettings %@", identifier]];
 
 	if( [eventPrefs[@"playSound"] boolValue] && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatNotificationsMuted"] ) {
 		if( [eventPrefs[@"playSoundOnlyIfBackground"] boolValue] && ! [[NSApplication sharedApplication] isActive] )
@@ -119,7 +119,7 @@ static JVNotificationController *sharedInstance = nil;
 		NSString *desc = description;
 		if( [desc isKindOfClass:[NSAttributedString class]] ) desc = [description string];
 		NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-		NSDictionary *notification = [NSDictionary dictionaryWithObjectsAndKeys:
+		NSDictionary *notification = [[NSDictionary alloc] initWithObjectsAndKeys:
 			programName, GROWL_APP_NAME,
 			identifier, GROWL_NOTIFICATION_NAME,
 			title, GROWL_NOTIFICATION_TITLE,
@@ -187,7 +187,7 @@ static JVNotificationController *sharedInstance = nil;
 		if (!path) {
 			// fall-back in case the sound file isn't there.
 			// so the dictionary doesn't get sent nil.
-			path = [[NSString stringWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:oldPath];
+			path = [[[NSString alloc] initWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:oldPath];
 		}
 	}
 	
@@ -210,7 +210,7 @@ static JVNotificationController *sharedInstance = nil;
 
 - (NSDictionary *) registrationDictionaryForGrowl {
 	NSMutableArray *notifications = [[NSMutableArray alloc] init];
-	for( NSDictionary *info in [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"notifications" ofType:@"plist"]] ) {
+	for( NSDictionary *info in [[NSArray alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"notifications" ofType:@"plist"]] ) {
 		if( ! info[@"seperator"] )
 			[notifications addObject:info[@"identifier"]];
 		

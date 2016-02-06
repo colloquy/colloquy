@@ -156,7 +156,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	if( [[self identifier] length] ) {
 		[[self window] setDelegate:nil]; // so we don't act on the windowDidResize notification
-		[[self window] setFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [self identifier]]];
+		[[self window] setFrameUsingName:[[NSString alloc] initWithFormat:@"Chat Window %@", [self identifier]]];
 		[[self window] setDelegate:self];
 	}
 
@@ -168,7 +168,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (NSString *) userDefaultsPreferencesKey {
 	if( [[self identifier] length] )
-		return [NSString stringWithFormat:@"Chat Window %@ Settings", [self identifier]];
+		return [[NSString alloc] initWithFormat:@"Chat Window %@ Settings", [self identifier]];
 	return @"Chat Window Settings";
 }
 
@@ -384,7 +384,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	if( ! [[self identifier] length] && [_views count] == 1 ) {
 		[[self window] setDelegate:nil]; // so we don't act on the windowDidResize notification
-		[[self window] setFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
+		[[self window] setFrameUsingName:[[NSString alloc] initWithFormat:@"Chat Window %@", [controller identifier]]];
 		[[self window] setDelegate:self];
 	}
 
@@ -511,7 +511,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (NSArray *) allChatViewControllers {
-	return [NSArray arrayWithArray:_views];
+	return [[NSArray alloc] initWithArray:_views];
 }
 
 #pragma mark -
@@ -742,7 +742,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSMutableArray *result = [NSMutableArray arrayWithObjects:NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier,
+	NSMutableArray *result = [[NSMutableArray alloc] initWithObjects:NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier,
 		NSToolbarSeparatorItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, JVToolbarToggleChatDrawerItemIdentifier, nil];
 
 	if( [_activeViewController respondsToSelector:@selector( toolbarAllowedItemIdentifiers: )] ) {
@@ -1129,12 +1129,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) _saveWindowFrame {
 	if( [[self identifier] length] ) {
 		[[self window] saveFrameUsingName:@"Chat Window"];
-		[[self window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [self identifier]]];
+		[[self window] saveFrameUsingName:[[NSString alloc] initWithFormat:@"Chat Window %@", [self identifier]]];
 	} else {
 		[[self window] saveFrameUsingName:@"Chat Window"];
 
 		for( id <JVChatViewController> controller in [self allChatViewControllers])
-			[[self window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
+			[[self window] saveFrameUsingName:[[NSString alloc] initWithFormat:@"Chat Window %@", [controller identifier]]];
 	}
 }
 

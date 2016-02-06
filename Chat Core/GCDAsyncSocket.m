@@ -7552,7 +7552,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 	}
 	else
 	{
-		NSString *portStr = [NSString stringWithFormat:@"%hu", port];
+		NSString *portStr = [[NSString alloc] initWithFormat:@"%hu", port];
 		
 		struct addrinfo hints, *res, *res0;
 		

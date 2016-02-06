@@ -71,7 +71,7 @@
 
 	NSMutableAttributedString *text = nil;
 	if( _showPointSize ) {
-		text = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %.0f", ( _showFontFace ? [_actualFont displayName] : [_actualFont familyName] ), [_actualFont pointSize]]];
+		text = [[NSMutableAttributedString alloc] initWithString:[[NSString alloc] initWithFormat:@"%@ %.0f", ( _showFontFace ? [_actualFont displayName] : [_actualFont familyName] ), [_actualFont pointSize]]];
 	} else {
 		text = [[NSMutableAttributedString alloc] initWithString:( _showFontFace ? [_actualFont displayName] : [_actualFont familyName] )];
 	}

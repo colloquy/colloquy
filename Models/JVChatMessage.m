@@ -130,13 +130,13 @@ NS_ASSUME_NONNULL_BEGIN
 	if( ! _node ) {
 		NSDictionary *options = @{@"IgnoreFonts": @YES, @"IgnoreFontSizes": @YES};
 		NSString *htmlMessage = ( [self body] ? [[self body] HTMLFormatWithOptions:options] : @"" );
-		const char *msgStr = [[NSString stringWithFormat:@"<message>%@</message>", [htmlMessage stringByStrippingIllegalXMLCharacters]] UTF8String];
+		const char *msgStr = [[[NSString alloc] initWithFormat:@"<message>%@</message>", [htmlMessage stringByStrippingIllegalXMLCharacters]] UTF8String];
 
 		if( !msgStr) {
-			NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses", nil];
+			NSMutableDictionary *attributes = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses", nil];
 			NSTextStorage *messageString = [[NSTextStorage alloc] initWithString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" ) attributes:attributes];
 			htmlMessage = ( messageString ? [messageString HTMLFormatWithOptions:options] : @"" );
-			msgStr = [[NSString stringWithFormat:@"<message>%@</message>", [htmlMessage stringByStrippingIllegalXMLCharacters]] UTF8String];
+			msgStr = [[[NSString alloc] initWithFormat:@"<message>%@</message>", [htmlMessage stringByStrippingIllegalXMLCharacters]] UTF8String];
 		}
 
 		if( _doc ) xmlFreeDoc( _doc );
@@ -324,7 +324,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (NSString *) debugDescription {
-	return [NSString stringWithFormat:@"<%@ %p [%@]: (%@) %@>", NSStringFromClass( [self class] ), self, _messageIdentifier, [self senderNickname], [self body]];
+	return [[NSString alloc] initWithFormat:@"<%@ %p [%@]: (%@) %@>", NSStringFromClass( [self class] ), self, _messageIdentifier, [self senderNickname], [self body]];
 }
 
 #pragma mark -
@@ -332,7 +332,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The message id %@ doesn't have the \"%@\" property.", [self messageIdentifier], key]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The message id %@ doesn't have the \"%@\" property.", [self messageIdentifier], key]];
 		return nil;
 	}
 
@@ -343,7 +343,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if( [NSScriptCommand currentCommand] ) {
 		// this is a non-mutable message, give AppleScript a good error if this is a script command call
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The properties of message id %@ are read only.", key]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The properties of message id %@ are read only.", key]];
 		return;
 	}
 
@@ -453,7 +453,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if( [[self sender] respondsToSelector:@selector( hostmask )] )
 		return [[self sender] hostmask];
 	if( [[self sender] isKindOfClass:[MVChatUser class]] )
-		return [NSString stringWithFormat:@"%@@%@", [(MVChatUser *)[self sender] username], [(MVChatUser *)[self sender] address]];
+		return [[NSString alloc] initWithFormat:@"%@@%@", [(MVChatUser *)[self sender] username], [(MVChatUser *)[self sender] address]];
 	return [super senderNickname];
 }
 
@@ -563,7 +563,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setValue:(nullable id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of message id %@ is read only.", key, [self messageIdentifier]]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The \"%@\" property of message id %@ is read only.", key, [self messageIdentifier]]];
 		return;
 	}
 

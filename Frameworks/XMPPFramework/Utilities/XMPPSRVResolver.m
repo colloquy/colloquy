@@ -371,7 +371,7 @@ NSString *const XMPPSRVResolverErrorDomain = @"XMPPSRVResolverErrorDomain";
 	{
         NSString *target;
         
-        target = [NSString stringWithCString:rr->data.SRV->target encoding:NSASCIIStringEncoding];
+        target = [[NSString alloc] initWithCString:rr->data.SRV->target encoding:NSASCIIStringEncoding];
         if (target != nil)
 		{
 			UInt16 priority = rr->data.SRV->priority;
@@ -619,7 +619,7 @@ static void QueryRecordCallback(DNSServiceRef       sdRef,
 	if (xmppDomain == nil)
 		return nil;
 	else
-		return [NSString stringWithFormat:@"_xmpp-client._tcp.%@", xmppDomain];
+		return [[NSString alloc] initWithFormat:@"_xmpp-client._tcp.%@", xmppDomain];
 }
 
 @end
@@ -662,7 +662,7 @@ static void QueryRecordCallback(DNSServiceRef       sdRef,
 
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"<%@:%p target(%@) port(%hu) priority(%hu) weight(%hu)>",
+	return [[NSString alloc] initWithFormat:@"<%@:%p target(%@) port(%hu) priority(%hu) weight(%hu)>",
 			NSStringFromClass([self class]), self, target, port, priority, weight];
 }
 

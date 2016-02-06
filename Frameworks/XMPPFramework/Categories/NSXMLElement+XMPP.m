@@ -556,7 +556,7 @@
 - (NSMutableDictionary *)attributesAsDictionary
 {
 	NSArray *attributes = [self attributes];
-	NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:[attributes count]];
+	NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithCapacity:[attributes count]];
 	
 	NSUInteger i;
 	for(i = 0; i < [attributes count]; i++)

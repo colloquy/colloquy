@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (NSString *) formattedStringWithDate:(NSDate *) date dateStyle:(NSDateFormatterStyle) dateStyle timeStyle:(NSDateFormatterStyle) timeStyle {
-	NSString *key = [NSString stringWithFormat:@"%lu-%lu", (unsigned long)dateStyle, (unsigned long)timeStyle];
+	NSString *key = [[NSString alloc] initWithFormat:@"%lu-%lu", (unsigned long)dateStyle, (unsigned long)timeStyle];
 	NSDateFormatter *dateFormatter = [self cq_cacheDictionary][key];
 
 	if (!dateFormatter) {

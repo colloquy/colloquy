@@ -84,7 +84,7 @@
 }
 
 - (IBAction) switchEvent:(id) sender {
-	self.eventPrefs = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[NSString stringWithFormat:@"JVNotificationSettings %@", [[self.chatActions selectedItem] representedObject]]]];
+	self.eventPrefs = [[NSMutableDictionary alloc] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[NSString alloc] initWithFormat:@"JVNotificationSettings %@", [[self.chatActions selectedItem] representedObject]]]];
 
 	BOOL boolValue = [[self.eventPrefs objectForKey:@"playSound"] boolValue];
 	[self.playSound setState:boolValue];
@@ -114,7 +114,7 @@
 }
 
 - (void) saveEventSettings {
-	[[NSUserDefaults standardUserDefaults] setObject:self.eventPrefs forKey:[NSString stringWithFormat:@"JVNotificationSettings %@", [[self.chatActions selectedItem] representedObject]]];
+	[[NSUserDefaults standardUserDefaults] setObject:self.eventPrefs forKey:[[NSString alloc] initWithFormat:@"JVNotificationSettings %@", [[self.chatActions selectedItem] representedObject]]];
 }
 
 - (IBAction) saveHighlightWords:(id) sender {
@@ -138,7 +138,7 @@
 - (void) buildEventsMenu {
 	NSMenu *availableEvents = [[NSMenu alloc] initWithTitle:@""];
 
-	for( NSDictionary *info in [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"notifications" ofType:@"plist"]] ) {
+	for( NSDictionary *info in [[NSArray alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"notifications" ofType:@"plist"]] ) {
 		if( ! [info objectForKey:@"seperator"] ) {
 			NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( [info objectForKey:@"title"], "notification event menu items, notification preferences" ) action:NULL keyEquivalent:@""];
 			[menuItem setRepresentedObject:[info objectForKey:@"identifier"]];
@@ -164,10 +164,10 @@
 
 	NSFileManager *fm = [NSFileManager defaultManager];
 	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-	NSArray *paths = [NSArray arrayWithObjects:
-		[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Sounds", bundleName],
-		[NSString stringWithFormat:@"/Library/Application Support/%@/Sounds", bundleName],
-		[[NSString stringWithFormat:@"~/Library/Application Support/%@/Sounds", bundleName] stringByExpandingTildeInPath],
+	NSArray *paths = [[NSArray alloc] initWithObjects:
+		[[NSString alloc] initWithFormat:@"/Network/Library/Application Support/%@/Sounds", bundleName],
+		[[NSString alloc] initWithFormat:@"/Library/Application Support/%@/Sounds", bundleName],
+		[[[NSString alloc] initWithFormat:@"~/Library/Application Support/%@/Sounds", bundleName] stringByExpandingTildeInPath],
 		@"-",
 		@"/System/Library/Sounds",
 		[@"~/Library/Sounds" stringByExpandingTildeInPath],
@@ -250,7 +250,7 @@
 	[self saveEventSettings];
 
 	if( [self.playSound state] == NSOnState ) {
-		if( ! [path isAbsolutePath] ) path = [[NSString stringWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:path];
+		if( ! [path isAbsolutePath] ) path = [[[NSString alloc] initWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:path];
 		NSSound *sound = [[NSSound alloc] initWithContentsOfFile:path byReference:YES];
 		[sound play];
 	}

@@ -407,7 +407,7 @@
 			NSString *selectorStr = NSStringFromSelector([origInvocation selector]);
 			
 			NSString *format = @"Argument %lu to method %@ - Type(%c) not supported";
-			NSString *reason = [NSString stringWithFormat:format, (unsigned long)(i - 2), selectorStr, *type];
+			NSString *reason = [[NSString alloc] initWithFormat:format, (unsigned long)(i - 2), selectorStr, *type];
 			
 			[[NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil] raise];
 		}

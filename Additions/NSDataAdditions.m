@@ -143,7 +143,7 @@ static char encodingTable[64] = {
 		}
 	}
 
-	return [NSString stringWithString:result];
+	return [[NSString alloc] initWithString:result];
 }
 
 #pragma mark -

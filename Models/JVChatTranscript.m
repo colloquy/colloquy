@@ -1155,7 +1155,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 - (nullable id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The transcript doesn't have the \"%@\" property.", key]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The transcript doesn't have the \"%@\" property.", key]];
 		return nil;
 	}
 
@@ -1165,7 +1165,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 - (void) setValue:(nullable id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of the transcript is read only.", key]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The \"%@\" property of the transcript is read only.", key]];
 		return;
 	}
 
@@ -1241,7 +1241,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 		@synchronized( _transcript ) {
 			xmlChar *startedStr = xmlGetProp( _node, (xmlChar *) "started" );
-			_startDate = ( startedStr ? [[NSDate alloc] initWithString:[NSString stringWithUTF8String:(char *) startedStr]] : nil );
+			_startDate = ( startedStr ? [[NSDate alloc] initWithString:[[NSString alloc] initWithUTF8String:(char *) startedStr]] : nil );
 			xmlFree( startedStr );
 		}
 	}
@@ -1277,7 +1277,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 	@synchronized( _transcript ) {
 		xmlChar *prop = xmlGetProp( _node, (xmlChar *) "received" );
-		_date = ( prop ? [[NSDate alloc] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
+		_date = ( prop ? [[NSDate alloc] initWithString:[[NSString alloc] initWithUTF8String:(char *) prop]] : nil );
 		xmlFree( prop );
 
 		prop = xmlGetProp( _node, (xmlChar *) "action" );
@@ -1303,7 +1303,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		xmlFree( prop );
 
 		prop = xmlGetProp( envelope, (xmlChar *) "source" );
-		_source = ( prop ? [[NSURL alloc] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
+		_source = ( prop ? [[NSURL alloc] initWithString:[[NSString alloc] initWithUTF8String:(char *) prop]] : nil );
 		xmlFree( prop );
 
 		xmlNode *node = envelope -> children;

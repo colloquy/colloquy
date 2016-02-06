@@ -318,7 +318,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( [firstName length] && ! [lastName length] )
 		return firstName;
 	if( [firstName length] && [lastName length] )
-		return [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+		return [[NSString alloc] initWithFormat:@"%@ %@", firstName, lastName];
 
 	firstName = [self givenNickname];
 	if( [firstName length] )
@@ -362,13 +362,13 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 - (void) editInAddressBook {
 	if( ! _person ) return;
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"addressbook://%@?edit", [_person uniqueId]]];
+	NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"addressbook://%@?edit", [_person uniqueId]]];
 	[[NSWorkspace sharedWorkspace] openURL:url];
 }
 
 - (void) viewInAddressBook {
 	if( ! _person ) return;
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"addressbook://%@", [_person uniqueId]]];
+	NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"addressbook://%@", [_person uniqueId]]];
 	[[NSWorkspace sharedWorkspace] openURL:url];
 }
 
@@ -549,7 +549,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 @implementation JVBuddy (JVBuddyScripting)
 - (NSDictionary *) activeNicknameDictionary {
 	MVChatConnection *connection = [[MVConnectionsController defaultController] connectionForServerAddress:[[self activeNickname] host]];
-	return [NSDictionary dictionaryWithObjectsAndKeys:connection, @"connection", [[self activeNickname] user], @"nickname", nil];
+	return [[NSDictionary alloc] initWithObjectsAndKeys:connection, @"connection", [[self activeNickname] user], @"nickname", nil];
 }
 
 - (NSArray *) nicknamesArray {
@@ -560,7 +560,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	while( ( nick = [enumerator nextObject] ) ) {
 		MVChatConnection *connection = [[MVConnectionsController defaultController] connectionForServerAddress:[nick host]];
 		if( ! connection ) continue;
-		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"connection", [nick user], @"nickname", nil];
+		NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:connection, @"connection", [nick user], @"nickname", nil];
 		[ret addObject:info];
 	}
 
@@ -575,7 +575,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	while( ( nick = [enumerator nextObject] ) ) {
 		MVChatConnection *connection = [[MVConnectionsController defaultController] connectionForServerAddress:[nick host]];
 		if( ! connection ) continue;
-		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"connection", [nick user], @"nickname", nil];
+		NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:connection, @"connection", [nick user], @"nickname", nil];
 		[ret addObject:info];
 	}
 

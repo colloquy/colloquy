@@ -83,7 +83,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	
 	[self.windowSetsTable setTarget:self];
 	[self.windowSetsTable setDoubleAction:@selector( editWindowSet: )];
-	[self.windowSetsTable registerForDraggedTypes:[NSArray arrayWithObject:JVInterfacePreferencesWindowDragPboardType]];
+	[self.windowSetsTable registerForDraggedTypes:@[JVInterfacePreferencesWindowDragPboardType]];
 	
 	[self.rulesTable setTarget:self];
 	[self.rulesTable setDoubleAction:@selector( editRuleSet: )];
@@ -262,7 +262,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 		NSUInteger c = [(NSArray *)[info objectForKey:@"rules"] count];
 		if( c == 0 ) [(JVDetailCell *) cell setInformationText:NSLocalizedString( @"No rules", "no rules info label" )];
 		else if( c == 1 ) [(JVDetailCell *) cell setInformationText:NSLocalizedString( @"1 rule", "one rule info label" )];
-		else [(JVDetailCell *) cell setInformationText:[NSString stringWithFormat:NSLocalizedString( @"%d rules", "number of rules info label" ), c]];
+		else [(JVDetailCell *) cell setInformationText:[[NSString alloc] initWithFormat:NSLocalizedString( @"%d rules", "number of rules info label" ), c]];
 	} else if( view == self.rulesTable ) {
 		NSArray *ruleSets = [self selectedRules];
 		NSDictionary *info = [ruleSets objectAtIndex:row];
@@ -310,7 +310,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 		NSData *data = [NSData dataWithBytes:&row length:sizeof( &row )];
 
-		[pboard declareTypes:[NSArray arrayWithObject:JVInterfacePreferencesWindowDragPboardType] owner:self];
+		[pboard declareTypes:@[JVInterfacePreferencesWindowDragPboardType] owner:self];
 		[pboard setData:data forType:JVInterfacePreferencesWindowDragPboardType];
 		return YES;
 	}
@@ -319,7 +319,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 }
 
 - (NSDragOperation) tableView:(NSTableView *) view validateDrop:(id <NSDraggingInfo>) info proposedRow:(NSInteger) row proposedDropOperation:(NSTableViewDropOperation) operation {
-	if( view == self.windowSetsTable && [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:JVInterfacePreferencesWindowDragPboardType]] ) {
+	if( view == self.windowSetsTable && [[info draggingPasteboard] availableTypeFromArray:@[JVInterfacePreferencesWindowDragPboardType]] ) {
 		if( operation == NSTableViewDropOn && row != -1 ) return NSDragOperationNone;
 
 		NSInteger index = -1;
@@ -335,7 +335,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 }
 
 - (BOOL) tableView:(NSTableView *) view acceptDrop:(id <NSDraggingInfo>) info row:(NSInteger) row dropOperation:(NSTableViewDropOperation) operation {
-	if( view == self.windowSetsTable && [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:JVInterfacePreferencesWindowDragPboardType]] ) {
+	if( view == self.windowSetsTable && [[info draggingPasteboard] availableTypeFromArray:@[JVInterfacePreferencesWindowDragPboardType]] ) {
 		NSInteger index = -1;
 		[[[info draggingPasteboard] dataForType:JVInterfacePreferencesWindowDragPboardType] getBytes:&index];
 		if( row > index ) row--;
@@ -390,7 +390,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 #pragma mark -
 
 - (IBAction) addWindowSet:(id) sender {
-	NSString *title = [NSString stringWithFormat:NSLocalizedString( @"Window %d", "starting window title, window and a number" ), [self.windowSets count]];
+	NSString *title = [[NSString alloc] initWithFormat:NSLocalizedString( @"Window %d", "starting window title, window and a number" ), [self.windowSets count]];
 	[self.windowTitle setStringValue:title];
 	[self.rememberPanels setState:NSOnState];
 	[self.windowEditSaveButton setEnabled:YES];

@@ -92,7 +92,7 @@ static NSString * const kXEP0082SharedDateFormatterKey = @"xep0082_shared_date_f
 	
 	NSString *today = [df stringFromDate:[NSDate date]];
     
-	NSString *dateTimeStr = [NSString stringWithFormat:@"%@T%@", today, timeStr];
+	NSString *dateTimeStr = [[NSString alloc] initWithFormat:@"%@T%@", today, timeStr];
 	
 	return [self parseDateTime:dateTimeStr withMandatoryTimeZone:NO];
 }
@@ -196,7 +196,7 @@ static NSString * const kXEP0082SharedDateFormatterKey = @"xep0082_shared_date_f
 
 	NSDate *result = nil;
 	NSString *dateAndTime = [dateTimeStr substringToIndex:19];
-	NSString *fraction = fractionalDigits != 0 ? [NSString stringWithFormat:@"0%@", [dateTimeStr substringWithRange:NSMakeRange(19, fractionalDigits + 1)]] : nil;
+	NSString *fraction = fractionalDigits != 0 ? [[NSString alloc] initWithFormat:@"0%@", [dateTimeStr substringWithRange:NSMakeRange(19, fractionalDigits + 1)]] : nil;
 
 	if (hasTimeZoneInfo && !hasTimeZoneOffset)
 	{

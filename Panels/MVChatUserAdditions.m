@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[ret appendFormat:@">%@</%@>", [[self displayName] stringByEncodingXMLSpecialCharactersAsEntities], tag];
 
 	[ret stripIllegalXMLCharacters];
-	return [NSString stringWithString:ret];
+	return [[NSString alloc] initWithString:ret];
 }
 
 - (nullable KAIgnoreRule *) _tempIgnoreRule {
@@ -159,7 +159,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:[self connection]];
 	KAIgnoreRule *rule = [self _tempIgnoreRule];
 	if( rule ) [rules removeObjectIdenticalTo:rule];
-	else [rules addObject:[KAIgnoreRule ruleForUser:[self nickname] message:nil inRooms:nil isPermanent:NO friendlyName:[NSString stringWithFormat:@"%@ %@", [self displayName], NSLocalizedString( @" (Temporary)", "temporary ignore title suffix" )]]];
+	else [rules addObject:[KAIgnoreRule ruleForUser:[self nickname] message:nil inRooms:nil isPermanent:NO friendlyName:[[NSString alloc] initWithFormat:@"%@ %@", [self displayName], NSLocalizedString( @" (Temporary)", "temporary ignore title suffix" )]]];
 }
 
 - (BOOL) validateMenuItem:(NSMenuItem *) menuItem {

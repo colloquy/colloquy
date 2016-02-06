@@ -574,7 +574,7 @@ enum XMPPStreamConfig
 		
 		if (keepAliveChar == ' ' || keepAliveChar == '\n' || keepAliveChar == '\t')
 		{
-			keepAliveData = [[NSString stringWithFormat:@"%c", keepAliveChar] dataUsingEncoding:NSUTF8StringEncoding];
+			keepAliveData = [[[NSString alloc] initWithFormat:@"%c", keepAliveChar] dataUsingEncoding:NSUTF8StringEncoding];
 		}
 		else
 		{
@@ -3273,22 +3273,22 @@ enum XMPPStreamConfig
 		if (myJID_setByClient && remoteJID)
 		{
 			temp = @"<stream:stream xmlns='%@' xmlns:stream='%@' version='1.0' from='%@' to='%@'>";
-			s2 = [NSString stringWithFormat:temp, xmlns, xmlns_stream, [myJID_setByClient bare], [remoteJID bare]];
+			s2 = [[NSString alloc] initWithFormat:temp, xmlns, xmlns_stream, [myJID_setByClient bare], [remoteJID bare]];
 		}
 		else if (myJID_setByClient)
 		{
 			temp = @"<stream:stream xmlns='%@' xmlns:stream='%@' version='1.0' from='%@'>";
-			s2 = [NSString stringWithFormat:temp, xmlns, xmlns_stream, [myJID_setByClient bare]];
+			s2 = [[NSString alloc] initWithFormat:temp, xmlns, xmlns_stream, [myJID_setByClient bare]];
 		}
 		else if (remoteJID)
 		{
 			temp = @"<stream:stream xmlns='%@' xmlns:stream='%@' version='1.0' to='%@'>";
-			s2 = [NSString stringWithFormat:temp, xmlns, xmlns_stream, [remoteJID bare]];
+			s2 = [[NSString alloc] initWithFormat:temp, xmlns, xmlns_stream, [remoteJID bare]];
 		}
 		else
 		{
 			temp = @"<stream:stream xmlns='%@' xmlns:stream='%@' version='1.0'>";
-			s2 = [NSString stringWithFormat:temp, xmlns, xmlns_stream];
+			s2 = [[NSString alloc] initWithFormat:temp, xmlns, xmlns_stream];
 		}
     }
     else
@@ -3296,17 +3296,17 @@ enum XMPPStreamConfig
 		if (myJID_setByClient)
 		{
 			temp = @"<stream:stream xmlns='%@' xmlns:stream='%@' version='1.0' to='%@'>";
-            s2 = [NSString stringWithFormat:temp, xmlns, xmlns_stream, [myJID_setByClient domain]];
+            s2 = [[NSString alloc] initWithFormat:temp, xmlns, xmlns_stream, [myJID_setByClient domain]];
 		}
         else if ([hostName length] > 0)
         {
             temp = @"<stream:stream xmlns='%@' xmlns:stream='%@' version='1.0' to='%@'>";
-            s2 = [NSString stringWithFormat:temp, xmlns, xmlns_stream, hostName];
+            s2 = [[NSString alloc] initWithFormat:temp, xmlns, xmlns_stream, hostName];
         }
         else
         {
             temp = @"<stream:stream xmlns='%@' xmlns:stream='%@' version='1.0'>";
-            s2 = [NSString stringWithFormat:temp, xmlns, xmlns_stream];
+            s2 = [[NSString alloc] initWithFormat:temp, xmlns, xmlns_stream];
         }
     }
 	
@@ -3336,7 +3336,7 @@ enum XMPPStreamConfig
 	state = STATE_XMPP_STARTTLS_2;
 	
 	// Create a mutable dictionary for security settings
-	NSMutableDictionary *settings = [NSMutableDictionary dictionaryWithCapacity:5];
+	NSMutableDictionary *settings = [[NSMutableDictionary alloc] initWithCapacity:5];
 	
 	SEL selector = @selector(xmppStream:willSecureWithSettings:);
 	

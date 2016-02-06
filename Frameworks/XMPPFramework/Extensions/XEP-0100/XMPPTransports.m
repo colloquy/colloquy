@@ -29,7 +29,7 @@
 {
 	XMPPJID *myJID = xmppStream.myJID;
 	
-	NSString *toValue = [NSString stringWithFormat:@"%@.%@", service, [myJID domain]];
+	NSString *toValue = [[NSString alloc] initWithFormat:@"%@.%@", service, [myJID domain]];
 	
 	// <iq type="get" from="myFullJID" to="service.domain" id="disco1">
 	//   <query xmlns="http://jabber.org/protocol/disco#info"/>
@@ -71,7 +71,7 @@
 {
 	XMPPJID *myJID = xmppStream.myJID;
 	
-	NSString *toValue = [NSString stringWithFormat:@"%@.%@", service, [myJID domain]];
+	NSString *toValue = [[NSString alloc] initWithFormat:@"%@.%@", service, [myJID domain]];
 	
 	// <iq type="get" from="myFullJID" to="service.domain" id="reg1">
 	//   <query xmlns="jabber:iq:register"/>
@@ -93,7 +93,7 @@
 {
 	XMPPJID *myJID = xmppStream.myJID;
 	
-	NSString *toValue = [NSString stringWithFormat:@"%@.%@", service, [myJID domain]];
+	NSString *toValue = [[NSString alloc] initWithFormat:@"%@.%@", service, [myJID domain]];
 	
 	// <iq type="set" from="myFullJID" to="service.domain" id="reg2">
 	//   <query xmlns="jabber:iq:register">
@@ -124,7 +124,7 @@
 {
 	XMPPJID *myJID = xmppStream.myJID;
 	
-	NSString *toValue = [NSString stringWithFormat:@"%@.%@", service, [myJID domain]];
+	NSString *toValue = [[NSString alloc] initWithFormat:@"%@.%@", service, [myJID domain]];
 	
 	// <iq type="set" from="myFullJID" to="service.domain" id="unreg1">
 	//   <query xmlns="jabber:iq:register">

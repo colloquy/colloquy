@@ -78,7 +78,7 @@
 	[editPort setIntValue:[_connection serverPort]];
 	[editNickname setObjectValue:[_connection preferredNickname]];
 	[editAltNicknames setObjectValue:[[_connection alternateNicknames] componentsJoinedByString:@" "]];
-	[editPassword setObjectValue:[[CQKeychain standardKeychain] passwordForServer:_connection.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", _connection.preferredNickname]]];
+	[editPassword setObjectValue:[[CQKeychain standardKeychain] passwordForServer:_connection.uniqueIdentifier area:[[NSString alloc] initWithFormat:@"Nickname %@", _connection.preferredNickname]]];
 	[editServerPassword setObjectValue:[[CQKeychain standardKeychain] passwordForServer:_connection.uniqueIdentifier area:@"Server"]];
 	[editRealName setObjectValue:[_connection realName]];
 	[editUsername setObjectValue:[_connection username]];
@@ -93,7 +93,7 @@
 	NSString *commands = [[MVConnectionsController defaultController] connectCommandsForConnection:_connection];
 	if( commands) [connectCommands setString:commands];
 
-	_editingRooms = [NSMutableArray arrayWithArray:[[MVConnectionsController defaultController] joinRoomsForConnection:_connection]];
+	_editingRooms = [[NSMutableArray alloc] initWithArray:[[MVConnectionsController defaultController] joinRoomsForConnection:_connection]];
 
 	[editRooms reloadData];
 
@@ -173,7 +173,7 @@
 		[_connection setAlternateNicknames:[[sender stringValue] componentsSeparatedByString:@" "]];
 	} else if( sender == editPassword ) {
 		_connection.nicknamePassword = nil;
-		[[CQKeychain standardKeychain] setPassword:[sender stringValue] forServer:_connection.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", _connection.preferredNickname] displayValue:_connection.server];
+		[[CQKeychain standardKeychain] setPassword:[sender stringValue] forServer:_connection.uniqueIdentifier area:[[NSString alloc] initWithFormat:@"Nickname %@", _connection.preferredNickname] displayValue:_connection.server];
 	} else if( sender == editServerPassword ) {
 		_connection.password = [sender stringValue];
 		[[CQKeychain standardKeychain] setPassword:[sender stringValue] forServer:_connection.uniqueIdentifier area:@"Server" displayValue:_connection.server];
@@ -326,13 +326,13 @@
 		NSString *user = nil;
 		if( [ruleUsesSender state] == NSOnState ) {
 			if( [senderType indexOfSelectedItem] == 0 ) user = [editRuleSender stringValue];
-			else user = [NSString stringWithFormat:@"/%@/",[editRuleSender stringValue]];
+			else user = [[NSString alloc] initWithFormat:@"/%@/",[editRuleSender stringValue]];
 		}
 
 		NSString *message = nil;
 		if( [ruleUsesMessage state] == NSOnState ) {
 			if( [messageType indexOfSelectedItem] == 0 ) message = [editRuleMessage stringValue];
-			else message = [NSString stringWithFormat:@"/%@/",[editRuleMessage stringValue]];
+			else message = [[NSString alloc] initWithFormat:@"/%@/",[editRuleMessage stringValue]];
 		}
 
 		NSString *friendlyName = [editRuleName stringValue];

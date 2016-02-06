@@ -104,7 +104,7 @@
 }
 
 - (NSString *) title {
-	if( [self plugin] ) return [NSString stringWithFormat:NSLocalizedStringFromTableInBundle( @"%@ Console", nil, [NSBundle bundleForClass:[self class]], "plugin named console panel title" ), [[[[self plugin] scriptFilePath] lastPathComponent] stringByDeletingPathExtension]];
+	if( [self plugin] ) return [[NSString alloc] initWithFormat:NSLocalizedStringFromTableInBundle( @"%@ Console", nil, [NSBundle bundleForClass:[self class]], "plugin named console panel title" ), [[[[self plugin] scriptFilePath] lastPathComponent] stringByDeletingPathExtension]];
 	return NSLocalizedStringFromTableInBundle( @"F-Script Console", nil, [NSBundle bundleForClass:[self class]], "F-Script console panel title" );
 }
 
@@ -129,7 +129,7 @@
 #pragma mark -
 
 - (NSString *) identifier {
-	return [NSString stringWithFormat:@"F-Script Console %p", self];
+	return [[NSString alloc] initWithFormat:@"F-Script Console %p", self];
 }
 
 - (MVChatConnection *) connection {

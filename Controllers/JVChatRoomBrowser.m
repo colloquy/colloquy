@@ -345,7 +345,7 @@
 
 		if( ! t ) {
 			NSData *topic = info[@"topic"];
-			NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:@([_connection encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
+			NSMutableDictionary *options = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@([_connection encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
 			if( ! ( t = [NSAttributedString attributedStringWithChatFormat:topic options:options] ) ) {
 				options[@"StringEncoding"] = @(NSISOLatin1StringEncoding);
 				t = [NSAttributedString attributedStringWithChatFormat:topic options:options];
@@ -440,7 +440,7 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 
 	for( MVChatConnection *connection in [[MVConnectionsController defaultController] connections] ) {
-		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [connection server], [connection nickname]] action:NULL keyEquivalent:@""];
+		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[[NSString alloc] initWithFormat:@"%@ (%@)", [connection server], [connection nickname]] action:NULL keyEquivalent:@""];
 
 		NSImage *icon = nil;
 		if( [connection isConnected] ) icon = [NSImage imageNamed:@"connected"];
@@ -500,7 +500,7 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 
 	[_roomOrder removeAllObjects]; // this is far more efficient than doing a containsObject: and a removeObject: during the while
 
-	options = [NSMutableDictionary dictionaryWithObjectsAndKeys:@([_connection encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
+	options = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@([_connection encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
 
 	for( NSString *room in _roomResults ) {
 		NSMutableDictionary *info = _roomResults[room];
@@ -529,11 +529,11 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 
 refresh:
 	if( _connection && [_connection isConnected] && [_roomResults count] ) {
-		[indexResults setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"%d rooms indexed.", "number of rooms listed on the server" ), [_roomResults count]]];
+		[indexResults setObjectValue:[[NSString alloc] initWithFormat:NSLocalizedString( @"%d rooms indexed.", "number of rooms listed on the server" ), [_roomResults count]]];
 		if( ! [_currentFilter length] ) {
 			[indexAndFindResults setObjectValue:[indexResults stringValue]];
 		} else {
-			[indexAndFindResults setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"%d of %d rooms found.", "number of rooms found with a filter from the server listing" ), [_roomOrder count], [_roomResults count]]];
+			[indexAndFindResults setObjectValue:[[NSString alloc] initWithFormat:NSLocalizedString( @"%d of %d rooms found.", "number of rooms found with a filter from the server listing" ), [_roomOrder count], [_roomResults count]]];
 		}
 	} else {
 		[indexResults setObjectValue:@""];

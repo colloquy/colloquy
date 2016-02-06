@@ -95,7 +95,7 @@ static char encodingTable[64] = {
 		charsonline += 4;
 	}
 	
-	return [NSString stringWithString:result];
+	return [[NSString alloc] initWithString:result];
 }
 
 - (NSData *)xmpp_base64Decoded

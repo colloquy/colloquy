@@ -422,7 +422,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSURL *) url {
-	NSString *urlString = [NSString stringWithFormat:@"%@://%@@%@:%hu", [self urlScheme], [[self preferredNickname] stringByEncodingIllegalURLCharacters], [[self server] stringByEncodingIllegalURLCharacters], [self serverPort]];
+	NSString *urlString = [[NSString alloc] initWithFormat:@"%@://%@@%@:%hu", [self urlScheme], [[self preferredNickname] stringByEncodingIllegalURLCharacters], [[self server] stringByEncodingIllegalURLCharacters], [self serverPort]];
 	if( urlString ) return [NSURL URLWithString:urlString];
 	return nil;
 }
@@ -465,7 +465,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSArray <NSString *> *) alternateNicknames {
-	return [NSArray arrayWithArray:_alternateNicks];
+	return [[NSArray alloc] initWithArray:_alternateNicks];
 }
 
 - (NSString *) nextAlternateNickname {
@@ -585,7 +585,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 }
 
 - (NSDictionary *) persistentInformation {
-	return [NSDictionary dictionaryWithDictionary:_persistentInformation];
+	return [[NSDictionary alloc] initWithDictionary:_persistentInformation];
 }
 
 - (id) persistentInformationObjectForKey:(id) key {
@@ -1174,7 +1174,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The connection id %@ doesn't have the \"%@\" property.", [self scriptUniqueIdentifier], key]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The connection id %@ doesn't have the \"%@\" property.", [self scriptUniqueIdentifier], key]];
 		return nil;
 	}
 
@@ -1184,7 +1184,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (void) setValue:(id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of connection id %@ is read only.", key, [self scriptUniqueIdentifier]]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The \"%@\" property of connection id %@ is read only.", key, [self scriptUniqueIdentifier]]];
 		return;
 	}
 

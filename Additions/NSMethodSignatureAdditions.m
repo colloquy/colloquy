@@ -4,7 +4,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation NSMethodSignature (NSMethodSignatureAdditions)
 + (instancetype) methodSignatureWithReturnAndArgumentTypes:(const char *) retType, ... {
-	NSMutableString *types = [NSMutableString stringWithFormat:@"%s@:", retType];
+	NSMutableString *types = [[NSMutableString alloc] initWithFormat:@"%s@:", retType];
 
 	char *type = NULL;
 	va_list strings;
