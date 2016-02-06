@@ -21,7 +21,7 @@
 
 @implementation JVConnectionInspector
 - (instancetype) initWithConnection:(MVChatConnection *) connection {
-	if( ( self = [self init] ) )
+	if( ( self = [super init] ) )
 		_connection = connection;
 	return self;
 }

@@ -1,4 +1,4 @@
-#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 #import <ChatCore/MVChatUser.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -7,7 +7,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, copy) NSString *xmlDescription;
 - (NSString *) xmlDescriptionWithTagName:(NSString *) tag;
 
-- (NSArray *) standardMenuItems;
+- (NSArray<NSMenuItem*> *) standardMenuItems;
 
 - (IBAction) getInfo:(nullable id) sender;
 

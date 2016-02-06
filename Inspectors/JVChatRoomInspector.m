@@ -24,7 +24,7 @@
 
 @implementation JVChatRoomInspector
 - (instancetype) initWithRoom:(JVChatRoomPanel *) room {
-	if( ( self = [self init] ) )
+	if( ( self = [super init] ) )
 		_room = room;
 	return self;
 }

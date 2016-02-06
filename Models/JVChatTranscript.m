@@ -34,14 +34,14 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 */
 
 @interface JVChatSession (JVChatSessionPrivate)
-- (nullable instancetype) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript;
+- (nullable instancetype) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript NS_RETURNS_RETAINED;
 - (void) _setNode:(nullable xmlNode *) node;
 @end
 
 #pragma mark -
 
 @interface JVChatMessage (JVChatMessagePrivate)
-- (nullable instancetype) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript;
+- (nullable instancetype) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript NS_RETURNS_RETAINED;
 - (void) _setNode:(nullable xmlNode *) node;
 - (void) _loadFromXML;
 - (void) _loadSenderFromXML;
@@ -51,13 +51,15 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 #pragma mark -
 
 @interface JVChatEvent (JVChatEventPrivate)
-- (nullable instancetype) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript;
+- (nullable instancetype) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript NS_RETURNS_RETAINED;
 - (void) _setNode:(nullable xmlNode *) node;
 @end
 
 #pragma mark -
 
 @implementation JVChatTranscript
+@synthesize elementLimit = _elementLimit;
+
 + (instancetype) chatTranscript {
 	return [[self alloc] init];
 }
@@ -575,7 +577,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 			if( [message ignoreStatus] == JVUserIgnored )
 				xmlSetProp( root, (xmlChar *) "ignored", (xmlChar *) "yes" );
 
-			xmlNode *subNode = ((xmlNode *) [message node]) -> parent -> children;
+			xmlNode *subNode = ([message node]) -> parent -> children;
 
 			do {
 				if( ! strcmp( "sender", (char *) subNode -> name ) ) break;
@@ -584,11 +586,11 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 			child = xmlDocCopyNode( subNode, _xmlLog, 1 );
 			xmlAddChild( root, child );
 
-			child = xmlDocCopyNode( (xmlNode *) [message node], _xmlLog, 1 );
+			child = xmlDocCopyNode( [message node], _xmlLog, 1 );
 			xmlAddChild( root, child );
 		} else { // append message to an existing envelope
 			root = parent;
-			child = (xmlNode *) [message node];
+			child = [message node];
 			child = xmlAddChild( parent, xmlDocCopyNode( child, _xmlLog, 1 ) );
 		}
 
@@ -1238,7 +1240,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		}
 
 		@synchronized( _transcript ) {
-			xmlChar *startedStr = xmlGetProp( (xmlNode *) _node, (xmlChar *) "started" );
+			xmlChar *startedStr = xmlGetProp( _node, (xmlChar *) "started" );
 			_startDate = ( startedStr ? [[NSDate alloc] initWithString:[NSString stringWithUTF8String:(char *) startedStr]] : nil );
 			xmlFree( startedStr );
 		}
@@ -1294,7 +1296,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		_type = ( ( prop && ! strcmp( (char *) prop, "notice" ) ) ? JVChatMessageNoticeType : JVChatMessageNormalType );
 		xmlFree( prop );
 
-		xmlNode *envelope = ((xmlNode *) _node) -> parent;
+		xmlNode *envelope = (_node) -> parent;
 
 		prop = xmlGetProp( envelope, (xmlChar *) "ignored" );
 		_ignoreStatus = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? JVUserIgnored : _ignoreStatus );
@@ -1321,7 +1323,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	if( _senderLoaded || ! _node ) return;
 
 	@synchronized( _transcript ) {
-		xmlNode *subNode = ((xmlNode *) _node) -> parent -> children;
+		xmlNode *subNode = ( _node) -> parent -> children;
 
 		do {
 			if( subNode -> type == XML_ELEMENT_NODE && ! strcmp( "sender", (char *) subNode -> name ) ) {
@@ -1387,7 +1389,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		}
 
 		@synchronized( _transcript ) {
-			xmlChar *prop = xmlGetProp( (xmlNode *) _node, (xmlChar *) "id" );
+			xmlChar *prop = xmlGetProp( _node, (xmlChar *) "id" );
 			_eventIdentifier = ( prop ? [[NSString alloc] initWithUTF8String:(char *) prop] : nil );
 			xmlFree( prop );
 		}

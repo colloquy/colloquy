@@ -21,7 +21,7 @@ extern NSString *JVChatViewPboardType;
 	IBOutlet MVMenuButton *favoritesButton;
 	NSString *_identifier;
 	NSMutableDictionary *_settings;
-	NSMutableArray *_views;
+	NSMutableArray/*<id <JVChatViewController>>*/ *_views;
 	id <JVChatViewController> _activeViewController;
 	BOOL _usesSmallIcons;
 	BOOL _showDelayed;

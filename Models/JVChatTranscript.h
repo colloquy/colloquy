@@ -16,7 +16,7 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 
 @interface JVChatTranscript : NSObject {
 	NSScriptObjectSpecifier *_objectSpecifier;
-	struct _xmlDoc *_xmlLog; /* xmlDoc * */
+	struct _xmlDoc *_xmlLog;
 	NSMutableArray *_messages;
 	NSString *_filePath;
 	NSFileHandle *_logFile;

@@ -12,7 +12,7 @@
 
 @implementation JVBuddyInspector
 - (instancetype) initWithBuddy:(JVBuddy *) buddy {
-	if( ( self = [self init] ) )
+	if( ( self = [super init] ) )
 		_buddy = buddy;
 	return self;
 }

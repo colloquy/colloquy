@@ -12,9 +12,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation JVChatMessage
-
 @synthesize node = _node;
 @synthesize objectSpecifier = _objectSpecifier;
+@synthesize transcript = _transcript;
+@synthesize messageIdentifier = _messageIdentifier;
 
 + (void) initialize {
 	[super initialize];
@@ -299,14 +300,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSURL *) source {
 	[self load];
 	return _source;
-}
-
-- (nullable JVChatTranscript *) transcript {
-	return _transcript;
-}
-
-- (NSString *) messageIdentifier {
-	return _messageIdentifier;
 }
 
 #pragma mark -

@@ -53,7 +53,7 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 }
 - (instancetype) init NS_DESIGNATED_INITIALIZER;
 - (instancetype) initWithTarget:(id) target;
-@property (readonly, assign, nullable) id target;
+@property (readonly, strong, nullable) id target;
 @property (readonly, strong, nullable) MVChatUser *user;
 @property (readonly, copy) NSURL *url;
 

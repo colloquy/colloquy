@@ -994,7 +994,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) _refreshMenuWithItem:(id) item {
 	[MVConnectionsController refreshFavoritesMenu];
 
-	id menuItem = nil;
+	NSMenuItem *menuItem = nil;
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 	[menu setDelegate:self];
 
@@ -1046,11 +1046,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( ! item ) return;
 
 	if( ( [item conformsToProtocol:@protocol( JVChatViewController )] && item != (id) _activeViewController ) || ( ! _activeViewController && [[item parent] conformsToProtocol:@protocol( JVChatViewController )] && ( item = [item parent] ) ) ) {
-		id lastActive = _activeViewController;
+		id<JVChatViewController> lastActive = _activeViewController;
 		if( [_activeViewController respondsToSelector:@selector( willUnselect )] )
-			[(id<JVChatViewController>)_activeViewController willUnselect];
+			[_activeViewController willUnselect];
 		if( [item respondsToSelector:@selector( willSelect )] )
-			[(id<JVChatViewController>)item willSelect];
+			[item willSelect];
 
 		_activeViewController = item;
 
@@ -1060,9 +1060,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[self _refreshToolbar];
 
 		if( [lastActive respondsToSelector:@selector( didUnselect )] )
-			[(id<JVChatViewController>)lastActive didUnselect];
+			[lastActive didUnselect];
 		if( [_activeViewController respondsToSelector:@selector( didSelect )] )
-			[(id<JVChatViewController>)_activeViewController didSelect];
+			[_activeViewController didSelect];
 	} else if( ! [_views count] || ! _activeViewController ) {
 		NSView *placeHolder = [[NSView alloc] initWithFrame:[[[self window] contentView] frame]];
 		[[self window] setContentView:placeHolder];
@@ -1091,7 +1091,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[toolbar setSizeMode:[oldToolbar sizeMode]];
 		[toolbar setVisible:oldToolbarVisisble];
 	}
-
 }
 
 - (void) _refreshWindowTitle {

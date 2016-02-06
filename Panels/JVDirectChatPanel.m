@@ -108,6 +108,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 #pragma mark -
 
 @implementation JVDirectChatPanel
+@synthesize target = _target;
 - (instancetype) init {
 	if( ( self = [super init] ) ) {
 		send = nil;
@@ -230,10 +231,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 }
 
 #pragma mark -
-
-- (nullable id) target {
-	return _target;
-}
 
 - (nullable MVChatUser *) user {
 	if( [[self target] isKindOfClass:[MVChatUser class]] )
@@ -2006,7 +2003,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 #pragma mark -
 
-@interface JVAddEventMessageScriptCommand : NSScriptCommand {}
+@interface JVAddEventMessageScriptCommand : NSScriptCommand
 @end
 
 @implementation JVAddEventMessageScriptCommand

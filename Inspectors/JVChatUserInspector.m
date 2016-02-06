@@ -30,7 +30,7 @@
 
 @implementation JVChatUserInspector
 - (instancetype) initWithChatUser:(MVChatUser *) user {
-	if( ( self = [self init] ) )
+	if( ( self = [super init] ) )
 		_user = user;
 	return self;
 }
