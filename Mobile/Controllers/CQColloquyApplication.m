@@ -234,6 +234,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[self updateAnalytics];
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_accessibilityDarkerSystemColorsStatus:) name:UIAccessibilityDarkerSystemColorsStatusDidChangeNotification object:nil];
 }
 
 - (void) handleNotificationWithUserInfo:(NSDictionary *) userInfo {
@@ -275,6 +276,23 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #pragma mark -
 
+- (void) _accessibilityDarkerSystemColorsStatus:(NSNotification *) notification {
+	[self _applyTintColor];
+}
+
+- (void) _applyTintColor {
+	BOOL darkerColorsEnabled = UIAccessibilityDarkerSystemColorsEnabled();
+
+	// rgb(109, 22, 101) == hsb(306°, 80%, 43%)
+	CGFloat hue = 306 * (darkerColorsEnabled ? 1.13 : 1.0);
+	CGFloat saturation = .8;
+	CGFloat brightness = .43 * (darkerColorsEnabled ? 0.88 : 1.0);
+
+	_mainWindow.tintColor = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1.0];
+}
+
+#pragma mark -
+
 - (void) reloadSplitViewController {
 	[_rootContainerViewController buildRootViewController];
 
@@ -311,12 +329,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if (![[CQChatController defaultController] hasPendingChatController] && [UIDevice currentDevice].isPadModel)
 		[[CQChatController defaultController] setFirstChatController];
 
-	_mainWindow.tintColor = [UIColor colorWithRed:0.427 green:0.086 blue:0.396 alpha:1];
-	if (UIAccessibilityDarkerSystemColorsEnabled()) {
-		CGFloat hue, saturation, brightness, alpha = 0.;
-		[_mainWindow.tintColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
-		_mainWindow.tintColor = [UIColor colorWithHue:hue saturation:saturation * 1.13 brightness:brightness * .88 alpha:alpha];
-	}
+	[self _applyTintColor];
 
 	[self userDefaultsChanged];
 
