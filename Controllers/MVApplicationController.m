@@ -624,14 +624,14 @@ static BOOL applicationIsTerminating = NO;
 	NSAlert *alert = [[NSAlert alloc] init];
 	alert.messageText = (invalidPlugins.count > 1) ? NSLocalizedString( @"Unable to load plugins", @"Unable to load plugins message text" ) : NSLocalizedString( @"Unable to load a plugin", @"Unable to load a plugin message text" );
 
-	NSString *informativeText = nil;
+	NSMutableString *informativeText = nil;
 	if( invalidPlugins.count > 1 ) {
-		informativeText = NSLocalizedString( @"Colloquy is unable to load the following plugins:\n", @"Colloquy is unable to load the following plugins:\n. informative text");
+		informativeText = [NSLocalizedString( @"Colloquy is unable to load the following plugins:\n", @"Colloquy is unable to load the following plugins:\n. informative text") mutableCopy];
 		for( NSString *pluginName in invalidPlugins )
-			informativeText = [informativeText stringByAppendingFormat:@"%@\n", [pluginName fileName]];
+			[informativeText appendFormat:@"%@\n", [pluginName fileName]];
 	} else {
 		NSString *pluginName = [[invalidPlugins lastObject] fileName];
-		informativeText = [NSString stringWithFormat:NSLocalizedString( @"Colloquy is unable to load the plugin named \"%@\".", @"Colloquy is unable to load the plugin named \"%@\". informative text"), pluginName];
+		informativeText = [[NSMutableString alloc] initWithFormat:NSLocalizedString( @"Colloquy is unable to load the plugin named \"%@\".", @"Colloquy is unable to load the plugin named \"%@\". informative text"), pluginName];
 	}
 
 	alert.informativeText = informativeText;

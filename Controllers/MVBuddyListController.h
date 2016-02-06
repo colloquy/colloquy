@@ -66,7 +66,7 @@ typedef NS_ENUM(OSType, MVBuddyListSortOrder) {
 
 - (JVBuddy *) buddyForUser:(MVChatUser *) user;
 @property (readonly, copy) NSArray<JVBuddy*> *buddies;
-@property (readonly, copy) NSSet *onlineBuddies;
+@property (readonly, copy) NSSet<JVBuddy*> *onlineBuddies;
 
 - (IBAction) showBuddyPickerSheet:(id) sender;
 - (IBAction) cancelBuddySelection:(id) sender;

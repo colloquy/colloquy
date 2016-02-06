@@ -26,15 +26,15 @@
 
 - (void) addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller userInitiated:(BOOL) initiated;
 
-@property (readonly, copy) NSSet *allChatWindowControllers;
+@property (readonly, copy) NSSet<JVChatWindowController*> *allChatWindowControllers;
 @property (readonly, strong) JVChatWindowController *createChatWindowController;
 - (JVChatWindowController *) chatWindowControllerWithIdentifier:(NSString *) identifier;
 - (void) disposeChatWindowController:(JVChatWindowController *) controller;
 
-@property (readonly, copy) NSSet *allChatViewControllers;
-- (NSSet *) chatViewControllersWithConnection:(MVChatConnection *) connection;
-- (NSSet *) chatViewControllersOfClass:(Class) class;
-- (NSSet *) chatViewControllersKindOfClass:(Class) class;
+@property (readonly, copy) NSSet<id <JVChatViewController>> *allChatViewControllers;
+- (NSSet<id <JVChatViewController>> *) chatViewControllersWithConnection:(MVChatConnection *) connection;
+- (NSSet<id <JVChatViewController>> *) chatViewControllersOfClass:(Class) class;
+- (NSSet<id <JVChatViewController>> *) chatViewControllersKindOfClass:(Class) class;
 
 - (JVChatRoomPanel *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists;
 - (JVDirectChatPanel *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists;
@@ -44,8 +44,8 @@
 - (JVChatTranscriptPanel *) chatViewControllerForTranscript:(NSString *) filename;
 - (JVChatConsolePanel *) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 
-@property (readonly, strong) JVSmartTranscriptPanel *createSmartTranscript;
-@property (readonly, copy) NSSet *smartTranscripts;
+- (JVSmartTranscriptPanel *)createSmartTranscript NS_RETURNS_RETAINED;
+@property (readonly, copy) NSSet<JVSmartTranscriptPanel*> *smartTranscripts;
 - (void) saveSmartTranscripts;
 - (void) disposeSmartTranscript:(JVSmartTranscriptPanel *) panel;
 

@@ -2,10 +2,14 @@
 
 #import <Cocoa/Cocoa.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface JVSpeechController : NSObject <NSSpeechSynthesizerDelegate> {
-	NSMutableArray *_speechQueue;
-	NSArray *_synthesizers;
+	NSMutableArray<NSDictionary<NSString*, NSString*>*> *_speechQueue;
+	NSArray<NSSpeechSynthesizer*> *_synthesizers;
 }
 + (JVSpeechController *) sharedSpeechController;
 - (void) startSpeakingString:(NSString *) string usingVoice:(NSString *) voice;
 @end
+
+NS_ASSUME_NONNULL_END
