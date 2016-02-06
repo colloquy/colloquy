@@ -480,13 +480,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 #pragma mark -
 
-- (void) setPassword:(NSString *) newPassword {
-	MVSafeCopyAssign( _password, newPassword );
-}
-
-- (NSString *) password {
-	return _password;
-}
+@synthesize password = _password;
 
 #pragma mark -
 
@@ -520,7 +514,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 #pragma mark -
 
 - (void) setServerPort:(unsigned short) port {
-	_serverPort = ( port ? port : 6667 );
+	_serverPort = ( port ?: 6667 );
 }
 
 - (unsigned short) serverPort {
@@ -540,15 +534,15 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	return (([NSDate timeIntervalSinceReferenceDate] - [_connectedDate timeIntervalSinceReferenceDate]) > 10.);
 }
 
-- (double) minimumSendQueueDelay {
+- (NSTimeInterval) minimumSendQueueDelay {
 	return self.recentlyConnected ? .5 : .25;
 }
 
-- (double) maximumSendQueueDelay {
+- (NSTimeInterval) maximumSendQueueDelay {
 	return self.recentlyConnected ? 1.5 : 3.;
 }
 
-- (double) sendQueueDelayIncrement {
+- (NSTimeInterval) sendQueueDelayIncrement {
 	return self.recentlyConnected ? .25 : .15;
 }
 
@@ -988,10 +982,10 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	//			NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
 	//			if( _proxy == MVChatConnectionHTTPSProxy ) {
 	//				[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertyHTTPSProxyHost];
-	//				[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertyHTTPSProxyPort];
+	//				[settings setObject:@([self proxyServerPort]) forKey:(NSString *)kCFStreamPropertyHTTPSProxyPort];
 	//			} else {
 	//				[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertyHTTPProxyHost];
-	//				[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertyHTTPProxyPort];
+	//				[settings setObject:@([self proxyServerPort]) forKey:(NSString *)kCFStreamPropertyHTTPProxyPort];
 	//			}
 	//
 	//			CFReadStreamSetProperty( [sock readStream], kCFStreamPropertyHTTPProxy, (CFDictionaryRef) settings );
@@ -1001,7 +995,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	//			NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
 	//
 	//			[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertySOCKSProxyHost];
-	//			[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertySOCKSProxyPort];
+	//			[settings setObject:@([self proxyServerPort]) forKey:(NSString *)kCFStreamPropertySOCKSProxyPort];
 	//
 	//			if( [[self proxyUsername] length] )
 	//				[settings setObject:[self proxyUsername] forKey:(NSString *)kCFStreamPropertySOCKSUser];
@@ -1228,10 +1222,10 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 #undef notEndOfLine
 
 parsingFinished: { // make a scope for this
-	NSString *senderString = [self _newStringWithBytes:sender length:senderLength];
+	NSString *senderString = ((sender && senderLength) ? [self _newStringWithBytes:sender length:senderLength] : nil);
 	NSString *commandString = ((command && commandLength) ? [[NSString alloc] initWithBytes:command length:commandLength encoding:NSASCIIStringEncoding] : nil);
+	NSString *intentOrTagsString = ((intentOrTags && intentOrTagsLength) ? [self _newStringWithBytes:intentOrTags length:intentOrTagsLength] : nil);
 
-	NSString *intentOrTagsString = [self _newStringWithBytes:intentOrTags length:intentOrTagsLength];
 	NSMutableDictionary *intentOrTagsDictionary = [[NSMutableDictionary alloc] init];
 	for( NSString *anIntentOrTag in [intentOrTagsString componentsSeparatedByString:@";"] ) {
 		NSArray <NSString *> *intentOrTagPair = [anIntentOrTag componentsSeparatedByString:@"="];

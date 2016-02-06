@@ -128,7 +128,7 @@ NS_ASSUME_NONNULL_BEGIN
 	// not supported
 }
 
-- (NSString *) nicknamePassword {
+- (NSString *__nullable) nicknamePassword {
 	return nil;
 }
 
@@ -281,12 +281,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) outgoingPacket:(NSNotification *) notification {
 	NSString *string = [[NSString alloc] initWithData:[notification object] encoding:NSUTF8StringEncoding];
-	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{@"message": string, @"outbound": @YES}];
+	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", @YES, @"outbound", nil]];
 }
 
 - (void) incomingPacket:(NSNotification *) notification {
 	NSString *string = [[NSString alloc] initWithData:[notification object] encoding:NSUTF8StringEncoding];
-	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{@"message": string, @"outbound": @NO}];
+	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", @NO, @"outbound", nil]];
 }
 
 - (void) xmppStream:(XMPPStream *) stream didReceiveMessage:(XMPPMessage *) message {

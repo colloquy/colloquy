@@ -86,7 +86,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 	NSUInteger _hash;
 	BOOL _releasing;
 }
-@property(strong, readonly) MVChatConnection *connection;
+@property(weak, nullable, readonly) MVChatConnection *connection;
 
 @property(strong, readonly) NSURL *url;
 @property(strong, readonly) NSString *name;

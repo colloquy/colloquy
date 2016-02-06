@@ -118,12 +118,10 @@ static const NSStringEncoding supportedEncodings[] = {
 // subclass this method
 @dynamic nickname;
 @synthesize alternateNicknames = _alternateNicks;
-@synthesize nicknamePassword = _npassword;
+@synthesize nicknamePassword;
 
 // subclass this method
 @dynamic serverPort;
-@synthesize proxyType = _proxy;
-@synthesize bouncerType = _bouncer;
 
 + (BOOL) supportsURLScheme:(NSString *__nullable) scheme {
 	return
@@ -186,16 +184,9 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (instancetype) init {
 	if( ( self = [super init] ) ) {
-		_alternateNicks = nil;
-		_npassword = nil;
-		_cachedDate = nil;
-		_lastConnectAttempt = nil;
-		_awayMessage = nil;
 		_encoding = NSUTF8StringEncoding;
 		_outgoingChatFormat = MVChatConnectionDefaultMessageFormat;
 		_incomingChatFormat = MVChatConnectionDefaultMessageFormat;
-		_nextAltNickIndex = 0;
-		_roomListDirty = NO;
 
 		_requestsSASL = YES;
 
@@ -207,7 +198,6 @@ static const NSStringEncoding supportedEncodings[] = {
 		_pendingRoomUpdates = [[NSMutableSet alloc] initWithCapacity:100];
 		_persistentInformation = [[NSMutableDictionary alloc] initWithCapacity:5];
 		_supportedFeatures = [[NSMutableSet alloc] initWithCapacity:10];
-		_localUser = nil;
 
 		_joinedRooms = [[NSMutableSet alloc] initWithCapacity:10];
 
@@ -465,7 +455,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSArray <NSString *> *) alternateNicknames {
-	return [[NSArray alloc] initWithArray:_alternateNicks];
+	return [_alternateNicks copy];
 }
 
 - (NSString *) nextAlternateNickname {
@@ -565,6 +555,19 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
+- (void) setServerPort:(unsigned short) port {
+// subclass this method
+	[self doesNotRecognizeSelector:_cmd];
+}
+
+- (unsigned short) serverPort {
+// subclass this method
+	[self doesNotRecognizeSelector:_cmd];
+	return 0;
+}
+
+#pragma mark -
+
 - (void) setOutgoingChatFormat:(MVChatMessageFormat) format {
 	if( ! format ) format = MVChatConnectionDefaultMessageFormat;
 	_outgoingChatFormat = format;
@@ -577,6 +580,25 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
+@synthesize connectedSecurely = _connectedSecurely;
+@synthesize secure = _secure;
+@synthesize requestsSASL = _requestsSASL;
+@synthesize roomsWaitForIdentification = _roomsWaitForIdentification;
+@synthesize proxyType = _proxy;
+@synthesize proxyServer = _proxyServer;
+@synthesize proxyServerPort = _proxyServerPort;
+@synthesize proxyUsername = _proxyUsername;
+@synthesize proxyPassword = _proxyPassword;
+@synthesize bouncerType = _bouncer;
+@synthesize bouncerServer = _bouncerServer;
+@synthesize bouncerServerPort = _bouncerServerPort;
+@synthesize bouncerUsername = _bouncerUsername;
+@synthesize bouncerPassword = _bouncerPassword;
+@synthesize bouncerDeviceIdentifier = _bouncerDeviceIdentifier;
+@synthesize bouncerConnectionIdentifier = _bouncerConnectionIdentifier;
+
+#pragma mark -
+
 - (void) setPersistentInformation:(NSDictionary *) information {
 	@synchronized( _persistentInformation ) {
 		if( information.count ) [_persistentInformation setDictionary:information];
@@ -585,7 +607,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 }
 
 - (NSDictionary *) persistentInformation {
-	return [[NSDictionary alloc] initWithDictionary:_persistentInformation];
+	return [_persistentInformation copy];
 }
 
 - (id) persistentInformationObjectForKey:(id) key {
@@ -882,7 +904,9 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
-@synthesize awayStatusMessage = _awayMessage;
+- (MVChatString *) awayStatusMessage {
+	return _awayMessage;
+}
 
 - (void) setAwayStatusMessage:(MVChatString * __nullable) message {
 // subclass this method
@@ -1166,7 +1190,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #if ENABLE(SCRIPTING)
 @implementation MVChatConnection (MVChatConnectionScripting)
 - (NSNumber *) scriptUniqueIdentifier {
-	return [NSNumber numberWithUnsignedLong:(intptr_t)self];
+	return @((intptr_t)self);
 }
 
 #pragma mark -
@@ -1435,14 +1459,14 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 					cformat = nil;
 			}
 
-			NSDictionary *options = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:realEncoding], @"StringEncoding", cformat, @"FormatType", nil];
+			NSDictionary *options = [[NSDictionary alloc] initWithObjectsAndKeys:@(realEncoding), @"StringEncoding", cformat, @"FormatType", nil];
 			NSData *msgData = [realMessage chatFormatWithOptions:options];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 			NSData *msgData = [realMessage dataUsingEncoding:realEncoding];
 #endif
 
 			if( [target isKindOfClass:[MVChatRoom class]] ) {
-				NSDictionary *info = @{@"user": [[(MVChatRoom *)target connection] localUser], @"message": msgData, @"identifier": [NSString locallyUniqueString], @"action": @(realAction)};
+				NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:[[(MVChatRoom *)target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", @(realAction), @"action", nil];
 				[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomGotMessageNotification object:target userInfo:info];
 			} // we can't really echo a private message with our current notifications
 		}

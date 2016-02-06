@@ -13,7 +13,7 @@ extern NSString *const CQRemoteFontCourierFontLoadingDidFailNotification;
 	extern NSString *const CQRemoteFontCourierFontLoadingFontKey;
 
 @interface UIFont (Additions)
-+ (void) cq_availableRemoteFontNames:(void (^)(NSArray *fontNames)) completion; // usually synchronous. might not be if the cache expires (and needs updating)
++ (void) cq_availableRemoteFontNames:(void (^)(NSArray *__nullable fontNames)) completion; // usually synchronous. might not be if the cache expires (and needs updating)
 
 + (void) cq_loadRemoteFontWithName:(NSString *) fontName completionHandler:(CQRemoteFontCompletionHandler __nullable) completionHandler;
 @end

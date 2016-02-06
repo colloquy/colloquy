@@ -282,7 +282,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 }
 
 - (instancetype) initWithXHTMLTree:(struct _xmlNode *) node baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
-	NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:attributes];
+	NSMutableDictionary *attrs = [attributes mutableCopy];
 	if( ! attrs[NSFontAttributeName] )
 		attrs[NSFontAttributeName] = [NSFont userFontOfSize:12.];
 	id ret = parseXHTMLTreeNode( node, attrs, base, YES );

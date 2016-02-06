@@ -116,9 +116,23 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
-- (MVChatConnection *) connection {
-	return _connection;
-}
+@synthesize connection = _connection;
+@synthesize type = _type;
+@synthesize identified = _identified;
+@synthesize serverOperator = _serverOperator;
+@synthesize status = _status;
+@synthesize awayStatusMessage = _awayStatusMessage;
+@synthesize dateConnected = _dateConnected;
+@synthesize dateDisconnected = _dateDisconnected;
+@synthesize dateUpdated = _dateUpdated;
+@synthesize mostRecentUserActivity = _mostRecentUserActivity;
+@synthesize idleTime = _idleTime;
+@synthesize lag = _lag;
+@synthesize address = _address;
+@synthesize uniqueIdentifier = _uniqueIdentifier;
+@synthesize publicKey = _publicKey;
+@synthesize fingerprint = _fingerprint;
+@synthesize modes = _modes;
 
 #pragma mark -
 
@@ -305,7 +319,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (NSDictionary *) attributes {
 	@synchronized( _attributes ) {
-		return [[NSDictionary alloc] initWithDictionary:_attributes];
+		return [_attributes copy];
 	}
 }
 
@@ -378,10 +392,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 @implementation MVChatUser (MVChatUserPrivate)
 - (void) _connectionDestroyed {
 	_connection = nil;
-}
-
-- (void) _setType:(MVChatUserType) type {
-	_type = type;
 }
 
 - (void) _setUniqueIdentifier:(id) identifier {

@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSInteger cancelButtonIndex;
 @property NSInteger destructiveButtonIndex;
 
-- (NSInteger) addButtonWithTitle:(nullable NSString *) title;
+- (NSInteger) addButtonWithTitle:(NSString *) title;
 - (nullable NSString *) buttonTitleAtIndex:(NSInteger) buttonIndex;
 
 - (void) showforSender:(__nullable id) sender orFromPoint:(CGPoint) point animated:(BOOL) animated;

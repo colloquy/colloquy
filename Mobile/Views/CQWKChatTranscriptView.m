@@ -307,9 +307,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) webView:(WKWebView *) webView didFinishNavigation:(WKNavigation *__null_unspecified) navigation {
 	[self performSelector:@selector(_checkIfLoadingFinished) withObject:nil afterDelay:0.];
 
-	if (UIAccessibilityIsBoldTextEnabled())
-		[self stringByEvaluatingJavaScriptFromString:@"document.body.style.fontWeight='bold';"];
-	else [self stringByEvaluatingJavaScriptFromString:@"document.body.style.fontWeight='';"];
+	[self _updateAccessibilityBoldStyle];
 }
 
 #pragma mark -
@@ -439,6 +437,11 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) stringByEvaluatingJavaScriptFromString:(NSString *) script {
+	if (!_readyForDisplay) {
+		NSLog(@"Refusing to evaluate script before WKWebView is ready for display: %@", script);
+		return;
+	}
+
 	[self stringByEvaluatingJavaScriptFromString:script completionHandler:NULL];
 }
 
@@ -563,6 +566,14 @@ NS_ASSUME_NONNULL_BEGIN
 	_addedMessage = NO;
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged:) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_accessibilityBoldTextStatusDidChange:) name:UIAccessibilityBoldTextStatusDidChangeNotification object:nil];
+}
+
+- (void) _accessibilityBoldTextStatusDidChange:(NSNotification *) notification {
+	if (!_readyForDisplay)
+		return;
+
+	[self _updateAccessibilityBoldStyle];
 }
 
 - (void) _userDefaultsChanged:(NSNotification *) notification {
@@ -574,6 +585,12 @@ NS_ASSUME_NONNULL_BEGIN
 	_addedMessage = NO;
 
 	[self noteTopicChangeTo:_roomTopic by:_roomTopicSetter];
+}
+
+- (void) _updateAccessibilityBoldStyle {
+	if (UIAccessibilityIsBoldTextEnabled())
+		[self stringByEvaluatingJavaScriptFromString:@"document.body.style.fontWeight='bold';"];
+	else [self stringByEvaluatingJavaScriptFromString:@"document.body.style.fontWeight='';"];
 }
 
 - (NSString *) _variantStyleString {
@@ -596,6 +613,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) _reloadVariantStyle {
+	if (!_readyForDisplay)
+		return;
+
 	NSString *javascript = [NSString stringWithFormat:@"document.getElementById('custom').innerHTML = '%@';", [self _variantStyleString]];
 
 	[self stringByEvaluatingJavaScriptFromString:javascript];
@@ -615,6 +635,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 		_loading = NO;
 		_readyForDisplay = YES;
+
+		[self _reloadVariantStyle];
 
 		[self _addComponentsToTranscript:_pendingPreviousSessionComponents fromPreviousSession:YES animated:NO];
 

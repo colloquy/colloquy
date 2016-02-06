@@ -269,8 +269,6 @@ static void generateDeviceIdentifier() {
 		[resultString appendFormat:@"%@=%@", key, value];
 	}
 
-	MVAutorelease(resultString);
-
 	return [resultString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:NO];
 }
 

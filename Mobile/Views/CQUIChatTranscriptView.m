@@ -307,9 +307,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) webViewDidFinishLoad:(UIWebView *) webView {
 	[self performSelector:@selector(_checkIfLoadingFinished) withObject:nil afterDelay:0.];
 
-	if (UIAccessibilityIsBoldTextEnabled())
-		[super stringByEvaluatingJavaScriptFromString:@"document.body.style.fontWeight='bold';"];
-	else [super stringByEvaluatingJavaScriptFromString:@"document.body.style.fontWeight='';"];
+	[self _updateAccessibilityBoldStyle];
 }
 
 #pragma mark -
@@ -550,6 +548,14 @@ NS_ASSUME_NONNULL_BEGIN
 	self.allowsInlineMediaPlayback = YES;
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged:) name:CQSettingsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_accessibilityBoldTextStatusDidChange:) name:UIAccessibilityBoldTextStatusDidChangeNotification object:nil];
+}
+
+- (void) _accessibilityBoldTextStatusDidChange:(NSNotification *) notification {
+	if (!_readyForDisplay)
+		return;
+
+	[self _updateAccessibilityBoldStyle];
 }
 
 - (void) _userDefaultsChanged:(NSNotification *) notification {
@@ -560,6 +566,12 @@ NS_ASSUME_NONNULL_BEGIN
 	_showRoomTopic = shouldShowRoomTopic;
 
 	[self noteTopicChangeTo:_roomTopic by:_roomTopicSetter];
+}
+
+- (void) _updateAccessibilityBoldStyle {
+	if (UIAccessibilityIsBoldTextEnabled())
+		[self stringByEvaluatingJavaScriptFromString:@"document.body.style.fontWeight='bold';"];
+	else [self stringByEvaluatingJavaScriptFromString:@"document.body.style.fontWeight='';"];
 }
 
 - (NSString *) _variantStyleString {

@@ -10,7 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 @implementation NSScriptCommand (NSScriptCommandAdditions)
-- (id) subjectParameter {
+- (id __nullable) subjectParameter {
 	return [[self subjectSpecifier] objectsByEvaluatingSpecifier];
 }
 

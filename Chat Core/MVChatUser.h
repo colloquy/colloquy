@@ -101,7 +101,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 + (instancetype) wildcardUserWithNicknameMask:(NSString * __nullable) nickname andHostMask:(NSString * __nullable) host;
 + (instancetype) wildcardUserWithFingerprint:(NSString *) fingerprint;
 
-@property(strong, readonly) MVChatConnection *connection;
+@property(weak, nullable, readonly) MVChatConnection *connection;
 @property(readonly) MVChatUserType type;
 
 @property(readonly, getter=isRemoteUser) BOOL remoteUser;

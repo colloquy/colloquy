@@ -118,12 +118,14 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 
 - (void) sendSubcodeRequest:(NSString *) command withArguments:(id __nullable) arguments {
 	NSParameterAssert( command != nil );
+
+	MVChatConnection *connection = [self connection];
 	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
 		NSString *prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@ :\001%@ ", [self nickname], command];
-		[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
+		[connection sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
 	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
-		[[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@ %@\001", [self nickname], command, arguments];
-	} else [[self connection] sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@\001", [self nickname], command];
+		[connection sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@ %@\001", [self nickname], command, arguments];
+	} else [connection sendRawMessageWithFormat:@"PRIVMSG %@ :\001%@\001", [self nickname], command];
 
 	_mostRecentUserActivity = [NSDate date];
 	[self persistLastActivityDate];
@@ -131,20 +133,22 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 
 - (void) sendSubcodeReply:(NSString *) command withArguments:(id __nullable) arguments {
 	NSParameterAssert( command != nil );
-	if( [[self connection] status] == MVChatConnectionConnectingStatus ) {
+
+	MVChatConnection *connection = [self connection];
+	if( [connection status] == MVChatConnectionConnectingStatus ) {
 		if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
 			NSString *prefix = [[NSString alloc] initWithFormat:@"NOTICE %@ :\001%@ ", [self nickname], command];
-			[[self connection] sendRawMessageImmediatelyWithComponents:prefix, arguments, @"\001", nil];
+			[connection sendRawMessageImmediatelyWithComponents:prefix, arguments, @"\001", nil];
 		} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
-			[[self connection] sendRawMessageImmediatelyWithFormat:@"NOTICE %@ :\001%@ %@\001", [self nickname], command, arguments];
-		} else [[self connection] sendRawMessageImmediatelyWithFormat:@"NOTICE %@ :\001%@\001", [self nickname], command];
+			[connection sendRawMessageImmediatelyWithFormat:@"NOTICE %@ :\001%@ %@\001", [self nickname], command, arguments];
+		} else [connection sendRawMessageImmediatelyWithFormat:@"NOTICE %@ :\001%@\001", [self nickname], command];
 	} else {
 		if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
 			NSString *prefix = [[NSString alloc] initWithFormat:@"NOTICE %@ :\001%@ ", [self nickname], command];
-			[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
+			[connection sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
 		} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
-			[[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@ %@\001", [self nickname], command, arguments];
-		} else [[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@\001", [self nickname], command];
+			[connection sendRawMessageWithFormat:@"NOTICE %@ :\001%@ %@\001", [self nickname], command, arguments];
+		} else [connection sendRawMessageWithFormat:@"NOTICE %@ :\001%@\001", [self nickname], command];
 	}
 
 	_mostRecentUserActivity = [NSDate date];
@@ -156,9 +160,11 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 - (void) refreshInformation {
 	if( _hasPendingRefreshInformationRequest ) return;
 	_hasPendingRefreshInformationRequest = YES;
-	[[self connection] sendRawMessageWithFormat:@"WHOIS %@ %1$@", [self nickname]];
-	if( [[[self connection] supportedFeatures] containsObject:MVChatConnectionMetadataFeature] )
-		[[self connection] sendRawMessageWithFormat:@"METADATA %@ LIST", [self nickname]];
+
+	MVChatConnection *connection = [self connection];
+	[connection sendRawMessageWithFormat:@"WHOIS %@ %1$@", [self nickname]];
+	if( [[connection supportedFeatures] containsObject:MVChatConnectionMetadataFeature] )
+		[connection sendRawMessageWithFormat:@"METADATA %@ LIST", [self nickname]];
 }
 
 - (void) _setDateUpdated:(NSDate *) date {
@@ -178,8 +184,9 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	} else if( [key isEqualToString:MVChatUserKnownRoomsAttribute] ) {
 		[self refreshInformation];
 	} else {
-		if( [[[self connection] supportedFeatures] containsObject:MVChatConnectionMetadataFeature] )
-			[[self connection] sendRawMessageWithFormat:@"METADATA %@ LIST :%@", [self nickname], MVMetadataKeyForAttributeName(key)];
+		MVChatConnection *connection = [self connection];
+		if( [[connection supportedFeatures] containsObject:MVChatConnectionMetadataFeature] )
+			[connection sendRawMessageWithFormat:@"METADATA %@ LIST :%@", [self nickname], MVMetadataKeyForAttributeName(key)];
 	}
 }
 
@@ -190,6 +197,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 #pragma mark -
 
 - (void) ctcpReplyNotification:(NSNotification *) notification {
+	MVChatConnection *connection = [self connection];
 	NSString *command = [notification userInfo][@"command"];
 	NSData *arguments = [notification userInfo][@"arguments"];
 	if( [command isCaseInsensitiveEqualToString:@"PING"] ) {
@@ -197,10 +205,10 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 		[self setAttribute:@(diff) forKey:MVChatUserPingAttribute];
 		[self setAttribute:nil forKey:@"MVChatUserPingSendDateAttribute"];
 	} else if( [command isCaseInsensitiveEqualToString:@"VERSION"] ) {
-		NSString *info = [[NSString alloc] initWithData:arguments encoding:[[self connection] encoding]];
+		NSString *info = [[NSString alloc] initWithData:arguments encoding:[connection encoding]];
 		[self setAttribute:info forKey:MVChatUserClientInfoAttribute];
 	} else if( [command isCaseInsensitiveEqualToString:@"TIME"] ) {
-		NSString *date = [[NSString alloc] initWithData:arguments encoding:[[self connection] encoding]];
+		NSString *date = [[NSString alloc] initWithData:arguments encoding:[connection encoding]];
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
 		[self setAttribute:date forKey:MVChatUserLocalTimeAttribute];
 #else
@@ -211,13 +219,15 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 }
 
 - (void) requestRecentActivity {
-	if( [[[self connection] supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] )
-		[[self connection] sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %.3f", self.nickname, [self.mostRecentUserActivity timeIntervalSince1970]];
+	MVChatConnection *connection = [self connection];
+	if( [[connection supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] )
+		[connection sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %.3f", self.nickname, [self.mostRecentUserActivity timeIntervalSince1970]];
 }
 
 - (void) persistLastActivityDate {
-	if ( _mostRecentUserActivity && [[[self connection] supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] ) {
-		NSString *recentActivityDateKey = [[NSString alloc] initWithFormat:@"%@-%@", self.connection.uniqueIdentifier, self.uniqueIdentifier];
+	MVChatConnection *connection = [self connection];
+	if ( _mostRecentUserActivity && [[connection supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] ) {
+		NSString *recentActivityDateKey = [[NSString alloc] initWithFormat:@"%@-%@", connection.uniqueIdentifier, self.uniqueIdentifier];
 		[[NSUserDefaults standardUserDefaults] setObject:_mostRecentUserActivity forKey:recentActivityDateKey];
 	}
 }

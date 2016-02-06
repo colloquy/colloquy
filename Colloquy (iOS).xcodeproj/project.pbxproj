@@ -729,7 +729,6 @@
 		B6831CC71BE4321D00D3AC1D /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		B6831CCD1BE44EC000D3AC1D /* Colloquy TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Colloquy TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6831CD91BE44EC000D3AC1D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		B6831CDB1BE44EC000D3AC1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B6831CDD1BE44EC000D3AC1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B68725AF1B8E3E320003D4F8 /* UIPrintPageRendererAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIPrintPageRendererAdditions.h; path = Additions/UIPrintPageRendererAdditions.h; sourceTree = "<group>"; };
 		B68725B01B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIPrintPageRendererAdditions.m; path = Additions/UIPrintPageRendererAdditions.m; sourceTree = "<group>"; };
@@ -1395,7 +1394,6 @@
 			isa = PBXGroup;
 			children = (
 				B6831CD81BE44EC000D3AC1D /* Main.storyboard */,
-				B6831CDB1BE44EC000D3AC1D /* Assets.xcassets */,
 				B6831CDD1BE44EC000D3AC1D /* Info.plist */,
 			);
 			path = "Colloquy TV";
@@ -1953,7 +1951,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Shared/Frameworks",
-					"$(PROJECT_DIR)/Mobile/Frameworks/OTRKit",
 				);
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2004,7 +2001,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Shared/Frameworks",
-					"$(PROJECT_DIR)/Mobile/Frameworks/OTRKit",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
@@ -2054,7 +2050,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Shared/Frameworks",
-					"$(PROJECT_DIR)/Mobile/Frameworks/OTRKit",
 				);
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (

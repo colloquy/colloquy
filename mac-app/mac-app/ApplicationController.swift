@@ -10,16 +10,24 @@ import Cocoa
 import ChatCore
 
 @NSApplicationMain
-class ApplicationController: NSObject, NSApplicationDelegate {
-
-    func applicationDidFinishLaunching(aNotification: NSNotification) {
+class ApplicationController: NSObject, NSApplicationDelegate
+{
+    let windowController = ChatWindowController(windowNibName: "ChatWindowController")
+  
+    func applicationDidFinishLaunching(aNotification: NSNotification)
+    {
         // Insert code here to initialize your application
+        
+        windowController.showWindow(self)
+        
+        
+        
     }
 
-    func applicationWillTerminate(aNotification: NSNotification) {
+    func applicationWillTerminate(aNotification: NSNotification)
+    {
         // Insert code here to tear down your application
     }
 
 
 }
-
