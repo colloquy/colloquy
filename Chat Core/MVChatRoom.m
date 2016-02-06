@@ -78,7 +78,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (MVChatConnection *) connection {
+- (MVChatConnection *__nullable) connection {
 	return _connection;
 }
 
@@ -120,22 +120,26 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 #pragma mark -
 
 - (NSURL *) url {
-	NSString *urlString = [NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[[self connection] server] stringByEncodingIllegalURLCharacters], [[self name] stringByEncodingIllegalURLCharacters]];
+	MVChatConnection *connection = [self connection];
+	NSString *urlString = [NSString stringWithFormat:@"%@://%@/%@", [connection urlScheme], [[connection server] stringByEncodingIllegalURLCharacters], [[self name] stringByEncodingIllegalURLCharacters]];
 	if( urlString ) return [NSURL URLWithString:urlString];
 	return nil;
 }
 
-- (NSString *) name {
-	return _name;
-}
+@synthesize name = _name;
+@synthesize uniqueIdentifier = _uniqueIdentifier;
+@synthesize dateJoined = _dateJoined;
+@synthesize dateParted = _dateParted;
+@synthesize mostRecentUserActivity = _mostRecentUserActivity;
+@synthesize encoding = _encoding;
+@synthesize topic = _topic;
+@synthesize topicAuthor = _topicAuthor;
+@synthesize dateTopicChanged = _dateTopicChanged;
+@synthesize modes = _modes;
 
 - (NSString *) displayName {
-	__strong MVChatConnection *connection = _connection;
+	MVChatConnection *connection = _connection;
 	return connection ? [connection displayNameForChatRoomNamed:[self name]] : [self name];
-}
-
-- (id) uniqueIdentifier {
-	return _uniqueIdentifier;
 }
 
 #pragma mark -
@@ -147,9 +151,10 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	if( [self supportedModes] & MVChatRoomPassphraseToJoinMode )
 		passphrase = [self attributeForMode:MVChatRoomPassphraseToJoinMode];
 
+	MVChatConnection *connection = [self connection];
 	if (passphrase.length)
-		[[self connection] joinChatRoomNamed:[self name] withPassphrase:passphrase];
-	else [[self connection] joinChatRoomNamed:[self name]];
+		[connection joinChatRoomNamed:[self name] withPassphrase:passphrase];
+	else [connection joinChatRoomNamed:[self name]];
 }
 
 - (void) part {
@@ -167,34 +172,12 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return ( [self dateJoined] && ! [self dateParted] );
 }
 
-- (NSDate *) dateJoined {
-	return _dateJoined;
-}
-
-- (NSDate *) dateParted {
-	return _dateParted;
-}
-
-- (NSDate *) mostRecentUserActivity {
-	return _mostRecentUserActivity;
-}
-
 - (void) requestRecentActivity {
 	// subclass this method, don't call super
 }
 
 - (void) persistLastActivityDate {
 	// subclass this method, don't call super
-}
-
-#pragma mark -
-
-- (NSStringEncoding) encoding {
-	return _encoding;
-}
-
-- (void) setEncoding:(NSStringEncoding) encoding {
-	_encoding = encoding;
 }
 
 #pragma mark -
@@ -235,20 +218,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (NSData *) topic {
-	return _topic;
-}
-
 - (void) changeTopic:(MVChatString *) topic {
 // subclass this method, if needed
-}
-
-- (MVChatUser *) topicAuthor {
-	return _topicAuthor;
-}
-
-- (NSDate *) dateTopicChanged {
-	return _dateTopicChanged;
 }
 
 #pragma mark -
@@ -308,10 +279,6 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 #pragma mark -
-
-- (NSUInteger) modes {
-	return _modes;
-}
 
 - (id) attributeForMode:(MVChatRoomMode) mode {
 	NSParameterAssert( [self supportedModes] & mode );

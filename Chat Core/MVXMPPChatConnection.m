@@ -128,7 +128,7 @@ NS_ASSUME_NONNULL_BEGIN
 	// not supported
 }
 
-- (NSString *) nicknamePassword {
+- (NSString *__nullable) nicknamePassword {
 	return nil;
 }
 

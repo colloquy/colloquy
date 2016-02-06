@@ -116,13 +116,23 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
-- (MVChatConnection *) connection {
-	return _connection;
-}
-
-- (MVChatUserType) type {
-	return _type;
-}
+@synthesize connection = _connection;
+@synthesize type = _type;
+@synthesize identified = _identified;
+@synthesize serverOperator = _serverOperator;
+@synthesize status = _status;
+@synthesize awayStatusMessage = _awayStatusMessage;
+@synthesize dateConnected = _dateConnected;
+@synthesize dateDisconnected = _dateDisconnected;
+@synthesize dateUpdated = _dateUpdated;
+@synthesize mostRecentUserActivity = _mostRecentUserActivity;
+@synthesize idleTime = _idleTime;
+@synthesize lag = _lag;
+@synthesize address = _address;
+@synthesize uniqueIdentifier = _uniqueIdentifier;
+@synthesize publicKey = _publicKey;
+@synthesize fingerprint = _fingerprint;
+@synthesize modes = _modes;
 
 #pragma mark -
 
@@ -136,16 +146,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (BOOL) isWildcardUser {
 	return ( _type == MVChatWildcardUserType );
-}
-
-#pragma mark -
-
-- (BOOL) isIdentified {
-	return _identified;
-}
-
-- (BOOL) isServerOperator {
-	return _serverOperator;
 }
 
 #pragma mark -
@@ -235,48 +235,12 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
-- (MVChatUserStatus) status {
-	return _status;
-}
-
-- (NSData *) awayStatusMessage {
-	return _awayStatusMessage;
-}
-
-#pragma mark -
-
-- (NSDate *) dateConnected {
-	return _dateConnected;
-}
-
-- (NSDate *) dateDisconnected {
-	return _dateDisconnected;
-}
-
-- (NSDate *) dateUpdated {
-	return _dateUpdated;
-}
-
-- (NSDate *) mostRecentUserActivity {
-	return _mostRecentUserActivity;
-}
-
 - (void) requestRecentActivity {
 	// subclass this method, don't call super
 }
 
 - (void) persistLastActivityDate {
 	// subclass this method, don't call super
-}
-
-#pragma mark -
-
-- (NSTimeInterval) idleTime {
-	return _idleTime;
-}
-
-- (NSTimeInterval) lag {
-	return _lag;
 }
 
 #pragma mark -
@@ -311,10 +275,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	return _username;
 }
 
-- (NSString *) address {
-	return _address;
-}
-
 - (NSString *) serverAddress {
 	if( ! _serverAddress ) return [[self connection] server];
 	return _serverAddress;
@@ -326,27 +286,9 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
-- (id) uniqueIdentifier {
-	return _uniqueIdentifier;
-}
-
-- (NSData *) publicKey {
-	return _publicKey;
-}
-
-- (NSString *) fingerprint {
-	return _fingerprint;
-}
-
-#pragma mark -
-
 - (NSUInteger) supportedModes {
 // subclass this method, if needed
 	return 0;
-}
-
-- (NSUInteger) modes {
-	return _modes;
 }
 
 #pragma mark -
@@ -450,10 +392,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 @implementation MVChatUser (MVChatUserPrivate)
 - (void) _connectionDestroyed {
 	_connection = nil;
-}
-
-- (void) _setType:(MVChatUserType) type {
-	_type = type;
 }
 
 - (void) _setUniqueIdentifier:(id) identifier {

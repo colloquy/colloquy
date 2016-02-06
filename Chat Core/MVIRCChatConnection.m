@@ -478,13 +478,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 #pragma mark -
 
-- (void) setPassword:(NSString *) newPassword {
-	MVSafeCopyAssign( _password, newPassword );
-}
-
-- (NSString *) password {
-	return _password;
-}
+@synthesize password = _password;
 
 #pragma mark -
 
@@ -518,7 +512,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 #pragma mark -
 
 - (void) setServerPort:(unsigned short) port {
-	_serverPort = ( port ? port : 6667 );
+	_serverPort = ( port ?: 6667 );
 }
 
 - (unsigned short) serverPort {
@@ -538,15 +532,15 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	return (([NSDate timeIntervalSinceReferenceDate] - [_connectedDate timeIntervalSinceReferenceDate]) > 10.);
 }
 
-- (double) minimumSendQueueDelay {
+- (NSTimeInterval) minimumSendQueueDelay {
 	return self.recentlyConnected ? .5 : .25;
 }
 
-- (double) maximumSendQueueDelay {
+- (NSTimeInterval) maximumSendQueueDelay {
 	return self.recentlyConnected ? 1.5 : 3.;
 }
 
-- (double) sendQueueDelayIncrement {
+- (NSTimeInterval) sendQueueDelayIncrement {
 	return self.recentlyConnected ? .25 : .15;
 }
 

@@ -176,16 +176,9 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (instancetype) init {
 	if( ( self = [super init] ) ) {
-		_alternateNicks = nil;
-		_npassword = nil;
-		_cachedDate = nil;
-		_lastConnectAttempt = nil;
-		_awayMessage = nil;
 		_encoding = NSUTF8StringEncoding;
 		_outgoingChatFormat = MVChatConnectionDefaultMessageFormat;
 		_incomingChatFormat = MVChatConnectionDefaultMessageFormat;
-		_nextAltNickIndex = 0;
-		_roomListDirty = NO;
 
 		_requestsSASL = YES;
 
@@ -197,7 +190,6 @@ static const NSStringEncoding supportedEncodings[] = {
 		_pendingRoomUpdates = [[NSMutableSet alloc] initWithCapacity:100];
 		_persistentInformation = [[NSMutableDictionary alloc] initWithCapacity:5];
 		_supportedFeatures = [[NSMutableSet alloc] initWithCapacity:10];
-		_localUser = nil;
 
 		_joinedRooms = [[NSMutableSet alloc] initWithCapacity:10];
 
@@ -493,13 +485,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) setNicknamePassword:(NSString * __nullable) newPassword {
-	MVSafeCopyAssign( _npassword, newPassword );
-}
-
-- (NSString *) nicknamePassword {
-	return _npassword;
-}
+@synthesize nicknamePassword;
 
 #pragma mark -
 
@@ -617,163 +603,22 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
-- (void) setConnectedSecurely:(BOOL) connectedSecurely {
-	_connectedSecurely = connectedSecurely;
-}
-
-- (BOOL) didConnectSecurely {
-	return _connectedSecurely;
-}
-
-#pragma mark -
-
-- (void) setSecure:(BOOL) ssl {
-	_secure = ssl;
-}
-
-- (BOOL) isSecure {
-	return _secure;
-}
-
-#pragma mark -
-
-- (void) setRequestsSASL:(BOOL) sasl {
-	_requestsSASL = sasl;
-}
-
-- (BOOL) requestsSASL {
-	return _requestsSASL;
-}
-
-#pragma mark -
-
-- (void) setRoomsWaitForIdentification:(BOOL)roomsWaitForIdentification {
-	_roomsWaitForIdentification = roomsWaitForIdentification;
-}
-
-- (BOOL) roomsWaitForIdentification {
-	return _roomsWaitForIdentification;
-}
-
-#pragma mark -
-
-- (void) setProxyType:(MVChatConnectionProxy) newType {
-	_proxy = newType;
-}
-
-- (MVChatConnectionProxy) proxyType {
-	return _proxy;
-}
-
-#pragma mark -
-
-- (void) setProxyServer:(NSString *) address {
-	MVSafeCopyAssign( _proxyServer, address );
-}
-
-- (NSString *) proxyServer {
-	return _proxyServer;
-}
-
-#pragma mark -
-
-- (void) setProxyServerPort:(unsigned short) port {
-	_proxyServerPort = port;
-}
-
-- (unsigned short) proxyServerPort {
-	return _proxyServerPort;
-}
-
-#pragma mark -
-
-- (void) setProxyUsername:(NSString *) newUsername {
-	MVSafeCopyAssign( _proxyUsername, newUsername );
-}
-
-- (NSString *) proxyUsername {
-	return _proxyUsername;
-}
-
-#pragma mark -
-
-- (void) setProxyPassword:(NSString *) newPassword {
-	MVSafeCopyAssign( _proxyPassword, newPassword );
-}
-
-- (NSString *) proxyPassword {
-	return _proxyPassword;
-}
-
-#pragma mark -
-
-- (void) setBouncerType:(MVChatConnectionBouncer) newType {
-	_bouncer = newType;
-}
-
-- (MVChatConnectionBouncer) bouncerType {
-	return _bouncer;
-}
-
-#pragma mark -
-
-- (void) setBouncerServer:(NSString *) address {
-	MVSafeCopyAssign( _bouncerServer, address );
-}
-
-- (NSString *) bouncerServer {
-	return _bouncerServer;
-}
-
-#pragma mark -
-
-- (void) setBouncerServerPort:(unsigned short) port {
-	_bouncerServerPort = port;
-}
-
-- (unsigned short) bouncerServerPort {
-	return _bouncerServerPort;
-}
-
-#pragma mark -
-
-- (void) setBouncerUsername:(NSString *) newUsername {
-	MVSafeCopyAssign( _bouncerUsername, newUsername );
-}
-
-- (NSString *) bouncerUsername {
-	return _bouncerUsername;
-}
-
-#pragma mark -
-
-- (void) setBouncerPassword:(NSString *) newPassword {
-	MVSafeCopyAssign( _bouncerPassword, newPassword );
-}
-
-- (NSString *) bouncerPassword {
-	return _bouncerPassword;
-}
-
-#pragma mark -
-
-- (void) setBouncerDeviceIdentifier:(NSString *) newIdentifier {
-	MVSafeCopyAssign( _bouncerDeviceIdentifier, newIdentifier );
-}
-
-- (NSString *) bouncerDeviceIdentifier {
-	return _bouncerDeviceIdentifier;
-}
-
-#pragma mark -
-
-- (void) setBouncerConnectionIdentifier:(NSString *) newIdentifier {
-	MVSafeCopyAssign( _bouncerConnectionIdentifier, newIdentifier );
-}
-
-- (NSString *) bouncerConnectionIdentifier {
-	return _bouncerConnectionIdentifier;
-}
+@synthesize connectedSecurely = _connectedSecurely;
+@synthesize secure = _secure;
+@synthesize requestsSASL = _requestsSASL;
+@synthesize roomsWaitForIdentification = _roomsWaitForIdentification;
+@synthesize proxyType = _proxy;
+@synthesize proxyServer = _proxyServer;
+@synthesize proxyServerPort = _proxyServerPort;
+@synthesize proxyUsername = _proxyUsername;
+@synthesize proxyPassword = _proxyPassword;
+@synthesize bouncerType = _bouncer;
+@synthesize bouncerServer = _bouncerServer;
+@synthesize bouncerServerPort = _bouncerServerPort;
+@synthesize bouncerUsername = _bouncerUsername;
+@synthesize bouncerPassword = _bouncerPassword;
+@synthesize bouncerDeviceIdentifier = _bouncerDeviceIdentifier;
+@synthesize bouncerConnectionIdentifier = _bouncerConnectionIdentifier;
 
 #pragma mark -
 
