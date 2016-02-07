@@ -19,9 +19,9 @@
     NSString *name = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
     NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
 #if TARGET_OS_IPHONE
-    NSString *os = [[NSString alloc] initWithFormat:@"%@ %@",[[UIDevice currentDevice] systemName],[[UIDevice currentDevice] systemVersion]];
+    NSString *os = [NSString stringWithFormat:@"%@ %@",[[UIDevice currentDevice] systemName],[[UIDevice currentDevice] systemVersion]];
 #else
-    NSString *os = [[NSString alloc] initWithFormat:@"OS X %@",[[NSProcessInfo processInfo] operatingSystemVersionString]];
+    NSString *os = [NSString stringWithFormat:@"OS X %@",[[NSProcessInfo processInfo] operatingSystemVersionString]];
 #endif
     
     return [self initWithName:name version:version os:os dispatchQueue:queue];

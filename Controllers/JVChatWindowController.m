@@ -156,7 +156,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	if( [[self identifier] length] ) {
 		[[self window] setDelegate:nil]; // so we don't act on the windowDidResize notification
-		[[self window] setFrameUsingName:[[NSString alloc] initWithFormat:@"Chat Window %@", [self identifier]]];
+		[[self window] setFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [self identifier]]];
 		[[self window] setDelegate:self];
 	}
 
@@ -168,7 +168,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (NSString *) userDefaultsPreferencesKey {
 	if( [[self identifier] length] )
-		return [[NSString alloc] initWithFormat:@"Chat Window %@ Settings", [self identifier]];
+		return [NSString stringWithFormat:@"Chat Window %@ Settings", [self identifier]];
 	return @"Chat Window Settings";
 }
 
@@ -349,7 +349,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	if ( organizationType != 0 ) {
 		SEL localizedCaseInsensitive = @selector(localizedCaseInsensitiveCompare:);
-		NSMutableArray* sortDescriptors = [[NSMutableArray alloc] init];
+		NSMutableArray* sortDescriptors = [NSMutableArray array];
 
 		switch ( organizationType ) {
 			case JVChatViewOrganizationTypeByNetworkAndRoom:
@@ -384,7 +384,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	if( ! [[self identifier] length] && [_views count] == 1 ) {
 		[[self window] setDelegate:nil]; // so we don't act on the windowDidResize notification
-		[[self window] setFrameUsingName:[[NSString alloc] initWithFormat:@"Chat Window %@", [controller identifier]]];
+		[[self window] setFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
 		[[self window] setDelegate:self];
 	}
 
@@ -486,7 +486,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (NSArray *) chatViewControllersForConnection:(MVChatConnection *) connection {
 	NSParameterAssert( connection != nil );
 
-	NSMutableArray *ret = [[NSMutableArray alloc] init];
+	NSMutableArray *ret = [NSMutableArray array];
 	id <JVChatViewController> controller = nil;
 
 	for( controller in _views )
@@ -500,7 +500,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSParameterAssert( class != NULL );
 	NSAssert( [class conformsToProtocol:@protocol( JVChatViewController )], @"The tab controller class must conform to the JVChatViewController protocol." );
 
-	NSMutableArray *ret = [[NSMutableArray alloc] init];
+	NSMutableArray *ret = [NSMutableArray array];
 	id <JVChatViewController> controller = nil;
 
 	for( controller in _views )
@@ -511,7 +511,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (NSArray *) allChatViewControllers {
-	return [[NSArray alloc] initWithArray:_views];
+	return [_views copy];
 }
 
 #pragma mark -
@@ -654,9 +654,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	return YES;
 }
+@end
 
 #pragma mark -
 
+@implementation JVChatWindowController (JVChatWindowControllerDelegate)
 - (NSSize) drawerWillResizeContents:(NSDrawer *) drawer toSize:(NSSize) contentSize {
 	[self setPreference:NSStringFromSize( contentSize ) forKey:@"drawer size"];
 	return contentSize;
@@ -742,7 +744,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSMutableArray *result = [[NSMutableArray alloc] initWithObjects:NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier,
+	NSMutableArray *result = [NSMutableArray arrayWithObjects:NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier,
 		NSToolbarSeparatorItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, JVToolbarToggleChatDrawerItemIdentifier, nil];
 
 	if( [_activeViewController respondsToSelector:@selector( toolbarAllowedItemIdentifiers: )] ) {
@@ -1129,12 +1131,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) _saveWindowFrame {
 	if( [[self identifier] length] ) {
 		[[self window] saveFrameUsingName:@"Chat Window"];
-		[[self window] saveFrameUsingName:[[NSString alloc] initWithFormat:@"Chat Window %@", [self identifier]]];
+		[[self window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [self identifier]]];
 	} else {
 		[[self window] saveFrameUsingName:@"Chat Window"];
 
 		for( id <JVChatViewController> controller in [self allChatViewControllers])
-			[[self window] saveFrameUsingName:[[NSString alloc] initWithFormat:@"Chat Window %@", [controller identifier]]];
+			[[self window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
 	}
 }
 
@@ -1215,7 +1217,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (NSArray *) chatViewsWithClass:(Class) class {
-	NSMutableArray *ret = [[NSMutableArray alloc] init];
+	NSMutableArray *ret = [NSMutableArray array];
 
 	for( id <JVChatViewController> item in [self chatViews] )
 		if( [item isMemberOfClass:class] )
@@ -1509,7 +1511,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 			// Now startIndex and endIndex specify the end points of the range we want within the main array.
 			// We will traverse the range and pick the objects we want.
 			// We do this by getting each object and seeing if it actually appears in the real key that we are trying to evaluate in.
-			NSMutableArray *result = [[NSMutableArray alloc] init];
+			NSMutableArray *result = [NSMutableArray array];
 			BOOL keyIsGeneric = [key isEqualToString:@"chatViews"];
 			NSArray *rangeKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
 			NSUInteger curKeyIndex = 0;
@@ -1570,7 +1572,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 			// Now baseIndex specifies the base object for the relative spec in the master array.
 			// We will start either right before or right after and look for an object that matches the type we want.
 			// We do this by getting each object and seeing if it actually appears in the real key that we are trying to evaluate in.
-			NSMutableArray *result = [[NSMutableArray alloc] init];
+			NSMutableArray *result = [NSMutableArray array];
 			BOOL keyIsGeneric = [key isEqualToString:@"chatViews"];
 			NSArray *relKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
 			NSUInteger curKeyIndex = 0, viewCount = [chatViews count];

@@ -549,18 +549,18 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 @implementation JVBuddy (JVBuddyScripting)
 - (NSDictionary *) activeNicknameDictionary {
 	MVChatConnection *connection = [[MVConnectionsController defaultController] connectionForServerAddress:[[self activeNickname] host]];
-	return [[NSDictionary alloc] initWithObjectsAndKeys:connection, @"connection", [[self activeNickname] user], @"nickname", nil];
+	return [NSDictionary dictionaryWithObjectsAndKeys:connection, @"connection", [[self activeNickname] user], @"nickname", nil];
 }
 
 - (NSArray *) nicknamesArray {
-	NSMutableArray *ret = [[NSMutableArray alloc] initWithCapacity:[_users count]];
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_users count]];
 	NSEnumerator *enumerator = [_users objectEnumerator];
 	NSURL *nick = nil;
 
 	while( ( nick = [enumerator nextObject] ) ) {
 		MVChatConnection *connection = [[MVConnectionsController defaultController] connectionForServerAddress:[nick host]];
 		if( ! connection ) continue;
-		NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:connection, @"connection", [nick user], @"nickname", nil];
+		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"connection", [nick user], @"nickname", nil];
 		[ret addObject:info];
 	}
 
@@ -568,14 +568,14 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 - (NSArray *) onlineNicknamesArray {
-	NSMutableArray *ret = [[NSMutableArray alloc] initWithCapacity:[_users count]];
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_users count]];
 	NSEnumerator *enumerator = [_users objectEnumerator];
 	NSURL *nick = nil;
 
 	while( ( nick = [enumerator nextObject] ) ) {
 		MVChatConnection *connection = [[MVConnectionsController defaultController] connectionForServerAddress:[nick host]];
 		if( ! connection ) continue;
-		NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:connection, @"connection", [nick user], @"nickname", nil];
+		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"connection", [nick user], @"nickname", nil];
 		[ret addObject:info];
 	}
 

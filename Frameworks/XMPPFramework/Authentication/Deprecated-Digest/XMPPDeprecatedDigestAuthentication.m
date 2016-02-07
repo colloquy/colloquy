@@ -64,7 +64,7 @@
 	}
 	
 	NSString *rootID = [[[xmppStream rootElement] attributeForName:@"id"] stringValue];
-	NSString *digestStr = [[NSString alloc] initWithFormat:@"%@%@", rootID, password];
+	NSString *digestStr = [NSString stringWithFormat:@"%@%@", rootID, password];
 	
 	NSString *digest = [[[digestStr dataUsingEncoding:NSUTF8StringEncoding] xmpp_sha1Digest] xmpp_hexStringValue];
 	

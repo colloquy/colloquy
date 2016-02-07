@@ -821,7 +821,7 @@ static void xmpp_xmlEndElement(void *ctx, const xmlChar *localname,
 				
 				if (xmlErr->message)
 				{
-					NSString *errMsg = [[NSString alloc] initWithFormat:@"%s", xmlErr->message];
+					NSString *errMsg = [NSString stringWithFormat:@"%s", xmlErr->message];
 					NSDictionary *info = @{NSLocalizedDescriptionKey : errMsg};
 					
 					error = [NSError errorWithDomain:@"libxmlErrorDomain" code:xmlErr->code userInfo:info];

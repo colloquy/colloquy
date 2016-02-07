@@ -46,7 +46,7 @@
  * This method is queried if the initWithDatabaseFileName:storeOptions: method is invoked with a nil parameter for databaseFileName.
  * The default implementation returns:
  * 
- * [[NSString alloc] initWithFormat:@"%@.sqlite", [self managedObjectModelName]];
+ * [NSString stringWithFormat:@"%@.sqlite", [self managedObjectModelName]];
  * 
  * You are encouraged to use the sqlite file extension.
 **/

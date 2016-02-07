@@ -375,7 +375,7 @@
 			[enable addAttributeWithName:@"resume" stringValue:@"true"];
 		}
 		if (maxTimeout > 0.0) {
-			[enable addAttributeWithName:@"max" stringValue:[[NSString alloc] initWithFormat:@"%.0f", maxTimeout]];
+			[enable addAttributeWithName:@"max" stringValue:[NSString stringWithFormat:@"%.0f", maxTimeout]];
 		}
 		
 		[xmppStream sendElement:enable];
@@ -515,7 +515,7 @@
 		
 		NSXMLElement *resume = [NSXMLElement elementWithName:@"resume" xmlns:XMLNS_STREAM_MANAGEMENT];
 		[resume addAttributeWithName:@"previd" stringValue:resumptionId];
-		[resume addAttributeWithName:@"h" stringValue:[[NSString alloc] initWithFormat:@"%u", lastHandledByClient]];
+		[resume addAttributeWithName:@"h" stringValue:[NSString stringWithFormat:@"%u", lastHandledByClient]];
 		
 		[xmppStream sendBindElement:resume];
 		
@@ -559,7 +559,7 @@
 			diff = (uint32_t)[prev_unackedByServer count];
 		}
 		
-		NSMutableArray *stanzaIds = [[NSMutableArray alloc] initWithCapacity:(NSUInteger)diff];
+		NSMutableArray *stanzaIds = [NSMutableArray arrayWithCapacity:(NSUInteger)diff];
 		
 		for (uint32_t i = 0; i < diff; i++)
 		{
@@ -1025,7 +1025,7 @@
 	BOOL canProcessEntireAck = YES;
 	NSUInteger processed = 0;
 	
-	NSMutableArray *stanzaIds = [[NSMutableArray alloc] initWithCapacity:(NSUInteger)diff];
+	NSMutableArray *stanzaIds = [NSMutableArray arrayWithCapacity:(NSUInteger)diff];
 	
 	for (uint32_t i = 0; i < diff; i++)
 	{
@@ -1192,7 +1192,7 @@
 		
 		NSXMLElement *a = [NSXMLElement elementWithName:@"a" xmlns:XMLNS_STREAM_MANAGEMENT];
 		
-		NSString *h = [[NSString alloc] initWithFormat:@"%u", (unsigned int)lastHandledByClient];
+		NSString *h = [NSString stringWithFormat:@"%u", (unsigned int)lastHandledByClient];
 		[a addAttributeWithName:@"h" stringValue:h];
 		
 		[xmppStream sendElement:a];

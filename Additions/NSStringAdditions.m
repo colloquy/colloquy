@@ -400,7 +400,7 @@ static BOOL scanOneOrTwoDigits( NSScanner *scanner, NSUInteger *number ) {
 }
 
 static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned char blue ) {
-	return [[NSString alloc] initWithFormat:@"#%02X%02X%02X", red, green, blue];
+	return [NSString stringWithFormat:@"#%02X%02X%02X", red, green, blue];
 }
 
 @implementation NSString (NSStringAdditions)
@@ -678,7 +678,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 		return self;
 	}
 
-	NSMutableString *ret = [[NSMutableString alloc] init];
+	NSMutableString *ret = [NSMutableString string];
 	NSScanner *scanner = [NSScanner scannerWithString:message];
 	[scanner setCharactersToBeSkipped:nil]; // don't skip leading whitespace!
 
@@ -1042,7 +1042,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 		NSArray <NSString *> *parts = [self componentsSeparatedByString:@"."];
 		NSUInteger count = parts.count;
 		if( count > 2 )
-			ret = [[NSString alloc] initWithFormat:@"%@.%@", parts[(count - 2)], parts[(count - 1)]];
+			ret = [NSString stringWithFormat:@"%@.%@", parts[(count - 2)], parts[(count - 1)]];
 	}
 
 	return ret;
@@ -1052,7 +1052,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 - (NSString *) fileName {
 	NSString *fileName = [self lastPathComponent];
-	NSString *fileExtension = [[NSString alloc] initWithFormat:@".%@", [self pathExtension]];
+	NSString *fileExtension = [NSString stringWithFormat:@".%@", [self pathExtension]];
 
 	return [fileName stringByReplacingOccurrencesOfString:fileExtension withString:@""];
 }
@@ -1187,7 +1187,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	if (result == nil)
 		return nil;
 
-	NSMutableArray <NSString *> *results = [[NSMutableArray alloc] init];
+	NSMutableArray <NSString *> *results = [NSMutableArray array];
 
 	for (NSUInteger i = 1; i < (result.numberOfRanges - 1); i++)
 		[results addObject:[self substringWithRange:[result rangeAtIndex:i]]];

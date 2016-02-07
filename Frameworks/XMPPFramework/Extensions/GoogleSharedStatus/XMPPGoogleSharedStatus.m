@@ -239,11 +239,11 @@ NSString *const XMPPGoogleSharedStatusShowIdle = @"away";
 // The XMPPElement "query" is a child of a shared status XMPPIQ.
 - (NSDictionary *)unpackSharedStatus:(XMPPElement *)sharedStatus {
 	if([sharedStatus.xmlns isEqualToString:GOOGLE_SHARED_STATUS]) {
-		NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+		NSMutableDictionary *dict = [NSMutableDictionary dictionary];
 		
 		for(XMPPElement *element in sharedStatus.children) {
 			if([element.name isEqualToString:@"status-list"]) {
-				NSMutableArray *array = [[NSMutableArray alloc] init];
+				NSMutableArray *array = [NSMutableArray array];
 				for(XMPPElement *status in element.children)
 					[array addObject:[status stringValue]];
 				dict[[[element attributeForName:XMPPGoogleSharedStatusShow] stringValue]] = array;

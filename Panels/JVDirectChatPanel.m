@@ -127,11 +127,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		_encodingMenu = nil;
 		_spillEncodingMenu = nil;
 
-		_sendHistory = [[NSMutableArray alloc] initWithCapacity:30];
+		_sendHistory = [NSMutableArray arrayWithCapacity:30];
 		[_sendHistory insertObject:[[NSAttributedString alloc] initWithString:@""] atIndex:0];
 
-		_waitingAlerts = [[NSMutableArray alloc] initWithCapacity:5];
-		_waitingAlertNames = [[NSMutableDictionary alloc] initWithCapacity:5];
+		_waitingAlerts = [NSMutableArray arrayWithCapacity:5];
+		_waitingAlertNames = [NSMutableDictionary dictionaryWithCapacity:5];
 	}
 
 	return self;
@@ -168,7 +168,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 			}
 		}
 
-		_settings = [[NSMutableDictionary alloc] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]]];
+		_settings = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]]];
 	}
 
 	return self;
@@ -244,7 +244,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 - (NSURL *) url {
 	NSString *server = [[[self connection] url] absoluteString];
-	return [NSURL URLWithString:[[NSString alloc] initWithFormat:@"%@/%@", server, [[[self user] nickname] stringByEncodingIllegalURLCharacters]]];
+	return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", server, [[[self user] nickname] stringByEncodingIllegalURLCharacters]]];
 }
 
 - (nullable MVChatConnection *) connection {
@@ -283,21 +283,21 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 - (NSString *) windowTitle {
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
-		return [[NSString alloc] initWithFormat:@"%@ (%@)", [_buddy preferredName], [[self user] serverAddress]]; */
+		return [NSString stringWithFormat:@"%@ (%@)", [_buddy preferredName], [[self user] serverAddress]]; */
 
 	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] ) {
 		NSString *host = [(MVDirectChatConnection *)[self target] connectedHost];
 		if( ! [host length] ) host = [[self user] address];
-		if( [host length] ) return [[NSString alloc] initWithFormat:@"%@ (%@)", [self title], host];
+		if( [host length] ) return [NSString stringWithFormat:@"%@ (%@)", [self title], host];
 		return [self title];
 	}
 
-	return [[NSString alloc] initWithFormat:@"%@ (%@)", [self title], [[self user] serverAddress]];
+	return [NSString stringWithFormat:@"%@ (%@)", [self title], [[self user] serverAddress]];
 }
 
 - (nullable NSString *) information {
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname && ! [[self target] isEqualToString:[_buddy preferredName]] )
-		return [[NSString alloc] initWithFormat:@"%@ (%@)", [self target], [[self user] serverAddress]]; */
+		return [NSString stringWithFormat:@"%@ (%@)", [self target], [[self user] serverAddress]]; */
 	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] ) {
 		if( [(MVDirectChatConnection *)[self target] status] == MVDirectChatConnectionWaitingStatus )
 			return NSLocalizedString( @"waiting for connection", "waiting for connection information" );
@@ -316,10 +316,10 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	NSString *messageCount = @"";
 	if( [self newMessagesWaiting] == 0 ) messageCount = NSLocalizedString( @"no messages waiting", "no messages waiting room tooltip" );
 	else if( [self newMessagesWaiting] == 1 ) messageCount = NSLocalizedString( @"1 message waiting", "one message waiting room tooltip" );
-	else messageCount = [[NSString alloc] initWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), [self newMessagesWaiting]];
+	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), [self newMessagesWaiting]];
 
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
-		return [[NSString alloc] initWithFormat:@"%@\n%@ (%@)\n%@", [_buddy preferredName], [self target], [[self user] serverAddress], messageCount]; */
+		return [NSString stringWithFormat:@"%@\n%@ (%@)\n%@", [_buddy preferredName], [self target], [[self user] serverAddress], messageCount]; */
 
 	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] ) {
 		NSString *info = nil;
@@ -332,11 +332,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 			if( ! [info length] ) info = [[self user] address];
 		}
 
-		if( [info length] ) return [[NSString alloc] initWithFormat:@"%@ (%@)\n%@", [self title], info, messageCount];
-		return [[NSString alloc] initWithFormat:@"%@\n%@", [self title], messageCount];
+		if( [info length] ) return [NSString stringWithFormat:@"%@ (%@)\n%@", [self title], info, messageCount];
+		return [NSString stringWithFormat:@"%@\n%@", [self title], messageCount];
 	}
 
-	return [[NSString alloc] initWithFormat:@"%@ (%@)\n%@", [self title], [[self user] serverAddress], messageCount];
+	return [NSString stringWithFormat:@"%@ (%@)\n%@", [self title], [[self user] serverAddress], messageCount];
 }
 
 #pragma mark -
@@ -413,8 +413,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 - (NSString *) identifier {
 	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
-		return [[NSString alloc] initWithFormat:@"Direct Chat %@", [self user]];
-	return [[NSString alloc] initWithFormat:@"Direct Chat %@ (%@)", [self user], [[self user] serverAddress]];
+		return [NSString stringWithFormat:@"Direct Chat %@", [self user]];
+	return [NSString stringWithFormat:@"Direct Chat %@ (%@)", [self user], [[self user] serverAddress]];
 }
 
 #pragma mark -
@@ -565,18 +565,18 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		BOOL nameFound = NO;
 		NSUInteger i = 1;
 
-		if( org ) logName = [[NSString alloc] initWithFormat:@"%@.colloquyTranscript", [self target]];
-		else logName = [[NSString alloc] initWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self user] serverAddress]];
+		if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
+		else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self user] serverAddress]];
 		nameFound = ! [[logs URLByAppendingPathComponent:logName] checkResourceIsReachableAndReturnError:NULL];
 
 		while( ! nameFound ) {
-			if( org ) logName = [[NSString alloc] initWithFormat:@"%@ %ld.colloquyTranscript", [self target], i++];
-			else logName = [[NSString alloc] initWithFormat:@"%@ (%@) %ld.colloquyTranscript", [self target], [[self user] serverAddress], i++];
+			if( org ) logName = [NSString stringWithFormat:@"%@ %ld.colloquyTranscript", [self target], i++];
+			else logName = [NSString stringWithFormat:@"%@ (%@) %ld.colloquyTranscript", [self target], [[self user] serverAddress], i++];
 			nameFound = ! [[logs URLByAppendingPathComponent:logName] checkResourceIsReachableAndReturnError:NULL];
 		}
 	} else if( session == 1 ) {
-		if( org ) logName = [[NSString alloc] initWithFormat:@"%@.colloquyTranscript", [self target]];
-		else logName = [[NSString alloc] initWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self user] serverAddress]];
+		if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
+		else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self user] serverAddress]];
 	} else /* if( session == 2 ) */ {
 		if( org ) logName = [NSMutableString stringWithFormat:@"%@ %@.colloquyTranscript", [self target], dateString];
 		else logName = [NSMutableString stringWithFormat:@"%@ (%@) %@.colloquyTranscript", [self target], [[self user] serverAddress], dateString];
@@ -600,7 +600,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	else targetName = [_target description];
 
 	if( ![connURL scheme] || ![connURL host] || ![connURL path] ) return;
-	NSURL *source = [[NSURL alloc] initWithScheme:[connURL scheme] host:[connURL host] path:[[connURL path] stringByAppendingString:[[NSString alloc] initWithFormat:@"/%@", targetName]]];
+	NSURL *source = [[NSURL alloc] initWithScheme:[connURL scheme] host:[connURL host] path:[[connURL path] stringByAppendingString:[NSString stringWithFormat:@"/%@", targetName]]];
 	[[self transcript] setSource:source];
 	[[self transcript] setAutomaticallyWritesChangesToFile:YES];
 	[[self transcript] setElementLimit:0]; // start with zero limit
@@ -741,14 +741,14 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	NSFont *baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[[display preferences] standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:[[display preferences] defaultFontSize]];
 	if( ! baseFont ) baseFont = [NSFont userFontOfSize:12.];
 
-	NSMutableDictionary *options = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@(_encoding), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:@(_encoding), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
 	NSTextStorage *messageString = [NSTextStorage attributedStringWithChatFormat:message options:options];
 
 	if( ! messageString ) {
 		options[@"StringEncoding"] = @(NSISOLatin1StringEncoding);
 		messageString = [[NSTextStorage alloc] initWithAttributedString:[NSMutableAttributedString attributedStringWithChatFormat:message options:options]];
 
-		NSMutableDictionary *attributes = [[NSMutableDictionary alloc] initWithObjectsAndKeys:baseFont, NSFontAttributeName, nil];
+		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:baseFont, NSFontAttributeName, nil];
 		NSMutableAttributedString *error = [[NSMutableAttributedString alloc] initWithString:[@" " stringByAppendingString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" )] attributes:attributes];
 		[error addAttribute:@"CSSClasses" value:[NSSet setWithObjects:@"error", @"encoding", nil] range:NSMakeRange( 1, ( [error length] - 1 ) )];
 		[messageString appendAttributedString:error];
@@ -756,7 +756,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	// The message needs to be able to convert to UTF8, otherwise we can't display it.
 	if( ! [messageString length] || ! [[messageString string] UTF8String] ) {
-		NSMutableDictionary *attributes = [[NSMutableDictionary alloc] initWithObjectsAndKeys:baseFont, NSFontAttributeName, [NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses", nil];
+		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:baseFont, NSFontAttributeName, [NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses", nil];
 		messageString = [[NSTextStorage alloc] initWithString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" ) attributes:attributes];
 	}
 
@@ -806,7 +806,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 				regex = [NSRegularExpression cachedRegularExpressionWithPattern:[name substringWithRange:NSMakeRange( 1, [name length] - 2 )] options:NSRegularExpressionCaseInsensitive error:nil];
 			} else {
 				name = [name stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'"]];
-				NSString *pattern = [[NSString alloc] initWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", [name stringByEscapingCharactersInSet:escapeSet]];
+				NSString *pattern = [NSString stringWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", [name stringByEscapingCharactersInSet:escapeSet]];
 				regex = [NSRegularExpression cachedRegularExpressionWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
 			}
 
@@ -834,8 +834,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	if( [cmessage isHighlighted] && [cmessage ignoreStatus] == JVNotIgnored ) {
 		_newHighlightMessageCount++;
-		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
-		context[@"title"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ Mentioned a Highlight Word", "mention bubble title" ), [user displayName]];
+		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"%@ Mentioned a Highlight Word", "mention bubble title" ), [user displayName]];
 		context[@"description"] = [messageString string];
 		context[@"image"] = [NSImage imageNamed:@"activityNewImportant"];
 		context[@"target"] = self;
@@ -844,10 +844,10 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	}
 
 	if( [cmessage ignoreStatus] != JVNotIgnored ) {
-		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
+		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		context[@"title"] = ( ( [cmessage ignoreStatus] == JVUserIgnored ) ? NSLocalizedString( @"User Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) );
-		if( [self isMemberOfClass:[JVChatRoomPanel class]] ) context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@'s message was ignored in %@.", "chat room user ignored bubble text" ), user, [self title]];
-		else context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@'s message was ignored.", "direct chat user ignored bubble text" ), user];
+		if( [self isMemberOfClass:[JVChatRoomPanel class]] ) context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@'s message was ignored in %@.", "chat room user ignored bubble text" ), user, [self title]];
+		else context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@'s message was ignored.", "direct chat user ignored bubble text" ), user];
 		context[@"image"] = [NSImage imageNamed:@"activity"];
 		[self performNotification:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
 	}
@@ -871,7 +871,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		NSString *voiceIdentifier = [[[MVBuddyListController sharedBuddyList] buddyForUser:user] speechVoice];
 		if( [voiceIdentifier length] ) {
 			NSString *text = [cmessage bodyAsPlainText];
-			if( [cmessage isAction] ) text = [[NSString alloc] initWithFormat:@"%@ %@", [[cmessage sender] displayName], text];
+			if( [cmessage isAction] ) text = [NSString stringWithFormat:@"%@ %@", [[cmessage sender] displayName], text];
 			[[JVSpeechController sharedSpeechController] startSpeakingString:text usingVoice:voiceIdentifier];
 		}
 	}
@@ -894,25 +894,25 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		if (!windowTitle) return;
 
 		if( [message ignoreStatus] == JVNotIgnored && _firstMessage ) {
-			NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"New Private Message", "first message bubble title" ) forKey:@"title"];
-			[context setObject:[[NSString alloc] initWithFormat:NSLocalizedString( @"%@ wrote you a private message.", "first message bubble text" ), [self title]] forKey:@"description"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ wrote you a private message.", "first message bubble text" ), [self title]] forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
 			[context setObject:[windowTitle stringByAppendingString:@"JVChatPrivateMessage"] forKey:@"coalesceKey"];
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-			[context setObject:[[NSString alloc] initWithFormat:@"%@: %@", self.target, [message bodyAsPlainText]] forKey:@"subtitle"];
+			[context setObject:[NSString stringWithFormat:@"%@: %@", self.target, [message bodyAsPlainText]] forKey:@"subtitle"];
 			[self performNotification:@"JVChatFirstMessage" withContextInfo:context];
 		} else if( [message ignoreStatus] == JVNotIgnored ) {
-			NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Private Message", "new message bubble title" ) forKey:@"title"];
-			if( [self newMessagesWaiting] == 1 ) [context setObject:[[NSString alloc] initWithFormat:NSLocalizedString( @"You have 1 message waiting from %@.", "new single message bubble text" ), [self title]] forKey:@"description"];
-			[context setObject:[[NSString alloc] initWithFormat:NSLocalizedString( @"You have %d messages waiting from %@.", "new messages bubble text" ), [self newMessagesWaiting], [self title]] forKey:@"description"];
+			if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"You have 1 message waiting from %@.", "new single message bubble text" ), [self title]] forKey:@"description"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You have %d messages waiting from %@.", "new messages bubble text" ), [self newMessagesWaiting], [self title]] forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
 			[context setObject:[windowTitle stringByAppendingString:@"JVChatPrivateMessage"] forKey:@"coalesceKey"];
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-			[context setObject:[[NSString alloc] initWithFormat:@"%@: %@", self.target, [message bodyAsPlainText]] forKey:@"subtitle"];
+			[context setObject:[NSString stringWithFormat:@"%@: %@", self.target, [message bodyAsPlainText]] forKey:@"subtitle"];
 			[self performNotification:@"JVChatAdditionalMessages" withContextInfo:context];
 		}
 	}
@@ -943,7 +943,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		cformat = nil;
 	}
 
-	NSDictionary *options = [[NSDictionary alloc] initWithObjectsAndKeys:@([self encoding]), @"StringEncoding", cformat, @"FormatType", nil];
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:[self encoding]], @"StringEncoding", cformat, @"FormatType", nil];
 	NSData *msgData = [[message body] chatFormatWithOptions:options]; // we could save this back to the message object before sending
 	[self addMessageToDisplay:msgData fromUser:[message sender] withAttributes:[message attributes] withIdentifier:[message messageIdentifier] andType:[message type]];
 }
@@ -1006,8 +1006,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( ( _cantSendMessages || ! [self isEnabled] ) && ( ! [[[send textStorage] string] hasPrefix:@"/"] || [[[send textStorage] string] hasPrefix:@"//"] ) ) {
 		if( [[self target] isKindOfClass:[MVChatUser class]] && [[self user] status] == MVChatUserOfflineStatus ) {
 			NSAlert *alert = [[NSAlert alloc] init];
-			[alert setMessageText:[[NSString alloc] initWithFormat:NSLocalizedString( @"User \"%@\" is not online", "user not online alert dialog title" ), [[self user] displayName]]];
-			[alert setInformativeText:[[NSString alloc] initWithFormat:NSLocalizedString( @"The user \"%@\" is not online and is unavailable until they reconnect.", "user not online alert dialog message" ), [[self user] displayName]]];
+			[alert setMessageText:[NSString stringWithFormat:NSLocalizedString( @"User \"%@\" is not online", "user not online alert dialog title" ), [[self user] displayName]]];
+			[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"The user \"%@\" is not online and is unavailable until they reconnect.", "user not online alert dialog message" ), [[self user] displayName]]];
 			[alert setAlertStyle:NSInformationalAlertStyle];
 			[alert runModal];
 		}
@@ -1030,7 +1030,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		if ( newlineCount > messageLimit ) {
 			NSAlert *alert = [[NSAlert alloc] init];
 			[alert setMessageText:NSLocalizedString( @"Multiple lines detected", "multiple lines detected alert dialog title")];
-			[alert setInformativeText:[[NSString alloc] initWithFormat:NSLocalizedString( @"You are about to send a message with %d lines. Are you sure you want to do this?", "about to send a %d line message alert dialog message" ), newlineCount]];
+			[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"You are about to send a message with %d lines. Are you sure you want to do this?", "about to send a %d line message alert dialog message" ), newlineCount]];
 			[alert addButtonWithTitle:NSLocalizedString( @"Send", "Send alert dialog button title" )];
 			[alert addButtonWithTitle:NSLocalizedString( @"Cancel", "Cancel alert dialog button title" )];
 			[alert setAlertStyle:NSWarningAlertStyle];
@@ -1072,7 +1072,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 				if( [[subMsg string] hasPrefix:@"//"] && ![[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendDoubleSlashes"] ) [subMsg deleteCharactersInRange:NSMakeRange( 0, 1 )];
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && ! action ) {
 					if( ! actionVerbs ) {
-						NSArray *verbs = [[NSArray alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]];
+						NSArray *verbs = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]];
 						actionVerbs = [[NSSet alloc] initWithArray:verbs];
 					}
 
@@ -1272,7 +1272,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 }
 
 - (NSArray *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix {
-	NSMutableArray *possibleCompletion = [[NSMutableArray alloc] init];
+	NSMutableArray *possibleCompletion = [NSMutableArray array];
 
 	if( [[self title] rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
 		[possibleCompletion addObject:[self title]];
@@ -1300,7 +1300,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 - (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(nullable NSInteger *) index {
 	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSString *search = [[[send textStorage] string] substringWithRange:charRange];
-	NSMutableArray *ret = [[NSMutableArray alloc] init];
+	NSMutableArray *ret = [NSMutableArray array];
 	NSString *suffix = ( ! ( [event modifierFlags] & NSAlternateKeyMask ) ? ( charRange.location == 0 ? @": " : @" " ) : @"" );
 	NSString *comparison = [[[self user] nickname] substringToIndex:[search length]];
 
@@ -1494,7 +1494,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSMutableArray *list = [[NSMutableArray alloc] initWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
+	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
 	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) {
 		[list addObject:JVToolbarSendFileItemIdentifier];
 		[list addObject:JVToolbarTextEncodingItemIdentifier];
@@ -1508,7 +1508,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSMutableArray *list = [[NSMutableArray alloc] initWithArray:[super toolbarAllowedItemIdentifiers:toolbar]];
+	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarAllowedItemIdentifiers:toolbar]];
 	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) [list addObject:JVToolbarSendFileItemIdentifier];
 	[list addObject:JVToolbarTextEncodingItemIdentifier];
 	[list addObject:JVToolbarClearScrollbackItemIdentifier];
@@ -1520,7 +1520,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 #pragma mark WebKit Support
 
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
-	NSMutableArray *ret = [[NSMutableArray alloc] init];
+	NSMutableArray *ret = [NSMutableArray array];
 
 	BOOL found = NO;
 
@@ -1569,7 +1569,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( ! firstName && lastName ) return lastName;
 	else if( firstName && ! lastName ) return firstName;
 	else if( firstName && lastName ) {
-		return [[NSString alloc] initWithFormat:@"%@ %@", firstName, lastName];
+		return [NSString stringWithFormat:@"%@ %@", firstName, lastName];
 	}
 
 	firstName = [_person valueForProperty:kABNicknameProperty];
@@ -1601,7 +1601,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		NSRange foundRange = [match range];
 		NSString *text = [[message string] substringWithRange:foundRange];
 		id currentLink = [message attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
-		if( ! currentLink ) [message addAttribute:NSLinkAttributeName value:[[NSString alloc] initWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[self connection] server], text] range:foundRange];
+		if( ! currentLink ) [message addAttribute:NSLinkAttributeName value:[NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[self connection] server], text] range:foundRange];
 	}
 }
 
@@ -1615,7 +1615,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( ! baseFont ) baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[[display preferences] standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:[[display preferences] defaultFontSize]];
 	if( ! baseFont ) baseFont = [NSFont userFontOfSize:12.];
 
-	NSMutableDictionary *options = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@(_encoding), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:@(_encoding), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
 	NSMutableAttributedString *messageString = [NSMutableAttributedString attributedStringWithChatFormat:message options:options];
 
 	if( ! messageString ) {
@@ -1669,7 +1669,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( [error code] == MVChatConnectionNoSuchUserError ) {
 		MVChatUser *user = [error userInfo][@"user"];
 		if( [user isEqualTo:[self user]] )
-			[self addEventMessageToDisplay:[[NSString alloc] initWithFormat:NSLocalizedString( @"%@ is not online. Any messages sent will not be received.", "user not online" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"offline" andAttributes:nil];
+			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is not online. Any messages sent will not be received.", "user not online" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"offline" andAttributes:nil];
 	}
 }
 
@@ -1685,7 +1685,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		NSDictionary *options = @{@"IgnoreFonts": @YES, @"IgnoreFontSizes": @YES};
 		NSString *msgString = [messageString HTMLFormatWithOptions:options];
 
-		[self addEventMessageToDisplay:[[NSString alloc] initWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), msgString] withName:@"awaySet" andAttributes:[[NSDictionary alloc] initWithObjectsAndKeys:messageString, @"away-message", nil]];
+		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), msgString] withName:@"awaySet" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:messageString, @"away-message", nil]];
 
 		NSUInteger messageCount = [display _visibleMessageCount];
 		NSUInteger loc = [display _locationOfElementAtIndex:( messageCount - 1 )];
@@ -1782,7 +1782,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 - (void) _insertEmoticon:(id) sender {
 	if( [[send string] length] )
 		[send replaceCharactersInRange:NSMakeRange( [[send string] length], 0 ) withString:@" "];
-	[send replaceCharactersInRange:NSMakeRange( [[send string] length], 0 ) withString:[[NSString alloc] initWithFormat:@"%@ ", [sender representedObject]]];
+	[send replaceCharactersInRange:NSMakeRange( [[send string] length], 0 ) withString:[NSString stringWithFormat:@"%@ ", [sender representedObject]]];
 }
 
 - (BOOL) _usingSpecificStyle {
@@ -1826,11 +1826,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
 
 	if( ! [_personImageData length] ) {
-		[[NSFileManager defaultManager] removeItemAtPath:[[NSString alloc] initWithFormat:@"/tmp/%@.tif", [me uniqueId]] error:nil];
+		[[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [me uniqueId]] error:nil];
 	} else {
 		NSImage *icon = [[NSImage alloc] initWithData:_personImageData];
 		NSData *imageData = [icon TIFFRepresentation];
-		[imageData writeToFile:[[NSString alloc] initWithFormat:@"/tmp/%@.tif", [me uniqueId]] atomically:NO];
+		[imageData writeToFile:[NSString stringWithFormat:@"/tmp/%@.tif", [me uniqueId]] atomically:NO];
 
 		_personImageData = nil;
 	}
@@ -1839,11 +1839,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 - (void) _saveBuddyIcon:(JVBuddy *) buddy {
 	NSData *imageData = [[buddy picture] TIFFRepresentation];
 	if( ! [imageData length] ) {
-		[[NSFileManager defaultManager] removeItemAtPath:[[NSString alloc] initWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]] error:nil];
+		[[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]] error:nil];
 		return;
 	}
 
-	[imageData writeToFile:[[NSString alloc] initWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]] atomically:NO];
+	[imageData writeToFile:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]] atomically:NO];
 }
 
 - (void) _refreshIcon:(NSNotification *) notification {
@@ -1871,11 +1871,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 - (void) _userStatusChanged:(NSNotification *) notification {
 	if ([(MVChatUser *)_target status] == MVChatUserOfflineStatus)
-		[self addEventMessageToDisplay:[[NSString alloc] initWithFormat:NSLocalizedString( @"%@ disconnected from the server.", "User disconnected event message" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"userDisconnected" andAttributes:nil];
+		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ disconnected from the server.", "User disconnected event message" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"userDisconnected" andAttributes:nil];
 	else if ([(MVChatUser *)_target status] == MVChatUserAwayStatus)
-		[self addEventMessageToDisplay:[[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> is marked as away.", "User marked as away event message" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"userAway" andAttributes:nil];
+		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> is marked as away.", "User marked as away event message" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"userAway" andAttributes:nil];
 	else if ([(MVChatUser *)_target status] == MVChatUserAvailableStatus)
-		[self addEventMessageToDisplay:[[NSString alloc] initWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> is now available.", "User available event message" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"userAvailable" andAttributes:nil];
+		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> is now available.", "User available event message" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"userAvailable" andAttributes:nil];
 }
 
 @end

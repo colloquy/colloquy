@@ -139,9 +139,9 @@
 	}
 	
 	if ([virtualHostName length] > 0)
-		digestURI = [[NSString alloc] initWithFormat:@"xmpp/%@", virtualHostName];
+		digestURI = [NSString stringWithFormat:@"xmpp/%@", virtualHostName];
 	else
-		digestURI = [[NSString alloc] initWithFormat:@"xmpp/%@", serverHostName];
+		digestURI = [NSString stringWithFormat:@"xmpp/%@", serverHostName];
 	
 	if (cnonce == nil)
 		cnonce = [XMPPStream generateUUID];
@@ -231,7 +231,7 @@
 	XMPPLogVerbose(@"%@: Decoded challenge: %@", THIS_FILE, authStr);
 	
 	NSArray *components = [authStr componentsSeparatedByString:@","];
-	NSMutableDictionary *auth = [[NSMutableDictionary alloc] initWithCapacity:5];
+	NSMutableDictionary *auth = [NSMutableDictionary dictionaryWithCapacity:5];
 	
 	for (NSString *component in components)
 	{
@@ -263,14 +263,14 @@
 
 - (NSString *)response
 {
-	NSString *HA1str = [[NSString alloc] initWithFormat:@"%@:%@:%@", username, realm, password];
-	NSString *HA2str = [[NSString alloc] initWithFormat:@"AUTHENTICATE:%@", digestURI];
+	NSString *HA1str = [NSString stringWithFormat:@"%@:%@:%@", username, realm, password];
+	NSString *HA2str = [NSString stringWithFormat:@"AUTHENTICATE:%@", digestURI];
 	
 	XMPPLogVerbose(@"HA1str: %@", HA1str);
 	XMPPLogVerbose(@"HA2str: %@", HA2str);
 	
 	NSData *HA1dataA = [[HA1str dataUsingEncoding:NSUTF8StringEncoding] xmpp_md5Digest];
-	NSData *HA1dataB = [[[NSString alloc] initWithFormat:@":%@:%@", nonce, cnonce] dataUsingEncoding:NSUTF8StringEncoding];
+	NSData *HA1dataB = [[NSString stringWithFormat:@":%@:%@", nonce, cnonce] dataUsingEncoding:NSUTF8StringEncoding];
 	
 	XMPPLogVerbose(@"HA1dataA: %@", HA1dataA);
 	XMPPLogVerbose(@"HA1dataB: %@", HA1dataB);
@@ -288,7 +288,7 @@
 	XMPPLogVerbose(@"HA1: %@", HA1);
 	XMPPLogVerbose(@"HA2: %@", HA2);
 	
-	NSString *responseStr = [[NSString alloc] initWithFormat:@"%@:%@:00000001:%@:auth:%@",
+	NSString *responseStr = [NSString stringWithFormat:@"%@:%@:00000001:%@:auth:%@",
                            HA1, nonce, cnonce, HA2];
 	
 	XMPPLogVerbose(@"responseStr: %@", responseStr);
@@ -302,7 +302,7 @@
 
 - (NSString *)base64EncodedFullResponse
 {
-	NSMutableString *buffer = [[NSMutableString alloc] initWithCapacity:100];
+	NSMutableString *buffer = [NSMutableString stringWithCapacity:100];
 	[buffer appendFormat:@"username=\"%@\",", username];
 	[buffer appendFormat:@"realm=\"%@\",", realm];
 	[buffer appendFormat:@"nonce=\"%@\",", nonce];

@@ -47,8 +47,8 @@
 	[paraStyle setLineBreakMode:_lineBreakMode];
 	[paraStyle setAlignment:[self alignment]];
 
-	NSMutableDictionary *attributes = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[self font], NSFontAttributeName, paraStyle, NSParagraphStyleAttributeName, ( [self isEnabled] ? ( highlighted ? [NSColor alternateSelectedControlTextColor] : [NSColor controlTextColor] ) : ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.50] ) ), NSForegroundColorAttributeName, nil];
-	NSMutableDictionary *subAttributes = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSFont toolTipsFontOfSize:9.], NSFontAttributeName, paraStyle, NSParagraphStyleAttributeName, ( [self isEnabled] ? ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.75] ) : ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.40] ) ), NSForegroundColorAttributeName, nil];
+	NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:[self font], NSFontAttributeName, paraStyle, NSParagraphStyleAttributeName, ( [self isEnabled] ? ( highlighted ? [NSColor alternateSelectedControlTextColor] : [NSColor controlTextColor] ) : ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.50] ) ), NSForegroundColorAttributeName, nil];
+	NSMutableDictionary *subAttributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:9.], NSFontAttributeName, paraStyle, NSParagraphStyleAttributeName, ( [self isEnabled] ? ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.75] ) : ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.40] ) ), NSForegroundColorAttributeName, nil];
 	NSImage *mainImage = nil, *curImage = nil;
 	NSSize mainStringSize = [_mainText sizeWithAttributes:attributes];
 	NSSize subStringSize = [_infoText sizeWithAttributes:subAttributes];
@@ -141,7 +141,7 @@
 
 		NSDictionary *statusNumberAttributes = @{NSFontAttributeName: font, NSParagraphStyleAttributeName: numberParaStyle, NSForegroundColorAttributeName: textColor, NSKernAttributeName: @1.0f};
 
-		NSString *statusText = [[NSString alloc] initWithFormat:@"%ld", ( _statusNumber ? _statusNumber : _importantStatusNumber )];
+		NSString *statusText = [NSString stringWithFormat:@"%ld", ( _statusNumber ? _statusNumber : _importantStatusNumber )];
 		NSSize numberSize = [statusText sizeWithAttributes:statusNumberAttributes];
 		statusWidth = numberSize.width + 12.;
 
@@ -158,7 +158,7 @@
 			[mainPath closePath];
 
 			if( _importantStatusNumber ) {
-				NSString *importantStatusText = [[NSString alloc] initWithFormat:@"%ld", _importantStatusNumber];
+				NSString *importantStatusText = [NSString stringWithFormat:@"%ld", _importantStatusNumber];
 				numberSize = [importantStatusText sizeWithAttributes:statusNumberAttributes];
 				CGFloat mainStatusWidth = statusWidth;
 				statusWidth += numberSize.width + 10.;
@@ -270,9 +270,9 @@
 
 - (id) accessibilityAttributeValue:(NSString *) attribute {
 	if ([attribute isEqualToString:NSAccessibilityValueDescriptionAttribute]) {
-		NSMutableArray *bits = [[NSMutableArray alloc] init];
-		NSString *statusText = (!_statusImage && _statusNumber) ? [[NSString alloc] initWithFormat:NSLocalizedString(@"%d items", nil), _statusNumber]: nil;
-		NSString *importantStatusText = (!_statusImage && _importantStatusNumber) ? [[NSString alloc] initWithFormat:NSLocalizedString(@"%d important items", nil), _importantStatusNumber]: nil;
+		NSMutableArray *bits = [NSMutableArray array];
+		NSString *statusText = (!_statusImage && _statusNumber) ? [NSString stringWithFormat:NSLocalizedString(@"%d items", nil), _statusNumber]: nil;
+		NSString *importantStatusText = (!_statusImage && _importantStatusNumber) ? [NSString stringWithFormat:NSLocalizedString(@"%d important items", nil), _importantStatusNumber]: nil;
 #define NIL_TO_EMPTY_STRING(a) ((a) ? (a) : @"")
 		NSArray *candidates = @[NIL_TO_EMPTY_STRING(_mainText), NIL_TO_EMPTY_STRING(_infoText), NIL_TO_EMPTY_STRING(importantStatusText), NIL_TO_EMPTY_STRING(statusText), NIL_TO_EMPTY_STRING([_statusImage accessibilityDescription]), NIL_TO_EMPTY_STRING([_altImage accessibilityDescription])];
 #undef NIL_TO_EMPTY_STRING

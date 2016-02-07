@@ -115,7 +115,7 @@
 			if( ! nick.length ) return NO;
 			if( ! [scanner isAtEnd] ) [scanner scanUpToCharactersFromSet:whitespace intoString:&roomName];
 
-			[connection sendRawMessage:[[NSString alloc] initWithFormat:@"INVITE %@ %@", nick, ( roomName.length ? roomName : room.target )]];
+			[connection sendRawMessage:[NSString stringWithFormat:@"INVITE %@ %@", nick, ( roomName.length ? roomName : room.target )]];
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"kick"] ) {
 			NSString *member = nil;
@@ -298,15 +298,15 @@
 		[connection sendRawMessage:arguments.string immediately:YES];
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"umode"] && connection.type == MVChatConnectionIRCType ) {
-		[connection sendRawMessage:[[NSString alloc] initWithFormat:@"MODE %@ %@", [connection nickname], arguments.string]];
+		[connection sendRawMessage:[NSString stringWithFormat:@"MODE %@ %@", [connection nickname], arguments.string]];
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"ctcp"] && connection.type == MVChatConnectionIRCType ) {
 		return [self handleCTCPWithArguments:arguments.string forConnection:connection];
 	} else if( ! [command caseInsensitiveCompare:@"wi"] ) {
-		[connection sendRawMessage:[[NSString alloc] initWithFormat:@"WHOIS %@", arguments.string]];
+		[connection sendRawMessage:[NSString stringWithFormat:@"WHOIS %@", arguments.string]];
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"wii"] ) {
-		[connection sendRawMessage:[[NSString alloc] initWithFormat:@"WHOIS %@ %@", arguments.string, arguments.string]];
+		[connection sendRawMessage:[NSString stringWithFormat:@"WHOIS %@ %@", arguments.string, arguments.string]];
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"list"] ) {
 		JVChatRoomBrowser *browser = [JVChatRoomBrowser chatRoomBrowserForConnection:connection];
@@ -338,7 +338,7 @@
 		if( ! nick.length || ! roomName.length ) return NO;
         if( ! [scanner isAtEnd] ) [scanner scanUpToCharactersFromSet:whitespace intoString:&roomName];
 
-		[connection sendRawMessage:[[NSString alloc] initWithFormat:@"INVITE %@ %@", nick, roomName]];
+		[connection sendRawMessage:[NSString stringWithFormat:@"INVITE %@ %@", nick, roomName]];
         return YES;
 	} else if( ! [command caseInsensitiveCompare:@"reload"] ) {
 		if( ! [arguments.string caseInsensitiveCompare:@"plugins"] || ! [arguments.string caseInsensitiveCompare:@"scripts"] ) {
@@ -362,7 +362,7 @@
 		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://project.colloquy.info/wiki/Documentation/CommandReference"]];
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"globops"] && connection.type == MVChatConnectionIRCType ) {
-		[connection sendRawMessage:[[NSString alloc] initWithFormat:@"%@ :%@", command, arguments.string]];
+		[connection sendRawMessage:[NSString stringWithFormat:@"%@ :%@", command, arguments.string]];
 		return YES;
 	} else if( ( ! [command caseInsensitiveCompare:@"notice"] || ! [command caseInsensitiveCompare:@"onotice"] ) && connection.type == MVChatConnectionIRCType ) {
         NSString *targetPrefix = nil;
@@ -391,7 +391,7 @@
 		if( ! [command caseInsensitiveCompare:@"onotice"] && ! [target hasPrefix:@"@"] )
 			target = [@"@" stringByAppendingString:[connection properNameForChatRoomNamed:target]];
 
-		[connection sendRawMessage:[[NSString alloc] initWithFormat:@"NOTICE %@ :%@", target, message]];
+		[connection sendRawMessage:[NSString stringWithFormat:@"NOTICE %@ :%@", target, message]];
 
 		NSCharacterSet *chanSet = connection.chatRoomNamePrefixes;
 		JVDirectChatPanel *chatView = nil;
@@ -423,7 +423,7 @@
 			connection.nickname = newNickname;
 		return YES;
 	} else if ( ! [command caseInsensitiveCompare:@"google"] || ! [command caseInsensitiveCompare:@"search"] ) {
-		NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.google.com/search?q=%@", [arguments.string stringByEncodingIllegalURLCharacters]]];
+		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.google.com/search?q=%@", [arguments.string stringByEncodingIllegalURLCharacters]]];
 		NSWorkspaceLaunchOptions options = (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVURLOpensInBackground"]) ? NSWorkspaceLaunchDefault : NSWorkspaceLaunchWithoutActivation;
 
 		[[NSWorkspace sharedWorkspace] openURLs:@[url] withAppBundleIdentifier:nil options:options additionalEventParamDescriptor:nil launchIdentifiers:nil];
@@ -489,8 +489,8 @@
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&address];
 		[scanner scanInt:&port];
 
-		if( address.length && port ) url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"irc://%@:%u", [address stringByEncodingIllegalURLCharacters], port]];
-		else if( address.length && ! port ) url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"irc://%@", [address stringByEncodingIllegalURLCharacters]]];
+		if( address.length && port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@:%u", [address stringByEncodingIllegalURLCharacters], port]];
+		else if( address.length && ! port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@", [address stringByEncodingIllegalURLCharacters]]];
 		else [[MVConnectionsController defaultController] newConnection:nil];
 
 		if( url ) [[MVConnectionsController defaultController] handleURL:url andConnectIfPossible:YES];
@@ -576,7 +576,7 @@
 		if( scanner.scanLocation ) {
 			NSString *roomTargetName = [to substringFromIndex:scanner.scanLocation];
 			if( roomTargetName.length > 1 && [connection.chatRoomNamePrefixes characterIsMember:[roomTargetName characterAtIndex:0]] ) {
-				[connection sendRawMessage:[[NSString alloc] initWithFormat:@"PRIVMSG %@ :%@", to, msg.string]];
+				[connection sendRawMessage:[NSString stringWithFormat:@"PRIVMSG %@ :%@", to, msg.string]];
 
 				MVChatRoom *room = [connection joinedChatRoomWithName:roomTargetName];
 				if( room ) chatView = [[JVChatController defaultController] chatViewControllerForRoom:room ifExists:YES];

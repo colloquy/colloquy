@@ -19,7 +19,7 @@ extern NSString *MVMetadataKeyForAttributeName(NSString *attributeName) {
 	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserClientVersionAttribute]) return @"client.version";
 	if ([attributeName hasCaseInsensitivePrefix:MVChatUserIMServiceAttribute]) {
 		NSString *serviceName = [attributeName stringByReplacingOccurrencesOfString:MVChatUserIMServiceAttribute withString:@""];
-		return [[NSString alloc] initWithFormat:@"server.im.%@", serviceName];
+		return [NSString stringWithFormat:@"server.im.%@", serviceName];
 	}
 	return attributeName;
 }
@@ -35,7 +35,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 	if ([metadataKey isCaseInsensitiveEqualToString:@"client.version"]) return MVChatUserClientVersionAttribute;
 	if ([metadataKey hasCaseInsensitivePrefix:@"server.im."]) {
 		NSString *serviceName = [metadataKey stringByReplacingOccurrencesOfString:@"server.im." withString:@""];
-		return [[NSString alloc] initWithFormat:@"MVChatUserIMServiceAttribute.%@", serviceName];
+		return [NSString stringWithFormat:@"MVChatUserIMServiceAttribute.%@", serviceName];
 	}
 	return metadataKey;
 }
@@ -85,7 +85,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 #pragma mark -
 
 - (NSString *) maskRepresentation {
-	return [[NSString alloc] initWithFormat:@"%@!%@@%@", (self.nickname ?: @""), (self.username ?: @""), (self.address ?: @"")];
+	return [NSString stringWithFormat:@"%@!%@@%@", (self.nickname ?: @""), (self.username ?: @""), (self.address ?: @"")];
 }
 
 #pragma mark -
@@ -227,7 +227,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 - (void) persistLastActivityDate {
 	MVChatConnection *connection = [self connection];
 	if ( _mostRecentUserActivity && [[connection supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] ) {
-		NSString *recentActivityDateKey = [[NSString alloc] initWithFormat:@"%@-%@", connection.uniqueIdentifier, self.uniqueIdentifier];
+		NSString *recentActivityDateKey = [NSString stringWithFormat:@"%@-%@", connection.uniqueIdentifier, self.uniqueIdentifier];
 		[[NSUserDefaults standardUserDefaults] setObject:_mostRecentUserActivity forKey:recentActivityDateKey];
 	}
 }

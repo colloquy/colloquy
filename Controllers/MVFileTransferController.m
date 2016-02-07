@@ -287,8 +287,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 #pragma mark -
 
 - (IBAction) copy:(id) sender {
-	NSMutableArray *array = [[NSMutableArray alloc] init];
-	NSMutableString *string = [[NSMutableString alloc] init];
+	NSMutableArray *array = [NSMutableArray array];
+	NSMutableString *string = [NSMutableString string];
 
 	[[NSPasteboard generalPasteboard] declareTypes:@[NSFilenamesPboardType,NSStringPboardType] owner:self];
 
@@ -372,7 +372,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 }
 
 - (BOOL) tableView:(NSTableView *) tableView writeRowsWithIndexes:(NSIndexSet *) rowIndexes toPasteboard:(NSPasteboard *) pboard {
-	NSMutableArray *array = [[NSMutableArray alloc] init];
+	NSMutableArray *array = [NSMutableArray array];
 
 	[pboard declareTypes:@[NSFilenamesPboardType] owner:self];
 
@@ -763,9 +763,9 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		if( ! totalTransferredUp || ! totalSizeUp ) {
 			str = NSLocalizedString( @"nothing uploaded yet", "status of pending upload file transfer" );
 		} else if( totalSizeUp != totalTransferredUp ) {
-			str = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ of %@ uploaded, at %@ per second", "status of current upload file transfer" ), MVPrettyFileSize( totalTransferredUp ), MVPrettyFileSize( totalSizeUp ), MVPrettyFileSize( upRate )];
+			str = [NSString stringWithFormat:NSLocalizedString( @"%@ of %@ uploaded, at %@ per second", "status of current upload file transfer" ), MVPrettyFileSize( totalTransferredUp ), MVPrettyFileSize( totalSizeUp ), MVPrettyFileSize( upRate )];
 		} else if( totalTransferredUp >= totalSizeUp ) {
-			str = [[NSString alloc] initWithFormat:NSLocalizedString( @"total of %@ uploaded, at %@ per second", "results final upload file transfer" ), MVPrettyFileSize( totalSizeUp ), MVPrettyFileSize( upRate )];
+			str = [NSString stringWithFormat:NSLocalizedString( @"total of %@ uploaded, at %@ per second", "results final upload file transfer" ), MVPrettyFileSize( totalSizeUp ), MVPrettyFileSize( upRate )];
 		}
 		str = [str stringByAppendingString:@"\n"];
 		downRate = downRate / (CGFloat) downCount;
@@ -783,11 +783,11 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			if( downCount ) str = NSLocalizedString( @"nothing downloaded yet", "status of pending download file transfer" );
 			else if( upCount ) str = NSLocalizedString( @"nothing uploaded yet", "status of pending upload file transfer" );
 		} else if( totalSize != totalTransferred ) {
-			if( downCount ) str = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ of %@ downloaded, at %@ per second", "status of current download file transfer" ), MVPrettyFileSize( totalTransferred ), MVPrettyFileSize( totalSize ), MVPrettyFileSize( avgRate )];
-			else if( upCount ) str = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ of %@ uploaded, at %@ per second", "status of current upload file transfer" ), MVPrettyFileSize( totalTransferred ), MVPrettyFileSize( totalSize ), MVPrettyFileSize( avgRate )];
+			if( downCount ) str = [NSString stringWithFormat:NSLocalizedString( @"%@ of %@ downloaded, at %@ per second", "status of current download file transfer" ), MVPrettyFileSize( totalTransferred ), MVPrettyFileSize( totalSize ), MVPrettyFileSize( avgRate )];
+			else if( upCount ) str = [NSString stringWithFormat:NSLocalizedString( @"%@ of %@ uploaded, at %@ per second", "status of current upload file transfer" ), MVPrettyFileSize( totalTransferred ), MVPrettyFileSize( totalSize ), MVPrettyFileSize( avgRate )];
 		} else if( totalTransferred >= totalSize ) {
-			if( downCount ) str = [[NSString alloc] initWithFormat:NSLocalizedString( @"total of %@ downloaded, at %@ per second", "results final download file transfer" ), MVPrettyFileSize( totalSize ), MVPrettyFileSize( avgRate )];
-			else if( upCount ) str = [[NSString alloc] initWithFormat:NSLocalizedString( @"total of %@ uploaded, at %@ per second", "results final upload file transfer" ), MVPrettyFileSize( totalSize ), MVPrettyFileSize( avgRate )];
+			if( downCount ) str = [NSString stringWithFormat:NSLocalizedString( @"total of %@ downloaded, at %@ per second", "results final download file transfer" ), MVPrettyFileSize( totalSize ), MVPrettyFileSize( avgRate )];
+			else if( upCount ) str = [NSString stringWithFormat:NSLocalizedString( @"total of %@ uploaded, at %@ per second", "results final upload file transfer" ), MVPrettyFileSize( totalSize ), MVPrettyFileSize( avgRate )];
 		}
 		if( ( upCount + downCount ) == 1 ) {
 			NSDate *startDate = nil;

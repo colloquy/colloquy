@@ -349,7 +349,7 @@ NS_ASSUME_NONNULL_BEGIN
 		[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:self userInfo:@{
 			@"completionHandler": completionHandler,
 			@"trust": (__bridge id)trust,
-			@"result": [[NSString alloc] initWithFormat:@"%d", result]
+			@"result": [NSString stringWithFormat:@"%d", result]
 		}];
 	});
 }

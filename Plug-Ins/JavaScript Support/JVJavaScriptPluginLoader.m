@@ -26,7 +26,7 @@
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
 	if( ! [command caseInsensitiveCompare:@"javascript"] || ! [command caseInsensitiveCompare:@"js"] ) {
 		NSArray *args = [[[arguments string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
-		NSString *subcmd = ( [args count] ? args[0] : nil );
+		NSString *subcmd = [args firstObject];
 		/* if( [args count] == 1 ) {
 			if( view && ! [subcmd caseInsensitiveCompare:@"console"] ) {
 				JVJavaScriptConsolePanel *console = [[[JVJavaScriptConsolePanel alloc] init] autorelease];

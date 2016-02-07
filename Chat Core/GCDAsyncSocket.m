@@ -7546,13 +7546,13 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 		NSData *address4 = [NSData dataWithBytes:&nativeAddr4 length:sizeof(nativeAddr4)];
 		NSData *address6 = [NSData dataWithBytes:&nativeAddr6 length:sizeof(nativeAddr6)];
 		
-		addresses = [[NSMutableArray alloc] initWithCapacity:2];
+		addresses = [NSMutableArray arrayWithCapacity:2];
 		[addresses addObject:address4];
 		[addresses addObject:address6];
 	}
 	else
 	{
-		NSString *portStr = [[NSString alloc] initWithFormat:@"%hu", port];
+		NSString *portStr = [NSString stringWithFormat:@"%hu", port];
 		
 		struct addrinfo hints, *res, *res0;
 		

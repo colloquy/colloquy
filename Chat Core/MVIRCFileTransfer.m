@@ -48,8 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 		if( ++passiveId > 999 ) passiveId = 1;
 		[ret _setPassiveIdentifier:passiveId];
 
-		if( [ret _fileNameQuoted] ) [user sendSubcodeRequest:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"SEND \"%@\" 16843009 0 %llu %llu T", fileName, [ret finalSize], passiveId]];
-		else [user sendSubcodeRequest:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"SEND %@ 16843009 0 %llu %llu T", fileName, [ret finalSize], passiveId]];
+		if( [ret _fileNameQuoted] ) [user sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" 16843009 0 %llu %llu T", fileName, [ret finalSize], passiveId]];
+		else [user sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND %@ 16843009 0 %llu %llu T", fileName, [ret finalSize], passiveId]];
 	} else {
 		[ret _setupAndStart];
 	}
@@ -107,8 +107,8 @@ NS_ASSUME_NONNULL_BEGIN
 	[self _setPort:port];
 
 	NSString *fileName = [[self source] lastPathComponent];
-	if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"SEND \"%@\" %@ %hu %llu T", fileName, address, [self port], [self finalSize]]];
-	else [[self user] sendSubcodeRequest:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"SEND %@ %@ %hu %llu T", fileName, address, [self port], [self finalSize]]];
+	if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu T", fileName, address, [self port], [self finalSize]]];
+	else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND %@ %@ %hu %llu T", fileName, address, [self port], [self finalSize]]];
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection willDisconnectWithError:(NSError *) error {
@@ -227,15 +227,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) reject {
 	if( [self isPassive] ) {
-		if( _fileNameQuoted ) [[self user] sendSubcodeReply:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"REJECT SEND \"%@\" 16843009 0 %llu %llu T", [self originalFileName], [self finalSize], [self _passiveIdentifier]]];
-		else [[self user] sendSubcodeReply:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"REJECT SEND %@ 16843009 0 %llu %llu T", [self originalFileName], [self finalSize], [self _passiveIdentifier]]];
+		if( _fileNameQuoted ) [[self user] sendSubcodeReply:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT SEND \"%@\" 16843009 0 %llu %llu T", [self originalFileName], [self finalSize], [self _passiveIdentifier]]];
+		else [[self user] sendSubcodeReply:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT SEND %@ 16843009 0 %llu %llu T", [self originalFileName], [self finalSize], [self _passiveIdentifier]]];
 	} else {
 		NSString *address = [self host];
 		if( ! address ) address = @"16843009";
 		if( address && [address rangeOfString:@"."].location != NSNotFound )
-			address = [[NSString alloc] initWithFormat:@"%d", ntohl( inet_addr( [address UTF8String] ) )];
-		if( _fileNameQuoted ) [[self user] sendSubcodeReply:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"REJECT SEND \"%@\" %@ %hu %llu T", [self originalFileName], address, [self port], [self finalSize]]];
-		else [[self user] sendSubcodeReply:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"REJECT SEND %@ %@ %hu %llu T", [self originalFileName], address, [self port], [self finalSize]]];
+			address = [NSString stringWithFormat:@"%d", ntohl( inet_addr( [address UTF8String] ) )];
+		if( _fileNameQuoted ) [[self user] sendSubcodeReply:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT SEND \"%@\" %@ %hu %llu T", [self originalFileName], address, [self port], [self finalSize]]];
+		else [[self user] sendSubcodeReply:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT SEND %@ %@ %hu %llu T", [self originalFileName], address, [self port], [self finalSize]]];
 	}
 
 	[self cancel];
@@ -262,11 +262,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 		if( fileExists && [size unsignedLongLongValue] < [self finalSize] ) {
 			if( [self isPassive] ) {
-				if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"RESUME \"%@\" 0 %llu %llu", [self originalFileName], [size unsignedLongLongValue], _passiveId]];
-				else [[self user] sendSubcodeRequest:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"RESUME %@ 0 %llu %llu", [self originalFileName], [size unsignedLongLongValue], _passiveId]];
+				if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"RESUME \"%@\" 0 %llu %llu", [self originalFileName], [size unsignedLongLongValue], _passiveId]];
+				else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"RESUME %@ 0 %llu %llu", [self originalFileName], [size unsignedLongLongValue], _passiveId]];
 			} else {
-				if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"RESUME \"%@\" %hu %llu", [self originalFileName], [self port], [size unsignedLongLongValue]]];
-				else [[self user] sendSubcodeRequest:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"RESUME %@ %hu %llu", [self originalFileName], [self port], [size unsignedLongLongValue]]];
+				if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"RESUME \"%@\" %hu %llu", [self originalFileName], [self port], [size unsignedLongLongValue]]];
+				else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"RESUME %@ %hu %llu", [self originalFileName], [self port], [size unsignedLongLongValue]]];
 			}
 
 			return; // we need to wait until we get a DCC ACCEPT reply
@@ -296,8 +296,8 @@ NS_ASSUME_NONNULL_BEGIN
 	[self _setPort:port];
 
 	NSString *fileName = [self originalFileName];
-	if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"SEND \"%@\" %@ %hu %llu %llu", fileName, address, [self port], [self finalSize], [self _passiveIdentifier]]];
-	else [[self user] sendSubcodeRequest:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"SEND %@ %@ %hu %llu %llu", fileName, address, [self port], [self finalSize], [self _passiveIdentifier]]];
+	if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu %llu", fileName, address, [self port], [self finalSize], [self _passiveIdentifier]]];
+	else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND %@ %@ %hu %llu %llu", fileName, address, [self port], [self finalSize], [self _passiveIdentifier]]];
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection willDisconnectWithError:(NSError *) error {

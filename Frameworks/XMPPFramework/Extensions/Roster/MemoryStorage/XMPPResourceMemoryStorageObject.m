@@ -200,7 +200,7 @@
 
 - (NSString *)description
 {
-	return [[NSString alloc] initWithFormat:@"<XMPPResource[%p]: %@>", self, [jid full]];
+	return [NSString stringWithFormat:@"<XMPPResource[%p]: %@>", self, [jid full]];
 }
 
 @end

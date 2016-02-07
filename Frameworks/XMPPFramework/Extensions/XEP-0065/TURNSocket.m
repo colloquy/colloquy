@@ -75,10 +75,6 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface TURNSocket () <GCDAsyncSocketDelegate>
-
-@end
-
 @implementation TURNSocket
 
 static NSMutableDictionary *existingTurnSockets;
@@ -1123,7 +1119,7 @@ static NSMutableArray *proxyCandidates;
 	XMPPJID *initiatorJID = isClient ? myJID : jid;
 	XMPPJID *targetJID    = isClient ? jid   : myJID;
 	
-	NSString *hashMe = [[NSString alloc] initWithFormat:@"%@%@%@", uuid, [initiatorJID full], [targetJID full]];
+	NSString *hashMe = [NSString stringWithFormat:@"%@%@%@", uuid, [initiatorJID full], [targetJID full]];
 	NSData *hashRaw = [[hashMe dataUsingEncoding:NSUTF8StringEncoding] xmpp_sha1Digest];
 	NSData *hash = [[hashRaw xmpp_hexStringValue] dataUsingEncoding:NSUTF8StringEncoding];
 	

@@ -254,7 +254,7 @@
 
 	_roomResults = [_connection chatRoomListResults];
 
-	_roomOrder = [[NSMutableArray alloc] init];
+	_roomOrder = [NSMutableArray array];
 
 	[self _refreshResults:nil];
 
@@ -345,7 +345,7 @@
 
 		if( ! t ) {
 			NSData *topic = info[@"topic"];
-			NSMutableDictionary *options = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@([_connection encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
+			NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:@([_connection encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
 			if( ! ( t = [NSAttributedString attributedStringWithChatFormat:topic options:options] ) ) {
 				options[@"StringEncoding"] = @(NSISOLatin1StringEncoding);
 				t = [NSAttributedString attributedStringWithChatFormat:topic options:options];
@@ -440,7 +440,7 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 
 	for( MVChatConnection *connection in [[MVConnectionsController defaultController] connections] ) {
-		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[[NSString alloc] initWithFormat:@"%@ (%@)", [connection server], [connection nickname]] action:NULL keyEquivalent:@""];
+		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [connection server], [connection nickname]] action:NULL keyEquivalent:@""];
 
 		NSImage *icon = nil;
 		if( [connection isConnected] ) icon = [NSImage imageNamed:@"connected"];
@@ -500,7 +500,7 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 
 	[_roomOrder removeAllObjects]; // this is far more efficient than doing a containsObject: and a removeObject: during the while
 
-	options = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@([_connection encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
+	options = [NSMutableDictionary dictionaryWithObjectsAndKeys:@([_connection encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
 
 	for( NSString *room in _roomResults ) {
 		NSMutableDictionary *info = _roomResults[room];

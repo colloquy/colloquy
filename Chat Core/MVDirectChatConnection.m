@@ -61,7 +61,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 		// register with the main connection so the passive reply can find the original
 		[(MVIRCChatConnection *)[user connection] _addDirectClientConnection:ret];
 
-		[user sendSubcodeRequest:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"CHAT chat 16843009 0 %lld", passiveId]];
+		[user sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"CHAT chat 16843009 0 %lld", passiveId]];
 	} else {
 		[ret initiate];
 	}
@@ -199,8 +199,8 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 	NSString *address = MVDCCFriendlyAddress( host );
 	[self _setPort:port];
 
-	if( [self isPassive] ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"CHAT chat %@ %hu %llu", address, [self port], [self _passiveIdentifier]]];
-	else [[self user] sendSubcodeRequest:@"DCC" withArguments:[[NSString alloc] initWithFormat:@"CHAT chat %@ %hu", address, [self port]]];
+	if( [self isPassive] ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"CHAT chat %@ %hu %llu", address, [self port], [self _passiveIdentifier]]];
+	else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"CHAT chat %@ %hu", address, [self port]]];
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection willDisconnectWithError:(NSError *) error {

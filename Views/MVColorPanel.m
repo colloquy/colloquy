@@ -8,7 +8,7 @@
 #pragma mark -
 
 @interface MVColorPanel (MVColorPanelPrivate)
-@property (readonly, strong) NSView *_makeAccessoryView;
+- (NSView *) _makeAccessoryView;
 @end
 
 #pragma mark -

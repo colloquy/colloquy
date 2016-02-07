@@ -431,7 +431,7 @@ static NSString* extractFormTypeValue(NSXMLElement *form)
 					result = @"";
 				}
 				
-				return [[NSString alloc] initWithFormat:@"%@<", encodeLt(result)];
+				return [NSString stringWithFormat:@"%@<", encodeLt(result)];
 			}
 		}
 	}
@@ -500,9 +500,9 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 {
 	if (query == nil) return nil;
 	
-	NSMutableSet *set = [[NSMutableSet alloc] init];
+	NSMutableSet *set = [NSMutableSet set];
 	
-	NSMutableString *s = [[NSMutableString alloc] init];
+	NSMutableString *s = [NSMutableString string];
 	
 	NSArray *identities = [[query elementsForName:@"identity"] sortedArrayUsingFunction:sortIdentities context:NULL];
 	for (NSXMLElement *identity in identities)
@@ -519,7 +519,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 		lang     = encodeLt(lang);
 		name     = encodeLt(name);
 		
-		NSString *mash = [[NSString alloc] initWithFormat:@"%@/%@/%@/%@<", category, type, lang, name];
+		NSString *mash = [NSString stringWithFormat:@"%@/%@/%@/%@<", category, type, lang, name];
 		
 		// Section 5.4, rule 3.3:
 		// 
@@ -548,7 +548,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 		
 		var = encodeLt(var);
 		
-		NSString *mash = [[NSString alloc] initWithFormat:@"%@<", var];
+		NSString *mash = [NSString stringWithFormat:@"%@<", var];
 		
 		// Section 5.4, rule 3.4:
 		// 
@@ -638,7 +638,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 
 - (NSString *)keyFromHash:(NSString *)hash algorithm:(NSString *)hashAlg
 {
-	return [[NSString alloc] initWithFormat:@"%@-%@", hash, hashAlg];
+	return [NSString stringWithFormat:@"%@-%@", hash, hashAlg];
 }
 
 - (BOOL)getHash:(NSString **)hashPtr algorithm:(NSString **)hashAlgPtr fromKey:(NSString *)key
@@ -861,7 +861,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	
 	if (node && ver)
 	{
-		NSString *nodeValue = [[NSString alloc] initWithFormat:@"%@#%@", node, ver];
+		NSString *nodeValue = [NSString stringWithFormat:@"%@#%@", node, ver];
 		
 		[query addAttributeWithName:@"node" stringValue:nodeValue];
 	}

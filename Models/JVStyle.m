@@ -348,12 +348,12 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 - (BOOL) isUserVariantName:(NSString *) name {
-	NSString *path = [[[NSString alloc] initWithFormat:@"~/Library/Application Support/%@/Styles/Variants/%@/%@.css", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], [self identifier], name] stringByExpandingTildeInPath];
+	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles/Variants/%@/%@.css", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], [self identifier], name] stringByExpandingTildeInPath];
 	return [[NSFileManager defaultManager] isReadableFileAtPath:path];
 }
 
 - (NSString *) defaultVariantName {
-	NSString *name = [[NSUserDefaults standardUserDefaults] stringForKey:[[NSString alloc] initWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
+	NSString *name = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
 	if( [name isAbsolutePath] ) return [[name lastPathComponent] stringByDeletingPathExtension];
 	return name;
 }
@@ -362,13 +362,13 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	if( [name isEqualToString:[self defaultVariantName]] ) return;
 
 	if( ! [name length] ) {
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[[NSString alloc] initWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
 	} else {
 		if( [self isUserVariantName:name] ) {
-			NSString *path = [[[NSString alloc] initWithFormat:@"~/Library/Application Support/%@/Styles/Variants/%@/%@.css", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], [self identifier], name] stringByExpandingTildeInPath];
-			[[NSUserDefaults standardUserDefaults] setObject:path forKey:[[NSString alloc] initWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
+			NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles/Variants/%@/%@.css", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], [self identifier], name] stringByExpandingTildeInPath];
+			[[NSUserDefaults standardUserDefaults] setObject:path forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
 		} else {
-			[[NSUserDefaults standardUserDefaults] setObject:name forKey:[[NSString alloc] initWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
+			[[NSUserDefaults standardUserDefaults] setObject:name forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
 		}
 	}
 
@@ -379,12 +379,12 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 #pragma mark -
 
 - (JVEmoticonSet *) defaultEmoticonSet {
-	NSString *defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:[[NSString alloc] initWithFormat:@"JVChatDefaultEmoticons %@", [self identifier]]];
+	NSString *defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [self identifier]]];
 	JVEmoticonSet *emoticon = [JVEmoticonSet emoticonSetWithIdentifier:defaultEmoticons];
 
 	if( ! emoticon ) {
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[[NSString alloc] initWithFormat:@"JVChatDefaultEmoticons %@", [self identifier]]];
-		defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:[[NSString alloc] initWithFormat:@"JVChatDefaultEmoticons %@", [self identifier]]];
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [self identifier]]];
+		defaultEmoticons = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [self identifier]]];
 		emoticon = [JVEmoticonSet emoticonSetWithIdentifier:defaultEmoticons];
 		if( ! emoticon ) emoticon = [JVEmoticonSet textOnlyEmoticonSet];
 	}
@@ -393,15 +393,15 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 - (void) setDefaultEmoticonSet:(JVEmoticonSet *) emoticons {
-	if( emoticons ) [[NSUserDefaults standardUserDefaults] setObject:[emoticons identifier] forKey:[[NSString alloc] initWithFormat:@"JVChatDefaultEmoticons %@", [self identifier]]];
-	else [[NSUserDefaults standardUserDefaults] removeObjectForKey:[[NSString alloc] initWithFormat:@"JVChatDefaultEmoticons %@", [self identifier]]];
+	if( emoticons ) [[NSUserDefaults standardUserDefaults] setObject:[emoticons identifier] forKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [self identifier]]];
+	else [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultEmoticons %@", [self identifier]]];
 }
 
 #pragma mark -
 
 - (NSArray *) styleSheetOptions {
 	if( ! _styleOptions ) {
-		NSMutableArray *options = [[NSMutableArray alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"styleOptions" ofType:@"plist"]];
+		NSMutableArray *options = [NSMutableArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"styleOptions" ofType:@"plist"]];
 		if( [_bundle objectForInfoDictionaryKey:@"JVStyleOptions"] )
 			[options addObjectsFromArray:[_bundle objectForInfoDictionaryKey:@"JVStyleOptions"]];
 		[self _setStyleOptions:options];
@@ -493,12 +493,12 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 #pragma mark -
 
 - (NSString *) contentsOfMainStyleSheet {
-	NSString *contents = [[NSString alloc] initWithContentsOfURL:[self mainStyleSheetLocation] encoding:NSUTF8StringEncoding error:NULL];
+	NSString *contents = [NSString stringWithContentsOfURL:[self mainStyleSheetLocation] encoding:NSUTF8StringEncoding error:NULL];
 	return ( contents ? contents : @"" );
 }
 
 - (NSString *) contentsOfVariantStyleSheetWithName:(NSString *) name {
-	NSString *contents = [[NSString alloc] initWithContentsOfURL:[self variantStyleSheetLocationWithName:name] encoding:NSUTF8StringEncoding error:NULL];
+	NSString *contents = [NSString stringWithContentsOfURL:[self variantStyleSheetLocationWithName:name] encoding:NSUTF8StringEncoding error:NULL];
 	return ( contents ? contents : @"" );
 }
 
@@ -506,10 +506,10 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	NSURL *url = [self bodyTemplateLocationWithName:name];
 	if( ! url ) return @"";
 
-	NSString *contents = [[NSString alloc] initWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
+	NSString *contents = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
 
 	NSURL *resources = [[NSBundle mainBundle] resourceURL];
-	return ( contents ? [[NSString alloc] initWithFormat:contents, [resources absoluteString], @""] : @"" );
+	return ( contents ? [NSString stringWithFormat:contents, [resources absoluteString], @""] : @"" );
 }
 
 #pragma mark -
@@ -568,7 +568,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 	_bundle = bundle;
 
-	[self setMainParameters:(file ? [[NSDictionary alloc] initWithContentsOfFile:file] : @{})];
+	[self setMainParameters:(file ? [NSDictionary dictionaryWithContentsOfFile:file] : @{})];
 
 	[self reload];
 }

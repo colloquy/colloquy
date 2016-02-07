@@ -50,7 +50,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 - (nullable instancetype) initWithCoder:(NSCoder *) coder {
 	if( [coder allowsKeyedCoding] ) {
-		NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
+		NSMutableDictionary *settings = [NSMutableDictionary dictionary];
 		settings[@"rules"] = [coder decodeObjectForKey:@"rules"];
 		settings[@"title"] = [coder decodeObjectForKey:@"title"];
 		settings[@"ignoreCase"] = @([coder decodeBoolForKey:@"ignoreCase"]);
@@ -120,8 +120,8 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	NSString *messageCount = @"";
 	if( _newMessages == 0 ) messageCount = NSLocalizedString( @"no messages waiting", "no messages waiting room tooltip" );
 	else if( _newMessages == 1 ) messageCount = NSLocalizedString( @"1 message waiting", "one message waiting room tooltip" );
-	else messageCount = [[NSString alloc] initWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), _newMessages];
-	return [[NSString alloc] initWithFormat:@"%@\n%@", [self title], messageCount];
+	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), _newMessages];
+	return [NSString stringWithFormat:@"%@\n%@", [self title], messageCount];
 }
 
 - (NSMenu *) menu {

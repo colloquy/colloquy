@@ -580,7 +580,7 @@ static NSMenu *favoritesMenu = nil;
 			[self _validateToolbar];
 
 			_userSelectionPossibleUsers = [users allObjects];
-			[userSelectionDescription setStringValue:[[NSString alloc] initWithFormat:NSLocalizedString(@"Multiple users with the name '%@' have been found.", "multiple user same nickname, user selection description"), [userToMessage stringValue]]];
+			[userSelectionDescription setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Multiple users with the name '%@' have been found.", "multiple user same nickname, user selection description"), [userToMessage stringValue]]];
 
 			[userSelectionTable reloadData];
 			[userSelectionTable selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
@@ -609,7 +609,7 @@ static NSMenu *favoritesMenu = nil;
 	if( [sender tag] ) {
 		[_passConnection setNicknamePassword:[authPassword stringValue]];
 		if( [authKeychain state] == NSOnState ) {
-			[[CQKeychain standardKeychain] setPassword:[authPassword stringValue] forServer:_passConnection.uniqueIdentifier area:[[NSString alloc] initWithFormat:@"Nickname %@", _passConnection.preferredNickname] displayValue:_passConnection.server];
+			[[CQKeychain standardKeychain] setPassword:[authPassword stringValue] forServer:_passConnection.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", _passConnection.preferredNickname] displayValue:_passConnection.server];
 		}
 	}
 
@@ -685,7 +685,7 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark -
 
 - (NSArray *) connections {
-	NSMutableArray *ret = [[NSMutableArray alloc] initWithCapacity:[_bookmarks count]];
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
 
 	for( id info in _bookmarks ) {
 		MVChatConnection *connection = info[@"connection"];
@@ -696,7 +696,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (NSArray *) connectedConnections {
-	NSMutableArray *ret = [[NSMutableArray alloc] initWithCapacity:[_bookmarks count]];
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
 
 	for( id info in _bookmarks ) {
 		MVChatConnection *connection = info[@"connection"];
@@ -715,7 +715,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (NSArray *) connectionsForServerAddress:(NSString *) address {
-	NSMutableArray *ret = [[NSMutableArray alloc] initWithCapacity:[_bookmarks count]];
+	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
 
 	address = [address stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@". \t\n"]];
 
@@ -745,7 +745,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) addConnection:(MVChatConnection *) connection keepBookmark:(BOOL) keep {
-	NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary *info = [NSMutableDictionary dictionary];
 	info[@"created"] = [NSDate date];
 	info[@"connection"] = connection;
 	if( ! keep ) info[@"temporary"] = @YES;
@@ -763,7 +763,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) insertConnection:(MVChatConnection *) connection atIndex:(NSUInteger) index {
-	NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary *info = [NSMutableDictionary dictionary];
 	info[@"created"] = [NSDate date];
 	info[@"connection"] = connection;
 
@@ -801,7 +801,7 @@ static NSMenu *favoritesMenu = nil;
 	[self _deregisterNotificationsForConnection:connection];
 
 	[[CQKeychain standardKeychain] removePasswordForServer:connection.uniqueIdentifier area:@"Server"];
-	[[CQKeychain standardKeychain] removePasswordForServer:connection.uniqueIdentifier area:[[NSString alloc] initWithFormat:@"Nickname %@", connection.preferredNickname]];
+	[[CQKeychain standardKeychain] removePasswordForServer:connection.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", connection.preferredNickname]];
 
 	[_bookmarks removeObjectAtIndex:index];
 	[self _saveBookmarkList];
@@ -810,7 +810,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) replaceConnectionAtIndex:(NSUInteger) index withConnection:(MVChatConnection *) connection {
-	NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary *info = [NSMutableDictionary dictionary];
 	info[@"created"] = [NSDate date];
 	info[@"connection"] = connection;
 
@@ -826,7 +826,7 @@ static NSMenu *favoritesMenu = nil;
 	[self _deregisterNotificationsForConnection:oldConnection];
 
 	[[CQKeychain standardKeychain] removePasswordForServer:connection.uniqueIdentifier area:@"Server"];
-	[[CQKeychain standardKeychain] removePasswordForServer:connection.uniqueIdentifier area:[[NSString alloc] initWithFormat:@"Nickname %@", connection.preferredNickname]];
+	[[CQKeychain standardKeychain] removePasswordForServer:connection.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", connection.preferredNickname]];
 
 	[self _registerNotificationsForConnection:connection];
 
@@ -1014,7 +1014,7 @@ static NSMenu *favoritesMenu = nil;
 		if( info[@"connection"] == connection ) {
 			NSMutableArray *ret = info[@"ignores"];
 			if( ! ret ) {
-				ret = [[NSMutableArray alloc] init];
+				ret = [NSMutableArray array];
 				info[@"ignores"] = ret;
 			}
 			return ret;
@@ -1595,7 +1595,7 @@ static NSMenu *favoritesMenu = nil;
 			break;
 	}
 
-	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	context[@"title"] = errorTitle;
 	context[@"description"] = [[notification userInfo][@"error"] localizedDescription];
 	[[JVNotificationController defaultController] performNotification:@"JVChatError" withContextInfo:context];
@@ -1615,7 +1615,7 @@ static NSMenu *favoritesMenu = nil;
 
 	[chatErrorAlert setMessageText:errorTitle];
 	if( error.userInfo[@"errorLiteralReason"] )
-		[chatErrorAlert setInformativeText:[[NSString alloc] initWithFormat:NSLocalizedString( @"%@\n\nServer Details:\n%@", "error alert informative text with literal reason"), [[notification userInfo][@"error"] localizedDescription], [[notification userInfo][@"error"] userInfo][@"errorLiteralReason"]]];
+		[chatErrorAlert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"%@\n\nServer Details:\n%@", "error alert informative text with literal reason"), [[notification userInfo][@"error"] localizedDescription], [[notification userInfo][@"error"] userInfo][@"errorLiteralReason"]]];
 	else [chatErrorAlert setInformativeText:[[notification userInfo][@"error"] localizedDescription]];
 
 	[chatErrorAlert setAlertStyle:NSInformationalAlertStyle];
@@ -1666,7 +1666,7 @@ static NSMenu *favoritesMenu = nil;
 				}
 				break;
 			default:
-				NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), [[NSString alloc] initWithFormat:NSLocalizedString( @"The connection was terminated between your computer and the server. %s.", "unknown disconnection error dialog message" ), [MVChatConnection descriptionForError:error]], nil, nil, nil );
+				NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), [NSString stringWithFormat:NSLocalizedString( @"The connection was terminated between your computer and the server. %s.", "unknown disconnection error dialog message" ), [MVChatConnection descriptionForError:error]], nil, nil, nil );
 				break;
 		}
 	} else if( [[[notification userInfo] objectForKey:@"whileConnecting"] boolValue] ) {
@@ -1680,10 +1680,10 @@ static NSMenu *favoritesMenu = nil;
 				NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat password is invalid", "chat invalid password dialog title" ), NSLocalizedString( @"The password you specified is invalid or a connection could not be made without a proper password. Make sure you have access to the server.", "chat invalid password dialog message" ), nil, nil, nil );
 				break;
 			case MVChatBadTargetError:
-				NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), [[NSString alloc] initWithFormat:NSLocalizedString( @"The nickname you specified is in use or invalid on this server. A connection could not be made with '%@' as your nickname.", "chat invalid nicknames dialog message" ), [connection nickname]], nil, nil, nil );
+				NSRunCriticalAlertPanel( NSLocalizedString( @"Your Chat nickname could not be used", "chat invalid nickname dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"The nickname you specified is in use or invalid on this server. A connection could not be made with '%@' as your nickname.", "chat invalid nicknames dialog message" ), [connection nickname]], nil, nil, nil );
 				break;
 			default:
-				NSRunCriticalAlertPanel( NSLocalizedString( @"An error occured while connecting", "chat connecting error dialog title" ), [[NSString alloc] initWithFormat:NSLocalizedString( @"The connection could not be made. %s.", "unknown connection error dialog message" ), [[NSString alloc] initWithFormat:NSLocalizedString( @"The connection was terminated between your computer and the server. %s.", "unknown disconnection error dialog message" ), [MVChatConnection descriptionForError:error]]], nil, nil, nil );
+				NSRunCriticalAlertPanel( NSLocalizedString( @"An error occured while connecting", "chat connecting error dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"The connection could not be made. %s.", "unknown connection error dialog message" ), [NSString stringWithFormat:NSLocalizedString( @"The connection was terminated between your computer and the server. %s.", "unknown disconnection error dialog message" ), [MVChatConnection descriptionForError:error]]], nil, nil, nil );
 				break;
 		}
 	} else {
@@ -1700,7 +1700,7 @@ static NSMenu *favoritesMenu = nil;
 				}
 				break;
 			default:
-				NSRunCriticalAlertPanel( NSLocalizedString( @"An error occured", "unknown error dialog title" ), [[NSString alloc] initWithFormat:NSLocalizedString( @"An error occured when dealing with %@. %@", "unknown error dialog message" ), ( target ? target : NSLocalizedString( @"server", "singular server label" ) ), [MVChatConnection descriptionForError:error]], nil, nil, nil );
+				NSRunCriticalAlertPanel( NSLocalizedString( @"An error occured", "unknown error dialog title" ), [NSString stringWithFormat:NSLocalizedString( @"An error occured when dealing with %@. %@", "unknown error dialog message" ), ( target ? target : NSLocalizedString( @"server", "singular server label" ) ), [MVChatConnection descriptionForError:error]], nil, nil, nil );
 				break;
 		}
 	}*/
@@ -1710,21 +1710,21 @@ static NSMenu *favoritesMenu = nil;
 	if( ! _bookmarks ) return; // _loadBookmarkList hasn't fired yet, we have nothing to save
 
 	NSUInteger roomCount = 0;
-	NSMutableArray *saveList = [[NSMutableArray alloc] initWithCapacity:[_bookmarks count]];
+	NSMutableArray *saveList = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
 
 	for( id info in _bookmarks ) {
 		if( ! [info[@"temporary"] boolValue] ) {
 			MVChatConnection *connection = info[@"connection"];
 			if( ! connection ) continue;
 
-			NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+			NSMutableDictionary *data = [NSMutableDictionary dictionary];
 			data[@"automatic"] = @([info[@"automatic"] boolValue]);
 			data[@"showConsole"] = @([info[@"showConsole"] boolValue]);
 			data[@"secure"] = @([connection isSecure]);
 			data[@"requestsSASL"] = @(connection.requestsSASL);
 			data[@"roomsWaitForIdentification"] = @(connection.roomsWaitForIdentification);
-			data[@"proxy"] = [NSNumber numberWithLong:[connection proxyType]];
-			data[@"encoding"] = [NSNumber numberWithLong:[connection encoding]];
+			data[@"proxy"] = @([connection proxyType]);
+			data[@"encoding"] = @([connection encoding]);
 			data[@"uniqueIdentifier"] = [connection uniqueIdentifier];
 			data[@"server"] = [connection server];
 			data[@"port"] = @([connection serverPort]);
@@ -1744,7 +1744,7 @@ static NSMenu *favoritesMenu = nil;
 			if( [[connection persistentInformation] count] )
 				data[@"persistentInformation"] = [connection persistentInformation];
 
-			NSMutableArray *permIgnores = [[NSMutableArray alloc] init];
+			NSMutableArray *permIgnores = [NSMutableArray array];
 
 			for( KAIgnoreRule *rule in info[@"ignores"] ) {
 				if( [rule isPermanent] ) {
@@ -1781,7 +1781,7 @@ static NSMenu *favoritesMenu = nil;
 	_bookmarks = [[NSMutableArray alloc] init];
 
 	for( __strong NSMutableDictionary *info in list ) {
-		info = [[NSMutableDictionary alloc] initWithDictionary:info];
+		info = [info mutableCopy];
 
 		MVChatConnection *connection = nil;
 
@@ -1789,15 +1789,16 @@ static NSMenu *favoritesMenu = nil;
 		if( ! [(NSString *)info[@"type"] length] )
 		    type = MVChatConnectionIRCType;
 		else {
-			if( [info[@"type"] isEqualToString:@"icb"] )
+			if( [info[@"type"] isEqualToString:@"icb"] ) {
 				type = MVChatConnectionICBType;
-			else if( [info[@"type"] isEqualToString:@"irc"] )
+			} else if( [info[@"type"] isEqualToString:@"irc"] ) {
 				type = MVChatConnectionIRCType;
-		    else if( [info[@"type"] isEqualToString:@"silc"] )
+			} else if( [info[@"type"] isEqualToString:@"silc"] ) {
 		        type = MVChatConnectionSILCType;
-		    else if( [info[@"type"] isEqualToString:@"xmpp"] )
+			} else if( [info[@"type"] isEqualToString:@"xmpp"] ) {
 		        type = MVChatConnectionXMPPType;
-			else type = MVChatConnectionIRCType;
+			} else
+				type = MVChatConnectionIRCType;
 		}
 
 		if( info[@"url"] ) {
@@ -1824,7 +1825,7 @@ static NSMenu *favoritesMenu = nil;
 		if( info[@"alternateNicknames"] )
 			connection.alternateNicknames = info[@"alternateNicknames"];
 
-		NSMutableArray *permIgnores = [[NSMutableArray alloc] init];
+		NSMutableArray *permIgnores = [NSMutableArray array];
 		for( NSData *rule in info[@"ignores"] ) {
 			NSData *archive = [NSKeyedUnarchiver unarchiveObjectWithData:rule];
 			if( archive ) [permIgnores addObject:archive];
@@ -1851,12 +1852,12 @@ static NSMenu *favoritesMenu = nil;
 		}
 		connection.password = password;
 
-		NSString *nicknamePassword = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:[[NSString alloc] initWithFormat:@"Nickname %@", connection.preferredNickname]];
+		NSString *nicknamePassword = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", connection.preferredNickname]];
 		if (!nicknamePassword) {
 			nicknamePassword = [[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection preferredNickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 			if (nicknamePassword.length) {
 				[[MVKeyChain defaultKeyChain] removeInternetPasswordForServer:connection.server securityDomain:connection.server account:connection.preferredNickname path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
-				[[CQKeychain standardKeychain] setPassword:nicknamePassword forServer:connection.uniqueIdentifier area:[[NSString alloc] initWithFormat:@"Nickname %@", connection.preferredNickname] displayValue:connection.server];
+				[[CQKeychain standardKeychain] setPassword:nicknamePassword forServer:connection.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", connection.preferredNickname] displayValue:connection.server];
 			}
 		}
 		connection.nicknamePassword = nicknamePassword;
@@ -1956,7 +1957,7 @@ static NSMenu *favoritesMenu = nil;
 		return;
 	}
 
-	[certificateDescription setObjectValue:[[NSString alloc] initWithFormat:NSLocalizedString( @"Your certificate is locked with a passphrase. In order to connect to %@, you need to unlock your certificate.", "certificate unlock request, server name inserted" ), [connection server]]];
+	[certificateDescription setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"Your certificate is locked with a passphrase. In order to connect to %@, you need to unlock your certificate.", "certificate unlock request, server name inserted" ), [connection server]]];
 	[certificatePassphrase setObjectValue:@""];
 	[certificateKeychain setState:NSOffState];
 
@@ -2026,7 +2027,7 @@ static NSMenu *favoritesMenu = nil;
 	if ( [[notification name] isEqualToString:MVChatConnectionDidIdentifyWithServicesNotification] ) {
 		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 		context[@"title"] = NSLocalizedString( @"You Have Been Identified", "identified bubble title" );
-		context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ has identified you as %@ on %@.", "identified bubble message, server message and server name" ), [notification userInfo][@"user"], [notification userInfo][@"target"], [connection server]];
+		context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@ has identified you as %@ on %@.", "identified bubble message, server message and server name" ), [notification userInfo][@"user"], [notification userInfo][@"target"], [connection server]];
 		context[@"image"] = [NSImage imageNamed:@"Keychain"];
 		[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
 	}
@@ -2131,7 +2132,7 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) _didConnect:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
-	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	context[@"title"] = NSLocalizedString( @"Connected", "connected bubble title" );
 	context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"You're now connected to %@ as %@.", "you are now connected bubble text" ), [connection server], [connection nickname]];
 	context[@"image"] = [NSImage imageNamed:@"connect"];
@@ -2144,7 +2145,7 @@ static NSMenu *favoritesMenu = nil;
 - (void) _didDisconnect:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
 	if( [connection status] == MVChatConnectionServerDisconnectedStatus ) {
-		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
+		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		context[@"title"] = NSLocalizedString( @"Disconnected", "disconnected bubble title" );
 		context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"You're were disconnected from %@.", "you were disconnected bubble text" ), [connection server]];
 		context[@"image"] = [NSImage imageNamed:@"disconnect"];

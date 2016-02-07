@@ -60,7 +60,7 @@
 	for( NSString *path in [[_manager class] pluginSearchPaths] ) {
 		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			if( [[file pathExtension] isEqualToString:@"scpt"] || [[file pathExtension] isEqualToString:@"scptd"] || [[file pathExtension] isEqualToString:@"applescript"] ) {
-				JVAppleScriptChatPlugin *plugin = [[JVAppleScriptChatPlugin alloc] initWithScriptAtPath:[[NSString alloc] initWithFormat:@"%@/%@", path, file] withManager:_manager];
+				JVAppleScriptChatPlugin *plugin = [[JVAppleScriptChatPlugin alloc] initWithScriptAtPath:[NSString stringWithFormat:@"%@/%@", path, file] withManager:_manager];
 				if( plugin ) [_manager addPlugin:plugin];
 			}
 		}

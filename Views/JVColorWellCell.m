@@ -71,7 +71,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	ret -> _showsWebValue = _showsWebValue;
 	ret -> _releasing = NO;
 
-	if( ! colorWellCells ) colorWellCells = [[NSMutableSet alloc] init];
+	if( ! colorWellCells ) colorWellCells = [NSMutableSet set];
 	[colorWellCells addObject:ret];
 
 	return ret;
@@ -209,5 +209,4 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 - (void) setStringValue:(NSString *) string {
 	[self setColor:[NSColor colorWithCSSAttributeValue:string]];
 }
-
 @end

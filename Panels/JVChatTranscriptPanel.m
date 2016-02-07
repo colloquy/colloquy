@@ -148,7 +148,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 - (NSString *) windowTitle {
 	NSCalendarDate *date = [[self transcript] dateBegan];
-	return [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ - %@ Transcript", "chat transcript/log - window title" ), [self title], ( date ? [NSDate formattedShortDateStringForDate:[NSDate date]] : @"" )];
+	return [NSString stringWithFormat:NSLocalizedString( @"%@ - %@ Transcript", "chat transcript/log - window title" ), [self title], ( date ? [NSDate formattedShortDateStringForDate:[NSDate date]] : @"" )];
 }
 
 - (nullable NSString *) information {
@@ -156,7 +156,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (NSString *) toolTip {
-	return [[NSString alloc] initWithFormat:@"%@\n%@", [self title], [self information]];
+	return [NSString stringWithFormat:@"%@\n%@", [self title], [self information]];
 }
 
 - (IBAction) close:(nullable id) sender {
@@ -169,7 +169,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (NSString *) identifier {
-	return [[NSString alloc] initWithFormat:@"Transcript %@", [self title]];
+	return [NSString stringWithFormat:@"Transcript %@", [self title]];
 }
 
 - (nullable MVChatConnection *) connection {
@@ -273,7 +273,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	if( [searchEngineFormatter rangeOfString:@"%@"].location == NSNotFound )
 		searchEngineFormatter = @"http://google.com/search?q=%@";
 
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[[NSString alloc] initWithFormat:searchEngineFormatter, [display.selectedDOMRange.text stringByEncodingIllegalURLCharacters]]]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:searchEngineFormatter, [display.selectedDOMRange.text stringByEncodingIllegalURLCharacters]]]];
 }
 
 #pragma mark -
@@ -294,7 +294,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 - (nullable id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The panel id %@ doesn't have the \"%@\" property.", [self uniqueIdentifier], key]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The panel id %@ doesn't have the \"%@\" property.", [self uniqueIdentifier], key]];
 		return nil;
 	}
 
@@ -304,7 +304,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 - (void) setValue:(nullable id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The \"%@\" property of panel id %@ is read only.", key, [self uniqueIdentifier]]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of panel id %@ is read only.", key, [self uniqueIdentifier]]];
 		return;
 	}
 

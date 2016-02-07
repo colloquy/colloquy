@@ -140,7 +140,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *) friendlyName {
 	if (!_friendlyName.length) {
 		if (_ignoredUser.length && _ignoredMessage.length)
-			return [[NSString alloc] initWithFormat:@"%@ - %@", _ignoredUser, _ignoredMessage];
+			return [NSString stringWithFormat:@"%@ - %@", _ignoredUser, _ignoredMessage];
 		if (_ignoredUser.length)
 			return _ignoredUser;
 		if ([_ignoredMessage length])

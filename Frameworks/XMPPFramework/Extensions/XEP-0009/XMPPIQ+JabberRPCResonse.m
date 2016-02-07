@@ -193,7 +193,7 @@
 	NSXMLElement *data = (NSXMLElement *)[arrayElement childAtIndex:0];
 	NSArray *children = [data children];
 	
-	NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:[children count]];
+	NSMutableArray *array = [NSMutableArray arrayWithCapacity:[children count]];
 	
 	for (NSXMLElement *child in children) {
 		[array addObject:[self objectFromElement:child]];
@@ -216,7 +216,7 @@
 	</struct>
 	*/
 	NSArray *children = [structElement children];
-	NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:[children count]];
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:[children count]];
 	
 	for (NSXMLElement *child in children) {
 		[dict addEntriesFromDictionary:[self parseMember:child]];

@@ -390,7 +390,7 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
 
 - (NSArray *)allResources
 {
-    NSMutableArray *allResources = [[NSMutableArray alloc] init];
+    NSMutableArray *allResources = [NSMutableArray array];
 	
     for (XMPPResourceCoreDataStorageObject *resource in [[self resources] allObjects]) {
         

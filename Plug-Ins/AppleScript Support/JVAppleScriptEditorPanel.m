@@ -161,7 +161,7 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 #pragma mark -
 
 - (NSString *) identifier {
-	return [[NSString alloc] initWithFormat:@"F-Script Console %x", self];
+	return [NSString stringWithFormat:@"F-Script Console %x", self];
 }
 
 - (MVChatConnection *) connection {
@@ -214,7 +214,7 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 	if( returnCode == NSOKButton && [self compile:nil] ) {
 		[[[self plugin] script] saveToFile:[sheet filename]];
 		[[self plugin] setScriptFilePath:[sheet filename]];
-		[[NSFileManager defaultManager] changeFileAttributes:[[NSDictionary alloc] initWithObjectsAndKeys:@([sheet isExtensionHidden]), NSFileExtensionHidden, nil] atPath:[sheet filename]];
+		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:[sheet isExtensionHidden]], NSFileExtensionHidden, nil] atPath:[sheet filename]];
 	}
 }
 
@@ -302,12 +302,12 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [[NSArray alloc] initWithObjects:JVToolbarCompileItemIdentifier, nil];
+	NSArray *list = [NSArray arrayWithObjects:JVToolbarCompileItemIdentifier, nil];
 	return [[list retain] autorelease];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [[NSArray alloc] initWithObjects:JVToolbarCompileItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier,
+	NSArray *list = [NSArray arrayWithObjects:JVToolbarCompileItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier,
 		NSToolbarFlexibleSpaceItemIdentifier,  NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
 
 	return [[list retain] autorelease];

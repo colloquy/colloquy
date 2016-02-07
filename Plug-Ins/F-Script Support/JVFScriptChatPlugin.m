@@ -175,7 +175,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 			if( ! _errorShown ) {
 				BlockStackElem *stack = [[exception userInfo][@"blockStack"] lastObject];
 				NSString *locationError = @"";
-				if( stack ) locationError = [[NSString alloc] initWithFormat:@" The error occured near character %d inside the block.", [stack firstCharIndex]];
+				if( stack ) locationError = [NSString stringWithFormat:@" The error occured near character %d inside the block.", [stack firstCharIndex]];
 
 				_errorShown = YES;
 				NSInteger result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"F-Script Plugin Error", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error title" ), NSLocalizedStringFromTableInBundle( @"The F-Script plugin \"%@\" had an error while calling the \"%@\" block.%@\n\n%@", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error message" ), nil, NSLocalizedStringFromTableInBundle( @"Inspect", nil, [NSBundle bundleForClass:[self class]], "inspect button title" ), NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], blockName, locationError, [exception reason] );

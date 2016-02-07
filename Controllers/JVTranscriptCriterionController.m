@@ -73,7 +73,7 @@
 #pragma mark -
 
 - (void) awakeFromNib {
-	[tabView selectTabViewItemWithIdentifier:[[NSString alloc] initWithFormat:@"%ld", (long)[self format]]];
+	[tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%d", [self format]]];
 
 	if( [self usesSmartTranscriptCriterion] ) {
 		[textKindButton setMenu:expandedKindMenu];
@@ -120,7 +120,7 @@
 	if( format != _format ) {
 		_format = format;
 
-		[tabView selectTabViewItemWithIdentifier:[[NSString alloc] initWithFormat:@"%ld", (long)format]];
+		[tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%ld", (long)format]];
 
 		if( [self format] == JVTranscriptTextCriterionFormat ) {
 			[textKindButton selectItemAtIndex:[textKindButton indexOfItemWithTag:[self kind]]];
@@ -306,7 +306,7 @@
 		case JVTranscriptMessageAddressedToMeCriterionKind:
 		case JVTranscriptMessageNotAddressedToMeCriterionKind: {
 			if( ! chatView || ! [chatView connection] ) return NO;
-			NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[[NSString alloc] initWithFormat:@"^%@[:;,-]", [[[chatView connection] localUser] nickname]] options:( ignoreCase ? NSRegularExpressionCaseInsensitive : 0) error:nil];
+			NSRegularExpression *regex = [NSRegularExpression cachedRegularExpressionWithPattern:[NSString stringWithFormat:@"^%@[:;,-]", [[[chatView connection] localUser] nickname]] options:( ignoreCase ? NSRegularExpressionCaseInsensitive : 0) error:nil];
 			NSTextCheckingResult *match = [regex firstMatchInString:[message bodyAsPlainText] options:0 range:NSMakeRange( 0, [message bodyAsPlainText].length )];
 			if( [match numberOfRanges] && [self kind] == JVTranscriptMessageAddressedToMeCriterionKind ) return YES;
 			else if( ! [match numberOfRanges] && [self kind] == JVTranscriptMessageNotAddressedToMeCriterionKind ) return YES;
@@ -453,13 +453,13 @@
 - (NSString *) description {
 	[self view];
 	if( [self format] == JVTranscriptTextCriterionFormat ) {
-		return [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ %@ \"%@\"", "description format for kind, operation and query, JVTranscriptCriterionController" ), [textKindButton titleOfSelectedItem], [textOperationButton titleOfSelectedItem], [self query]];
+		return [NSString stringWithFormat:NSLocalizedString( @"%@ %@ \"%@\"", "description format for kind, operation and query, JVTranscriptCriterionController" ), [textKindButton titleOfSelectedItem], [textOperationButton titleOfSelectedItem], [self query]];
 	} else if( [self format] == JVTranscriptDateCriterionFormat ) {
-		return [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ %@ %@ %@", "description format for kind, operation, query and unit, JVTranscriptCriterionController" ), [dateKindButton titleOfSelectedItem], [dateOperationButton titleOfSelectedItem], [self query], [dateUnitsButton titleOfSelectedItem]];
+		return [NSString stringWithFormat:NSLocalizedString( @"%@ %@ %@ %@", "description format for kind, operation, query and unit, JVTranscriptCriterionController" ), [dateKindButton titleOfSelectedItem], [dateOperationButton titleOfSelectedItem], [self query], [dateUnitsButton titleOfSelectedItem]];
 	} else if( [self format] == JVTranscriptBooleanCriterionFormat ) {
 		return [booleanKindButton titleOfSelectedItem];
 	} else if( [self format] == JVTranscriptListCriterionFormat ) {
-		return [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ %@ %@", "description format for kind, operation and type, JVTranscriptCriterionController" ), [listKindButton titleOfSelectedItem], [listOperationButton titleOfSelectedItem], [listQuery titleOfSelectedItem]];
+		return [NSString stringWithFormat:NSLocalizedString( @"%@ %@ %@", "description format for kind, operation and type, JVTranscriptCriterionController" ), [listKindButton titleOfSelectedItem], [listOperationButton titleOfSelectedItem], [listQuery titleOfSelectedItem]];
 	} else return [super description];
 }
 @end

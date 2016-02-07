@@ -137,7 +137,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 - (NSString *) HTMLFormatWithOptions:(NSDictionary *) options {
 	NSRange limitRange, effectiveRange;
-	NSMutableString *ret = [[NSMutableString alloc] init];
+	NSMutableString *ret = [NSMutableString string];
 
 	if( [options[@"FullDocument"] boolValue] )
 		[ret appendString:@"<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>"];
@@ -157,8 +157,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		NSString *title = dict[@"LinkTitle"];
 		BOOL bold = NO, italic = NO, underline = NO, strikethrough = NO;
 
-		NSMutableString *spanString = [[NSMutableString alloc] initWithString:@"<span"];
-		NSMutableString *styleString = [[NSMutableString alloc] initWithString:( style ? style : @"" )];
+		NSMutableString *spanString = [NSMutableString stringWithString:@"<span"];
+		NSMutableString *styleString = [NSMutableString stringWithString:( style ? style : @"" )];
 
 		if( foregoundColor && ! [options[@"IgnoreFontColors"] boolValue] ) {
 			if( styleString.length && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
@@ -174,7 +174,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			if( styleString.length && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
 			NSString *family = [currentFont familyName];
 			if( [family rangeOfString:@" "].location != NSNotFound )
-				family = [[NSString alloc] initWithFormat:@"'%@'", family];
+				family = [NSString stringWithFormat:@"'%@'", family];
 			[styleString appendFormat:@"font-family: %@", family];
 		}
 
@@ -353,7 +353,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	}
 
 	NSCharacterSet *formatCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\002\003\006\026\037\017"];
-	NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 
 	NSFont *baseFont = options[@"BaseFont"];
 	if( ! baseFont ) baseFont = [NSFont userFontOfSize:12.];
@@ -924,7 +924,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	NSParameterAssert(characterSet);
 
 	NSArray <NSString *> *stringComponentsSeparatedByCharactersInSet = [self.string componentsSeparatedByCharactersInSet:characterSet];
-	NSMutableArray <NSAttributedString *> *componentsSeparatedByCharactersInSet = [[NSMutableArray alloc] init];
+	NSMutableArray <NSAttributedString *> *componentsSeparatedByCharactersInSet = [NSMutableArray array];
 	NSUInteger currentIndex = 0;
 	for (NSString *string in stringComponentsSeparatedByCharactersInSet) {
 		[componentsSeparatedByCharactersInSet addObject:[self attributedSubstringFromRange:NSMakeRange(currentIndex, string.length)]];

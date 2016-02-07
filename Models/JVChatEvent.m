@@ -73,11 +73,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 	@synchronized( _transcript ) {
 		xmlNode *subNode = _node -> children;
-		NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+		NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 
 		do {
 			if( subNode -> type == XML_ELEMENT_NODE && strcmp( "message", (char *) subNode -> name ) ) { // everything but "message"
-				NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
+				NSMutableDictionary *properties = [NSMutableDictionary dictionary];
 				xmlAttrPtr prop = NULL;
 				for( prop = subNode -> properties; prop; prop = prop -> next ) {
 					xmlChar *value = xmlGetProp( subNode, prop -> name );
@@ -138,7 +138,7 @@ NS_ASSUME_NONNULL_BEGIN
 			NSString *msgValue = [[self message] HTMLFormatWithOptions:options];
 			msgValue = [msgValue stringByStrippingIllegalXMLCharacters];
 
-			msgStr = [[[NSString alloc] initWithFormat:@"<message>%@</message>", msgValue] UTF8String];
+			msgStr = [[NSString stringWithFormat:@"<message>%@</message>", msgValue] UTF8String];
 
 			msgDoc = xmlParseMemory( msgStr, (int)strlen( msgStr ) );
 			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), _doc, 1 );
@@ -156,19 +156,19 @@ NS_ASSUME_NONNULL_BEGIN
 				value = [value HTMLFormatWithOptions:options];
 				value = [value stringByStrippingIllegalXMLCharacters];
 				if( [(NSString *)value length] )
-					msgStr = [[[NSString alloc] initWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
+					msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
 			} else if( [value isKindOfClass:[NSString class]] ) {
 				value = [value stringByEncodingXMLSpecialCharactersAsEntities];
 				value = [value stringByStrippingIllegalXMLCharacters];
 				if( [(NSString *)value length] )
-					msgStr = [[[NSString alloc] initWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
+					msgStr = [[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key] UTF8String];
 			} else if( [value isKindOfClass:[NSData class]] ) {
 				value = [value base64EncodingWithLineLength:0];
 				if( [(NSString *)value length] )
-					msgStr = [[[NSString alloc] initWithFormat:@"<%@ encoding=\"base64\">%@</%@>", key, value, key] UTF8String];
+					msgStr = [[NSString stringWithFormat:@"<%@ encoding=\"base64\">%@</%@>", key, value, key] UTF8String];
 			}
 
-			if( ! msgStr ) msgStr = [[[NSString alloc] initWithFormat:@"<%@ />", key] UTF8String];
+			if( ! msgStr ) msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];
 
 			msgDoc = xmlParseMemory( msgStr, (int)strlen( msgStr ) );
 			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), _doc, 1 );

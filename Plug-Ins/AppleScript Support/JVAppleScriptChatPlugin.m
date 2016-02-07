@@ -253,7 +253,7 @@
 #pragma mark -
 
 - (void) load {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:[self scriptFilePath], @"lOd1", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[self scriptFilePath], @"lOd1", nil];
 	[self callScriptHandler:'lOdX' withArguments:args forSelector:_cmd];
 }
 
@@ -262,24 +262,24 @@
 }
 
 - (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:command, @"----", ( arguments ? (id)arguments : (id)[NSNull null] ), @"psR1", user, @"psR2", [user connection], @"psR3", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", ( arguments ? (id)arguments : (id)[NSNull null] ), @"psR1", user, @"psR2", [user connection], @"psR3", nil];
 	id result = [self callScriptHandler:'psRX' withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:command, @"----", ( arguments ? (id)arguments : (id)[NSNull null] ), @"psL1", user, @"psL2", [user connection], @"psL3", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", ( arguments ? (id)arguments : (id)[NSNull null] ), @"psL1", user, @"psL2", [user connection], @"psL3", nil];
 	id result = [self callScriptHandler:'psLX' withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (void) connected:(MVChatConnection *) connection {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:connection, @"----", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"----", nil];
 	[self callScriptHandler:'cTsX' withArguments:args forSelector:_cmd];
 }
 
 - (void) disconnecting:(MVChatConnection *) connection {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:connection, @"----", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"----", nil];
 	[self callScriptHandler:'dFsX' withArguments:args forSelector:_cmd];
 }
 
@@ -295,7 +295,7 @@
 	}
 
 	NSString *title = [sender title];
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:title, @"----", object, @"pcM1", submenu, @"pcM2", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:title, @"----", object, @"pcM1", submenu, @"pcM2", nil];
 	[self callScriptHandler:'pcMX' withArguments:args forSelector:_cmd];
 }
 
@@ -450,7 +450,7 @@
 }
 
 - (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:object, @"----", ( view ? (id) view : (id) [NSNull null] ), @"cMi1", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:object, @"----", ( view ? (id) view : (id) [NSNull null] ), @"cMi1", nil];
 	id result = [self callScriptHandler:'cMiX' withArguments:args forSelector:_cmd];
 	NSMutableArray *ret = [NSMutableArray array];
 
@@ -465,89 +465,89 @@
 }
 
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context andPreferences:(NSDictionary *) preferences {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:identifier, @"----", context, @"nOt1", preferences, @"nOt2", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:identifier, @"----", context, @"nOt1", preferences, @"nOt2", nil];
 	[self callScriptHandler:'nOtX' withArguments:args forSelector:_cmd];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:command, @"----", [arguments string], @"pcC1", view, @"pcC2", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:command, @"----", [arguments string], @"pcC1", view, @"pcC2", nil];
 	id result = [self callScriptHandler:'pcCX' withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (BOOL) handleClickedLink:(NSURL *) url inView:(id <JVChatViewController>) view {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:[url absoluteString], @"----", view, @"hCl1", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[url absoluteString], @"----", view, @"hCl1", nil];
 	id result = [self callScriptHandler:'hClX' withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (void) processIncomingMessage:(JVMutableChatMessage *) message inView:(id <JVChatViewController>) view {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:[message isAction]], @"piM1", [message sender], @"piM2", view, @"piM3", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:[message isAction]], @"piM1", [message sender], @"piM2", view, @"piM3", nil];
 	[self callScriptHandler:'piMX' withArguments:args forSelector:_cmd];
 }
 
 - (void) processOutgoingMessage:(JVMutableChatMessage *) message inView:(id <JVChatViewController>) view {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:[message isAction]], @"poM1", view, @"poM2", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:message, @"----", [NSNumber numberWithBool:[message isAction]], @"poM1", view, @"poM2", nil];
 	[self callScriptHandler:'poMX' withArguments:args forSelector:_cmd];
 }
 
 /*- (void) userNamed:(NSString *) nickname isNowKnownAs:(NSString *) newNickname inView:(id <JVChatViewController>) view {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:nickname, @"----", newNickname, @"uNc1", view, @"uNc2", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:nickname, @"----", newNickname, @"uNc1", view, @"uNc2", nil];
 	[self callScriptHandler:'uNcX' withArguments:args forSelector:_cmd];
 }*/
 
 - (void) memberJoined:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:member, @"----", room, @"mJr1", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mJr1", nil];
 	[self callScriptHandler:'mJrX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberParted:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room forReason:(NSAttributedString *) reason {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:member, @"----", room, @"mPr1", [reason string], @"mPr2", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mPr1", [reason string], @"mPr2", nil];
 	[self callScriptHandler:'mPrX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberKicked:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:member, @"----", room, @"mKr1", by, @"mKr2", [reason string], @"mKr3", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", room, @"mKr1", by, @"mKr2", [reason string], @"mKr3", nil];
 	[self callScriptHandler:'mKrX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberPromoted:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:"cOpr" objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:"cOpr" objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
 	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberDemoted:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:( [member voice] ? "VoIc" : "noRm" ) objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:( [member voice] ? "VoIc" : "noRm" ) objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
 	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberVoiced:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:"VoIc" objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:"VoIc" objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
 	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
 - (void) memberDevoiced:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:( [member operator] ? "cOpr" : "noRm" ) objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:member, @"----", [NSValue valueWithBytes:( [member operator] ? "cOpr" : "noRm" ) objCType:@encode( char * )], @"mSc1", by, @"mSc2", room, @"mSc3", nil];
 	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
 - (void) joinedRoom:(JVChatRoomPanel *) room {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:room, @"----", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", nil];
 	[self callScriptHandler:'jRmX' withArguments:args forSelector:_cmd];
 }
 
 - (void) partingFromRoom:(JVChatRoomPanel *) room {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:room, @"----", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", nil];
 	[self callScriptHandler:'pRmX' withArguments:args forSelector:_cmd];
 }
 
 - (void) kickedFromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:room, @"----", by, @"kRm1", [reason string], @"kRm2", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", by, @"kRm1", [reason string], @"kRm2", nil];
 	[self callScriptHandler:'kRmX' withArguments:args forSelector:_cmd];
 }
 
 - (void) topicChangedTo:(NSAttributedString *) topic inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) member {
-	NSDictionary *args = [[NSDictionary alloc] initWithObjectsAndKeys:[topic string], @"rTc1", member, @"rTc2", room, @"rTc3", nil];
+	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:[topic string], @"rTc1", member, @"rTc2", room, @"rTc3", nil];
 	[self callScriptHandler:'rTcX' withArguments:args forSelector:_cmd];
 }
 @end

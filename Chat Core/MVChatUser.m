@@ -247,7 +247,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (NSString *) displayName {
 	if( _type == MVChatWildcardUserType )
-		return [[NSString alloc] initWithFormat:@"%@!%@@%@", ( [self nickname] ? [self nickname] : @"*" ), ( [self username] ? [self username] : @"*" ), ( [self address] ? [self address] : @"*" )];
+		return [NSString stringWithFormat:@"%@!%@@%@", ( [self nickname] ? [self nickname] : @"*" ), ( [self username] ? [self username] : @"*" ), ( [self address] ? [self address] : @"*" )];
 	return [self nickname];
 }
 
@@ -511,7 +511,7 @@ NS_ASSUME_NONNULL_END
 - (id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The chat user id \"%@\" of connection id %@ doesn't have the \"%@\" property.", [self scriptUniqueIdentifier], [[self connection] uniqueIdentifier], key]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The chat user id \"%@\" of connection id %@ doesn't have the \"%@\" property.", [self scriptUniqueIdentifier], [[self connection] uniqueIdentifier], key]];
 		return nil;
 	}
 
@@ -521,7 +521,7 @@ NS_ASSUME_NONNULL_END
 - (void) setValue:(id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The \"%@\" property of chat user id \"%@\" of connection id %@ is read only.", key, [self scriptUniqueIdentifier], [[self connection] uniqueIdentifier]]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of chat user id \"%@\" of connection id %@ is read only.", key, [self scriptUniqueIdentifier], [[self connection] uniqueIdentifier]]];
 		return;
 	}
 

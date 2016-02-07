@@ -25,6 +25,6 @@
 }
 
 - (NSString *) loggerName {
-	return [[NSString alloc] initWithFormat:@"info.colloquy.delegateLogger-%p", self];
+	return [NSString stringWithFormat:@"info.colloquy.delegateLogger-%p", self];
 }
 @end

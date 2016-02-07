@@ -62,7 +62,7 @@
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _refreshEditStatus: ) name:MVChatRoomKickedNotification object:[_room target]];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( refreshBanList: ) name:MVChatRoomBannedUsersSyncedNotification object:[_room target]];
 
-	[[_room connection] sendRawMessage:[[NSString alloc] initWithFormat:@"MODE %@", (MVChatRoom *)[_room target]]];
+	[[_room connection] sendRawMessage:[NSString stringWithFormat:@"MODE %@", (MVChatRoom *)[_room target]]];
 
 	[nameField setStringValue:[_room title]];
 
@@ -72,8 +72,8 @@
 	[formatter setTimeStyle:NSDateFormatterShortStyle];
 
 	if( [[_room target] isJoined] )
-		[infoField setObjectValue:[[NSString alloc] initWithFormat:NSLocalizedString( @"Joined: %@", "chat room joined date label" ), [formatter stringFromDate:[[_room target] dateJoined]]]];
-	else [infoField setObjectValue:[[NSString alloc] initWithFormat:NSLocalizedString( @"Parted: %@", "chat room parted date label" ), [formatter stringFromDate:[[_room target] dateParted]]]];
+		[infoField setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"Joined: %@", "chat room joined date label" ), [formatter stringFromDate:[[_room target] dateJoined]]]];
+	else [infoField setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"Parted: %@", "chat room parted date label" ), [formatter stringFromDate:[[_room target] dateParted]]]];
 
 	[encodingSelection setMenu:[_room _encodingMenu]];
 	[styleSelection setMenu:[_room _stylesMenu]];
@@ -248,7 +248,7 @@
 
 	NSString *server = [user attributeForKey:MVChatUserBanServerAttribute];
 
-	return [[NSString alloc] initWithFormat:@"%@ (%@)", dateString, server];
+	return [NSString stringWithFormat:@"%@ (%@)", dateString, server];
 }
 
 - (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
@@ -290,7 +290,7 @@
 
 - (void) _reloadTopic {
 	NSFont *baseFont = [NSFont userFontOfSize:12.];
-	NSMutableDictionary *options = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@([_room encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:@([_room encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
 	NSAttributedString *messageString = [NSAttributedString attributedStringWithChatFormat:[(MVChatRoom *)[_room target] topic] options:options];
 
 	if( ! messageString ) {

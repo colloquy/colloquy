@@ -99,7 +99,7 @@ static NSMutableSet *databaseFileNames;
 	// 
 	// You are encouraged to use the sqlite file extension.
 	
-	return [[NSString alloc] initWithFormat:@"%@.sqlite", [self managedObjectModelName]];
+	return [NSString stringWithFormat:@"%@.sqlite", [self managedObjectModelName]];
 }
 
 - (NSDictionary *)defaultStoreOptions

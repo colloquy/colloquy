@@ -16,9 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 		dangerousCache[pattern] = patternKey;
 	}
 #if SYSTEM(MAC)
-	NSString *key = [[NSString alloc] initWithFormat:@"%ld-%@", options, patternKey];
+	NSString *key = [NSString stringWithFormat:@"%ld-%@", options, patternKey];
 #else
-	NSString *key = [[NSString alloc] initWithFormat:@"%tu-%@", options, patternKey];
+	NSString *key = [NSString stringWithFormat:@"%tu-%@", options, patternKey];
 #endif
 	NSRegularExpression *regularExpression = dangerousCache[key];
 

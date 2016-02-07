@@ -324,7 +324,7 @@
 - (NSString *)bare
 {
 	if (user)
-		return [[NSString alloc] initWithFormat:@"%@@%@", user, domain];
+		return [NSString stringWithFormat:@"%@@%@", user, domain];
 	else
 		return domain;
 }
@@ -334,14 +334,14 @@
 	if (user)
 	{
 		if (resource)
-			return [[NSString alloc] initWithFormat:@"%@@%@/%@", user, domain, resource];
+			return [NSString stringWithFormat:@"%@@%@/%@", user, domain, resource];
 		else
-			return [[NSString alloc] initWithFormat:@"%@@%@", user, domain];
+			return [NSString stringWithFormat:@"%@@%@", user, domain];
 	}
 	else
 	{
 		if (resource)
-			return [[NSString alloc] initWithFormat:@"%@/%@", domain, resource];
+			return [NSString stringWithFormat:@"%@/%@", domain, resource];
 		else
 			return domain;
 	}

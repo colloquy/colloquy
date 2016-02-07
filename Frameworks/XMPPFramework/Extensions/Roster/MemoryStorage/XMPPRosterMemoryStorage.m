@@ -161,7 +161,7 @@
 	
 	NSArray *allUsers = [roster allValues];
 	
-	NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:[allUsers count]];
+	NSMutableArray *result = [NSMutableArray arrayWithCapacity:[allUsers count]];
 	
 	for (id <XMPPUser> user in allUsers)
 	{
@@ -180,7 +180,7 @@
 	
 	NSArray *allUsers = [roster allValues];
 	
-	NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:[allUsers count]];
+	NSMutableArray *result = [NSMutableArray arrayWithCapacity:[allUsers count]];
 	
 	for (id <XMPPUser> user in allUsers)
 	{
@@ -231,7 +231,7 @@
 	
 	NSArray *availableUsers = [self unsortedAvailableUsers];
 	
-	NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:[availableUsers count]];
+	NSMutableArray *result = [NSMutableArray arrayWithCapacity:[availableUsers count]];
 	
 	for (id<XMPPUser> user in availableUsers)
 	{
@@ -809,7 +809,7 @@
     XMPPLogTrace();
 	AssertParentQueue();
 	
-    NSMutableArray *results = [[NSMutableArray alloc] init];
+    NSMutableArray *results = [NSMutableArray array];
     
 	for (XMPPUserMemoryStorageObject *user in [roster objectEnumerator])
 	{

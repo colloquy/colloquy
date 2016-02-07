@@ -401,7 +401,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 
 	_currentFunction = nil;
 
-	NSDictionary *error = @{NSLocalizedDescriptionKey: [[NSString alloc] initWithFormat:@"Function named \"%@\" could not be found or is not callable", functionName]};
+	NSDictionary *error = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Function named \"%@\" could not be found or is not callable", functionName]};
 	return [NSError errorWithDomain:JVJavaScriptErrorDomain code:-1 userInfo:error];
 }
 
@@ -412,7 +412,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 			return nil;
 
 		unsigned length = [lengthObj unsignedIntValue];
-		NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:length];
+		NSMutableArray *result = [NSMutableArray arrayWithCapacity:length];
 		for( unsigned i = 0; i < length; ++i ) {
 			id item = [javaScriptArray webScriptValueAtIndex:i];
 			if( item ) [result addObject:item];

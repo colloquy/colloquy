@@ -1,12 +1,5 @@
 #import "MVTableView.h"
 
-@interface NSTableView (PrivHiddenWhut)
-
-+ (NSImage *)_defaultTableHeaderSortImage;
-+ (NSImage *)_defaultTableHeaderReverseSortImage;
-
-@end
-
 @implementation MVTableView
 
 - (void) setDelegate:(id) delegate {
@@ -34,7 +27,7 @@
 - (void) setHighlightedTableColumn:(NSTableColumn *) tableColumn {
 	[super setHighlightedTableColumn:tableColumn];
 	if( autosaveTableColumnHighlight && [self autosaveName] ) {
-		NSString *key = [[NSUserDefaults standardUserDefaults] stringForKey:[[NSString alloc] initWithFormat:@"%@ Highlighted Column %@", [self class], [self autosaveName]]];
+		NSString *key = [[NSUserDefaults standardUserDefaults] stringForKey:[NSString stringWithFormat:@"%@ Highlighted Column %@", [self class], [self autosaveName]]];
 		[[NSUserDefaults standardUserDefaults] setObject:[tableColumn identifier] forKey:key];
 	}
 }

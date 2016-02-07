@@ -23,7 +23,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 @implementation JVChatConsolePanel
 - (instancetype) initWithConnection:(MVChatConnection *) connection {
 	if( ( self = [self init] ) ) {
-		_sendHistory = [[NSMutableArray alloc] init];
+		_sendHistory = [NSMutableArray array];
 		[_sendHistory insertObject:[[NSAttributedString alloc] initWithString:@""] atIndex:0];
 
 		_sendHeight = 25.;
@@ -74,7 +74,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (NSString *) description {
-	return [[NSString alloc] initWithFormat:@"%@: %@", NSStringFromClass( [self class] ), [[self connection] server]];
+	return [NSString stringWithFormat:@"%@: %@", NSStringFromClass( [self class] ), [[self connection] server]];
 }
 
 #pragma mark -
@@ -127,7 +127,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (NSString *) windowTitle {
-	return [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ - Console", "chat console - window title" ), [[self connection] server]];
+	return [NSString stringWithFormat:NSLocalizedString( @"%@ - Console", "chat console - window title" ), [[self connection] server]];
 }
 
 - (nullable NSString *) information {
@@ -138,7 +138,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (NSString *) toolTip {
 	if( ! [[self connection] lag] ) return [self title];
-	return [[NSString alloc] initWithFormat:NSLocalizedString( @"%@\n%.3f seconds lag", "console tooltip witg lag (server delay) info in seconds" ), [self title], [[self connection] lag] / 1000.];
+	return [NSString stringWithFormat:NSLocalizedString( @"%@\n%.3f seconds lag", "console tooltip witg lag (server delay) info in seconds" ), [self title], [[self connection] lag] / 1000.];
 }
 
 #pragma mark -
@@ -188,7 +188,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 - (NSString *) identifier {
-	return [[NSString alloc] initWithFormat:@"Console %@", [[self connection] server]];
+	return [NSString stringWithFormat:@"Console %@", [[self connection] server]];
 }
 
 - (nullable MVChatConnection *) connection {
@@ -221,7 +221,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) addMessageToDisplay:(NSString *) message asOutboundMessage:(BOOL) outbound {
 	NSAttributedString *msg = nil;
 	id strMsg = [message mutableCopy];
-	NSMutableDictionary *attrs = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
 	NSMutableParagraphStyle *para = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	NSUInteger numeric = 0;
 
@@ -255,7 +255,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			tempStr = parts[0];
 			if( tempStr && [tempStr rangeOfString:@"@"].location == NSNotFound && [tempStr rangeOfString:@"."].location != NSNotFound && [NSURL URLWithString:[@"irc://" stringByAppendingString:tempStr]] ) {
 				[parts removeObjectAtIndex:0];
-			} else if( [tempStr hasPrefix:[[NSString alloc] initWithFormat:@"%@!", [[self connection] nickname]]] ) {
+			} else if( [tempStr hasPrefix:[NSString stringWithFormat:@"%@!", [[self connection] nickname]]] ) {
 				[parts removeObjectAtIndex:0];
 			}
 
@@ -266,7 +266,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			}
 
 			strMsg = (NSMutableString *) [parts componentsJoinedByString:@" "];
-			if( numeric ) strMsg = [[NSString alloc] initWithFormat:@"%03ld: %@", numeric, strMsg];
+			if( numeric ) strMsg = [NSString stringWithFormat:@"%03ld: %@", numeric, strMsg];
 		} else if( outbound && ! _verbose ) {
 			if( [strMsg rangeOfString:@"NOTICE"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location != NSNotFound ) {
 				[strMsg replaceOccurrencesOfString:@"NOTICE" withString:@"CTCP REPLY" options:NSAnchoredSearch range:NSMakeRange( 0, 6 )];
@@ -508,7 +508,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (nullable id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The panel id %@ doesn't have the \"%@\" property.", [self uniqueIdentifier], key]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The panel id %@ doesn't have the \"%@\" property.", [self uniqueIdentifier], key]];
 		return nil;
 	}
 
@@ -518,7 +518,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) setValue:(nullable id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The \"%@\" property of panel id %@ is read only.", key, [self uniqueIdentifier]]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of panel id %@ is read only.", key, [self uniqueIdentifier]]];
 		return;
 	}
 

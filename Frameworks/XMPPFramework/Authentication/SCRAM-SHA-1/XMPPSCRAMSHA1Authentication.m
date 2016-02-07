@@ -179,9 +179,9 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
 {
     self.clientNonce = [XMPPStream generateUUID];
     
-    self.clientFirstMessageBare = [[NSString alloc] initWithFormat:@"n=%@,r=%@",self.username,self.clientNonce];
+    self.clientFirstMessageBare = [NSString stringWithFormat:@"n=%@,r=%@",self.username,self.clientNonce];
     
-    NSData *message1Data = [[[NSString alloc] initWithFormat:@"n,,%@",self.clientFirstMessageBare] dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *message1Data = [[NSString stringWithFormat:@"n,,%@",self.clientFirstMessageBare] dataUsingEncoding:NSUTF8StringEncoding];
     
     return [message1Data xmpp_base64Encoded];
 }
@@ -189,7 +189,7 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
 - (NSString *)clientMessage2
 {
     NSString *clientProofString = [self.clientProofData xmpp_base64Encoded];
-    NSData *message2Data = [[[NSString alloc] initWithFormat:@"c=biws,r=%@,p=%@",self.combinedNonce,clientProofString] dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *message2Data = [[NSString stringWithFormat:@"c=biws,r=%@,p=%@",self.combinedNonce,clientProofString] dataUsingEncoding:NSUTF8StringEncoding];
     
     return [message2Data xmpp_base64Encoded];
 }
@@ -211,7 +211,7 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
 
     NSData *storedKeyData = [clientKeyData xmpp_sha1Digest];
     
-    NSData *authMessageData = [[[NSString alloc] initWithFormat:@"%@,%@,c=biws,r=%@",self.clientFirstMessageBare,self.serverMessage1,self.combinedNonce] dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *authMessageData = [[NSString stringWithFormat:@"%@,%@,c=biws,r=%@",self.clientFirstMessageBare,self.serverMessage1,self.combinedNonce] dataUsingEncoding:NSUTF8StringEncoding];
     
     NSData *clientSignatureData = [self HashWithAlgorithm:self.hashAlgorithm data:authMessageData key:storedKeyData];
     
@@ -297,7 +297,7 @@ static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
 	XMPPLogVerbose(@"%@: Decoded challenge: %@", THIS_FILE, self.serverMessage1);
 	
 	NSArray *components = [self.serverMessage1 componentsSeparatedByString:@","];
-	NSMutableDictionary *auth = [[NSMutableDictionary alloc] initWithCapacity:5];
+	NSMutableDictionary *auth = [NSMutableDictionary dictionaryWithCapacity:5];
 	
 	for (NSString *component in components)
 	{

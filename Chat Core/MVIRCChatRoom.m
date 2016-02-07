@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 		_uniqueIdentifier = [roomName lowercaseString];
 		[roomConnection _addKnownRoom:self];
 
-		NSString *recentActivityDateKey = [[NSString alloc] initWithFormat:@"%@-%@", self.connection.uniqueIdentifier, self.uniqueIdentifier];
+		NSString *recentActivityDateKey = [NSString stringWithFormat:@"%@-%@", self.connection.uniqueIdentifier, self.uniqueIdentifier];
 		_mostRecentUserActivity = [[NSUserDefaults standardUserDefaults] objectForKey:recentActivityDateKey];
 	}
 
@@ -414,7 +414,7 @@ NS_ASSUME_NONNULL_BEGIN
 	MVChatConnection *connection = [self connection];
 
 	if ( _mostRecentUserActivity && [[connection supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] ) {
-		NSString *recentActivityDateKey = [[NSString alloc] initWithFormat:@"%@-%@", connection.uniqueIdentifier, self.uniqueIdentifier];
+		NSString *recentActivityDateKey = [NSString stringWithFormat:@"%@-%@", connection.uniqueIdentifier, self.uniqueIdentifier];
 		[[NSUserDefaults standardUserDefaults] setObject:_mostRecentUserActivity forKey:recentActivityDateKey];
 	}
 }

@@ -53,12 +53,12 @@ static NSMenu *smartTranscriptMenu = nil;
 	[smartTranscriptMenu removeAllItems];
 
 	NSMenuItem *menuItem = nil;
-	NSMutableArray *items = [[NSMutableArray alloc] initWithArray:[[[self defaultController] smartTranscripts] allObjects]];
+	NSMutableArray *items = [NSMutableArray arrayWithArray:[[[self defaultController] smartTranscripts] allObjects]];
 	[items sortUsingSelector:@selector( compare: )];
 
 	for( JVSmartTranscriptPanel *panel in items ) {
 		NSString *title = [panel title];
-		if( [panel newMessagesWaiting] > 0 ) title = [[NSString alloc] initWithFormat:@"%@ (%ld)", [panel title], [panel newMessagesWaiting]];
+		if( [panel newMessagesWaiting] > 0 ) title = [NSString stringWithFormat:@"%@ (%ld)", [panel title], [panel newMessagesWaiting]];
 		menuItem = [[NSMenuItem alloc] initWithTitle:title action:@selector( showView: ) keyEquivalent:@""];
 		if( [panel newMessagesWaiting] ) [menuItem setImage:[NSImage imageNamed:@"smartTranscriptTabActivity"]];
 		else [menuItem setImage:[NSImage imageNamed:@"smartTranscriptTab"]];
@@ -219,7 +219,7 @@ static NSMenu *smartTranscriptMenu = nil;
 - (NSSet *) chatViewControllersWithConnection:(MVChatConnection *) connection {
 	NSParameterAssert( connection != nil );
 
-	NSMutableSet *ret = [[NSMutableSet alloc] init];
+	NSMutableSet *ret = [NSMutableSet set];
 	for( id <JVChatViewController> item in _chatControllers )
 		if( [item connection] == connection )
 			[ret addObject:item];
@@ -230,7 +230,7 @@ static NSMenu *smartTranscriptMenu = nil;
 - (NSSet *) chatViewControllersOfClass:(Class) class {
 	NSParameterAssert( class != nil );
 	
-	NSMutableSet *ret = [[NSMutableSet alloc] init];
+	NSMutableSet *ret = [NSMutableSet set];
 	for( id <JVChatViewController> item in _chatControllers )
 		if( [item isMemberOfClass:class] )
 			[ret addObject:item];
@@ -241,7 +241,7 @@ static NSMenu *smartTranscriptMenu = nil;
 - (NSSet *) chatViewControllersKindOfClass:(Class) class {
 	NSParameterAssert( class != nil );
 	
-	NSMutableSet *ret = [[NSMutableSet alloc] init];
+	NSMutableSet *ret = [NSMutableSet set];
 	for( id <JVChatViewController> item in _chatControllers )
 		if( [item isKindOfClass:class] )
 			[ret addObject:item];
@@ -344,7 +344,7 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (void) saveSmartTranscripts {
-	NSMutableArray *smartTranscripts = [[NSMutableArray alloc] init];
+	NSMutableArray *smartTranscripts = [NSMutableArray array];
 
 	for( JVSmartTranscriptPanel *smartTranscript in [self smartTranscripts] ) {
 		NSData *archived = [NSKeyedArchiver archivedDataWithRootObject:smartTranscript];
@@ -410,13 +410,13 @@ static NSMenu *smartTranscriptMenu = nil;
 	JVChatWindowController *windowController = [self createChatWindowController];
 	[[controller windowController] removeChatViewController:controller];
 
-	[[windowController window] setFrameUsingName:[[NSString alloc] initWithFormat:@"Chat Window %@", [controller identifier]]];
+	[[windowController window] setFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
 
 	NSRect frame = [[windowController window] frame];
 	NSPoint point = [[windowController window] cascadeTopLeftFromPoint:NSMakePoint( NSMinX( frame ), NSMaxY( frame ) )];
 	[[windowController window] setFrameTopLeftPoint:point];
 
-	[[windowController window] saveFrameUsingName:[[NSString alloc] initWithFormat:@"Chat Window %@", [controller identifier]]];
+	[[windowController window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
 
 	[windowController addChatViewController:controller];
 
@@ -451,9 +451,11 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	return ignoreResult;
 }
+@end
 
 #pragma mark -
 
+@implementation JVChatController (JVChatControllerPrivate)
 - (void) _joinedRoom:(NSNotification *) notification {
 	MVChatRoom *rm = [notification object];
 	if( ! [[MVConnectionsController defaultController] managesConnection:[rm connection]] ) return;
@@ -470,7 +472,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	MVChatUser *invitedUser = notification.userInfo[@"target"];
 	if (invitedUser) {
-		NSString *message = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ invited %@ to \"%@\" on \"%@\".", "User invited to join room alert message"), user.displayName, invitedUser.displayName,  room, connection.server];
+		NSString *message = [NSString stringWithFormat:NSLocalizedString(@"%@ invited %@ to \"%@\" on \"%@\".", "User invited to join room alert message"), user.displayName, invitedUser.displayName,  room, connection.server];
 		MVChatRoom *roomInstance = [connection chatRoomWithName:room];
 		JVChatRoomPanel *chatRoomPanel = [self chatViewControllerForRoom:roomInstance ifExists:NO];
 		[chatRoomPanel addEventMessageToDisplay:message withName:@"invite" andAttributes:nil];
@@ -478,11 +480,11 @@ static NSMenu *smartTranscriptMenu = nil;
 	}
 
 	NSString *title = NSLocalizedString( @"Chat Room Invite", "member invited to room title" );
-	NSString *message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", "you were invited to join a chat room status message" ), room, [user nickname]];
+	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", "you were invited to join a chat room status message" ), room, [user nickname]];
 
-	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	context[@"title"] = NSLocalizedString( @"Invited to Chat", "bubble title invited to room" );
-	context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message invited to room" ), room, [user nickname]];
+	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message invited to room" ), room, [user nickname]];
 	[[JVNotificationController defaultController] performNotification:@"JVChatRoomInvite" withContextInfo:context];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinChatRoomOnInvite"] || NSRunInformationalAlertPanel( title, @"%@", NSLocalizedString( @"Join", "join button" ), NSLocalizedString( @"Decline", "decline button" ), nil, message ) == NSOKButton )
@@ -496,11 +498,11 @@ static NSMenu *smartTranscriptMenu = nil;
 	if( ! [[MVConnectionsController defaultController] managesConnection:[user connection]] ) return;
 
 	NSString *title = NSLocalizedString( @"Direct Chat Invite", "invited to direct chat title" );
-	NSString *message = [[NSString alloc] initWithFormat:NSLocalizedString( @"You were invited to participate in a chat with %@. Would you like to accept this invitation?", "you were invited to a direct chat status message" ), [user nickname]];
+	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to participate in a chat with %@. Would you like to accept this invitation?", "you were invited to a direct chat status message" ), [user nickname]];
 
-	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	context[@"title"] = NSLocalizedString( @"Invited to Direct Chat", "bubble title invited to direct chat" );
-	context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"You were invited to participate in a chat with %@.", "bubble message invited to participate in a direct chat" ), [user nickname]];
+	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"You were invited to participate in a chat with %@.", "bubble message invited to participate in a direct chat" ), [user nickname]];
 	[[JVNotificationController defaultController] performNotification:@"JVDirectChatInvite" withContextInfo:context];
 
 	if( NSRunInformationalAlertPanel( title, @"%@", NSLocalizedString( @"Accept", "accept button" ), NSLocalizedString( @"Decline", "decline button" ), nil, message ) == NSOKButton ) {
@@ -513,9 +515,9 @@ static NSMenu *smartTranscriptMenu = nil;
 	NSDictionary *userInfo = [notification userInfo];
 	MVChatUser *user = userInfo[@"user"];
 
-	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	context[@"title"] = NSLocalizedString( @"Beep received", "beep bubble title" );
-	context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ is reclaiming your attention by means of a beep.", "beep bubble text" ), [user nickname]];
+	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@ is reclaiming your attention by means of a beep.", "beep bubble text" ), [user nickname]];
 	context[@"image"] = [NSImage imageNamed:@"activityNewImportant"];
 	context[@"coalesceKey"] = [[user nickname] stringByAppendingString:@"JVChatBeeped"];
 	context[@"target"] = self;
@@ -561,7 +563,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			hideFromUser = YES;
 
 		MVChatConnection *connection = [user connection];
-		NSMutableDictionary *options = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@([connection encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
+		NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:@([connection encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
 		NSAttributedString *messageString = [NSAttributedString attributedStringWithChatFormat:message options:options];
 		if( ! messageString ) {
 			options[@"StringEncoding"] = @(NSISOLatin1StringEncoding);
@@ -570,7 +572,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 		if( [[user nickname] isEqualToString:@"MemoServ"] && [[messageString string] rangeOfString:@"new memo" options:NSCaseInsensitiveSearch].location != NSNotFound && [[messageString string] rangeOfString:@" no " options:NSCaseInsensitiveSearch].location == NSNotFound ) {
 
-			NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			context[@"title"] = NSLocalizedString( @"You Have New Memos", "new memos bubble title" );
 			context[@"description"] = messageString;
 			context[@"image"] = [NSImage imageNamed:@"Stickies"];
@@ -581,7 +583,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 		} else {
 			NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
-			context[@"title"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"Notice from %@", "notice message from user title" ), [user displayName]];
+			context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"Notice from %@", "notice message from user title" ), [user displayName]];
 			context[@"description"] = messageString;
 			context[@"image"] = [NSImage imageNamed:@"activityNewImportant"];
 			NSString *type = ( hideFromUser ? @"JVChatUnhandledNoticeMessage" : @"JVChatNoticeMessage" );
@@ -602,7 +604,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		NSString *nickname = [error userInfo][@"nickname"];
 		NSAlert *alert = [[NSAlert alloc] init];
 		[alert setMessageText:NSLocalizedString( @"Connection error", "connection error alert dialog title" )];
-		[alert setInformativeText:[[NSString alloc] initWithFormat:NSLocalizedString( @"Could not connect to server because the requested nickname (%@) was unavailable or invalid.", "connection error alert dialog message" ), nickname]];
+		[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"Could not connect to server because the requested nickname (%@) was unavailable or invalid.", "connection error alert dialog message" ), nickname]];
 		[alert setAlertStyle:NSInformationalAlertStyle];
 		[alert runModal];
 	} else if( [error code] == MVChatConnectionNoSuchUserError ) {
@@ -610,8 +612,8 @@ static NSMenu *smartTranscriptMenu = nil;
 		JVDirectChatPanel *panel = [self chatViewControllerForUser:user ifExists:YES];
 		if( ! panel || ( panel && [[panel windowController] activeChatViewController] != panel ) ) {
 			NSAlert *alert = [[NSAlert alloc] init];
-			[alert setMessageText:[[NSString alloc] initWithFormat:NSLocalizedString( @"User \"%@\" is not online", "user not online alert dialog title" ), [user displayName]]];
-			[alert setInformativeText:[[NSString alloc] initWithFormat:NSLocalizedString( @"The user \"%@\" is not online and is unavailable until they reconnect.", "user not online alert dialog message" ), [user displayName]]];
+			[alert setMessageText:[NSString stringWithFormat:NSLocalizedString( @"User \"%@\" is not online", "user not online alert dialog title" ), [user displayName]]];
+			[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"The user \"%@\" is not online and is unavailable until they reconnect.", "user not online alert dialog message" ), [user displayName]]];
 			[alert setAlertStyle:NSInformationalAlertStyle];
 			[alert runModal];
 		}
@@ -625,7 +627,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		NSString *reason = [error userInfo][@"reason"];
 		NSAlert *alert = [[NSAlert alloc] init];
 		[alert setMessageText:NSLocalizedString( @"Chat protocol error", "malformed packet alert dialog title" )];
-		[alert setInformativeText:[[NSString alloc] initWithFormat:NSLocalizedString( @"Client got a malformed packet: %@", "malformed packet alert dialog message" ), reason]];
+		[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"Client got a malformed packet: %@", "malformed packet alert dialog message" ), reason]];
 		[alert setAlertStyle:NSInformationalAlertStyle];
 		[alert runModal];
 	}
@@ -730,7 +732,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 		if( ! target ) {
 			[self setScriptErrorNumber:1000];
-			[self setScriptErrorString:[[NSString alloc] initWithFormat:@"The connection did not find a chat user with the nickname \"%@\".", nickname]];
+			[self setScriptErrorString:[NSString stringWithFormat:@"The connection did not find a chat user with the nickname \"%@\".", nickname]];
 			return nil;
 		}
 	}
@@ -1085,7 +1087,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			// Now startIndex and endIndex specify the end points of the range we want within the main array.
 			// We will traverse the range and pick the objects we want.
 			// We do this by getting each object and seeing if it actually appears in the real key that we are trying to evaluate in.
-			NSMutableArray *result = [[NSMutableArray alloc] init];
+			NSMutableArray *result = [NSMutableArray array];
 			BOOL keyIsGeneric = [key isEqualToString:@"chatViews"];
 			NSArray *rangeKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
 			NSUInteger curKeyIndex = 0;
@@ -1146,7 +1148,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			// Now baseIndex specifies the base object for the relative spec in the master array.
 			// We will start either right before or right after and look for an object that matches the type we want.
 			// We do this by getting each object and seeing if it actually appears in the real key that we are trying to evaluate in.
-			NSMutableArray *result = [[NSMutableArray alloc] init];
+			NSMutableArray *result = [NSMutableArray array];
 			BOOL keyIsGeneric = [key isEqualToString:@"chatViews"];
 			NSArray *relKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
 			NSUInteger curKeyIndex = 0, viewCount = [chatViews count];

@@ -439,7 +439,7 @@ NSString *const XMPPIncomingFileTransferErrorDomain = @"XMPPIncomingFileTransfer
 - (NSData *)sha1Hash
 {
   NSString *hashMe =
-      [[NSString alloc] initWithFormat:@"%@%@%@", self.sid, _senderJID.full, xmppStream.myJID.full];
+      [NSString stringWithFormat:@"%@%@%@", self.sid, _senderJID.full, xmppStream.myJID.full];
   NSData *hashRaw = [[hashMe dataUsingEncoding:NSUTF8StringEncoding] xmpp_sha1Digest];
   NSData *hash = [[hashRaw xmpp_hexStringValue] dataUsingEncoding:NSUTF8StringEncoding];
 

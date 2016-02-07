@@ -491,7 +491,7 @@ static XMPPRosterCoreDataStorage *sharedInstance;
     
     XMPPLogTrace();
     
-    __block NSMutableArray *results = [[NSMutableArray alloc] init];
+    __block NSMutableArray *results = [NSMutableArray array];
 	
 	[self executeBlock:^{
 		
@@ -559,7 +559,7 @@ static XMPPRosterCoreDataStorage *sharedInstance;
             {
                 if([user.groups count])
                 {
-                    NSMutableArray *groupNames = [[NSMutableArray alloc] init];
+                    NSMutableArray *groupNames = [NSMutableArray array];
                     
                     for(XMPPGroupCoreDataStorageObject *group in user.groups){
                         [groupNames addObject:group.name];

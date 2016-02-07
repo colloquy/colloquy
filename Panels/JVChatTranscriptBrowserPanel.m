@@ -36,7 +36,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 		c = [_dirtyLogs count];
 	}
 
-	if( c > 1 ) [statusText setStringValue:[[NSString alloc] initWithFormat:NSLocalizedString( @"%d logs still have to be indexed", "number of transcripts indexing remains message" ),c]];
+	if( c > 1 ) [statusText setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%d logs still have to be indexed", "number of transcripts indexing remains message" ),c]];
 	else if( c == 1 ) [statusText setStringValue:NSLocalizedString( @"One log still has to be indexed", "one  indexing remains message" )];
 	else [statusText setStringValue:NSLocalizedString( @"Indexing is complete", "transcripts indexing finished message" )];
 }
@@ -113,23 +113,23 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 
 					if( ( size = fgetxattr( fd, "server", buffer, 1023, 0, 0 ) ) > 0 ) {
 						buffer[size] = 0;
-						server = [[NSString alloc] initWithUTF8String:buffer];
+						server = [NSString stringWithUTF8String:buffer];
 					}
 
 					if( ( size = fgetxattr( fd, "target", buffer, 1023, 0, 0 ) ) > 0 ) {
 						buffer[size] = 0;
-						target = [[NSString alloc] initWithUTF8String:buffer];
+						target = [NSString stringWithUTF8String:buffer];
 					}
 
 					if( ( size = fgetxattr( fd, "dateBegan", buffer, 1023, 0, 0 ) ) > 0 ) {
 						buffer[size] = 0;
-						session = [[NSString alloc] initWithUTF8String:buffer];
+						session = [NSString stringWithUTF8String:buffer];
 					}
 
 					fclose( logsFile );
 				}
 
-				NSDictionary *d = [[NSDictionary alloc] initWithObjectsAndKeys:server, @"server", target, @"target", session, @"session", path, @"path", nil];
+				NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:server, @"server", target, @"target", session, @"session", path, @"path", nil];
 				[tempDictionary setObject:d forKey:path];
 				if( _shouldIndex ) [_dirtyLogs addObject:path];
 			}

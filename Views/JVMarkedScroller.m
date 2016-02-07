@@ -22,8 +22,8 @@
 @implementation JVMarkedScroller
 - (instancetype) initWithFrame:(NSRect) frame {
 	if( ( self = [super initWithFrame:frame] ) ) {
-		_marks = [[NSMutableSet alloc] init];
-		_shades = [[NSMutableArray alloc] init];
+		_marks = [NSMutableSet set];
+		_shades = [NSMutableArray array];
 		_nearestPreviousMark = NSNotFound;
 		_nearestNextMark = NSNotFound;
 		_currentMark = NSNotFound;
@@ -86,7 +86,7 @@
 	}
 
 	NSBezierPath *lines = [NSBezierPath bezierPath];
-	NSMutableArray *lineArray = [[NSMutableArray alloc] init];
+	NSMutableArray *lineArray = [NSMutableArray array];
 
 	unsigned long long currentPosition = ( _currentMark != NSNotFound ? _currentMark : [self floatValue] * [self contentViewLength] );
 	BOOL foundNext = NO, foundPrevious = NO;
@@ -334,7 +334,7 @@
 
 	[_marks setSet:shiftedMarks];
 
-	NSMutableArray *shiftedShades = [[NSMutableArray alloc] init];
+	NSMutableArray *shiftedShades = [NSMutableArray array];
 	NSNumber *start = nil;
 	NSNumber *stop = nil;
 

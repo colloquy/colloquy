@@ -141,7 +141,7 @@ NSString *const XMPPSRVResolverErrorDomain = @"XMPPSRVResolverErrorDomain";
 	XMPPLogTrace();
 	
 	// Sort results
-	NSMutableArray *sortedResults = [[NSMutableArray alloc] initWithCapacity:[results count]];
+	NSMutableArray *sortedResults = [NSMutableArray arrayWithCapacity:[results count]];
 	
 	// Sort the list by priority (lowest number first)
 	[results sortUsingSelector:@selector(compareByPriority:)];
@@ -186,7 +186,7 @@ NSString *const XMPPSRVResolverErrorDomain = @"XMPPSRVResolverErrorDomain";
 			 */
 			
 			NSUInteger runningSum = 0;
-			NSMutableArray *samePriorityRecords = [[NSMutableArray alloc] initWithCapacity:srvResultsCount];
+			NSMutableArray *samePriorityRecords = [NSMutableArray arrayWithCapacity:srvResultsCount];
 			
 			XMPPSRVRecord *srvRecord = results[0];
 			
@@ -371,7 +371,7 @@ NSString *const XMPPSRVResolverErrorDomain = @"XMPPSRVResolverErrorDomain";
 	{
         NSString *target;
         
-        target = [[NSString alloc] initWithCString:rr->data.SRV->target encoding:NSASCIIStringEncoding];
+        target = [NSString stringWithCString:rr->data.SRV->target encoding:NSASCIIStringEncoding];
         if (target != nil)
 		{
 			UInt16 priority = rr->data.SRV->priority;
@@ -619,7 +619,7 @@ static void QueryRecordCallback(DNSServiceRef       sdRef,
 	if (xmppDomain == nil)
 		return nil;
 	else
-		return [[NSString alloc] initWithFormat:@"_xmpp-client._tcp.%@", xmppDomain];
+		return [NSString stringWithFormat:@"_xmpp-client._tcp.%@", xmppDomain];
 }
 
 @end
@@ -662,7 +662,7 @@ static void QueryRecordCallback(DNSServiceRef       sdRef,
 
 - (NSString *)description
 {
-	return [[NSString alloc] initWithFormat:@"<%@:%p target(%@) port(%hu) priority(%hu) weight(%hu)>",
+	return [NSString stringWithFormat:@"<%@:%p target(%@) port(%hu) priority(%hu) weight(%hu)>",
 			NSStringFromClass([self class]), self, target, port, priority, weight];
 }
 

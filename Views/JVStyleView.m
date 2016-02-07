@@ -213,7 +213,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	_styleParameters[@"buddyIconDirectory"] = @"'/tmp/'";
 	_styleParameters[@"buddyIconExtension"] = @"'.tif'";
 
-	NSString *timeFormatParameter = [[NSString alloc] initWithFormat:@"'%@'", [NSDate formattedShortTimeStringForDate:[NSDate date]]];
+	NSString *timeFormatParameter = [NSString stringWithFormat:@"'%@'", [NSDate formattedShortTimeStringForDate:[NSDate date]]];
 	_styleParameters[@"timeFormat"] = timeFormatParameter;
 
 	[[NSNotificationCenter chatCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
@@ -261,7 +261,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (NSDictionary *) styleParameters {
-	return [[NSDictionary alloc] initWithDictionary:_styleParameters];
+	return [_styleParameters copy];
 }
 
 #pragma mark -
@@ -334,7 +334,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		return;
 	}
 
-	NSString *shell = [[NSString alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
+	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
 
 	DOMHTMLElement *element = (DOMHTMLElement *)[_mainDocument createElement:@"div"];
 	[element setClassName:@"banner"];
@@ -454,7 +454,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 */}
 
 - (void) clearAllMessageHighlights {
-//	[[self windowScriptObject] callWebScriptMethod:@"resetHighlightMessage" withArguments:[[NSArray alloc] initWithObject:[NSNull null]]];
+//	[[self windowScriptObject] callWebScriptMethod:@"resetHighlightMessage" withArguments:[NSArray arrayWithObject:[NSNull null]]];
 }
 
 #pragma mark -
@@ -910,12 +910,12 @@ quickEnd:
 	NSString *variantStyleSheetLocation = [[[self style] variantStyleSheetLocationWithName:[self styleVariant]] absoluteString];
 	if( ! variantStyleSheetLocation ) variantStyleSheetLocation = @"";
 
-	NSString *shell = [[NSString alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
+	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
 
 	NSString *bodyTemplate = [[self style] contentsOfBodyTemplateWithName:[self bodyTemplate]];
 	if( [bodyTemplate length] && [html length] ) {
 		if( [bodyTemplate rangeOfString:@"%@"].location != NSNotFound )
-			bodyTemplate = [[NSString alloc] initWithFormat:bodyTemplate, html];
+			bodyTemplate = [NSString stringWithFormat:bodyTemplate, html];
 		else bodyTemplate = [bodyTemplate stringByAppendingString:html];
 	} else if( ! [bodyTemplate length] && [html length] ) {
 		bodyTemplate = html;
@@ -923,7 +923,7 @@ quickEnd:
 
 	NSString *baseURL = [[[NSBundle mainBundle] resourceURL] absoluteString];
 
-	return [[NSString alloc] initWithFormat:shell, @"", @"", baseURL, [[[self emoticons] styleSheetLocation] absoluteString], [[[self style] mainStyleSheetLocation] absoluteString], variantStyleSheetLocation, [[[self style] baseLocation] absoluteString], bodyTemplate];
+	return [NSString stringWithFormat:shell, @"", @"", baseURL, [[[self emoticons] styleSheetLocation] absoluteString], [[[self style] mainStyleSheetLocation] absoluteString], variantStyleSheetLocation, [[[self style] baseLocation] absoluteString], bodyTemplate];
 }
 
 - (NSURL *) _baseURL {

@@ -121,7 +121,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 - (NSURL *) url {
 	MVChatConnection *connection = [self connection];
-	NSString *urlString = [[NSString alloc] initWithFormat:@"%@://%@/%@", [connection urlScheme], [[connection server] stringByEncodingIllegalURLCharacters], [[self name] stringByEncodingIllegalURLCharacters]];
+	NSString *urlString = [NSString stringWithFormat:@"%@://%@/%@", [connection urlScheme], [[connection server] stringByEncodingIllegalURLCharacters], [[self name] stringByEncodingIllegalURLCharacters]];
 	if( urlString ) return [NSURL URLWithString:urlString];
 	return nil;
 }
@@ -711,7 +711,7 @@ NS_ASSUME_NONNULL_END
 - (id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The chat room id \"%@\" of connection id %@ doesn't have the \"%@\" property.", [self scriptUniqueIdentifier], [[self connection] uniqueIdentifier], key]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The chat room id \"%@\" of connection id %@ doesn't have the \"%@\" property.", [self scriptUniqueIdentifier], [[self connection] uniqueIdentifier], key]];
 		return nil;
 	}
 
@@ -721,7 +721,7 @@ NS_ASSUME_NONNULL_END
 - (void) setValue:(id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[[NSString alloc] initWithFormat:@"The \"%@\" property of chat room id \"%@\" of connection id %@ is read only.", key, [self scriptUniqueIdentifier], [[self connection] uniqueIdentifier]]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of chat room id \"%@\" of connection id %@ is read only.", key, [self scriptUniqueIdentifier], [[self connection] uniqueIdentifier]]];
 		return;
 	}
 

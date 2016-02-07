@@ -591,7 +591,7 @@ static MVBuddyListController *sharedInstance = nil;
 			else [cell setInformationText:nil];
 		} else {
 			[cell setMainText:[buddy compositeName]];
-			if( user && _showNicknameAndServer ) [cell setInformationText:[[NSString alloc] initWithFormat:@"%@ (%@)", [user nickname], [user serverAddress]]];
+			if( user && _showNicknameAndServer ) [cell setInformationText:[NSString stringWithFormat:@"%@ (%@)", [user nickname], [user serverAddress]]];
 			else [cell setInformationText:nil];
 		}
 
@@ -622,7 +622,7 @@ static MVBuddyListController *sharedInstance = nil;
 			MVChatUser *activeUser = [buddy activeUser];
 
 			for( MVChatUser *user in ordered ) {
-				NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[[NSString alloc] initWithFormat:@"%@ (%@)", [user nickname], [user serverAddress]] action:NULL keyEquivalent:@""];
+				NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [user nickname], [user serverAddress]] action:NULL keyEquivalent:@""];
 				if( [user isEqualToChatUser:activeUser] ) [item setState:NSOnState];
 				[menu addItem:item];
 			}
@@ -862,7 +862,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 	_animating = YES;
 
-	_oldPositions = [[NSMutableArray alloc] initWithCapacity:[_buddyOrder count]];
+	_oldPositions = [NSMutableArray arrayWithCapacity:[_buddyOrder count]];
 
 	for( id object in _buddyOrder )
 		[_oldPositions addObject:@([oldOrder indexOfObject:object])];
@@ -890,9 +890,9 @@ static MVBuddyListController *sharedInstance = nil;
 
 	[self _buddyChanged:notification];
 
-	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	context[@"title"] = NSLocalizedString( @"Buddy Available", "available buddy bubble title" );
-	context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"Your buddy %@ is now online.", "available buddy bubble text" ), [buddy displayName]];
+	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now online.", "available buddy bubble text" ), [buddy displayName]];
 
 	NSImage *icon = [buddy picture];
 	if( ! icon ) icon = [NSImage imageNamed:@"person"];
@@ -913,9 +913,9 @@ static MVBuddyListController *sharedInstance = nil;
 
 	MVChatConnection *buddyConnection = [[buddy activeUser] connection];
 	if( [buddyConnection isConnected] ) {
-		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
+		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		context[@"title"] = NSLocalizedString( @"Buddy Unavailable", "unavailable buddy bubble title" );
-		context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"Your buddy %@ is now offline.", "unavailable buddy bubble text" ), [buddy displayName]];
+		context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now offline.", "unavailable buddy bubble text" ), [buddy displayName]];
 
 		NSImage *icon = [buddy picture];
 		if( ! icon ) icon = [NSImage imageNamed:@"person"];

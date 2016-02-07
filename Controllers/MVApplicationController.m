@@ -157,7 +157,7 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) emailDeveloper:(id) sender {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[[NSString alloc] initWithFormat:@"mailto:support@colloquy.info?subject=Colloquy%%20%%28build%%20%@%%29", [[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"]]]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"mailto:support@colloquy.info?subject=Colloquy%%20%%28build%%20%@%%29", [[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"]]]];
 }
 
 - (IBAction) productWebsite:(id) sender {
@@ -334,7 +334,7 @@ static BOOL applicationIsTerminating = NO;
 		if( [newPath isEqualToString:filename] ) return NO;
 
 		if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:newPath] && */ [[NSFileManager defaultManager] isDeletableFileAtPath:newPath] ) {
-			if( NSRunInformationalAlertPanel( [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ Already Installed", "style already installed title" ), [[filename lastPathComponent] stringByDeletingPathExtension]], [[NSString alloc] initWithFormat:NSLocalizedString( @"The %@ style is already installed. Would you like to replace it with this version?", "would you like to replace a style with a different version" ), [[filename lastPathComponent] stringByDeletingPathExtension]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil ) == NSOKButton ) {
+			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"%@ Already Installed", "style already installed title" ), [[filename lastPathComponent] stringByDeletingPathExtension]], [NSString stringWithFormat:NSLocalizedString( @"The %@ style is already installed. Would you like to replace it with this version?", "would you like to replace a style with a different version" ), [[filename lastPathComponent] stringByDeletingPathExtension]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil ) == NSOKButton ) {
 				[[NSFileManager defaultManager] removeItemAtPath:newPath error:nil];
 			} else return NO;
 		}
@@ -345,7 +345,7 @@ static BOOL applicationIsTerminating = NO;
 
 			[[NSNotificationCenter chatCenter] postNotificationName:JVChatStyleInstalledNotification object:style];
 
-			if( NSRunInformationalAlertPanel( [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ Successfully Installed", "style installed title" ), [style displayName]], [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?", "would you like to view the style in the Appearance Preferences" ), [style displayName], [style displayName]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil) == NSOKButton ) {
+			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"%@ Successfully Installed", "style installed title" ), [style displayName]], [NSString stringWithFormat:NSLocalizedString( @"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?", "would you like to view the style in the Appearance Preferences" ), [style displayName], [style displayName]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil) == NSOKButton ) {
 				[self showPreferences:nil];
 				[self.preferencesWindowController selectControllerWithIdentifier:self.preferencesWindowController.appearancePreferences.identifier];
 				[self.preferencesWindowController.appearancePreferences selectStyleWithIdentifier:[style identifier]];
@@ -361,7 +361,7 @@ static BOOL applicationIsTerminating = NO;
 		if( [newPath isEqualToString:filename] ) return NO;
 
 		if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:newPath] && */ [[NSFileManager defaultManager] isDeletableFileAtPath:newPath] ) {
-			if( NSRunInformationalAlertPanel( [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ Already Installed", "emoticons already installed title" ), [[filename lastPathComponent] stringByDeletingPathExtension]], [[NSString alloc] initWithFormat:NSLocalizedString( @"The %@ emoticons are already installed. Would you like to replace them with this version?", "would you like to replace an emoticon bundle with a different version" ), [[filename lastPathComponent] stringByDeletingPathExtension]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil ) == NSOKButton ) {
+			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"%@ Already Installed", "emoticons already installed title" ), [[filename lastPathComponent] stringByDeletingPathExtension]], [NSString stringWithFormat:NSLocalizedString( @"The %@ emoticons are already installed. Would you like to replace them with this version?", "would you like to replace an emoticon bundle with a different version" ), [[filename lastPathComponent] stringByDeletingPathExtension]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil ) == NSOKButton ) {
 				[[NSFileManager defaultManager] removeItemAtPath:newPath error:nil];
 			} else return NO;
 		}
@@ -370,7 +370,7 @@ static BOOL applicationIsTerminating = NO;
 			NSBundle *emoticon = [NSBundle bundleWithPath:newPath];
 			[[NSNotificationCenter chatCenter] postNotificationName:JVChatEmoticonSetInstalledNotification object:emoticon];
 
-			if( NSRunInformationalAlertPanel( [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ Successfully Installed", "emoticon installed title" ), [emoticon displayName]], [[NSString alloc] initWithFormat:NSLocalizedString( @"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?", "would you like to view the emoticons in the Appearance Preferences" ), [emoticon displayName], [emoticon displayName]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil ) == NSOKButton ) {
+			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"%@ Successfully Installed", "emoticon installed title" ), [emoticon displayName]], [NSString stringWithFormat:NSLocalizedString( @"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?", "would you like to view the emoticons in the Appearance Preferences" ), [emoticon displayName], [emoticon displayName]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil ) == NSOKButton ) {
 				[self showPreferences:nil];
 				[self.preferencesWindowController selectControllerWithIdentifier:self.preferencesWindowController.appearancePreferences.identifier];
 				[self.preferencesWindowController.appearancePreferences selectEmoticonsWithIdentifier:[emoticon bundleIdentifier]];
@@ -446,7 +446,7 @@ static BOOL applicationIsTerminating = NO;
 - (void) applicationWillFinishLaunching:(NSNotification *) notification {
 	PFMoveToApplicationsFolderIfNecessary();
 
-	[[NSUserDefaults standardUserDefaults] registerDefaults:[[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
+	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
 	if ([[[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys] indexOfObject:@"JVRemoveTransferedItems"] != NSNotFound) {
 		[[NSUserDefaults standardUserDefaults] setInteger:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] forKey:@"JVRemoveTransferredItems"];
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVRemoveTransferedItems"];
@@ -631,7 +631,7 @@ static BOOL applicationIsTerminating = NO;
 			[informativeText appendFormat:@"%@\n", [pluginName fileName]];
 	} else {
 		NSString *pluginName = [[invalidPlugins lastObject] fileName];
-		informativeText = [[NSMutableString alloc] initWithFormat:NSLocalizedString( @"Colloquy is unable to load the plugin named \"%@\".", @"Colloquy is unable to load the plugin named \"%@\". informative text"), pluginName];
+		informativeText = [NSMutableString stringWithFormat:NSLocalizedString( @"Colloquy is unable to load the plugin named \"%@\".", @"Colloquy is unable to load the plugin named \"%@\". informative text"), pluginName];
 	}
 
 	alert.informativeText = informativeText;

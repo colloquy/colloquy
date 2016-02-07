@@ -161,7 +161,7 @@
 
 +(NSXMLElement *)valueElementFromNumber:(NSNumber *)number {
 	// what type of NSNumber is this?
-    if ([[[NSString alloc] initWithCString: [number objCType] 
+    if ([[NSString stringWithCString: [number objCType] 
 							encoding: NSUTF8StringEncoding] isEqualToString: @"d"]) {
         return [self valueElementFromElementWithName:@"double" value:[number stringValue]];
     } else {
@@ -183,7 +183,7 @@
 	kCFCalendarUnitMinute | 
 	kCFCalendarUnitSecond;
     NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:calendarComponents fromDate:date];
-    NSString *dateString = [[NSString alloc] initWithFormat: @"%.4ld%.2ld%.2ldT%.2ld:%.2ld:%.2ld", 
+    NSString *dateString = [NSString stringWithFormat: @"%.4ld%.2ld%.2ldT%.2ld:%.2ld:%.2ld", 
 							(long)[dateComponents year],
 							(long)[dateComponents month],
 							(long)[dateComponents day],
