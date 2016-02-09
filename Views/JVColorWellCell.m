@@ -177,16 +177,6 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 
 #pragma mark -
 
-- (void) setTarget:(id) object {
-	[NSException raise:NSIllegalSelectorException format:@"JVColorWellCell does not implement setTarget:"];
-}
-
-- (void) setAction:(SEL) action {
-	[NSException raise:NSIllegalSelectorException format:@"JVColorWellCell does not implement setAction:"];
-}
-
-#pragma mark -
-
 - (BOOL) hasValidObjectValue {
 	return YES;
 }
