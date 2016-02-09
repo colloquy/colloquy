@@ -4479,9 +4479,20 @@ parsingFinished: { // make a scope for this
 }
 
 #pragma mark -
-#pragma mark Metadata Replies
+#pragma mark STARTTLS
 
 - (void) _handle670WithParameters:(NSArray *) parameters fromSender:(id) sender {
+	if( parameters.count == 2) { // STARTTLS start TLS session. nickname :STARTTLS successful, go ahead with TLS handshake
+		[self _startTLS];
+
+		self.connectedSecurely = YES;
+	}
+}
+
+#pragma mark -
+#pragma mark Metadata Replies
+
+- (void) _handle760WithParameters:(NSArray *) parameters fromSender:(id) sender {
 	if( parameters.count == 2) { // STARTTLS start TLS session. nickname :STARTTLS successful, go ahead with TLS handshake
 		[self _startTLS];
 
@@ -4496,7 +4507,7 @@ parsingFinished: { // make a scope for this
 	}
 }
 
-- (void) _handle671WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_KEYVALUE, <target> <key> [:<value>]
+- (void) _handle761WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_KEYVALUE, <target> <key> [:<value>]
 	if (2 > parameters.count) return;
 
 	NSString *nickname = parameters[0];
@@ -4508,15 +4519,19 @@ parsingFinished: { // make a scope for this
 	[user setAttribute:attribute forKey:parameters[1]];
 }
 
-- (void) _handle672WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_METADATAEND, :end of metadata
+- (void) _handle762WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_METADATAEND, :end of metadata
 	// nothing to do
 }
 
-- (void) _handle675WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_TARGETINVALID, <target> :invalid metadata target
+- (void) _handle764WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_METADATALIMIT, <target> :metadata limit reached
 	// nothing to do
 }
 
-- (void) _handle676WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOMATCHINGKEYS, <string> :no matching keys
+- (void) _handle765WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_TARGETINVALID, <target> :invalid metadata target
+	// nothing to do
+}
+
+- (void) _handle766WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOMATCHINGKEYS, <string> :no matching keys
 	// nothing to do
 }
 
@@ -4526,7 +4541,7 @@ parsingFinished: { // make a scope for this
 	[self.localUser setAttribute:nil forKey:parameters[0]];
 }
 
-- (void) _handle678WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_KEYNOTSET, <target> <key> :key not set
+- (void) _handle768WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_KEYNOTSET, <target> <key> :key not set
 	if (parameters.count != 2) return;
 
 	NSString *nickname = parameters[0];
@@ -4537,7 +4552,7 @@ parsingFinished: { // make a scope for this
 	[user setAttribute:nil forKey:parameters[1]];
 }
 
-- (void) _handle679WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_KEYNOPERMISSION
+- (void) _handle769WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_KEYNOPERMISSION
 	// <Target> <key> :permission denied
 }
 
