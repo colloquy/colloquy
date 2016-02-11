@@ -104,6 +104,8 @@ NS_ASSUME_NONNULL_BEGIN
 			[strongSelf.alertController removeFromParentViewController];
 			[strongSelf.alertController.view removeFromSuperview];
 			strongSelf.alertController = nil;
+			[strongSelf->_overlappingPresentationViewController.view removeFromSuperview];
+			[strongSelf->_overlappingPresentationViewController removeFromParentViewController];
 			strongSelf->_overlappingPresentationViewController = nil;
 
 			[self.delegate actionSheet:self clickedButtonAtIndex:i];
