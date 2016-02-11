@@ -1,3 +1,4 @@
+// provided for scripting support
 @interface NSTextStorage (NSTextStorageAdditions)
 - (NSColor *) backgroundColor;
 - (void) setBackgroundColor:(NSColor *) color;
