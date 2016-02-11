@@ -105,7 +105,7 @@ NS_ASSUME_NONNULL_BEGIN
 		[self _setPort:port];
 
 		NSString *fileName = [[self source] lastPathComponent];
-		if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu T", fileName, address, [self port], [self finalSize]]];
+		if( self->_fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu T", fileName, address, [self port], [self finalSize]]];
 		else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND %@ %@ %hu %llu T", fileName, address, [self port], [self finalSize]]];
 	});
 }
@@ -312,7 +312,7 @@ NS_ASSUME_NONNULL_BEGIN
 		[self _setPort:port];
 
 		NSString *fileName = [self originalFileName];
-		if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu %llu", fileName, address, [self port], [self finalSize], [self _passiveIdentifier]]];
+		if( self->_fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu %llu", fileName, address, [self port], [self finalSize], [self _passiveIdentifier]]];
 		else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND %@ %@ %hu %llu %llu", fileName, address, [self port], [self finalSize], [self _passiveIdentifier]]];
 	});
 }
