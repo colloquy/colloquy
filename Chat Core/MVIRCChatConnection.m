@@ -2425,9 +2425,6 @@ parsingFinished: { // make a scope for this
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionTLSFeature];
 					}
-
-					self.secure = YES;
-					self.serverPort = 6697; // Charybdis defaults to 6697 for SSL connections. Theoretically, STARTTLS support makes this a non-issue, but, this seems safer.
 				} else if( [capability isCaseInsensitiveEqualToString:@"away-notify"]) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionAwayNotifyFeature];
@@ -2569,8 +2566,6 @@ parsingFinished: { // make a scope for this
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVChatConnectionTLSFeature];
 					}
-					self.secure = NO;
-					self.serverPort = 6667; // reset back to default
 				} else if( [capability isCaseInsensitiveEqualToString:@"away-notify"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVChatConnectionAwayNotifyFeature];
@@ -2739,6 +2734,7 @@ parsingFinished: { // make a scope for this
 	for( NSString *feature in parameters ) {
 		// IRCv3.x
 		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"STARTTLS"] ) {
+			// STARTTLS ISUPPORT is kind of useless, since we always send it at the beginning of a session anyway.
 			[_supportedFeatures addObject:MVChatConnectionTLSFeature];
 		} else if ( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"METADATA"] ) {
 			[_supportedFeatures addObject:MVChatConnectionMetadataFeature];
@@ -4548,11 +4544,7 @@ parsingFinished: { // make a scope for this
 #pragma mark Metadata Replies
 
 - (void) _handle760WithParameters:(NSArray *) parameters fromSender:(id) sender {
-	if( parameters.count == 2) { // STARTTLS start TLS session. nickname :STARTTLS successful, go ahead with TLS handshake
-		[self _startTLS];
-
-		self.connectedSecurely = YES;
-	} else if (parameters.count == 3) { // IRCv3.2 RPL_WHOISKEYVALUE, <target> <key> :<value
+	if (parameters.count == 3) { // IRCv3.2 RPL_WHOISKEYVALUE, <target> <key> :<value
 		NSString *nickname = parameters[0];
 		if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
 		if( !nickname.length ) return;
