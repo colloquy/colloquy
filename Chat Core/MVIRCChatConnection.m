@@ -1065,7 +1065,10 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		NSArray <NSString *> *IRCv31Optional = @[ @"tls", @"away-notify", @"extended-join", @"account-notify", @" " ];
 		NSArray <NSString *> *IRCv32Required = @[ @"account-tag", @"intent", @" " ];
 		NSArray <NSString *> *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time", @"userhost-in-names", @"batch", @" " ];
-		NSArray <NSString *> *IRCv33Prototypes = @[ /* @"sts", */ @" " ];
+		NSArray <NSString *> *IRCv33Prototypes = nil;
+		if( !_secure )
+			IRCv33Prototypes = @[ /* @"sts", */ @" " ]; // we only request sts support if we are on insecure connections
+		else IRCv33Prototypes = @[ @" " ];
 
 		// Older versions of ZNC prefixes their capabilities (from when IRCv3.2 wasn't finished).
 		NSArray <NSString *> *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message", @"znc.in/batch", @"znc.in/playback", @" " ];
