@@ -2,16 +2,6 @@
 
 #define MVInline static __inline__ __attribute__((always_inline))
 
-#define MVDefaultController \
-{ \
-	static dispatch_once_t onceToken; \
-	static id sharedInstance = nil; \
-	dispatch_once(&onceToken, ^{ \
-		sharedInstance = [[self alloc] init]; \
-	}); \
-	return sharedInstance; \
-}
-
 #if !defined(__has_feature) || !__has_feature(objc_arc)
 #define MVSafeAdoptAssign(var, newExpression) \
 { \
