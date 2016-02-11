@@ -101,12 +101,13 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection acceptingConnectionsToHost:(NSString *) host port:(unsigned short) port {
-	NSString *address = MVDCCFriendlyAddress( host );
-	[self _setPort:port];
+	MVFindDCCFriendlyAddress( host, ^(NSString *address) {
+		[self _setPort:port];
 
-	NSString *fileName = [[self source] lastPathComponent];
-	if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu T", fileName, address, [self port], [self finalSize]]];
-	else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND %@ %@ %hu %llu T", fileName, address, [self port], [self finalSize]]];
+		NSString *fileName = [[self source] lastPathComponent];
+		if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu T", fileName, address, [self port], [self finalSize]]];
+		else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND %@ %@ %hu %llu T", fileName, address, [self port], [self finalSize]]];
+	});
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection willDisconnectWithError:(NSError *) error {
@@ -307,12 +308,13 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection acceptingConnectionsToHost:(NSString *) host port:(unsigned short) port {
-	NSString *address = MVDCCFriendlyAddress( host );
-	[self _setPort:port];
+	MVFindDCCFriendlyAddress( host, ^(NSString *address) {
+		[self _setPort:port];
 
-	NSString *fileName = [self originalFileName];
-	if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu %llu", fileName, address, [self port], [self finalSize], [self _passiveIdentifier]]];
-	else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND %@ %@ %hu %llu %llu", fileName, address, [self port], [self finalSize], [self _passiveIdentifier]]];
+		NSString *fileName = [self originalFileName];
+		if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu %llu", fileName, address, [self port], [self finalSize], [self _passiveIdentifier]]];
+		else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND %@ %@ %hu %llu %llu", fileName, address, [self port], [self finalSize], [self _passiveIdentifier]]];
+	});
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection willDisconnectWithError:(NSError *) error {

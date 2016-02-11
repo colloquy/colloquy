@@ -288,7 +288,7 @@ NS_ASSUME_NONNULL_BEGIN
 			if (endOfSchemeRange.location == NSNotFound)
 				return NO;
 
-			NSString *nickname = [[request.URL.absoluteString substringFromIndex:(endOfSchemeRange.location + endOfSchemeRange.length)] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+			NSString *nickname = [[request.URL.absoluteString substringFromIndex:(endOfSchemeRange.location + endOfSchemeRange.length)] stringByRemovingPercentEncoding];
 			[transcriptDelegate transcriptView:self handleNicknameTap:nickname atLocation:_lastTouchLocation];
 		}
 

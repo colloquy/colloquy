@@ -52,7 +52,7 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 	NSMutableURLRequest *request = [self _postRequestWithURL:@"https://getpocket.com/v3/oauth/authorize"];
 	request.HTTPBody = @{ @"consumer_key": [self _consumerKey], @"code": activeCode }.postDataRepresentation;
 
-	[NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+	[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 		NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
 		if ((HTTPResponse.statusCode / 100) == 2) {
 			NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
@@ -68,7 +68,7 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 	NSMutableURLRequest *request = [self _postRequestWithURL:@"https://getpocket.com/v3/oauth/request"];
 	request.HTTPBody = @{ @"consumer_key": [self _consumerKey], @"redirect_uri": @"colloquy://redirect" }.postDataRepresentation;
 
-	[NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+	[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 		NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
 		if ((HTTPResponse.statusCode / 100) == 2) {
 			NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
@@ -99,7 +99,7 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 	NSMutableURLRequest *request = [self _postRequestWithURL:@"https://getpocket.com/v3/add"];
 	request.HTTPBody = @{ @"url": link, @"consumer_key": [self _consumerKey], @"access_token": token }.postDataRepresentation;
 
-	[NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+	[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 		[self handleBookmarkingResponse:response withData:data forLink:link];
 	}];
 }

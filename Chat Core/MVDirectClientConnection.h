@@ -17,7 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) directClientConnection:(MVDirectClientConnection *) connection didReadData:(NSData *) data withTag:(long) tag;
 @end
 
-NSString *MVDCCFriendlyAddress( NSString *address );
+typedef void (^MVStringParameterBlock)(NSString *);
+void MVFindDCCFriendlyAddress( NSString *address, MVStringParameterBlock completion );
 
 @interface MVDirectClientConnection : NSObject
 - (void) connectToHost:(NSString *) host onPort:(unsigned short) port;
