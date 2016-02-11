@@ -107,6 +107,8 @@ NS_ASSUME_NONNULL_BEGIN
 		break;
 	}
 
+	self.secure = connection.secure;
+
 	if (connection.directConnection)
 		_iconImageView.image = [UIImage imageNamed:@"server.png"];
 	else _iconImageView.image = [UIImage imageNamed:@"bouncer.png"];
@@ -169,11 +171,18 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) setStatus:(CQConnectionTableCellStatus) status {
-	if (_status == status)
-		return;
-
 	_status = status;
 
+	[self _setBadgeWithStatus:status secure:_secure];
+}
+
+- (void) setSecure:(BOOL) secure {
+	_secure = secure;
+
+	[self _setBadgeWithStatus:_status secure:secure];
+}
+
+- (void) _setBadgeWithStatus:(CQConnectionTableCellStatus) status secure:(BOOL) secure {
 	switch (status) {
 	case CQConnectionTableCellNotConnectedStatus:
 		_badgeImageView.image = nil;
@@ -186,7 +195,7 @@ NS_ASSUME_NONNULL_BEGIN
 		_badgeImageView.image = [UIImage imageNamed:@"connectingBadgeDim.png"];
 		break;
 	case CQConnectionTableCellConnectedStatus:
-		_badgeImageView.image = [UIImage imageNamed:@"connectedBadgeDim.png"];
+		_badgeImageView.image = secure ? [UIImage imageNamed:@"connectedBadgeDim.png"] : [UIImage imageNamed:@"connectedInsecureBadgeDim.png"];
 		break;
 	}
 
