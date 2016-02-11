@@ -2538,6 +2538,7 @@ parsingFinished: { // make a scope for this
 					if( [stsExpirationDate timeIntervalSinceNow] > 0 )
 						[self performSelector:@selector(_reconnectForSTS) withObject:nil afterDelay:[stsExpirationDate timeIntervalSinceNow]];
 
+					self.serverPort = stsPort;
 					self.secure = YES;
 
 					[self forceDisconnect];
