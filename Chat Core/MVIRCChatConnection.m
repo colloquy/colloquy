@@ -342,6 +342,8 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	BOOL _fetchingMonitorList;
 	BOOL _monitorListFull;
 	BOOL _hasRequestedPlaybackList;
+	BOOL _preSTSServerPort;
+	BOOL _preSTSSecure;
 
 	dispatch_queue_t _connectionQueue;
 
@@ -1063,6 +1065,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		NSArray <NSString *> *IRCv31Optional = @[ @"tls", @"away-notify", @"extended-join", @"account-notify", @" " ];
 		NSArray <NSString *> *IRCv32Required = @[ @"account-tag", @"intent", @" " ];
 		NSArray <NSString *> *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time", @"userhost-in-names", @"batch", @" " ];
+		NSArray <NSString *> *IRCv33Prototypes = @[ /* @"sts", */ @" " ];
 
 		// Older versions of ZNC prefixes their capabilities (from when IRCv3.2 wasn't finished).
 		NSArray <NSString *> *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message", @"znc.in/batch", @"znc.in/playback", @" " ];
@@ -1075,6 +1078,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		[rawMessage appendString:[IRCv32Required componentsJoinedByString:@" "]];
 		[rawMessage appendString:[IRCv32Optional componentsJoinedByString:@" "]];
 		[rawMessage appendString:[ZNCPrefixedIRCv32Optional componentsJoinedByString:@" "]];
+		[rawMessage appendString:[IRCv33Prototypes componentsJoinedByString:@" "]];
 
 		[self sendRawMessageImmediatelyWithFormat:[rawMessage copy]];
 	}
@@ -2493,6 +2497,46 @@ parsingFinished: { // make a scope for this
 					}
 				}
 
+				// IRCv3.3
+				else if( [capability hasCaseInsensitivePrefix:@"sts"] ) {
+					NSString *parametersSubstring = [capability stringByReplacingOccurrencesOfString:@"sts=" withString:@"" options:NSAnchoredSearch range:NSMakeRange(0, capability.length)];
+					NSDate *stsExpirationDate = nil;
+					unsigned short stsPort = 0;
+					for (NSString *keyValuePairs in [parametersSubstring componentsSeparatedByString:@","]) {
+						NSArray *keyValueComponents = [keyValuePairs componentsSeparatedByString:@"="];
+						if( keyValueComponents.count != 2 ) continue;
+
+						if( [keyValueComponents[0] isCaseInsensitiveEqualToString:@"duration"] ) {
+							stsExpirationDate = [NSDate dateWithTimeIntervalSinceNow:[keyValueComponents[1] doubleValue]];
+						} else if( [keyValueComponents[0] isCaseInsensitiveEqualToString:@"port"] ) {
+							NSInteger port = [keyValueComponents[1] intValue];
+							if( USHRT_MAX >= port )
+								stsPort = (unsigned short)port;
+						}
+					}
+
+					// STS requires a port to be specified to reconnect on.
+					// (unlike `tls`/`STARTTLS` which make use of the current port/connection.)
+					if( stsPort == 0 ) continue;
+
+					@synchronized ( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionSTSFeature];
+					}
+
+					_preSTSServerPort = _serverPort;
+					_preSTSSecure = _secure;
+
+					self.secure = YES;
+
+					[self forceDisconnect];
+					[self connect];
+
+					if( [stsExpirationDate timeIntervalSinceNow] > 0 ) {
+						[self performSelector:@selector(disconnect) withObject:nil afterDelay:[stsExpirationDate timeIntervalSinceNow]];
+						[self performSelector:@selector(connect) withObject:nil afterDelay:[stsExpirationDate timeIntervalSinceNow]];
+					}
+				}
+
 				// Unknown / future capabilities
 				else {
 					sendCapReqForFeature = NO;
@@ -2576,6 +2620,14 @@ parsingFinished: { // make a scope for this
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVIRCChatConnectionZNCEchoMessageFeature];
 					}
+				} else if( [capability hasCaseInsensitivePrefix:@"sts"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionSTSFeature];
+					}
+
+					self.secure = _preSTSSecure;
+
+					if( _preSTSServerPort > 0 ) self.serverPort = _preSTSServerPort;
 				}
 			}
 		}
