@@ -875,6 +875,15 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	else [self _resetSendQueueInterval];
 }
 
+- (void) _reconnectForSTS {
+	[self forceDisconnect];
+
+	self.secure = _preSTSSecure;
+	self.serverPort = _preSTSServerPort;
+
+	[self connect];
+}
+
 #pragma mark -
 
 - (void) _willConnect {
@@ -2526,15 +2535,13 @@ parsingFinished: { // make a scope for this
 					_preSTSServerPort = _serverPort;
 					_preSTSSecure = _secure;
 
+					if( [stsExpirationDate timeIntervalSinceNow] > 0 )
+						[self performSelector:@selector(_reconnectForSTS) withObject:nil afterDelay:[stsExpirationDate timeIntervalSinceNow]];
+
 					self.secure = YES;
 
 					[self forceDisconnect];
 					[self connect];
-
-					if( [stsExpirationDate timeIntervalSinceNow] > 0 ) {
-						[self performSelector:@selector(disconnect) withObject:nil afterDelay:[stsExpirationDate timeIntervalSinceNow]];
-						[self performSelector:@selector(connect) withObject:nil afterDelay:[stsExpirationDate timeIntervalSinceNow]];
-					}
 				}
 
 				// Unknown / future capabilities
@@ -2618,14 +2625,6 @@ parsingFinished: { // make a scope for this
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVIRCChatConnectionZNCEchoMessageFeature];
 					}
-				} else if( [capability hasCaseInsensitivePrefix:@"sts"] ) {
-					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures removeObject:MVChatConnectionSTSFeature];
-					}
-
-					self.secure = _preSTSSecure;
-
-					if( _preSTSServerPort > 0 ) self.serverPort = _preSTSServerPort;
 				}
 			}
 		}
