@@ -284,7 +284,7 @@ NS_ASSUME_NONNULL_BEGIN
 				return;
 			}
 
-			NSString *nickname = [[navigationAction.request.URL.absoluteString substringFromIndex:(endOfSchemeRange.location + endOfSchemeRange.length)] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+			NSString *nickname = [[navigationAction.request.URL.absoluteString substringFromIndex:(endOfSchemeRange.location + endOfSchemeRange.length)] stringByRemovingPercentEncoding];
 			[transcriptDelegate transcriptView:self handleNicknameTap:nickname atLocation:_lastTouchLocation];
 		}
 

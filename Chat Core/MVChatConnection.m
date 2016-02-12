@@ -70,6 +70,9 @@ NSString *MVChatConnectionCapNotifyFeature = @"MVChatConnectionCapNotifyFeature"
 NSString *MVChatConnectionInviteFeature = @"MVChatConnectionInviteFeature";
 NSString *MVChatConnectionEchoMessageFeature = @"MVChatConnectionEchoMessageFeature";
 
+// IRC3v3
+NSString *MVChatConnectionSTSFeature = @"MVChatConnectionSTSFeature";
+
 // InspIRCd Enhancements
 NSString *MVChatConnectionNamesxFeature = @"MVChatConnectionNamesxFeature";
 

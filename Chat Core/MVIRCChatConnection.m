@@ -344,6 +344,8 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	BOOL _fetchingMonitorList;
 	BOOL _monitorListFull;
 	BOOL _hasRequestedPlaybackList;
+	BOOL _preSTSServerPort;
+	BOOL _preSTSSecure;
 
 	dispatch_queue_t _connectionQueue;
 
@@ -1065,6 +1067,10 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		NSArray <NSString *> *IRCv31Optional = @[ @"tls", @"away-notify", @"extended-join", @"account-notify", @" " ];
 		NSArray <NSString *> *IRCv32Required = @[ @"account-tag", @"intent", @" " ];
 		NSArray <NSString *> *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time", @"userhost-in-names", @"batch", @" " ];
+		NSArray <NSString *> *IRCv33Prototypes = nil;
+		if( !_secure )
+			IRCv33Prototypes = @[ /* @"sts", */ @" " ]; // we only request sts support if we are on insecure connections
+		else IRCv33Prototypes = @[ @" " ];
 
 		// Older versions of ZNC prefixes their capabilities (from when IRCv3.2 wasn't finished).
 		NSArray <NSString *> *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message", @"znc.in/batch", @"znc.in/playback", @" " ];
@@ -1077,6 +1083,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		[rawMessage appendString:[IRCv32Required componentsJoinedByString:@" "]];
 		[rawMessage appendString:[IRCv32Optional componentsJoinedByString:@" "]];
 		[rawMessage appendString:[ZNCPrefixedIRCv32Optional componentsJoinedByString:@" "]];
+		[rawMessage appendString:[IRCv33Prototypes componentsJoinedByString:@" "]];
 
 		[self sendRawMessageImmediatelyWithFormat:[rawMessage copy]];
 	}
@@ -2420,9 +2427,6 @@ parsingFinished: { // make a scope for this
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionTLSFeature];
 					}
-
-					self.secure = YES;
-					self.serverPort = 6697; // Charybdis defaults to 6697 for SSL connections. Theoretically, STARTTLS support makes this a non-issue, but, this seems safer.
 				} else if( [capability isCaseInsensitiveEqualToString:@"away-notify"]) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionAwayNotifyFeature];
@@ -2495,6 +2499,46 @@ parsingFinished: { // make a scope for this
 					}
 				}
 
+				// IRCv3.3
+				else if( [capability hasCaseInsensitivePrefix:@"sts"] ) {
+					NSString *parametersSubstring = [capability stringByReplacingOccurrencesOfString:@"sts=" withString:@"" options:NSAnchoredSearch range:NSMakeRange(0, capability.length)];
+					NSDate *stsExpirationDate = nil;
+					unsigned short stsPort = 0;
+					for (NSString *keyValuePairs in [parametersSubstring componentsSeparatedByString:@","]) {
+						NSArray *keyValueComponents = [keyValuePairs componentsSeparatedByString:@"="];
+						if( keyValueComponents.count != 2 ) continue;
+
+						if( [keyValueComponents[0] isCaseInsensitiveEqualToString:@"duration"] ) {
+							stsExpirationDate = [NSDate dateWithTimeIntervalSinceNow:[keyValueComponents[1] doubleValue]];
+						} else if( [keyValueComponents[0] isCaseInsensitiveEqualToString:@"port"] ) {
+							NSInteger port = [keyValueComponents[1] intValue];
+							if( USHRT_MAX >= port )
+								stsPort = (unsigned short)port;
+						}
+					}
+
+					// STS requires a port to be specified to reconnect on.
+					// (unlike `tls`/`STARTTLS` which make use of the current port/connection.)
+					if( stsPort == 0 ) continue;
+
+					@synchronized ( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionSTSFeature];
+					}
+
+					_preSTSServerPort = _serverPort;
+					_preSTSSecure = _secure;
+
+					self.secure = YES;
+
+					[self forceDisconnect];
+					[self connect];
+
+					if( [stsExpirationDate timeIntervalSinceNow] > 0 ) {
+						[self performSelector:@selector(disconnect) withObject:nil afterDelay:[stsExpirationDate timeIntervalSinceNow]];
+						[self performSelector:@selector(connect) withObject:nil afterDelay:[stsExpirationDate timeIntervalSinceNow]];
+					}
+				}
+
 				// Unknown / future capabilities
 				else {
 					sendCapReqForFeature = NO;
@@ -2524,8 +2568,6 @@ parsingFinished: { // make a scope for this
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVChatConnectionTLSFeature];
 					}
-					self.secure = NO;
-					self.serverPort = 6667; // reset back to default
 				} else if( [capability isCaseInsensitiveEqualToString:@"away-notify"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVChatConnectionAwayNotifyFeature];
@@ -2578,6 +2620,14 @@ parsingFinished: { // make a scope for this
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVIRCChatConnectionZNCEchoMessageFeature];
 					}
+				} else if( [capability hasCaseInsensitivePrefix:@"sts"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures removeObject:MVChatConnectionSTSFeature];
+					}
+
+					self.secure = _preSTSSecure;
+
+					if( _preSTSServerPort > 0 ) self.serverPort = _preSTSServerPort;
 				}
 			}
 		}
@@ -2686,6 +2736,7 @@ parsingFinished: { // make a scope for this
 	for( NSString *feature in parameters ) {
 		// IRCv3.x
 		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"STARTTLS"] ) {
+			// STARTTLS ISUPPORT is kind of useless, since we always send it at the beginning of a session anyway.
 			[_supportedFeatures addObject:MVChatConnectionTLSFeature];
 		} else if ( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"METADATA"] ) {
 			[_supportedFeatures addObject:MVChatConnectionMetadataFeature];
@@ -4481,14 +4532,21 @@ parsingFinished: { // make a scope for this
 }
 
 #pragma mark -
-#pragma mark Metadata Replies
+#pragma mark STARTTLS
 
 - (void) _handle670WithParameters:(NSArray *) parameters fromSender:(id) sender {
 	if( parameters.count == 2) { // STARTTLS start TLS session. nickname :STARTTLS successful, go ahead with TLS handshake
 		[self _startTLS];
 
 		self.connectedSecurely = YES;
-	} else if (parameters.count == 3) { // IRCv3.2 RPL_WHOISKEYVALUE, <target> <key> :<value
+	}
+}
+
+#pragma mark -
+#pragma mark Metadata Replies
+
+- (void) _handle760WithParameters:(NSArray *) parameters fromSender:(id) sender {
+	if (parameters.count == 3) { // IRCv3.2 RPL_WHOISKEYVALUE, <target> <key> :<value
 		NSString *nickname = parameters[0];
 		if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
 		if( !nickname.length ) return;
@@ -4498,7 +4556,7 @@ parsingFinished: { // make a scope for this
 	}
 }
 
-- (void) _handle671WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_KEYVALUE, <target> <key> [:<value>]
+- (void) _handle761WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_KEYVALUE, <target> <key> [:<value>]
 	if (2 > parameters.count) return;
 
 	NSString *nickname = parameters[0];
@@ -4510,15 +4568,19 @@ parsingFinished: { // make a scope for this
 	[user setAttribute:attribute forKey:parameters[1]];
 }
 
-- (void) _handle672WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_METADATAEND, :end of metadata
+- (void) _handle762WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_METADATAEND, :end of metadata
 	// nothing to do
 }
 
-- (void) _handle675WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_TARGETINVALID, <target> :invalid metadata target
+- (void) _handle764WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_METADATALIMIT, <target> :metadata limit reached
 	// nothing to do
 }
 
-- (void) _handle676WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOMATCHINGKEYS, <string> :no matching keys
+- (void) _handle765WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_TARGETINVALID, <target> :invalid metadata target
+	// nothing to do
+}
+
+- (void) _handle766WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOMATCHINGKEYS, <string> :no matching keys
 	// nothing to do
 }
 
@@ -4528,7 +4590,7 @@ parsingFinished: { // make a scope for this
 	[self.localUser setAttribute:nil forKey:parameters[0]];
 }
 
-- (void) _handle678WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_KEYNOTSET, <target> <key> :key not set
+- (void) _handle768WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_KEYNOTSET, <target> <key> :key not set
 	if (parameters.count != 2) return;
 
 	NSString *nickname = parameters[0];
@@ -4539,7 +4601,7 @@ parsingFinished: { // make a scope for this
 	[user setAttribute:nil forKey:parameters[1]];
 }
 
-- (void) _handle679WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_KEYNOPERMISSION
+- (void) _handle769WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_KEYNOPERMISSION
 	// <Target> <key> :permission denied
 }
 

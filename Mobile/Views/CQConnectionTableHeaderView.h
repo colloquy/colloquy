@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *nickname;
 @property (nonatomic, copy) NSDate *connectDate;
 @property (nonatomic) CQConnectionTableCellStatus status;
+@property (nonatomic) BOOL secure;
 
 @property (nonatomic) BOOL editing;
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated;
