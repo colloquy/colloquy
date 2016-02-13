@@ -37,7 +37,7 @@
 		C2E4C9F91C555079007A4FA5 /* MVDelegateLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E4C9981C55425A007A4FA5 /* MVDelegateLogger.h */; };
 		C2E4C9FA1C555079007A4FA5 /* MVDelegateLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E4C9991C55425A007A4FA5 /* MVDelegateLogger.m */; };
 		C2E4CA421C5554CE007A4FA5 /* MVUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E4CA2B1C555466007A4FA5 /* MVUtilities.h */; };
-		C2E4CA441C556ECD007A4FA5 /* MVAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E4C99A1C55425A007A4FA5 /* MVAvailability.h */; };
+		C2E4CA441C556ECD007A4FA5 /* MVAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E4C99A1C55425A007A4FA5 /* MVAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C2E4CA461C557093007A4FA5 /* NSAttributedStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E4CA2D1C555466007A4FA5 /* NSAttributedStringAdditions.m */; };
 		C2E4CA471C5570BB007A4FA5 /* NSAttributedStringAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E4CA2C1C555466007A4FA5 /* NSAttributedStringAdditions.h */; };
 		C2E4CA481C55714D007A4FA5 /* MVIRCChatConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E4C9B71C55425A007A4FA5 /* MVIRCChatConnection.h */; };
@@ -153,17 +153,17 @@
 		C2E4C9691C5538E1007A4FA5 = {
 			isa = PBXGroup;
 			children = (
+				C2E4C9741C5538E1007A4FA5 /* _products */,
 				C2E4C9751C5538E1007A4FA5 /* chat-core */,
-				C2E4C9741C5538E1007A4FA5 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		C2E4C9741C5538E1007A4FA5 /* Products */ = {
+		C2E4C9741C5538E1007A4FA5 /* _products */ = {
 			isa = PBXGroup;
 			children = (
 				C2E4C9731C5538E1007A4FA5 /* ChatCore.framework */,
 			);
-			name = Products;
+			name = _products;
 			sourceTree = "<group>";
 		};
 		C2E4C9751C5538E1007A4FA5 /* chat-core */ = {
@@ -368,7 +368,7 @@
 				en,
 			);
 			mainGroup = C2E4C9691C5538E1007A4FA5;
-			productRefGroup = C2E4C9741C5538E1007A4FA5 /* Products */;
+			productRefGroup = C2E4C9741C5538E1007A4FA5 /* _products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (

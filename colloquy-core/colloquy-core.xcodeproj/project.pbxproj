@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		C26B5CCF1C67D223007D209E /* ColloquyCore.h in Headers */ = {isa = PBXBuildFile; fileRef = C26B5CCE1C67D223007D209E /* ColloquyCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C2D9D5BC1C6F6CBE00498F28 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2D9D5BB1C6F6CA300498F28 /* ChatCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		C26B5CCB1C67D223007D209E /* ColloquyCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ColloquyCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C26B5CCE1C67D223007D209E /* ColloquyCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColloquyCore.h; sourceTree = "<group>"; };
 		C26B5CD01C67D223007D209E /* ColloquyCore-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ColloquyCore-Info.plist"; sourceTree = "<group>"; };
+		C2D9D5BB1C6F6CA300498F28 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -21,6 +23,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2D9D5BC1C6F6CBE00498F28 /* ChatCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -30,17 +33,18 @@
 		C26B5CC11C67D223007D209E = {
 			isa = PBXGroup;
 			children = (
+				C2D9D5BA1C6F6C9000498F28 /* _dependencies */,
+				C26B5CCC1C67D223007D209E /* _products */,
 				C26B5CCD1C67D223007D209E /* colloquy-core */,
-				C26B5CCC1C67D223007D209E /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		C26B5CCC1C67D223007D209E /* Products */ = {
+		C26B5CCC1C67D223007D209E /* _products */ = {
 			isa = PBXGroup;
 			children = (
 				C26B5CCB1C67D223007D209E /* ColloquyCore.framework */,
 			);
-			name = Products;
+			name = _products;
 			sourceTree = "<group>";
 		};
 		C26B5CCD1C67D223007D209E /* colloquy-core */ = {
@@ -50,6 +54,14 @@
 				C26B5CD01C67D223007D209E /* ColloquyCore-Info.plist */,
 			);
 			path = "colloquy-core";
+			sourceTree = "<group>";
+		};
+		C2D9D5BA1C6F6C9000498F28 /* _dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				C2D9D5BB1C6F6CA300498F28 /* ChatCore.framework */,
+			);
+			name = _dependencies;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -107,7 +119,7 @@
 				en,
 			);
 			mainGroup = C26B5CC11C67D223007D209E;
-			productRefGroup = C26B5CCC1C67D223007D209E /* Products */;
+			productRefGroup = C26B5CCC1C67D223007D209E /* _products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -281,6 +293,7 @@
 				C26B5CE11C67D223007D209E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
