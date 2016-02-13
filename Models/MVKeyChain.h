@@ -33,15 +33,12 @@ enum {
 typedef SecProtocolType MVKeyChainProtocol;
 
 
-@interface MVKeyChain : NSObject {
-}
+@interface MVKeyChain : NSObject
 + (MVKeyChain *) defaultKeyChain;
 
-- (void) setGenericPassword:(NSString *) password forService:(NSString*) service account:(NSString *) account;
 - (NSString *) genericPasswordForService:(NSString *) service account:(NSString *) account;
 - (void) removeGenericPasswordForService:(NSString *) service account:(NSString *) account;
 
-- (void) setInternetPassword:(NSString *) password forServer:(NSString *) server securityDomain:(NSString *) domain account:(NSString *) account path:(NSString *) path port:(unsigned short) port protocol:(MVKeyChainProtocol) protocol authenticationType:(MVKeyChainAuthenticationType) authType;
 - (NSString *) internetPasswordForServer:(NSString *) server securityDomain:(NSString *) domain account:(NSString *) account path:(NSString *) path port:(unsigned short) port protocol:(MVKeyChainProtocol) protocol authenticationType:(MVKeyChainAuthenticationType) authType;
 - (void) removeInternetPasswordForServer:(NSString *) server securityDomain:(NSString *) domain account:(NSString *) account path:(NSString *) path port:(unsigned short) port protocol:(MVKeyChainProtocol) protocol authenticationType:(MVKeyChainAuthenticationType) authType;
 @end

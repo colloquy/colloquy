@@ -444,8 +444,8 @@ static NSMenu *favoritesMenu = nil;
 	}
 
 	// Ask people what to do, if its ever been turned on
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"MVAskOnInvalidCertificates"] || [[[MVKeyChain defaultKeyChain] genericPasswordForService:@"MVAskOnInvalidCertificates" account:@"MVSecurePrefs"] boolValue]) {
-		[[MVKeyChain defaultKeyChain] setGenericPassword:@"1" forService:@"MVAskOnInvalidCertificates" account:@"MVSecurePrefs"];
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"MVAskOnInvalidCertificates"] || [[[CQKeychain standardKeychain] passwordForServer:@"MVAskOnInvalidCertificates" area:@"MVSecurePrefs"] boolValue]) {
+		[[CQKeychain standardKeychain] setPassword:@"1" forServer:@"MVAskOnInvalidCertificates" area:@"MVSecurePrefs"];
 
 		SFCertificateTrustPanel *panel = [SFCertificateTrustPanel sharedCertificateTrustPanel];
 		panel.showsHelp = YES;
@@ -1832,6 +1832,7 @@ static NSMenu *favoritesMenu = nil;
 		NSString *password = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:@"Server"];;
 		if (!password) {
 			password = [[MVKeyChain defaultKeyChain] internetPasswordForServer:connection.server securityDomain:connection.server account:nil path:nil port:connection.serverPort protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+```````
 			if (password.length) {
 				[[MVKeyChain defaultKeyChain] removeInternetPasswordForServer:connection.server securityDomain:connection.server account:nil path:nil port:connection.serverPort protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 				[[CQKeychain standardKeychain] setPassword:password forServer:connection.uniqueIdentifier area:@"Server" displayValue:connection.server];
@@ -1842,6 +1843,7 @@ static NSMenu *favoritesMenu = nil;
 		NSString *nicknamePassword = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", connection.preferredNickname]];
 		if (!nicknamePassword) {
 			nicknamePassword = [[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection preferredNickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+
 			if (nicknamePassword.length) {
 				[[MVKeyChain defaultKeyChain] removeInternetPasswordForServer:connection.server securityDomain:connection.server account:connection.preferredNickname path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 				[[CQKeychain standardKeychain] setPassword:nicknamePassword forServer:connection.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", connection.preferredNickname] displayValue:connection.server];
@@ -1934,6 +1936,11 @@ static NSMenu *favoritesMenu = nil;
 	MVChatConnection *connection = [notification object];
 
 	NSString *pass = [[MVKeyChain defaultKeyChain] genericPasswordForService:[connection certificateServiceName] account:@"Colloquy"];
+	if( pass.length ) {
+		[[CQKeychain standardKeychain] setPassword:pass forServer:[connection certificateServiceName] area:@"Colloquy"];
+		[[MVKeyChain defaultKeyChain] removeGenericPasswordForService:[connection certificateServiceName] account:@"Colloquy"];
+	}
+
 	if( [pass length] ) {
 		// if authenticateCertificateWithPassword returns NO, its the wrong password.
 		if( [connection authenticateCertificateWithPassword:pass] ) return;
@@ -2063,8 +2070,9 @@ static NSMenu *favoritesMenu = nil;
 - (void) _connect:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
 	MVChatConnection *connection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
-	[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-	[connection setNicknamePassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:[connection preferredNickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+
+	connection.password = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:@"Server"];
+	connection.nicknamePassword = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", connection.preferredNickname]];
 	[connection connect];
 }
 
