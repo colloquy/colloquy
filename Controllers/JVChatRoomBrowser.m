@@ -3,6 +3,7 @@
 #import "JVChatConsolePanel.h"
 #import "MVConnectionsController.h"
 #import "MVTableView.h"
+#import "NSImageAdditions.h"
 
 @interface JVChatRoomBrowser (Private)
 - (void) _needToRefreshResults:(id) sender;
@@ -71,7 +72,7 @@
 	[roomsTable accessibilitySetOverrideValue:NSLocalizedString(@"Chat rooms", "VoiceOver title for chat rooms table") forAttribute:NSAccessibilityDescriptionAttribute];
 
 	theColumn = [roomsTable tableColumnWithIdentifier:@"members"];
-	NSImage *headerImage = [NSImage imageNamed:@"person"];
+	NSImage *headerImage = [NSImage imageFromPDF:@"person"];
 	headerImage.size = NSMakeSize(10., 10.);
 	[[theColumn headerCell] setImage:headerImage];
 	[[theColumn headerCell] accessibilitySetOverrideValue:NSLocalizedString(@"Participants", "VoiceOver title for number of connected users in chat room browser table") forAttribute:NSAccessibilityDescriptionAttribute];
