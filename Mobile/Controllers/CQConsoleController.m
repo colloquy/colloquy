@@ -8,7 +8,7 @@
 #import "MVDelegateLogger.h"
 #import "MVIRCChatConnection.h"
 
-#import "DDLog.h"
+#import "DDLogMacros.h"
 
 static BOOL hideNICKs;
 static BOOL hideTraffic; // JOIN, PART, KICK, INVITE

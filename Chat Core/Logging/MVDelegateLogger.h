@@ -1,4 +1,4 @@
-#import "DDLog.h"
+#import "DDLogMacros.h"
 
 @class MVDelegateLogger;
 

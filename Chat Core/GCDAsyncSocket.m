@@ -53,20 +53,20 @@
 #define LogContext GCDAsyncSocketLoggingContext
 
 #define LogObjc(flg, frmt, ...) LOG_OBJC_MAYBE(LogAsync, logLevel, flg, (int)self, frmt, ##__VA_ARGS__)
-#define LogC(flg, frmt, ...)    LOG_C_MAYBE(LogAsync, logLevel, flg, LogContext, frmt, ##__VA_ARGS__)
+#define LogC(flg, frmt, ...)    LOG_MAYBE(LogAsync, logLevel, flg, LogContext, frmt, ##__VA_ARGS__)
 
 #define LogError(frmt, ...)     LogObjc(LOG_FLAG_ERROR,   (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
 #define LogWarn(frmt, ...)      LogObjc(LOG_FLAG_WARN,    (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
 #define LogInfo(frmt, ...)      LogObjc(LOG_FLAG_INFO,    (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
 #define LogVerbose(frmt, ...)   LogObjc(LOG_FLAG_VERBOSE, (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
 
-#define LogCError(frmt, ...)    LogC(LOG_FLAG_ERROR,   (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
-#define LogCWarn(frmt, ...)     LogC(LOG_FLAG_WARN,    (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
-#define LogCInfo(frmt, ...)     LogC(LOG_FLAG_INFO,    (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
-#define LogCVerbose(frmt, ...)  LogC(LOG_FLAG_VERBOSE, (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
+#define LogCError(frmt, ...)    LogC(LOG_FLAG_ERROR,   ("%s: " frmt), THIS_FILE, ##__VA_ARGS__)
+#define LogCWarn(frmt, ...)     LogC(LOG_FLAG_WARN,    ("%s: " frmt), THIS_FILE, ##__VA_ARGS__)
+#define LogCInfo(frmt, ...)     LogC(LOG_FLAG_INFO,    ("%s: " frmt), THIS_FILE, ##__VA_ARGS__)
+#define LogCVerbose(frmt, ...)  LogC(LOG_FLAG_VERBOSE, ("%s: " frmt), THIS_FILE, ##__VA_ARGS__)
 
 #define LogTrace()              LogObjc(LOG_FLAG_VERBOSE, @"%@: %@", THIS_FILE, THIS_METHOD)
-#define LogCTrace()             LogC(LOG_FLAG_VERBOSE, @"%@: %s", THIS_FILE, __FUNCTION__)
+#define LogCTrace()             LogC(LOG_FLAG_VERBOSE, "%s: %s", THIS_FILE, __FUNCTION__)
 
 #ifndef GCDAsyncSocketLogLevel
 #define GCDAsyncSocketLogLevel LOG_LEVEL_VERBOSE
@@ -1663,7 +1663,7 @@ enum GCDAsyncSocketConfig
 	return result;
 }
 
-- (BOOL)acceptOnUrl:(NSURL *)url error:(NSError **)errPtr;
+- (BOOL)acceptOnUrl:(NSURL *)url error:(NSError **)errPtr
 {
 	LogTrace();
 	
@@ -2393,7 +2393,7 @@ enum GCDAsyncSocketConfig
 	return result;
 }
 
-- (BOOL)connectToUrl:(NSURL *)url withTimeout:(NSTimeInterval)timeout error:(NSError **)errPtr;
+- (BOOL)connectToUrl:(NSURL *)url withTimeout:(NSTimeInterval)timeout error:(NSError **)errPtr
 {
 	LogTrace();
 	
@@ -2426,7 +2426,6 @@ enum GCDAsyncSocketConfig
 		
 		// Start the normal connection process
 		
-		NSError *err = nil;
 		if (![self connectWithAddressUN:connectInterfaceUN error:&err])
 		{
 			[self closeWithError:err];
@@ -4004,7 +4003,7 @@ enum GCDAsyncSocketConfig
 	if (interfaceAddr6Ptr) *interfaceAddr6Ptr = addr6;
 }
 
-- (NSData *)getInterfaceAddressFromUrl:(NSURL *)url;
+- (NSData *)getInterfaceAddressFromUrl:(NSURL *)url
 {
 	NSString *path = url.path;
 	if (path.length == 0) {
@@ -7457,7 +7456,7 @@ static void CFReadStreamCallback (CFReadStreamRef stream, CFStreamEventType type
 		{
 			dispatch_async(asyncSocket->socketQueue, ^{ @autoreleasepool {
 				
-				LogCVerbose(@"CFReadStreamCallback - HasBytesAvailable");
+				LogCVerbose("CFReadStreamCallback - HasBytesAvailable");
 				
 				if (asyncSocket->readStream != stream)
 					return_from_block;
@@ -7493,7 +7492,7 @@ static void CFReadStreamCallback (CFReadStreamRef stream, CFStreamEventType type
 			
 			dispatch_async(asyncSocket->socketQueue, ^{ @autoreleasepool {
 				
-				LogCVerbose(@"CFReadStreamCallback - Other");
+				LogCVerbose("CFReadStreamCallback - Other");
 				
 				if (asyncSocket->readStream != stream)
 					return_from_block;
@@ -7524,7 +7523,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 		{
 			dispatch_async(asyncSocket->socketQueue, ^{ @autoreleasepool {
 				
-				LogCVerbose(@"CFWriteStreamCallback - CanAcceptBytes");
+				LogCVerbose("CFWriteStreamCallback - CanAcceptBytes");
 				
 				if (asyncSocket->writeStream != stream)
 					return_from_block;
@@ -7560,7 +7559,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 			
 			dispatch_async(asyncSocket->socketQueue, ^{ @autoreleasepool {
 				
-				LogCVerbose(@"CFWriteStreamCallback - Other");
+				LogCVerbose("CFWriteStreamCallback - Other");
 				
 				if (asyncSocket->writeStream != stream)
 					return_from_block;
