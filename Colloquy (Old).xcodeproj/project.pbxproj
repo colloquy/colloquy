@@ -152,10 +152,6 @@
 		1CB2CD33052DDC560094AAA4 /* Colloquy.icns in Resources */ = {isa = PBXBuildFile; fileRef = F5DD34730382E5E501000102 /* Colloquy.icns */; };
 		1CB2CD34052DDC560094AAA4 /* MVConnections.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5C4977B0385785401000102 /* MVConnections.nib */; };
 		1CB2CD35052DDC560094AAA4 /* statusHeader.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E2536603874B5601000102 /* statusHeader.png */; };
-		1CB2CD36052DDC560094AAA4 /* connected.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E253690387618E01000102 /* connected.png */; };
-		1CB2CD37052DDC560094AAA4 /* connectedSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E2536A0387618E01000102 /* connectedSelected.png */; };
-		1CB2CD38052DDC560094AAA4 /* connecting.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E2536D0387657C01000102 /* connecting.png */; };
-		1CB2CD39052DDC560094AAA4 /* connectingSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E2536E0387657C01000102 /* connectingSelected.png */; };
 		1CB2CD3A052DDC560094AAA4 /* autoHeader.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E253710387690301000102 /* autoHeader.png */; };
 		1CB2CD4E052DDC560094AAA4 /* viewAlert.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBB23D504EFE24C000001C8 /* viewAlert.png */; };
 		1CB2CD50052DDC560094AAA4 /* template.html in Resources */ = {isa = PBXBuildFile; fileRef = 1C3C116005029DE1000001C8 /* template.html */; };
@@ -282,6 +278,10 @@
 		B6310B4D1C6EFA800033E88E /* activityNewImportant.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B4A1C6EFA800033E88E /* activityNewImportant.pdf */; };
 		B6310B501C6EFAB00033E88E /* smartTranscript.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B4E1C6EFAB00033E88E /* smartTranscript.pdf */; };
 		B6310B511C6EFAB00033E88E /* smartTranscriptActivity.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B4F1C6EFAB00033E88E /* smartTranscriptActivity.pdf */; };
+		B6310B561C6F0A300033E88E /* connected.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B521C6F0A300033E88E /* connected.pdf */; };
+		B6310B581C6F0A300033E88E /* connecting.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B541C6F0A300033E88E /* connecting.pdf */; };
+		B6310B591C6F0A300033E88E /* connectingSelected.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B551C6F0A300033E88E /* connectingSelected.pdf */; };
+		B6310B5B1C6F0ADE0033E88E /* connectedSelected.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B5A1C6F0ADE0033E88E /* connectedSelected.pdf */; };
 		C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; };
 		C22A35571BC00BB7001757D7 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C23298991C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = C23298981C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m */; };
@@ -922,6 +922,10 @@
 		B6310B4A1C6EFA800033E88E /* activityNewImportant.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = activityNewImportant.pdf; path = "Resources/Toolbar Icons/activityNewImportant.pdf"; sourceTree = "<group>"; };
 		B6310B4E1C6EFAB00033E88E /* smartTranscript.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = smartTranscript.pdf; path = Resources/smartTranscript.pdf; sourceTree = "<group>"; };
 		B6310B4F1C6EFAB00033E88E /* smartTranscriptActivity.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = smartTranscriptActivity.pdf; path = Resources/smartTranscriptActivity.pdf; sourceTree = "<group>"; };
+		B6310B521C6F0A300033E88E /* connected.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = connected.pdf; path = Resources/connected.pdf; sourceTree = "<group>"; };
+		B6310B541C6F0A300033E88E /* connecting.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = connecting.pdf; path = Resources/connecting.pdf; sourceTree = "<group>"; };
+		B6310B551C6F0A300033E88E /* connectingSelected.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = connectingSelected.pdf; path = Resources/connectingSelected.pdf; sourceTree = "<group>"; };
+		B6310B5A1C6F0ADE0033E88E /* connectedSelected.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = connectedSelected.pdf; path = Resources/connectedSelected.pdf; sourceTree = "<group>"; };
 		C23298971C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSWindow+CQMCoordinateSpaceConversion.h"; path = "Additions/NSWindow+CQMCoordinateSpaceConversion.h"; sourceTree = "<group>"; };
 		C23298981C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSWindow+CQMCoordinateSpaceConversion.m"; path = "Additions/NSWindow+CQMCoordinateSpaceConversion.m"; sourceTree = "<group>"; };
 		C236F6561BDCE81200E64469 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = Importer/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -1052,10 +1056,6 @@
 		F5D04C03019489B801A35792 /* encoding.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = encoding.png; path = "Resources/Toolbar Icons/encoding.png"; sourceTree = "<group>"; };
 		F5DD34730382E5E501000102 /* Colloquy.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Colloquy.icns; path = Resources/Colloquy.icns; sourceTree = SOURCE_ROOT; };
 		F5E2536603874B5601000102 /* statusHeader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = statusHeader.png; path = Resources/statusHeader.png; sourceTree = "<group>"; };
-		F5E253690387618E01000102 /* connected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = connected.png; path = Resources/connected.png; sourceTree = SOURCE_ROOT; };
-		F5E2536A0387618E01000102 /* connectedSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = connectedSelected.png; path = Resources/connectedSelected.png; sourceTree = SOURCE_ROOT; };
-		F5E2536D0387657C01000102 /* connecting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = connecting.png; path = Resources/connecting.png; sourceTree = SOURCE_ROOT; };
-		F5E2536E0387657C01000102 /* connectingSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = connectingSelected.png; path = Resources/connectingSelected.png; sourceTree = SOURCE_ROOT; };
 		F5E253710387690301000102 /* autoHeader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = autoHeader.png; path = Resources/autoHeader.png; sourceTree = SOURCE_ROOT; };
 		F5E2538403882A8501000102 /* MVColorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVColorPanel.h; path = Views/MVColorPanel.h; sourceTree = "<group>"; };
 		F5E2538503882A8501000102 /* MVColorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVColorPanel.m; path = Views/MVColorPanel.m; sourceTree = "<group>"; };
@@ -1220,14 +1220,14 @@
 			isa = PBXGroup;
 			children = (
 				1C2391B40677E8F1000E89A7 /* aquaTabBackground.png */,
-				1C2391B60677E8F1000E89A7 /* aquaTabDivider.png */,
-				1C2391B70677E8F1000E89A7 /* aquaTabLeft.png */,
-				1C2391B80677E8F1000E89A7 /* aquaTabMiddle.png */,
-				1C2391B90677E8F1000E89A7 /* aquaTabRight.png */,
 				1C2391B50677E8F1000E89A7 /* aquaTabClose.png */,
 				1C23927206795020000E89A7 /* aquaTabCloseBack.png */,
 				1C2391BA0677E8F1000E89A7 /* aquaTabClosePressed.png */,
 				1C2391BB0677E8F1000E89A7 /* aquaTabCloseRollover.png */,
+				1C2391B60677E8F1000E89A7 /* aquaTabDivider.png */,
+				1C2391B70677E8F1000E89A7 /* aquaTabLeft.png */,
+				1C2391B80677E8F1000E89A7 /* aquaTabMiddle.png */,
+				1C2391B90677E8F1000E89A7 /* aquaTabRight.png */,
 				B6310B3B1C6EF9C80033E88E /* privateChatTab.pdf */,
 				B6310B3C1C6EF9C80033E88E /* privateChatTabNewMessage.pdf */,
 				B6310B3D1C6EF9C80033E88E /* roomTabNewHighlightMessage.pdf */,
@@ -1350,11 +1350,11 @@
 		1CBC6317054896CB009E59E1 /* Preference Icons */ = {
 			isa = PBXGroup;
 			children = (
-				1CDEE8260586C723000B9075 /* InterfacePreferences.png */,
-				1CBC63180548975E009E59E1 /* GeneralPreferences.png */,
 				1CC6FCD4054A2BF80075807C /* AppearancePreferences.png */,
-				1CC6FCD2054A25040075807C /* FileTransferPreferences.png */,
 				1CC6FC6F054A02F70075807C /* BehaviorPreferences.png */,
+				1CC6FCD2054A25040075807C /* FileTransferPreferences.png */,
+				1CBC63180548975E009E59E1 /* GeneralPreferences.png */,
+				1CDEE8260586C723000B9075 /* InterfacePreferences.png */,
 				1C9981F90603EF2F006C6417 /* NotificationPreferences.png */,
 				1C96E95806AAEC280013B0A9 /* TranscriptPreferences.png */,
 			);
@@ -1626,54 +1626,54 @@
 		F50B0AA10170C89301A84BDE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				9295C84E1675E10A009F9014 /* Colloquy.exp */,
-				1C51B89D052DF91E00BB459B /* Info.plist */,
-				1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */,
-				1C51B4CC052DE14B00BB459B /* Info-StandardCommands.plist */,
-				1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */,
-				F5DD34730382E5E501000102 /* Colloquy.icns */,
-				1C5959010507803F000001C8 /* Generic.icns */,
-				F52BA284037C13C201A35792 /* GPL.txt */,
-				1C043B4913DC8B7200B8FD9E /* Credits.rtf */,
-				F5394C0B0378E44D01A35792 /* Localizable.strings */,
-				F5BC17DD019655DC01A35792 /* info.colloquy.plist */,
-				1CEC004D0A20EF95004C2B86 /* transcriptSchema.sql */,
-				1CBECDCF0508C8AB000001C8 /* default.xsl */,
-				0A5B683E0810EC9700398D5A /* default.css */,
-				0AA811220826DB8800A3BF2D /* default.js */,
-				1C1AFB3C09C295D900BF3E2A /* base.html */,
-				1C3C116005029DE1000001C8 /* template.html */,
-				1C1AFDAA09C3BC4F00BF3E2A /* roomTopicBanner.html */,
-				1C1AFE8109C3D8C900BF3E2A /* roomTopicBanner.js */,
-				1C746A95050CF86B000001C8 /* emoticons.plist */,
-				F5675B8601DB767601EE70DE /* verbs.plist */,
-				1C9982AF0604BEAA006C6417 /* notifications.plist */,
-				1CA75A260652537A000141D5 /* styleOptions.plist */,
-				1CC6FD38054AF1940075807C /* preview.colloquyTranscript */,
-				1CD9DF6507D934F70006BB99 /* Colloquy.sdef */,
-				1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */,
-				1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */,
-				1C7C76E507DBA1C100FB5F83 /* NSCoreSuite.scriptSuite */,
-				1C7C76E607DBA1C100FB5F83 /* NSCoreSuite.scriptTerminology */,
-				1C7C76E707DBA1C100FB5F83 /* NSTextSuite.scriptSuite */,
-				1C7C76E807DBA1C100FB5F83 /* NSTextSuite.scriptTerminology */,
-				1CCA510D0598108000F0A4CD /* Colloquy.scriptSuite */,
-				1CCA510E0598108000F0A4CD /* Colloquy.scriptTerminology */,
-				1C59BD61059E2E02001487E2 /* ChatPlugIn.scriptSuite */,
-				1C59BD63059E2E16001487E2 /* ChatPlugIn.scriptTerminology */,
-				1C1D19F105992D80000BB31A /* ChatCore.scriptSuite */,
-				1C1D19F205992D80000BB31A /* ChatCore.scriptTerminology */,
-				1C3C116205029E03000001C8 /* Styles */,
 				1C258E55050B9656000001C8 /* Emoticons */,
 				F520458E01B1D37701EBB4B5 /* Sounds */,
+				1C3C116205029E03000001C8 /* Styles */,
 				F51F91D7037967CB01A35792 /* Chat.clr */,
-				F544999D018E46A501EE70DE /* Room Member Icons */,
-				F5ED0F46017CD77701EE70DE /* Toolbar Icons */,
-				1CBC6317054896CB009E59E1 /* Preference Icons */,
-				1C2391B30677E8D2000E89A7 /* Tabs Interface Images */,
-				1C710AB009F23D84007B4515 /* Sidebar Interface Images */,
-				F5C3D42203973E7B01000102 /* Widget Images */,
+				1CC6FD38054AF1940075807C /* preview.colloquyTranscript */,
+				0A5B683E0810EC9700398D5A /* default.css */,
+				9295C84E1675E10A009F9014 /* Colloquy.exp */,
+				1C1AFB3C09C295D900BF3E2A /* base.html */,
+				1C1AFDAA09C3BC4F00BF3E2A /* roomTopicBanner.html */,
+				1C3C116005029DE1000001C8 /* template.html */,
+				F5DD34730382E5E501000102 /* Colloquy.icns */,
+				1C5959010507803F000001C8 /* Generic.icns */,
+				0AA811220826DB8800A3BF2D /* default.js */,
+				1C1AFE8109C3D8C900BF3E2A /* roomTopicBanner.js */,
+				1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */,
+				1C746A95050CF86B000001C8 /* emoticons.plist */,
+				1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */,
+				1C51B4CC052DE14B00BB459B /* Info-StandardCommands.plist */,
+				F5BC17DD019655DC01A35792 /* info.colloquy.plist */,
+				1C51B89D052DF91E00BB459B /* Info.plist */,
+				1C9982AF0604BEAA006C6417 /* notifications.plist */,
+				1CA75A260652537A000141D5 /* styleOptions.plist */,
+				F5675B8601DB767601EE70DE /* verbs.plist */,
+				1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */,
+				1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */,
+				1C1D19F105992D80000BB31A /* ChatCore.scriptSuite */,
+				1C59BD61059E2E02001487E2 /* ChatPlugIn.scriptSuite */,
+				1CCA510D0598108000F0A4CD /* Colloquy.scriptSuite */,
+				1C7C76E507DBA1C100FB5F83 /* NSCoreSuite.scriptSuite */,
+				1C7C76E707DBA1C100FB5F83 /* NSTextSuite.scriptSuite */,
+				1C1D19F205992D80000BB31A /* ChatCore.scriptTerminology */,
+				1C59BD63059E2E16001487E2 /* ChatPlugIn.scriptTerminology */,
+				1CCA510E0598108000F0A4CD /* Colloquy.scriptTerminology */,
+				1C7C76E607DBA1C100FB5F83 /* NSCoreSuite.scriptTerminology */,
+				1C7C76E807DBA1C100FB5F83 /* NSTextSuite.scriptTerminology */,
+				1CD9DF6507D934F70006BB99 /* Colloquy.sdef */,
+				1CEC004D0A20EF95004C2B86 /* transcriptSchema.sql */,
+				F52BA284037C13C201A35792 /* GPL.txt */,
+				1CBECDCF0508C8AB000001C8 /* default.xsl */,
+				1C043B4913DC8B7200B8FD9E /* Credits.rtf */,
+				F5394C0B0378E44D01A35792 /* Localizable.strings */,
 				F52955590181EB5901EE70DE /* Misc. Icons */,
+				1CBC6317054896CB009E59E1 /* Preference Icons */,
+				F544999D018E46A501EE70DE /* Room Member Icons */,
+				1C710AB009F23D84007B4515 /* Sidebar Interface Images */,
+				1C2391B30677E8D2000E89A7 /* Tabs Interface Images */,
+				F5ED0F46017CD77701EE70DE /* Toolbar Icons */,
+				F5C3D42203973E7B01000102 /* Widget Images */,
 			);
 			indentWidth = 4;
 			name = Resources;
@@ -1715,44 +1715,44 @@
 		F52955590181EB5901EE70DE /* Misc. Icons */ = {
 			isa = PBXGroup;
 			children = (
-				92C70D081A5E87CF00080E45 /* room.pdf */,
-				1C9982AC0604BA1F006C6417 /* sound.png */,
 				B6310B481C6EFA800033E88E /* activity.pdf */,
 				B6310B491C6EFA800033E88E /* activityNew.pdf */,
 				B6310B4A1C6EFA800033E88E /* activityNewImportant.pdf */,
-				CB66DEA00631F8160034F76E /* Keychain.png */,
-				CB66DEA10631F8160034F76E /* Stickies.png */,
+				F5E253710387690301000102 /* autoHeader.png */,
+				F56539F501C5B6C301A35792 /* clear.png */,
 				1C6075E005138ED600A8FE6E /* colloquy-alpha.png */,
+				B6310B521C6F0A300033E88E /* connected.pdf */,
+				B6310B5A1C6F0ADE0033E88E /* connectedSelected.pdf */,
+				B6310B541C6F0A300033E88E /* connecting.pdf */,
+				B6310B551C6F0A300033E88E /* connectingSelected.pdf */,
+				F51A4F3B01C3204701EE70DE /* done.png */,
+				F51A4F3101C2ED2C01EE70DE /* download.png */,
+				F51A4F3701C319D801EE70DE /* error.png */,
+				CB66DEA00631F8160034F76E /* Keychain.png */,
+				1CA95D28051B413E00A8FE10 /* newHighlightMessage.png */,
+				1C705701051A830200A8FE6E /* newMessage.png */,
+				1C45BFA4086F4BD80079E014 /* newWindow.png */,
+				F51A4F3801C319D801EE70DE /* pending.png */,
+				F56539F601C5B6C301A35792 /* reveal.png */,
+				92C70D081A5E87CF00080E45 /* room.pdf */,
+				1C6E43C30955EFD7002D22E7 /* serverWindow.png */,
 				B6310B4E1C6EFAB00033E88E /* smartTranscript.pdf */,
 				B6310B4F1C6EFAB00033E88E /* smartTranscriptActivity.pdf */,
-				1C705701051A830200A8FE6E /* newMessage.png */,
-				1CA95D28051B413E00A8FE10 /* newHighlightMessage.png */,
-				1CBB23D504EFE24C000001C8 /* viewAlert.png */,
-				1CBB23D604EFE24C000001C8 /* viewAlertSelected.png */,
-				F5E253710387690301000102 /* autoHeader.png */,
+				1C9982AC0604BA1F006C6417 /* sound.png */,
+				1C710C4D09F323F8007B4515 /* splitviewDimple.png */,
+				1C710C4E09F323F8007B4515 /* splitviewDividerBackground.png */,
 				F5E2536603874B5601000102 /* statusHeader.png */,
-				F5E2536D0387657C01000102 /* connecting.png */,
-				F5E2536E0387657C01000102 /* connectingSelected.png */,
-				F5E253690387618E01000102 /* connected.png */,
-				F5E2536A0387618E01000102 /* connectedSelected.png */,
-				F51A4F3101C2ED2C01EE70DE /* download.png */,
-				F51A4F3201C2ED2C01EE70DE /* upload.png */,
-				F51A4F3701C319D801EE70DE /* error.png */,
-				F51A4F3801C319D801EE70DE /* pending.png */,
-				F5765F9501C6669D01A35792 /* stopped.png */,
-				F51A4F3B01C3204701EE70DE /* done.png */,
+				CB66DEA10631F8160034F76E /* Stickies.png */,
 				F56539F301C5A91401A35792 /* stop.png */,
-				F56539F501C5B6C301A35792 /* clear.png */,
-				F56539F601C5B6C301A35792 /* reveal.png */,
-				1C6A429508400BEA00572AB6 /* window.png */,
+				F5765F9501C6669D01A35792 /* stopped.png */,
 				1C6A42A608400E7900572AB6 /* targetWindow.png */,
-				1C45BFA4086F4BD80079E014 /* newWindow.png */,
-				1C6E43C30955EFD7002D22E7 /* serverWindow.png */,
 				1C77822808FA4101006AD8E5 /* topicBackground.png */,
 				1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */,
 				1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */,
-				1C710C4D09F323F8007B4515 /* splitviewDimple.png */,
-				1C710C4E09F323F8007B4515 /* splitviewDividerBackground.png */,
+				F51A4F3201C2ED2C01EE70DE /* upload.png */,
+				1CBB23D504EFE24C000001C8 /* viewAlert.png */,
+				1CBB23D604EFE24C000001C8 /* viewAlertSelected.png */,
+				1C6A429508400BEA00572AB6 /* window.png */,
 			);
 			name = "Misc. Icons";
 			sourceTree = "<group>";
@@ -1781,14 +1781,14 @@
 		F544999D018E46A501EE70DE /* Room Member Icons */ = {
 			isa = PBXGroup;
 			children = (
-				92C70D0A1A5E88CE00080E45 /* half-op.pdf */,
-				92C70D0B1A5E88CE00080E45 /* person.pdf */,
 				92C70D0C1A5E88CE00080E45 /* admin.pdf */,
-				92C70D0D1A5E88CE00080E45 /* op.pdf */,
-				92C70D0E1A5E88CE00080E45 /* room.pdf */,
 				92C70D0F1A5E88CE00080E45 /* founder.pdf */,
-				92C70D101A5E88CE00080E45 /* voice.pdf */,
+				92C70D0A1A5E88CE00080E45 /* half-op.pdf */,
+				92C70D0D1A5E88CE00080E45 /* op.pdf */,
+				92C70D0B1A5E88CE00080E45 /* person.pdf */,
+				92C70D0E1A5E88CE00080E45 /* room.pdf */,
 				92C70D111A5E88CE00080E45 /* super-op.pdf */,
+				92C70D101A5E88CE00080E45 /* voice.pdf */,
 			);
 			name = "Room Member Icons";
 			sourceTree = "<group>";
@@ -1796,18 +1796,18 @@
 		F5C3D42203973E7B01000102 /* Widget Images */ = {
 			isa = PBXGroup;
 			children = (
+				F5FB4D170393F0CC01000102 /* buddyInfo.png */,
+				F5FB4D180393F0CC01000102 /* buddyInfoBlue.png */,
+				F5FB4D1B0393F2D301000102 /* buddyMessage.png */,
+				F5FB4D1C0393F2D301000102 /* buddyMessageBlue.png */,
+				F5FB4D0F0393F04701000102 /* buddyOptions.png */,
+				F5FB4D100393F04701000102 /* buddyOptionsBlue.png */,
 				1CF16CDD083ADE590037F222 /* editWidget.png */,
 				1CF16CDE083ADE590037F222 /* editWidgetPressed.png */,
 				1CD4BD9B05AA773800F72EE6 /* favorites.png */,
 				1CD4BD9C05AA773800F72EE6 /* favoritesPressed.png */,
 				1CBA4E64062CCDA90082D1BF /* infoWidget.png */,
 				1CBA4E65062CCDA90082D1BF /* infoWidgetPressed.png */,
-				F5FB4D1B0393F2D301000102 /* buddyMessage.png */,
-				F5FB4D1C0393F2D301000102 /* buddyMessageBlue.png */,
-				F5FB4D170393F0CC01000102 /* buddyInfo.png */,
-				F5FB4D180393F0CC01000102 /* buddyInfoBlue.png */,
-				F5FB4D0F0393F04701000102 /* buddyOptions.png */,
-				F5FB4D100393F04701000102 /* buddyOptionsBlue.png */,
 			);
 			name = "Widget Images";
 			path = Resources/Widget;
@@ -2052,11 +2052,7 @@
 				1CB2CD33052DDC560094AAA4 /* Colloquy.icns in Resources */,
 				1CB2CD34052DDC560094AAA4 /* MVConnections.nib in Resources */,
 				1CB2CD35052DDC560094AAA4 /* statusHeader.png in Resources */,
-				1CB2CD36052DDC560094AAA4 /* connected.png in Resources */,
-				1CB2CD37052DDC560094AAA4 /* connectedSelected.png in Resources */,
-				1CB2CD38052DDC560094AAA4 /* connecting.png in Resources */,
 				B6310B4C1C6EFA800033E88E /* activityNew.pdf in Resources */,
-				1CB2CD39052DDC560094AAA4 /* connectingSelected.png in Resources */,
 				1CB2CD3A052DDC560094AAA4 /* autoHeader.png in Resources */,
 				19F2929A1B130440000198FE /* joinRoom.pdf in Resources */,
 				92C70D161A5E88CE00080E45 /* room.pdf in Resources */,
@@ -2098,6 +2094,7 @@
 				1CD0200B057588D0000F93B4 /* buddyInfoBlue.png in Resources */,
 				1CD0200E057588D2000F93B4 /* buddyOptions.png in Resources */,
 				1CD0200F057588D3000F93B4 /* buddyOptionsBlue.png in Resources */,
+				B6310B5B1C6F0ADE0033E88E /* connectedSelected.pdf in Resources */,
 				1CD0201005758A33000F93B4 /* MVBuddyList.nib in Resources */,
 				1CDEE48D0583E268000B9075 /* JVBuddyInspector.nib in Resources */,
 				1CDEE8C505878D30000B9075 /* InterfacePreferences.png in Resources */,
@@ -2153,6 +2150,7 @@
 				C29654161BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib in Resources */,
 				1CE6916808B183C2006D9CA0 /* Styles in Resources */,
 				1CE6916908B183C2006D9CA0 /* ChatCore.scriptTerminology in Resources */,
+				B6310B581C6F0A300033E88E /* connecting.pdf in Resources */,
 				B6310B4B1C6EFA800033E88E /* activity.pdf in Resources */,
 				1CE6916A08B183C3006D9CA0 /* ChatCore.scriptSuite in Resources */,
 				1CE6916B08B183C4006D9CA0 /* ChatPlugIn.scriptTerminology in Resources */,
@@ -2163,9 +2161,11 @@
 				B6310B451C6EF9C80033E88E /* smartTranscript.pdf in Resources */,
 				1CE6916F08B183C7006D9CA0 /* NSTextSuite.scriptTerminology in Resources */,
 				1CE6917008B183C8006D9CA0 /* NSTextSuite.scriptSuite in Resources */,
+				B6310B561C6F0A300033E88E /* connected.pdf in Resources */,
 				1C77822908FA4104006AD8E5 /* topicBackground.png in Resources */,
 				B6310B411C6EF9C80033E88E /* privateChatTab.pdf in Resources */,
 				1C77831208FA4EA2006AD8E5 /* topicToggleDown.png in Resources */,
+				B6310B591C6F0A300033E88E /* connectingSelected.pdf in Resources */,
 				1C77831308FA4EA2006AD8E5 /* topicToggleUp.png in Resources */,
 				1C6E43C40955EFD7002D22E7 /* serverWindow.png in Resources */,
 				1C1AFB3D09C295D900BF3E2A /* base.html in Resources */,
