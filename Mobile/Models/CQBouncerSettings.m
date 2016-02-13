@@ -78,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) setType:(MVChatConnectionBouncer) type {
-	NSParameterAssert(type != MVChatConnectionNoProxy);
+	NSParameterAssert(type != MVChatConnectionNoBouncer);
 	_type = type;
 }
 
