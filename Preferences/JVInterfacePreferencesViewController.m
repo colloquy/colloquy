@@ -208,7 +208,10 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 		if( ! multipleType && [rule kind] == JVChatViewTypeCriterionKind && [rule operation] == JVChatViewIsEqualCriterionOperation ) {
 			if( [[rule query] intValue] == 1 ) icon = [NSImage imageNamed:@"room"];
 			else if( [[rule query] intValue] == 2 ) icon = [NSImage imageNamed:@"privateChatTabNewMessage"];
-			else if( [[rule query] intValue] == 12 ) icon = [NSImage imageNamed:@"smartTranscriptTab"];
+			else if( [[rule query] intValue] == 12 ) {
+				icon = [NSImage imageNamed:@"smartTranscript"];
+				icon.size = NSMakeSize(16, 16);
+			}
 			multipleType = YES;
 		} else if( multipleType && [rule kind] == JVChatViewTypeCriterionKind ) {
 			icon = [NSImage imageNamed:@"gearSmall"];
