@@ -20,6 +20,8 @@
 	NSMutableDictionary *_roomResults;
 	NSMutableArray *_roomOrder;
 	NSString *_currentFilter;
+	BOOL _ignoreFontColors;
+	BOOL _ignoreFontTraits;
 }
 + (id) chatRoomBrowserForConnection:(MVChatConnection *) connection;
 
