@@ -542,19 +542,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) loadView {
 	[super loadView];
 
-	if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion == 8)
-		return;
-
-	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
-//	CQUITextChatTranscriptView *webkitChatTranscriptView = [[CQUITextChatTranscriptView alloc] initWithFrame:transcriptView.frame];
-	CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
-	webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
-	webkitChatTranscriptView.transcriptDelegate = self;
-
-	[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
-
-	[transcriptView removeFromSuperview];
-	transcriptView = webkitChatTranscriptView;
+//	if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion == 8)
+//		return;
+//
+//	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
+////	CQUITextChatTranscriptView *webkitChatTranscriptView = [[CQUITextChatTranscriptView alloc] initWithFrame:transcriptView.frame];
+//	CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
+//	webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
+//	webkitChatTranscriptView.transcriptDelegate = self;
+//
+//	[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
+//
+//	[transcriptView removeFromSuperview];
+//	transcriptView = webkitChatTranscriptView;
 }
 
 - (void) viewDidLoad {
