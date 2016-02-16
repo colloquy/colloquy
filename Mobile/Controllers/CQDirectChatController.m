@@ -1296,7 +1296,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSString *languageCode = results[0];
 	NSString *query = results[1];
 
-	[self _handleSearchForURL:@"http://www.google.com/m/search?q=%@&hl=%@" withQuery:query withLocale:languageCode];
+	[self _handleSearchForURL:@"https://www.google.com/m/search?q=%@&hl=%@" withQuery:query withLocale:languageCode];
 
 	return YES;
 }
@@ -1306,7 +1306,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSString *languageCode = results[0];
 	NSString *query = results[1];
 
-	[self _handleSearchForURL:@"http://www.wikipedia.org/search-redirect.php?search=%@&language=%@" withQuery:query withLocale:languageCode];
+	[self _handleSearchForURL:@"https://www.wikipedia.org/search-redirect.php?search=%@&language=%@" withQuery:query withLocale:languageCode];
 
 	return YES;
 }
@@ -1317,18 +1317,18 @@ NS_ASSUME_NONNULL_BEGIN
 	NSString *query = results[1];
 
 	if ([languageCode isCaseInsensitiveEqualToString:@"en_gb"])
-		[self _handleSearchForURL:@"http://www.amazon.co.uk/s/field-keywords=%@" withQuery:query withLocale:languageCode];
+		[self _handleSearchForURL:@"https://www.amazon.co.uk/s/field-keywords=%@" withQuery:query withLocale:languageCode];
 	else if ([languageCode isCaseInsensitiveEqualToString:@"de"])
-		[self _handleSearchForURL:@"http://www.amazon.de/gp/aw/s.html?k=%@" withQuery:query withLocale:languageCode];
+		[self _handleSearchForURL:@"https://www.amazon.de/gp/aw/s.html?k=%@" withQuery:query withLocale:languageCode];
 	else if ([languageCode isCaseInsensitiveEqualToString:@"cn"])
-		[self _handleSearchForURL:@"http://www.amazon.cn/mn/searchApp?&keywords=%@" withQuery:query withLocale:languageCode];
+		[self _handleSearchForURL:@"https://www.amazon.cn/mn/searchApp?&keywords=%@" withQuery:query withLocale:languageCode];
 	else if ([languageCode isCaseInsensitiveEqualToString:@"ja_jp"])
-		[self _handleSearchForURL:@"http://www.amazon.co.jp/s/field-keywords=%@" withQuery:query withLocale:languageCode];
+		[self _handleSearchForURL:@"https://www.amazon.co.jp/s/field-keywords=%@" withQuery:query withLocale:languageCode];
 	else if ([languageCode isCaseInsensitiveEqualToString:@"fr"])
-		[self _handleSearchForURL:@"http://www.amazon.fr/s/field-keywords=%@" withQuery:query withLocale:languageCode];
+		[self _handleSearchForURL:@"https://www.amazon.fr/s/field-keywords=%@" withQuery:query withLocale:languageCode];
 	else if ([languageCode isCaseInsensitiveEqualToString:@"ca"])
-		[self _handleSearchForURL:@"http://www.amazon.ca/s/field-keywords=%@" withQuery:query withLocale:languageCode];
-	else [self _handleSearchForURL:@"http://www.amazon.com/gp/aw/s.html?k=%@" withQuery:query withLocale:languageCode];
+		[self _handleSearchForURL:@"https://www.amazon.ca/s/field-keywords=%@" withQuery:query withLocale:languageCode];
+	else [self _handleSearchForURL:@"https://www.amazon.com/gp/aw/s.html?k=%@" withQuery:query withLocale:languageCode];
 
 	return YES;
 }
