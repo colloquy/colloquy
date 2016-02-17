@@ -87,7 +87,7 @@ static BOOL showingKeyboard;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CQDirectChatController () <CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, CQAlertViewDelegate, CQActionSheetDelegate, CQChatInputStyleDelegate>
-@property (strong, nullable) UIPopoverController *activityPopoverController;
+@property (strong, nullable) UIActivityViewController *activityController;
 @end
 
 @implementation CQDirectChatController {
@@ -1998,20 +1998,23 @@ NS_ASSUME_NONNULL_BEGIN
 	activityController.completionWithItemsHandler = ^(NSString *activityType, BOOL completed, NSArray <UIActivity *> *returnedItems, NSError *activityError) {
 		__strong __typeof__((weakSelf)) strongSelf = weakSelf;
 		[strongSelf _endShowingActivityViewControllerWithInputBarAsResponder:inputBarWasFirstResponder];
-		[strongSelf.activityPopoverController dismissPopoverAnimated:YES];
-		strongSelf.activityPopoverController = nil;
+		[strongSelf.activityController dismissViewControllerAnimated:YES completion:^{
+			strongSelf.activityController = nil;
+		}];
 	};
 
-	BOOL usePopoverController = [UIDevice currentDevice].isPadModel && self.view.window.isFullscreen;
-	if (!usePopoverController)
-		[self presentViewController:activityController animated:[UIView areAnimationsEnabled] completion:nil];
-	else {
-		[_activityPopoverController dismissPopoverAnimated:NO];
-		_activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:activityController];
+	activityController.modalPresentationStyle = UIModalPresentationPopover;
+	activityController.popoverPresentationController.sourceView = chatInputBar.accessoryButton;
+	activityController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
 
-		CGRect frame = [self.view convertRect:chatInputBar.accessoryButton.frame fromView:chatInputBar];
-		[_activityPopoverController presentPopoverFromRect:frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-	}
+	id old = self.activityController;
+	if (old && [old isBeingPresented]) {
+		[old dismissViewControllerAnimated:NO completion:^{
+			__strong __typeof__((weakSelf)) strongSelf = weakSelf;
+			[strongSelf presentViewController:activityController animated:YES completion:nil];
+		}];
+	} else [self presentViewController:activityController animated:YES completion:nil];
+	self.activityController = activityController;
 #endif
 }
 

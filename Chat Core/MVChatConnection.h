@@ -112,6 +112,9 @@ extern NSString *MVChatConnectionCapNotifyFeature;
 extern NSString *MVChatConnectionInviteFeature;
 extern NSString *MVChatConnectionEchoMessageFeature;
 
+// IRC3v3 Prototypes
+extern NSString *MVChatConnectionSTSFeature;
+
 // InspIRCd Enhancements
 extern NSString *MVChatConnectionNamesxFeature;
 

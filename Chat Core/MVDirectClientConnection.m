@@ -16,15 +16,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NSString *MVDCCFriendlyAddress( NSString *address ) {
+void MVFindDCCFriendlyAddress( NSString *address, MVStringParameterBlock completion ) {
 	NSURL *url = [NSURL URLWithString:@"http://colloquy.info/ip.php"];
 	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:3.];
-	NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL];
-	if( result.length >= 6 && result.length <= 40 ) // should be a valid IPv4 or IPv6 address
-		address = [[NSString alloc] initWithData:result encoding:NSASCIIStringEncoding];
-	if( address && [address rangeOfString:@"."].location != NSNotFound )
-		return [NSString stringWithFormat:@"%u", ntohl( inet_addr( [address UTF8String] ) )];
-	return address;
+	[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *result, NSURLResponse *response, NSError *error) {
+		NSString *addr = address;
+
+		if( result.length >= 6 && result.length <= 40 ) // should be a valid IPv4 or IPv6 address
+			addr = [[NSString alloc] initWithData:result encoding:NSASCIIStringEncoding];
+		if( addr && [addr rangeOfString:@"."].location != NSNotFound )
+			addr = [NSString stringWithFormat:@"%u", ntohl( inet_addr( [addr UTF8String] ) )];
+		completion(addr);
+	}];
 }
 
 #pragma mark -

@@ -73,7 +73,6 @@
 
 - (void) drawDividerInRect:(NSRect) rect {
 	if( ! [self isVertical] ) {
-		rect.origin.y += 10.;
 		[[NSImage imageNamed:@"splitviewDividerBackground"] tileInRect:rect];
 		if( [self dividerStyle] != NSSplitViewDividerStylePaneSplitter )
 			[[NSImage imageNamed:@"splitviewDimple"] drawAtPoint:NSMakePoint( ( NSWidth( rect ) / 2. ) - 3., rect.origin.y ) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.];

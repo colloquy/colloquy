@@ -2,6 +2,7 @@
 #import "JVConnectionInspector.h"
 #import "MVConnectionsController.h"
 #import "KAIgnoreRule.h"
+#import "NSImageAdditions.h"
 
 @implementation MVChatConnection (MVChatConnectionInspection)
 - (id <JVInspector>) inspector {
@@ -380,7 +381,7 @@
 		KAIgnoreRule *rule = _ignoreRules[row];
 		if( [[column identifier] isEqualToString:@"icon"] ) {
 			if( [rule user] && [rule message] ) return [NSImage imageNamed:@"privateChatTab"];
-			else if( [rule user] ) return [NSImage imageNamed:@"person"];
+			else if( [rule user] ) return [NSImage imageFromPDF:@"person"];
 			else return [NSImage imageNamed:@"roomTabNewMessage"];
 		} else {
 			if( ! [rule isPermanent] ) return [[NSAttributedString alloc] initWithString:[rule friendlyName] attributes:@{NSForegroundColorAttributeName: [[NSColor blackColor] colorWithAlphaComponent:0.67]}];

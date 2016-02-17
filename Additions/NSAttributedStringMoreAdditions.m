@@ -307,6 +307,19 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 
 @implementation NSMutableAttributedString (NSMutableAttributedStringHTMLAdditions)
 - (void) makeLinkAttributesAutomatically {
+	// catch well-formed email addresses like "timothy@hatcher.name" or "timothy@javelin.cc"
+	NSRegularExpression *emailRegex = [NSRegularExpression cachedRegularExpressionWithPattern:@"[\\p{L}\\p{N}.+\\-_]+@(?:[\\p{L}\\-_]+\\.)+[\\w]{2,}" options:NSRegularExpressionCaseInsensitive error:nil];
+
+	for( NSTextCheckingResult *match in [emailRegex matchesInString:[self string] options:0 range:NSMakeRange( 0, [self string].length )] ) {
+		NSRange foundRange = [match range];
+		NSString *currentLink = [self attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
+		if( ! currentLink ) {
+			NSString *contents = [[self string] substringWithRange:foundRange];
+			NSString *link = [NSString stringWithFormat:@"mailto:%@", contents];
+			[self addAttribute:NSLinkAttributeName value:link range:foundRange];
+		}
+	}
+
 	// catch well-formed urls like "http://www.apple.com", "www.apple.com" or "irc://irc.javelin.cc"
 	static NSDataDetector *linkDataDetector = nil;
 	static dispatch_once_t onceToken;
@@ -318,19 +331,11 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		NSRange foundRange = [match range];
 		NSString *currentLink = [self attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
 		NSString *contents = [[self string] substringWithRange:foundRange];
-		if( ! currentLink ) [self addAttribute:NSLinkAttributeName value:( [contents hasCaseInsensitivePrefix:@"www."] ? [@"http://" stringByAppendingString:contents] : contents ) range:foundRange];
-	}
-
-	// catch well-formed email addresses like "timothy@hatcher.name" or "timothy@javelin.cc"
-	NSRegularExpression *emailRegex = [NSRegularExpression cachedRegularExpressionWithPattern:@"[\\p{L}\\p{N}.+\\-_]+@(?:[\\p{L}\\-_]+\\.)+[\\w]{2,}" options:NSRegularExpressionCaseInsensitive error:nil];
-
-	for( NSTextCheckingResult *match in [emailRegex matchesInString:[self string] options:0 range:NSMakeRange( 0, [self string].length )] ) {
-		NSRange foundRange = [match range];
-		NSString *currentLink = [self attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
 		if( ! currentLink ) {
-			NSString *contents = [[self string] substringWithRange:foundRange];
-			NSString *link = [[NSString alloc] initWithFormat:@"mailto:%@", contents];
-			[self addAttribute:NSLinkAttributeName value:link range:foundRange];
+			NSURL *linkURL = [NSURL URLWithString:contents];
+			if( !linkURL.scheme )
+				contents = [@"http://" stringByAppendingString:contents];
+			[self addAttribute:NSLinkAttributeName value: contents range:foundRange];
 		}
 	}
 }

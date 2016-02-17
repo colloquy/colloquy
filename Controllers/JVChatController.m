@@ -61,7 +61,11 @@ static NSMenu *smartTranscriptMenu = nil;
 		if( [panel newMessagesWaiting] > 0 ) title = [NSString stringWithFormat:@"%@ (%ld)", [panel title], [panel newMessagesWaiting]];
 		menuItem = [[NSMenuItem alloc] initWithTitle:title action:@selector( showView: ) keyEquivalent:@""];
 		if( [panel newMessagesWaiting] ) [menuItem setImage:[NSImage imageNamed:@"smartTranscriptTabActivity"]];
-		else [menuItem setImage:[NSImage imageNamed:@"smartTranscriptTab"]];
+		else {
+			NSImage *icon = [NSImage imageNamed:@"smartTranscript"];
+			icon.size = NSMakeSize(16, 16);
+			[menuItem setImage:icon];
+		}
 		[menuItem setTarget:[self defaultController]];
 		[menuItem setRepresentedObject:panel];
 		[smartTranscriptMenu addItem:menuItem];

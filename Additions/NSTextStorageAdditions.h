@@ -1,3 +1,4 @@
+// provided for scripting support
 @interface NSTextStorage (NSTextStorageAdditions)
 @property (copy) NSColor *backgroundColor;
 

@@ -14,7 +14,7 @@
 #import "JVDirectChatPanel.h"
 #import "JVAnalyticsController.h"
 //#import "JVChatTranscriptBrowserPanel.h"
-#import "MVKeyChain.h"
+#import "CQKeychain.h"
 
 #import "PFMoveApplicationController.h"
 
@@ -453,8 +453,8 @@ static BOOL applicationIsTerminating = NO;
 	}
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"MVAskOnInvalidCertificates"] || [[[MVKeyChain defaultKeyChain] genericPasswordForService:@"MVAskOnInvalidCertificates" account:@"MVSecurePrefs"] boolValue])
-		[[MVKeyChain defaultKeyChain] setGenericPassword:@"1" forService:@"MVAskOnInvalidCertificates" account:@"MVSecurePrefs"];
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"MVAskOnInvalidCertificates"] || [[[CQKeychain standardKeychain] passwordForServer:@"MVAskOnInvalidCertificates" area:@"MVSecurePrefs"] boolValue])
+		[[CQKeychain standardKeychain] setPassword:@"1" forServer:@"MVAskOnInvalidCertificates" area:@"MVSecurePrefs"];
 }
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {

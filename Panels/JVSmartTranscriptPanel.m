@@ -150,9 +150,11 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 - (NSImage *) icon {
 	BOOL smallIcons = [[[self windowController] preferenceForKey:@"small drawer icons"] boolValue];
-	if( smallIcons || [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] )
-		return [NSImage imageNamed:@"smartTranscriptTab"];
-	return [NSImage imageNamed:@"smartTranscript"];
+	if( smallIcons || [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] ) {
+		NSImage *icon = [NSImage imageNamed:@"smartTranscript"];
+		icon.size = NSMakeSize(16, 16);
+		return icon;
+	} return [NSImage imageNamed:@"smartTranscript"];
 }
 
 - (nullable NSImage *) statusImage {

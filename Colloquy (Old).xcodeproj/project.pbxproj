@@ -201,6 +201,7 @@
 		9200338D13D92515005B69BA /* MVFileTransfer.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9200338B13D92515005B69BA /* MVFileTransfer.xib */; };
 		9220565E11018298005CD72D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9220565D11018298005CD72D /* NSDateAdditions.m */; };
 		92823CF2168FFA0A000EC36E /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CF1168FFA0A000EC36E /* KAIgnoreRule.m */; };
+		928FB03613EE64C700A0DF4B /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 928FB03513EE64C700A0DF4B /* libicucore.dylib */; };
 		9295C85D1675E227009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
 		92A711951A4A5166009E80F0 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A711941A4A5166009E80F0 /* SecurityInterface.framework */; };
 		C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; };
@@ -702,6 +703,7 @@
 		92823CF1168FFA0A000EC36E /* KAIgnoreRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KAIgnoreRule.m; path = Shared/Models/KAIgnoreRule.m; sourceTree = SOURCE_ROOT; };
 		928FB02F13EE643E00A0DF4B /* NSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStringAdditions.h; sourceTree = "<group>"; };
 		928FB03013EE643E00A0DF4B /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStringAdditions.m; sourceTree = "<group>"; };
+		928FB03513EE64C700A0DF4B /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		9295C84E1675E10A009F9014 /* Colloquy.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; name = Colloquy.exp; path = ../Colloquy.exp; sourceTree = "<group>"; };
 		92A711941A4A5166009E80F0 /* SecurityInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityInterface.framework; path = System/Library/Frameworks/SecurityInterface.framework; sourceTree = SDKROOT; };
 		A1429C720901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = Languages/it.lproj/Colloquy.xib; sourceTree = "<group>"; };
@@ -1013,6 +1015,7 @@
 				55B0EF3918CE3E250000E4CA /* libxslt.dylib */,
 				55B0EF3518CE3DE10000E4CA /* libxml2.dylib */,
 				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
+				928FB03513EE64C700A0DF4B /* libicucore.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1464,52 +1467,52 @@
 			isa = PBXGroup;
 			children = (
 				55B0EF2D18CE34850000E4CA /* AppIcon.xcassets */,
-				9295C84E1675E10A009F9014 /* Colloquy.exp */,
-				1C51B89D052DF91E00BB459B /* Info.plist */,
-				1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */,
-				1C51B4CC052DE14B00BB459B /* Info-StandardCommands.plist */,
-				1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */,
-				F52BA284037C13C201A35792 /* GPL.txt */,
-				1C043B4913DC8B7200B8FD9E /* Credits.rtf */,
-				F5394C0B0378E44D01A35792 /* Localizable.strings */,
-				F5BC17DD019655DC01A35792 /* info.colloquy.plist */,
-				1CEC004D0A20EF95004C2B86 /* transcriptSchema.sql */,
-				1CBECDCF0508C8AB000001C8 /* default.xsl */,
-				0A5B683E0810EC9700398D5A /* default.css */,
-				0AA811220826DB8800A3BF2D /* default.js */,
-				1C1AFB3C09C295D900BF3E2A /* base.html */,
-				1C3C116005029DE1000001C8 /* template.html */,
-				1C1AFDAA09C3BC4F00BF3E2A /* roomTopicBanner.html */,
-				1C1AFE8109C3D8C900BF3E2A /* roomTopicBanner.js */,
-				1C746A95050CF86B000001C8 /* emoticons.plist */,
-				F5675B8601DB767601EE70DE /* verbs.plist */,
-				1C9982AF0604BEAA006C6417 /* notifications.plist */,
-				1CA75A260652537A000141D5 /* styleOptions.plist */,
-				1CC6FD38054AF1940075807C /* preview.colloquyTranscript */,
-				1CD9DF6507D934F70006BB99 /* Colloquy.sdef */,
-				1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */,
-				1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */,
-				1C7C76E507DBA1C100FB5F83 /* NSCoreSuite.scriptSuite */,
-				1C7C76E607DBA1C100FB5F83 /* NSCoreSuite.scriptTerminology */,
-				1C7C76E707DBA1C100FB5F83 /* NSTextSuite.scriptSuite */,
-				1C7C76E807DBA1C100FB5F83 /* NSTextSuite.scriptTerminology */,
-				1CCA510D0598108000F0A4CD /* Colloquy.scriptSuite */,
-				1CCA510E0598108000F0A4CD /* Colloquy.scriptTerminology */,
-				1C59BD61059E2E02001487E2 /* ChatPlugIn.scriptSuite */,
-				1C59BD63059E2E16001487E2 /* ChatPlugIn.scriptTerminology */,
-				1C1D19F105992D80000BB31A /* ChatCore.scriptSuite */,
-				1C1D19F205992D80000BB31A /* ChatCore.scriptTerminology */,
-				1C3C116205029E03000001C8 /* Styles */,
 				1C258E55050B9656000001C8 /* Emoticons */,
 				F520458E01B1D37701EBB4B5 /* Sounds */,
+				1C3C116205029E03000001C8 /* Styles */,
 				F51F91D7037967CB01A35792 /* Chat.clr */,
-				558EF2361AEC356800619BDE /* Room Member Icons.xcassets */,
-				F5ED0F46017CD77701EE70DE /* Toolbar Icons */,
-				55B56A911B0693C9008DC039 /* Preferences.xcassets */,
-				556CEBE41BCB795600F00EAA /* Tabs Interface Images.xcassets */,
-				1C710AB009F23D84007B4515 /* Sidebar Interface Images */,
-				F5C3D42203973E7B01000102 /* Widget Images */,
+				1CC6FD38054AF1940075807C /* preview.colloquyTranscript */,
+				0A5B683E0810EC9700398D5A /* default.css */,
+				9295C84E1675E10A009F9014 /* Colloquy.exp */,
+				1C1AFB3C09C295D900BF3E2A /* base.html */,
+				1C1AFDAA09C3BC4F00BF3E2A /* roomTopicBanner.html */,
+				1C3C116005029DE1000001C8 /* template.html */,
+				0AA811220826DB8800A3BF2D /* default.js */,
+				1C1AFE8109C3D8C900BF3E2A /* roomTopicBanner.js */,
+				1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */,
+				1C746A95050CF86B000001C8 /* emoticons.plist */,
+				1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */,
+				1C51B4CC052DE14B00BB459B /* Info-StandardCommands.plist */,
+				F5BC17DD019655DC01A35792 /* info.colloquy.plist */,
+				1C51B89D052DF91E00BB459B /* Info.plist */,
+				1C9982AF0604BEAA006C6417 /* notifications.plist */,
+				1CA75A260652537A000141D5 /* styleOptions.plist */,
+				F5675B8601DB767601EE70DE /* verbs.plist */,
+				1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */,
+				1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */,
+				1C1D19F105992D80000BB31A /* ChatCore.scriptSuite */,
+				1C59BD61059E2E02001487E2 /* ChatPlugIn.scriptSuite */,
+				1CCA510D0598108000F0A4CD /* Colloquy.scriptSuite */,
+				1C7C76E507DBA1C100FB5F83 /* NSCoreSuite.scriptSuite */,
+				1C7C76E707DBA1C100FB5F83 /* NSTextSuite.scriptSuite */,
+				1C1D19F205992D80000BB31A /* ChatCore.scriptTerminology */,
+				1C59BD63059E2E16001487E2 /* ChatPlugIn.scriptTerminology */,
+				1CCA510E0598108000F0A4CD /* Colloquy.scriptTerminology */,
+				1C7C76E607DBA1C100FB5F83 /* NSCoreSuite.scriptTerminology */,
+				1C7C76E807DBA1C100FB5F83 /* NSTextSuite.scriptTerminology */,
+				1CD9DF6507D934F70006BB99 /* Colloquy.sdef */,
+				1CEC004D0A20EF95004C2B86 /* transcriptSchema.sql */,
+				F52BA284037C13C201A35792 /* GPL.txt */,
+				1CBECDCF0508C8AB000001C8 /* default.xsl */,
+				1C043B4913DC8B7200B8FD9E /* Credits.rtf */,
+				F5394C0B0378E44D01A35792 /* Localizable.strings */,
 				F52955590181EB5901EE70DE /* Misc. Icons */,
+				55B56A911B0693C9008DC039 /* Preferences.xcassets */,
+				558EF2361AEC356800619BDE /* Room Member Icons.xcassets */,
+				1C710AB009F23D84007B4515 /* Sidebar Interface Images */,
+				556CEBE41BCB795600F00EAA /* Tabs Interface Images.xcassets */,
+				F5ED0F46017CD77701EE70DE /* Toolbar Icons */,
+				F5C3D42203973E7B01000102 /* Widget Images */,
 			);
 			indentWidth = 4;
 			path = Resources;
@@ -1836,9 +1839,9 @@
 				55B56A921B0693C9008DC039 /* Preferences.xcassets in Resources */,
 				1CC6FD39054AF1940075807C /* preview.colloquyTranscript in Resources */,
 				5575C7BF1AFAB53D001EEF98 /* widgets.xcassets in Resources */,
+				55B56AA01B069524008DC039 /* OS X toolbars.xcassets in Resources */,
 				1CD0201005758A33000F93B4 /* MVBuddyList.xib in Resources */,
 				1CDEE48D0583E268000B9075 /* JVBuddyInspector.xib in Resources */,
-				55B56AA01B069524008DC039 /* OS X toolbars.xcassets in Resources */,
 				1C6EA23E05A735D6006A559F /* JVChatRoomBrowser.xib in Resources */,
 				1C9982AA0604B979006C6417 /* Sounds in Resources */,
 				1C9982B00604BEAA006C6417 /* notifications.plist in Resources */,
