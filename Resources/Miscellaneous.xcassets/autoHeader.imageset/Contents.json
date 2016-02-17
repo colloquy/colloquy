@@ -3,6 +3,19 @@
     {
       "idiom" : "universal",
       "filename" : "autoHeader.pdf"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "autoHeader.png",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
     }
   ],
   "info" : {

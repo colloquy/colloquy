@@ -3,6 +3,19 @@
     {
       "idiom" : "universal",
       "filename" : "connectingSelected.pdf"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "connectingSelected.png",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
     }
   ],
   "info" : {
