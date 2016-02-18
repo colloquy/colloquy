@@ -120,6 +120,7 @@
 	[window orderOut:nil];
 
 	self.doneBlock();
+	self.doneBlock = nil;
 }
 
 - (BOOL) windowShouldClose:(id) sender {

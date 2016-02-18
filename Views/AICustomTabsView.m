@@ -127,15 +127,11 @@ static  NSImage			*tabDivider = nil;
 //Can the user close inactive tabs?
 - (void)setAllowsInactiveTabClosing:(BOOL)inValue
 {
-    NSEnumerator		*enumerator;
-    AICustomTabCell		*tabCell;
-
     //Save the value
     allowsInactiveTabClosing = inValue;
 
     //Pass it onto our tabs
-    enumerator = [tabCellArray objectEnumerator];
-    while((tabCell = [enumerator nextObject])){
+    for (AICustomTabCell *tabCell in tabCellArray) {
 		[tabCell setAllowsInactiveTabClosing:allowsInactiveTabClosing];
     }
 }
@@ -269,10 +265,8 @@ static  NSImage			*tabDivider = nil;
 - (int)totalWidthOfTabs
 {
     int				totalWidth = (CUSTOM_TABS_INDENT * 2);
-    NSEnumerator	*enumerator = [tabCellArray objectEnumerator];
-    AICustomTabCell	*tabCell;
 
-    while((tabCell = [enumerator nextObject])){
+    for (AICustomTabCell *tabCell in tabCellArray) {
 		if(tabCell != dragCell) totalWidth += [tabCell size].width + CUSTOM_TABS_GAP;
     }
 
@@ -877,16 +871,13 @@ static NSRect AIConstrainRectWidth(NSRect rect, CGFloat left, CGFloat right)
 {
     //Track only if we're within a valid window
     if([self window] && !trackingCursor){
-        NSEnumerator		*enumerator;
-        AICustomTabCell		*tabCell;
         NSPoint			localPoint;
 
         //Local mouse location
 		localPoint = [[self window] cqm_convertPointToScreen:[NSEvent mouseLocation]];
 
         //Install tracking rects for each tab
-        enumerator = [tabCellArray objectEnumerator];
-        while((tabCell = [enumerator nextObject])){
+        for (AICustomTabCell *tabCell in tabCellArray) {
             NSRect trackRect = [tabCell frame];
             [tabCell addTrackingRectsWithFrame:trackRect cursorLocation:localPoint];
         }
@@ -899,11 +890,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, CGFloat left, CGFloat right)
 - (void)stopCursorTracking
 {
 	if(trackingCursor){
-		NSEnumerator	*enumerator;
-		AICustomTabCell	*tabCell;
-
-		enumerator = [tabCellArray objectEnumerator];
-		while((tabCell = [enumerator nextObject])){
+		for (AICustomTabCell *tabCell in tabCellArray) {
 			[tabCell removeTrackingRects];
 		}
 
