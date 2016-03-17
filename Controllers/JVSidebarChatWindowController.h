@@ -6,6 +6,7 @@
 @interface JVSidebarChatWindowController : JVChatWindowController <AICustomTabsViewDelegate> {
 	IBOutlet JVSideSplitView *splitView;
 	IBOutlet NSView *bodyView;
+	IBOutlet NSView *sideView;
 	BOOL _forceSplitViewPosition;
 }
 @end
