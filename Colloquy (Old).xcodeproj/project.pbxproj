@@ -152,7 +152,6 @@
 		1CB2CD33052DDC560094AAA4 /* Colloquy.icns in Resources */ = {isa = PBXBuildFile; fileRef = F5DD34730382E5E501000102 /* Colloquy.icns */; };
 		1CB2CD34052DDC560094AAA4 /* MVConnections.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5C4977B0385785401000102 /* MVConnections.nib */; };
 		1CB2CD35052DDC560094AAA4 /* statusHeader.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E2536603874B5601000102 /* statusHeader.png */; };
-		1CB2CD3A052DDC560094AAA4 /* autoHeader.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E253710387690301000102 /* autoHeader.png */; };
 		1CB2CD4E052DDC560094AAA4 /* viewAlert.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBB23D504EFE24C000001C8 /* viewAlert.png */; };
 		1CB2CD50052DDC560094AAA4 /* template.html in Resources */ = {isa = PBXBuildFile; fileRef = 1C3C116005029DE1000001C8 /* template.html */; };
 		1CB2CD52052DDC560094AAA4 /* Generic.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1C5959010507803F000001C8 /* Generic.icns */; };
@@ -287,6 +286,7 @@
 		C23298991C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = C23298981C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m */; };
 		C236F65C1BDCE8E400E64469 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C236F6551BDCE81200E64469 /* InfoPlist.strings */; };
 		C236F65D1BDCE8E600E64469 /* schema.strings in Resources */ = {isa = PBXBuildFile; fileRef = C236F6581BDCE81F00E64469 /* schema.strings */; };
+		C237FECA1CA2EA9B00CB8C69 /* autoHeader.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C237FEC91CA2EA9B00CB8C69 /* autoHeader.pdf */; };
 		C29654101BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */; };
 		C29654131BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654151BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib */; };
 		C29654161BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654181BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib */; };
@@ -930,6 +930,7 @@
 		C23298981C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSWindow+CQMCoordinateSpaceConversion.m"; path = "Additions/NSWindow+CQMCoordinateSpaceConversion.m"; sourceTree = "<group>"; };
 		C236F6561BDCE81200E64469 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = Importer/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C236F6591BDCE81F00E64469 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = Importer/English.lproj/schema.strings; sourceTree = "<group>"; };
+		C237FEC91CA2EA9B00CB8C69 /* autoHeader.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = autoHeader.pdf; path = Resources/autoHeader.pdf; sourceTree = "<group>"; };
 		C25154471C22063900551BB4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
 		C25154491C2207A200551BB4 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
 		C251544B1C2207A900551BB4 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
@@ -1056,7 +1057,6 @@
 		F5D04C03019489B801A35792 /* encoding.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = encoding.png; path = "Resources/Toolbar Icons/encoding.png"; sourceTree = "<group>"; };
 		F5DD34730382E5E501000102 /* Colloquy.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Colloquy.icns; path = Resources/Colloquy.icns; sourceTree = SOURCE_ROOT; };
 		F5E2536603874B5601000102 /* statusHeader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = statusHeader.png; path = Resources/statusHeader.png; sourceTree = "<group>"; };
-		F5E253710387690301000102 /* autoHeader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = autoHeader.png; path = Resources/autoHeader.png; sourceTree = SOURCE_ROOT; };
 		F5E2538403882A8501000102 /* MVColorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVColorPanel.h; path = Views/MVColorPanel.h; sourceTree = "<group>"; };
 		F5E2538503882A8501000102 /* MVColorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVColorPanel.m; path = Views/MVColorPanel.m; sourceTree = "<group>"; };
 		F5E98623018B412B01EE70DE /* NSAttributedStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSAttributedStringAdditions.h; path = Additions/NSAttributedStringAdditions.h; sourceTree = "<group>"; };
@@ -1718,7 +1718,7 @@
 				B6310B481C6EFA800033E88E /* activity.pdf */,
 				B6310B491C6EFA800033E88E /* activityNew.pdf */,
 				B6310B4A1C6EFA800033E88E /* activityNewImportant.pdf */,
-				F5E253710387690301000102 /* autoHeader.png */,
+				C237FEC91CA2EA9B00CB8C69 /* autoHeader.pdf */,
 				F56539F501C5B6C301A35792 /* clear.png */,
 				1C6075E005138ED600A8FE6E /* colloquy-alpha.png */,
 				B6310B521C6F0A300033E88E /* connected.pdf */,
@@ -2025,6 +2025,7 @@
 			files = (
 				1C1AFE8E09C3D92E00BF3E2A /* roomTopicBanner.js in Resources */,
 				1CB2CD17052DDC560094AAA4 /* encoding.png in Resources */,
+				C237FECA1CA2EA9B00CB8C69 /* autoHeader.pdf in Resources */,
 				1CB2CD18052DDC560094AAA4 /* info.colloquy.plist in Resources */,
 				C29654131BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib in Resources */,
 				1CB2CD19052DDC560094AAA4 /* info.png in Resources */,
@@ -2053,7 +2054,6 @@
 				1CB2CD34052DDC560094AAA4 /* MVConnections.nib in Resources */,
 				1CB2CD35052DDC560094AAA4 /* statusHeader.png in Resources */,
 				B6310B4C1C6EFA800033E88E /* activityNew.pdf in Resources */,
-				1CB2CD3A052DDC560094AAA4 /* autoHeader.png in Resources */,
 				19F2929A1B130440000198FE /* joinRoom.pdf in Resources */,
 				92C70D161A5E88CE00080E45 /* room.pdf in Resources */,
 				1CB2CD4E052DDC560094AAA4 /* viewAlert.png in Resources */,
