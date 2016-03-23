@@ -69,7 +69,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Colloquy</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Colloquy 2.5; Copyright © 2003-2014, Colloquy Project</string>
+	<string>Colloquy 2.5; Copyright © 2003-2016, Colloquy Project</string>
 	<key>CFBundleIconFile</key>
 	<string>Colloquy</string>
 	<key>CFBundleIdentifier</key>
@@ -106,7 +106,7 @@
 	<key>CFBundleVersion</key>
 	<string>source</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>10.7</string>
+	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
 	<string>http://colloquy.info</string>
 	<key>NSAppTransportSecurity</key>
@@ -117,7 +117,7 @@
 	<key>NSAppleScriptEnabled</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2003-2014, Colloquy Project</string>
+	<string>Copyright © 2003-2016, Colloquy Project</string>
 	<key>NSMainNibFile</key>
 	<string>Colloquy</string>
 	<key>NSPrincipalClass</key>
