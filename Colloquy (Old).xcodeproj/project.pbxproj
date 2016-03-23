@@ -270,13 +270,9 @@
 		B6310B421C6EF9C80033E88E /* privateChatTabNewMessage.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B3C1C6EF9C80033E88E /* privateChatTabNewMessage.pdf */; };
 		B6310B431C6EF9C80033E88E /* roomTabNewHighlightMessage.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B3D1C6EF9C80033E88E /* roomTabNewHighlightMessage.pdf */; };
 		B6310B441C6EF9C80033E88E /* roomTabNewMessage.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B3E1C6EF9C80033E88E /* roomTabNewMessage.pdf */; };
-		B6310B451C6EF9C80033E88E /* smartTranscript.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B3F1C6EF9C80033E88E /* smartTranscript.pdf */; };
-		B6310B461C6EF9C80033E88E /* smartTranscriptActivity.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B401C6EF9C80033E88E /* smartTranscriptActivity.pdf */; };
 		B6310B4B1C6EFA800033E88E /* activity.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B481C6EFA800033E88E /* activity.pdf */; };
 		B6310B4C1C6EFA800033E88E /* activityNew.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B491C6EFA800033E88E /* activityNew.pdf */; };
 		B6310B4D1C6EFA800033E88E /* activityNewImportant.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B4A1C6EFA800033E88E /* activityNewImportant.pdf */; };
-		B6310B501C6EFAB00033E88E /* smartTranscript.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B4E1C6EFAB00033E88E /* smartTranscript.pdf */; };
-		B6310B511C6EFAB00033E88E /* smartTranscriptActivity.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B4F1C6EFAB00033E88E /* smartTranscriptActivity.pdf */; };
 		B6310B561C6F0A300033E88E /* connected.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B521C6F0A300033E88E /* connected.pdf */; };
 		B6310B581C6F0A300033E88E /* connecting.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B541C6F0A300033E88E /* connecting.pdf */; };
 		B6310B591C6F0A300033E88E /* connectingSelected.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B551C6F0A300033E88E /* connectingSelected.pdf */; };
@@ -287,6 +283,8 @@
 		C236F65C1BDCE8E400E64469 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C236F6551BDCE81200E64469 /* InfoPlist.strings */; };
 		C236F65D1BDCE8E600E64469 /* schema.strings in Resources */ = {isa = PBXBuildFile; fileRef = C236F6581BDCE81F00E64469 /* schema.strings */; };
 		C237FECA1CA2EA9B00CB8C69 /* autoHeader.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C237FEC91CA2EA9B00CB8C69 /* autoHeader.pdf */; };
+		C237FECF1CA2EFF500CB8C69 /* smartTranscript.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C237FECB1CA2EFD600CB8C69 /* smartTranscript.pdf */; };
+		C237FED01CA2EFF500CB8C69 /* smartTranscriptActivity.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C237FECC1CA2EFD600CB8C69 /* smartTranscriptActivity.pdf */; };
 		C29654101BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */; };
 		C29654131BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654151BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib */; };
 		C29654161BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654181BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib */; };
@@ -920,8 +918,6 @@
 		B6310B481C6EFA800033E88E /* activity.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = activity.pdf; path = "Resources/Toolbar Icons/activity.pdf"; sourceTree = "<group>"; };
 		B6310B491C6EFA800033E88E /* activityNew.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = activityNew.pdf; path = "Resources/Toolbar Icons/activityNew.pdf"; sourceTree = "<group>"; };
 		B6310B4A1C6EFA800033E88E /* activityNewImportant.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = activityNewImportant.pdf; path = "Resources/Toolbar Icons/activityNewImportant.pdf"; sourceTree = "<group>"; };
-		B6310B4E1C6EFAB00033E88E /* smartTranscript.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = smartTranscript.pdf; path = Resources/smartTranscript.pdf; sourceTree = "<group>"; };
-		B6310B4F1C6EFAB00033E88E /* smartTranscriptActivity.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = smartTranscriptActivity.pdf; path = Resources/smartTranscriptActivity.pdf; sourceTree = "<group>"; };
 		B6310B521C6F0A300033E88E /* connected.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = connected.pdf; path = Resources/connected.pdf; sourceTree = "<group>"; };
 		B6310B541C6F0A300033E88E /* connecting.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = connecting.pdf; path = Resources/connecting.pdf; sourceTree = "<group>"; };
 		B6310B551C6F0A300033E88E /* connectingSelected.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = connectingSelected.pdf; path = Resources/connectingSelected.pdf; sourceTree = "<group>"; };
@@ -931,6 +927,8 @@
 		C236F6561BDCE81200E64469 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = Importer/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C236F6591BDCE81F00E64469 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = Importer/English.lproj/schema.strings; sourceTree = "<group>"; };
 		C237FEC91CA2EA9B00CB8C69 /* autoHeader.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = autoHeader.pdf; path = Resources/autoHeader.pdf; sourceTree = "<group>"; };
+		C237FECB1CA2EFD600CB8C69 /* smartTranscript.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = smartTranscript.pdf; path = Resources/smartTranscript.pdf; sourceTree = "<group>"; };
+		C237FECC1CA2EFD600CB8C69 /* smartTranscriptActivity.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = smartTranscriptActivity.pdf; path = Resources/smartTranscriptActivity.pdf; sourceTree = "<group>"; };
 		C25154471C22063900551BB4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
 		C25154491C2207A200551BB4 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
 		C251544B1C2207A900551BB4 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
@@ -1719,12 +1717,15 @@
 				B6310B491C6EFA800033E88E /* activityNew.pdf */,
 				B6310B4A1C6EFA800033E88E /* activityNewImportant.pdf */,
 				C237FEC91CA2EA9B00CB8C69 /* autoHeader.pdf */,
-				F56539F501C5B6C301A35792 /* clear.png */,
-				1C6075E005138ED600A8FE6E /* colloquy-alpha.png */,
 				B6310B521C6F0A300033E88E /* connected.pdf */,
 				B6310B5A1C6F0ADE0033E88E /* connectedSelected.pdf */,
 				B6310B541C6F0A300033E88E /* connecting.pdf */,
 				B6310B551C6F0A300033E88E /* connectingSelected.pdf */,
+				92C70D081A5E87CF00080E45 /* room.pdf */,
+				C237FECB1CA2EFD600CB8C69 /* smartTranscript.pdf */,
+				C237FECC1CA2EFD600CB8C69 /* smartTranscriptActivity.pdf */,
+				F56539F501C5B6C301A35792 /* clear.png */,
+				1C6075E005138ED600A8FE6E /* colloquy-alpha.png */,
 				F51A4F3B01C3204701EE70DE /* done.png */,
 				F51A4F3101C2ED2C01EE70DE /* download.png */,
 				F51A4F3701C319D801EE70DE /* error.png */,
@@ -1734,10 +1735,7 @@
 				1C45BFA4086F4BD80079E014 /* newWindow.png */,
 				F51A4F3801C319D801EE70DE /* pending.png */,
 				F56539F601C5B6C301A35792 /* reveal.png */,
-				92C70D081A5E87CF00080E45 /* room.pdf */,
 				1C6E43C30955EFD7002D22E7 /* serverWindow.png */,
-				B6310B4E1C6EFAB00033E88E /* smartTranscript.pdf */,
-				B6310B4F1C6EFAB00033E88E /* smartTranscriptActivity.pdf */,
 				1C9982AC0604BA1F006C6417 /* sound.png */,
 				1C710C4D09F323F8007B4515 /* splitviewDimple.png */,
 				1C710C4E09F323F8007B4515 /* splitviewDividerBackground.png */,
@@ -2035,7 +2033,6 @@
 				1CB2CD1C052DDC560094AAA4 /* error.png in Resources */,
 				1CB2CD1D052DDC560094AAA4 /* pending.png in Resources */,
 				1CB2CD1E052DDC560094AAA4 /* done.png in Resources */,
-				B6310B511C6EFAB00033E88E /* smartTranscriptActivity.pdf in Resources */,
 				1CB2CD1F052DDC560094AAA4 /* stop.png in Resources */,
 				19F292981B130440000198FE /* connect.pdf in Resources */,
 				1CB2CD20052DDC560094AAA4 /* clear.png in Resources */,
@@ -2043,7 +2040,6 @@
 				92C70D171A5E88CE00080E45 /* founder.pdf in Resources */,
 				1CB2CD22052DDC560094AAA4 /* stopped.png in Resources */,
 				1CB2CD24052DDC560094AAA4 /* verbs.plist in Resources */,
-				B6310B501C6EFAB00033E88E /* smartTranscript.pdf in Resources */,
 				1CB2CD2A052DDC560094AAA4 /* Colloquy.nib in Resources */,
 				1CB2CD2B052DDC560094AAA4 /* MVCrashCatcher.nib in Resources */,
 				1CB2CD2C052DDC560094AAA4 /* MVSoftwareUpdate.nib in Resources */,
@@ -2069,7 +2065,6 @@
 				1CB2CD5B052DDC560094AAA4 /* colloquy-alpha.png in Resources */,
 				1CB2CD5C052DDC560094AAA4 /* newMessage.png in Resources */,
 				1CB2CD5D052DDC560094AAA4 /* newHighlightMessage.png in Resources */,
-				B6310B461C6EF9C80033E88E /* smartTranscriptActivity.pdf in Resources */,
 				1CB2CD5E052DDC560094AAA4 /* JVChatTranscript.nib in Resources */,
 				92C70D121A5E88CE00080E45 /* half-op.pdf in Resources */,
 				C29654221BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib in Resources */,
@@ -2097,6 +2092,7 @@
 				B6310B5B1C6F0ADE0033E88E /* connectedSelected.pdf in Resources */,
 				1CD0201005758A33000F93B4 /* MVBuddyList.nib in Resources */,
 				1CDEE48D0583E268000B9075 /* JVBuddyInspector.nib in Resources */,
+				C237FED01CA2EFF500CB8C69 /* smartTranscriptActivity.pdf in Resources */,
 				1CDEE8C505878D30000B9075 /* InterfacePreferences.png in Resources */,
 				1CBA56ED058D202200257832 /* emoticon.png in Resources */,
 				1C6EA23E05A735D6006A559F /* JVChatRoomBrowser.nib in Resources */,
@@ -2126,6 +2122,7 @@
 				1C2391C10677E8F1000E89A7 /* aquaTabRight.png in Resources */,
 				1C2391C20677E8F2000E89A7 /* aquaTabClosePressed.png in Resources */,
 				1C2391C30677E8F2000E89A7 /* aquaTabCloseRollover.png in Resources */,
+				C237FECF1CA2EFF500CB8C69 /* smartTranscript.pdf in Resources */,
 				1C23927306795020000E89A7 /* aquaTabCloseBack.png in Resources */,
 				0A3187FC067ECEB600271E42 /* TSCustomBan.nib in Resources */,
 				1C96E95906AAEC280013B0A9 /* TranscriptPreferences.png in Resources */,
@@ -2158,7 +2155,6 @@
 				1CE6916C08B183C5006D9CA0 /* ChatPlugIn.scriptSuite in Resources */,
 				1CE6916D08B183C6006D9CA0 /* Colloquy.scriptTerminology in Resources */,
 				1CE6916E08B183C7006D9CA0 /* Colloquy.scriptSuite in Resources */,
-				B6310B451C6EF9C80033E88E /* smartTranscript.pdf in Resources */,
 				1CE6916F08B183C7006D9CA0 /* NSTextSuite.scriptTerminology in Resources */,
 				1CE6917008B183C8006D9CA0 /* NSTextSuite.scriptSuite in Resources */,
 				B6310B561C6F0A300033E88E /* connected.pdf in Resources */,
