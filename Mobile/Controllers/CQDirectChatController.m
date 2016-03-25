@@ -692,6 +692,11 @@ NS_ASSUME_NONNULL_BEGIN
 	return [chatInputBar resignFirstResponder];
 }
 
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+	[super traitCollectionDidChange:previousTraitCollection];
+	[self _userDefaultsChanged];
+}
+
 #pragma mark -
 
 - (void) chatInputBarTextDidChange:(CQChatInputBar *) theChatInputBar {
@@ -2119,7 +2124,7 @@ NS_ASSUME_NONNULL_BEGIN
 	const float CQDefaultDynamicTypeFontSize = 17.;
 
 	if (chatTranscriptFontSize == CQDefaultDynamicTypeFontSize || [[NSUserDefaults standardUserDefaults] boolForKey:@"CQOverrideDynamicTypeSize"]) {
-		if ([UIDevice currentDevice].isPadModel) {
+		if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular) {
 			if (!chatTranscriptFontSizeString.length) {
 				chatTranscriptFontSize = 14; // default
 			} else if ([chatTranscriptFontSizeString isEqualToString:@"smallest"])
