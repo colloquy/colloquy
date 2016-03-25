@@ -55,7 +55,7 @@ typedef NS_OPTIONS(NSInteger, CQAppIconOptions) {
 @property (nonatomic, readonly) NSSet *handledURLSchemes;
 @property (nonatomic, readonly) NSString *deviceToken;
 @property (nonatomic, readonly) NSArray <NSString *> *highlightWords;
-@property (nonatomic, readonly) UIColor *tintColor;
+@property (nonatomic, readonly, nullable) UIColor *tintColor;
 
 @property (readonly, strong) UISplitViewController *splitViewController;
 @end

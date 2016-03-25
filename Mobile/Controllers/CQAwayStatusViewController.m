@@ -84,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (BOOL) statusIsDefaultAwayStatus:(NSString *) status {
+- (BOOL) statusIsDefaultAwayStatus:(NSString *__nullable) status {
 	return [status isEqualToString:[[CQSettingsController settingsController] stringForKey:@"CQAwayStatus"]];
 }
 

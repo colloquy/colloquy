@@ -73,8 +73,8 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 - (NSRange) rangeOfRegex:(NSString *) regex inRange:(NSRange) range;
 - (NSRange) rangeOfRegex:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error;
 
-- (NSString *) stringByMatching:(NSString *) regex capture:(NSInteger) capture;
-- (NSString *) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error;
+- (NSString *__nullable) stringByMatching:(NSString *) regex capture:(NSInteger) capture;
+- (NSString *__nullable) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error;
 
 - (NSArray <NSString *> *) captureComponentsMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options range:(NSRange) range error:(NSError **) error;
 

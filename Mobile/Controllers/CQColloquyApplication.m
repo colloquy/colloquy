@@ -237,7 +237,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_accessibilityDarkerSystemColorsStatus:) name:UIAccessibilityDarkerSystemColorsStatusDidChangeNotification object:nil];
 }
 
-- (void) handleNotificationWithUserInfo:(NSDictionary *) userInfo {
+- (void) handleNotificationWithUserInfo:(NSDictionary *__nullable) userInfo {
 	if (!userInfo.count)
 		return;
 
@@ -549,7 +549,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 - (NSString *) applicationNameForURL:(NSURL *) url {
 	if (!url)
-		return nil;
+		return @"";
 	NSString *scheme = url.scheme;
 #if !TARGET_IPHONE_SIMULATOR
 	NSString *host = url.host;
@@ -560,7 +560,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #endif
 	if ([scheme isCaseInsensitiveEqualToString:@"http"] || [scheme isCaseInsensitiveEqualToString:@"https"])
 		return NSLocalizedString(@"Safari", @"Safari application name");
-	return nil;
+	return @"";
 }
 
 - (BOOL) openURL:(NSURL *) url {
@@ -611,7 +611,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #pragma mark -
 
-- (UIColor *) tintColor {
+- (UIColor *__nullable) tintColor {
 	if ([UIDevice currentDevice].isPadModel)
 		return nil;
 

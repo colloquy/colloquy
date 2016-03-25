@@ -1161,11 +1161,11 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	return foundRange;
 }
 
-- (NSString *) stringByMatching:(NSString *) regex capture:(NSInteger) capture {
+- (NSString *__nullable) stringByMatching:(NSString *) regex capture:(NSInteger) capture {
 	return [self stringByMatching:regex options:0 inRange:NSMakeRange(0, self.length) capture:capture error:nil];
 }
 
-- (NSString *) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error {
+- (NSString *__nullable) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error {
 	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:range];
 
@@ -1304,11 +1304,11 @@ static NSCharacterSet *typicalEmoticonCharacters;
 #pragma mark -
 
 - (void) encodeIllegalURLCharacters {
-	[self setString:[self stringByEncodingIllegalURLCharacters] ?: @""];
+	[self setString:[self stringByEncodingIllegalURLCharacters]];
 }
 
 - (void) decodeIllegalURLCharacters {
-	[self setString:[self stringByDecodingIllegalURLCharacters] ?: @""];
+	[self setString:[self stringByDecodingIllegalURLCharacters]];
 }
 
 #pragma mark -

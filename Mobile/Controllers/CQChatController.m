@@ -478,7 +478,7 @@ static CQSoundController *fileTransferSound;
 - (NSDictionary *) persistentStateForConnection:(MVChatConnection *) connection {
 	NSArray <id <CQChatViewController>> *controllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
 	if (!controllers.count)
-		return nil;
+		return @{};
 
 	NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
 	NSMutableArray <NSDictionary *> *controllerStates = [[NSMutableArray alloc] init];
