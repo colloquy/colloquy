@@ -684,8 +684,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	[self resizeForViewInPopoverUsingTableView:self.tableView];
-
 	self.tableView.allowsSelectionDuringEditing = self.view.window.isFullscreen;
 	self.clearsSelectionOnViewWillAppear = !self.view.window.isFullscreen;
 
@@ -729,12 +727,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	_active = NO;
 }
 
-- (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>) coordinator {
-	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-
-	[self resizeForViewInPopoverUsingTableView:self.tableView];
-}
-
 - (void) traitCollectionDidChange:(nullable UITraitCollection *) previousTraitCollection {
 	self.tableView.allowsSelectionDuringEditing = self.view.window.isFullscreen;
 	self.clearsSelectionOnViewWillAppear = !self.view.window.isFullscreen;
@@ -763,8 +755,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			selectedIndexPath = [NSIndexPath indexPathForRow:selectedIndexPath.row + 1 inSection:selectedIndexPath.section];
 		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 	}
-
-	[self resizeForViewInPopoverUsingTableView:self.tableView];
 
 	[self _refreshIndexPathForChatControllersCache];
 }

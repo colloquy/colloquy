@@ -354,7 +354,7 @@ NS_ASSUME_NONNULL_BEGIN
 	sheet.title = nickname;
 	sheet.tag = NicknameActionSheet;
 
-	if ([[UIDevice currentDevice] isPadModel] && self.view.window.isFullscreen)
+	if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular)
 		[[CQColloquyApplication sharedApplication] showActionSheet:sheet fromPoint:location];
 	else [[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:nil animated:YES];
 }
