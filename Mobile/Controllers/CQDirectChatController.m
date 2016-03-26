@@ -692,7 +692,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return [chatInputBar resignFirstResponder];
 }
 
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+- (void)traitCollectionDidChange:(UITraitCollection *__nullable)previousTraitCollection {
 	[super traitCollectionDidChange:previousTraitCollection];
 	[self _userDefaultsChanged];
 }
@@ -2102,7 +2102,7 @@ NS_ASSUME_NONNULL_BEGIN
 		alert.tag = ReconnectAlertTag;
 		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to user because server is disconnected alert message");
 		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
-	} else if (self.user.status != MVChatUserAvailableStatus && self.user.status != MVChatUserAwayStatus) {
+	} else if (self.user.status == MVChatUserOfflineStatus || self.user.status == MVChatUserDetachedStatus) {
 		alert.message = NSLocalizedString(@"The user is not connected.", @"Can't send message to user because they are disconnected alert message");
 	} else {
 		return;

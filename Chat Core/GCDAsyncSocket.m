@@ -7456,7 +7456,7 @@ static void CFReadStreamCallback (CFReadStreamRef stream, CFStreamEventType type
 		{
 			dispatch_async(asyncSocket->socketQueue, ^{ @autoreleasepool {
 				
-				LogCVerbose("CFReadStreamCallback - HasBytesAvailable");
+				LogCVerbose("%s", "CFReadStreamCallback - HasBytesAvailable");
 				
 				if (asyncSocket->readStream != stream)
 					return_from_block;
@@ -7492,7 +7492,7 @@ static void CFReadStreamCallback (CFReadStreamRef stream, CFStreamEventType type
 			
 			dispatch_async(asyncSocket->socketQueue, ^{ @autoreleasepool {
 				
-				LogCVerbose("CFReadStreamCallback - Other");
+				LogCVerbose("%s", "CFReadStreamCallback - Other");
 				
 				if (asyncSocket->readStream != stream)
 					return_from_block;
@@ -7523,7 +7523,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 		{
 			dispatch_async(asyncSocket->socketQueue, ^{ @autoreleasepool {
 				
-				LogCVerbose("CFWriteStreamCallback - CanAcceptBytes");
+				LogCVerbose("%s", "CFWriteStreamCallback - CanAcceptBytes");
 				
 				if (asyncSocket->writeStream != stream)
 					return_from_block;
@@ -7559,7 +7559,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 			
 			dispatch_async(asyncSocket->socketQueue, ^{ @autoreleasepool {
 				
-				LogCVerbose("CFWriteStreamCallback - Other");
+				LogCVerbose("%s", "CFWriteStreamCallback - Other");
 				
 				if (asyncSocket->writeStream != stream)
 					return_from_block;

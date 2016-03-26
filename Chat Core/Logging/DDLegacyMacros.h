@@ -20,9 +20,6 @@
  **/
 #if DD_LEGACY_MACROS
 
-#warning CocoaLumberjack 1.9.x legacy macros enabled. \
-Disable legacy macros by importing CocoaLumberjack.h or DDLogMacros.h instead of DDLog.h or add `#define DD_LEGACY_MACROS 0` before importing DDLog.h.
-
 #ifndef LOG_LEVEL_DEF
     #define LOG_LEVEL_DEF ddLogLevel
 #endif
