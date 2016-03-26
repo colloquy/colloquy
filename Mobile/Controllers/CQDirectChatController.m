@@ -976,10 +976,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
-
-#if !SYSTEM(TV)
-	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
-#endif
 }
 
 #pragma mark -

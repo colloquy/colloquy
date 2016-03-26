@@ -7,8 +7,9 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 typedef NS_OPTIONS(NSInteger, CQAppIconOptions) {
 	CQAppIconOptionNone = 0,
 	CQAppIconOptionConnect = 1 << 0,
-	CQAppIconOptionDisconnect = 1 << 1,
-	CQAppIconOptionMarkAllAsRead = 1 << 2
+	CQAppIconOptionNewChat = 1 << 2,
+	CQAppIconOptionNewPrivateChat = 1 << 3,
+	CQAppIconOptionNewConnection = 1 << 4
 };
 
 @interface CQColloquyApplication : UIApplication

@@ -159,10 +159,6 @@ static CQSoundController *fileTransferSound;
 
 	CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:NO];
 	[controller addMessage:notification.userInfo];
-
-#if !SYSTEM(TV)
-	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
-#endif
 }
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {
@@ -183,9 +179,6 @@ static CQSoundController *fileTransferSound;
 	if (!hideFromUser) {
 		CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:NO userInitiated:NO];
 		[controller addMessage:notification.userInfo];
-#if !SYSTEM(TV)
-		[[CQColloquyApplication sharedApplication] updateAppShortcuts];
-#endif
 	}
 }
 
@@ -194,9 +187,6 @@ static CQSoundController *fileTransferSound;
 
 	CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForDirectChatConnection:connection ifExists:NO];
 	[controller addMessage:notification.userInfo];
-#if !SYSTEM(TV)
-	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
-#endif
 }
 
 #if ENABLE(FILE_TRANSFERS)
@@ -534,7 +524,7 @@ static CQSoundController *fileTransferSound;
 		sheet.tag = NewChatActionSheetTag;
 
 		[sheet addButtonWithTitle:NSLocalizedString(@"Join a Chat Room", @"Join a Chat Room button title")];
-		[sheet addButtonWithTitle:NSLocalizedString(@"Message a User", @"Message a User button title")];
+		[sheet addButtonWithTitle:NSLocalizedString(@"Send Private Message", @"Send Private Message button title")];
 	} else {
 		sheet.tag = NewConnectionActionSheetTag;
 
