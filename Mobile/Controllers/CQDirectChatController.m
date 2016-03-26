@@ -416,7 +416,7 @@ NS_ASSUME_NONNULL_BEGIN
 	sheet.tag = InfoActionSheet;
 
 #if !SYSTEM(TV)
-	if (!([UIDevice currentDevice].isPadModel && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+	if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
 		sheet.title = self.user.displayName;
 #endif
 
@@ -2102,7 +2102,7 @@ NS_ASSUME_NONNULL_BEGIN
 		alert.tag = ReconnectAlertTag;
 		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to user because server is disconnected alert message");
 		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
-	} else if (self.user.status == MVChatUserOfflineStatus || self.user.status == MVChatUserDetachedStatus) {
+	} else if (self.user.status != MVChatUserAvailableStatus && self.user.status != MVChatUserAwayStatus) {
 		alert.message = NSLocalizedString(@"The user is not connected.", @"Can't send message to user because they are disconnected alert message");
 	} else {
 		return;
