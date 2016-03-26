@@ -308,6 +308,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (void) _addedChatViewController:(NSNotification *) notification {
 	id <CQChatViewController> controller = notification.userInfo[@"controller"];
 	[self chatViewControllerAdded:controller];
+
+	if (![CQChatController defaultController].visibleChatController)
+		[[CQChatController defaultController] showChatController:controller animated:NO];
 }
 
 - (void) _updateMessagePreview:(NSNotification *) notification {
