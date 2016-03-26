@@ -26,7 +26,7 @@ static CQShowRoomTopic showRoomTopic;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQDirectChatController (CQDirectChatControllerPrivate) <CQAlertViewDelegate, CQActionSheetDelegate, UIPopoverControllerDelegate, CQChatInputBarDelegate>
+@interface CQDirectChatController (CQDirectChatControllerPrivate) <CQAlertViewDelegate, CQActionSheetDelegate, CQChatInputBarDelegate>
 - (void) _addPendingComponentsAnimated:(BOOL) animated;
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _didDisconnect:(NSNotification *) notification;
@@ -120,17 +120,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewDidAppear:(BOOL) animated {
 	[super viewDidAppear:animated];
 
-	if (_showingMembersInModalController) {
-		_showingMembersInModalController = NO;
-		_currentUserListNavigationController = nil;
-		_currentUserListViewController = nil;
-	}
-}
-
-- (void) viewWillDisappear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-
-	[self dismissPopoversAnimated:animated];
+	_currentUserListNavigationController = nil;
+	_currentUserListViewController = nil;
 }
 
 #pragma mark -
@@ -223,34 +214,14 @@ NS_ASSUME_NONNULL_BEGIN
 		_currentUserListViewController.room = self.room;
 	}
 
-	BOOL usePopoverController = [UIDevice currentDevice].isPadModel && self.view.window.isFullscreen;
-	if (usePopoverController) {
-		if (!_currentUserListPopoverController) {
-			_currentUserListPopoverController = [[UIPopoverController alloc] initWithContentViewController:_currentUserListViewController];
-			_currentUserListPopoverController.delegate = self;
-		}
-
-		if (!_currentUserListPopoverController.popoverVisible) {
-			[[CQColloquyApplication sharedApplication] dismissPopoversAnimated:NO];
-
-			[_currentUserListPopoverController presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-		} else [_currentUserListPopoverController dismissPopoverAnimated:YES];
-	} else {
-		if (!self.navigationController || _showingMembersInModalController)
-			return;
-
-		if (!_currentUserListNavigationController)
-			_currentUserListNavigationController = [[UINavigationController alloc] initWithRootViewController:_currentUserListViewController];
-
-		_showingMembersInModalController = YES;
-		[self.navigationController presentViewController:_currentUserListNavigationController animated:YES completion:NULL];
+	if (!_currentUserListNavigationController) {
+		_currentUserListNavigationController = [[UINavigationController alloc] initWithRootViewController:_currentUserListViewController];
+		_currentUserListNavigationController.modalPresentationStyle = UIModalPresentationPopover;
+		_currentUserListNavigationController.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
+		_currentUserListNavigationController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
 	}
-}
 
-#pragma mark -
-
-- (void) dismissPopoversAnimated:(BOOL) animated {
-	[_currentUserListPopoverController dismissPopoverAnimated:animated];
+	[self presentViewController:_currentUserListNavigationController animated:YES completion:NULL];
 }
 
 #pragma mark -
@@ -301,13 +272,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 	// return NO to pass the command on to the server directly
 	return NO;
-}
-
-- (void) popoverControllerDidDismissPopover:(UIPopoverController *) popoverController {
-	if (popoverController == _currentUserListPopoverController) {
-		_currentUserListViewController = nil;
-		_currentUserListPopoverController = nil;
-	}
 }
 
 #pragma mark -

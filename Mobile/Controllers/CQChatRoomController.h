@@ -12,7 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CQChatRoomController : CQDirectChatController {
 	@protected
 	NSMutableArray <MVChatUser *> *_orderedMembers;
-	BOOL _showingMembersInModalController;
 	BOOL _membersNeedSorted;
 	BOOL _banListSynced;
 	BOOL _joined;
@@ -20,7 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 	NSUInteger _joinCount;
 	CQChatUserListViewController *_currentUserListViewController;
 	UINavigationController *_currentUserListNavigationController;
-	UIPopoverController *_currentUserListPopoverController;
 	NSDictionary *_topicInformation;
 }
 @property (readonly, strong) MVChatRoom *room;
