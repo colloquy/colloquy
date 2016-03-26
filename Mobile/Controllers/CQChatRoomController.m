@@ -232,7 +232,7 @@ NS_ASSUME_NONNULL_BEGIN
 	sheet.tag = JoinActionSheet;
 
 #if !SYSTEM(TV)
-	if (!(self.view.window.isFullscreen && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+	if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
 		sheet.title = self.room.displayName;
 #endif
 
