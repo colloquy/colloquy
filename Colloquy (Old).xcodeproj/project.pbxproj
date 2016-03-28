@@ -656,6 +656,7 @@
 		556CEBE41BCB795600F00EAA /* Tabs Interface Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Tabs Interface Images.xcassets"; sourceTree = "<group>"; };
 		5575C7BE1AFAB53D001EEF98 /* widgets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = widgets.xcassets; sourceTree = "<group>"; };
 		558EF2361AEC356800619BDE /* Room Member Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Room Member Icons.xcassets"; sourceTree = "<group>"; };
+		559110461CA9B28400258B5F /* NSRegularExpressionAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSRegularExpressionAdditions.h; sourceTree = "<group>"; };
 		55AD12391C597212009F258C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Languages/Base.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
 		55AD123B1C597223009F258C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Languages/en.lproj/TSCustomBan.strings; sourceTree = "<group>"; };
 		55AD123C1C59722F009F258C /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = Languages/nl.lproj/TSCustomBan.strings; sourceTree = "<group>"; };
@@ -1447,6 +1448,7 @@
 				9220565C11018298005CD72D /* NSDateAdditions.h */,
 				1C0730E30677A63B008D8AD9 /* NSImageAdditions.m */,
 				1C0730E20677A63B008D8AD9 /* NSImageAdditions.h */,
+				559110461CA9B28400258B5F /* NSRegularExpressionAdditions.h */,
 				928FB03013EE643E00A0DF4B /* NSStringAdditions.m */,
 				928FB02F13EE643E00A0DF4B /* NSStringAdditions.h */,
 				1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */,

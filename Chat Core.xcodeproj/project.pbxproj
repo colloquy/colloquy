@@ -311,6 +311,7 @@
 		32C46E1A0B3AB37E00B96B27 /* MVICBChatUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 32C46E180B3AB37E00B96B27 /* MVICBChatUser.h */; };
 		32C46E1B0B3AB37E00B96B27 /* MVICBChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 32C46E190B3AB37E00B96B27 /* MVICBChatUser.m */; };
 		431261C3072EE37A00720AD1 /* MVSILCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */; };
+		559110451CA9B1F300258B5F /* NSDateAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 559110441CA9B1F300258B5F /* NSDateAdditions.h */; };
 		55B748171AD2E6FD001459F7 /* RunOnMainThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 55B748161AD2E6FD001459F7 /* RunOnMainThread.h */; };
 		55B748181AD2E6FD001459F7 /* RunOnMainThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 55B748161AD2E6FD001459F7 /* RunOnMainThread.h */; };
 		899F4EFE12617870003B9D9A /* NSFileManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */; };
@@ -741,6 +742,7 @@
 		32C46E190B3AB37E00B96B27 /* MVICBChatUser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MVICBChatUser.m; path = "Chat Core/MVICBChatUser.m"; sourceTree = "<group>"; };
 		431261C0072EE37A00720AD1 /* MVSILCFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = MVSILCFileTransfer.h; path = "Chat Core/MVSILCFileTransfer.h"; sourceTree = "<group>"; };
 		431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MVSILCFileTransfer.m; path = "Chat Core/MVSILCFileTransfer.m"; sourceTree = "<group>"; };
+		559110441CA9B1F300258B5F /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		5596BE781B37206C0078571A /* build-libidn-OSX.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "build-libidn-OSX.sh"; sourceTree = "<group>"; };
 		55AA73C81C554FD000BD820C /* ChatCore.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = ChatCore.modulemap; sourceTree = "<group>"; };
 		55B748161AD2E6FD001459F7 /* RunOnMainThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RunOnMainThread.h; path = Additions/RunOnMainThread.h; sourceTree = "<group>"; };
@@ -1752,6 +1754,7 @@
 				1CD020BC057593A9000F93B4 /* NSColorAdditions.h */,
 				1CF4E5100698E9E900986498 /* NSDataAdditions.m */,
 				1CF4E50F0698E9E900986498 /* NSDataAdditions.h */,
+				559110441CA9B1F300258B5F /* NSDateAdditions.h */,
 				899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */,
 				899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */,
 				1C3D55C005A4DC1E00F25F5E /* NSMethodSignatureAdditions.m */,
@@ -1944,6 +1947,7 @@
 				19A7A9981B28E7A90022172F /* XMPPPresence.h in Headers */,
 				DD0A302A0BD881650054443A /* MVIRCChatRoom.h in Headers */,
 				DD0A302B0BD881660054443A /* MVIRCChatUser.h in Headers */,
+				559110451CA9B1F300258B5F /* NSDateAdditions.h in Headers */,
 				19A7AA261B28E7A90022172F /* XMPPCapsCoreDataStorageObject.h in Headers */,
 				19A7AA2D1B28E7A90022172F /* XMPPMessageArchiving_Contact_CoreDataObject.h in Headers */,
 				19A7A98D1B28E7A90022172F /* XMPPIQ.h in Headers */,
