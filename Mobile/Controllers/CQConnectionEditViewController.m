@@ -570,7 +570,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 }
 
 - (void) deleteConnection:(__nullable id) sender {
-	if ([[UIDevice currentDevice] isPadModel] && self.view.window.isFullscreen) {
+	if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular) {
 		CQAlertView *alert = [[CQAlertView alloc] init];
 		alert.delegate = self;
 

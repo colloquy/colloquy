@@ -77,8 +77,6 @@ NS_ASSUME_NONNULL_BEGIN
 	
 	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissFromDoneButton)];
 	self.navigationItem.rightBarButtonItem = doneButton;
-
-	[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -215,8 +213,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (searchBarFocused)
 		_searchController.active = YES;
-
-	[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 - (void) moveUserAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex {
@@ -252,8 +248,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if (searchBarFocused)
 		_searchController.active = YES;
-
-	[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 - (void) updateUserAtIndex:(NSUInteger) index {
@@ -359,14 +353,6 @@ NS_ASSUME_NONNULL_BEGIN
 	else self.title = [NSString stringWithFormat:membersFilteredCountFormat, self.matchedUsers.count, self.users.count];
 
 	[_searchController.searchBar becomeFirstResponder];
-}
-
-#pragma mark -
-
-- (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>) coordinator {
-	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-
-	[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 #pragma mark -

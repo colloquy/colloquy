@@ -201,7 +201,6 @@
 		9200338D13D92515005B69BA /* MVFileTransfer.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9200338B13D92515005B69BA /* MVFileTransfer.xib */; };
 		9220565E11018298005CD72D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9220565D11018298005CD72D /* NSDateAdditions.m */; };
 		92823CF2168FFA0A000EC36E /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CF1168FFA0A000EC36E /* KAIgnoreRule.m */; };
-		928FB03613EE64C700A0DF4B /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 928FB03513EE64C700A0DF4B /* libicucore.dylib */; };
 		9295C85D1675E227009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
 		92A711951A4A5166009E80F0 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A711941A4A5166009E80F0 /* SecurityInterface.framework */; };
 		C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C22A35541BC009FA001757D7 /* MASPreferences.framework */; };

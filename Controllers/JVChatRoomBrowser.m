@@ -22,17 +22,15 @@
 - (instancetype) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
 		_self = self;
-		_connection = nil;
-		_roomResults = nil;
-		_roomOrder = nil;
-		_currentFilter = nil;
 		_sortColumn = @"room";
 		_ascending = YES;
 		_collapsed = YES;
-		_needsRefresh = NO;
+
+		[self _userDefaultsChanged:nil];
 
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _connectionChange: ) name:MVChatConnectionDidConnectNotification object:nil];
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _connectionChange: ) name:MVChatConnectionDidDisconnectNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _userDefaultsChanged: ) name:NSUserDefaultsDidChangeNotification object:nil];
 	}
 	return self;
 }
@@ -58,12 +56,6 @@
 	[roomsTable setDataSource:nil];
 
 	[[NSNotificationCenter chatCenter] removeObserver:self];
-
-	_connection = nil;
-	_currentFilter = nil;
-	_roomResults = nil;
-	_roomOrder = nil;
-	_sortColumn = nil;
 }
 
 - (void) windowDidLoad {
@@ -331,6 +323,11 @@
 	}
 }
 
+- (void) _userDefaultsChanged:(NSNotification *) notification {
+	_ignoreFontColors = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"];
+	_ignoreFontTraits = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"];
+}
+
 #pragma mark -
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView *) view {
@@ -338,17 +335,24 @@
 }
 
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
-	if( [[column identifier] isEqualToString:@"room"] ) {
+	if( [column.identifier isEqualToString:@"room"] ) {
 		return _roomOrder[row];
-	} else if( [[column identifier] isEqualToString:@"topic"] ) {
+	} else if( [column.identifier isEqualToString:@"topic"] ) {
 		NSMutableDictionary *info = _roomResults[_roomOrder[row]];
 		NSAttributedString *t = info[@"topicAttributed"];
 
 		if( ! t ) {
 			NSData *topic = info[@"topic"];
-			NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:@([_connection encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
+			NSMutableDictionary *options = [@{
+				@"StringEncoding": @(_connection.encoding),
+				@"IgnoreFontColors": @(_ignoreFontColors),
+				@"IgnoreFontTraits": @(_ignoreFontTraits),
+				@"BaseFont": [NSFont systemFontOfSize:11.]
+			} mutableCopy];
+
 			if( ! ( t = [NSAttributedString attributedStringWithChatFormat:topic options:options] ) ) {
 				options[@"StringEncoding"] = @(NSISOLatin1StringEncoding);
+
 				t = [NSAttributedString attributedStringWithChatFormat:topic options:options];
 			}
 
@@ -356,9 +360,8 @@
 		}
 
 		return t;
-	} else if( [[column identifier] isEqualToString:@"members"] ) {
-		NSString *room = _roomOrder[row];
-		return _roomResults[room][@"users"];
+	} else if( [column.identifier isEqualToString:@"members"] ) {
+		return _roomResults[_roomOrder[row]][@"users"];
 	}
 	return nil;
 }
@@ -490,18 +493,23 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 }
 
 - (void) _refreshResults:(id) sender {
-	NSInteger index = [roomsTable selectedRow];
-	NSString *selectedRoom = ( index != -1 && [_roomOrder count] ? [_roomOrder[index] copy] : nil );
+	NSInteger index = roomsTable.selectedRow;
+	NSString *selectedRoom = ( index != -1 && _roomOrder.count ? [_roomOrder[index] copy] : nil );
 	NSMutableDictionary *options = nil;
 
-	if( _collapsed || ! [_currentFilter length] ) {
-		[_roomOrder setArray:[_roomResults allKeys]];
+	if( _collapsed || ! _currentFilter.length ) {
+		_roomOrder.array = _roomResults.allKeys;
 		goto refresh;
 	}
 
 	[_roomOrder removeAllObjects]; // this is far more efficient than doing a containsObject: and a removeObject: during the while
 
-	options = [NSMutableDictionary dictionaryWithObjectsAndKeys:@([_connection encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
+	options = [@{
+		@"StringEncoding": @(_connection.encoding),
+		@"IgnoreFontColors": @(_ignoreFontColors),
+		@"IgnoreFontTraits": @(_ignoreFontTraits),
+		@"BaseFont": [NSFont systemFontOfSize:11.]
+	} mutableCopy];
 
 	for( NSString *room in _roomResults ) {
 		NSMutableDictionary *info = _roomResults[room];
@@ -515,7 +523,8 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 
 		if( ! t ) {
 			NSData *topic = info[@"topic"];
-			options[@"StringEncoding"] = @([_connection encoding]);
+			options[@"StringEncoding"] = @(_connection.encoding);
+
 			if( ! ( t = [NSAttributedString attributedStringWithChatFormat:topic options:options] ) ) {
 				options[@"StringEncoding"] = @(NSISOLatin1StringEncoding);
 				t = [NSAttributedString attributedStringWithChatFormat:topic options:options];
@@ -524,21 +533,21 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 			if( t ) info[@"topicAttributed"] = t;
 		}
 
-		if( t && [[t string] rangeOfString:_currentFilter options:NSCaseInsensitiveSearch].location != NSNotFound )
+		if( t && [t.string rangeOfString:_currentFilter options:NSCaseInsensitiveSearch].location != NSNotFound )
 			[_roomOrder addObject:room];
 	}
 
 refresh:
-	if( _connection && [_connection isConnected] && [_roomResults count] ) {
-		[indexResults setObjectValue:[[NSString alloc] initWithFormat:NSLocalizedString( @"%d rooms indexed.", "number of rooms listed on the server" ), [_roomResults count]]];
-		if( ! [_currentFilter length] ) {
-			[indexAndFindResults setObjectValue:[indexResults stringValue]];
+	if( _connection && _connection.isConnected && _roomResults.count ) {
+		indexResults.objectValue = [NSString stringWithFormat:NSLocalizedString( @"%d rooms indexed.", "number of rooms listed on the server" ), _roomResults.count];
+		if( ! _currentFilter.length ) {
+			indexAndFindResults.objectValue = indexResults.stringValue;
 		} else {
-			[indexAndFindResults setObjectValue:[[NSString alloc] initWithFormat:NSLocalizedString( @"%d of %d rooms found.", "number of rooms found with a filter from the server listing" ), [_roomOrder count], [_roomResults count]]];
+			indexAndFindResults.objectValue = [NSString stringWithFormat:NSLocalizedString( @"%d of %d rooms found.", "number of rooms found with a filter from the server listing" ), _roomOrder.count, _roomResults.count];
 		}
 	} else {
-		[indexResults setObjectValue:@""];
-		[indexAndFindResults setObjectValue:@""];
+		indexResults.objectValue = @"";
+		indexAndFindResults.objectValue = @"";
 	}
 
 	[roomsTable deselectAll:nil];

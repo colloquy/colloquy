@@ -724,6 +724,8 @@
 		97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQFileTransferTableCell.m; sourceTree = "<group>"; };
 		B6024FF11BCD2D44000A5058 /* CQRootContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQRootContainerViewController.h; path = Mobile/Controllers/CQRootContainerViewController.h; sourceTree = "<group>"; };
 		B6024FF21BCD2D44000A5058 /* CQRootContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQRootContainerViewController.m; path = Mobile/Controllers/CQRootContainerViewController.m; sourceTree = "<group>"; };
+		B6310B641C6FE3C80033E88E /* DDLogMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DDLogMacros.h; path = Logging/DDLogMacros.h; sourceTree = "<group>"; };
+		B6310B651C6FE52C0033E88E /* DDLegacyMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DDLegacyMacros.h; path = Logging/DDLegacyMacros.h; sourceTree = "<group>"; };
 		B6831CC41BE425C300D3AC1D /* CQUITextChatTranscriptView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQUITextChatTranscriptView.h; sourceTree = "<group>"; };
 		B6831CC51BE425C300D3AC1D /* CQUITextChatTranscriptView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQUITextChatTranscriptView.m; sourceTree = "<group>"; };
 		B6831CC71BE4321D00D3AC1D /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -1376,6 +1378,8 @@
 			children = (
 				92823D3E169123FD000EC36E /* DDLog.m */,
 				92823D3D169123FD000EC36E /* DDLog.h */,
+				B6310B641C6FE3C80033E88E /* DDLogMacros.h */,
+				B6310B651C6FE52C0033E88E /* DDLegacyMacros.h */,
 				922B1FE016926749002ECDFD /* MVDelegateLogger.m */,
 				922B1FDF16926749002ECDFD /* MVDelegateLogger.h */,
 			);
@@ -1924,8 +1928,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				GCC_NO_COMMON_BLOCKS = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Jane Lee (N94ANP6XYA)";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1980,7 +1984,6 @@
 				LLVM_LTO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile;
 				PRODUCT_NAME = Colloquy;
-				PROVISIONING_PROFILE = "df6f6b91-55c0-4c60-b88a-229137d57125";
 			};
 			name = Distribution;
 		};
@@ -1993,8 +1996,6 @@
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
 				CLANG_ENABLE_MODULE_DEBUGGING = NO;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_BITCODE = NO;
 				ENABLE_ON_DEMAND_RESOURCES = NO;
@@ -2042,8 +2043,6 @@
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
 				CLANG_ENABLE_MODULE_DEBUGGING = NO;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_BITCODE = NO;
 				ENABLE_ON_DEMAND_RESOURCES = NO;

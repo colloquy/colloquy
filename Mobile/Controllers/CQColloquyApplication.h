@@ -7,8 +7,9 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 typedef NS_OPTIONS(NSInteger, CQAppIconOptions) {
 	CQAppIconOptionNone = 0,
 	CQAppIconOptionConnect = 1 << 0,
-	CQAppIconOptionDisconnect = 1 << 1,
-	CQAppIconOptionMarkAllAsRead = 1 << 2
+	CQAppIconOptionNewChat = 1 << 2,
+	CQAppIconOptionNewPrivateChat = 1 << 3,
+	CQAppIconOptionNewConnection = 1 << 4
 };
 
 @interface CQColloquyApplication : UIApplication
@@ -55,7 +56,7 @@ typedef NS_OPTIONS(NSInteger, CQAppIconOptions) {
 @property (nonatomic, readonly) NSSet *handledURLSchemes;
 @property (nonatomic, readonly) NSString *deviceToken;
 @property (nonatomic, readonly) NSArray <NSString *> *highlightWords;
-@property (nonatomic, readonly) UIColor *tintColor;
+@property (nonatomic, readonly, nullable) UIColor *tintColor;
 
 @property (readonly, strong) UISplitViewController *splitViewController;
 @end

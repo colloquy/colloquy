@@ -416,7 +416,7 @@ NS_ASSUME_NONNULL_BEGIN
 	sheet.tag = InfoActionSheet;
 
 #if !SYSTEM(TV)
-	if (!([UIDevice currentDevice].isPadModel && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+	if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
 		sheet.title = self.user.displayName;
 #endif
 
@@ -542,19 +542,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) loadView {
 	[super loadView];
 
-	if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion == 8)
-		return;
-
-	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
-//	CQUITextChatTranscriptView *webkitChatTranscriptView = [[CQUITextChatTranscriptView alloc] initWithFrame:transcriptView.frame];
-	CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
-	webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
-	webkitChatTranscriptView.transcriptDelegate = self;
-
-	[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
-
-	[transcriptView removeFromSuperview];
-	transcriptView = webkitChatTranscriptView;
+//	if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion == 8)
+//		return;
+//
+//	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
+////	CQUITextChatTranscriptView *webkitChatTranscriptView = [[CQUITextChatTranscriptView alloc] initWithFrame:transcriptView.frame];
+//	CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
+//	webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
+//	webkitChatTranscriptView.transcriptDelegate = self;
+//
+//	[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
+//
+//	[transcriptView removeFromSuperview];
+//	transcriptView = webkitChatTranscriptView;
 }
 
 - (void) viewDidLoad {
@@ -690,6 +690,11 @@ NS_ASSUME_NONNULL_BEGIN
 	if (_showingActivityViewController)
 		return [super resignFirstResponder];
 	return [chatInputBar resignFirstResponder];
+}
+
+- (void)traitCollectionDidChange:(UITraitCollection *__nullable)previousTraitCollection {
+	[super traitCollectionDidChange:previousTraitCollection];
+	[self _userDefaultsChanged];
 }
 
 #pragma mark -
@@ -971,10 +976,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
-
-#if !SYSTEM(TV)
-	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
-#endif
 }
 
 #pragma mark -
@@ -1296,7 +1297,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSString *languageCode = results[0];
 	NSString *query = results[1];
 
-	[self _handleSearchForURL:@"http://www.google.com/m/search?q=%@&hl=%@" withQuery:query withLocale:languageCode];
+	[self _handleSearchForURL:@"https://www.google.com/m/search?q=%@&hl=%@" withQuery:query withLocale:languageCode];
 
 	return YES;
 }
@@ -1306,7 +1307,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSString *languageCode = results[0];
 	NSString *query = results[1];
 
-	[self _handleSearchForURL:@"http://www.wikipedia.org/search-redirect.php?search=%@&language=%@" withQuery:query withLocale:languageCode];
+	[self _handleSearchForURL:@"https://www.wikipedia.org/search-redirect.php?search=%@&language=%@" withQuery:query withLocale:languageCode];
 
 	return YES;
 }
@@ -1317,18 +1318,18 @@ NS_ASSUME_NONNULL_BEGIN
 	NSString *query = results[1];
 
 	if ([languageCode isCaseInsensitiveEqualToString:@"en_gb"])
-		[self _handleSearchForURL:@"http://www.amazon.co.uk/s/field-keywords=%@" withQuery:query withLocale:languageCode];
+		[self _handleSearchForURL:@"https://www.amazon.co.uk/s/field-keywords=%@" withQuery:query withLocale:languageCode];
 	else if ([languageCode isCaseInsensitiveEqualToString:@"de"])
-		[self _handleSearchForURL:@"http://www.amazon.de/gp/aw/s.html?k=%@" withQuery:query withLocale:languageCode];
+		[self _handleSearchForURL:@"https://www.amazon.de/gp/aw/s.html?k=%@" withQuery:query withLocale:languageCode];
 	else if ([languageCode isCaseInsensitiveEqualToString:@"cn"])
-		[self _handleSearchForURL:@"http://www.amazon.cn/mn/searchApp?&keywords=%@" withQuery:query withLocale:languageCode];
+		[self _handleSearchForURL:@"https://www.amazon.cn/mn/searchApp?&keywords=%@" withQuery:query withLocale:languageCode];
 	else if ([languageCode isCaseInsensitiveEqualToString:@"ja_jp"])
-		[self _handleSearchForURL:@"http://www.amazon.co.jp/s/field-keywords=%@" withQuery:query withLocale:languageCode];
+		[self _handleSearchForURL:@"https://www.amazon.co.jp/s/field-keywords=%@" withQuery:query withLocale:languageCode];
 	else if ([languageCode isCaseInsensitiveEqualToString:@"fr"])
-		[self _handleSearchForURL:@"http://www.amazon.fr/s/field-keywords=%@" withQuery:query withLocale:languageCode];
+		[self _handleSearchForURL:@"https://www.amazon.fr/s/field-keywords=%@" withQuery:query withLocale:languageCode];
 	else if ([languageCode isCaseInsensitiveEqualToString:@"ca"])
-		[self _handleSearchForURL:@"http://www.amazon.ca/s/field-keywords=%@" withQuery:query withLocale:languageCode];
-	else [self _handleSearchForURL:@"http://www.amazon.com/gp/aw/s.html?k=%@" withQuery:query withLocale:languageCode];
+		[self _handleSearchForURL:@"https://www.amazon.ca/s/field-keywords=%@" withQuery:query withLocale:languageCode];
+	else [self _handleSearchForURL:@"https://www.amazon.com/gp/aw/s.html?k=%@" withQuery:query withLocale:languageCode];
 
 	return YES;
 }
@@ -2119,7 +2120,7 @@ NS_ASSUME_NONNULL_BEGIN
 	const float CQDefaultDynamicTypeFontSize = 17.;
 
 	if (chatTranscriptFontSize == CQDefaultDynamicTypeFontSize || [[NSUserDefaults standardUserDefaults] boolForKey:@"CQOverrideDynamicTypeSize"]) {
-		if ([UIDevice currentDevice].isPadModel) {
+		if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular) {
 			if (!chatTranscriptFontSizeString.length) {
 				chatTranscriptFontSize = 14; // default
 			} else if ([chatTranscriptFontSizeString isEqualToString:@"smallest"])

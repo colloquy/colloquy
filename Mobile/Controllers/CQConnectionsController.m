@@ -1156,6 +1156,7 @@ CQBouncerConnectionDelegate>
 
 - (void) _didDisconnect:(NSNotification *) notification {
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
+	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
 
 	MVChatConnection *connection = notification.object;
 	[connection removePersistentInformationObjectForKey:@"tryBouncerFirst"];

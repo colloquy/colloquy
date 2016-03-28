@@ -762,7 +762,8 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 				else [_pendingMonitorList addObject:[rule nickname]];
 			}
 			else if( [self.supportedFeatures containsObject:MVChatConnectionWatchFeature] ) [self sendRawMessageWithFormat:@"WATCH +%@", [rule nickname]];
-			else [self sendRawMessageWithFormat:@"ISON %@", [rule nickname]];
+			[self sendRawMessageWithFormat:@"ISON %@", [rule nickname]];
+			_isonSentCount++;
 		}
 	} else {
 		@synchronized( _knownUsers ) {
@@ -779,12 +780,17 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	if( [self isConnected] && [rule nickname] && ! [rule nicknameIsRegularExpression] ) {
 		if( [self.supportedFeatures containsObject:MVChatConnectionMonitorFeature] )
 			[self sendRawMessageWithFormat:@"MONITOR - %@", [rule nickname]];
-		if( [self.supportedFeatures containsObject:MVChatConnectionWatchFeature] )
+		else if( [self.supportedFeatures containsObject:MVChatConnectionWatchFeature] )
 			[self sendRawMessageWithFormat:@"WATCH -%@", [rule nickname]];
 	}
 
 	if( _monitorListFull ) {
 		NSString *nicknameToMonitor = _pendingMonitorList.firstObject;
+		if( !nicknameToMonitor ) {
+			_monitorListFull = NO;
+			return;
+		}
+
 		[_pendingMonitorList removeObjectAtIndex:0];
 
 		MVChatUserWatchRule *watchRule = [[MVChatUserWatchRule alloc] init];
@@ -795,7 +801,6 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		[self addChatUserWatchRule:watchRule];
 
 		if( _pendingMonitorList.count == 0 ) {
-			_monitorListFull = NO;
 			_pendingMonitorList = nil;
 		}
 	}

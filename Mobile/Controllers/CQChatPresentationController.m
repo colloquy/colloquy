@@ -201,9 +201,7 @@ NS_ASSUME_NONNULL_BEGIN
 	CGFloat statusBarHeight = fmin(statusBarFrame.size.height, statusBarFrame.size.width);
 	frame.size.height += statusBarHeight;
 	_toolbar.frame = frame;
-#endif
 
-#if !SYSTEM(TV)
 	if (UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation))
 #endif
 		_topChatViewController.scrollView.contentInset = UIEdgeInsetsMake(CGRectGetHeight(_toolbar.frame), 0., 0., 0.);

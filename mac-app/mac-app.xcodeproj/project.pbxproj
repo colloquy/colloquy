@@ -20,6 +20,9 @@
 		C2BEAC591C5CF9A700B1C78E /* UserListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2BEAC571C5CF9A700B1C78E /* UserListViewController.xib */; };
 		C2BEAC5C1C5CFFE400B1C78E /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BEAC5A1C5CFFE400B1C78E /* ChatViewController.swift */; };
 		C2BEAC5D1C5CFFE400B1C78E /* ChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2BEAC5B1C5CFFE400B1C78E /* ChatViewController.xib */; };
+		C2D9D5BE1C6F744100498F28 /* ColloquyCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2D9D5BD1C6F744100498F28 /* ColloquyCore.framework */; };
+		C2D9D5BF1C6F74BE00498F28 /* ColloquyCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C2D9D5BD1C6F744100498F28 /* ColloquyCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2E4C9DB1C554376007A4FA5 /* ChatCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C2E4C9D21C55433B007A4FA5 /* ChatCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +50,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				55AD12281C596704009F258C /* ChatCore.framework in Embed Frameworks */,
+				C2D9D5BF1C6F74BE00498F28 /* ColloquyCore.framework in Embed Frameworks */,
+				C2E4C9DB1C554376007A4FA5 /* ChatCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -68,6 +73,8 @@
 		C2BEAC571C5CF9A700B1C78E /* UserListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserListViewController.xib; sourceTree = "<group>"; };
 		C2BEAC5A1C5CFFE400B1C78E /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		C2BEAC5B1C5CFFE400B1C78E /* ChatViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatViewController.xib; sourceTree = "<group>"; };
+		C2D9D5BD1C6F744100498F28 /* ColloquyCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ColloquyCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C2E4C9D21C55433B007A4FA5 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +83,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55AD12271C596704009F258C /* ChatCore.framework in Frameworks */,
+				C2D9D5BE1C6F744100498F28 /* ColloquyCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,18 +101,18 @@
 		C265DFB61C55254A00140D24 = {
 			isa = PBXGroup;
 			children = (
+				C2E4C9671C55373C007A4FA5 /* _dependencies */,
+				C265DFC01C55254B00140D24 /* _products */,
 				C265DFC11C55254B00140D24 /* mac-app */,
-				C2E4C9671C55373C007A4FA5 /* Dependencies */,
-				C265DFC01C55254B00140D24 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		C265DFC01C55254B00140D24 /* Products */ = {
+		C265DFC01C55254B00140D24 /* _products */ = {
 			isa = PBXGroup;
 			children = (
 				C265DFBF1C55254B00140D24 /* Colloquy3.app */,
 			);
-			name = Products;
+			name = _products;
 			sourceTree = "<group>";
 		};
 		C265DFC11C55254B00140D24 /* mac-app */ = {
@@ -134,12 +142,14 @@
 			path = "chat-window";
 			sourceTree = "<group>";
 		};
-		C2E4C9671C55373C007A4FA5 /* Dependencies */ = {
+		C2E4C9671C55373C007A4FA5 /* _dependencies */ = {
 			isa = PBXGroup;
 			children = (
 				55AD12211C5966E4009F258C /* chat-core.xcodeproj */,
+				C2E4C9D21C55433B007A4FA5 /* ChatCore.framework */,
+				C2D9D5BD1C6F744100498F28 /* ColloquyCore.framework */,
 			);
-			name = Dependencies;
+			name = _dependencies;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -188,7 +198,7 @@
 				Base,
 			);
 			mainGroup = C265DFB61C55254A00140D24;
-			productRefGroup = C265DFC01C55254B00140D24 /* Products */;
+			productRefGroup = C265DFC01C55254B00140D24 /* _products */;
 			projectDirPath = "";
 			projectReferences = (
 				{

@@ -76,7 +76,7 @@
 		55AD122B1C596747009F258C /* RunOnMainThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunOnMainThread.h; sourceTree = "<group>"; };
 		C2E4C9731C5538E1007A4FA5 /* ChatCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2E4C9761C5538E1007A4FA5 /* ChatCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatCore.h; sourceTree = "<group>"; };
-		C2E4C9781C5538E1007A4FA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C2E4C9781C5538E1007A4FA5 /* ChatCore-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ChatCore-Info.plist"; sourceTree = "<group>"; };
 		C2E4C98F1C55425A007A4FA5 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
 		C2E4C9901C55425A007A4FA5 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
 		C2E4C9931C55425A007A4FA5 /* InterThreadMessaging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InterThreadMessaging.h; sourceTree = "<group>"; };
@@ -155,17 +155,17 @@
 		C2E4C9691C5538E1007A4FA5 = {
 			isa = PBXGroup;
 			children = (
+				C2E4C9741C5538E1007A4FA5 /* _products */,
 				C2E4C9751C5538E1007A4FA5 /* chat-core */,
-				C2E4C9741C5538E1007A4FA5 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		C2E4C9741C5538E1007A4FA5 /* Products */ = {
+		C2E4C9741C5538E1007A4FA5 /* _products */ = {
 			isa = PBXGroup;
 			children = (
 				C2E4C9731C5538E1007A4FA5 /* ChatCore.framework */,
 			);
-			name = Products;
+			name = _products;
 			sourceTree = "<group>";
 		};
 		C2E4C9751C5538E1007A4FA5 /* chat-core */ = {
@@ -175,7 +175,7 @@
 				C2E4C9FB1C5553B3007A4FA5 /* Additions (old location) */,
 				C2E4C9761C5538E1007A4FA5 /* ChatCore.h */,
 				C2E4CA431C555D8C007A4FA5 /* ChatCore.pch */,
-				C2E4C9781C5538E1007A4FA5 /* Info.plist */,
+				C2E4C9781C5538E1007A4FA5 /* ChatCore-Info.plist */,
 			);
 			path = "chat-core";
 			sourceTree = "<group>";
@@ -372,7 +372,7 @@
 				en,
 			);
 			mainGroup = C2E4C9691C5538E1007A4FA5;
-			productRefGroup = C2E4C9741C5538E1007A4FA5 /* Products */;
+			productRefGroup = C2E4C9741C5538E1007A4FA5 /* _products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -535,7 +535,7 @@
 					"ENABLE_CHAT_CENTER=1",
 					"AUTO_PORT_MAPPING=0",
 				);
-				INFOPLIST_FILE = "chat-core/Info.plist";
+				INFOPLIST_FILE = "chat-core/ChatCore-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.chat-core";
@@ -566,7 +566,7 @@
 					"ENABLE_CHAT_CENTER=1",
 					"AUTO_PORT_MAPPING=0",
 				);
-				INFOPLIST_FILE = "chat-core/Info.plist";
+				INFOPLIST_FILE = "chat-core/ChatCore-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.chat-core";

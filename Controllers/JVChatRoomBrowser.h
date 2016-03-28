@@ -22,6 +22,8 @@
 	NSMutableDictionary *_roomResults;
 	NSMutableArray *_roomOrder;
 	NSString *_currentFilter;
+	BOOL _ignoreFontColors;
+	BOOL _ignoreFontTraits;
 }
 + (instancetype) chatRoomBrowserForConnection:(MVChatConnection *) connection;
 
