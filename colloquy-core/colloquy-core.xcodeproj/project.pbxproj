@@ -7,15 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		559110271CA99FDB00258B5F /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 559110241CA99FBB00258B5F /* ChatCore.framework */; };
 		C26B5CCF1C67D223007D209E /* ColloquyCore.h in Headers */ = {isa = PBXBuildFile; fileRef = C26B5CCE1C67D223007D209E /* ColloquyCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C2D9D5BC1C6F6CBE00498F28 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2D9D5BB1C6F6CA300498F28 /* ChatCore.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		559110231CA99FBB00258B5F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5591101F1CA99FBB00258B5F /* chat-core.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C2E4C9731C5538E1007A4FA5;
+			remoteInfo = "chat-core";
+		};
+		559110251CA99FD000258B5F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5591101F1CA99FBB00258B5F /* chat-core.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C2E4C9721C5538E1007A4FA5;
+			remoteInfo = "chat-core";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		5591101F1CA99FBB00258B5F /* chat-core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "chat-core.xcodeproj"; path = "/Users/cwbetts/makestuff/colloquy-3/mac-app/../chat-core/chat-core.xcodeproj"; sourceTree = "<absolute>"; };
 		C26B5CCB1C67D223007D209E /* ColloquyCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ColloquyCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C26B5CCE1C67D223007D209E /* ColloquyCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColloquyCore.h; sourceTree = "<group>"; };
 		C26B5CD01C67D223007D209E /* ColloquyCore-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ColloquyCore-Info.plist"; sourceTree = "<group>"; };
-		C2D9D5BB1C6F6CA300498F28 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -23,13 +40,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C2D9D5BC1C6F6CBE00498F28 /* ChatCore.framework in Frameworks */,
+				559110271CA99FDB00258B5F /* ChatCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		559110201CA99FBB00258B5F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				559110241CA99FBB00258B5F /* ChatCore.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		C26B5CC11C67D223007D209E = {
 			isa = PBXGroup;
 			children = (
@@ -59,7 +84,7 @@
 		C2D9D5BA1C6F6C9000498F28 /* _dependencies */ = {
 			isa = PBXGroup;
 			children = (
-				C2D9D5BB1C6F6CA300498F28 /* ChatCore.framework */,
+				5591101F1CA99FBB00258B5F /* chat-core.xcodeproj */,
 			);
 			name = _dependencies;
 			sourceTree = "<group>";
@@ -90,6 +115,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				559110261CA99FD000258B5F /* PBXTargetDependency */,
 			);
 			name = "colloquy-core";
 			productName = "colloquy-core";
@@ -121,12 +147,28 @@
 			mainGroup = C26B5CC11C67D223007D209E;
 			productRefGroup = C26B5CCC1C67D223007D209E /* _products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 559110201CA99FBB00258B5F /* Products */;
+					ProjectRef = 5591101F1CA99FBB00258B5F /* chat-core.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				C26B5CCA1C67D223007D209E /* colloquy-core */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		559110241CA99FBB00258B5F /* ChatCore.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ChatCore.framework;
+			remoteRef = 559110231CA99FBB00258B5F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		C26B5CC91C67D223007D209E /* Resources */ = {
@@ -147,6 +189,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		559110261CA99FD000258B5F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "chat-core";
+			targetProxy = 559110251CA99FD000258B5F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		C26B5CDD1C67D223007D209E /* Debug */ = {

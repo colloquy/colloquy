@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5591101D1CA99F7200258B5F /* ColloquyCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5591101A1CA99F5000258B5F /* ColloquyCore.framework */; };
+		5591101E1CA99F7C00258B5F /* ColloquyCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5591101A1CA99F5000258B5F /* ColloquyCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		55AD12271C596704009F258C /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55AD12261C5966E4009F258C /* ChatCore.framework */; };
 		55AD12281C596704009F258C /* ChatCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 55AD12261C5966E4009F258C /* ChatCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C21956BB1C5C1E2D0072D2F7 /* ChatListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21956B91C5C1E2D0072D2F7 /* ChatListViewController.swift */; };
@@ -20,12 +22,23 @@
 		C2BEAC591C5CF9A700B1C78E /* UserListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2BEAC571C5CF9A700B1C78E /* UserListViewController.xib */; };
 		C2BEAC5C1C5CFFE400B1C78E /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BEAC5A1C5CFFE400B1C78E /* ChatViewController.swift */; };
 		C2BEAC5D1C5CFFE400B1C78E /* ChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C2BEAC5B1C5CFFE400B1C78E /* ChatViewController.xib */; };
-		C2D9D5BE1C6F744100498F28 /* ColloquyCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2D9D5BD1C6F744100498F28 /* ColloquyCore.framework */; };
-		C2D9D5BF1C6F74BE00498F28 /* ColloquyCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C2D9D5BD1C6F744100498F28 /* ColloquyCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2E4C9DB1C554376007A4FA5 /* ChatCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C2E4C9D21C55433B007A4FA5 /* ChatCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		559110191CA99F5000258B5F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 559110151CA99F4F00258B5F /* colloquy-core.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C26B5CCB1C67D223007D209E;
+			remoteInfo = "colloquy-core";
+		};
+		5591101B1CA99F6B00258B5F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 559110151CA99F4F00258B5F /* colloquy-core.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C26B5CCA1C67D223007D209E;
+			remoteInfo = "colloquy-core";
+		};
 		55AD12251C5966E4009F258C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 55AD12211C5966E4009F258C /* chat-core.xcodeproj */;
@@ -49,9 +62,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				5591101E1CA99F7C00258B5F /* ColloquyCore.framework in Embed Frameworks */,
 				55AD12281C596704009F258C /* ChatCore.framework in Embed Frameworks */,
-				C2D9D5BF1C6F74BE00498F28 /* ColloquyCore.framework in Embed Frameworks */,
-				C2E4C9DB1C554376007A4FA5 /* ChatCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -59,6 +71,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		559110151CA99F4F00258B5F /* colloquy-core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "colloquy-core.xcodeproj"; path = "../colloquy-core/colloquy-core.xcodeproj"; sourceTree = "<group>"; };
 		55AD12211C5966E4009F258C /* chat-core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "chat-core.xcodeproj"; path = "../chat-core/chat-core.xcodeproj"; sourceTree = "<group>"; };
 		C21956B91C5C1E2D0072D2F7 /* ChatListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatListViewController.swift; sourceTree = "<group>"; };
 		C21956BA1C5C1E2D0072D2F7 /* ChatListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatListViewController.xib; sourceTree = "<group>"; };
@@ -73,8 +86,6 @@
 		C2BEAC571C5CF9A700B1C78E /* UserListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserListViewController.xib; sourceTree = "<group>"; };
 		C2BEAC5A1C5CFFE400B1C78E /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		C2BEAC5B1C5CFFE400B1C78E /* ChatViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatViewController.xib; sourceTree = "<group>"; };
-		C2D9D5BD1C6F744100498F28 /* ColloquyCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ColloquyCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C2E4C9D21C55433B007A4FA5 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,14 +93,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5591101D1CA99F7200258B5F /* ColloquyCore.framework in Frameworks */,
 				55AD12271C596704009F258C /* ChatCore.framework in Frameworks */,
-				C2D9D5BE1C6F744100498F28 /* ColloquyCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		559110161CA99F4F00258B5F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5591101A1CA99F5000258B5F /* ColloquyCore.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		55AD12221C5966E4009F258C /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -145,9 +164,8 @@
 		C2E4C9671C55373C007A4FA5 /* _dependencies */ = {
 			isa = PBXGroup;
 			children = (
+				559110151CA99F4F00258B5F /* colloquy-core.xcodeproj */,
 				55AD12211C5966E4009F258C /* chat-core.xcodeproj */,
-				C2E4C9D21C55433B007A4FA5 /* ChatCore.framework */,
-				C2D9D5BD1C6F744100498F28 /* ColloquyCore.framework */,
 			);
 			name = _dependencies;
 			sourceTree = "<group>";
@@ -167,6 +185,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				5591101C1CA99F6B00258B5F /* PBXTargetDependency */,
 				55AD122A1C596704009F258C /* PBXTargetDependency */,
 			);
 			name = "mac-app";
@@ -205,6 +224,10 @@
 					ProductGroup = 55AD12221C5966E4009F258C /* Products */;
 					ProjectRef = 55AD12211C5966E4009F258C /* chat-core.xcodeproj */;
 				},
+				{
+					ProductGroup = 559110161CA99F4F00258B5F /* Products */;
+					ProjectRef = 559110151CA99F4F00258B5F /* colloquy-core.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -214,6 +237,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		5591101A1CA99F5000258B5F /* ColloquyCore.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ColloquyCore.framework;
+			remoteRef = 559110191CA99F5000258B5F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		55AD12261C5966E4009F258C /* ChatCore.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -255,6 +285,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		5591101C1CA99F6B00258B5F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "colloquy-core";
+			targetProxy = 5591101B1CA99F6B00258B5F /* PBXContainerItemProxy */;
+		};
 		55AD122A1C596704009F258C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "chat-core";
