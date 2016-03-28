@@ -73,7 +73,7 @@
 #pragma mark -
 
 - (void) awakeFromNib {
-	[tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%d", [self format]]];
+	[tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%ld", (long)[self format]]];
 
 	if( [self usesSmartTranscriptCriterion] ) {
 		[textKindButton setMenu:expandedKindMenu];

@@ -105,9 +105,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 				if( [properties count] ) {
 					properties[@"value"] = value;
-					attributes[@((char *) subNode -> name)] = properties;
+					attributes[@((const char *) subNode -> name)] = properties;
 				} else {
-					attributes[@((char *) subNode -> name)] = value;
+					attributes[@((const char *) subNode -> name)] = value;
 				}
 			}
 		} while( ( subNode = subNode -> next ) );

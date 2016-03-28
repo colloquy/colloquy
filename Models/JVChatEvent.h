@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, copy) NSString *messageAsPlainText;
 @property (readonly, copy) NSString *messageAsHTML;
 
-@property (readonly, copy) NSDictionary *attributes;
+@property (readonly, copy) NSDictionary<NSString*,id> *attributes;
 - (instancetype) init NS_DESIGNATED_INITIALIZER;
 
 @end
@@ -48,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readwrite, copy) NSString *messageAsPlainText;
 @property (readwrite, copy) NSString *messageAsHTML;
 
-@property (readwrite, copy) NSDictionary *attributes;
+@property (readwrite, copy) NSDictionary<NSString*,id> *attributes;
 
 @property (readwrite, copy) NSString *eventIdentifier;
 @end
