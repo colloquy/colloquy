@@ -381,9 +381,22 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	NSArray <NSString *> *completions = _completions;
-	NSString *prefixText = [text substringToIndex:_completionRange.location];
-	CGSize textSize = [prefixText sizeWithAttributes:@{ NSFontAttributeName: _inputView.font }];
+	NSString *suffixText = nil;
+	BOOL isFirstWord = NO;
+	if (_completionRange.location == 0) {
+		isFirstWord = YES;
 
+		NSUInteger spaceIndex = [_inputView.text rangeOfString:@" "].length;
+		if (spaceIndex == 0) {
+			suffixText = [_inputView.text copy];
+		} else {
+			suffixText = [[_inputView.text substringToIndex:spaceIndex] copy];
+		}
+	} else {
+		suffixText = [[text substringFromIndex:_completionRange.location] copy];
+	}
+
+	CGSize textSize = [suffixText sizeWithAttributes:@{ NSFontAttributeName: _inputView.font }];
 	CGRect inputFrame = [self convertRect:_inputView.frame toView:self.superview];
 
 retry:
@@ -392,13 +405,19 @@ retry:
 
 	CGRect frame = _completionView.frame;
 	frame.origin = inputFrame.origin;
-	frame.origin.y -= 31.;
-	frame.origin.x += textSize.width + 1.;
+
+	CGRect cursorPosition = [_inputView caretRectForPosition:_inputView.selectedTextRange.start];
+	cursorPosition = [self convertRect:cursorPosition toView:self.superview];
+
+	frame = _completionView.frame;
+	frame.origin = inputFrame.origin;
+	frame.origin.y = CGRectGetMinY(cursorPosition) - 31.;
+	frame.origin.x = CGRectGetMaxX(cursorPosition) - (5. + textSize.width);
 
 	if ((frame.origin.x + _completionView.bounds.size.width) > CGRectGetMaxX(inputFrame))
 		frame.origin.x -= ((frame.origin.x + _completionView.bounds.size.width) - CGRectGetMaxX(inputFrame));
 
-	if (frame.origin.x < inputFrame.origin.x) {
+	if (!isFirstWord && frame.origin.x < inputFrame.origin.x) {
 		if (completions.count > 1) {
 			completions = [completions subarrayWithRange:NSMakeRange(0, (completions.count - 1))];
 			goto retry;
