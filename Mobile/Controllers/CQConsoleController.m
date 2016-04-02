@@ -10,16 +10,16 @@
 
 #import "DDLogMacros.h"
 
-static BOOL hideNICKs;
-static BOOL hideTraffic; // JOIN, PART, KICK, INVITE
-static BOOL hideTOPICs;
-static BOOL hideMessages; // PRIVMSG, NOTICE
-static BOOL hideMODEs;
-static BOOL hideNumerics; // includes IRCv3 commands such as CAP and AUTHENTICATE
-static BOOL hideUnknown; // WALLOP, OLINEs, etc
-static BOOL hideCTCPs;
-static BOOL hidePINGs;
-static BOOL hideSocketInformation;
+static BOOL showNICKs;
+static BOOL showTraffic; // JOIN, PART, KICK, INVITE
+static BOOL showTOPICs;
+static BOOL showMessages; // PRIVMSG, NOTICE
+static BOOL showMODEs;
+static BOOL showNumerics; // includes IRCv3 commands such as CAP and AUTHENTICATE
+static BOOL showUnknown; // WALLOP, OLINEs, etc
+static BOOL showCTCPs;
+static BOOL showPINGs;
+static BOOL showSocketInformation;
 static BOOL verbose;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -44,16 +44,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (void) userDefaultsChanged {
 	[super userDefaultsChanged];
 
-	hideNICKs = defaultNamed(@"Nick");
-	hideTraffic = defaultNamed(@"Traffic");
-	hideTOPICs = defaultNamed(@"Topic");
-	hideMessages = defaultNamed(@"Messages");
-	hideMODEs = defaultNamed(@"Mode");
-	hideNumerics = defaultNamed(@"Numeric");
-	hideCTCPs = defaultNamed(@"Unknown");
-	hidePINGs = defaultNamed(@"Ping");
-	hideUnknown = defaultNamed(@"Ctcp");
-	hideSocketInformation = defaultNamed(@"Socket");
+	showNICKs = defaultNamed(@"Nick");
+	showTraffic = defaultNamed(@"Traffic");
+	showTOPICs = defaultNamed(@"Topic");
+	showMessages = defaultNamed(@"Messages");
+	showMODEs = defaultNamed(@"Mode");
+	showNumerics = defaultNamed(@"Numeric");
+	showCTCPs = defaultNamed(@"Unknown");
+	showPINGs = defaultNamed(@"Ping");
+	showUnknown = defaultNamed(@"Ctcp");
+	showSocketInformation = defaultNamed(@"Socket");
 
 	verbose = defaultNamed(@"Verbose");
 }
@@ -193,7 +193,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) delegateLogger:(MVDelegateLogger *) delegateLogger socketTrafficDidOccur:(NSString *) socketTraffic context:(int) context {
-	if (hideSocketInformation)
+	if (!showSocketInformation)
 		return;
 
 	if (context != (int)((__bridge void *)_connection._chatConnection))
@@ -209,23 +209,23 @@ NS_ASSUME_NONNULL_BEGIN
 	if (![operation respondsToSelector:@selector(messageType)])
 		return;
 
-	if (!hideMessages && operation.messageType == CQConsoleMessageTypeMessage)
+	if (!showMessages && operation.messageType == CQConsoleMessageTypeMessage)
 		return;
-	if (!hideTraffic && operation.messageType == CQConsoleMessageTypeTraffic)
+	if (!showTraffic && operation.messageType == CQConsoleMessageTypeTraffic)
 		return;
-	if (!hideNICKs && operation.messageType == CQConsoleMessageTypeNick)
+	if (!showNICKs && operation.messageType == CQConsoleMessageTypeNick)
 		return;
-	if (!hideTOPICs && operation.messageType == CQConsoleMessageTypeTopic)
+	if (!showTOPICs && operation.messageType == CQConsoleMessageTypeTopic)
 		return;
-	if (!hideMODEs && operation.messageType == CQConsoleMessageTypeMode)
+	if (!showMODEs && operation.messageType == CQConsoleMessageTypeMode)
 		return;
-	if (!hideNumerics && operation.messageType == CQConsoleMessageTypeNumeric)
+	if (!showNumerics && operation.messageType == CQConsoleMessageTypeNumeric)
 		return;
-	if (!hideCTCPs && operation.messageType == CQConsoleMessageTypeCTCP)
+	if (!showCTCPs && operation.messageType == CQConsoleMessageTypeCTCP)
 		return;
-	if (!hidePINGs && operation.messageType == CQConsoleMessageTypePing)
+	if (!showPINGs && operation.messageType == CQConsoleMessageTypePing)
 		return;
-	if (!hideUnknown && operation.messageType == CQConsoleMessageTypeUnknown)
+	if (!showUnknown && operation.messageType == CQConsoleMessageTypeUnknown)
 		return;
 
 	if (!_recentMessages)
