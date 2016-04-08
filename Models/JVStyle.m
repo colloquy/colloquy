@@ -249,7 +249,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	const char *string = [xml UTF8String];
 	if( ! string ) return nil;
 
-	xmlDoc *doc = xmlParseMemory( string, strlen( string ) );
+	xmlDoc *doc = xmlParseMemory( string, (int)strlen( string ) );
 	if( ! doc ) return nil;
 
 	NSString *result = [self transformXMLDocument:doc withParameters:parameters];

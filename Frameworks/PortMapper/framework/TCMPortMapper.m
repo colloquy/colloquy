@@ -360,7 +360,7 @@ enum {
 #ifdef USE_OPENSSL
     MD5([dataToHash bytes],[dataToHash length],digest);
 #else
-    CC_MD5([dataToHash bytes], [dataToHash length], digest);
+    CC_MD5([dataToHash bytes], (unsigned int)[dataToHash length], digest);
 #endif
     
     for(i=0;i<16;i++) sprintf(hashstring+i*2,"%02x",digest[i]);

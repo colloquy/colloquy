@@ -1,6 +1,7 @@
 #import "JVChatEvent.h"
 #import "NSAttributedStringMoreAdditions.h"
 #import "NSDateAdditions.h"
+#import "JVChatRoomMember.h"
 
 #import <libxml/tree.h>
 
@@ -128,7 +129,7 @@
 
 			msgStr = [[NSString stringWithFormat:@"<message>%@</message>", msgValue] UTF8String];
 
-			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
+			msgDoc = xmlParseMemory( msgStr, (int)strlen( msgStr ) );
 			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), _doc, 1 );
 			xmlAddChild( root, child );
 			xmlFreeDoc( msgDoc );
@@ -158,7 +159,7 @@
 
 			if( ! msgStr ) msgStr = [[NSString stringWithFormat:@"<%@ />", key] UTF8String];
 
-			msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
+			msgDoc = xmlParseMemory( msgStr, (int)strlen( msgStr ) );
 			child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), _doc, 1 );
 			xmlAddChild( root, child );
 			xmlFreeDoc( msgDoc );

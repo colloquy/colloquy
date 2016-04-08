@@ -100,7 +100,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) setInteger:(NSInteger) value forDOMProperty:(NSString *) property {
 	SEL selector = NSSelectorFromString( [@"set" stringByAppendingString:[property capitalizedString]] );
 	if( [self respondsToSelector:selector] ) {
-		((void(*)(id, SEL, int))objc_msgSend)(self, selector, value);
+		((void(*)(id, SEL, NSInteger))objc_msgSend)(self, selector, value);
 	} else {
 		NSNumber *number = [NSNumber numberWithLong:value];
 		[self setValue:number forKey:property];

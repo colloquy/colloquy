@@ -5,6 +5,7 @@
 #import "JVDetailCell.h"
 #import "JVInspectorController.h"
 #import "JVNotificationController.h"
+#import "MVApplicationController.h"
 #import "MVChatUserAdditions.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"

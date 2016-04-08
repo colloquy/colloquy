@@ -151,7 +151,7 @@
 			const char *sendDesc = [(NSString *)[sender performSelector:@selector( xmlDescriptionWithTagName: ) withObject:@"sender"] UTF8String];
 
 			if( sendDesc ) {
-				xmlDocPtr tempDoc = xmlParseMemory( sendDesc, strlen( sendDesc ) );
+				xmlDocPtr tempDoc = xmlParseMemory( sendDesc, (int)strlen( sendDesc ) );
 				if( ! tempDoc ) return NULL; // somthing bad with the message contents
 
 				child = xmlDocCopyNode( xmlDocGetRootElement( tempDoc ), _doc, 1 );
@@ -173,7 +173,7 @@
 				xmlSetProp( child, (xmlChar *) "buddy", (xmlChar *) [[self senderBuddyIdentifier] UTF8String] );
 		}
 
-		xmlDocPtr msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
+		xmlDocPtr msgDoc = xmlParseMemory( msgStr, (int)strlen( msgStr ) );
 		if( ! msgDoc ) return NULL; // somthing bad with the message contents
 
 		_node = child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), _doc, 1 );

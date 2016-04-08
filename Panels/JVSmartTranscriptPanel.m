@@ -37,7 +37,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 		_rules = [[settings objectForKey:@"rules"] mutableCopy];
 		_title = [[settings objectForKey:@"title"] copy];
-		_operation = [[settings objectForKey:@"operation"] intValue];
+		_operation = [[settings objectForKey:@"operation"] unsignedIntegerValue];
 		_ignoreCase = [[settings objectForKey:@"ignoreCase"] boolValue];
 
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( _messageDisplayed: ) name:JVChatMessageWasProcessedNotification object:nil];
@@ -51,8 +51,8 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 		NSMutableDictionary *settings = [NSMutableDictionary dictionary];
 		[settings setObject:[coder decodeObjectForKey:@"rules"] forKey:@"rules"];
 		[settings setObject:[coder decodeObjectForKey:@"title"] forKey:@"title"];
-		[settings setObject:[NSNumber numberWithBool:[coder decodeBoolForKey:@"ignoreCase"]] forKey:@"ignoreCase"];
-		[settings setObject:[NSNumber numberWithInt:[coder decodeIntForKey:@"operation"]] forKey:@"operation"];
+		[settings setObject:@([coder decodeBoolForKey:@"ignoreCase"]) forKey:@"ignoreCase"];
+		[settings setObject:@([coder decodeIntForKey:@"operation"]) forKey:@"operation"];
 		return [self initWithSettings:settings];
 	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 	return nil;
@@ -62,7 +62,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	if( [coder allowsKeyedCoding] ) {
 		[coder encodeObject:[self rules] forKey:@"rules"];
 		[coder encodeObject:[self title] forKey:@"title"];
-		[coder encodeInt:_operation forKey:@"operation"];
+		[coder encodeObject:@(_operation) forKey:@"operation"];
 		[coder encodeBool:_ignoreCase forKey:@"ignoreCase"];
 	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 }
