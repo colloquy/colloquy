@@ -291,7 +291,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 	const char *string = [[NSString stringWithFormat:@"<root>%@</root>", [fragment stringByStrippingIllegalXMLCharacters]] UTF8String];
 
 	if( string ) {
-		xmlDocPtr tempDoc = xmlParseMemory( string, strlen( string ) );
+		xmlDocPtr tempDoc = xmlParseMemory( string, (int)strlen( string ) );
 		self = [self initWithXHTMLTree:xmlDocGetRootElement( tempDoc ) baseURL:base defaultAttributes:attributes];
 		xmlFreeDoc( tempDoc );
 		return self;
