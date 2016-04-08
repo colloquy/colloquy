@@ -3063,7 +3063,7 @@ parsingFinished: { // make a scope for this
 					// 3. If we have any recent activity saved, request anything from the last timestamp we have saved. Otherwise,
 					// we have to assume everything is new and request everything.
 					if (mostRecentActivity)
-						[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %.3f %@", components[0], [mostRecentActivity timeIntervalSince1970], components[2]];
+						[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %.2f %@", components[0], [mostRecentActivity timeIntervalSince1970], components[2]];
 					else [self sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ 0", [components[0] copy]];
 				}
 			}
