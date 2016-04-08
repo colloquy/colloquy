@@ -260,7 +260,7 @@ Standardablauf:
 
 - (BOOL)applyPortMapping:(TCMPortMapping *)aPortMapping remove:(BOOL)shouldRemove natpmp:(natpmp_t *)aNatPMPt {
     natpmpresp_t response;
-    int r;
+    ssize_t r;
     //int sav_errno;
     struct timeval timeout;
     fd_set fds;
@@ -408,7 +408,7 @@ Standardablauf:
     [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:TCMNATPMPPortMapperDidBeginWorkingNotification object:self];
     natpmp_t natpmp;
     natpmpresp_t response;
-    int r;
+    ssize_t r;
     struct timeval timeout;
     fd_set fds;
     BOOL didFail=NO;
