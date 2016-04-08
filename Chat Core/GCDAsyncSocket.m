@@ -7909,6 +7909,11 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 
 - (BOOL)enableExtendBackgroundIdleMode
 {
+	if (&kCFStreamPropertySocketExtendedBackgroundIdleMode == NULL)
+	{
+		return NO;
+	}
+
 	if (![self createReadAndWriteStream])
 	{
 		// Error occured creating streams (perhaps socket isn't open)
@@ -7918,14 +7923,9 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 	CFStreamStatus readStatus = CFReadStreamGetStatus(readStream);
 	CFStreamStatus writeStatus = CFWriteStreamGetStatus(writeStream);
 
-	if ((readStatus == kCFStreamStatusNotOpen) || (writeStatus == kCFStreamStatusNotOpen))
+	if ((readStatus != kCFStreamStatusNotOpen) || (writeStatus != kCFStreamStatusNotOpen))
 	{
 		LogError(@"Unable to change state for delaying of socket reclaiming in background on opened sockets");
-		return NO;
-	}
-
-	if (&kCFStreamPropertySocketExtendedBackgroundIdleMode == NULL)
-	{
 		return NO;
 	}
 
