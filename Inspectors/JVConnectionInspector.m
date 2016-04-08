@@ -384,7 +384,11 @@
 		KAIgnoreRule *rule = [_ignoreRules objectAtIndex:row];
 		if( [[column identifier] isEqualToString:@"icon"] ) {
 			if( [rule user] && [rule message] ) return [NSImage imageNamed:@"privateChatTab"];
-			else if( [rule user] ) return [NSImage imageFromPDF:@"person"];
+			else if( [rule user] ) {
+				NSImage *image = [[NSImage imageFromPDF:@"person"] copy];
+				image.size = NSMakeSize(14., 14.);
+				return image;
+			}
 			else return [NSImage imageNamed:@"roomTabNewMessage"];
 		} else {
 			if( ! [rule isPermanent] ) return [[NSAttributedString alloc] initWithString:[rule friendlyName] attributes:[NSDictionary dictionaryWithObject:[[NSColor blackColor] colorWithAlphaComponent:0.67] forKey:NSForegroundColorAttributeName]];
