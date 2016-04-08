@@ -26,7 +26,7 @@ UPNP_GetTotalBytesSent(const char * controlURL,
 	struct NameValueParserData pdata;
 	char buffer[4096];
 	int bufsize = 4096;
-	unsigned int r = 0;
+	UNSIGNED_INTEGER r = 0;
 	char * p;
 	simpleUPnPcommand(-1, controlURL, servicetype, "GetTotalBytesSent", 0, buffer, &bufsize);
 	ParseNameValue(buffer, bufsize, &pdata);
@@ -46,7 +46,7 @@ UPNP_GetTotalBytesReceived(const char * controlURL,
 	struct NameValueParserData pdata;
 	char buffer[4096];
 	int bufsize = 4096;
-	unsigned int r = 0;
+	UNSIGNED_INTEGER r = 0;
 	char * p;
 	simpleUPnPcommand(-1, controlURL, servicetype, "GetTotalBytesReceived", 0, buffer, &bufsize);
 	ParseNameValue(buffer, bufsize, &pdata);
@@ -66,7 +66,7 @@ UPNP_GetTotalPacketsSent(const char * controlURL,
 	struct NameValueParserData pdata;
 	char buffer[4096];
 	int bufsize = 4096;
-	unsigned int r = 0;
+	UNSIGNED_INTEGER r = 0;
 	char * p;
 	simpleUPnPcommand(-1, controlURL, servicetype, "GetTotalPacketsSent", 0, buffer, &bufsize);
 	ParseNameValue(buffer, bufsize, &pdata);
@@ -86,7 +86,7 @@ UPNP_GetTotalPacketsReceived(const char * controlURL,
 	struct NameValueParserData pdata;
 	char buffer[4096];
 	int bufsize = 4096;
-	unsigned int r = 0;
+	UNSIGNED_INTEGER r = 0;
 	char * p;
 	simpleUPnPcommand(-1, controlURL, servicetype, "GetTotalPacketsReceived", 0, buffer, &bufsize);
 	ParseNameValue(buffer, bufsize, &pdata);

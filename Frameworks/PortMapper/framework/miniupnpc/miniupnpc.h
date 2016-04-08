@@ -100,7 +100,7 @@ LIBSPEC void FreeUPNPUrls(struct UPNPUrls *);
 /* Reads data from the specified socket. 
  * Returns the number of bytes read if successful, zero if no bytes were 
  * read or if we timed out. Returns negative if there was an error. */
-int ReceiveData(int socket, char * data, int length, int timeout);
+ssize_t ReceiveData(int socket, char * data, int length, int timeout);
 
 #ifdef __cplusplus
 }
