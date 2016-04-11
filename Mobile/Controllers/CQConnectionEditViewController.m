@@ -1,6 +1,5 @@
 #import "CQConnectionEditViewController.h"
 
-#import "CQAlertView.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionAdvancedEditController.h"
 #import "CQConnectionPushEditController.h"
@@ -43,9 +42,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 }
 
 #pragma mark -
-
-@interface CQConnectionEditViewController () <CQActionSheetDelegate, CQAlertViewDelegate>
-@end
 
 @implementation CQConnectionEditViewController {
 	MVChatConnection *_connection;
@@ -556,59 +552,32 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	if (sender.on && ![[CQSettingsController settingsController] doubleForKey:@"CQMultitaskingTimeout"]) {
 		[[CQSettingsController settingsController] setDouble:300 forKey:@"CQMultitaskingTimeout"];
 
-		CQAlertView *alert = [[CQAlertView alloc] init];
+		NSString *title = NSLocalizedString(@"Multitasking Enabled", @"Multitasking enabled alert title");
+		NSString *message = NSLocalizedString(@"Multitasking was disabled for Colloquy, but has been enabled again with a timeout of 5 minutes.", @"Multitasking enabled alert message");
+		UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+		[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:nil]];
 
-		alert.title = NSLocalizedString(@"Multitasking Enabled", @"Multitasking enabled alert title");
-		alert.message = NSLocalizedString(@"Multitasking was disabled for Colloquy, but has been enabled again with a timeout of 5 minutes.", @"Multitasking enabled alert message");
-
-		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
-
-		[alert show];
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 
 	_connection.multitaskingSupported = sender.on;
 }
 
 - (void) deleteConnection:(__nullable id) sender {
+	UIAlertControllerStyle style = UIAlertControllerStyleActionSheet;
+
 	if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular) {
-		CQAlertView *alert = [[CQAlertView alloc] init];
-		alert.delegate = self;
-
-		alert.title = NSLocalizedString(@"Delete Connection", @"Delete Connection alert title");
-
-		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
-		[alert addButtonWithTitle:NSLocalizedString(@"Delete", @"Delete alert button title")];
-
-		[alert show];
-
-		return;
+		style = UIAlertControllerStyleAlert;
 	}
 
-	CQActionSheet *sheet = [[CQActionSheet alloc] init];
-	sheet.delegate = self;
+	UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete Connection", @"Delete Connection alert title") message:@"" preferredStyle:style];
+	[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss button title") style:UIAlertActionStyleCancel handler:nil]];
+	[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"Delete button title") style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+		[[CQConnectionsController defaultController] removeConnection:_connection];
+		[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
+	}]];
 
-	sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Delete Connection", @"Delete Connection button title")];
-	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
-
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
-}
-
-#pragma mark -
-
-- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (buttonIndex == alertView.cancelButtonIndex)
-		return;
-	[[CQConnectionsController defaultController] removeConnection:_connection];
-	[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
-}
-
-#pragma mark -
-
-- (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (buttonIndex == actionSheet.cancelButtonIndex)
-		return;
-	[[CQConnectionsController defaultController] removeConnection:_connection];
-	[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 @end
 

@@ -1,7 +1,6 @@
 #import "CQDirectChatController.h"
 
 #import "CQActivities.h"
-#import "CQAlertView.h"
 #import "CQBookmarkingController.h"
 #import "CQChatOrderingController.h"
 #import "CQChatCreationViewController.h"
@@ -38,9 +37,6 @@
 
 #define InfoActionSheet 1001
 #define URLActionSheet 1003
-
-#define CantSendMessageAlertView 100
-#define BookmarkLogInAlertView 101
 
 typedef NS_ENUM(NSInteger, CQSwipeMeaning) {
 	CQSwipeDisabled,
@@ -86,7 +82,7 @@ static BOOL showingKeyboard;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQDirectChatController () <CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, CQAlertViewDelegate, CQActionSheetDelegate, CQChatInputStyleDelegate>
+@interface CQDirectChatController () <CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, CQActionSheetDelegate, CQChatInputStyleDelegate>
 @property (strong, nullable) UIActivityViewController *activityController;
 @end
 
@@ -140,33 +136,45 @@ NS_ASSUME_NONNULL_BEGIN
 		if ([activeService respondsToSelector:@selector(authorize)]) {
 			[activeService authorize];
 		} else {
-			CQAlertView *alertView = [[CQAlertView alloc] init];
-			alertView.delegate = self;
-			alertView.tag = BookmarkLogInAlertView;
-			alertView.title = [activeService serviceName];
+			UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[activeService serviceName].capitalizedString message:@"" preferredStyle:UIAlertControllerStyleAlert];
+			alertController.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@ due to a server error.", @"Unable to bookmark link server error message"), notification.object, [activeService serviceName]];
 
-			[alertView addTextFieldWithPlaceholder:NSLocalizedString(@"Username or Email", @"Username or Email placeholder") andText:@""];
-			[alertView addSecureTextFieldWithPlaceholder:NSLocalizedString(@"Password", @"Password placeholder")];
+			[alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+				textField.placeholder = NSLocalizedString(@"Username or Email", @"Username or Email placeholder");
+			}];
+			[alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+				textField.secureTextEntry = YES;
+				textField.placeholder = NSLocalizedString(@"Password", @"Password placeholder");
+			}];
 
-			[alertView addButtonWithTitle:NSLocalizedString(@"Log In", @"Log In button")];
-			alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button")];
+			[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+				_showingAlert = NO;
+			}]];
+			[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Log In", @"Log In button") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+				_showingAlert = NO;
+				[[CQBookmarkingController activeService] setUsername:alertController.textFields[0].text password:alertController.textFields[1].text];
+				[[CQBookmarkingController activeService] bookmarkLink:notification.object];
+			}]];
 
-			[alertView associateObject:notification.object forKey:@"link"];
-
-			[alertView show];
+			_showingAlert = YES;
+			[self presentViewController:alertController animated:YES completion:nil];
 		}
 	} else if (error.code == CQBookmarkingErrorServer) {
-		CQAlertView *alertView = [[CQAlertView alloc] init];
-		alertView.title = NSLocalizedString(@"Server Error", @"Server Error");
-		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@ due to a server error.", @"Unable to bookmark link server error message"), notification.object, [activeService serviceName]];
-		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
-		[alertView show];
+		UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+		alertController.title = NSLocalizedString(@"Server Error", @"Server Error");
+		alertController.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@ due to a server error.", @"Unable to bookmark link server error message"), notification.object, [activeService serviceName]];
+
+		[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Okay", @"Okay alert button title") style:UIAlertActionStyleDefault handler:nil]];
+
+		[self presentViewController:alertController animated:YES completion:nil];
 	} else {
-		CQAlertView *alertView = [[CQAlertView alloc] init];
-		alertView.title = NSLocalizedString(@"Unknown Error", @"Unknown Error");
-		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@.", @"Unable to bookmark link message"), notification.object, [activeService serviceName]];
-		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
-		[alertView show];
+		UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+		alertController.title = NSLocalizedString(@"Unknown Error", @"Unknown Error");
+		alertController.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@.", @"Unable to bookmark link message"), notification.object, [activeService serviceName]];
+
+		[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Okay", @"Okay alert button title") style:UIAlertActionStyleDefault handler:nil]];
+
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }
 
@@ -1942,28 +1950,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) willPresentAlertView:(CQAlertView *) alertView {
-	_showingAlert = YES;
-}
-
-- (void) alertView:(CQAlertView *) alertView didDismissWithButtonIndex:(NSInteger) buttonIndex {
-	_showingAlert = NO;
-}
-
-- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (buttonIndex == alertView.cancelButtonIndex)
-		return;
-
-	if (alertView.tag == ReconnectAlertTag) 
-		[self.connection connectAppropriately];
-	else if (alertView.tag == BookmarkLogInAlertView) {
-		[[CQBookmarkingController activeService] setUsername:[alertView textFieldAtIndex:0].text password:[alertView textFieldAtIndex:1].text];
-		[[CQBookmarkingController activeService] bookmarkLink:[alertView associatedObjectForKey:@"link"]];
-	}
-}
-
-#pragma mark -
-
 - (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
@@ -2083,28 +2069,27 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
-	CQAlertView *alert = [[CQAlertView alloc] init];
-	alert.delegate = self;
-	alert.tag = CantSendMessageAlertView;
+	UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
 
-	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+	[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:nil]];
 
-	if (command) alert.title = NSLocalizedString(@"Can't Send Command", @"Can't send command alert title");
-	else alert.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
+	if (command) alertController.title = NSLocalizedString(@"Can't Send Command", @"Can't send command alert title");
+	else alertController.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
 
 	if (self.connection.status == MVChatConnectionConnectingStatus) {
-		alert.message = NSLocalizedString(@"You are currently connecting,\ntry sending again soon.", @"Can't send message to user because server is connecting alert message");
+		alertController.message = NSLocalizedString(@"You are currently connecting,\ntry sending again soon.", @"Can't send message to user because server is connecting alert message");
 	} else if (!self.connection.connected) {
-		alert.tag = ReconnectAlertTag;
-		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to user because server is disconnected alert message");
-		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
+		alertController.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to user because server is disconnected alert message");
+		[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Connect", @"Connect button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			[self.connection connectAppropriately];
+		}]];
 	} else if (self.user.status != MVChatUserAvailableStatus && self.user.status != MVChatUserAwayStatus) {
-		alert.message = NSLocalizedString(@"The user is not connected.", @"Can't send message to user because they are disconnected alert message");
+		alertController.message = NSLocalizedString(@"The user is not connected.", @"Can't send message to user because they are disconnected alert message");
 	} else {
 		return;
 	}
 
-	[alert show];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void) _userDefaultsChanged {

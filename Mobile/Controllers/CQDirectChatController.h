@@ -3,9 +3,6 @@
 
 #import "MVChatString.h"
 
-#define ReconnectAlertTag 1
-#define RejoinRoomAlertTag 2
-
 #define ToolbarTitleButtonTag 1
 #define ToolbarLastButtonTag 2
 
