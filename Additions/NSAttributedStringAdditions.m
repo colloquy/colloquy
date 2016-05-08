@@ -696,9 +696,6 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
 
-	if( [options[@"NullTerminatedReturn"] boolValue] )
-		[ret appendBytes:"\0" length:1];
-
 	return ret;
 }
 
@@ -872,9 +869,6 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
 
-	if( [[options objectForKey:@"NullTerminatedReturn"] boolValue] )
-		[ret appendBytes:"\0" length:1];
-
 	return ret;
 }
 #endif
@@ -896,9 +890,6 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 	NSData *data = [[self string] dataUsingEncoding:encoding allowLossyConversion:YES];
 	if( data ) [ret appendData:data];
-
-	if( [options[@"NullTerminatedReturn"] boolValue] )
-		[ret appendBytes:"\0" length:1];
 
 	return ret;
 }
