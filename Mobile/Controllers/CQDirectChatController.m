@@ -1007,7 +1007,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) _handleURLCommandWithArguments:(MVChatString *) arguments {
-	NSScanner *scanner = [NSScanner scannerWithString:arguments.string];
+	NSScanner *scanner = [NSScanner scannerWithString:MVChatStringAsString(arguments)];
 	NSString *urlString = nil;
 
 	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&urlString];
@@ -1015,7 +1015,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!urlString.length)
 		return NO;
 
-	if ([arguments.string isCaseInsensitiveEqualToString:@"last"])
+	if ([MVChatStringAsString(arguments) isCaseInsensitiveEqualToString:@"last"])
 		urlString = @"about:last";
 
 	NSURL *url = (urlString ? [NSURL URLWithString:urlString] : nil);
@@ -1059,7 +1059,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL) handleAnickCommandWithArguments:(MVChatString *) arguments {
 	for (MVChatConnection *connection in [CQConnectionsController defaultController].connectedConnections)
-		connection.nickname = arguments.string;
+		connection.nickname = MVChatStringAsString(arguments);
 	return YES;
 }
 
@@ -1086,7 +1086,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleJoinCommandWithArguments:(MVChatString *__nullable) arguments {
-	if (![arguments.string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
+	if (![MVChatStringAsString(arguments) stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
 		[self _showChatCreationViewController];
 
 		return YES;
@@ -1094,7 +1094,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[self.connection connectAppropriately];
 
-	NSArray <NSString *> *rooms = [arguments.string componentsSeparatedByString:@","];
+	NSArray <NSString *> *rooms = [MVChatStringAsString(arguments) componentsSeparatedByString:@","];
 	if (((NSString *)rooms.firstObject).length)
 		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:rooms.firstObject andConnection:self.connection];
 
@@ -1113,7 +1113,7 @@ NS_ASSUME_NONNULL_BEGIN
 		return YES;
 	}
 
-	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments.string];
+	NSScanner *argumentsScanner = [NSScanner scannerWithString:MVChatStringAsString(arguments)];
 	[argumentsScanner setCharactersToBeSkipped:nil];
 
 	NSString *targetName = nil;
@@ -1135,7 +1135,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleNoticeCommandWithArguments:(MVChatString *) arguments {
-	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments.string];
+	NSScanner *argumentsScanner = [NSScanner scannerWithString:MVChatStringAsString(arguments)];
 	argumentsScanner.charactersToBeSkipped = nil;
 
 	NSString *target = nil;
@@ -1165,7 +1165,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleOnoticeCommandWithArguments:(MVChatString *) arguments {
-	if ([arguments.string hasPrefix:@"@"])
+	if ([MVChatStringAsString(arguments) hasPrefix:@"@"])
 		return [self handleNoticeCommandWithArguments:arguments];
 
 	NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"@"];
@@ -1188,7 +1188,7 @@ NS_ASSUME_NONNULL_BEGIN
 	MPMusicPlayerController *musicController = [MPMusicPlayerController systemMusicPlayer];
 	MPMediaItem *nowPlayingItem = musicController.nowPlayingItem;
 
-	NSString *argumentsString = arguments.string;
+	NSString *argumentsString = MVChatStringAsString(arguments);
 	if ([argumentsString isCaseInsensitiveEqualToString:@"next"] || [argumentsString isCaseInsensitiveEqualToString:@"skip"] || [argumentsString isCaseInsensitiveEqualToString:@"forward"])
 		[musicController skipToNextItem];
 	else if ([argumentsString isCaseInsensitiveEqualToString:@"previous"] || [argumentsString isCaseInsensitiveEqualToString:@"back"])
@@ -1252,7 +1252,7 @@ NS_ASSUME_NONNULL_BEGIN
 	creationViewController.roomTarget = YES;
 	creationViewController.selectedConnection = self.connection;
 
-	[creationViewController showRoomListFilteredWithSearchString:arguments.string];
+	[creationViewController showRoomListFilteredWithSearchString:MVChatStringAsString(arguments)];
 
 	[self _forceResignKeyboard];
 
@@ -1282,8 +1282,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 	NSString *query = nil;
 	if (arguments.length >= (argumentsScanner.scanLocation + 1))
-		query = [arguments.string substringWithRange:NSMakeRange(argumentsScanner.scanLocation + 1, (arguments.length - argumentsScanner.scanLocation - 1))];
-	else query = arguments.string;
+		query = [MVChatStringAsString(arguments) substringWithRange:NSMakeRange(argumentsScanner.scanLocation + 1, (arguments.length - argumentsScanner.scanLocation - 1))];
+	else query = MVChatStringAsString(arguments);
 
 	[results addObject:languageCode];
 	[results addObject:query];
@@ -1385,7 +1385,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL) handleSearchCommandWithArguments:(MVChatString *) arguments {
 	NSString *urlString = @"http://searchirc.com/search.php?F=partial&I=%@&T=both&N=all&M=min&C=5&PER=20";
 
-	[self _handleSearchForURL:urlString withQuery:arguments.string];
+	[self _handleSearchForURL:urlString withQuery:MVChatStringAsString(arguments)];
 
 	return YES;
 }
@@ -1477,7 +1477,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL) handleWhoisCommandWithArguments:(MVChatString *) arguments {
 	if (arguments.length) {
-		NSString *nick = [arguments.string componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]][0];
+		NSString *nick = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]][0];
 		[self _showUserInfoControllerForUserNamed:nick];
 	} else if (self.user) {
 		[self _showUserInfoControllerForUser:self.user];
@@ -1514,7 +1514,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL) handleIgnoreCommandWithArguments:(MVChatString *) arguments {
 	KAIgnoreRule *ignoreRule = nil;
 
-	NSString *argumentsString = arguments.string;
+	NSString *argumentsString = MVChatStringAsString(arguments);
 	if (argumentsString.isValidIRCMask)
 		ignoreRule = [KAIgnoreRule ruleForUser:nil mask:argumentsString message:nil inRooms:nil isPermanent:YES friendlyName:nil];
 	else ignoreRule = [KAIgnoreRule ruleForUser:argumentsString mask:nil message:nil inRooms:nil isPermanent:YES friendlyName:nil];
@@ -1525,7 +1525,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleUnignoreCommandWithArguments:(MVChatString *) arguments {
-	[self.connection.ignoreController removeIgnoreRuleFromString:arguments.string];
+	[self.connection.ignoreController removeIgnoreRuleFromString:MVChatStringAsString(arguments)];
 
 	return YES;
 }
@@ -1790,7 +1790,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL ) _sendLineOfText:(MVChatString *) text {
-	NSString *argumentString = text.string;
+	NSString *argumentString = MVChatStringAsString(arguments);
 	if ([argumentString hasPrefix:@"/"] && ![argumentString hasPrefix:@"//"] && argumentString.length > 1) {
 		static NSSet *commandsNotRequiringConnection;
 		if (!commandsNotRequiringConnection)
@@ -2240,7 +2240,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) _awayStatusChanged:(NSNotification *) notification {
 	if (self.connection.awayStatusMessage.length) {
 		NSString *eventMessageFormat = [NSLocalizedString(@"You have set yourself as away with the message \"%@\".", "Marked as away event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, self.connection.awayStatusMessage.string] withIdentifier:@"awaySet"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, MVChatStringAsString(self.connection.awayStatusMessage)] withIdentifier:@"awaySet"];
 	} else {
 		[self addEventMessage:NSLocalizedString(@"You have returned from being away.", "Returned from being away event message") withIdentifier:@"awayRemoved"];
 	}
