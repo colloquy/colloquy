@@ -25,7 +25,7 @@ static CQShowRoomTopic showRoomTopic;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQDirectChatController (CQDirectChatControllerPrivate) <CQActionSheetDelegate, CQChatInputBarDelegate>
+@interface CQDirectChatController (CQDirectChatControllerPrivate) <CQActionSheetDelegate, CQChatInputBarDelegate, UIPopoverPresentationControllerDelegate>
 - (void) _addPendingComponentsAnimated:(BOOL) animated;
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _didDisconnect:(NSNotification *) notification;
@@ -224,6 +224,7 @@ NS_ASSUME_NONNULL_BEGIN
 		_currentUserListNavigationController.modalPresentationStyle = UIModalPresentationPopover;
 		_currentUserListNavigationController.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
 		_currentUserListNavigationController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+		_currentUserListNavigationController.popoverPresentationController.delegate = self;
 	}
 
 	[self presentViewController:_currentUserListNavigationController animated:YES completion:NULL];
@@ -313,6 +314,12 @@ NS_ASSUME_NONNULL_BEGIN
 		[completions addObjectsFromArray:[super chatInputBar:inputBar completionsForWordWithPrefix:word inRange:range]];
 
 	return completions;
+}
+
+#pragma mark -
+
+- (void) popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *) popoverPresentationController  {
+	_currentUserListNavigationController = nil;
 }
 
 #pragma mark -
