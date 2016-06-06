@@ -82,13 +82,13 @@ NS_ASSUME_NONNULL_BEGIN
 	_type = type;
 }
 
-- (NSString *) password {
+- (NSString *__nullable) password {
 	if (!_password && _server && _username)
 		_password = [[[CQKeychain standardKeychain] passwordForServer:_identifier area:@"Bouncer"] copy];
 	return _password;
 }
 
-- (void) setPassword:(NSString *) password {
+- (void) setPassword:(NSString *__nullable) password {
 	if (_password != password) {
 		_password = [password copy];
 	}
