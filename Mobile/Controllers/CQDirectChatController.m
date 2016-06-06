@@ -1790,7 +1790,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL ) _sendLineOfText:(MVChatString *) text {
-	NSString *argumentString = MVChatStringAsString(arguments);
+	NSString *argumentString = MVChatStringAsString(text);
 	if ([argumentString hasPrefix:@"/"] && ![argumentString hasPrefix:@"//"] && argumentString.length > 1) {
 		static NSSet *commandsNotRequiringConnection;
 		if (!commandsNotRequiringConnection)
