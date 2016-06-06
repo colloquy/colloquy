@@ -1750,6 +1750,11 @@ NS_ASSUME_NONNULL_BEGIN
 	if (![self isViewLoaded])
 		return;
 
+	if (&UIKeyboardIsLocalUserInfoKey != NULL) {
+		if (![notification.userInfo[UIKeyboardIsLocalUserInfoKey] boolValue])
+			return;
+	}
+
 	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 
