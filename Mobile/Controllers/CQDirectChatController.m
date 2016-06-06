@@ -1722,6 +1722,11 @@ NS_ASSUME_NONNULL_BEGIN
 	if (![self isViewLoaded] || !self.view.window)
 		return;
 
+	if (&UIKeyboardIsLocalUserInfoKey != NULL) {
+		if (![notification.userInfo[UIKeyboardIsLocalUserInfoKey] boolValue])
+			return;
+	}
+
 	CGRect keyboardRect = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	keyboardRect = [self.view.window convertRect:keyboardRect toView:self.view];
 

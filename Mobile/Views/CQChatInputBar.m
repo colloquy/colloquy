@@ -492,6 +492,11 @@ retry:
 #pragma mark -
 
 - (void) keyboardWillShow:(NSNotification *) notification {
+	if (&UIKeyboardIsLocalUserInfoKey != NULL) {
+		if (![notification.userInfo[UIKeyboardIsLocalUserInfoKey] boolValue])
+			return;
+	}
+
 	_responderState = CQChatInputBarResponder;
 
 	_animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
