@@ -49,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 	UIImageView *_overlayBackgroundViewPiece;
 	UIView *_topLineView;
 	NSMutableDictionary *_accessoryImages;
+	NSMutableDictionary *_accessibilityLabels;
 	CQChatInputBarResponderState _responderState;
 }
 
@@ -140,6 +141,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[self addSubview:_accessoryButton];
 
 	_accessoryImages = [[NSMutableDictionary alloc] init];
+	_accessibilityLabels = [[NSMutableDictionary alloc] init];
 }
 
 #pragma mark -
@@ -195,6 +197,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL) canPerformAction:(SEL) action withSender:(__nullable id) sender {
 	[self hideCompletions];
 	return NO;
+}
+
+- (void) setAccessibilityLabel:(NSString *) accessibilityLabel forResponderState:(CQChatInputBarResponderState) responderState {
+	_accessoryButton.accessibilityLabel = _accessibilityLabels[@(responderState)];
 }
 
 - (void) setAccessoryImage:(UIImage *) image forResponderState:(CQChatInputBarResponderState) responderState controlState:(UIControlState) controlState {
@@ -911,6 +917,8 @@ retry:
 
 	UIImage *pressedImage = _accessoryImages[@(activeResponderState)][@(UIControlStateHighlighted)];
 	[_accessoryButton setImage:pressedImage forState:UIControlStateHighlighted];
+
+	_accessoryButton.accessibilityLabel = _accessibilityLabels[@(activeResponderState)];
 }
 
 #pragma mark -

@@ -116,6 +116,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	[chatInputBar setAccessibilityLabel:NSLocalizedString(@"Roomv Controls", @"Info Accessibility Label") forResponderState:CQChatInputBarNotResponder];
+}
+
 - (void) viewDidAppear:(BOOL) animated {
 	[super viewDidAppear:animated];
 

@@ -580,6 +580,9 @@ NS_ASSUME_NONNULL_BEGIN
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clearPressed.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateHighlighted];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButton.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButtonPressed.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateHighlighted];
+
+	[chatInputBar setAccessibilityLabel:NSLocalizedString(@"User Controls", @"Info Accessibility Label") forResponderState:CQChatInputBarNotResponder];
+	[chatInputBar setAccessibilityLabel:NSLocalizedString(@"Clear Text", @"Clear Text Accessibility Label") forResponderState:CQChatInputBarResponder];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
