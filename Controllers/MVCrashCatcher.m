@@ -1,20 +1,11 @@
 #import "MVCrashCatcher.h"
 #import <sys/sysctl.h>
 
-@interface MVCrashCatcher ()
-
-@property (atomic, copy) dispatch_block_t doneBlock;
-
-@end
+static MVCrashCatcher *crashCatcher = nil;
 
 @implementation MVCrashCatcher
 + (void) check {
-	static MVCrashCatcher *crashCatcher = nil;
 	crashCatcher = [[MVCrashCatcher alloc] init]; // Released when the window is closed.
-	crashCatcher.doneBlock = ^{
-		crashCatcher.doneBlock = nil;
-		crashCatcher = nil;
-	};
 }
 
 #pragma mark -
@@ -42,9 +33,6 @@
 
 - (void) dealloc {
 	[window close];
-
-	if (self.doneBlock)
-		self.doneBlock();
 }
 
 - (void) awakeFromNib {
@@ -64,11 +52,11 @@
 
 - (void) connectionDidFinishLoading:(NSURLConnection *) connection {
 	[[NSFileManager defaultManager] removeItemAtPath:logPath error:nil];
-	self.doneBlock();
+	crashCatcher = nil;
 }
 
 - (void) connection:(NSURLConnection *) connection didFailWithError:(NSError *) error {
-	self.doneBlock();
+	crashCatcher = nil;
 }
 
 #pragma mark -
@@ -119,7 +107,7 @@
 	[[NSApplication sharedApplication] stopModal];
 	[window orderOut:nil];
 
-	self.doneBlock();
+	crashCatcher = nil;
 }
 
 - (BOOL) windowShouldClose:(id) sender {
