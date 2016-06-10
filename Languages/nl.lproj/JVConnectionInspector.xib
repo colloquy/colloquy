@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="JVConnectionInspector">
@@ -302,8 +302,8 @@
                         </tabViewItem>
                         <tabViewItem label="Proxy" identifier="Proxy" id="138">
                             <view key="view" id="137">
-                                <rect key="frame" x="10" y="25" width="330" height="298"/>
-                                <autoresizingMask key="autoresizingMask"/>
+                                <rect key="frame" x="10" y="25" width="365" height="298"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField verticalHuggingPriority="750" id="159">
                                         <rect key="frame" x="66" y="268" width="38" height="14"/>
@@ -315,7 +315,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <popUpButton verticalHuggingPriority="750" id="161">
-                                        <rect key="frame" x="106" y="262" width="243" height="22"/>
+                                        <rect key="frame" x="106" y="262" width="278" height="22"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <popUpButtonCell key="cell" type="push" title="Geen" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="158" id="418">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -342,7 +342,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <secureTextField verticalHuggingPriority="750" id="165">
-                                        <rect key="frame" x="109" y="114" width="237" height="19"/>
+                                        <rect key="frame" x="109" y="114" width="272" height="19"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <secureTextFieldCell key="cell" controlSize="small" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="420">
                                             <font key="font" metaFont="smallSystem"/>
@@ -354,7 +354,7 @@
                                         </secureTextFieldCell>
                                     </secureTextField>
                                     <textField verticalHuggingPriority="750" id="166">
-                                        <rect key="frame" x="109" y="141" width="237" height="19"/>
+                                        <rect key="frame" x="109" y="141" width="272" height="19"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="421">
                                             <font key="font" metaFont="smallSystem"/>
@@ -392,7 +392,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <textField verticalHuggingPriority="750" id="171">
-                                        <rect key="frame" x="109" y="205" width="237" height="19"/>
+                                        <rect key="frame" x="109" y="205" width="272" height="19"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="425">
                                             <font key="font" metaFont="smallSystem"/>
@@ -459,7 +459,7 @@
                                         </connections>
                                     </button>
                                     <button id="182">
-                                        <rect key="frame" x="94" y="153" width="19" height="19"/>
+                                        <rect key="frame" x="94" y="152" width="19" height="19"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="450">
                                             <behavior key="behavior" lightByContents="YES"/>
@@ -584,14 +584,14 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <scrollView autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="249">
-                                        <rect key="frame" x="51" y="35" width="325" height="248"/>
+                                        <rect key="frame" x="20" y="35" width="322" height="248"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <clipView key="contentView" id="lF2-fn-7hP">
-                                            <rect key="frame" x="1" y="1" width="323" height="246"/>
+                                            <rect key="frame" x="1" y="1" width="320" height="246"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" id="252">
-                                                    <rect key="frame" x="0.0" y="0.0" width="266" height="20"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="246"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -640,7 +640,7 @@
                                         </scroller>
                                     </scrollView>
                                     <button toolTip="Voeg genegeerde toe" id="404">
-                                        <rect key="frame" x="301" y="5" width="23" height="22"/>
+                                        <rect key="frame" x="271" y="5" width="23" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="453">
                                             <behavior key="behavior" lightByContents="YES"/>
@@ -651,7 +651,7 @@
                                         </connections>
                                     </button>
                                     <button toolTip="Wijzig genegeerde" id="405">
-                                        <rect key="frame" x="353" y="5" width="23" height="22"/>
+                                        <rect key="frame" x="319" y="5" width="23" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="454">
                                             <behavior key="behavior" lightByContents="YES"/>
@@ -662,7 +662,7 @@
                                         </connections>
                                     </button>
                                     <button toolTip="Verwijder genegeerde" id="406">
-                                        <rect key="frame" x="327" y="5" width="23" height="22"/>
+                                        <rect key="frame" x="293" y="5" width="23" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="455">
                                             <behavior key="behavior" lightByContents="YES"/>
@@ -687,7 +687,7 @@
             <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1257"/>
             <value key="minSize" type="size" width="213" height="113"/>
             <view key="contentView" id="329">
-                <rect key="frame" x="1" y="1" width="314" height="282"/>
+                <rect key="frame" x="0.0" y="0.0" width="314" height="282"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="16" horizontalPageScroll="0.0" verticalLineScroll="16" verticalPageScroll="0.0" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="320">
@@ -695,7 +695,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" id="LpP-3n-ZZl">
                             <rect key="frame" x="1" y="1" width="254" height="64"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" id="322">
                                     <rect key="frame" x="0.0" y="0.0" width="243" height="16"/>
