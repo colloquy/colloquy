@@ -145,7 +145,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 		if (self.modalViewController)
 			_userDefaultsChanged = YES;
-		else [self reloadSplitViewController];
+		else [self _reloadSplitViewController];
 
 		BOOL disableSingleSwipe = (![[UIDevice currentDevice] isPadModel] && !(self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryHidden || self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryOverlay));
 		if (disableSingleSwipe)
@@ -294,12 +294,24 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #pragma mark -
 
-- (void) reloadSplitViewController {
+- (BOOL)_handleOpenURL:(NSURL *)url {
+	if ([url.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
+		[[NSNotificationCenter chatCenter] postNotificationName:@"CQPocketShouldConvertTokenFromTokenNotification" object:nil];
+
+		return YES;
+	}
+
+	return [[CQConnectionsController defaultController] handleOpenURL:url];
+}
+
+- (void) _reloadSplitViewController {
 	[_rootContainerViewController buildRootViewController];
 
 	_mainViewController = _rootContainerViewController;
 	_mainWindow.rootViewController = _mainViewController;
 }
+
+#pragma mark -
 
 - (BOOL) application:(UIApplication *) application willFinishLaunchingWithOptions:(NSDictionary *__nullable) launchOptions {
 	NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]];
@@ -334,7 +346,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	[self userDefaultsChanged];
 
-	[self reloadSplitViewController];
+	[self _reloadSplitViewController];
 
 	[_mainWindow makeKeyAndVisible];
 
@@ -406,13 +418,11 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #endif
 
 - (BOOL) application:(UIApplication *) application handleOpenURL:(NSURL *) url {
-	if ([url.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
-		[[NSNotificationCenter chatCenter] postNotificationName:@"CQPocketShouldConvertTokenFromTokenNotification" object:nil];
+	return [self _handleOpenURL:url];
+}
 
-		return YES;
-	}
-
-	return [[CQConnectionsController defaultController] handleOpenURL:url];
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary <NSString *, id> *)options {
+	return [self _handleOpenURL:url];
 }
 
 - (void) applicationWillTerminate:(UIApplication *) application {
@@ -485,7 +495,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if (_userDefaultsChanged) {
 		_userDefaultsChanged = NO;
 
-		[self reloadSplitViewController];
+		[self _reloadSplitViewController];
 	}
 }
 

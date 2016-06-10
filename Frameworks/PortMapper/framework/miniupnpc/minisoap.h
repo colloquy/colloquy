@@ -8,8 +8,8 @@
 #define __MINISOAP_H__
 
 /*int httpWrite(int, const char *, int, const char *);*/
-int soapPostSubmit(int, const char *, const char *, unsigned short,
-				   const char *, const char *);
+ssize_t soapPostSubmit(int, const char *, const char *, unsigned short,
+					   const char *, const char *);
 
 #endif
 

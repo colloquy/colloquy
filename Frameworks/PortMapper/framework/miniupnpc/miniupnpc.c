@@ -147,7 +147,7 @@ int simpleUPnPcommand(int s, const char * url, const char * service,
 	char soapbody[2048];
 	char * buf;
 	int buffree;
-    int n;
+    ssize_t n;
 	int contentlen, headerlen;	/* for the response */
 	snprintf(soapact, sizeof(soapact), "%s#%s", service, action);
 	if(args==NULL)
@@ -275,7 +275,7 @@ int simpleUPnPcommand(int s, const char * url, const char * service,
  *    - st/stsize : "st:" field of the SSDP reply packet.
  * The strings are NOT null terminated */
 static void
-parseMSEARCHReply(const char * reply, int size,
+parseMSEARCHReply(const char * reply, ssize_t size,
                   const char * * location, int * locationsize,
 			      const char * * st, int * stsize)
 {
@@ -363,7 +363,7 @@ struct UPNPDev * upnpDiscover(int delay, const char * multicastif,
 	int deviceIndex = 0;
 	char bufr[1536];	/* reception and emission buffer */
 	int sudp;
-	int n;
+	ssize_t n;
 	struct sockaddr_in sockudp_r, sockudp_w;
 
 #ifndef WIN32
@@ -501,7 +501,7 @@ void freeUPNPDevlist(struct UPNPDev * devlist)
 }
 
 static void
-url_cpy_or_cat(char * dst, const char * src, int n)
+url_cpy_or_cat(char * dst, const char * src, size_t n)
 {
 	if(  (src[0] == 'h')
 	   &&(src[1] == 't')
@@ -515,7 +515,7 @@ url_cpy_or_cat(char * dst, const char * src, int n)
 	}
 	else
 	{
-		int l = strlen(dst);
+		size_t l = strlen(dst);
 		if(src[0] != '/')
 			dst[l++] = '/';
 		if(l<=n)
@@ -529,7 +529,7 @@ void GetUPNPUrls(struct UPNPUrls * urls, struct IGDdatas * data,
                  const char * descURL)
 {
 	char * p;
-	int n1, n2, n3;
+	size_t n1, n2, n3;
 	n1 = strlen(data->urlbase);
 	if(n1==0)
 		n1 = strlen(descURL);
@@ -582,9 +582,9 @@ FreeUPNPUrls(struct UPNPUrls * urls)
 }
 
 
-int ReceiveData(int socket, char * data, int length, int timeout)
+ssize_t ReceiveData(int socket, char * data, int length, int timeout)
 {
-    int n;
+    ssize_t n;
 #ifndef WIN32
     struct pollfd fds[1]; /* for the poll */
     fds[0].fd = socket;

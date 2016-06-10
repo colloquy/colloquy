@@ -1808,8 +1808,8 @@
 /* Time with a unit word */
 "%u %@" = "%1$u %2$@";
 
-/* Message a User button title */
-"Message a User" = "Einen Benutzer ansprechen";
+/* Send Private Message button title */
+"Send Private Message" = "Einen Benutzer ansprechen";
 
 /* Voiceover search members label */
 "Search Members" = "Teilnehmer suchen";

@@ -34,7 +34,7 @@ getDevicesFromMiniSSDPD(const char * devtype, const char * socketpath)
 	unsigned char * p;
 	unsigned char * url;
 	unsigned int i;
-	unsigned int urlsize, stsize, usnsize, l;
+	size_t urlsize, stsize, usnsize, l;
 	int s;
 	struct sockaddr_un addr;
 

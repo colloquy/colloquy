@@ -220,8 +220,11 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 
 - (void) requestRecentActivity {
 	MVChatConnection *connection = [self connection];
-	if( [[connection supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] )
-		[connection sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %.3f", self.nickname, [self.mostRecentUserActivity timeIntervalSince1970]];
+	if( [[connection supportedFeatures] containsObject:MVIRCChatConnectionZNCPluginPlaybackFeature] ) {
+		if (self.mostRecentUserActivity)
+			[connection sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %.2", self.nickname, [self.mostRecentUserActivity timeIntervalSince1970]];
+		else [connection sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ 0", self.nickname];
+	}
 }
 
 - (void) persistLastActivityDate {

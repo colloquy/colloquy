@@ -816,8 +816,8 @@
 /* Voiceover members list label */
 "Members List" = "Members List";
 
-/* Message a User button title */
-"Message a User" = "Message a User";
+/* Send Private Message button title */
+"Send Private Message" = "Send Private Message";
 
 /* Message User view title */
 "Message User" = "Message User";

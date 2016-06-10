@@ -474,7 +474,7 @@
                                     <scrollView autohidesScrollers="YES" horizontalLineScroll="16" horizontalPageScroll="10" verticalLineScroll="16" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="183">
                                         <rect key="frame" x="85" y="134" width="230" height="115"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                        <clipView key="contentView" id="UkP-O2-OAb">
+                                        <clipView key="contentView" id="72X-bY-2Id">
                                             <rect key="frame" x="1" y="1" width="228" height="113"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
@@ -527,7 +527,7 @@
                                     <scrollView autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="196">
                                         <rect key="frame" x="85" y="12" width="230" height="92"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <clipView key="contentView" id="pQE-8c-ikL">
+                                        <clipView key="contentView" id="ZcQ-nq-VMp">
                                             <rect key="frame" x="1" y="1" width="228" height="90"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
@@ -586,7 +586,7 @@
                                     <scrollView autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="249">
                                         <rect key="frame" x="20" y="35" width="290" height="248"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <clipView key="contentView" id="7bf-IH-7kl">
+                                        <clipView key="contentView" id="QWv-QS-7rk">
                                             <rect key="frame" x="1" y="1" width="288" height="246"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
@@ -687,13 +687,13 @@
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="213" height="113"/>
             <view key="contentView" id="329">
-                <rect key="frame" x="0.0" y="0.0" width="314" height="282"/>
+                <rect key="frame" x="1" y="1" width="314" height="282"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="16" horizontalPageScroll="10" verticalLineScroll="16" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="320">
                         <rect key="frame" x="38" y="46" width="256" height="66"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                        <clipView key="contentView" id="pCb-pp-FMO">
+                        <clipView key="contentView" id="95b-xS-uzp">
                             <rect key="frame" x="1" y="1" width="254" height="64"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>

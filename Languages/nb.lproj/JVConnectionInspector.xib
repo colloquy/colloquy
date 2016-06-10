@@ -303,7 +303,7 @@
                         <tabViewItem label="Node" identifier="Proxy" id="138">
                             <view key="view" id="137">
                                 <rect key="frame" x="10" y="25" width="330" height="298"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
                                     <textField verticalHuggingPriority="750" id="159">
                                         <rect key="frame" x="35" y="268" width="38" height="14"/>
@@ -474,7 +474,7 @@
                                     <scrollView autohidesScrollers="YES" horizontalLineScroll="16" horizontalPageScroll="10" verticalLineScroll="16" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="183">
                                         <rect key="frame" x="85" y="134" width="230" height="115"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                        <clipView key="contentView" id="5aO-Rt-VK9">
+                                        <clipView key="contentView" id="8Op-sn-Pri">
                                             <rect key="frame" x="1" y="1" width="228" height="113"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
@@ -527,7 +527,7 @@
                                     <scrollView autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="196">
                                         <rect key="frame" x="85" y="12" width="230" height="92"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <clipView key="contentView" id="tul-OD-ql9">
+                                        <clipView key="contentView" id="aol-xz-Gjm">
                                             <rect key="frame" x="1" y="1" width="228" height="90"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
@@ -586,7 +586,7 @@
                                     <scrollView autohidesScrollers="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="249">
                                         <rect key="frame" x="20" y="35" width="290" height="248"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <clipView key="contentView" id="IWo-S0-9Ye">
+                                        <clipView key="contentView" id="LSk-SB-VAY">
                                             <rect key="frame" x="1" y="1" width="288" height="246"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
@@ -693,9 +693,9 @@
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="16" horizontalPageScroll="10" verticalLineScroll="16" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="320">
                         <rect key="frame" x="38" y="46" width="256" height="66"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                        <clipView key="contentView" id="LDQ-CY-SjT">
+                        <clipView key="contentView" id="5uU-Aw-7BY">
                             <rect key="frame" x="1" y="1" width="254" height="64"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" id="322">
                                     <rect key="frame" x="0.0" y="0.0" width="243" height="16"/>

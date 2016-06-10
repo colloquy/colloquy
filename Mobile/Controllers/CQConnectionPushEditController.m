@@ -1,15 +1,11 @@
 #import "CQConnectionPushEditController.h"
 
-#import "CQAlertView.h"
 #import "CQConnectionsController.h"
 #import "CQPreferencesSwitchCell.h"
 
 #define PushEnabledTableSection 0
 
 NS_ASSUME_NONNULL_BEGIN
-
-@interface CQConnectionPushEditController () <CQAlertViewDelegate>
-@end
 
 @implementation CQConnectionPushEditController
 - (instancetype) init {
@@ -67,27 +63,24 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	[self.tableView beginUpdates];
-	[self.tableView reloadRowsAtIndexPaths:self.tableView.indexPathsForVisibleRows withRowAnimation:UITableViewRowAnimationAutomatic];
-	[self.tableView endUpdates];
-}
-
-#pragma mark -
-
 - (void) pushEnabled:(CQPreferencesSwitchCell *) sender {
 	if (_connection.connected || self.newConnection)
 		_connection.pushNotifications = sender.on;
 	else {
-		CQAlertView *alertView = [[CQAlertView alloc] init];
-		alertView.title = @"Connection Required";
-		alertView.delegate = self;
-		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button title")];
-
+		NSString *title = NSLocalizedString(@"Connection Required", @"Connection Required alert title");
+		NSString *message = nil;
 		if (_connection.pushNotifications)
-			alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to disable push notifications for %@. Please connect and try again." , @"Unable to turn push notifications off message"), _connection.displayName];
-		else alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to enable push notifications for %@. Please connect and try again." , @"Unable to turn push notifications off message"), _connection.displayName];
-		[alertView show];
+			message = [NSString stringWithFormat:NSLocalizedString(@"Unable to disable push notifications for %@. Please connect and try again." , @"Unable to turn push notifications off message"), _connection.displayName];
+		else message = [NSString stringWithFormat:NSLocalizedString(@"Unable to enable push notifications for %@. Please connect and try again." , @"Unable to turn push notifications off message"), _connection.displayName];
+
+		UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+		[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Okay", @"Okay alert button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			[self.tableView beginUpdates];
+			[self.tableView reloadRowsAtIndexPaths:self.tableView.indexPathsForVisibleRows withRowAnimation:UITableViewRowAnimationAutomatic];
+			[self.tableView endUpdates];
+		}]];
+
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }
 @end

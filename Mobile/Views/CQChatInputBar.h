@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) updateTextViewContentSize;
 
 - (void) setAccessoryImage:(UIImage *) image forResponderState:(CQChatInputBarResponderState) responderState controlState:(UIControlState) controlState;
+- (void) setAccessibilityLabel:(NSString *) accessibilityLabel forResponderState:(CQChatInputBarResponderState) responderState;
 - (UIImage *) accessoryImageForResponderState:(CQChatInputBarResponderState) responderState controlState:(UIControlState) controlState;
 @end
 

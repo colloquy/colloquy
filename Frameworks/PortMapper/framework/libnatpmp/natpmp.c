@@ -163,12 +163,12 @@ int sendnewportmappingrequest(natpmp_t * p, int protocol,
 	return sendnatpmprequest(p);
 }
 
-int readnatpmpresponse(natpmp_t * p, natpmpresp_t * response)
+ssize_t readnatpmpresponse(natpmp_t * p, natpmpresp_t * response)
 {
 	unsigned char buf[16];
 	struct sockaddr_in addr;
 	socklen_t addrlen = sizeof(addr);
-	int n;
+	ssize_t n;
 	if(!p)
 		return NATPMP_ERR_INVALIDARGS;
 	n = recvfrom(p->s, buf, sizeof(buf), 0,
@@ -231,9 +231,9 @@ int readnatpmpresponse(natpmp_t * p, natpmpresp_t * response)
 	return n;
 }
 
-int readnatpmpresponseorretry(natpmp_t * p, natpmpresp_t * response)
+ssize_t readnatpmpresponseorretry(natpmp_t * p, natpmpresp_t * response)
 {
-	int n;
+	ssize_t n;
 	if(!p || !response)
 		return NATPMP_ERR_INVALIDARGS;
 	if(!p->has_pending_request)

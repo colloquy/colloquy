@@ -32,11 +32,11 @@
 
 /* httpWrite sends the headers and the body to the socket
  * and returns the number of bytes sent */
-static int
+ssize_t
 httpWrite(int fd, const char * body, int bodysize,
           const char * headers, int headerssize)
 {
-	int n = 0;
+	ssize_t n = 0;
 	/*n = write(fd, headers, headerssize);*/
 	/*if(bodysize>0)
 		n += write(fd, body, bodysize);*/
@@ -70,7 +70,7 @@ httpWrite(int fd, const char * body, int bodysize,
 }
 
 /* self explanatory  */
-int soapPostSubmit(int fd,
+ssize_t soapPostSubmit(int fd,
                    const char * url,
 				   const char * host,
 				   unsigned short port,

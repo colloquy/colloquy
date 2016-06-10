@@ -260,7 +260,7 @@ Standardablauf:
 
 - (BOOL)applyPortMapping:(TCMPortMapping *)aPortMapping remove:(BOOL)shouldRemove natpmp:(natpmp_t *)aNatPMPt {
     natpmpresp_t response;
-    int r;
+    ssize_t r;
     //int sav_errno;
     struct timeval timeout;
     fd_set fds;
@@ -406,91 +406,90 @@ Standardablauf:
 - (void)refreshExternalIPInThread {
     [natPMPThreadIsRunningLock lock];
     @autoreleasepool {
-		
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:TCMNATPMPPortMapperDidBeginWorkingNotification object:self];
-		natpmp_t natpmp;
-		natpmpresp_t response;
-		int r;
-		struct timeval timeout;
-		fd_set fds;
-		BOOL didFail=NO;
-		r = initnatpmp(&natpmp);
-		if(r<0) {
-			didFail = YES;
-		} else {
-			r = sendpublicaddressrequest(&natpmp);
-			if(r<0) {
-				didFail = YES;
-			} else {
+    [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:TCMNATPMPPortMapperDidBeginWorkingNotification object:self];
+    natpmp_t natpmp;
+    natpmpresp_t response;
+    ssize_t r;
+    struct timeval timeout;
+    fd_set fds;
+    BOOL didFail=NO;
+    r = initnatpmp(&natpmp);
+    if(r<0) {
+        didFail = YES;
+    } else {
+        r = sendpublicaddressrequest(&natpmp);
+        if(r<0) {
+            didFail = YES;
+        } else {
 #ifdef DEBUG
-				int count = 0;
+            int count = 0;
 #endif
-				do {
-					FD_ZERO(&fds);
-					FD_SET(natpmp.s, &fds);
-					getnatpmprequesttimeout(&natpmp, &timeout);
+            do {
+                FD_ZERO(&fds);
+                FD_SET(natpmp.s, &fds);
+                getnatpmprequesttimeout(&natpmp, &timeout);
 #ifdef DEBUG
-					NSLog(@"NATPMP refreshExternalIP try #%d",++count);
+                NSLog(@"NATPMP refreshExternalIP try #%d",++count);
 #endif
-					select(FD_SETSIZE, &fds, NULL, NULL, &timeout);
-					r = readnatpmpresponseorretry(&natpmp, &response);
-					if (IPAddressThreadShouldQuitAndRestart) {
+                select(FD_SETSIZE, &fds, NULL, NULL, &timeout);
+                r = readnatpmpresponseorretry(&natpmp, &response);
+                if (IPAddressThreadShouldQuitAndRestart) {
 #ifdef DEBUG
-						NSLog(@"%s ----------------- thread quit prematurely",__FUNCTION__);
+                    NSLog(@"%s ----------------- thread quit prematurely",__FUNCTION__);
 #endif
-						[natPMPThreadIsRunningLock unlock];
-						if (IPAddressThreadShouldQuitAndRestart != PORTMAPREFRESHSHOULDNOTRESTART) {
-							[self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:0];
-						}
-						closenatpmp(&natpmp);
-						[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:TCMNATPMPPortMapperDidEndWorkingNotification object:self];
-						return;
-					}
-				} while(r==NATPMP_TRYAGAIN);
-				
-				if(r<0 && r != NATPMP_ERR_NETWORKFAILURE) {
-					didFail = YES;
+                    [natPMPThreadIsRunningLock unlock];
+                    if (IPAddressThreadShouldQuitAndRestart != PORTMAPREFRESHSHOULDNOTRESTART) {
+                        [self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:0];
+                    }
+                    closenatpmp(&natpmp);
+                    [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:TCMNATPMPPortMapperDidEndWorkingNotification object:self];
+                    return;
+                }
+            } while(r==NATPMP_TRYAGAIN);
+            
+            if(r<0 && r != NATPMP_ERR_NETWORKFAILURE) {
+                didFail = YES;
 #ifndef NDEBUG
-					NSLog(@"%s NAT-PMP: IP refresh did fail: %d",__FUNCTION__,r);
+                NSLog(@"%s NAT-PMP: IP refresh did fail: %d",__FUNCTION__,r);
 #endif
-				} else {
-					NSString *ipString = [NSString stringWithFormat:@"%s", inet_ntoa(response.pnu.publicaddress.addr)];
-					if (r == NATPMP_ERR_NETWORKFAILURE) {
-						ipString = @"0.0.0.0"; // citing the RFC:
-						//   If the result code is non-zero, the value of External IP
-						//   Address is undefined (MUST be set to zero on transmission, and MUST
-						//   be ignored on reception).
-						// so we use 0.0.0.0 at this stage. also because that is what the airport is broadcasting.
-						// we externally can savely display 0.0.0.0 as not having an external ip
-					}
-					/* TODO : check that response.type == 0 */
-					
+            } else {
+                NSString *ipString = [NSString stringWithFormat:@"%s", inet_ntoa(response.pnu.publicaddress.addr)];
+                if (r == NATPMP_ERR_NETWORKFAILURE) {
+                    ipString = @"0.0.0.0"; // citing the RFC:
+                    //   If the result code is non-zero, the value of External IP
+                    //   Address is undefined (MUST be set to zero on transmission, and MUST
+                    //   be ignored on reception).
+                    // so we use 0.0.0.0 at this stage. also because that is what the airport is broadcasting.
+                    // we externally can savely display 0.0.0.0 as not having an external ip
+                }
+                /* TODO : check that response.type == 0 */
+                
 #ifndef NDEBUG
-					NSLog(@"NAT-PMP:  found IP:%@",ipString);
+                NSLog(@"NAT-PMP:  found IP:%@",ipString);
 #endif
-					[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:[NSNotification notificationWithName:TCMNATPMPPortMapperDidGetExternalIPAddressNotification object:self userInfo:@{@"externalIPAddress": ipString}]];
-				}
-			}
-		}
-		closenatpmp(&natpmp);
-		[natPMPThreadIsRunningLock unlock];
-		if (IPAddressThreadShouldQuitAndRestart) {
+                [[NSNotificationCenter defaultCenter] postNotificationOnMainThread:[NSNotification notificationWithName:TCMNATPMPPortMapperDidGetExternalIPAddressNotification object:self userInfo:@{@"externalIPAddress": ipString}]];
+            }
+        }
+    }
+    closenatpmp(&natpmp);
+    [natPMPThreadIsRunningLock unlock];
+    if (IPAddressThreadShouldQuitAndRestart) {
 #ifndef DEBUG
-			NSLog(@"%s thread quit prematurely",__FUNCTION__);
+        NSLog(@"%s thread quit prematurely",__FUNCTION__);
 #endif
-			if (IPAddressThreadShouldQuitAndRestart != PORTMAPREFRESHSHOULDNOTRESTART) {
-				[self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:0];
-			}
-		} else {
-			if (didFail) {
-				[self performSelectorOnMainThread:@selector(stopListeningToExternalIPAddressChanges) withObject:nil waitUntilDone:NO];
-				[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:[NSNotification notificationWithName:TCMNATPMPPortMapperDidFailNotification object:self]];
-			} else {
-				[self performSelectorOnMainThread:@selector(updatePortMappings) withObject:nil waitUntilDone:0];
-			}
-		}
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:TCMNATPMPPortMapperDidEndWorkingNotification object:self];
-	}
+        if (IPAddressThreadShouldQuitAndRestart != PORTMAPREFRESHSHOULDNOTRESTART) {
+            [self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:0];
+        }
+    } else {
+        if (didFail) {
+            [self performSelectorOnMainThread:@selector(stopListeningToExternalIPAddressChanges) withObject:nil waitUntilDone:NO];
+            [[NSNotificationCenter defaultCenter] postNotificationOnMainThread:[NSNotification notificationWithName:TCMNATPMPPortMapperDidFailNotification object:self]];
+        } else {
+            [self performSelectorOnMainThread:@selector(updatePortMappings) withObject:nil waitUntilDone:0];
+        }
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:TCMNATPMPPortMapperDidEndWorkingNotification object:self];
+    }
 }
 
 - (void)stopBlocking {

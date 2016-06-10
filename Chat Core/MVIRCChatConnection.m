@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 //#define JVWatchedUserWHOISDelay 300.
 #define JVWatchedUserISONDelay 60.
 #define JVEndCapabilityTimeoutDelay 45.
+#define JVDisconnectTimeoutDelay 5.
 #define JVMaximumMessageLength 512
 #define JVMaximumCommandLength 510 // minus trailing \r\n
 #define JVMaximumISONCommandLength JVMaximumCommandLength
@@ -416,10 +417,22 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 			NSData *msg = [[self class] _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 			[self sendRawMessageImmediatelyWithComponents:@"QUIT :", msg, nil];
 		} else [self sendRawMessage:@"QUIT" immediately:YES];
+		[self _waitForDisconnectWithTimeout:JVDisconnectTimeoutDelay];
 	} else if( _status == MVChatConnectionConnectingStatus ) {
 		_userDisconnected = YES;
 		[self._chatConnection disconnect];
 	}
+}
+
+/// Some non-compliant servers do not close the connection after receiving "QUIT", even though they MUST (for
+/// example WeeChat's proxy feature behaves this way). To protect the client, we close the connection from our end
+/// after a timeout period.
+- (void) _waitForDisconnectWithTimeout:(NSTimeInterval)timeout {
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeout * NSEC_PER_SEC)), _connectionQueue, ^{
+		if (self.status == MVChatConnectionConnectedStatus && self->_userDisconnected == YES) {
+			[self._chatConnection disconnect];
+		}
+	});
 }
 
 #pragma mark -
@@ -3052,7 +3065,7 @@ parsingFinished: { // make a scope for this
 					// 3. If we have any recent activity saved, request anything from the last timestamp we have saved. Otherwise,
 					// we have to assume everything is new and request everything.
 					if (mostRecentActivity)
-						[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %.3f %@", components[0], [mostRecentActivity timeIntervalSince1970], components[2]];
+						[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ %.2f %@", components[0], [mostRecentActivity timeIntervalSince1970], components[2]];
 					else [self sendRawMessageImmediatelyWithFormat:@"PRIVMSG *playback PLAY %@ 0", [components[0] copy]];
 				}
 			}

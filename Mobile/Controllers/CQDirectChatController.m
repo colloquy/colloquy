@@ -1,7 +1,6 @@
 #import "CQDirectChatController.h"
 
 #import "CQActivities.h"
-#import "CQAlertView.h"
 #import "CQBookmarkingController.h"
 #import "CQChatOrderingController.h"
 #import "CQChatCreationViewController.h"
@@ -38,9 +37,6 @@
 
 #define InfoActionSheet 1001
 #define URLActionSheet 1003
-
-#define CantSendMessageAlertView 100
-#define BookmarkLogInAlertView 101
 
 typedef NS_ENUM(NSInteger, CQSwipeMeaning) {
 	CQSwipeDisabled,
@@ -86,7 +82,7 @@ static BOOL showingKeyboard;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQDirectChatController () <CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, CQAlertViewDelegate, CQActionSheetDelegate, CQChatInputStyleDelegate>
+@interface CQDirectChatController () <CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, CQActionSheetDelegate, CQChatInputStyleDelegate>
 @property (strong, nullable) UIActivityViewController *activityController;
 @end
 
@@ -140,33 +136,45 @@ NS_ASSUME_NONNULL_BEGIN
 		if ([activeService respondsToSelector:@selector(authorize)]) {
 			[activeService authorize];
 		} else {
-			CQAlertView *alertView = [[CQAlertView alloc] init];
-			alertView.delegate = self;
-			alertView.tag = BookmarkLogInAlertView;
-			alertView.title = [activeService serviceName];
+			UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[activeService serviceName].capitalizedString message:@"" preferredStyle:UIAlertControllerStyleAlert];
+			alertController.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@ due to a server error.", @"Unable to bookmark link server error message"), notification.object, [activeService serviceName]];
 
-			[alertView addTextFieldWithPlaceholder:NSLocalizedString(@"Username or Email", @"Username or Email placeholder") andText:@""];
-			[alertView addSecureTextFieldWithPlaceholder:NSLocalizedString(@"Password", @"Password placeholder")];
+			[alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+				textField.placeholder = NSLocalizedString(@"Username or Email", @"Username or Email placeholder");
+			}];
+			[alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+				textField.secureTextEntry = YES;
+				textField.placeholder = NSLocalizedString(@"Password", @"Password placeholder");
+			}];
 
-			[alertView addButtonWithTitle:NSLocalizedString(@"Log In", @"Log In button")];
-			alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button")];
+			[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+				_showingAlert = NO;
+			}]];
+			[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Log In", @"Log In button") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+				_showingAlert = NO;
+				[[CQBookmarkingController activeService] setUsername:alertController.textFields[0].text password:alertController.textFields[1].text];
+				[[CQBookmarkingController activeService] bookmarkLink:notification.object];
+			}]];
 
-			[alertView associateObject:notification.object forKey:@"link"];
-
-			[alertView show];
+			_showingAlert = YES;
+			[self presentViewController:alertController animated:YES completion:nil];
 		}
 	} else if (error.code == CQBookmarkingErrorServer) {
-		CQAlertView *alertView = [[CQAlertView alloc] init];
-		alertView.title = NSLocalizedString(@"Server Error", @"Server Error");
-		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@ due to a server error.", @"Unable to bookmark link server error message"), notification.object, [activeService serviceName]];
-		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
-		[alertView show];
+		UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+		alertController.title = NSLocalizedString(@"Server Error", @"Server Error");
+		alertController.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@ due to a server error.", @"Unable to bookmark link server error message"), notification.object, [activeService serviceName]];
+
+		[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Okay", @"Okay alert button title") style:UIAlertActionStyleDefault handler:nil]];
+
+		[self presentViewController:alertController animated:YES completion:nil];
 	} else {
-		CQAlertView *alertView = [[CQAlertView alloc] init];
-		alertView.title = NSLocalizedString(@"Unknown Error", @"Unknown Error");
-		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@.", @"Unable to bookmark link message"), notification.object, [activeService serviceName]];
-		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
-		[alertView show];
+		UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+		alertController.title = NSLocalizedString(@"Unknown Error", @"Unknown Error");
+		alertController.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@.", @"Unable to bookmark link message"), notification.object, [activeService serviceName]];
+
+		[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Okay", @"Okay alert button title") style:UIAlertActionStyleDefault handler:nil]];
+
+		[self presentViewController:alertController animated:YES completion:nil];
 	}
 }
 
@@ -572,6 +580,9 @@ NS_ASSUME_NONNULL_BEGIN
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clearPressed.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateHighlighted];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButton.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
 	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButtonPressed.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateHighlighted];
+
+	[chatInputBar setAccessibilityLabel:NSLocalizedString(@"User Controls", @"Info Accessibility Label") forResponderState:CQChatInputBarNotResponder];
+	[chatInputBar setAccessibilityLabel:NSLocalizedString(@"Clear Text", @"Clear Text Accessibility Label") forResponderState:CQChatInputBarResponder];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -996,7 +1007,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) _handleURLCommandWithArguments:(MVChatString *) arguments {
-	NSScanner *scanner = [NSScanner scannerWithString:arguments.string];
+	NSScanner *scanner = [NSScanner scannerWithString:MVChatStringAsString(arguments)];
 	NSString *urlString = nil;
 
 	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&urlString];
@@ -1004,7 +1015,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!urlString.length)
 		return NO;
 
-	if ([arguments.string isCaseInsensitiveEqualToString:@"last"])
+	if ([MVChatStringAsString(arguments) isCaseInsensitiveEqualToString:@"last"])
 		urlString = @"about:last";
 
 	NSURL *url = (urlString ? [NSURL URLWithString:urlString] : nil);
@@ -1048,7 +1059,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL) handleAnickCommandWithArguments:(MVChatString *) arguments {
 	for (MVChatConnection *connection in [CQConnectionsController defaultController].connectedConnections)
-		connection.nickname = arguments.string;
+		connection.nickname = MVChatStringAsString(arguments);
 	return YES;
 }
 
@@ -1075,7 +1086,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleJoinCommandWithArguments:(MVChatString *__nullable) arguments {
-	if (![arguments.string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
+	if (![MVChatStringAsString(arguments) stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
 		[self _showChatCreationViewController];
 
 		return YES;
@@ -1083,7 +1094,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[self.connection connectAppropriately];
 
-	NSArray <NSString *> *rooms = [arguments.string componentsSeparatedByString:@","];
+	NSArray <NSString *> *rooms = [MVChatStringAsString(arguments) componentsSeparatedByString:@","];
 	if (((NSString *)rooms.firstObject).length)
 		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:rooms.firstObject andConnection:self.connection];
 
@@ -1102,7 +1113,7 @@ NS_ASSUME_NONNULL_BEGIN
 		return YES;
 	}
 
-	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments.string];
+	NSScanner *argumentsScanner = [NSScanner scannerWithString:MVChatStringAsString(arguments)];
 	[argumentsScanner setCharactersToBeSkipped:nil];
 
 	NSString *targetName = nil;
@@ -1124,7 +1135,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleNoticeCommandWithArguments:(MVChatString *) arguments {
-	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments.string];
+	NSScanner *argumentsScanner = [NSScanner scannerWithString:MVChatStringAsString(arguments)];
 	argumentsScanner.charactersToBeSkipped = nil;
 
 	NSString *target = nil;
@@ -1154,7 +1165,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleOnoticeCommandWithArguments:(MVChatString *) arguments {
-	if ([arguments.string hasPrefix:@"@"])
+	if ([MVChatStringAsString(arguments) hasPrefix:@"@"])
 		return [self handleNoticeCommandWithArguments:arguments];
 
 	NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"@"];
@@ -1177,7 +1188,7 @@ NS_ASSUME_NONNULL_BEGIN
 	MPMusicPlayerController *musicController = [MPMusicPlayerController systemMusicPlayer];
 	MPMediaItem *nowPlayingItem = musicController.nowPlayingItem;
 
-	NSString *argumentsString = arguments.string;
+	NSString *argumentsString = MVChatStringAsString(arguments);
 	if ([argumentsString isCaseInsensitiveEqualToString:@"next"] || [argumentsString isCaseInsensitiveEqualToString:@"skip"] || [argumentsString isCaseInsensitiveEqualToString:@"forward"])
 		[musicController skipToNextItem];
 	else if ([argumentsString isCaseInsensitiveEqualToString:@"previous"] || [argumentsString isCaseInsensitiveEqualToString:@"back"])
@@ -1241,7 +1252,7 @@ NS_ASSUME_NONNULL_BEGIN
 	creationViewController.roomTarget = YES;
 	creationViewController.selectedConnection = self.connection;
 
-	[creationViewController showRoomListFilteredWithSearchString:arguments.string];
+	[creationViewController showRoomListFilteredWithSearchString:MVChatStringAsString(arguments)];
 
 	[self _forceResignKeyboard];
 
@@ -1271,8 +1282,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 	NSString *query = nil;
 	if (arguments.length >= (argumentsScanner.scanLocation + 1))
-		query = [arguments.string substringWithRange:NSMakeRange(argumentsScanner.scanLocation + 1, (arguments.length - argumentsScanner.scanLocation - 1))];
-	else query = arguments.string;
+		query = [MVChatStringAsString(arguments) substringWithRange:NSMakeRange(argumentsScanner.scanLocation + 1, (arguments.length - argumentsScanner.scanLocation - 1))];
+	else query = MVChatStringAsString(arguments);
 
 	[results addObject:languageCode];
 	[results addObject:query];
@@ -1374,7 +1385,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL) handleSearchCommandWithArguments:(MVChatString *) arguments {
 	NSString *urlString = @"http://searchirc.com/search.php?F=partial&I=%@&T=both&N=all&M=min&C=5&PER=20";
 
-	[self _handleSearchForURL:urlString withQuery:arguments.string];
+	[self _handleSearchForURL:urlString withQuery:MVChatStringAsString(arguments)];
 
 	return YES;
 }
@@ -1466,7 +1477,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL) handleWhoisCommandWithArguments:(MVChatString *) arguments {
 	if (arguments.length) {
-		NSString *nick = [arguments.string componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]][0];
+		NSString *nick = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]][0];
 		[self _showUserInfoControllerForUserNamed:nick];
 	} else if (self.user) {
 		[self _showUserInfoControllerForUser:self.user];
@@ -1503,7 +1514,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL) handleIgnoreCommandWithArguments:(MVChatString *) arguments {
 	KAIgnoreRule *ignoreRule = nil;
 
-	NSString *argumentsString = arguments.string;
+	NSString *argumentsString = MVChatStringAsString(arguments);
 	if (argumentsString.isValidIRCMask)
 		ignoreRule = [KAIgnoreRule ruleForUser:nil mask:argumentsString message:nil inRooms:nil isPermanent:YES friendlyName:nil];
 	else ignoreRule = [KAIgnoreRule ruleForUser:argumentsString mask:nil message:nil inRooms:nil isPermanent:YES friendlyName:nil];
@@ -1514,7 +1525,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleUnignoreCommandWithArguments:(MVChatString *) arguments {
-	[self.connection.ignoreController removeIgnoreRuleFromString:arguments.string];
+	[self.connection.ignoreController removeIgnoreRuleFromString:MVChatStringAsString(arguments)];
 
 	return YES;
 }
@@ -1779,7 +1790,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL ) _sendLineOfText:(MVChatString *) text {
-	NSString *argumentString = text.string;
+	NSString *argumentString = MVChatStringAsString(text);
 	if ([argumentString hasPrefix:@"/"] && ![argumentString hasPrefix:@"//"] && argumentString.length > 1) {
 		static NSSet *commandsNotRequiringConnection;
 		if (!commandsNotRequiringConnection)
@@ -1942,28 +1953,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) willPresentAlertView:(CQAlertView *) alertView {
-	_showingAlert = YES;
-}
-
-- (void) alertView:(CQAlertView *) alertView didDismissWithButtonIndex:(NSInteger) buttonIndex {
-	_showingAlert = NO;
-}
-
-- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (buttonIndex == alertView.cancelButtonIndex)
-		return;
-
-	if (alertView.tag == ReconnectAlertTag) 
-		[self.connection connectAppropriately];
-	else if (alertView.tag == BookmarkLogInAlertView) {
-		[[CQBookmarkingController activeService] setUsername:[alertView textFieldAtIndex:0].text password:[alertView textFieldAtIndex:1].text];
-		[[CQBookmarkingController activeService] bookmarkLink:[alertView associatedObjectForKey:@"link"]];
-	}
-}
-
-#pragma mark -
-
 - (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
@@ -2083,28 +2072,27 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
-	CQAlertView *alert = [[CQAlertView alloc] init];
-	alert.delegate = self;
-	alert.tag = CantSendMessageAlertView;
+	UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
 
-	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+	[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:nil]];
 
-	if (command) alert.title = NSLocalizedString(@"Can't Send Command", @"Can't send command alert title");
-	else alert.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
+	if (command) alertController.title = NSLocalizedString(@"Can't Send Command", @"Can't send command alert title");
+	else alertController.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
 
 	if (self.connection.status == MVChatConnectionConnectingStatus) {
-		alert.message = NSLocalizedString(@"You are currently connecting,\ntry sending again soon.", @"Can't send message to user because server is connecting alert message");
+		alertController.message = NSLocalizedString(@"You are currently connecting,\ntry sending again soon.", @"Can't send message to user because server is connecting alert message");
 	} else if (!self.connection.connected) {
-		alert.tag = ReconnectAlertTag;
-		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to user because server is disconnected alert message");
-		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
+		alertController.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to user because server is disconnected alert message");
+		[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Connect", @"Connect button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			[self.connection connectAppropriately];
+		}]];
 	} else if (self.user.status != MVChatUserAvailableStatus && self.user.status != MVChatUserAwayStatus) {
-		alert.message = NSLocalizedString(@"The user is not connected.", @"Can't send message to user because they are disconnected alert message");
+		alertController.message = NSLocalizedString(@"The user is not connected.", @"Can't send message to user because they are disconnected alert message");
 	} else {
 		return;
 	}
 
-	[alert show];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void) _userDefaultsChanged {
@@ -2252,7 +2240,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) _awayStatusChanged:(NSNotification *) notification {
 	if (self.connection.awayStatusMessage.length) {
 		NSString *eventMessageFormat = [NSLocalizedString(@"You have set yourself as away with the message \"%@\".", "Marked as away event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, self.connection.awayStatusMessage.string] withIdentifier:@"awaySet"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, MVChatStringAsString(self.connection.awayStatusMessage)] withIdentifier:@"awaySet"];
 	} else {
 		[self addEventMessage:NSLocalizedString(@"You have returned from being away.", "Returned from being away event message") withIdentifier:@"awayRemoved"];
 	}

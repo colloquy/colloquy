@@ -93,6 +93,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 @implementation CQChatOrderingController {
 	NSArray <id <CQChatViewController>> *_chatControllers;
+	dispatch_queue_t _orderingQueue;
 }
 
 @synthesize chatViewControllers = _chatControllers;
@@ -120,6 +121,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if (!(self = [super init]))
 		return nil;
 
+	_orderingQueue = dispatch_queue_create("info.colloquy.orderingQueue", DISPATCH_QUEUE_SERIAL);
 	_chatControllers = @[];
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_asyncSortChatControllers) name:CQChatViewControllerHandledMessageNotification object:nil];
@@ -137,16 +139,24 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 - (void) _sortChatControllers {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_sortChatControllers) object:nil];
-	_chatControllers = [[_chatControllers copy] sortedArrayUsingFunction:sortControllersAscending context:NULL];
+	dispatch_sync(_orderingQueue, ^{
+		_chatControllers = [[_chatControllers copy] sortedArrayUsingFunction:sortControllersAscending context:NULL];
+	});
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatOrderingControllerDidChangeOrderingNotification object:nil];
 }
 
 - (NSUInteger) indexOfViewController:(id <CQChatViewController>) controller {
-	return [_chatControllers indexOfObjectIdenticalTo:controller];
+	__block NSUInteger index = NSNotFound;
+	dispatch_sync(_orderingQueue, ^{
+		index = [_chatControllers indexOfObjectIdenticalTo:controller];
+	});
+	return index;
 }
 
 - (void) _addViewController:(id <CQChatViewController>) controller resortingRightAway:(BOOL) resortingRightAway {
-	_chatControllers = [_chatControllers arrayByAddingObject:controller];
+	dispatch_sync(_orderingQueue, ^{
+		_chatControllers = [_chatControllers arrayByAddingObject:controller];
+	});
 
 	NSDictionary *notificationInfo = @{@"controller": controller};
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatControllerAddedChatViewControllerNotification object:self userInfo:notificationInfo];
@@ -169,13 +179,15 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 - (void) removeViewController:(id <CQChatViewController>) controller {
-	NSMutableArray *copy = [_chatControllers mutableCopy];
-	NSUInteger index = [copy indexOfObjectIdenticalTo:controller];
-	if (index != NSNotFound) {
-		[copy removeObjectAtIndex:index];
+	dispatch_sync(_orderingQueue, ^{
+		NSMutableArray *copy = [_chatControllers mutableCopy];
+		NSUInteger index = [copy indexOfObjectIdenticalTo:controller];
+		if (index != NSNotFound) {
+			[copy removeObjectAtIndex:index];
 
-		_chatControllers = [copy copy];
-	}
+			_chatControllers = [copy copy];
+		}
+	});
 }
 
 #if ENABLE(FILE_TRANSFERS)
@@ -193,20 +205,27 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 - (CQConsoleController *) chatViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
 	NSParameterAssert(connection != nil);
 
-	for (id <CQChatViewController> controller in _chatControllers)
-		if ([controller isMemberOfClass:[CQConsoleController class]] && controller.target == connection)
-			return (CQConsoleController *)controller;
+	__block CQConsoleController *consoleController = nil;
 
-	CQConsoleController *controller = nil;
+	dispatch_sync(_orderingQueue, ^{
+		for (id <CQChatViewController> controller in _chatControllers) {
+			if ([controller isMemberOfClass:[CQConsoleController class]] && controller.target == connection) {
+				consoleController = (CQConsoleController *)controller;
+				break;
+			}
+		}
+	});
+
+	if (consoleController)
+		return consoleController;
 
 	if (!exists) {
-		if ((controller = [[CQConsoleController alloc] initWithTarget:connection])) {
-			[[CQChatOrderingController defaultController] addViewController:controller];
-			return controller;
+		if ((consoleController = [[CQConsoleController alloc] initWithTarget:connection])) {
+			[[CQChatOrderingController defaultController] addViewController:consoleController];
 		}
 	}
 
-	return nil;
+	return consoleController;
 }
 
 - (NSArray <id <CQChatViewController>> *) chatViewControllersForConnection:(MVChatConnection *) connection {
@@ -214,9 +233,11 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	NSMutableArray <id <CQChatViewController>> *result = [NSMutableArray array];
 
-	for (id controller in _chatControllers)
-		if ([controller conformsToProtocol:@protocol(CQChatViewController)] && ((id <CQChatViewController>) controller).connection == connection)
-			[result addObject:controller];
+	dispatch_sync(_orderingQueue, ^{
+		for (id controller in _chatControllers)
+			if ([controller conformsToProtocol:@protocol(CQChatViewController)] && ((id <CQChatViewController>) controller).connection == connection)
+				[result addObject:controller];
+	});
 
 	return result;
 }
@@ -226,9 +247,11 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	NSMutableArray <id <CQChatViewController>> *result = [NSMutableArray array];
 
-	for (id controller in _chatControllers)
-		if ([controller isMemberOfClass:class])
-			[result addObject:controller];
+	dispatch_sync(_orderingQueue, ^{
+		for (id controller in _chatControllers)
+			if ([controller isMemberOfClass:class])
+				[result addObject:controller];
+	});
 
 	return result;
 }
@@ -238,9 +261,11 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	NSMutableArray <id <CQChatViewController>> *result = [NSMutableArray array];
 
-	for (id controller in _chatControllers)
-		if ([controller isKindOfClass:class])
-			[result addObject:controller];
+	dispatch_sync(_orderingQueue, ^{
+		for (id controller in _chatControllers)
+			if ([controller isKindOfClass:class])
+				[result addObject:controller];
+	});
 
 	return result;
 }
@@ -250,24 +275,30 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 - (CQChatRoomController *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists {
 	NSParameterAssert(room != nil);
 
-	for (id <CQChatViewController> controller in _chatControllers)
-		if ([controller isMemberOfClass:[CQChatRoomController class]] && controller.target == room)
-			return (CQChatRoomController *)controller;
+	__block CQChatRoomController *chatRoomController = nil;
 
-	CQChatRoomController *controller = nil;
+	dispatch_sync(_orderingQueue, ^{
+		for (id <CQChatViewController> controller in _chatControllers) {
+			if ([controller isMemberOfClass:[CQChatRoomController class]] && controller.target == room) {
+				chatRoomController = (CQChatRoomController *)controller;
+				break;
+			}
+		}
+	});
+
+	if (chatRoomController)
+		return chatRoomController;
 
 	if (!exists) {
-		if ((controller = [[CQChatRoomController alloc] initWithTarget:room])) {
-			[[CQChatOrderingController defaultController] addViewController:controller];
+		if ((chatRoomController = [[CQChatRoomController alloc] initWithTarget:room])) {
+			[[CQChatOrderingController defaultController] addViewController:chatRoomController];
 
 			if (room.connection == [CQChatController defaultController].nextRoomConnection)
-				[[CQChatController defaultController] showChatController:controller animated:YES];
-
-			return controller;
+				[[CQChatController defaultController] showChatController:chatRoomController animated:YES];
 		}
 	}
 
-	return nil;
+	return chatRoomController;
 }
 
 - (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists {
@@ -277,39 +308,47 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 - (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
 	NSParameterAssert(user != nil);
 
-	for (id <CQChatViewController> controller in _chatControllers)
-		if ([controller isMemberOfClass:[CQDirectChatController class]] && [controller.target isEqual:user])
-			return (CQDirectChatController *)controller;
+	__block CQDirectChatController *chatController = nil;
 
-	CQDirectChatController *controller = nil;
+	dispatch_sync(_orderingQueue, ^{
+		for (id <CQChatViewController> controller in _chatControllers) {
+			if ([controller isMemberOfClass:[CQDirectChatController class]] && [controller.target isEqual:user]) {
+				chatController = (CQDirectChatController *)controller;
+				break;
+			}
+		}
+	});
 
 	if (!exists) {
-		if ((controller = [[CQDirectChatController alloc] initWithTarget:user])) {
-			[[CQChatOrderingController defaultController] addViewController:controller];
-			return controller;
+		if ((chatController = [[CQDirectChatController alloc] initWithTarget:user])) {
+			[[CQChatOrderingController defaultController] addViewController:chatController];
 		}
 	}
 
-	return nil;
+	return chatController;
 }
 
 - (CQDirectChatController *) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists {
 	NSParameterAssert(connection != nil);
 
-	for (id <CQChatViewController> controller in _chatControllers)
-		if ([controller isMemberOfClass:[CQDirectChatController class]] && controller.target == connection)
-			return (CQDirectChatController *)controller;
+	__block CQDirectChatController *chatController = nil;
 
-	CQDirectChatController *controller = nil;
+	dispatch_sync(_orderingQueue, ^{
+		for (id <CQChatViewController> controller in _chatControllers) {
+			if ([controller isMemberOfClass:[CQDirectChatController class]] && controller.target == connection) {
+				chatController = (CQDirectChatController *)controller;
+				break;
+			}
+		}
+	});
 
 	if (!exists) {
-		if ((controller = [[CQDirectChatController alloc] initWithTarget:connection])) {
-			[[CQChatOrderingController defaultController] addViewController:controller];
-			return controller;
+		if ((chatController = [[CQDirectChatController alloc] initWithTarget:connection])) {
+			[[CQChatOrderingController defaultController] addViewController:chatController];
 		}
 	}
 
-	return nil;
+	return chatController;
 }
 
 #if ENABLE(FILE_TRANSFERS)
@@ -351,20 +390,33 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 #pragma mark -
 
 - (id <CQChatViewController>) _enumerateChatViewControllersFromChatController:(id <CQChatViewController>) chatViewController withOption:(NSEnumerationOptions) options requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight {
-	if (_chatControllers.count < 2)
-		return [_chatControllers lastObject];
+	__block id <CQChatViewController> result = nil;
 
-	NSUInteger index = [_chatControllers indexOfObject:chatViewController];
-	NSArray <id <CQChatViewController>> *firstHalf = nil;
-	NSArray <id <CQChatViewController>> *secondHalf = nil;
+	dispatch_sync(_orderingQueue, ^{
+		if (_chatControllers.count < 2)
+			result = [_chatControllers lastObject];
+	});
 
-	if (options & NSEnumerationReverse) {
-		firstHalf = [_chatControllers subarrayWithRange:NSMakeRange(0, index)];
-		secondHalf = [_chatControllers subarrayWithRange:NSMakeRange((index + 1), (_chatControllers.count - (index + 1)))];
-	} else {
-		firstHalf = [_chatControllers subarrayWithRange:NSMakeRange((index + 1), (_chatControllers.count - (index + 1)))];
-		secondHalf = [_chatControllers subarrayWithRange:NSMakeRange(0, index)];
-	}
+	if (result)
+		return result;
+
+	__block NSUInteger index = NSNotFound;
+	dispatch_sync(_orderingQueue, ^{
+		index = [_chatControllers indexOfObject:chatViewController];
+	});
+
+	__block NSArray <id <CQChatViewController>> *firstHalf = nil;
+	__block NSArray <id <CQChatViewController>> *secondHalf = nil;
+
+	dispatch_sync(_orderingQueue, ^{
+		if (options & NSEnumerationReverse) {
+			firstHalf = [_chatControllers subarrayWithRange:NSMakeRange(0, index)];
+			secondHalf = [_chatControllers subarrayWithRange:NSMakeRange((index + 1), (_chatControllers.count - (index + 1)))];
+		} else {
+			firstHalf = [_chatControllers subarrayWithRange:NSMakeRange((index + 1), (_chatControllers.count - (index + 1)))];
+			secondHalf = [_chatControllers subarrayWithRange:NSMakeRange(0, index)];
+		}
+	});
 
 	id <CQChatViewController> (^findNearestMatchForBlock)(CQMatchingResult) = ^(CQMatchingResult block) {
 		__block id <CQChatViewController> nearestChatViewController = nil;
@@ -411,26 +463,40 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 - (id <CQChatViewController>) chatViewControllerPreceedingChatController:(id <CQChatViewController>) chatViewController requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight {
-	if (!_chatControllers.count)
-		return nil;
+	__block id <CQChatViewController> result = nil;
 
-	if (!requiringActivity && !requiringHighlight) {
-		NSUInteger index = [_chatControllers indexOfObjectIdenticalTo:chatViewController];
-		if (!index)
-			return [_chatControllers lastObject];
-		return _chatControllers[(index - 1)];
-	}
+	dispatch_sync(_orderingQueue, ^{
+		if (!_chatControllers.count)
+			result = nil;
+
+		if (!requiringActivity && !requiringHighlight) {
+			NSUInteger index = [_chatControllers indexOfObjectIdenticalTo:chatViewController];
+			if (!index)
+				result = [_chatControllers lastObject];
+			result = _chatControllers[(index - 1)];
+		}
+	});
+
+	if (result)
+		return result;
 
 	return [self _enumerateChatViewControllersFromChatController:chatViewController withOption:NSEnumerationReverse requiringActivity:requiringActivity requiringHighlight:requiringHighlight];
 }
 
 - (id <CQChatViewController>) chatViewControllerFollowingChatController:(id <CQChatViewController>) chatViewController requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight {
-	if (!requiringActivity && !requiringHighlight) {
-		NSUInteger index = [_chatControllers indexOfObjectIdenticalTo:chatViewController];
-		if (index == (_chatControllers.count - 1))
-			return _chatControllers[0];
-		return _chatControllers[(index + 1)];
-	}
+	__block id <CQChatViewController> result = nil;
+
+	dispatch_sync(_orderingQueue, ^{
+		if (!requiringActivity && !requiringHighlight) {
+			NSUInteger index = [_chatControllers indexOfObjectIdenticalTo:chatViewController];
+			if (index == (_chatControllers.count - 1))
+				result = _chatControllers[0];
+			result = _chatControllers[(index + 1)];
+		}
+	});
+
+	if (result)
+		return result;
 
 	return [self _enumerateChatViewControllersFromChatController:chatViewController withOption:0 requiringActivity:requiringActivity requiringHighlight:requiringHighlight];
 }

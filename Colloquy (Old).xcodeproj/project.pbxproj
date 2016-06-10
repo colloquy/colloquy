@@ -2762,8 +2762,6 @@
 					__TEXT,
 					__text,
 					Colloquy.order,
-					"-e",
-					start,
 				);
 				WRAPPER_EXTENSION = app;
 			};

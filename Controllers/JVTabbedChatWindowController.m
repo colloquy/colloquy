@@ -1,5 +1,6 @@
 #import "JVChatController.h"
 #import "JVTabbedChatWindowController.h"
+#import "MVApplicationController.h"
 #import "AICustomTabsView.h"
 #import "JVChatTabItem.h"
 #import "MVApplicationController.h"

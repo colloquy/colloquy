@@ -63,8 +63,8 @@
                     <scrollView borderType="none" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="112">
                         <rect key="frame" x="0.0" y="0.0" width="350" height="191"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <clipView key="contentView" id="sDb-le-xP8">
-                            <rect key="frame" x="0.0" y="0.0" width="350" height="191"/>
+                        <clipView key="contentView" id="oTu-bd-Lr7">
+                            <rect key="frame" x="0.0" y="23" width="350" height="168"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" headerView="100869" id="114" customClass="MVTableView">
@@ -76,7 +76,7 @@
                                     <tableColumns>
                                         <tableColumn identifier="status" editable="NO" width="17" minWidth="17" maxWidth="17" id="119">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
-                                                <font key="font" metaFont="smallSystem"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" white="0.33333299" alpha="1" colorSpace="calibratedWhite"/>
                                             </tableHeaderCell>
@@ -84,12 +84,12 @@
                                         </tableColumn>
                                         <tableColumn identifier="address" width="125" minWidth="65" maxWidth="1000" id="115">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Server">
-                                                <font key="font" metaFont="smallSystem"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" white="0.33333299" alpha="1" colorSpace="calibratedWhite"/>
                                             </tableHeaderCell>
                                             <textFieldCell key="dataCell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" alignment="left" id="100862">
-                                                <font key="font" metaFont="cellTitle"/>
+                                                <font key="font" metaFont="titleBar" size="12"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             </textFieldCell>
@@ -97,7 +97,7 @@
                                         </tableColumn>
                                         <tableColumn identifier="port" width="45" minWidth="40" maxWidth="1000" id="328">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Port">
-                                                <font key="font" metaFont="smallSystem"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
@@ -109,19 +109,19 @@
                                                     <decimal key="minimum" value="0"/>
                                                     <decimal key="maximum" value="65535"/>
                                                 </numberFormatter>
-                                                <font key="font" metaFont="cellTitle"/>
+                                                <font key="font" metaFont="titleBar" size="12"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </tableColumn>
                                         <tableColumn identifier="nickname" width="131.16799926757812" minWidth="56.667999267578125" maxWidth="1000" id="356">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Nickname">
-                                                <font key="font" metaFont="smallSystem"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
                                             <textFieldCell key="dataCell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" alignment="left" drawsBackground="YES" id="100864">
-                                                <font key="font" metaFont="cellTitle"/>
+                                                <font key="font" metaFont="titleBar" size="12"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -129,7 +129,7 @@
                                         </tableColumn>
                                         <tableColumn identifier="auto" editable="NO" width="17" minWidth="4" maxWidth="17" id="357">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center">
-                                                <font key="font" metaFont="smallSystem"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
@@ -196,7 +196,7 @@
                                         <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="662">
                                             <rect key="frame" x="132" y="9" width="199" height="79"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <clipView key="contentView" id="yfC-ot-WMY">
+                                            <clipView key="contentView" id="dOT-UR-0ZI">
                                                 <rect key="frame" x="1" y="1" width="197" height="77"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
@@ -267,7 +267,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                             <popUpButtonCell key="cell" type="push" title="None" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" enabled="NO" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="664" id="100808">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="menu"/>
+                                                <font key="font" metaFont="system"/>
                                                 <menu key="menu" title="OtherViews" id="671">
                                                     <items>
                                                         <menuItem title="None" state="on" id="664"/>
@@ -762,7 +762,7 @@ DQ
             <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1257"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="710">
-                <rect key="frame" x="0.0" y="0.0" width="420" height="189"/>
+                <rect key="frame" x="1" y="1" width="420" height="189"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField verticalHuggingPriority="750" id="711">
@@ -849,7 +849,7 @@ DQ
             <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1257"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="732">
-                <rect key="frame" x="0.0" y="0.0" width="433" height="213"/>
+                <rect key="frame" x="1" y="1" width="433" height="213"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView id="734">
@@ -965,7 +965,7 @@ DQ
             <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1257"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="777">
-                <rect key="frame" x="0.0" y="0.0" width="449" height="242"/>
+                <rect key="frame" x="1" y="1" width="449" height="242"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField verticalHuggingPriority="750" id="779">
@@ -989,7 +989,7 @@ DQ
                     <scrollView horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="781">
                         <rect key="frame" x="20" y="62" width="409" height="89"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <clipView key="contentView" id="ojs-eF-kEn">
+                        <clipView key="contentView" id="CfZ-kp-2Rk">
                             <rect key="frame" x="1" y="0.0" width="407" height="88"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>

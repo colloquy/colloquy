@@ -718,8 +718,8 @@
 /* Voiceover members list label */
 "Members List" = "Lista Membri";
 
-/* Message a User button title */
-"Message a User" = "Parla in Privato con un Utente";
+/* Send Private Message button title */
+"Send Private Message" = "Parla in Privato con un Utente";
 
 /* Message User view title */
 "Message User" = "Parla in Privato";

@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) unsigned short serverPort;
 
 @property (nonatomic, copy) NSString *username;
-@property (nonatomic, copy) NSString *password;
+@property (nonatomic, copy, nullable) NSString *password;
 
 @property (nonatomic) BOOL pushNotifications;
 @end

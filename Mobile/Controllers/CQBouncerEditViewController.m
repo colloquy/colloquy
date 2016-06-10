@@ -1,6 +1,5 @@
 #import "CQBouncerEditViewController.h"
 
-#import "CQAlertView.h"
 #import "CQBouncerSettings.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
@@ -24,9 +23,6 @@ static BOOL pushAvailable = YES;
 #pragma mark -
 
 NS_ASSUME_NONNULL_BEGIN
-
-@interface CQBouncerEditViewController () <CQActionSheetDelegate, CQAlertViewDelegate>
-@end
 
 @implementation CQBouncerEditViewController
 - (instancetype) init {
@@ -291,45 +287,19 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) deleteBouncer:(__nullable id) sender {
+	UIAlertControllerStyle style = UIAlertControllerStyleActionSheet;
+
 	if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular) {
-		CQAlertView *alert = [[CQAlertView alloc] init];
-		alert.delegate = self;
-
-		alert.title = NSLocalizedString(@"Delete Bouncer", @"Delete Bouncer alert title");
-
-		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
-		[alert addButtonWithTitle:NSLocalizedString(@"Delete", @"Delete alert button title")];
-
-		[alert show];
-
-		return;
+		style = UIAlertControllerStyleAlert;
 	}
 
-	CQActionSheet *sheet = [[CQActionSheet alloc] init];
-	sheet.delegate = self;
-
-	sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Delete Bouncer", @"Delete Bouncer button title")];
-	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
-
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
-}
-
-#pragma mark -
-
-- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (buttonIndex == alertView.cancelButtonIndex)
-		return;
-	[[CQConnectionsController defaultController] removeBouncerSettings:_settings];
-	[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
-}
-
-#pragma mark -
-
-- (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (buttonIndex == actionSheet.cancelButtonIndex)
-		return;
-	[[CQConnectionsController defaultController] removeBouncerSettings:_settings];
-	[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
+	UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete Bouncer", @"Delete Bouncer alert title") message:@"" preferredStyle:style];
+	[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss button title") style:UIAlertActionStyleCancel handler:nil]];
+	[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Delete", @"Delete button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+		[[CQConnectionsController defaultController] removeBouncerSettings:_settings];
+		[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
+	}]];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 @end
 

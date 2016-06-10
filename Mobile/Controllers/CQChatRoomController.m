@@ -1,6 +1,5 @@
 #import "CQChatRoomController.h"
 
-#import "CQAlertView.h"
 #import "CQChatInputBar.h"
 #import "CQChatPresentationController.h"
 #import "CQChatUserListViewController.h"
@@ -26,7 +25,7 @@ static CQShowRoomTopic showRoomTopic;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQDirectChatController (CQDirectChatControllerPrivate) <CQAlertViewDelegate, CQActionSheetDelegate, CQChatInputBarDelegate>
+@interface CQDirectChatController (CQDirectChatControllerPrivate) <CQActionSheetDelegate, CQChatInputBarDelegate, UIPopoverPresentationControllerDelegate>
 - (void) _addPendingComponentsAnimated:(BOOL) animated;
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _didDisconnect:(NSNotification *) notification;
@@ -116,6 +115,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 #pragma mark -
+
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	[chatInputBar setAccessibilityLabel:NSLocalizedString(@"Roomv Controls", @"Info Accessibility Label") forResponderState:CQChatInputBarNotResponder];
+}
 
 - (void) viewDidAppear:(BOOL) animated {
 	[super viewDidAppear:animated];
@@ -219,6 +224,7 @@ NS_ASSUME_NONNULL_BEGIN
 		_currentUserListNavigationController.modalPresentationStyle = UIModalPresentationPopover;
 		_currentUserListNavigationController.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
 		_currentUserListNavigationController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+		_currentUserListNavigationController.popoverPresentationController.delegate = self;
 	}
 
 	[self presentViewController:_currentUserListNavigationController animated:YES completion:NULL];
@@ -308,6 +314,12 @@ NS_ASSUME_NONNULL_BEGIN
 		[completions addObjectsFromArray:[super chatInputBar:inputBar completionsForWordWithPrefix:word inRange:range]];
 
 	return completions;
+}
+
+#pragma mark -
+
+- (void) popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController *) popoverPresentationController  {
+	_currentUserListNavigationController = nil;
 }
 
 #pragma mark -
@@ -473,20 +485,18 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		return;
 	}
 
-	CQAlertView *alert = [[CQAlertView alloc] init];
-	alert.tag = RejoinRoomAlertTag;
-	alert.delegate = self;
-	alert.title = NSLocalizedString(@"Kicked from Room", "Kicked from room alert title");
-	alert.message = [NSString stringWithFormat:NSLocalizedString(@"You were kicked from \"%@\" by \"%@\" on \"%@\".", "Kicked from room alert message"), self.room.displayName, user.displayName, self.connection.displayName];
-
-	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
-
-	[alert addButtonWithTitle:NSLocalizedString(@"Rejoin", @"Rejoin alert button title")];
+	UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+	alertController.title = NSLocalizedString(@"Kicked from Room", "Kicked from room alert title");
+	alertController.message = [NSString stringWithFormat:NSLocalizedString(@"You were kicked from \"%@\" by \"%@\" on \"%@\".", "Kicked from room alert message"), self.room.displayName, user.displayName, self.connection.displayName];
+	[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:nil]];
+	[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Rejoin", @"Rejoin alert button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+		[self join];
+	}]];
 
 	if ([[CQSettingsController settingsController] boolForKey:@"CQVibrateOnHighlight"])
 		[CQSoundController vibrate];
 
-	[alert show];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void) _displayTopicChange:(CQProcessChatMessageOperation *) operation {
@@ -1236,21 +1246,6 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 #pragma mark -
 
-- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (buttonIndex == alertView.cancelButtonIndex)
-		return;
-
-	if (alertView.tag != ReconnectAlertTag && alertView.tag != RejoinRoomAlertTag) {
-		[super alertView:alertView clickedButtonAtIndex:buttonIndex];
-		return;
-	}
-
-	if (alertView.tag == ReconnectAlertTag || alertView.tag == RejoinRoomAlertTag)
-		[self join];
-}
-
-#pragma mark -
-
 - (void) actionSheet:(CQActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
@@ -1300,29 +1295,28 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 }
 
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
-	CQAlertView *alert = [[CQAlertView alloc] init];
-	alert.delegate = self;
+	UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+	[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:nil]];
 
-	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
-
-	if (command) alert.title = NSLocalizedString(@"Can't Send Command", @"Can't send command alert title");
-	else alert.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
+	if (command) alertController.title = NSLocalizedString(@"Can't Send Command", @"Can't send command alert title");
+	else alertController.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
 
 	if (self.connection.status == MVChatConnectionConnectingStatus) {
-		alert.message = NSLocalizedString(@"You are currently connecting,\nyou should join the room shortly.", @"Can't send message to room because server is connecting alert message");
+		alertController.message = NSLocalizedString(@"You are currently connecting,\nyou should join the room shortly.", @"Can't send message to room because server is connecting alert message");
 	} else if (!self.connection.connected) {
-		alert.tag = ReconnectAlertTag;
-		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to room because server is disconnected alert message");
-		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
+		alertController.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to user because server is disconnected alert message");
+		[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Connect", @"Connect button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			[self.connection connectAppropriately];
+		}]];
 	} else if (!self.room.joined) {
-		alert.tag = RejoinRoomAlertTag;
-		alert.message = NSLocalizedString(@"You are not a room member,\nrejoin and try again.", @"Can't send message to room because not a member alert message");
-		[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join button title")];
+		[alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Join", @"Join button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			[self join];
+		}]];
 	} else {
 		return;
 	}
 
-	[alert show];
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 @end
 

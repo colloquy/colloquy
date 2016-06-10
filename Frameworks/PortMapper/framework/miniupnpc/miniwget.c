@@ -104,7 +104,8 @@ miniwget2(const char * url, const char * host,
 	/*write(s, buf, strlen(buf));*/
 	send(s, buf, strlen(buf), 0);
 	{
-		int n, headers=1;
+		ssize_t n;
+		int headers=1;
 		char * respbuffer = NULL;
 		int allreadyread = 0;
 		/*while((n = recv(s, buf, 2048, 0)) > 0)*/
