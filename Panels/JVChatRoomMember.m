@@ -242,7 +242,7 @@ NS_ASSUME_NONNULL_BEGIN
 	else if( modes & MVChatRoomMemberHalfOperatorMode ) iconName = @"userHalfOperator";
 	else if( modes & MVChatRoomMemberVoicedMode ) iconName = @"userVoice";
 
-	return [NSImage imageFromPDF:iconName];
+	return [NSImage imageNamed:iconName];
 }
 
 - (nullable NSImage *) statusImage {

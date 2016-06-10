@@ -561,7 +561,7 @@ static MVBuddyListController *sharedInstance = nil;
 		if( _showIcons ) {
 			JVBuddy *buddy = _buddyOrder[row];
 			NSImage *ret = [buddy picture];
-			if( ! ret ) ret = [[NSImage imageFromPDF:@"person"] copy];
+			if( ! ret ) ret = [[NSImage imageNamed:@"person"] copy];
 			[ret setSize:NSMakeSize( 32., 32. )];
 
 			return ret;
@@ -896,7 +896,7 @@ static MVBuddyListController *sharedInstance = nil;
 	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now online.", "available buddy bubble text" ), [buddy displayName]];
 
 	NSImage *icon = [buddy picture];
-	if( ! icon ) icon = [NSImage imageFromPDF:@"person"];
+	if( ! icon ) icon = [NSImage imageNamed:@"person"];
 	context[@"image"] = icon;
 
 	[[JVNotificationController defaultController] performNotification:@"JVChatBuddyOnline" withContextInfo:context];
@@ -919,7 +919,7 @@ static MVBuddyListController *sharedInstance = nil;
 		context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"Your buddy %@ is now offline.", "unavailable buddy bubble text" ), [buddy displayName]];
 
 		NSImage *icon = [buddy picture];
-		if( ! icon ) icon = [NSImage imageFromPDF:@"person"];
+		if( ! icon ) icon = [NSImage imageNamed:@"person"];
 		context[@"image"] = icon;
 
 		[[JVNotificationController defaultController] performNotification:@"JVChatBuddyOffline" withContextInfo:context];

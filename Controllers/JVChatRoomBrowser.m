@@ -64,7 +64,7 @@
 	[roomsTable accessibilitySetOverrideValue:NSLocalizedString(@"Chat rooms", "VoiceOver title for chat rooms table") forAttribute:NSAccessibilityDescriptionAttribute];
 
 	theColumn = [roomsTable tableColumnWithIdentifier:@"members"];
-	NSImage *headerImage = [NSImage imageFromPDF:@"person"];
+	NSImage *headerImage = [NSImage imageNamed:@"person"];
 	headerImage.size = NSMakeSize(10., 10.);
 	[[theColumn headerCell] setImage:headerImage];
 	[[theColumn headerCell] accessibilitySetOverrideValue:NSLocalizedString(@"Participants", "VoiceOver title for number of connected users in chat room browser table") forAttribute:NSAccessibilityDescriptionAttribute];

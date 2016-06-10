@@ -382,7 +382,7 @@
 		if( [[column identifier] isEqualToString:@"icon"] ) {
 			if( [rule user] && [rule message] ) return [NSImage imageNamed:@"privateChatTab"];
 			else if( [rule user] ) {
-				NSImage *image = [[NSImage imageFromPDF:@"person"] copy];
+				NSImage *image = [[NSImage imageNamed:@"person"] copy];
 				image.size = NSMakeSize(14., 14.);
 				return image;
 			}

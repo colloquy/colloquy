@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		196B54A71B28EB4F00EAECA3 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 196B54A61B28EB4F00EAECA3 /* libresolv.dylib */; };
 		198360F51B2905A3006F63DB /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19A7A96C1B28E7A90022172F /* libidn.a */; };
 		19A7A96E1B28E7A90022172F /* XMPPAnonymousAuthentication.h in Headers */ = {isa = PBXBuildFile; fileRef = 19A7A3E21B28E7A60022172F /* XMPPAnonymousAuthentication.h */; };
 		19A7A96F1B28E7A90022172F /* XMPPAnonymousAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 19A7A3E31B28E7A60022172F /* XMPPAnonymousAuthentication.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self -Wno-pointer-arith"; }; };
@@ -284,7 +283,6 @@
 		1C9CF4FE0615091400330D8D /* MVChatPluginManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C9CF4FF0615091500330D8D /* MVChatPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */; };
 		1C9CF5010615091700330D8D /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F52D043001873FC401EE70DE /* MVChatConnection.m */; };
-		1C9FFB140FA1958300748177 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C9FFB130FA1958300748177 /* libicucore.dylib */; };
 		1CB643D50C84F1EF00B79FB0 /* MVChatString.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CB643D40C84F1EF00B79FB0 /* MVChatString.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1CCA51800598AFBA00F0A4CD /* ChatCore.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1CCA517E0598AFBA00F0A4CD /* ChatCore.scriptSuite */; };
 		1CCA51810598AFBA00F0A4CD /* ChatCore.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 1CCA517F0598AFBA00F0A4CD /* ChatCore.scriptTerminology */; };
@@ -312,6 +310,9 @@
 		32C46E1B0B3AB37E00B96B27 /* MVICBChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 32C46E190B3AB37E00B96B27 /* MVICBChatUser.m */; };
 		431261C3072EE37A00720AD1 /* MVSILCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */; };
 		559110451CA9B1F300258B5F /* NSDateAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 559110441CA9B1F300258B5F /* NSDateAdditions.h */; };
+		55A3A0541D0B8B29001F92CA /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A3A0531D0B8B29001F92CA /* libicucore.tbd */; };
+		55A3A0551D0B8B47001F92CA /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 19A7AE541B28EB200022172F /* libresolv.tbd */; };
+		55A3A0581D0B8B81001F92CA /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A3A0531D0B8B29001F92CA /* libicucore.tbd */; };
 		55B748171AD2E6FD001459F7 /* RunOnMainThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 55B748161AD2E6FD001459F7 /* RunOnMainThread.h */; };
 		55B748181AD2E6FD001459F7 /* RunOnMainThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 55B748161AD2E6FD001459F7 /* RunOnMainThread.h */; };
 		899F4EFE12617870003B9D9A /* NSFileManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */; };
@@ -348,7 +349,6 @@
 		92417D53149C019A0009B06E /* NSFileManagerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */; };
 		92417D55149C019A0009B06E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB3C3705228EFD000001C8 /* SystemConfiguration.framework */; };
 		92417D59149C019A0009B06E /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEB167095BE3A000166A54 /* CoreServices.framework */; };
-		92417D5C149C019A0009B06E /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C9FFB130FA1958300748177 /* libicucore.dylib */; };
 		92417D61149C019A0009B06E /* BSD License.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1C11B7A009C27AC800789814 /* BSD License.txt */; };
 		92417D65149C019A0009B06E /* MVFileTransfer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C943AA9063C260800618CD9 /* MVFileTransfer.h */; settings = {ATTRIBUTES = (); }; };
 		92417D66149C019A0009B06E /* MVChatConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = F52D043101873FC401EE70DE /* MVChatConnection.h */; settings = {ATTRIBUTES = (); }; };
@@ -421,9 +421,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
-		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		196B54A61B28EB4F00EAECA3 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
 		19A7A3E21B28E7A60022172F /* XMPPAnonymousAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPAnonymousAuthentication.h; sourceTree = "<group>"; };
 		19A7A3E31B28E7A60022172F /* XMPPAnonymousAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPAnonymousAuthentication.m; sourceTree = "<group>"; };
@@ -709,11 +709,11 @@
 		1C9C13370B50A7AC005F9F28 /* MVDirectChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectChatConnection.h; path = "Chat Core/MVDirectChatConnection.h"; sourceTree = "<group>"; };
 		1C9C13380B50A7AC005F9F28 /* MVDirectChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDirectChatConnection.m; path = "Chat Core/MVDirectChatConnection.m"; sourceTree = "<group>"; };
 		1C9C14170B50B3AB005F9F28 /* MVDirectChatConnectionPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectChatConnectionPrivate.h; path = "Chat Core/MVDirectChatConnectionPrivate.h"; sourceTree = "<group>"; };
-		1C9FFB130FA1958300748177 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
+		1C9FFB130FA1958300748177 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		1CB643D40C84F1EF00B79FB0 /* MVChatString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatString.h; path = "Chat Core/MVChatString.h"; sourceTree = "<group>"; };
 		1CCA517E0598AFBA00F0A4CD /* ChatCore.scriptSuite */ = {isa = PBXFileReference; explicitFileType = text.plist.scriptSuite; fileEncoding = 4; name = ChatCore.scriptSuite; path = Resources/ChatCore.scriptSuite; sourceTree = "<group>"; };
 		1CCA517F0598AFBA00F0A4CD /* ChatCore.scriptTerminology */ = {isa = PBXFileReference; explicitFileType = text.plist.scriptTerminology; fileEncoding = 4; name = ChatCore.scriptTerminology; path = Resources/ChatCore.scriptTerminology; sourceTree = "<group>"; };
-		1CCB3C3705228EFD000001C8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
+		1CCB3C3705228EFD000001C8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		1CD020B205759347000F93B4 /* NSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = NSStringAdditions.h; path = Additions/NSStringAdditions.h; sourceTree = "<group>"; };
 		1CD020B305759347000F93B4 /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = NSStringAdditions.m; path = Additions/NSStringAdditions.m; sourceTree = "<group>"; };
 		1CD020BC057593A9000F93B4 /* NSColorAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = NSColorAdditions.h; path = Additions/NSColorAdditions.h; sourceTree = "<group>"; };
@@ -725,7 +725,7 @@
 		1CE4631D095ECD7300AB7732 /* MVChatRoomPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatRoomPrivate.h; path = "Chat Core/MVChatRoomPrivate.h"; sourceTree = "<group>"; };
 		1CE4632E095ECDE600AB7732 /* MVFileTransferPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVFileTransferPrivate.h; path = "Chat Core/MVFileTransferPrivate.h"; sourceTree = "<group>"; };
 		1CE4633B095ECE4F00AB7732 /* MVChatConnectionPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatConnectionPrivate.h; path = "Chat Core/MVChatConnectionPrivate.h"; sourceTree = "<group>"; };
-		1CEEB167095BE3A000166A54 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
+		1CEEB167095BE3A000166A54 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		1CF4E50F0698E9E900986498 /* NSDataAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDataAdditions.h; path = Additions/NSDataAdditions.h; sourceTree = "<group>"; };
 		1CF4E5100698E9E900986498 /* NSDataAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDataAdditions.m; path = Additions/NSDataAdditions.m; sourceTree = "<group>"; };
 		1CF6B4960710894D008ABEFA /* MVSILCChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVSILCChatRoom.h; path = "Chat Core/MVSILCChatRoom.h"; sourceTree = "<group>"; };
@@ -744,6 +744,7 @@
 		431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MVSILCFileTransfer.m; path = "Chat Core/MVSILCFileTransfer.m"; sourceTree = "<group>"; };
 		559110441CA9B1F300258B5F /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		5596BE781B37206C0078571A /* build-libidn-OSX.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "build-libidn-OSX.sh"; sourceTree = "<group>"; };
+		55A3A0531D0B8B29001F92CA /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		55AA73C81C554FD000BD820C /* ChatCore.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = ChatCore.modulemap; sourceTree = "<group>"; };
 		55B748161AD2E6FD001459F7 /* RunOnMainThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RunOnMainThread.h; path = Additions/RunOnMainThread.h; sourceTree = "<group>"; };
 		899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerAdditions.h; path = Additions/NSFileManagerAdditions.h; sourceTree = "<group>"; };
@@ -777,7 +778,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				196B54A71B28EB4F00EAECA3 /* libresolv.dylib in Frameworks */,
+				55A3A0551D0B8B47001F92CA /* libresolv.tbd in Frameworks */,
 				198360F51B2905A3006F63DB /* libidn.a in Frameworks */,
 				92BA71FF16890B66000AA0C5 /* Security.framework in Frameworks */,
 				1C51B485052DE0CB00BB459B /* SystemConfiguration.framework in Frameworks */,
@@ -785,7 +786,7 @@
 				1C5A233F06FA4FEE00A51F10 /* libsilc.framework in Frameworks */,
 				1C5A234006FA4FEE00A51F10 /* libsilcclient.framework in Frameworks */,
 				1CEEB173095BE3A000166A54 /* CoreServices.framework in Frameworks */,
-				1C9FFB140FA1958300748177 /* libicucore.dylib in Frameworks */,
+				55A3A0541D0B8B29001F92CA /* libicucore.tbd in Frameworks */,
 				1C386E8E103246B500660864 /* TCMPortMapper.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -796,7 +797,7 @@
 			files = (
 				92417D55149C019A0009B06E /* SystemConfiguration.framework in Frameworks */,
 				92417D59149C019A0009B06E /* CoreServices.framework in Frameworks */,
-				92417D5C149C019A0009B06E /* libicucore.dylib in Frameworks */,
+				55A3A0581D0B8B81001F92CA /* libicucore.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -806,26 +807,24 @@
 		089C166AFE841209C02AAC07 /* Massinova Menu Extra */ = {
 			isa = PBXGroup;
 			children = (
-				196B54A61B28EB4F00EAECA3 /* libresolv.dylib */,
-				19A7AE541B28EB200022172F /* libresolv.tbd */,
 				1C386E7C1032464A00660864 /* Port Map.xcodeproj */,
 				F50B0A9F0170C89301A84BDE /* Sources & Headers */,
 				F50B0AA00170C89301A84BDE /* Other Sources & Additions */,
 				F50B0AA10170C89301A84BDE /* Resources */,
 				1C9AE8DF086A5218008ED7AD /* Configurations */,
-				089C1671FE841209C02AAC07 /* Frameworks & Libraries */,
+				089C1671FE841209C02AAC07 /* Frameworks */,
 				1CB2C8CC052DDA360094AAA4 /* Products */,
 			);
 			name = "Massinova Menu Extra";
 			sourceTree = "<group>";
 		};
-		089C1671FE841209C02AAC07 /* Frameworks & Libraries */ = {
+		089C1671FE841209C02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
 				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
 			);
-			name = "Frameworks & Libraries";
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
@@ -838,7 +837,10 @@
 				1C5A233D06FA4FEE00A51F10 /* libsilc.framework */,
 				1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */,
 				1C386E8D103246B500660864 /* TCMPortMapper.framework */,
+				196B54A61B28EB4F00EAECA3 /* libresolv.dylib */,
+				19A7AE541B28EB200022172F /* libresolv.tbd */,
 				1C9FFB130FA1958300748177 /* libicucore.dylib */,
+				55A3A0531D0B8B29001F92CA /* libicucore.tbd */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
