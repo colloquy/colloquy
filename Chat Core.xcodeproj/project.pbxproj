@@ -312,7 +312,6 @@
 		559110451CA9B1F300258B5F /* NSDateAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 559110441CA9B1F300258B5F /* NSDateAdditions.h */; };
 		55A3A0541D0B8B29001F92CA /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A3A0531D0B8B29001F92CA /* libicucore.tbd */; };
 		55A3A0551D0B8B47001F92CA /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 19A7AE541B28EB200022172F /* libresolv.tbd */; };
-		55A3A0581D0B8B81001F92CA /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A3A0531D0B8B29001F92CA /* libicucore.tbd */; };
 		55B748171AD2E6FD001459F7 /* RunOnMainThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 55B748161AD2E6FD001459F7 /* RunOnMainThread.h */; };
 		55B748181AD2E6FD001459F7 /* RunOnMainThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 55B748161AD2E6FD001459F7 /* RunOnMainThread.h */; };
 		899F4EFE12617870003B9D9A /* NSFileManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */; };
@@ -661,7 +660,7 @@
 		19A7A96B1B28E7A90022172F /* idn-int.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "idn-int.h"; sourceTree = "<group>"; };
 		19A7A96C1B28E7A90022172F /* libidn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libidn.a; path = dependencies/lib/libidn.a; sourceTree = "<group>"; };
 		19A7A96D1B28E7A90022172F /* stringprep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringprep.h; sourceTree = "<group>"; };
-		19A7AE541B28EB200022172F /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = text; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
+		19A7AE541B28EB200022172F /* libresolv.tbd */ = {isa = PBXFileReference; explicitFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectClientConnection.h; path = "Chat Core/MVDirectClientConnection.h"; sourceTree = "<group>"; };
 		1C0FE8A90B4F647D00855B9C /* MVDirectClientConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDirectClientConnection.m; path = "Chat Core/MVDirectClientConnection.m"; sourceTree = "<group>"; };
 		1C11B7A009C27AC800789814 /* BSD License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "BSD License.txt"; path = "Resources/BSD License.txt"; sourceTree = "<group>"; };
@@ -745,6 +744,7 @@
 		559110441CA9B1F300258B5F /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		5596BE781B37206C0078571A /* build-libidn-OSX.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "build-libidn-OSX.sh"; sourceTree = "<group>"; };
 		55A3A0531D0B8B29001F92CA /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
+		55A3A05A1D0BB993001F92CA /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libicucore.tbd; sourceTree = DEVELOPER_DIR; };
 		55AA73C81C554FD000BD820C /* ChatCore.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = ChatCore.modulemap; sourceTree = "<group>"; };
 		55B748161AD2E6FD001459F7 /* RunOnMainThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RunOnMainThread.h; path = Additions/RunOnMainThread.h; sourceTree = "<group>"; };
 		899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerAdditions.h; path = Additions/NSFileManagerAdditions.h; sourceTree = "<group>"; };
@@ -797,7 +797,6 @@
 			files = (
 				92417D55149C019A0009B06E /* SystemConfiguration.framework in Frameworks */,
 				92417D59149C019A0009B06E /* CoreServices.framework in Frameworks */,
-				55A3A0581D0B8B81001F92CA /* libicucore.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -821,6 +820,7 @@
 		089C1671FE841209C02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				55A3A05C1D0BB99D001F92CA /* iOS */,
 				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
 				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
 			);
@@ -1671,6 +1671,14 @@
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 1;
+		};
+		55A3A05C1D0BB99D001F92CA /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				55A3A05A1D0BB993001F92CA /* libicucore.tbd */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
 		};
 		922B1FF21692C41F002ECDFD /* Logging */ = {
 			isa = PBXGroup;
@@ -2528,6 +2536,7 @@
 					"RKL_BLOCKS=0",
 				);
 				GCC_THUMB_SUPPORT = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
@@ -2579,6 +2588,7 @@
 					"RKL_BLOCKS=0",
 				);
 				GCC_THUMB_SUPPORT = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
