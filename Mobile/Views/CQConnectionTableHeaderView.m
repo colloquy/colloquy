@@ -279,7 +279,7 @@ NS_ASSUME_NONNULL_BEGIN
 	self.contentView.backgroundColor = [UIColor colorWithWhite:(208. / 255.) alpha:1.];
 }
 
-- (void) touchesCancelled:(NSSet *__nullable) touches withEvent:(UIEvent *__nullable) event {
+- (void) touchesCancelled:(NSSet *) touches withEvent:(UIEvent *__nullable) event {
 	[super touchesCancelled:touches withEvent:event];
 
 	self.contentView.backgroundColor = _originalBackgroundColor;
