@@ -31,10 +31,6 @@ static MVCrashCatcher *crashCatcher = nil;
 	return self;
 }
 
-- (void) dealloc {
-	[window close];
-}
-
 - (void) awakeFromNib {
 	NSString *logContent = [NSString stringWithContentsOfFile:logPath encoding:NSUTF8StringEncoding error:NULL];
 	logContent = [logContent stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -42,7 +38,6 @@ static MVCrashCatcher *crashCatcher = nil;
 	NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	description.stringValue = [NSString stringWithFormat:NSLocalizedString( @"%@ encountered an unrecoverable error during a previous session. Please enter any details you may recall about what you were doing when the application crashed. This will help us to improve future releases of %@.", "crash message" ), programName, programName];
 	log.string = logContent;
-
 	[window center];
 
 	[[NSApplication sharedApplication] runModalForWindow:window];
@@ -95,6 +90,7 @@ static MVCrashCatcher *crashCatcher = nil;
 	[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
 	[request setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES]];
 
+	
 	[NSURLConnection connectionWithRequest:request delegate:self];
 
 	[[NSApplication sharedApplication] stopModal];
