@@ -319,6 +319,9 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		}
 	});
 
+	if (chatController)
+		return chatController;
+
 	if (!exists) {
 		if ((chatController = [[CQDirectChatController alloc] initWithTarget:user])) {
 			[[CQChatOrderingController defaultController] addViewController:chatController];
@@ -341,6 +344,9 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 			}
 		}
 	});
+
+	if (chatController)
+		return chatController;
 
 	if (!exists) {
 		if ((chatController = [[CQDirectChatController alloc] initWithTarget:connection])) {
