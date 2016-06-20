@@ -1048,7 +1048,9 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		self.connectedSecurely = YES;
 
 		[self _startTLS];
-	} else self.connectedSecurely = NO;
+    } else {
+        self.connectedSecurely = NO;
+    }
 
 	NSString *password = _password;
 	NSString *username = ( _username.length ? _username : @"anonymous" );
