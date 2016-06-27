@@ -19,6 +19,10 @@ NS_ASSUME_NONNULL_BEGIN
 }
 + (NSArray <NSNumber*> *) defaultServerPorts;
 + (NSUInteger) maxMessageLength;
+#if __has_feature(objc_class_property)
+@property (readonly, class, copy) NSArray<NSNumber*> *defaultServerPorts;
+@property (readonly, class) NSUInteger maxMessageLength;
+#endif
 @end
 
 @interface MVXMPPChatConnection (MVXMPPChatConnectionPrivate)

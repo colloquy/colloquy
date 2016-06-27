@@ -4,6 +4,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CQKeychain : NSObject
 + (CQKeychain *) standardKeychain;
+#if __has_feature(objc_class_property)
+@property (readonly, strong, class) CQKeychain *standardKeychain;
+#endif
 
 - (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *__nullable) area;
 - (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *__nullable) area displayValue:(NSString *__nullable)displayValue;

@@ -29,13 +29,16 @@ typedef NS_ENUM(FourCharCode, MVKeyChainProtocol) {
 	MVKeyChainProtocolSSH = kSecProtocolTypeSSH
 };
 
+NS_ASSUME_NONNULL_BEGIN
 
 @interface MVKeyChain : NSObject
 + (MVKeyChain *) defaultKeyChain;
 
-- (NSString *) genericPasswordForService:(NSString *) service account:(NSString *) account;
+- (nullable NSString *) genericPasswordForService:(nullable NSString *) service account:(nullable NSString *) account;
 - (void) removeGenericPasswordForService:(NSString *) service account:(NSString *) account;
 
 - (NSString *) internetPasswordForServer:(NSString *) server securityDomain:(NSString *) domain account:(NSString *) account path:(NSString *) path port:(unsigned short) port protocol:(MVKeyChainProtocol) protocol authenticationType:(MVKeyChainAuthenticationType) authType;
-- (void) removeInternetPasswordForServer:(NSString *) server securityDomain:(NSString *) domain account:(NSString *) account path:(NSString *) path port:(unsigned short) port protocol:(MVKeyChainProtocol) protocol authenticationType:(MVKeyChainAuthenticationType) authType;
+- (void) removeInternetPasswordForServer:(NSString *) server securityDomain:(nullable NSString *) domain account:(NSString *) account path:(nullable NSString *) path port:(unsigned short) port protocol:(MVKeyChainProtocol) protocol authenticationType:(MVKeyChainAuthenticationType) authType;
 @end
+
+NS_ASSUME_NONNULL_END

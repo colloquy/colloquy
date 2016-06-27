@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 @interface MVSILCUploadFileTransfer (MVSILCUploadFileTransferPrivate)
+@property (getter=_sessionID, setter=_setSessionID:) SilcUInt32 sessionID;
 - (SilcUInt32) _sessionID;
 - (void) _setSessionID:(SilcUInt32) sessionID;
 @end
@@ -29,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 @interface MVSILCDownloadFileTransfer (MVSILCDownloadFileTransferPrivate)
+@property (getter=_sessionID, setter=_setSessionID:) SilcUInt32 sessionID;
 - (SilcUInt32) _sessionID;
 - (void) _setSessionID:(SilcUInt32) sessionID;
 @end

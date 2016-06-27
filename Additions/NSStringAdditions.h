@@ -27,6 +27,10 @@ extern BOOL isValidUTF8( const char *string, NSUInteger length );
 
 + (NSArray <NSString *> *) knownEmoticons;
 + (NSSet <NSString *> *) knownEmojiWithEmoticons;
+#if __has_feature(objc_class_property)
+@property (class, readonly, copy) NSArray <NSString *> *knownEmoticons;
+@property (class, readonly, copy) NSSet <NSString *> *knownEmojiWithEmoticons;
+#endif
 
 - (instancetype) initWithChatData:(NSData *) data encoding:(NSStringEncoding) encoding;
 

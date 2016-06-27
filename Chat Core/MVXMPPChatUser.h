@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface MVXMPPChatUser (MVXMPPChatUserPrivate)
+@property (getter=_isRoomMember, setter=_setRoomMember:) BOOL roomMember;
 - (void) _setRoomMember:(BOOL) member;
 - (BOOL) _isRoomMember;
 @end

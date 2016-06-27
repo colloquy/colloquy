@@ -22,11 +22,17 @@ extern NSString *JVStyleVariantChangedNotification;
 }
 + (void) scanForStyles;
 + (NSSet<JVStyle*> *) styles;
+#if __has_feature(objc_class_property)
+@property (class, readonly, copy) NSSet<JVStyle*> *styles
+#endif
 + (nullable instancetype) styleWithIdentifier:(NSString *) identifier;
 + (nullable instancetype) newWithBundle:(NSBundle *) bundle;
 
 + (JVStyle*) defaultStyle;
 + (void) setDefaultStyle:(nullable JVStyle *) style;
+#if __has_feature(objc_class_property)
+@property (class, strong, null_resettable) JVStyle *defaultStyle;
+#endif
 
 - (nullable instancetype) initWithBundle:(NSBundle *) bundle;
 

@@ -13,6 +13,9 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey);
 
 @interface MVIRCChatUser : MVChatUser
 + (NSArray <NSString *> *) servicesNicknames;
+#if __has_feature(objc_class_property)
+@property (readonly, class, copy) NSArray<NSString*> *servicesNicknames;
+#endif
 
 - (instancetype) initLocalUserWithConnection:(MVIRCChatConnection *) connection;
 - (instancetype) initWithNickname:(NSString *) nickname andConnection:(MVIRCChatConnection *) connection;
