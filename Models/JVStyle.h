@@ -23,7 +23,7 @@ extern NSString *JVStyleVariantChangedNotification;
 + (void) scanForStyles;
 + (NSSet<JVStyle*> *) styles;
 #if __has_feature(objc_class_property)
-@property (class, readonly, copy) NSSet<JVStyle*> *styles
+@property (class, readonly, copy) NSSet<JVStyle*> *styles;
 #endif
 + (nullable instancetype) styleWithIdentifier:(NSString *) identifier;
 + (nullable instancetype) newWithBundle:(NSBundle *) bundle;

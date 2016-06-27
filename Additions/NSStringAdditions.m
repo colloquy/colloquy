@@ -540,7 +540,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	if( ! knownEmoticons ) {
 		knownEmoticons = [[NSMutableArray alloc] initWithCapacity:350];
 		for (const struct EmojiEmoticonPair *entry = emoticonToEmojiList; entry && entry->emoticon; ++entry)
-			[knownEmoticons addObject:objc_unretainedObject(entry->emoticon)];
+			[knownEmoticons addObject:(__bridge id)(entry->emoticon)];
 	}
 
 	return knownEmoticons;
@@ -1359,7 +1359,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 		escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 
 	for (const struct EmojiEmoticonPair *entry = emoticonToEmojiList; entry && entry->emoticon; ++entry) {
-		NSString *searchEmoticon = objc_unretainedObject(entry->emoticon);
+		NSString *searchEmoticon = (__bridge id)(entry->emoticon);
 		if (encoded) searchEmoticon = [searchEmoticon stringByEncodingXMLSpecialCharactersAsEntities];
 		if ([self rangeOfString:searchEmoticon options:NSLiteralSearch range:*range].location == NSNotFound)
 			continue;
@@ -1403,7 +1403,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 		unichar currentCharacter = [self characterAtIndex:emojiRange.location];
 		for (const struct EmojiEmoticonPair *entry = emojiToEmoticonList; entry && entry->emoji; ++entry) {
 			if (entry->emoji == currentCharacter) {
-				NSString *emoticon = objc_unretainedObject(entry->emoticon);
+				NSString *emoticon = (__bridge id)(entry->emoticon);
 				if (encode) emoticon = [emoticon stringByEncodingXMLSpecialCharactersAsEntities];
 
 				NSString *replacement = nil;
