@@ -20,6 +20,11 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 
 + (MVFileTransferController *) defaultController;
 
+#if __has_feature(objc_class_property)
+@property (copy, class) NSString *userPreferredDownloadFolder;
+@property (readonly, strong, class) MVFileTransferController *defaultController;
+#endif
+
 - (IBAction) showTransferManager:(id) sender;
 - (IBAction) hideTransferManager:(id) sender;
 

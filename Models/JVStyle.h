@@ -26,7 +26,7 @@ extern NSString *JVStyleVariantChangedNotification;
 @property (class, readonly, copy) NSSet<JVStyle*> *styles;
 #endif
 + (nullable instancetype) styleWithIdentifier:(NSString *) identifier;
-+ (nullable instancetype) newWithBundle:(NSBundle *) bundle;
++ (nullable instancetype) newWithBundle:(NSBundle *) bundle NS_SWIFT_UNAVAILABLE("Use init(bundle:) instead");
 
 + (JVStyle*) defaultStyle;
 + (void) setDefaultStyle:(nullable JVStyle *) style;

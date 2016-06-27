@@ -59,7 +59,10 @@ typedef NS_ENUM(NSInteger, JVChatViewCriterionOperation) {
 
 	BOOL _changed;
 }
-+ (instancetype) controller;
++ (JVChatViewCriterionController*) controller;
+#if __has_feature(objc_class_property)
+@property (readonly, strong, class) JVChatViewCriterionController *controller;
+#endif
 
 @property (readonly, strong) NSView *view;
 

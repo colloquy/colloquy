@@ -43,7 +43,7 @@
 	AICustomTabsView					*view;
 }
 
-+ (id)customTabForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView;
++ (instancetype)customTabForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView;
 @property BOOL allowsInactiveTabClosing;
 @property (getter=isSelected) BOOL selected;
 - (void)setHoveringClose:(BOOL)hovering;

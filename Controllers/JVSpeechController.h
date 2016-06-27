@@ -9,6 +9,9 @@ NS_ASSUME_NONNULL_BEGIN
 	NSArray<NSSpeechSynthesizer*> *_synthesizers;
 }
 + (JVSpeechController *) sharedSpeechController;
+#if __has_feature(objc_class_property)
+@property (readonly, strong, class) JVSpeechController *sharedSpeechController;
+#endif
 - (void) startSpeakingString:(NSString *) string usingVoice:(NSString *) voice;
 @end
 

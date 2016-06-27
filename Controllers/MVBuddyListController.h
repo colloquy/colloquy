@@ -54,6 +54,9 @@ typedef NS_ENUM(OSType, MVBuddyListSortOrder) {
 	BOOL _animating;
 }
 + (MVBuddyListController *) sharedBuddyList;
+#if __has_feature(objc_class_property)
+@property (readonly, strong, class) MVBuddyListController *sharedBuddyList;
+#endif
 
 - (void) save;
 

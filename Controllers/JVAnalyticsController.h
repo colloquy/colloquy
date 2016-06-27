@@ -7,6 +7,9 @@ NS_ASSUME_NONNULL_BEGIN
 	BOOL _pendingSynchronize;
 }
 + (JVAnalyticsController *) defaultController;
+#if __has_feature(objc_class_property)
+@property (readonly, strong, class) JVAnalyticsController *defaultController;
+#endif
 
 - (nullable id) objectForKey:(NSString *) key;
 - (void) setObject:(nullable id) object forKey:(NSString *) key;

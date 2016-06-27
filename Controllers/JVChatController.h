@@ -24,6 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
 }
 + (JVChatController *) defaultController;
 + (NSMenu *) smartTranscriptMenu;
+#if __has_feature(objc_class_property)
+@property (readonly, strong, class) JVChatController *defaultController;
+@property (readonly, strong, class) NSMenu *smartTranscriptMenu;
+#endif
 + (void) refreshSmartTranscriptMenu;
 
 - (void) addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller userInitiated:(BOOL) initiated;

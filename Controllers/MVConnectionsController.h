@@ -68,6 +68,11 @@
 + (NSMenu *) favoritesMenu;
 + (void) refreshFavoritesMenu;
 
+#if __has_feature(objc_class_property)
+@property (readonly, retain, class) MVConnectionsController *defaultController;
+@property (readonly, retain, class) NSMenu *favoritesMenu;
+#endif
+
 - (IBAction) showConnectionManager:(id) sender;
 - (IBAction) hideConnectionManager:(id) sender;
 
