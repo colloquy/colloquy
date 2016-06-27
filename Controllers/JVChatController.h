@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface NSObject (MVChatPluginCommandSupport)
-- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view;
+- (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(nullable MVChatConnection *) connection inView:(nullable id <JVChatViewController>) view;
 @end
 
 NS_ASSUME_NONNULL_END
