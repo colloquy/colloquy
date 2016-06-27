@@ -124,7 +124,7 @@ getContentLengthAndHeaderLength(char * p, int n,
 		line = line + linelen + 2;
 		if(line[0] == '\r' && line[1] == '\n')
 		{
-			*headerlen = (line - p) + 2;
+			*headerlen = (int)(line - p) + 2;
 			return;
 		}
 	}
@@ -257,7 +257,7 @@ int simpleUPnPcommand(int s, const char * url, const char * service,
 		getContentLengthAndHeaderLength(buffer, *bufsize,
 		                                &contentlen, &headerlen);
 #ifdef DEBUG
-		printf("received n=%dbytes bufsize=%d ContLen=%d HeadLen=%d\n",
+		printf("received n=%zdbytes bufsize=%d ContLen=%d HeadLen=%d\n",
 		       n, *bufsize, contentlen, headerlen);
 #endif
 		/* break if we received everything */
@@ -559,11 +559,11 @@ void GetUPNPUrls(struct UPNPUrls * urls, struct IGDdatas * data,
 	url_cpy_or_cat(urls->controlURL_CIF, data->controlurl_CIF, n3);
 
 #ifdef DEBUG
-	printf("urls->ipcondescURL='%s' %lu n1=%d\n", urls->ipcondescURL,
+	printf("urls->ipcondescURL='%s' %lu n1=%zu\n", urls->ipcondescURL,
 	       (unsigned long)strlen(urls->ipcondescURL), n1);
-	printf("urls->controlURL='%s' %lu n2=%d\n", urls->controlURL,
+	printf("urls->controlURL='%s' %lu n2=%zu\n", urls->controlURL,
 	       (unsigned long)strlen(urls->controlURL), n2);
-	printf("urls->controlURL_CIF='%s' %lu n3=%d\n", urls->controlURL_CIF,
+	printf("urls->controlURL_CIF='%s' %lu n3=%zu\n", urls->controlURL_CIF,
 	       (unsigned long)strlen(urls->controlURL_CIF), n3);
 #endif
 }

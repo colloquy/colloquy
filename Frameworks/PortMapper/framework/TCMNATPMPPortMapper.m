@@ -450,7 +450,7 @@ Standardablauf:
             if(r<0 && r != NATPMP_ERR_NETWORKFAILURE) {
                 didFail = YES;
 #ifndef NDEBUG
-                NSLog(@"%s NAT-PMP: IP refresh did fail: %d",__FUNCTION__,r);
+                NSLog(@"%s NAT-PMP: IP refresh did fail: %zd",__FUNCTION__,r);
 #endif
             } else {
                 NSString *ipString = [NSString stringWithFormat:@"%s", inet_ntoa(response.pnu.publicaddress.addr)];
