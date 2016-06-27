@@ -58,7 +58,6 @@
 		1C386FAA1032471F00660864 /* TCMPortMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C386FA91032471F00660864 /* TCMPortMapper.framework */; };
 		1C386FB61032474D00660864 /* TCMPortMapper.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C386FA91032471F00660864 /* TCMPortMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C397368082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.xib */; };
-		1C3B290806529E720066197C /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; };
 		1C415F270B350CA300239EB3 /* JVToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C415F250B350CA300239EB3 /* JVToolbarItem.m */; };
 		1C4671E606D7759100071DC6 /* NSTextStorageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */; };
 		1C51B4C7052DE14B00BB459B /* JVStandardCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3B4D570427BD5200000102 /* JVStandardCommands.m */; };
@@ -421,8 +420,6 @@
 		1C0A4CE40799BE660093B702 /* JVTranscriptFindWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVTranscriptFindWindowController.m; sourceTree = "<group>"; };
 		1C0A4CF40799BEA70093B702 /* JVViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVViewCell.h; sourceTree = "<group>"; };
 		1C0A4CF50799BEA70093B702 /* JVViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVViewCell.m; sourceTree = "<group>"; };
-		1C0B2F0809DF8A8B009952E7 /* MVChatUserWatchRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVChatUserWatchRule.h; sourceTree = "<group>"; };
-		1C18CD100528DBBA000001C8 /* NSColorAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSColorAdditions.h; path = Additions/NSColorAdditions.h; sourceTree = SOURCE_ROOT; };
 		1C1ACE410533943900F71D4E /* JVInspectorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVInspectorController.h; sourceTree = "<group>"; };
 		1C1ACE420533943900F71D4E /* JVInspectorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVInspectorController.m; sourceTree = "<group>"; };
 		1C1ACFB505344FCC00F71D4E /* JVConnectionInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVConnectionInspector.h; sourceTree = "<group>"; };
@@ -439,20 +436,16 @@
 		1C2462A205F9205900505752 /* JVStyleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVStyleView.h; sourceTree = "<group>"; };
 		1C2462A305F9205900505752 /* JVStyleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVStyleView.m; sourceTree = "<group>"; };
 		1C258E55050B9656000001C8 /* Emoticons */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = Emoticons; path = Resources/Emoticons; sourceTree = SOURCE_ROOT; };
-		1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVChatPluginManager.h; sourceTree = "<group>"; };
 		1C386FA91032471F00660864 /* TCMPortMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TCMPortMapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C3972DB082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVChatTranscriptBrowserPanel.h; sourceTree = "<group>"; };
 		1C3972DC082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = JVChatTranscriptBrowserPanel.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1C397369082D3ED000DCF3CF /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
 		1C397390082D4ADA00DCF3CF /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
-		1C3B290706529E720066197C /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C3B4D560427BD5200000102 /* JVStandardCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVStandardCommands.h; sourceTree = "<group>"; };
 		1C3B4D570427BD5200000102 /* JVStandardCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVStandardCommands.m; sourceTree = "<group>"; };
 		1C3C112E050265AE000001C8 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		1C3C116005029DE1000001C8 /* template.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = template.html; sourceTree = "<group>"; };
 		1C3C116205029E03000001C8 /* Styles */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = Styles; path = Resources/Styles; sourceTree = SOURCE_ROOT; };
-		1C3D55A305A4CB2B00F25F5E /* NSNumberAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSNumberAdditions.h; path = Additions/NSNumberAdditions.h; sourceTree = SOURCE_ROOT; };
-		1C3D562105A4DCCD00F25F5E /* NSMethodSignatureAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSMethodSignatureAdditions.h; path = Additions/NSMethodSignatureAdditions.h; sourceTree = SOURCE_ROOT; };
 		1C415F240B350CA300239EB3 /* JVToolbarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVToolbarItem.h; sourceTree = "<group>"; };
 		1C415F250B350CA300239EB3 /* JVToolbarItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVToolbarItem.m; sourceTree = "<group>"; };
 		1C4671E306D7759100071DC6 /* NSTextStorageAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTextStorageAdditions.h; sourceTree = "<group>"; };
@@ -464,7 +457,6 @@
 		1C59A91F09FDEBA3000682B8 /* JVChatWindowControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVChatWindowControllerTests.m; sourceTree = "<group>"; };
 		1C59BD61059E2E02001487E2 /* ChatPlugIn.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.scriptSuite; path = ChatPlugIn.scriptSuite; sourceTree = "<group>"; };
 		1C59BD63059E2E16001487E2 /* ChatPlugIn.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.scriptTerminology; path = ChatPlugIn.scriptTerminology; sourceTree = "<group>"; };
-		1C5A1A1106F8F42C00A51F10 /* MVChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVChatConnection.h; sourceTree = "<group>"; };
 		1C5EF35807B45C1F004E66D3 /* JVChatEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVChatEvent.h; sourceTree = "<group>"; };
 		1C5EF35907B45C1F004E66D3 /* JVChatEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVChatEvent.m; sourceTree = "<group>"; };
 		1C5EF36907B45FBF004E66D3 /* JVChatSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVChatSession.h; sourceTree = "<group>"; };
@@ -473,7 +465,6 @@
 		1C6266D2103CC9A900A6B346 /* JVAnalyticsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAnalyticsController.h; sourceTree = "<group>"; };
 		1C6266D3103CC9A900A6B346 /* JVAnalyticsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAnalyticsController.m; sourceTree = "<group>"; };
 		1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SparkleUpdatePublicDSAKey.pem; sourceTree = "<group>"; };
-		1C6690D107BFA037008400F7 /* NSScannerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSScannerAdditions.h; path = Additions/NSScannerAdditions.h; sourceTree = SOURCE_ROOT; };
 		1C66913707BFA76D008400F7 /* JVEmoticonSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVEmoticonSet.h; sourceTree = "<group>"; };
 		1C66913807BFA76D008400F7 /* JVEmoticonSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVEmoticonSet.m; sourceTree = "<group>"; };
 		1C6A112806BC0C9E00A66340 /* NSAttributedStringMoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSAttributedStringMoreAdditions.h; sourceTree = "<group>"; };
@@ -507,7 +498,6 @@
 		1C77822808FA4101006AD8E5 /* topicBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topicBackground.png; sourceTree = "<group>"; };
 		1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topicToggleDown.png; sourceTree = "<group>"; };
 		1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topicToggleUp.png; sourceTree = "<group>"; };
-		1C7B83C50668D732004F1EFE /* NSNotificationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSNotificationAdditions.h; path = Additions/NSNotificationAdditions.h; sourceTree = SOURCE_ROOT; };
 		1C7C76E507DBA1C100FB5F83 /* NSCoreSuite.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.scriptSuite; path = NSCoreSuite.scriptSuite; sourceTree = "<group>"; };
 		1C7C76E607DBA1C100FB5F83 /* NSCoreSuite.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.scriptTerminology; path = NSCoreSuite.scriptTerminology; sourceTree = "<group>"; };
 		1C7C76E707DBA1C100FB5F83 /* NSTextSuite.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.scriptSuite; path = NSTextSuite.scriptSuite; sourceTree = "<group>"; };
@@ -518,7 +508,6 @@
 		1C8BDCF2054345160035B84A /* JVChatUserInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = JVChatUserInspector.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1C8BDD2105436A020035B84A /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
 		1C8CE1EB05A921A00020D841 /* iTunes.scpt */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunes.scpt; sourceTree = "<group>"; };
-		1C8CF8E1066530D60080A2F5 /* MVFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVFileTransfer.h; sourceTree = "<group>"; };
 		1C9014BE07A2D798002942A7 /* MVChatUserAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVChatUserAdditions.h; sourceTree = "<group>"; };
 		1C9014BF07A2D798002942A7 /* MVChatUserAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVChatUserAdditions.m; sourceTree = "<group>"; };
 		1C9437080639F86700618CD9 /* JVMarkedScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVMarkedScroller.h; sourceTree = "<group>"; };
@@ -624,8 +613,6 @@
 		1CD733C905A0E2470080F952 /* JVChatMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVChatMessage.h; sourceTree = "<group>"; };
 		1CD733CA05A0E2470080F952 /* JVChatMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVChatMessage.m; sourceTree = "<group>"; };
 		1CD9DF6507D934F70006BB99 /* Colloquy.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Colloquy.sdef; sourceTree = "<group>"; };
-		1CDDCF830716208300FE11C3 /* MVChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVChatRoom.h; sourceTree = "<group>"; };
-		1CDDCF840716208300FE11C3 /* MVChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVChatUser.h; sourceTree = "<group>"; };
 		1CDEE25505823C13000B9075 /* JVFileTransferPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVFileTransferPreferencesViewController.h; sourceTree = "<group>"; };
 		1CDEE25605823C13000B9075 /* JVFileTransferPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFileTransferPreferencesViewController.m; sourceTree = "<group>"; };
 		1CDEE4770583DC58000B9075 /* JVBuddyInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVBuddyInspector.h; sourceTree = "<group>"; };
@@ -645,7 +632,6 @@
 		1CEE3F03057AEC0200AD6DE2 /* JVBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVBuddy.h; sourceTree = "<group>"; };
 		1CEE3F04057AEC0200AD6DE2 /* JVBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVBuddy.m; sourceTree = "<group>"; };
 		1CEF8F7B0A3AB7BB0054298A /* JavaScript Support.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "JavaScript Support.xcodeproj"; sourceTree = "<group>"; };
-		1CF4E51D0698E9FB00986498 /* NSDataAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDataAdditions.h; path = Additions/NSDataAdditions.h; sourceTree = SOURCE_ROOT; };
 		1CF5F8D107D537E50019DC13 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Growl.framework; path = Frameworks/Growl.framework; sourceTree = SOURCE_ROOT; };
 		1CF6511406EA22480073DEA8 /* Colloquy.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colloquy.pch; sourceTree = SOURCE_ROOT; };
 		1CF79CBC07AC77E600696918 /* JVChatTranscript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVChatTranscript.h; sourceTree = "<group>"; };
@@ -902,7 +888,6 @@
 		F555208701F0DC2B01EE70DE /* MVCrashCatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MVCrashCatcher.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		F555208801F0DC2B01EE70DE /* MVCrashCatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVCrashCatcher.h; sourceTree = "<group>"; };
 		F5675B8601DB767601EE70DE /* verbs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = verbs.plist; sourceTree = "<group>"; };
-		F56CD5440191182601EE70DE /* NSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSStringAdditions.h; path = Additions/NSStringAdditions.h; sourceTree = SOURCE_ROOT; };
 		F592CABF01824AE801EE70DE /* MVTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVTableView.m; sourceTree = "<group>"; };
 		F592CAC001824AE801EE70DE /* MVTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVTableView.h; sourceTree = "<group>"; };
 		F599994901890E4601EE70DE /* MVTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVTextView.m; sourceTree = "<group>"; };
@@ -913,7 +898,6 @@
 		F5C4977C0385785401000102 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/MVConnections.xib; sourceTree = "<group>"; };
 		F5E2538403882A8501000102 /* MVColorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVColorPanel.h; sourceTree = "<group>"; };
 		F5E2538503882A8501000102 /* MVColorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVColorPanel.m; sourceTree = "<group>"; };
-		F5E98623018B412B01EE70DE /* NSAttributedStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSAttributedStringAdditions.h; path = Additions/NSAttributedStringAdditions.h; sourceTree = SOURCE_ROOT; };
 		F5F9AF410170EE4A01A84BDE /* MVApplicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVApplicationController.m; sourceTree = "<group>"; };
 		F5F9AF420170EE4A01A84BDE /* MVApplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVApplicationController.h; sourceTree = "<group>"; };
 		F5F9AF5801711CD401A84BDE /* MVMenuButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVMenuButton.m; sourceTree = "<group>"; };
@@ -946,7 +930,6 @@
 				1CB2CD7C052DDC560094AAA4 /* WebKit.framework in Frameworks */,
 				1CD0201F05758F26000F93B4 /* AddressBook.framework in Frameworks */,
 				C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */,
-				1C3B290806529E720066197C /* ChatCore.framework in Frameworks */,
 				1CF8030E070C893500C9B54C /* libsilc.framework in Frameworks */,
 				1CF8030F070C893500C9B54C /* libsilcclient.framework in Frameworks */,
 				1CF5F8D207D537E50019DC13 /* Growl.framework in Frameworks */,
@@ -1007,7 +990,6 @@
 				CBF687A508202F3F00F498FB /* CoreServices.framework */,
 				89EB91A90F269BEF0028B3E3 /* Sparkle.framework */,
 				1C386FA91032471F00660864 /* TCMPortMapper.framework */,
-				1C3B290706529E720066197C /* ChatCore.framework */,
 				1CF8030C070C893500C9B54C /* libsilc.framework */,
 				1CF8030D070C893500C9B54C /* libsilcclient.framework */,
 				1CF5F8D107D537E50019DC13 /* Growl.framework */,
@@ -1416,7 +1398,6 @@
 		F50B0A9F0170C89301A84BDE /* Sources & Headers */ = {
 			isa = PBXGroup;
 			children = (
-				F5394BBA0378DD7601A35792 /* Chat Core */,
 				1CFAFE9A053C1B3D00C702F9 /* Models */,
 				1CC00D2407B06C8800A301F2 /* Views */,
 				1CFAFED8053C1BC500C702F9 /* Controllers */,
@@ -1562,27 +1543,6 @@
 				55D0E36C1B86605A00DD27B9 /* Miscellaneous.xcassets */,
 			);
 			name = "Misc. Icons";
-			sourceTree = "<group>";
-		};
-		F5394BBA0378DD7601A35792 /* Chat Core */ = {
-			isa = PBXGroup;
-			children = (
-				1C5A1A1106F8F42C00A51F10 /* MVChatConnection.h */,
-				1CDDCF830716208300FE11C3 /* MVChatRoom.h */,
-				1CDDCF840716208300FE11C3 /* MVChatUser.h */,
-				1C0B2F0809DF8A8B009952E7 /* MVChatUserWatchRule.h */,
-				1C8CF8E1066530D60080A2F5 /* MVFileTransfer.h */,
-				1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */,
-				1C18CD100528DBBA000001C8 /* NSColorAdditions.h */,
-				F5E98623018B412B01EE70DE /* NSAttributedStringAdditions.h */,
-				F56CD5440191182601EE70DE /* NSStringAdditions.h */,
-				1C6690D107BFA037008400F7 /* NSScannerAdditions.h */,
-				1CF4E51D0698E9FB00986498 /* NSDataAdditions.h */,
-				1C3D55A305A4CB2B00F25F5E /* NSNumberAdditions.h */,
-				1C3D562105A4DCCD00F25F5E /* NSMethodSignatureAdditions.h */,
-				1C7B83C50668D732004F1EFE /* NSNotificationAdditions.h */,
-			);
-			path = "Chat Core";
 			sourceTree = "<group>";
 		};
 		F5C3D42203973E7B01000102 /* Widget Images */ = {
@@ -2663,7 +2623,7 @@
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"${SDK_DIR}/usr/include/libxml2",
+					"$(SDK_DIR)/usr/include/libxml2",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = Resources/Info.plist;
@@ -2746,7 +2706,7 @@
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					"${SDK_DIR}/usr/include/libxml2",
+					"$(SDK_DIR)/usr/include/libxml2",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = Resources/Info.plist;
