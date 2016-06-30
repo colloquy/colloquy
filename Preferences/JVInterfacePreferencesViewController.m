@@ -326,7 +326,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 		if( operation == NSTableViewDropOn && row != -1 ) return NSDragOperationNone;
 
 		NSInteger index = -1;
-		[[[info draggingPasteboard] dataForType:JVInterfacePreferencesWindowDragPboardType] getBytes:&index];
+		[[[info draggingPasteboard] dataForType:JVInterfacePreferencesWindowDragPboardType] getBytes:&index length:sizeof(index)];
 
 		if( row >= 0 && row != index && ( row - 1 ) != index ) return NSDragOperationEvery;
 		else if( row == -1 ) return NSDragOperationNone;
@@ -340,7 +340,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 - (BOOL) tableView:(NSTableView *) view acceptDrop:(id <NSDraggingInfo>) info row:(NSInteger) row dropOperation:(NSTableViewDropOperation) operation {
 	if( view == self.windowSetsTable && [[info draggingPasteboard] availableTypeFromArray:@[JVInterfacePreferencesWindowDragPboardType]] ) {
 		NSInteger index = -1;
-		[[[info draggingPasteboard] dataForType:JVInterfacePreferencesWindowDragPboardType] getBytes:&index];
+		[[[info draggingPasteboard] dataForType:JVInterfacePreferencesWindowDragPboardType] getBytes:&index length:sizeof(index)];
 		if( row > index ) row--;
 
 		id item = [self.windowSets objectAtIndex:index];

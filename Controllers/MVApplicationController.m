@@ -95,7 +95,7 @@ static BOOL applicationIsTerminating = NO;
 	id hidIdleTimeObj = hidProperties[@"HIDIdleTime"];
 	unsigned long long result;
 
-	if( [hidIdleTimeObj isKindOfClass:[NSData class]] ) [hidIdleTimeObj getBytes:&result];
+	if( [hidIdleTimeObj isKindOfClass:[NSData class]] ) [hidIdleTimeObj getBytes:&result length:sizeof(result)];
 	else result = [hidIdleTimeObj longLongValue];
 
 	if (hidPropertiesRef)

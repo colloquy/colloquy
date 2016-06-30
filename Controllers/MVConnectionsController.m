@@ -1300,7 +1300,7 @@ static NSMenu *favoritesMenu = nil;
 		if( operation == NSTableViewDropOn && row != -1 ) return NSDragOperationNone;
 
 		string = [[info draggingPasteboard] availableTypeFromArray:@[MVConnectionPboardType]];
-		[[[info draggingPasteboard] dataForType:MVConnectionPboardType] getBytes:&index];
+		[[[info draggingPasteboard] dataForType:MVConnectionPboardType] getBytes:&index length:sizeof(index)];
 		if( string && row >= 0 && row != index && ( row - 1 ) != index ) return NSDragOperationEvery;
 		else if( string && row == -1 ) return NSDragOperationNone;
 
@@ -1329,7 +1329,7 @@ static NSMenu *favoritesMenu = nil;
 	if( view == connections ) {
 		if( [[info draggingPasteboard] availableTypeFromArray:@[MVConnectionPboardType]] ) {
 			NSInteger index = -1;
-			[[[info draggingPasteboard] dataForType:MVConnectionPboardType] getBytes:&index];
+			[[[info draggingPasteboard] dataForType:MVConnectionPboardType] getBytes:&index length:sizeof(index)];
 			if( row > index ) row--;
 
 			id item = _bookmarks[index];
