@@ -179,19 +179,15 @@
 		1CF8030F070C893500C9B54C /* libsilcclient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; };
 		1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		556CEBE51BCB795600F00EAA /* Tabs Interface Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 556CEBE41BCB795600F00EAA /* Tabs Interface Images.xcassets */; };
-		5575C7BF1AFAB53D001EEF98 /* widgets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5575C7BE1AFAB53D001EEF98 /* widgets.xcassets */; };
+		555A6C141D25B1F800E69E04 /* OS X Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 555A6C131D25B1F800E69E04 /* OS X Images.xcassets */; };
 		558EF2371AEC356800619BDE /* Room Member Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 558EF2361AEC356800619BDE /* Room Member Icons.xcassets */; };
 		55B0EF3618CE3DE10000E4CA /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B0EF3518CE3DE10000E4CA /* libxml2.dylib */; };
 		55B0EF3718CE3E040000E4CA /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B0EF3518CE3DE10000E4CA /* libxml2.dylib */; };
 		55B0EF3A18CE3E250000E4CA /* libexslt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B0EF3818CE3E250000E4CA /* libexslt.dylib */; };
 		55B0EF3B18CE3E250000E4CA /* libxslt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B0EF3918CE3E250000E4CA /* libxslt.dylib */; };
-		55B56A921B0693C9008DC039 /* Preferences.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55B56A911B0693C9008DC039 /* Preferences.xcassets */; };
-		55B56AA01B069524008DC039 /* OS X toolbars.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55B56A9F1B069524008DC039 /* OS X toolbars.xcassets */; };
 		55C8A2D9180735D100A7BB42 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55C8A2D7180735D100A7BB42 /* InfoPlist.strings */; };
 		55C8A2E41807361900A7BB42 /* JVChatWindowControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C59A91F09FDEBA3000682B8 /* JVChatWindowControllerTests.m */; };
 		55C8A2E51807391600A7BB42 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
-		55D0E36D1B86605A00DD27B9 /* Miscellaneous.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55D0E36C1B86605A00DD27B9 /* Miscellaneous.xcassets */; };
 		55F42AC01AEC39A00085CA56 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55B0EF2D18CE34850000E4CA /* AppIcon.xcassets */; };
 		55F42AC21AEC3A930085CA56 /* Shared Toolbar.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55F42AC11AEC3A930085CA56 /* Shared Toolbar.xcassets */; };
 		891E8467123F0AEF00EC3C0F /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 891E8466123F0AEF00EC3C0F /* NSCharacterSetAdditions.m */; };
@@ -639,8 +635,7 @@
 		1CF8030C070C893500C9B54C /* libsilc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilc.framework; path = Frameworks/libsilc.framework; sourceTree = SOURCE_ROOT; };
 		1CF8030D070C893500C9B54C /* libsilcclient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilcclient.framework; path = Frameworks/libsilcclient.framework; sourceTree = SOURCE_ROOT; };
 		5530388F171722A200652D45 /* GetMetadataForFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetMetadataForFile.h; sourceTree = "<group>"; };
-		556CEBE41BCB795600F00EAA /* Tabs Interface Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Tabs Interface Images.xcassets"; sourceTree = "<group>"; };
-		5575C7BE1AFAB53D001EEF98 /* widgets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = widgets.xcassets; sourceTree = "<group>"; };
+		555A6C131D25B1F800E69E04 /* OS X Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "OS X Images.xcassets"; sourceTree = "<group>"; };
 		558EF2361AEC356800619BDE /* Room Member Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Room Member Icons.xcassets"; sourceTree = "<group>"; };
 		559110461CA9B28400258B5F /* NSRegularExpressionAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSRegularExpressionAdditions.h; sourceTree = "<group>"; };
 		55AD12391C597212009F258C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Languages/Base.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
@@ -658,13 +653,10 @@
 		55B0EF3518CE3DE10000E4CA /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		55B0EF3818CE3E250000E4CA /* libexslt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libexslt.dylib; path = usr/lib/libexslt.dylib; sourceTree = SDKROOT; };
 		55B0EF3918CE3E250000E4CA /* libxslt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxslt.dylib; path = usr/lib/libxslt.dylib; sourceTree = SDKROOT; };
-		55B56A911B0693C9008DC039 /* Preferences.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Preferences.xcassets; path = Resources/Preferences.xcassets; sourceTree = SOURCE_ROOT; };
-		55B56A9F1B069524008DC039 /* OS X toolbars.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "OS X toolbars.xcassets"; sourceTree = "<group>"; };
 		55B748191AD2E957001459F7 /* RunOnMainThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RunOnMainThread.h; sourceTree = "<group>"; };
 		55C8A2D0180735D100A7BB42 /* Colloquy Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Colloquy Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		55C8A2D6180735D100A7BB42 /* Colloquy Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Colloquy Tests-Info.plist"; sourceTree = "<group>"; };
 		55C8A2D8180735D100A7BB42 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		55D0E36C1B86605A00DD27B9 /* Miscellaneous.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Miscellaneous.xcassets; sourceTree = "<group>"; };
 		55F42AC11AEC3A930085CA56 /* Shared Toolbar.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Shared Toolbar.xcassets"; sourceTree = "<group>"; };
 		891E8465123F0AEF00EC3C0F /* NSCharacterSetAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCharacterSetAdditions.h; sourceTree = "<group>"; };
 		891E8466123F0AEF00EC3C0F /* NSCharacterSetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCharacterSetAdditions.m; sourceTree = "<group>"; };
@@ -1489,12 +1481,10 @@
 				1C043B4913DC8B7200B8FD9E /* Credits.rtf */,
 				F5394C0B0378E44D01A35792 /* Localizable.strings */,
 				F52955590181EB5901EE70DE /* Misc. Icons */,
-				55B56A911B0693C9008DC039 /* Preferences.xcassets */,
 				558EF2361AEC356800619BDE /* Room Member Icons.xcassets */,
 				1C710AB009F23D84007B4515 /* Sidebar Interface Images */,
-				556CEBE41BCB795600F00EAA /* Tabs Interface Images.xcassets */,
 				F5ED0F46017CD77701EE70DE /* Toolbar Icons */,
-				F5C3D42203973E7B01000102 /* Widget Images */,
+				555A6C131D25B1F800E69E04 /* OS X Images.xcassets */,
 			);
 			indentWidth = 4;
 			path = Resources;
@@ -1540,25 +1530,14 @@
 				1C77822808FA4101006AD8E5 /* topicBackground.png */,
 				1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */,
 				1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */,
-				55D0E36C1B86605A00DD27B9 /* Miscellaneous.xcassets */,
 			);
 			name = "Misc. Icons";
-			sourceTree = "<group>";
-		};
-		F5C3D42203973E7B01000102 /* Widget Images */ = {
-			isa = PBXGroup;
-			children = (
-				5575C7BE1AFAB53D001EEF98 /* widgets.xcassets */,
-			);
-			name = "Widget Images";
-			path = Widget;
 			sourceTree = "<group>";
 		};
 		F5ED0F46017CD77701EE70DE /* Toolbar Icons */ = {
 			isa = PBXGroup;
 			children = (
 				55F42AC11AEC3A930085CA56 /* Shared Toolbar.xcassets */,
-				55B56A9F1B069524008DC039 /* OS X toolbars.xcassets */,
 			);
 			path = "Toolbar Icons";
 			sourceTree = "<group>";
@@ -1784,7 +1763,6 @@
 				1CB2CD34052DDC560094AAA4 /* MVConnections.xib in Resources */,
 				1CB2CD50052DDC560094AAA4 /* template.html in Resources */,
 				1CB2CD54052DDC560094AAA4 /* default.xsl in Resources */,
-				55D0E36D1B86605A00DD27B9 /* Miscellaneous.xcassets in Resources */,
 				1CB2CD56052DDC560094AAA4 /* JVChatWindow.xib in Resources */,
 				1CB2CD57052DDC560094AAA4 /* JVDirectChat.xib in Resources */,
 				1CB2CD59052DDC560094AAA4 /* Emoticons in Resources */,
@@ -1796,11 +1774,7 @@
 				1C1AD00B053487ED00F71D4E /* JVConnectionInspector.xib in Resources */,
 				1CB4DCAB053627C00080D36F /* JVRoomInspector.xib in Resources */,
 				1C8BDD2205436A030035B84A /* JVChatMemberInspector.xib in Resources */,
-				556CEBE51BCB795600F00EAA /* Tabs Interface Images.xcassets in Resources */,
-				55B56A921B0693C9008DC039 /* Preferences.xcassets in Resources */,
 				1CC6FD39054AF1940075807C /* preview.colloquyTranscript in Resources */,
-				5575C7BF1AFAB53D001EEF98 /* widgets.xcassets in Resources */,
-				55B56AA01B069524008DC039 /* OS X toolbars.xcassets in Resources */,
 				1CD0201005758A33000F93B4 /* MVBuddyList.xib in Resources */,
 				1CDEE48D0583E268000B9075 /* JVBuddyInspector.xib in Resources */,
 				1C6EA23E05A735D6006A559F /* JVChatRoomBrowser.xib in Resources */,
@@ -1822,6 +1796,7 @@
 				1CE6916908B183C2006D9CA0 /* ChatCore.scriptTerminology in Resources */,
 				1CE6916A08B183C3006D9CA0 /* ChatCore.scriptSuite in Resources */,
 				1CE6916B08B183C4006D9CA0 /* ChatPlugIn.scriptTerminology in Resources */,
+				555A6C141D25B1F800E69E04 /* OS X Images.xcassets in Resources */,
 				C29654191BDBA00400F28873 /* JVNotificationPreferencesViewController.xib in Resources */,
 				1CE6916C08B183C5006D9CA0 /* ChatPlugIn.scriptSuite in Resources */,
 				1CE6916D08B183C6006D9CA0 /* Colloquy.scriptTerminology in Resources */,
