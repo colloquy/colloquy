@@ -4,6 +4,10 @@ static NSMutableSet *colorWellCells = nil;
 
 NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidChangeNotification";
 
+@interface JVColorWellCell ()
+- (instancetype)initWithCoder:(NSCoder *)coder NS_DESIGNATED_INITIALIZER;
+@end
+
 @implementation JVColorWellCell
 + (void) colorPanelColorChanged:(NSNotification *) notification {
 	NSColorPanel *panel = [notification object];
@@ -31,6 +35,11 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 }
 
 #pragma mark -
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+	return [super initWithCoder:coder];
+}
 
 - (instancetype) initTextCell:(NSString *) string {
 	return [self initImageCell:nil];
