@@ -141,7 +141,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 @property(strong, readonly) NSSet<NSString*> *supportedAttributes;
 @property(strong, readonly) NSDictionary<NSString*,id> *attributes;
 
-- (BOOL) isEqual:(id) object;
+- (BOOL) isEqual:(nullable id) object;
 - (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser;
 
 - (NSComparisonResult) compare:(MVChatUser *) otherUser;

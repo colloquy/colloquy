@@ -84,7 +84,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (BOOL) isEqual:(id) object {
+- (BOOL) isEqual:(nullable id) object {
 	if( object == self ) return YES;
 	if( ! object || ! [object isKindOfClass:[self class]] ) return NO;
 	return [self isEqualToChatRoom:object];
