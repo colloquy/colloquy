@@ -15,8 +15,8 @@ extern NSString * __nonnull JVEmoticonSetsScannedNotification;
 #if __has_feature(objc_class_property)
 @property (readonly, class, copy) NSSet<JVEmoticonSet*> *emoticonSets;
 #endif
-+ (nullable instancetype) emoticonSetWithIdentifier:(NSString *) identifier;
-+ (nullable instancetype) newWithBundle:(NSBundle *) bundle NS_SWIFT_UNAVAILABLE("Use init(bundle:) instead");
++ (nullable JVEmoticonSet*) emoticonSetWithIdentifier:(NSString *) identifier;
++ (nullable JVEmoticonSet*) newWithBundle:(NSBundle *) bundle NS_SWIFT_NAME(with(bundle:));
 
 + (JVEmoticonSet*) textOnlyEmoticonSet;
 #if __has_feature(objc_class_property)

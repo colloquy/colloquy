@@ -74,7 +74,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 + (NSSet *) styles {
-	return allStyles;
+	return [allStyles copy];
 }
 
 + (nullable instancetype) styleWithIdentifier:(NSString *) identifier {
