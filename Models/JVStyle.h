@@ -25,8 +25,8 @@ extern NSString *JVStyleVariantChangedNotification;
 #if __has_feature(objc_class_property)
 @property (class, readonly, copy) NSSet<JVStyle*> *styles;
 #endif
-+ (nullable instancetype) styleWithIdentifier:(NSString *) identifier;
-+ (nullable instancetype) newWithBundle:(NSBundle *) bundle NS_SWIFT_NAME(with(bundle:));
++ (nullable JVStyle*) styleWithIdentifier:(NSString *) identifier;
++ (nullable JVStyle*) newWithBundle:(NSBundle *) bundle NS_SWIFT_NAME(with(bundle:));
 
 + (JVStyle*) defaultStyle;
 + (void) setDefaultStyle:(nullable JVStyle *) style;
@@ -43,12 +43,12 @@ extern NSString *JVStyleVariantChangedNotification;
 @property (readonly, strong) NSBundle *bundle;
 @property (readonly, copy) NSString *identifier;
 
-- (nullable NSString *) transformChatTranscript:(JVChatTranscript *) transcript withParameters:(NSDictionary *) parameters;
-- (nullable NSString *) transformChatTranscriptElement:(id <JVChatTranscriptElement>) element withParameters:(NSDictionary *) parameters;
-- (nullable NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary *) parameters;
+- (nullable NSString *) transformChatTranscript:(JVChatTranscript *) transcript withParameters:(NSDictionary<NSString*,id> *) parameters;
+- (nullable NSString *) transformChatTranscriptElement:(id <JVChatTranscriptElement>) element withParameters:(NSDictionary<NSString*,id> *) parameters;
+- (nullable NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary<NSString*,id> *) parameters;
 - (nullable NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters;
-- (nullable NSString *) transformXML:(NSString *) xml withParameters:(NSDictionary *) parameters;
-- (nullable NSString *) transformXMLDocument:(struct _xmlDoc *) document withParameters:(NSDictionary *) parameters;
+- (nullable NSString *) transformXML:(NSString *) xml withParameters:(NSDictionary<NSString*,id> *) parameters;
+- (nullable NSString *) transformXMLDocument:(struct _xmlDoc *) document withParameters:(NSDictionary<NSString*,id> *) parameters;
 
 - (NSComparisonResult) compare:(JVStyle *) style;
 @property (readonly, copy) NSString *displayName;
@@ -61,7 +61,7 @@ extern NSString *JVStyleVariantChangedNotification;
 
 @property (strong) JVEmoticonSet *defaultEmoticonSet;
 
-@property (readonly, copy) NSArray *styleSheetOptions;
+@property (readonly, copy) NSArray<NSDictionary<NSString*,id>*> *styleSheetOptions;
 
 @property (copy) NSDictionary *mainParameters;
 
