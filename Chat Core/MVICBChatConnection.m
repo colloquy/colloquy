@@ -100,7 +100,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 #pragma mark Class accessors
 
 + (NSArray *) defaultServerPorts {
-	return @[ @(7326) ];
+	return @[ @((unsigned short)7326) ];
 }
 
 + (NSUInteger) maxMessageLength {
@@ -124,6 +124,17 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	}
 
 	return self;
+}
+
+- (void) dealloc {
+	[self disconnect];
+	[_nickname release];
+	[_username release];
+	[_threadWaitLock release];
+	[_initialChannel release];
+	[_server release];
+	[_password release];
+	[super dealloc];
 }
 
 - (void) finalize {

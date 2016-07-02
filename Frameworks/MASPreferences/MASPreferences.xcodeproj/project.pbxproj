@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F16AF8081BA27AFD0022155C /* MASPreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F16AF8001BA27AFD0022155C /* MASPreferencesWindow.xib */; settings = {ASSET_TAGS = (); }; };
+		F16AF8081BA27AFD0022155C /* MASPreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F16AF8001BA27AFD0022155C /* MASPreferencesWindow.xib */; };
 		F16AF80A1BA27AFD0022155C /* MASPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = F16AF8031BA27AFD0022155C /* MASPreferences.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F16AF80B1BA27AFD0022155C /* MASPreferencesViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = F16AF8051BA27AFD0022155C /* MASPreferencesViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F16AF80C1BA27AFD0022155C /* MASPreferencesWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = F16AF8061BA27AFD0022155C /* MASPreferencesWindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F16AF80D1BA27AFD0022155C /* MASPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F16AF8071BA27AFD0022155C /* MASPreferencesWindowController.m */; settings = {ASSET_TAGS = (); }; };
+		F16AF80D1BA27AFD0022155C /* MASPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F16AF8071BA27AFD0022155C /* MASPreferencesWindowController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -243,6 +243,7 @@
 		F16AF7FD1BA279F10022155C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -262,6 +263,7 @@
 		F16AF7FE1BA279F10022155C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
