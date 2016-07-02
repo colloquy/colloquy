@@ -51,7 +51,7 @@ extern NSString *JVChatViewPboardType;
 @property (readonly, copy) NSArray *allChatViewControllers;
 
 @property (readonly, strong) id<JVChatViewController> activeChatViewController;
-@property (readonly, strong) id<JVChatListItem> selectedListItem;
+@property (readonly, strong, nullable) id<JVChatListItem> selectedListItem;
 
 - (IBAction) getInfo:(nullable id) sender;
 
@@ -158,8 +158,8 @@ extern NSString *JVChatViewPboardType;
 @end
 
 @interface NSObject (MVChatPluginToolbarSupport)
-- (NSArray<NSString*> *) toolbarItemIdentifiersForView:(id <JVChatViewController>) view;
-- (NSToolbarItem *) toolbarItemForIdentifier:(NSString *) identifier inView:(id <JVChatViewController>) view willBeInsertedIntoToolbar:(BOOL) willBeInserted;
+- (nullable NSArray<NSString*> *) toolbarItemIdentifiersForView:(id <JVChatViewController>) view;
+- (nullable NSToolbarItem *) toolbarItemForIdentifier:(NSString *) identifier inView:(id <JVChatViewController>) view willBeInsertedIntoToolbar:(BOOL) willBeInserted;
 @end
 
 NS_ASSUME_NONNULL_END

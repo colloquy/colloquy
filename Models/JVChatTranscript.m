@@ -662,7 +662,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	return [[self sessionsInRange:NSMakeRange( index, 1 )] lastObject];
 }
 
-- (JVChatSession *) lastSession {
+- (nullable JVChatSession *) lastSession {
 	@synchronized( self ) {
 		xmlNode *node = xmlGetLastChild( xmlDocGetRootElement( _xmlLog ) );
 		do {
@@ -676,7 +676,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (JVChatSession *) startNewSession {
+- (nullable JVChatSession *) startNewSession {
 	return nil;
 //	return [self appendSession:[NSDate date]];
 }
@@ -779,11 +779,9 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (NSString *) filePath {
-	return _filePath;
-}
+@synthesize filePath = _filePath;
 
-- (void) setFilePath:(NSString *) filePath {
+- (void) setFilePath:(nullable NSString *) filePath {
 	if( filePath && ! [[NSFileManager defaultManager] fileExistsAtPath:filePath] ) {
 		BOOL success = [[NSFileManager defaultManager] createFileAtPath:filePath contents:[NSData data] attributes:nil];
 		if( success ) [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil]; // remove the blank until we need to write the real file, since we now know it will likely work
@@ -813,7 +811,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (NSCalendarDate *) dateBegan {
+- (nullable NSCalendarDate *) dateBegan {
 	if( ! _xmlLog ) return nil;
 
 	xmlNode *node = xmlDocGetRootElement( _xmlLog );

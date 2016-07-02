@@ -195,9 +195,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	NSParameterAssert( newServer );
 	NSParameterAssert( newServer.length > 0 );
 
-	id old = _server;
-	_server = [newServer copy];
-	[old release];
+	MVSafeCopyAssign(_server, newServer);
 
 	[super setServer:newServer];
 }
@@ -213,9 +211,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	NSParameterAssert( newUsername );
 	NSParameterAssert( newUsername.length > 0 );
 
-	id old = _username;
-	_username = [newUsername copy];
-	[old release];
+	MVSafeCopyAssign(_username, newUsername);
 }
 
 #pragma mark Connection handling
@@ -226,9 +222,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 		_status != MVChatConnectionSuspendedStatus )
 		return;
 
-	id old = _lastConnectAttempt;
-	_lastConnectAttempt = [[NSDate alloc] init];
-	[old release];
+	MVSafeRetainAssign(_lastConnectAttempt, [NSDate date]);
 
 	_loggedIn = NO;
 	[self _willConnect];
@@ -494,7 +488,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	NSString *string = nil;
 
 	if( [raw isKindOfClass:[NSMutableData class]] ) {
-		data = [raw retain];
+		data = [raw mutableCopy];
 		string = [[NSString alloc]
 		          initWithData:data encoding:[self encoding]];
 	} else if( [raw isKindOfClass:[NSData class]] ) {
@@ -1176,7 +1170,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	 userInfo:@{@"user": sender}];
 }
 
-- (void) stcStatusPacketStatus:(NSArray *) fields {
+- (void) stcStatusPacketStatus:(NSArray<NSString*> *) fields {
 	NSString *msg = fields[1];
 
 	NSRange r;
@@ -1198,7 +1192,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	}
 }
 
-- (void) stcStatusPacketTopic:(NSArray *) fields {
+- (void) stcStatusPacketTopic:(NSArray<NSString*> *) fields {
 	NSString *msg = fields[1];
 
 	NSRange r;

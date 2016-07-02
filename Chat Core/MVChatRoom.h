@@ -88,7 +88,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 }
 @property(weak, nullable, readonly) MVChatConnection *connection;
 
-@property(strong, readonly) NSURL *url;
+@property(strong, readonly, nullable) NSURL *url;
 @property(strong, readonly) NSString *name;
 @property(strong, readonly) NSString *displayName;
 @property(strong, readonly) id uniqueIdentifier;

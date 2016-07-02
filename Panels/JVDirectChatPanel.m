@@ -1675,7 +1675,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 - (void) _awayStatusChanged:(NSNotification *) notification {
 	if( [[self connection] awayStatusMessage] ) {
-		NSMutableAttributedString *messageString = [[[self connection] awayStatusMessage] mutableCopy];
+		NSMutableAttributedString *messageString = [[[self connection] awayStatusMessage] mutableCopy] ?: [[NSMutableAttributedString alloc] initWithString:@""];
 
 		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 			[messageString makeLinkAttributesAutomatically];

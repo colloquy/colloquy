@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @synthesize _passiveIdentifier = _passiveId;
 @synthesize _fileNameQuoted;
 
-+ (instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
++ (nullable instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	static long long passiveId = 0;
 
 	MVIRCUploadFileTransfer *ret = [(MVIRCUploadFileTransfer *)[MVIRCUploadFileTransfer alloc] initWithUser:user];

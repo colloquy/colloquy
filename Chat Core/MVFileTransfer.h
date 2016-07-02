@@ -82,7 +82,7 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 @protected
 	NSString *_source;
 }
-+ (instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive;
++ (nullable instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive;
 
 @property(strong, readonly) NSString *source;
 @end

@@ -150,7 +150,7 @@ static BOOL autoPortMapping = YES;
 #pragma mark -
 
 @implementation MVUploadFileTransfer
-+ (instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
++ (nullable instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	switch([[user connection] type]) {
 #if ENABLE(IRC)
 	case MVChatConnectionIRCType:

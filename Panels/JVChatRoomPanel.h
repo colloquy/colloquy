@@ -26,10 +26,10 @@ extern NSString *const MVFavoritesListDidUpdateNotification;
 
 - (IBAction) toggleFavorites:(nullable id) sender;
 
-- (NSSet *) chatRoomMembersWithName:(NSString *) name;
-- (JVChatRoomMember *) firstChatRoomMemberWithName:(NSString *) name;
-- (JVChatRoomMember *) chatRoomMemberForUser:(MVChatUser *) user;
-@property (readonly, strong) JVChatRoomMember *localChatRoomMember;
+- (NSSet<JVChatRoomMember*> *) chatRoomMembersWithName:(NSString *) name;
+- (nullable JVChatRoomMember *) firstChatRoomMemberWithName:(NSString *) name;
+- (nullable JVChatRoomMember *) chatRoomMemberForUser:(MVChatUser *) user;
+@property (readonly, strong, nullable) JVChatRoomMember *localChatRoomMember;
 - (void) resortMembers;
 
 - (void) handleRoomMessageNotification:(NSNotification *) notification;

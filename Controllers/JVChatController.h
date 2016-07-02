@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller userInitiated:(BOOL) initiated;
 
 @property (readonly, copy) NSSet<JVChatWindowController*> *allChatWindowControllers;
-- (JVChatWindowController *) createChatWindowController NS_RETURNS_RETAINED;
+- (nullable JVChatWindowController *) createChatWindowController NS_RETURNS_RETAINED;
 - (JVChatWindowController *) chatWindowControllerWithIdentifier:(NSString *) identifier;
 - (void) disposeChatWindowController:(JVChatWindowController *) controller;
 

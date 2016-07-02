@@ -211,7 +211,7 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSUInteger _hash;
 }
 + (BOOL) supportsURLScheme:(NSString *__nullable) scheme;
-+ (NSArray <NSNumber *> *) defaultServerPortsForType:(MVChatConnectionType) type;
++ (nullable NSArray <NSNumber *> *) defaultServerPortsForType:(MVChatConnectionType) type;
 + (NSUInteger) maxMessageLengthForType:(MVChatConnectionType) type;
 
 #pragma mark -
@@ -244,7 +244,7 @@ extern NSString *MVChatConnectionErrorDomain;
 @property(copy) NSString *preferredNickname;
 
 @property(copy) NSArray <NSString *> *alternateNicknames;
-@property(strong, readonly) NSString *nextAlternateNickname;
+@property(strong, readonly, nullable) NSString *nextAlternateNickname;
 
 @property(copy, nullable) NSString *nicknamePassword;
 

@@ -143,7 +143,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		NO;
 }
 
-+ (NSArray <NSNumber *> *) defaultServerPortsForType:(MVChatConnectionType) type {
++ (nullable NSArray <NSNumber *> *) defaultServerPortsForType:(MVChatConnectionType) type {
 #if ENABLE(ICB)
 	if( type == MVChatConnectionICBType )
 		return [MVICBChatConnection defaultServerPorts];
@@ -461,7 +461,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	return [_alternateNicks copy];
 }
 
-- (NSString *) nextAlternateNickname {
+- (nullable NSString *) nextAlternateNickname {
 	if( [[self alternateNicknames] count] && _nextAltNickIndex < [[self alternateNicknames] count] )
 		return [self alternateNicknames][_nextAltNickIndex++];
 	return nil;
