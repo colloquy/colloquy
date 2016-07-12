@@ -234,7 +234,7 @@ extern NSString *MVChatConnectionErrorDomain;
 @property(strong, readonly) NSError *serverError;
 
 @property(strong, readonly) NSString *urlScheme;
-@property(strong, readonly) NSURL *url;
+@property(strong, readonly, nullable) NSURL *url;
 
 @property(nonatomic) NSStringEncoding encoding;
 
@@ -362,13 +362,13 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-- (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier;
-- (MVChatRoom *) joinedChatRoomWithName:(NSString *) room;
+- (nullable MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier;
+- (nullable MVChatRoom *) joinedChatRoomWithName:(NSString *) room;
 
 #pragma mark -
 
 - (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier;
-- (MVChatRoom *) chatRoomWithName:(NSString *) room;
+- (nullable MVChatRoom *) chatRoomWithName:(NSString *) room;
 
 #pragma mark -
 

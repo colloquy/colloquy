@@ -693,12 +693,12 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	}
 }
 
-- (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
+- (nullable MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
 	return [super joinedChatRoomWithUniqueIdentifier:[(NSString *)identifier lowercaseString]];
 }
 
-- (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
+- (nullable MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
 	return [self joinedChatRoomWithUniqueIdentifier:[self properNameForChatRoomNamed:name]];
 }
 
@@ -709,7 +709,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	return room;
 }
 
-- (MVChatRoom *) chatRoomWithName:(NSString *) name {
+- (nullable MVChatRoom *) chatRoomWithName:(NSString *) name {
 	return [self chatRoomWithUniqueIdentifier:[self properNameForChatRoomNamed:name]];
 }
 

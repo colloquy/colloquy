@@ -239,6 +239,7 @@ enum {
     [_portMappings release];
     [_removeMappingQueue release];
     [_userID release];
+    [_appIdentifier release];
     [super dealloc];
 }
 
