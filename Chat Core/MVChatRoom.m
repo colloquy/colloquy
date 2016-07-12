@@ -342,7 +342,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return users;
 }
 
-- (NSSet *) memberUsersWithNickname:(NSString *) nickname {
+- (nullable NSSet *) memberUsersWithNickname:(NSString *) nickname {
 	NSMutableSet *users = [[NSMutableSet alloc] init];
 
 	@synchronized( _memberUsers ) {
