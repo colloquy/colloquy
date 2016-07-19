@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 - (instancetype) initWithRoom:(JVChatRoomPanel *) room andUser:(MVChatUser *) user NS_DESIGNATED_INITIALIZER;
 - (instancetype) initLocalMemberWithRoom:(JVChatRoomPanel *) room;
+- (instancetype) init UNAVAILABLE_ATTRIBUTE;
 
 - (NSComparisonResult) compare:(JVChatRoomMember *) member;
 - (NSComparisonResult) compareUsingStatus:(JVChatRoomMember *) member;
