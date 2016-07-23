@@ -119,7 +119,9 @@
 	[[NSApplication sharedApplication] stopModal];
 	[window orderOut:nil];
 
-	self.doneBlock();
+	if (self.doneBlock) {
+		self.doneBlock();
+	}
 	self.doneBlock = nil;
 }
 
