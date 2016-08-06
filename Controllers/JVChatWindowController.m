@@ -69,7 +69,13 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[menu setDelegate:self];
 	[chatViewsOutlineView setMenu:menu];
 
-	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
+	NSMenu *favorites = [[MVConnectionsController favoritesMenu] copy];
+	{
+		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""];
+		menuItem.image = [NSImage imageNamed:@"CQFavoritesTemplate"];
+		[favorites insertItem:menuItem atIndex:0];
+	}
+	[favoritesButton setMenu:favorites];
 	[[favoritesButton cell] accessibilitySetOverrideValue:NSLocalizedString(@"Favorites", nil) forAttribute:NSAccessibilityDescriptionAttribute];
 
 	[[viewActionButton cell] accessibilitySetOverrideValue:NSLocalizedString(@"Actions", nil) forAttribute:NSAccessibilityDescriptionAttribute];
@@ -1038,6 +1044,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	if( [menu numberOfItems] ) {
 		[viewActionButton setEnabled:YES];
+		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""];
+		menuItem.image = [NSImage imageNamed:NSImageNameActionTemplate];
+		[menu insertItem:menuItem atIndex:0];
 		[viewActionButton setMenu:menu];
 	} else [viewActionButton setEnabled:NO];
 

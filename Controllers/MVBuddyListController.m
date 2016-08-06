@@ -717,7 +717,11 @@ static MVBuddyListController *sharedInstance = nil;
 
 	if( [buddies selectedRow] != -1 ) {
 		JVBuddy *buddy = _buddyOrder[[buddies selectedRow]];
-		[actionButton setMenu:[self _menuForBuddy:buddy]];
+		NSMenu *buddyMenu = [[self _menuForBuddy:buddy] copy];
+		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""];
+		menuItem.image = [NSImage imageNamed:NSImageNameActionTemplate];
+		[buddyMenu addItem:menuItem];
+		[actionButton setMenu:buddyMenu];
 	} else {
 		[actionButton setMenu:nil];
 	}
