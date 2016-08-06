@@ -19,7 +19,7 @@ typedef NS_ENUM(OSType, MVBuddyListSortOrder) {
 	@private
 	IBOutlet MVTableView *buddies;
 	IBOutlet NSButton *sendMessageButton;
-	IBOutlet NSButton *actionButton;
+	IBOutlet NSPopUpButton *actionButton;
 	IBOutlet NSButton *infoButton;
 
 	IBOutlet NSWindow *pickerWindow;

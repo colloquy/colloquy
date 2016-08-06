@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MVBuddyListController">
             <connections>
-                <outlet property="actionButton" destination="105" id="202"/>
+                <outlet property="actionButton" destination="105" id="Z05-32-JNd"/>
                 <outlet property="addButton" destination="135" id="139"/>
                 <outlet property="buddies" destination="38" id="55"/>
                 <outlet property="email" destination="133" id="140"/>
@@ -30,7 +29,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="709" y="91" width="225" height="277"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="180" height="108"/>
             <value key="maxSize" type="size" width="500" height="1006"/>
             <view key="contentView" id="43">
@@ -40,7 +39,7 @@
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="38" horizontalPageScroll="10" verticalLineScroll="38" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="45">
                         <rect key="frame" x="-1" y="31" width="227" height="247"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <clipView key="contentView" id="m49-TY-OrK">
+                        <clipView key="contentView" id="SfO-ul-FYp">
                             <rect key="frame" x="1" y="1" width="225" height="245"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
@@ -139,14 +138,19 @@
                             <action selector="messageSelectedBuddy:" target="-2" id="109"/>
                         </connections>
                     </button>
-                    <button toolTip="指令" id="105" customClass="MVMenuButton">
+                    <popUpButton toolTip="指令" id="105">
                         <rect key="frame" x="6" y="5" width="28" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="CQActionTemplate" imagePosition="only" alignment="left" borderStyle="border" imageScaling="proportionallyDown" id="208">
+                        <popUpButtonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="only" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" pullsDown="YES" altersStateOfSelectedItem="NO" selectedItem="dBf-Q0-p7A" id="RXs-Gu-4ob">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="label"/>
-                        </buttonCell>
-                    </button>
+                            <font key="font" metaFont="menu"/>
+                            <menu key="menu" id="xnM-FY-UeD">
+                                <items>
+                                    <menuItem state="on" image="NSActionTemplate" hidden="YES" id="dBf-Q0-p7A"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                    </popUpButton>
                 </subviews>
             </view>
             <connections>
@@ -157,7 +161,7 @@
             <windowStyleMask key="styleMask" titled="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="38" y="544" width="510" height="292"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="81">
                 <rect key="frame" x="0.0" y="0.0" width="510" height="292"/>
@@ -225,7 +229,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="223" y="383" width="428" height="302"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="114">
                 <rect key="frame" x="0.0" y="0.0" width="428" height="302"/>
@@ -378,7 +382,7 @@ Gw
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="0.0" verticalLineScroll="19" verticalPageScroll="0.0" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="194">
                         <rect key="frame" x="214" y="173" width="194" height="59"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <clipView key="contentView" id="ukB-3i-sBF">
+                        <clipView key="contentView" id="9p9-er-InG">
                             <rect key="frame" x="1" y="1" width="192" height="57"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
@@ -491,10 +495,10 @@ Gw
         </menu>
     </objects>
     <resources>
-        <image name="CQActionTemplate" width="19" height="12"/>
         <image name="CQBuddyMessageTemplate" width="14" height="12"/>
         <image name="CQBuddyOptionsTemplate" width="16" height="12"/>
         <image name="CQInfoTemplate" width="12" height="12"/>
+        <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSAddTemplate" width="11" height="11"/>
     </resources>
 </document>
