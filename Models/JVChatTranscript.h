@@ -65,8 +65,8 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 
 - (nullable JVChatMessage *) appendMessage:(JVChatMessage *) message;
 - (nullable JVChatMessage *) appendMessage:(JVChatMessage *) message forceNewEnvelope:(BOOL) forceEnvelope;
-- (NSArray<JVChatMessage*> *) appendMessages:(NSArray *) messages;
-- (NSArray<JVChatMessage*> *) appendMessages:(NSArray *) messages forceNewEnvelope:(BOOL) forceEnvelope;
+- (NSArray<JVChatMessage*> *) appendMessages:(NSArray<JVChatMessage*> *) messages;
+- (NSArray<JVChatMessage*> *) appendMessages:(NSArray<JVChatMessage*> *) messages forceNewEnvelope:(BOOL) forceEnvelope;
 
 @property (readonly, copy) NSArray<JVChatSession*> *sessions;
 - (NSArray<JVChatSession*> *) sessionsInRange:(NSRange) range;
