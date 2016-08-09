@@ -205,7 +205,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		_joinedRooms = [[NSMutableSet alloc] initWithCapacity:10];
 
 		CFDictionaryValueCallBacks valueCallbacks = { 0, NULL, NULL, kCFTypeDictionaryValueCallBacks.copyDescription, kCFTypeDictionaryValueCallBacks.equal };
-		_knownRooms = (NSMutableDictionary *)CFBridgingRelease(CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &valueCallbacks));
+		_knownRooms = (NSMutableDictionary *)CFBridgingRelease(CFDictionaryCreateMutable(NULL, 0, &kCFCopyStringDictionaryKeyCallBacks, &valueCallbacks));
 
 		_knownUsers = [[NSMapTable alloc] initWithKeyOptions:NSMapTableObjectPointerPersonality|NSMapTableCopyIn
 												valueOptions:NSMapTableObjectPointerPersonality|NSMapTableWeakMemory
@@ -244,7 +244,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		break;
 #endif
 	default:
-		self = nil;
+		return nil;
 	}
 
 	[self setUniqueIdentifier:[NSString locallyUniqueString]];
