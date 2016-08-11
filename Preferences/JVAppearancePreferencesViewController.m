@@ -9,7 +9,7 @@
 #import "JVColorWellCell.h"
 #import "JVDetailCell.h"
 #import "NSBundleAdditions.h"
-#import "NSRegularExpressionAdditions.h"
+#import <ChatCore/NSRegularExpressionAdditions.h>
 
 #import <objc/objc-runtime.h>
 

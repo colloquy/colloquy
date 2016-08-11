@@ -2,7 +2,7 @@
 #import "JVChatRoomPanel.h"
 #import "JVBuddy.h"
 #import "MVFileTransferController.h"
-#import "NSDateAdditions.h"
+#import <ChatCore/NSDateAdditions.h>
 
 @implementation JVDirectChatPanel (JVDirectChatPanelInspection)
 - (id <JVInspector>) inspector {

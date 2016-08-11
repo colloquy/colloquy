@@ -1,6 +1,6 @@
 #import "JVChatEvent.h"
 #import "NSAttributedStringMoreAdditions.h"
-#import "NSDateAdditions.h"
+#import <ChatCore/NSDateAdditions.h>
 #import "JVChatRoomMember.h"
 
 #include <libxml/tree.h>

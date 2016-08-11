@@ -15,7 +15,7 @@
 #import "JVAppearancePreferencesViewController.h"
 #import "JVMarkedScroller.h"
 #import "NSBundleAdditions.h"
-#import "NSDateAdditions.h"
+#import <ChatCore/NSDateAdditions.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

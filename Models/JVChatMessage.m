@@ -7,7 +7,7 @@
 #import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
 #import "NSAttributedStringMoreAdditions.h"
-#import "NSDateAdditions.h"
+#import <ChatCore/NSDateAdditions.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

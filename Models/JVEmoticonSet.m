@@ -1,6 +1,6 @@
 #import "JVEmoticonSet.h"
 #import "NSBundleAdditions.h"
-#import "NSRegularExpressionAdditions.h"
+#import <ChatCore/NSRegularExpressionAdditions.h>
 
 @interface JVEmoticonSet (JVEmoticonSetPrivate)
 - (void) _setBundle:(NSBundle *) bundle;

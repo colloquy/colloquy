@@ -10,7 +10,7 @@
 #import "MVTextView.h"
 #import "JVStyleView.h"
 #import "NSAttributedStringMoreAdditions.h"
-#import "NSRegularExpressionAdditions.h"
+#import <ChatCore/NSRegularExpressionAdditions.h>
 #import "MVChatUserAdditions.h"
 #import "MVApplicationController.h"
 

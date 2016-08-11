@@ -4,7 +4,7 @@
 #import "JVChatMessage.h"
 #import "JVStyle.h"
 #import "JVEmoticonSet.h"
-#import "NSDateAdditions.h"
+#import <ChatCore/NSDateAdditions.h>
 #import "RunOnMainThread.h"
 
 #import <objc/objc-runtime.h>
