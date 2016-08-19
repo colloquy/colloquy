@@ -869,9 +869,6 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
 
-	if( [options[@"NullTerminatedReturn"] boolValue] )
-		[ret appendBytes:"\0" length:1];
-
 	return ret;
 }
 #endif

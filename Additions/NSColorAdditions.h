@@ -1,4 +1,4 @@
-#if !defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE
+#if !((defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) || (defined(TARGET_OS_TV) && TARGET_OS_TV))
 #import <AppKit/NSColor.h>
 
 NS_ASSUME_NONNULL_BEGIN

@@ -8,7 +8,7 @@ extern NSString *NSChatCTCPTwoFormatType;
 #define JVItalicObliquenessValue 0.16
 
 @interface NSAttributedString (NSAttributedStringHTMLAdditions)
-#if !defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE
+#if !((defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) || (defined(TARGET_OS_TV) && TARGET_OS_TV)) 
 + (instancetype) attributedStringWithHTMLFragment:(NSString *) fragment;
 
 + (instancetype) attributedStringWithChatFormat:(NSData *) data options:(NSDictionary<NSString*,id> *) options;

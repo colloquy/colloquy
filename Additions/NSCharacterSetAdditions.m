@@ -4,7 +4,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation NSCharacterSet (Additions)
 + (NSCharacterSet *) illegalXMLCharacterSet {
-	static NSMutableCharacterSet *illegalSet = nil;
+	static NSCharacterSet *illegalSet = nil;
 	if (!illegalSet) {
 		NSMutableCharacterSet *illegalSet2 = [[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 0x1f )] mutableCopy];
 
