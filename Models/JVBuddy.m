@@ -34,6 +34,13 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 @synthesize picture = _picture;
+@synthesize firstName = _firstName;
+@synthesize lastName = _lastName;
+@synthesize primaryEmail = _primaryEmail;
+@synthesize givenNickname = _givenNickname;
+@synthesize addressBookPersonRecord = _person;
+
+#pragma mark -
 
 + (JVBuddyName) preferredName {
 	return _mainPreferredName;
@@ -152,7 +159,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( _person && [_person uniqueId] )
 		dictionary[@"addressBookPersonRecord"] = [_person uniqueId];
 
-	return dictionary;
+	return [dictionary copy];
 }
 
 #pragma mark -
@@ -270,13 +277,13 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 #pragma mark -
 
 - (NSSet *) users {
-	return _users;
+	return [_users copy];
 }
 
 #pragma mark -
 
 - (NSArray *) watchRules {
-	return _rules;
+	return [_rules copy];
 }
 
 - (void) addWatchRule:(MVChatUserWatchRule *) rule {
@@ -357,8 +364,6 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 #pragma mark -
-
-@synthesize addressBookPersonRecord = _person;
 
 - (void) editInAddressBook {
 	if( ! _person ) return;

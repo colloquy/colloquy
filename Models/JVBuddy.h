@@ -29,8 +29,8 @@ typedef NS_ENUM(NSInteger, JVBuddyName) {
 #endif
 
 - (instancetype) init NS_DESIGNATED_INITIALIZER;
-- (instancetype) initWithDictionaryRepresentation:(NSDictionary *) dictionary;
-- (NSDictionary *) dictionaryRepresentation;
+- (instancetype) initWithDictionaryRepresentation:(NSDictionary<NSString*,id> *) dictionary;
+- (NSDictionary<NSString*,id> *) dictionaryRepresentation;
 
 - (void) registerWithConnection:(MVChatConnection *) connection;
 - (void) registerWithApplicableConnections;
