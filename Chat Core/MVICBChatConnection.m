@@ -50,6 +50,11 @@
 #import "NSNotificationAdditions.h"
 #import "RunOnMainThread.h"
 
+@interface MVICBChatConnection () <GCDAsyncSocketDelegate>
+
+@end
+
+
 NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark Prototypes for auxiliary functions
