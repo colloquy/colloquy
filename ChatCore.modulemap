@@ -6,8 +6,6 @@ framework module ChatCore {
 
 	explicit module MVDirectClientConnection {
 		header "MVDirectClientConnection.h"
+		export *
 	}
-	
-	textual header "MVUtilities.h"
-	textual header "MVChatString.h"
 }

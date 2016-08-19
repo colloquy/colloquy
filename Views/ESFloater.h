@@ -15,6 +15,7 @@
     CGFloat             maxOpacity;
 }
 
+- (instancetype)init UNAVAILABLE_ATTRIBUTE;
 + (instancetype)floaterWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask title:(NSString *) title;
 - (instancetype)initWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask title:(NSString *) title NS_DESIGNATED_INITIALIZER;
 - (void)moveFloaterToPoint:(NSPoint)inPoint;

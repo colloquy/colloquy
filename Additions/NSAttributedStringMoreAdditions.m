@@ -5,7 +5,7 @@
 #include <libxml/tree.h>
 
 #import "NSAttributedStringMoreAdditions.h"
-#import "NSRegularExpressionAdditions.h"
+#import <ChatCore/NSRegularExpressionAdditions.h>
 
 #import <ChatCore/NSStringAdditions.h>
 
