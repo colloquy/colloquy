@@ -112,7 +112,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return contents;
 }
 
-- (NSResponder *) firstResponder {
+- (nullable NSResponder *) firstResponder {
 	return send;
 }
 

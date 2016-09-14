@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 
 #import "MVChatConnection.h"
+#import "MVMessaging.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -24,7 +25,7 @@ typedef NS_ENUM(OSType, MVDirectChatConnectionStatus) {
 
 @class MVChatUser;
 
-@interface MVDirectChatConnection : NSObject
+@interface MVDirectChatConnection : NSObject <MVMessaging>
 + (instancetype) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive;
 
 @property (getter=isPassive, readonly) BOOL passive;

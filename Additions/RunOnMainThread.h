@@ -11,7 +11,7 @@
 
 #import <Foundation/Foundation.h>
 
-static inline void RunOnMainThread(BOOL async, dispatch_block_t block)
+static inline void RunOnMainThread(BOOL async, dispatch_block_t __nonnull block)
 {
 	void (*theDispatchFunc)(dispatch_queue_t, dispatch_block_t);
 	if (async) {
@@ -27,12 +27,12 @@ static inline void RunOnMainThread(BOOL async, dispatch_block_t block)
 	}
 }
 
-static inline void RunOnMainThreadSync(dispatch_block_t block)
+static inline void RunOnMainThreadSync(dispatch_block_t __nonnull block)
 {
 	RunOnMainThread(NO, block);
 }
 
-static inline void RunOnMainThreadAsync(dispatch_block_t block)
+static inline void RunOnMainThreadAsync(dispatch_block_t __nonnull block)
 {
 	RunOnMainThread(YES, block);
 }

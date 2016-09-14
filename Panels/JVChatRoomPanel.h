@@ -1,5 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import "JVDirectChatPanel.h"
+#import <ChatCore/MVMessaging.h>
 
 @class JVChatRoomMember;
 @class MVChatUser;

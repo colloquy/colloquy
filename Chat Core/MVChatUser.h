@@ -2,6 +2,7 @@
 
 #import "MVAvailability.h"
 #import "MVChatString.h"
+#import "MVMessaging.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -69,7 +70,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 @class MVChatConnection;
 @class MVUploadFileTransfer;
 
-@interface MVChatUser : NSObject {
+@interface MVChatUser : NSObject <MVMessaging> {
 @protected
 	__weak MVChatConnection *_connection;
 	id _uniqueIdentifier;
