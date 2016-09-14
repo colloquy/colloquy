@@ -704,7 +704,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	return [self joinedChatRoomWithUniqueIdentifier:[self properNameForChatRoomNamed:name]];
 }
 
-- (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
+- (nullable MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
 	MVChatRoom *room = [super chatRoomWithUniqueIdentifier:[identifier lowercaseString]];
 	if( ! room ) room = [[MVIRCChatRoom alloc] initWithName:identifier andConnection:self];

@@ -142,11 +142,6 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	[super dealloc];
 }
 
-- (void) finalize {
-	[self disconnect];
-	[super finalize];
-}
-
 #pragma mark Accessors
 
 @synthesize nickname = _nickname;

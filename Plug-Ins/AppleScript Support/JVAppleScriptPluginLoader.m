@@ -2,8 +2,13 @@
 #import "JVAppleScriptEditorPanel.h"
 #import "JVAppleScriptChatPlugin.h"
 #import "JVChatWindowController.h"
+#import "JVChatController.h"
 
 #import <ChatCore/MVChatConnection.h>
+
+@interface JVAppleScriptPluginLoader () <MVChatPluginCommandSupport>
+
+@end
 
 @implementation JVAppleScriptPluginLoader
 - (instancetype) initWithManager:(MVChatPluginManager *) manager {

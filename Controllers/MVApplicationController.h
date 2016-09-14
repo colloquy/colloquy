@@ -48,7 +48,7 @@ extern NSString *JVMachineStoppedIdlingNotification;
 
 @protocol JVChatViewController;
 
-@protocol MVChatPluginContextualMenuSupport <NSObject>
+@protocol MVChatPluginContextualMenuSupport <MVChatPlugin>
 @optional
 - (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view;
 - (NSViewController<MASPreferencesViewController> *) preferencesViewController;

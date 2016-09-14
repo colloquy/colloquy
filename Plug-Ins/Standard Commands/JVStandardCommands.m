@@ -13,8 +13,13 @@
 #import "JVEmoticonSet.h"
 #import "JVStyleView.h"
 #import "JVConnectionInspector.h"
+#import "JVChatController.h"
 
 #import <WebKit/WebKit.h>
+
+@interface JVStandardCommands () <MVChatPluginCommandSupport>
+
+@end
 
 //@interface MVChatConnection (MVChatConnectionInspection) <JVInspection>
 //- (id <JVInspector>) inspector;

@@ -39,6 +39,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 @implementation JVChatTranscriptPanel
 @synthesize transcript = _transcript;
 @synthesize searchQuery = _searchQuery;
+@synthesize windowController = _windowController;
 
 - (instancetype) init {
 	if( ( self = [super init] ) ) {
@@ -113,10 +114,6 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #pragma mark -
 #pragma mark Window Controller and Proxy Icon Support
 
-- (nullable JVChatWindowController *) windowController {
-	return _windowController;
-}
-
 - (void) setWindowController:(nullable JVChatWindowController *) controller {
 	if( [[[_windowController window] representedFilename] isEqualToString:[[self transcript] filePath]] )
 		[[_windowController window] setRepresentedFilename:@""];
@@ -181,7 +178,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	return contents;
 }
 
-- (NSResponder *) firstResponder {
+- (nullable NSResponder *) firstResponder {
 	return display;
 }
 

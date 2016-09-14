@@ -17,13 +17,13 @@
 #import <ChatCore/MVChatUser.h>
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
-#import "NSAttributedStringAdditions.h"
-#import "NSStringAdditions.h"
+#import <ChatCore/NSAttributedStringAdditions.h>
+#import <ChatCore/NSStringAdditions.h>
 
 #import <WebKit/WebKit.h>
 #import <objc/objc-runtime.h>
 
-@interface JVJavaScriptChatPlugin ()
+@interface JVJavaScriptChatPlugin () <MVChatPluginCommandSupport>
 - (id) allocInstance:(NSString *) class NS_RETURNS_NOT_RETAINED;
 @end
 
