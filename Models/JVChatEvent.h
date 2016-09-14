@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
 #import "JVChatTranscript.h"
-
+#if !((defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) || (defined(TARGET_OS_TV) && TARGET_OS_TV))
+#import <AppKit/NSTextStorage.h>
+#endif
 NS_ASSUME_NONNULL_BEGIN
 
 @interface JVChatEvent : NSObject <JVChatTranscriptElement> {

@@ -82,7 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
 				for( prop = subNode -> properties; prop; prop = prop -> next ) {
 					xmlChar *value = xmlGetProp( subNode, prop -> name );
 					if( value ) {
-						properties[@((char *) prop -> name)] = @((char *) value);
+						properties[@((const char *) prop -> name)] = @((char *) value);
 						xmlFree( value );
 					}
 				}
