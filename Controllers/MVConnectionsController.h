@@ -56,7 +56,7 @@
 	NSArray *_userSelectionPossibleUsers;
 
 	NSMapTable *_connectionToErrorToAlertMap;
-	NSMutableArray *_bookmarks;
+	NSMutableArray<NSMutableDictionary*> *_bookmarks;
 	NSMutableArray *_joinRooms;
 	MVChatConnection *_passConnection;
 	MVChatConnection *_certificateConnection;

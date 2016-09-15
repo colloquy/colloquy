@@ -1,3 +1,4 @@
+#import <ChatCore/MVChatConnection.h>
 #import "JVChatRoomBrowser.h"
 #import "JVChatController.h"
 #import "JVChatConsolePanel.h"
@@ -5,7 +6,7 @@
 #import "MVTableView.h"
 #import "NSImageAdditions.h"
 
-@interface JVChatRoomBrowser (Private)
+@interface JVChatRoomBrowser (Private) <NSTableViewDelegate>
 - (void) _needToRefreshResults:(id) sender;
 - (void) _refreshResults:(id) sender;
 - (void) _resortResults;
@@ -13,7 +14,7 @@
 - (void) _startFetch;
 - (void) _stopFetch;
 
-- (void) tableView:(NSTableView *) view didClickTableColumn:(NSTableColumn *) column;
+//- (void) tableView:(NSTableView *) view didClickTableColumn:(NSTableColumn *) column;
 @end
 
 #pragma mark -

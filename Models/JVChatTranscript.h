@@ -27,13 +27,13 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 }
 + (instancetype) chatTranscript;
 + (instancetype) chatTranscriptWithChatTranscript:(JVChatTranscript *) transcript;
-+ (instancetype) chatTranscriptWithElements:(NSArray *) elements;
++ (instancetype) chatTranscriptWithElements:(NSArray<id<JVChatTranscriptElement>> *) elements;
 + (nullable instancetype) chatTranscriptWithContentsOfFile:(NSString *) path;
 + (nullable instancetype) chatTranscriptWithContentsOfURL:(NSURL *) url;
 
 - (instancetype) init NS_DESIGNATED_INITIALIZER;
 - (instancetype) initWithChatTranscript:(JVChatTranscript *) transcript;
-- (instancetype) initWithElements:(NSArray *) elements;
+- (instancetype) initWithElements:(NSArray<id<JVChatTranscriptElement>> *) elements;
 - (nullable instancetype) initWithContentsOfFile:(NSString *) path;
 - (nullable instancetype) initWithContentsOfURL:(NSURL *) url;
 
@@ -47,12 +47,12 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 
 @property NSUInteger elementLimit;
 
-@property (readonly, copy, nullable) NSArray *elements;
-- (nullable NSArray *) elementsInRange:(NSRange) range;
-- (nullable id) elementAtIndex:(NSUInteger) index;
-@property (readonly, strong, nullable) id lastElement;
+@property (readonly, copy, nullable) NSArray<id<JVChatTranscriptElement>> *elements;
+- (nullable NSArray<id<JVChatTranscriptElement>> *) elementsInRange:(NSRange) range;
+- (nullable id<JVChatTranscriptElement>) elementAtIndex:(NSUInteger) index;
+@property (readonly, strong, nullable) id<JVChatTranscriptElement> lastElement;
 
-- (NSArray *) appendElements:(NSArray *) elements;
+- (NSArray<id<JVChatTranscriptElement>> *) appendElements:(NSArray<id<JVChatTranscriptElement>> *) elements;
 - (void) appendChatTranscript:(JVChatTranscript *) transcript;
 
 @property (readonly, copy, nullable) NSArray<JVChatMessage*> *messages;

@@ -46,7 +46,7 @@ extern NSString *JVStyleVariantChangedNotification;
 - (nullable NSString *) transformChatTranscript:(JVChatTranscript *) transcript withParameters:(NSDictionary<NSString*,id> *) parameters;
 - (nullable NSString *) transformChatTranscriptElement:(id <JVChatTranscriptElement>) element withParameters:(NSDictionary<NSString*,id> *) parameters;
 - (nullable NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary<NSString*,id> *) parameters;
-- (nullable NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters;
+- (nullable NSString *) transformChatTranscriptElements:(NSArray<id<JVChatTranscriptElement>> *) elements withParameters:(NSDictionary<NSString*,id> *) parameters;
 - (nullable NSString *) transformXML:(NSString *) xml withParameters:(NSDictionary<NSString*,id> *) parameters;
 - (nullable NSString *) transformXMLDocument:(struct _xmlDoc *) document withParameters:(NSDictionary<NSString*,id> *) parameters;
 

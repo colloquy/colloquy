@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSUInteger _origSheetHeight;
 }
 - (instancetype) init NS_DESIGNATED_INITIALIZER;
-- (nullable instancetype) initWithSettings:(nullable NSDictionary *) settings;
+- (nullable instancetype) initWithSettings:(nullable NSDictionary<NSString*,id> *) settings;
 
 - (NSComparisonResult) compare:(JVSmartTranscriptPanel *) panel;
 

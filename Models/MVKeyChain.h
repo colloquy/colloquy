@@ -33,6 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MVKeyChain : NSObject
 + (MVKeyChain *) defaultKeyChain;
+#if __has_feature(objc_class_property)
+@property (class, readonly, retain) MVKeyChain *defaultKeyChain;
+#endif
 
 - (nullable NSString *) genericPasswordForService:(nullable NSString *) service account:(nullable NSString *) account;
 - (void) removeGenericPasswordForService:(NSString *) service account:(NSString *) account;

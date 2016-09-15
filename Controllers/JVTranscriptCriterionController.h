@@ -1,7 +1,8 @@
 #import <Cocoa/Cocoa.h>
 #import "JVChatWindowController.h"
 
-typedef NS_ENUM(NSInteger, JVTranscriptCriterionFormat) { // cooresponds to the nib tab view identifiers
+/// corresponds to the nib tab view identifiers
+typedef NS_ENUM(NSInteger, JVTranscriptCriterionFormat) {
 	JVTranscriptTextCriterionFormat = 1,
 	JVTranscriptDateCriterionFormat,
 	JVTranscriptBooleanCriterionFormat,

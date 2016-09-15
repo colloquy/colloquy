@@ -63,7 +63,7 @@ extern NSString *JVToolbarQuickSearchItemIdentifier;
 
 #pragma mark -
 
-@interface NSObject (MVChatPluginLinkClickSupport)
+@protocol MVChatPluginLinkClickSupport <MVChatPlugin>
 - (BOOL) handleClickedLink:(NSURL *) url inView:(id <JVChatViewController>) view;
 @end
 

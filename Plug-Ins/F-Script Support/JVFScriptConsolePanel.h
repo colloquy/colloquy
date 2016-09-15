@@ -1,3 +1,4 @@
+#import <ChatCore/MVChatPluginManager.h>
 #import "JVChatWindowController.h"
 
 @class FSInterpreterView;

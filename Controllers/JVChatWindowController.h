@@ -163,7 +163,7 @@ extern NSString *JVChatViewPboardType;
 - (id<JVChatListItem>) childAtIndex:(NSUInteger) index;
 @end
 
-@interface NSObject (MVChatPluginToolbarSupport)
+@protocol MVChatPluginToolbarSupport <MVChatPlugin>
 - (nullable NSArray<NSString*> *) toolbarItemIdentifiersForView:(id <JVChatViewController>) view;
 - (nullable NSToolbarItem *) toolbarItemForIdentifier:(NSString *) identifier inView:(id <JVChatViewController>) view willBeInsertedIntoToolbar:(BOOL) willBeInserted;
 @end

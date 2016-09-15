@@ -5,10 +5,13 @@
 #import "JVChatRoomMember.h"
 #import "JVToolbarItem.h"
 #import "JVChatController.h"
+#import "JVNotificationController.h"
+#import "MVApplicationController.h"
 #import <ChatCore/NSStringAdditions.h>
+#import <ChatCore/MVChatConnection.h>
 #import "pyobjc-api.h"
 
-@interface JVPythonChatPlugin () <MVChatPluginCommandSupport>
+@interface JVPythonChatPlugin () <MVChatPluginCommandSupport, MVChatPluginContextualMenuSupport, MVChatPluginToolbarSupport, MVChatPluginNotificationSupport, MVChatPluginConnectionSupport, MVChatPluginRoomSupport, MVChatPluginDirectChatSupport, MVChatPluginLinkClickSupport>
 
 @end
 

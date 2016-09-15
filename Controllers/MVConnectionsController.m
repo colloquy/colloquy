@@ -515,7 +515,7 @@ static NSMenu *favoritesMenu = nil;
 		return;
 	}
 
-	for( NSDictionary *info in _bookmarks ) {
+	for( NSMutableDictionary *info in _bookmarks ) {
 		MVChatConnection *connection = info[@"connection"];
 
 		if( [[connection server] isEqualToString:[newAddress stringValue]] && [connection serverPort] == [newPort intValue] &&
@@ -849,7 +849,7 @@ static NSMenu *favoritesMenu = nil;
 			target = [[[url path] substringFromIndex:1] stringByDecodingIllegalURLCharacters];
 		}
 
-		for( NSDictionary *info in _bookmarks ) {
+		for( NSMutableDictionary *info in _bookmarks ) {
 			MVChatConnection *connection = info[@"connection"];
 
 			if( [[connection server] isEqualToString:[url host]] &&

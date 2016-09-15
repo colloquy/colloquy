@@ -91,7 +91,8 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 - (void) textDidChange:(nullable NSNotification *) notification;
 @end
 
-@interface NSObject (MVChatPluginDirectChatSupport)
+@protocol MVChatPluginDirectChatSupport <MVChatPlugin>
+@optional
 - (void) processIncomingMessage:(JVMutableChatMessage *) message inView:(id <JVChatViewController>) view;
 - (void) processOutgoingMessage:(JVMutableChatMessage *) message inView:(id <JVChatViewController>) view;
 @end

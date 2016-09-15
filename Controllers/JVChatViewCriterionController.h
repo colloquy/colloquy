@@ -1,6 +1,7 @@
 #import "JVChatWindowController.h"
 
-typedef NS_ENUM(NSInteger, JVChatViewCriterionFormat) { // cooresponds to the nib tab view identifiers
+/// corresponds to the nib tab view identifiers
+typedef NS_ENUM(NSInteger, JVChatViewCriterionFormat) {
 	JVChatViewTextCriterionFormat = 1,
 	JVChatViewBooleanCriterionFormat,
 	JVChatViewListCriterionFormat
@@ -59,10 +60,7 @@ typedef NS_ENUM(NSInteger, JVChatViewCriterionOperation) {
 
 	BOOL _changed;
 }
-+ (JVChatViewCriterionController*) controller;
-#if __has_feature(objc_class_property)
-@property (readonly, strong, class) JVChatViewCriterionController *controller;
-#endif
++ (instancetype) controller;
 
 @property (readonly, strong) NSView *view;
 
