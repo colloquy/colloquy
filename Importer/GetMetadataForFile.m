@@ -92,7 +92,7 @@ __private_extern @interface JVChatTranscriptMetadataExtractor : NSObject <NSXMLP
 	if ([participants count])
 		ret[(NSString *) kMDItemContributors] = [participants allObjects];
 	if ([source length])
-		ret[(NSString *) kMDItemWhereFroms] = source;
+		ret[(NSString *) kMDItemWhereFroms] = @[source];
 
 	ret[(NSString *) kMDItemKind] = @"transcript";
 	ret[(NSString *) kMDItemCreator] = @"Colloquy";
