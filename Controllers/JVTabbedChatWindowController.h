@@ -13,5 +13,5 @@
     CGFloat _tabHeight;
 }
 - (IBAction) toggleTabBarVisible:(id) sender;
-- (void) updateTabBarVisibilityAndAnimate:(BOOL) animate;
+- (void) updateTabBarVisibilityAndAnimate:(BOOL) animate NS_SWIFT_NAME(updateTabBarVisibility(animate:));
 @end

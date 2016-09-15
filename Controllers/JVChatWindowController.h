@@ -103,6 +103,7 @@ extern NSString *JVChatViewPboardType;
 
 @required
 - (nullable MVChatConnection *) connection;
+@property (readonly, strong, nullable) MVChatConnection *connection;
 
 - (nullable JVChatWindowController *) windowController;
 - (void) setWindowController:(nullable JVChatWindowController *) controller;
@@ -111,10 +112,11 @@ extern NSString *JVChatViewPboardType;
 - (NSView *) view;
 - (nullable NSResponder *) firstResponder;
 - (NSString *) toolbarIdentifier;
-- (NSString *) windowTitle;
 @property (readonly, copy) NSString *toolbarIdentifier;
+- (NSString *) windowTitle;
 @property (readonly, copy) NSString *windowTitle;
-@property (readonly) NSString * identifier;
+- (NSString *)identifier;
+@property (readonly, copy) NSString *identifier;
 
 @optional
 - (void) willSelect;
@@ -128,9 +130,12 @@ extern NSString *JVChatViewPboardType;
 
 @protocol JVChatListItemScripting <NSObject>
 - (NSNumber *) uniqueIdentifier;
+@property (readonly, copy) NSNumber *uniqueIdentifier;
 - (nullable NSArray *) children;
 - (nullable NSString *) information;
+@property (readonly, copy, nullable) NSString *information;
 - (NSString *) toolTip;
+@property (readonly, copy) NSString *toolTip;
 - (BOOL) isEnabled;
 @property (readonly, getter=isEnabled) BOOL enabled;
 @end
@@ -142,7 +147,9 @@ extern NSString *JVChatViewPboardType;
 
 @protocol JVChatListItem <NSObject>
 - (nullable id <JVChatListItem>) parent;
+@property (readonly, nullable, weak) id<JVChatListItem> parent;
 - (NSImage *) icon;
+@property (readonly, retain) NSImage *icon;
 - (NSString *) title;
 @property (readonly, copy) NSString *title;
 
@@ -150,16 +157,19 @@ extern NSString *JVChatViewPboardType;
 - (BOOL) acceptsDraggedFileOfType:(NSString *) type;
 - (void) handleDraggedFile:(NSString *) path;
 - (IBAction) doubleClicked:(nullable id) sender;
-@property (readonly, getter=isEnabled) BOOL enabled;
 - (BOOL) isEnabled;
+@property (readonly, getter=isEnabled) BOOL enabled;
 
 - (NSMenu *) menu;
 - (nullable NSString *) information;
+@property (readonly, copy, nullable) NSString *information;
 - (NSString *) toolTip;
+@property (readonly, copy) NSString *toolTip;
 - (nullable NSImage *) statusImage;
+@property (readonly, retain, nullable) NSImage *statusImage;
 
-@property (readonly) NSUInteger numberOfChildren;
 - (NSUInteger) numberOfChildren;
+@property (readonly) NSUInteger numberOfChildren;
 - (id<JVChatListItem>) childAtIndex:(NSUInteger) index;
 @end
 

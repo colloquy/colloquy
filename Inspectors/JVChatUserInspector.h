@@ -5,15 +5,15 @@
 #import "JVInspectorController.h"
 
 @interface JVDirectChatPanel (JVDirectChatPanelInspection) <JVInspection>
-@property (readonly, strong) id<JVInspector> inspector;
+- (id <JVInspector>) inspector;
 @end
 
 @interface JVChatRoomMember (JVChatRoomMemberInspection) <JVInspection>
-@property (readonly, strong) id<JVInspector> inspector;
+- (id <JVInspector>) inspector;
 @end
 
 @interface MVChatUser (MVChatUserInspection) <JVInspection>
-@property (readonly, strong) id<JVInspector> inspector;
+- (id <JVInspector>) inspector;
 @end
 
 @interface JVChatUserInspector : NSObject <JVInspector> {

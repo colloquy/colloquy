@@ -3,7 +3,7 @@
 #import "JVInspectorController.h"
 
 @interface JVBuddy (JVBuddyInspection) <JVInspection>
-@property (readonly, strong) id<JVInspector> inspector;
+- (id <JVInspector>) inspector;
 @end
 
 @interface JVBuddyInspector : NSObject <JVInspector> {

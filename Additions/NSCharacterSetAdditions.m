@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSCharacterSet *) cq_encodedXMLCharacterSet {
 	static NSCharacterSet *specialSet = nil;
 	if (!specialSet) {
-		specialSet = [NSCharacterSet characterSetWithCharactersInString:@"&<>\"'"];;
+		specialSet = [NSCharacterSet characterSetWithCharactersInString:@"&<>\"'"];
 	}
 	return specialSet;
 }

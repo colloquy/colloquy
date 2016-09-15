@@ -94,16 +94,11 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 #pragma mark Associations
 
-- (JVChatRoomPanel *) room {
-	return _room;
-}
+@synthesize room = _room;
+@synthesize user = _user;
 
 - (MVChatConnection *) connection {
 	return [_user connection];
-}
-
-- (MVChatUser *) user {
-	return _user;
 }
 
 - (nullable JVBuddy *) buddy {

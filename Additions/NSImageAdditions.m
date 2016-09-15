@@ -4,6 +4,14 @@
 // Created for Adium by Evan Schoenberg on Tue Dec 02 2003 under the GPL.
 // Draw this image in a rect, tiling if the rect is larger than the image
 - (void) tileInRect:(NSRect) rect {
+#if 1
+	[[NSGraphicsContext currentContext] saveGraphicsState];
+	NSColor *aColor = [NSColor colorWithPatternImage:self];
+	[aColor set];
+	[[NSBezierPath bezierPathWithRect:rect] fill];
+	
+	[[NSGraphicsContext currentContext] restoreGraphicsState];
+#else
 	NSSize size = [self size];
 	NSRect destRect = NSMakeRect( rect.origin.x, rect.origin.y, size.width, size.height );
 	double top = rect.origin.y + rect.size.height;
@@ -29,6 +37,7 @@
 
 		destRect.origin.y += destRect.size.height;
 	}
+#endif
 }
 
 + (NSImage *)templateName:(NSString *)templateName

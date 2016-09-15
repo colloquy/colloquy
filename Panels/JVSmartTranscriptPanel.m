@@ -18,6 +18,8 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 @end
 
 @implementation JVSmartTranscriptPanel
+@synthesize rules = _rules;
+
 - (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_operation = 1;

@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSComparisonResult) compare:(JVSmartTranscriptPanel *) panel;
 
-@property (readonly, copy) NSMutableArray *rules;
+@property (readonly, retain) NSMutableArray *rules;
 
 @property (readonly) NSUInteger newMessagesWaiting;
 - (void) matchMessage:(JVChatMessage *) message fromView:(id <JVChatViewController>) view;

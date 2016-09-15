@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSComparisonResult) compareUsingStatus:(JVChatRoomMember *) member;
 - (NSComparisonResult) compareUsingBuddyStatus:(JVChatRoomMember *) member;
 
-@property (readonly, strong) JVChatRoomPanel *room;
+@property (readonly, weak) JVChatRoomPanel *room;
 @property (readonly, strong) MVChatConnection *connection;
 @property (readonly, strong) MVChatUser *user;
 @property (readonly, strong, nullable) JVBuddy *buddy;
