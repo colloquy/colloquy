@@ -720,7 +720,7 @@ static MVBuddyListController *sharedInstance = nil;
 		NSMenu *buddyMenu = [[self _menuForBuddy:buddy] copy];
 		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""];
 		menuItem.image = [NSImage imageNamed:NSImageNameActionTemplate];
-		[buddyMenu addItem:menuItem];
+		[buddyMenu insertItem:menuItem atIndex:0];
 		[actionButton setMenu:buddyMenu];
 	} else {
 		[actionButton setMenu:nil];
