@@ -37,7 +37,7 @@
 }
 
 - (NSImage *) toolbarItemImage {
-	return [NSImage imageNamed:@"FileTransferPreferences"];
+	return [NSImage imageNamed:@"Preferences/FileTransfer"];
 }
 
 - (NSString *)toolbarItemLabel {

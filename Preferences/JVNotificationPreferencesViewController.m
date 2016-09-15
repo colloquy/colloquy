@@ -57,7 +57,7 @@
 }
 
 - (NSImage *) toolbarItemImage {
-	return [NSImage imageNamed:@"NotificationPreferences"];
+	return [NSImage imageNamed:@"Preferences/Notification"];
 }
 
 - (NSString *) toolbarItemLabel {

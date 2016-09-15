@@ -30,7 +30,7 @@
 }
 
 - (NSImage *) toolbarItemImage {
-	return [NSImage imageNamed:@"TranscriptPreferences"];
+	return [NSImage imageNamed:@"Preferences/Transcript"];
 }
 
 - (NSString *)toolbarItemLabel {

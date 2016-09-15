@@ -107,7 +107,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 }
 
 - (NSImage *) toolbarItemImage {
-	return [NSImage imageNamed:@"InterfacePreferences"];
+	return [NSImage imageNamed:@"Preferences/Interface"];
 }
 
 - (NSString *) toolbarItemLabel {
