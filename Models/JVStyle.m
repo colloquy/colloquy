@@ -372,7 +372,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		}
 	}
 
-	NSDictionary *info = @{@"variant": [self defaultVariantName]};
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[self defaultVariantName], @"variant", nil];
 	[[NSNotificationCenter chatCenter] postNotificationName:JVDefaultStyleVariantChangedNotification object:self userInfo:info];
 }
 
