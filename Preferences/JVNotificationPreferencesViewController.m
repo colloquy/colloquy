@@ -163,15 +163,28 @@
 	}
 
 	NSFileManager *fm = [NSFileManager defaultManager];
-	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-	NSArray *paths = [NSArray arrayWithObjects:
-		[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Sounds", bundleName],
-		[NSString stringWithFormat:@"/Library/Application Support/%@/Sounds", bundleName],
-		[[NSString stringWithFormat:@"~/Library/Application Support/%@/Sounds", bundleName] stringByExpandingTildeInPath],
-		@"-",
-		@"/System/Library/Sounds",
-		[@"~/Library/Sounds" stringByExpandingTildeInPath],
-		nil];
+	NSArray *paths;
+	{
+		NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+		NSMutableArray *tmpPaths = [NSMutableArray arrayWithCapacity:6];
+		NSArray *appSupport = [[fm URLsForDirectory:NSApplicationSupportDirectory inDomains:NSAllDomainsMask & ~NSSystemDomainMask] sortedArrayUsingSelector:@selector(compare:)];
+		for (NSURL *aURL in appSupport) {
+			NSString *dir = [aURL path];
+			dir = [dir stringByAppendingPathComponent:bundleName];
+			dir = [dir stringByAppendingPathComponent:@"Sounds"];
+			[tmpPaths addObject:dir];
+		}
+		
+		[tmpPaths addObject:@"-"];
+		
+		NSArray *soundsDir = [[fm URLsForDirectory:NSLibraryDirectory inDomains:NSUserDomainMask | NSSystemDomainMask] sortedArrayUsingSelector:@selector(compare:)];
+		for (NSURL *aURL in soundsDir) {
+			NSString *dir = [aURL path];
+			dir = [dir stringByAppendingPathComponent:@"Sounds"];
+			[tmpPaths addObject:dir];
+		}
+		paths = [tmpPaths copy];
+	}
 
 	for( __strong NSString *aPath in paths ) {
 		if( [aPath isEqualToString:@"-"] ) {

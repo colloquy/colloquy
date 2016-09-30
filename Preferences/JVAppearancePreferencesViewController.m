@@ -793,7 +793,10 @@
 	[name replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [name length] )];
 	[name replaceOccurrencesOfString:@":" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [name length] )];
 
-	NSString *varDir = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [self.style identifier]] stringByExpandingTildeInPath];
+	NSString *varDir = [[[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL] path];
+	for (NSString *subDir in @[@"Colloquy", @"Styles", @"Variants", self.style.identifier]) {
+		varDir = [varDir stringByAppendingPathComponent:subDir];
+	}
 	[[NSFileManager defaultManager] createDirectoryAtPath:varDir withIntermediateDirectories:YES attributes:nil error:nil];
 
 	NSString *path = [[varDir stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"css"];

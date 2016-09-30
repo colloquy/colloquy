@@ -192,20 +192,33 @@ static BOOL applicationIsTerminating = NO;
 
 - (void) setupFolders {
 	NSFileManager *fm = [NSFileManager defaultManager];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/PlugIns" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Styles" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Styles/Variants" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Emoticons" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Sounds" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-//	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Recent Chat Rooms" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-//	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Recent Acquaintances" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Silc" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Silc/Client Keys" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Silc/Server Keys" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Scripts/Applications" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Scripts/Applications/Colloquy" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
+	NSArray *toCreate;
+	{
+		NSURL *varURL = [fm URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+		varURL = [varURL URLByAppendingPathComponent:@"Colloquy" isDirectory:YES];
+		NSMutableArray *tmpCreate = [[NSMutableArray alloc] initWithCapacity:11];
+		[tmpCreate addObject:varURL];
+		for (NSString *subdir in @[@"PlugIns", @"Styles", @"Emoticons", @"Sounds", @"Favorites" /*, @"Recent Chat Rooms", @"Recent Acquaintances"*/, @"Silc"]) {
+			[tmpCreate addObject:[varURL URLByAppendingPathComponent:subdir isDirectory:YES]];
+		}
+		
+		for (NSArray<NSString*> *subdirs in @[@[@"Styles", @"Variants"], @[@"Silc", @"Client Keys"], @[@"Silc", @"Server Keys"]]) {
+			NSURL *tmpURL = varURL;
+			for (NSString *subdir in subdirs) {
+				tmpURL = [tmpURL URLByAppendingPathComponent:subdir isDirectory:YES];
+			}
+			[tmpCreate addObject:tmpURL];
+		}
+		
+		varURL = [[[[fm URLForDirectory:NSLibraryDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL] URLByAppendingPathComponent:@"Scripts"] URLByAppendingPathComponent:@"Applications"] URLByAppendingPathComponent:@"Colloquy" isDirectory:YES];
+		
+		[tmpCreate addObject:varURL];
+		
+		toCreate = [tmpCreate copy];
+	}
+	for (NSURL *createURL in toCreate) {
+		[fm createDirectoryAtURL:createURL withIntermediateDirectories:YES attributes:nil error:NULL];
+	}
 }
 
 #pragma mark -

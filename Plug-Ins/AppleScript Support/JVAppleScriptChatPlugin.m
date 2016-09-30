@@ -170,7 +170,7 @@
 		if( [value isKindOfClass:[NSScriptObjectSpecifier class]] ) specifier = value;
 		else specifier = [value objectSpecifier];
 
-		if( specifier ) descriptor = [[value objectSpecifier] _asDescriptor]; // custom object, use it's object specitier
+		if( specifier ) descriptor = [[value objectSpecifier] _asDescriptor]; // custom object, use its object specifier
 		else descriptor = [[NSAEDescriptorTranslator sharedAEDescriptorTranslator] descriptorByTranslatingObject:value ofType:nil inSuite:nil];
 
 		if( ! descriptor ) descriptor = [NSAppleEventDescriptor nullDescriptor];
