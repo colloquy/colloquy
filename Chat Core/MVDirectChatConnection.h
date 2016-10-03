@@ -44,7 +44,7 @@ typedef NS_ENUM(OSType, MVDirectChatConnectionStatus) {
 @property MVChatMessageFormat outgoingChatFormat;
 
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
-- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *)attributes;
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary<NSString*,id> *)attributes;
 @end
 
 NS_ASSUME_NONNULL_END

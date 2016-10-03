@@ -132,7 +132,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 
 - (void) sendMessage:(MVChatString *) message asAction:(BOOL) action;
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
-- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes;
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary<NSString*,id> *) attributes;
 
 - (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments;
 - (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments withEncoding:(NSStringEncoding) encoding;
