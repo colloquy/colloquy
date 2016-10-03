@@ -10,7 +10,7 @@ typedef struct {
 	BOOL armv6;
 	BOOL armv7;
 	BOOL armv8;
-	NSInteger unknown; // 68k, MIPS, etc
+	NSInteger unknown; ///< 68k, MIPS, etc
 } MVArchitectures;
 
 @interface NSFileManager (Additions)
