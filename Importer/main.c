@@ -86,7 +86,7 @@ HRESULT MetadataImporterQueryInterface(void *thisInstance,REFIID iid,LPVOID *ppv
 		*ppv = thisInstance;
 		CFRelease(interfaceID);
 		return S_OK;
-	} else if (CFEqual(interfaceID, kMDImporterInterfaceID)){
+	} else if (CFEqual(interfaceID, kMDImporterInterfaceID)) {
 		/* If the right interface was requested, bump the ref count,
 		 * set the ppv parameter equal to the instance, and
 		 * return good status.
@@ -103,7 +103,7 @@ HRESULT MetadataImporterQueryInterface(void *thisInstance,REFIID iid,LPVOID *ppv
 		*ppv = thisInstance;
 		CFRelease(interfaceID);
 		return S_OK;
-	}else{
+	} else {
 		/* Requested interface unknown, bail with error. */
 		*ppv = NULL;
 		CFRelease(interfaceID);

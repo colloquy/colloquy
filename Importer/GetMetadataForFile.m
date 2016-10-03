@@ -34,7 +34,7 @@ __private_extern @interface JVChatTranscriptMetadataExtractor : NSObject <NSXMLP
 }
 @property (strong) NSCharacterSet *lineBreaks;
 @property (strong) NSMutableString *content;
-@property (strong) NSMutableSet *participants;
+@property (strong) NSMutableSet<NSString*> *participants;
 
 - (instancetype) initWithCapacity:(NSUInteger) capacity NS_DESIGNATED_INITIALIZER;
 @property (readonly, copy) NSDictionary *metadataAttributes;
@@ -60,7 +60,7 @@ __private_extern @interface JVChatTranscriptMetadataExtractor : NSObject <NSXMLP
 	return self;
 }
 
-- (NSDictionary *)metadataAttributes {
+- (NSDictionary *) metadataAttributes {
 	NSMutableDictionary *ret = [[NSMutableDictionary alloc] init];
 	ret[(NSString *) kMDItemTextContent] = content;
 
@@ -168,7 +168,7 @@ static BOOL GetMetadataForNSURL(void* thisInterface, NSMutableDictionary *attrib
 		goto badend;
 	
 	unsigned long long fileSize = [fileSizeClass unsignedLongLongValue];
-	fileSizeClass = nil;
+	
 	NSUInteger capacity = (NSUInteger)( fileSize ? fileSize / 3 : 5000 ); // the message content takes up about a third of the XML file's size
 	
 	extractor = [[JVChatTranscriptMetadataExtractor alloc] initWithCapacity:capacity];
@@ -178,7 +178,6 @@ static BOOL GetMetadataForNSURL(void* thisInterface, NSMutableDictionary *attrib
 	
 	[attributes addEntriesFromDictionary:[extractor metadataAttributes]];
 	
-    parser = nil;
 	xmlSetStructuredErrorFunc( NULL, NULL );
 	return YES;
 	
