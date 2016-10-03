@@ -437,7 +437,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				}
 				break;
 			}
-			case '\006': { // ctcp 2 formatting (http://www.lag.net/~robey/ctcp/ctcp2.2.txt)
+			case '\006': { // ctcp 2 formatting ( http://www.lag.net/~robey/ctcp/ctcp2.2.txt )
 				if( ! [scanner isAtEnd] ) {
 					BOOL off = NO;
 

@@ -166,7 +166,7 @@ static  NSImage			*tabDivider = nil;
 }
 
 //Move a tab
-- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index
+- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(NSInteger)index
 {
 	[self moveTab:tabViewItem toIndex:index selectTab:NO animate:YES];
 }

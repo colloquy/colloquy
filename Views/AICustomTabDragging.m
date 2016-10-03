@@ -21,6 +21,8 @@
 @end
 
 @implementation AICustomTabDragging
+@synthesize destinationTabView = destTabBar;
+@synthesize sourceTabView = sourceTabBar;
 
 static AICustomTabDragging *sharedTabDragInstance = nil;
 + (AICustomTabDragging *)sharedInstance

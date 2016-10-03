@@ -68,7 +68,7 @@ typedef NS_ENUM(OSType, JVChatMessageType) {
 
 @property (strong, nullable) NSScriptObjectSpecifier *objectSpecifier;
 
-- (NSDictionary<NSObject*,id> *) attributes;
+- (NSDictionary<NSString*,id> *) attributes;
 - (nullable id) attributeForKey:(id) key;
 @end
 
@@ -95,7 +95,7 @@ typedef NS_ENUM(OSType, JVChatMessageType) {
 @property (readwrite, strong) NSURL *source;
 @property (readwrite, copy) NSString *messageIdentifier;
 
-- (NSMutableDictionary<NSObject*,id> *) attributes;
+- (NSMutableDictionary<NSString*,id> *) attributes;
 - (void) setAttributes:(NSDictionary<NSObject*,id> *) attributes;
 - (void) setAttribute:(id) object forKey:(id) key;
 @end

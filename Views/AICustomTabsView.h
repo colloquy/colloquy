@@ -36,17 +36,17 @@
     IBOutlet	NSTabView			*tabView;
 
 	id                  _self;
-    BOOL				allowsInactiveTabClosing;	//Allow closing of inactive tabs
-	BOOL				allowsTabRearranging;		//Allow tabs to be rearranged in the window
-	BOOL				trackingCursor;				//Tracking rects are installed
-	BOOL				ignoreTabNumberChange;		//Ignore tab count changes, used for re-arranging
+    BOOL				allowsInactiveTabClosing;	///< Allow closing of inactive tabs
+	BOOL				allowsTabRearranging;		///< Allow tabs to be rearranged in the window
+	BOOL				trackingCursor;				///< Tracking rects are installed
+	BOOL				ignoreTabNumberChange;		///< Ignore tab count changes, used for re-arranging
 
 	//Tab Dragging
-    BOOL                removingLastTabHidesWindow;	//Removing the last tab hides our window
-	unsigned 			tabGapWidth;				//Gap in our tabs
-	NSInteger 			tabGapIndex;				//Location of the gap
-    NSPoint				lastClickLocation;			//Last click location
-    NSTimer             *arrangeCellTimer;			//Timer for tab animations
+    BOOL                removingLastTabHidesWindow;	///< Removing the last tab hides our window
+	unsigned 			tabGapWidth;				///< Gap in our tabs
+	NSInteger 			tabGapIndex;				///< Location of the gap
+    NSPoint				lastClickLocation;			///< Last click location
+    NSTimer             *arrangeCellTimer;			///< Timer for tab animations
 
 	//Guarded.  Access these using the internal accessors
     NSMutableArray		*tabCellArray;
@@ -71,7 +71,7 @@
 //Misc
 - (void)redisplayTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
 - (void)resizeTabForTabViewItem:(NSTabViewItem *)inTabViewItem;
-- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index;
+- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(NSInteger)index;
 @property (readonly) NSInteger numberOfTabViewItems;
 
 //Private

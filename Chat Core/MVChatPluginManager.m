@@ -159,15 +159,15 @@ NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatP
 
 #pragma mark -
 
-- (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation {
+- (nullable NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation {
 	return [self makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
 }
 
-- (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop {
+- (nullable NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop {
 	return [self makePluginsOfClass:NULL performInvocation:invocation stoppingOnFirstSuccessfulReturn:stop];
 }
 
-- (NSArray *) makePluginsOfClass:(Class __nullable) class performInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop {
+- (nullable NSArray *) makePluginsOfClass:(Class __nullable) class performInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop {
 	NSParameterAssert( invocation != nil );
 	NSParameterAssert( [invocation selector] != NULL );
 
@@ -178,7 +178,7 @@ NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatP
 	NSMutableArray *results = [[NSMutableArray alloc] init];
 	NSMethodSignature *sig = [invocation methodSignature];
 
-	for ( id plugin in plugins ) {
+	for ( id<MVChatPlugin> plugin in plugins ) {
 		@try {
 			[invocation invokeWithTarget:plugin];
 		} @catch ( NSException *exception ) {
