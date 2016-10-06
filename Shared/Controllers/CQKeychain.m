@@ -35,7 +35,7 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *__n
 
 	NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
 
-	[self setData:passwordData forServer:server area:area];
+	[self setData:passwordData forServer:server area:area displayValue:displayValue];
 }
 
 - (void) setData:(NSData *) passwordData forServer:(NSString *) server area:(NSString *__nullable) area {

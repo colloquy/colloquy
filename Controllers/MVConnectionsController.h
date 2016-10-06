@@ -1,6 +1,9 @@
 #import "JVInspectorController.h"
 
 @class MVChatConnection;
+@class KAIgnoreRule;
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface MVConnectionsController : NSWindowController <JVInspectionDelegator, NSToolbarDelegate> {
 @private
@@ -56,7 +59,7 @@
 	NSArray *_userSelectionPossibleUsers;
 
 	NSMapTable *_connectionToErrorToAlertMap;
-	NSMutableArray<NSMutableDictionary*> *_bookmarks;
+	NSMutableArray<NSMutableDictionary<NSString*,id>*> *_bookmarks;
 	NSMutableArray *_joinRooms;
 	MVChatConnection *_passConnection;
 	MVChatConnection *_certificateConnection;
@@ -73,32 +76,32 @@
 @property (readonly, retain, class) NSMenu *favoritesMenu;
 #endif
 
-- (IBAction) showConnectionManager:(id) sender;
-- (IBAction) hideConnectionManager:(id) sender;
+- (IBAction) showConnectionManager:(nullable id) sender;
+- (IBAction) hideConnectionManager:(nullable id) sender;
 
-- (void) newConnectionWithJoinRooms:(NSArray *) rooms;
+- (void) newConnectionWithJoinRooms:(nullable NSArray<NSString*> *) rooms;
 
-- (IBAction) newConnection:(id) sender;
-- (IBAction) changeNewConnectionProtocol:(id) sender;
-- (IBAction) toggleNewConnectionDetails:(id) sender;
-- (IBAction) addRoom:(id) sender;
-- (IBAction) removeRoom:(id) sender;
-- (IBAction) openNetworkPreferences:(id) sender;
-- (IBAction) connectNewConnection:(id) sender;
+- (IBAction) newConnection:(nullable id) sender;
+- (IBAction) changeNewConnectionProtocol:(nullable id) sender;
+- (IBAction) toggleNewConnectionDetails:(nullable id) sender;
+- (IBAction) addRoom:(nullable id) sender;
+- (IBAction) removeRoom:(nullable id) sender;
+- (IBAction) openNetworkPreferences:(nullable id) sender;
+- (IBAction) connectNewConnection:(nullable id) sender;
 
-- (IBAction) messageUser:(id) sender;
+- (IBAction) messageUser:(nullable id) sender;
 
-- (IBAction) sendPassword:(id) sender;
+- (IBAction) sendPassword:(nullable id) sender;
 
-- (IBAction) sendCertificatePassword:(id) sender;
+- (IBAction) sendCertificatePassword:(nullable id) sender;
 
-- (IBAction) verifiedPublicKey:(id) sender;
+- (IBAction) verifiedPublicKey:(nullable id) sender;
 
-- (IBAction) userSelectionSelected:(id) sender;
+- (IBAction) userSelectionSelected:(nullable id) sender;
 
 @property (readonly, copy) NSArray<MVChatConnection*> *connections;
 @property (readonly, copy) NSArray<MVChatConnection*> *connectedConnections;
-- (MVChatConnection *) connectionForServerAddress:(NSString *) address;
+- (nullable MVChatConnection *) connectionForServerAddress:(NSString *) address;
 - (NSArray<MVChatConnection*> *) connectionsForServerAddress:(NSString *) address;
 - (BOOL) managesConnection:(MVChatConnection *) connection;
 
@@ -108,14 +111,14 @@
 - (void) setShowConsoleOnConnect:(BOOL) autoConsole forConnection:(MVChatConnection *) connection;
 - (BOOL) showConsoleOnConnectForConnection:(MVChatConnection *) connection;
 
-- (void) setJoinRooms:(NSArray *) rooms forConnection:(MVChatConnection *) connection;
-- (NSMutableArray *) joinRoomsForConnection:(MVChatConnection *) connection;
+- (void) setJoinRooms:(NSArray<NSString*> *) rooms forConnection:(MVChatConnection *) connection;
+- (NSMutableArray<NSString*> *) joinRoomsForConnection:(MVChatConnection *) connection;
 
 - (void) setConnectCommands:(NSString *) commands forConnection:(MVChatConnection *) connection;
 - (NSString *) connectCommandsForConnection:(MVChatConnection *) connection;
 
-- (void) setIgnoreRules:(NSArray *) ignores forConnection:(MVChatConnection *) connection;
-- (NSMutableArray *) ignoreRulesForConnection:(MVChatConnection *) connection;
+- (void) setIgnoreRules:(NSArray<KAIgnoreRule*> *) ignores forConnection:(MVChatConnection *) connection;
+- (NSMutableArray<KAIgnoreRule*> *) ignoreRulesForConnection:(MVChatConnection *) connection;
 
 - (void) addConnection:(MVChatConnection *) connection;
 - (void) addConnection:(MVChatConnection *) connection keepBookmark:(BOOL) keep;
@@ -126,3 +129,5 @@
 
 - (void) handleURL:(NSURL *) url andConnectIfPossible:(BOOL) connect;
 @end
+
+NS_ASSUME_NONNULL_END

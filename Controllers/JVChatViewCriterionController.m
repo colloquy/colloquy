@@ -7,6 +7,13 @@
 #import <ChatCore/NSRegularExpressionAdditions.h>
 
 @implementation JVChatViewCriterionController
+@synthesize format = _format;
+@synthesize view = subview;
+@synthesize kind = _kind;
+@synthesize operation = _operation;
+@synthesize query = _query;
+@synthesize changedSinceLastMatch = _changed;
+
 + (instancetype) controller {
 	return [[self alloc] init];
 }
@@ -92,10 +99,6 @@
 
 #pragma mark -
 
-- (JVChatViewCriterionFormat) format {
-	return _format;
-}
-
 - (void) setFormat:(JVChatViewCriterionFormat) format {
 	if( format != _format ) {
 		_format = format;
@@ -113,10 +116,6 @@
 }
 
 #pragma mark -
-
-- (JVChatViewCriterionKind) kind {
-	return _kind;
-}
 
 - (void) setKind:(JVChatViewCriterionKind) kind {
 	if( kind != _kind ) {
@@ -152,10 +151,6 @@
 
 #pragma mark -
 
-- (JVChatViewCriterionOperation) operation {
-	return _operation;
-}
-
 - (void) setOperation:(JVChatViewCriterionOperation) operation {
 	_operation = operation;
 
@@ -167,10 +162,6 @@
 }
 
 #pragma mark -
-
-- (id) query {
-	return _query;
-}
 
 - (void) setQuery:(id) query {
 	_query = query;
@@ -225,10 +216,6 @@
 }
 
 #pragma mark -
-
-- (BOOL) changedSinceLastMatch {
-	return _changed;
-}
 
 - (BOOL) matchChatView:(id <JVChatViewController>) chatView ignoringCase:(BOOL) ignoreCase {
 	_changed = NO;

@@ -66,12 +66,6 @@ static NSMenu *favoritesMenu = nil;
 
 #pragma mark -
 
-@interface NSAlert (LeopardOnly)
-- (void) setAccessoryView:(NSView *) view;
-@end
-
-#pragma mark -
-
 @implementation MVConnectionsController
 + (MVConnectionsController *) defaultController {
 	if( ! sharedInstance ) {
@@ -206,9 +200,10 @@ static NSMenu *favoritesMenu = nil;
 		// this can likely be removed when 3.0 starts, if we even keep MVConnectionsController around (zach)
 		// agreed. and once we do, we should document it in a list of "retired user defaults keys". (alex)
 		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVFavoritesMigrated"] ) {
+			NSFileManager *fm = [NSFileManager defaultManager];
 			NSString *path = [@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath];
 
-			NSArray *directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+			NSArray *directoryContents = [fm contentsOfDirectoryAtPath:path error:nil];
 			for ( NSString *item in directoryContents ) {
 				if ( ![[item pathExtension] isEqualToString:@"inetloc"] ) {
 					continue;
@@ -217,7 +212,7 @@ static NSMenu *favoritesMenu = nil;
 				// This code previously migrated favorites from being resource fork based (.inetloc files) to the newer
 				// plist (shipped 4 versions with it from 2012 to at least 2015), now it just deletes the old files.
 
-				[[NSFileManager defaultManager] removeItemAtPath:item error:nil];
+				[fm removeItemAtPath:item error:nil];
 			}
 
 			[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVFavoritesMigrated"];
@@ -708,10 +703,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address {
-	NSArray *result = [self connectionsForServerAddress:address];
-	if( [result count] )
-		return result[0];
-	return nil;
+	return [[self connectionsForServerAddress:address] firstObject];
 }
 
 - (NSArray *) connectionsForServerAddress:(NSString *) address {

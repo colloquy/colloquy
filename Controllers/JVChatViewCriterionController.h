@@ -64,10 +64,10 @@ typedef NS_ENUM(NSInteger, JVChatViewCriterionOperation) {
 
 @property (readonly, strong) NSView *view;
 
-@property (readonly) JVChatViewCriterionFormat format;
-@property JVChatViewCriterionKind kind;
-@property JVChatViewCriterionOperation operation;
-@property (strong) id query;
+@property (nonatomic, readonly) JVChatViewCriterionFormat format;
+@property (nonatomic) JVChatViewCriterionKind kind;
+@property (nonatomic) JVChatViewCriterionOperation operation;
+@property (nonatomic, strong) id query;
 
 - (IBAction) selectCriterionKind:(id) sender;
 - (IBAction) selectCriterionOperation:(id) sender;
