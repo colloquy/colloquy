@@ -42,15 +42,16 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 }
 
 @interface MVFileTransfer : NSObject
+
+#if __has_feature(objc_class_property)
+@property (class) NSRange fileTransferPortRange;
+@property (class, getter=isAutoPortMappingEnabled) BOOL autoPortMappingEnabled;
+#else
 + (void) setFileTransferPortRange:(NSRange) range;
 + (NSRange) fileTransferPortRange;
 
 + (void) setAutoPortMappingEnabled:(BOOL) enable;
 + (BOOL) isAutoPortMappingEnabled;
-
-#if __has_feature(objc_class_property)
-@property (class) NSRange fileTransferPortRange;
-@property (class, getter=isAutoPortMappingEnabled) BOOL autoPortMappingEnabled;
 #endif
 
 - (instancetype) init NS_UNAVAILABLE;

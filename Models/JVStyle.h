@@ -21,17 +21,19 @@ extern NSString *JVStyleVariantChangedNotification;
 	struct _xsltStylesheet *_XSLStyle;
 }
 + (void) scanForStyles;
-+ (NSSet<JVStyle*> *) styles;
 #if __has_feature(objc_class_property)
 @property (class, readonly, copy) NSSet<JVStyle*> *styles;
+#else
++ (NSSet<JVStyle*> *) styles;
 #endif
 + (nullable JVStyle*) styleWithIdentifier:(NSString *) identifier;
 + (nullable JVStyle*) newWithBundle:(NSBundle *) bundle NS_SWIFT_NAME(with(bundle:));
 
-+ (JVStyle*) defaultStyle;
-+ (void) setDefaultStyle:(nullable JVStyle *) style;
 #if __has_feature(objc_class_property)
 @property (class, strong, null_resettable) JVStyle *defaultStyle;
+#else
++ (JVStyle*) defaultStyle;
++ (void) setDefaultStyle:(nullable JVStyle *) style;
 #endif
 
 - (nullable instancetype) initWithBundle:(NSBundle *) bundle;

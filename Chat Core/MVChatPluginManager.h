@@ -14,11 +14,12 @@ extern NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification;
 	NSMutableDictionary<NSString*,NSString*> *_invalidPlugins;
 	BOOL _reloadingPlugins;
 }
-+ (MVChatPluginManager *) defaultManager;
-+ (NSArray<NSString*> *) pluginSearchPaths;
 #if __has_feature(objc_class_property)
 @property (readonly, strong, class) MVChatPluginManager *defaultManager;
 @property (readonly, copy, class) NSArray<NSString*> *pluginSearchPaths;
+#else
++ (MVChatPluginManager *) defaultManager;
++ (NSArray<NSString*> *) pluginSearchPaths;
 #endif
 
 @property(strong, readonly) NSArray<id<MVChatPlugin>> *plugins;

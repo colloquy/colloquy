@@ -18,9 +18,10 @@
 	NSUInteger _lastMessageIndex;
 	BOOL _findPasteboardNeedsUpdated;
 }
-+ (JVTranscriptFindWindowController *) sharedController;
 #if __has_feature(objc_class_property)
 @property (readonly, strong, class) JVTranscriptFindWindowController *sharedController;
+#else
++ (JVTranscriptFindWindowController *) sharedController;
 #endif
 
 @property (readonly, strong) JVChatTranscriptPanel *focusedChatTranscriptPanel;

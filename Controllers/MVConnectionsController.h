@@ -66,14 +66,16 @@ NS_ASSUME_NONNULL_BEGIN
 	NSDictionary *_publicKeyDictionary;
 	NSMutableSet *_publicKeyRequestQueue;
 }
-+ (MVConnectionsController *) defaultController;
-
-+ (NSMenu *) favoritesMenu;
 + (void) refreshFavoritesMenu;
 
 #if __has_feature(objc_class_property)
 @property (readonly, retain, class) MVConnectionsController *defaultController;
+
 @property (readonly, retain, class) NSMenu *favoritesMenu;
+#else
++ (MVConnectionsController *) defaultController;
+
++ (NSMenu *) favoritesMenu;
 #endif
 
 - (IBAction) showConnectionManager:(nullable id) sender;

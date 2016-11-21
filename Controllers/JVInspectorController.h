@@ -37,9 +37,10 @@ NS_ASSUME_NONNULL_BEGIN
 	id <JVInspector> _inspector;
 	BOOL _inspectorLoaded;
 }
-+ (JVInspectorController *) sharedInspector;
 #if __has_feature(objc_class_property)
 @property (readonly, strong, class) JVInspectorController *sharedInspector;
+#else
++ (JVInspectorController *) sharedInspector;
 #endif
 + (void /*IBAction*/) showInspector:(id) sender; // only works because this is already wired up
 - (IBAction) showInspector:(id) sender;

@@ -25,9 +25,10 @@
 	AICustomTabDragWindow	*tabDragWindow;			///< drag window used for custom drag animations
 }
 
-+ (AICustomTabDragging *)sharedInstance;
 #if __has_feature(objc_class_property)
 @property (readonly, strong, class) AICustomTabDragging *sharedInstance;
+#else
++ (AICustomTabDragging *)sharedInstance;
 #endif
 
 - (void)dragTabCell:(AICustomTabCell *)inTabCell fromCustomTabsView:(AICustomTabsView *)sourceView withEvent:(NSEvent *)inEvent selectTab:(BOOL)shouldSelect;

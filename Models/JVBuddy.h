@@ -22,10 +22,11 @@ typedef NS_ENUM(NSInteger, JVBuddyName) {
 };
 
 @interface JVBuddy : NSObject
-+ (JVBuddyName) preferredName;
-+ (void) setPreferredName:(JVBuddyName) preferred;
 #if __has_feature(objc_class_property)
 @property (readwrite, class) JVBuddyName preferredName;
+#else
++ (JVBuddyName) preferredName;
++ (void) setPreferredName:(JVBuddyName) preferred;
 #endif
 
 - (instancetype) init NS_DESIGNATED_INITIALIZER;

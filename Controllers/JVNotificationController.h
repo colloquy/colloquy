@@ -7,9 +7,10 @@ NS_ASSUME_NONNULL_BEGIN
 	NSMutableDictionary *_sounds;
 	BOOL _useGrowl;
 }
-+ (JVNotificationController *) defaultController;
 #if __has_feature(objc_class_property)
 @property (readonly, strong, class) JVNotificationController *defaultController;
+#else
++ (JVNotificationController *) defaultController;
 #endif
 - (void) performNotification:(NSString *) identifier withContextInfo:(nullable NSDictionary<NSString*,id> *) context;
 @end

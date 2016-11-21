@@ -15,14 +15,15 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 	NSTimer *_updateTimer;
 	NSSet *_safeFileExtentions;
 }
-+ (NSString *) userPreferredDownloadFolder;
-+ (void) setUserPreferredDownloadFolder:(NSString *) path;
-
-+ (MVFileTransferController *) defaultController;
 
 #if __has_feature(objc_class_property)
 @property (copy, class) NSString *userPreferredDownloadFolder;
 @property (readonly, strong, class) MVFileTransferController *defaultController;
+#else
++ (NSString *) userPreferredDownloadFolder;
++ (void) setUserPreferredDownloadFolder:(NSString *) path;
+
++ (MVFileTransferController *) defaultController;
 #endif
 
 - (IBAction) showTransferManager:(id) sender;
