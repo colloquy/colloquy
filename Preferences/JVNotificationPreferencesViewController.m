@@ -177,7 +177,7 @@
 		
 		[tmpPaths addObject:@"-"];
 		
-		NSArray *soundsDir = [[fm URLsForDirectory:NSLibraryDirectory inDomains:NSUserDomainMask | NSSystemDomainMask] sortedArrayUsingSelector:@selector(compare:)];
+		NSArray *soundsDir = [[fm URLsForDirectory:NSLibraryDirectory inDomains:NSAllDomainsMask] sortedArrayUsingSelector:@selector(compare:)];
 		for (NSURL *aURL in soundsDir) {
 			NSString *dir = [aURL path];
 			dir = [dir stringByAppendingPathComponent:@"Sounds"];
