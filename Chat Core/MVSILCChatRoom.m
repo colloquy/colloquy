@@ -260,9 +260,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (SilcChannelEntry) _getChannelEntry {
-	return _channelEntry;
-}
+@synthesize channelEntry = _channelEntry;
 
 #pragma mark -
 

@@ -287,7 +287,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property(strong, readonly) NSSet<__kindof MVChatRoom*> *knownChatRooms;
 @property(strong, readonly) NSSet<__kindof MVChatRoom*> *joinedChatRooms;
-@property(strong, readonly) NSCharacterSet *chatRoomNamePrefixes;
+@property(strong, readonly, nullable) NSCharacterSet *chatRoomNamePrefixes;
 
 @property(strong, readonly) NSSet<__kindof MVChatUser*> *knownChatUsers;
 @property(strong, readonly) MVChatUser *localUser;

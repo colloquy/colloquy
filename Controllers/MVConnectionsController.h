@@ -120,7 +120,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *) connectCommandsForConnection:(MVChatConnection *) connection;
 
 - (void) setIgnoreRules:(NSArray<KAIgnoreRule*> *) ignores forConnection:(MVChatConnection *) connection;
-- (NSMutableArray<KAIgnoreRule*> *) ignoreRulesForConnection:(MVChatConnection *) connection;
+- (nullable NSMutableArray<KAIgnoreRule*> *) ignoreRulesForConnection:(MVChatConnection *) connection;
 
 - (void) addConnection:(MVChatConnection *) connection;
 - (void) addConnection:(MVChatConnection *) connection keepBookmark:(BOOL) keep;

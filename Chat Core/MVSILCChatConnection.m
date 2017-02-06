@@ -1250,7 +1250,7 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-- (NSCharacterSet *) chatRoomNamePrefixes {
+- (nullable NSCharacterSet *) chatRoomNamePrefixes {
 	return nil;
 }
 

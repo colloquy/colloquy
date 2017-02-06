@@ -22,7 +22,7 @@ extern NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification;
 + (NSArray<NSString*> *) pluginSearchPaths;
 #endif
 
-@property(strong, readonly) NSArray<id<MVChatPlugin>> *plugins;
+@property(copy, readonly) NSArray<id<MVChatPlugin>> *plugins;
 
 - (void) reloadPlugins;
 - (void) addPlugin:(id <MVChatPlugin>) plugin;

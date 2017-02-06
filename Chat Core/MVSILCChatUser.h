@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) updateWithClientEntry:(SilcClientEntry) clientEntry;
 
 - (SilcClientEntry) _getClientEntry;
+@property (readonly, getter=_getClientEntry) SilcClientEntry clientEntry;
 @end
 
 NS_ASSUME_NONNULL_END

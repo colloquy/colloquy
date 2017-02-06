@@ -69,7 +69,7 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier andType:(JVChatMessageType) type;
 - (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user withAttributes:(NSDictionary *) msgAttributes withIdentifier:(NSString *) identifier andType:(JVChatMessageType) type;
 - (void) processIncomingMessage:(JVMutableChatMessage *) message;
-- (void) echoSentMessageToDisplay:(JVMutableChatMessage *) message;
+- (void) echoSentMessageToDisplay:(JVMutableChatMessage *) message NS_SWIFT_NAME(echoSentMessageToDisplay(_:));
 @property (readonly, strong) JVMutableChatMessage *currentMessage;
 
 - (void) addMessageToHistory:(NSAttributedString *)message;

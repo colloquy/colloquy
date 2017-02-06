@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype) initWithChannelEntry:(SilcChannelEntry) channelEntry andConnection:(MVSILCChatConnection *) connection;
 
 - (SilcChannelEntry) _getChannelEntry;
+@property (readonly, getter=_getChannelEntry) SilcChannelEntry channelEntry;
 
 - (void) _setChannelUserMode:(SilcUInt32)SilcMode forUser:(MVChatUser *) user;
 - (void) _removeChannelUserMode:(SilcUInt32)SilcMode forUser:(MVChatUser *) user;

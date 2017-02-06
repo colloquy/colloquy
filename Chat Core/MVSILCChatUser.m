@@ -84,9 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (SilcClientEntry) _getClientEntry {
-	return _clientEntry;
-}
+@synthesize clientEntry = _clientEntry;
 
 #pragma mark -
 

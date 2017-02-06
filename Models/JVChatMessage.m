@@ -437,7 +437,7 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	if( [identifier isKindOfClass:[NSData class]] )
-		identifier = [identifier colBase64Encoding];
+		identifier = [(NSData*)identifier base64EncodedStringWithOptions:0];
 	//identifier = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedData:identifier options:0] encoding:NSUTF8StringEncoding];
 
 	return ( identifier ? identifier : [super senderIdentifier] );

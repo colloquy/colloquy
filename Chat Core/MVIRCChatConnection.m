@@ -717,7 +717,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 #pragma mark -
 
-- (NSCharacterSet *) chatRoomNamePrefixes {
+- (nullable NSCharacterSet *) chatRoomNamePrefixes {
 	static NSCharacterSet *defaultPrefixes = nil;
 	if( ! _roomPrefixes && ! defaultPrefixes )
 		defaultPrefixes = [NSCharacterSet characterSetWithCharactersInString:@"#&+!~"];
