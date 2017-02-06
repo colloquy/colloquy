@@ -10,6 +10,7 @@
 #import "JVDetailCell.h"
 #import "NSBundleAdditions.h"
 #import <ChatCore/NSRegularExpressionAdditions.h>
+#import "MaddsPathExtensions.h"
 
 #import <objc/objc-runtime.h>
 
@@ -794,9 +795,7 @@
 	[name replaceOccurrencesOfString:@":" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [name length] )];
 
 	NSString *varDir = [[[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL] path];
-	for (NSString *subDir in @[@"Colloquy", @"Styles", @"Variants", self.style.identifier]) {
-		varDir = [varDir stringByAppendingPathComponent:subDir];
-	}
+	varDir = [varDir stringByAppendingPathComponents:@[@"Colloquy", @"Styles", @"Variants", self.style.identifier]];
 	[[NSFileManager defaultManager] createDirectoryAtPath:varDir withIntermediateDirectories:YES attributes:nil error:nil];
 
 	NSString *path = [[varDir stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"css"];

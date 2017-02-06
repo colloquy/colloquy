@@ -6,6 +6,7 @@
 #import "JVEmoticonSet.h"
 #import "JVChatMessage.h"
 #import "NSBundleAdditions.h"
+#import "MaddsPathExtensions.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -46,10 +47,8 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 			[paths addObject:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Styles"]];
 		NSArray *arr = [fm URLsForDirectory:NSApplicationSupportDirectory inDomains:(NSAllDomainsMask & ~NSSystemDomainMask)];
 		for (NSURL *loc in arr) {
-			NSString *toAddDir = [loc path];
-			toAddDir = [toAddDir stringByAppendingPathComponent:bundleName];
-			toAddDir = [toAddDir stringByAppendingPathComponent:@"Styles"];
-			[paths addObject:toAddDir];
+			NSURL *bLoc = [loc URLByAppendingPathComponents:@[bundleName, @"Styles"]];
+			[paths addObject:bLoc.path];
 		}
 	}
 
@@ -76,9 +75,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 - (NSString*)variantsPath
 {
 	NSURL *varURL = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
-	for (NSString *subPath in @[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], @"Styles", @"Variants", self.identifier]) {
-		varURL = [varURL URLByAppendingPathComponent:subPath isDirectory:YES];
-	}
+	varURL = [varURL URLByAppendingPathComponents:@[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], @"Styles", @"Variants", self.identifier]];
 	return varURL.path;
 }
 

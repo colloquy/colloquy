@@ -2,6 +2,7 @@
 #import "JVNotificationController.h"
 #import "KABubbleWindowController.h"
 #import "KABubbleWindowView.h"
+#import "MaddsPathExtensions.h"
 
 #define GrowlApplicationBridge NSClassFromString( @"GrowlApplicationBridge" )
 
@@ -187,7 +188,7 @@ static JVNotificationController *sharedInstance = nil;
 		if (!path) {
 			// fall-back in case the sound file isn't there.
 			// so the dictionary doesn't get sent nil.
-			path = [[[NSString alloc] initWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:oldPath];
+			path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponents:@[@"Sounds", oldPath]];
 		}
 	}
 	

@@ -178,6 +178,7 @@
 		1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		555A6C141D25B1F800E69E04 /* OS X Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 555A6C131D25B1F800E69E04 /* OS X Images.xcassets */; };
+		557D715F1E4915270041D61B /* MaddsPathExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 557D715E1E4915270041D61B /* MaddsPathExtensions.m */; };
 		558EF2371AEC356800619BDE /* Room Member Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 558EF2361AEC356800619BDE /* Room Member Icons.xcassets */; };
 		55B0EF3618CE3DE10000E4CA /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B0EF3518CE3DE10000E4CA /* libxml2.dylib */; };
 		55B0EF3718CE3E040000E4CA /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B0EF3518CE3DE10000E4CA /* libxml2.dylib */; };
@@ -631,6 +632,8 @@
 		1CF8030D070C893500C9B54C /* libsilcclient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilcclient.framework; path = Frameworks/libsilcclient.framework; sourceTree = SOURCE_ROOT; };
 		5530388F171722A200652D45 /* GetMetadataForFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetMetadataForFile.h; sourceTree = "<group>"; };
 		555A6C131D25B1F800E69E04 /* OS X Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "OS X Images.xcassets"; sourceTree = "<group>"; };
+		557D715D1E4915270041D61B /* MaddsPathExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MaddsPathExtensions.h; sourceTree = "<group>"; };
+		557D715E1E4915270041D61B /* MaddsPathExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MaddsPathExtensions.m; sourceTree = "<group>"; };
 		558EF2361AEC356800619BDE /* Room Member Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Room Member Icons.xcassets"; sourceTree = "<group>"; };
 		55AD12391C597212009F258C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Languages/Base.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
 		55AD123B1C597223009F258C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Languages/en.lproj/TSCustomBan.strings; sourceTree = "<group>"; };
@@ -1403,6 +1406,8 @@
 				55B748191AD2E957001459F7 /* RunOnMainThread.h */,
 				C23298971C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.h */,
 				C23298981C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m */,
+				557D715D1E4915270041D61B /* MaddsPathExtensions.h */,
+				557D715E1E4915270041D61B /* MaddsPathExtensions.m */,
 			);
 			indentWidth = 4;
 			name = "Other Sources & Additions";
@@ -1961,6 +1966,7 @@
 				1C0A4CAC0799BDD00093B702 /* JVTranscriptCriterionController.m in Sources */,
 				1C0A4CBA0799BE000093B702 /* JVTabbedChatWindowController.m in Sources */,
 				1C0A4CE50799BE660093B702 /* JVTranscriptFindWindowController.m in Sources */,
+				557D715F1E4915270041D61B /* MaddsPathExtensions.m in Sources */,
 				1C0A4CF70799BEA70093B702 /* JVViewCell.m in Sources */,
 				1C9014C107A2D798002942A7 /* MVChatUserAdditions.m in Sources */,
 				1CF79CBF07AC77E600696918 /* JVChatTranscript.m in Sources */,

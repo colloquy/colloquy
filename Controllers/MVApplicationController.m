@@ -20,6 +20,7 @@
 
 #import "CQMPreferencesWindowController.h"
 #import "JVAppearancePreferencesViewController.h"
+#import "MaddsPathExtensions.h"
 
 #import <Sparkle/SUUpdater.h>
 
@@ -343,7 +344,14 @@ static BOOL applicationIsTerminating = NO;
 
 		return YES;
 	} else if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:filename] && */ ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[filename pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [attributes[NSFileHFSTypeCode] unsignedIntValue] == 'coSt' && [attributes[NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
-		NSString *newPath = [[@"~/Library/Application Support/Colloquy/Styles" stringByExpandingTildeInPath] stringByAppendingPathComponent:[filename lastPathComponent]];
+		NSString *newPath;
+		@autoreleasepool {
+			NSURL *aURL = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+			aURL = [aURL URLByAppendingPathComponents:@[@"Colloquy", @"Styles", filename.lastPathComponent]];
+			newPath = aURL.path;
+		}
+		if (!newPath)
+		newPath = [[@"~/Library/Application Support/Colloquy/Styles" stringByExpandingTildeInPath] stringByAppendingPathComponent:[filename lastPathComponent]];
 		if( [newPath isEqualToString:filename] ) return NO;
 
 		if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:newPath] && */ [[NSFileManager defaultManager] isDeletableFileAtPath:newPath] ) {
@@ -370,7 +378,14 @@ static BOOL applicationIsTerminating = NO;
 			NSRunCriticalAlertPanel( NSLocalizedString( @"Style Installation Error", "error installing style title" ), NSLocalizedString( @"The style could not be installed, please make sure you have permission to install this item.", "style install error message" ), nil, nil, nil, nil );
 		} return NO;
 	} else if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:filename] && */ ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyEmoticons"] == NSOrderedSame || ( [attributes[NSFileHFSTypeCode] unsignedIntValue] == 'coEm' && [attributes[NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
-		NSString *newPath = [[@"~/Library/Application Support/Colloquy/Emoticons" stringByExpandingTildeInPath] stringByAppendingPathComponent:[filename lastPathComponent]];
+		NSString *newPath;
+		@autoreleasepool {
+			NSURL *aURL = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+			aURL = [aURL URLByAppendingPathComponents:@[@"Colloquy", @"Emoticons", filename.lastPathComponent]];
+			newPath = aURL.path;
+		}
+		if (!newPath)
+		newPath = [[@"~/Library/Application Support/Colloquy/Emoticons" stringByExpandingTildeInPath] stringByAppendingPathComponent:[filename lastPathComponent]];
 		if( [newPath isEqualToString:filename] ) return NO;
 
 		if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:newPath] && */ [[NSFileManager defaultManager] isDeletableFileAtPath:newPath] ) {

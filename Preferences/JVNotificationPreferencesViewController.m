@@ -1,6 +1,7 @@
 #import "JVNotificationPreferencesViewController.h"
 
 #import <ChatCore/NSRegularExpressionAdditions.h>
+#import "MaddsPathExtensions.h"
 
 
 @interface JVNotificationPreferencesViewController ()
@@ -169,10 +170,8 @@
 		NSMutableArray *tmpPaths = [NSMutableArray arrayWithCapacity:6];
 		NSArray *appSupport = [[fm URLsForDirectory:NSApplicationSupportDirectory inDomains:NSAllDomainsMask & ~NSSystemDomainMask] sortedArrayUsingSelector:@selector(compare:)];
 		for (NSURL *aURL in appSupport) {
-			NSString *dir = [aURL path];
-			dir = [dir stringByAppendingPathComponent:bundleName];
-			dir = [dir stringByAppendingPathComponent:@"Sounds"];
-			[tmpPaths addObject:dir];
+			NSURL *bURL = [aURL URLByAppendingPathComponents:@[bundleName, @"Sounds"]];
+			[tmpPaths addObject:bURL.path];
 		}
 		
 		[tmpPaths addObject:@"-"];
@@ -263,7 +262,7 @@
 	[self saveEventSettings];
 
 	if( [self.playSound state] == NSOnState ) {
-		if( ! [path isAbsolutePath] ) path = [[NSString stringWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:path];
+		if( ! [path isAbsolutePath] ) path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponents:@[@"Sounds", path]];
 		NSSound *sound = [[NSSound alloc] initWithContentsOfFile:path byReference:YES];
 		[sound play];
 	}
