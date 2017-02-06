@@ -1546,7 +1546,6 @@
 				1C7C770C07DBA1F700FB5F83 /* Rez */,
 				1CB2CD0F052DDC560094AAA4 /* Resources */,
 				1CB2CD82052DDC560094AAA4 /* Copy Frameworks */,
-				1C91DEAC06972EC0007C1638 /* Remove Headers */,
 				1C7F300D085545E600D41FB0 /* Copy Spotlight Importer */,
 				1C51B53B104E160600791856 /* Copy Bouncer Plugin */,
 				1CB2CD88052DDC560094AAA4 /* Copy Plugins */,
@@ -1855,21 +1854,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [ -d \"$TARGET_BUILD_DIR/Bouncer.plugin\" ]; then\n\tditto \"$TARGET_BUILD_DIR/Bouncer.plugin\" \"$TARGET_BUILD_DIR/$PLUGINS_FOLDER_PATH/Bouncer.plugin\"\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		1C91DEAC06972EC0007C1638 /* Remove Headers */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Remove Headers";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "find \"$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH\" -name \"Headers\" -print0 | xargs -0 rm -rf\n";
 			showEnvVarsInLog = 0;
 		};
 		1CAF6496099EA9350036A727 /* Unarchive Frameworks */ = {
