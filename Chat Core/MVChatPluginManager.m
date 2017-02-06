@@ -90,7 +90,7 @@ NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatP
 				}
 
 				if( ![[NSFileManager defaultManager] canExecutePluginAtPath:bundle.executablePath] ) {
-					[invalidPluginList addObject:[NSString stringWithFormat:@"%@/%@", path, file]];
+					[invalidPluginList addObject:[path stringByAppendingPathComponent:file]];
 
 					_invalidPlugins[bundleIdentifier] = pluginVersion;
 
