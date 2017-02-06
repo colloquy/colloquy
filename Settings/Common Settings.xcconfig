@@ -60,3 +60,5 @@ WARNING_CFLAGS = -Wmost -Wextra -Wchar-subscripts -Wformat-security -Wpointer-ar
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks @loader_path/../Frameworks
 
 ALWAYS_SEARCH_USER_PATHS = NO
+CLANG_WARN_INFINITE_RECURSION = YES
+CLANG_WARN_SUSPICIOUS_MOVE = YES
