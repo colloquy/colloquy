@@ -13,7 +13,7 @@ class ApplicationController: NSObject, NSApplicationDelegate
 {
     let windowController = ChatWindowController(windowNibName: "ChatWindowController")
   
-    func applicationDidFinishLaunching(aNotification: NSNotification)
+    func applicationDidFinishLaunching(_ aNotification: Notification)
     {
         // Insert code here to initialize your application
         
@@ -23,7 +23,7 @@ class ApplicationController: NSObject, NSApplicationDelegate
         
     }
 
-    func applicationWillTerminate(aNotification: NSNotification)
+    func applicationWillTerminate(_ aNotification: Notification)
     {
         // Insert code here to tear down your application
     }
