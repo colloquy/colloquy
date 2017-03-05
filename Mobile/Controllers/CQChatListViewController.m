@@ -1304,7 +1304,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	_previousSelectedChatViewController = chatControllerForIndexPath([self.tableView indexPathForSelectedRow]);
 }
 
-- (void) tableView:(UITableView *) tableView didEndEditingRowAtIndexPath:(NSIndexPath *) indexPath {
+- (void) tableView:(UITableView *) tableView didEndEditingRowAtIndexPath:(nullable NSIndexPath *) indexPath {
 	if (_previousSelectedChatViewController) {
 		indexPath = indexPathForChatController(_previousSelectedChatViewController, self.editing);
 		if (indexPath)
