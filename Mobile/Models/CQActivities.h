@@ -12,7 +12,7 @@
 CQActivitySubclass(CQRecentMessagesActivity, showRecentlySentMessages)
 CQActivitySubclass(CQSaveChatLogToPDFActivity, saveChatLog)
 
-CQActivitySubclass(CQChatRoomModesActivity, showRoomInfo)
+CQActivitySubclass(CQChatRoomModesActivity, showRoomModes)
 CQActivitySubclass(CQChatRoomTopicActivity, showRoomTopic)
 CQActivitySubclass(CQChatRoomBansActivity, showRoomBans)
 

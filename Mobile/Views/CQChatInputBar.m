@@ -598,7 +598,7 @@ retry:
 			[self _updateTextTraits];
 		}
 
-		if (![strongDelegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![strongDelegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:)])
+		if (![strongDelegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![strongDelegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)])
 			return YES;
 
 		if (_spaceCyclesCompletions && _completionCapturedKeyboard && self.showingCompletions && [string isEqualToString:@" "] && !_completionView.closeSelected) {
