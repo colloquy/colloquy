@@ -87,7 +87,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
     BOOL			sourceWindowWillHide;
 
 	//Post the dragging will begin notification
-	[[NSNotificationCenter chatCenter] postNotificationName:AICustomTabDragWillBegin object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationName:AICustomTabDragWillBegin object:self];
 
 	//Setup
 	 destTabBar = nil;
@@ -175,7 +175,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	[self cleanupDrag];
 
 	//Post the dragging did finish notification
-	[[NSNotificationCenter chatCenter] postNotificationName:AICustomTabDragDidComplete object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationName:AICustomTabDragDidComplete object:self];
 }
 
 
