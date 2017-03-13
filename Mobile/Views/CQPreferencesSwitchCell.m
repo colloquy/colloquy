@@ -25,13 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
 		self.switchControlBlock(sender);
 }
 
-- (SEL) switchAction {
+- (SEL __nullable) switchAction {
 	NSArray <NSString *> *actions = [_switchControl actionsForTarget:nil forControlEvent:UIControlEventValueChanged];
 	if (!actions.count) return NULL;
 	return NSSelectorFromString(actions[0]);
 }
 
-- (void) setSwitchAction:(SEL) action {
+- (void) setSwitchAction:(SEL __nullable) action {
 	[_switchControl removeTarget:nil action:NULL forControlEvents:UIControlEventValueChanged];
 	[_switchControl addTarget:nil action:action forControlEvents:UIControlEventValueChanged];
 }

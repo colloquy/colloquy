@@ -4,7 +4,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol CQPreferencesTextEditViewDelegate <NSObject>
 @optional
-- (NSString *) stringForFooterWithTextView:(UITextView *) textView;
+- (NSString *__nullable) stringForFooterWithTextView:(UITextView *) textView;
 - (NSInteger) integerForCountdownInFooterWithTextView:(UITextView *) textView;
 @end
 

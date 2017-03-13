@@ -1380,7 +1380,7 @@ CQBouncerConnectionDelegate>
 
 #pragma mark -
 
-- (MVChatConnection *) _chatConnectionWithDictionaryRepresentation:(NSDictionary *) info {
+- (MVChatConnection *__nullable) _chatConnectionWithDictionaryRepresentation:(NSDictionary *) info {
 	MVChatConnection *connection = nil;
 
 	MVChatConnectionType type = MVChatConnectionIRCType;
@@ -1797,19 +1797,19 @@ CQBouncerConnectionDelegate>
 	return result;
 }
 
-- (MVChatConnection *) connectionForUniqueIdentifier:(NSString *) identifier {
+- (MVChatConnection * __nullable) connectionForUniqueIdentifier:(NSString *) identifier {
 	for (MVChatConnection *connection in _connections)
 		if ([connection.uniqueIdentifier isEqualToString:identifier])
 			return connection;
 	return nil;
 }
 
-- (MVChatConnection *) connectionForServerAddress:(NSString *) address {
+- (MVChatConnection * __nullable) connectionForServerAddress:(NSString *) address {
 	NSArray <MVChatConnection *> *connections = [self connectionsForServerAddress:address];
 	return connections.firstObject;
 }
 
-- (NSArray <MVChatConnection *> *) connectionsForServerAddress:(NSString *) address {
+- (NSArray <MVChatConnection *> * __nullable) connectionsForServerAddress:(NSString *) address {
 	NSMutableArray <MVChatConnection *> *result = [NSMutableArray arrayWithCapacity:_connections.count];
 
 	address = [address stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@". \t\n"]];
@@ -1925,14 +1925,14 @@ CQBouncerConnectionDelegate>
 
 #pragma mark -
 
-- (CQBouncerSettings *) bouncerSettingsForIdentifier:(NSString *) identifier {
+- (CQBouncerSettings * __nullable) bouncerSettingsForIdentifier:(NSString *) identifier {
 	for (CQBouncerSettings *bouncer in _bouncers)
 		if ([bouncer.identifier isEqualToString:identifier])
 			return bouncer;
 	return nil;
 }
 
-- (NSArray <MVChatConnection *> *) bouncerChatConnectionsForIdentifier:(NSString *) identifier {
+- (NSArray <MVChatConnection *> * __nullable) bouncerChatConnectionsForIdentifier:(NSString *) identifier {
 	return _bouncerChatConnections[identifier];
 }
 

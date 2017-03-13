@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 	UINavigationController *_currentUserListNavigationController;
 	NSDictionary *_topicInformation;
 }
+@property (readonly, strong, nullable) MVChatUser *user;
 @property (readonly, strong) MVChatRoom *room;
 
 - (void) join;

@@ -417,11 +417,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 #endif
 
-- (BOOL) application:(UIApplication *) application handleOpenURL:(NSURL *) url {
-	return [self _handleOpenURL:url];
-}
-
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary <NSString *, id> *)options {
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
 	return [self _handleOpenURL:url];
 }
 

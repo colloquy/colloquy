@@ -198,11 +198,11 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 #pragma mark -
 
-- (CQConsoleController *) consoleViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
+- (CQConsoleController *__nullable) consoleViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
 	return [self chatViewControllerForConnection:connection ifExists:exists userInitiated:YES];
 }
 
-- (CQConsoleController *) chatViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
+- (CQConsoleController *__nullable) chatViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
 	NSParameterAssert(connection != nil);
 
 	__block CQConsoleController *consoleController = nil;
@@ -228,7 +228,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return consoleController;
 }
 
-- (NSArray <id <CQChatViewController>> *) chatViewControllersForConnection:(MVChatConnection *) connection {
+- (NSArray <id <CQChatViewController>> *__nullable) chatViewControllersForConnection:(MVChatConnection *) connection {
 	NSParameterAssert(connection != nil);
 
 	NSMutableArray <id <CQChatViewController>> *result = [NSMutableArray array];
@@ -242,7 +242,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return result;
 }
 
-- (NSArray <id <CQChatViewController>> *) chatViewControllersOfClass:(Class) class {
+- (NSArray <id <CQChatViewController>> *__nullable) chatViewControllersOfClass:(Class) class {
 	NSParameterAssert(class != NULL);
 
 	NSMutableArray <id <CQChatViewController>> *result = [NSMutableArray array];
@@ -256,7 +256,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return result;
 }
 
-- (NSArray <id <CQChatViewController>> *) chatViewControllersKindOfClass:(Class) class {
+- (NSArray <id <CQChatViewController>> *__nullable) chatViewControllersKindOfClass:(Class) class {
 	NSParameterAssert(class != NULL);
 
 	NSMutableArray <id <CQChatViewController>> *result = [NSMutableArray array];
@@ -272,7 +272,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 #pragma mark -
 
-- (CQChatRoomController *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists {
+- (CQChatRoomController *__nullable) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists {
 	NSParameterAssert(room != nil);
 
 	__block CQChatRoomController *chatRoomController = nil;
@@ -301,11 +301,11 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return chatRoomController;
 }
 
-- (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists {
+- (CQDirectChatController *__nullable) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists {
 	return [self chatViewControllerForUser:user ifExists:exists userInitiated:YES];
 }
 
-- (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
+- (CQDirectChatController *__nullable) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
 	NSParameterAssert(user != nil);
 
 	__block CQDirectChatController *chatController = nil;
@@ -331,7 +331,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return chatController;
 }
 
-- (CQDirectChatController *) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists {
+- (CQDirectChatController *__nullable) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists {
 	NSParameterAssert(connection != nil);
 
 	__block CQDirectChatController *chatController = nil;
@@ -358,7 +358,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 #if ENABLE(FILE_TRANSFERS)
-- (CQFileTransferController *) chatViewControllerForFileTransfer:(MVFileTransfer *) transfer ifExists:(BOOL) exists {
+- (CQFileTransferController *__nullable) chatViewControllerForFileTransfer:(MVFileTransfer *) transfer ifExists:(BOOL) exists {
 	NSParameterAssert(transfer != nil);
 
 	for (id controller in _chatControllers)
@@ -395,7 +395,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 #pragma mark -
 
-- (id <CQChatViewController>) _enumerateChatViewControllersFromChatController:(id <CQChatViewController>) chatViewController withOption:(NSEnumerationOptions) options requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight {
+- (id <CQChatViewController> __nullable) _enumerateChatViewControllersFromChatController:(id <CQChatViewController>) chatViewController withOption:(NSEnumerationOptions) options requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight {
 	__block id <CQChatViewController> result = nil;
 
 	dispatch_sync(_orderingQueue, ^{
@@ -468,7 +468,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return nil;
 }
 
-- (id <CQChatViewController>) chatViewControllerPreceedingChatController:(id <CQChatViewController>) chatViewController requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight {
+- (id <CQChatViewController> __nullable) chatViewControllerPreceedingChatController:(id <CQChatViewController>) chatViewController requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight {
 	__block id <CQChatViewController> result = nil;
 
 	dispatch_sync(_orderingQueue, ^{
@@ -489,7 +489,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return [self _enumerateChatViewControllersFromChatController:chatViewController withOption:NSEnumerationReverse requiringActivity:requiringActivity requiringHighlight:requiringHighlight];
 }
 
-- (id <CQChatViewController>) chatViewControllerFollowingChatController:(id <CQChatViewController>) chatViewController requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight {
+- (id <CQChatViewController> __nullable) chatViewControllerFollowingChatController:(id <CQChatViewController>) chatViewController requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight {
 	__block id <CQChatViewController> result = nil;
 
 	dispatch_sync(_orderingQueue, ^{
@@ -522,7 +522,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return [allConnections copy];
 }
 
-- (id) connectionAtIndex:(NSInteger) index {
+- (id __nullable) connectionAtIndex:(NSInteger) index {
 	@synchronized([CQConnectionsController defaultController]) {
 		NSArray <MVChatConnection *> *orderedConnections = self.orderedConnections;
 		if (index >= (NSInteger)orderedConnections.count || index == NSNotFound)

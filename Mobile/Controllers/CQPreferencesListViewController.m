@@ -180,7 +180,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return UITableViewCellAccessoryNone;
 }
 
-- (UIView *) accessoryViewForAccessoryType:(int) accessoryType {
+- (UIView * __nullable) accessoryViewForAccessoryType:(int) accessoryType {
 	if (accessoryType != CQTableViewCellAccessoryPlay)
 		return nil;
 

@@ -124,7 +124,8 @@ NS_ASSUME_NONNULL_BEGIN
 		return switchCell;
 	}
 
-	return nil;
+	NSAssert(NO, @"Should not reach this point.");
+	__builtin_unreachable();
 }
 
 - (NSIndexPath *__nullable) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {

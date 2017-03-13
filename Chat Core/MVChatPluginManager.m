@@ -154,7 +154,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 		if( ( ! class || ( class && [plugin isKindOfClass:class] ) ) && [plugin respondsToSelector:selector] )
 			[qualified addObject:plugin];
 
-	return ( qualified.count ? qualified : nil );
+	return ( qualified.count ? qualified : @[] );
 }
 
 #pragma mark -

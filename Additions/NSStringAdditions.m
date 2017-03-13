@@ -1059,7 +1059,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
-- (NSArray <NSString *> *) _IRCComponents {
+- (NSArray <NSString *> *__nullable) _IRCComponents {
 	NSArray <NSString *> *components = [self componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"!@ "]];
 
 	// given "nickname!username@hostmask realname", we want to get "nickname", "username", "hostmask" and "realname" back
@@ -1073,19 +1073,19 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	return self.IRCNickname.length;
 }
 
-- (NSString *) IRCNickname {
+- (NSString *__nullable) IRCNickname {
 	return self._IRCComponents[0];
 }
 
-- (NSString *) IRCUsername {
+- (NSString *__nullable) IRCUsername {
 	return self._IRCComponents[1];
 }
 
-- (NSString *) IRCHostname {
+- (NSString *__nullable) IRCHostname {
 	return self._IRCComponents[2];
 }
 
-- (NSString *) IRCRealname {
+- (NSString *__nullable) IRCRealname {
 	NSArray <NSString *> *components = self._IRCComponents;
 	if (components.count == 4)
 		return components[3];
@@ -1185,7 +1185,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:range];
 
 	if (result == nil)
-		return nil;
+		return @[];
 
 	NSMutableArray <NSString *> *results = [NSMutableArray array];
 

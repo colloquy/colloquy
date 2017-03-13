@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-+ (Class <CQBookmarking>) activeService {
++ (Class <CQBookmarking> __nullable) activeService {
 	if ([bookmarkingService isEqualToString:CQBookmarkingServiceDelicious])
 		return [CQDeliciousController class];
 	if ([bookmarkingService isEqualToString:CQBookmarkingServiceInstapaper])

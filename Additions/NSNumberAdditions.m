@@ -3,7 +3,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation NSNumber (NSNumberAdditions)
-+ (NSNumber *) numberWithBytes:(const void *) bytes objCType:(const char *) type {
++ (NSNumber *__nullable) numberWithBytes:(const void *) bytes objCType:(const char *) type {
 	if( ! strcmp( type, @encode( char ) ) ) {
 		char *val = (char *) bytes;
 		return [NSNumber numberWithChar:*val];

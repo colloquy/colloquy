@@ -131,13 +131,13 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 
 	NSError *error = nil;
 	NSData *rootData = [NSKeyedArchiver archivedDataWithRootObject:permanentIgnores];
-	if (![rootData writeToFile:self._ignoreFilePath options:NSDataWritingAtomic error:&error])
+	if (![rootData writeToFile:ignoreFilePath options:NSDataWritingAtomic error:&error])
 		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQIgnoreRulesNotSavedNotification object:nil userInfo:@{@"connection": _connection, @"error": error}];
 }
 
 #pragma mark -
 
-- (NSString *) _ignoreFilePath {
+- (NSString *__nullable) _ignoreFilePath {
 	if (!_appSupportPath) {
 		NSString *appSupportPath = nil;
 		appSupportPath = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];

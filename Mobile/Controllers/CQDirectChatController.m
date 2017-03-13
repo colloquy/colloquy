@@ -379,7 +379,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSDictionary *) persistentState {
 	if (!_target)
-		return nil;
+		return @{};
 
 	NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
 
@@ -1719,10 +1719,8 @@ NS_ASSUME_NONNULL_BEGIN
 	if (![self isViewLoaded] || !self.view.window)
 		return;
 
-	if (&UIKeyboardIsLocalUserInfoKey != NULL) {
-		if (![notification.userInfo[UIKeyboardIsLocalUserInfoKey] boolValue])
-			return;
-	}
+	if (![notification.userInfo[UIKeyboardIsLocalUserInfoKey] boolValue])
+		return;
 
 	CGRect keyboardRect = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	keyboardRect = [self.view.window convertRect:keyboardRect toView:self.view];
@@ -1747,10 +1745,8 @@ NS_ASSUME_NONNULL_BEGIN
 	if (![self isViewLoaded])
 		return;
 
-	if (&UIKeyboardIsLocalUserInfoKey != NULL) {
-		if (![notification.userInfo[UIKeyboardIsLocalUserInfoKey] boolValue])
-			return;
-	}
+	if (![notification.userInfo[UIKeyboardIsLocalUserInfoKey] boolValue])
+		return;
 
 	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];

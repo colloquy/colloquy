@@ -3,7 +3,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation UINavigationController (UINavigationControllerColloquyAdditions)
-- (UIViewController *) rootViewController {
+- (UIViewController * __nullable) rootViewController {
 	if (self.viewControllers.count)
 		return self.viewControllers[0];
 	return nil;

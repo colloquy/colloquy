@@ -26,22 +26,22 @@ extern NSString *const CQChatOrderingControllerDidChangeOrderingNotification;
 - (BOOL) connectionHasAnyChatRooms:(MVChatConnection *) connection;
 - (BOOL) connectionHasAnyPrivateChats:(MVChatConnection *) connection;
 
-- (CQDirectChatController *) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists;
-- (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) initiated;
-- (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists;
+- (CQDirectChatController * __nullable) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists;
+- (CQDirectChatController * __nullable) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) initiated;
+- (CQDirectChatController * __nullable) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists;
 
-- (CQChatRoomController *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists;
-- (NSArray <id <CQChatViewController>> *) chatViewControllersKindOfClass:(Class) class;
-- (NSArray <id <CQChatViewController>> *) chatViewControllersOfClass:(Class) class;
+- (CQChatRoomController * __nullable) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists;
+- (NSArray <id <CQChatViewController>> * __nullable) chatViewControllersKindOfClass:(Class) class;
+- (NSArray <id <CQChatViewController>> * __nullable) chatViewControllersOfClass:(Class) class;
 
-- (NSArray <id <CQChatViewController>> *) chatViewControllersForConnection:(MVChatConnection *) connection;
-- (CQConsoleController *) chatViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists userInitiated:(BOOL) initiated;
-- (CQConsoleController *) consoleViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
+- (NSArray <id <CQChatViewController>> * __nullable) chatViewControllersForConnection:(MVChatConnection *) connection;
+- (CQConsoleController *__nullable) chatViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists userInitiated:(BOOL) initiated;
+- (CQConsoleController *__nullable) consoleViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 
-- (id <CQChatViewController>) chatViewControllerPreceedingChatController:(id <CQChatViewController>) chatViewController requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight;
-- (id <CQChatViewController>) chatViewControllerFollowingChatController:(id <CQChatViewController>) chatViewController requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight;
+- (id <CQChatViewController> __nullable) chatViewControllerPreceedingChatController:(id <CQChatViewController>) chatViewController requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight;
+- (id <CQChatViewController> __nullable) chatViewControllerFollowingChatController:(id <CQChatViewController>) chatViewController requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight;
 
-- (id) connectionAtIndex:(NSInteger) index;
+- (id __nullable) connectionAtIndex:(NSInteger) index;
 - (NSUInteger) sectionIndexForConnection:(id) connection;
 @end
 

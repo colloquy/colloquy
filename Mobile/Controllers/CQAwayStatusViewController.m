@@ -195,7 +195,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (NSString *) stringForFooterWithTextView:(CQTextView *) textView {
+- (NSString *__nullable) stringForFooterWithTextView:(CQTextView *) textView {
 	if (textView.text.length)
 		return nil;
 	if ([self integerForCountdownInFooterWithTextView:textView] == 1)

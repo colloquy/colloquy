@@ -635,7 +635,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
     if(tabCell && [delegate respondsToSelector:@selector(customTabView:toolTipForTabViewItem:)]){
         return([delegate customTabView:self toolTipForTabViewItem:[tabCell tabViewItem]]);
     }
-    return(nil);
+    return @"";
 }
 
 //Clicking & Dragging --------------------------------------------------------------------------------------------------
