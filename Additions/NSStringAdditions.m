@@ -405,6 +405,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 @implementation NSString (NSStringAdditions)
 + (NSString *) locallyUniqueString {
+    // TODO: Consider replace calls to this method with NSUUID
 	struct timeval tv;
 	gettimeofday( &tv, NULL );
 

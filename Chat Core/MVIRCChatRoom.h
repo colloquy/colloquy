@@ -1,7 +1,6 @@
 #import <Foundation/Foundation.h>
 
 #import "MVChatRoom.h"
-#import "MVChatRoomPrivate.h"
 
 
 NS_ASSUME_NONNULL_BEGIN

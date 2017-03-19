@@ -15,6 +15,8 @@
 #import "NSDateAdditions.h"
 #import "MVUtilities.h"
 
+#import "MVChatRoomPrivate.h"
+
 #if USE(ATTRIBUTED_CHAT_STRING)
 #import "NSAttributedStringAdditions.h"
 #endif

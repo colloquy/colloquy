@@ -40,3 +40,9 @@ FOUNDATION_EXPORT const unsigned char ChatCoreVersionString[];
 //#import <ChatCore/NSMethodSignatureAdditions.h>
 //#import <ChatCore/NSNotificationAdditions.h>
 //#import <ChatCore/NSScriptCommandAdditions.h>
+
+#import <ChatCore/GCDAsyncSocket.h>
+#import <ChatCore/NSDataAdditions.h>
+#import <ChatCore/NSStringAdditions.h>
+
+#import <ChatCore/MVIRCChatRoom.h>

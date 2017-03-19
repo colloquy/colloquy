@@ -1,3 +1,5 @@
+#import <Foundation/Foundation.h>
+
 #import "MVChatConnection.h"
 
 NS_ASSUME_NONNULL_BEGIN
