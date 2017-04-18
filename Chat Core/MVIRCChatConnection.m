@@ -8,7 +8,7 @@
 
 #import "GCDAsyncSocket.h"
 #import "InterThreadMessaging.h"
-#import "MVChatuserWatchRule.h"
+#import "MVChatUserWatchRule.h"
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
 #import "NSDataAdditions.h"
