@@ -935,7 +935,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 #pragma mark -
 
-- (void) _openAppearancePreferences:(nullable id) sender {
+- (IBAction) _openAppearancePreferences:(nullable id) sender {
 	MVApplicationController *applicationController = (MVApplicationController *)NSApp.delegate;
 	[applicationController showPreferences:sender];
 	CQMPreferencesWindowController *preferencesWindowController = [applicationController preferencesWindowController];
