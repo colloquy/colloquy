@@ -1,5 +1,5 @@
 #import "CQDirectChatController.h"
-
+ 
 @class CQChatUserListViewController;
 
 typedef NS_ENUM(NSInteger, CQChatRoomBatchType) {

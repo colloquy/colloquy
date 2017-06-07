@@ -973,7 +973,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (chatViewController && ![chatViewController isKindOfClass:[CQFileTransferController class]]) {
 #else
 	if (!chatViewController)
-		return nil;
+		__builtin_unreachable();
 #endif
 		CQChatTableCell *cell = [CQChatTableCell reusableTableViewCellInTableView:tableView];
 

@@ -33,7 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) setSwitchAction:(SEL __nullable) action {
 	[_switchControl removeTarget:nil action:NULL forControlEvents:UIControlEventValueChanged];
-	[_switchControl addTarget:nil action:action forControlEvents:UIControlEventValueChanged];
+	if (action)
+		[_switchControl addTarget:nil action:action forControlEvents:UIControlEventValueChanged];
 }
 
 - (BOOL) isOn {

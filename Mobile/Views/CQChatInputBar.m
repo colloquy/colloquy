@@ -6,6 +6,9 @@
 #import "NSNotificationAdditions.h"
 
 #define CompletionsCaptureKeyboardDelay 0.5
+#define CQLineHeight 22.
+#define CQInactiveLineHeight 44.
+#define CQMaxLineHeight 84.
 
 static BOOL hardwareKeyboard;
 static BOOL boldText;
@@ -243,34 +246,56 @@ NS_ASSUME_NONNULL_BEGIN
 	return _inputView.selectedRange;
 }
 
-- (void) setHeight:(CGFloat) height numberOfLines:(NSUInteger) numberOfLines {
-	height += self._lineHeight;
+- (void) updateTextViewContentSize {
 
-	if (height == CGRectGetHeight(self.frame))
-		return;
+	CGFloat contentWidth = CGRectGetWidth(_inputView.bounds) - (_inputView.contentInset.left + _inputView.contentInset.right) - 8.0;
+	CGSize calculatableSize = CGSizeMake(contentWidth, CGFLOAT_MAX);
+	const NSStringDrawingOptions options = (NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesDeviceMetrics);
+	NSDictionary *attributes = self._textAttributes;
+
+	CGSize textSize = [_inputView.text boundingRectWithSize:calculatableSize options:options attributes:attributes context:nil].size;
+	CGFloat lineHeight = [attributes[NSFontAttributeName] lineHeight] + _inputView.contentInset.top + _inputView.contentInset.bottom;
+	NSLog(@"calculatableSize: %@", NSStringFromCGSize(calculatableSize));
+	if (lineHeight == 0) {
+		lineHeight = CQLineHeight;
+	}
+
+	UIEdgeInsets insets = _inputView.contentInset;
+	insets.top = 4.0;
+	insets.bottom = 0.0;
+	_inputView.contentInset = insets;
+
+	CGSize inputFrameSize = textSize;
+	if (inputFrameSize.height > lineHeight * 4) {
+		inputFrameSize.height = lineHeight * 4;
+	} else if (inputFrameSize.height < lineHeight * 2) {
+		inputFrameSize.height = lineHeight * 2;
+	}
+
+	NSLog(@"inputFrameSize: %@", NSStringFromCGSize(inputFrameSize));
 
 	__strong __typeof__((_delegate)) strongDelegate = _delegate;
 	BOOL shouldSetHeight = YES;
 	if (strongDelegate && [strongDelegate respondsToSelector:@selector(chatInputBar:shouldChangeHeightBy:)])
-		shouldSetHeight = [strongDelegate chatInputBar:self shouldChangeHeightBy:(self.frame.size.height - height)];
+		shouldSetHeight = [strongDelegate chatInputBar:self shouldChangeHeightBy:(self.bounds.size.height - inputFrameSize.height)];
 
 	if (shouldSetHeight) {
-		self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, height);
+		self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, inputFrameSize.height);
 
 		[self setNeedsLayout];
 		[self layoutIfNeeded];
 
 		// Work around iOS 7 bug where the input view frame doesn't update right away after being set, causing text to be clipped.
 		_inputView.frame = _inputView.frame;
+		NSLog(@"frame: %@", NSStringFromCGRect(_inputView.frame));
 
-		CGFloat contentWidth = floorf((_inputView.frame.size.width - (_inputView.frame.origin.x * 2)));
-		CGFloat contentHeight = ceilf((numberOfLines * self._lineHeight));
-		contentHeight += (fabs(_inputView.contentInset.top) * numberOfLines + 1);
-		_inputView.contentSize = CGSizeMake(contentWidth, height);
-		_inputView.scrollEnabled = (contentHeight >= CGRectGetHeight(_inputView.frame));
+		_inputView.contentSize = textSize;
+		NSLog(@"contentSize: %@", NSStringFromCGSize(textSize));
 
-		if (_inputView.scrollEnabled)
-			_inputView.contentOffset = CGPointMake(_inputView.contentOffset.x, _inputView.contentOffset.y + fabs(_inputView.contentInset.top));
+		_inputView.scrollEnabled = (textSize.height >= CGRectGetHeight(_inputView.frame));
+
+//		if (_inputView.scrollEnabled)
+//			_inputView.contentOffset = CGPointMake(_inputView.contentOffset.x, _inputView.contentOffset.y + fabs(_inputView.contentInset.top));
 	}
 }
 
@@ -471,16 +496,6 @@ retry:
 	return numberOfLines;
 }
 
-- (void) updateTextViewContentSize {
-	if (_inputView.hasText || self._hasMarkedText) {
-		NSUInteger numberOfLines = self._numberOfLines;
-		CGFloat contentHeight = fminf(numberOfLines * self._lineHeight, self._maxLineHeight);
-		[self setHeight:contentHeight numberOfLines:numberOfLines];
-	} else {
-		[self _resetTextViewHeight];
-	}
-}
-
 #pragma mark -
 
 - (void) accessoryButtonPressed:(__nullable id) sender {
@@ -521,8 +536,6 @@ retry:
 }
 
 - (BOOL) textViewShouldBeginEditing:(UITextView *) textView {
-	textView.contentInset = UIEdgeInsetsMake(-4., 2., 0., 0.);
-
 	__strong __typeof__((_delegate)) strongDelegate = _delegate;
 	if ([strongDelegate respondsToSelector:@selector(chatInputBarShouldBeginEditing:)])
 		return [strongDelegate chatInputBarShouldBeginEditing:self];
@@ -543,8 +556,6 @@ retry:
 }
 
 - (void) textViewDidEndEditing:(UITextView *) textView {
-	textView.contentInset = UIEdgeInsetsMake(-4., 2., 0., 0.);
-
 	__strong __typeof__((_delegate)) strongDelegate = _delegate;
 	if ([strongDelegate respondsToSelector:@selector(chatInputBarDidEndEditing:)])
 		[strongDelegate chatInputBarDidEndEditing:self];
@@ -864,17 +875,10 @@ retry:
 }
 
 - (void) _resetTextViewHeight {
-	[self setHeight:self._lineHeight numberOfLines:1];
+	[self updateTextViewContentSize];
 }
 
-- (void) _resetTextAttributes {
-	if (_textNeedsClearing) {
-		_textNeedsClearing = NO;
-		return;
-	}
-
-	self.font = self.font; // recalculate bold/italic settings
-
+- (NSDictionary *) _textAttributes {
 	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 	attributes[NSFontAttributeName] = self.font;
 	attributes[NSUnderlineStyleAttributeName] = (underlineText ? @(NSUnderlineStyleSingle) : @(NSUnderlineStyleNone));
@@ -891,6 +895,19 @@ retry:
 
 	if (foregroundColor) attributes[NSForegroundColorAttributeName] = foregroundColor;
 	if (backgroundColor) attributes[NSBackgroundColorAttributeName] = backgroundColor;
+
+	return [attributes copy];
+}
+
+- (void) _resetTextAttributes {
+	if (_textNeedsClearing) {
+		_textNeedsClearing = NO;
+		return;
+	}
+
+	self.font = self.font; // recalculate bold/italic settings
+
+	NSDictionary *attributes = self._textAttributes;
 
 	NSMutableAttributedString *attributedString = [_inputView.attributedText mutableCopy];
 	_textNeedsClearing = NO;
@@ -922,26 +939,6 @@ retry:
 	[_accessoryButton setImage:pressedImage forState:UIControlStateHighlighted];
 
 	_accessoryButton.accessibilityLabel = _accessibilityLabels[@(activeResponderState)];
-}
-
-#pragma mark -
-
-#define CQLineHeight 22.
-#define CQInactiveLineHeight 44.
-#define CQMaxLineHeight 84.
-
-- (CGFloat) _lineHeight {
-	if (!_inputView.font)
-		return CQLineHeight;
-	return ceilf(fmaxf(CQLineHeight, _inputView.font.lineHeight));
-}
-
-- (CGFloat) _inactiveLineHeight {
-	return fmax(self._lineHeight * 2, CQInactiveLineHeight);
-}
-
-- (CGFloat) _maxLineHeight {
-	return fmax(self._lineHeight * 4, CQMaxLineHeight);
 }
 @end
 

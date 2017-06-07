@@ -156,7 +156,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 - (NSSet *) memberUsersWithModes:(NSUInteger) modes;
 - (NSSet *) memberUsersWithNickname:(NSString *) nickname;
 - (NSSet *) memberUsersWithFingerprint:(NSString *) fingerprint;
-- (MVChatUser *) memberUserWithUniqueIdentifier:(id) identifier;
+- (MVChatUser *__nullable) memberUserWithUniqueIdentifier:(id) identifier;
 - (BOOL) hasUser:(MVChatUser *) user;
 
 - (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString * __nullable) reason;

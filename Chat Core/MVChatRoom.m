@@ -366,7 +366,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return users;
 }
 
-- (MVChatUser *) memberUserWithUniqueIdentifier:(id) identifier {
+- (MVChatUser *__nullable) memberUserWithUniqueIdentifier:(id) identifier {
 	@synchronized( _memberUsers ) {
 		for( MVChatUser *user in _memberUsers )
 			if( [[user uniqueIdentifier] isEqual:identifier] )

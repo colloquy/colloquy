@@ -1797,19 +1797,19 @@ CQBouncerConnectionDelegate>
 	return result;
 }
 
-- (MVChatConnection * __nullable) connectionForUniqueIdentifier:(NSString *) identifier {
+- (MVChatConnection *__nullable) connectionForUniqueIdentifier:(NSString *) identifier {
 	for (MVChatConnection *connection in _connections)
 		if ([connection.uniqueIdentifier isEqualToString:identifier])
 			return connection;
 	return nil;
 }
 
-- (MVChatConnection * __nullable) connectionForServerAddress:(NSString *) address {
+- (MVChatConnection *__nullable) connectionForServerAddress:(NSString *) address {
 	NSArray <MVChatConnection *> *connections = [self connectionsForServerAddress:address];
 	return connections.firstObject;
 }
 
-- (NSArray <MVChatConnection *> * __nullable) connectionsForServerAddress:(NSString *) address {
+- (NSArray <MVChatConnection *> *) connectionsForServerAddress:(NSString *) address {
 	NSMutableArray <MVChatConnection *> *result = [NSMutableArray arrayWithCapacity:_connections.count];
 
 	address = [address stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@". \t\n"]];
@@ -1925,15 +1925,15 @@ CQBouncerConnectionDelegate>
 
 #pragma mark -
 
-- (CQBouncerSettings * __nullable) bouncerSettingsForIdentifier:(NSString *) identifier {
+- (CQBouncerSettings *__nullable) bouncerSettingsForIdentifier:(NSString *) identifier {
 	for (CQBouncerSettings *bouncer in _bouncers)
 		if ([bouncer.identifier isEqualToString:identifier])
 			return bouncer;
 	return nil;
 }
 
-- (NSArray <MVChatConnection *> * __nullable) bouncerChatConnectionsForIdentifier:(NSString *) identifier {
-	return _bouncerChatConnections[identifier];
+- (NSArray <MVChatConnection *> *) bouncerChatConnectionsForIdentifier:(NSString *) identifier {
+	return _bouncerChatConnections[identifier] ?: @[];
 }
 
 #pragma mark -

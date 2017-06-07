@@ -197,7 +197,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSString *__nullable) stringForFooterWithTextView:(CQTextView *) textView {
 	if (textView.text.length)
-		return nil;
+		return @"";
 	if ([self integerForCountdownInFooterWithTextView:textView] == 1)
 		return NSLocalizedString(@"character remaining", @"character remaining tableview footer");
 	return NSLocalizedString(@"characters remaining", @"characters remaining tableview footer");

@@ -1287,11 +1287,12 @@ parsingFinished: { // make a scope for this
 
 	id chatSender = ( chatUser ? (id) chatUser : (id) senderString );
 
-	[self _processedCommand:commandString fromSender:chatSender withIntentOrTags:intentOrTagsDictionary parameters:parameters];
+	if (commandString)
+		[self _processedCommand:commandString fromSender:chatSender withIntentOrTags:intentOrTagsDictionary parameters:parameters];
 	}
 }
 
-- (void)_processedCommand:(NSString *) commandString fromSender:(id) chatSender withIntentOrTags:(NSMutableDictionary *) intentOrTagsDictionary parameters:(NSMutableArray *) parameters {
+- (void)_processedCommand:(NSString *) commandString fromSender:(id __nullable) chatSender withIntentOrTags:(NSMutableDictionary *) intentOrTagsDictionary parameters:(NSMutableArray *) parameters {
 	BOOL hasTagsToSend = !!intentOrTagsDictionary.allKeys.count;
 	NSString *selectorString = nil;
 	SEL selector = NULL;

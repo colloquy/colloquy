@@ -42,7 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) setDeleteAction:(SEL __nullable) action {
 	[_deleteButton removeTarget:nil action:NULL forControlEvents:UIControlEventTouchUpInside];
-	[_deleteButton addTarget:nil action:action forControlEvents:UIControlEventTouchUpInside];
+	if (action)
+		[_deleteButton addTarget:nil action:action forControlEvents:UIControlEventTouchUpInside];
 }
 @end
 

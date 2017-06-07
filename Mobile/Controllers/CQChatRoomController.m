@@ -131,7 +131,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (MVChatUser * __nullable) user {
+- (MVChatUser *__nullable) user {
 	return nil;
 }
 

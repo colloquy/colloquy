@@ -147,7 +147,8 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 			[[NSFileManager defaultManager] createDirectoryAtPath:appSupportPath withIntermediateDirectories:YES attributes:nil error:nil];
 
 			if (![[NSFileManager defaultManager] fileExistsAtPath:appSupportPath])
-				return nil;
+				NSAssert(NO, @"should not reach this point");
+				__builtin_unreachable();
 		}
 
 		_appSupportPath = [appSupportPath copy];

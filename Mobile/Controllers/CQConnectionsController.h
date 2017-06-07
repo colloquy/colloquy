@@ -41,9 +41,9 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 - (void) showConnectionCreationView:(__nullable id) sender;
 - (void) showConnectionCreationViewForURL:(NSURL *__nullable) url;
 
-- (MVChatConnection * __nullable) connectionForUniqueIdentifier:(NSString *) identifier;
-- (MVChatConnection * __nullable) connectionForServerAddress:(NSString *) address;
-- (NSArray <MVChatConnection *> * __nullable) connectionsForServerAddress:(NSString *) address;
+- (MVChatConnection *__nullable) connectionForUniqueIdentifier:(NSString *) identifier;
+- (MVChatConnection *__nullable) connectionForServerAddress:(NSString *) address;
+- (NSArray <MVChatConnection *> *) connectionsForServerAddress:(NSString *) address;
 - (BOOL) managesConnection:(MVChatConnection *) connection;
 
 - (void) addConnection:(MVChatConnection *) connection;
@@ -56,8 +56,8 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 
 - (void) moveConnectionAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex forBouncerIdentifier:(NSString *) identifier;
 
-- (CQBouncerSettings * __nullable) bouncerSettingsForIdentifier:(NSString *) identifier;
-- (NSArray <MVChatConnection *> * __nullable) bouncerChatConnectionsForIdentifier:(NSString *) identifier;
+- (CQBouncerSettings *__nullable) bouncerSettingsForIdentifier:(NSString *) identifier;
+- (NSArray <MVChatConnection *> *) bouncerChatConnectionsForIdentifier:(NSString *) identifier;
 
 - (void) refreshBouncerConnectionsWithBouncerSettings:(CQBouncerSettings *) settings;
 

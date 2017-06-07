@@ -1059,7 +1059,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
-- (NSArray <NSString *> *__nullable) _IRCComponents {
+- (NSArray <NSString *> * __nullable) _IRCComponents {
 	NSArray <NSString *> *components = [self componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"!@ "]];
 
 	// given "nickname!username@hostmask realname", we want to get "nickname", "username", "hostmask" and "realname" back
