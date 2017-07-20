@@ -11,30 +11,22 @@
 
 #import <Foundation/Foundation.h>
 
-static inline void RunOnMainThread(BOOL async, dispatch_block_t __nonnull block)
+static inline void RunOnMainThreadSync(dispatch_block_t __nonnull DISPATCH_NOESCAPE block)
 {
-	void (*theDispatchFunc)(dispatch_queue_t, dispatch_block_t);
-	if (async) {
-		theDispatchFunc = dispatch_async;
-	} else {
-		theDispatchFunc = dispatch_sync;
-	}
-	
 	if ([NSThread isMainThread]) {
 		block();
 	} else {
-		theDispatchFunc(dispatch_get_main_queue(), block);
+		dispatch_sync(dispatch_get_main_queue(), block);
 	}
-}
-
-static inline void RunOnMainThreadSync(dispatch_block_t __nonnull block)
-{
-	RunOnMainThread(NO, block);
 }
 
 static inline void RunOnMainThreadAsync(dispatch_block_t __nonnull block)
 {
-	RunOnMainThread(YES, block);
+	if ([NSThread isMainThread]) {
+		block();
+	} else {
+		dispatch_async(dispatch_get_main_queue(), block);
+	}
 }
 
 #endif
