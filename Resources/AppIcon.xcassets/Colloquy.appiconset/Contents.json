@@ -150,6 +150,11 @@
       "idiom" : "mac",
       "size" : "512x512",
       "scale" : "2x"
+    },
+    {
+      "idiom" : "ios-marketing",
+      "size" : "1024x1024",
+      "scale" : "1x"
     }
   ],
   "info" : {

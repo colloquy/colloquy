@@ -222,7 +222,7 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	NSAssert(NO, @"Should not reach this point.");
-	return nil;
+	__builtin_unreachable();
 }
 
 #pragma mark -

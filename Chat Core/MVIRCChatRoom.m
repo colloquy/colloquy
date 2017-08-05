@@ -291,10 +291,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSSet *) memberUsersWithNickname:(NSString *) nickname {
 	MVChatUser *user = [self memberUserWithUniqueIdentifier:nickname];
 	if( user ) return [NSSet setWithObject:user];
-	return nil;
+	return [NSSet set];
 }
 
-- (MVChatUser *) memberUserWithUniqueIdentifier:(id) identifier {
+- (MVChatUser *__nullable) memberUserWithUniqueIdentifier:(id) identifier {
 	if( ! [identifier isKindOfClass:[NSString class]] ) return nil;
 
 	NSString *uniqueIdentfier = [identifier lowercaseString];

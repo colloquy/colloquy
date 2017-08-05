@@ -36,42 +36,45 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 
 #pragma mark -
 
-- (instancetype)initWithCoder:(NSCoder *)coder
-{
-	return [super initWithCoder:coder];
+- (id) initTextCell:(NSString *) string {
+	if( ( self = [super initTextCell:@""] ) ) {
+		[self _commonInitialization];
+	}
+
+	return self;
 }
 
-- (instancetype) initTextCell:(NSString *) string {
-	return [self initImageCell:nil];
+- (id) initImageCell:(NSImage *) image {
+	if( ( self = [super initImageCell:nil] ) ) {
+		[self _commonInitialization];
+	}
+
+	return self;
 }
 
-- (instancetype) initImageCell:(NSImage *) image {
+- (void) _commonInitialization {
 	static BOOL observingClose = NO;
 	if( ! observingClose ) {
 		[[NSNotificationCenter defaultCenter] addObserver:[self class] selector:@selector( colorPanelClosed: ) name:NSWindowWillCloseNotification object:[NSColorPanel sharedColorPanel]];
 		observingClose = YES;
 	}
 
-	if( ( self = [super initImageCell:nil] ) ) {
-		if( ! colorWellCells ) colorWellCells = [[NSMutableSet alloc] init];
-		[colorWellCells addObject:self];
-		_releasing = NO;
+	if( ! colorWellCells ) colorWellCells = [NSMutableSet set];
+	[colorWellCells addObject:self];
+	_releasing = NO;
 
-		[self setShowsWebValue:YES];
-		[self setEditable:YES];
-		[self setColor:[NSColor whiteColor]];
-		[self setBezelStyle:NSShadowlessSquareBezelStyle];
-		[self setButtonType:NSOnOffButton];
-		[self setImagePosition:NSImageOnly];
-		[super setTarget:self];
-		[super setAction:@selector( clicked: )];
-		[super setTitle:@""];
-		[super setAlternateTitle:@""];
-		[super setImage:nil];
-		[super setAlternateImage:nil];
-	}
-
-	return self;
+	[self setShowsWebValue:YES];
+	[self setEditable:YES];
+	[self setColor:[NSColor whiteColor]];
+	[self setBezelStyle:NSShadowlessSquareBezelStyle];
+	[self setButtonType:NSOnOffButton];
+	[self setImagePosition:NSImageOnly];
+	[super setTarget:self];
+	[super setAction:@selector( clicked: )];
+	[super setTitle:@""];
+	[super setAlternateTitle:@""];
+	[super setImage:nil];
+	[super setAlternateImage:nil];
 }
 
 - (id) copyWithZone:(NSZone *) zone {

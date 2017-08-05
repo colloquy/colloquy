@@ -60,9 +60,9 @@ extern BOOL isValidUTF8( const char *string, NSUInteger length );
 @property (readonly, copy) NSString *fileName;
 
 @property (getter=isValidIRCMask, readonly) BOOL validIRCMask;
-@property (readonly, copy) NSString *IRCNickname;
-@property (readonly, copy) NSString *IRCUsername;
-@property (readonly, copy) NSString *IRCHostname;
+@property (readonly, copy, nullable) NSString *IRCNickname;
+@property (readonly, copy, nullable) NSString *IRCUsername;
+@property (readonly, copy, nullable) NSString *IRCHostname;
 @property (readonly, copy, nullable) NSString *IRCRealname;
 
 @property (readonly) BOOL containsEmojiCharacters;

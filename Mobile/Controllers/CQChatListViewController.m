@@ -973,7 +973,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (chatViewController && ![chatViewController isKindOfClass:[CQFileTransferController class]]) {
 #else
 	if (!chatViewController)
-		return nil;
+		__builtin_unreachable();
 #endif
 		CQChatTableCell *cell = [CQChatTableCell reusableTableViewCellInTableView:tableView];
 
@@ -1304,7 +1304,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	_previousSelectedChatViewController = chatControllerForIndexPath([self.tableView indexPathForSelectedRow]);
 }
 
-- (void) tableView:(UITableView *) tableView didEndEditingRowAtIndexPath:(NSIndexPath *) indexPath {
+- (void) tableView:(UITableView *) tableView didEndEditingRowAtIndexPath:(nullable NSIndexPath *) indexPath {
 	if (_previousSelectedChatViewController) {
 		indexPath = indexPathForChatController(_previousSelectedChatViewController, self.editing);
 		if (indexPath)

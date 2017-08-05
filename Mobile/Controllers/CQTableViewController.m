@@ -94,12 +94,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	NSAssert(NO, @"tableView:numberOfRowsInSection: not implemented");
-	return 0;
+	[self doesNotRecognizeSelector:_cmd];
+	__builtin_unreachable();
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	NSAssert(NO, @"tableView:cellForRowAtIndexPath: not implemented");
-	return nil;
+	[self doesNotRecognizeSelector:_cmd];
+	__builtin_unreachable();
 }
 
 #pragma mark -

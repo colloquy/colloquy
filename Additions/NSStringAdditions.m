@@ -540,7 +540,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	if( ! knownEmoticons ) {
 		knownEmoticons = [[NSMutableArray alloc] initWithCapacity:350];
 		for (const struct EmojiEmoticonPair *entry = emoticonToEmojiList; entry && entry->emoticon; ++entry)
-			[knownEmoticons addObject:(__bridge id)(entry->emoticon)];
+			[knownEmoticons addObject:(__bridge id)entry->emoticon];
 	}
 
 	return knownEmoticons;
@@ -1059,7 +1059,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
-- (nullable NSArray <NSString *> *) _IRCComponents {
+- (NSArray <NSString *> * __nullable) _IRCComponents {
 	NSArray <NSString *> *components = [self componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"!@ "]];
 
 	// given "nickname!username@hostmask realname", we want to get "nickname", "username", "hostmask" and "realname" back
@@ -1073,19 +1073,19 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	return self.IRCNickname.length;
 }
 
-- (NSString *) IRCNickname {
+- (NSString *__nullable) IRCNickname {
 	return self._IRCComponents[0];
 }
 
-- (NSString *) IRCUsername {
+- (NSString *__nullable) IRCUsername {
 	return self._IRCComponents[1];
 }
 
-- (NSString *) IRCHostname {
+- (NSString *__nullable) IRCHostname {
 	return self._IRCComponents[2];
 }
 
-- (nullable NSString *) IRCRealname {
+- (NSString *__nullable) IRCRealname {
 	NSArray <NSString *> *components = self._IRCComponents;
 	if (components.count == 4)
 		return components[3];
@@ -1185,7 +1185,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:range];
 
 	if (result == nil)
-		return nil;
+		return @[];
 
 	NSMutableArray <NSString *> *results = [NSMutableArray array];
 
@@ -1359,7 +1359,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 		escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 
 	for (const struct EmojiEmoticonPair *entry = emoticonToEmojiList; entry && entry->emoticon; ++entry) {
-		NSString *searchEmoticon = (__bridge id)(entry->emoticon);
+		NSString *searchEmoticon = (__bridge id)entry->emoticon;
 		if (encoded) searchEmoticon = [searchEmoticon stringByEncodingXMLSpecialCharactersAsEntities];
 		if ([self rangeOfString:searchEmoticon options:NSLiteralSearch range:*range].location == NSNotFound)
 			continue;
@@ -1403,7 +1403,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 		unichar currentCharacter = [self characterAtIndex:emojiRange.location];
 		for (const struct EmojiEmoticonPair *entry = emojiToEmoticonList; entry && entry->emoji; ++entry) {
 			if (entry->emoji == currentCharacter) {
-				NSString *emoticon = (__bridge id)(entry->emoticon);
+				NSString *emoticon = (__bridge id)entry->emoticon;
 				if (encode) emoticon = [emoticon stringByEncodingXMLSpecialCharactersAsEntities];
 
 				NSString *replacement = nil;

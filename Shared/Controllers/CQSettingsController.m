@@ -126,7 +126,8 @@ NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotificat
 	if (_settingsLocation == CQSettingsLocationDevice)
 		return [NSUserDefaults standardUserDefaults];
 
-	return nil;
+	NSAssert(NO, @"Should not reach this point.");
+	__builtin_unreachable();
 }
 @end
 

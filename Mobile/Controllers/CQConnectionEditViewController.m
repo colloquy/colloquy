@@ -440,7 +440,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	}
 
 	NSAssert(NO, @"Should not reach this point.");
-	return nil;
+	__builtin_unreachable();
 }
 
 - (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {

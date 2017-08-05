@@ -379,7 +379,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSDictionary *) persistentState {
 	if (!_target)
-		return nil;
+		return @{};
 
 	NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
 
@@ -550,9 +550,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) loadView {
 	[super loadView];
 
-//	if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion == 8)
-//		return;
-//
 //	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
 ////	CQUITextChatTranscriptView *webkitChatTranscriptView = [[CQUITextChatTranscriptView alloc] initWithFrame:transcriptView.frame];
 //	CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
@@ -1722,6 +1719,9 @@ NS_ASSUME_NONNULL_BEGIN
 	if (![self isViewLoaded] || !self.view.window)
 		return;
 
+	if (![notification.userInfo[UIKeyboardIsLocalUserInfoKey] boolValue])
+		return;
+
 	CGRect keyboardRect = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	keyboardRect = [self.view.window convertRect:keyboardRect toView:self.view];
 
@@ -1743,6 +1743,9 @@ NS_ASSUME_NONNULL_BEGIN
 	_showingKeyboard = NO;
 
 	if (![self isViewLoaded])
+		return;
+
+	if (![notification.userInfo[UIKeyboardIsLocalUserInfoKey] boolValue])
 		return;
 
 	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
@@ -1893,9 +1896,17 @@ NS_ASSUME_NONNULL_BEGIN
 		NSString *plainMessage = [messageString stringByStrippingXMLTags];
 		plainMessage = [plainMessage stringByDecodingXMLSpecialCharacterEntities];
 
-		if ([self isMemberOfClass:[CQDirectChatController class]])
+		__weak static id weakAccessibilityTarget = nil;
+		id accessibilityTarget = weakAccessibilityTarget;
+		if (!accessibilityTarget || accessibilityTarget == self.target) {
 			voiceOverAnnouncement = plainMessage;
-		else voiceOverAnnouncement = [NSString stringWithFormat:NSLocalizedString(@"In %@, %@", @"VoiceOver event announcement"), self.title, plainMessage];
+		} else {
+			weakAccessibilityTarget = self.target;
+
+			if ([self isMemberOfClass:[CQDirectChatController class]])
+				voiceOverAnnouncement = [NSString stringWithFormat:NSLocalizedString(@"%@ said %@", @"Voiceover event announcement (private message)"), self.title, plainMessage];
+			else voiceOverAnnouncement = [NSString stringWithFormat:NSLocalizedString(@"In %@, %@", @"VoiceOver event announcement (chat room)"), self.title, plainMessage];
+		}
 
 		UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, voiceOverAnnouncement);
 	}

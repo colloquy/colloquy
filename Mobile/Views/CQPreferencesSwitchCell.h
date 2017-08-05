@@ -7,7 +7,7 @@ typedef void (^UISwitchControlBlock)(UISwitch *switchControl);
 
 @property (nonatomic, readonly) UISwitch *switchControl;
 
-@property (nonatomic) SEL switchAction;
+@property (nonatomic, nullable) SEL switchAction;
 
 @property (nonatomic, copy) UISwitchControlBlock switchControlBlock;
 @end

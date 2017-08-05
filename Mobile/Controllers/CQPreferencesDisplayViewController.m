@@ -330,7 +330,8 @@ static NSString *const CQPSListTypeFont = @"Font";
 		return cell;
 	}
 
-	return nil;
+	NSAssert(NO, @"Should not reach this point.");
+	__builtin_unreachable();
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {

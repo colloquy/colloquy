@@ -452,7 +452,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 	}
 
 	NSAssert(NO, @"Should not reach this point.");
-	return nil;
+	__builtin_unreachable();
 }
 
 #pragma mark -

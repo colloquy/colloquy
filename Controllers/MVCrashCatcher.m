@@ -1,20 +1,11 @@
 #import "MVCrashCatcher.h"
 #import <sys/sysctl.h>
 
-@interface MVCrashCatcher ()
-
-@property (atomic, copy) dispatch_block_t doneBlock;
-
-@end
+static MVCrashCatcher *crashCatcher = nil;
 
 @implementation MVCrashCatcher
 + (void) check {
-	static MVCrashCatcher *crashCatcher = nil;
 	crashCatcher = [[MVCrashCatcher alloc] init]; // Released when the window is closed.
-	crashCatcher.doneBlock = ^{
-		crashCatcher.doneBlock = nil;
-		crashCatcher = nil;
-	};
 }
 
 #pragma mark -
@@ -40,13 +31,6 @@
 	return self;
 }
 
-- (void) dealloc {
-	[window close];
-
-	if (self.doneBlock)
-		self.doneBlock();
-}
-
 - (void) awakeFromNib {
 	NSString *logContent = [NSString stringWithContentsOfFile:logPath encoding:NSUTF8StringEncoding error:NULL];
 	logContent = [logContent stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -54,7 +38,6 @@
 	NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	description.stringValue = [NSString stringWithFormat:NSLocalizedString( @"%@ encountered an unrecoverable error during a previous session. Please enter any details you may recall about what you were doing when the application crashed. This will help us to improve future releases of %@.", "crash message" ), programName, programName];
 	log.string = logContent;
-
 	[window center];
 
 	[[NSApplication sharedApplication] runModalForWindow:window];
@@ -64,11 +47,11 @@
 
 - (void) connectionDidFinishLoading:(NSURLConnection *) connection {
 	[[NSFileManager defaultManager] removeItemAtPath:logPath error:nil];
-	self.doneBlock();
+	crashCatcher = nil;
 }
 
 - (void) connection:(NSURLConnection *) connection didFailWithError:(NSError *) error {
-	self.doneBlock();
+	crashCatcher = nil;
 }
 
 #pragma mark -
@@ -107,6 +90,7 @@
 	[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
 	[request setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES]];
 
+	
 	[NSURLConnection connectionWithRequest:request delegate:self];
 
 	[[NSApplication sharedApplication] stopModal];
@@ -119,10 +103,7 @@
 	[[NSApplication sharedApplication] stopModal];
 	[window orderOut:nil];
 
-	if (self.doneBlock) {
-		self.doneBlock();
-	}
-	self.doneBlock = nil;
+	crashCatcher = nil;
 }
 
 - (BOOL) windowShouldClose:(id) sender {

@@ -7,6 +7,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) UITableView *tableView;
 @property (nonatomic) BOOL clearsSelectionOnViewWillAppear; // defaults to YES. If YES, any selection is cleared in viewWillAppear:
+
+- (void) viewWillAppear:(BOOL) animated NS_REQUIRES_SUPER;
+- (void) viewWillDisappear:(BOOL) animated NS_REQUIRES_SUPER;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -34,15 +34,16 @@ NS_ASSUME_NONNULL_BEGIN
 	return nil;
 }
 
-- (SEL) deleteAction {
+- (SEL __nullable) deleteAction {
 	NSArray <NSString *> *actions = [_deleteButton actionsForTarget:nil forControlEvent:UIControlEventTouchUpInside];
 	if (!actions.count) return NULL;
 	return NSSelectorFromString(actions[0]);
 }
 
-- (void) setDeleteAction:(SEL) action {
+- (void) setDeleteAction:(SEL __nullable) action {
 	[_deleteButton removeTarget:nil action:NULL forControlEvents:UIControlEventTouchUpInside];
-	[_deleteButton addTarget:nil action:action forControlEvents:UIControlEventTouchUpInside];
+	if (action)
+		[_deleteButton addTarget:nil action:action forControlEvents:UIControlEventTouchUpInside];
 }
 @end
 

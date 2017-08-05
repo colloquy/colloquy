@@ -273,7 +273,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 }
 
-- (void) touchesCancelled:(NSSet *__nullable) touches withEvent:(UIEvent *__nullable) event {
+- (void) touchesCancelled:(NSSet *) touches withEvent:(UIEvent *__nullable) event {
 	self.selectedCompletion = NSNotFound;
 }
 @end
