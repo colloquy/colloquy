@@ -186,7 +186,10 @@ NS_ASSUME_NONNULL_BEGIN
 			cell.accessibilityHint = NSLocalizedString(@"Required", @"Voiceover required label");
 		}
 
-		return cell;
+		if (cell)
+			return cell;
+
+		__builtin_unreachable();
 	} else if (pushAvailable && indexPath.section == PushTableSection && indexPath.row == 0) {
 		CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 
