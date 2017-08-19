@@ -15,8 +15,6 @@ FOUNDATION_EXPORT double ChatCoreVersionNumber;
 //! Project version string for ChatCore.
 FOUNDATION_EXPORT const unsigned char ChatCoreVersionString[];
 
-// In this header, you should import all the public headers of your framework using statements like #import <ChatCore/PublicHeader.h>
-
 
 //#import <ChatCore/MVAvailability.h>
 //#import <ChatCore/MVUtilities.h>
