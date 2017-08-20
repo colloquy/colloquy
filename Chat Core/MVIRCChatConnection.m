@@ -125,6 +125,9 @@ static const NSStringEncoding supportedEncodings[] = {
 	0
 };
 
+@interface MVIRCChatConnection () <GCDAsyncSocketDelegate>
+@end
+
 // znc/self-message could have been better named; while it implies self-message semantics, the situations in which messages are echoed back differ:
 // - with self-message, all messages we send are echoed back to us.
 // - with znc/self-message, only messages we previously sent are echoed back to us when replaying query buffers.
@@ -948,7 +951,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	});
 }
 
-- (void) socketDidDisconnect:(GCDAsyncSocket *) sock withError:(NSError *) error {
+- (void) socketDidDisconnect:(GCDAsyncSocket *) sock withError:(nullable NSError *) error {
 	if( sock != _chatConnection ) return;
 
 	__strong id me = self;
