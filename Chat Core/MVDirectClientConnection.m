@@ -37,7 +37,7 @@ void MVFindDCCFriendlyAddress( NSString *address, MVStringParameterBlock complet
 
 #pragma mark -
 
-@interface MVDirectClientConnection (MVDirectClientConnectionPrivate)
+@interface MVDirectClientConnection (MVDirectClientConnectionPrivate) <GCDAsyncSocketDelegate>
 - (void) _setupThread;
 - (void) _connect:(NSDictionary *) info;
 - (void) _acceptConnectionOnFirstPortInRange:(NSValue *) portsObject;

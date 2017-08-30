@@ -15,6 +15,8 @@
 #import "NSDateAdditions.h"
 #import "MVUtilities.h"
 
+#import "MVChatRoomPrivate.h"
+
 #if USE(ATTRIBUTED_CHAT_STRING)
 #import "NSAttributedStringAdditions.h"
 #endif
@@ -124,7 +126,6 @@ static const NSStringEncoding supportedEncodings[] = {
 };
 
 @interface MVIRCChatConnection () <GCDAsyncSocketDelegate>
-
 @end
 
 // znc/self-message could have been better named; while it implies self-message semantics, the situations in which messages are echoed back differ:

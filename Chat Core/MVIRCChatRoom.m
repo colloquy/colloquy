@@ -3,6 +3,7 @@
 #import "MVIRCChatConnection.h"
 #import "MVIRCChatUser.h"
 #import "NSStringAdditions.h"
+#import "MVChatRoomPrivate.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

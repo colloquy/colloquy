@@ -36,7 +36,7 @@
 
 
 #ifndef GCDAsyncSocketLoggingEnabled
-#define GCDAsyncSocketLoggingEnabled 1
+#define GCDAsyncSocketLoggingEnabled 0
 #endif
 
 #if GCDAsyncSocketLoggingEnabled
@@ -52,21 +52,21 @@
 #define LogAsync   YES
 #define LogContext GCDAsyncSocketLoggingContext
 
-#define LogObjc(flg, frmt, ...) LOG_OBJC_MAYBE(LogAsync, logLevel, flg, (int)self, frmt, ##__VA_ARGS__)
-#define LogC(flg, frmt, ...)    LOG_MAYBE(LogAsync, logLevel, flg, LogContext, frmt, ##__VA_ARGS__)
+#define LogObjc(flg, frmt, ...) LOG_OBJC_MAYBE(LogAsync, logLevel, flg, LogContext, frmt, ##__VA_ARGS__)
+#define LogC(flg, frmt, ...)    LOG_C_MAYBE(LogAsync, logLevel, flg, LogContext, frmt, ##__VA_ARGS__)
 
 #define LogError(frmt, ...)     LogObjc(LOG_FLAG_ERROR,   (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
 #define LogWarn(frmt, ...)      LogObjc(LOG_FLAG_WARN,    (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
 #define LogInfo(frmt, ...)      LogObjc(LOG_FLAG_INFO,    (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
 #define LogVerbose(frmt, ...)   LogObjc(LOG_FLAG_VERBOSE, (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
 
-#define LogCError(frmt, ...)    LogC(LOG_FLAG_ERROR,   ("%s: " frmt), THIS_FILE, ##__VA_ARGS__)
-#define LogCWarn(frmt, ...)     LogC(LOG_FLAG_WARN,    ("%s: " frmt), THIS_FILE, ##__VA_ARGS__)
-#define LogCInfo(frmt, ...)     LogC(LOG_FLAG_INFO,    ("%s: " frmt), THIS_FILE, ##__VA_ARGS__)
-#define LogCVerbose(frmt, ...)  LogC(LOG_FLAG_VERBOSE, ("%s: " frmt), THIS_FILE, ##__VA_ARGS__)
+#define LogCError(frmt, ...)    LogC(LOG_FLAG_ERROR,   (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
+#define LogCWarn(frmt, ...)     LogC(LOG_FLAG_WARN,    (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
+#define LogCInfo(frmt, ...)     LogC(LOG_FLAG_INFO,    (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
+#define LogCVerbose(frmt, ...)  LogC(LOG_FLAG_VERBOSE, (@"%@: " frmt), THIS_FILE, ##__VA_ARGS__)
 
 #define LogTrace()              LogObjc(LOG_FLAG_VERBOSE, @"%@: %@", THIS_FILE, THIS_METHOD)
-#define LogCTrace()             LogC(LOG_FLAG_VERBOSE, "%s: %s", THIS_FILE, __FUNCTION__)
+#define LogCTrace()             LogC(LOG_FLAG_VERBOSE, @"%@: %s", THIS_FILE, __FUNCTION__)
 
 #ifndef GCDAsyncSocketLogLevel
 #define GCDAsyncSocketLogLevel LOG_LEVEL_VERBOSE
@@ -1036,6 +1036,69 @@ typedef NS_OPTIONS(uint16_t, GCDAsyncSocketConfig)
 	LogInfo(@"%@ - %@ (finish)", THIS_METHOD, self);
 }
 
+#pragma mark -
+
++ (nullable instancetype)socketFromConnectedSocketFD:(int)socketFD socketQueue:(nullable dispatch_queue_t)sq error:(NSError**)error {
+  return [self socketFromConnectedSocketFD:socketFD delegate:nil delegateQueue:NULL socketQueue:sq error:error];
+}
+
++ (nullable instancetype)socketFromConnectedSocketFD:(int)socketFD delegate:(nullable id<GCDAsyncSocketDelegate>)aDelegate delegateQueue:(nullable dispatch_queue_t)dq error:(NSError**)error {
+  return [self socketFromConnectedSocketFD:socketFD delegate:aDelegate delegateQueue:dq socketQueue:NULL error:error];
+}
+
++ (nullable instancetype)socketFromConnectedSocketFD:(int)socketFD delegate:(nullable id<GCDAsyncSocketDelegate>)aDelegate delegateQueue:(nullable dispatch_queue_t)dq socketQueue:(nullable dispatch_queue_t)sq error:(NSError**)error
+{
+  __block BOOL errorOccured = NO;
+  
+  GCDAsyncSocket *socket = [[[self class] alloc] initWithDelegate:aDelegate delegateQueue:dq socketQueue:sq];
+  
+  dispatch_sync(socket->socketQueue, ^{ @autoreleasepool {
+    struct sockaddr addr;
+    socklen_t addr_size = sizeof(struct sockaddr);
+    int retVal = getpeername(socketFD, (struct sockaddr *)&addr, &addr_size);
+    if (retVal)
+    {
+      NSString *errMsg = NSLocalizedStringWithDefaultValue(@"GCDAsyncSocketOtherError",
+                                                           @"GCDAsyncSocket", [NSBundle mainBundle],
+                                                           @"Attempt to create socket from socket FD failed. getpeername() failed", nil);
+      
+      NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+
+      errorOccured = YES;
+      if (error)
+        *error = [NSError errorWithDomain:GCDAsyncSocketErrorDomain code:GCDAsyncSocketOtherError userInfo:userInfo];
+      return;
+    }
+    
+    if (addr.sa_family == AF_INET)
+    {
+      socket->socket4FD = socketFD;
+    }
+    else if (addr.sa_family == AF_INET6)
+    {
+      socket->socket6FD = socketFD;
+    }
+    else
+    {
+      NSString *errMsg = NSLocalizedStringWithDefaultValue(@"GCDAsyncSocketOtherError",
+                                                           @"GCDAsyncSocket", [NSBundle mainBundle],
+                                                           @"Attempt to create socket from socket FD failed. socket FD is neither IPv4 nor IPv6", nil);
+      
+      NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+      
+      errorOccured = YES;
+      if (error)
+        *error = [NSError errorWithDomain:GCDAsyncSocketErrorDomain code:GCDAsyncSocketOtherError userInfo:userInfo];
+      return;
+    }
+    
+    socket->flags = kSocketStarted;
+    [socket didConnect:socket->stateIndex];
+  }});
+  
+  return errorOccured? nil: socket;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Configuration
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1954,6 +2017,8 @@ typedef NS_OPTIONS(uint16_t, GCDAsyncSocketConfig)
 	if (result == -1)
 	{
 		LogWarn(@"Error enabling non-blocking IO on accepted socket (fcntl)");
+		LogVerbose(@"close(childSocketFD)");
+		close(childSocketFD);
 		return NO;
 	}
 	
@@ -2250,7 +2315,7 @@ typedef NS_OPTIONS(uint16_t, GCDAsyncSocketConfig)
 		#pragma clang diagnostic warning "-Wimplicit-retain-self"
 			
 			NSError *lookupErr = nil;
-			NSMutableArray *addresses = [GCDAsyncSocket lookupHost:hostCpy port:port error:&lookupErr];
+			NSMutableArray *addresses = [[self class] lookupHost:hostCpy port:port error:&lookupErr];
 			
 			__strong GCDAsyncSocket *strongSelf = weakSelf;
 			if (strongSelf == nil) return_from_block;
@@ -2269,11 +2334,11 @@ typedef NS_OPTIONS(uint16_t, GCDAsyncSocketConfig)
 				
 				for (NSData *address in addresses)
 				{
-					if (!address4 && [GCDAsyncSocket isIPv4Address:address])
+					if (!address4 && [[self class] isIPv4Address:address])
 					{
 						address4 = address;
 					}
-					else if (!address6 && [GCDAsyncSocket isIPv6Address:address])
+					else if (!address6 && [[self class] isIPv6Address:address])
 					{
 						address6 = address;
 					}
@@ -7497,11 +7562,11 @@ static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, 
 			[cfstreamThread cancel]; // set isCancelled flag
 			
 			// wake up the thread
-			[GCDAsyncSocket performSelector:@selector(ignore:)
-			                       onThread:cfstreamThread
-			                     withObject:[NSNull null]
-			                  waitUntilDone:NO];
-			
+            [[self class] performSelector:@selector(ignore:)
+                                 onThread:cfstreamThread
+                               withObject:[NSNull null]
+                            waitUntilDone:NO];
+            
 			cfstreamThread = nil;
 		}
 		
@@ -7574,7 +7639,7 @@ static void CFReadStreamCallback (CFReadStreamRef stream, CFStreamEventType type
 		{
 			dispatch_async(asyncSocket->socketQueue, ^{ @autoreleasepool {
 				
-				LogCVerbose("%s", "CFReadStreamCallback - HasBytesAvailable");
+				LogCVerbose(@"CFReadStreamCallback - HasBytesAvailable");
 				
 				if (asyncSocket->readStream != stream)
 					return_from_block;
@@ -7610,7 +7675,7 @@ static void CFReadStreamCallback (CFReadStreamRef stream, CFStreamEventType type
 			
 			dispatch_async(asyncSocket->socketQueue, ^{ @autoreleasepool {
 				
-				LogCVerbose("%s", "CFReadStreamCallback - Other");
+				LogCVerbose(@"CFReadStreamCallback - Other");
 				
 				if (asyncSocket->readStream != stream)
 					return_from_block;
@@ -7641,7 +7706,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 		{
 			dispatch_async(asyncSocket->socketQueue, ^{ @autoreleasepool {
 				
-				LogCVerbose("%s", "CFWriteStreamCallback - CanAcceptBytes");
+				LogCVerbose(@"CFWriteStreamCallback - CanAcceptBytes");
 				
 				if (asyncSocket->writeStream != stream)
 					return_from_block;
@@ -7677,7 +7742,7 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 			
 			dispatch_async(asyncSocket->socketQueue, ^{ @autoreleasepool {
 				
-				LogCVerbose("%s", "CFWriteStreamCallback - Other");
+				LogCVerbose(@"CFWriteStreamCallback - Other");
 				
 				if (asyncSocket->writeStream != stream)
 					return_from_block;
@@ -7806,11 +7871,12 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 		LogVerbose(@"Adding streams to runloop...");
 		
 		[[self class] startCFStreamThreadIfNeeded];
-		[[self class] performSelector:@selector(scheduleCFStreams:)
-		                     onThread:cfstreamThread
-		                   withObject:self
-		                waitUntilDone:YES];
-		
+        dispatch_sync(cfstreamThreadSetupQueue, ^{
+            [[self class] performSelector:@selector(scheduleCFStreams:)
+                                 onThread:cfstreamThread
+                               withObject:self
+                            waitUntilDone:YES];
+        });
 		flags |= kAddedStreamsToRunLoop;
 	}
 	
@@ -7827,11 +7893,13 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 	if (flags & kAddedStreamsToRunLoop)
 	{
 		LogVerbose(@"Removing streams from runloop...");
-		
-		[[self class] performSelector:@selector(unscheduleCFStreams:)
-		                     onThread:cfstreamThread
-		                   withObject:self
-		                waitUntilDone:YES];
+        
+        dispatch_sync(cfstreamThreadSetupQueue, ^{
+            [[self class] performSelector:@selector(unscheduleCFStreams:)
+                                 onThread:cfstreamThread
+                               withObject:self
+                            waitUntilDone:YES];
+        });
 		[[self class] stopCFStreamThreadIfNeeded];
 		
 		flags &= ~kAddedStreamsToRunLoop;
@@ -8025,40 +8093,6 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 	return writeStream;
 }
 
-- (BOOL)enableExtendBackgroundIdleMode
-{
-	if (&kCFStreamPropertySocketExtendedBackgroundIdleMode == NULL)
-	{
-		return NO;
-	}
-
-	if (![self createReadAndWriteStream])
-	{
-		// Error occured creating streams (perhaps socket isn't open)
-		return NO;
-	}
-
-	CFStreamStatus readStatus = CFReadStreamGetStatus(readStream);
-	CFStreamStatus writeStatus = CFWriteStreamGetStatus(writeStream);
-
-	if ((readStatus != kCFStreamStatusNotOpen) || (writeStatus != kCFStreamStatusNotOpen))
-	{
-		LogError(@"Unable to change state for delaying of socket reclaiming in background on opened sockets");
-		return NO;
-	}
-
-	BOOL r1 = CFReadStreamSetProperty(readStream, kCFStreamPropertySocketExtendedBackgroundIdleMode, kCFBooleanTrue);
-	BOOL r2 = CFWriteStreamSetProperty(writeStream, kCFStreamPropertySocketExtendedBackgroundIdleMode, kCFBooleanTrue);
-
-	if (!r1 || !r2)
-	{
-		LogError(@"Unable to delay socket reclaiming for read or write stream");
-		return NO;
-	}
-
-	return YES;
-}
-
 - (BOOL)enableBackgroundingOnSocketWithCaveat:(BOOL)caveat
 {
 	if (![self createReadAndWriteStream])
@@ -8121,6 +8155,40 @@ static void CFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType ty
 	}
 	
 	return [self enableBackgroundingOnSocketWithCaveat:YES];
+}
+
+- (BOOL)enableExtendBackgroundIdleMode
+{
+	if (&kCFStreamPropertySocketExtendedBackgroundIdleMode == NULL)
+	{
+		return NO;
+	}
+	
+	if (![self createReadAndWriteStream])
+	{
+		// Error occured creating streams (perhaps socket isn't open)
+		return NO;
+	}
+	
+	CFStreamStatus readStatus = CFReadStreamGetStatus(readStream);
+	CFStreamStatus writeStatus = CFWriteStreamGetStatus(writeStream);
+	
+	if ((readStatus != kCFStreamStatusNotOpen) || (writeStatus != kCFStreamStatusNotOpen))
+	{
+		LogError(@"Unable to change state for delaying of socket reclaiming in background on opened sockets");
+		return NO;
+	}
+	
+	BOOL r1 = CFReadStreamSetProperty(readStream, kCFStreamPropertySocketExtendedBackgroundIdleMode, kCFBooleanTrue);
+	BOOL r2 = CFWriteStreamSetProperty(writeStream, kCFStreamPropertySocketExtendedBackgroundIdleMode, kCFBooleanTrue);
+	
+	if (!r1 || !r2)
+	{
+		LogError(@"Unable to delay socket reclaiming for read or write stream");
+		return NO;
+	}
+	
+	return YES;
 }
 
 #endif
