@@ -7,7 +7,7 @@ extern NSString *JVColorWellCellColorDidChangeNotification;
 	BOOL _showsWebValue;
 	BOOL _releasing;
 }
-- (instancetype) initTextCell:(NSString *) string;
+- (instancetype) initTextCell:(NSString *) string NS_DESIGNATED_INITIALIZER;
 - (instancetype) initImageCell:(NSImage *) image NS_DESIGNATED_INITIALIZER;
 - (void) deactivate;
 - (void) activate:(BOOL) exclusive;
