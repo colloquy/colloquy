@@ -100,6 +100,7 @@
 				1C9AE940086A59CF008ED7AD /* Configurations */,
 				089C1671FE841209C02AAC07 /* Frameworks */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
+				55E39FD81F57804500BA9A7B /* Recovered References */,
 			);
 			name = "FScript Plugin";
 			sourceTree = "<group>";
@@ -188,6 +189,14 @@
 			tabWidth = 4;
 			usesTabs = 1;
 		};
+		55E39FD81F57804500BA9A7B /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				9295C9811678302E009F9014 /* ChatCore.framework */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		92823D2316900FDA000EC36E /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -227,7 +236,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 0900;
 			};
 			buildConfigurationList = 1C7F306F0855489300D41FB0 /* Build configuration list for PBXProject "Python Support" */;
 			compatibilityVersion = "Xcode 6.3";
@@ -401,11 +410,17 @@
 			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -423,11 +438,17 @@
 			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
