@@ -678,8 +678,8 @@
 		1C5A1A2306F8F4A000A51F10 /* MVIRCChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVIRCChatConnection.m; path = "Chat Core/MVIRCChatConnection.m"; sourceTree = "<group>"; };
 		1C5A230706FA4F2700A51F10 /* MVSILCChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVSILCChatConnection.h; path = "Chat Core/MVSILCChatConnection.h"; sourceTree = "<group>"; };
 		1C5A230806FA4F2700A51F10 /* MVSILCChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVSILCChatConnection.m; path = "Chat Core/MVSILCChatConnection.m"; sourceTree = "<group>"; };
-		1C5A233D06FA4FEE00A51F10 /* libsilc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilc.framework; path = Frameworks/libsilc.framework; sourceTree = SOURCE_ROOT; };
-		1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilcclient.framework; path = Frameworks/libsilcclient.framework; sourceTree = SOURCE_ROOT; };
+		1C5A233D06FA4FEE00A51F10 /* libsilc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libsilc.framework; sourceTree = "<group>"; };
+		1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libsilcclient.framework; sourceTree = "<group>"; };
 		1C5CBF3306FF986E0006C5B1 /* MVChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUser.h; path = "Chat Core/MVChatUser.h"; sourceTree = "<group>"; };
 		1C5CBF3406FF986E0006C5B1 /* MVChatUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatUser.m; path = "Chat Core/MVChatUser.m"; sourceTree = "<group>"; };
 		1C5CC07A06FFCB0B0006C5B1 /* MVChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatRoom.h; path = "Chat Core/MVChatRoom.h"; sourceTree = "<group>"; };
@@ -806,6 +806,7 @@
 				F50B0AA00170C89301A84BDE /* Other Sources & Additions */,
 				F50B0AA10170C89301A84BDE /* Resources */,
 				1C9AE8DF086A5218008ED7AD /* Configurations */,
+				C26D0E131F5B0B3C00B58261 /* old-mac-binary-frameworks */,
 				089C1671FE841209C02AAC07 /* Frameworks & Libraries */,
 				1CB2C8CC052DDA360094AAA4 /* Products */,
 				92BFCEAA14FDEF95001D02BB /* libChat Core.a */,
@@ -829,8 +830,6 @@
 				1CEEB167095BE3A000166A54 /* CoreServices.framework */,
 				1CCB3C3705228EFD000001C8 /* SystemConfiguration.framework */,
 				92BA71FE16890B66000AA0C5 /* Security.framework */,
-				1C5A233D06FA4FEE00A51F10 /* libsilc.framework */,
-				1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */,
 				1C386E8D103246B500660864 /* TCMPortMapper.framework */,
 				1C9FFB130FA1958300748177 /* libicucore.dylib */,
 			);
@@ -1675,6 +1674,15 @@
 			name = Logging;
 			sourceTree = "<group>";
 		};
+		C26D0E131F5B0B3C00B58261 /* old-mac-binary-frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1C5A233D06FA4FEE00A51F10 /* libsilc.framework */,
+				1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */,
+			);
+			path = "old-mac-binary-frameworks";
+			sourceTree = "<group>";
+		};
 		DDF64CE20BD29DA4009E8FF6 /* XMPP Support */ = {
 			isa = PBXGroup;
 			children = (
@@ -2139,16 +2147,16 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Frameworks/frameworks.tar.gz",
+				"$(SRCROOT)/old-mac-binary-frameworks/frameworks.tar.gz",
 			);
 			name = "Unarchive Frameworks";
 			outputPaths = (
-				"$(SRCROOT)/Frameworks/libsilc.framework",
-				"$(SRCROOT)/Frameworks/libsilcclient.framework",
+				"$(SRCROOT)/old-mac-binary-frameworks/libsilc.framework",
+				"$(SRCROOT)/old-mac-binary-frameworks/libsilcclient.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/Frameworks\"\nrm -rf *.framework\ntar xzf frameworks.tar.gz\n";
+			shellScript = "cd \"$SRCROOT/old-mac-binary-frameworks\"\nrm -rf *.framework\ntar xzf frameworks.tar.gz\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2372,7 +2380,7 @@
 					"RKL_BLOCKS=0",
 				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
-				INSTALL_PATH = "@executable_path/../Frameworks";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks\n";
 				OTHER_CFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
@@ -2409,7 +2417,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
-				INSTALL_PATH = "@executable_path/../Frameworks/";
 				ONLY_ACTIVE_ARCH = YES;
 				SYMROOT = build;
 			};
@@ -2438,6 +2445,7 @@
 					"RKL_CACHE_SIZE=47",
 					"RKL_BLOCKS=0",
 				);
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks\n";
 				OTHER_CFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
@@ -2472,7 +2480,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VALUE = YES;
-				INSTALL_PATH = "@executable_path/../Frameworks/";
 				SYMROOT = build;
 			};
 			name = Release;
@@ -2483,7 +2490,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
 				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Basic.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2534,7 +2540,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
 				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Basic.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (

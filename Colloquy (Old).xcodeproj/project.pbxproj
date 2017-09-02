@@ -770,19 +770,19 @@
 		1CF16CDE083ADE590037F222 /* editWidgetPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = editWidgetPressed.png; path = Resources/editWidgetPressed.png; sourceTree = SOURCE_ROOT; };
 		1CF4D76507E6AD4400DB421A /* smartTranscriptSettings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = smartTranscriptSettings.png; path = Resources/smartTranscriptSettings.png; sourceTree = "<group>"; };
 		1CF4E51D0698E9FB00986498 /* NSDataAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDataAdditions.h; path = Additions/NSDataAdditions.h; sourceTree = "<group>"; };
-		1CF5F8D107D537E50019DC13 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Growl.framework; path = Frameworks/Growl.framework; sourceTree = SOURCE_ROOT; };
+		1CF5F8D107D537E50019DC13 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Growl.framework; sourceTree = "<group>"; };
 		1CF627CA07558F79005DFCFA /* fileSend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fileSend.png; path = "Resources/Toolbar Icons/fileSend.png"; sourceTree = "<group>"; };
 		1CF6511406EA22480073DEA8 /* Colloquy.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colloquy.pch; sourceTree = "<group>"; };
 		1CF79CBC07AC77E600696918 /* JVChatTranscript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatTranscript.h; path = Models/JVChatTranscript.h; sourceTree = "<group>"; };
 		1CF79CBD07AC77E600696918 /* JVChatTranscript.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatTranscript.m; path = Models/JVChatTranscript.m; sourceTree = "<group>"; };
-		1CF8030C070C893500C9B54C /* libsilc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilc.framework; path = Frameworks/libsilc.framework; sourceTree = SOURCE_ROOT; };
-		1CF8030D070C893500C9B54C /* libsilcclient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilcclient.framework; path = Frameworks/libsilcclient.framework; sourceTree = SOURCE_ROOT; };
+		1CF8030C070C893500C9B54C /* libsilc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libsilc.framework; sourceTree = "<group>"; };
+		1CF8030D070C893500C9B54C /* libsilcclient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libsilcclient.framework; sourceTree = "<group>"; };
 		891E8465123F0AEF00EC3C0F /* NSCharacterSetAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSCharacterSetAdditions.h; path = Additions/NSCharacterSetAdditions.h; sourceTree = "<group>"; };
 		891E8466123F0AEF00EC3C0F /* NSCharacterSetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSCharacterSetAdditions.m; path = Additions/NSCharacterSetAdditions.m; sourceTree = "<group>"; };
 		891EF3D0106426CB00CCEA35 /* PFMoveApplicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFMoveApplicationController.m; path = Controllers/PFMoveApplicationController.m; sourceTree = "<group>"; };
 		891EF4091064278200CCEA35 /* PFMoveApplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFMoveApplicationController.h; path = Controllers/PFMoveApplicationController.h; sourceTree = "<group>"; };
 		895BCD3812BD39400082AB5A /* CQActivityWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = CQActivityWindow.xib; path = Resources/CQActivityWindow.xib; sourceTree = "<group>"; };
-		89EB91A90F269BEF0028B3E3 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
+		89EB91A90F269BEF0028B3E3 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Less Common Settings.xcconfig"; path = "Settings/Less Common Settings.xcconfig"; sourceTree = "<group>"; };
 		9200338C13D92515005B69BA /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Languages/nl.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
 		9200338E13D92530005B69BA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/en.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
@@ -1129,6 +1129,7 @@
 				F50B0AA10170C89301A84BDE /* Resources */,
 				1C6A13E608666DDC009EE6D2 /* Configurations */,
 				C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */,
+				C26D0E121F5B0A7700B58261 /* old-mac-binary-frameworks */,
 				089C1671FE841209C02AAC07 /* Frameworks & Libraries */,
 				1CB2C8CC052DDA360094AAA4 /* Products */,
 			);
@@ -1164,7 +1165,6 @@
 			isa = PBXGroup;
 			children = (
 				92A711941A4A5166009E80F0 /* SecurityInterface.framework */,
-				89EB91A90F269BEF0028B3E3 /* Sparkle.framework */,
 				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
 				1C397390082D4ADA00DCF3CF /* IOKit.framework */,
 				F51F91F103796FCD01A35792 /* Security.framework */,
@@ -1172,9 +1172,6 @@
 				F5FB4CE60393C15601000102 /* AddressBook.framework */,
 				1C386FA91032471F00660864 /* TCMPortMapper.framework */,
 				1C3B290706529E720066197C /* ChatCore.framework */,
-				1CF8030C070C893500C9B54C /* libsilc.framework */,
-				1CF8030D070C893500C9B54C /* libsilcclient.framework */,
-				1CF5F8D107D537E50019DC13 /* Growl.framework */,
 				928FB03513EE64C700A0DF4B /* libicucore.dylib */,
 			);
 			name = "Linked Frameworks";
@@ -1558,6 +1555,17 @@
 				C22A35541BC009FA001757D7 /* MASPreferences.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C26D0E121F5B0A7700B58261 /* old-mac-binary-frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				89EB91A90F269BEF0028B3E3 /* Sparkle.framework */,
+				1CF8030C070C893500C9B54C /* libsilc.framework */,
+				1CF8030D070C893500C9B54C /* libsilcclient.framework */,
+				1CF5F8D107D537E50019DC13 /* Growl.framework */,
+			);
+			path = "old-mac-binary-frameworks";
 			sourceTree = "<group>";
 		};
 		CBF684F00820174000F498FB /* Metadata Importer */ = {
@@ -2261,18 +2269,18 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Frameworks/frameworks.tar.gz",
+				"$(SRCROOT)/old-mac-binary-frameworks/frameworks.tar.gz",
 			);
 			name = "Unarchive Frameworks";
 			outputPaths = (
-				"$(SRCROOT)/Frameworks/Sparkle.framework",
-				"$(SRCROOT)/Frameworks/Growl.framework",
-				"$(SRCROOT)/Frameworks/libsilc.framework",
-				"$(SRCROOT)/Frameworks/libsilcclient.framework",
+				"$(SRCROOT)/old-mac-binary-frameworks/Sparkle.framework",
+				"$(SRCROOT)/old-mac-binary-frameworks/Growl.framework",
+				"$(SRCROOT)/old-mac-binary-frameworks/libsilc.framework",
+				"$(SRCROOT)/old-mac-binary-frameworks/libsilcclient.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/Frameworks\"\nrm -rf *.{framework,a}\ntar xzf frameworks.tar.gz\n";
+			shellScript = "cd \"$SRCROOT/old-mac-binary-frameworks\"\nrm -rf *.{framework,a}\ntar xzf frameworks.tar.gz\n";
 			showEnvVarsInLog = 0;
 		};
 		1CB5A8F10BAB7E3700C1BDE2 /* Strip Localizations */ = {
@@ -2922,7 +2930,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREFIX_HEADER = Basic.pch;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/Frameworks\"",
+					"$(inherited)",
 					Shared/Models,
 				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
@@ -3010,7 +3018,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREFIX_HEADER = Basic.pch;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/Frameworks\"",
+					"$(inherited)",
 					Shared/Models,
 				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
