@@ -158,7 +158,7 @@
 			children = (
 			);
 			name = _dependencies;
-			sourceTree = BUILT_PRODUCTS_DIR;
+			sourceTree = "<group>";
 		};
 		C23C10B71F5B2EFF00830C2A /* Settings */ = {
 			isa = PBXGroup;
