@@ -3,4 +3,4 @@
 
 #### MASPreferences
 - https://github.com/shpakovski/MASPreferences
-- Grabbed master branch on 2015-12-19, commit bed90764e1730987d7e721ef1d432e71e4d98c5c
+- Release 1.2.1: https://github.com/shpakovski/MASPreferences/releases/tag/1.2.1
