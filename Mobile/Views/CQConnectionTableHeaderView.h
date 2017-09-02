@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL showingDeleteConfirmation;
 @property (nonatomic) BOOL showsReorderControl;
 
-@property (atomic, copy) void (^selectedConnectionHeaderView)();
+@property (atomic, copy) void (^selectedConnectionHeaderView)(void);
 @end
 
 NS_ASSUME_NONNULL_END

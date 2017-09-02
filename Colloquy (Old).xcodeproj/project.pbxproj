@@ -177,13 +177,13 @@
 		1CF8030F070C893500C9B54C /* libsilcclient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; };
 		1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5509D1C81F5B6DB20037CE4E /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5509D1C71F5B6DB20037CE4E /* libxml2.tbd */; };
+		5509D1CA1F5B6EC60037CE4E /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5509D1C71F5B6DB20037CE4E /* libxml2.tbd */; };
+		5509D1CD1F5B6EFB0037CE4E /* libxslt.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5509D1CB1F5B6ED40037CE4E /* libxslt.tbd */; };
+		5509D1CF1F5B6F160037CE4E /* libexslt.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5509D1CE1F5B6F160037CE4E /* libexslt.tbd */; };
 		555A6C141D25B1F800E69E04 /* OS X Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 555A6C131D25B1F800E69E04 /* OS X Images.xcassets */; };
 		557D715F1E4915270041D61B /* MaddsPathExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 557D715E1E4915270041D61B /* MaddsPathExtensions.m */; };
 		558EF2371AEC356800619BDE /* Room Member Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 558EF2361AEC356800619BDE /* Room Member Icons.xcassets */; };
-		55B0EF3618CE3DE10000E4CA /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B0EF3518CE3DE10000E4CA /* libxml2.dylib */; };
-		55B0EF3718CE3E040000E4CA /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B0EF3518CE3DE10000E4CA /* libxml2.dylib */; };
-		55B0EF3A18CE3E250000E4CA /* libexslt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B0EF3818CE3E250000E4CA /* libexslt.dylib */; };
-		55B0EF3B18CE3E250000E4CA /* libxslt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 55B0EF3918CE3E250000E4CA /* libxslt.dylib */; };
 		55C8A2D9180735D100A7BB42 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55C8A2D7180735D100A7BB42 /* InfoPlist.strings */; };
 		55C8A2E41807361900A7BB42 /* JVChatWindowControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C59A91F09FDEBA3000682B8 /* JVChatWindowControllerTests.m */; };
 		55C8A2E51807391600A7BB42 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
@@ -609,7 +609,7 @@
 		1CDEE25605823C13000B9075 /* JVFileTransferPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFileTransferPreferencesViewController.m; sourceTree = "<group>"; };
 		1CDEE4770583DC58000B9075 /* JVBuddyInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVBuddyInspector.h; sourceTree = "<group>"; };
 		1CDEE4780583DC58000B9075 /* JVBuddyInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVBuddyInspector.m; sourceTree = "<group>"; };
-		1CDEE48C0583E268000B9075 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
+		1CDEE48C0583E268000B9075 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Languages/en.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
 		1CE2BC1D042F4AD300000102 /* JVChatWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVChatWindowController.h; sourceTree = "<group>"; };
 		1CE2BC1E042F4AD300000102 /* JVChatWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVChatWindowController.m; sourceTree = "<group>"; };
 		1CE2BC49042F53AD00000102 /* JVChatRoomPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVChatRoomPanel.h; sourceTree = "<group>"; };
@@ -624,12 +624,15 @@
 		1CEE3F03057AEC0200AD6DE2 /* JVBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVBuddy.h; sourceTree = "<group>"; };
 		1CEE3F04057AEC0200AD6DE2 /* JVBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVBuddy.m; sourceTree = "<group>"; };
 		1CEF8F7B0A3AB7BB0054298A /* JavaScript Support.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "JavaScript Support.xcodeproj"; sourceTree = "<group>"; };
-		1CF5F8D107D537E50019DC13 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Growl.framework; path = Frameworks/Growl.framework; sourceTree = SOURCE_ROOT; };
+		1CF5F8D107D537E50019DC13 /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Growl.framework; path = "old-mac-binary-frameworks/Growl.framework"; sourceTree = SOURCE_ROOT; };
 		1CF6511406EA22480073DEA8 /* Colloquy.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colloquy.pch; sourceTree = SOURCE_ROOT; };
 		1CF79CBC07AC77E600696918 /* JVChatTranscript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVChatTranscript.h; sourceTree = "<group>"; };
 		1CF79CBD07AC77E600696918 /* JVChatTranscript.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVChatTranscript.m; sourceTree = "<group>"; };
-		1CF8030C070C893500C9B54C /* libsilc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilc.framework; path = Frameworks/libsilc.framework; sourceTree = SOURCE_ROOT; };
-		1CF8030D070C893500C9B54C /* libsilcclient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilcclient.framework; path = Frameworks/libsilcclient.framework; sourceTree = SOURCE_ROOT; };
+		1CF8030C070C893500C9B54C /* libsilc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilc.framework; path = "old-mac-binary-frameworks/libsilc.framework"; sourceTree = SOURCE_ROOT; };
+		1CF8030D070C893500C9B54C /* libsilcclient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilcclient.framework; path = "old-mac-binary-frameworks/libsilcclient.framework"; sourceTree = SOURCE_ROOT; };
+		5509D1C71F5B6DB20037CE4E /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		5509D1CB1F5B6ED40037CE4E /* libxslt.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxslt.tbd; path = usr/lib/libxslt.tbd; sourceTree = SDKROOT; };
+		5509D1CE1F5B6F160037CE4E /* libexslt.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libexslt.tbd; path = usr/lib/libexslt.tbd; sourceTree = SDKROOT; };
 		5530388F171722A200652D45 /* GetMetadataForFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetMetadataForFile.h; sourceTree = "<group>"; };
 		555A6C131D25B1F800E69E04 /* OS X Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "OS X Images.xcassets"; sourceTree = "<group>"; };
 		557D715D1E4915270041D61B /* MaddsPathExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MaddsPathExtensions.h; sourceTree = "<group>"; };
@@ -647,9 +650,6 @@
 		55AD12431C597266009F258C /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = Languages/es.lproj/TSCustomBan.strings; sourceTree = "<group>"; };
 		55AD12441C59726D009F258C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "Languages/zh-Hant.lproj/TSCustomBan.strings"; sourceTree = "<group>"; };
 		55B0EF2D18CE34850000E4CA /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AppIcon.xcassets; sourceTree = "<group>"; };
-		55B0EF3518CE3DE10000E4CA /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
-		55B0EF3818CE3E250000E4CA /* libexslt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libexslt.dylib; path = usr/lib/libexslt.dylib; sourceTree = SDKROOT; };
-		55B0EF3918CE3E250000E4CA /* libxslt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxslt.dylib; path = usr/lib/libxslt.dylib; sourceTree = SDKROOT; };
 		55B748191AD2E957001459F7 /* RunOnMainThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RunOnMainThread.h; sourceTree = "<group>"; };
 		55C8A2D0180735D100A7BB42 /* Colloquy Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Colloquy Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		55C8A2D6180735D100A7BB42 /* Colloquy Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Colloquy Tests-Info.plist"; sourceTree = "<group>"; };
@@ -660,7 +660,7 @@
 		891EF3D0106426CB00CCEA35 /* PFMoveApplicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFMoveApplicationController.m; sourceTree = "<group>"; };
 		891EF4091064278200CCEA35 /* PFMoveApplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFMoveApplicationController.h; sourceTree = "<group>"; };
 		895BCD3812BD39400082AB5A /* CQActivityWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = CQActivityWindow.xib; path = Resources/CQActivityWindow.xib; sourceTree = "<group>"; };
-		89EB91A90F269BEF0028B3E3 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
+		89EB91A90F269BEF0028B3E3 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = "old-mac-binary-frameworks/Sparkle.framework"; sourceTree = "<group>"; };
 		89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Less Common Settings.xcconfig"; sourceTree = "<group>"; };
 		9200338C13D92515005B69BA /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
 		9200338E13D92530005B69BA /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
@@ -905,12 +905,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5509D1CF1F5B6F160037CE4E /* libexslt.tbd in Frameworks */,
+				5509D1CD1F5B6EFB0037CE4E /* libxslt.tbd in Frameworks */,
 				92A711951A4A5166009E80F0 /* SecurityInterface.framework in Frameworks */,
-				55B0EF3A18CE3E250000E4CA /* libexslt.dylib in Frameworks */,
-				55B0EF3B18CE3E250000E4CA /* libxslt.dylib in Frameworks */,
-				55B0EF3618CE3DE10000E4CA /* libxml2.dylib in Frameworks */,
 				1CB2CD79052DDC560094AAA4 /* Cocoa.framework in Frameworks */,
 				1CB2CD7B052DDC560094AAA4 /* Security.framework in Frameworks */,
+				5509D1CA1F5B6EC60037CE4E /* libxml2.tbd in Frameworks */,
 				1CB2CD7C052DDC560094AAA4 /* WebKit.framework in Frameworks */,
 				1CD0201F05758F26000F93B4 /* AddressBook.framework in Frameworks */,
 				C22A35561BC00BB7001757D7 /* MASPreferences.framework in Frameworks */,
@@ -936,7 +936,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				55B0EF3718CE3E040000E4CA /* libxml2.dylib in Frameworks */,
+				5509D1C81F5B6DB20037CE4E /* libxml2.tbd in Frameworks */,
 				CBF6857708201C4C00F498FB /* Foundation.framework in Frameworks */,
 				1CBAB8B00884BF49005D1CDD /* CoreServices.framework in Frameworks */,
 			);
@@ -964,6 +964,9 @@
 		089C1671FE841209C02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5509D1CE1F5B6F160037CE4E /* libexslt.tbd */,
+				5509D1CB1F5B6ED40037CE4E /* libxslt.tbd */,
+				5509D1C71F5B6DB20037CE4E /* libxml2.tbd */,
 				C2BFB18A1BBFFAFA004FAE14 /* MASPreferences.xcodeproj */,
 				92A711941A4A5166009E80F0 /* SecurityInterface.framework */,
 				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
@@ -977,9 +980,6 @@
 				1CF8030C070C893500C9B54C /* libsilc.framework */,
 				1CF8030D070C893500C9B54C /* libsilcclient.framework */,
 				1CF5F8D107D537E50019DC13 /* Growl.framework */,
-				55B0EF3818CE3E250000E4CA /* libexslt.dylib */,
-				55B0EF3918CE3E250000E4CA /* libxslt.dylib */,
-				55B0EF3518CE3DE10000E4CA /* libxml2.dylib */,
 				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -1867,18 +1867,18 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Frameworks/frameworks.tar.gz",
+				"$(SRCROOT)/old-mac-binary-frameworks/frameworks.tar.gz",
 			);
 			name = "Unarchive Frameworks";
 			outputPaths = (
-				"$(SRCROOT)/Frameworks/Sparkle.framework",
-				"$(SRCROOT)/Frameworks/Growl.framework",
-				"$(SRCROOT)/Frameworks/libsilc.framework",
-				"$(SRCROOT)/Frameworks/libsilcclient.framework",
+				"$(SRCROOT)/old-mac-binary-frameworks/Sparkle.framework",
+				"$(SRCROOT)/old-mac-binary-frameworks/Growl.framework",
+				"$(SRCROOT)/old-mac-binary-frameworks/libsilc.framework",
+				"$(SRCROOT)/old-mac-binary-frameworks/libsilcclient.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/Frameworks\"\nrm -rf *.{framework,a}\ntar xzf frameworks.tar.gz\n";
+			shellScript = "cd \"$SRCROOT/old-mac-binary-frameworks\"\nrm -rf *.{framework,a}\ntar xzf frameworks.tar.gz\n";
 			showEnvVarsInLog = 0;
 		};
 		9295C9D116784584009F9014 /* ShellScript */ = {
@@ -2258,7 +2258,7 @@
 		1CDEE48B0583E268000B9075 /* JVBuddyInspector.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				1CDEE48C0583E268000B9075 /* English */,
+				1CDEE48C0583E268000B9075 /* en */,
 				1CD4B721078209BD0003620F /* Dutch */,
 				1CD4B736078209E00003620F /* German */,
 				A18BC9DE08FF569A0005DC2D /* Spanish */,
@@ -2534,7 +2534,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREFIX_HEADER = Basic.pch;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/Frameworks\"",
+					"$(inherited)",
 					Shared/Models,
 				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
@@ -2627,7 +2627,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREFIX_HEADER = Basic.pch;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/Frameworks\"",
+					"$(inherited)",
 					Shared/Models,
 				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";

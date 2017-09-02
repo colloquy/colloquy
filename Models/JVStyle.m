@@ -55,7 +55,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	for( NSString *path in paths ) {
 		for( NSString *file in [fm contentsOfDirectoryAtPath:path error:nil] ) {
 			NSString *fullPath = [path stringByAppendingPathComponent:file];
-			NSDictionary *attributes = [fm attributesOfItemAtPath:fullPath error:NO];
+			NSDictionary *attributes = [fm attributesOfItemAtPath:fullPath error:NULL];
 			if( /* [fm isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[file pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [attributes[NSFileHFSTypeCode] unsignedIntValue] == 'coSt' && [attributes[NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
 				NSBundle *bundle = nil;
 				JVStyle *style = nil;
