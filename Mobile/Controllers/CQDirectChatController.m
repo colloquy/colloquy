@@ -1986,7 +1986,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) _showActivityViewControllerWithItems:(NSArray <UIActivity *> *) items activities:(NSArray <UIActivity *> *) activities {
+- (void) _showActivityViewControllerWithItems:(NSArray *) items activities:(NSArray <UIActivity *> *) activities {
 #if !SYSTEM(TV)
 	_showingActivityViewController = YES;
 
