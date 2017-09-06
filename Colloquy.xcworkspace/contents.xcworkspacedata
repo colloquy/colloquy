@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Cartfile">
+   </FileRef>
+   <FileRef
+      location = "group:Cartfile.resolved">
+   </FileRef>
+   <FileRef
       location = "container:Colloquy (iOS).xcodeproj">
    </FileRef>
    <FileRef
@@ -13,4 +19,19 @@
    <FileRef
       location = "group:chat-core/chat-core.xcodeproj">
    </FileRef>
+   <Group
+      location = "group:Carthage"
+      name = "Carthage">
+      <Group
+         location = "group:Checkouts"
+         name = "Checkouts">
+         <Group
+            location = "group:CocoaAsyncSocket"
+            name = "CocoaAsyncSocket">
+            <FileRef
+               location = "group:CocoaAsyncSocket.xcodeproj">
+            </FileRef>
+         </Group>
+      </Group>
+   </Group>
 </Workspace>
