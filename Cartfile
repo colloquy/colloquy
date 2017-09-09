@@ -27,3 +27,6 @@
 
 # CocoaAsyncSocket
 github "colloquy/CocoaAsyncSocket" "colloquy-patches"
+
+
+github "mugginsoft/TCMPortMapper" "master"

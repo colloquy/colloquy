@@ -29,9 +29,6 @@
       location = "group:Chat Core.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Frameworks/PortMapper/Port Map.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:Frameworks/MASPreferences/MASPreferences.xcodeproj">
    </FileRef>
    <FileRef
@@ -49,6 +46,13 @@
       <Group
          location = "group:Checkouts"
          name = "Checkouts">
+         <Group
+            location = "container:Carthage/Checkouts/TCMPortMapper"
+            name = "TCMPortMapper">
+            <FileRef
+               location = "group:Port Map.xcodeproj">
+            </FileRef>
+         </Group>
          <Group
             location = "group:CocoaAsyncSocket"
             name = "CocoaAsyncSocket">

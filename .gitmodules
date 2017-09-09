@@ -1,3 +1,6 @@
 [submodule "Carthage/Checkouts/CocoaAsyncSocket"]
 	path = Carthage/Checkouts/CocoaAsyncSocket
 	url = ssh://git@github.com/colloquy/CocoaAsyncSocket.git
+[submodule "Carthage/Checkouts/TCMPortMapper"]
+	path = Carthage/Checkouts/TCMPortMapper
+	url = ssh://git@github.com/mugginsoft/TCMPortMapper.git
