@@ -55,13 +55,15 @@
 		1C4FD36507C6BC25000EA451 /* JVJavaScriptPluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVJavaScriptPluginLoader.h; sourceTree = "<group>"; };
 		1C4FD36607C6BC25000EA451 /* JVJavaScriptPluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVJavaScriptPluginLoader.m; sourceTree = "<group>"; };
 		1C8748F30B2A801800286F24 /* plugin.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = plugin.html; sourceTree = "<group>"; };
-		1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
 		1CEF8E6B0A3AAF530054298A /* JVJavaScriptChatPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVJavaScriptChatPlugin.m; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* JavaScript Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "JavaScript Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		92823D0416900FA8000EC36E /* Colloquy (Old).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Colloquy (Old).xcodeproj"; path = "../../Colloquy (Old).xcodeproj"; sourceTree = "<group>"; };
 		9295C8501675E158009F9014 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		9295C95C16782FF1009F9014 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChatCore.framework; path = ../../build/Development/ChatCore.framework; sourceTree = "<group>"; };
+		C29E3BED1F64A31200C18D21 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
+		C29E3BEE1F64A31200C18D21 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Less Common Settings.xcconfig"; sourceTree = "<group>"; };
+		C29E3BEF1F64A31200C18D21 /* target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = target.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,7 +88,7 @@
 				1C415F6A0B35126500239EB3 /* Template.js */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				089C167CFE841241C02AAC07 /* Resources */,
-				1C9AE940086A59CF008ED7AD /* Configurations */,
+				1C9AE940086A59CF008ED7AD /* Settings */,
 				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
 			);
@@ -154,13 +156,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1C9AE940086A59CF008ED7AD /* Configurations */ = {
+		1C9AE940086A59CF008ED7AD /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */,
+				C29E3BED1F64A31200C18D21 /* Base.xcconfig */,
+				C29E3BEE1F64A31200C18D21 /* Less Common Settings.xcconfig */,
+				C29E3BEF1F64A31200C18D21 /* target.xcconfig */,
 			);
 			indentWidth = 4;
-			name = Configurations;
+			name = Settings;
+			path = ../../Settings;
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 1;
@@ -290,6 +295,7 @@
 /* Begin XCBuildConfiguration section */
 		1C7F306C0855489300D41FB0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C29E3BEF1F64A31200C18D21 /* target.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -316,6 +322,7 @@
 		};
 		1C7F306E0855489300D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C29E3BEF1F64A31200C18D21 /* target.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -342,7 +349,7 @@
 		};
 		1C7F30700855489300D41FB0 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
+			baseConfigurationReference = C29E3BED1F64A31200C18D21 /* Base.xcconfig */;
 			buildSettings = {
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -362,7 +369,7 @@
 		};
 		1C7F30720855489300D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
+			baseConfigurationReference = C29E3BED1F64A31200C18D21 /* Base.xcconfig */;
 			buildSettings = {
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;

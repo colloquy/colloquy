@@ -668,6 +668,8 @@
 		B6BFA5421BBDA3B6000C3BBC /* UIWindowAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIWindowAdditions.m; path = Mobile/Additions/UIWindowAdditions.m; sourceTree = "<group>"; };
 		B6D085B41B8D6E8400734C96 /* CQActivities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQActivities.h; sourceTree = "<group>"; };
 		B6D085B51B8D6E8400734C96 /* CQActivities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQActivities.m; sourceTree = "<group>"; };
+		C21297001F64661C00555EE3 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Less Common Settings.xcconfig"; sourceTree = "<group>"; };
+		C22181CE1F648ED200F2E814 /* target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = target.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -738,6 +740,8 @@
 			isa = PBXGroup;
 			children = (
 				1C15B12913107243006FA16B /* Base.xcconfig */,
+				C21297001F64661C00555EE3 /* Less Common Settings.xcconfig */,
+				C22181CE1F648ED200F2E814 /* target.xcconfig */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1766,7 +1770,6 @@
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Jane Lee (N94ANP6XYA)";
-				LLVM_VECTORIZE_LOOPS = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1774,23 +1777,12 @@
 		};
 		1C7F63A00FB3C50600E5FDD3 /* Distribution */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
+			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_MODULE_DEBUGGING = YES;
-				CLANG_MODULES_AUTOLINK = YES;
-				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
-				COPY_PHASE_STRIP = NO;
-				ENABLE_BITCODE = NO;
-				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_ON_DEMAND_RESOURCES = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/Shared/Frameworks",
-				);
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
@@ -1810,9 +1802,6 @@
 				);
 				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)";
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LLVM_LTO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile;
 				PRODUCT_NAME = Colloquy;
 			};
@@ -1820,23 +1809,12 @@
 		};
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
+			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_MODULE_DEBUGGING = YES;
-				CLANG_MODULES_AUTOLINK = YES;
-				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
-				COPY_PHASE_STRIP = NO;
-				ENABLE_BITCODE = NO;
 				ENABLE_ON_DEMAND_RESOURCES = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/Shared/Frameworks",
-				);
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
@@ -1855,8 +1833,6 @@
 				);
 				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)";
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile;
 				PRODUCT_NAME = Colloquy;
 				PROVISIONING_PROFILE = "";
@@ -1865,22 +1841,12 @@
 		};
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
+			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_MODULE_DEBUGGING = YES;
-				CLANG_MODULES_AUTOLINK = YES;
-				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
-				COPY_PHASE_STRIP = NO;
-				ENABLE_BITCODE = NO;
 				ENABLE_ON_DEMAND_RESOURCES = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/Shared/Frameworks",
-				);
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
@@ -1900,9 +1866,6 @@
 				);
 				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)";
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LLVM_LTO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile;
 				PRODUCT_NAME = Colloquy;
 				PROVISIONING_PROFILE = "";
@@ -1911,7 +1874,7 @@
 		};
 		B6831CDF1BE44EC000D3AC1D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
+			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
@@ -1971,7 +1934,7 @@
 		};
 		B6831CE01BE44EC000D3AC1D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
+			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
@@ -2031,7 +1994,7 @@
 		};
 		B6831CE11BE44EC000D3AC1D /* Distribution */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
+			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
@@ -2095,15 +2058,9 @@
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				ENABLE_TESTABILITY = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = "";
-				LLVM_VECTORIZE_LOOPS = YES;
-				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = NO;
 			};
 			name = Debug;
 		};
@@ -2112,11 +2069,9 @@
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				LLVM_VECTORIZE_LOOPS = YES;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = NO;
 			};
 			name = Release;
 		};

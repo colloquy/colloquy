@@ -6,7 +6,7 @@
 #import "JVChatMessage.h"
 #import "JVDirectChatPanel.h"
 #import "JVChatRoomPanel.h"
-#import "NSRegularExpressionAdditions.h"
+#import <ChatCore/NSRegularExpressionAdditions.h>
 
 @implementation JVTranscriptCriterionController
 + (id) controller {

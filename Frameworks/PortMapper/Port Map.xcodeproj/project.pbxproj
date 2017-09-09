@@ -32,12 +32,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1C386E321032434B00660864 /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Common Settings.xcconfig"; sourceTree = "<group>"; };
 		1C38711110330E2700660864 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		3180119F0D4DEC8400BE3B28 /* TCMPortMapper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TCMPortMapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3180154D0D4E08D900BE3B28 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		9245ABAD1A6C7B3B005D931C /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		C29E3C011F64A73B00C18D21 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
+		C29E3C021F64A73B00C18D21 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Less Common Settings.xcconfig"; sourceTree = "<group>"; };
+		C29E3C031F64A73B00C18D21 /* target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = target.xcconfig; sourceTree = "<group>"; };
 		F2301B010D685C1B00728699 /* bsdqueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bsdqueue.h; sourceTree = "<group>"; };
 		F2301B030D685C1B00728699 /* declspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = declspec.h; sourceTree = "<group>"; };
 		F2301B040D685C1B00728699 /* igd_desc_parse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = igd_desc_parse.c; sourceTree = "<group>"; };
@@ -113,7 +115,9 @@
 		1C386E311032434B00660864 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				1C386E321032434B00660864 /* Common Settings.xcconfig */,
+				C29E3C011F64A73B00C18D21 /* Base.xcconfig */,
+				C29E3C021F64A73B00C18D21 /* Less Common Settings.xcconfig */,
+				C29E3C031F64A73B00C18D21 /* target.xcconfig */,
 			);
 			name = Settings;
 			path = ../../Settings;
@@ -313,6 +317,7 @@
 /* Begin XCBuildConfiguration section */
 		318011A10D4DEC8500BE3B28 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C29E3C031F64A73B00C18D21 /* target.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -334,6 +339,7 @@
 		};
 		318011A20D4DEC8500BE3B28 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C29E3C031F64A73B00C18D21 /* target.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -355,7 +361,7 @@
 		};
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C386E321032434B00660864 /* Common Settings.xcconfig */;
+			baseConfigurationReference = C29E3C011F64A73B00C18D21 /* Base.xcconfig */;
 			buildSettings = {
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -389,7 +395,7 @@
 		};
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C386E321032434B00660864 /* Common Settings.xcconfig */;
+			baseConfigurationReference = C29E3C011F64A73B00C18D21 /* Base.xcconfig */;
 			buildSettings = {
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;

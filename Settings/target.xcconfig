@@ -1,0 +1,3 @@
+LD_RUNPATH_SEARCH_PATHS = $(LD_RUNPATH_SEARCH_PATHS_$(WRAPPER_EXTENSION))
+LD_RUNPATH_SEARCH_PATHS_app = $(inherited) @executable_path/../Frameworks
+LD_RUNPATH_SEARCH_PATHS_framework = $(inherited) @executable_path/Frameworks @loader_path/Frameworks

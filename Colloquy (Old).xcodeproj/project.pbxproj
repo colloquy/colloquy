@@ -530,7 +530,6 @@
 		1C66913807BFA76D008400F7 /* JVEmoticonSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVEmoticonSet.m; path = Models/JVEmoticonSet.m; sourceTree = "<group>"; };
 		1C6A112806BC0C9E00A66340 /* NSAttributedStringMoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSAttributedStringMoreAdditions.h; path = Additions/NSAttributedStringMoreAdditions.h; sourceTree = "<group>"; };
 		1C6A112906BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSAttributedStringMoreAdditions.m; path = Additions/NSAttributedStringMoreAdditions.m; sourceTree = "<group>"; };
-		1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
 		1C6A40C7083FF6C600572AB6 /* JVInterfacePreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVInterfacePreferencesViewController.h; sourceTree = "<group>"; };
 		1C6A40C8083FF6C600572AB6 /* JVInterfacePreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVInterfacePreferencesViewController.m; sourceTree = "<group>"; };
 		1C6A429508400BEA00572AB6 /* window.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = window.png; path = Resources/window.png; sourceTree = "<group>"; };
@@ -746,7 +745,7 @@
 		891EF4091064278200CCEA35 /* PFMoveApplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFMoveApplicationController.h; path = Controllers/PFMoveApplicationController.h; sourceTree = "<group>"; };
 		895BCD3812BD39400082AB5A /* CQActivityWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = CQActivityWindow.xib; path = Resources/CQActivityWindow.xib; sourceTree = "<group>"; };
 		89EB91A90F269BEF0028B3E3 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
-		89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Less Common Settings.xcconfig"; path = "Settings/Less Common Settings.xcconfig"; sourceTree = "<group>"; };
+		89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Less Common Settings.xcconfig"; sourceTree = "<group>"; };
 		9200338C13D92515005B69BA /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Languages/nl.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
 		9200338E13D92530005B69BA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/en.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
 		9200339013D92543005B69BA /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Languages/fr.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
@@ -885,6 +884,7 @@
 		B6310B541C6F0A300033E88E /* connecting.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = connecting.pdf; path = Resources/connecting.pdf; sourceTree = "<group>"; };
 		B6310B551C6F0A300033E88E /* connectingSelected.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = connectingSelected.pdf; path = Resources/connectingSelected.pdf; sourceTree = "<group>"; };
 		B6310B5A1C6F0ADE0033E88E /* connectedSelected.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = connectedSelected.pdf; path = Resources/connectedSelected.pdf; sourceTree = "<group>"; };
+		C21296FF1F6465FC00555EE3 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
 		C23298971C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSWindow+CQMCoordinateSpaceConversion.h"; path = "Additions/NSWindow+CQMCoordinateSpaceConversion.h"; sourceTree = "<group>"; };
 		C23298981C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSWindow+CQMCoordinateSpaceConversion.m"; path = "Additions/NSWindow+CQMCoordinateSpaceConversion.m"; sourceTree = "<group>"; };
 		C236F6561BDCE81200E64469 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = Importer/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -960,6 +960,7 @@
 		C29B1ADD1C10D3CC005CA86A /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVTranscriptPreferencesViewController.strings"; sourceTree = "<group>"; };
 		C29B1ADF1C10D3CE005CA86A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
 		C29B1AE11C10D3D0005CA86A /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVTranscriptPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C29E3BFC1F64A3CB00C18D21 /* target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = target.xcconfig; sourceTree = "<group>"; };
 		C2B9D0EB1C258BA200C2B4C4 /* CQMPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQMPreferencesWindowController.h; sourceTree = "<group>"; };
 		C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQMPreferencesWindowController.m; sourceTree = "<group>"; };
 		C2EB205F1C1EA95F00CB88B2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
@@ -1088,7 +1089,7 @@
 				1C59A92909FDEBC6000682B8 /* Unit Tests */,
 				F5185C82018626F701EE70DE /* Interfaces */,
 				F50B0AA10170C89301A84BDE /* Resources */,
-				1C6A13E608666DDC009EE6D2 /* Configurations */,
+				1C6A13E608666DDC009EE6D2 /* Settings */,
 				C26D0E121F5B0A7700B58261 /* old-mac-binary-frameworks */,
 				089C1671FE841209C02AAC07 /* Frameworks & Libraries */,
 				1CB2C8CC052DDA360094AAA4 /* Products */,
@@ -1205,14 +1206,15 @@
 			tabWidth = 4;
 			usesTabs = 1;
 		};
-		1C6A13E608666DDC009EE6D2 /* Configurations */ = {
+		1C6A13E608666DDC009EE6D2 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */,
+				C21296FF1F6465FC00555EE3 /* Base.xcconfig */,
 				89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */,
+				C29E3BFC1F64A3CB00C18D21 /* target.xcconfig */,
 			);
 			indentWidth = 4;
-			name = Configurations;
+			path = Settings;
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 1;
@@ -2828,6 +2830,7 @@
 /* Begin XCBuildConfiguration section */
 		1C041A660854E97700A5A5BA /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				CLANG_ENABLE_OBJC_ARC = NO;
@@ -2846,6 +2849,7 @@
 		};
 		1C041A6A0854E97700A5A5BA /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2876,6 +2880,7 @@
 		};
 		1C041A6E0854E97700A5A5BA /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2891,7 +2896,7 @@
 		};
 		1C041A720854E97700A5A5BA /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
+			baseConfigurationReference = C21296FF1F6465FC00555EE3 /* Base.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -2916,6 +2921,7 @@
 		};
 		1C041DC90855377900A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				CLANG_ENABLE_OBJC_ARC = NO;
@@ -2934,6 +2940,7 @@
 		};
 		1C041DCA0855377900A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2969,6 +2976,7 @@
 		};
 		1C041DCB0855377900A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2984,7 +2992,7 @@
 		};
 		1C041DCC0855377900A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
+			baseConfigurationReference = C21296FF1F6465FC00555EE3 /* Base.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -3002,6 +3010,7 @@
 		};
 		9295C92616782ECB009F9014 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -3009,6 +3018,7 @@
 		};
 		9295C92716782ECB009F9014 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
