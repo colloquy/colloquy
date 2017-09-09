@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0720"
+   LastUpgradeVersion = "0830"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1CB2CCF5052DDC560094AAA4"
-               BuildableName = "Colloquy.app"
-               BlueprintName = "Colloquy (Application)"
+               BlueprintIdentifier = "1C51B4BB052DE14B00BB459B"
+               BuildableName = "Standard Commands.plugin"
+               BlueprintName = "Standard Commands (Plug-In)"
                ReferencedContainer = "container:Colloquy (Old).xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +32,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1CB2CCF5052DDC560094AAA4"
-            BuildableName = "Colloquy.app"
-            BlueprintName = "Colloquy (Application)"
+            BlueprintIdentifier = "1C51B4BB052DE14B00BB459B"
+            BuildableName = "Standard Commands.plugin"
+            BlueprintName = "Standard Commands (Plug-In)"
             ReferencedContainer = "container:Colloquy (Old).xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -51,22 +51,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1CB2CCF5052DDC560094AAA4"
-            BuildableName = "Colloquy.app"
-            BlueprintName = "Colloquy (Application)"
+            BlueprintIdentifier = "1C51B4BB052DE14B00BB459B"
+            BuildableName = "Standard Commands.plugin"
+            BlueprintName = "Standard Commands (Plug-In)"
             ReferencedContainer = "container:Colloquy (Old).xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <AdditionalOptions>
-         <AdditionalOption
-            key = "NSZombieEnabled"
-            value = "YES"
-            isEnabled = "YES">
-         </AdditionalOption>
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
@@ -75,16 +69,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1CB2CCF5052DDC560094AAA4"
-            BuildableName = "Colloquy.app"
-            BlueprintName = "Colloquy (Application)"
+            BlueprintIdentifier = "1C51B4BB052DE14B00BB459B"
+            BuildableName = "Standard Commands.plugin"
+            BlueprintName = "Standard Commands (Plug-In)"
             ReferencedContainer = "container:Colloquy (Old).xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

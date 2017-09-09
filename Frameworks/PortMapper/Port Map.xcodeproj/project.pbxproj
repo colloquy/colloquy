@@ -311,7 +311,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		318011A10D4DEC8500BE3B28 /* Development */ = {
+		318011A10D4DEC8500BE3B28 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -330,7 +330,7 @@
 				PRODUCT_NAME = TCMPortMapper;
 				USER_HEADER_SEARCH_PATHS = framework;
 			};
-			name = Development;
+			name = Debug;
 		};
 		318011A20D4DEC8500BE3B28 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -353,7 +353,7 @@
 			};
 			name = Release;
 		};
-		C01FCF4F08A954540054247B /* Development */ = {
+		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C386E321032434B00660864 /* Common Settings.xcconfig */;
 			buildSettings = {
@@ -385,7 +385,7 @@
 					"-Wbad-function-cast",
 				);
 			};
-			name = Development;
+			name = Debug;
 		};
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -428,7 +428,7 @@
 		318011A30D4DEC8500BE3B28 /* Build configuration list for PBXNativeTarget "TCMPortMapper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				318011A10D4DEC8500BE3B28 /* Development */,
+				318011A10D4DEC8500BE3B28 /* Debug */,
 				318011A20D4DEC8500BE3B28 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -437,7 +437,7 @@
 		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Port Map" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C01FCF4F08A954540054247B /* Development */,
+				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;

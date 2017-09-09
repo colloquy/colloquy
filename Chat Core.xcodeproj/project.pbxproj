@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 48;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -400,23 +400,6 @@
 		DDF64E1A0BD2CABE009E8FF6 /* MVXMPPChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF64E180BD2CABE009E8FF6 /* MVXMPPChatUser.m */; settings = {COMPILER_FLAGS = "-Wno-implicit-retain-self -Wno-pointer-arith"; }; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		1C386E801032464A00660864 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1C386E7C1032464A00660864 /* Port Map.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3180119F0D4DEC8400BE3B28;
-			remoteInfo = TCMPortMapper;
-		};
-		1C386E861032466B00660864 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1C386E7C1032464A00660864 /* Port Map.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 3180119E0D4DEC8400BE3B28;
-			remoteInfo = TCMPortMapper;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -666,7 +649,6 @@
 		1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatPluginManager.h; path = "Chat Core/MVChatPluginManager.h"; sourceTree = "<group>"; };
 		1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatPluginManager.m; path = "Chat Core/MVChatPluginManager.m"; sourceTree = "<group>"; };
 		1C3560050B4CCE95008A93FA /* MVUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVUtilities.h; path = Additions/MVUtilities.h; sourceTree = "<group>"; };
-		1C386E7C1032464A00660864 /* Port Map.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Port Map.xcodeproj"; path = "Frameworks/PortMapper/Port Map.xcodeproj"; sourceTree = "<group>"; };
 		1C386E8D103246B500660864 /* TCMPortMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TCMPortMapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C3D55B905A4CBBE00F25F5E /* NSNumberAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSNumberAdditions.h; path = Additions/NSNumberAdditions.h; sourceTree = "<group>"; };
 		1C3D55BA05A4CBBE00F25F5E /* NSNumberAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSNumberAdditions.m; path = Additions/NSNumberAdditions.m; sourceTree = "<group>"; };
@@ -801,7 +783,6 @@
 			children = (
 				196B54A61B28EB4F00EAECA3 /* libresolv.dylib */,
 				19A7AE541B28EB200022172F /* libresolv.tbd */,
-				1C386E7C1032464A00660864 /* Port Map.xcodeproj */,
 				F50B0A9F0170C89301A84BDE /* Sources & Headers */,
 				F50B0AA00170C89301A84BDE /* Other Sources & Additions */,
 				F50B0AA10170C89301A84BDE /* Resources */,
@@ -1582,14 +1563,6 @@
 			path = libidn;
 			sourceTree = "<group>";
 		};
-		1C386E7D1032464A00660864 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1C386E811032464A00660864 /* TCMPortMapper.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		1C5CBF2D06FF92C90006C5B1 /* IRC Support */ = {
 			isa = PBXGroup;
 			children = (
@@ -2033,7 +2006,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				1C386E871032466B00660864 /* PBXTargetDependency */,
 			);
 			name = "Chat Core (Framework)";
 			productInstallPath = "@executable_path/../Frameworks";
@@ -2067,9 +2039,10 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "Colloquy Project";
 			};
 			buildConfigurationList = 1C041DDE08553AD200A5A5BA /* Build configuration list for PBXProject "Chat Core" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -2093,12 +2066,6 @@
 			mainGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
 			productRefGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 1C386E7D1032464A00660864 /* Products */;
-					ProjectRef = 1C386E7C1032464A00660864 /* Port Map.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				1C51B46E052DE0CB00BB459B /* Chat Core (Framework) */,
@@ -2106,16 +2073,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		1C386E811032464A00660864 /* TCMPortMapper.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = TCMPortMapper.framework;
-			remoteRef = 1C386E801032464A00660864 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1C51B47A052DE0CB00BB459B /* Resources */ = {
@@ -2347,16 +2304,8 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		1C386E871032466B00660864 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = TCMPortMapper;
-			targetProxy = 1C386E861032466B00660864 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
-		1C041DDC08553AD200A5A5BA /* Development */ = {
+		1C041DDC08553AD200A5A5BA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -2393,9 +2342,9 @@
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
 			};
-			name = Development;
+			name = Debug;
 		};
-		1C041DE008553AD200A5A5BA /* Development */ = {
+		1C041DE008553AD200A5A5BA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
@@ -2420,7 +2369,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SYMROOT = build;
 			};
-			name = Development;
+			name = Debug;
 		};
 		1C7F2DB408553C1900D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -2534,7 +2483,7 @@
 			};
 			name = Release;
 		};
-		92417D95149C019A0009B06E /* Development */ = {
+		92417D95149C019A0009B06E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
@@ -2582,7 +2531,7 @@
 				);
 				WRAPPER_EXTENSION = a;
 			};
-			name = Development;
+			name = Debug;
 		};
 /* End XCBuildConfiguration section */
 
@@ -2591,28 +2540,28 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1C7F2DB408553C1900D41FB0 /* Release */,
-				1C041DDC08553AD200A5A5BA /* Development */,
+				1C041DDC08553AD200A5A5BA /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Release;
 		};
 		1C041DDE08553AD200A5A5BA /* Build configuration list for PBXProject "Chat Core" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1C7F2DB508553C1900D41FB0 /* Release */,
-				1C041DE008553AD200A5A5BA /* Development */,
+				1C041DE008553AD200A5A5BA /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Release;
 		};
 		92417D93149C019A0009B06E /* Build configuration list for PBXNativeTarget "Chat Core (Static Library)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				92417D94149C019A0009B06E /* Release */,
-				92417D95149C019A0009B06E /* Development */,
+				92417D95149C019A0009B06E /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

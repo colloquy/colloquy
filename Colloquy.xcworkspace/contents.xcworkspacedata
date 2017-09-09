@@ -2,13 +2,37 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:README.md">
+   </FileRef>
+   <FileRef
+      location = "group:CODE_OF_CONDUCT.md">
+   </FileRef>
+   <FileRef
+      location = "group:.gitignore">
+   </FileRef>
+   <FileRef
+      location = "group:.gitmodules">
+   </FileRef>
+   <FileRef
       location = "group:Cartfile">
    </FileRef>
    <FileRef
       location = "group:Cartfile.resolved">
    </FileRef>
    <FileRef
+      location = "group:Colloquy (Old).xcodeproj">
+   </FileRef>
+   <FileRef
       location = "container:Colloquy (iOS).xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Chat Core.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Frameworks/PortMapper/Port Map.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Frameworks/MASPreferences/MASPreferences.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:mac-app/mac-app.xcodeproj">

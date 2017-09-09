@@ -1,5 +1,5 @@
 #include "Common Settings.xcconfig"
 
-FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/old-mac-binary-frameworks" "$(BUILT_PRODUCTS_DIR)" "$(SRCROOT)/Frameworks/MASPreferences/build/Release" "$(HOME)/Library/Frameworks/**" "$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks"
+FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/old-mac-binary-frameworks" "$(BUILT_PRODUCTS_DIR)" "$(HOME)/Library/Frameworks/**" "$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks"
 HEADER_SEARCH_PATHS = "$(SRCROOT)/Frameworks/XMPPFramework/Vendor/libidn/**" "$(SDKROOT)/usr/include/libxml2"
 LIBRARY_SEARCH_PATHS = "$(SRCROOT)/Frameworks/XMPPFramework/Vendor/libidn/**"
