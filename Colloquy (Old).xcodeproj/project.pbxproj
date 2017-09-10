@@ -281,9 +281,9 @@
 		C237FED01CA2EFF500CB8C69 /* smartTranscriptActivity.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C237FECC1CA2EFD600CB8C69 /* smartTranscriptActivity.pdf */; };
 		C25750D41F64194F008AE623 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; };
 		C25750D51F641958008AE623 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; };
-		C25750D61F64195B008AE623 /* ChatCore.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C25750D61F64195B008AE623 /* ChatCore.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C25750D81F64209D008AE623 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C25750D71F64209D008AE623 /* MASPreferences.framework */; };
-		C25750D91F6420E2008AE623 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C25750D71F64209D008AE623 /* MASPreferences.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C25750D91F6420E2008AE623 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C25750D71F64209D008AE623 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C29654101BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */; };
 		C29654131BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654151BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib */; };
 		C29654161BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654181BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib */; };
@@ -291,6 +291,13 @@
 		C296541C1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C296541E1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib */; };
 		C296541F1BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654211BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib */; };
 		C29654221BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654241BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib */; };
+		C29FF9661F6532B80044954E /* libxml2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF9651F6532B80044954E /* libxml2.2.dylib */; };
+		C29FF9681F6533360044954E /* libxslt.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF9671F6533360044954E /* libxslt.1.dylib */; };
+		C29FF96A1F6533510044954E /* libexslt.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF9691F6533510044954E /* libexslt.0.dylib */; };
+		C29FF96C1F6538790044954E /* KissXML.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96B1F6538650044954E /* KissXML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C29FF9701F6544EB0044954E /* CocoaLumberjack.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96E1F6544D90044954E /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C29FF9711F6544EB0044954E /* libidn.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96F1F6544D90044954E /* libidn.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C29FF9721F6544EB0044954E /* XMPPFramework.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96D1F6544BA0044954E /* XMPPFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2B9D0ED1C258BA200C2B4C4 /* CQMPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
@@ -399,6 +406,10 @@
 				1C8444A30F26C7D600701E36 /* Sparkle.framework in Copy Frameworks */,
 				C25750D61F64195B008AE623 /* ChatCore.framework in Copy Frameworks */,
 				1C386FB61032474D00660864 /* TCMPortMapper.framework in Copy Frameworks */,
+				C29FF96C1F6538790044954E /* KissXML.framework in Copy Frameworks */,
+				C29FF9701F6544EB0044954E /* CocoaLumberjack.framework in Copy Frameworks */,
+				C29FF9711F6544EB0044954E /* libidn.framework in Copy Frameworks */,
+				C29FF9721F6544EB0044954E /* XMPPFramework.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -961,6 +972,13 @@
 		C29B1ADF1C10D3CE005CA86A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
 		C29B1AE11C10D3D0005CA86A /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVTranscriptPreferencesViewController.strings"; sourceTree = "<group>"; };
 		C29E3BFC1F64A3CB00C18D21 /* target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = target.xcconfig; sourceTree = "<group>"; };
+		C29FF9651F6532B80044954E /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = /usr/lib/libxml2.2.dylib; sourceTree = "<absolute>"; };
+		C29FF9671F6533360044954E /* libxslt.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxslt.1.dylib; path = /usr/lib/libxslt.1.dylib; sourceTree = "<absolute>"; };
+		C29FF9691F6533510044954E /* libexslt.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libexslt.0.dylib; path = /usr/lib/libexslt.0.dylib; sourceTree = "<absolute>"; };
+		C29FF96B1F6538650044954E /* KissXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KissXML.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C29FF96D1F6544BA0044954E /* XMPPFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = XMPPFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C29FF96E1F6544D90044954E /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CocoaLumberjack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C29FF96F1F6544D90044954E /* libidn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libidn.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2B9D0EB1C258BA200C2B4C4 /* CQMPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQMPreferencesWindowController.h; sourceTree = "<group>"; };
 		C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQMPreferencesWindowController.m; sourceTree = "<group>"; };
 		C2EB205F1C1EA95F00CB88B2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
@@ -1052,6 +1070,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C29FF96A1F6533510044954E /* libexslt.0.dylib in Frameworks */,
+				C29FF9681F6533360044954E /* libxslt.1.dylib in Frameworks */,
+				C29FF9661F6532B80044954E /* libxml2.2.dylib in Frameworks */,
 				92A711951A4A5166009E80F0 /* SecurityInterface.framework in Frameworks */,
 				928FB03613EE64C700A0DF4B /* libicucore.dylib in Frameworks */,
 				1CB2CD79052DDC560094AAA4 /* Cocoa.framework in Frameworks */,
@@ -1134,6 +1155,10 @@
 				1C386FA91032471F00660864 /* TCMPortMapper.framework */,
 				1C3B290706529E720066197C /* ChatCore.framework */,
 				928FB03513EE64C700A0DF4B /* libicucore.dylib */,
+				C29FF96E1F6544D90044954E /* CocoaLumberjack.framework */,
+				C29FF96F1F6544D90044954E /* libidn.framework */,
+				C29FF96D1F6544BA0044954E /* XMPPFramework.framework */,
+				C29FF96B1F6538650044954E /* KissXML.framework */,
 				C25750D71F64209D008AE623 /* MASPreferences.framework */,
 			);
 			name = "Linked Frameworks";
@@ -1142,9 +1167,12 @@
 		1058C7AEFEA557BF11CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				089C167FFE841241C02AAC07 /* AppKit.framework */,
 				CBF687A508202F3F00F498FB /* CoreServices.framework */,
 				089C1672FE841209C02AAC07 /* Foundation.framework */,
-				089C167FFE841241C02AAC07 /* AppKit.framework */,
+				C29FF9691F6533510044954E /* libexslt.0.dylib */,
+				C29FF9651F6532B80044954E /* libxml2.2.dylib */,
+				C29FF9671F6533360044954E /* libxslt.1.dylib */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -2851,6 +2879,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEPLOYMENT_POSTPROCESSING = NO;
@@ -2866,11 +2895,6 @@
 				OTHER_CFLAGS = (
 					"-fconstant-cfstrings",
 					"-Wno-arc-performSelector-leaks",
-				);
-				OTHER_LDFLAGS = (
-					"-lxml2",
-					"-lxslt",
-					"-lexslt",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy;
 				PRODUCT_NAME = Colloquy;
@@ -2942,6 +2966,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				EXPORTED_SYMBOLS_FILE = Colloquy.exp;
@@ -2956,11 +2981,6 @@
 				OTHER_CFLAGS = (
 					"-fconstant-cfstrings",
 					"-Wno-arc-performSelector-leaks",
-				);
-				OTHER_LDFLAGS = (
-					"-lxml2",
-					"-lxslt",
-					"-lexslt",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy;
 				PRODUCT_NAME = Colloquy;

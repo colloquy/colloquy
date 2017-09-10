@@ -394,6 +394,10 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	_connection = nil;
 }
 
+- (void) _setType:(MVChatUserType) type {
+	_type = type;
+}
+
 - (void) _setUniqueIdentifier:(id) identifier {
 	MVSafeAdoptAssign( _uniqueIdentifier, ( [identifier conformsToProtocol:@protocol( NSCopying )] ? [identifier copy] : identifier ) );
 }

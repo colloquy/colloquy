@@ -1,4 +1,4 @@
-#import "XMPPFramework.h"
+@import XMPPFramework;
 
 #import "MVXMPPChatConnection.h"
 #import "MVXMPPChatUser.h"

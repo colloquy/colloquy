@@ -47,17 +47,45 @@
          location = "group:Checkouts"
          name = "Checkouts">
          <Group
-            location = "container:Carthage/Checkouts/TCMPortMapper"
+            location = "group:CocoaAsyncSocket"
+            name = "CocoaAsyncSocket">
+            <FileRef
+               location = "group:CocoaAsyncSocket.xcodeproj">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:CocoaLumberjack"
+            name = "CocoaLumberjack">
+            <FileRef
+               location = "group:Lumberjack.xcodeproj">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:KissXML"
+            name = "KissXML">
+            <FileRef
+               location = "group:KissXML.xcodeproj">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:libidn-framework"
+            name = "libidn-framework">
+            <FileRef
+               location = "group:libidn.xcodeproj">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:TCMPortMapper"
             name = "TCMPortMapper">
             <FileRef
                location = "group:Port Map.xcodeproj">
             </FileRef>
          </Group>
          <Group
-            location = "group:CocoaAsyncSocket"
-            name = "CocoaAsyncSocket">
+            location = "group:XMPPFramework"
+            name = "XMPPFramework">
             <FileRef
-               location = "group:CocoaAsyncSocket.xcodeproj">
+               location = "group:XMPPFramework.xcodeproj">
             </FileRef>
          </Group>
       </Group>

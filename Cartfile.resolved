@@ -1,2 +1,7 @@
+github "CocoaLumberjack/CocoaLumberjack" "3.2.1"
+github "chrisballinger/libidn-framework" "1.33"
 github "colloquy/CocoaAsyncSocket" "08f1441253741de4c9e84a0e191755fb8c9bf440"
 github "mugginsoft/TCMPortMapper" "6e3fc96229c1c8df62e42573baf4c0350a667878"
+github "robbiehanson/CocoaAsyncSocket" "7.6.1"
+github "robbiehanson/KissXML" "5.2.0"
+github "robbiehanson/XMPPFramework" "75728a41f312acaddd556fe091817e8a88d2b63d"

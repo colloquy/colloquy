@@ -4,3 +4,15 @@
 [submodule "Carthage/Checkouts/TCMPortMapper"]
 	path = Carthage/Checkouts/TCMPortMapper
 	url = ssh://git@github.com/mugginsoft/TCMPortMapper.git
+[submodule "Carthage/Checkouts/KissXML"]
+	path = Carthage/Checkouts/KissXML
+	url = ssh://git@github.com/robbiehanson/KissXML.git
+[submodule "Carthage/Checkouts/XMPPFramework"]
+	path = Carthage/Checkouts/XMPPFramework
+	url = ssh://git@github.com/robbiehanson/XMPPFramework.git
+[submodule "Carthage/Checkouts/libidn-framework"]
+	path = Carthage/Checkouts/libidn-framework
+	url = ssh://git@github.com/chrisballinger/libidn-framework.git
+[submodule "Carthage/Checkouts/CocoaLumberjack"]
+	path = Carthage/Checkouts/CocoaLumberjack
+	url = ssh://git@github.com/CocoaLumberjack/CocoaLumberjack.git
