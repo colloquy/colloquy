@@ -16,3 +16,6 @@
 [submodule "Carthage/Checkouts/CocoaLumberjack"]
 	path = Carthage/Checkouts/CocoaLumberjack
 	url = ssh://git@github.com/CocoaLumberjack/CocoaLumberjack.git
+[submodule "Carthage/Checkouts/MASPreferences"]
+	path = Carthage/Checkouts/MASPreferences
+	url = ssh://git@github.com/shpakovski/MASPreferences.git

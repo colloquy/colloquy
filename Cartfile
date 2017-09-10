@@ -8,6 +8,7 @@
 
 github "mugginsoft/TCMPortMapper" "master"
 github "robbiehanson/XMPPFramework" "master"
+github "shpakovski/MASPreferences" ~> 1.2.1
 
 # iOS Dependencies
 

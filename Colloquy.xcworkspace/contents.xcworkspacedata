@@ -29,9 +29,6 @@
       location = "group:Chat Core.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Frameworks/MASPreferences/MASPreferences.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:mac-app/mac-app.xcodeproj">
    </FileRef>
    <FileRef
@@ -72,6 +69,13 @@
             name = "libidn-framework">
             <FileRef
                location = "group:libidn.xcodeproj">
+            </FileRef>
+         </Group>
+         <Group
+            location = "container:"
+            name = "MASPreferences">
+            <FileRef
+               location = "group:Carthage/Checkouts/MASPreferences/MASPreferences.xcodeproj">
             </FileRef>
          </Group>
          <Group
