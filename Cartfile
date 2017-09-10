@@ -1,34 +1,16 @@
-# ==================================================
 # Instructions
-# ==================================================
 #
 # To update dependencies …
 # - Install Carthage: https://github.com/Carthage/Carthage#installing-carthage
 # - Use "carthage update --use-submodules --no-build --use-ssh" from the command line
-#
 
-
-
-# ==================================================
 # Mac Dependencies
-# ==================================================
-
-
-
-# ==================================================
-# iOS Dependencies
-# ==================================================
-
-
-
-# ==================================================
-# Shared Dependencies
-# ==================================================
-
-# CocoaAsyncSocket
-github "colloquy/CocoaAsyncSocket" "colloquy-patches"
-
 
 github "mugginsoft/TCMPortMapper" "master"
-
 github "robbiehanson/XMPPFramework" "master"
+
+# iOS Dependencies
+
+# Shared Dependencies
+
+github "colloquy/CocoaAsyncSocket" "colloquy-patches"
