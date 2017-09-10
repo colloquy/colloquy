@@ -72,6 +72,9 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 #pragma mark -
 
+@interface MVICBChatConnection () <GCDAsyncSocketDelegate>
+@end
+
 @interface MVICBChatConnection (MVICBChatConnectionPrivate)
 - (oneway void) _runloop;
 - (void) _connect;
