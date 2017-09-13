@@ -119,7 +119,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (NSURL *) url {
+- (NSURL *__nullable) url {
 	MVChatConnection *connection = [self connection];
 	NSString *urlString = [NSString stringWithFormat:@"%@://%@/%@", [connection urlScheme], [[connection server] stringByEncodingIllegalURLCharacters], [[self name] stringByEncodingIllegalURLCharacters]];
 	if( urlString ) return [NSURL URLWithString:urlString];
@@ -237,7 +237,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 - (NSSet *) supportedAttributes {
 // subclass this method, if needed
-	return nil;
+	return [NSSet set];
 }
 
 #pragma mark -

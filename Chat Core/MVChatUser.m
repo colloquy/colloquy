@@ -280,7 +280,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	return _serverAddress;
 }
 
-- (NSString *) maskRepresentation {
+- (NSString *__nullable) maskRepresentation {
 	return nil;
 }
 

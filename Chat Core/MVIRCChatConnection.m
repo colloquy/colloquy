@@ -167,7 +167,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 #pragma mark Incoming Message Replies
 
-- (MVChatRoom*) _chatRoomFromMessageTarget:(NSString*)messageTarget;
+- (MVChatRoom*__nullable) _chatRoomFromMessageTarget:(NSString*)messageTarget;
 
 - (void) _handlePrivmsg:(NSMutableDictionary *) privmsgInfo;
 - (void) _handlePrivmsgWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender;
@@ -440,20 +440,20 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 #pragma mark -
 
-- (void) setRealName:(NSString *) name {
+- (void) setRealName:(NSString *__nullable) name {
 	NSParameterAssert( name != nil );
 	MVSafeCopyAssign( _realName, name );
 }
 
-- (NSString *) realName {
+- (NSString *__nullable) realName {
 	return _realName;
 }
 
 #pragma mark -
 
-- (void) setNickname:(NSString *) newNickname {
-	NSParameterAssert( newNickname != nil );
+- (void) setNickname:(NSString *__nullable) newNickname {
 	NSParameterAssert( newNickname.length > 0 );
+	NSParameterAssert( newNickname != nil );
 
 	BOOL connectiongOrConnected = ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus );
 
@@ -470,7 +470,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		[self sendRawMessageImmediatelyWithFormat:@"NICK %@", newNickname];
 }
 
-- (NSString *) nickname {
+- (NSString *__nullable) nickname {
 	return _currentNickname;
 }
 
@@ -502,13 +502,12 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 #pragma mark -
 
-- (void) setUsername:(NSString *) newUsername {
-	NSParameterAssert( newUsername != nil );
+- (void) setUsername:(NSString *__nullable) newUsername {
 	NSParameterAssert( newUsername.length > 0 );
 	MVSafeCopyAssign( _username, newUsername );
 }
 
-- (NSString *) username {
+- (NSString *__nullable) username {
 	return _username;
 }
 
@@ -712,7 +711,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	return room;
 }
 
-- (MVChatRoom *) chatRoomWithName:(NSString *) name {
+- (MVChatRoom *__nullable) chatRoomWithName:(NSString *) name {
 	return [self chatRoomWithUniqueIdentifier:[self properNameForChatRoomNamed:name]];
 }
 
@@ -2292,7 +2291,7 @@ parsingFinished: { // make a scope for this
 
 #pragma mark -
 
-- (NSString *) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length NS_RETURNS_RETAINED {
+- (NSString * __nullable) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length NS_RETURNS_RETAINED {
 	if( bytes && length ) {
 		NSStringEncoding encoding = [self encoding];
 		if( encoding != NSUTF8StringEncoding && isValidUTF8( bytes, length ) )
@@ -2922,7 +2921,7 @@ parsingFinished: { // make a scope for this
 #pragma mark -
 #pragma mark Incoming Message Replies
 
-- (MVChatRoom*) _chatRoomFromMessageTarget:(NSString*)messageTarget
+- (MVChatRoom*__nullable) _chatRoomFromMessageTarget:(NSString*)messageTarget
 {
 	// a room identifier consists of a chatroom prefix (for example #&+!) and the room name: #room
 	// additionally it can be pre-prefixed in PRIVMSG or NOTICE with a nickname prefix (for example @+), indicating a room message, that is only visible to room members with that user status: @#room

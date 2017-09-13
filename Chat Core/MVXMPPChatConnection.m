@@ -98,23 +98,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setRealName:(NSString *) name {
+- (void) setRealName:(NSString *__nullable) name {
 	// not supported
 }
 
-- (NSString *) realName {
+- (NSString *__nullable) realName {
 	return nil;
 }
 
 #pragma mark -
 
-- (void) setNickname:(NSString *) newNickname {
+- (void) setNickname:(NSString *__nullable) newNickname {
 	NSParameterAssert( newNickname != nil );
 	NSParameterAssert( newNickname.length > 0 );
 	MVSafeCopyAssign( _nickname, newNickname );
 }
 
-- (NSString *) nickname {
+- (NSString *__nullable) nickname {
 	return _nickname;
 }
 
@@ -134,23 +134,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) setPassword:(NSString *) newPassword {
+- (void) setPassword:(NSString *__nullable) newPassword {
 	MVSafeCopyAssign( _password, newPassword );
 }
 
-- (NSString *) password {
+- (NSString *__nullable) password {
 	return _password;
 }
 
 #pragma mark -
 
-- (void) setUsername:(NSString *) newUsername {
+- (void) setUsername:(NSString *__nullable) newUsername {
 	NSParameterAssert( newUsername != nil );
 	NSParameterAssert( newUsername.length > 0 );
 	MVSafeCopyAssign( _username, newUsername );
 }
 
-- (NSString *) username {
+- (NSString *__nullable) username {
 	return _username;
 }
 

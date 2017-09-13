@@ -22,6 +22,9 @@ extern NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature;
 
 @interface MVChatConnection (MVIRCChatConnectionPrivate)
 @property (readonly, strong) GCDAsyncSocket *_chatConnection;
+@property (nonatomic, copy, nonnull) NSString *username;
+@property (nonatomic, copy, nonnull) NSString *nickname;
+
 - (void) _connect;
 
 - (void) _readNextMessageFromServer;
@@ -61,7 +64,7 @@ extern NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature;
 - (MVChatRoomMemberMode) _modeForNicknamePrefixCharacter:(unichar) character;
 - (MVChatRoomMemberMode) _stripModePrefixesFromNickname:(NSString *__nonnull *__nonnull) nickname;
 
-- (NSString *) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length NS_RETURNS_RETAINED;
+- (NSString *__nullable) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length NS_RETURNS_RETAINED;
 - (NSString *) _stringFromPossibleData:(id) input;
 
 - (void) _cancelScheduledSendEndCapabilityCommand;
