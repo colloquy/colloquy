@@ -72,17 +72,15 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 #pragma mark -
 
+@interface MVICBChatConnection () <GCDAsyncSocketDelegate>
+@end
+
 @interface MVICBChatConnection (MVICBChatConnectionPrivate)
 - (oneway void) _runloop;
 - (void) _connect;
 - (void) _startSendQueue;
 - (void) _stopSendQueue;
 - (void) _sendQueue;
-- (void) socket:(GCDAsyncSocket *) sock
-         didConnectToHost:(NSString *) host port:(UInt16) port;
-- (void) socket:(GCDAsyncSocket *) sock
-	     didReadData:(NSData *) data withTag:(long) tag;
-- (void) socketDidDisconnect:(GCDAsyncSocket *)sock;
 - (void) _writeDataToServer:(id) raw;
 - (void) _readNextMessageFromServer;
 - (void) _joinChatRoomNamed:(NSString *) name
@@ -543,7 +541,8 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	}
 }
 
-- (void) socketDidDisconnect:(GCDAsyncSocket *) sock {
+- (void)socketDidDisconnect:(GCDAsyncSocket *)sock
+                  withError:(nullable NSError *)err {
 	[self _didDisconnect];
 }
 
