@@ -247,7 +247,6 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) updateTextViewContentSize {
-
 	CGFloat contentWidth = CGRectGetWidth(_inputView.bounds) - (_inputView.contentInset.left + _inputView.contentInset.right) - 8.0;
 	CGSize calculatableSize = CGSizeMake(contentWidth, CGFLOAT_MAX);
 	const NSStringDrawingOptions options = (NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesDeviceMetrics);
@@ -255,7 +254,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	CGSize textSize = [_inputView.text boundingRectWithSize:calculatableSize options:options attributes:attributes context:nil].size;
 	CGFloat lineHeight = [attributes[NSFontAttributeName] lineHeight] + _inputView.contentInset.top + _inputView.contentInset.bottom;
-	NSLog(@"calculatableSize: %@", NSStringFromCGSize(calculatableSize));
+
 	if (lineHeight == 0) {
 		lineHeight = CQLineHeight;
 	}
@@ -272,8 +271,6 @@ NS_ASSUME_NONNULL_BEGIN
 		inputFrameSize.height = lineHeight * 2;
 	}
 
-	NSLog(@"inputFrameSize: %@", NSStringFromCGSize(inputFrameSize));
-
 	__strong __typeof__((_delegate)) strongDelegate = _delegate;
 	BOOL shouldSetHeight = YES;
 	if (strongDelegate && [strongDelegate respondsToSelector:@selector(chatInputBar:shouldChangeHeightBy:)])
@@ -287,10 +284,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 		// Work around iOS 7 bug where the input view frame doesn't update right away after being set, causing text to be clipped.
 		_inputView.frame = _inputView.frame;
-		NSLog(@"frame: %@", NSStringFromCGRect(_inputView.frame));
 
 		_inputView.contentSize = textSize;
-		NSLog(@"contentSize: %@", NSStringFromCGSize(textSize));
 
 		_inputView.scrollEnabled = (textSize.height >= CGRectGetHeight(_inputView.frame));
 

@@ -84,7 +84,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 
 #pragma mark -
 
-- (NSString *) maskRepresentation {
+- (NSString *__nullable) maskRepresentation {
 	return [NSString stringWithFormat:@"%@!%@@%@", (self.nickname ?: @""), (self.username ?: @""), (self.address ?: @"")];
 }
 

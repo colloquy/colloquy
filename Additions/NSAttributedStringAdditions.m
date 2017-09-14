@@ -227,11 +227,6 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 	return ret;
 }
-#else
-
-- (NSString *) HTMLFormatWithOptions:(NSDictionary *) options {
-	return nil;
-}
 #endif
 
 #pragma mark -

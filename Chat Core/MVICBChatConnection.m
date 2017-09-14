@@ -81,11 +81,6 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 - (void) _startSendQueue;
 - (void) _stopSendQueue;
 - (void) _sendQueue;
-- (void) socket:(GCDAsyncSocket *) sock
-         didConnectToHost:(NSString *) host port:(UInt16) port;
-- (void) socket:(GCDAsyncSocket *) sock
-	     didReadData:(NSData *) data withTag:(long) tag;
-- (void) socketDidDisconnect:(GCDAsyncSocket *)sock;
 - (void) _writeDataToServer:(id) raw;
 - (void) _readNextMessageFromServer;
 - (void) _joinChatRoomNamed:(NSString *) name
@@ -129,18 +124,18 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	return self;
 }
 
-- (void) finalize {
+- (void) dealloc {
 	[self disconnect];
-	[super finalize];
+    [super dealloc];
 }
 
 #pragma mark Accessors
 
-- (NSString *) nickname {
+- (NSString *__nullable) nickname {
 	return _nickname;
 }
 
-- (NSString *) password {
+- (NSString *__nullable) password {
 	return _password;
 }
 
@@ -164,7 +159,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	return @"icb";
 }
 
-- (NSString *) username {
+- (NSString *__nullable) username {
 	return _username;
 }
 
@@ -173,7 +168,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 - (void) setAwayStatusMessage:(MVChatString * __nullable) message {
 }
 
-- (void) setNickname:(NSString *) newNickname {
+- (void) setNickname:(NSString *__nullable) newNickname {
 	NSParameterAssert( newNickname );
 	NSParameterAssert( newNickname.length > 0 );
 
@@ -186,7 +181,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	}
 }
 
-- (void) setPassword:(NSString *) newPassword {
+- (void) setPassword:(NSString *__nullable) newPassword {
 	[_password release];
 
 	if( ! newPassword )
@@ -216,7 +211,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 		                objectAtIndex:0] shortValue];
 }
 
-- (void) setUsername:(NSString *) newUsername {
+- (void) setUsername:(NSString *__nullable) newUsername {
 	NSParameterAssert( newUsername );
 	NSParameterAssert( newUsername.length > 0 );
 
@@ -546,7 +541,8 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	}
 }
 
-- (void) socketDidDisconnect:(GCDAsyncSocket *) sock {
+- (void)socketDidDisconnect:(GCDAsyncSocket *)sock
+                  withError:(nullable NSError *)err {
 	[self _didDisconnect];
 }
 

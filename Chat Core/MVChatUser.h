@@ -129,7 +129,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 @property(strong, readonly) NSString *account;
 @property(strong, readonly) NSString *address;
 @property(strong, readonly) NSString *serverAddress;
-@property(strong, readonly) NSString *maskRepresentation;
+@property(strong, readonly, nullable) NSString *maskRepresentation;
 
 @property(strong, readonly) id uniqueIdentifier;
 @property(strong, readonly) NSData *publicKey;

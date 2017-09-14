@@ -152,7 +152,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( type == MVChatConnectionXMPPType )
 		return [MVXMPPChatConnection defaultServerPorts];
 #endif
-	return nil;
+	return @[];
 }
 
 + (NSUInteger) maxMessageLengthForType:(MVChatConnectionType) type {
@@ -421,7 +421,8 @@ static const NSStringEncoding supportedEncodings[] = {
 - (NSURL *) url {
 	NSString *urlString = [NSString stringWithFormat:@"%@://%@@%@:%hu", [self urlScheme], [[self preferredNickname] stringByEncodingIllegalURLCharacters], [[self server] stringByEncodingIllegalURLCharacters], [self serverPort]];
 	if( urlString ) return [NSURL URLWithString:urlString];
-	return nil;
+	NSAssert(NO, @"Should not reach this point");
+	__builtin_unreachable();
 }
 
 #pragma mark -
@@ -439,10 +440,12 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) setRealName:(NSString *) name {
 // subclass this method, if needed
+	[self doesNotRecognizeSelector:_cmd];
 }
 
 - (NSString *) realName {
 // subclass this method, if needed
+	[self doesNotRecognizeSelector:_cmd];
 	return nil;
 }
 
@@ -476,11 +479,11 @@ static const NSStringEncoding supportedEncodings[] = {
 	_nextAltNickIndex = 0;
 }
 
-- (NSArray <NSString *> *) alternateNicknames {
+- (NSArray <NSString *> *__nullable) alternateNicknames {
 	return [_alternateNicks copy];
 }
 
-- (NSString *) nextAlternateNickname {
+- (NSString *__nullable) nextAlternateNickname {
 	if( [[self alternateNicknames] count] && _nextAltNickIndex < [[self alternateNicknames] count] )
 		return [self alternateNicknames][_nextAltNickIndex++];
 	return nil;
@@ -492,41 +495,9 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (NSString *) certificateServiceName {
-// subclass this method, if needed
-	return nil;
-}
-
 - (BOOL) authenticateCertificateWithPassword:(NSString *) password {
 // subclass this method. if needed
 	return NO;
-}
-
-- (NSString *) certificatePassword {
-// subclass this method. if needed
-	return nil;
-}
-
-#pragma mark -
-
-- (void) setPassword:(NSString *) password {
-// subclass this method, if needed
-}
-
-- (NSString *) password {
-// subclass this method, if needed
-	return nil;
-}
-
-#pragma mark -
-
-- (void) setUsername:(NSString *) username {
-// subclass this method, if needed
-}
-
-- (NSString *) username {
-// subclass this method, if needed
-	return nil;
 }
 
 #pragma mark -
@@ -829,7 +800,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	}
 }
 
-- (MVChatRoom *) chatRoomWithName:(NSString *) name {
+- (MVChatRoom *__nullable) chatRoomWithName:(NSString *) name {
 	@synchronized( _knownRooms ) {
 		for( id key in _knownRooms ) {
 			MVChatRoom *room = _knownRooms[key];
@@ -844,7 +815,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #pragma mark -
 
 - (NSCharacterSet *) chatRoomNamePrefixes {
-	return nil;
+	return [NSCharacterSet characterSetWithCharactersInString:@""];
 }
 
 - (NSString *) properNameForChatRoomNamed:(NSString *) room {
@@ -866,12 +837,12 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (NSSet *) chatUsersWithNickname:(NSString *) nickname {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
-	return nil;
+	return [NSSet set];
 }
 
 - (NSSet *) chatUsersWithFingerprint:(NSString *) fingerprint {
 // subclass this method, if needed
-	return nil;
+	return [NSSet set];
 }
 
 - (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {

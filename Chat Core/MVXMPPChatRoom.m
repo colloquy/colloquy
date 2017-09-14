@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (NSURL *) url {
+- (NSURL *__nullable) url {
 	NSString *urlString = [NSString stringWithFormat:@"%@:%@?join", [[self connection] urlScheme], [[_uniqueIdentifier domain] stringByEncodingIllegalURLCharacters]];
 	if( urlString ) return [NSURL URLWithString:urlString];
 	return nil;
