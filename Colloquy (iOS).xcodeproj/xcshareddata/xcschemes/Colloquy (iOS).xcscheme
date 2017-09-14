@@ -39,10 +39,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       displayScaleIsEnabled = "NO"
       displayScale = "1.00"
-<<<<<<< HEAD
-=======
       enableUBSanitizer = "YES"
->>>>>>> f58c0c44... blorp
       language = ""
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
