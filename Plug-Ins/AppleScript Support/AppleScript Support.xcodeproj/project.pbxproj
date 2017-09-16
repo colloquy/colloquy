@@ -62,7 +62,7 @@
 		92823CF516900F97000EC36E /* Colloquy (Old).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Colloquy (Old).xcodeproj"; path = "../../Colloquy (Old).xcodeproj"; sourceTree = "<group>"; };
 		9295C94B16782FCE009F9014 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChatCore.framework; path = ../../build/Development/ChatCore.framework; sourceTree = "<group>"; };
 		C29E3BE31F64A2C000C18D21 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
-		C29E3BE51F64A2C000C18D21 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Less Common Settings.xcconfig"; sourceTree = "<group>"; };
+		C29E3BE51F64A2C000C18D21 /* old-mac-target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
 		C29E3BE61F64A2C000C18D21 /* target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = target.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -161,7 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				C29E3BE31F64A2C000C18D21 /* Base.xcconfig */,
-				C29E3BE51F64A2C000C18D21 /* Less Common Settings.xcconfig */,
+				C29E3BE51F64A2C000C18D21 /* old-mac-target.xcconfig */,
 				C29E3BE61F64A2C000C18D21 /* target.xcconfig */,
 			);
 			indentWidth = 4;

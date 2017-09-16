@@ -13,7 +13,7 @@
 
 /* Begin PBXFileReference section */
 		C23C10BC1F5B2F2700830C2A /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
-		C23C10BE1F5B2F2700830C2A /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Less Common Settings.xcconfig"; sourceTree = "<group>"; };
+		C23C10BE1F5B2F2700830C2A /* old-mac-target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
 		C26B5CCB1C67D223007D209E /* ColloquyCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ColloquyCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C26B5CCE1C67D223007D209E /* ColloquyCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColloquyCore.h; sourceTree = "<group>"; };
 		C26B5CD01C67D223007D209E /* ColloquyCore-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ColloquyCore-Info.plist"; sourceTree = "<group>"; };
@@ -37,7 +37,7 @@
 			isa = PBXGroup;
 			children = (
 				C23C10BC1F5B2F2700830C2A /* Base.xcconfig */,
-				C23C10BE1F5B2F2700830C2A /* Less Common Settings.xcconfig */,
+				C23C10BE1F5B2F2700830C2A /* old-mac-target.xcconfig */,
 				C29E3BFF1F64A42F00C18D21 /* target.xcconfig */,
 			);
 			name = Settings;

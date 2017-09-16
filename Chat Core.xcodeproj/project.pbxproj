@@ -251,7 +251,7 @@
 		431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MVSILCFileTransfer.m; path = "Chat Core/MVSILCFileTransfer.m"; sourceTree = "<group>"; };
 		899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerAdditions.h; path = Additions/NSFileManagerAdditions.h; sourceTree = "<group>"; };
 		899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSFileManagerAdditions.m; path = Additions/NSFileManagerAdditions.m; sourceTree = "<group>"; };
-		89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Less Common Settings.xcconfig"; sourceTree = "<group>"; };
+		89FB4F2512FAAC6800668905 /* old-mac-target.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
 		922453B91689057200BFF3FF /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncSocket.h; path = Carthage/Checkouts/CocoaAsyncSocket/Source/GCD/GCDAsyncSocket.h; sourceTree = "<group>"; };
 		922453BA1689057200BFF3FF /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDAsyncSocket.m; path = Carthage/Checkouts/CocoaAsyncSocket/Source/GCD/GCDAsyncSocket.m; sourceTree = "<group>"; };
 		922B1FF31692C42F002ECDFD /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDLog.h; path = "Chat Core/Logging/DDLog.h"; sourceTree = "<group>"; };
@@ -392,7 +392,7 @@
 			isa = PBXGroup;
 			children = (
 				C21296FD1F6463A000555EE3 /* Base.xcconfig */,
-				89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */,
+				89FB4F2512FAAC6800668905 /* old-mac-target.xcconfig */,
 				C29E3BFD1F64A3F400C18D21 /* target.xcconfig */,
 			);
 			fileEncoding = 4;
@@ -871,7 +871,7 @@
 /* Begin XCBuildConfiguration section */
 		1C041DDC08553AD200A5A5BA /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */;
+			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -933,7 +933,7 @@
 		};
 		1C7F2DB408553C1900D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */;
+			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -993,7 +993,7 @@
 		};
 		92417D94149C019A0009B06E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */;
+			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
@@ -1044,7 +1044,7 @@
 		};
 		92417D95149C019A0009B06E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */;
+			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;

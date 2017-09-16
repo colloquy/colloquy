@@ -63,7 +63,7 @@
 		9295C9811678302E009F9014 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChatCore.framework; path = ../../build/Development/ChatCore.framework; sourceTree = "<group>"; };
 		A1F6108B0957E4BB001B65CD /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C29E3BF91F64A39E00C18D21 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
-		C29E3BFA1F64A39E00C18D21 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Less Common Settings.xcconfig"; sourceTree = "<group>"; };
+		C29E3BFA1F64A39E00C18D21 /* old-mac-target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
 		C29E3BFB1F64A39E00C18D21 /* target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = target.xcconfig; sourceTree = "<group>"; };
 		C2EC59E8185E11F9008797B7 /* libpython2.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.7.dylib; path = /System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config/libpython2.7.dylib; sourceTree = "<absolute>"; };
 		C2EC59EC185E1570008797B7 /* pyobjc-compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pyobjc-compat.h"; sourceTree = "<group>"; };
@@ -164,7 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				C29E3BF91F64A39E00C18D21 /* Base.xcconfig */,
-				C29E3BFA1F64A39E00C18D21 /* Less Common Settings.xcconfig */,
+				C29E3BFA1F64A39E00C18D21 /* old-mac-target.xcconfig */,
 				C29E3BFB1F64A39E00C18D21 /* target.xcconfig */,
 			);
 			indentWidth = 4;

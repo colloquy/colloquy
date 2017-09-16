@@ -42,7 +42,7 @@
 		C21956B91C5C1E2D0072D2F7 /* ChatListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatListViewController.swift; sourceTree = "<group>"; };
 		C21956BA1C5C1E2D0072D2F7 /* ChatListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatListViewController.xib; sourceTree = "<group>"; };
 		C23C10C01F5B2F4F00830C2A /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
-		C23C10C21F5B2F4F00830C2A /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Less Common Settings.xcconfig"; sourceTree = "<group>"; };
+		C23C10C21F5B2F4F00830C2A /* old-mac-target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
 		C23F44351C595DE1003EDD80 /* ChatWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatWindowController.swift; sourceTree = "<group>"; };
 		C23F44361C595DE2003EDD80 /* ChatWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatWindowController.xib; sourceTree = "<group>"; };
 		C265DFBF1C55254B00140D24 /* Colloquy3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy3.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,7 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				C23C10C01F5B2F4F00830C2A /* Base.xcconfig */,
-				C23C10C21F5B2F4F00830C2A /* Less Common Settings.xcconfig */,
+				C23C10C21F5B2F4F00830C2A /* old-mac-target.xcconfig */,
 				C29E3BFE1F64A41400C18D21 /* target.xcconfig */,
 			);
 			name = Settings;

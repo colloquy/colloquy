@@ -668,7 +668,7 @@
 		B6BFA5421BBDA3B6000C3BBC /* UIWindowAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIWindowAdditions.m; path = Mobile/Additions/UIWindowAdditions.m; sourceTree = "<group>"; };
 		B6D085B41B8D6E8400734C96 /* CQActivities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQActivities.h; sourceTree = "<group>"; };
 		B6D085B51B8D6E8400734C96 /* CQActivities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQActivities.m; sourceTree = "<group>"; };
-		C21297001F64661C00555EE3 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Less Common Settings.xcconfig"; sourceTree = "<group>"; };
+		C21297001F64661C00555EE3 /* old-mac-target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
 		C22181CE1F648ED200F2E814 /* target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = target.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -740,7 +740,7 @@
 			isa = PBXGroup;
 			children = (
 				1C15B12913107243006FA16B /* Base.xcconfig */,
-				C21297001F64661C00555EE3 /* Less Common Settings.xcconfig */,
+				C21297001F64661C00555EE3 /* old-mac-target.xcconfig */,
 				C22181CE1F648ED200F2E814 /* target.xcconfig */,
 			);
 			path = Settings;

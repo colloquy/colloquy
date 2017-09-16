@@ -756,7 +756,7 @@
 		891EF4091064278200CCEA35 /* PFMoveApplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFMoveApplicationController.h; path = Controllers/PFMoveApplicationController.h; sourceTree = "<group>"; };
 		895BCD3812BD39400082AB5A /* CQActivityWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = CQActivityWindow.xib; path = Resources/CQActivityWindow.xib; sourceTree = "<group>"; };
 		89EB91A90F269BEF0028B3E3 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
-		89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Less Common Settings.xcconfig"; sourceTree = "<group>"; };
+		89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
 		9200338C13D92515005B69BA /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Languages/nl.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
 		9200338E13D92530005B69BA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/en.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
 		9200339013D92543005B69BA /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Languages/fr.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
@@ -1238,7 +1238,7 @@
 			isa = PBXGroup;
 			children = (
 				C21296FF1F6465FC00555EE3 /* Base.xcconfig */,
-				89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */,
+				89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */,
 				C29E3BFC1F64A3CB00C18D21 /* target.xcconfig */,
 			);
 			indentWidth = 4;
@@ -2858,7 +2858,7 @@
 /* Begin XCBuildConfiguration section */
 		1C041A660854E97700A5A5BA /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				CLANG_ENABLE_OBJC_ARC = NO;
@@ -2877,7 +2877,7 @@
 		};
 		1C041A6A0854E97700A5A5BA /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -2904,7 +2904,7 @@
 		};
 		1C041A6E0854E97700A5A5BA /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2945,7 +2945,7 @@
 		};
 		1C041DC90855377900A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				CLANG_ENABLE_OBJC_ARC = NO;
@@ -2964,7 +2964,7 @@
 		};
 		1C041DCA0855377900A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -2996,7 +2996,7 @@
 		};
 		1C041DCB0855377900A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -3030,7 +3030,7 @@
 		};
 		9295C92616782ECB009F9014 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -3038,7 +3038,7 @@
 		};
 		9295C92716782ECB009F9014 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
+			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
