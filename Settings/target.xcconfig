@@ -2,5 +2,9 @@ LD_RUNPATH_SEARCH_PATHS = $(LD_RUNPATH_SEARCH_PATHS_$(WRAPPER_EXTENSION))
 LD_RUNPATH_SEARCH_PATHS_app = $(inherited) @executable_path/../Frameworks
 LD_RUNPATH_SEARCH_PATHS_framework = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
 SKIP_INSTALL = $(SKIP_INSTALL_$(WRAPPER_EXTENSION))
+SKIP_INSTALL_a = YES
 SKIP_INSTALL_app = NO
 SKIP_INSTALL_framework = YES
+
+// TODO: Set STRIP_STYLE according to https://developer.apple.com/library/content/technotes/tn2004/tn2123.html#SECSTRIPPINGMACHOSYMBOLS
+// TODO: Do this in combination with reviewing https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/SymbolVisibility.html which could obsolete our export symbols file.
