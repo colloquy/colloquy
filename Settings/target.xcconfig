@@ -1,3 +1,6 @@
 LD_RUNPATH_SEARCH_PATHS = $(LD_RUNPATH_SEARCH_PATHS_$(WRAPPER_EXTENSION))
 LD_RUNPATH_SEARCH_PATHS_app = $(inherited) @executable_path/../Frameworks
 LD_RUNPATH_SEARCH_PATHS_framework = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
+SKIP_INSTALL = $(SKIP_INSTALL_$(WRAPPER_EXTENSION))
+SKIP_INSTALL_app = NO
+SKIP_INSTALL_framework = YES
