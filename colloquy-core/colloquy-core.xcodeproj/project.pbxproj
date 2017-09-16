@@ -13,11 +13,11 @@
 
 /* Begin PBXFileReference section */
 		C23C10BC1F5B2F2700830C2A /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
-		C23C10BD1F5B2F2700830C2A /* Common Settings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Common Settings.xcconfig"; sourceTree = "<group>"; };
-		C23C10BE1F5B2F2700830C2A /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Less Common Settings.xcconfig"; sourceTree = "<group>"; };
+		C23C10BE1F5B2F2700830C2A /* old-mac-target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
 		C26B5CCB1C67D223007D209E /* ColloquyCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ColloquyCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C26B5CCE1C67D223007D209E /* ColloquyCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColloquyCore.h; sourceTree = "<group>"; };
 		C26B5CD01C67D223007D209E /* ColloquyCore-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ColloquyCore-Info.plist"; sourceTree = "<group>"; };
+		C29E3BFF1F64A42F00C18D21 /* target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = target.xcconfig; sourceTree = "<group>"; };
 		C2D9D5BB1C6F6CA300498F28 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -37,8 +37,8 @@
 			isa = PBXGroup;
 			children = (
 				C23C10BC1F5B2F2700830C2A /* Base.xcconfig */,
-				C23C10BD1F5B2F2700830C2A /* Common Settings.xcconfig */,
-				C23C10BE1F5B2F2700830C2A /* Less Common Settings.xcconfig */,
+				C23C10BE1F5B2F2700830C2A /* old-mac-target.xcconfig */,
+				C29E3BFF1F64A42F00C18D21 /* target.xcconfig */,
 			);
 			name = Settings;
 			path = ../Settings;
@@ -225,6 +225,7 @@
 		};
 		C26B5CE01C67D223007D209E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C29E3BFF1F64A42F00C18D21 /* target.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -234,7 +235,6 @@
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "colloquy-core/ColloquyCore-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.colloquy-core";
 				PRODUCT_NAME = ColloquyCore;
 				SKIP_INSTALL = YES;
@@ -245,6 +245,7 @@
 		};
 		C26B5CE11C67D223007D209E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C29E3BFF1F64A42F00C18D21 /* target.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -254,7 +255,6 @@
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "colloquy-core/ColloquyCore-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.colloquy-core";
 				PRODUCT_NAME = ColloquyCore;
 				SKIP_INSTALL = YES;

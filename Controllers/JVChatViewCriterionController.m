@@ -4,7 +4,7 @@
 #import "JVChatTranscriptPanel.h"
 #import "JVSmartTranscriptPanel.h"
 #import "JVChatConsolePanel.h"
-#import "NSRegularExpressionAdditions.h"
+#import <ChatCore/NSRegularExpressionAdditions.h>
 
 @implementation JVChatViewCriterionController
 + (id) controller {

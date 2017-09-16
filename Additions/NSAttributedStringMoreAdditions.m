@@ -3,7 +3,7 @@
 // Copyright Graham Booker and Timothy Hatcher. All rights reserved.
 
 #import "NSAttributedStringMoreAdditions.h"
-#import "NSRegularExpressionAdditions.h"
+#import <ChatCore/NSRegularExpressionAdditions.h>
 
 #import <libxml/tree.h>
 

@@ -1,6 +1,6 @@
 #import "JVNotificationPreferencesViewController.h"
 
-#import "NSRegularExpressionAdditions.h"
+#import <ChatCore/NSRegularExpressionAdditions.h>
 
 
 @interface JVNotificationPreferencesViewController ()

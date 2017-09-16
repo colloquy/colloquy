@@ -27,7 +27,7 @@
 #import "NSAttributedStringMoreAdditions.h"
 #import "NSBundleAdditions.h"
 #import "NSDateAdditions.h"
-#import "NSRegularExpressionAdditions.h"
+#import <ChatCore/NSRegularExpressionAdditions.h>
 
 static NSSet *actionVerbs = nil;
 
