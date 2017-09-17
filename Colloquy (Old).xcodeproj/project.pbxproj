@@ -148,7 +148,6 @@
 		1CB2CD2F052DDC560094AAA4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F5394C0B0378E44D01A35792 /* Localizable.strings */; };
 		1CB2CD30052DDC560094AAA4 /* Chat.clr in Resources */ = {isa = PBXBuildFile; fileRef = F51F91D7037967CB01A35792 /* Chat.clr */; };
 		1CB2CD31052DDC560094AAA4 /* GPL.txt in Resources */ = {isa = PBXBuildFile; fileRef = F52BA284037C13C201A35792 /* GPL.txt */; };
-		1CB2CD33052DDC560094AAA4 /* Colloquy.icns in Resources */ = {isa = PBXBuildFile; fileRef = F5DD34730382E5E501000102 /* Colloquy.icns */; };
 		1CB2CD34052DDC560094AAA4 /* MVConnections.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5C4977B0385785401000102 /* MVConnections.nib */; };
 		1CB2CD35052DDC560094AAA4 /* statusHeader.png in Resources */ = {isa = PBXBuildFile; fileRef = F5E2536603874B5601000102 /* statusHeader.png */; };
 		1CB2CD4E052DDC560094AAA4 /* viewAlert.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBB23D504EFE24C000001C8 /* viewAlert.png */; };
@@ -298,6 +297,7 @@
 		C29FF9701F6544EB0044954E /* CocoaLumberjack.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96E1F6544D90044954E /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C29FF9711F6544EB0044954E /* libidn.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96F1F6544D90044954E /* libidn.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C29FF9721F6544EB0044954E /* XMPPFramework.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96D1F6544BA0044954E /* XMPPFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2B6BF501F6F00FC0044C20E /* Mac.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C2A889561F6EFD5300F2C6D4 /* Mac.xcassets */; };
 		C2B9D0ED1C258BA200C2B4C4 /* CQMPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
@@ -522,7 +522,7 @@
 		1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Info-ChatCore.plist"; path = "Resources/Info-ChatCore.plist"; sourceTree = SOURCE_ROOT; };
 		1C51B4CC052DE14B00BB459B /* Info-StandardCommands.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Info-StandardCommands.plist"; path = "Resources/Info-StandardCommands.plist"; sourceTree = SOURCE_ROOT; };
 		1C51B4CD052DE14B00BB459B /* Standard Commands.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Standard Commands.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1C51B89D052DF91E00BB459B /* Info.plist */ = {isa = PBXFileReference; explicitFileType = text.xml; fileEncoding = 4; name = Info.plist; path = Resources/Info.plist; sourceTree = SOURCE_ROOT; };
+		1C51B89D052DF91E00BB459B /* Info.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.xml; fileEncoding = 4; name = Info.plist; path = Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		1C5959010507803F000001C8 /* Generic.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Generic.icns; path = Resources/Generic.icns; sourceTree = SOURCE_ROOT; };
 		1C59A91F09FDEBA3000682B8 /* JVChatWindowControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatWindowControllerTests.m; path = Tests/JVChatWindowControllerTests.m; sourceTree = "<group>"; };
 		1C59BD61059E2E02001487E2 /* ChatPlugIn.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ChatPlugIn.scriptSuite; path = Resources/ChatPlugIn.scriptSuite; sourceTree = "<group>"; };
@@ -979,6 +979,7 @@
 		C29FF96D1F6544BA0044954E /* XMPPFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = XMPPFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C29FF96E1F6544D90044954E /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CocoaLumberjack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C29FF96F1F6544D90044954E /* libidn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libidn.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C2A889561F6EFD5300F2C6D4 /* Mac.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Mac.xcassets; path = Resources/Mac.xcassets; sourceTree = "<group>"; };
 		C2B9D0EB1C258BA200C2B4C4 /* CQMPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQMPreferencesWindowController.h; sourceTree = "<group>"; };
 		C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQMPreferencesWindowController.m; sourceTree = "<group>"; };
 		C2EB205F1C1EA95F00CB88B2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
@@ -1035,7 +1036,6 @@
 		F5C497750385713801000102 /* MVConnectionsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVConnectionsController.m; path = Controllers/MVConnectionsController.m; sourceTree = "<group>"; };
 		F5C4977C0385785401000102 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/en.lproj/MVConnections.nib; sourceTree = "<group>"; };
 		F5D04C03019489B801A35792 /* encoding.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = encoding.png; path = "Resources/Toolbar Icons/encoding.png"; sourceTree = "<group>"; };
-		F5DD34730382E5E501000102 /* Colloquy.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Colloquy.icns; path = Resources/Colloquy.icns; sourceTree = SOURCE_ROOT; };
 		F5E2536603874B5601000102 /* statusHeader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = statusHeader.png; path = Resources/statusHeader.png; sourceTree = "<group>"; };
 		F5E2538403882A8501000102 /* MVColorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVColorPanel.h; path = Views/MVColorPanel.h; sourceTree = "<group>"; };
 		F5E2538503882A8501000102 /* MVColorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVColorPanel.m; path = Views/MVColorPanel.m; sourceTree = "<group>"; };
@@ -1616,8 +1616,8 @@
 				1C1AFB3C09C295D900BF3E2A /* base.html */,
 				1C1AFDAA09C3BC4F00BF3E2A /* roomTopicBanner.html */,
 				1C3C116005029DE1000001C8 /* template.html */,
-				F5DD34730382E5E501000102 /* Colloquy.icns */,
 				1C5959010507803F000001C8 /* Generic.icns */,
+				C2A889561F6EFD5300F2C6D4 /* Mac.xcassets */,
 				0AA811220826DB8800A3BF2D /* default.js */,
 				1C1AFE8109C3D8C900BF3E2A /* roomTopicBanner.js */,
 				1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */,
@@ -1998,7 +1998,6 @@
 				1CB2CD2F052DDC560094AAA4 /* Localizable.strings in Resources */,
 				1CB2CD30052DDC560094AAA4 /* Chat.clr in Resources */,
 				1CB2CD31052DDC560094AAA4 /* GPL.txt in Resources */,
-				1CB2CD33052DDC560094AAA4 /* Colloquy.icns in Resources */,
 				1CB2CD34052DDC560094AAA4 /* MVConnections.nib in Resources */,
 				1CB2CD35052DDC560094AAA4 /* statusHeader.png in Resources */,
 				B6310B4C1C6EFA800033E88E /* activityNew.pdf in Resources */,
@@ -2068,6 +2067,7 @@
 				B6310B4D1C6EFA800033E88E /* activityNewImportant.pdf in Resources */,
 				19F2929E1B132BB7000198FE /* delete.pdf in Resources */,
 				1C2391BE0677E8F1000E89A7 /* aquaTabDivider.png in Resources */,
+				C2B6BF501F6F00FC0044C20E /* Mac.xcassets in Resources */,
 				92C70D151A5E88CE00080E45 /* op.pdf in Resources */,
 				1C2391BF0677E8F1000E89A7 /* aquaTabLeft.png in Resources */,
 				1C2391C00677E8F1000E89A7 /* aquaTabMiddle.png in Resources */,
@@ -2880,6 +2880,7 @@
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-$(COLLOQUY_BASE_CONFIGURATION)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEPLOYMENT_POSTPROCESSING = NO;
@@ -2967,6 +2968,7 @@
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-$(COLLOQUY_BASE_CONFIGURATION)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				EXPORTED_SYMBOLS_FILE = Colloquy.exp;
