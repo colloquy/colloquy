@@ -351,6 +351,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C29E3BED1F64A31200C18D21 /* Base.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -371,6 +372,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C29E3BED1F64A31200C18D21 /* Base.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
