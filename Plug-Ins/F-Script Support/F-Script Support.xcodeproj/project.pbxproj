@@ -322,7 +322,7 @@
 /* Begin XCBuildConfiguration section */
 		1C7F306C0855489300D41FB0 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C29E3BF51F64A33A00C18D21 /* target.xcconfig */;
+			baseConfigurationReference = C29E3BF41F64A33A00C18D21 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -348,7 +348,7 @@
 		};
 		1C7F306E0855489300D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C29E3BF51F64A33A00C18D21 /* target.xcconfig */;
+			baseConfigurationReference = C29E3BF41F64A33A00C18D21 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				COMBINE_HIDPI_IMAGES = YES;
