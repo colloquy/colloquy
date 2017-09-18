@@ -2429,7 +2429,7 @@ parsingFinished: { // make a scope for this
 				capabilitiesString = [self _stringFromPossibleData:parameters[3]];
 
 			NSArray <NSString *> *capabilities = [capabilitiesString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-			for( __strong NSString *capability in capabilities ) {
+			for( NSString *capability in capabilities ) {
 				BOOL sendCapReqForFeature = YES;
 
 				// IRCv3.1 Required
@@ -2761,8 +2761,6 @@ parsingFinished: { // make a scope for this
 		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"STARTTLS"] ) {
 			// STARTTLS ISUPPORT is kind of useless, since we always send it at the beginning of a session anyway.
 			[_supportedFeatures addObject:MVChatConnectionTLSFeature];
-		} else if ( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"METADATA"] ) {
-			[_supportedFeatures addObject:MVChatConnectionMetadataFeature];
 		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"WATCH"] ) {
 			@synchronized(_supportedFeatures) {
 				[_supportedFeatures addObject:MVChatConnectionWatchFeature];
@@ -2865,12 +2863,6 @@ parsingFinished: { // make a scope for this
 	}
 	if( [_supportedFeatures containsObject:MVChatConnectionWatchFeature] )
 		[self _requestServerNotificationsOfUserConnectedState];
-
-	if( [_supportedFeatures containsObject:MVChatConnectionMetadataFeature] ) {
-		NSBundle *bundle = [NSBundle mainBundle];
-		[self sendRawMessageImmediatelyWithFormat:@"METADATA SET client.name :%@", bundle.infoDictionary[(__bridge id)kCFBundleIdentifierKey]];
-		[self sendRawMessageImmediatelyWithFormat:@"METADATA SET client.version :%@ (%@)", bundle.infoDictionary[@"CFBundleShortVersionString"], bundle.infoDictionary[@"CFBundleVersion"]];
-	}
 
 	if( foundNAMESXCommand && [_supportedFeatures containsObject:MVChatConnectionNamesxFeature] ) {
 		[self sendRawMessageImmediatelyWithFormat:@"PROTOCTL NAMESX"];
@@ -4563,69 +4555,6 @@ parsingFinished: { // make a scope for this
 
 		self.connectedSecurely = YES;
 	}
-}
-
-#pragma mark -
-#pragma mark Metadata Replies
-
-- (void) _handle760WithParameters:(NSArray *) parameters fromSender:(id) sender {
-	if (parameters.count == 3) { // IRCv3.2 RPL_WHOISKEYVALUE, <target> <key> :<value
-		NSString *nickname = parameters[0];
-		if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
-		if( !nickname.length ) return;
-
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:nickname];
-		[user setAttribute:parameters[2] forKey:parameters[1]];
-	}
-}
-
-- (void) _handle761WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_KEYVALUE, <target> <key> [:<value>]
-	if (2 > parameters.count) return;
-
-	NSString *nickname = parameters[0];
-	if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
-	if( !nickname.length ) return;
-
-	MVChatUser *user = [self chatUserWithUniqueIdentifier:nickname];
-	id attribute = ((parameters.count >= 3) ? parameters[2] : nil);
-	[user setAttribute:attribute forKey:parameters[1]];
-}
-
-- (void) _handle762WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_METADATAEND, :end of metadata
-	// nothing to do
-}
-
-- (void) _handle764WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_METADATALIMIT, <target> :metadata limit reached
-	// nothing to do
-}
-
-- (void) _handle765WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_TARGETINVALID, <target> :invalid metadata target
-	// nothing to do
-}
-
-- (void) _handle766WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOMATCHINGKEYS, <string> :no matching keys
-	// nothing to do
-}
-
-- (void) _handle677WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_KEYINVALID, <key> :invalid metadata key
-	if (1 > parameters.count) return;
-
-	[self.localUser setAttribute:nil forKey:parameters[0]];
-}
-
-- (void) _handle768WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_KEYNOTSET, <target> <key> :key not set
-	if (parameters.count != 2) return;
-
-	NSString *nickname = parameters[0];
-	if( [nickname hasSuffix:@"*"] ) nickname = [nickname substringToIndex:(nickname.length - 1)];
-	if( !nickname.length ) return;
-
-	MVChatUser *user = [self chatUserWithUniqueIdentifier:nickname];
-	[user setAttribute:nil forKey:parameters[1]];
-}
-
-- (void) _handle769WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_KEYNOPERMISSION
-	// <Target> <key> :permission denied
 }
 
 #pragma mark -

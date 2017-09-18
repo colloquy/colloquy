@@ -8,38 +8,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString *MVMetadataKeyForAttributeName(NSString *attributeName) {
-	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserSSLCertFingerprintAttribute]) return @"server.certfp";
-	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserEmailAttribute]) return @"user.email";
-	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserPhoneAttribute]) return @"user.phone";
-	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserWebsiteAttribute]) return @"user.website";
-	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserCurrentlyPlayingAttribute]) return @"user.playing";
-	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserStatusAttribute]) return @"user.status";
-	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserClientNameAttribute]) return @"client.name";
-	if ([attributeName isCaseInsensitiveEqualToString:MVChatUserClientVersionAttribute]) return @"client.version";
-	if ([attributeName hasCaseInsensitivePrefix:MVChatUserIMServiceAttribute]) {
-		NSString *serviceName = [attributeName stringByReplacingOccurrencesOfString:MVChatUserIMServiceAttribute withString:@""];
-		return [NSString stringWithFormat:@"server.im.%@", serviceName];
-	}
-	return attributeName;
-}
-
-extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
-	if ([metadataKey isCaseInsensitiveEqualToString:@"server.certfp"]) return MVChatUserSSLCertFingerprintAttribute;
-	if ([metadataKey isCaseInsensitiveEqualToString:@"user.email"]) return MVChatUserEmailAttribute;
-	if ([metadataKey isCaseInsensitiveEqualToString:@"user.phone"]) return MVChatUserPhoneAttribute;
-	if ([metadataKey isCaseInsensitiveEqualToString:@"user.website"]) return MVChatUserWebsiteAttribute;
-	if ([metadataKey isCaseInsensitiveEqualToString:@"user.playing"]) return MVChatUserCurrentlyPlayingAttribute;
-	if ([metadataKey isCaseInsensitiveEqualToString:@"user.status"]) return MVChatUserStatusAttribute;
-	if ([metadataKey isCaseInsensitiveEqualToString:@"client.name"]) return MVChatUserClientNameAttribute;
-	if ([metadataKey isCaseInsensitiveEqualToString:@"client.version"]) return MVChatUserClientVersionAttribute;
-	if ([metadataKey hasCaseInsensitivePrefix:@"server.im."]) {
-		NSString *serviceName = [metadataKey stringByReplacingOccurrencesOfString:@"server.im." withString:@""];
-		return [NSString stringWithFormat:@"MVChatUserIMServiceAttribute.%@", serviceName];
-	}
-	return metadataKey;
-}
-
 @implementation MVIRCChatUser {
 	BOOL _hasPendingRefreshInformationRequest;
 }
@@ -70,7 +38,6 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 		MVSafeCopyAssign( _uniqueIdentifier, [userNickname lowercaseString] );
 
 		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( ctcpReplyNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
-//		[[NSNotificationCenter chatCenter] addObserver:self selector:@selector( metadataUpdatedNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
 
 		[userConnection _addKnownUser:self];
 	}
@@ -163,8 +130,6 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 
 	MVChatConnection *connection = [self connection];
 	[connection sendRawMessageWithFormat:@"WHOIS %@ %1$@", [self nickname]];
-	if( [[connection supportedFeatures] containsObject:MVChatConnectionMetadataFeature] )
-		[connection sendRawMessageWithFormat:@"METADATA %@ LIST", [self nickname]];
 }
 
 - (void) _setDateUpdated:(NSDate *) date {
@@ -183,15 +148,7 @@ extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey) {
 		[self sendSubcodeRequest:@"VERSION" withArguments:nil];
 	} else if( [key isEqualToString:MVChatUserKnownRoomsAttribute] ) {
 		[self refreshInformation];
-	} else {
-		MVChatConnection *connection = [self connection];
-		if( [[connection supportedFeatures] containsObject:MVChatConnectionMetadataFeature] )
-			[connection sendRawMessageWithFormat:@"METADATA %@ LIST :%@", [self nickname], MVMetadataKeyForAttributeName(key)];
 	}
-}
-
-- (void) setAttribute:(id __nullable) attribute forKey:(id) key {
-	[super setAttribute:attribute forKey:MVAttributeNameForMetadataKey(key)];
 }
 
 #pragma mark -

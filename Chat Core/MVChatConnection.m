@@ -57,7 +57,6 @@ NSString *MVChatConnectionTLSFeature = @"MVChatConnectionTLSFeature";
 // IRC3v2 Required
 NSString *MVChatConnectionMessageTagsFeature = @"MVChatConnectionMessageTagsFeature";
 NSString *MVChatConnectionMessageIntentsFeature = @"MVChatConnectionMessageIntentsFeature";
-NSString *MVChatConnectionMetadataFeature = @"MVChatConnectionMetadataFeature";
 NSString *MVChatConnectionMonitorFeature = @"MVChatConnectionMonitorFeature";
 
 // IRC3v2 Optional
