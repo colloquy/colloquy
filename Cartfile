@@ -16,6 +16,7 @@ github "shpakovski/MASPreferences" ~> 1.2.1
 
 github "colloquy/CocoaAsyncSocket" "colloquy-patches"
 
-# Fork overwrites of sub-dependencies
+# Overwrites of sub-dependencies
 
 github "colloquy/KissXML" "colloquy-patches"
+github "CocoaLumberjack/CocoaLumberjack" "master"
