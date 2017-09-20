@@ -283,6 +283,7 @@
 		C25750D61F64195B008AE623 /* ChatCore.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C25750D81F64209D008AE623 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C25750D71F64209D008AE623 /* MASPreferences.framework */; };
 		C25750D91F6420E2008AE623 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C25750D71F64209D008AE623 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C267EE2C1F7304DC00F3380D /* CocoaAsyncSocket.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C267EE2B1F7304D000F3380D /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C29654101BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */; };
 		C29654131BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654151BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib */; };
 		C29654161BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654181BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib */; };
@@ -410,6 +411,7 @@
 				C29FF9701F6544EB0044954E /* CocoaLumberjack.framework in Copy Frameworks */,
 				C29FF9711F6544EB0044954E /* libidn.framework in Copy Frameworks */,
 				C29FF9721F6544EB0044954E /* XMPPFramework.framework in Copy Frameworks */,
+				C267EE2C1F7304DC00F3380D /* CocoaAsyncSocket.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -933,6 +935,7 @@
 		C26756221C2173F30039BB6E /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVNotificationPreferencesViewController.strings"; sourceTree = "<group>"; };
 		C26756241C2173F60039BB6E /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
 		C26756261C2173F90039BB6E /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVNotificationPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C267EE2B1F7304D000F3380D /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CocoaAsyncSocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2784FED1C255BA200AE399E /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
 		C2784FEF1C255BA400AE399E /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
 		C2784FF11C255BA900AE399E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
@@ -1160,6 +1163,7 @@
 				C29FF96D1F6544BA0044954E /* XMPPFramework.framework */,
 				C29FF96B1F6538650044954E /* KissXML.framework */,
 				C25750D71F64209D008AE623 /* MASPreferences.framework */,
+				C267EE2B1F7304D000F3380D /* CocoaAsyncSocket.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
