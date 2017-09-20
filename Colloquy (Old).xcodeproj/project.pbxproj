@@ -293,10 +293,10 @@
 		C29FF9661F6532B80044954E /* libxml2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF9651F6532B80044954E /* libxml2.2.dylib */; };
 		C29FF9681F6533360044954E /* libxslt.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF9671F6533360044954E /* libxslt.1.dylib */; };
 		C29FF96A1F6533510044954E /* libexslt.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF9691F6533510044954E /* libexslt.0.dylib */; };
-		C29FF96C1F6538790044954E /* KissXML.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96B1F6538650044954E /* KissXML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C29FF9701F6544EB0044954E /* CocoaLumberjack.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96E1F6544D90044954E /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C29FF9711F6544EB0044954E /* libidn.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96F1F6544D90044954E /* libidn.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C29FF9721F6544EB0044954E /* XMPPFramework.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96D1F6544BA0044954E /* XMPPFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C29FF96C1F6538790044954E /* KissXML.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96B1F6538650044954E /* KissXML.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C29FF9701F6544EB0044954E /* CocoaLumberjack.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96E1F6544D90044954E /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C29FF9711F6544EB0044954E /* libidn.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96F1F6544D90044954E /* libidn.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C29FF9721F6544EB0044954E /* XMPPFramework.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96D1F6544BA0044954E /* XMPPFramework.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C2B6BF501F6F00FC0044C20E /* Mac.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C2A889561F6EFD5300F2C6D4 /* Mac.xcassets */; };
 		C2B9D0ED1C258BA200C2B4C4 /* CQMPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };

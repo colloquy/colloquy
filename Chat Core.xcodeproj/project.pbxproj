@@ -894,7 +894,7 @@
 					"RKL_BLOCKS=0",
 				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks\n";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
@@ -955,7 +955,7 @@
 					"RKL_CACHE_SIZE=47",
 					"RKL_BLOCKS=0",
 				);
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks\n";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
