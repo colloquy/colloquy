@@ -10,6 +10,9 @@
    <FileRef
       location = "group:Chat Core.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:../bouncer/Colloquy Bouncer.xcodeproj">
+   </FileRef>
    <Group
       location = "container:"
       name = "Documents">
