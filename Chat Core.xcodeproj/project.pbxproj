@@ -15,8 +15,6 @@
 		1C3D55BC05A4CBBE00F25F5E /* NSNumberAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3D55BA05A4CBBE00F25F5E /* NSNumberAdditions.m */; };
 		1C3D55C205A4DC1E00F25F5E /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3D55C005A4DC1E00F25F5E /* NSMethodSignatureAdditions.m */; };
 		1C51B483052DE0CB00BB459B /* NSAttributedStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E98622018B412B01EE70DE /* NSAttributedStringAdditions.m */; };
-		1C51B485052DE0CB00BB459B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB3C3705228EFD000001C8 /* SystemConfiguration.framework */; };
-		1C51B487052DE0CB00BB459B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		1C5A1A2506F8F4A000A51F10 /* MVIRCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5A1A2306F8F4A000A51F10 /* MVIRCChatConnection.m */; };
 		1C5A233F06FA4FEE00A51F10 /* libsilc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C5A233D06FA4FEE00A51F10 /* libsilc.framework */; };
 		1C5A234006FA4FEE00A51F10 /* libsilcclient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */; };
@@ -60,7 +58,6 @@
 		1CE4631E095ECD7300AB7732 /* MVChatRoomPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CE4631D095ECD7300AB7732 /* MVChatRoomPrivate.h */; };
 		1CE4632F095ECDE600AB7732 /* MVFileTransferPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CE4632E095ECDE600AB7732 /* MVFileTransferPrivate.h */; };
 		1CE4633C095ECE4F00AB7732 /* MVChatConnectionPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CE4633B095ECE4F00AB7732 /* MVChatConnectionPrivate.h */; };
-		1CEEB173095BE3A000166A54 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEB167095BE3A000166A54 /* CoreServices.framework */; };
 		1CF4E5120698E9E900986498 /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF4E5100698E9E900986498 /* NSDataAdditions.m */; };
 		1CF6513006EA23300073DEA8 /* MVChatConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = F52D043101873FC401EE70DE /* MVChatConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1CF6B82D07122670008ABEFA /* MVSILCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5A230806FA4F2700A51F10 /* MVSILCChatConnection.m */; };
@@ -107,8 +104,6 @@
 		92417D49149C019A0009B06E /* MVDirectClientConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0FE8A90B4F647D00855B9C /* MVDirectClientConnection.m */; };
 		92417D4A149C019A0009B06E /* MVDirectChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9C13380B50A7AC005F9F28 /* MVDirectChatConnection.m */; };
 		92417D53149C019A0009B06E /* NSFileManagerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */; };
-		92417D55149C019A0009B06E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB3C3705228EFD000001C8 /* SystemConfiguration.framework */; };
-		92417D59149C019A0009B06E /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEB167095BE3A000166A54 /* CoreServices.framework */; };
 		92417D5C149C019A0009B06E /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C9FFB130FA1958300748177 /* libicucore.dylib */; };
 		92417D61149C019A0009B06E /* BSD License.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1C11B7A009C27AC800789814 /* BSD License.txt */; };
 		92417D65149C019A0009B06E /* MVFileTransfer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C943AA9063C260800618CD9 /* MVFileTransfer.h */; settings = {ATTRIBUTES = (); }; };
@@ -139,7 +134,6 @@
 		92417D8F149C019A0009B06E /* MVChatString.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CB643D40C84F1EF00B79FB0 /* MVChatString.h */; settings = {ATTRIBUTES = (); }; };
 		92417D90149C019A0009B06E /* MVAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C1895590E29CC19003CFED0 /* MVAvailability.h */; settings = {ATTRIBUTES = (); }; };
 		92417D92149C019A0009B06E /* NSFileManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */; };
-		92BA71FF16890B66000AA0C5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92BA71FE16890B66000AA0C5 /* Security.framework */; };
 		92FC6D3B16C7C04E00EF6568 /* NSRegularExpressionAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 92FC6D3916C7C04E00EF6568 /* NSRegularExpressionAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92FC6D3C16C7C04E00EF6568 /* NSRegularExpressionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC6D3A16C7C04E00EF6568 /* NSRegularExpressionAdditions.m */; };
 		B6310B611C6FE3760033E88E /* DDLegacyMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = B6310B601C6FE3760033E88E /* DDLegacyMacros.h */; };
@@ -168,9 +162,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
-		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectClientConnection.h; path = "Chat Core/MVDirectClientConnection.h"; sourceTree = "<group>"; };
 		1C0FE8A90B4F647D00855B9C /* MVDirectClientConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDirectClientConnection.m; path = "Chat Core/MVDirectClientConnection.m"; sourceTree = "<group>"; };
 		1C11B7A009C27AC800789814 /* BSD License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "BSD License.txt"; path = "Resources/BSD License.txt"; sourceTree = "<group>"; };
@@ -220,7 +211,6 @@
 		1CB643D40C84F1EF00B79FB0 /* MVChatString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatString.h; path = "Chat Core/MVChatString.h"; sourceTree = "<group>"; };
 		1CCA517E0598AFBA00F0A4CD /* ChatCore.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ChatCore.scriptSuite; path = Resources/ChatCore.scriptSuite; sourceTree = "<group>"; };
 		1CCA517F0598AFBA00F0A4CD /* ChatCore.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ChatCore.scriptTerminology; path = Resources/ChatCore.scriptTerminology; sourceTree = "<group>"; };
-		1CCB3C3705228EFD000001C8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		1CD020B205759347000F93B4 /* NSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = NSStringAdditions.h; path = Additions/NSStringAdditions.h; sourceTree = "<group>"; };
 		1CD020B305759347000F93B4 /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = NSStringAdditions.m; path = Additions/NSStringAdditions.m; sourceTree = "<group>"; };
 		1CD020BC057593A9000F93B4 /* NSColorAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = NSColorAdditions.h; path = Additions/NSColorAdditions.h; sourceTree = "<group>"; };
@@ -232,7 +222,6 @@
 		1CE4631D095ECD7300AB7732 /* MVChatRoomPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatRoomPrivate.h; path = "Chat Core/MVChatRoomPrivate.h"; sourceTree = "<group>"; };
 		1CE4632E095ECDE600AB7732 /* MVFileTransferPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVFileTransferPrivate.h; path = "Chat Core/MVFileTransferPrivate.h"; sourceTree = "<group>"; };
 		1CE4633B095ECE4F00AB7732 /* MVChatConnectionPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatConnectionPrivate.h; path = "Chat Core/MVChatConnectionPrivate.h"; sourceTree = "<group>"; };
-		1CEEB167095BE3A000166A54 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		1CF4E50F0698E9E900986498 /* NSDataAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDataAdditions.h; path = Additions/NSDataAdditions.h; sourceTree = "<group>"; };
 		1CF4E5100698E9E900986498 /* NSDataAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDataAdditions.m; path = Additions/NSDataAdditions.m; sourceTree = "<group>"; };
 		1CF6B4960710894D008ABEFA /* MVSILCChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVSILCChatRoom.h; path = "Chat Core/MVSILCChatRoom.h"; sourceTree = "<group>"; };
@@ -258,7 +247,6 @@
 		922B1FF41692C42F002ECDFD /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDLog.m; path = "Chat Core/Logging/DDLog.m"; sourceTree = "<group>"; };
 		922B1FF51692C42F002ECDFD /* MVDelegateLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDelegateLogger.h; path = "Chat Core/Logging/MVDelegateLogger.h"; sourceTree = "<group>"; };
 		922B1FF61692C42F002ECDFD /* MVDelegateLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDelegateLogger.m; path = "Chat Core/Logging/MVDelegateLogger.m"; sourceTree = "<group>"; };
-		92BA71FE16890B66000AA0C5 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		92BFCEAA14FDEF95001D02BB /* libChat Core.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libChat Core.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		92FC6D3916C7C04E00EF6568 /* NSRegularExpressionAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSRegularExpressionAdditions.h; path = Additions/NSRegularExpressionAdditions.h; sourceTree = "<group>"; };
 		92FC6D3A16C7C04E00EF6568 /* NSRegularExpressionAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSRegularExpressionAdditions.m; path = Additions/NSRegularExpressionAdditions.m; sourceTree = "<group>"; };
@@ -285,13 +273,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				92BA71FF16890B66000AA0C5 /* Security.framework in Frameworks */,
-				1C51B485052DE0CB00BB459B /* SystemConfiguration.framework in Frameworks */,
-				1C51B487052DE0CB00BB459B /* Cocoa.framework in Frameworks */,
 				1C5A233F06FA4FEE00A51F10 /* libsilc.framework in Frameworks */,
 				1C5A234006FA4FEE00A51F10 /* libsilcclient.framework in Frameworks */,
 				C2B1A2031F652442003442D5 /* XMPPFramework.framework in Frameworks */,
-				1CEEB173095BE3A000166A54 /* CoreServices.framework in Frameworks */,
 				1C9FFB140FA1958300748177 /* libicucore.dylib in Frameworks */,
 				1C386E8E103246B500660864 /* TCMPortMapper.framework in Frameworks */,
 			);
@@ -301,8 +285,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				92417D55149C019A0009B06E /* SystemConfiguration.framework in Frameworks */,
-				92417D59149C019A0009B06E /* CoreServices.framework in Frameworks */,
 				92417D5C149C019A0009B06E /* libicucore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -329,7 +311,6 @@
 			isa = PBXGroup;
 			children = (
 				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
-				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
 			);
 			name = "Frameworks & Libraries";
 			sourceTree = "<group>";
@@ -337,24 +318,11 @@
 		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
-				1CEEB167095BE3A000166A54 /* CoreServices.framework */,
-				1CCB3C3705228EFD000001C8 /* SystemConfiguration.framework */,
-				92BA71FE16890B66000AA0C5 /* Security.framework */,
+				1C9FFB130FA1958300748177 /* libicucore.dylib */,
 				1C386E8D103246B500660864 /* TCMPortMapper.framework */,
 				C2B1A2021F652442003442D5 /* XMPPFramework.framework */,
-				1C9FFB130FA1958300748177 /* libicucore.dylib */,
 			);
 			name = "Linked Frameworks";
-			sourceTree = "<group>";
-		};
-		1058C7AEFEA557BF11CA2CBB /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				089C1672FE841209C02AAC07 /* Foundation.framework */,
-				089C167FFE841241C02AAC07 /* AppKit.framework */,
-			);
-			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
 		1C5CBF2D06FF92C90006C5B1 /* IRC Support */ = {
