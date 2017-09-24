@@ -49,7 +49,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window title="Connections" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Connections" animationBehavior="default" id="5" userLabel="Connections Window" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -64,7 +64,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" id="6Da-gK-I9z">
                             <rect key="frame" x="0.0" y="0.0" width="350" height="191"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" headerView="873" id="114" customClass="MVTableView">
                                     <rect key="frame" x="0.0" y="0.0" width="350" height="168"/>
@@ -185,21 +185,21 @@
                         <tabViewItems>
                             <tabViewItem identifier="0" id="657">
                                 <view key="view" id="656">
-                                    <rect key="frame" x="0.0" y="0.0" width="351" height="213"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="392" height="242"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                             </tabViewItem>
                             <tabViewItem identifier="1" id="655">
                                 <view key="view" id="654">
                                     <rect key="frame" x="0.0" y="0.0" width="392" height="242"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="662">
                                             <rect key="frame" x="173" y="9" width="199" height="79"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="Fy0-mI-AAq">
                                                 <rect key="frame" x="1" y="1" width="197" height="77"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" id="673">
                                                         <rect key="frame" x="0.0" y="0.0" width="402" height="77"/>
@@ -267,7 +267,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                             <popUpButtonCell key="cell" type="push" title="Nenhum" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" enabled="NO" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="664" id="812">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="system"/>
+                                                <font key="font" metaFont="menu"/>
                                                 <menu key="menu" title="OtherViews" id="671">
                                                     <items>
                                                         <menuItem title="Nenhum" state="on" id="664"/>
@@ -283,7 +283,7 @@
                                         <button imageHugsTitle="YES" id="667">
                                             <rect key="frame" x="146" y="9" width="19" height="19"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
-                                            <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="addWidget" imagePosition="overlaps" alignment="center" alternateImage="addWidgetSelected" inset="2" id="813">
+                                            <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="813">
                                                 <behavior key="behavior" lightByContents="YES"/>
                                                 <font key="font" metaFont="systemBold"/>
                                             </buttonCell>
@@ -325,7 +325,7 @@
                                         <button imageHugsTitle="YES" id="672">
                                             <rect key="frame" x="146" y="28" width="19" height="19"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
-                                            <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="removeWidget" imagePosition="overlaps" alignment="center" alternateImage="removeWidgetSelected" transparent="YES" inset="2" id="817">
+                                            <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" transparent="YES" imageScaling="proportionallyDown" inset="2" id="817">
                                                 <behavior key="behavior" lightByContents="YES"/>
                                                 <font key="font" metaFont="systemBold"/>
                                                 <string key="keyEquivalent"></string>
@@ -456,30 +456,15 @@
                             <outlet property="nextKeyView" destination="636" id="761"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="296">
-                        <rect key="frame" x="190" y="9" width="95" height="34"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="push" title="Cancelar" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="805">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                            <string key="keyEquivalent" base64-UTF8="YES">
-Gw
-</string>
-                        </buttonCell>
-                        <connections>
-                            <action selector="performClose:" target="267" id="322"/>
-                            <outlet property="nextKeyView" destination="297" id="772"/>
-                        </connections>
-                    </button>
                     <button verticalHuggingPriority="750" imageHugsTitle="YES" id="297">
                         <rect key="frame" x="283" y="9" width="98" height="34"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Ligar" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="806">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
-                            <mutableString key="keyEquivalent" base64-UTF8="YES">
+                            <string key="keyEquivalent" base64-UTF8="YES">
 DQ
-</mutableString>
+</string>
                         </buttonCell>
                         <connections>
                             <action selector="connectNewConnection:" target="-2" id="323"/>
@@ -535,7 +520,7 @@ DQ
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="IRC (Internet Relay Chat)" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="702" id="826">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
+                            <font key="font" metaFont="menu"/>
                             <menu key="menu" title="OtherViews" id="699">
                                 <items>
                                     <menuItem title="ICB (Internet Citizen's Band)" id="799"/>
@@ -549,6 +534,21 @@ DQ
                             <outlet property="nextKeyView" destination="306" id="758"/>
                         </connections>
                     </popUpButton>
+                    <button verticalHuggingPriority="750" misplaced="YES" imageHugsTitle="YES" id="296">
+                        <rect key="frame" x="188" y="9" width="95" height="34"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <buttonCell key="cell" type="push" title="Cancelar" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="805">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="performClose:" target="267" id="322"/>
+                            <outlet property="nextKeyView" destination="297" id="772"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
             <connections>
@@ -579,9 +579,9 @@ DQ
                         <buttonCell key="cell" type="push" title="Conversa" bezelStyle="rounded" alignment="center" borderStyle="border" tag="1" inset="2" id="827">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
-                            <mutableString key="keyEquivalent" base64-UTF8="YES">
+                            <string key="keyEquivalent" base64-UTF8="YES">
 DQ
-</mutableString>
+</string>
                         </buttonCell>
                         <connections>
                             <action selector="messageUser:" target="-2" id="350"/>
@@ -646,9 +646,9 @@ Gw
                         <buttonCell key="cell" type="push" title="Identificar" bezelStyle="rounded" alignment="center" borderStyle="border" tag="1" inset="2" id="835">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
-                            <mutableString key="keyEquivalent" base64-UTF8="YES">
+                            <string key="keyEquivalent" base64-UTF8="YES">
 DQ
-</mutableString>
+</string>
                         </buttonCell>
                         <connections>
                             <action selector="sendPassword:" target="-2" id="478"/>
@@ -984,7 +984,7 @@ DQ
                         <rect key="frame" x="20" y="62" width="409" height="89"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <clipView key="contentView" id="TLC-28-gYV">
-                            <rect key="frame" x="1" y="23" width="407" height="65"/>
+                            <rect key="frame" x="1" y="0.0" width="407" height="88"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" headerView="878" id="782">
@@ -1076,9 +1076,9 @@ Gw
         </window>
     </objects>
     <resources>
+        <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSApplicationIcon" width="128" height="128"/>
-        <image name="addWidget" width="128" height="128"/>
-        <image name="addWidgetSelected" width="128" height="128"/>
+        <image name="NSRemoveTemplate" width="11" height="11"/>
         <image name="buttonCell:808:image" width="1" height="1">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
@@ -1161,7 +1161,5 @@ ANcA2QDbEMEQxhDRENoQ7RDxEPwRBREKERIRFREaESkRLRE0ETwRSRFOEVARUhFXEV8RYhFnEW8RchGE
 EYcRjAAAAAAAAAIBAAAAAAAAAEEAAAAAAAAAAAAAAAAAABGOA
 </mutableData>
         </image>
-        <image name="removeWidget" width="128" height="128"/>
-        <image name="removeWidgetSelected" width="128" height="128"/>
     </resources>
 </document>
