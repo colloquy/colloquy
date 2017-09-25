@@ -346,6 +346,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		19164BCC1F79A324002F196D /* Colloquy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Colloquy.entitlements; sourceTree = "<group>"; };
 		194D95D21B2A33910061AE55 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		1C0931010D80C6E900A2705D /* CQColloquyApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQColloquyApplication.m; path = Mobile/Controllers/CQColloquyApplication.m; sourceTree = "<group>"; };
 		1C0931020D80C6E900A2705D /* CQColloquyApplication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQColloquyApplication.h; path = Mobile/Controllers/CQColloquyApplication.h; sourceTree = "<group>"; };
@@ -1078,6 +1079,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				19164BCC1F79A324002F196D /* Colloquy.entitlements */,
 				1C09310A0D80C71800A2705D /* Colloquy.pch */,
 				1C716EB313100F220088C737 /* Chat Core */,
 				1C15B2631311838B006FA16B /* Shared */,
@@ -1312,6 +1314,9 @@
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 0;
+							};
+							com.apple.Push = {
+								enabled = 1;
 							};
 						};
 					};
@@ -1787,6 +1792,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
+				CODE_SIGN_ENTITLEMENTS = Colloquy.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_ON_DEMAND_RESOURCES = NO;
@@ -1822,6 +1828,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
+				CODE_SIGN_ENTITLEMENTS = Colloquy.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
@@ -1857,6 +1864,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
+				CODE_SIGN_ENTITLEMENTS = Colloquy.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
