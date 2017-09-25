@@ -11,6 +11,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, copy) NSString *localizedDescription;
 @end
 
-NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFormat);
+NSString *humanReadableTimeInterval(NSTimeInterval interval);
 
 NS_ASSUME_NONNULL_END
