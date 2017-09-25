@@ -798,7 +798,7 @@ NS_ASSUME_NONNULL_BEGIN
 #if ENABLE(FILE_TRANSFERS)
 		@"/dcc",
 #endif
-		@"/aaway", @"/anick", @"/aquit", @"/amsg", @"/ame", @"/google", @"/wikipedia", @"/amazon", @"/safari", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/ipod", @"/music", @"/squit", @"/welcome", @"/sysinfo", @"/ignore", @"/unignore", @"/giphy", @"/gif" ];
+		@"/aaway", @"/anick", @"/aquit", @"/amsg", @"/ame", @"/google", @"/wikipedia", @"/amazon", @"/safari", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/ipod", @"/music", @"/squit", @"/welcome", @"/sysinfo", @"/ignore", @"/unignore", @"/giphy", @"/gif", @"/shrug" ];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -1358,6 +1358,29 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL) handleGiphyCommandWithArguments:(MVChatString *) arguments {
 	return [self handleGifCommandWithArguments:arguments];
+}
+
+- (BOOL) handleShrugCommandWithArguments:(MVChatString *) arguments {
+	static NSString *const shrug = @"¯\\_(ツ)_/¯";
+	NSString *trimmed = [MVChatStringAsString(arguments) stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	if (![trimmed hasSuffix:shrug]) {
+#if( defined(USE_ATTRIBUTED_CHAT_STRING) && USE_ATTRIBUTED_CHAT_STRING )
+		NSMutableAttributedString *stringWithShrug = [arguments mutableCopy];
+		NSDictionary *attributes = [stringWithShrug attributesAtIndex:arguments.length - 1 effectiveRange:NULL];
+		[stringWithShrug appendAttributedString:[[NSAttributedString alloc] initWithString:shrug attributes:attributes]];
+		[stringWithShrug deleteCharactersInRange:NSMakeRange(0, @"/shrug".length)];
+
+		[self sendMessage:stringWithShrug asAction:NO];
+#else
+		NSMutableString *stringWithShrug = [arguments mutableCopy];
+		[stringWithShrug appendString:shrug];
+		[stringWithShrug deleteCharactersInRange:NSMakeRange(0, @"/shrug".length)];
+
+		[self sendMessage:stringWithShrug asAction:NO];
+#endif
+	}
+
+	return YES;
 }
 
 - (BOOL) handleHelpCommandWithArguments:(MVChatString *) arguments {
