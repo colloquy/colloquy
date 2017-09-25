@@ -1441,7 +1441,7 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 	NSString *model = [UIDevice currentDevice].localizedModel;
 	NSString *systemVersion = [NSProcessInfo processInfo].operatingSystemVersionString;
-	NSString *systemUptime = humanReadableTimeInterval([NSProcessInfo processInfo].systemUptime, YES);
+	NSString *systemUptime = humanReadableTimeInterval([NSProcessInfo processInfo].systemUptime);
 	NSUInteger processorsInTotal = [NSProcessInfo processInfo].processorCount;
 
 	long long physicalMemory = [NSProcessInfo processInfo].physicalMemory;
