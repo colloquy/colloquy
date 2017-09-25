@@ -52,14 +52,14 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 	NSMutableURLRequest *request = [self _postRequestWithURL:@"https://getpocket.com/v3/oauth/authorize"];
 	request.HTTPBody = @{ @"consumer_key": [self _consumerKey], @"code": activeCode }.postDataRepresentation;
 
-	[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+	[[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 		NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
 		if ((HTTPResponse.statusCode / 100) == 2) {
 			NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
 			[[CQKeychain standardKeychain] setPassword:responseDictionary[@"access_token"] forServer:@"pocket-token" area:@"bookmarking"];
 		} else if ((HTTPResponse.statusCode / 100) == 5)
 			[self _postServerErrorNotification];
-	}];
+	}] resume];
 }
 
 #pragma mark -
@@ -68,7 +68,7 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 	NSMutableURLRequest *request = [self _postRequestWithURL:@"https://getpocket.com/v3/oauth/request"];
 	request.HTTPBody = @{ @"consumer_key": [self _consumerKey], @"redirect_uri": @"colloquy://redirect" }.postDataRepresentation;
 
-	[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+	[[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 		NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
 		if ((HTTPResponse.statusCode / 100) == 2) {
 			NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
@@ -83,7 +83,7 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[URLBase stringByAppendingFormat:@"request_token=%@&redirect_uri=%@", responseDictionary[@"code"], @"colloquy://redirect"]]];
 		} else if ((HTTPResponse.statusCode / 100) == 5)
 			[self _postServerErrorNotification];
-	}];
+	}] resume];
 }
 
 #pragma mark -
@@ -99,9 +99,9 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 	NSMutableURLRequest *request = [self _postRequestWithURL:@"https://getpocket.com/v3/add"];
 	request.HTTPBody = @{ @"url": link, @"consumer_key": [self _consumerKey], @"access_token": token }.postDataRepresentation;
 
-	[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+	[[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 		[self handleBookmarkingResponse:response withData:data forLink:link];
-	}];
+	}] resume];
 }
 @end
 
