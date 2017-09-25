@@ -12,8 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 	NSString *patternKey = dangerousCache[pattern];
 	if (!patternKey) {
-		patternKey = [NSRegularExpression escapedPatternForString:pattern];
-		dangerousCache[pattern] = patternKey;
+		@synchronized([NSRegularExpression class]) {
+			patternKey = [NSRegularExpression escapedPatternForString:pattern];
+			dangerousCache[pattern] = patternKey;
+		}
 	}
 #if SYSTEM(MAC)
 	NSString *key = [NSString stringWithFormat:@"%ld-%@", options, patternKey];
