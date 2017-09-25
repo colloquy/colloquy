@@ -4,5 +4,7 @@
 <dict>
 	<key>get-task-allow</key>
 	<false/>
+	<key>aps-environment</key>
+	<string>development</string>
 </dict>
 </plist>
