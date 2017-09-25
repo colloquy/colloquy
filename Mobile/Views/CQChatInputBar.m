@@ -321,6 +321,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) setFont:(UIFont *) font {
+	if (font.pointSize == _inputView.font.pointSize)
+		return;
+
 	if (font.pointSize > .0) {
 		UIFontDescriptorSymbolicTraits symbolicTraits = font.fontDescriptor.symbolicTraits;
 		if (italicText) symbolicTraits |= UIFontDescriptorTraitItalic;
