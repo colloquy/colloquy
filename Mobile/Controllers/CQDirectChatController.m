@@ -1445,32 +1445,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSUInteger processorsInTotal = [NSProcessInfo processInfo].processorCount;
 
 	long long physicalMemory = [NSProcessInfo processInfo].physicalMemory;
-	NSUInteger loopCount = 0;
-	for ( ; physicalMemory > 1024; loopCount++)
-		physicalMemory /= 1024;
-
-	NSString *memoryUnit = nil;
-	switch (loopCount) {
-	case 0:
-		memoryUnit = @"B";
-		break;
-	case 1:
-		memoryUnit = @"KiB";
-		break;
-	case 2:
-		memoryUnit = @"MiB";
-		break;
-	case 3:
-		memoryUnit = @"GiB";
-		break;
-	case 4:
-		memoryUnit = @"TiB";
-		break;
-	default:
-		memoryUnit = @"Units";
-		break;
-	}
-	NSString *systemMemory = [NSString stringWithFormat:@"%zd %@", physicalMemory, memoryUnit];
+	NSString *systemMemory = [NSByteCountFormatter stringFromByteCount:physicalMemory countStyle:NSByteCountFormatterCountStyleBinary];
 
 	NSString *message = nil;
 #if !SYSTEM(TV)
