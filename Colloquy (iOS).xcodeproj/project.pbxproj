@@ -1810,6 +1810,8 @@
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile;
 				PRODUCT_NAME = Colloquy;
+				PROVISIONING_PROFILE = "54ab4db4-4f40-4f53-bcaf-14067883cf1b";
+				PROVISIONING_PROFILE_SPECIFIER = distribution;
 			};
 			name = Distribution;
 		};
