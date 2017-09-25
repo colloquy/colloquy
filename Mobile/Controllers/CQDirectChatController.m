@@ -837,6 +837,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) chatInputBar:(CQChatInputBar *) theChatInputBar shouldChangeHeightBy:(CGFloat) difference {
+	if (difference == 0)
+		return NO;
+
 	CGRect frame = transcriptView.frame;
 	frame.size.height += difference;
 	transcriptView.frame = frame;
