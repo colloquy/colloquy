@@ -2,24 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:README.md">
-   </FileRef>
-   <FileRef
-      location = "group:CODE_OF_CONDUCT.md">
-   </FileRef>
-   <FileRef
-      location = "group:.gitignore">
-   </FileRef>
-   <FileRef
-      location = "group:.gitmodules">
-   </FileRef>
-   <FileRef
-      location = "group:Cartfile">
-   </FileRef>
-   <FileRef
-      location = "group:Cartfile.resolved">
-   </FileRef>
-   <FileRef
       location = "group:Colloquy (Old).xcodeproj">
    </FileRef>
    <FileRef
@@ -37,6 +19,32 @@
    <FileRef
       location = "group:chat-core/chat-core.xcodeproj">
    </FileRef>
+   <Group
+      location = "container:"
+      name = "Documents">
+      <FileRef
+         location = "group:README.md">
+      </FileRef>
+      <FileRef
+         location = "group:CODE_OF_CONDUCT.md">
+      </FileRef>
+   </Group>
+   <Group
+      location = "container:"
+      name = "Dependency Configuration">
+      <FileRef
+         location = "group:.gitignore">
+      </FileRef>
+      <FileRef
+         location = "group:.gitmodules">
+      </FileRef>
+      <FileRef
+         location = "group:Cartfile">
+      </FileRef>
+      <FileRef
+         location = "group:Cartfile.resolved">
+      </FileRef>
+   </Group>
    <Group
       location = "group:Carthage"
       name = "Carthage">
