@@ -85,7 +85,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	[[self window] setDelegate:self];
 
-	[[self window] useOptimizedDrawing:YES];
 	[[self window] setIgnoresMouseEvents:NO];
 	[[self window] setOpaque:NO]; // let us poke transparant holes in the window
 
