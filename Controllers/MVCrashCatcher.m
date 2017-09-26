@@ -82,7 +82,7 @@ static MVCrashCatcher *crashCatcher = nil;
 	[body appendFormat:@"feedback_comments=%@&", [[comments.string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByEncodingIllegalURLCharacters]];
 
 	NSData *trace = [[log string] dataUsingEncoding:NSUTF8StringEncoding];
-	[body appendFormat:@"page_source=%@", ( trace ? [trace base64Encoding] : @"" )];
+	[body appendFormat:@"page_source=%@", ( trace ? [trace mv_base64Encoding] : @"" )];
 
 	NSURL *url = [NSURL URLWithString:@"http://colloquy.info/crash.php"];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.];

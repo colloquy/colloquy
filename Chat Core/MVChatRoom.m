@@ -650,7 +650,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 		return [self uniqueIdentifier];
 
 	if( [[self uniqueIdentifier] isKindOfClass:[NSData class]] )
-		return [[self uniqueIdentifier] base64Encoding];
+		return [[self uniqueIdentifier] mv_base64Encoding];
 
 	return [[self uniqueIdentifier] description];
 }
