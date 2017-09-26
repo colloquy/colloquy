@@ -326,7 +326,7 @@
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	for( JVEmoticonSet *emoticon in [[[JVEmoticonSet emoticonSets] allObjects] sortedArrayUsingSelector:@selector( compare: )] ) {
+	for( emoticon in [[[JVEmoticonSet emoticonSets] allObjects] sortedArrayUsingSelector:@selector( compare: )] ) {
 		if( ! [[emoticon displayName] length] ) continue;
 		menuItem = [[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeDefaultEmoticons: ) keyEquivalent:@""];
 		[menuItem setTarget:self];
@@ -509,8 +509,8 @@
 
 						// Try to pick which option the list needs to select.
 						if( ! [value isEqualToString:compare] ) { // Didn't match.
-							NSNumber *value = [info objectForKey:@"value"];
-							if( [value unsignedLongValue] == count ) [info removeObjectForKey:@"value"];
+							NSNumber *infoValue = [info objectForKey:@"value"];
+							if( [infoValue unsignedLongValue] == count ) [info removeObjectForKey:@"value"];
 						} else [info setObject:[NSNumber numberWithUnsignedLong:count] forKey:@"value"]; // Matched for now.
 					} else if( [[info objectForKey:@"type"] isEqualToString:@"color"] ) {
 						if( value && [v rangeOfString:@"%@"].location != NSNotFound ) {

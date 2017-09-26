@@ -1179,11 +1179,11 @@ static NSMenu *favoritesMenu = nil;
 
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-		id view = nil;
+		id contextView = nil;
 
 		[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
 		MVAddUnsafeUnretainedAddress(connection, 2);
-		MVAddUnsafeUnretainedAddress(view, 3);
+		MVAddUnsafeUnretainedAddress(contextView, 3);
 
 		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		if( [results count] ) {

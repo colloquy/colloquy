@@ -659,8 +659,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			[sheet close];
 			[savePanel setDelegate:self];
 			[savePanel setDirectoryURL:[sheet directoryURL]];
-			[savePanel beginWithCompletionHandler:^(NSInteger result) {
-				[self _incomingFileSavePanelDidEnd:savePanel returnCode:result contextInfo:(void *)transfer];
+			[savePanel beginWithCompletionHandler:^(NSInteger saveResult) {
+				[self _incomingFileSavePanelDidEnd:savePanel returnCode:saveResult contextInfo:(void *)transfer];
 			}];
 		} else {
 			BOOL resume = ( resumePossible && result == NSModalResponseOK );

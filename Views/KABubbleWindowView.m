@@ -63,12 +63,12 @@ static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat
 	[_text drawInRect:NSMakeRect( 55., 10., 200., 30. )];
 
 	if( [_icon size].width > 32. || [_icon size].height > 32. ) { // Assume a square image.
-		NSRect rect = NSMakeRect( 0., 0., 32., 32. );
-		NSImageRep *sourceImageRep = [_icon bestRepresentationForRect:rect context:[NSGraphicsContext currentContext] hints:nil];
+		NSRect imageRect = NSMakeRect( 0., 0., 32., 32. );
+		NSImageRep *sourceImageRep = [_icon bestRepresentationForRect:imageRect context:[NSGraphicsContext currentContext] hints:nil];
 		_icon = [[NSImage alloc] initWithSize:NSMakeSize( 32., 32. )];
 		[_icon lockFocus];
 		[[NSGraphicsContext currentContext] setImageInterpolation: NSImageInterpolationHigh];
-		[sourceImageRep drawInRect:rect];
+		[sourceImageRep drawInRect:imageRect];
 		[_icon unlockFocus];
 	}
 
