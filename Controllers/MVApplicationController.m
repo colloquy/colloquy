@@ -141,7 +141,7 @@ static BOOL applicationIsTerminating = NO;
 #pragma mark -
 
 - (IBAction) checkForUpdate:(id) sender {
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_4 ) { // test for 10.4
+	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_9 ) { // test for 10.9
 		NSRunInformationalAlertPanel( @"Tiger is no longer supported.", @"You are running the last version of Colloquy that is supported for Tiger (10.4.11). Please update to Leopard or Snow Leopard to receive further updates and support for Colloquy.", nil, nil, nil );
 		return;
 	}
