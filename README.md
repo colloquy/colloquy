@@ -4,3 +4,4 @@ This repository uses git submodules for some of its dependencies, so you will ha
 
 To update these dependencies to newer versions, please refer to the instructions in the [Cartfile](Cartfile) and don't update the submodules manually.
 
+To build and run an app, open up `Colloquy.xcworkspace` and select the appropriate scheme from the dropdown menu.
