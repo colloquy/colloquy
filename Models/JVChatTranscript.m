@@ -1238,8 +1238,9 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		}
 
 		@synchronized( _transcript ) {
+
 			xmlChar *startedStr = xmlGetProp( (xmlNode *) _node, (xmlChar *) "started" );
-			_startDate = ( startedStr ? [[NSDate alloc] initWithString:[NSString stringWithUTF8String:(char *) startedStr]] : nil );
+			_startDate = ( startedStr ? [[NSString stringWithUTF8String:(char *) startedStr] dateFromFormat:@"yyyy-MM-DD HH:mm:ss ZZZZZ"] : nil );
 			xmlFree( startedStr );
 		}
 	}
@@ -1275,7 +1276,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 	@synchronized( _transcript ) {
 		xmlChar *prop = xmlGetProp( _node, (xmlChar *) "received" );
-		_date = ( prop ? [[NSDate alloc] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
+		_date = ( prop ? [[NSString stringWithUTF8String:(char *) prop] dateFromFormat:@"yyyy-MM-DD HH:mm:ss ZZZZZ"] : nil );
 		xmlFree( prop );
 
 		prop = xmlGetProp( _node, (xmlChar *) "action" );
