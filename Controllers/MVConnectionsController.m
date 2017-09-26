@@ -1291,7 +1291,8 @@ static NSMenu *favoritesMenu = nil;
 		if( operation == NSTableViewDropOn && row != -1 ) return NSDragOperationNone;
 
 		string = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:MVConnectionPboardType]];
-		[[[info draggingPasteboard] dataForType:MVConnectionPboardType] getBytes:&index];
+		NSData *pboardData = [[info draggingPasteboard] dataForType:MVConnectionPboardType];
+		[pboardData getBytes:&index length:[pboardData length]];
 		if( string && row >= 0 && row != index && ( row - 1 ) != index ) return NSDragOperationEvery;
 		else if( string && row == -1 ) return NSDragOperationNone;
 
@@ -1320,7 +1321,8 @@ static NSMenu *favoritesMenu = nil;
 	if( view == connections ) {
 		if( [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:MVConnectionPboardType]] ) {
 			NSInteger index = -1;
-			[[[info draggingPasteboard] dataForType:MVConnectionPboardType] getBytes:&index];
+			NSData *pboardData = [[info draggingPasteboard] dataForType:MVConnectionPboardType];
+			[pboardData getBytes:&index length:[pboardData length]];
 			if( row > index ) row--;
 
 			id item = [_bookmarks objectAtIndex:index];
