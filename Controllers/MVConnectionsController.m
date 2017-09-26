@@ -1272,8 +1272,8 @@ static NSMenu *favoritesMenu = nil;
 		[board setString:string forType:@"CorePasteboardFlavorType 0x75726C6E"];
 		[board setData:data forType:@"CorePasteboardFlavorType 0x75726C6E"];
 
-		plist = [NSArray arrayWithObjects:[NSArray arrayWithObject:[[connection url] absoluteString]], [NSArray arrayWithObject:[[connection url] host]], nil];
-		data = [NSPropertyListSerialization dataFromPropertyList:plist format:NSPropertyListXMLFormat_v1_0 errorDescription:NULL];
+		plist = @[ @[ connection.url.absoluteString ], @[ connection.url.host ] ];
+		data = [NSPropertyListSerialization dataWithPropertyList:plist format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL];
 		string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 		[board setPropertyList:plist forType:@"WebURLsWithTitlesPboardType"];
 		[board setString:string forType:@"WebURLsWithTitlesPboardType"];
