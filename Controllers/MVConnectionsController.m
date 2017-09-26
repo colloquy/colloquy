@@ -456,7 +456,7 @@ static NSMenu *favoritesMenu = nil;
 		SecTrustRef trust = (__bridge SecTrustRef)notification.userInfo[@"trust"];
 		NSInteger shouldTrust = [panel runModalForTrust:trust showGroup:YES];
 
-		completionHandler(shouldTrust == NSOKButton);
+		completionHandler(shouldTrust == NSModalResponseOK);
 	} else {
 		completionHandler(YES);
 	}
@@ -1650,10 +1650,10 @@ static NSMenu *favoritesMenu = nil;
 			case MVChatPacketError:
 			case MVChatPacketSizeError:
 				if( ! [connection isConnected] ) {
-					if( NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), NSLocalizedString( @"The server may have shutdown for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Reconnect", "reconnect to server button" ), NSLocalizedString( @"Cancel", "cancel button" ), nil ) == NSOKButton )
+					if( NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), NSLocalizedString( @"The server may have shutdown for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Reconnect", "reconnect to server button" ), NSLocalizedString( @"Cancel", "cancel button" ), nil ) == NSModalResponseOK )
 						[connection connect];
 				} else {
-					if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect", "title of the could not connect error" ), NSLocalizedString( @"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Retry", "retry connecting to server" ), NSLocalizedString( @"Cancel" "cancel buttun" ), nil ) == NSOKButton )
+					if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect", "title of the could not connect error" ), NSLocalizedString( @"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Retry", "retry connecting to server" ), NSLocalizedString( @"Cancel" "cancel buttun" ), nil ) == NSModalResponseOK )
 						[connection connect];
 				}
 				break;
@@ -1665,7 +1665,7 @@ static NSMenu *favoritesMenu = nil;
 		switch( error ) {
 			case MVChatSocketError:
 			case MVChatDNSError:
-				if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect to Chat server", "chat invalid password dialog title" ), NSLocalizedString( @"The server is disconnected or refusing connections from your computer. Make sure you are connected to the internet and have access to the server.", "chat invalid password dialog message" ), NSLocalizedString( @"Retry", "retry connecting to server" ), NSLocalizedString( @"Cancel", "cancel button" ), nil ) == NSOKButton )
+				if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect to Chat server", "chat invalid password dialog title" ), NSLocalizedString( @"The server is disconnected or refusing connections from your computer. Make sure you are connected to the internet and have access to the server.", "chat invalid password dialog message" ), NSLocalizedString( @"Retry", "retry connecting to server" ), NSLocalizedString( @"Cancel", "cancel button" ), nil ) == NSModalResponseOK )
 					[connection connect];
 				break;
 			case MVChatBadUserPasswordError:
@@ -2221,7 +2221,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _deleteConnectionSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	if( returnCode != NSCancelButton ) return; // the cancel button because we have them flipped above
+	if( returnCode != NSModalResponseCancel ) return; // the cancel button because we have them flipped above
 	NSInteger row = [connections selectedRow];
 	if( row == -1 ) return;
 	[connections deselectAll:nil];

@@ -330,7 +330,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo {
-	if( returnCode == NSOKButton ) {
+	if( returnCode == NSModalResponseOK ) {
 		[[self transcript] writeToURL:[sheet URL] atomically:YES];
 		[[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:[sheet isExtensionHidden]], NSFileExtensionHidden, nil] ofItemAtPath:[[sheet URL] absoluteString] error:nil];
 		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[sheet URL]];

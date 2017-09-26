@@ -710,7 +710,7 @@
 	[openPanel setDirectoryURL:[NSURL fileURLWithPath:value isDirectory:NO]];
 	[openPanel setAllowedFileTypes:types];
 
-	if( [openPanel runModal] != NSOKButton )
+	if( [openPanel runModal] != NSModalResponseOK )
 		return;
 
 	value = [[openPanel URL] path];

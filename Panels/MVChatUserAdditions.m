@@ -139,7 +139,7 @@
 	[panel setAccessoryView:view];
 
 	[panel setAllowedFileTypes:nil];
-	if( [panel runModal] == NSOKButton ) {
+	if( [panel runModal] == NSModalResponseOK ) {
 		passive = [passiveButton state];
 		for( NSURL *fileURL in [panel URLs] )
 			[[MVFileTransferController defaultController] addFileTransfer:[self sendFile:[fileURL path] passively:passive]];
