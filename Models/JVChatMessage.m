@@ -445,7 +445,7 @@
 	}
 
 	if( [identifier isKindOfClass:[NSData class]] )
-		identifier = [identifier base64Encoding];
+		identifier = [identifier mv_base64Encoding];
 
 	return ( identifier ? identifier : [super senderIdentifier] );
 }
