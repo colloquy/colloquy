@@ -11,7 +11,7 @@
 		_leftMargin = 0.;
 
 		[self setImageAlignment:NSImageAlignLeft];
-		[self setImageScaling:NSScaleProportionally];
+		[self setImageScaling:NSImageScaleProportionallyDown];
 		[self setImageFrameStyle:NSImageFrameNone];
 		[self setLineBreakMode:NSLineBreakByTruncatingTail];
 	}
@@ -99,16 +99,16 @@
 
 	if( [self image] ) {
 		switch( [self imageScaling] ) {
-		case NSScaleProportionally:
+		case NSImageScaleProportionallyDown:
 			if( NSHeight( cellFrame ) < [[self image] size].height )
 				imageWidth = ( NSHeight( cellFrame ) / [[self image] size].height ) * [[self image] size].width;
 			else imageWidth = [[self image] size].width;
 			break;
 		default:
-		case NSScaleNone:
+		case NSImageScaleNone:
 			imageWidth = [[self image] size].width;
 			break;
-		case NSScaleToFit:
+		case NSImageScaleAxesIndependently:
 			imageWidth = [[self image] size].width;
 			break;
 		}
@@ -228,7 +228,7 @@
 #pragma mark -
 
 - (void) setImageScaling:(NSImageScaling) newScaling {
-	[super setImageScaling:( newScaling == NSScaleProportionally || newScaling == NSScaleNone ? newScaling : NSScaleProportionally )];
+	[super setImageScaling:( newScaling == NSImageScaleProportionallyDown || newScaling == NSImageScaleNone ? newScaling : NSImageScaleAxesIndependently )];
 }
 
 - (void) setImageAlignment:(NSImageAlignment) newAlign {
