@@ -43,30 +43,10 @@
 	if( ( self = [super init] ) ) {
 		content = [[NSMutableString alloc] initWithCapacity:capacity];
 		participants = [[NSMutableSet alloc] initWithCapacity:400];
-		lineBreaks = [[NSCharacterSet characterSetWithCharactersInString:@"\n\r"] retain];
+		lineBreaks = [NSCharacterSet characterSetWithCharactersInString:@"\n\r"];
 	}
 
 	return self;
-}
-
-- (void) dealloc {
-	[lastElement release];
-	[content release];
-	[participants release];
-	[dateStarted release];
-	[lastEventDate release];
-	[source release];
-	[lineBreaks release];
-
-	lastElement = nil;
-	content = nil;
-	participants = nil;
-	dateStarted = nil;
-	lastEventDate = nil;
-	source = nil;
-	lineBreaks = nil;
-
-	[super dealloc];
 }
 
 - (NSDictionary *) metadataAttributes {
@@ -93,7 +73,6 @@
 
 				NSString *coverageWording = [NSString stringWithFormat:@"%@ - %@", [formatter stringFromDate:dateStarted], [formatter stringFromDate:lastDate]];
 				[ret setObject:coverageWording forKey:(NSString *) kMDItemCoverage];
-				[formatter release];
 			}
 		}
 	}
@@ -108,29 +87,26 @@
 }
 
 - (void) parser:(NSXMLParser *) parser didStartElement:(NSString *) elementName namespaceURI:(NSString *) namespaceURI qualifiedName:(NSString *) qName attributes:(NSDictionary *) attributes {
-	[lastElement release];
-	lastElement = [elementName retain];
+	lastElement = elementName;
 
 	if( [elementName isEqualToString:@"envelope"] ) inEnvelope = YES;
 	else if( inEnvelope && [elementName isEqualToString:@"message"] ) {
 		inMessage = YES;
 		NSString *date = [attributes objectForKey:@"received"];
 		if( date ) {
-			[lastEventDate release];
-			lastEventDate = [date retain];
+			lastEventDate = [date copy];
 			if( ! dateStarted ) dateStarted = [[NSDate alloc] initWithString:date];
 		}
 	} else if( ! inEnvelope && [elementName isEqualToString:@"event"] ) {
 		NSString *date = [attributes objectForKey:@"occurred"];
 		if( date ) {
-			[lastEventDate release];
-			lastEventDate = [date retain];
+			lastEventDate = [date copy];
 			if( ! dateStarted ) dateStarted = [[NSDate alloc] initWithString:date];
 		}
 	} else if( ! inEnvelope && [elementName isEqualToString:@"log"] ) {
 		NSString *date = [attributes objectForKey:@"began"];
 		if( date && ! dateStarted ) dateStarted = [[NSDate alloc] initWithString:date];
-		if( ! source ) source = [[attributes objectForKey:@"source"] retain];
+		if( ! source ) source = [[attributes objectForKey:@"source"] copy];
 	}
 }
 
@@ -141,7 +117,6 @@
 		[content appendString:@"\n"]; // append a newline after messages
 	}
 
-	[lastElement release];
 	lastElement = nil;
 }
 
@@ -158,32 +133,28 @@
 Boolean GetMetadataForFile( void *thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile );
 
 Boolean GetMetadataForFile( void *thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile ) {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	@autoreleasepool {
+		NSFileManager *fm = [NSFileManager defaultManager];
 
-	NSFileManager *fm = [NSFileManager defaultManager];
+		if( ! [fm fileExistsAtPath:(__bridge NSString *) pathToFile] ) goto end;
+		if( ! [fm isReadableFileAtPath:(__bridge NSString *) pathToFile] ) goto end;
 
-	if( ! [fm fileExistsAtPath:(NSString *) pathToFile] ) goto end;
-	if( ! [fm isReadableFileAtPath:(NSString *) pathToFile] ) goto end;
+		NSURL *file = [NSURL fileURLWithPath:(__bridge NSString *) pathToFile];
+		NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:file];
 
-	NSURL *file = [NSURL fileURLWithPath:(NSString *) pathToFile];
-	NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:file];
+		unsigned long long fileSize = [[[fm attributesOfItemAtPath:(__bridge NSString *) pathToFile error:nil] objectForKey:NSFileSize] unsignedLongLongValue];
+		NSUInteger capacity = (NSUInteger)( fileSize ? fileSize / 3 : 5000 ); // the message content takes up about a third of the XML file's size
 
-	unsigned long long fileSize = [[[fm attributesOfItemAtPath:(NSString *) pathToFile error:nil] objectForKey:NSFileSize] unsignedLongLongValue];
-	NSUInteger capacity = (NSUInteger)( fileSize ? fileSize / 3 : 5000 ); // the message content takes up about a third of the XML file's size
+		JVChatTranscriptMetadataExtractor *extractor = [[JVChatTranscriptMetadataExtractor alloc] initWithCapacity:capacity];
 
-	JVChatTranscriptMetadataExtractor *extractor = [[JVChatTranscriptMetadataExtractor alloc] initWithCapacity:capacity];
+		[parser setDelegate:extractor];
+		[parser parse];
 
-	[parser setDelegate:extractor];
-	[parser parse];
+		[(__bridge NSMutableDictionary *) attributes addEntriesFromDictionary:[extractor metadataAttributes]];
 
-	[(NSMutableDictionary *) attributes addEntriesFromDictionary:[extractor metadataAttributes]];
+		xmlSetStructuredErrorFunc( NULL, NULL );
 
-	[parser release];
-	[extractor release];
-
-	xmlSetStructuredErrorFunc( NULL, NULL );
-
+	}
 end:
-	[pool release];
     return TRUE;
 }
