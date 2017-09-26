@@ -85,7 +85,7 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 - (NSString *) filePath;
 - (void) setFilePath:(NSString *) filePath;
 
-- (NSCalendarDate *) dateBegan;
+- (NSDateComponents *) dateBegan;
 
 - (NSURL *) source;
 - (void) setSource:(NSURL *) source;

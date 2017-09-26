@@ -811,7 +811,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (NSCalendarDate *) dateBegan {
+- (NSDateComponents *) dateBegan {
 	if( ! _xmlLog ) return nil;
 
 	xmlNode *node = xmlDocGetRootElement( _xmlLog );
@@ -820,7 +820,9 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	xmlChar *prop = xmlGetProp( node, (xmlChar *) "began" );
 	if( prop ) {
 		NSString *dateString = [NSString stringWithUTF8String:(char *) prop];
-		NSCalendarDate *ret = [NSCalendarDate dateWithNaturalLanguageString:dateString];
+		NSDate *date = [dateString dateFromFormat:@"yyyy-MM-DD HH:mm:ss ZZZZZ"];
+		const NSCalendarUnit requestedComponents = (NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond | NSCalendarUnitTimeZone);
+		NSDateComponents *ret = [[NSCalendar autoupdatingCurrentCalendar] components:requestedComponents fromDate:date];
 		xmlFree( prop );
 		return ret;
 	}
@@ -1095,7 +1097,8 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	[[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] ofItemAtPath:path error:nil];
 
 	if( _logFile ) {
-		NSString *beganDateString = [[self dateBegan] localizedDescription];
+		NSDate *began = [[NSCalendar autoupdatingCurrentCalendar] dateFromComponents:[self dateBegan]];
+		NSString *beganDateString = [began localizedDescription];
 		NSString *lastDateString = [[[self lastMessage] date] localizedDescription];
 		NSString *target = [[self source] path];
 		if( [target length] > 1 ) target = [target substringFromIndex:1];

@@ -151,7 +151,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (NSString *) windowTitle {
-	NSCalendarDate *date = [[self transcript] dateBegan];
+	NSDateComponents *dateComponents = [[self transcript] dateBegan];
+	NSDate *date = [[NSCalendar autoupdatingCurrentCalendar] dateFromComponents:dateComponents];
 	return [NSString stringWithFormat:NSLocalizedString( @"%@ - %@ Transcript", "chat transcript/log - window title" ), [self title], ( date ? [NSDate formattedShortDateStringForDate:[NSDate date]] : @"" )];
 }
 

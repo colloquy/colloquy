@@ -59,6 +59,21 @@ NS_ASSUME_NONNULL_BEGIN
 }
 @end
 
+@implementation NSString (NSDateAdditions)
+- (NSDate *) dateFromFormat:(NSString *) format {
+	NSDateFormatter *dateFormatter = [NSDate cq_cacheDictionary][format];
+	if (!dateFormatter) {
+		dateFormatter = [[NSDateFormatter alloc] init];
+		dateFormatter.dateFormat = format;
+
+		[NSDate cq_cacheDictionary][format] = dateFormatter;
+	}
+
+	return [dateFormatter dateFromString:self];
+}
+@end
+
+
 NSString *humanReadableTimeInterval(NSTimeInterval interval) {
 	NSDateComponentsFormatter *formatter = [[NSDateComponentsFormatter alloc] init];
 	formatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
