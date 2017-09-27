@@ -142,7 +142,7 @@ static BOOL applicationIsTerminating = NO;
 
 - (IBAction) checkForUpdate:(id) sender {
 	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_9 ) { // test for 10.9
-		NSRunInformationalAlertPanel( @"Tiger is no longer supported.", @"You are running the last version of Colloquy that is supported for Tiger (10.4.11). Please update to Leopard or Snow Leopard to receive further updates and support for Colloquy.", nil, nil, nil );
+		NSRunInformationalAlertPanel( @"Mavericks is no longer supported.", @"You are running the last version of Colloquy that is supported for Mavericks (10.9). Please update to Sierra (10.10) or later to receive further updates and support for Colloquy.", nil, nil, nil );
 		return;
 	}
 
