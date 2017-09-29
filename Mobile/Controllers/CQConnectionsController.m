@@ -1,6 +1,5 @@
 #import "CQConnectionsController.h"
 
-#import "CQAlertView.h"
 #import "CQAnalyticsController.h"
 #import "CQBouncerSettings.h"
 #import "CQBouncerConnection.h"
@@ -42,19 +41,9 @@ NSString *CQConnectionsControllerMovedConnectionNotification = @"CQConnectionsCo
 NSString *CQConnectionsControllerAddedBouncerSettingsNotification = @"CQConnectionsControllerAddedBouncerSettingsNotification";
 NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnectionsControllerRemovedBouncerSettingsNotification";
 
-#define CannotConnectToBouncerConnectionTag 1
-#define CannotConnectToBouncerTag 2
-#define HelpAlertTag 3
-#define NextAlertTag 4
-#define IncorrectRoomPasswordTag 5
-#define NotIdentifiedWithServicesTag 6
-#define NoServerTag 7
-#define PeerTrustFeedbackTag 8
-#define ServerPasswordRequiredTag 9
-
 static NSString *const connectionInvalidSSLCertAction = nil;
 
-@interface CQConnectionsController () <CQActionSheetDelegate, CQAlertViewDelegate,
+@interface CQConnectionsController () <CQActionSheetDelegate,
 #if !SYSTEM(TV)
 CSSearchableIndexDelegate,
 #endif
@@ -267,142 +256,6 @@ CQBouncerConnectionDelegate>
 
 #pragma mark -
 
-- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	NSMapTable *errorToAlertMappingsForConnection = [_connectionToErrorToAlertMap objectForKey:[alertView associatedObjectForKey:@"connection"]];
-	[errorToAlertMappingsForConnection removeObjectForKey:[alertView associatedObjectForKey:@"error-code"]];
-	[errorToAlertMappingsForConnection removeObjectForKey:@"peerTrust"];
-
-	if (buttonIndex == alertView.cancelButtonIndex)
-		return;
-
-	if (alertView.tag == CannotConnectToBouncerConnectionTag) {
-		MVChatConnection *connection = [alertView associatedObjectForKey:@"userInfo"];
-		[connection connectDirectly];
-		return;
-	}
-
-	if (alertView.tag == CannotConnectToBouncerTag) {
-//		CQBouncerSettings *settings = [alertView associatedObjectForKey:@"userInfo"];
-//		[_connectionsNavigationController editBouncer:settings];
-		[[CQColloquyApplication sharedApplication] showConnections:nil];
-		return;
-	}
-
-	if (alertView.tag == HelpAlertTag) {
-		[[CQColloquyApplication sharedApplication] showHelp:nil];
-		return;
-	}
-
-	if (alertView.tag == NextAlertTag) {
-		CQAlertView *nextAlertView = [alertView associatedObjectForKey:@"userInfo"];
-		[nextAlertView show];
-		return;
-	}
-
-	if (alertView.tag == IncorrectRoomPasswordTag || alertView.tag == NotIdentifiedWithServicesTag) {
-		UITextField *passwordField = [alertView textFieldAtIndex:0];
-		NSString *password = passwordField.text;
-
-		NSNotification *notification = [alertView associatedObjectForKey:@"userInfo"];
-		NSError *error = notification.userInfo[@"error"];
-		MVChatConnection *connection = notification.object;
-		NSString *room = (error.userInfo)[@"room"];
-
-		NSString *roomPassword = nil;
-		if (alertView.tag == IncorrectRoomPasswordTag) {
-			roomPassword = password;
-			[[CQKeychain standardKeychain] setPassword:password forServer:connection.uniqueIdentifier area:room];
-		} else if (alertView.tag == NotIdentifiedWithServicesTag) {
-			connection.nicknamePassword = password;
-			[connection savePasswordsToKeychain];
-		}
-
-		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:room andConnection:connection];
-
-		if (roomPassword.length)
-			[connection joinChatRoomNamed:room withPassphrase:roomPassword];
-		else [connection joinChatRoomNamed:room];
-
-		return;
-	}
-
-	if (alertView.tag == ServerPasswordRequiredTag) {
-		UITextField *passwordField = [alertView textFieldAtIndex:1];
-		NSString *password = passwordField.text;
-		if (!password.length)
-			return;
-
-		NSNotification *notification = [alertView associatedObjectForKey:@"userInfo"];
-		MVChatConnection *connection = notification.object;
-		connection.password = password;
-
-		UITextField *usernameField = [alertView textFieldAtIndex:0];
-		NSString *usernameFromAlertView = usernameField.text;
-		NSString *usernameFromConnection = connection.username;
-
-		BOOL shouldSendUserInPass = usernameFromAlertView.length && usernameFromConnection.length && ![usernameFromConnection isEqualToString:usernameFromAlertView];
-		if (shouldSendUserInPass) {
-			connection.username = usernameFromAlertView;
-
-			[connection sendRawMessageImmediatelyWithFormat:@"PASS %@:%@", usernameFromAlertView, password];
-		} else [connection sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
-
-		[connection savePasswordsToKeychain];
-
-		return;
-	}
-
-	if (alertView.tag == NoServerTag) {
-		CQAlertView *colloquyAlertView = (CQAlertView *)alertView;
-		MVChatConnection *connection = [colloquyAlertView associatedObjectForKey:@"connection"];
-		connection.server = [colloquyAlertView textFieldAtIndex:0].text;
-
-		[connection cancelPendingReconnectAttempts];
-		[connection connect];
-
-		return;
-	}
-
-	if (alertView.tag == PeerTrustFeedbackTag) {
-		void (^completionHandler)(BOOL shouldTrustPeer) = [alertView associatedObjectForKey:@"completionHandler"];
-
-		if (buttonIndex == 0) { // cancel
-			completionHandler(NO);
-		} else if (buttonIndex == 1) { // continue
-			completionHandler(YES);
-		} else { // always continue
-			completionHandler(YES);
-
-			SecTrustRef trust = (__bridge SecTrustRef)[alertView associatedObjectForKey:@"trust"];
-
-			// • The correct way to handle this is by creating an exception with SecTrustSetExceptions().
-			// This doesn't seem to work on iOS 8; the trust result isn't the same for across multiple SecTrustRef's.
-			// (That is:
-			//		Connect -> Evaluate Trust and get initial state -> Add Exception. Evaluate Trust and get .Proceed.
-			//		Reconnect -> Evaluate Trust and get the initial state again.)
-			// But, it doesn't hurt to try setting an exception, anyway.
-			SecTrustSetExceptions(trust, CFAutorelease(SecTrustCopyExceptions(trust)));
-
-			// • To work around this, copy the certificate data to the keychain (along with the current trust
-			// result. If it changes in the future, we will force a re-evaluation of trust on the next connection.
-			// • If we do not have any certificate data, we will force a re-evaluation of trust on the next connection.
-			CFIndex certificateCount = SecTrustGetCertificateCount(trust);
-			if (certificateCount == 0) {
-				return;
-			}
-
-			SecCertificateRef certificate = SecTrustGetCertificateAtIndex(trust, 0);
-			NSString *certificateSubject = (__bridge_transfer NSString *)SecCertificateCopySubjectSummary(certificate);
-			NSData *certificateData = (__bridge_transfer NSData *)SecCertificateCopyData(certificate);
-
-			[[CQKeychain standardKeychain] setData:certificateData forServer:certificateSubject area:@"Certificate"];
-			[[CQKeychain standardKeychain] setPassword:[alertView associatedObjectForKey:@"result"] forServer:certificateSubject area:@"Trust"];
-		}
-	}
-}
-
-#pragma mark -
-
 #if !SYSTEM(TV)
 - (void) searchableIndex:(CSSearchableIndex *) searchableIndex reindexSearchableItemsWithIdentifiers:(NSArray <NSString *> *) identifiers acknowledgementHandler:(void (^)(void)) acknowledgementHandler {
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"])
@@ -434,15 +287,16 @@ CQBouncerConnectionDelegate>
 	} else { // Ask people what to do
 #if SYSTEM(IOS)
 		SecTrustRef trust = (__bridge SecTrustRef)notification.userInfo[@"trust"];
-		SecCertificateRef certificate;
+		SecCertificateRef certificate = NULL;
 		NSString *certificateSubject = nil;
-		if (SecTrustGetCertificateCount(trust) == 0)
+		CFIndex certificateCount = SecTrustGetCertificateCount(trust);
+		if (certificateCount == 0)
 			certificateSubject = @"Unknown";
 		else {
 			// In the event that SecTrustAddException() starts working, we will have different results, but, it won't matter
 			// because the initial trust evaluation will succeed and we will not get to this point.
 			certificate = SecTrustGetCertificateAtIndex(trust, 0);
-			certificateSubject = (__bridge_transfer NSString *)SecCertificateCopySubjectSummary(SecTrustGetCertificateAtIndex(trust, 0));
+			certificateSubject = (__bridge_transfer NSString *)SecCertificateCopySubjectSummary(certificate);
 			SecTrustResultType result = [notification.userInfo[@"result"] intValue];
 			SecTrustResultType existingResult = [[[CQKeychain standardKeychain] passwordForServer:certificateSubject area:@"Trust"] intValue];
 			BOOL isSameResult = (result == existingResult);
@@ -463,19 +317,40 @@ CQBouncerConnectionDelegate>
 			}
 		}
 
-		CQAlertView *alertView = [[CQAlertView alloc] init];
-		alertView.delegate = self;
-		alertView.tag = PeerTrustFeedbackTag;
-		alertView.title = NSLocalizedString(@"Cannot Verify Server Identity" , @"Cannot Verify Server Identity alert title");
-		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"The identity of \"%@\" cannot be verified by Colloquy. Please decide how to continue.", @"Identity cannot be verified message"), certificateSubject];
-		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel alert button")];
-		[alertView addButtonWithTitle:NSLocalizedString(@"Continue", @"Continue alert button")];
-		[alertView addButtonWithTitle:NSLocalizedString(@"Always Continue", @"Always Continue alert button")];
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+		alert.title = NSLocalizedString(@"Cannot Verify Server Identity" , @"Cannot Verify Server Identity alert title");
+		alert.message = [NSString stringWithFormat:NSLocalizedString(@"The identity of \"%@\" cannot be verified by Colloquy. Please decide how to continue.", @"Identity cannot be verified message"), certificateSubject];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel alert button") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+			completionHandler(NO);
+		}]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Continue", @"Continue alert button") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			completionHandler(YES);
+		}]];
+		if (certificate) {
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Always Continue", @"Always Continue alert button") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+				completionHandler(YES);
 
-		[alertView associateObject:completionHandler forKey:@"completionHandler"];
-		[alertView associateObject:notification.userInfo[@"trust"] forKey:@"trust"];
-		[alertView associateObject:notification.userInfo[@"result"] forKey:@"result"];
-		[alertView associateObject:notification.object forKey:@"connection"];
+				// • The correct way to handle this is by creating an exception with SecTrustSetExceptions().
+				// This doesn't seem to work on iOS 8; the trust result isn't the same for across multiple SecTrustRef's.
+				// (That is:
+				//		Connect -> Evaluate Trust and get initial state -> Add Exception. Evaluate Trust and get .Proceed.
+				//		Reconnect -> Evaluate Trust and get the initial state again.)
+				// But, it doesn't hurt to try setting an exception, anyway.
+				SecTrustSetExceptions(trust, CFAutorelease(SecTrustCopyExceptions(trust)));
+
+				// • To work around this, copy the certificate data to the keychain (along with the current trust
+				// result. If it changes in the future, we will force a re-evaluation of trust on the next connection.
+				// • If we do not have any certificate data, we will force a re-evaluation of trust on the next connection.
+				if (certificateCount == 0) {
+					return;
+				}
+
+				NSData *certificateData = (__bridge_transfer NSData *)SecCertificateCopyData(certificate);
+
+				[[CQKeychain standardKeychain] setData:certificateData forServer:certificateSubject area:@"Certificate"];
+				[[CQKeychain standardKeychain] setPassword:notification.userInfo[@"result"] forServer:certificateSubject area:@"Trust"];
+			}]];
+		}
 
 		NSMapTable *errorToAlertMappingsForConnection = [_connectionToErrorToAlertMap objectForKey:notification.object];
 		if (!errorToAlertMappingsForConnection) {
@@ -483,13 +358,16 @@ CQBouncerConnectionDelegate>
 			[_connectionToErrorToAlertMap setObject:errorToAlertMappingsForConnection forKey:notification.object];
 		}
 
-		CQAlertView *previousAlert = [errorToAlertMappingsForConnection objectForKey:@"peerTrust"];
+		UIAlertController *previousAlert = [errorToAlertMappingsForConnection objectForKey:@"peerTrust"];
 		if (previousAlert) {
-			[previousAlert dismissWithClickedButtonIndex:previousAlert.cancelButtonIndex animated:NO];
+			[previousAlert dismissViewControllerAnimated:NO completion:^{
+				[[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:NO completion:NULL];
+			}];
+		} else {
+			[[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
 		}
-		[errorToAlertMappingsForConnection setObject:alertView forKey:@"peerTrust"];
+		[errorToAlertMappingsForConnection setObject:alert forKey:@"peerTrust"];
 
-		[alertView show];
 #elif SYSTEM(MAC)
 		// Ask people what to do
 		SFCertificateTrustPanel *panel = [SFCertificateTrustPanel sharedCertificateTrustPanel];
@@ -595,19 +473,17 @@ CQBouncerConnectionDelegate>
 	NSMutableArray *connections = _bouncerChatConnections[connection.settings.identifier];
 
 	if (error && (!connections.count || [connection.userInfo isEqual:@"manual-refresh"])) {
-		CQAlertView *alert = [[CQAlertView alloc] init];
-
-		alert.tag = CannotConnectToBouncerTag;
-		alert.delegate = self;
+		UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
 		alert.title = NSLocalizedString(@"Can't Connect to Bouncer", @"Can't Connect to Bouncer alert title");
 		alert.message = [NSString stringWithFormat:NSLocalizedString(@"Can't connect to the bouncer \"%@\". Check the bouncer settings and try again.", @"Can't connect to bouncer alert message"), connection.settings.displayName];
 
-		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:NULL]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Settings", @"Settings alert button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+//			[_connectionsNavigationController editBouncer:connection.settings];
+			[[CQColloquyApplication sharedApplication] showConnections:nil];
+		}]];
 
-		[alert associateObject:connection.settings forKey:@"userInfo"];
-		[alert addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings alert button title")];
-
-//		[alert show];
+		[[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
 	}
 
 	connection.delegate = nil;
@@ -662,11 +538,13 @@ CQBouncerConnectionDelegate>
 
 	if (self._anyConnectedOrConnectingConnections) {
 		if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-			CQAlertView *alertView = [[CQAlertView alloc] init];
+			UIAlertController *alertView = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
 			alertView.title = NSLocalizedString(@"Disconnected", @"Disconnected alert title");
 			alertView.message = NSLocalizedString(@"You have been disconnected due to the loss of network connectivity", @"Disconnected due to network alert message");
-			alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
-			[alertView show];
+
+			[alertView addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:NULL]];
+
+			[[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alertView animated:YES completion:NULL];
 		} else {
 #if !SYSTEM(TV)
 			UILocalNotification *notification = [[UILocalNotification alloc] init];
@@ -951,12 +829,13 @@ CQBouncerConnectionDelegate>
 - (void) _gotConnectionError:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
 
-	CQAlertView *alertView = [[CQAlertView alloc] init];
+	UIAlertController *alertView = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
 	alertView.title = connection.displayName;
 	alertView.message = notification.userInfo[@"message"];
-	alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button title")];
 
-	[alertView show];
+	[alertView addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Okay", @"Okay button title") style:UIAlertActionStyleCancel handler:NULL]];
+
+	[[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alertView animated:YES completion:NULL];
 }
 
 - (void) _willConnect:(NSNotification *) notification {
@@ -1089,46 +968,42 @@ CQBouncerConnectionDelegate>
 	if (connection.server.length && (connection.reconnectAttemptCount > 0 || userDisconnected || connection.serverError.domain == MVChatConnectionErrorDomain))
 		return;
 
-	CQAlertView *alert = [[CQAlertView alloc] init];
+	UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
 
 	if (!connection.server.length) {
-		alert.tag = NoServerTag;
-		alert.delegate = self;
-
 		alert.title = connection.displayName;
 		alert.message = [NSString stringWithFormat:NSLocalizedString(@"No server found for %@.", @"No server found for %@. alert message"), connection.displayName];
 
-		[alert addTextFieldWithPlaceholder:NSLocalizedString(@"irc.server.com", @"irc.server.com placeholder text") andText:nil];
+		[alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+			textField.placeholder = NSLocalizedString(@"irc.server.com", @"irc.server.com placeholder text");
+		}];
 
-		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:NULL]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Connect", @"Connect button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			connection.server = alert.textFields.firstObject.text;
 
-		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
-
-		[alert associateObject:connection forKey:@"connection"];
+			[connection cancelPendingReconnectAttempts];
+			[connection connect];
+		}]];
 	} else if (connection.directConnection) {
-		alert.tag = HelpAlertTag;
-		alert.delegate = self;
-
 		alert.title = NSLocalizedString(@"Can't Connect to Server", @"Can't Connect to Server alert title");
 		alert.message = [NSString stringWithFormat:NSLocalizedString(@"Can't connect to the server \"%@\".", @"Cannot connect alert message"), connection.displayName];
 
-		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
-
-		[alert addButtonWithTitle:NSLocalizedString(@"Help", @"Help button title")];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:NULL]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Help", @"Help button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			[[CQColloquyApplication sharedApplication] showHelp:nil];
+		}]];
 	} else {
-		alert.tag = CannotConnectToBouncerConnectionTag;
-		alert.delegate = self;
-
 		alert.title = NSLocalizedString(@"Can't Connect to Bouncer", @"Can't Connect to Bouncer alert title");
 		alert.message = [NSString stringWithFormat:NSLocalizedString(@"Can't connect to the server \"%@\" via \"%@\". Would you like to connect directly?", @"Connect directly alert message"), connection.displayName, connection.bouncerSettings.displayName];
 
-		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
-
-		[alert associateObject:connection forKey:@"userInfo"];
-		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:NULL]];
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Connect", @"Connect button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			[connection connectDirectly];
+		}]];
 	}
 
-	[alert show];
+	[[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
 }
 
 - (void) _didConnect:(NSNotification *) notification {
@@ -1195,45 +1070,71 @@ CQBouncerConnectionDelegate>
 - (void) _nicknamePasswordRequested:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
 
-	CQAlertView *alertView = [[CQAlertView alloc] init];
-	alertView.tag = NotIdentifiedWithServicesTag;
-	alertView.delegate = self;
+	UIAlertController *alertView = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
 	alertView.title = NSLocalizedString(@"Serivces Password", @"Serivces Password alert title");
 	alertView.message = connection.displayName;
 
-	alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+	[alertView addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:NULL]];
+	[alertView addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Identify", @"Identify button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+		NSString *password = alertView.textFields.firstObject.text;
+		connection.nicknamePassword = password;
+		[connection savePasswordsToKeychain];
+	}]];
 
-	[alertView associateObject:notification	forKey:@"userInfo"];
-	[alertView addButtonWithTitle:NSLocalizedString(@"Identify", @"Identify button title")];
+	[alertView addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+		textField.placeholder = NSLocalizedString(@"Password", @"Password placeholder");
+		textField.secureTextEntry = YES;
+	}];
 
-	[alertView addSecureTextFieldWithPlaceholder:NSLocalizedString(@"Password", @"Password placeholder")];
-
-	[alertView show];
+	[[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alertView animated:YES completion:NULL];
 }
 
 - (void) _serverPasswordRequested:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
 
-	CQAlertView *alertView = [[CQAlertView alloc] init];
-	alertView.tag = ServerPasswordRequiredTag;
-	alertView.delegate = self;
+	UIAlertController *alertView = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
 	alertView.title = NSLocalizedString(@"Serivces Password", @"Serivces Password alert title");
 	alertView.message = connection.displayName;
+	
+	[alertView addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+		textField.placeholder = NSLocalizedString(@"Username", @"Username connection setting label");
+		textField.text = connection.username;
+	}];
+	[alertView addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+		textField.placeholder = NSLocalizedString(@"Password", @"Password placeholder");
+		textField.secureTextEntry = YES;
+	}];
 
-	alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+	[alertView addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:NULL]];
+	[alertView addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Identify", @"Identify button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+		NSString *username = alertView.textFields.firstObject.text;
+		NSString *password = alertView.textFields.lastObject.text;
 
-	[alertView associateObject:notification	forKey:@"userInfo"];
-	[alertView addButtonWithTitle:NSLocalizedString(@"Identify", @"Identify button title")];
+		BOOL shouldSendUserInPass = username.length && connection.username.length && ![connection.username isEqualToString:username];
+		if (shouldSendUserInPass) {
+			connection.username = username;
+			[connection sendRawMessageImmediatelyWithFormat:@"PASS %@:%@", username, password];
+		} else [connection sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
 
-	[alertView addTextFieldWithPlaceholder:NSLocalizedString(@"Username", @"Username connection setting label") andText:connection.username];
-	[alertView addSecureTextFieldWithPlaceholder:NSLocalizedString(@"Password", @"Password placeholder")];
-
-	[alertView show];
+		[connection savePasswordsToKeychain];
+	}]];
+	
+	[[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alertView animated:YES completion:NULL];
 }
 
 - (void) _errorOccurred:(NSNotification *) notification {
 	NSError *error = notification.userInfo[@"error"];
 
+	MVChatConnection *connection = notification.object;
+	NSMapTable *errorToAlertMappingsForConnection = [_connectionToErrorToAlertMap objectForKey:connection];
+	if (!errorToAlertMappingsForConnection) {
+		errorToAlertMappingsForConnection = [NSMapTable strongToStrongObjectsMapTable];
+		[_connectionToErrorToAlertMap setObject:errorToAlertMappingsForConnection forKey:connection];
+	}
+	
+	UIAlertController *alert = [errorToAlertMappingsForConnection objectForKey:@(error.code)];
+	if (alert) return;
+	
 	NSString *errorTitle = nil;
 	switch (error.code) {
 		case MVChatConnectionRoomIsFullError:
@@ -1270,15 +1171,14 @@ CQBouncerConnectionDelegate>
 
 	if (!errorTitle) return;
 
-	MVChatConnection *connection = notification.object;
 	NSString *roomName = error.userInfo[@"room"];
 	MVChatRoom *room = (roomName ? [connection chatRoomWithName:roomName] : nil);
 
-	NSString *buttonTitle = NSLocalizedString(@"Help", @"Help button title");
 	NSString *errorMessage = nil;
-	NSString *placeholder = nil;
-	NSUInteger tag = HelpAlertTag;
-	id userInfo = nil;
+	BOOL addedDefaultAction = NO;
+
+	alert = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:NULL]];
 
 	switch (error.code) {
 		case MVChatConnectionRoomIsFullError:
@@ -1291,11 +1191,26 @@ CQBouncerConnectionDelegate>
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"You are banned from \"%@\" on \"%@\".", "Banned from room alert message"), room.displayName, connection.displayName];
 			break;
 		case MVChatConnectionRoomPasswordIncorrectError:
+			addedDefaultAction = YES;
 			errorMessage = [NSString stringWithFormat:@"%@ - %@", room.displayName, connection.displayName];
-			buttonTitle = NSLocalizedString(@"Join", @"Join button title");
-			placeholder = NSLocalizedString(@"Password", @"Password placeholder");
-			tag = IncorrectRoomPasswordTag;
-			userInfo = notification;
+
+			[alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+				textField.placeholder = NSLocalizedString(@"Password", @"Password placeholder");
+				textField.secureTextEntry = YES;
+			}];
+
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Join", @"Join button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+				NSString *password = alert.textFields.firstObject.text;
+
+				[[CQKeychain standardKeychain] setPassword:password forServer:connection.uniqueIdentifier area:roomName];
+				
+				[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:room.name andConnection:connection];
+				
+				if (password.length)
+					[connection joinChatRoomNamed:roomName withPassphrase:password];
+				else [connection joinChatRoomNamed:roomName];
+			}]];
+			
 			break;
 		case MVChatConnectionCantSendToRoomError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't send messages to \"%@\" due to some room restriction.", "Cant send message alert message"), room.displayName];
@@ -1303,28 +1218,29 @@ CQBouncerConnectionDelegate>
 		case MVChatConnectionRoomDoesNotSupportModesError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The room \"%@\" on \"%@\" doesn't support modes.", "Room does not support modes alert message"), room.displayName, connection.displayName];
 			break;
-		case MVChatConnectionIdentifyToJoinRoomError: {
+		case MVChatConnectionIdentifyToJoinRoomError:
+			addedDefaultAction = YES;
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Identify with network services to join \"%@\" on \"%@\".", "Identify to join room alert message"), room.displayName, connection.displayName];
 
-			buttonTitle = NSLocalizedString(@"Identify", @"Identify button title");
-			tag = NextAlertTag;
+			[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Identify", @"Identify button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+				UIAlertController *nextAlertView = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+				nextAlertView.title = NSLocalizedString(@"Serivces Password", @"Serivces Password alert title");
+				nextAlertView.message = connection.displayName;
 
-			CQAlertView *nextAlertView = [[CQAlertView alloc] init];
-			nextAlertView.tag = NotIdentifiedWithServicesTag;
-			nextAlertView.delegate = self;
-			nextAlertView.title = NSLocalizedString(@"Serivces Password", @"Serivces Password alert title");
-			nextAlertView.message = connection.displayName;
+				[nextAlertView addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+					textField.placeholder = NSLocalizedString(@"Password", @"Password placeholder");
+					textField.secureTextEntry = YES;
+				}];
 
-			nextAlertView.cancelButtonIndex = [nextAlertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+				[nextAlertView addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:NULL]];
+				[nextAlertView addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Identify", @"Identify button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *nextAction) {
+					NSString *password = nextAlertView.textFields.firstObject.text;
+					connection.nicknamePassword = password;
+					[connection savePasswordsToKeychain];
+				}]];
+			}]];
 
-			[nextAlertView associateObject:notification	forKey:@"userInfo"];
-			[nextAlertView addButtonWithTitle:NSLocalizedString(@"Identify", @"Identify button title")];
-
-			[nextAlertView addSecureTextFieldWithPlaceholder:NSLocalizedString(@"Password", @"Password placeholder")];
-
-			userInfo = nextAlertView;
 			break;
-		}
 		case MVChatConnectionCantChangeNickError:
 			if (room) errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't change your nickname while in \"%@\" on \"%@\". Leave the room and try again.", "Can't change nick because of room alert message" ), room.displayName, connection.displayName];
 			else errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't change nicknames too fast on \"%@\", wait and try again.", "Can't change nick too fast alert message"), connection.displayName];
@@ -1348,34 +1264,18 @@ CQBouncerConnectionDelegate>
 
 	if (!errorMessage) return;
 
-	NSMapTable *errorToAlertMappingsForConnection = [_connectionToErrorToAlertMap objectForKey:connection];
-	if (!errorToAlertMappingsForConnection) {
-		errorToAlertMappingsForConnection = [NSMapTable strongToStrongObjectsMapTable];
-		[_connectionToErrorToAlertMap setObject:errorToAlertMappingsForConnection forKey:connection];
-	}
-
-	CQAlertView *alert = [errorToAlertMappingsForConnection objectForKey:@(error.code)];
-	if (alert) return;
-
-	alert = [[CQAlertView alloc] init];
-
-	[errorToAlertMappingsForConnection setObject:alert forKey:@(error.code)];
-	alert.tag = tag;
-	alert.delegate = self;
 	alert.title = errorTitle;
 	alert.message = errorMessage;
-	[alert associateObject:@(error.code) forKey:@"error-code"];
-	[alert associateObject:connection forKey:@"connection"];
 
-	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+	[errorToAlertMappingsForConnection setObject:alert forKey:@(error.code)];
 
-	if (placeholder.length)
-		[alert addSecureTextFieldWithPlaceholder:placeholder];
+	if (!addedDefaultAction) {
+		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Help", @"Help button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			[[CQColloquyApplication sharedApplication] showHelp:nil];
+		}]];
+	}
 
-	[alert associateObject:userInfo forKey:@"userInfo"];
-	[alert addButtonWithTitle:buttonTitle];
-
-	[alert show];
+	[[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
 }
 
 #pragma mark -
@@ -1767,12 +1667,13 @@ CQBouncerConnectionDelegate>
 			NSString *title = NSLocalizedString(@"Unknown Error", @"Unknown Error error title");
 			NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Unable to remove index from Spotlight: %@", @"search deletion failed error message"), error.localizedDescription];
 			if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-				CQAlertView *alertView = [[CQAlertView alloc] init];
+				UIAlertController *alertView = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
 				alertView.title = title;
 				alertView.message = message;
-				alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay")];
+				
+				[alertView addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Okay", @"Okay") style:UIAlertActionStyleCancel handler:NULL]];
 
-				[alertView show];
+				[[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alertView animated:YES completion:NULL];
 			} else {
 				UILocalNotification *notification = [[UILocalNotification alloc] init];
 				notification.alertTitle = title;

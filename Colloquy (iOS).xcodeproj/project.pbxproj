@@ -95,7 +95,6 @@
 		1CAE8C8C0EE61AD000CE1AF8 /* transcript.js in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8C850EE6190A00CE1AF8 /* transcript.js */; };
 		1CB24E03101EBE4800217B50 /* verbs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1CB24E02101EBE4800217B50 /* verbs.plist */; };
 		1CBCFF2D0F04632900EEBCFB /* CQTextCompletionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBCFF2C0F04632900EEBCFB /* CQTextCompletionView.m */; };
-		1CBEA7351002CC5C00546847 /* CQAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBEA7341002CC5C00546847 /* CQAlertView.m */; };
 		1CC575980ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */; };
 		1CC576D30ED4684700FEC2C1 /* UITableViewCellAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */; };
 		1CC64B2D0EE97F8B00DE91D0 /* CQChatUserListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC64B2C0EE97F8B00DE91D0 /* CQChatUserListViewController.m */; };
@@ -296,7 +295,6 @@
 		B6831D791BE450C200D3AC1D /* CQBouncerSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6341630FAF30B600BB5866 /* CQBouncerSettings.m */; };
 		B6831D7C1BE450D500D3AC1D /* CQProcessChatMessageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0DBCA81005A57A003BEEF3 /* CQProcessChatMessageOperation.m */; };
 		B6831D7D1BE450D500D3AC1D /* CQProcessConsoleMessageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */; };
-		B6831D7E1BE450DC00D3AC1D /* CQAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBEA7341002CC5C00546847 /* CQAlertView.m */; };
 		B6831D7F1BE450DC00D3AC1D /* CQChatInputBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE69FD80EE317F200389442 /* CQChatInputBar.m */; };
 		B6831D801BE450DC00D3AC1D /* CQChatRoomInfoTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C34A4971016C73800BAA714 /* CQChatRoomInfoTableCell.m */; };
 		B6831D811BE450DC00D3AC1D /* CQChatTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1950D83CF1D009ABD9F /* CQChatTableCell.m */; };
@@ -496,8 +494,6 @@
 		1CB24E02101EBE4800217B50 /* verbs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = verbs.plist; path = Resources/verbs.plist; sourceTree = SOURCE_ROOT; };
 		1CBCFF2B0F04632900EEBCFB /* CQTextCompletionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQTextCompletionView.h; sourceTree = "<group>"; };
 		1CBCFF2C0F04632900EEBCFB /* CQTextCompletionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQTextCompletionView.m; sourceTree = "<group>"; };
-		1CBEA7331002CC5C00546847 /* CQAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQAlertView.h; sourceTree = "<group>"; };
-		1CBEA7341002CC5C00546847 /* CQAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQAlertView.m; sourceTree = "<group>"; };
 		1CC575960ED3A71900FEC2C1 /* CQPreferencesDeleteCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQPreferencesDeleteCell.h; sourceTree = "<group>"; };
 		1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesDeleteCell.m; sourceTree = "<group>"; };
 		1CC576D10ED4684700FEC2C1 /* UITableViewCellAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UITableViewCellAdditions.h; path = Mobile/Additions/UITableViewCellAdditions.h; sourceTree = "<group>"; };
@@ -1003,8 +999,6 @@
 		1C82C18D0D83CEFE009ABD9F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				1CBEA7341002CC5C00546847 /* CQAlertView.m */,
-				1CBEA7331002CC5C00546847 /* CQAlertView.h */,
 				1CE69FD80EE317F200389442 /* CQChatInputBar.m */,
 				1CE69FD70EE317F200389442 /* CQChatInputBar.h */,
 				1C34A4971016C73800BAA714 /* CQChatRoomInfoTableCell.m */,
@@ -1541,7 +1535,6 @@
 				1C9B60EA0FFAE4C400B7BAC0 /* CQBouncerConnection.m in Sources */,
 				1C16F77F0FFF049F008D7BB3 /* CQBouncerCreationViewController.m in Sources */,
 				1C16F79B0FFF0789008D7BB3 /* CQBouncerEditViewController.m in Sources */,
-				1CBEA7351002CC5C00546847 /* CQAlertView.m in Sources */,
 				1C0DBCA91005A57A003BEEF3 /* CQProcessChatMessageOperation.m in Sources */,
 				1C34A4981016C73800BAA714 /* CQChatRoomInfoTableCell.m in Sources */,
 				1C34A4A71016CC2500BAA714 /* CQChatRoomListViewController.m in Sources */,
@@ -1702,7 +1695,6 @@
 				B6831D791BE450C200D3AC1D /* CQBouncerSettings.m in Sources */,
 				B6831D7C1BE450D500D3AC1D /* CQProcessChatMessageOperation.m in Sources */,
 				B6831D7D1BE450D500D3AC1D /* CQProcessConsoleMessageOperation.m in Sources */,
-				B6831D7E1BE450DC00D3AC1D /* CQAlertView.m in Sources */,
 				B6831D7F1BE450DC00D3AC1D /* CQChatInputBar.m in Sources */,
 				B6831D801BE450DC00D3AC1D /* CQChatRoomInfoTableCell.m in Sources */,
 				B6831D811BE450DC00D3AC1D /* CQChatTableCell.m in Sources */,
