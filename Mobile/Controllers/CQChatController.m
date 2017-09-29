@@ -1,6 +1,5 @@
 #import "CQChatController.h"
 
-#import "CQAlertView.h"
 #import "CQChatCreationViewController.h"
 #import "CQChatNavigationController.h"
 #import "CQChatOrderingController.h"
@@ -30,11 +29,6 @@ NSString *CQChatControllerAddedChatViewControllerNotification = @"CQChatControll
 NSString *CQChatControllerRemovedChatViewControllerNotification = @"CQChatControllerRemovedChatViewControllerNotification";
 NSString *CQChatControllerChangedTotalImportantUnreadCountNotification = @"CQChatControllerChangedTotalImportantUnreadCountNotification";
 
-#define ChatRoomInviteAlertTag 1
-#if ENABLE(FILE_TRANSFERS)
-#define FileDownloadAlertTag 2
-#endif
-
 #define NewChatActionSheetTag 0
 #define NewConnectionActionSheetTag 1
 #if ENABLE(FILE_TRANSFERS)
@@ -53,7 +47,7 @@ static CQSoundController *fileTransferSound;
 
 #pragma mark -
 
-@interface CQChatController () <CQActionSheetDelegate, CQAlertViewDelegate
+@interface CQChatController () <CQActionSheetDelegate
 #if !SYSTEM(TV)
 , UIImagePickerControllerDelegate
 #endif
@@ -211,25 +205,26 @@ static CQSoundController *fileTransferSound;
 	NSString *file = transfer.originalFileName;
 	NSString *user = transfer.user.displayName;
 
-	CQAlertView *alert = [[CQAlertView alloc] init];
-	alert.tag = FileDownloadAlertTag;
-	alert.delegate = self;
+	UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
 	alert.title = NSLocalizedString(@"File Download", "File Download alert title");
 	alert.message = [NSString stringWithFormat:NSLocalizedString(@"%@ wants to send you \"%@\".", "File download alert message"), user, file];
 
-	[alert associateObject:transfer forKey:@"transfer"];
-	[alert addButtonWithTitle:NSLocalizedString(@"Accept", @"Accept alert button title")];
-
-	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Deny", @"Deny alert button title")];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Deny", @"Deny alert button title") style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+		[transfer reject];
+	}]];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Accept", @"Accept alert button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+		NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:transfer.originalFileName];
+		[self chatViewControllerForFileTransfer:transfer ifExists:NO];
+		[transfer setDestination:filePath renameIfFileExists:YES];
+		[transfer acceptByResumingIfPossible:YES];
+	}]];
 
 	if (vibrateOnFileTransfer)
 		[CQSoundController vibrate];
 
 	[fileTransferSound playSound];
 
-	[alert show];
-
-	[alert release];
+	[[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
 }
 
 - (void) _sendImage:(UIImage *) image asPNG:(BOOL) asPNG {
@@ -293,51 +288,22 @@ static CQSoundController *fileTransferSound;
 	}
 #endif
 
-	CQAlertView *alert = [[CQAlertView alloc] init];
-	alert.tag = ChatRoomInviteAlertTag;
-	alert.delegate = self;
+	UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
 	alert.title = NSLocalizedString(@"Invited to Room", "Invited to room alert title");
 	alert.message = message;
 
-	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
-
-	[alert associateObject:room forKey:@"userInfo"];
-	[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join button title")];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:NULL]];
+	[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Join", @"Join button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:room.name andConnection:room.connection];
+		[room join];
+	}]];
 
 	if (vibrateOnHighlight)
 		[CQSoundController vibrate];
 
 		[highlightSound playSound];
 
-	[alert show];
-}
-
-#pragma mark -
-
-- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	id userInfo = [alertView associatedObjectForKey:@"userInfo"];
-
-	if (buttonIndex == alertView.cancelButtonIndex) {
-#if ENABLE(FILE_TRANSFERS)
-		if (alertView.tag == FileDownloadAlertTag)
-			[(MVDownloadFileTransfer *)userInfo reject];
-#endif
-		return;
-	}
-
-	if (alertView.tag == ChatRoomInviteAlertTag) {
-		MVChatRoom *room = userInfo;
-		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:room.name andConnection:room.connection];
-		[room join];
-#if ENABLE(FILE_TRANSFERS)
-	} else if (alertView.tag == FileDownloadAlertTag) {
-		MVDownloadFileTransfer *transfer = userInfo;
-		NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:transfer.originalFileName];
-		[self chatViewControllerForFileTransfer:transfer ifExists:NO];
-		[transfer setDestination:filePath renameIfFileExists:YES];
-		[transfer acceptByResumingIfPossible:YES];
-#endif
-	}
+	[[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
 }
 
 #pragma mark -
