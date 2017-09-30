@@ -1,5 +1,6 @@
 #import "CQColloquyApplication.h"
 
+#import "CQAlertView.h"
 #import "CQAnalyticsController.h"
 #import "CQChatController.h"
 #import "CQChatCreationViewController.h"
@@ -21,7 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyApplicationDidRecieveDeviceTokenNotification";
 
-@interface CQColloquyApplication () <UIApplicationDelegate, BITHockeyManagerDelegate>
+#define BrowserAlertTag 1
+
+@interface CQColloquyApplication () <UIApplicationDelegate, CQAlertViewDelegate, BITHockeyManagerDelegate>
 @end
 
 @implementation CQColloquyApplication {
@@ -582,24 +585,35 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		if (!prompt)
 			return [super openURL:url];
 
-		UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+		CQAlertView *alert = [[CQAlertView alloc] init];
+
+		alert.tag = BrowserAlertTag;
+
 		NSString *applicationName = [self applicationNameForURL:url];
 		if (applicationName)
 			alert.title = [NSString stringWithFormat:NSLocalizedString(@"Open Link in %@?", @"Open link in app alert title"), applicationName];
 		else alert.title = NSLocalizedString(@"Open Link?", @"Open link alert title");
 
 		alert.message = NSLocalizedString(@"Opening this link will close Colloquy.", @"Opening link alert message");
+		alert.delegate = self;
 
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Open", @"Open button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-			[super openURL:url];
-		}]];
+		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
-		[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") style:UIAlertActionStyleCancel handler:NULL]];
+		[alert associateObject:url forKey:@"userInfo"];
+		[alert addButtonWithTitle:NSLocalizedString(@"Open", @"Open button title")];
 
-		[_mainWindow.rootViewController presentViewController:alert animated:YES completion:NULL];
+		[alert show];
 	} else [super openURL:url];
 
 	return YES;
+}
+
+#pragma mark -
+
+- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+	if (alertView.tag != BrowserAlertTag || alertView.cancelButtonIndex == buttonIndex)
+		return;
+	[super openURL:[alertView associatedObjectForKey:@"userInfo"]];
 }
 
 #pragma mark -
