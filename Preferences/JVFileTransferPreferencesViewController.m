@@ -32,7 +32,7 @@
 
 #pragma mark - MASPreferencesViewController
 
-- (NSString *) identifier {
+- (NSString *) viewIdentifier {
 	return @"JVFileTransferPreferencesViewController";
 }
 
