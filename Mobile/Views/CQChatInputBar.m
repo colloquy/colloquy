@@ -252,7 +252,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSDictionary *attributes = self._textAttributes;
 
 	CGSize textSize = [_inputView.text boundingRectWithSize:calculatableSize options:options attributes:attributes context:nil].size;
-	CGFloat lineHeight = [attributes[NSFontAttributeName] lineHeight];
+	CGFloat lineHeight = ceilf([attributes[NSFontAttributeName] lineHeight]);
 
 	if (lineHeight == 0) {
 		lineHeight = CQLineHeight;
@@ -268,6 +268,8 @@ NS_ASSUME_NONNULL_BEGIN
 		newFrameSize.height = lineHeight * 4;
 	} else if (newFrameSize.height < lineHeight * 2) {
 		newFrameSize.height = lineHeight * 2;
+	} else {
+		newFrameSize.height = ceilf(newFrameSize.height);
 	}
 
 	newFrameSize.height += CQInputBarVerticalPadding;
