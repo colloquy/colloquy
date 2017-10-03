@@ -1,5 +1,5 @@
 #include "target.xcconfig"
 
 // TODO: Include FScript.framework differently, so $(HOME)/Library/Frameworks can be removed here.
-FRAMEWORK_SEARCH_PATHS = $(SRCROOT)/old-mac-binary-frameworks $(BUILT_PRODUCTS_DIR) $(HOME)/Library/Frameworks $(SYSTEM_LIBRARY_DIR)/PrivateFrameworks
+FRAMEWORK_SEARCH_PATHS = $(COLLOQUY_WORKSPACE_ROOT)/old-mac-binary-frameworks $(BUILT_PRODUCTS_DIR) $(HOME)/Library/Frameworks $(SYSTEM_LIBRARY_DIR)/PrivateFrameworks
 HEADER_SEARCH_PATHS = $(SDKROOT)/usr/include/libxml2
