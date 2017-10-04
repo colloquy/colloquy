@@ -141,11 +141,6 @@ static BOOL applicationIsTerminating = NO;
 #pragma mark -
 
 - (IBAction) checkForUpdate:(id) sender {
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_9 ) { // test for 10.9
-		NSRunInformationalAlertPanel( @"Mavericks is no longer supported.", @"You are running the last version of Colloquy that is supported for Mavericks (10.9). Please update to Sierra (10.10) or later to receive further updates and support for Colloquy.", nil, nil, nil );
-		return;
-	}
-
 	if( ! _updater ) _updater = [[SUUpdater alloc] init];
 	[_updater checkForUpdates:sender];
 }
