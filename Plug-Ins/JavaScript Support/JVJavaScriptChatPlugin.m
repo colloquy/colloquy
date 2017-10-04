@@ -300,7 +300,16 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 #pragma mark -
 
 - (void) promptForReload {
-	if( NSRunInformationalAlertPanel( NSLocalizedStringFromTableInBundle( @"JavaScript Changed", nil, [NSBundle bundleForClass:[self class]], "JavaScript file changed dialog title" ), NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" has changed on disk. Any script variables will reset if reloaded.", nil, [NSBundle bundleForClass:[self class]], "JavaScript changed on disk message" ), NSLocalizedStringFromTableInBundle( @"Reload", nil, [NSBundle bundleForClass:[self class]], "reload button title" ), NSLocalizedStringFromTableInBundle( @"Keep Previous Version", nil, [NSBundle bundleForClass:[self class]], "keep previous version button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension] ) == NSModalResponseOK ) {
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = NSLocalizedStringFromTableInBundle( @"JavaScript Changed", nil, [NSBundle bundleForClass:[self class]], "JavaScript file changed dialog title" );
+	alert.informativeText = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" has changed on disk. Any script variables will reset if reloaded.", nil, [NSBundle bundleForClass:[self class]], "JavaScript changed on disk message" ), [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension]];
+	alert.alertStyle = NSAlertStyleInformational;
+	[alert addButtonWithTitle:NSLocalizedStringFromTableInBundle( @"Reload", nil, [NSBundle bundleForClass:[self class]], "reload button title" )];
+	[alert addButtonWithTitle:NSLocalizedStringFromTableInBundle( @"Keep Previous Version", nil, [NSBundle bundleForClass:[self class]], "keep previous version button title" )];
+	NSModalResponse response = [alert runModal];
+	[alert release];
+	
+	if( response == NSAlertFirstButtonReturn ) {
 		[self reloadFromDisk];
 	}
 }
@@ -371,15 +380,32 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 
 	NSString *alertTitle = NSLocalizedStringFromTableInBundle( @"JavaScript Error", nil, [NSBundle bundleForClass:[self class]], "JavaScript error title" );
 	NSString *scriptTitle = [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension];
-	NSInteger result = NSModalResponseOK;
-
+	
+	NSString *informativeText;
+	if( whileLoading ) {
+		informativeText = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error while loading.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript error message while loading" ), scriptTitle, errorDesc];
+	} else if( functionName ) {
+		informativeText = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error while calling the \"%@\" function.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript plugin error message calling function" ), scriptTitle, functionName, errorDesc];
+	} else {
+		informativeText = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript error message" ), scriptTitle, errorDesc];
+	}
+	
 	_errorShown = YES;
-	if( whileLoading ) result = NSRunCriticalAlertPanel( alertTitle, NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error while loading.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript error message while loading" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, scriptTitle, errorDesc );
-	else if( functionName ) result = NSRunCriticalAlertPanel( alertTitle, NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error while calling the \"%@\" function.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript plugin error message calling function" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, scriptTitle, functionName, errorDesc );
-	else result = NSRunCriticalAlertPanel( alertTitle, NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript error message" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, scriptTitle, errorDesc );
+	
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = alertTitle;
+	alert.informativeText = informativeText;
+	alert.alertStyle = NSAlertStyleCritical;
+	[alert addButtonWithTitle:NSLocalizedString( @"OK", @"OK button title" )];
+	[alert addButtonWithTitle:NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" )];
+	NSModalResponse response = [alert runModal];
+	[alert release];
+	
 	_errorShown = NO;
 
-	if( result == NSModalResponseCancel ) [[NSWorkspace sharedWorkspace] openFile:sourceFile];
+	if( response == NSAlertSecondButtonReturn ) {
+		[[NSWorkspace sharedWorkspace] openFile:sourceFile];
+	}
 
 	[errorDesc release];
 }

@@ -114,7 +114,16 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 #pragma mark -
 
 - (void) promptForReload {
-	if( NSRunInformationalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Changed", nil, [NSBundle bundleForClass:[self class]], "Python script file changed dialog title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" has changed on disk. Any script variables will reset if reloaded.", nil, [NSBundle bundleForClass:[self class]], "Python script changed on disk message" ), NSLocalizedStringFromTableInBundle( @"Reload", nil, [NSBundle bundleForClass:[self class]], "reload button title" ), NSLocalizedStringFromTableInBundle( @"Keep Previous Version", nil, [NSBundle bundleForClass:[self class]], "keep previous version button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension] ) == NSModalResponseOK ) {
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = NSLocalizedStringFromTableInBundle( @"Python Script Changed", nil, [NSBundle bundleForClass:[self class]], "Python script file changed dialog title" );
+	alert.informativeText = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" has changed on disk. Any script variables will reset if reloaded.", nil, [NSBundle bundleForClass:[self class]], "Python script changed on disk message" ), [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension]];
+	alert.alertStyle = NSAlertStyleInformational;
+	[alert addButtonWithTitle:NSLocalizedStringFromTableInBundle( @"Reload", nil, [NSBundle bundleForClass:[self class]], "reload button title" )];
+	[alert addButtonWithTitle:NSLocalizedStringFromTableInBundle( @"Keep Previous Version", nil, [NSBundle bundleForClass:[self class]], "keep previous version button title" )];
+	NSModalResponse response = [alert runModal];
+	[alert release];
+	
+	if( response == NSAlertFirstButtonReturn ) {
 		[self reloadFromDisk];
 	}
 }
@@ -230,15 +239,33 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 		}
 
 		NSString *scriptTitle = [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension];
-		NSInteger result = NSModalResponseOK;
-
+		
+		NSString *informativeText;
+		if( functionName ) {
+			informativeText = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while calling the \"%@\" function.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "Python script plugin error message" ), scriptTitle, functionName, errorDesc];
+		} else {
+			informativeText = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while loading.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "Python script error message" ), scriptTitle, errorDesc];
+		}
+		
 		_errorShown = YES;
-		if( functionName ) result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python script error title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while calling the \"%@\" function.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "Python script plugin error message" ), nil, ( filename ? NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ) : nil ), nil, scriptTitle, functionName, errorDesc );
-		else result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python script error title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while loading.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "Python script error message" ), nil, ( filename ? NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ) : nil ), nil, scriptTitle, errorDesc );
+		
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python script error title" );
+		alert.informativeText = informativeText;
+		alert.alertStyle = NSAlertStyleInformational;
+		[alert addButtonWithTitle:NSLocalizedString( @"OK", @"OK button title" )];
+		if (filename != NULL) {
+			[alert addButtonWithTitle:NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" )];
+		}
+		NSModalResponse response = [alert runModal];
+		[alert release];
+		
 		_errorShown = NO;
-
-		if( result == NSModalResponseCancel && filename ) [[NSWorkspace sharedWorkspace] openFile:[NSString stringWithUTF8String:filename]];
-
+		
+		if( response == NSAlertSecondButtonReturn && filename ) {
+			[[NSWorkspace sharedWorkspace] openFile:[NSString stringWithUTF8String:filename]];
+		}
+		
 		[errorDesc release];
 
 		NSLog(@"Python plugin script error in %@:", scriptTitle);

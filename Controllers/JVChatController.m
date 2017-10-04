@@ -488,16 +488,26 @@ static NSMenu *smartTranscriptMenu = nil;
 		return;
 	}
 
-	NSString *title = NSLocalizedString( @"Chat Room Invite", "member invited to room title" );
-	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", "you were invited to join a chat room status message" ), room, [user nickname]];
 
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:NSLocalizedString( @"Invited to Chat", "bubble title invited to room" ) forKey:@"title"];
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message invited to room" ), room, [user nickname]] forKey:@"description"];
 	[[JVNotificationController defaultController] performNotification:@"JVChatRoomInvite" withContextInfo:context];
+	
+	BOOL(^presentInvitationAlert)(NSString *, MVChatUser *) = ^BOOL(NSString *roomToJoin, MVChatUser *invitingUser) {
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = NSLocalizedString( @"Chat Room Invite", "member invited to room title" );
+		alert.informativeText = [NSString stringWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", "you were invited to join a chat room status message" ), roomToJoin, [invitingUser nickname]];
+		alert.alertStyle = NSAlertStyleInformational;
+		[alert addButtonWithTitle:NSLocalizedString( @"Join", "join button" )];
+		[alert addButtonWithTitle:NSLocalizedString( @"Decline", "decline button" )];
+		NSModalResponse response = [alert runModal];
+		return response == NSAlertFirstButtonReturn;
+	};
 
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinChatRoomOnInvite"] || NSRunInformationalAlertPanel( title, @"%@", NSLocalizedString( @"Join", "join button" ), NSLocalizedString( @"Decline", "decline button" ), nil, message ) == NSModalResponseOK )
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinChatRoomOnInvite"] || presentInvitationAlert(room, user) ) {
 		[connection joinChatRoomNamed:room];
+	}
 }
 
 - (void) _invitedToDirectChat:(NSNotification *) notification {
@@ -514,7 +524,15 @@ static NSMenu *smartTranscriptMenu = nil;
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to participate in a chat with %@.", "bubble message invited to participate in a direct chat" ), [user nickname]] forKey:@"description"];
 	[[JVNotificationController defaultController] performNotification:@"JVDirectChatInvite" withContextInfo:context];
 
-	if( NSRunInformationalAlertPanel( title, @"%@", NSLocalizedString( @"Accept", "accept button" ), NSLocalizedString( @"Decline", "decline button" ), nil, message ) == NSModalResponseOK ) {
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = title;
+	alert.informativeText = message;
+	alert.alertStyle = NSAlertStyleInformational;
+	[alert addButtonWithTitle:NSLocalizedString( @"Accept", "accept button" )];
+	[alert addButtonWithTitle:NSLocalizedString( @"Decline", "decline button" )];
+	NSModalResponse response = [alert runModal];
+	
+	if( response == NSAlertFirstButtonReturn ) {
 		[self chatViewControllerForDirectChatConnection:connection ifExists:NO userInitiated:NO];
 		[connection initiate];
 	}

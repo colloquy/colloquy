@@ -180,7 +180,14 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 	if( ! [script compileAndReturnError:&errorInfo] ) {
 		NSRange range = [[errorInfo objectForKey:NSAppleScriptErrorRange] rangeValue];
 		[editor setSelectedRange:range affinity:NSSelectionAffinityUpstream stillSelecting:NO];
-		NSRunCriticalAlertPanel( NSLocalizedString( @"AppleScript Syntax Error", "AppleScript syntax error title" ), [errorInfo objectForKey:NSAppleScriptErrorMessage] , nil, nil, nil );
+		
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = NSLocalizedString( @"AppleScript Syntax Error", "AppleScript syntax error title" );
+		alert.informativeText = [errorInfo objectForKey:NSAppleScriptErrorMessage];
+		alert.alertStyle = NSAlertStyleCritical;
+		[alert runModal];
+		[alert release];
+		
 		return;
 	}
 
