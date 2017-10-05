@@ -55,7 +55,7 @@
 		[[self delegate] fontPreviewField:self didChangeToFont:font];
 }
 
-- (NSUInteger) validModesForFontPanel:(NSFontPanel *) fontPanel {
+- (NSFontPanelModeMask) validModesForFontPanel:(NSFontPanel *) fontPanel {
 	NSUInteger ret = NSFontPanelStandardModesMask;
 	if( ! _showPointSize ) ret ^= NSFontPanelSizeModeMask;
 	if( ! _showFontFace ) ret ^= NSFontPanelFaceModeMask;
