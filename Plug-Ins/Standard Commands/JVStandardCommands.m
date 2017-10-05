@@ -10,14 +10,10 @@
 #import "JVChatRoomBrowser.h"
 #import "JVStyle.h"
 #import "JVEmoticonSet.h"
+#import "JVConnectionInspector.h"
 
 #import <WebKit/WebKit.h>
 
-@interface MVChatConnection (MVChatConnectionInspection) <JVInspection>
-- (id <JVInspector>) inspector;
-@end
-
-#pragma mark -
 
 @interface MVChatConnection (MVChatConnectionPrivate)
 - (NSCharacterSet *) _nicknamePrefixes;
@@ -666,9 +662,9 @@
 	NSUInteger offset = 0;
 
 	if( ! args.length ) {
-		id info = [JVInspectorController inspectorOfObject:view.connection];
+		JVInspectorController *info = [JVInspectorController inspectorOfObject:view.connection];
 		[info show:nil];
-		[[info inspector] performSelector:@selector(selectTabWithIdentifier:) withObject:@"Ignores"];
+		[(JVConnectionInspector *)[info inspector] selectTabWithIdentifier:@"Ignores"];
 		return YES;
 	}
 
@@ -740,9 +736,9 @@
 	NSUInteger offset = 0;
 
 	if( ! args.length ) {
-		id info = [JVInspectorController inspectorOfObject:view.connection];
+		JVInspectorController *info = [JVInspectorController inspectorOfObject:view.connection];
 		[info show:nil];
-		[[info inspector] performSelector:@selector(selectTabWithIdentifier:) withObject:@"Ignores"];
+		[(JVConnectionInspector *)[info inspector] selectTabWithIdentifier:@"Ignores"];
 		return YES;
 	}
 
