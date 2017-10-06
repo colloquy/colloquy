@@ -253,7 +253,7 @@ static NSMenu *favoritesMenu = nil;
 	[[self window] setHidesOnDeactivate:NO];
 	[[self window] setResizeIncrements:NSMakeSize( 1, [connections rowHeight] + [connections intercellSpacing].height - 1. )];
 
-	[connections setAccessibilityRoleDescription:NSLocalizedString(@"Connections", "VoiceOver label for connections table")];
+	[connections setAccessibilityLabel:NSLocalizedString(@"Connections", "VoiceOver label for connections table")];
 
 	theColumn = [connections tableColumnWithIdentifier:@"auto"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"autoHeader"]];
