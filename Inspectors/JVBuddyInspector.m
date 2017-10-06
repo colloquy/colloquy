@@ -102,7 +102,9 @@
 	[identifierEditPanel makeFirstResponder:identifierNickname];
 
 	_identifierIsNew = YES;
-	[[NSApplication sharedApplication] beginSheet:identifierEditPanel modalForWindow:[view window] modalDelegate:self didEndSelector:@selector( identifierSheetDidEnd:returnCode:contextInfo: ) contextInfo:nil];
+	[view.window beginSheet:identifierEditPanel completionHandler:^(NSModalResponse returnCode) {
+		[self identifierSheetDidEnd:identifierEditPanel returnCode:returnCode];
+	}];
 }
 
 - (IBAction) editIdentifier:(id) sender {
@@ -146,7 +148,9 @@
 	[identifierEditPanel makeFirstResponder:identifierNickname];
 
 	_identifierIsNew = NO;
-	[[NSApplication sharedApplication] beginSheet:identifierEditPanel modalForWindow:[view window] modalDelegate:self didEndSelector:@selector( identifierSheetDidEnd:returnCode:contextInfo: ) contextInfo:nil];
+	[view.window beginSheet:identifierEditPanel completionHandler:^(NSModalResponse returnCode) {
+		[self identifierSheetDidEnd:identifierEditPanel returnCode:returnCode];
+	}];
 }
 
 - (IBAction) removeIdentifier:(id) sender {
@@ -163,17 +167,15 @@
 }
 
 - (IBAction) discardIdentifierChanges:(id) sender {
-	[[NSApplication sharedApplication] endSheet:identifierEditPanel returnCode:NO];
-	[identifierEditPanel orderOut:sender];
+	[view.window endSheet:identifierEditPanel returnCode:NSModalResponseOK];
 }
 
 - (IBAction) saveIdentifierChanges:(id) sender {
-	[[NSApplication sharedApplication] endSheet:identifierEditPanel returnCode:YES];
-	[identifierEditPanel orderOut:sender];
+	[view.window endSheet:identifierEditPanel returnCode:NSModalResponseCancel];
 }
 
-- (void) identifierSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	if( returnCode ) {
+- (void) identifierSheetDidEnd:(NSWindow *) sheet returnCode:(NSModalResponse) returnCode {
+	if( returnCode == NSModalResponseOK ) {
 		NSString *string = [identifierNickname stringValue];
 		[_currentRule setNickname:( [string length] ? string : nil )];
 

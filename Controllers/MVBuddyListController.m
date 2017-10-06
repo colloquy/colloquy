@@ -202,31 +202,28 @@ static MVBuddyListController *sharedInstance = nil;
 - (IBAction) showBuddyPickerSheet:(id) sender {
 	[self showBuddyList:nil];
 
-	if( [[self window] attachedSheet] ) {
-		[[NSApplication sharedApplication] endSheet:[[self window] attachedSheet]];
-		[[[self window] attachedSheet] orderOut:nil];
+	if( self.window.attachedSheet ) {
+		[self.window endSheet:self.window.attachedSheet];
 	}
 
 	_addPerson = nil;
 
 	_addServers = [[NSMutableSet alloc] init];
 
-	[[NSApplication sharedApplication] beginSheet:pickerWindow modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[self.window beginSheet:pickerWindow completionHandler:nil];
 }
 
 - (IBAction) cancelBuddySelection:(id) sender {
-	if( [[self window] attachedSheet] ) {
-		[[NSApplication sharedApplication] endSheet:[[self window] attachedSheet]];
-		[[[self window] attachedSheet] orderOut:nil];
+	if( self.window.attachedSheet ) {
+		[self.window endSheet:self.window.attachedSheet];
 	}
 
 	_addServers = nil;
 }
 
 - (IBAction) confirmBuddySelection:(id) sender {
-	if( [[self window] attachedSheet] ) {
-		[[NSApplication sharedApplication] endSheet:[[self window] attachedSheet]];
-		[[[self window] attachedSheet] orderOut:nil];
+	if( self.window.attachedSheet ) {
+		[self.window endSheet:self.window.attachedSheet];
 	}
 
 	ABPerson *person = [[pickerView selectedRecords] lastObject];
@@ -238,9 +235,8 @@ static MVBuddyListController *sharedInstance = nil;
 #pragma mark -
 
 - (IBAction) showNewPersonSheet:(id) sender {
-	if( [[self window] attachedSheet] ) {
-		[[NSApplication sharedApplication] endSheet:[[self window] attachedSheet]];
-		[[[self window] attachedSheet] orderOut:nil];
+	if( self.window.attachedSheet ) {
+		[self.window endSheet:self.window.attachedSheet];
 	}
 
 	[servers reloadData];
@@ -265,13 +261,12 @@ static MVBuddyListController *sharedInstance = nil;
 		[addButton setEnabled:YES];
 	else [addButton setEnabled:NO];
 
-	[[NSApplication sharedApplication] beginSheet:newPersonWindow modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[self.window beginSheet:newPersonWindow completionHandler:nil];
 }
 
 - (IBAction) cancelNewBuddy:(id) sender {
-	if( [[self window] attachedSheet] ) {
-		[[NSApplication sharedApplication] endSheet:[[self window] attachedSheet]];
-		[[[self window] attachedSheet] orderOut:nil];
+	if( self.window.attachedSheet ) {
+		[self.window endSheet:self.window.attachedSheet];
 	}
 
 	[nickname setObjectValue:@""];
@@ -286,9 +281,8 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (IBAction) confirmNewBuddy:(id) sender {
-	if( [[self window] attachedSheet] ) {
-		[[NSApplication sharedApplication] endSheet:[[self window] attachedSheet]];
-		[[[self window] attachedSheet] orderOut:nil];
+	if( self.window.attachedSheet ) {
+		[self.window endSheet:self.window.attachedSheet];
 	}
 
 	JVBuddy *buddy = [[JVBuddy alloc] init];

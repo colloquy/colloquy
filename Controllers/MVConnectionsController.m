@@ -56,7 +56,6 @@ static NSMenu *favoritesMenu = nil;
 - (void) _machineDidStopIdling:(NSNotification *) notification;
 - (void) _disconnect:(id) sender;
 - (void) _delete:(id) sender;
-- (void) _deleteConnectionSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
 - (void) _messageUser:(id) sender;
 - (void) _openConsole:(id) sender;
 + (void) _openFavoritesFolder:(id) sender;
@@ -592,8 +591,7 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark -
 
 - (IBAction) messageUser:(id) sender {
-	[messageUser orderOut:nil];
-	[[NSApplication sharedApplication] endSheet:messageUser];
+	[self.window endSheet:messageUser];
 
 	if( [connections selectedRow] == -1 ) return;
 
@@ -612,7 +610,7 @@ static NSMenu *favoritesMenu = nil;
 			[userSelectionTable reloadData];
 			[userSelectionTable selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
 
-			[[NSApplication sharedApplication] beginSheet:userSelectionPanel modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+			[self.window beginSheet:userSelectionPanel completionHandler:nil];
 
 			return;
 		}
@@ -625,7 +623,7 @@ static NSMenu *favoritesMenu = nil;
 	if( ! [_bookmarks count] ) return;
 	NSArray *connectedConnections = [self connectedConnections];
 	JVChatRoomBrowser *browser = [JVChatRoomBrowser chatRoomBrowserForConnection:( [connections selectedRow] == -1 ? ( [connectedConnections count] ? [connectedConnections objectAtIndex:0] : nil ) : [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] )];
-	[[NSApplication sharedApplication] beginSheet:[browser window] modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[self.window beginSheet:browser.window completionHandler:nil];
 }
 
 #pragma mark -
@@ -693,8 +691,7 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark User Selection
 
 - (IBAction) userSelectionSelected:(id) sender {
-	[userSelectionPanel orderOut:nil];
-	[[NSApplication sharedApplication] endSheet:userSelectionPanel];
+	[self.window endSheet:userSelectionPanel];
 
 	NSInteger row = [userSelectionTable selectedRow];
 
@@ -2272,7 +2269,7 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) _messageUser:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
-	[[NSApplication sharedApplication] beginSheet:messageUser modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[self.window beginSheet:messageUser completionHandler:nil];
 }
 
 - (void) _openConsole:(id) sender {
