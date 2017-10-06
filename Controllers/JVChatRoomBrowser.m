@@ -61,13 +61,13 @@
 - (void) windowDidLoad {
 	NSTableColumn *theColumn = nil;
 
-	[roomsTable accessibilitySetOverrideValue:NSLocalizedString(@"Chat rooms", "VoiceOver title for chat rooms table") forAttribute:NSAccessibilityDescriptionAttribute];
+	[roomsTable setAccessibilityMarkerTypeDescription:NSLocalizedString(@"Chat rooms", "VoiceOver title for chat rooms table")];
 
 	theColumn = [roomsTable tableColumnWithIdentifier:@"members"];
 	NSImage *headerImage = [NSImage imageFromPDF:@"person"];
 	headerImage.size = NSMakeSize(10., 10.);
 	[[theColumn headerCell] setImage:headerImage];
-	[[theColumn headerCell] accessibilitySetOverrideValue:NSLocalizedString(@"Participants", "VoiceOver title for number of connected users in chat room browser table") forAttribute:NSAccessibilityDescriptionAttribute];
+	[[theColumn headerCell] setAccessibilityMarkerTypeDescription:NSLocalizedString(@"Participants", "VoiceOver title for number of connected users in chat room browser table")];
 
 	[self tableView:roomsTable didClickTableColumn:[roomsTable tableColumnWithIdentifier:_sortColumn]];
 
@@ -75,7 +75,7 @@
 
 	[showBrowser setBezelStyle:NSRoundedDisclosureBezelStyle];
 	[showBrowser setButtonType:NSOnOffButton];
-	[[showBrowser cell] accessibilitySetOverrideValue:NSLocalizedString(@"Show chat rooms", "VoiceOver title for disclosure checkbox for chat rooms table in Join room dialog") forAttribute:NSAccessibilityDescriptionAttribute];
+	[[showBrowser cell] setAccessibilityRoleDescription:NSLocalizedString(@"Show chat rooms", "VoiceOver title for disclosure checkbox for chat rooms table in Join room dialog")];
 
 	[searchField setAction:@selector( filterResults: )];
 	[searchField setTarget:self];

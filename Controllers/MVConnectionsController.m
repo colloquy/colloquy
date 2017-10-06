@@ -253,7 +253,7 @@ static NSMenu *favoritesMenu = nil;
 	[[self window] setHidesOnDeactivate:NO];
 	[[self window] setResizeIncrements:NSMakeSize( 1, [connections rowHeight] + [connections intercellSpacing].height - 1. )];
 
-	[connections accessibilitySetOverrideValue:NSLocalizedString(@"Connections", "VoiceOver label for connections table") forAttribute:NSAccessibilityDescriptionAttribute];
+	[connections setAccessibilityRoleDescription:NSLocalizedString(@"Connections", "VoiceOver label for connections table")];
 
 	theColumn = [connections tableColumnWithIdentifier:@"auto"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"autoHeader"]];
@@ -1165,7 +1165,7 @@ static NSMenu *favoritesMenu = nil;
 			}
 			if( imageName )
 				[cell setImage:[NSImage imageNamed:imageName]];
-			[cell accessibilitySetOverrideValue:title forAttribute:NSAccessibilityValueDescriptionAttribute];
+			[cell setAccessibilityValueDescription:title];
 		}
 	}
 }
