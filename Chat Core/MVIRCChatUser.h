@@ -8,9 +8,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class MVIRCChatConnection;
 
-extern NSString *MVMetadataKeyForAttributeName(NSString *attributeName);
-extern NSString *MVAttributeNameForMetadataKey(NSString *metadataKey);
-
 @interface MVIRCChatUser : MVChatUser
 #if __has_feature(objc_class_property)
 @property (readonly, class, copy) NSArray<NSString*> *servicesNicknames;

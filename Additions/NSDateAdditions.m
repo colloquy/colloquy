@@ -8,13 +8,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (cacheDictionary)
 		return cacheDictionary;
 
-#if defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && defined(__IPHONE_7_0) && __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_7_0
-	cacheDictionary = [[NSMutableDictionary alloc] init];
-#elif defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && defined(__MAC_10_9) && __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9 && (__LP64__ || NS_BUILD_32_LIKE_64)
-	cacheDictionary = [[NSMutableDictionary alloc] init];
-#else
-	cacheDictionary = [NSThread currentThread].threadDictionary;
-#endif
+	cacheDictionary = [NSMutableDictionary dictionary];
 
 	return cacheDictionary;
 }
@@ -65,45 +59,28 @@ NS_ASSUME_NONNULL_BEGIN
 }
 @end
 
-NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFormat) {
-	NSDictionary *singularWords = @{
-		@(1U): NSLocalizedString(@"second", "Singular second"), @(60U): NSLocalizedString(@"minute", "Singular minute"),
-		@(3600U): NSLocalizedString(@"hour", "Singular hour"), @(86400U): NSLocalizedString(@"day", "Singular day"),
-		@(604800U): NSLocalizedString(@"week", "Singular week"), @(2628000U): NSLocalizedString(@"month", "Singular month"),
-		@(31536000U): NSLocalizedString(@"year", "Singular year")
-	};
+@implementation NSString (NSDateAdditions)
+- (NSDate *) dateFromFormat:(NSString *) format {
+	NSDateFormatter *dateFormatter = [NSDate cq_cacheDictionary][format];
+	if (!dateFormatter) {
+		dateFormatter = [[NSDateFormatter alloc] init];
+		dateFormatter.dateFormat = format;
 
-	NSDictionary *pluralWords = @{
-		@(1U): NSLocalizedString(@"seconds", "Plural seconds"), @(60U): NSLocalizedString(@"minutes", "Plural minutes"),
-		@(3600U): NSLocalizedString(@"hours", "Plural hours"), @(86400U): NSLocalizedString(@"days", "Plural days"),
-		@(604800U): NSLocalizedString(@"weeks", "Plural weeks"), @(2628000U): NSLocalizedString(@"months", "Plural months"),
-		@(31536000U): NSLocalizedString(@"years", "Plural years")
-	};
-
-	NSArray <NSNumber *> *breaks = @[ @(1U), @(60U), @(3600U), @(86400U), @(604800U), @(2628000U), @(31536000U) ];
-
-	NSTimeInterval seconds = ABS(interval);
-
-	NSUInteger i = 0;
-	while (i < [breaks count] && seconds >= [breaks[i] doubleValue]) ++i;
-	if (i > 0) --i;
-
-	float stop = [breaks[i] floatValue];
-	NSUInteger value = (seconds / stop);
-	NSDictionary *words = (value != 1 ? pluralWords : singularWords);
-
-	NSMutableString *result = [NSMutableString stringWithFormat:NSLocalizedString(@"%u %@", "Time with a unit word"), value, words[@(stop)]];
-	if (longFormat && i > 0) {
-		NSUInteger remainder = ((NSUInteger)seconds % (NSUInteger)stop);
-		stop = [breaks[--i] floatValue];
-		remainder = (remainder / stop);
-		if (remainder) {
-			words = (remainder != 1 ? pluralWords : singularWords);
-			[result appendFormat:NSLocalizedString(@" %u %@", "Time with a unit word, appended to a previous larger unit of time"), remainder, words[breaks[i]]];
-		}
+		[NSDate cq_cacheDictionary][format] = dateFormatter;
 	}
-	
-	return result;
+
+	return [dateFormatter dateFromString:self];
+}
+@end
+
+
+NSString *humanReadableTimeInterval(NSTimeInterval interval) {
+	NSDateComponentsFormatter *formatter = [[NSDateComponentsFormatter alloc] init];
+	formatter.unitsStyle = NSDateComponentsFormatterUnitsStyleFull;
+	formatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorDropAll;
+	formatter.collapsesLargestUnit = YES;
+
+	return [formatter stringFromTimeInterval:interval];
 }
 
 NS_ASSUME_NONNULL_END

@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	id uniqueId = [self uniqueIdentifier];
 	if( ! [uniqueId isEqual:[self nickname]] ) {
-		if( [uniqueId isKindOfClass:[NSData class]] ) uniqueId = [uniqueId colBase64Encoding];
+		if( [uniqueId isKindOfClass:[NSData class]] ) uniqueId = [uniqueId mv_base64Encoding];
 		else if( [uniqueId isKindOfClass:[NSString class]] ) uniqueId = [uniqueId stringByEncodingXMLSpecialCharactersAsEntities];
 		[ret appendFormat:@" identifier=\"%@\"", uniqueId];
 	}
@@ -141,7 +141,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[panel setAccessoryView:view];
 
 	[panel setAllowedFileTypes:nil];
-	if( [panel runModal] == NSOKButton ) {
+	if( [panel runModal] == NSModalResponseOK ) {
 		passive = [passiveButton state];
 		for( NSURL *fileURL in [panel URLs] )
 			[[MVFileTransferController defaultController] addFileTransfer:[self sendFile:[fileURL path] passively:passive]];

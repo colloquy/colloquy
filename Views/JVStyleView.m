@@ -868,7 +868,11 @@ quickEnd:
 }
 
 - (void) _styleError {
-	NSRunCriticalAlertPanel( NSLocalizedString( @"An internal Style error occurred.", "the stylesheet parse failed" ), NSLocalizedString( @"The %@ Style has been damaged or has an internal error preventing new messages from displaying. Please contact the %@ author about this.", "the style contains and error" ), @"OK", nil, nil, [[self style] displayName], [[self style] displayName] );
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = NSLocalizedString( @"An internal Style error occurred.", "the stylesheet parse failed" );
+	alert.informativeText = [NSString stringWithFormat:NSLocalizedString( @"The %@ Style has been damaged or has an internal error preventing new messages from displaying. Please contact the %@ author about this.", "the style contains and error" ), [[self style] displayName], [[self style] displayName]];
+	alert.alertStyle = NSAlertStyleCritical;
+	[alert runModal];
 }
 
 - (void) _styleVariantChanged:(NSNotification *) notification {

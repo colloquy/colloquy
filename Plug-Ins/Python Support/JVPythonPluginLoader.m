@@ -25,7 +25,12 @@
 }
 
 - (void) displayInstallationWarning {
-	NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"PyObjC Required", nil, [NSBundle bundleForClass:[self class]], "PyObjC required error title" ), NSLocalizedStringFromTableInBundle( @"PyObjC was not found. The Python console and any Python plugins will not work during this session. For the latest version of PyObjC visit http://pyobjc.sourceforge.net.", nil, [NSBundle bundleForClass:[self class]], "PyObjC required error message" ), nil, nil, nil, nil );
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = NSLocalizedStringFromTableInBundle( @"PyObjC Required", nil, [NSBundle bundleForClass:[self class]], "PyObjC required error title" );
+	alert.informativeText = NSLocalizedStringFromTableInBundle( @"PyObjC was not found. The Python console and any Python plugins will not work during this session. For the latest version of PyObjC visit http://pyobjc.sourceforge.net.", nil, [NSBundle bundleForClass:[self class]], "PyObjC required error message" );
+	alert.alertStyle = NSAlertStyleCritical;
+	[alert runModal];
+	[alert release];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {

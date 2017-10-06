@@ -811,7 +811,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (nullable NSCalendarDate *) dateBegan {
+- (NSDateComponents *__nullable) dateBegan {
 	if( ! _xmlLog ) return nil;
 
 	xmlNode *node = xmlDocGetRootElement( _xmlLog );
@@ -819,8 +819,10 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 	xmlChar *prop = xmlGetProp( node, (xmlChar *) "began" );
 	if( prop ) {
-		NSString *dateString = @((char *) prop);
-		NSCalendarDate *ret = [NSCalendarDate dateWithNaturalLanguageString:dateString];
+		NSString *dateString = [NSString stringWithUTF8String:(char *) prop];
+		NSDate *date = [dateString dateFromFormat:@"yyyy-MM-DD HH:mm:ss ZZZZZ"];
+		const NSCalendarUnit requestedComponents = (NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond | NSCalendarUnitTimeZone);
+		NSDateComponents *ret = [[NSCalendar autoupdatingCurrentCalendar] components:requestedComponents fromDate:date];
 		xmlFree( prop );
 		return ret;
 	}
@@ -1095,7 +1097,8 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	[[NSFileManager defaultManager] setAttributes:@{NSFileExtensionHidden: @YES, NSFileHFSTypeCode: @((OSType)'coTr'), NSFileHFSCreatorCode: @((OSType)'coRC')} ofItemAtPath:path error:nil];
 
 	if( _logFile ) {
-		NSString *beganDateString = [[self dateBegan] localizedDescription];
+		NSDate *began = [[NSCalendar autoupdatingCurrentCalendar] dateFromComponents:[self dateBegan]];
+		NSString *beganDateString = [began localizedDescription];
 		NSString *lastDateString = [[[self lastMessage] date] localizedDescription];
 		NSURL *source = [self source];
 		NSString *target = [source path];
@@ -1238,8 +1241,9 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		}
 
 		@synchronized( _transcript ) {
-			xmlChar *startedStr = xmlGetProp( _node, (xmlChar *) "started" );
-			_startDate = ( startedStr ? [[NSDate alloc] initWithString:[NSString stringWithUTF8String:(char *) startedStr]] : nil );
+
+			xmlChar *startedStr = xmlGetProp( (xmlNode *) _node, (xmlChar *) "started" );
+			_startDate = ( startedStr ? [[NSString stringWithUTF8String:(char *) startedStr] dateFromFormat:@"yyyy-MM-DD HH:mm:ss ZZZZZ"] : nil );
 			xmlFree( startedStr );
 		}
 	}
@@ -1275,7 +1279,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 	@synchronized( _transcript ) {
 		xmlChar *prop = xmlGetProp( _node, (xmlChar *) "received" );
-		_date = ( prop ? [[NSDate alloc] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
+		_date = ( prop ? [[NSString stringWithUTF8String:(char *) prop] dateFromFormat:@"yyyy-MM-DD HH:mm:ss ZZZZZ"] : nil );
 		xmlFree( prop );
 
 		prop = xmlGetProp( _node, (xmlChar *) "action" );

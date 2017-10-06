@@ -1,0 +1,26 @@
+BUNDLE_LOADER = $(BUNDLE_LOADER_$(WRAPPER_EXTENSION))
+BUNDLE_LOADER_plugin = ${BUILT_PRODUCTS_DIR}/Colloquy.app/Contents/MacOS/Colloquy
+DYLIB_INSTALL_NAME_BASE = $(DYLIB_INSTALL_NAME_BASE_$(WRAPPER_EXTENSION))
+DYLIB_INSTALL_NAME_BASE_framework = @rpath
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) $(GCC_PREPROCESSOR_DEFINITIONS_$(WRAPPER_EXTENSION))
+GCC_PREPROCESSOR_DEFINITIONS_plugin = COLLOQUY_PLUGIN
+LD_RUNPATH_SEARCH_PATHS = $(LD_RUNPATH_SEARCH_PATHS_$(WRAPPER_EXTENSION))
+LD_RUNPATH_SEARCH_PATHS[sdk=macosx*] = $(LD_RUNPATH_SEARCH_PATHS_$(WRAPPER_EXTENSION))
+LD_RUNPATH_SEARCH_PATHS_app = @executable_path/Frameworks
+LD_RUNPATH_SEARCH_PATHS_appex = @executable_path/../../Frameworks
+LD_RUNPATH_SEARCH_PATHS_appex[sdk=macosx*] = @executable_path/../Frameworks @executable_path/../../../../Frameworks
+LD_RUNPATH_SEARCH_PATHS_app[sdk=macosx*] = @executable_path/../Frameworks
+LD_RUNPATH_SEARCH_PATHS_framework = @executable_path/Frameworks @loader_path/Frameworks
+LD_RUNPATH_SEARCH_PATHS_framework[sdk=macosx*] = @executable_path/../Frameworks @loader_path/Frameworks
+LD_RUNPATH_SEARCH_PATHS_xctest = @executable_path/Frameworks @loader_path/Frameworks
+LD_RUNPATH_SEARCH_PATHS_xctest[sdk=macosx*] = @executable_path/../Frameworks @loader_path/../Frameworks
+SKIP_INSTALL = $(SKIP_INSTALL_$(WRAPPER_EXTENSION))
+SKIP_INSTALL_a = YES
+SKIP_INSTALL_app = NO
+SKIP_INSTALL_appex = YES
+SKIP_INSTALL_framework = YES
+SKIP_INSTALL_plugin = YES
+SKIP_INSTALL_xctest = YES
+
+// TODO: Set STRIP_STYLE according to https://developer.apple.com/library/content/technotes/tn2004/tn2123.html#SECSTRIPPINGMACHOSYMBOLS
+// TODO: Do this in combination with reviewing https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/SymbolVisibility.html which could obsolete our export symbols file.

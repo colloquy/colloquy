@@ -10,6 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation CQTableViewController {
 	UITableViewStyle _style;
 	UITableView *_tableView;
+	UIEdgeInsets _insetsPriorToKeyboardAppearance;
 }
 
 - (instancetype)initWithStyle:(UITableViewStyle)style {
@@ -70,6 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) viewDidLoad {
 	[super viewDidLoad];
+
 	[_tableView performSelectorOnMainThread:@selector(hideEmptyCells) withObject:nil waitUntilDone:YES];
 }
 
@@ -82,12 +84,18 @@ NS_ASSUME_NONNULL_BEGIN
 		for (NSIndexPath *indexPath in _tableView.indexPathsForSelectedRows)
 			[_tableView deselectRowAtIndexPath:indexPath animated:NO];
 	}
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(CQTableViewController_keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(CQTableViewController_keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 }
 
 #pragma mark -
@@ -102,6 +110,38 @@ NS_ASSUME_NONNULL_BEGIN
 	NSAssert(NO, @"tableView:cellForRowAtIndexPath: not implemented");
 	[self doesNotRecognizeSelector:_cmd];
 	__builtin_unreachable();
+}
+
+#pragma mark -
+
+- (void) CQTableViewController_keyboardWillShow:(NSNotification *) notification {
+	_insetsPriorToKeyboardAppearance = self.tableView.contentInset;
+
+	CGRect keyboardRect = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+	keyboardRect = [self.view.window convertRect:keyboardRect toView:self.view];
+
+	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	NSUInteger animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+
+	if (CGRectIntersectsRect(keyboardRect, self.tableView.frame)) {
+		[UIView animateWithDuration:(animationDuration) delay:.0 options:animationCurve animations:^{
+			CGRect intersection = CGRectIntersection(keyboardRect, self.tableView.frame);
+			UIEdgeInsets insets = self.tableView.contentInset;
+			insets.bottom += intersection.size.height;
+			self.tableView.contentInset = insets;
+		} completion:NULL];
+	}
+}
+
+- (void) CQTableViewController_keyboardWillHide:(NSNotification *) notification {
+	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	NSUInteger animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+
+	if (!UIEdgeInsetsEqualToEdgeInsets(_insetsPriorToKeyboardAppearance, UIEdgeInsetsZero)) {
+		[UIView animateWithDuration:(animationDuration) delay:.0 options:animationCurve animations:^{
+			self.tableView.contentInset = _insetsPriorToKeyboardAppearance;
+		} completion:NULL];
+	}
 }
 
 #pragma mark -

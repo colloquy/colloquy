@@ -34,7 +34,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "55C8A2CF180735D100A7BB42"
-               BuildableName = "Colloquy Tests.xctest"
+               BuildableName = "Colloquy Tests"
                BlueprintName = "Colloquy Tests"
                ReferencedContainer = "container:Colloquy (Old).xcodeproj">
             </BuildableReference>
@@ -74,16 +74,6 @@
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
-         <AdditionalOption
-            key = "MallocStackLogging"
-            value = ""
-            isEnabled = "YES">
-         </AdditionalOption>
-         <AdditionalOption
-            key = "NSZombieEnabled"
-            value = "YES"
-            isEnabled = "YES">
-         </AdditionalOption>
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction

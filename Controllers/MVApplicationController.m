@@ -96,7 +96,7 @@ static BOOL applicationIsTerminating = NO;
 	id hidIdleTimeObj = hidProperties[@"HIDIdleTime"];
 	unsigned long long result;
 
-	if( [hidIdleTimeObj isKindOfClass:[NSData class]] ) [hidIdleTimeObj getBytes:&result length:sizeof(result)];
+	if( [hidIdleTimeObj isKindOfClass:[NSData class]] ) [hidIdleTimeObj getBytes:&result length:[hidIdleTimeObj length]];
 	else result = [hidIdleTimeObj longLongValue];
 
 	if (hidPropertiesRef)
@@ -140,11 +140,6 @@ static BOOL applicationIsTerminating = NO;
 #pragma mark -
 
 - (IBAction) checkForUpdate:(id) sender {
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_4 ) { // test for 10.4
-		NSRunInformationalAlertPanel( @"Tiger is no longer supported.", @"You are running the last version of Colloquy that is supported for Tiger (10.4.11). Please update to Leopard or Snow Leopard to receive further updates and support for Colloquy.", nil, nil, nil );
-		return;
-	}
-
 	if( ! _updater ) _updater = [[SUUpdater alloc] init];
 	[_updater checkForUpdates:sender];
 }
@@ -281,7 +276,7 @@ static BOOL applicationIsTerminating = NO;
 - (void) openDocumentPanelDidEnd:(NSOpenPanel *) panel returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo {
 	NSString *filename = [[panel URL] path];
 	NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filename error:nil];
-	if( returnCode == NSOKButton && [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [attributes[NSFileHFSTypeCode] unsignedIntValue] == 'coTr' && [attributes[NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
+	if( returnCode == NSModalResponseOK && [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedIntValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
 		[[JVChatController defaultController] chatViewControllerForTranscript:filename];
 	}
 }
@@ -355,9 +350,19 @@ static BOOL applicationIsTerminating = NO;
 		if( [newPath isEqualToString:filename] ) return NO;
 
 		if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:newPath] && */ [[NSFileManager defaultManager] isDeletableFileAtPath:newPath] ) {
-			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"%@ Already Installed", "style already installed title" ), [[filename lastPathComponent] stringByDeletingPathExtension]], [NSString stringWithFormat:NSLocalizedString( @"The %@ style is already installed. Would you like to replace it with this version?", "would you like to replace a style with a different version" ), [[filename lastPathComponent] stringByDeletingPathExtension]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil ) == NSOKButton ) {
+			NSAlert *alert = [[NSAlert alloc] init];
+			alert.messageText = [NSString stringWithFormat:NSLocalizedString( @"%@ Already Installed", "style already installed title" ), [[filename lastPathComponent] stringByDeletingPathExtension]];
+			alert.informativeText = [NSString stringWithFormat:NSLocalizedString( @"The %@ style is already installed. Would you like to replace it with this version?", "would you like to replace a style with a different version" ), [[filename lastPathComponent] stringByDeletingPathExtension]];
+			alert.alertStyle = NSAlertStyleInformational;
+			[alert addButtonWithTitle:NSLocalizedString( @"Yes", "yes button" )];
+			[alert addButtonWithTitle:NSLocalizedString( @"No", "no button" )];
+			NSModalResponse response = [alert runModal];
+			
+			if( response == NSAlertFirstButtonReturn ) {
 				[[NSFileManager defaultManager] removeItemAtPath:newPath error:nil];
-			} else return NO;
+			} else {
+				return NO;
+			}
 		}
 
 		if( [[NSFileManager defaultManager] moveItemAtPath:filename toPath:newPath error:nil] ) {
@@ -366,16 +371,28 @@ static BOOL applicationIsTerminating = NO;
 
 			[[NSNotificationCenter chatCenter] postNotificationName:JVChatStyleInstalledNotification object:style];
 
-			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"%@ Successfully Installed", "style installed title" ), [style displayName]], [NSString stringWithFormat:NSLocalizedString( @"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?", "would you like to view the style in the Appearance Preferences" ), [style displayName], [style displayName]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil) == NSOKButton ) {
+			NSAlert *alert = [[NSAlert alloc] init];
+			alert.messageText = [NSString stringWithFormat:NSLocalizedString( @"%@ Successfully Installed", "style installed title" ), [style displayName]];
+			alert.informativeText = [NSString stringWithFormat:NSLocalizedString( @"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?", "would you like to view the style in the Appearance Preferences" ), [style displayName], [style displayName]];
+			alert.alertStyle = NSAlertStyleInformational;
+			[alert addButtonWithTitle:NSLocalizedString( @"Yes", "yes button" )];
+			[alert addButtonWithTitle:NSLocalizedString( @"No", "no button" )];
+			NSModalResponse response = [alert runModal];
+
+			if( response == NSAlertFirstButtonReturn ) {
 				[self showPreferences:nil];
 				[self.preferencesWindowController selectControllerWithIdentifier:self.preferencesWindowController.appearancePreferences.identifier];
 				[self.preferencesWindowController.appearancePreferences selectStyleWithIdentifier:[style identifier]];
 			}
 
-
 			return YES;
 		} else {
-			NSRunCriticalAlertPanel( NSLocalizedString( @"Style Installation Error", "error installing style title" ), NSLocalizedString( @"The style could not be installed, please make sure you have permission to install this item.", "style install error message" ), nil, nil, nil, nil );
+			NSAlert *alert = [[NSAlert alloc] init];
+			alert.messageText = NSLocalizedString( @"Style Installation Error", "error installing style title" );
+			alert.informativeText = NSLocalizedString( @"The style could not be installed, please make sure you have permission to install this item.", "style install error message" );
+			alert.alertStyle = NSAlertStyleCritical;
+			[alert runModal];
+			
 		} return NO;
 	} else if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:filename] && */ ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyEmoticons"] == NSOrderedSame || ( [attributes[NSFileHFSTypeCode] unsignedIntValue] == 'coEm' && [attributes[NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
 		NSString *newPath;
@@ -389,7 +406,15 @@ static BOOL applicationIsTerminating = NO;
 		if( [newPath isEqualToString:filename] ) return NO;
 
 		if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:newPath] && */ [[NSFileManager defaultManager] isDeletableFileAtPath:newPath] ) {
-			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"%@ Already Installed", "emoticons already installed title" ), [[filename lastPathComponent] stringByDeletingPathExtension]], [NSString stringWithFormat:NSLocalizedString( @"The %@ emoticons are already installed. Would you like to replace them with this version?", "would you like to replace an emoticon bundle with a different version" ), [[filename lastPathComponent] stringByDeletingPathExtension]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil ) == NSOKButton ) {
+			NSAlert *alert = [[NSAlert alloc] init];
+			alert.messageText = [NSString stringWithFormat:NSLocalizedString( @"%@ Already Installed", "emoticons already installed title" ), [[filename lastPathComponent] stringByDeletingPathExtension]];
+			alert.informativeText = [NSString stringWithFormat:NSLocalizedString( @"The %@ emoticons are already installed. Would you like to replace them with this version?", "would you like to replace an emoticon bundle with a different version" ), [[filename lastPathComponent] stringByDeletingPathExtension]];
+			alert.alertStyle = NSAlertStyleInformational;
+			[alert addButtonWithTitle:NSLocalizedString( @"Yes", "yes button" )];
+			[alert addButtonWithTitle:NSLocalizedString( @"No", "no button" )];
+			NSModalResponse response = [alert runModal];
+
+			if( response == NSAlertFirstButtonReturn ) {
 				[[NSFileManager defaultManager] removeItemAtPath:newPath error:nil];
 			} else return NO;
 		}
@@ -398,7 +423,15 @@ static BOOL applicationIsTerminating = NO;
 			NSBundle *emoticon = [NSBundle bundleWithPath:newPath];
 			[[NSNotificationCenter chatCenter] postNotificationName:JVChatEmoticonSetInstalledNotification object:emoticon];
 
-			if( NSRunInformationalAlertPanel( [NSString stringWithFormat:NSLocalizedString( @"%@ Successfully Installed", "emoticon installed title" ), [emoticon displayName]], [NSString stringWithFormat:NSLocalizedString( @"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?", "would you like to view the emoticons in the Appearance Preferences" ), [emoticon displayName], [emoticon displayName]], NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil, nil ) == NSOKButton ) {
+			NSAlert *alert = [[NSAlert alloc] init];
+			alert.messageText = [NSString stringWithFormat:NSLocalizedString( @"%@ Successfully Installed", "emoticon installed title" ), [emoticon displayName]];
+			alert.informativeText = [NSString stringWithFormat:NSLocalizedString( @"%@ is ready to be used in your colloquies. Would you like to view %@ and it's options in the Appearance Preferences?", "would you like to view the emoticons in the Appearance Preferences" ), [emoticon displayName], [emoticon displayName]];
+			alert.alertStyle = NSAlertStyleInformational;
+			[alert addButtonWithTitle:NSLocalizedString( @"Yes", "yes button" )];
+			[alert addButtonWithTitle:NSLocalizedString( @"No", "no button" )];
+			NSModalResponse response = [alert runModal];
+
+			if( response == NSAlertFirstButtonReturn ) {
 				[self showPreferences:nil];
 				[self.preferencesWindowController selectControllerWithIdentifier:self.preferencesWindowController.appearancePreferences.identifier];
 				[self.preferencesWindowController.appearancePreferences selectEmoticonsWithIdentifier:[emoticon bundleIdentifier]];
@@ -406,7 +439,12 @@ static BOOL applicationIsTerminating = NO;
 
 			return YES;
 		} else {
-			NSRunCriticalAlertPanel( NSLocalizedString( @"Emoticon Installation Error", "error installing emoticons title" ), NSLocalizedString( @"The emoticons could not be installed, please make sure you have permission to install this item.", "emoticons install error message" ), nil, nil, nil, nil );
+			NSAlert *alert = [[NSAlert alloc] init];
+			alert.messageText = NSLocalizedString( @"Emoticon Installation Error", "error installing emoticons title" );
+			alert.informativeText = NSLocalizedString( @"The emoticons could not be installed, please make sure you have permission to install this item.", "emoticons install error message" );
+			alert.alertStyle = NSAlertStyleCritical;
+			[alert runModal];
+			
 		} return NO;
 	} return NO;
 }

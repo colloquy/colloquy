@@ -195,7 +195,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	id uniqueId = [_user uniqueIdentifier];
 	if( ! [uniqueId isEqual:[self nickname]] ) {
-		if( [uniqueId isKindOfClass:[NSData class]] ) uniqueId = [uniqueId colBase64Encoding];
+		if( [uniqueId isKindOfClass:[NSData class]] ) uniqueId = [uniqueId mv_base64Encoding];
 		else if( [uniqueId isKindOfClass:[NSString class]] ) uniqueId = [uniqueId stringByEncodingXMLSpecialCharactersAsEntities];
 		[ret appendFormat:@" identifier=\"%@\"", uniqueId];
 	}

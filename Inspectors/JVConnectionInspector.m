@@ -102,7 +102,7 @@
 	NSImageCell *prototypeCell = [NSImageCell new];
 	[prototypeCell setImageAlignment:NSImageAlignRight];
 	[prototypeCell setImageFrameStyle:NSImageFrameNone];
-	[prototypeCell setImageScaling:NSScaleNone];
+	[prototypeCell setImageScaling:NSImageScaleNone];
 	[column setDataCell:prototypeCell];
 
 	[editRules setTarget:self];

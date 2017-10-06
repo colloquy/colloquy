@@ -86,7 +86,7 @@ static char encodingTable[64] = {
 
 #pragma mark -
 
-- (NSString *) colBase64Encoding {
+- (NSString *) mv_base64Encoding {
 	return [self base64EncodingWithLineLength:0];
 }
 

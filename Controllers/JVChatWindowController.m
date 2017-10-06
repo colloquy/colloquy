@@ -92,7 +92,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	[[self window] setDelegate:self];
 
-	[[self window] useOptimizedDrawing:YES];
 	[[self window] setIgnoresMouseEvents:NO];
 	[[self window] setOpaque:NO]; // let us poke transparant holes in the window
 
@@ -683,8 +682,18 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (BOOL) windowShouldClose:(id) sender {
 	if( [[self chatViewControllersWithControllerClass:[JVChatRoomPanel class]] count] <= 1 ) return YES; // no rooms, close without a prompt
-	if( NSRunCriticalAlertPanel( NSLocalizedString( @"Are you sure you want to part from all chat rooms and close this window?", "are you sure you want to part all chat rooms dialog title" ), NSLocalizedString( @"You will exit all chat rooms and lose any unsaved chat transcripts. Do you want to proceed?", "confirm close of window message" ), NSLocalizedString( @"Close", "close button" ), NSLocalizedString( @"Cancel", "close button" ), nil, nil ) == NSOKButton )
+	
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = NSLocalizedString( @"Are you sure you want to part from all chat rooms and close this window?", "are you sure you want to part all chat rooms dialog title" );
+	alert.informativeText = NSLocalizedString( @"You will exit all chat rooms and lose any unsaved chat transcripts. Do you want to proceed?", "confirm close of window message" );
+	[alert addButtonWithTitle:NSLocalizedString( @"Close", "close button" )];
+	[alert addButtonWithTitle:NSLocalizedString( @"Cancel", "close button" )];
+	alert.alertStyle = NSAlertStyleCritical;
+	NSModalResponse response = [alert runModal];
+	
+	if( response == NSAlertFirstButtonReturn ) {
 		return YES;
+	}
 	return NO;
 }
 

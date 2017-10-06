@@ -1041,21 +1041,21 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-- (void) setRealName:(NSString *) name {
+- (void) setRealName:(NSString *__nullable) name {
 	NSParameterAssert( name != nil );
 	if( ! [self _silcClient] ) return;
 	if( [self _silcClient] -> realname) free( [self _silcClient] -> realname );
 	[self _silcClient] -> realname = strdup( [name UTF8String] );
 }
 
-- (NSString *) realName {
+- (NSString *__nullable) realName {
 	if( ! [self _silcClient] ) return nil;
 	return @([self _silcClient] -> realname);
 }
 
 #pragma mark -
 
-- (void) setNickname:(NSString *) newNickname {
+- (void) setNickname:(NSString *__nullable) newNickname {
 	NSParameterAssert( newNickname != nil );
 	NSParameterAssert( newNickname.length > 0 );
 	if( ! [self _silcClient] ) return;
@@ -1069,7 +1069,7 @@ static SilcClientOperations silcClientOps = {
 	}
 }
 
-- (NSString *) nickname {
+- (NSString *__nullable) nickname {
 	if( [self isConnected] && [self _silcConn] && [self _silcConn] -> nickname )
 		return @([self _silcConn] -> nickname);
 
@@ -1082,7 +1082,7 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-- (NSString *) certificateServiceName {
+- (NSString *__nullable) certificateServiceName {
 	return @"SILC Keypair";
 }
 
@@ -1098,24 +1098,24 @@ static SilcClientOperations silcClientOps = {
 	return YES;
 }
 
-- (NSString *) certificatePassword {
+- (NSString *__nullable) certificatePassword {
 	return _certificatePassword;
 }
 
 #pragma mark -
 
-- (void) setPassword:(NSString *) newPassword {
+- (void) setPassword:(NSString *__nullable) newPassword {
 	if( newPassword.length ) _silcPassword = [newPassword copy];
 	else _silcPassword = nil;
 }
 
-- (NSString *) password {
+- (NSString *__nullable) password {
 	return _silcPassword;
 }
 
 #pragma mark -
 
-- (void) setUsername:(NSString *) newUsername {
+- (void) setUsername:(NSString *__nullable) newUsername {
 	NSParameterAssert( newUsername != nil );
 	NSParameterAssert( newUsername.length > 0 );
 	if( ! [self _silcClient] ) return;
@@ -1124,7 +1124,7 @@ static SilcClientOperations silcClientOps = {
 	[self _silcClient] -> username = strdup( [newUsername UTF8String] );
 }
 
-- (NSString *) username {
+- (NSString *__nullable) username {
 	if( ! [self _silcClient] ) return nil;
 	return @([self _silcClient] -> username);
 }

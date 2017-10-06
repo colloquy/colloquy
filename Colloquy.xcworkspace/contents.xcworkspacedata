@@ -2,18 +2,98 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Colloquy (Old).xcodeproj">
+   </FileRef>
+   <FileRef
       location = "container:Colloquy (iOS).xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:mac-app/mac-app.xcodeproj">
+      location = "group:Chat Core.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:colloquy-core/colloquy-core.xcodeproj">
+      location = "group:../bouncer/Colloquy Bouncer.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:chat-core/chat-core.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:Colloquy (Old).xcodeproj">
-   </FileRef>
+   <Group
+      location = "container:"
+      name = "Documents">
+      <FileRef
+         location = "group:README.md">
+      </FileRef>
+      <FileRef
+         location = "group:CODE_OF_CONDUCT.md">
+      </FileRef>
+   </Group>
+   <Group
+      location = "container:"
+      name = "Dependency Configuration">
+      <FileRef
+         location = "group:.gitignore">
+      </FileRef>
+      <FileRef
+         location = "group:.gitmodules">
+      </FileRef>
+      <FileRef
+         location = "group:Cartfile">
+      </FileRef>
+      <FileRef
+         location = "group:Cartfile.resolved">
+      </FileRef>
+   </Group>
+   <Group
+      location = "group:Carthage"
+      name = "Carthage">
+      <Group
+         location = "group:Checkouts"
+         name = "Checkouts">
+         <Group
+            location = "group:CocoaAsyncSocket"
+            name = "CocoaAsyncSocket">
+            <FileRef
+               location = "group:CocoaAsyncSocket.xcodeproj">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:CocoaLumberjack"
+            name = "CocoaLumberjack">
+            <FileRef
+               location = "group:Lumberjack.xcodeproj">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:KissXML"
+            name = "KissXML">
+            <FileRef
+               location = "group:KissXML.xcodeproj">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:libidn-framework"
+            name = "libidn-framework">
+            <FileRef
+               location = "group:libidn.xcodeproj">
+            </FileRef>
+         </Group>
+         <Group
+            location = "container:"
+            name = "MASPreferences">
+            <FileRef
+               location = "group:Carthage/Checkouts/MASPreferences/MASPreferences.xcodeproj">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:TCMPortMapper"
+            name = "TCMPortMapper">
+            <FileRef
+               location = "group:Port Map.xcodeproj">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:XMPPFramework"
+            name = "XMPPFramework">
+            <FileRef
+               location = "group:XMPPFramework.xcodeproj">
+            </FileRef>
+         </Group>
+      </Group>
+   </Group>
 </Workspace>

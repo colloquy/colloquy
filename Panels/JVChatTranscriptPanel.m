@@ -144,7 +144,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (NSString *) windowTitle {
-	NSCalendarDate *date = [[self transcript] dateBegan];
+	NSDateComponents *dateComponents = [[self transcript] dateBegan];
+	NSDate *date = [[NSCalendar autoupdatingCurrentCalendar] dateFromComponents:dateComponents];
 	return [NSString stringWithFormat:NSLocalizedString( @"%@ - %@ Transcript", "chat transcript/log - window title" ), [self title], ( date ? [NSDate formattedShortDateStringForDate:[NSDate date]] : @"" )];
 }
 
@@ -323,11 +324,10 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(nullable void *) contextInfo {
-	if( returnCode == NSOKButton ) {
-		NSURL *sheetURL = [sheet URL];
-		[[self transcript] writeToURL:sheetURL atomically:YES];
-		[sheetURL setResourceValue:@([sheet isExtensionHidden]) forKey:NSFileExtensionHidden error:NULL];
-		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:sheetURL];
+	if( returnCode == NSModalResponseOK ) {
+		[[self transcript] writeToURL:[sheet URL] atomically:YES];
+		[[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:[sheet isExtensionHidden]], NSFileExtensionHidden, nil] ofItemAtPath:[[sheet URL] absoluteString] error:nil];
+		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[sheet URL]];
 	}
 }
 

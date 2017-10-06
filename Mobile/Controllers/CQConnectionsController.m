@@ -501,7 +501,7 @@ CQBouncerConnectionDelegate>
 		SecTrustRef trust = (__bridge SecTrustRef)notification.userInfo[@"trust"];
 		NSInteger shouldTrust = [panel runModalForTrust:trust showGroup:YES];
 
-		completionHandler(shouldTrust == NSOKButton);
+		completionHandler(shouldTrust == NSModalResponseOK);
 #else
 		completionHandler(NO);
 #endif

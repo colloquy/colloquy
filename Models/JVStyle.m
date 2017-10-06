@@ -55,8 +55,8 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	for( NSString *path in paths ) {
 		for( NSString *file in [fm contentsOfDirectoryAtPath:path error:nil] ) {
 			NSString *fullPath = [path stringByAppendingPathComponent:file];
-			NSDictionary *attributes = [fm attributesOfItemAtPath:fullPath error:NULL];
-			if( /* [fm isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[file pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [attributes[NSFileHFSTypeCode] unsignedIntValue] == 'coSt' && [attributes[NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
+			NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:NULL];
+			if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[file pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedIntValue] == 'coSt' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
 				NSBundle *bundle = nil;
 				JVStyle *style = nil;
 				if( ( bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]] ) ) {

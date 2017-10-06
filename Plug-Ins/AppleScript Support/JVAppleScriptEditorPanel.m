@@ -183,7 +183,14 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 	if( ! [script compileAndReturnError:&errorInfo] ) {
 		NSRange range = [[errorInfo objectForKey:NSAppleScriptErrorRange] rangeValue];
 		[editor setSelectedRange:range affinity:NSSelectionAffinityUpstream stillSelecting:NO];
-		NSRunCriticalAlertPanel( NSLocalizedString( @"AppleScript Syntax Error", "AppleScript syntax error title" ), [errorInfo objectForKey:NSAppleScriptErrorMessage] , nil, nil, nil );
+		
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = NSLocalizedString( @"AppleScript Syntax Error", "AppleScript syntax error title" );
+		alert.informativeText = [errorInfo objectForKey:NSAppleScriptErrorMessage];
+		alert.alertStyle = NSAlertStyleCritical;
+		[alert runModal];
+		[alert release];
+		
 		return;
 	}
 
@@ -211,7 +218,7 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	[sheet autorelease];
-	if( returnCode == NSOKButton && [self compile:nil] ) {
+	if( returnCode == NSModalResponseOK && [self compile:nil] ) {
 		[[[self plugin] script] saveToFile:[sheet filename]];
 		[[self plugin] setScriptFilePath:[sheet filename]];
 		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:[sheet isExtensionHidden]], NSFileExtensionHidden, nil] atPath:[sheet filename]];
@@ -312,5 +319,4 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 
 	return [[list retain] autorelease];
 }
-
 @end

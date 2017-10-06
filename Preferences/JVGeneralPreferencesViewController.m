@@ -24,7 +24,7 @@ extern const NSStringEncoding JVAllowedTextEncodings[];
 
 #pragma mark - MASPreferencesViewController
 
-- (NSString *) identifier {
+- (NSString *) viewIdentifier {
 	return @"JVGeneralPreferencesViewController";
 }
 

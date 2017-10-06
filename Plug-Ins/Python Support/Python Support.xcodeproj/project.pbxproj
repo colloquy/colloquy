@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 47;
+	objectVersion = 48;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -64,13 +64,15 @@
 		1C415F690B35122700239EB3 /* Template.py */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = text.script.python; name = Template.py; path = ../SDK/Python/Template.py; sourceTree = SOURCE_ROOT; tabWidth = 4; usesTabs = 1; };
 		1C4FD36507C6BC25000EA451 /* JVPythonPluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVPythonPluginLoader.h; sourceTree = SOURCE_ROOT; };
 		1C4FD36607C6BC25000EA451 /* JVPythonPluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVPythonPluginLoader.m; sourceTree = SOURCE_ROOT; };
-		1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
 		55E527401C5AC0FC001EF610 /* ja */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* Python Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Python Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Colloquy (Old).xcodeproj"; path = "../../Colloquy (Old).xcodeproj"; sourceTree = "<group>"; };
 		9295C9811678302E009F9014 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChatCore.framework; path = ../../build/Development/ChatCore.framework; sourceTree = "<group>"; };
-		A1F6108B0957E4BB001B65CD /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A1F6108B0957E4BB001B65CD /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C29E3BF91F64A39E00C18D21 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
+		C29E3BFA1F64A39E00C18D21 /* old-mac-target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
+		C29E3BFB1F64A39E00C18D21 /* target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = target.xcconfig; sourceTree = "<group>"; };
 		C2EC59E8185E11F9008797B7 /* libpython2.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.7.dylib; path = /System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config/libpython2.7.dylib; sourceTree = "<absolute>"; };
 		C2EC59EC185E1570008797B7 /* pyobjc-compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pyobjc-compat.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -97,8 +99,8 @@
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				32C88E010371C26100C91783 /* Other Sources */,
 				089C167CFE841241C02AAC07 /* Resources */,
-				1C9AE940086A59CF008ED7AD /* Configurations */,
-				089C1671FE841209C02AAC07 /* Frameworks */,
+				1C9AE940086A59CF008ED7AD /* Settings */,
+				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
 				55E39FD81F57804500BA9A7B /* Recovered References */,
 			);
@@ -166,13 +168,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1C9AE940086A59CF008ED7AD /* Configurations */ = {
+		1C9AE940086A59CF008ED7AD /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */,
+				C29E3BF91F64A39E00C18D21 /* Base.xcconfig */,
+				C29E3BFA1F64A39E00C18D21 /* old-mac-target.xcconfig */,
+				C29E3BFB1F64A39E00C18D21 /* target.xcconfig */,
 			);
 			indentWidth = 4;
-			name = Configurations;
+			name = Settings;
+			path = ../../Settings;
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 1;
@@ -237,9 +242,10 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = "Colloquy Project";
 			};
 			buildConfigurationList = 1C7F306F0855489300D41FB0 /* Build configuration list for PBXProject "Python Support" */;
-			compatibilityVersion = "Xcode 6.3";
+			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -342,6 +348,7 @@
 /* Begin XCBuildConfiguration section */
 		1C7F306C0855489300D41FB0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C29E3BFB1F64A39E00C18D21 /* target.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -374,6 +381,7 @@
 		};
 		1C7F306E0855489300D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C29E3BFB1F64A39E00C18D21 /* target.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -407,10 +415,9 @@
 		};
 		1C7F30700855489300D41FB0 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
+			baseConfigurationReference = C29E3BF91F64A39E00C18D21 /* Base.xcconfig */;
 			buildSettings = {
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -422,6 +429,7 @@
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)/../..";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -435,10 +443,9 @@
 		};
 		1C7F30720855489300D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
+			baseConfigurationReference = C29E3BF91F64A39E00C18D21 /* Base.xcconfig */;
 			buildSettings = {
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -450,6 +457,7 @@
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)/../..";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;

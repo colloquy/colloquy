@@ -13,6 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, copy) NSString *localizedDescription;
 @end
 
-NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFormat);
+@interface NSString (NSDateAdditions)
+- (NSDate *) dateFromFormat:(NSString *) format;
+@end
+
+NSString *humanReadableTimeInterval(NSTimeInterval interval);
 
 NS_ASSUME_NONNULL_END

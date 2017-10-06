@@ -1,4 +1,4 @@
-#import "XMPPFramework.h"
+@import XMPPFramework;
 
 #import "MVXMPPChatRoom.h"
 #import "MVXMPPChatUser.h"
@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (nullable NSURL *) url {
+- (NSURL *__nullable) url {
 	NSString *urlString = [NSString stringWithFormat:@"%@:%@?join", [[self connection] urlScheme], [[_uniqueIdentifier domain] stringByEncodingIllegalURLCharacters]];
 	if( urlString ) return [NSURL URLWithString:urlString];
 	return nil;

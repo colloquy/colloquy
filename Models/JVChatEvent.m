@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 		xmlFree( prop );
 
 		prop = xmlGetProp( (xmlNode *) _node, (xmlChar *) "occurred" );
-		_date = ( prop ? [[NSDate alloc] initWithString:@((char *) prop)] : nil );
+		_date = ( prop ? [[NSString stringWithUTF8String:(char *) prop] dateFromFormat:@"yyyy-MM-DD HH:mm:ss ZZZZZ"] : nil );
 		xmlFree( prop );
 	}
 

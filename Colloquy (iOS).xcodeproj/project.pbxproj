@@ -3,12 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 48;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		194D95D31B2A33910061AE55 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 194D95D21B2A33910061AE55 /* LaunchScreen.xib */; };
-		19C7F58B1B26C1E3000F5AAE /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C7F58A1B26C1E3000F5AAE /* MobileCoreServices.framework */; };
 		1C0931030D80C6E900A2705D /* CQColloquyApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0931010D80C6E900A2705D /* CQColloquyApplication.m */; };
 		1C09313B0D80C8F600A2705D /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C09313A0D80C8F600A2705D /* Defaults.plist */; };
 		1C09327E0D80CA4800A2705D /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932670D80CA4800A2705D /* NSDataAdditions.m */; };
@@ -24,20 +23,16 @@
 		1C0F69450F15033C002BB855 /* chromatic.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F69440F15033C002BB855 /* chromatic.css */; };
 		1C0F694F0F15035D002BB855 /* chromatic-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F694E0F15035D002BB855 /* chromatic-dark.css */; };
 		1C0F6A5B0F1508C9002BB855 /* chromatic.js in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F6A550F150776002BB855 /* chromatic.js */; };
-		1C124A720F097575008F181B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C124A710F097575008F181B /* AudioToolbox.framework */; };
 		1C1253290F0D4FC1008F181B /* standard-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C1253280F0D4FC1008F181B /* standard-dark.css */; };
 		1C1254A40F0D8D7F008F181B /* CQChatCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1254A30F0D8D7F008F181B /* CQChatCreationViewController.m */; };
 		1C1255670F0EAA69008F181B /* CQChatEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1255660F0EAA69008F181B /* CQChatEditViewController.m */; };
 		1C15B2681311838C006FA16B /* CQAnalyticsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B2661311838C006FA16B /* CQAnalyticsController.m */; };
 		1C16F77F0FFF049F008D7BB3 /* CQBouncerCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C16F77C0FFF049F008D7BB3 /* CQBouncerCreationViewController.m */; };
 		1C16F79B0FFF0789008D7BB3 /* CQBouncerEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C16F77E0FFF049F008D7BB3 /* CQBouncerEditViewController.m */; };
-		1C1896110E29CF74003CFED0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */; };
-		1C1896120E29CF75003CFED0 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */; };
 		1C20BE820EFEDF26005AD8A5 /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */; };
 		1C2A046F0EDAFC2D004509AE /* CQPreferencesListEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */; };
 		1C34A4981016C73800BAA714 /* CQChatRoomInfoTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C34A4971016C73800BAA714 /* CQChatRoomInfoTableCell.m */; };
 		1C34A4A71016CC2500BAA714 /* CQChatRoomListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C34A4A61016CC2500BAA714 /* CQChatRoomListViewController.m */; };
-		1C3A8B2313293CC8005EB3A6 /* libSystem.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3A8B2213293CC8005EB3A6 /* libSystem.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1C3CD7961112357100FE29AA /* UIDeviceAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3CD7951112357100FE29AA /* UIDeviceAdditions.m */; };
 		1C3CDB651113D2E000FE29AA /* CQConnectionsNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3CDB641113D2E000FE29AA /* CQConnectionsNavigationController.m */; };
 		1C4CE6360FA03D7800215521 /* Beep 1.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6250FA03D7800215521 /* Beep 1.aiff */; };
@@ -84,7 +79,6 @@
 		1C82C27D0D847EA4009ABD9F /* CQChatListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C27C0D847EA4009ABD9F /* CQChatListViewController.m */; };
 		1C8408BF0F1552B0004665DC /* chromatic-dark.js in Resources */ = {isa = PBXBuildFile; fileRef = 1C8408BE0F1552A7004665DC /* chromatic-dark.js */; };
 		1C8CFE970F60E11900B672F9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1C8CFE950F60E11900B672F9 /* Localizable.strings */; };
-		1C957EBC11F7EFF3001950FD /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C957EBB11F7EFF3001950FD /* libicucore.dylib */; };
 		1C9B15A50D878B6A003794A5 /* CQConnectionEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */; };
 		1C9B60EA0FFAE4C400B7BAC0 /* CQBouncerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B60E90FFAE4C400B7BAC0 /* CQBouncerConnection.m */; };
 		1CA3DC581027984A008B1AD2 /* CQWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */; };
@@ -100,20 +94,17 @@
 		1CAE8BF60EE612DA00CE1AF8 /* standard.css in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8BF30EE612DA00CE1AF8 /* standard.css */; };
 		1CAE8C8C0EE61AD000CE1AF8 /* transcript.js in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8C850EE6190A00CE1AF8 /* transcript.js */; };
 		1CB24E03101EBE4800217B50 /* verbs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1CB24E02101EBE4800217B50 /* verbs.plist */; };
-		1CBC07CE0F0741E400EEBCFB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CBC07CD0F0741E400EEBCFB /* SystemConfiguration.framework */; };
 		1CBCFF2D0F04632900EEBCFB /* CQTextCompletionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBCFF2C0F04632900EEBCFB /* CQTextCompletionView.m */; };
 		1CBEA7351002CC5C00546847 /* CQAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBEA7341002CC5C00546847 /* CQAlertView.m */; };
 		1CC575980ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */; };
 		1CC576D30ED4684700FEC2C1 /* UITableViewCellAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */; };
 		1CC64B2D0EE97F8B00DE91D0 /* CQChatUserListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC64B2C0EE97F8B00DE91D0 /* CQChatUserListViewController.m */; };
 		1CD46802102A5EBB00A7A49E /* whats-new.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CD46801102A5EBB00A7A49E /* whats-new.html */; };
-		1CD84C2B10040AB300E56A7E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CD84C2A10040AB300E56A7E /* MediaPlayer.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		1CDDE9C5118C8EB700C83EBE /* CQTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9C4118C8EB700C83EBE /* CQTableViewController.m */; };
 		1CDDE9F6118CD2B800C83EBE /* NSObjectAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9F5118CD2B800C83EBE /* NSObjectAdditions.m */; };
 		1CE3FB120D8A3DC100FB035F /* CQConnectionCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */; };
 		1CE69FD90EE317F200389442 /* CQChatInputBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE69FD80EE317F200389442 /* CQChatInputBar.m */; };
 		1CF50C150ED8AFBE00CBE5E3 /* CQKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */; };
-		1CF50C870ED8BE1100CBE5E3 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF50C860ED8BE1100CBE5E3 /* Security.framework */; };
 		1CF50EAF0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */; };
 		1CFCB94F1114DD9600EA5F10 /* CQChatNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCB94E1114DD9600EA5F10 /* CQChatNavigationController.m */; };
 		1CFCB9BA1114EED200EA5F10 /* UINavigationControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCB9B91114EED200EA5F10 /* UINavigationControllerAdditions.m */; };
@@ -124,12 +115,6 @@
 		1CFCC0C511172B2A00EA5F10 /* CQChatPresentationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCC0C411172B2A00EA5F10 /* CQChatPresentationController.m */; };
 		1CFF6E820EDF772800D3C557 /* UITableViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
-		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
-		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		556CEBE71BCD86DA00F00EAA /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 556CEBE61BCD86DA00F00EAA /* AppIcon.xcassets */; };
-		55A60EA21B33C4DF00F72574 /* CoreSpotlight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C7F5881B26BE04000F5AAE /* CoreSpotlight.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		55F42ABD1AEC36E00085CA56 /* Room Member Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55F42ABC1AEC36E00085CA56 /* Room Member Icons.xcassets */; };
-		55F42AC41AEC3AD30085CA56 /* Shared Toolbar.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55F42AC31AEC3AD30085CA56 /* Shared Toolbar.xcassets */; };
 		8900D7340FBFB2D900DE3E3B /* Servers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8900D7330FBFB2D900DE3E3B /* Servers.plist */; };
 		891E84D4123F0C8C00EC3C0F /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 891E84D3123F0C8C00EC3C0F /* NSCharacterSetAdditions.m */; };
 		896E84610F15AB6C00D810FE /* notes.css in Resources */ = {isa = PBXBuildFile; fileRef = 896E84600F15AB6C00D810FE /* notes.css */; };
@@ -140,7 +125,6 @@
 		9215E175168AE04100E7E77F /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9215E174168AE04100E7E77F /* GCDAsyncSocket.m */; };
 		921857D819D13AE70076F87E /* CQUIChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 921857D619D13AE70076F87E /* CQUIChatView.xib */; };
 		921857D919D13AE70076F87E /* CQWKChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 921857D719D13AE70076F87E /* CQWKChatView.xib */; };
-		92196C9E16C911310020FE35 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92196C9D16C911310020FE35 /* MessageUI.framework */; };
 		92196CA316C918D10020FE35 /* CQChatRoomInfoDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92196CA016C918D10020FE35 /* CQChatRoomInfoDisplayViewController.m */; };
 		92196CA416C918D10020FE35 /* CQChatRoomInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92196CA216C918D10020FE35 /* CQChatRoomInfoViewController.m */; };
 		92196CA616CA345D0020FE35 /* common.css in Resources */ = {isa = PBXBuildFile; fileRef = 92196CA516CA345D0020FE35 /* common.css */; };
@@ -161,13 +145,10 @@
 		9251306719FDCEAA00847018 /* UIFontAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9251306619FDCEAA00847018 /* UIFontAdditions.m */; };
 		925C594C1177CB63001995E0 /* CQModalNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C594B1177CB63001995E0 /* CQModalNavigationController.m */; };
 		925C59591177D84C001995E0 /* CQAwayStatusController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C59581177D84C001995E0 /* CQAwayStatusController.m */; };
-		9261B6F818419DEB001B14C3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6F718419DEB001B14C3 /* QuartzCore.framework */; };
-		9261B6FA18419DF0001B14C3 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6F918419DF0001B14C3 /* CoreText.framework */; };
 		9261B6FC18419FCA001B14C3 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6FB18419FCA001B14C3 /* HockeySDK.framework */; };
 		9261B7011841AEA1001B14C3 /* UIApplicationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261B7001841AEA1001B14C3 /* UIApplicationAdditions.m */; };
 		926678F619BFE22900CCE5BE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 926678F519BFE22900CCE5BE /* Images.xcassets */; };
 		926678F919C03C8500CCE5BE /* CQWKChatTranscriptView.m in Sources */ = {isa = PBXBuildFile; fileRef = 926678F819C03C8500CCE5BE /* CQWKChatTranscriptView.m */; };
-		926678FB19C03FA700CCE5BE /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 926678FA19C03FA700CCE5BE /* WebKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		9271923C16CFA831003380F0 /* CQChatOrderingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9271923B16CFA831003380F0 /* CQChatOrderingController.m */; };
 		927192C616D3272E003380F0 /* CQImportantChatMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 927192C516D3272D003380F0 /* CQImportantChatMessageViewController.m */; };
 		92823CEC168FE6CB000EC36E /* CQIgnoreRulesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CEB168FE6CB000EC36E /* CQIgnoreRulesController.m */; };
@@ -179,13 +160,9 @@
 		9290D7C21694F3A400ACF833 /* console.css in Resources */ = {isa = PBXBuildFile; fileRef = 9290D7C11694F3A400ACF833 /* console.css */; };
 		9292E93016A956E300F22070 /* CQPreferencesDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9292E92F16A956E300F22070 /* CQPreferencesDisplayViewController.m */; };
 		929BCAB917C0D2630046B081 /* CQSafariReadingListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 929BCAB817C0D2630046B081 /* CQSafariReadingListController.m */; };
-		929BCABB17C0D3D60046B081 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929BCABA17C0D3D60046B081 /* SafariServices.framework */; };
 		929EBE04162A33EE00F0CE6E /* chromatic-redux.js in Resources */ = {isa = PBXBuildFile; fileRef = 9247414216119CCC009132B5 /* chromatic-redux.js */; };
 		92A24DA7114C918300897373 /* CQPreferencesListChannelEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */; };
-		92A54AA515AD1DDD00F21FC5 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */; };
-		92AD95A517E2F1780044B8B1 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92AD95A417E2F1780044B8B1 /* Social.framework */; };
 		92AF958D1A520D6A006E3152 /* UIColorAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AF958C1A520D6A006E3152 /* UIColorAdditions.m */; };
-		92AFF84A16B0CE4700940E5D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92AFF84916B0CE4700940E5D /* AVFoundation.framework */; };
 		92AFF85216B0D25D00940E5D /* NSRegularExpressionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AFF85116B0D25D00940E5D /* NSRegularExpressionAdditions.m */; };
 		92B257CA174023B300F303B5 /* CQSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B257C9174023B300F303B5 /* CQSettingsController.m */; };
 		92B6661417ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 92B6661317ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf */; };
@@ -200,7 +177,6 @@
 		9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
 		B6024FF31BCD2D44000A5058 /* CQRootContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6024FF21BCD2D44000A5058 /* CQRootContainerViewController.m */; };
 		B6831CC61BE425C300D3AC1D /* CQUITextChatTranscriptView.m in Sources */ = {isa = PBXBuildFile; fileRef = B6831CC51BE425C300D3AC1D /* CQUITextChatTranscriptView.m */; };
-		B6831CC81BE4321D00D3AC1D /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6831CC71BE4321D00D3AC1D /* JavaScriptCore.framework */; };
 		B6831CE41BE44F2F00D3AC1D /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1CA718A90EF5F136006225CD /* Settings.bundle */; };
 		B6831CE51BE44F3B00D3AC1D /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C09313A0D80C8F600A2705D /* Defaults.plist */; };
 		B6831CE71BE44F3B00D3AC1D /* Servers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8900D7330FBFB2D900DE3E3B /* Servers.plist */; };
@@ -245,27 +221,6 @@
 		B6831D121BE44F9600D3AC1D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 926678F519BFE22900CCE5BE /* Images.xcassets */; };
 		B6831D131BE44FA200D3AC1D /* OpenDyslexic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 92B6661317ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf */; };
 		B6831D141BE44FB800D3AC1D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1C8CFE950F60E11900B672F9 /* Localizable.strings */; };
-		B6831D151BE4505C00D3AC1D /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6831CC71BE4321D00D3AC1D /* JavaScriptCore.framework */; };
-		B6831D161BE4505C00D3AC1D /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B6C921051B812F350049622C /* libc++.dylib */; };
-		B6831D171BE4505C00D3AC1D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C7F58A1B26C1E3000F5AAE /* MobileCoreServices.framework */; };
-		B6831D181BE4505C00D3AC1D /* CoreSpotlight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C7F5881B26BE04000F5AAE /* CoreSpotlight.framework */; };
-		B6831D191BE4505C00D3AC1D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 926678FA19C03FA700CCE5BE /* WebKit.framework */; };
-		B6831D1B1BE4505C00D3AC1D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92AFF84916B0CE4700940E5D /* AVFoundation.framework */; };
-		B6831D1C1BE4505C00D3AC1D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C124A710F097575008F181B /* AudioToolbox.framework */; };
-		B6831D1D1BE4505C00D3AC1D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */; };
-		B6831D1E1BE4505C00D3AC1D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */; };
-		B6831D1F1BE4505C00D3AC1D /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6F918419DF0001B14C3 /* CoreText.framework */; };
-		B6831D201BE4505C00D3AC1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
-		B6831D211BE4505C00D3AC1D /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CD84C2A10040AB300E56A7E /* MediaPlayer.framework */; };
-		B6831D221BE4505C00D3AC1D /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92196C9D16C911310020FE35 /* MessageUI.framework */; };
-		B6831D231BE4505C00D3AC1D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF50C860ED8BE1100CBE5E3 /* Security.framework */; };
-		B6831D251BE4505C00D3AC1D /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92AD95A417E2F1780044B8B1 /* Social.framework */; };
-		B6831D261BE4505C00D3AC1D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CBC07CD0F0741E400EEBCFB /* SystemConfiguration.framework */; };
-		B6831D271BE4505C00D3AC1D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6F718419DEB001B14C3 /* QuartzCore.framework */; };
-		B6831D281BE4505C00D3AC1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
-		B6831D291BE4505C00D3AC1D /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C957EBB11F7EFF3001950FD /* libicucore.dylib */; };
-		B6831D2A1BE4505C00D3AC1D /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */; };
-		B6831D2B1BE4505C00D3AC1D /* libSystem.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3A8B2213293CC8005EB3A6 /* libSystem.dylib */; };
 		B6831D2C1BE4505C00D3AC1D /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6FB18419FCA001B14C3 /* HockeySDK.framework */; };
 		B6831D2D1BE4508400D3AC1D /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3E169123FD000EC36E /* DDLog.m */; };
 		B6831D2E1BE4508400D3AC1D /* MVDelegateLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FE016926749002ECDFD /* MVDelegateLogger.m */; };
@@ -385,18 +340,13 @@
 		B68725B41B8E7FF60003D4F8 /* CQPrinterPage.m in Sources */ = {isa = PBXBuildFile; fileRef = B68725B31B8E7FF60003D4F8 /* CQPrinterPage.m */; };
 		B69FE8001BE4559900CA7B84 /* CQWelcomeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCBA341114FB2500EA5F10 /* CQWelcomeController.m */; };
 		B69FE8011BE4559900CA7B84 /* CQWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */; };
-		B69FE8031BE45BB000CA7B84 /* libSystem.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B69FE8021BE45BB000CA7B84 /* libSystem.tbd */; };
 		B6AEBB441C58592400F7CF66 /* CQGiphyController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6AEBB431C58592400F7CF66 /* CQGiphyController.m */; };
 		B6BFA5431BBDA3B6000C3BBC /* UIWindowAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B6BFA5421BBDA3B6000C3BBC /* UIWindowAdditions.m */; };
-		B6C921061B812F350049622C /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B6C921051B812F350049622C /* libc++.dylib */; };
 		B6D085B61B8D6E8400734C96 /* CQActivities.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D085B51B8D6E8400734C96 /* CQActivities.m */; };
-		B6F99EE61BA0FAB5000F4929 /* CoreSpotlight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C7F5881B26BE04000F5AAE /* CoreSpotlight.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		194D95D21B2A33910061AE55 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
-		19C7F5881B26BE04000F5AAE /* CoreSpotlight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreSpotlight.framework; path = System/Library/Frameworks/CoreSpotlight.framework; sourceTree = SDKROOT; };
-		19C7F58A1B26C1E3000F5AAE /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		1C0931010D80C6E900A2705D /* CQColloquyApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQColloquyApplication.m; path = Mobile/Controllers/CQColloquyApplication.m; sourceTree = "<group>"; };
 		1C0931020D80C6E900A2705D /* CQColloquyApplication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQColloquyApplication.h; path = Mobile/Controllers/CQColloquyApplication.h; sourceTree = "<group>"; };
 		1C09310A0D80C71800A2705D /* Colloquy.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Colloquy.pch; path = Mobile/Colloquy.pch; sourceTree = "<group>"; };
@@ -423,7 +373,6 @@
 		1C0F69440F15033C002BB855 /* chromatic.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = chromatic.css; sourceTree = "<group>"; };
 		1C0F694E0F15035D002BB855 /* chromatic-dark.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "chromatic-dark.css"; sourceTree = "<group>"; };
 		1C0F6A550F150776002BB855 /* chromatic.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = chromatic.js; sourceTree = "<group>"; };
-		1C124A710F097575008F181B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		1C1253280F0D4FC1008F181B /* standard-dark.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "standard-dark.css"; sourceTree = "<group>"; };
 		1C1254A20F0D8D7F008F181B /* CQChatCreationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatCreationViewController.h; sourceTree = "<group>"; };
 		1C1254A30F0D8D7F008F181B /* CQChatCreationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatCreationViewController.m; sourceTree = "<group>"; };
@@ -436,7 +385,6 @@
 		1C16F77C0FFF049F008D7BB3 /* CQBouncerCreationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQBouncerCreationViewController.m; sourceTree = "<group>"; };
 		1C16F77D0FFF049F008D7BB3 /* CQBouncerEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQBouncerEditViewController.h; sourceTree = "<group>"; };
 		1C16F77E0FFF049F008D7BB3 /* CQBouncerEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQBouncerEditViewController.m; sourceTree = "<group>"; };
-		1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		1C20BE800EFEDF26005AD8A5 /* NSDictionaryAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSDictionaryAdditions.h; path = Additions/NSDictionaryAdditions.h; sourceTree = "<group>"; };
 		1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NSDictionaryAdditions.m; path = Additions/NSDictionaryAdditions.m; sourceTree = "<group>"; };
 		1C2A046D0EDAFC2D004509AE /* CQPreferencesListEditViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListEditViewController.h; path = Mobile/Controllers/CQPreferencesListEditViewController.h; sourceTree = "<group>"; };
@@ -445,7 +393,6 @@
 		1C34A4971016C73800BAA714 /* CQChatRoomInfoTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatRoomInfoTableCell.m; sourceTree = "<group>"; };
 		1C34A4A51016CC2500BAA714 /* CQChatRoomListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatRoomListViewController.h; sourceTree = "<group>"; };
 		1C34A4A61016CC2500BAA714 /* CQChatRoomListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatRoomListViewController.m; sourceTree = "<group>"; };
-		1C3A8B2213293CC8005EB3A6 /* libSystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSystem.dylib; path = usr/lib/libSystem.dylib; sourceTree = SDKROOT; };
 		1C3CD7941112357100FE29AA /* UIDeviceAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIDeviceAdditions.h; path = Mobile/Additions/UIDeviceAdditions.h; sourceTree = "<group>"; };
 		1C3CD7951112357100FE29AA /* UIDeviceAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIDeviceAdditions.m; path = Mobile/Additions/UIDeviceAdditions.m; sourceTree = "<group>"; };
 		1C3CDB631113D2E000FE29AA /* CQConnectionsNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionsNavigationController.h; sourceTree = "<group>"; };
@@ -524,7 +471,6 @@
 		1C8408BE0F1552A7004665DC /* chromatic-dark.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "chromatic-dark.js"; sourceTree = "<group>"; };
 		1C8CFE960F60E11900B672F9 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = Mobile/Languages/en.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
 		1C8CFEAB0F60EC8F00B672F9 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = Mobile/Languages/de.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
-		1C957EBB11F7EFF3001950FD /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		1C95B41C0FEC9BD900DAE9DF /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		1C9B15A30D878B6A003794A5 /* CQConnectionEditViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQConnectionEditViewController.h; sourceTree = "<group>"; };
 		1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQConnectionEditViewController.m; sourceTree = "<group>"; };
@@ -548,7 +494,6 @@
 		1CAE8BF30EE612DA00CE1AF8 /* standard.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = standard.css; sourceTree = "<group>"; };
 		1CAE8C850EE6190A00CE1AF8 /* transcript.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = transcript.js; sourceTree = "<group>"; };
 		1CB24E02101EBE4800217B50 /* verbs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = verbs.plist; path = Resources/verbs.plist; sourceTree = SOURCE_ROOT; };
-		1CBC07CD0F0741E400EEBCFB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		1CBCFF2B0F04632900EEBCFB /* CQTextCompletionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQTextCompletionView.h; sourceTree = "<group>"; };
 		1CBCFF2C0F04632900EEBCFB /* CQTextCompletionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQTextCompletionView.m; sourceTree = "<group>"; };
 		1CBEA7331002CC5C00546847 /* CQAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQAlertView.h; sourceTree = "<group>"; };
@@ -560,7 +505,6 @@
 		1CC64B2B0EE97F8B00DE91D0 /* CQChatUserListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatUserListViewController.h; sourceTree = "<group>"; };
 		1CC64B2C0EE97F8B00DE91D0 /* CQChatUserListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatUserListViewController.m; sourceTree = "<group>"; };
 		1CD46801102A5EBB00A7A49E /* whats-new.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "whats-new.html"; sourceTree = "<group>"; };
-		1CD84C2A10040AB300E56A7E /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		1CDDE9C3118C8EB700C83EBE /* CQTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQTableViewController.h; path = Mobile/Controllers/CQTableViewController.h; sourceTree = "<group>"; };
 		1CDDE9C4118C8EB700C83EBE /* CQTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQTableViewController.m; path = Mobile/Controllers/CQTableViewController.m; sourceTree = "<group>"; };
 		1CDDE9F4118CD2B800C83EBE /* NSObjectAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSObjectAdditions.h; path = Additions/NSObjectAdditions.h; sourceTree = "<group>"; };
@@ -571,7 +515,6 @@
 		1CE69FD80EE317F200389442 /* CQChatInputBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatInputBar.m; sourceTree = "<group>"; };
 		1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQKeychain.h; sourceTree = "<group>"; };
 		1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CQKeychain.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		1CF50C860ED8BE1100CBE5E3 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListViewController.h; path = Mobile/Controllers/CQPreferencesListViewController.h; sourceTree = "<group>"; };
 		1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListViewController.m; path = Mobile/Controllers/CQPreferencesListViewController.m; sourceTree = "<group>"; };
 		1CFCB94D1114DD9600EA5F10 /* CQChatNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatNavigationController.h; sourceTree = "<group>"; };
@@ -590,10 +533,7 @@
 		1CFCC0C411172B2A00EA5F10 /* CQChatPresentationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatPresentationController.m; sourceTree = "<group>"; };
 		1CFF6E800EDF772800D3C557 /* UITableViewAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UITableViewAdditions.h; path = Mobile/Additions/UITableViewAdditions.h; sourceTree = "<group>"; };
 		1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UITableViewAdditions.m; path = Mobile/Additions/UITableViewAdditions.m; sourceTree = "<group>"; };
-		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* Colloquy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Mobile/main.m; sourceTree = "<group>"; };
 		556CEBE61BCD86DA00F00EAA /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = AppIcon.xcassets; path = ../../Resources/AppIcon.xcassets; sourceTree = "<group>"; };
 		55F42ABC1AEC36E00085CA56 /* Room Member Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "Room Member Icons.xcassets"; path = "Resources/Room Member Icons.xcassets"; sourceTree = SOURCE_ROOT; };
@@ -609,11 +549,10 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		920B6D5817196C6700879D86 /* topic.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = topic.css; sourceTree = "<group>"; };
 		920B6D5A17196C7900879D86 /* roomTopicBanner.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = roomTopicBanner.js; path = Resources/roomTopicBanner.js; sourceTree = SOURCE_ROOT; };
-		9215E173168AE04100E7E77F /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
-		9215E174168AE04100E7E77F /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
+		9215E173168AE04100E7E77F /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncSocket.h; path = ../Carthage/Checkouts/CocoaAsyncSocket/Source/GCD/GCDAsyncSocket.h; sourceTree = "<group>"; };
+		9215E174168AE04100E7E77F /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDAsyncSocket.m; path = ../Carthage/Checkouts/CocoaAsyncSocket/Source/GCD/GCDAsyncSocket.m; sourceTree = "<group>"; };
 		921857D619D13AE70076F87E /* CQUIChatView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CQUIChatView.xib; sourceTree = "<group>"; };
 		921857D719D13AE70076F87E /* CQWKChatView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CQWKChatView.xib; sourceTree = "<group>"; };
-		92196C9D16C911310020FE35 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		92196C9F16C918D10020FE35 /* CQChatRoomInfoDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatRoomInfoDisplayViewController.h; sourceTree = "<group>"; };
 		92196CA016C918D10020FE35 /* CQChatRoomInfoDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatRoomInfoDisplayViewController.m; sourceTree = "<group>"; };
 		92196CA116C918D10020FE35 /* CQChatRoomInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatRoomInfoViewController.h; sourceTree = "<group>"; };
@@ -653,18 +592,14 @@
 		925C594B1177CB63001995E0 /* CQModalNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQModalNavigationController.m; path = Mobile/Controllers/CQModalNavigationController.m; sourceTree = "<group>"; };
 		925C59571177D84C001995E0 /* CQAwayStatusController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQAwayStatusController.h; sourceTree = "<group>"; };
 		925C59581177D84C001995E0 /* CQAwayStatusController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQAwayStatusController.m; sourceTree = "<group>"; };
-		9261B6F718419DEB001B14C3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		9261B6F918419DF0001B14C3 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		9261B6FB18419FCA001B14C3 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = Shared/Frameworks/HockeySDK.framework; sourceTree = "<group>"; };
 		9261B6FF1841AEA1001B14C3 /* UIApplicationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIApplicationAdditions.h; path = Mobile/Additions/UIApplicationAdditions.h; sourceTree = "<group>"; };
 		9261B7001841AEA1001B14C3 /* UIApplicationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIApplicationAdditions.m; path = Mobile/Additions/UIApplicationAdditions.m; sourceTree = "<group>"; };
 		926678F519BFE22900CCE5BE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		926678F719C03C8500CCE5BE /* CQWKChatTranscriptView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQWKChatTranscriptView.h; sourceTree = "<group>"; };
 		926678F819C03C8500CCE5BE /* CQWKChatTranscriptView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQWKChatTranscriptView.m; sourceTree = "<group>"; };
-		926678FA19C03FA700CCE5BE /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		926678FC19C041B000CCE5BE /* CQChatTranscriptViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatTranscriptViewDelegate.h; sourceTree = "<group>"; };
-		926CF29018FBB09100A81159 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = Mobile/Languages/it.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
-		926CF2B818FBC5A300A81159 /* libcommonCrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcommonCrypto.dylib; path = usr/lib/system/libcommonCrypto.dylib; sourceTree = SDKROOT; };
+		926CF29018FBB09100A81159 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = Mobile/Languages/it.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
 		9271923A16CFA831003380F0 /* CQChatOrderingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatOrderingController.h; sourceTree = "<group>"; };
 		9271923B16CFA831003380F0 /* CQChatOrderingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatOrderingController.m; sourceTree = "<group>"; };
 		927192C416D3272D003380F0 /* CQImportantChatMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQImportantChatMessageViewController.h; sourceTree = "<group>"; };
@@ -686,14 +621,10 @@
 		9292E92F16A956E300F22070 /* CQPreferencesDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesDisplayViewController.m; path = Mobile/Controllers/CQPreferencesDisplayViewController.m; sourceTree = "<group>"; };
 		929BCAB717C0D2630046B081 /* CQSafariReadingListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQSafariReadingListController.h; path = Shared/Controllers/CQSafariReadingListController.h; sourceTree = "<group>"; };
 		929BCAB817C0D2630046B081 /* CQSafariReadingListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQSafariReadingListController.m; path = Shared/Controllers/CQSafariReadingListController.m; sourceTree = "<group>"; };
-		929BCABA17C0D3D60046B081 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		92A24DA5114C918300897373 /* CQPreferencesListChannelEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListChannelEditViewController.h; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.h; sourceTree = "<group>"; };
 		92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListChannelEditViewController.m; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.m; sourceTree = "<group>"; };
-		92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
-		92AD95A417E2F1780044B8B1 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		92AF958B1A520D6A006E3152 /* UIColorAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIColorAdditions.h; path = Mobile/Additions/UIColorAdditions.h; sourceTree = "<group>"; };
 		92AF958C1A520D6A006E3152 /* UIColorAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIColorAdditions.m; path = Mobile/Additions/UIColorAdditions.m; sourceTree = "<group>"; };
-		92AFF84916B0CE4700940E5D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		92AFF85016B0D25D00940E5D /* NSRegularExpressionAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSRegularExpressionAdditions.h; path = Additions/NSRegularExpressionAdditions.h; sourceTree = "<group>"; };
 		92AFF85116B0D25D00940E5D /* NSRegularExpressionAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSRegularExpressionAdditions.m; path = Additions/NSRegularExpressionAdditions.m; sourceTree = "<group>"; };
 		92B257C8174023B300F303B5 /* CQSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQSettingsController.h; sourceTree = "<group>"; };
@@ -728,7 +659,6 @@
 		B6310B651C6FE52C0033E88E /* DDLegacyMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DDLegacyMacros.h; path = Logging/DDLegacyMacros.h; sourceTree = "<group>"; };
 		B6831CC41BE425C300D3AC1D /* CQUITextChatTranscriptView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQUITextChatTranscriptView.h; sourceTree = "<group>"; };
 		B6831CC51BE425C300D3AC1D /* CQUITextChatTranscriptView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQUITextChatTranscriptView.m; sourceTree = "<group>"; };
-		B6831CC71BE4321D00D3AC1D /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		B6831CCD1BE44EC000D3AC1D /* Colloquy TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Colloquy TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6831CD91BE44EC000D3AC1D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B6831CDD1BE44EC000D3AC1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -736,14 +666,14 @@
 		B68725B01B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIPrintPageRendererAdditions.m; path = Additions/UIPrintPageRendererAdditions.m; sourceTree = "<group>"; };
 		B68725B21B8E7FF60003D4F8 /* CQPrinterPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPrinterPage.h; sourceTree = "<group>"; };
 		B68725B31B8E7FF60003D4F8 /* CQPrinterPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPrinterPage.m; sourceTree = "<group>"; };
-		B69FE8021BE45BB000CA7B84 /* libSystem.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libSystem.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.0.sdk/usr/lib/libSystem.tbd; sourceTree = DEVELOPER_DIR; };
 		B6AEBB421C58592400F7CF66 /* CQGiphyController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQGiphyController.h; sourceTree = "<group>"; };
 		B6AEBB431C58592400F7CF66 /* CQGiphyController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQGiphyController.m; sourceTree = "<group>"; };
 		B6BFA5411BBDA3B6000C3BBC /* UIWindowAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIWindowAdditions.h; path = Mobile/Additions/UIWindowAdditions.h; sourceTree = "<group>"; };
 		B6BFA5421BBDA3B6000C3BBC /* UIWindowAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIWindowAdditions.m; path = Mobile/Additions/UIWindowAdditions.m; sourceTree = "<group>"; };
-		B6C921051B812F350049622C /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		B6D085B41B8D6E8400734C96 /* CQActivities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQActivities.h; sourceTree = "<group>"; };
 		B6D085B51B8D6E8400734C96 /* CQActivities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQActivities.m; sourceTree = "<group>"; };
+		C21297001F64661C00555EE3 /* old-mac-target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
+		C22181CE1F648ED200F2E814 /* target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = target.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -751,29 +681,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B6831CC81BE4321D00D3AC1D /* JavaScriptCore.framework in Frameworks */,
-				B6F99EE61BA0FAB5000F4929 /* CoreSpotlight.framework in Frameworks */,
-				B6C921061B812F350049622C /* libc++.dylib in Frameworks */,
-				19C7F58B1B26C1E3000F5AAE /* MobileCoreServices.framework in Frameworks */,
-				926678FB19C03FA700CCE5BE /* WebKit.framework in Frameworks */,
-				1CBC07CE0F0741E400EEBCFB /* SystemConfiguration.framework in Frameworks */,
-				1CF50C870ED8BE1100CBE5E3 /* Security.framework in Frameworks */,
-				9261B6FA18419DF0001B14C3 /* CoreText.framework in Frameworks */,
-				9261B6F818419DEB001B14C3 /* QuartzCore.framework in Frameworks */,
-				92AD95A517E2F1780044B8B1 /* Social.framework in Frameworks */,
-				929BCABB17C0D3D60046B081 /* SafariServices.framework in Frameworks */,
-				92196C9E16C911310020FE35 /* MessageUI.framework in Frameworks */,
-				92AFF84A16B0CE4700940E5D /* AVFoundation.framework in Frameworks */,
-				92A54AA515AD1DDD00F21FC5 /* libsqlite3.dylib in Frameworks */,
-				1C3A8B2313293CC8005EB3A6 /* libSystem.dylib in Frameworks */,
-				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
-				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
-				55A60EA21B33C4DF00F72574 /* CoreSpotlight.framework in Frameworks */,
-				1C1896110E29CF74003CFED0 /* CoreGraphics.framework in Frameworks */,
-				1C1896120E29CF75003CFED0 /* CFNetwork.framework in Frameworks */,
-				1C124A720F097575008F181B /* AudioToolbox.framework in Frameworks */,
-				1CD84C2B10040AB300E56A7E /* MediaPlayer.framework in Frameworks */,
-				1C957EBC11F7EFF3001950FD /* libicucore.dylib in Frameworks */,
 				9261B6FC18419FCA001B14C3 /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -782,28 +689,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B69FE8031BE45BB000CA7B84 /* libSystem.tbd in Frameworks */,
-				B6831D151BE4505C00D3AC1D /* JavaScriptCore.framework in Frameworks */,
-				B6831D161BE4505C00D3AC1D /* libc++.dylib in Frameworks */,
-				B6831D171BE4505C00D3AC1D /* MobileCoreServices.framework in Frameworks */,
-				B6831D181BE4505C00D3AC1D /* CoreSpotlight.framework in Frameworks */,
-				B6831D191BE4505C00D3AC1D /* WebKit.framework in Frameworks */,
-				B6831D1B1BE4505C00D3AC1D /* AVFoundation.framework in Frameworks */,
-				B6831D1C1BE4505C00D3AC1D /* AudioToolbox.framework in Frameworks */,
-				B6831D1D1BE4505C00D3AC1D /* CFNetwork.framework in Frameworks */,
-				B6831D1E1BE4505C00D3AC1D /* CoreGraphics.framework in Frameworks */,
-				B6831D1F1BE4505C00D3AC1D /* CoreText.framework in Frameworks */,
-				B6831D201BE4505C00D3AC1D /* Foundation.framework in Frameworks */,
-				B6831D211BE4505C00D3AC1D /* MediaPlayer.framework in Frameworks */,
-				B6831D221BE4505C00D3AC1D /* MessageUI.framework in Frameworks */,
-				B6831D231BE4505C00D3AC1D /* Security.framework in Frameworks */,
-				B6831D251BE4505C00D3AC1D /* Social.framework in Frameworks */,
-				B6831D261BE4505C00D3AC1D /* SystemConfiguration.framework in Frameworks */,
-				B6831D271BE4505C00D3AC1D /* QuartzCore.framework in Frameworks */,
-				B6831D281BE4505C00D3AC1D /* UIKit.framework in Frameworks */,
-				B6831D291BE4505C00D3AC1D /* libicucore.dylib in Frameworks */,
-				B6831D2A1BE4505C00D3AC1D /* libsqlite3.dylib in Frameworks */,
-				B6831D2B1BE4505C00D3AC1D /* libSystem.dylib in Frameworks */,
 				B6831D2C1BE4505C00D3AC1D /* HockeySDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -859,6 +744,8 @@
 			isa = PBXGroup;
 			children = (
 				1C15B12913107243006FA16B /* Base.xcconfig */,
+				C21297001F64661C00555EE3 /* old-mac-target.xcconfig */,
+				C22181CE1F648ED200F2E814 /* target.xcconfig */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1318,30 +1205,6 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B69FE8021BE45BB000CA7B84 /* libSystem.tbd */,
-				B6831CC71BE4321D00D3AC1D /* JavaScriptCore.framework */,
-				B6C921051B812F350049622C /* libc++.dylib */,
-				19C7F58A1B26C1E3000F5AAE /* MobileCoreServices.framework */,
-				19C7F5881B26BE04000F5AAE /* CoreSpotlight.framework */,
-				926678FA19C03FA700CCE5BE /* WebKit.framework */,
-				926CF2B818FBC5A300A81159 /* libcommonCrypto.dylib */,
-				92AFF84916B0CE4700940E5D /* AVFoundation.framework */,
-				1C124A710F097575008F181B /* AudioToolbox.framework */,
-				1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */,
-				1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */,
-				9261B6F918419DF0001B14C3 /* CoreText.framework */,
-				1D30AB110D05D00D00671497 /* Foundation.framework */,
-				1CD84C2A10040AB300E56A7E /* MediaPlayer.framework */,
-				92196C9D16C911310020FE35 /* MessageUI.framework */,
-				1CF50C860ED8BE1100CBE5E3 /* Security.framework */,
-				929BCABA17C0D3D60046B081 /* SafariServices.framework */,
-				92AD95A417E2F1780044B8B1 /* Social.framework */,
-				1CBC07CD0F0741E400EEBCFB /* SystemConfiguration.framework */,
-				9261B6F718419DEB001B14C3 /* QuartzCore.framework */,
-				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
-				1C957EBB11F7EFF3001950FD /* libicucore.dylib */,
-				92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */,
-				1C3A8B2213293CC8005EB3A6 /* libSystem.dylib */,
 				9261B6FB18419FCA001B14C3 /* HockeySDK.framework */,
 			);
 			fileEncoding = 4;
@@ -1448,14 +1311,18 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Colloquy Project";
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
 						DevelopmentTeam = 37EUQ42C7J;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 0;
+							};
+							com.apple.Push = {
+								enabled = 1;
 							};
 						};
 					};
@@ -1465,7 +1332,7 @@
 				};
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Colloquy (iOS)" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -1615,7 +1482,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = "/usr/bin/perl -w";
-			shellScript = "use strict;\n\n# Get the current subversion revision number and use it to set the CFBundleVersion value\nmy $version = undef;\n$version = `/usr/bin/svnversion -n .` if -e \"/usr/bin/svnversion\";\n$version = `/usr/local/bin/svnversion -n .` if -e \"/usr/local/bin/svnversion\";\n$version = `/opt/local/bin/svnversion -n .` if -e \"/opt/local/bin/svnversion\";\n\n# Match the last group of digits:\n($version =~ m/(\\d+)[MS]*$/) && ($version = $1);\n\n# Get the Info.plist path, and remove the \".plist\" extension for the defualts command\nmy $infoFile = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{INFOPLIST_PATH}\";\n$infoFile =~ s/\\.plist$//;\n\n# Specify the build type\nmy $buildType = undef;\n$buildType = \"official\" if $ENV{BUILD_STYLE} eq \"Distribution\";\n\nif (defined $version || defined $buildType) {\n\t`defaults write \"$infoFile\" CFBundleVersion -string \"$version\"` if defined $version;\n\t`defaults write \"$infoFile\" CQBuildType -string \"$buildType\"` if defined $buildType;\n}";
+			shellScript = "use strict;\n\n# Get the current subversion revision number and use it to set the CFBundleVersion value\nmy $version = undef;\n$version = `/usr/bin/git rev-list --no-merges --count HEAD` if -e \"/usr/bin/git\";\n$version = `/usr/local/bin/git rev-list --no-merges --count HEAD` if -e \"/usr/local/bin/git\";\n$version = `/opt/local/bin/git rev-list --no-merges --count HEAD` if -e \"/opt/local/bin/git\";\n\n# Match the last group of digits:\n($version =~ m/(\\d+)[MS]*$/) && ($version = $1);\n\n# Get the Info.plist path, and remove the \".plist\" extension for the defualts command\nmy $infoFile = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{INFOPLIST_PATH}\";\n$infoFile =~ s/\\.plist$//;\n\n# Specify the build type\nmy $buildType = undef;\n$buildType = \"official\" if $ENV{BUILD_STYLE} eq \"Distribution\";\n\nif (defined $version || defined $buildType) {\n\t`defaults write \"$infoFile\" CFBundleVersion -string \"$version\"` if defined $version;\n\t`defaults write \"$infoFile\" CQBuildType -string \"$buildType\"` if defined $buildType;\n}";
 			showEnvVarsInLog = 0;
 		};
 		922C766C16D9BF4500AEFCB4 /* Insert API Keys */ = {
@@ -1918,7 +1785,11 @@
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Jane Lee (N94ANP6XYA)";
-				LLVM_VECTORIZE_LOOPS = YES;
+				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SOURCE_ROOT)",
+				);
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1926,21 +1797,15 @@
 		};
 		1C7F63A00FB3C50600E5FDD3 /* Distribution */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
+			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Colloquy;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
-				CLANG_ENABLE_MODULE_DEBUGGING = NO;
-				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
-				COPY_PHASE_STRIP = NO;
-				ENABLE_BITCODE = NO;
-				ENABLE_NS_ASSERTIONS = NO;
+				CODE_SIGN_ENTITLEMENTS = Mobile/Resources/Entitlements.plist;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_ON_DEMAND_RESOURCES = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/Shared/Frameworks",
-				);
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
@@ -1958,33 +1823,26 @@
 					"RKL_BLOCKS=0",
 					"ENABLE_CHAT_CENTER=1",
 				);
-				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)";
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LLVM_LTO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile;
 				PRODUCT_NAME = Colloquy;
+				PROVISIONING_PROFILE = "54ab4db4-4f40-4f53-bcaf-14067883cf1b";
+				PROVISIONING_PROFILE_SPECIFIER = distribution;
 			};
 			name = Distribution;
 		};
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
+			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Colloquy;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
-				CLANG_ENABLE_MODULE_DEBUGGING = NO;
-				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
-				COPY_PHASE_STRIP = NO;
-				ENABLE_BITCODE = NO;
+				CODE_SIGN_ENTITLEMENTS = Mobile/Resources/Entitlements.plist;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_ON_DEMAND_RESOURCES = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/Shared/Frameworks",
-				);
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
@@ -2001,32 +1859,26 @@
 					"RKL_BLOCKS=0",
 					"ENABLE_CHAT_CENTER=1",
 				);
-				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)";
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile;
 				PRODUCT_NAME = Colloquy;
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
+			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Colloquy;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
-				CLANG_ENABLE_MODULE_DEBUGGING = NO;
-				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
-				COPY_PHASE_STRIP = NO;
-				ENABLE_BITCODE = NO;
+				CODE_SIGN_ENTITLEMENTS = Mobile/Resources/Entitlements.plist;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_ON_DEMAND_RESOURCES = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/Shared/Frameworks",
-				);
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
@@ -2044,20 +1896,17 @@
 					"RKL_BLOCKS=0",
 					"ENABLE_CHAT_CENTER=1",
 				);
-				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)";
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LLVM_LTO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile;
 				PRODUCT_NAME = Colloquy;
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
 		B6831CDF1BE44EC000D3AC1D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
+			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
@@ -2065,15 +1914,12 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_MODULES_AUTOLINK = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/Shared/Frameworks",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -2098,9 +1944,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)";
 				INFOPLIST_FILE = "Colloquy TV/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/system",
@@ -2116,7 +1960,7 @@
 		};
 		B6831CE01BE44EC000D3AC1D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
+			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
@@ -2124,15 +1968,12 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_MODULES_AUTOLINK = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/Shared/Frameworks",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
@@ -2157,9 +1998,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)";
 				INFOPLIST_FILE = "Colloquy TV/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/system",
@@ -2175,7 +2014,7 @@
 		};
 		B6831CE11BE44EC000D3AC1D /* Distribution */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
+			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
@@ -2183,16 +2022,13 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_MODULES_AUTOLINK = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				COPY_PHASE_STRIP = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/Shared/Frameworks",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
@@ -2217,9 +2053,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "$(SOURCE_ROOT)";
 				INFOPLIST_FILE = "Colloquy TV/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/system",
@@ -2238,15 +2072,13 @@
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				ENABLE_TESTABILITY = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = "";
-				LLVM_VECTORIZE_LOOPS = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SOURCE_ROOT)",
+				);
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = NO;
 			};
 			name = Debug;
 		};
@@ -2255,11 +2087,13 @@
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				LLVM_VECTORIZE_LOOPS = YES;
+				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SOURCE_ROOT)",
+				);
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = NO;
 			};
 			name = Release;
 		};

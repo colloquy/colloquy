@@ -86,7 +86,7 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 - (JVChatEvent *) appendEvent:(JVChatEvent *) event;
 
 @property (nonatomic, copy, nullable) NSString *filePath;
-@property (readonly, copy, nullable) NSCalendarDate *dateBegan;
+@property (readonly, copy, nullable) NSDateComponents *dateBegan;
 @property (strong, null_unspecified) NSURL *source;
 @property BOOL automaticallyWritesChangesToFile;
 

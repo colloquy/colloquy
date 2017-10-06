@@ -37,14 +37,14 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 
 	NSString *urlString = [NSString stringWithFormat:CQHelpTopicsURLFormatString, [[NSLocale autoupdatingCurrentLocale] localeIdentifier]];
 	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15.];
-	[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+	[[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 		_loading = NO;
 
 		NSArray *help = data.length ? [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:NULL] : nil;
 		if (help.count)
 			[self _generateSectionsFromHelpContent:help];
 		else [self loadDefaultHelpContent];
-	}];
+	}] resume];
 }
 
 - (void) loadDefaultHelpContent {

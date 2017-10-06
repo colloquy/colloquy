@@ -191,7 +191,17 @@
 			NSTerminologyRegistry *term = [[[NSClassFromString( @"NSTerminologyRegistry" ) alloc] initWithSuiteName:scriptSuiteName bundle:[NSBundle mainBundle]] autorelease];
 			NSString *handlerName = [[term commandTerminologyDictionary:[commandDesc commandName]] objectForKey:@"Name"];
 			if( ! handlerName ) handlerName = [commandDesc commandName];
-			if( NSRunCriticalAlertPanel( NSLocalizedString( @"AppleScript Plugin Error", "AppleScript plugin error title" ), NSLocalizedString( @"The AppleScript plugin \"%@\" had an error while calling the \"%@\" handler.\n\n%@", "AppleScript plugin error message" ), nil, NSLocalizedString( @"Edit...", "edit button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], handlerName, errorDesc ) == NSCancelButton ) {
+			
+			NSAlert *alert = [[NSAlert alloc] init];
+			alert.messageText = NSLocalizedString( @"AppleScript Plugin Error", "AppleScript plugin error title" );
+			alert.informativeText = [NSString stringWithFormat:NSLocalizedString( @"The AppleScript plugin \"%@\" had an error while calling the \"%@\" handler.\n\n%@", "AppleScript plugin error message" ), [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], handlerName, errorDesc];
+			alert.alertStyle = NSAlertStyleCritical;
+			[alert addButtonWithTitle:NSLocalizedString( @"OK", @"OK button title" )];
+			[alert addButtonWithTitle:NSLocalizedString( @"Edit...", "edit button title" )];
+			NSModalResponse response = [alert runModal];
+			[alert release];
+			
+			if( response == NSAlertSecondButtonReturn ) {
 				[[NSWorkspace sharedWorkspace] openFile:[self scriptFilePath]];
 			}
 		}
@@ -211,7 +221,16 @@
 #pragma mark -
 
 - (void) promptForReload {
-	if( NSRunInformationalAlertPanel( NSLocalizedString( @"AppleScript Plugin Changed", "AppleScript plugin file changed dialog title" ), NSLocalizedString( @"The AppleScript plugin \"%@\" has changed on disk. Any script variables will reset if reloaded.", "AppleScript plugin changed on disk message" ), NSLocalizedString( @"Reload", "reload button title" ), NSLocalizedString( @"Keep Previous Version", "keep previous version button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension] ) == NSOKButton ) {
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = NSLocalizedString( @"AppleScript Plugin Changed", "AppleScript plugin file changed dialog title" );
+	alert.informativeText = [NSString stringWithFormat:NSLocalizedString( @"The AppleScript plugin \"%@\" has changed on disk. Any script variables will reset if reloaded.", "AppleScript plugin changed on disk message" ), [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension]];
+	alert.alertStyle = NSAlertStyleInformational;
+	[alert addButtonWithTitle:NSLocalizedString( @"Reload", "reload button title" )];
+	[alert addButtonWithTitle:NSLocalizedString( @"Keep Previous Version", "keep previous version button title" )];
+	NSModalResponse response = [alert runModal];
+	[alert release];
+	
+	if( response == NSAlertFirstButtonReturn ) {
 		[self reloadFromDisk];
 	}
 }

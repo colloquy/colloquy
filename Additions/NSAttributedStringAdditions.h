@@ -11,12 +11,12 @@ extern NSString *NSChatCTCPTwoFormatType;
 #if !((defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) || (defined(TARGET_OS_TV) && TARGET_OS_TV)) 
 + (instancetype) attributedStringWithHTMLFragment:(NSString *) fragment;
 
-+ (instancetype) attributedStringWithChatFormat:(NSData *) data options:(NSDictionary<NSString*,id> *) options;
-- (instancetype) initWithChatFormat:(NSData *) data options:(NSDictionary<NSString*,id> *) options;
++ (instancetype) attributedStringWithChatFormat:(NSData *) data options:(NSDictionary *) options;
+- (instancetype) initWithChatFormat:(NSData *) data options:(NSDictionary *) options;
+- (NSString *) HTMLFormatWithOptions:(NSDictionary *) options;
 #endif
 
-- (NSString *) HTMLFormatWithOptions:(NSDictionary<NSString*,id> *) options;
-- (NSData *) chatFormatWithOptions:(NSDictionary<NSString*,id> *) options;
+- (NSData *) chatFormatWithOptions:(NSDictionary *) options;
 
 - (NSAttributedString *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set;
 

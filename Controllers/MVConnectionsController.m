@@ -460,7 +460,7 @@ static NSMenu *favoritesMenu = nil;
 		SecTrustRef trust = (__bridge SecTrustRef)notification.userInfo[@"trust"];
 		NSInteger shouldTrust = [panel runModalForTrust:trust showGroup:YES];
 
-		completionHandler(shouldTrust == NSOKButton);
+		completionHandler(shouldTrust == NSModalResponseOK);
 	} else {
 		completionHandler(YES);
 	}
@@ -469,19 +469,37 @@ static NSMenu *favoritesMenu = nil;
 - (IBAction) connectNewConnection:(id) sender {
 	if( ! [[newNickname stringValue] length] ) {
 		[[self window] makeFirstResponder:newNickname];
-		NSRunCriticalAlertPanel( NSLocalizedString( @"Nickname is blank", "chat invalid nickname dialog title" ), NSLocalizedString( @"The nickname is invalid because it was left blank.", "chat nickname blank dialog message" ), nil, nil, nil, nil );
+		
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = NSLocalizedString( @"Nickname is blank", "chat invalid nickname dialog title" );
+		alert.informativeText = NSLocalizedString( @"The nickname is invalid because it was left blank.", "chat nickname blank dialog message" );
+		alert.alertStyle = NSAlertStyleCritical;
+		[alert runModal];
+		
 		return;
 	}
 
 	if( ! [[newAddress stringValue] length] ) {
 		[[self window] makeFirstResponder:newAddress];
-		NSRunCriticalAlertPanel( NSLocalizedString( @"Chat Server is blank", "chat invalid nickname dialog title" ), NSLocalizedString( @"The chat server is invalid because it was left blank.", "chat server blank dialog message" ), nil, nil, nil, nil );
+		
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = NSLocalizedString( @"Chat Server is blank", "chat invalid nickname dialog title" );
+		alert.informativeText = NSLocalizedString( @"The chat server is invalid because it was left blank.", "chat server blank dialog message" );
+		alert.alertStyle = NSAlertStyleCritical;
+		[alert runModal];
+		
 		return;
 	}
 
 	if( [newPort intValue] < 0 ) {
 		[[self window] makeFirstResponder:newPort];
-		NSRunCriticalAlertPanel( NSLocalizedString( @"Chat Server Port is invalid", "chat invalid nickname dialog title" ), NSLocalizedString( @"The chat server port you specified is invalid because it can't be negative or greater than 65535.", "chat server port invalid dialog message" ), nil, nil, nil, nil );
+		
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = NSLocalizedString( @"Chat Server Port is invalid", "chat invalid nickname dialog title" );
+		alert.informativeText = NSLocalizedString( @"The chat server port you specified is invalid because it can't be negative or greater than 65535.", "chat server port invalid dialog message" );
+		alert.alertStyle = NSAlertStyleCritical;
+		[alert runModal];
+		
 		return;
 	}
 
@@ -491,7 +509,13 @@ static NSMenu *favoritesMenu = nil;
 			[self toggleNewConnectionDetails:showDetails];
 		}
 		[[self window] makeFirstResponder:newUsername];
-		NSRunCriticalAlertPanel( NSLocalizedString( @"Username is blank", "chat blank username dialog title" ), NSLocalizedString( @"The username is invalid because it was left blank.", "chat username blank dialog message" ), nil, nil, nil, nil );
+		
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = NSLocalizedString( @"Username is blank", "chat blank username dialog title" );
+		alert.informativeText = NSLocalizedString( @"The username is invalid because it was left blank.", "chat username blank dialog message" );
+		alert.alertStyle = NSAlertStyleCritical;
+		[alert runModal];
+		
 		return;
 	}
 
@@ -506,7 +530,13 @@ static NSMenu *favoritesMenu = nil;
 			[self toggleNewConnectionDetails:showDetails];
 		}
 		[[self window] makeFirstResponder:newUsername];
-		NSRunCriticalAlertPanel( NSLocalizedString( @"Username invalid", "chat invalid username dialog title" ), NSLocalizedString( @"The username you specified is invalid because it contains spaces or other non-alphanumeric characters.", "chat username blank dialog message" ), nil, nil, nil, nil );
+		
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = NSLocalizedString( @"Username invalid", "chat invalid username dialog title" );
+		alert.informativeText = NSLocalizedString( @"The username you specified is invalid because it contains spaces or other non-alphanumeric characters.", "chat username blank dialog message" );
+		alert.alertStyle = NSAlertStyleCritical;
+		[alert runModal];
+		
 		return;
 	}
 
@@ -518,7 +548,13 @@ static NSMenu *favoritesMenu = nil;
 			[[connection username] isEqualToString:[newUsername stringValue]] &&
 			[[connection password] isEqualToString:[newServerPassword stringValue]] ) {
 			if( [connection isConnected] ) {
-				NSRunCriticalAlertPanel( NSLocalizedString( @"Already connected", "already connected dialog title" ), NSLocalizedString( @"The chat server with the nickname you specified is already connected to from this computer. Use another nickname if you desire multiple connections.", "chat already connected message" ), nil, nil, nil, nil );
+				
+				NSAlert *alert = [[NSAlert alloc] init];
+				alert.messageText = NSLocalizedString( @"Already connected", "already connected dialog title" );
+				alert.informativeText = NSLocalizedString( @"The chat server with the nickname you specified is already connected to from this computer. Use another nickname if you desire multiple connections.", "chat already connected message" );
+				alert.alertStyle = NSAlertStyleCritical;
+				[alert runModal];
+				
 				[openConnection makeFirstResponder:newNickname];
 			} else {
 				[connections selectRowIndexes:[NSIndexSet indexSetWithIndex:[_bookmarks indexOfObject:info]] byExtendingSelection:NO];
@@ -1180,11 +1216,11 @@ static NSMenu *favoritesMenu = nil;
 
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-		id view = nil;
+		id contextView = nil;
 
 		[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
 		MVAddUnsafeUnretainedAddress(connection, 2);
-		MVAddUnsafeUnretainedAddress(view, 3);
+		MVAddUnsafeUnretainedAddress(contextView, 3);
 
 		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		if( [results count] ) {
@@ -1273,8 +1309,8 @@ static NSMenu *favoritesMenu = nil;
 		[board setString:string forType:@"CorePasteboardFlavorType 0x75726C6E"];
 		[board setData:data forType:@"CorePasteboardFlavorType 0x75726C6E"];
 
-		plist = @[@[[[connection url] absoluteString]], @[[[connection url] host]]];
-		data = [NSPropertyListSerialization dataFromPropertyList:plist format:NSPropertyListXMLFormat_v1_0 errorDescription:NULL];
+		plist = @[ @[ connection.url.absoluteString ], @[ connection.url.host ] ];
+		data = [NSPropertyListSerialization dataWithPropertyList:plist format:NSPropertyListXMLFormat_v1_0 options:0 error:NULL];
 		string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 		[board setPropertyList:plist forType:@"WebURLsWithTitlesPboardType"];
 		[board setString:string forType:@"WebURLsWithTitlesPboardType"];
@@ -1291,8 +1327,9 @@ static NSMenu *favoritesMenu = nil;
 
 		if( operation == NSTableViewDropOn && row != -1 ) return NSDragOperationNone;
 
-		string = [[info draggingPasteboard] availableTypeFromArray:@[MVConnectionPboardType]];
-		[[[info draggingPasteboard] dataForType:MVConnectionPboardType] getBytes:&index length:sizeof(index)];
+		string = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:MVConnectionPboardType]];
+		NSData *pboardData = [[info draggingPasteboard] dataForType:MVConnectionPboardType];
+		[pboardData getBytes:&index length:[pboardData length]];
 		if( string && row >= 0 && row != index && ( row - 1 ) != index ) return NSDragOperationEvery;
 		else if( string && row == -1 ) return NSDragOperationNone;
 
@@ -1321,7 +1358,8 @@ static NSMenu *favoritesMenu = nil;
 	if( view == connections ) {
 		if( [[info draggingPasteboard] availableTypeFromArray:@[MVConnectionPboardType]] ) {
 			NSInteger index = -1;
-			[[[info draggingPasteboard] dataForType:MVConnectionPboardType] getBytes:&index length:sizeof(index)];
+			NSData *pboardData = [[info draggingPasteboard] dataForType:MVConnectionPboardType];
+			[pboardData getBytes:&index length:[pboardData length]];
 			if( row > index ) row--;
 
 			id item = _bookmarks[index];
@@ -1650,10 +1688,10 @@ static NSMenu *favoritesMenu = nil;
 			case MVChatPacketError:
 			case MVChatPacketSizeError:
 				if( ! [connection isConnected] ) {
-					if( NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), NSLocalizedString( @"The server may have shutdown for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Reconnect", "reconnect to server button" ), NSLocalizedString( @"Cancel", "cancel button" ), nil ) == NSOKButton )
+					if( NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), NSLocalizedString( @"The server may have shutdown for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Reconnect", "reconnect to server button" ), NSLocalizedString( @"Cancel", "cancel button" ), nil ) == NSModalResponseOK )
 						[connection connect];
 				} else {
-					if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect", "title of the could not connect error" ), NSLocalizedString( @"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Retry", "retry connecting to server" ), NSLocalizedString( @"Cancel" "cancel buttun" ), nil ) == NSOKButton )
+					if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect", "title of the could not connect error" ), NSLocalizedString( @"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Retry", "retry connecting to server" ), NSLocalizedString( @"Cancel" "cancel buttun" ), nil ) == NSModalResponseOK )
 						[connection connect];
 				}
 				break;
@@ -1665,7 +1703,7 @@ static NSMenu *favoritesMenu = nil;
 		switch( error ) {
 			case MVChatSocketError:
 			case MVChatDNSError:
-				if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect to Chat server", "chat invalid password dialog title" ), NSLocalizedString( @"The server is disconnected or refusing connections from your computer. Make sure you are connected to the internet and have access to the server.", "chat invalid password dialog message" ), NSLocalizedString( @"Retry", "retry connecting to server" ), NSLocalizedString( @"Cancel", "cancel button" ), nil ) == NSOKButton )
+				if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect to Chat server", "chat invalid password dialog title" ), NSLocalizedString( @"The server is disconnected or refusing connections from your computer. Make sure you are connected to the internet and have access to the server.", "chat invalid password dialog message" ), NSLocalizedString( @"Retry", "retry connecting to server" ), NSLocalizedString( @"Cancel", "cancel button" ), nil ) == NSModalResponseOK )
 					[connection connect];
 				break;
 			case MVChatBadUserPasswordError:
@@ -2226,7 +2264,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _deleteConnectionSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	if( returnCode != NSCancelButton ) return; // the cancel button because we have them flipped above
+	if( returnCode != NSModalResponseCancel ) return; // the cancel button because we have them flipped above
 	NSInteger row = [connections selectedRow];
 	if( row == -1 ) return;
 	[connections deselectAll:nil];

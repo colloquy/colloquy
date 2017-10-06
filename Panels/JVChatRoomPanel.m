@@ -934,7 +934,6 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 		NSString *unsupportedModes = (notification.userInfo)[@"unsupportedModes"];
 		if (unsupportedModes.length) {
-			NSString *message = nil;
 			if (unsupportedModes.length > 2) {
 				if (user.localUser)
 					message = [NSString stringWithFormat:[NSLocalizedString(@"You set modes %@.", @"unknown modes changed") stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
