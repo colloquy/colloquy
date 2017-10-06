@@ -99,59 +99,6 @@
       "scale" : "2x"
     },
     {
-      "size" : "16x16",
-      "idiom" : "mac",
-      "filename" : "col16.png",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "mac",
-      "size" : "16x16",
-      "scale" : "2x"
-    },
-    {
-      "size" : "32x32",
-      "idiom" : "mac",
-      "filename" : "col32.png",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "mac",
-      "size" : "32x32",
-      "scale" : "2x"
-    },
-    {
-      "size" : "128x128",
-      "idiom" : "mac",
-      "filename" : "Colloquy128x128.png",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "mac",
-      "size" : "128x128",
-      "scale" : "2x"
-    },
-    {
-      "idiom" : "mac",
-      "size" : "256x256",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "mac",
-      "size" : "256x256",
-      "scale" : "2x"
-    },
-    {
-      "idiom" : "mac",
-      "size" : "512x512",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "mac",
-      "size" : "512x512",
-      "scale" : "2x"
-    },
-    {
       "idiom" : "ios-marketing",
       "size" : "1024x1024",
       "scale" : "1x"
