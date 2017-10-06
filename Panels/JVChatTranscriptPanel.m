@@ -663,8 +663,12 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
         title = [message substringToIndex:range.location];
         message = [message substringFromIndex:( range.location + range.length )];
     }
-
-    NSBeginInformationalAlertSheet( title, nil, nil, nil, [sender window], nil, NULL, NULL, NULL, message, nil );
+	
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = title;
+	alert.informativeText = message;
+	alert.alertStyle = NSAlertStyleInformational;
+	[alert beginSheetModalForWindow:[sender window] completionHandler:nil];
 }
 
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {

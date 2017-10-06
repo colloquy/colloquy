@@ -2255,15 +2255,19 @@ static NSMenu *favoritesMenu = nil;
 	if( row == -1 ) return;
 
 	MVChatConnection *connection = [[_bookmarks objectAtIndex:row] objectForKey:@"connection"];
-	NSBeginCriticalAlertSheet( NSLocalizedString( @"Are you sure you want to delete?", "delete confirm dialog title" ), NSLocalizedString( @"Cancel", "cancel button" ), NSLocalizedString( @"OK", "OK button" ), nil, [self window], self, @selector( _deleteConnectionSheetDidEnd:returnCode:contextInfo: ), NULL, NULL, NSLocalizedString( @"Are you sure you want to delete the connection for %@? Any associated Keychain passwords will also be deleted.", "confirm the delete of a connection" ), [connection server] );
-}
-
-- (void) _deleteConnectionSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	if( returnCode != NSModalResponseCancel ) return; // the cancel button because we have them flipped above
-	NSInteger row = [connections selectedRow];
-	if( row == -1 ) return;
-	[connections deselectAll:nil];
-	[self removeConnectionAtIndex:row];
+	
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = NSLocalizedString( @"Are you sure you want to delete?", "delete confirm dialog title" );
+	alert.informativeText = [NSString stringWithFormat:NSLocalizedString( @"Are you sure you want to delete the connection for %@? Any associated Keychain passwords will also be deleted.", "confirm the delete of a connection" ), [connection server]];
+	alert.alertStyle = NSAlertStyleCritical;
+	[alert addButtonWithTitle:NSLocalizedString( @"Cancel", "cancel button" )];
+	[alert addButtonWithTitle:NSLocalizedString( @"OK", "OK button" )];
+	[alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode) {
+		if( returnCode != NSAlertSecondButtonReturn) return;
+		
+		[connections deselectAll:nil];
+		[self removeConnectionAtIndex:row];
+	}];
 }
 
 - (void) _messageUser:(id) sender {
