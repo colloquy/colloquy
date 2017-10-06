@@ -597,6 +597,7 @@
 		555A6C131D25B1F800E69E04 /* OS X Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "OS X Images.xcassets"; sourceTree = "<group>"; };
 		557D715D1E4915270041D61B /* MaddsPathExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MaddsPathExtensions.h; sourceTree = "<group>"; };
 		557D715E1E4915270041D61B /* MaddsPathExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MaddsPathExtensions.m; sourceTree = "<group>"; };
+		5582BE6A1F8709780010EE03 /* RunOnMainThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RunOnMainThread.h; sourceTree = "<group>"; };
 		558EF2361AEC356800619BDE /* Room Member Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Room Member Icons.xcassets"; sourceTree = "<group>"; };
 		55AD12391C597212009F258C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
 		55AD123B1C597223009F258C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/TSCustomBan.strings; sourceTree = "<group>"; };
@@ -1336,6 +1337,7 @@
 		F50B0AA00170C89301A84BDE /* Other Sources & Additions */ = {
 			isa = PBXGroup;
 			children = (
+				5582BE6A1F8709780010EE03 /* RunOnMainThread.h */,
 				F50B0AA20170CAD701A84BDE /* main.m */,
 				1CF6511406EA22480073DEA8 /* Colloquy.pch */,
 				1C018BF90A26930500C18024 /* Basic.pch */,

@@ -119,7 +119,6 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 	[alert addButtonWithTitle:NSLocalizedStringFromTableInBundle( @"Reload", nil, [NSBundle bundleForClass:[self class]], "reload button title" )];
 	[alert addButtonWithTitle:NSLocalizedStringFromTableInBundle( @"Keep Previous Version", nil, [NSBundle bundleForClass:[self class]], "keep previous version button title" )];
 	NSModalResponse response = [alert runModal];
-	[alert release];
 	
 	if( response == NSAlertFirstButtonReturn ) {
 		[self reloadFromDisk];
@@ -255,7 +254,6 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 			[alert addButtonWithTitle:NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" )];
 		}
 		NSModalResponse response = [alert runModal];
-		[alert release];
 		
 		_errorShown = NO;
 		
@@ -263,8 +261,6 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 			[[NSWorkspace sharedWorkspace] openFile:@(filename)];
 		}
 		
-		[errorDesc release];
-
 		NSLog(@"Python plugin script error in %@:", scriptTitle);
 		PyErr_Restore( errType, errValue, errTrace );
 		PyErr_Print();
