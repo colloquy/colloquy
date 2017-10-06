@@ -36,7 +36,6 @@
 	alert.informativeText = NSLocalizedStringFromTableInBundle( @"The F-Script framework was not found. The F-Script console and any F-Script plugins will not work during this session. For the latest version of F-Script visit http://www.fscript.org.", nil, [NSBundle bundleForClass:[self class]], "F-Script framework required error message" );
 	alert.alertStyle = NSAlertStyleCritical;
 	[alert runModal];
-	[alert release];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
