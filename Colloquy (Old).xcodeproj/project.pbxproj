@@ -70,8 +70,8 @@
 		1C23927306795020000E89A7 /* aquaTabCloseBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C23927206795020000E89A7 /* aquaTabCloseBack.png */; };
 		1C2462A505F9205900505752 /* JVStyleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2462A305F9205900505752 /* JVStyleView.m */; };
 		1C386FAA1032471F00660864 /* TCMPortMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C386FA91032471F00660864 /* TCMPortMapper.framework */; };
-		1C386FB61032474D00660864 /* TCMPortMapper.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C386FA91032471F00660864 /* TCMPortMapper.framework */; };
-		1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C397368082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.xib */; };
+		1C386FB61032474D00660864 /* TCMPortMapper.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C386FA91032471F00660864 /* TCMPortMapper.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C397368082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib */; };
 		1C415F270B350CA300239EB3 /* JVToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C415F250B350CA300239EB3 /* JVToolbarItem.m */; };
 		1C45BFA5086F4BD80079E014 /* newWindow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C45BFA4086F4BD80079E014 /* newWindow.png */; };
 		1C4671E606D7759100071DC6 /* NSTextStorageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */; };
@@ -110,7 +110,7 @@
 		1C77831208FA4EA2006AD8E5 /* topicToggleDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */; };
 		1C77831308FA4EA2006AD8E5 /* topicToggleUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */; };
 		1C7F30160855467F00D41FB0 /* Colloquy.mdimporter in Copy Spotlight Importer */ = {isa = PBXBuildFile; fileRef = CBF685150820186F00F498FB /* Colloquy.mdimporter */; };
-		1C8444A30F26C7D600701E36 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; };
+		1C8444A30F26C7D600701E36 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1C8BDCF4054345160035B84A /* JVChatUserInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8BDCF2054345160035B84A /* JVChatUserInspector.m */; };
 		1C8BDD2205436A030035B84A /* JVChatMemberInspector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C8BDD2005436A020035B84A /* JVChatMemberInspector.xib */; };
 		1C9014C107A2D798002942A7 /* MVChatUserAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9014BF07A2D798002942A7 /* MVChatUserAdditions.m */; };
@@ -229,13 +229,13 @@
 		1CF16CE2083ADE590037F222 /* editWidgetPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF16CDE083ADE590037F222 /* editWidgetPressed.png */; };
 		1CF4D76607E6AD4400DB421A /* smartTranscriptSettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF4D76507E6AD4400DB421A /* smartTranscriptSettings.png */; };
 		1CF5F8D207D537E50019DC13 /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF5F8D107D537E50019DC13 /* Growl.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF5F8D107D537E50019DC13 /* Growl.framework */; };
+		1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF5F8D107D537E50019DC13 /* Growl.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1CF627CB07558F79005DFCFA /* fileSend.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF627CA07558F79005DFCFA /* fileSend.png */; };
 		1CF79CBF07AC77E600696918 /* JVChatTranscript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF79CBD07AC77E600696918 /* JVChatTranscript.m */; };
 		1CF8030E070C893500C9B54C /* libsilc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; };
 		1CF8030F070C893500C9B54C /* libsilcclient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; };
-		1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; };
-		1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; };
+		1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		891E8467123F0AEF00EC3C0F /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 891E8466123F0AEF00EC3C0F /* NSCharacterSetAdditions.m */; };
 		891EF3D1106426CB00CCEA35 /* PFMoveApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 891EF3D0106426CB00CCEA35 /* PFMoveApplicationController.m */; };
 		89EB91AA0F269BEF0028B3E3 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; };
@@ -1814,7 +1814,6 @@
 				1C7C770C07DBA1F700FB5F83 /* Rez */,
 				1CB2CD0F052DDC560094AAA4 /* Resources */,
 				1CB2CD82052DDC560094AAA4 /* Copy Frameworks */,
-				1C91DEAC06972EC0007C1638 /* Remove Headers */,
 				1C7F300D085545E600D41FB0 /* Copy Spotlight Importer */,
 				1C51B53B104E160600791856 /* Copy Bouncer Plugin */,
 				1CB2CD88052DDC560094AAA4 /* Copy Plugins */,
@@ -2157,21 +2156,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [ -d \"$TARGET_BUILD_DIR/Bouncer.plugin\" ]; then\n\tditto \"$TARGET_BUILD_DIR/Bouncer.plugin\" \"$TARGET_BUILD_DIR/$PLUGINS_FOLDER_PATH/Bouncer.plugin\"\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		1C91DEAC06972EC0007C1638 /* Remove Headers */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Remove Headers";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "find \"$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH\" -name \"Headers\" -print0 | xargs -0 rm -rf\n";
 			showEnvVarsInLog = 0;
 		};
 		1CAF6496099EA9350036A727 /* Unarchive Frameworks */ = {
