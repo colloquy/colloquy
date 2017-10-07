@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <deployment version="101300" identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="JVTranscriptFindWindowController">
+            <connections>
+                <outlet property="hiddenResults" destination="395" id="398"/>
+                <outlet property="hiddenResultsCount" destination="397" id="399"/>
+                <outlet property="ignoreCase" destination="253" id="384"/>
+                <outlet property="operation" destination="243" id="382"/>
+                <outlet property="resultCount" destination="264" id="385"/>
+                <outlet property="resultProgress" destination="263" id="386"/>
+                <outlet property="scrollbackOnly" destination="252" id="400"/>
+                <outlet property="subviewTableView" destination="210" id="387"/>
+                <outlet property="window" destination="21" id="388"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application"/>
+        <window title="Finden" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hidesOnDeactivate="YES" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="Find" animationBehavior="default" id="21" userLabel="Window" customClass="NSPanel">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES" utility="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="32" y="584" width="520" height="138"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <view key="contentView" autoresizesSubviews="NO" id="2">
+                <rect key="frame" x="1" y="9" width="520" height="138"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField verticalHuggingPriority="750" id="264">
+                        <rect key="frame" x="403" y="96" width="97" height="13"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" id="412">
+                            <font key="font" metaFont="label"/>
+                            <color key="textColor" white="0.40000001000000002" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <scrollView horizontalLineScroll="30" horizontalPageScroll="0.0" verticalLineScroll="30" verticalPageScroll="0.0" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" id="212">
+                        <rect key="frame" x="20" y="55" width="474" height="32"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <clipView key="contentView" id="1U7-H2-4Er">
+                            <rect key="frame" x="1" y="1" width="472" height="30"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <subviews>
+                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="28" id="210">
+                                    <rect key="frame" x="0.0" y="0.0" width="472" height="30"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <size key="intercellSpacing" width="3" height="2"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                    <tableColumns>
+                                        <tableColumn identifier="criteria" editable="NO" width="423" minWidth="40" maxWidth="2000" id="209">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" white="0.33333299" alpha="1" colorSpace="calibratedWhite"/>
+                                            </tableHeaderCell>
+                                            <textFieldCell key="dataCell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" alignment="left" id="415">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </textFieldCell>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        </tableColumn>
+                                        <tableColumn identifier="remove" editable="NO" width="20" minWidth="20" maxWidth="20" id="227">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                            </tableHeaderCell>
+                                            <buttonCell key="dataCell" type="bevel" bezelStyle="regularSquare" image="removeWidget" imagePosition="only" alignment="center" alternateImage="removeWidgetSelected" enabled="NO" inset="2" id="245">
+                                                <behavior key="behavior" lightByContents="YES"/>
+                                                <font key="font" metaFont="cellTitle"/>
+                                                <connections>
+                                                    <action selector="removeRow:" target="-2" id="392"/>
+                                                </connections>
+                                            </buttonCell>
+                                        </tableColumn>
+                                        <tableColumn identifier="add" editable="NO" width="20" minWidth="20" maxWidth="20" id="228">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                            </tableHeaderCell>
+                                            <buttonCell key="dataCell" type="bevel" bezelStyle="regularSquare" image="addWidget" imagePosition="only" alignment="center" alternateImage="addWidgetSelected" inset="2" id="246">
+                                                <behavior key="behavior" lightByContents="YES"/>
+                                                <font key="font" metaFont="cellTitle"/>
+                                                <connections>
+                                                    <action selector="addRow:" target="-2" id="391"/>
+                                                </connections>
+                                            </buttonCell>
+                                        </tableColumn>
+                                    </tableColumns>
+                                </tableView>
+                            </subviews>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="416">
+                            <rect key="frame" x="-100" y="-100" width="423" height="15"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="417">
+                            <rect key="frame" x="-100" y="-100" width="15" height="209"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
+                    <textField verticalHuggingPriority="750" id="238">
+                        <rect key="frame" x="17" y="106" width="129" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Nachrichten finden, die" id="405">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" id="243">
+                        <rect key="frame" x="146" y="101" width="88" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                        <popUpButtonCell key="cell" type="push" title="einer" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="241" id="406">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                            <menu key="menu" title="OtherViews" id="239">
+                                <items>
+                                    <menuItem title="einer" state="on" tag="1" id="241"/>
+                                    <menuItem title="allen" tag="2" id="240"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                        <connections>
+                            <binding destination="271" name="selectedTag" keyPath="values.JVFindOperation" id="381">
+                                <dictionary key="options">
+                                    <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                    <decimal key="NSMultipleValuesPlaceholder" value="1"/>
+                                    <decimal key="NSNoSelectionPlaceholder" value="1"/>
+                                    <decimal key="NSNotApplicablePlaceholder" value="1"/>
+                                    <decimal key="NSNullPlaceholder" value="1"/>
+                                    <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </popUpButton>
+                    <textField verticalHuggingPriority="750" id="244">
+                        <rect key="frame" x="236" y="106" width="230" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="der folgenden Eigenschaften entsprechen:" id="407">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="249">
+                        <rect key="frame" x="430" y="6" width="69" height="28"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <buttonCell key="cell" type="push" title="Nächste" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="408">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="findNext:" target="-2" id="393"/>
+                            <outlet property="nextKeyView" destination="250" id="402"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="250">
+                        <rect key="frame" x="353" y="6" width="79" height="28"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <buttonCell key="cell" type="push" title="Vorherige" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="409">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                            <string key="keyEquivalent">G</string>
+                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="findPrevious:" target="-2" id="394"/>
+                            <outlet property="nextKeyView" destination="243" id="403"/>
+                        </connections>
+                    </button>
+                    <button toolTip="Continue search at the beginning of the document" imageHugsTitle="YES" id="252">
+                        <rect key="frame" x="136" y="30" width="146" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <buttonCell key="cell" type="check" title="Nur Nachrichtenverlauf" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" state="on" inset="2" id="410">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="271" name="value" keyPath="values.JVFindWrapAround" id="339">
+                                <dictionary key="options">
+                                    <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                    <integer key="NSMultipleValuesPlaceholder" value="1"/>
+                                    <integer key="NSNoSelectionPlaceholder" value="1"/>
+                                    <integer key="NSNotApplicablePlaceholder" value="1"/>
+                                    <integer key="NSNullPlaceholder" value="1"/>
+                                    <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                </dictionary>
+                            </binding>
+                            <outlet property="nextKeyView" destination="253" id="254"/>
+                        </connections>
+                    </button>
+                    <button toolTip="Groß-/Kleinschreibung ignorieren" imageHugsTitle="YES" id="253">
+                        <rect key="frame" x="136" y="12" width="205" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                        <buttonCell key="cell" type="check" title="Groß-/Kleinschreibung ignorieren" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" state="on" inset="2" id="411">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                        </buttonCell>
+                        <connections>
+                            <binding destination="271" name="value" keyPath="values.JVFindIgnoreCase" id="340">
+                                <dictionary key="options">
+                                    <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                    <integer key="NSMultipleValuesPlaceholder" value="1"/>
+                                    <integer key="NSNoSelectionPlaceholder" value="1"/>
+                                    <integer key="NSNotApplicablePlaceholder" value="1"/>
+                                    <integer key="NSNullPlaceholder" value="1"/>
+                                    <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                    <bool key="NSValidatesImmediately" value="YES"/>
+                                </dictionary>
+                            </binding>
+                            <outlet property="nextKeyView" destination="249" id="401"/>
+                        </connections>
+                    </button>
+                    <progressIndicator hidden="YES" verticalHuggingPriority="750" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="bar" id="263">
+                        <rect key="frame" x="425" y="92" width="70" height="12"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                    </progressIndicator>
+                    <customView hidden="YES" autoresizesSubviews="NO" id="395">
+                        <rect key="frame" x="20" y="28" width="109" height="20"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField verticalHuggingPriority="750" id="397">
+                                <rect key="frame" x="20" y="3" width="86" height="14"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="414">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <color key="textColor" white="0.054744527000000001" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <imageView id="396">
+                                <rect key="frame" x="2" y="2" width="16" height="16"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="AlertCautionIcon" id="413"/>
+                            </imageView>
+                        </subviews>
+                    </customView>
+                </subviews>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="389"/>
+                <outlet property="initialFirstResponder" destination="249" id="390"/>
+            </connections>
+        </window>
+        <userDefaultsController representsSharedInstance="YES" id="271" userLabel="Shared Defaults"/>
+    </objects>
+    <resources>
+        <image name="AlertCautionIcon" width="128" height="128"/>
+        <image name="addWidget" width="128" height="128"/>
+        <image name="addWidgetSelected" width="128" height="128"/>
+        <image name="removeWidget" width="128" height="128"/>
+        <image name="removeWidgetSelected" width="128" height="128"/>
+    </resources>
+</document>

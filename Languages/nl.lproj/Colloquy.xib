@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <deployment version="1030" identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
+            <connections>
+                <outlet property="delegate" destination="254" id="263"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application"/>
+        <menu title="Massinova" systemMenu="main" id="29" userLabel="MainMenu">
+            <items>
+                <menuItem title="Colloquy" id="56">
+                    <menu key="submenu" title="Colloquy" systemMenu="apple" id="57">
+                        <items>
+                            <menuItem title="Over Colloquy" id="58">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Zoek naar Nieuwe Versies…" id="696">
+                                <connections>
+                                    <action selector="checkForUpdate:" target="254" id="697"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="982">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Voorkeuren…" keyEquivalent="," id="129">
+                                <connections>
+                                    <action selector="showPreferences:" target="254" id="877"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="143">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Voorzieningen" id="131">
+                                <menu key="submenu" title="Voorzieningen" systemMenu="services" id="130"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="144">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Verberg Colloquy" keyEquivalent="h" id="134">
+                                <connections>
+                                    <action selector="hide:" target="-2" id="152"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Verberg andere" keyEquivalent="h" id="145">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="hideOtherApplications:" target="-2" id="146"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Selecteer Alles" id="150">
+                                <connections>
+                                    <action selector="unhideAllApplications:" target="-2" id="153"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="149">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Stop Colloquy…" keyEquivalent="q" id="136">
+                                <connections>
+                                    <action selector="terminate:" target="-2" id="139"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Stop Colloquy" alternate="YES" keyEquivalent="q" id="977">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="terminateWithoutConfirm:" target="254" id="978"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Archief" tag="1" id="83">
+                    <menu key="submenu" title="Archief" id="81">
+                        <items>
+                            <menuItem title="Nieuwe Verbinding…" keyEquivalent="n" id="749">
+                                <connections>
+                                    <action selector="newConnection:" target="-1" id="779"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Betreed Kanaal…" keyEquivalent="j" id="880">
+                                <connections>
+                                    <action selector="joinRoom:" target="-1" id="882"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="962">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Slimme Transcripten" tag="30" id="960">
+                                <menu key="submenu" title="Slimme Transcripten" id="961"/>
+                            </menuItem>
+                            <menuItem title="Favorieten" tag="20" id="890">
+                                <menu key="submenu" title="Favorieten" id="888"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="883">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Open Transcript…" id="974">
+                                <connections>
+                                    <action selector="openDocument:" target="-1" id="975"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Open Recente" id="804">
+                                <menu key="submenu" title="Open Recente" systemMenu="recentDocuments" id="805">
+                                    <items>
+                                        <menuItem title="Wis Menu" id="806">
+                                            <connections>
+                                                <action selector="clearRecentDocuments:" target="-1" id="807"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="754">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Maak paneel los" keyEquivalent="d" id="919">
+                                <connections>
+                                    <action selector="detachCurrentPanel:" target="-1" id="920"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Sluit Venster" tag="1" keyEquivalent="w" id="73">
+                                <connections>
+                                    <action selector="performClose:" target="-1" id="892"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Sluit Huidig Paneel" tag="2" id="789">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="closeCurrentPanel:" target="-1" id="798"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Bewaar Als…" keyEquivalent="s" id="780">
+                                <connections>
+                                    <action selector="saveDocumentTo:" target="-1" id="808"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Wijzig" tag="2" id="217">
+                    <menu key="submenu" title="Wijzig" id="205">
+                        <items>
+                            <menuItem title="Herstel" keyEquivalent="z" id="207">
+                                <connections>
+                                    <action selector="undo:" target="-1" id="223"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Opnieuw" keyEquivalent="Z" id="215">
+                                <connections>
+                                    <action selector="redo:" target="-1" id="231"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="206">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Knip" keyEquivalent="x" id="199">
+                                <connections>
+                                    <action selector="cut:" target="-1" id="228"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Kopieer" keyEquivalent="c" id="197">
+                                <connections>
+                                    <action selector="copy:" target="-1" id="979"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Plak" keyEquivalent="v" id="900">
+                                <connections>
+                                    <action selector="pasteAsPlainText:" target="-1" id="905"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Plak als Rich Text" keyEquivalent="V" id="901">
+                                <connections>
+                                    <action selector="pasteAsRichText:" target="-1" id="904"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Verwijder" id="202">
+                                <connections>
+                                    <action selector="clear:" target="-1" id="229"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Selecteer Alles" keyEquivalent="a" id="198">
+                                <connections>
+                                    <action selector="selectAll:" target="-1" id="232"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="214">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Zoek" id="948">
+                                <menu key="submenu" title="Zoek" id="949">
+                                    <items>
+                                        <menuItem title="Zoek…" tag="1" keyEquivalent="f" id="944">
+                                            <connections>
+                                                <action selector="orderFrontFindPanel:" target="-1" id="957"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Zoek Volgende" tag="2" keyEquivalent="g" id="950">
+                                            <connections>
+                                                <action selector="findNext:" target="-1" id="958"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Zoek Vorige" tag="3" keyEquivalent="G" id="946">
+                                            <connections>
+                                                <action selector="findPrevious:" target="-1" id="959"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Gebruik Selectie voor Zoekactie" tag="7" keyEquivalent="e" id="945">
+                                            <connections>
+                                                <action selector="copySelectionToFindPboard:" target="-1" id="985"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Spelling" id="216">
+                                <menu key="submenu" title="Spelling" id="200">
+                                    <items>
+                                        <menuItem title="Spelling..." keyEquivalent=":" id="204">
+                                            <connections>
+                                                <action selector="showGuessPanel:" target="-1" id="230"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Controleer Spelling" keyEquivalent=";" id="201">
+                                            <connections>
+                                                <action selector="checkSpelling:" target="-1" id="225"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Controlleer Spelling Tijdens Het Typen" id="219">
+                                            <connections>
+                                                <action selector="toggleContinuousSpellChecking:" target="-1" id="222"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Weergave" tag="3" id="391">
+                    <menu key="submenu" title="Weergave" id="392">
+                        <items>
+                            <menuItem title="Toon Lade" keyEquivalent="D" id="863">
+                                <connections>
+                                    <action selector="toggleViewsDrawer:" target="-1" id="865"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Toon Tabbalk" keyEquivalent="T" id="915">
+                                <connections>
+                                    <action selector="toggleTabBarVisible:" target="-1" id="917"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="864">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Toon Info" alternate="YES" keyEquivalent="I" id="908">
+                                <connections>
+                                    <action selector="getInfo:" target="-1" id="909"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Toon Info" alternate="YES" keyEquivalent="I" id="906">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showInspector:" target="-1" id="907"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="918">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Toon knoppenbalk" id="395">
+                                <connections>
+                                    <action selector="toggleToolbarShown:" target="-1" id="396"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Pas Knoppenbalk Aan…" id="393">
+                                <connections>
+                                    <action selector="runToolbarCustomizationPalette:" target="-1" id="397"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="921">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Kleine Symbolen in Lade" id="867">
+                                <connections>
+                                    <action selector="toggleSmallDrawerIcons:" target="-1" id="868"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="928">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Wis Buffer Berichten" keyEquivalent="k" id="922">
+                                <connections>
+                                    <action selector="clearDisplay:" target="-1" id="931"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Markeer Buffer Berichten" keyEquivalent="M" id="964">
+                                <connections>
+                                    <action selector="markDisplay:" target="-1" id="965"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Markeer Alles" alternate="YES" keyEquivalent="M" id="966">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="markAllDisplays:" target="254" id="968"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="866">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Vorig Signaalwoord" keyEquivalent="[" id="924">
+                                <connections>
+                                    <action selector="jumpToPreviousHighlight:" target="-1" id="929"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Volgend Signaalwoord" keyEquivalent="]" id="926">
+                                <connections>
+                                    <action selector="jumpToNextHighlight:" target="-1" id="930"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Ga naar Markering" keyEquivalent="J" id="969">
+                                <connections>
+                                    <action selector="jumpToMark:" target="-1" id="970"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Lettertype" tag="4" id="720">
+                    <menu key="submenu" title="Lettertype" systemMenu="font" id="710">
+                        <items>
+                            <menuItem title="Vetgedrukt" tag="2" keyEquivalent="b" id="719">
+                                <connections>
+                                    <action selector="bold:" target="-1" id="747"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Cursief" tag="1" keyEquivalent="i" id="711">
+                                <connections>
+                                    <action selector="italic:" target="-1" id="748"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Onderstrepen" keyEquivalent="u" id="701">
+                                <connections>
+                                    <action selector="underline:" target="-1" id="742"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="727">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Toon Kleuren" keyEquivalent="C" id="715">
+                                <connections>
+                                    <action selector="orderFrontColorPanel:" target="-1" id="734"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="717">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Kopieer Stijl" keyEquivalent="c" id="723">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="copyFont:" target="-1" id="738"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Plak Stijl" keyEquivalent="v" id="709">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="pasteFont:" target="-1" id="741"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Venster" tag="5" id="19">
+                    <menu key="submenu" title="Venster" systemMenu="window" id="24">
+                        <items>
+                            <menuItem title="Minimaliseer" keyEquivalent="m" id="23">
+                                <connections>
+                                    <action selector="performMiniaturize:" target="-1" id="37"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="92">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Selecteer Vorig Paneel" keyEquivalent="" id="794">
+                                <connections>
+                                    <action selector="selectPreviousPanel:" target="-1" id="803"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Selecteer Vorig Actief Paneel" alternate="YES" keyEquivalent="" id="910">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selectPreviousActivePanel:" target="-1" id="913"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Selecteer Volgend Paneel" keyEquivalent="" id="793">
+                                <connections>
+                                    <action selector="selectNextPanel:" target="-1" id="802"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Selecteer Volgend Actief Paneel" alternate="YES" keyEquivalent="" id="911">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selectNextActivePanel:" target="-1" id="914"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="795">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Verbindingen" keyEquivalent="1" id="751">
+                                <connections>
+                                    <action selector="showConnectionManager:" target="254" id="774"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Bestandsoverdrachten" keyEquivalent="2" id="658">
+                                <connections>
+                                    <action selector="showTransferManager:" target="254" id="775"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Vriendenlijst" keyEquivalent="3" id="878">
+                                <connections>
+                                    <action selector="showBuddyList:" target="254" id="879"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="657">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Alles op Voorgrond" id="5">
+                                <connections>
+                                    <action selector="arrangeInFront:" target="-1" id="39"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Help" tag="6" id="103">
+                    <menu key="submenu" title="Help" id="106">
+                        <items>
+                            <menuItem title="Colloquy Help" keyEquivalent="?" id="111">
+                                <connections>
+                                    <action selector="helpWebsite:" target="254" id="984"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="757">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Colloquy Kanaal" id="756">
+                                <connections>
+                                    <action selector="connectToSupportRoom:" target="254" id="771"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Colloquy Feedback" id="776">
+                                <connections>
+                                    <action selector="emailDeveloper:" target="254" id="777"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Colloquy Foutrapportage" id="786">
+                                <connections>
+                                    <action selector="bugReportWebsite:" target="254" id="981"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Colloquy Website" id="980">
+                                <connections>
+                                    <action selector="productWebsite:" target="254" id="983"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+            </items>
+        </menu>
+        <customObject id="254" userLabel="MVApplicationController" customClass="MVApplicationController"/>
+        <customObject id="453" userLabel="Font Manager" customClass="NSFontManager"/>
+    </objects>
+</document>
