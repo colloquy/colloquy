@@ -107,7 +107,7 @@
                     <button toolTip="Voeg vriend toe" imageHugsTitle="YES" id="39">
                         <rect key="frame" x="61" y="5" width="23" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="buddyNew" imagePosition="only" alignment="center" alternateImage="buddyNewBlue" inset="2" id="204">
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="204">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="system" size="10"/>
                         </buttonCell>
@@ -140,7 +140,7 @@
                     <button toolTip="Action" imageHugsTitle="YES" id="105" customClass="MVMenuButton">
                         <rect key="frame" x="6" y="5" width="28" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="actionWidget" imagePosition="only" alignment="left" alternateImage="actionWidgetPressed" id="208">
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="only" alignment="left" borderStyle="border" imageScaling="proportionallyDown" id="208">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="label"/>
                         </buttonCell>
@@ -157,7 +157,7 @@
             <rect key="contentRect" x="38" y="544" width="510" height="292"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <view key="contentView" autoresizesSubviews="NO" id="81">
-                <rect key="frame" x="1" y="9" width="510" height="292"/>
+                <rect key="frame" x="0.0" y="0.0" width="510" height="292"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" tag="1" imageHugsTitle="YES" id="85">
@@ -226,7 +226,7 @@ Gw
             <rect key="contentRect" x="223" y="383" width="448" height="302"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <view key="contentView" autoresizesSubviews="NO" id="114">
-                <rect key="frame" x="1" y="9" width="448" height="302"/>
+                <rect key="frame" x="0.0" y="0.0" width="448" height="302"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField verticalHuggingPriority="750" id="116">
@@ -378,7 +378,7 @@ Gw
                         <autoresizingMask key="autoresizingMask"/>
                         <clipView key="contentView" id="Gbs-ne-Q9H">
                             <rect key="frame" x="1" y="1" width="192" height="57"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" id="195">
                                     <rect key="frame" x="0.0" y="0.0" width="192" height="57"/>
@@ -488,14 +488,12 @@ Gw
         </menu>
     </objects>
     <resources>
-        <image name="actionWidget" width="128" height="128"/>
-        <image name="actionWidgetPressed" width="128" height="128"/>
+        <image name="NSActionTemplate" width="14" height="14"/>
+        <image name="NSAddTemplate" width="11" height="11"/>
         <image name="buddyInfo" width="23" height="22"/>
         <image name="buddyInfoBlue" width="23" height="22"/>
         <image name="buddyMessage" width="23" height="22"/>
         <image name="buddyMessageBlue" width="23" height="22"/>
-        <image name="buddyNew" width="128" height="128"/>
-        <image name="buddyNewBlue" width="128" height="128"/>
         <image name="buddyOptions" width="23" height="22"/>
         <image name="buddyOptionsBlue" width="23" height="22"/>
     </resources>

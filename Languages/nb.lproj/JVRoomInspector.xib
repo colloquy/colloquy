@@ -252,14 +252,14 @@ DQ
                         <tabViewItem label="Blokkeringer" identifier="bans" id="316">
                             <view key="view" autoresizesSubviews="NO" id="317">
                                 <rect key="frame" x="10" y="25" width="315" height="264"/>
-                                <autoresizingMask key="autoresizingMask"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="334">
                                         <rect key="frame" x="15" y="41" width="285" height="208"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <clipView key="contentView" id="TNB-AO-7Lx">
                                             <rect key="frame" x="1" y="1" width="283" height="206"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" autosaveColumns="NO" id="335">
                                                     <rect key="frame" x="0.0" y="0.0" width="283" height="206"/>
@@ -301,7 +301,7 @@ DQ
                                     <button toolTip="Legg til blokkering" imageHugsTitle="YES" id="338">
                                         <rect key="frame" x="15" y="12" width="23" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="addSquareWidget" imagePosition="only" alignment="center" alternateImage="addSquareWidgetPressed" inset="2" id="430">
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="430">
                                             <behavior key="behavior" lightByContents="YES"/>
                                             <font key="font" metaFont="label"/>
                                         </buttonCell>
@@ -323,7 +323,7 @@ DQ
                                     <button toolTip="Fjern blokkering" imageHugsTitle="YES" id="340">
                                         <rect key="frame" x="41" y="12" width="23" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="deleteWidget" imagePosition="only" alignment="center" alternateImage="deleteWidgetPressed" enabled="NO" inset="2" id="432">
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="432">
                                             <behavior key="behavior" lightByContents="YES"/>
                                             <font key="font" metaFont="label"/>
                                             <string key="keyEquivalent"></string>
@@ -463,10 +463,8 @@ DQ
         <userDefaultsController representsSharedInstance="YES" id="373" userLabel="Shared Defaults"/>
     </objects>
     <resources>
-        <image name="addSquareWidget" width="128" height="128"/>
-        <image name="addSquareWidgetPressed" width="128" height="128"/>
-        <image name="deleteWidget" width="128" height="128"/>
-        <image name="deleteWidgetPressed" width="128" height="128"/>
+        <image name="NSAddTemplate" width="11" height="11"/>
+        <image name="NSRemoveTemplate" width="11" height="11"/>
         <image name="editWidget" width="22" height="22"/>
         <image name="editWidgetPressed" width="22" height="22"/>
         <image name="room" width="55" height="55"/>

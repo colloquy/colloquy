@@ -72,7 +72,7 @@
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
-                                            <buttonCell key="dataCell" type="bevel" bezelStyle="regularSquare" image="removeWidget" imagePosition="only" alignment="center" alternateImage="removeWidgetSelected" enabled="NO" inset="2" id="245">
+                                            <buttonCell key="dataCell" type="bevel" bezelStyle="regularSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="245">
                                                 <behavior key="behavior" lightByContents="YES"/>
                                                 <font key="font" metaFont="cellTitle"/>
                                                 <connections>
@@ -86,7 +86,7 @@
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
-                                            <buttonCell key="dataCell" type="bevel" bezelStyle="regularSquare" image="addWidget" imagePosition="only" alignment="center" alternateImage="addWidgetSelected" inset="2" id="246">
+                                            <buttonCell key="dataCell" type="bevel" bezelStyle="regularSquare" image="NSAddTemplate" imagePosition="only" alignment="center" alternateImage="addWidgetSelected" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="246">
                                                 <behavior key="behavior" lightByContents="YES"/>
                                                 <font key="font" metaFont="cellTitle"/>
                                                 <connections>
@@ -245,7 +245,7 @@ DQ
                             <imageView id="396">
                                 <rect key="frame" x="2" y="2" width="16" height="16"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="AlertCautionIcon" id="413"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSCaution" id="413"/>
                             </imageView>
                         </subviews>
                     </customView>
@@ -259,10 +259,9 @@ DQ
         <userDefaultsController representsSharedInstance="YES" id="271" userLabel="Shared Defaults"/>
     </objects>
     <resources>
-        <image name="AlertCautionIcon" width="128" height="128"/>
-        <image name="addWidget" width="128" height="128"/>
+        <image name="NSAddTemplate" width="11" height="11"/>
+        <image name="NSCaution" width="32" height="32"/>
+        <image name="NSRemoveTemplate" width="11" height="11"/>
         <image name="addWidgetSelected" width="128" height="128"/>
-        <image name="removeWidget" width="128" height="128"/>
-        <image name="removeWidgetSelected" width="128" height="128"/>
     </resources>
 </document>

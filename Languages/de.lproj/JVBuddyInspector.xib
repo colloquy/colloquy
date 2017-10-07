@@ -69,7 +69,7 @@
                 <button toolTip="Delete identifier" imageHugsTitle="YES" id="210">
                     <rect key="frame" x="69" y="44" width="23" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="deleteWidget" imagePosition="only" alignment="center" alternateImage="deleteWidgetPressed" enabled="NO" inset="2" id="348">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="348">
                         <behavior key="behavior" lightByContents="YES"/>
                         <font key="font" metaFont="label"/>
                     </buttonCell>
@@ -91,7 +91,7 @@
                 <button toolTip="Add identifier" imageHugsTitle="YES" id="208">
                     <rect key="frame" x="69" y="20" width="23" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="addSquareWidget" imagePosition="only" alignment="center" alternateImage="addSquareWidgetPressed" inset="2" id="346">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="346">
                         <behavior key="behavior" lightByContents="YES"/>
                         <font key="font" metaFont="label"/>
                         <string key="keyEquivalent">+</string>
@@ -421,7 +421,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" id="8Qn-Cb-OSY">
                             <rect key="frame" x="1" y="1" width="198" height="97"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" id="284">
                                     <rect key="frame" x="0.0" y="0.0" width="198" height="97"/>
@@ -463,7 +463,7 @@
                     <button toolTip="Add domain" imageHugsTitle="YES" id="287">
                         <rect key="frame" x="72" y="40" width="23" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="addSquareWidget" imagePosition="only" alignment="center" alternateImage="addSquareWidgetPressed" enabled="NO" inset="2" id="361">
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="361">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="label"/>
                             <string key="keyEquivalent">+</string>
@@ -476,7 +476,7 @@
                     <button toolTip="Delete domain" imageHugsTitle="YES" id="289">
                         <rect key="frame" x="72" y="64" width="23" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="deleteWidget" imagePosition="only" alignment="center" alternateImage="deleteWidgetPressed" enabled="NO" inset="2" id="362">
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="362">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="label"/>
                         </buttonCell>
@@ -518,10 +518,8 @@ Gw
         </window>
     </objects>
     <resources>
-        <image name="addSquareWidget" width="128" height="128"/>
-        <image name="addSquareWidgetPressed" width="128" height="128"/>
-        <image name="deleteWidget" width="128" height="128"/>
-        <image name="deleteWidgetPressed" width="128" height="128"/>
+        <image name="NSAddTemplate" width="11" height="11"/>
+        <image name="NSRemoveTemplate" width="11" height="11"/>
         <image name="editWidget" width="22" height="22"/>
         <image name="editWidgetPressed" width="22" height="22"/>
     </resources>

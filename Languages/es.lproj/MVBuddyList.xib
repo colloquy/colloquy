@@ -107,7 +107,7 @@
                     <button toolTip="Añadir amigo" imageHugsTitle="YES" id="39">
                         <rect key="frame" x="61" y="5" width="23" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="buddyNew" imagePosition="only" alignment="center" alternateImage="buddyNewBlue" inset="2" id="204">
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="204">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="system" size="10"/>
                         </buttonCell>
@@ -140,7 +140,7 @@
                     <button toolTip="Action" imageHugsTitle="YES" id="105" customClass="MVMenuButton">
                         <rect key="frame" x="6" y="5" width="28" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="actionWidget" imagePosition="only" alignment="left" alternateImage="actionWidgetPressed" id="208">
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="only" alignment="left" borderStyle="border" imageScaling="proportionallyDown" id="208">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="label"/>
                         </buttonCell>
@@ -488,14 +488,12 @@ Gw
         </menu>
     </objects>
     <resources>
-        <image name="actionWidget" width="128" height="128"/>
-        <image name="actionWidgetPressed" width="128" height="128"/>
+        <image name="NSActionTemplate" width="14" height="14"/>
+        <image name="NSAddTemplate" width="11" height="11"/>
         <image name="buddyInfo" width="23" height="22"/>
         <image name="buddyInfoBlue" width="23" height="22"/>
         <image name="buddyMessage" width="23" height="22"/>
         <image name="buddyMessageBlue" width="23" height="22"/>
-        <image name="buddyNew" width="128" height="128"/>
-        <image name="buddyNewBlue" width="128" height="128"/>
         <image name="buddyOptions" width="23" height="22"/>
         <image name="buddyOptionsBlue" width="23" height="22"/>
     </resources>

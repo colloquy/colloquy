@@ -59,11 +59,11 @@
                     <tabViewItems>
                         <tabViewItem label="Generale" identifier="General" id="139">
                             <view key="view" id="136">
-                                <rect key="frame" x="10" y="25" width="395" height="298"/>
+                                <rect key="frame" x="10" y="29" width="395" height="294"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField verticalHuggingPriority="750" id="140">
-                                        <rect key="frame" x="86" y="123" width="61" height="14"/>
+                                        <rect key="frame" x="86" y="119" width="61" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="right" title="Password:" id="427">
                                             <font key="font" metaFont="smallSystem"/>
@@ -72,7 +72,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <secureTextField verticalHuggingPriority="750" id="141">
-                                        <rect key="frame" x="152" y="121" width="205" height="19"/>
+                                        <rect key="frame" x="152" y="117" width="205" height="19"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <secureTextFieldCell key="cell" controlSize="small" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="428">
                                             <font key="font" metaFont="smallSystem"/>
@@ -88,7 +88,7 @@
                                         </connections>
                                     </secureTextField>
                                     <textField verticalHuggingPriority="750" id="142">
-                                        <rect key="frame" x="58" y="150" width="89" height="14"/>
+                                        <rect key="frame" x="58" y="146" width="89" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="right" title="Soprannome:" id="429">
                                             <font key="font" metaFont="smallSystem"/>
@@ -97,7 +97,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <textField verticalHuggingPriority="750" id="143">
-                                        <rect key="frame" x="152" y="148" width="205" height="19"/>
+                                        <rect key="frame" x="152" y="144" width="205" height="19"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="430">
                                             <font key="font" metaFont="smallSystem"/>
@@ -111,7 +111,7 @@
                                         </connections>
                                     </textField>
                                     <textField verticalHuggingPriority="750" id="145">
-                                        <rect key="frame" x="38" y="266" width="109" height="14"/>
+                                        <rect key="frame" x="38" y="262" width="109" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="right" title="Server:" id="431">
                                             <font key="font" metaFont="smallSystem"/>
@@ -120,7 +120,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <comboBox verticalHuggingPriority="750" id="146">
-                                        <rect key="frame" x="152" y="262" width="208" height="22"/>
+                                        <rect key="frame" x="152" y="258" width="208" height="22"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <comboBoxCell key="cell" controlSize="small" selectable="YES" editable="YES" borderStyle="bezel" alignment="left" drawsBackground="YES" usesDataSource="YES" numberOfVisibleItems="10" id="432">
                                             <font key="font" metaFont="smallSystem"/>
@@ -134,7 +134,7 @@
                                         </connections>
                                     </comboBox>
                                     <secureTextField verticalHuggingPriority="750" id="147">
-                                        <rect key="frame" x="152" y="187" width="205" height="19"/>
+                                        <rect key="frame" x="152" y="183" width="205" height="19"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <secureTextFieldCell key="cell" controlSize="small" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="433">
                                             <font key="font" metaFont="smallSystem"/>
@@ -150,7 +150,7 @@
                                         </connections>
                                     </secureTextField>
                                     <textField verticalHuggingPriority="750" id="148">
-                                        <rect key="frame" x="17" y="189" width="130" height="14"/>
+                                        <rect key="frame" x="17" y="185" width="130" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="right" title="Password del server:" id="434">
                                             <font key="font" metaFont="smallSystem"/>
@@ -159,7 +159,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <textField verticalHuggingPriority="750" id="149">
-                                        <rect key="frame" x="48" y="217" width="99" height="14"/>
+                                        <rect key="frame" x="48" y="213" width="99" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="right" title="Nome utente:" id="435">
                                             <font key="font" metaFont="smallSystem"/>
@@ -168,7 +168,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <textField verticalHuggingPriority="750" id="150">
-                                        <rect key="frame" x="152" y="55" width="205" height="19"/>
+                                        <rect key="frame" x="152" y="51" width="205" height="19"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="436">
                                             <font key="font" metaFont="smallSystem"/>
@@ -182,7 +182,7 @@
                                         </connections>
                                     </textField>
                                     <textField verticalHuggingPriority="750" id="151">
-                                        <rect key="frame" x="152" y="214" width="205" height="19"/>
+                                        <rect key="frame" x="152" y="210" width="205" height="19"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="437">
                                             <font key="font" metaFont="smallSystem"/>
@@ -195,7 +195,7 @@
                                         </connections>
                                     </textField>
                                     <textField verticalHuggingPriority="750" id="152">
-                                        <rect key="frame" x="73" y="57" width="74" height="14"/>
+                                        <rect key="frame" x="73" y="53" width="74" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="right" title="Nome reale:" id="438">
                                             <font key="font" metaFont="smallSystem"/>
@@ -204,7 +204,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <textField verticalHuggingPriority="750" id="197">
-                                        <rect key="frame" x="17" y="96" width="130" height="14"/>
+                                        <rect key="frame" x="17" y="92" width="130" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="right" title="Soprannomi alternativi:" id="439">
                                             <font key="font" metaFont="smallSystem"/>
@@ -213,7 +213,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <textField verticalHuggingPriority="750" id="198">
-                                        <rect key="frame" x="152" y="94" width="205" height="19"/>
+                                        <rect key="frame" x="152" y="90" width="205" height="19"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="440">
                                             <font key="font" metaFont="smallSystem"/>
@@ -226,7 +226,7 @@
                                         </connections>
                                     </textField>
                                     <comboBox verticalHuggingPriority="750" id="199">
-                                        <rect key="frame" x="152" y="237" width="70" height="22"/>
+                                        <rect key="frame" x="152" y="233" width="70" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                         <comboBoxCell key="cell" controlSize="small" selectable="YES" editable="YES" borderStyle="bezel" alignment="left" title="6667" drawsBackground="YES" numberOfVisibleItems="5" id="441">
                                             <font key="font" metaFont="smallSystem"/>
@@ -246,7 +246,7 @@
                                         </connections>
                                     </comboBox>
                                     <textField verticalHuggingPriority="750" id="200">
-                                        <rect key="frame" x="32" y="241" width="115" height="14"/>
+                                        <rect key="frame" x="32" y="237" width="115" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="right" title="Porta del server:" id="442">
                                             <font key="font" metaFont="smallSystem"/>
@@ -255,7 +255,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <popUpButton verticalHuggingPriority="750" id="233">
-                                        <rect key="frame" x="149" y="11" width="211" height="22"/>
+                                        <rect key="frame" x="149" y="7" width="211" height="22"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <popUpButtonCell key="cell" type="push" title=" " bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="230" id="443">
                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -268,7 +268,7 @@
                                         </popUpButtonCell>
                                     </popUpButton>
                                     <textField verticalHuggingPriority="750" id="235">
-                                        <rect key="frame" x="73" y="16" width="74" height="14"/>
+                                        <rect key="frame" x="73" y="12" width="74" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" controlSize="small" sendsActionOnEndEditing="YES" alignment="right" title="Codifica:" id="444">
                                             <font key="font" metaFont="smallSystem"/>
@@ -277,7 +277,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <button id="238">
-                                        <rect key="frame" x="224" y="239" width="40" height="18"/>
+                                        <rect key="frame" x="224" y="235" width="40" height="18"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="check" title="SSL" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" inset="2" id="445">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -288,7 +288,7 @@
                                         </connections>
                                     </button>
                                     <button id="482">
-                                        <rect key="frame" x="267" y="239" width="48" height="18"/>
+                                        <rect key="frame" x="267" y="235" width="48" height="18"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="check" title="SASL" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" inset="2" id="483">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -450,7 +450,7 @@
                                     <button id="181">
                                         <rect key="frame" x="84" y="134" width="19" height="19"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" inset="2" id="448">
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="448">
                                             <behavior key="behavior" lightByContents="YES"/>
                                             <font key="font" metaFont="systemBold"/>
                                         </buttonCell>
@@ -462,7 +462,7 @@
                                     <button id="182">
                                         <rect key="frame" x="84" y="153" width="19" height="19"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" inset="2" id="449">
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="449">
                                             <behavior key="behavior" lightByContents="YES"/>
                                             <font key="font" metaFont="systemBold"/>
                                             <string key="keyEquivalent"></string>
@@ -586,7 +586,7 @@
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <clipView key="contentView" id="BiT-gb-ZSH">
                                             <rect key="frame" x="1" y="1" width="312" height="246"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" id="252">
                                                     <rect key="frame" x="0.0" y="0.0" width="312" height="246"/>
@@ -639,7 +639,7 @@
                                     <button toolTip="Aggiungi ignore" id="403">
                                         <rect key="frame" x="280" y="5" width="23" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" inset="2" id="452">
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="452">
                                             <behavior key="behavior" lightByContents="YES"/>
                                             <font key="font" metaFont="label"/>
                                         </buttonCell>
@@ -661,7 +661,7 @@
                                     <button toolTip="Rimuovi ignore" id="405">
                                         <rect key="frame" x="306" y="5" width="23" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" inset="2" id="454">
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="454">
                                             <behavior key="behavior" lightByContents="YES"/>
                                             <font key="font" metaFont="label"/>
                                             <string key="keyEquivalent"></string>
@@ -692,7 +692,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" id="I2m-70-Lwn">
                             <rect key="frame" x="1" y="1" width="254" height="64"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" id="322">
                                     <rect key="frame" x="0.0" y="0.0" width="254" height="64"/>
@@ -764,7 +764,7 @@
                     <button id="319">
                         <rect key="frame" x="16" y="63" width="19" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="removeWidget" imagePosition="only" alignment="center" alternateImage="removeWidgetSelected" enabled="NO" inset="2" id="455">
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="455">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="systemBold"/>
                             <string key="keyEquivalent"></string>
@@ -777,7 +777,7 @@
                     <button id="339">
                         <rect key="frame" x="16" y="45" width="19" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="addWidget" imagePosition="overlaps" alignment="center" alternateImage="addWidgetSelected" inset="2" id="464">
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="464">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="systemBold"/>
                         </buttonCell>
@@ -932,11 +932,7 @@ Gw
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="addWidget" width="18" height="18"/>
-        <image name="addWidgetSelected" width="18" height="18"/>
         <image name="editWidget" width="22" height="22"/>
         <image name="editWidgetPressed" width="22" height="22"/>
-        <image name="removeWidget" width="18" height="18"/>
-        <image name="removeWidgetSelected" width="18" height="18"/>
     </resources>
 </document>

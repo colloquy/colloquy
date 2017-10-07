@@ -452,7 +452,7 @@ betreten:</string>
                                     <button id="181">
                                         <rect key="frame" x="63" y="134" width="19" height="19"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" inset="2" id="449">
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="449">
                                             <behavior key="behavior" lightByContents="YES"/>
                                             <font key="font" metaFont="systemBold"/>
                                         </buttonCell>
@@ -464,7 +464,7 @@ betreten:</string>
                                     <button id="182">
                                         <rect key="frame" x="63" y="153" width="19" height="19"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" inset="2" id="450">
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="450">
                                             <behavior key="behavior" lightByContents="YES"/>
                                             <font key="font" metaFont="systemBold"/>
                                             <string key="keyEquivalent"></string>
@@ -479,7 +479,7 @@ betreten:</string>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <clipView key="contentView" id="RqM-5Y-0SG">
                                             <rect key="frame" x="1" y="1" width="228" height="113"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" id="179">
                                                     <rect key="frame" x="0.0" y="0.0" width="228" height="113"/>
@@ -531,7 +531,7 @@ betreten:</string>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <clipView key="contentView" id="P5a-JR-s5w">
                                             <rect key="frame" x="1" y="1" width="228" height="90"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" spellingCorrection="YES" smartInsertDelete="YES" id="195">
                                                     <rect key="frame" x="0.0" y="0.0" width="228" height="90"/>
@@ -588,7 +588,7 @@ betreten:</string>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <clipView key="contentView" id="o6B-se-SUr">
                                             <rect key="frame" x="1" y="1" width="288" height="246"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" id="252">
                                                     <rect key="frame" x="0.0" y="0.0" width="288" height="246"/>
@@ -641,7 +641,7 @@ betreten:</string>
                                     <button toolTip="Ignorier-Regel hinzufügen" id="404">
                                         <rect key="frame" x="235" y="5" width="23" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" inset="2" id="453">
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="453">
                                             <behavior key="behavior" lightByContents="YES"/>
                                             <font key="font" metaFont="label"/>
                                         </buttonCell>
@@ -663,7 +663,7 @@ betreten:</string>
                                     <button toolTip="Ignorier-Regel löschen" id="406">
                                         <rect key="frame" x="261" y="5" width="23" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" inset="2" id="455">
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="455">
                                             <behavior key="behavior" lightByContents="YES"/>
                                             <font key="font" metaFont="label"/>
                                             <string key="keyEquivalent"></string>
@@ -686,7 +686,7 @@ betreten:</string>
             <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1257"/>
             <value key="minSize" type="size" width="213" height="113"/>
             <view key="contentView" id="329">
-                <rect key="frame" x="1" y="1" width="314" height="282"/>
+                <rect key="frame" x="0.0" y="0.0" width="314" height="282"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="16" horizontalPageScroll="10" verticalLineScroll="16" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="320">
@@ -694,7 +694,7 @@ betreten:</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" id="P2M-qS-A6a">
                             <rect key="frame" x="1" y="1" width="254" height="64"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" id="322">
                                     <rect key="frame" x="0.0" y="0.0" width="254" height="64"/>
@@ -766,7 +766,7 @@ betreten:</string>
                     <button id="319">
                         <rect key="frame" x="16" y="63" width="19" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="removeWidget" imagePosition="only" alignment="center" alternateImage="removeWidgetSelected" enabled="NO" inset="2" id="456">
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="456">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="systemBold"/>
                             <string key="keyEquivalent"></string>
@@ -779,7 +779,7 @@ betreten:</string>
                     <button id="339">
                         <rect key="frame" x="16" y="45" width="19" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="addWidget" imagePosition="overlaps" alignment="center" alternateImage="addWidgetSelected" inset="2" id="465">
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="465">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="systemBold"/>
                         </buttonCell>
@@ -932,11 +932,7 @@ Gw
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="addWidget" width="18" height="18"/>
-        <image name="addWidgetSelected" width="18" height="18"/>
         <image name="editWidget" width="22" height="22"/>
         <image name="editWidgetPressed" width="22" height="22"/>
-        <image name="removeWidget" width="18" height="18"/>
-        <image name="removeWidgetSelected" width="18" height="18"/>
     </resources>
 </document>
