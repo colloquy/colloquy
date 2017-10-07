@@ -565,7 +565,7 @@
 	[banButton setTitle:NSLocalizedString( @"Kick User", "kick user button" )];
 	[banButton setTarget:self];
 
-	[[NSApplication sharedApplication] beginSheet:banWindow modalForWindow:[[_room view] window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[_room.view.window beginSheet:banWindow completionHandler:nil];
 }
 
 - (IBAction) customBan:(id) sender {
@@ -592,7 +592,7 @@
 	[banButton setTitle:NSLocalizedString( @"Ban User", "ban user button" )];
 	[banButton setTarget:self];
 
-	[[NSApplication sharedApplication] beginSheet:banWindow modalForWindow:[[_room view] window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[_room.view.window beginSheet:banWindow completionHandler:nil];
 }
 
 - (IBAction) kickban:(id) sender {
@@ -628,28 +628,25 @@
 	[banButton setTitle:NSLocalizedString( @"Kick & Ban User", "kick and ban user button" )];
 	[banButton setTarget:self];
 
-	[[NSApplication sharedApplication] beginSheet:banWindow modalForWindow:[[_room view] window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[_room.view.window beginSheet:banWindow completionHandler:nil];
 }
 
 - (IBAction) closeKickSheet:(id) sender {
-	[[NSApplication sharedApplication] endSheet:banWindow];
-	[banWindow orderOut:self];
+	[_room.view.window endSheet:banWindow];
 
 	NSAttributedString *reason = [[NSAttributedString alloc] initWithString:[firstField stringValue]];
 	[[_room target] kickOutMemberUser:_user forReason:reason];
 }
 
 - (IBAction) closeBanSheet:(id) sender {
-	[[NSApplication sharedApplication] endSheet:banWindow];
-	[banWindow orderOut:self];
+	[_room.view.window endSheet:banWindow];
 
 	MVChatUser *user = [MVChatUser wildcardUserFromString:[firstField stringValue]];
 	[[_room target] addBanForUser:user];
 }
 
 - (IBAction) closeKickbanSheet:(id) sender {
-	[[NSApplication sharedApplication] endSheet:banWindow];
-	[banWindow orderOut:self];
+	[_room.view.window endSheet:banWindow];
 
 	MVChatUser *user = [MVChatUser wildcardUserFromString:[firstField stringValue]];
 	[[_room target] addBanForUser:user];
@@ -659,8 +656,7 @@
 }
 
 - (IBAction) cancelSheet:(id) sender {
-	[[NSApplication sharedApplication] endSheet:banWindow];
-	[banWindow orderOut:self];
+	[_room.view.window endSheet:banWindow];
 }
 
 #pragma mark -

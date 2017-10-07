@@ -457,8 +457,12 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[_windowController reloadListItem:self andChildren:NO];
 	[[[self view] window] makeFirstResponder:send];
 
-	if( [_waitingAlerts count] )
-		[[NSApplication sharedApplication] beginSheet:[_waitingAlerts objectAtIndex:0] modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( _alertSheetDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
+	if( [_waitingAlerts count] ) {
+		NSWindow *alert = [_waitingAlerts objectAtIndex:0];
+		[_windowController.window beginSheet:alert completionHandler:^(NSModalResponse returnCode) {
+			[self _alertSheetDidEnd:alert returnCode:returnCode];
+		}];
+	}
 }
 
 #pragma mark -
@@ -484,7 +488,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 - (void) showAlert:(NSPanel *) alert withName:(NSString *) name {
 	if( _isActive && ! [[_windowController window] attachedSheet] ) {
-		if( alert ) [[NSApplication sharedApplication] beginSheet:alert modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( _alertSheetDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
+		if( alert ) {
+			[_windowController.window beginSheet:alert completionHandler:^(NSModalResponse returnCode) {
+				[self _alertSheetDidEnd:alert returnCode:returnCode];
+			}];
+		}
 	} else {
 		if( name && [_waitingAlertNames objectForKey:name] ) {
 			NSPanel *sheet = [_waitingAlertNames objectForKey:name];
@@ -1635,7 +1643,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	return messageString;
 }
 
-- (void) _alertSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
+- (void) _alertSheetDidEnd:(NSWindow *) sheet returnCode:(NSModalResponse) returnCode {
 	[[NSApplication sharedApplication] endSheet:sheet];
 	[sheet orderOut:nil];
 
@@ -1651,8 +1659,12 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	NSReleaseAlertPanel( sheet );
 
-	if( [_waitingAlerts count] )
-		[[NSApplication sharedApplication] beginSheet:[_waitingAlerts objectAtIndex:0] modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( _alertSheetDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
+	if( [_waitingAlerts count] ) {
+		NSWindow *alert = [_waitingAlerts objectAtIndex:0];
+		[_windowController.window beginSheet:alert completionHandler:^(NSModalResponse innerReturnCode) {
+			[self _alertSheetDidEnd:alert returnCode:innerReturnCode];
+		}];
+	}
 }
 
 - (void) _didConnect:(NSNotification *) notification {

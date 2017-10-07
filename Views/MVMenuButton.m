@@ -119,13 +119,16 @@
 	else if( _size == NSSmallControlSize ) [super setImage:_smallImage];
 }
 
-- (id) accessibilityAttributeValue:(NSString *) attribute {
-	if( [attribute isEqualToString:NSAccessibilityTitleAttribute] )
-		return [_toolbarItem label];
-	if( [attribute isEqualToString:NSAccessibilityHelpAttribute] )
-		return [_toolbarItem toolTip];
-	if( [attribute isEqualToString:NSAccessibilityToolbarButtonAttribute] )
-		return _toolbarItem;
-	return [super accessibilityAttributeValue:attribute];
+- (NSString *)accessibilityTitle {
+	return [_toolbarItem label];
 }
+
+- (NSString *)accessibilityHelp {
+	return [_toolbarItem toolTip];
+}
+
+- (id)accessibilityToolbarButton {
+	return _toolbarItem;
+}
+
 @end

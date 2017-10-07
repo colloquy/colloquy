@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="JVChatConsole">
+            <connections>
+                <outlet property="contents" destination="37" id="79"/>
+                <outlet property="display" destination="81" id="83"/>
+                <outlet property="send" destination="58" id="84"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="37" userLabel="View">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="322"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <splitView id="86" customClass="JVSplitView">
+                    <rect key="frame" x="0.0" y="0.0" width="480" height="322"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <subviews>
+                        <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="0.0" verticalPageScroll="0.0" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="80">
+                            <rect key="frame" x="0.0" y="0.0" width="480" height="282"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <clipView key="contentView" id="t4t-Lr-KsU">
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="282"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" continuousSpellChecking="YES" usesRuler="YES" textReplacement="YES" spellingCorrection="YES" smartInsertDelete="YES" id="81">
+                                        <rect key="frame" x="0.0" y="0.0" width="480" height="282"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <size key="minSize" width="480" height="282"/>
+                                        <size key="maxSize" width="482" height="10000000"/>
+                                        <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    </textView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </clipView>
+                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="91">
+                                <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </scroller>
+                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="92">
+                                <rect key="frame" x="-30" y="1" width="15" height="281"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </scroller>
+                        </scrollView>
+                        <scrollView borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="0.0" verticalPageScroll="0.0" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" id="57">
+                            <rect key="frame" x="0.0" y="291" width="480" height="31"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <clipView key="contentView" id="hZ0-AF-wkc">
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="31"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <customView id="58" customClass="MVTextView">
+                                        <rect key="frame" x="0.0" y="0.0" width="480" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="-2" id="69"/>
+                                        </connections>
+                                    </customView>
+                                </subviews>
+                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                            </clipView>
+                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="0.17543859779834747" horizontal="YES" id="89">
+                                <rect key="frame" x="-100" y="-100" width="129" height="11"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </scroller>
+                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="0.75862067937850952" horizontal="NO" id="90">
+                                <rect key="frame" x="-100" y="-100" width="15" height="58"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </scroller>
+                        </scrollView>
+                    </subviews>
+                    <holdingPriorities>
+                        <real value="250"/>
+                        <real value="250"/>
+                    </holdingPriorities>
+                    <connections>
+                        <outlet property="delegate" destination="-2" id="87"/>
+                    </connections>
+                </splitView>
+            </subviews>
+            <connections>
+                <outlet property="nextKeyView" destination="58" id="68"/>
+            </connections>
+        </customView>
+    </objects>
+</document>

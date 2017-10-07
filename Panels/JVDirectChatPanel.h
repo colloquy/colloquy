@@ -99,7 +99,7 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 - (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont;
-- (void) _alertSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
+- (void) _alertSheetDidEnd:(NSWindow *) sheet returnCode:(NSModalResponse) returnCode;
 - (void) _didConnect:(NSNotification *) notification;
 - (void) _didDisconnect:(NSNotification *) notification;
 - (void) _errorOccurred:(NSNotification *) notification;
