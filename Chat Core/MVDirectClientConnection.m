@@ -26,7 +26,9 @@ void MVFindDCCFriendlyAddress( NSString *address, MVStringParameterBlock complet
 			addr = [[NSString alloc] initWithData:result encoding:NSASCIIStringEncoding];
 		if( addr && [addr rangeOfString:@"."].location != NSNotFound )
 			addr = [NSString stringWithFormat:@"%u", ntohl( inet_addr( [addr UTF8String] ) )];
-		completion(addr);
+		dispatch_async(dispatch_get_main_queue(), ^{
+			completion(addr);
+		});
 	}] resume];
 }
 

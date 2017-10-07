@@ -101,9 +101,11 @@ NS_ASSUME_NONNULL_BEGIN
 			error = [NSError errorWithDomain:CQBookmarkingErrorDomain code:CQBookmarkingErrorAuthorization userInfo:nil];
 		} else error = [NSError errorWithDomain:CQBookmarkingErrorDomain code:CQBookmarkingErrorGeneric userInfo:nil];
 
-		[[NSNotificationCenter chatCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:link userInfo:@{
-			@"error": error, @"service": [class serviceName]
-		}];
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[[NSNotificationCenter chatCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:link userInfo:@{
+				@"error": error, @"service": [class serviceName]
+			}];
+		});
 	}
 }
 @end
