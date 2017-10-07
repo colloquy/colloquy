@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <deployment version="1030" identifier="macosx"/>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -34,7 +34,7 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView autoresizesSubviews="NO" id="263" userLabel="View">
             <rect key="frame" x="0.0" y="0.0" width="315" height="361"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -68,14 +68,14 @@
                         </imageView>
                     </subviews>
                 </customView>
-                <tabView autoresizesSubviews="NO" controlSize="small" id="315">
+                <tabView controlSize="small" id="315">
                     <rect key="frame" x="-10" y="-10" width="335" height="302"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <tabViewItems>
                         <tabViewItem label="Moduser" identifier="modes" id="318">
                             <view key="view" autoresizesSubviews="NO" id="319">
-                                <rect key="frame" x="10" y="25" width="315" height="264"/>
-                                <autoresizingMask key="autoresizingMask"/>
+                                <rect key="frame" x="10" y="29" width="315" height="260"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <customView autoresizesSubviews="NO" id="372">
                                         <rect key="frame" x="49" y="17" width="253" height="252"/>
@@ -202,7 +202,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <size key="minSize" width="283" height="207"/>
-                                                    <size key="maxSize" width="283" height="10000000"/>
+                                                    <size key="maxSize" width="285" height="10000000"/>
                                                     <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     <connections>
                                                         <outlet property="delegate" destination="-2" id="394"/>
@@ -467,8 +467,8 @@ DQ
         <image name="addSquareWidgetPressed" width="128" height="128"/>
         <image name="deleteWidget" width="128" height="128"/>
         <image name="deleteWidgetPressed" width="128" height="128"/>
-        <image name="editWidget" width="128" height="128"/>
-        <image name="editWidgetPressed" width="128" height="128"/>
-        <image name="room" width="128" height="128"/>
+        <image name="editWidget" width="22" height="22"/>
+        <image name="editWidgetPressed" width="22" height="22"/>
+        <image name="room" width="55" height="55"/>
     </resources>
 </document>
