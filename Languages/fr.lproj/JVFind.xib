@@ -245,7 +245,7 @@ DQ
                             <imageView id="396">
                                 <rect key="frame" x="2" y="2" width="16" height="16"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="AlertCautionIcon" id="413"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSCaution" id="413"/>
                             </imageView>
                         </subviews>
                     </customView>
@@ -259,7 +259,7 @@ DQ
         <userDefaultsController representsSharedInstance="YES" id="271" userLabel="Shared Defaults"/>
     </objects>
     <resources>
-        <image name="AlertCautionIcon" width="128" height="128"/>
+        <image name="NSCaution" width="32" height="32"/>
         <image name="addWidget" width="128" height="128"/>
         <image name="addWidgetSelected" width="128" height="128"/>
         <image name="removeWidget" width="128" height="128"/>
