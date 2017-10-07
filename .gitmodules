@@ -19,3 +19,6 @@
 [submodule "Carthage/Checkouts/MASPreferences"]
 	path = Carthage/Checkouts/MASPreferences
 	url = ssh://git@github.com/shpakovski/MASPreferences.git
+[submodule "Carthage/Checkouts/onepassword-extension"]
+	path = Carthage/Checkouts/onepassword-extension
+	url = ssh://git@github.com/AgileBits/onepassword-extension.git

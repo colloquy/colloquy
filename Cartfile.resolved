@@ -1,4 +1,5 @@
 github "CocoaLumberjack/CocoaLumberjack" "f4294a13470d43260569d62aac6e1009fbef491a"
+github "AgileBits/onepassword-extension" "04f146abd3bd5e6f7ba8b18b916c55f3b3c85aed"
 github "chrisballinger/libidn-framework" "1.33"
 github "colloquy/CocoaAsyncSocket" "cb513a67461c724b94cf4c795432123540b72818"
 github "colloquy/KissXML" "7d823487374267a749a8802818cef6758381a6ba"
