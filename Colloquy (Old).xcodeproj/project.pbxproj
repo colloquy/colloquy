@@ -1818,7 +1818,6 @@
 				1C7F300D085545E600D41FB0 /* Copy Spotlight Importer */,
 				1C51B53B104E160600791856 /* Copy Bouncer Plugin */,
 				1CB2CD88052DDC560094AAA4 /* Copy Plugins */,
-				1CB5A8F10BAB7E3700C1BDE2 /* Strip Localizations */,
 				1C2EDE8B0A3568EF0051E9C2 /* Update Build Number */,
 			);
 			buildRules = (
@@ -2193,21 +2192,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd \"$SRCROOT/old-mac-binary-frameworks\"\nrm -rf *.{framework,a}\ntar xzf frameworks.tar.gz\n";
-			showEnvVarsInLog = 0;
-		};
-		1CB5A8F10BAB7E3700C1BDE2 /* Strip Localizations */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Strip Localizations";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "find \"$TARGET_BUILD_DIR/$WRAPPER_NAME\" \\( -name \"classes.xib\" -or -name \"info.xib\" \\) -delete\n";
 			showEnvVarsInLog = 0;
 		};
 		9295C9D116784584009F9014 /* ShellScript */ = {
