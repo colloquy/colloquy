@@ -97,7 +97,6 @@ extern NSString *MVChatConnectionTLSFeature;
 
 // IRC3v2 Required
 extern NSString *MVChatConnectionMessageTagsFeature;
-extern NSString *MVChatConnectionMessageIntentsFeature;
 extern NSString *MVChatConnectionMonitorFeature;
 
 // IRC3v2 Optional
