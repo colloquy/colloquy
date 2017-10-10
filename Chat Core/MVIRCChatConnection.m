@@ -4291,6 +4291,7 @@ parsingFinished: { // make a scope for this
 						}
 					} else memberName = aMember;
 
+					// IRCv3.1 provides support for user modes in NAMES replies, per multi-prefix
 					MVChatRoomMemberMode modes = [self _stripModePrefixesFromNickname:&memberName];
 					MVChatUser *member = [self chatUserWithUniqueIdentifier:memberName];
 					[room _addMemberUser:member];
@@ -4342,7 +4343,13 @@ parsingFinished: { // make a scope for this
 			[member _setStatus:MVChatUserAwayStatus];
 		}
 
-		[member _setServerOperator:( statusString.length >= 2 && [statusString characterAtIndex:1] == '*' )];
+		if (statusString.length >= 2) {
+			[member _setServerOperator:( [statusString characterAtIndex:1] == '*' )];
+			NSString *modesString = [statusString substringFromIndex:2];
+			MVChatRoomMemberMode modes = [self _stripModePrefixesFromNickname:&modesString];
+			MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[self _stringFromPossibleData:parameters[1]]];
+			[room _setModes:modes forMemberUser:member];
+		}
 
 		if( parameters.count >= 8 ) {
 			NSString *lastParam = [self _stringFromPossibleData:parameters[7]];
