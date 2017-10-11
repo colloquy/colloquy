@@ -522,7 +522,7 @@
 		1CBB23DA04F03CA7000001C8 /* JVDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVDetailCell.m; sourceTree = "<group>"; };
 		1CBC630905489484009E59E1 /* JVGeneralPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVGeneralPreferencesViewController.h; sourceTree = "<group>"; };
 		1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVGeneralPreferencesViewController.m; sourceTree = "<group>"; };
-		1CBECDCF0508C8AB000001C8 /* default.xsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = default.xsl; sourceTree = "<group>"; };
+		1CBECDCF0508C8AB000001C8 /* default.xsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = default.xsl; path = Resources/default.xsl; sourceTree = SOURCE_ROOT; };
 		1CBECE390508D58F000001C8 /* JVChatWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = JVChatWindow.xib; path = Resources/JVChatWindow.xib; sourceTree = SOURCE_ROOT; };
 		1CBECE3A0508D58F000001C8 /* JVDirectChat.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = JVDirectChat.xib; path = Resources/JVDirectChat.xib; sourceTree = SOURCE_ROOT; };
 		1CC6FC500549FCD70075807C /* JVAppearancePreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppearancePreferencesViewController.h; sourceTree = "<group>"; };
@@ -1682,6 +1682,7 @@
 				1C9982B00604BEAA006C6417 /* notifications.plist in Resources */,
 				1CA75A270652537A000141D5 /* styleOptions.plist in Resources */,
 				1C238F050677B5E5000E89A7 /* JVTabbedChatWindow.xib in Resources */,
+				C2B6BF501F6F00FC0044C20E /* Mac.xcassets in Resources */,
 				0A3187FC067ECEB600271E42 /* TSCustomBan.xib in Resources */,
 				1C0A4C9C0799BDB00093B702 /* JVFind.xib in Resources */,
 				1C0A4C9D0799BDB00093B702 /* JVTranscriptCriterion.xib in Resources */,
@@ -2674,7 +2675,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -2683,7 +2683,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;

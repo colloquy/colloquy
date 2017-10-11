@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="JVChatViewCriterionController">
@@ -38,7 +39,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="425" height="28"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <popUpButton verticalHuggingPriority="750" id="33">
+                                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" id="33">
                                         <rect key="frame" x="2" y="2" width="132" height="22"/>
                                         <popUpButtonCell key="cell" type="push" title=" " bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="37" id="249">
                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -55,7 +56,7 @@
                                             <outlet property="nextKeyView" destination="40" id="160"/>
                                         </connections>
                                     </popUpButton>
-                                    <popUpButton verticalHuggingPriority="750" id="40">
+                                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" id="40">
                                         <rect key="frame" x="289" y="2" width="134" height="22"/>
                                         <popUpButtonCell key="cell" type="push" title="を含む項目" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="3" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="42" id="250">
                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -101,7 +102,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="425" height="28"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
-                                    <popUpButton verticalHuggingPriority="750" id="66">
+                                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" id="66">
                                         <rect key="frame" x="2" y="2" width="219" height="22"/>
                                         <popUpButtonCell key="cell" type="push" title=" " bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="67" id="252">
                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -125,7 +126,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="425" height="28"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
-                                    <popUpButton verticalHuggingPriority="750" id="73">
+                                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" id="73">
                                         <rect key="frame" x="348" y="2" width="75" height="22"/>
                                         <popUpButtonCell key="cell" type="push" title="の項目" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="7" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="72" id="253">
                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -142,7 +143,7 @@
                                             <outlet property="nextKeyView" destination="78" id="166"/>
                                         </connections>
                                     </popUpButton>
-                                    <popUpButton verticalHuggingPriority="750" id="77">
+                                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" id="77">
                                         <rect key="frame" x="2" y="2" width="132" height="22"/>
                                         <popUpButtonCell key="cell" type="push" title=" " bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="75" id="254">
                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -159,7 +160,7 @@
                                             <outlet property="nextKeyView" destination="73" id="165"/>
                                         </connections>
                                     </popUpButton>
-                                    <popUpButton verticalHuggingPriority="750" id="78">
+                                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" id="78">
                                         <rect key="frame" x="136" y="2" width="210" height="22"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <popUpButtonCell key="cell" type="push" title=" " bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="80" id="255">

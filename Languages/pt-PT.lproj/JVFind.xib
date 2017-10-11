@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="JVTranscriptFindWindowController">
@@ -24,10 +25,10 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="32" y="604" width="520" height="118"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="520" height="118"/>
             <value key="maxSize" type="size" width="700" height="118"/>
-            <view key="contentView" id="2">
+            <view key="contentView" autoresizesSubviews="NO" id="2">
                 <rect key="frame" x="0.0" y="0.0" width="520" height="118"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
@@ -43,7 +44,7 @@
                     <scrollView horizontalLineScroll="30" horizontalPageScroll="10" verticalLineScroll="30" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" id="212">
                         <rect key="frame" x="20" y="45" width="474" height="32"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <clipView key="contentView" id="Ito-w5-U0k">
+                        <clipView key="contentView" id="JU4-M6-pbf">
                             <rect key="frame" x="1" y="1" width="472" height="30"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
@@ -73,9 +74,9 @@
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
-                                            <buttonCell key="dataCell" type="roundRect" bezelStyle="roundedRect" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="245">
-                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="titleBar" size="12"/>
+                                            <buttonCell key="dataCell" type="bevel" bezelStyle="regularSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="245">
+                                                <behavior key="behavior" lightByContents="YES"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <connections>
                                                     <action selector="removeRow:" target="-2" id="392"/>
                                                 </connections>
@@ -87,9 +88,9 @@
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
-                                            <buttonCell key="dataCell" type="roundRect" bezelStyle="roundedRect" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="246">
-                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="titleBar" size="12"/>
+                                            <buttonCell key="dataCell" type="bevel" bezelStyle="regularSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="246">
+                                                <behavior key="behavior" lightByContents="YES"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <connections>
                                                     <action selector="addRow:" target="-2" id="391"/>
                                                 </connections>
@@ -98,7 +99,6 @@
                                     </tableColumns>
                                 </tableView>
                             </subviews>
-                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </clipView>
                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="416">
                             <rect key="frame" x="-100" y="-100" width="423" height="15"/>
@@ -120,7 +120,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <popUpButton verticalHuggingPriority="750" id="243">
+                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" id="243">
                         <rect key="frame" x="197" y="81" width="89" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="qualquer" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="241" id="406">
@@ -156,7 +156,7 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button verticalHuggingPriority="750" id="249">
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="249">
                         <rect key="frame" x="418" y="13" width="81" height="28"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Próximo" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="408">
@@ -171,7 +171,7 @@ DQ
                             <outlet property="nextKeyView" destination="250" id="402"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" id="250">
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="250">
                         <rect key="frame" x="339" y="13" width="81" height="28"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Anterior" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="409">
@@ -185,10 +185,10 @@ DQ
                             <outlet property="nextKeyView" destination="243" id="403"/>
                         </connections>
                     </button>
-                    <button toolTip="Continue search at the beginning of the document" id="252">
+                    <button toolTip="Continue search at the beginning of the document" imageHugsTitle="YES" id="252">
                         <rect key="frame" x="53" y="20" width="151" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="check" title="Só mensagens passadas" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="410">
+                        <buttonCell key="cell" type="check" title="Só mensagens passadas" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" state="on" inset="2" id="410">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
@@ -207,10 +207,10 @@ DQ
                             <outlet property="nextKeyView" destination="253" id="254"/>
                         </connections>
                     </button>
-                    <button toolTip="Ignorar MAIÚSCULAS e minúsculas" id="253">
+                    <button toolTip="Ignorar MAIÚSCULAS e minúsculas" imageHugsTitle="YES" id="253">
                         <rect key="frame" x="204" y="20" width="134" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="check" title="Ignorar capitalização" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="411">
+                        <buttonCell key="cell" type="check" title="Ignorar capitalização" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" state="on" inset="2" id="411">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
@@ -233,7 +233,7 @@ DQ
                         <rect key="frame" x="425" y="85" width="70" height="12"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     </progressIndicator>
-                    <customView hidden="YES" id="395">
+                    <customView hidden="YES" autoresizesSubviews="NO" id="395">
                         <rect key="frame" x="20" y="18" width="109" height="20"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>

@@ -402,7 +402,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 	self.makingNewWindowSet = YES;
 
-	[[NSApplication sharedApplication] beginSheet:self.windowEditPanel modalForWindow:[self.windowSetsTable window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[self.windowSetsTable.window beginSheet:self.windowEditPanel completionHandler:nil];
 }
 
 - (IBAction) editWindowSet:(id) sender {
@@ -415,7 +415,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 	self.makingNewWindowSet = NO;
 
-	[[NSApplication sharedApplication] beginSheet:self.windowEditPanel modalForWindow:[self.windowSetsTable window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[self.windowSetsTable.window beginSheet:self.windowEditPanel completionHandler:nil];
 }
 
 - (IBAction) saveWindowSet:(id) sender {
@@ -432,8 +432,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	[info setObject:[self.windowTitle stringValue] forKey:@"title"];
 	[info setObject:[NSNumber numberWithBool:[self.rememberPanels state]] forKey:@"rememberPanels"];
 
-	[self.windowEditPanel orderOut:nil];
-	[[NSApplication sharedApplication] endSheet:self.windowEditPanel];
+	[self.windowSetsTable.window endSheet:self.windowEditPanel];
 
 	[self.windowSetsTable reloadData];
 
@@ -447,8 +446,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 }
 
 - (IBAction) cancelWindowSet:(id) sender {
-	[self.windowEditPanel orderOut:nil];
-	[[NSApplication sharedApplication] endSheet:self.windowEditPanel];
+	[self.windowSetsTable.window endSheet:self.windowEditPanel];
 }
 
 #pragma mark -
@@ -558,7 +556,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 	[self addRuleCriterionRow:nil];
 	[self updateRuleEditPanelSize];
-	[[NSApplication sharedApplication] beginSheet:self.ruleEditPanel modalForWindow:[self.rulesTable window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[self.rulesTable.window beginSheet:self.ruleEditPanel completionHandler:nil];
 }
 
 - (IBAction) editRuleSet:(id) sender {
@@ -578,7 +576,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 	[self updateRuleEditPanelSize];
 	[self reloadRuleEditTableView];
-	[[NSApplication sharedApplication] beginSheet:self.ruleEditPanel modalForWindow:[self.rulesTable window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[self.rulesTable.window beginSheet:self.ruleEditPanel completionHandler:nil];
 }
 
 - (IBAction) saveRuleSet:(id) sender {
@@ -593,8 +591,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	[info setObject:[NSNumber numberWithLong:[self.ruleOperation selectedTag]] forKey:@"operation"];
 	[info setObject:[NSNumber numberWithBool:[self.ignoreCase state]] forKey:@"ignoreCase"];
 
-	[self.ruleEditPanel orderOut:nil];
-	[[NSApplication sharedApplication] endSheet:self.ruleEditPanel];
+	[self.rulesTable.window endSheet:self.ruleEditPanel];
 
 	[self.rulesTable reloadData];
 	[self.windowSetsTable reloadData];
@@ -615,8 +612,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 	self.editingRuleCriterion = nil;
 
-	[self.ruleEditPanel orderOut:nil];
-	[[NSApplication sharedApplication] endSheet:self.ruleEditPanel];
+	[self.rulesTable.window endSheet:self.ruleEditPanel];
 }
 
 #pragma mark -

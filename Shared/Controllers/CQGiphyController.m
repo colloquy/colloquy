@@ -29,7 +29,10 @@ NS_ASSUME_NONNULL_BEGIN
 	[[[NSURLSession sharedSession] dataTaskWithURL:[NSURL URLWithString:urlString] completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 		NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
 		if ((HTTPResponse.statusCode / 100) != 2) {
-			completion(nil);
+			dispatch_async(dispatch_get_main_queue(), ^{
+				completion(nil);
+			});
+
 			return;
 		}
 
@@ -40,7 +43,9 @@ NS_ASSUME_NONNULL_BEGIN
 		result.GIFURL = [NSURL URLWithString:item[@"image_url"]];
 		result.mp4URL = [NSURL URLWithString:item[@"image_mp4_url"]];
 
-		completion(result);
+		dispatch_async(dispatch_get_main_queue(), ^{
+			completion(result);
+		});
 	}] resume];
 }
 @end

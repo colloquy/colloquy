@@ -1471,33 +1471,30 @@ parsingFinished: { // make a scope for this
 
 	NSString *targetName = [target isKindOfClass:[MVChatRoom class]] ? [target name] : [target nickname];
 
-	BOOL usingIntentTags = ( [self.supportedFeatures containsObject:MVChatConnectionMessageIntentsFeature] );
 	NSString *accountName = self.localUser.account;
 	[self _stripModePrefixesFromNickname:&accountName];
 	if( [attributes[@"action"] boolValue] ) {
-		NSString *prefix = nil;
+		NSString *messageTags = @"";
 		NSUInteger messageTagLength = 0;
-
-		if( usingIntentTags ) {
-			NSString *messageTags = @"@intent=ACTION";
-			if ([self.supportedFeatures containsObject:MVChatConnectionAccountTagFeature] && self.localUser.account)
-				messageTags = [messageTags stringByAppendingString:[NSString stringWithFormat:@";account=%@", accountName]];
-			messageTagLength = messageTags.length + 1; // space is not in the prefix formatter (due to \001 being sent if not using @intent)
-			prefix = [[NSString alloc] initWithFormat:@"%@ PRIVMSG %@%@ :", messageTags, targetPrefix, targetName];
+		NSString *prefix = nil;
+		if ([self.supportedFeatures containsObject:MVChatConnectionAccountTagFeature] && self.localUser.account && self.localUser.isIdentified) {
+			messageTags = [NSString stringWithFormat:@"@account=%@ :", accountName];
+			messageTagLength = messageTags.length; // space is in the tag substring since we don't have to worry about \001 for regular PRIVMSGs
+			prefix = [[NSString alloc] initWithFormat:@"%@PRIVMSG %@%@ :\001ACTION", messageTags, targetPrefix, targetName];
 		} else {
 			prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@%@ :\001ACTION ", targetPrefix, targetName];
 		}
+
 		NSUInteger bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
-		bytesLeft += messageTagLength; // IRCv3.2 specifically excludes message-tag from the message length limit
 
 		if ( msg.length > bytesLeft ) [self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
-		else [self sendRawMessageWithComponents:prefix, msg, (usingIntentTags ? nil : @"\001"), nil]; // exclude trailing \001 byte if we are using intent tags
+		else [self sendRawMessageWithComponents:prefix, msg, @"\001", nil]; // exclude trailing \001 byte if we are using intent tags
 	} else {
 		NSString *messageTags = @"";
 		NSUInteger messageTagLength = 0;
 		NSString *prefix = nil;
-		if (usingIntentTags && [self.supportedFeatures containsObject:MVChatConnectionAccountTagFeature] && self.localUser.account) {
-			messageTags = [NSString stringWithFormat:@"@account=%@ ", accountName];
+		if ([self.supportedFeatures containsObject:MVChatConnectionAccountTagFeature] && self.localUser.account && self.localUser.isIdentified) {
+			messageTags = [NSString stringWithFormat:@"@account=%@ :", accountName];
 			messageTagLength = messageTags.length; // space is in the tag substring since we don't have to worry about \001 for regular PRIVMSGs
 			prefix = [[NSString alloc] initWithFormat:@"%@PRIVMSG %@%@ :", messageTags, targetPrefix, targetName];
 		} else {
@@ -2479,10 +2476,6 @@ parsingFinished: { // make a scope for this
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionAccountTagFeature];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"intents"] ) {
-					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures addObject:MVChatConnectionMessageIntentsFeature];
-					}
 				}
 
 				// IRCv3.2 Optional
@@ -2630,10 +2623,6 @@ parsingFinished: { // make a scope for this
 				} else if( [capability isCaseInsensitiveEqualToString:@"account-tag"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures removeObject:MVChatConnectionAccountTagFeature];
-					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"intents"] ) {
-					@synchronized( _supportedFeatures ) {
-						[_supportedFeatures removeObject:MVChatConnectionMessageIntentsFeature];
 					}
 				} else if( [capability isCaseInsensitiveEqualToString:@"server-time"] || [capability isCaseInsensitiveEqualToString:@"znc.in/server-time-iso"] ) {
 					@synchronized( _supportedFeatures ) {
@@ -4302,6 +4291,7 @@ parsingFinished: { // make a scope for this
 						}
 					} else memberName = aMember;
 
+					// IRCv3.1 provides support for user modes in NAMES replies, per multi-prefix
 					MVChatRoomMemberMode modes = [self _stripModePrefixesFromNickname:&memberName];
 					MVChatUser *member = [self chatUserWithUniqueIdentifier:memberName];
 					[room _addMemberUser:member];
@@ -4353,7 +4343,13 @@ parsingFinished: { // make a scope for this
 			[member _setStatus:MVChatUserAwayStatus];
 		}
 
-		[member _setServerOperator:( statusString.length >= 2 && [statusString characterAtIndex:1] == '*' )];
+		if (statusString.length >= 2) {
+			[member _setServerOperator:( [statusString characterAtIndex:1] == '*' )];
+			NSString *modesString = [statusString substringFromIndex:2];
+			MVChatRoomMemberMode modes = [self _stripModePrefixesFromNickname:&modesString];
+			MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[self _stringFromPossibleData:parameters[1]]];
+			[room _setModes:modes forMemberUser:member];
+		}
 
 		if( parameters.count >= 8 ) {
 			NSString *lastParam = [self _stringFromPossibleData:parameters[7]];

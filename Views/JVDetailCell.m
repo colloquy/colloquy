@@ -255,32 +255,18 @@
 
 #pragma mark - Accessibility
 
-- (NSArray *) accessibilityAttributeNames {
-	static NSMutableArray *attributes = nil;
-	if (!attributes) {
-		attributes = [[super accessibilityAttributeNames] mutableCopy];
-
-		for (NSString *attribute in @[NSAccessibilityValueDescriptionAttribute])
-			if (![attributes containsObject:attribute])
-				[attributes addObject:attribute];
-	}
-
-	return attributes;
-}
-
-- (id) accessibilityAttributeValue:(NSString *) attribute {
-	if ([attribute isEqualToString:NSAccessibilityValueDescriptionAttribute]) {
-		NSMutableArray *bits = [NSMutableArray array];
-		NSString *statusText = (!_statusImage && _statusNumber) ? [NSString stringWithFormat:NSLocalizedString(@"%d items", nil), _statusNumber]: nil;
-		NSString *importantStatusText = (!_statusImage && _importantStatusNumber) ? [NSString stringWithFormat:NSLocalizedString(@"%d important items", nil), _importantStatusNumber]: nil;
+- (NSString *)accessibilityValueDescription
+{
+	NSMutableArray *bits = [NSMutableArray array];
+	NSString *statusText = (!_statusImage && _statusNumber) ? [NSString stringWithFormat:NSLocalizedString(@"%d items", nil), _statusNumber]: nil;
+	NSString *importantStatusText = (!_statusImage && _importantStatusNumber) ? [NSString stringWithFormat:NSLocalizedString(@"%d important items", nil), _importantStatusNumber]: nil;
 #define NIL_TO_EMPTY_STRING(a) ((a) ? (a) : @"")
-		NSArray *candidates = @[NIL_TO_EMPTY_STRING(_mainText), NIL_TO_EMPTY_STRING(_infoText), NIL_TO_EMPTY_STRING(importantStatusText), NIL_TO_EMPTY_STRING(statusText), NIL_TO_EMPTY_STRING([_statusImage accessibilityDescription]), NIL_TO_EMPTY_STRING([_altImage accessibilityDescription])];
+	NSArray *candidates = @[NIL_TO_EMPTY_STRING(_mainText), NIL_TO_EMPTY_STRING(_infoText), NIL_TO_EMPTY_STRING(importantStatusText), NIL_TO_EMPTY_STRING(statusText), NIL_TO_EMPTY_STRING([_statusImage accessibilityDescription]), NIL_TO_EMPTY_STRING([_altImage accessibilityDescription])];
 #undef NIL_TO_EMPTY_STRING
 
-		for (NSString *candidate in candidates)
-			if (candidate && [candidate length])
-				[bits addObject:candidate];
-		return [bits componentsJoinedByString:@", "];
-	} else return [super accessibilityAttributeValue:attribute];
+	for (NSString *candidate in candidates)
+		if (candidate && [candidate length])
+			[bits addObject:candidate];
+	return [bits componentsJoinedByString:@", "];
 }
 @end

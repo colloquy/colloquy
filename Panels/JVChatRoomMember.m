@@ -556,7 +556,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[banButton setTitle:NSLocalizedString( @"Kick User", "kick user button" )];
 	[banButton setTarget:self];
 
-	[[NSApplication sharedApplication] beginSheet:banWindow modalForWindow:[[_room view] window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[_room.view.window beginSheet:banWindow completionHandler:nil];
 }
 
 - (IBAction) customBan:(nullable id) sender {
@@ -583,7 +583,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[banButton setTitle:NSLocalizedString( @"Ban User", "ban user button" )];
 	[banButton setTarget:self];
 
-	[[NSApplication sharedApplication] beginSheet:banWindow modalForWindow:[[_room view] window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[_room.view.window beginSheet:banWindow completionHandler:nil];
 }
 
 - (IBAction) kickban:(nullable id) sender {
@@ -619,28 +619,25 @@ NS_ASSUME_NONNULL_BEGIN
 	[banButton setTitle:NSLocalizedString( @"Kick & Ban User", "kick and ban user button" )];
 	[banButton setTarget:self];
 
-	[[NSApplication sharedApplication] beginSheet:banWindow modalForWindow:[[_room view] window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[_room.view.window beginSheet:banWindow completionHandler:nil];
 }
 
 - (IBAction) closeKickSheet:(nullable id) sender {
-	[[NSApplication sharedApplication] endSheet:banWindow];
-	[banWindow orderOut:self];
+	[_room.view.window endSheet:banWindow];
 
 	NSAttributedString *reason = [[NSAttributedString alloc] initWithString:[firstField stringValue]];
 	[[_room target] kickOutMemberUser:_user forReason:reason];
 }
 
 - (IBAction) closeBanSheet:(nullable id) sender {
-	[[NSApplication sharedApplication] endSheet:banWindow];
-	[banWindow orderOut:self];
+	[_room.view.window endSheet:banWindow];
 
 	MVChatUser *user = [MVChatUser wildcardUserFromString:[firstField stringValue]];
 	[[_room target] addBanForUser:user];
 }
 
 - (IBAction) closeKickbanSheet:(nullable id) sender {
-	[[NSApplication sharedApplication] endSheet:banWindow];
-	[banWindow orderOut:self];
+	[_room.view.window endSheet:banWindow];
 
 	MVChatUser *user = [MVChatUser wildcardUserFromString:[firstField stringValue]];
 	[[_room target] addBanForUser:user];
@@ -650,8 +647,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (IBAction) cancelSheet:(nullable id) sender {
-	[[NSApplication sharedApplication] endSheet:banWindow];
-	[banWindow orderOut:self];
+	[_room.view.window endSheet:banWindow];
 }
 
 #pragma mark -

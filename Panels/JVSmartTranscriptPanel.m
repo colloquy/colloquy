@@ -253,12 +253,12 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	[ignoreCase setState:( _ignoreCase ? NSOnState : NSOffState )];
 	if( [operation indexOfItemWithTag:_operation] != -1 ) [operation selectItemAtIndex:[operation indexOfItemWithTag:_operation]];
 
-	[[NSApplication sharedApplication] beginSheet:settingsSheet modalForWindow:[[self windowController] window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[self.windowController.window beginSheet:settingsSheet completionHandler:nil];
+
 }
 
 - (IBAction) closeEditSettingsSheet:(nullable id) sender {
-	[settingsSheet orderOut:nil];
-	[[NSApplication sharedApplication] endSheet:settingsSheet];
+	[self.windowController.window endSheet:settingsSheet];
 
 	[[self editingRules] removeAllObjects];
 	[self reloadTableView];

@@ -57,7 +57,6 @@ static NSMenu *favoritesMenu = nil;
 - (void) _machineDidStopIdling:(NSNotification *) notification;
 - (void) _disconnect:(id) sender;
 - (void) _delete:(id) sender;
-- (void) _deleteConnectionSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
 - (void) _messageUser:(id) sender;
 - (void) _openConsole:(id) sender;
 + (void) _openFavoritesFolder:(id) sender;
@@ -257,7 +256,7 @@ static NSMenu *favoritesMenu = nil;
 	[[self window] setHidesOnDeactivate:NO];
 	[[self window] setResizeIncrements:NSMakeSize( 1, [connections rowHeight] + [connections intercellSpacing].height - 1. )];
 
-	[connections accessibilitySetOverrideValue:NSLocalizedString(@"Connections", "VoiceOver label for connections table") forAttribute:NSAccessibilityDescriptionAttribute];
+	[connections setAccessibilityLabel:NSLocalizedString(@"Connections", "VoiceOver label for connections table")];
 
 	theColumn = [connections tableColumnWithIdentifier:@"auto"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"autoHeader"]];
@@ -596,8 +595,7 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark -
 
 - (IBAction) messageUser:(id) sender {
-	[messageUser orderOut:nil];
-	[[NSApplication sharedApplication] endSheet:messageUser];
+	[self.window endSheet:messageUser];
 
 	if( [connections selectedRow] == -1 ) return;
 
@@ -616,7 +614,7 @@ static NSMenu *favoritesMenu = nil;
 			[userSelectionTable reloadData];
 			[userSelectionTable selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
 
-			[[NSApplication sharedApplication] beginSheet:userSelectionPanel modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+			[self.window beginSheet:userSelectionPanel completionHandler:nil];
 
 			return;
 		}
@@ -628,8 +626,8 @@ static NSMenu *favoritesMenu = nil;
 - (IBAction) joinRoom:(id) sender {
 	if( ! [_bookmarks count] ) return;
 	NSArray *connectedConnections = [self connectedConnections];
-	JVChatRoomBrowser *browser = [JVChatRoomBrowser chatRoomBrowserForConnection:( [connections selectedRow] == -1 ? ( [connectedConnections count] ? connectedConnections[0] : nil ) : _bookmarks[[connections selectedRow]][@"connection"] )];
-	[[NSApplication sharedApplication] beginSheet:[browser window] modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	JVChatRoomBrowser *browser = [JVChatRoomBrowser chatRoomBrowserForConnection:( [connections selectedRow] == -1 ? ( [connectedConnections count] ? [connectedConnections objectAtIndex:0] : nil ) : [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] )];
+	[self.window beginSheet:browser.window completionHandler:nil];
 }
 
 #pragma mark -
@@ -697,8 +695,7 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark User Selection
 
 - (IBAction) userSelectionSelected:(id) sender {
-	[userSelectionPanel orderOut:nil];
-	[[NSApplication sharedApplication] endSheet:userSelectionPanel];
+	[self.window endSheet:userSelectionPanel];
 
 	NSInteger row = [userSelectionTable selectedRow];
 
@@ -1166,7 +1163,7 @@ static NSMenu *favoritesMenu = nil;
 			}
 			if( imageName )
 				[cell setImage:[NSImage imageNamed:imageName]];
-			[cell accessibilitySetOverrideValue:title forAttribute:NSAccessibilityValueDescriptionAttribute];
+			[cell setAccessibilityValueDescription:title];
 		}
 	}
 }
@@ -2259,21 +2256,25 @@ static NSMenu *favoritesMenu = nil;
 	NSInteger row = [connections selectedRow];
 	if( row == -1 ) return;
 
-	MVChatConnection *connection = _bookmarks[row][@"connection"];
-	NSBeginCriticalAlertSheet( NSLocalizedString( @"Are you sure you want to delete?", "delete confirm dialog title" ), NSLocalizedString( @"Cancel", "cancel button" ), NSLocalizedString( @"OK", "OK button" ), nil, [self window], self, @selector( _deleteConnectionSheetDidEnd:returnCode:contextInfo: ), NULL, NULL, NSLocalizedString( @"Are you sure you want to delete the connection for %@? Any associated Keychain passwords will also be deleted.", "confirm the delete of a connection" ), [connection server] );
-}
-
-- (void) _deleteConnectionSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	if( returnCode != NSModalResponseCancel ) return; // the cancel button because we have them flipped above
-	NSInteger row = [connections selectedRow];
-	if( row == -1 ) return;
-	[connections deselectAll:nil];
-	[self removeConnectionAtIndex:row];
+	MVChatConnection *connection = [[_bookmarks objectAtIndex:row] objectForKey:@"connection"];
+	
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = NSLocalizedString( @"Are you sure you want to delete?", "delete confirm dialog title" );
+	alert.informativeText = [NSString stringWithFormat:NSLocalizedString( @"Are you sure you want to delete the connection for %@? Any associated Keychain passwords will also be deleted.", "confirm the delete of a connection" ), [connection server]];
+	alert.alertStyle = NSAlertStyleCritical;
+	[alert addButtonWithTitle:NSLocalizedString( @"Cancel", "cancel button" )];
+	[alert addButtonWithTitle:NSLocalizedString( @"OK", "OK button" )];
+	[alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode) {
+		if( returnCode != NSAlertSecondButtonReturn) return;
+		
+		[connections deselectAll:nil];
+		[self removeConnectionAtIndex:row];
+	}];
 }
 
 - (void) _messageUser:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
-	[[NSApplication sharedApplication] beginSheet:messageUser modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[self.window beginSheet:messageUser completionHandler:nil];
 }
 
 - (void) _openConsole:(id) sender {

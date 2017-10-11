@@ -76,9 +76,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[favorites insertItem:menuItem atIndex:0];
 	}
 	[favoritesButton setMenu:favorites];
-	[[favoritesButton cell] accessibilitySetOverrideValue:NSLocalizedString(@"Favorites", nil) forAttribute:NSAccessibilityDescriptionAttribute];
+	[[favoritesButton cell] setAccessibilityLabel:NSLocalizedString(@"Favorites", nil)];
 
-	[[viewActionButton cell] accessibilitySetOverrideValue:NSLocalizedString(@"Actions", nil) forAttribute:NSAccessibilityDescriptionAttribute];
+	[[viewActionButton cell] setAccessibilityLabel:NSLocalizedString(@"Actions", nil)];
 
 	[self setShouldCascadeWindows:NO];
 	[self setWindowFrameAutosaveName:@""];
@@ -1053,9 +1053,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	if( [menu numberOfItems] ) {
 		[viewActionButton setEnabled:YES];
-		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""];
-		menuItem.image = [NSImage imageNamed:NSImageNameActionTemplate];
-		[menu insertItem:menuItem atIndex:0];
+		NSMenuItem *menuItem2 = [[NSMenuItem alloc] initWithTitle:@"" action:NULL keyEquivalent:@""];
+		menuItem2.image = [NSImage imageNamed:NSImageNameActionTemplate];
+		[menu insertItem:menuItem2 atIndex:0];
 		[viewActionButton setMenu:menu];
 	} else [viewActionButton setEnabled:NO];
 

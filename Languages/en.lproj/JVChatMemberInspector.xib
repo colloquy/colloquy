@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="JVChatUserInspector">
+        <customObject id="-2" userLabel="File's Owner" customClass="JVChatMemberInspector">
             <connections>
                 <outlet property="address" destination="14" id="39"/>
                 <outlet property="away" destination="9" id="40"/>
@@ -31,11 +32,11 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView id="5" userLabel="View">
+        <customView autoresizesSubviews="NO" id="5" userLabel="View">
             <rect key="frame" x="0.0" y="0.0" width="266" height="359"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <button id="61">
+                <button autoresizesSubviews="NO" horizontalHuggingPriority="750" verticalHuggingPriority="750" imageHugsTitle="YES" id="61">
                     <rect key="frame" x="231" y="71" width="19" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="bevel" bezelStyle="circular" image="NSRefreshFreestandingTemplate" imagePosition="only" alignment="center" controlSize="mini" id="95">
@@ -46,7 +47,7 @@
                         <action selector="sendPing:" target="-2" id="62"/>
                     </connections>
                 </button>
-                <textField verticalHuggingPriority="750" id="37">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="37">
                     <rect key="frame" x="82" y="71" width="100" height="14"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="n/a" id="94">
@@ -55,7 +56,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="35">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="35">
                     <rect key="frame" x="82" y="15" width="144" height="14"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" id="93">
@@ -64,7 +65,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="34">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="34">
                     <rect key="frame" x="12" y="245" width="68" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="IP Address:" id="92">
@@ -73,7 +74,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="33">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="33">
                     <rect key="frame" x="82" y="191" width="172" height="14"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="n/a" id="91">
@@ -82,8 +83,8 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button id="32">
-                    <rect key="frame" x="225" y="5" width="32" height="31"/>
+                <button autoresizesSubviews="NO" horizontalHuggingPriority="750" verticalHuggingPriority="750" imageHugsTitle="YES" id="32">
+                    <rect key="frame" x="231" y="15" width="19" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="bevel" bezelStyle="circular" image="NSRefreshFreestandingTemplate" imagePosition="only" alignment="center" controlSize="mini" id="90">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -93,7 +94,7 @@
                         <action selector="requestClientInfo:" target="-2" id="60"/>
                     </connections>
                 </button>
-                <textField verticalHuggingPriority="750" id="31">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="31">
                     <rect key="frame" x="13" y="118" width="67" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Connected:" id="89">
@@ -102,7 +103,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="30">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="30">
                     <rect key="frame" x="82" y="290" width="172" height="14"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="n/a" id="88">
@@ -111,7 +112,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="29">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="29">
                     <rect key="frame" x="82" y="226" width="172" height="14"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="n/a" id="87">
@@ -120,7 +121,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="28">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="28">
                     <rect key="frame" x="12" y="43" width="68" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Local Time:" id="86">
@@ -129,7 +130,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="27">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="27">
                     <rect key="frame" x="82" y="118" width="172" height="14"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="n/a" id="85">
@@ -138,7 +139,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="26">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="26">
                     <rect key="frame" x="82" y="320" width="148" height="17"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="84">
@@ -147,7 +148,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="25">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="25">
                     <rect key="frame" x="20" y="290" width="60" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Class:" id="83">
@@ -156,7 +157,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="24">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="24">
                     <rect key="frame" x="16" y="208" width="64" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Username:" id="82">
@@ -165,7 +166,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="23">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="23">
                     <rect key="frame" x="82" y="43" width="144" height="14"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" id="81">
@@ -174,7 +175,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="22">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="22">
                     <rect key="frame" x="13" y="191" width="67" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Real Name:" id="80">
@@ -183,7 +184,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="21">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="21">
                     <rect key="frame" x="16" y="272" width="64" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Away Info:" id="79">
@@ -192,7 +193,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="20">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="20">
                     <rect key="frame" x="14" y="15" width="66" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Client Info:" id="78">
@@ -201,7 +202,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="19">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="19">
                     <rect key="frame" x="37" y="162" width="43" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Server:" id="77">
@@ -210,7 +211,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button id="18">
+                <button autoresizesSubviews="NO" horizontalHuggingPriority="750" verticalHuggingPriority="750" imageHugsTitle="YES" id="18">
                     <rect key="frame" x="231" y="43" width="19" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="bevel" bezelStyle="circular" image="NSRefreshFreestandingTemplate" imagePosition="only" alignment="center" controlSize="mini" id="76">
@@ -221,12 +222,12 @@
                         <action selector="requestLocalTime:" target="-2" id="59"/>
                     </connections>
                 </button>
-                <imageView id="17">
+                <imageView autoresizesSubviews="NO" id="17">
                     <rect key="frame" x="45" y="312" width="32" height="32"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="userNormal" id="75"/>
                 </imageView>
-                <textField verticalHuggingPriority="750" id="16">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="16">
                     <rect key="frame" x="82" y="209" width="172" height="14"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="n/a" id="74">
@@ -235,7 +236,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="15">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="15">
                     <rect key="frame" x="20" y="100" width="60" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Idle Time:" id="73">
@@ -244,7 +245,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="14">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="14">
                     <rect key="frame" x="82" y="245" width="172" height="14"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="looking up…" id="72">
@@ -253,7 +254,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="13">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="13">
                     <rect key="frame" x="16" y="226" width="64" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Hostname:" id="71">
@@ -262,7 +263,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="12">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="12">
                     <rect key="frame" x="82" y="145" width="172" height="14"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="n/a" id="70">
@@ -271,7 +272,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="11">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="11">
                     <rect key="frame" x="82" y="162" width="172" height="14"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="n/a" id="69">
@@ -280,7 +281,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="10">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="10">
                     <rect key="frame" x="34" y="145" width="46" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Rooms:" id="68">
@@ -289,7 +290,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="9">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="9">
                     <rect key="frame" x="82" y="272" width="172" height="14"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="n/a" id="67">
@@ -298,7 +299,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="8">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="8">
                     <rect key="frame" x="14" y="71" width="66" height="14"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Ping:" id="66">
@@ -307,11 +308,11 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <progressIndicator horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" id="7">
+                <progressIndicator autoresizesSubviews="NO" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" id="7">
                     <rect key="frame" x="235" y="320" width="16" height="16"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                 </progressIndicator>
-                <textField verticalHuggingPriority="750" id="6">
+                <textField autoresizesSubviews="NO" verticalHuggingPriority="750" id="6">
                     <rect key="frame" x="82" y="100" width="172" height="14"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="n/a" id="65">

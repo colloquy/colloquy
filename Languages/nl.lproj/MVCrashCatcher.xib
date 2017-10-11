@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MVCrashCatcher">
@@ -19,13 +20,13 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="104" y="300" width="533" height="303"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="500" height="300"/>
-            <view key="contentView" id="8">
+            <view key="contentView" autoresizesSubviews="NO" id="8">
                 <rect key="frame" x="0.0" y="0.0" width="533" height="303"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button verticalHuggingPriority="750" id="5">
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="5">
                         <rect key="frame" x="302" y="12" width="222" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Verzend Problemenrapport" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="25">
@@ -39,7 +40,7 @@ DQ
                             <action selector="sendCrashLog:" target="-2" id="16"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" id="7">
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="7">
                         <rect key="frame" x="14" y="11" width="222" height="33"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Verstuur Géén Rapport" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="27">
@@ -76,19 +77,17 @@ Gw
                             <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="11">
                                 <rect key="frame" x="0.0" y="0.0" width="498" height="146"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <clipView key="contentView" id="iLI-pj-Br8">
+                                <clipView key="contentView" id="ecx-Eh-Ibb">
                                     <rect key="frame" x="1" y="1" width="496" height="144"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <textView importsGraphics="NO" richText="NO" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="9">
-                                            <rect key="frame" x="0.0" y="0.0" width="480" height="144"/>
+                                        <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" usesRuler="YES" textReplacement="YES" spellingCorrection="YES" smartInsertDelete="YES" id="9">
+                                            <rect key="frame" x="0.0" y="0.0" width="495" height="144"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <size key="minSize" width="496" height="144"/>
+                                            <size key="minSize" width="495" height="144"/>
                                             <size key="maxSize" width="623" height="10000000"/>
                                             <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="496" height="144"/>
-                                            <size key="maxSize" width="623" height="10000000"/>
                                         </textView>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -105,19 +104,17 @@ Gw
                             <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="13">
                                 <rect key="frame" x="0.0" y="155" width="498" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <clipView key="contentView" id="Yxi-po-gHR">
-                                    <rect key="frame" x="1" y="1" width="481" height="-2"/>
+                                <clipView key="contentView" id="3Uu-j8-UuS">
+                                    <rect key="frame" x="1" y="1" width="496" height="1"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <textView editable="NO" importsGraphics="NO" richText="NO" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="10">
-                                            <rect key="frame" x="0.0" y="-4" width="480" height="14"/>
+                                        <textView editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" usesRuler="YES" textReplacement="YES" spellingCorrection="YES" smartInsertDelete="YES" id="10">
+                                            <rect key="frame" x="0.0" y="-4" width="495" height="14"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <size key="minSize" width="496" height="1"/>
                                             <size key="maxSize" width="623" height="10000000"/>
                                             <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="496" height="1"/>
-                                            <size key="maxSize" width="623" height="10000000"/>
                                         </textView>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

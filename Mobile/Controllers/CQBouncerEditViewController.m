@@ -8,6 +8,8 @@
 #import "CQPreferencesSwitchCell.h"
 #import "CQPreferencesTextCell.h"
 
+#import <OnePasswordExtension/OnePasswordExtension.h>
+
 static unsigned short ServerTableSection = 0;
 static unsigned short AuthenticationTableSection = 1;
 static unsigned short PushTableSection = 2;
@@ -184,6 +186,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 			cell.accessibilityLabel = NSLocalizedString(@"Password", @"Voiceover password label");
 			cell.accessibilityHint = NSLocalizedString(@"Required", @"Voiceover required label");
+
+			if ([[OnePasswordExtension sharedExtension] isAppExtensionAvailable]) {
+				UIButton *onePasswordButton = [UIButton buttonWithType:UIButtonTypeSystem];
+				[onePasswordButton addTarget:self action:@selector(onePasswordActionForPassword:) forControlEvents:UIControlEventTouchUpInside];
+
+				UIImage *onePasswordImage = [UIImage imageNamed:@"onepassword-toolbar" inBundle:[NSBundle bundleForClass:[OnePasswordExtension class]] compatibleWithTraitCollection:nil];
+				[onePasswordButton setImage:onePasswordImage forState:UIControlStateNormal];
+
+				cell.textField.rightView = onePasswordButton;
+				cell.textField.rightViewMode = UITextFieldViewModeAlways;
+
+				[onePasswordButton sizeToFit];
+
+				onePasswordButton.transform = CGAffineTransformMakeScale(.83, .83);
+			}
 		}
 
 		if (cell)
@@ -303,6 +320,29 @@ NS_ASSUME_NONNULL_BEGIN
 		[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 	}]];
 	[self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void) onePasswordActionForPassword:(id) sender {
+	[[OnePasswordExtension sharedExtension] findLoginForURLString:_settings.server forViewController:self sender:sender completion:^(NSDictionary *loginDictionary, NSError *error) {
+		if (!loginDictionary.count) {
+			if (error.code != AppExtensionErrorCodeCancelledByUser) {
+				UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+				[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Okay", @"Okay button title") style:UIAlertActionStyleCancel handler:NULL]];
+				[self presentViewController:alert animated:YES completion:nil];
+			}
+
+			return;
+		}
+
+		_settings.password = loginDictionary[AppExtensionPasswordKey];
+		_settings.username = _settings.username.length ? _settings.username : loginDictionary[AppExtensionUsernameKey];
+
+		[self.tableView beginUpdates];
+		[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:AuthenticationTableSection] withRowAnimation:UITableViewRowAnimationAutomatic];
+		[self.tableView endUpdates];
+
+		[self updateConnectButton];
+	}];
 }
 @end
 

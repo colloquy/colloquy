@@ -270,7 +270,9 @@
 	[editRuleRooms reloadData];
 
 	_ignoreRuleIsNew = YES;
-	[[NSApplication sharedApplication] beginSheet:ruleSheet modalForWindow:[view window] modalDelegate:self didEndSelector:@selector( ruleSheetDidEnd:returnCode:contextInfo: ) contextInfo:nil];
+	[view.window beginSheet:ruleSheet completionHandler:^(NSModalResponse returnCode) {
+		[self ruleSheetDidEnd:ruleSheet returnCode:returnCode];
+	}];
 }
 
 - (IBAction) configureRule:(id) sender {
@@ -309,21 +311,21 @@
 	[editRuleRooms reloadData];
 
 	_ignoreRuleIsNew = NO;
-	[[NSApplication sharedApplication] beginSheet:ruleSheet modalForWindow:[view window] modalDelegate:self didEndSelector:@selector( ruleSheetDidEnd:returnCode:contextInfo: ) contextInfo:nil];
+	[view.window beginSheet:ruleSheet completionHandler:^(NSModalResponse returnCode) {
+		[self ruleSheetDidEnd:ruleSheet returnCode:returnCode];
+	}];
 }
 
 - (IBAction) saveRule:(id) sender {
-	[[NSApplication sharedApplication] endSheet:ruleSheet returnCode:YES];
-	[ruleSheet orderOut:self];
+	[view.window endSheet:ruleSheet returnCode:NSModalResponseOK];
 }
 
 - (IBAction) discardChangesToRule:(id) sender {
-	[[NSApplication sharedApplication] endSheet:ruleSheet returnCode:NO];
-	[ruleSheet orderOut:self];
+	[view.window endSheet:ruleSheet returnCode:NSModalResponseCancel];
 }
 
-- (void) ruleSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	if( returnCode ) {
+- (void) ruleSheetDidEnd:(NSWindow *) sheet returnCode:(NSModalResponse) returnCode {
+	if( returnCode == NSModalResponseOK ) {
 		NSString *user = nil;
 		if( [ruleUsesSender state] == NSOnState ) {
 			if( [senderType indexOfSelectedItem] == 0 ) user = [editRuleSender stringValue];

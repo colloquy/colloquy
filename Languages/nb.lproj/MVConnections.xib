@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MVConnectionsController">
@@ -56,19 +57,19 @@
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="350" height="77"/>
             <value key="maxSize" type="size" width="500" height="350"/>
-            <view key="contentView" id="6">
+            <view key="contentView" autoresizesSubviews="NO" id="6">
                 <rect key="frame" x="0.0" y="0.0" width="350" height="190"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView borderType="none" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="112">
                         <rect key="frame" x="0.0" y="0.0" width="350" height="191"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <clipView key="contentView" id="IA2-lu-Uam">
+                        <clipView key="contentView" id="oD1-Bm-2AC">
                             <rect key="frame" x="0.0" y="0.0" width="350" height="191"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" headerView="873" id="114" customClass="MVTableView">
-                                    <rect key="frame" x="0.0" y="0.0" width="350" height="174"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="350" height="168"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -103,6 +104,10 @@
                                             </tableHeaderCell>
                                             <textFieldCell key="dataCell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" alignment="left" drawsBackground="YES" id="867">
                                                 <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="#" negativeFormat="#" localizesFormat="NO" hasThousandSeparators="NO" thousandSeparator="," id="635">
+                                                    <attributedString key="attributedStringForNil"/>
+                                                    <attributedString key="attributedStringForNotANumber">
+                                                        <fragment content="NaN"/>
+                                                    </attributedString>
                                                     <attributedString key="attributedStringForZero">
                                                         <fragment content="0"/>
                                                     </attributedString>
@@ -114,7 +119,7 @@
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </tableColumn>
-                                        <tableColumn identifier="nickname" width="131.16799926757812" minWidth="56.667999267578125" maxWidth="1000" id="356">
+                                        <tableColumn identifier="nickname" width="130.66799926757812" minWidth="56.667999267578125" maxWidth="1000" id="356">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Kallenavn">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -133,9 +138,9 @@
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
-                                            <buttonCell key="dataCell" type="check" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" inset="2" id="634">
+                                            <buttonCell key="dataCell" type="check" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" inset="2" id="634">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="titleBar" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                             </buttonCell>
                                         </tableColumn>
                                     </tableColumns>
@@ -145,18 +150,17 @@
                                     </connections>
                                 </tableView>
                             </subviews>
-                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </clipView>
                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="872">
                             <rect key="frame" x="-100" y="-100" width="337" height="11"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="874">
-                            <rect key="frame" x="335" y="17" width="15" height="159"/>
+                            <rect key="frame" x="334" y="23" width="16" height="168"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <tableHeaderView key="headerView" id="873">
-                            <rect key="frame" x="0.0" y="0.0" width="350" height="17"/>
+                            <rect key="frame" x="0.0" y="0.0" width="350" height="23"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </tableHeaderView>
                     </scrollView>
@@ -173,7 +177,7 @@
             <rect key="contentRect" x="355" y="257" width="375" height="419"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="213" height="107"/>
-            <view key="contentView" id="268">
+            <view key="contentView" autoresizesSubviews="NO" id="268">
                 <rect key="frame" x="0.0" y="0.0" width="375" height="419"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
@@ -183,25 +187,25 @@
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem identifier="0" id="657">
-                                <view key="view" id="656">
-                                    <rect key="frame" x="0.0" y="0.0" width="351" height="242"/>
+                                <view key="view" autoresizesSubviews="NO" id="656">
+                                    <rect key="frame" x="0.0" y="0.0" width="370" height="242"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
                             </tabViewItem>
                             <tabViewItem identifier="1" id="655">
-                                <view key="view" id="654">
+                                <view key="view" autoresizesSubviews="NO" id="654">
                                     <rect key="frame" x="0.0" y="0.0" width="370" height="242"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="662">
                                             <rect key="frame" x="151" y="9" width="199" height="79"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <clipView key="contentView" id="f9H-1E-nuD">
+                                            <clipView key="contentView" id="hjq-0Q-kR0">
                                                 <rect key="frame" x="1" y="1" width="197" height="77"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" id="673">
-                                                        <rect key="frame" x="0.0" y="0.0" width="402" height="19"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="402" height="77"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -227,7 +231,6 @@
                                                         </connections>
                                                     </tableView>
                                                 </subviews>
-                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </clipView>
                                             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="875">
                                                 <rect key="frame" x="-100" y="-100" width="360" height="15"/>
@@ -262,7 +265,7 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <popUpButton verticalHuggingPriority="750" id="666">
+                                        <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" id="666">
                                             <rect key="frame" x="148" y="209" width="142" height="26"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                             <popUpButtonCell key="cell" type="push" title="Ingen" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" enabled="NO" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="664" id="812">
@@ -280,7 +283,7 @@
                                                 <outlet property="nextKeyView" destination="669" id="763"/>
                                             </connections>
                                         </popUpButton>
-                                        <button id="667">
+                                        <button imageHugsTitle="YES" id="667">
                                             <rect key="frame" x="124" y="9" width="19" height="19"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
                                             <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="813">
@@ -301,7 +304,7 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <button verticalHuggingPriority="750" id="669">
+                                        <button verticalHuggingPriority="750" imageHugsTitle="YES" id="669">
                                             <rect key="frame" x="290" y="207" width="65" height="28"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="push" title="Rediger..." bezelStyle="rounded" alignment="center" controlSize="small" enabled="NO" borderStyle="border" inset="2" id="815">
@@ -322,7 +325,7 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <button id="672">
+                                        <button imageHugsTitle="YES" id="672">
                                             <rect key="frame" x="124" y="28" width="19" height="19"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
                                             <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" transparent="YES" imageScaling="proportionallyDown" inset="2" id="817">
@@ -376,7 +379,7 @@
                                                 <outlet property="nextKeyView" destination="673" id="769"/>
                                             </connections>
                                         </textField>
-                                        <comboBox verticalHuggingPriority="750" id="724">
+                                        <comboBox verticalHuggingPriority="750" textCompletion="NO" id="724">
                                             <rect key="frame" x="151" y="181" width="70" height="26"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                             <comboBoxCell key="cell" selectable="YES" editable="YES" borderStyle="bezel" alignment="left" drawsBackground="YES" completes="NO" usesDataSource="YES" numberOfVisibleItems="5" id="822">
@@ -399,10 +402,10 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <button id="726">
+                                        <button imageHugsTitle="YES" id="726">
                                             <rect key="frame" x="231" y="185" width="122" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="check" title="SSL-tilkobling" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="824">
+                                            <buttonCell key="cell" type="check" title="SSL-tilkobling" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="824">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -445,10 +448,10 @@
                             <outlet property="nextKeyView" destination="701" id="757"/>
                         </connections>
                     </textField>
-                    <button id="295">
+                    <button imageHugsTitle="YES" id="295">
                         <rect key="frame" x="153" y="294" width="177" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Husk denne tilkoblingen" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="804">
+                        <buttonCell key="cell" type="check" title="Husk denne tilkoblingen" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="804">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -456,7 +459,7 @@
                             <outlet property="nextKeyView" destination="636" id="761"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" id="296">
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="296">
                         <rect key="frame" x="186" y="11" width="81" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Avbryt" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="805">
@@ -471,7 +474,7 @@ Gw
                             <outlet property="nextKeyView" destination="297" id="772"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" id="297">
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="297">
                         <rect key="frame" x="263" y="11" width="93" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Koble til" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="806">
@@ -486,7 +489,7 @@ DQ
                             <outlet property="nextKeyView" destination="279" id="773"/>
                         </connections>
                     </button>
-                    <comboBox verticalHuggingPriority="750" id="306">
+                    <comboBox verticalHuggingPriority="750" textCompletion="NO" id="306">
                         <rect key="frame" x="155" y="321" width="203" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <comboBoxCell key="cell" selectable="YES" editable="YES" borderStyle="bezel" alignment="left" drawsBackground="YES" usesDataSource="YES" numberOfVisibleItems="10" id="807">
@@ -500,8 +503,8 @@ DQ
                             <outlet property="nextKeyView" destination="295" id="760"/>
                         </connections>
                     </comboBox>
-                    <button horizontalHuggingPriority="750" verticalHuggingPriority="750" id="636">
-                        <rect key="frame" x="39" y="289" width="29" height="26"/>
+                    <button horizontalHuggingPriority="750" verticalHuggingPriority="750" imageHugsTitle="YES" id="636">
+                        <rect key="frame" x="39" y="291" width="29" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" imagePosition="only" alignment="left" state="on" borderStyle="border" inset="2" id="808">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
@@ -530,7 +533,7 @@ DQ
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <popUpButton verticalHuggingPriority="750" id="701">
+                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" id="701">
                         <rect key="frame" x="152" y="350" width="206" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="IRC (Internet Relay Chat)" bezelStyle="rounded" alignment="left" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="702" id="826">
@@ -561,7 +564,7 @@ DQ
             <rect key="contentRect" x="436" y="495" width="320" height="100"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="213" height="100"/>
-            <view key="contentView" id="341">
+            <view key="contentView" autoresizesSubviews="NO" id="341">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
@@ -574,7 +577,7 @@ DQ
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button verticalHuggingPriority="750" tag="1" id="338">
+                    <button verticalHuggingPriority="750" tag="1" imageHugsTitle="YES" id="338">
                         <rect key="frame" x="208" y="10" width="98" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Samtale" bezelStyle="rounded" alignment="center" borderStyle="border" tag="1" inset="2" id="827">
@@ -588,7 +591,7 @@ DQ
                             <action selector="messageUser:" target="-2" id="350"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" id="339">
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="339">
                         <rect key="frame" x="118" y="11" width="90" height="34"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Avbryt" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="828">
@@ -623,11 +626,11 @@ Gw
             <rect key="contentRect" x="276" y="396" width="420" height="243"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="94" height="7"/>
-            <view key="contentView" id="453">
+            <view key="contentView" autoresizesSubviews="NO" id="453">
                 <rect key="frame" x="0.0" y="0.0" width="420" height="243"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button verticalHuggingPriority="750" id="446">
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="446">
                         <rect key="frame" x="216" y="11" width="90" height="34"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Avbryt" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="831">
@@ -642,7 +645,7 @@ Gw
                             <outlet property="nextKeyView" destination="452" id="457"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" tag="1" id="452">
+                    <button verticalHuggingPriority="750" tag="1" imageHugsTitle="YES" id="452">
                         <rect key="frame" x="306" y="11" width="100" height="34"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Identifiser" bezelStyle="rounded" alignment="center" borderStyle="border" tag="1" inset="2" id="835">
@@ -736,10 +739,10 @@ DQ
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button id="464">
+                    <button imageHugsTitle="YES" id="464">
                         <rect key="frame" x="189" y="58" width="204" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="check" title="Legg til i nøkkelring" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="842">
+                        <buttonCell key="cell" type="check" title="Legg til i nøkkelring" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="842">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -759,7 +762,7 @@ DQ
             <rect key="contentRect" x="46" y="506" width="420" height="189"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="213" height="107"/>
-            <view key="contentView" id="710">
+            <view key="contentView" autoresizesSubviews="NO" id="710">
                 <rect key="frame" x="1" y="1" width="420" height="189"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
@@ -799,15 +802,15 @@ DQ
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button id="713">
+                    <button imageHugsTitle="YES" id="713">
                         <rect key="frame" x="189" y="55" width="149" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="check" title="Legg til i nøkkelring" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="849">
+                        <buttonCell key="cell" type="check" title="Legg til i nøkkelring" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="849">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
-                    <button verticalHuggingPriority="750" tag="1" id="708">
+                    <button verticalHuggingPriority="750" tag="1" imageHugsTitle="YES" id="708">
                         <rect key="frame" x="316" y="11" width="90" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Lås opp" bezelStyle="rounded" alignment="center" borderStyle="border" tag="1" inset="2" id="845">
@@ -821,7 +824,7 @@ DQ
                             <action selector="sendCertificatePassword:" target="-2" id="719"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" id="707">
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="707">
                         <rect key="frame" x="227" y="11" width="90" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Avbryt" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="844">
@@ -846,7 +849,7 @@ DQ
             <rect key="contentRect" x="72" y="481" width="433" height="213"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="213" height="107"/>
-            <view key="contentView" id="732">
+            <view key="contentView" autoresizesSubviews="NO" id="732">
                 <rect key="frame" x="1" y="1" width="433" height="213"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
@@ -920,15 +923,15 @@ DQ
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button id="744">
+                    <button imageHugsTitle="YES" id="744">
                         <rect key="frame" x="197" y="56" width="136" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="check" title="Alltid aksepter nøkkel" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="859">
+                        <buttonCell key="cell" type="check" title="Alltid aksepter nøkkel" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="859">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
-                    <button verticalHuggingPriority="750" tag="1" id="745">
+                    <button verticalHuggingPriority="750" tag="1" imageHugsTitle="YES" id="745">
                         <rect key="frame" x="329" y="12" width="90" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Aksepter" bezelStyle="rounded" alignment="center" borderStyle="border" tag="1" inset="2" id="860">
@@ -942,7 +945,7 @@ DQ
                             <action selector="verifiedPublicKey:" target="-2" id="755"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" id="746">
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="746">
                         <rect key="frame" x="240" y="12" width="90" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Avvis" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="861">
@@ -962,7 +965,7 @@ DQ
             <rect key="contentRect" x="289" y="459" width="449" height="242"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="213" height="107"/>
-            <view key="contentView" id="777">
+            <view key="contentView" autoresizesSubviews="NO" id="777">
                 <rect key="frame" x="1" y="1" width="449" height="242"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
@@ -987,12 +990,12 @@ DQ
                     <scrollView horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="781">
                         <rect key="frame" x="20" y="62" width="409" height="89"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <clipView key="contentView" id="bBl-as-yfe">
-                            <rect key="frame" x="1" y="17" width="392" height="56"/>
+                        <clipView key="contentView" id="GYh-yk-u91">
+                            <rect key="frame" x="1" y="0.0" width="407" height="88"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" headerView="878" id="782">
-                                    <rect key="frame" x="0.0" y="0.0" width="392" height="19"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="407" height="65"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1011,7 +1014,7 @@ DQ
                                             </textFieldCell>
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         </tableColumn>
-                                        <tableColumn identifier="fingerprint" editable="NO" width="249" minWidth="40" maxWidth="1000" id="784">
+                                        <tableColumn identifier="fingerprint" editable="NO" width="264" minWidth="40" maxWidth="1000" id="784">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Fingeravtrykk">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -1030,22 +1033,21 @@ DQ
                                     </connections>
                                 </tableView>
                             </subviews>
-                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </clipView>
                         <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="877">
-                            <rect key="frame" x="1" y="73" width="392" height="15"/>
+                            <rect key="frame" x="1" y="72" width="407" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="879">
-                            <rect key="frame" x="393" y="17" width="15" height="56"/>
+                            <rect key="frame" x="392" y="23" width="16" height="65"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <tableHeaderView key="headerView" id="878">
-                            <rect key="frame" x="0.0" y="0.0" width="392" height="17"/>
+                            <rect key="frame" x="0.0" y="0.0" width="407" height="23"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </tableHeaderView>
                     </scrollView>
-                    <button verticalHuggingPriority="750" id="785">
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="785">
                         <rect key="frame" x="353" y="14" width="82" height="32"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="Velg" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="864">
@@ -1059,7 +1061,7 @@ DQ
                             <action selector="userSelectionSelected:" target="-2" id="790"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" tag="1" id="786">
+                    <button verticalHuggingPriority="750" tag="1" imageHugsTitle="YES" id="786">
                         <rect key="frame" x="271" y="14" width="82" height="32"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="Avbryt" bezelStyle="rounded" alignment="center" borderStyle="border" tag="1" inset="2" id="865">

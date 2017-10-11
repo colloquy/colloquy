@@ -778,12 +778,11 @@
 // Shows the new variant sheet asking for a name.
 - (void) showNewVariantSheet {
 	[self.variantName setStringValue:NSLocalizedString( @"Untitled Variant", "new variant name" )];
-	[[NSApplication sharedApplication] beginSheet:self.addVariantPanel modalForWindow:[self.preview window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
+	[self.preview.window beginSheet:self.addVariantPanel completionHandler:nil];
 }
 
 - (IBAction) closeNewVariantSheet:(id) sender {
-	[self.addVariantPanel orderOut:nil];
-	[[NSApplication sharedApplication] endSheet:self.addVariantPanel];
+	[self.preview.window endSheet:self.addVariantPanel];
 }
 
 // Creates the new variant, making the proper folder and copying the current CSS settings.

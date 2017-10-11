@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11201"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MVBuddyListController">
             <connections>
-                <outlet property="actionButton" destination="105" id="Z05-32-JNd"/>
+                <outlet property="actionButton" destination="105" id="202"/>
                 <outlet property="addButton" destination="135" id="139"/>
                 <outlet property="buddies" destination="38" id="55"/>
                 <outlet property="email" destination="133" id="140"/>
@@ -30,17 +31,17 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="709" y="91" width="225" height="277"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="180" height="108"/>
             <value key="maxSize" type="size" width="500" height="1006"/>
-            <view key="contentView" id="43">
+            <view key="contentView" autoresizesSubviews="NO" id="43">
                 <rect key="frame" x="0.0" y="0.0" width="225" height="277"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="38" horizontalPageScroll="10" verticalLineScroll="38" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="45">
                         <rect key="frame" x="-1" y="31" width="227" height="247"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <clipView key="contentView" id="SfO-ul-FYp">
+                        <clipView key="contentView" id="olb-Rs-6DH">
                             <rect key="frame" x="1" y="1" width="225" height="245"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
@@ -94,7 +95,7 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
-                    <button toolTip="Voorkeuren vriendenlijst" id="44" customClass="MVMenuButton">
+                    <button toolTip="Voorkeuren vriendenlijst" imageHugsTitle="YES" id="44" customClass="MVMenuButton">
                         <rect key="frame" x="39" y="5" width="23" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="CQBuddyOptionsTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="207">
@@ -105,7 +106,7 @@
                             <outlet property="menu" destination="148" id="156"/>
                         </connections>
                     </button>
-                    <button toolTip="Voeg vriend toe" id="39">
+                    <button toolTip="Voeg vriend toe" imageHugsTitle="YES" id="39">
                         <rect key="frame" x="61" y="5" width="23" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="204">
@@ -116,7 +117,7 @@
                             <action selector="showBuddyPickerSheet:" target="-2" id="108"/>
                         </connections>
                     </button>
-                    <button toolTip="Toon info" id="42">
+                    <button toolTip="Toon info" imageHugsTitle="YES" id="42">
                         <rect key="frame" x="83" y="5" width="23" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="OAInfoTemplate" imagePosition="only" alignment="right" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="206">
@@ -127,7 +128,7 @@
                             <action selector="getInfo:" target="-2" id="191"/>
                         </connections>
                     </button>
-                    <button toolTip="Stuur bericht" id="40">
+                    <button toolTip="Stuur bericht" imageHugsTitle="YES" id="40">
                         <rect key="frame" x="105" y="5" width="23" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="CQBuddyMessageTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="205">
@@ -161,14 +162,13 @@
             <windowStyleMask key="styleMask" titled="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="38" y="544" width="510" height="292"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
-            <value key="minSize" type="size" width="213" height="107"/>
-            <view key="contentView" id="81">
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <view key="contentView" autoresizesSubviews="NO" id="81">
                 <rect key="frame" x="0.0" y="0.0" width="510" height="292"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button verticalHuggingPriority="750" tag="1" id="85">
-                        <rect key="frame" x="369" y="7" width="132" height="32"/>
+                    <button verticalHuggingPriority="750" tag="1" imageHugsTitle="YES" id="85">
+                        <rect key="frame" x="349" y="7" width="152" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="selecteer persoon" bezelStyle="rounded" alignment="center" borderStyle="border" tag="1" inset="2" id="211">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -181,8 +181,8 @@ DQ
                             <action selector="confirmBuddySelection:" target="-2" id="112"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" id="84">
-                        <rect key="frame" x="256" y="7" width="113" height="32"/>
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="84">
+                        <rect key="frame" x="240" y="7" width="113" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Annuleer" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="210">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -195,7 +195,7 @@ Gw
                             <action selector="cancelBuddySelection:" target="-2" id="111"/>
                         </connections>
                     </button>
-                    <customView id="83" customClass="ABPeoplePickerView">
+                    <customView autoresizesSubviews="NO" id="83" customClass="ABPeoplePickerView">
                         <rect key="frame" x="15" y="46" width="480" height="231"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </customView>
@@ -210,8 +210,8 @@ of voeg toe aan vriendenlijst.</string>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button verticalHuggingPriority="750" id="110">
-                        <rect key="frame" x="9" y="7" width="114" height="32"/>
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="110">
+                        <rect key="frame" x="9" y="7" width="128" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="nieuwe vriend" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="212">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -230,15 +230,15 @@ Gw
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="115" userLabel="New Buddy">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="223" y="383" width="428" height="302"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+            <rect key="contentRect" x="223" y="383" width="448" height="302"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
             <value key="minSize" type="size" width="213" height="107"/>
-            <view key="contentView" id="114">
-                <rect key="frame" x="0.0" y="0.0" width="428" height="302"/>
+            <view key="contentView" autoresizesSubviews="NO" id="114">
+                <rect key="frame" x="0.0" y="0.0" width="448" height="302"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField verticalHuggingPriority="750" id="116">
-                        <rect key="frame" x="12" y="270" width="399" height="17"/>
+                        <rect key="frame" x="12" y="270" width="429" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Geef de bijnaam van uw vriend en de servers welke hij gebruikt op:" id="213">
                             <font key="font" metaFont="system"/>
@@ -247,7 +247,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" id="117">
-                        <rect key="frame" x="67" y="242" width="142" height="17"/>
+                        <rect key="frame" x="87" y="242" width="142" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Bijnaam:" id="214">
                             <font key="font" metaFont="system"/>
@@ -256,7 +256,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" id="118">
-                        <rect key="frame" x="214" y="240" width="194" height="22"/>
+                        <rect key="frame" x="234" y="240" width="194" height="22"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="215">
                             <font key="font" metaFont="system"/>
@@ -268,7 +268,7 @@ Gw
                         </connections>
                     </textField>
                     <textField verticalHuggingPriority="750" id="119">
-                        <rect key="frame" x="67" y="214" width="142" height="17"/>
+                        <rect key="frame" x="87" y="214" width="142" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Chatservers:" id="216">
                             <font key="font" metaFont="system"/>
@@ -277,7 +277,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" id="125">
-                        <rect key="frame" x="12" y="148" width="399" height="17"/>
+                        <rect key="frame" x="32" y="148" width="399" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="Facultatieve info:" id="217">
                             <font key="font" metaFont="system"/>
@@ -291,7 +291,7 @@ Gw
                         <imageCell key="cell" selectable="YES" editable="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="218"/>
                     </imageView>
                     <textField verticalHuggingPriority="750" id="128">
-                        <rect key="frame" x="12" y="52" width="114" height="17"/>
+                        <rect key="frame" x="12" y="31" width="114" height="38"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="Afbeelding van Vriend" id="219">
                             <font key="font" metaFont="system"/>
@@ -300,7 +300,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" id="129">
-                        <rect key="frame" x="106" y="120" width="103" height="17"/>
+                        <rect key="frame" x="126" y="120" width="103" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Voornaam:" id="220">
                             <font key="font" metaFont="system"/>
@@ -309,7 +309,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" id="130">
-                        <rect key="frame" x="214" y="118" width="194" height="22"/>
+                        <rect key="frame" x="234" y="118" width="194" height="22"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="221">
                             <font key="font" metaFont="system"/>
@@ -318,7 +318,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" id="131">
-                        <rect key="frame" x="214" y="88" width="194" height="22"/>
+                        <rect key="frame" x="234" y="88" width="194" height="22"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="222">
                             <font key="font" metaFont="system"/>
@@ -327,7 +327,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" id="132">
-                        <rect key="frame" x="106" y="90" width="103" height="17"/>
+                        <rect key="frame" x="126" y="90" width="103" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="Familienaam:" id="223">
                             <font key="font" metaFont="system"/>
@@ -336,7 +336,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" id="133">
-                        <rect key="frame" x="214" y="58" width="194" height="22"/>
+                        <rect key="frame" x="234" y="58" width="194" height="22"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="224">
                             <font key="font" metaFont="system"/>
@@ -345,7 +345,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" id="134">
-                        <rect key="frame" x="106" y="60" width="103" height="17"/>
+                        <rect key="frame" x="126" y="60" width="103" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="E-mail:" id="225">
                             <font key="font" metaFont="system"/>
@@ -353,8 +353,8 @@ Gw
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button verticalHuggingPriority="750" id="135">
-                        <rect key="frame" x="305" y="10" width="109" height="32"/>
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="135">
+                        <rect key="frame" x="289" y="10" width="145" height="32"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <buttonCell key="cell" type="push" title="Voeg Vriend Toe" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" inset="2" id="226">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -367,8 +367,8 @@ DQ
                             <action selector="confirmNewBuddy:" target="-2" id="138"/>
                         </connections>
                     </button>
-                    <button verticalHuggingPriority="750" id="136">
-                        <rect key="frame" x="192" y="10" width="113" height="32"/>
+                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="136">
+                        <rect key="frame" x="176" y="10" width="113" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="push" title="Annuleer" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="227">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -382,9 +382,9 @@ Gw
                         </connections>
                     </button>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="0.0" verticalLineScroll="19" verticalPageScroll="0.0" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="194">
-                        <rect key="frame" x="214" y="173" width="194" height="59"/>
+                        <rect key="frame" x="234" y="173" width="194" height="59"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <clipView key="contentView" id="9p9-er-InG">
+                        <clipView key="contentView" id="Gbs-ne-Q9H">
                             <rect key="frame" x="1" y="1" width="192" height="57"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
@@ -403,7 +403,7 @@ Gw
                                             </tableHeaderCell>
                                             <buttonCell key="dataCell" type="check" bezelStyle="regularSquare" imagePosition="only" alignment="left" inset="2" id="198">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="titleBar" size="12"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                             </buttonCell>
                                         </tableColumn>
                                         <tableColumn identifier="domain" editable="NO" width="166" minWidth="40" maxWidth="1000" id="196">

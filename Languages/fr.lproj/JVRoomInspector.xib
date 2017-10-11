@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8191"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="JVChatRoomInspector">
@@ -33,11 +35,11 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customView id="263" userLabel="View">
+        <customView autoresizesSubviews="NO" id="263" userLabel="View">
             <rect key="frame" x="0.0" y="0.0" width="315" height="361"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <customView id="381">
+                <customView autoresizesSubviews="NO" id="381">
                     <rect key="frame" x="60" y="304" width="195" height="39"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <subviews>
@@ -71,18 +73,18 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <tabViewItems>
                         <tabViewItem label="Modes" identifier="modes" id="318">
-                            <view key="view" id="319">
-                                <rect key="frame" x="10" y="25" width="315" height="264"/>
+                            <view key="view" autoresizesSubviews="NO" id="319">
+                                <rect key="frame" x="10" y="29" width="315" height="260"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <customView id="372">
+                                    <customView autoresizesSubviews="NO" id="372">
                                         <rect key="frame" x="16" y="12" width="303" height="252"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <subviews>
-                                            <button tag="8" id="361">
+                                            <button tag="8" imageHugsTitle="YES" id="361">
                                                 <rect key="frame" x="17" y="40" width="254" height="18"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                                                <buttonCell key="cell" type="check" title="Mot de passe requis pour rejoindre le canal" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="8" inset="2" id="439">
+                                                <buttonCell key="cell" type="check" title="Mot de passe requis pour rejoindre le canal" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="8" inset="2" id="439">
                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                     <font key="font" metaFont="smallSystem"/>
                                                 </buttonCell>
@@ -95,6 +97,10 @@
                                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                                 <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="438">
                                                     <numberFormatter key="formatter" formatterBehavior="10_0" positiveFormat="0" negativeFormat="-0" localizesFormat="NO" hasThousandSeparators="NO" thousandSeparator="," id="360">
+                                                        <attributedString key="attributedStringForNil"/>
+                                                        <attributedString key="attributedStringForNotANumber">
+                                                            <fragment content="NaN"/>
+                                                        </attributedString>
                                                         <attributedString key="attributedStringForZero">
                                                             <fragment content="0"/>
                                                         </attributedString>
@@ -127,33 +133,33 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                 <size key="cellSize" width="268" height="18"/>
                                                 <size key="intercellSpacing" width="4" height="4"/>
-                                                <buttonCell key="prototype" type="check" title="Switch" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="-1" inset="2" id="451">
+                                                <buttonCell key="prototype" type="check" title="Switch" bezelStyle="regularSquare" imagePosition="leading" alignment="left" tag="-1" inset="2" id="451">
                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
                                                 <cells>
                                                     <column>
-                                                        <buttonCell type="check" title="Pas de messages éxtérieurs" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="1" inset="2" id="354">
+                                                        <buttonCell type="check" title="Pas de messages éxtérieurs" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="1" inset="2" id="354">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
-                                                        <buttonCell type="check" title="Sujet modifiable seulement par les opérateurs" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="2" inset="2" id="356">
+                                                        <buttonCell type="check" title="Sujet modifiable seulement par les opérateurs" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="2" inset="2" id="356">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
-                                                        <buttonCell type="check" title="Canal de discussion modéré" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="3" inset="2" id="351">
+                                                        <buttonCell type="check" title="Canal de discussion modéré" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="3" inset="2" id="351">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
-                                                        <buttonCell type="check" title="Canal de discussion sur invitation seulement" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="4" inset="2" id="353">
+                                                        <buttonCell type="check" title="Canal de discussion sur invitation seulement" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="4" inset="2" id="353">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
-                                                        <buttonCell type="check" title="Canal de discussion privé" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="5" inset="2" id="355">
+                                                        <buttonCell type="check" title="Canal de discussion privé" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="5" inset="2" id="355">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
-                                                        <buttonCell type="check" title="Canal de discussion secret" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="6" inset="2" id="352">
+                                                        <buttonCell type="check" title="Canal de discussion secret" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="6" inset="2" id="352">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
@@ -163,10 +169,10 @@
                                                     <action selector="changeChatOption:" target="-2" id="424"/>
                                                 </connections>
                                             </matrix>
-                                            <button tag="7" id="349">
+                                            <button tag="7" imageHugsTitle="YES" id="349">
                                                 <rect key="frame" x="17" y="84" width="187" height="18"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                                                <buttonCell key="cell" type="check" title="Limiter le nombre de membres" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="7" inset="2" id="436">
+                                                <buttonCell key="cell" type="check" title="Limiter le nombre de membres" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="7" inset="2" id="436">
                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                     <font key="font" metaFont="smallSystem"/>
                                                 </buttonCell>
@@ -180,26 +186,24 @@
                             </view>
                         </tabViewItem>
                         <tabViewItem label="Sujet" identifier="topic" id="385">
-                            <view key="view" id="386">
+                            <view key="view" autoresizesSubviews="NO" id="386">
                                 <rect key="frame" x="10" y="25" width="315" height="264"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
                                     <scrollView autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="387">
                                         <rect key="frame" x="15" y="40" width="285" height="209"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <clipView key="contentView" id="ZWG-AA-cjW">
+                                        <clipView key="contentView" id="hKT-p6-e5B">
                                             <rect key="frame" x="1" y="1" width="283" height="207"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textView importsGraphics="NO" continuousSpellChecking="YES" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="388" customClass="MVTextView">
+                                                <textView importsGraphics="NO" verticallyResizable="YES" usesFontPanel="YES" continuousSpellChecking="YES" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" usesRuler="YES" textReplacement="YES" spellingCorrection="YES" smartInsertDelete="YES" id="388" customClass="MVTextView">
                                                     <rect key="frame" x="0.0" y="0.0" width="283" height="207"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <size key="minSize" width="283" height="207"/>
                                                     <size key="maxSize" width="285" height="10000000"/>
                                                     <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                    <size key="minSize" width="283" height="207"/>
-                                                    <size key="maxSize" width="285" height="10000000"/>
                                                     <connections>
                                                         <outlet property="delegate" destination="-2" id="394"/>
                                                     </connections>
@@ -207,7 +211,7 @@
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </clipView>
-                                        <scroller key="horizontalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="456">
+                                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="456">
                                             <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
@@ -216,7 +220,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                     </scrollView>
-                                    <button verticalHuggingPriority="750" id="389">
+                                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="389">
                                         <rect key="frame" x="237" y="11" width="63" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         <buttonCell key="cell" type="smallSquare" title="Save" bezelStyle="smallSquare" alignment="center" controlSize="small" borderStyle="border" inset="2" id="446">
@@ -231,7 +235,7 @@ DQ
                                             <action selector="saveTopic:" target="-2" id="395"/>
                                         </connections>
                                     </button>
-                                    <button verticalHuggingPriority="750" id="390">
+                                    <button verticalHuggingPriority="750" imageHugsTitle="YES" id="390">
                                         <rect key="frame" x="166" y="11" width="63" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                         <buttonCell key="cell" type="smallSquare" title="Reset" bezelStyle="smallSquare" alignment="center" controlSize="small" borderStyle="border" inset="2" id="447">
@@ -246,19 +250,19 @@ DQ
                             </view>
                         </tabViewItem>
                         <tabViewItem label="Bans" identifier="bans" id="316">
-                            <view key="view" id="317">
+                            <view key="view" autoresizesSubviews="NO" id="317">
                                 <rect key="frame" x="10" y="25" width="315" height="264"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="334">
                                         <rect key="frame" x="15" y="41" width="285" height="208"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <clipView key="contentView" id="Cj8-jg-eUz">
+                                        <clipView key="contentView" id="1ND-Uy-Adh">
                                             <rect key="frame" x="1" y="1" width="283" height="206"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnReordering="NO" autosaveColumns="NO" id="335">
-                                                    <rect key="frame" x="0.0" y="0.0" width="286" height="19"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="286" height="206"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -297,7 +301,6 @@ DQ
                                                     </connections>
                                                 </tableView>
                                             </subviews>
-                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </clipView>
                                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="454">
                                             <rect key="frame" x="-100" y="-100" width="262" height="11"/>
@@ -308,7 +311,7 @@ DQ
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                     </scrollView>
-                                    <button toolTip="Add ban" id="338">
+                                    <button toolTip="Add ban" imageHugsTitle="YES" id="338">
                                         <rect key="frame" x="15" y="12" width="23" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="431">
@@ -319,7 +322,7 @@ DQ
                                             <action selector="newBanRule:" target="-2" id="421"/>
                                         </connections>
                                     </button>
-                                    <button toolTip="Edit ban" id="339">
+                                    <button toolTip="Edit ban" imageHugsTitle="YES" id="339">
                                         <rect key="frame" x="67" y="12" width="23" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="432">
@@ -330,7 +333,7 @@ DQ
                                             <action selector="editBanRule:" target="-2" id="423"/>
                                         </connections>
                                     </button>
-                                    <button toolTip="Delete ban" id="340">
+                                    <button toolTip="Delete ban" imageHugsTitle="YES" id="340">
                                         <rect key="frame" x="41" y="12" width="23" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="433">
@@ -342,7 +345,7 @@ DQ
                                             <action selector="deleteBanRule:" target="-2" id="422"/>
                                         </connections>
                                     </button>
-                                    <popUpButton verticalHuggingPriority="750" id="400">
+                                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" id="400">
                                         <rect key="frame" x="183" y="10" width="120" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                                         <popUpButtonCell key="cell" type="push" title="Nickname" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="1" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="403" id="434">
@@ -385,7 +388,7 @@ DQ
                             </view>
                         </tabViewItem>
                         <tabViewItem label="Preferences" identifier="preferences" id="320">
-                            <view key="view" id="321">
+                            <view key="view" autoresizesSubviews="NO" id="321">
                                 <rect key="frame" x="10" y="25" width="315" height="264"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
@@ -416,7 +419,7 @@ DQ
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <popUpButton verticalHuggingPriority="750" id="325">
+                                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" id="325">
                                         <rect key="frame" x="96" y="228" width="189" height="22"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <popUpButtonCell key="cell" type="push" title=" " bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="327" id="443">
@@ -429,7 +432,7 @@ DQ
                                             </menu>
                                         </popUpButtonCell>
                                     </popUpButton>
-                                    <popUpButton verticalHuggingPriority="750" id="328">
+                                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" id="328">
                                         <rect key="frame" x="96" y="203" width="189" height="22"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <popUpButtonCell key="cell" type="push" title=" " bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="330" id="444">
@@ -442,7 +445,7 @@ DQ
                                             </menu>
                                         </popUpButtonCell>
                                     </popUpButton>
-                                    <popUpButton verticalHuggingPriority="750" id="331">
+                                    <popUpButton verticalHuggingPriority="750" imageHugsTitle="YES" id="331">
                                         <rect key="frame" x="96" y="178" width="189" height="22"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <popUpButtonCell key="cell" type="push" title=" " bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="clipping" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="333" id="445">

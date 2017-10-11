@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
-        <plugIn identifier="com.apple.WebKitIBPlugin" version="9531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <plugIn identifier="com.apple.WebKitIBPlugin" version="13196"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="JVChatTranscriptBrowserPanel">
@@ -22,13 +23,13 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="92" y="272" width="570" height="491"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1152" height="848"/>
             <value key="minSize" type="size" width="213" height="107"/>
-            <view key="contentView" id="6">
+            <view key="contentView" autoresizesSubviews="NO" id="6">
                 <rect key="frame" x="0.0" y="0.0" width="570" height="491"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <searchField wantsLayer="YES" verticalHuggingPriority="750" id="13">
+                    <searchField wantsLayer="YES" verticalHuggingPriority="750" textCompletion="NO" id="13">
                         <rect key="frame" x="20" y="463" width="530" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" bezelStyle="round" id="48">
@@ -48,18 +49,18 @@
                             <scrollView horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="7">
                                 <rect key="frame" x="0.0" y="0.0" width="570" height="126"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
-                                <clipView key="contentView" id="cAS-rH-U8h">
+                                <clipView key="contentView" id="Umh-Qi-HNW">
                                     <rect key="frame" x="1" y="0.0" width="568" height="125"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="55" id="8">
-                                            <rect key="frame" x="0.0" y="0.0" width="568" height="108"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="568" height="102"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
-                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn identifier="server" width="122.5" minWidth="40" maxWidth="1000" id="10">
+                                                <tableColumn identifier="server" width="123" minWidth="40" maxWidth="1000" id="10">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Server">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -73,7 +74,7 @@
                                                     <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="server"/>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                 </tableColumn>
-                                                <tableColumn identifier="target" width="128.31201171875" minWidth="117.81201171875" maxWidth="1000" id="9">
+                                                <tableColumn identifier="target" width="129.81201171875" minWidth="117.81201171875" maxWidth="1000" id="9">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Chat Room or Buddy">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -87,7 +88,7 @@
                                                     <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="target"/>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                 </tableColumn>
-                                                <tableColumn identifier="session" width="198.5" minWidth="10" maxWidth="1000" id="11">
+                                                <tableColumn identifier="session" width="199" minWidth="10" maxWidth="1000" id="11">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Date and/or Session">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -101,7 +102,7 @@
                                                     <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="session" ascending="NO"/>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                 </tableColumn>
-                                                <tableColumn identifier="relevancy" width="106.3681640625" minWidth="56.3681640625" maxWidth="1000" id="12">
+                                                <tableColumn identifier="relevancy" width="103.8681640625" minWidth="56.3681640625" maxWidth="1000" id="12">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Relevancy">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -122,18 +123,17 @@
                                             </connections>
                                         </tableView>
                                     </subviews>
-                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </clipView>
                                 <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="54">
                                     <rect key="frame" x="1" y="109" width="568" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="56">
-                                    <rect key="frame" x="553" y="17" width="16" height="108"/>
+                                    <rect key="frame" x="553" y="23" width="16" height="102"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <tableHeaderView key="headerView" id="55">
-                                    <rect key="frame" x="0.0" y="0.0" width="568" height="17"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="568" height="23"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>

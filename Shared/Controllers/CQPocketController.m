@@ -58,7 +58,9 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 			NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
 			[[CQKeychain standardKeychain] setPassword:responseDictionary[@"access_token"] forServer:@"pocket-token" area:@"bookmarking"];
 		} else if ((HTTPResponse.statusCode / 100) == 5)
-			[self _postServerErrorNotification];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self _postServerErrorNotification];
+			});
 	}] resume];
 }
 
@@ -70,19 +72,21 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 
 	[[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 		NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
-		if ((HTTPResponse.statusCode / 100) == 2) {
-			NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-			[[NSUserDefaults standardUserDefaults] setObject:responseDictionary[@"code"] forKey:@"CQBookmarkingActivePocketCode"];
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if ((HTTPResponse.statusCode / 100) == 2) {
+				NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+				[[NSUserDefaults standardUserDefaults] setObject:responseDictionary[@"code"] forKey:@"CQBookmarkingActivePocketCode"];
 
-			NSString *URLBase = nil;
-			if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pocket-oauth-v1:///authorize"]])
-				URLBase = @"pocket-oauth-v1:///authorize?";
-			else URLBase = @"https://getpocket.com/auth/authorize?";
+				NSString *URLBase = nil;
+				if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pocket-oauth-v1:///authorize"]])
+					URLBase = @"pocket-oauth-v1:///authorize?";
+				else URLBase = @"https://getpocket.com/auth/authorize?";
 
-			[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_shouldConvertTokenFromTokenNotification:) name:@"CQPocketShouldConvertTokenFromTokenNotification" object:nil];
-			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[URLBase stringByAppendingFormat:@"request_token=%@&redirect_uri=%@", responseDictionary[@"code"], @"colloquy://redirect"]]];
-		} else if ((HTTPResponse.statusCode / 100) == 5)
-			[self _postServerErrorNotification];
+				[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_shouldConvertTokenFromTokenNotification:) name:@"CQPocketShouldConvertTokenFromTokenNotification" object:nil];
+				[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[URLBase stringByAppendingFormat:@"request_token=%@&redirect_uri=%@", responseDictionary[@"code"], @"colloquy://redirect"]]];
+			} else if ((HTTPResponse.statusCode / 100) == 5)
+				[self _postServerErrorNotification];
+		});
 	}] resume];
 }
 

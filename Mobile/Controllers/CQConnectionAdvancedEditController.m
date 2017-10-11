@@ -7,6 +7,8 @@
 
 #import <ChatCore/MVChatConnection.h>
 
+#import <OnePasswordExtension/OnePasswordExtension.h>
+
 #define SettingsTableSection 0
 #define AuthenticationTableSection 1
 #define IdentitiesTableSection 2
@@ -378,6 +380,21 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
 			cell.textField.secureTextEntry = YES;
 
+			if ([[OnePasswordExtension sharedExtension] isAppExtensionAvailable]) {
+				UIButton *onePasswordButton = [UIButton buttonWithType:UIButtonTypeSystem];
+				[onePasswordButton addTarget:self action:@selector(onePasswordActionForServerPassword:) forControlEvents:UIControlEventTouchUpInside];
+
+				UIImage *onePasswordImage = [UIImage imageNamed:@"onepassword-toolbar" inBundle:[NSBundle bundleForClass:[OnePasswordExtension class]] compatibleWithTraitCollection:nil];
+				[onePasswordButton setImage:onePasswordImage forState:UIControlStateNormal];
+
+				cell.textField.rightView = onePasswordButton;
+				cell.textField.rightViewMode = UITextFieldViewModeAlways;
+
+				[onePasswordButton sizeToFit];
+
+				onePasswordButton.transform = CGAffineTransformMakeScale(.83, .83);
+			}
+
 			if (_connection.directConnection) {
 				cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -400,6 +417,21 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+
+			if ([[OnePasswordExtension sharedExtension] isAppExtensionAvailable]) {
+				UIButton *onePasswordButton = [UIButton buttonWithType:UIButtonTypeSystem];
+				[onePasswordButton addTarget:self action:@selector(onePasswordActionForPassword:) forControlEvents:UIControlEventTouchUpInside];
+
+				UIImage *onePasswordImage = [UIImage imageNamed:@"onepassword-toolbar" inBundle:[NSBundle bundleForClass:[OnePasswordExtension class]] compatibleWithTraitCollection:nil];
+				[onePasswordButton setImage:onePasswordImage forState:UIControlStateNormal];
+
+				cell.textField.rightView = onePasswordButton;
+				cell.textField.rightViewMode = UITextFieldViewModeAlways;
+
+				[onePasswordButton sizeToFit];
+
+				onePasswordButton.transform = CGAffineTransformMakeScale(.83, .83);
+			}
 
 			cell.accessibilityLabel = NSLocalizedString(@"Nickname password.", @"Voiceover nickname password label");
  			cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
@@ -511,6 +543,54 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 - (void) encodingChanged:(CQPreferencesListViewController *) sender {
 	NSStringEncoding encoding = [_connection supportedStringEncodings][sender.selectedItemIndex];
 	_connection.encoding = encoding;
+}
+
+#pragma mark -
+
+- (void) reloadAuthenticationSection {
+	[self.tableView beginUpdates];
+	[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:AuthenticationTableSection] withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self.tableView endUpdates];
+}
+
+#pragma mark -
+
+- (void) onePasswordActionForPassword:(id) sender {
+	[[OnePasswordExtension sharedExtension] findLoginForURLString:_connection.server forViewController:self sender:sender completion:^(NSDictionary *loginDictionary, NSError *error) {
+		if (!loginDictionary.count) {
+			if (error.code != AppExtensionErrorCodeCancelledByUser) {
+				UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+				[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Okay", @"Okay button title") style:UIAlertActionStyleCancel handler:NULL]];
+				[self presentViewController:alert animated:YES completion:nil];
+			}
+
+			return;
+		}
+
+		_connection.nicknamePassword = loginDictionary[AppExtensionPasswordKey];
+		_connection.nickname = _connection.nickname.length ? _connection.nickname : loginDictionary[AppExtensionUsernameKey];
+
+		[self reloadAuthenticationSection];
+	}];
+}
+
+- (void) onePasswordActionForServerPassword:(id) sender {
+	[[OnePasswordExtension sharedExtension] findLoginForURLString:_connection.server forViewController:self sender:sender completion:^(NSDictionary *loginDictionary, NSError *error) {
+		if (!loginDictionary.count) {
+			if (error.code != AppExtensionErrorCodeCancelledByUser) {
+				UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+				[alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Okay", @"Okay button title") style:UIAlertActionStyleCancel handler:NULL]];
+				[self presentViewController:alert animated:YES completion:nil];
+			}
+
+			return;
+		}
+
+		_connection.password = loginDictionary[AppExtensionPasswordKey];
+		_connection.username = _connection.username.length ? _connection.username : loginDictionary[AppExtensionUsernameKey];
+
+		[self reloadAuthenticationSection];
+	}];
 }
 @end
 

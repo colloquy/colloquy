@@ -65,8 +65,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 - (void) _fileTransferStarted:(NSNotification *) notification;
 - (void) _fileTransferFinished:(NSNotification *) notification;
 - (void) _incomingFile:(NSNotification *) notification;
-- (void) _incomingFileSheetDidEnd:(NSWindow *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo;
-- (void) _incomingFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo;
+- (void) _incomingFileSheetDidEndWithReturnCode:(NSModalResponse) returnCode fileTransfer:(MVDownloadFileTransfer *) transfer;
+- (void) _incomingFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode fileTransfer:(MVDownloadFileTransfer *) transfer;
 #pragma mark URL Web Download Support
 - (void) _downloadFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo;
 - (void) _openFile:(id) sender;
@@ -191,7 +191,10 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	WebDownload *download = [[WebDownload alloc] initWithRequest:[NSURLRequest requestWithURL:url] delegate:self];
 
 	if( ! download ) {
-		NSBeginAlertSheet( NSLocalizedString( @"Invalid URL", "Invalid URL title" ), nil, nil, nil, [self window], nil, nil, nil, nil, NSLocalizedString( @"The download URL is either invalid or unsupported.", "Invalid URL message" ), nil );
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = NSLocalizedString( @"Invalid URL", "Invalid URL title" );
+		alert.informativeText = NSLocalizedString( @"The download URL is either invalid or unsupported.", "Invalid URL message" );
+		[alert beginSheetModalForWindow:[self window] completionHandler:nil];
 		return;
 	}
 
@@ -597,41 +600,53 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	MVDownloadFileTransfer *transfer = [notification object];
 
 	if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 3 ) {
-		[self _incomingFileSheetDidEnd:nil returnCode:NSModalResponseOK contextInfo:(void *)transfer];
+		[self _incomingFileSheetDidEndWithReturnCode:NSAlertFirstButtonReturn fileTransfer:transfer];
 	} else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 2 ) {
 //		JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:[transfer user] onServer:[(MVChatConnection *)[transfer connection] server]];
 //		if( buddy ) [self _incomingFileSheetDidEnd:nil returnCode:NSModalResponseOK contextInfo:(void *)[transfer retain]];
 //		else
 		// transfer is released when the sheet closes
-		NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *)CFBridgingRetain(transfer), NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer user], MVPrettyFileSize( [transfer finalSize] ) );
+		
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" );
+		alert.informativeText = [NSString stringWithFormat:NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer user], MVPrettyFileSize( [transfer finalSize] )];
+		alert.alertStyle = NSAlertStyleInformational;
+		[alert addButtonWithTitle:NSLocalizedString( @"Accept", "accept button name" )];
+		[alert addButtonWithTitle:NSLocalizedString( @"Refuse", "refuse button name" )];
+		[alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode) {
+			[self _incomingFileSheetDidEndWithReturnCode:returnCode fileTransfer:transfer];
+		}];
 	} else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 1 ) {
-		NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *)CFBridgingRetain(transfer), NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer user], MVPrettyFileSize( [transfer finalSize] ) );
+		NSAlert *alert = [[NSAlert alloc] init];
+		alert.messageText = NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" );
+		alert.informativeText = [NSString stringWithFormat:NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer user], MVPrettyFileSize( [transfer finalSize] )];
+		alert.alertStyle = NSAlertStyleInformational;
+		[alert addButtonWithTitle:NSLocalizedString( @"Accept", "accept button name" )];
+		[alert addButtonWithTitle:NSLocalizedString( @"Refuse", "refuse button name" )];
+		[alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode) {
+			[self _incomingFileSheetDidEndWithReturnCode:returnCode fileTransfer:transfer];
+		}];
 	}
 }
 
-- (void) _incomingFileSheetDidEnd:(NSWindow *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo {
-	MVDownloadFileTransfer *transfer = (__bridge MVDownloadFileTransfer *)contextInfo;
-
-	if( returnCode == NSModalResponseOK ) {
+- (void) _incomingFileSheetDidEndWithReturnCode:(NSModalResponse) returnCode fileTransfer:(MVDownloadFileTransfer *) transfer {
+	if( returnCode == NSAlertFirstButtonReturn ) {
 		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAskForTransferSaveLocation"] ) {
 			NSString *path = [[[self class] userPreferredDownloadFolder] stringByAppendingPathComponent:[transfer originalFileName]];
-			[sheet close];
 			[transfer setDestination:path renameIfFileExists:NO];
-			[self _incomingFileSavePanelDidEnd:nil returnCode:NSModalResponseOK contextInfo:(void *)transfer];
+			[self _incomingFileSavePanelDidEnd:nil returnCode:NSModalResponseOK fileTransfer:transfer];
 		} else {
 			NSSavePanel *savePanel = [NSSavePanel savePanel];
-			[sheet close];
 			[savePanel setDelegate:self];
 			[savePanel setDirectoryURL:[NSURL fileURLWithPath:[[self class] userPreferredDownloadFolder] isDirectory:YES]];
-			[savePanel beginWithCompletionHandler:^(NSInteger result) {
-				[self _incomingFileSavePanelDidEnd:savePanel returnCode:result contextInfo:(void *)transfer];
+			[savePanel beginWithCompletionHandler:^(NSModalResponse result) {
+				[self _incomingFileSavePanelDidEnd:savePanel returnCode:result fileTransfer:transfer];
 			}];
 		}
 	} else [transfer reject];
 }
 
-- (void) _incomingFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo {
-	MVDownloadFileTransfer *transfer = (__bridge MVDownloadFileTransfer *)contextInfo;
+- (void) _incomingFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(NSModalResponse) returnCode fileTransfer:(MVDownloadFileTransfer *) transfer {
 	[sheet setDelegate:nil];
 
 	if( returnCode == NSModalResponseOK ) {
@@ -675,7 +690,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			[savePanel setDelegate:self];
 			[savePanel setDirectoryURL:[sheet directoryURL]];
 			[savePanel beginWithCompletionHandler:^(NSInteger saveResult) {
-				[self _incomingFileSavePanelDidEnd:savePanel returnCode:saveResult contextInfo:(void *)transfer];
+				[self _incomingFileSavePanelDidEnd:savePanel returnCode:saveResult fileTransfer:transfer];
 			}];
 		} else {
 			BOOL resume = ( resumePossible && response == NSAlertFirstButtonReturn );
