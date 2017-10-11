@@ -865,8 +865,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
@@ -897,7 +895,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.chatCore;
 				PRODUCT_NAME = ChatCore;
-				SKIP_INSTALL = YES;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -913,9 +911,10 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"$(GCC_PREPROCESSOR_DEFINITIONS_$(WRAPPER_EXTENSION))",
+				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
@@ -930,9 +929,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
@@ -963,7 +959,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.chatCore;
 				PRODUCT_NAME = ChatCore;
-				SKIP_INSTALL = YES;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
@@ -979,8 +975,10 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = NS_BLOCK_ASSERTIONS;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"$(GCC_PREPROCESSOR_DEFINITIONS_$(WRAPPER_EXTENSION))",
+				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
@@ -1025,20 +1023,6 @@
 				SKIP_INSTALL = YES;
 				VALID_ARCHS = "armv6 armv7 armv7f armv7k";
 				"VALID_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wextra",
-					"-Wchar-subscripts",
-					"-Wformat-security",
-					"-Wmissing-format-attribute",
-					"-Wpointer-arith",
-					"-Wwrite-strings",
-					"-Wno-format-y2k",
-					"-Wno-unused-parameter",
-					"-Wbad-function-cast",
-					"-Wmissing-declarations",
-					"-Wnested-externs",
-				);
 				WRAPPER_EXTENSION = a;
 			};
 			name = Release;
@@ -1077,20 +1061,6 @@
 				SKIP_INSTALL = YES;
 				VALID_ARCHS = "armv6 armv7 armv7f armv7k";
 				"VALID_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wextra",
-					"-Wchar-subscripts",
-					"-Wformat-security",
-					"-Wmissing-format-attribute",
-					"-Wpointer-arith",
-					"-Wwrite-strings",
-					"-Wno-format-y2k",
-					"-Wno-unused-parameter",
-					"-Wbad-function-cast",
-					"-Wmissing-declarations",
-					"-Wnested-externs",
-				);
 				WRAPPER_EXTENSION = a;
 			};
 			name = Debug;

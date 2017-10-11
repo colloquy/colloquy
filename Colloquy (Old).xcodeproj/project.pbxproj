@@ -2448,7 +2448,6 @@
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREFIX_HEADER = Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2467,26 +2466,11 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-$(COLLOQUY_BASE_CONFIGURATION)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEPLOYMENT_POSTPROCESSING = NO;
 				EXPORTED_SYMBOLS_FILE = Colloquy.exp;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_SSE41_EXTENSIONS = YES;
-				GCC_ENABLE_SSE42_EXTENSIONS = YES;
-				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(SDK_DIR)/usr/include/libxml2",
-					"$(inherited)",
-				);
 				INFOPLIST_FILE = Resources/Info.plist;
-				LLVM_LTO = YES;
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-Wno-arc-performSelector-leaks",
-				);
+				OTHER_CFLAGS = "-Wno-arc-performSelector-leaks";
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy;
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;
@@ -2497,9 +2481,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREFIX_HEADER = Basic.pch;
-				HEADER_SEARCH_PATHS = "${SDK_DIR}/usr/include/libxml2";
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Importer/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.metadata-importer";
 				PRODUCT_NAME = Colloquy;
@@ -2511,24 +2494,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C21296FF1F6465FC00555EE3 /* Base.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					DEBUG,
-					"$(GCC_PREPROCESSOR_DEFINITIONS)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				SDKROOT = macosx;
 				SYMROOT = build;
 			};
 			name = Debug;
@@ -2538,7 +2506,6 @@
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREFIX_HEADER = Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2557,25 +2524,11 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-$(COLLOQUY_BASE_CONFIGURATION)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				COMBINE_HIDPI_IMAGES = YES;
 				EXPORTED_SYMBOLS_FILE = Colloquy.exp;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_SSE41_EXTENSIONS = YES;
-				GCC_ENABLE_SSE42_EXTENSIONS = YES;
-				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(SDK_DIR)/usr/include/libxml2",
-					"$(inherited)",
-				);
 				INFOPLIST_FILE = Resources/Info.plist;
-				LLVM_LTO = YES;
-				OTHER_CFLAGS = (
-					"-fconstant-cfstrings",
-					"-Wno-arc-performSelector-leaks",
-				);
+				OTHER_CFLAGS = "-Wno-arc-performSelector-leaks";
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy;
 				PRODUCT_NAME = Colloquy;
 				SECTORDER_FLAGS = (
@@ -2592,9 +2545,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREFIX_HEADER = Basic.pch;
-				HEADER_SEARCH_PATHS = "${SDK_DIR}/usr/include/libxml2";
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Importer/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.metadata-importer";
 				PRODUCT_NAME = Colloquy;
@@ -2606,18 +2558,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C21296FF1F6465FC00555EE3 /* Base.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				SDKROOT = macosx;
 				SYMROOT = build;
 			};
 			name = Release;
@@ -2626,16 +2569,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 				);
-				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				INFOPLIST_FILE = "Tests/Colloquy Tests-Info.plist";
@@ -2649,18 +2587,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 				);
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
