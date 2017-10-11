@@ -2796,14 +2796,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREFIX_HEADER = Basic.pch;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					Shared/Models,
-				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.standard-commands";
 				PRODUCT_NAME = "Standard Commands";
@@ -2817,14 +2811,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-$(COLLOQUY_BASE_CONFIGURATION)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEPLOYMENT_POSTPROCESSING = NO;
 				EXPORTED_SYMBOLS_FILE = Colloquy.exp;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_SSE41_EXTENSIONS = YES;
-				GCC_ENABLE_SSE42_EXTENSIONS = YES;
-				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Resources/Info.plist;
@@ -2842,9 +2829,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREFIX_HEADER = Basic.pch;
-				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Importer/Info.plist;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.metadata-importer";
@@ -2857,25 +2842,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C21296FF1F6465FC00555EE3 /* Base.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					DEBUG,
-					"$(GCC_PREPROCESSOR_DEFINITIONS)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				ONLY_ACTIVE_ARCH = YES;
-				SYMROOT = build;
 			};
 			name = Debug;
 		};
@@ -2883,14 +2850,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREFIX_HEADER = Basic.pch;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					Shared/Models,
-				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.standard-commands";
 				PRODUCT_NAME = "Standard Commands";
@@ -2904,13 +2865,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-$(COLLOQUY_BASE_CONFIGURATION)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				COMBINE_HIDPI_IMAGES = YES;
 				EXPORTED_SYMBOLS_FILE = Colloquy.exp;
-				GCC_ENABLE_SSE3_EXTENSIONS = YES;
-				GCC_ENABLE_SSE41_EXTENSIONS = YES;
-				GCC_ENABLE_SSE42_EXTENSIONS = YES;
-				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Resources/Info.plist;
@@ -2934,9 +2889,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREFIX_HEADER = Basic.pch;
-				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Importer/Info.plist;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.metadata-importer";
@@ -2949,18 +2902,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C21296FF1F6465FC00555EE3 /* Base.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				SYMROOT = build;
 			};
 			name = Release;
 		};
