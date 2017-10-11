@@ -29,8 +29,7 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 	NSStringEncoding _encoding;
 	NSMenu *_encodingMenu;
 	NSMutableArray *_sendHistory;
-	NSMutableArray *_waitingAlerts;
-	NSMutableDictionary *_waitingAlertNames;
+	NSMutableArray<NSDictionary <NSString *, id>*> *_waitingAlerts;
 	NSMutableDictionary *_settings;
 	NSMenu *_spillEncodingMenu;
 	JVMutableChatMessage *_currentMessage;
@@ -57,7 +56,7 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 @property (readonly, strong, nullable) MVChatUser *user;
 @property (readonly, copy) NSURL *url;
 
-- (void) showAlert:(NSPanel *) alert withName:(nullable NSString *) name;
+- (void) showAlert:(NSAlert *) alert withCompletionHandler:(void (^ __nullable)(NSModalResponse returnCode))handler;
 
 - (void) setPreference:(nullable id) value forKey:(NSString *) key;
 - (nullable id) preferenceForKey:(NSString *) key;
@@ -104,7 +103,6 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 - (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message;
 - (NSMutableAttributedString *) _convertRawMessage:(NSData *) message;
 - (nullable NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(nullable NSFont *) baseFont;
-- (void) _alertSheetDidEnd:(NSWindow *) sheet returnCode:(NSModalResponse) returnCode;
 - (void) _didConnect:(NSNotification *) notification;
 - (void) _didDisconnect:(NSNotification *) notification;
 - (void) _errorOccurred:(NSNotification *) notification;

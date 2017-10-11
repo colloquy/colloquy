@@ -131,8 +131,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		_sendHistory = [NSMutableArray arrayWithCapacity:30];
 		[_sendHistory insertObject:[[NSAttributedString alloc] initWithString:@""] atIndex:0];
 
-		_waitingAlerts = [NSMutableArray arrayWithCapacity:5];
-		_waitingAlertNames = [NSMutableDictionary dictionaryWithCapacity:5];
+		_waitingAlerts = [NSMutableArray array];
 	}
 
 	return self;
@@ -227,8 +226,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	if( _watchRule ) [[self connection] removeChatUserWatchRule:_watchRule];
 
-	for( id alert in _waitingAlerts )
-		NSReleaseAlertPanel( alert );
+	_target = nil;
+	_sendHistory = nil;
+	_settings = nil;
+	_encodingMenu = nil;
+	_spillEncodingMenu = nil;
 }
 
 #pragma mark -
@@ -449,12 +451,16 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[_windowController reloadListItem:self andChildren:NO];
 	[[[self view] window] makeFirstResponder:send];
 
-	if( [_waitingAlerts count] ) {
-		NSWindow *alert = [_waitingAlerts objectAtIndex:0];
-		[_windowController.window beginSheet:alert completionHandler:^(NSModalResponse returnCode) {
-			[self _alertSheetDidEnd:alert returnCode:returnCode];
-		}];
+	for (NSDictionary<NSString *, id> *alertDict in _waitingAlerts) {
+		NSString *alertKey = @"alert";
+		NSString *handlerKey = @"handler";
+		
+		NSAlert *alert = alertDict[alertKey];
+		void (^ __nullable handler)(NSModalResponse returnCode) = alertDict[handlerKey];
+		
+		[alert beginSheetModalForWindow:_windowController.window completionHandler:handler];
 	}
+	[_waitingAlerts removeAllObjects];
 }
 
 #pragma mark -
@@ -478,30 +484,14 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 #pragma mark -
 
-- (void) showAlert:(NSPanel *) alert withName:(nullable NSString *) name {
-	if( _isActive && ! [[_windowController window] attachedSheet] ) {
-		if( alert ) {
-			[_windowController.window beginSheet:alert completionHandler:^(NSModalResponse returnCode) {
-				[self _alertSheetDidEnd:alert returnCode:returnCode];
-			}];
-		}
+- (void) showAlert:(NSAlert *) alert withCompletionHandler:(void (^ __nullable)(NSModalResponse returnCode))handler {
+	if( _isActive ) {
+		[alert beginSheetModalForWindow:_windowController.window completionHandler:handler];
 	} else {
-		if( name && _waitingAlertNames[name] ) {
-			NSPanel *sheet = _waitingAlertNames[name];
-
-			if( alert ) {
-				_waitingAlerts[[_waitingAlerts indexOfObjectIdenticalTo:_waitingAlertNames[name]]] = alert;
-				_waitingAlertNames[name] = alert;
-			} else {
-				[_waitingAlerts removeObjectAtIndex:[_waitingAlerts indexOfObjectIdenticalTo:_waitingAlertNames[name]]];
-				[_waitingAlertNames removeObjectForKey:name];
-			}
-
-			NSReleaseAlertPanel( sheet );
-		} else {
-			if( name && alert ) _waitingAlertNames[name] = alert;
-			if( alert ) [_waitingAlerts addObject:alert];
-		}
+		NSString *alertKey = @"alert";
+		NSString *handlerKey = @"handler";
+		
+		[_waitingAlerts addObject:(handler ? @{alertKey: alert, handlerKey: handler} : @{alertKey: alert})];
 	}
 
 	[_windowController reloadListItem:self andChildren:NO];
@@ -1640,30 +1630,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[self _performEmoticonSubstitutionOnStringIfNecessary:messageString];
 
 	return messageString;
-}
-
-- (void) _alertSheetDidEnd:(NSWindow *) sheet returnCode:(NSModalResponse) returnCode {
-	[[NSApplication sharedApplication] endSheet:sheet];
-	[sheet orderOut:nil];
-
-	[_waitingAlerts removeObjectIdenticalTo:sheet];
-
-	id key = nil;
-	for( key in _waitingAlertNames ) {
-		id value = _waitingAlertNames[key];
-		if( value == sheet ) break;
-	}
-
-	if( key ) [_waitingAlertNames removeObjectForKey:key];
-
-	NSReleaseAlertPanel( sheet );
-
-	if( [_waitingAlerts count] ) {
-		NSWindow *alert = [_waitingAlerts objectAtIndex:0];
-		[_windowController.window beginSheet:alert completionHandler:^(NSModalResponse innerReturnCode) {
-			[self _alertSheetDidEnd:alert returnCode:innerReturnCode];
-		}];
-	}
 }
 
 - (void) _didConnect:(NSNotification *) notification {
