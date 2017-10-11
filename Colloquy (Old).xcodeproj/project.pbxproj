@@ -2828,7 +2828,6 @@
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Resources/Info.plist;
-				LLVM_LTO = YES;
 				OTHER_CFLAGS = (
 					"-fconstant-cfstrings",
 					"-Wno-arc-performSelector-leaks",
@@ -2915,7 +2914,6 @@
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Resources/Info.plist;
-				LLVM_LTO = YES;
 				OTHER_CFLAGS = (
 					"-fconstant-cfstrings",
 					"-Wno-arc-performSelector-leaks",
