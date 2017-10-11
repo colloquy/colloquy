@@ -9,6 +9,12 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 @end
 
 @implementation JVColorWellCell
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+	return self = [super initWithCoder:coder];
+}
+
 + (void) colorPanelColorChanged:(NSNotification *) notification {
 	NSColorPanel *panel = [notification object];
 
