@@ -2447,12 +2447,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				GCC_PREFIX_HEADER = Basic.pch;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					Shared/Models,
-				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.standard-commands";
 				PRODUCT_NAME = "Standard Commands";
@@ -2470,7 +2465,10 @@
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Resources/Info.plist;
-				OTHER_CFLAGS = "-Wno-arc-performSelector-leaks";
+				OTHER_CFLAGS = (
+					"-fconstant-cfstrings",
+					"-Wno-arc-performSelector-leaks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy;
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;
@@ -2482,7 +2480,6 @@
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Basic.pch;
-				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Importer/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.metadata-importer";
 				PRODUCT_NAME = Colloquy;
@@ -2495,9 +2492,7 @@
 			baseConfigurationReference = C21296FF1F6465FC00555EE3 /* Base.xcconfig */;
 			buildSettings = {
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				SDKROOT = macosx;
-				SYMROOT = build;
 			};
 			name = Debug;
 		};
@@ -2505,12 +2500,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				GCC_PREFIX_HEADER = Basic.pch;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					Shared/Models,
-				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.standard-commands";
 				PRODUCT_NAME = "Standard Commands";
@@ -2528,7 +2518,10 @@
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Resources/Info.plist;
-				OTHER_CFLAGS = "-Wno-arc-performSelector-leaks";
+				OTHER_CFLAGS = (
+					"-fconstant-cfstrings",
+					"-Wno-arc-performSelector-leaks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy;
 				PRODUCT_NAME = Colloquy;
 				SECTORDER_FLAGS = (
@@ -2546,7 +2539,6 @@
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Basic.pch;
-				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Importer/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.metadata-importer";
 				PRODUCT_NAME = Colloquy;
@@ -2559,9 +2551,7 @@
 			baseConfigurationReference = C21296FF1F6465FC00555EE3 /* Base.xcconfig */;
 			buildSettings = {
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				SDKROOT = macosx;
-				SYMROOT = build;
 			};
 			name = Release;
 		};
