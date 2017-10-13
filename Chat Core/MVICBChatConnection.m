@@ -32,17 +32,19 @@
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#import "MVICBChatConnection.h"
+
 #import <stdarg.h>
 #import <Foundation/Foundation.h>
+
+@import CocoaAsyncSocket;
 
 #import "MVChatConnectionPrivate.h"
 #import "MVChatRoomPrivate.h"
 #import "MVChatUserPrivate.h"
-#import "MVICBChatConnection.h"
 #import "MVICBChatRoom.h"
 #import "MVICBChatUser.h"
 
-#import "GCDAsyncSocket.h"
 #import "ICBPacket.h"
 #import "InterThreadMessaging.h"
 #import "MVUtilities.h"

@@ -1,4 +1,7 @@
 #import "MVIRCChatConnection.h"
+
+@import CocoaAsyncSocket;
+
 #import "MVIRCChatRoom.h"
 #import "MVIRCChatUser.h"
 #import "MVIRCFileTransfer.h"
@@ -6,7 +9,6 @@
 #import "MVDirectChatConnectionPrivate.h"
 #import "MVChatString.h"
 
-#import "GCDAsyncSocket.h"
 #import "InterThreadMessaging.h"
 #import "MVChatUserWatchRule.h"
 #import "NSNotificationAdditions.h"

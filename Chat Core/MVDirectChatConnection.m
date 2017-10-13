@@ -1,4 +1,7 @@
 #import "MVDirectChatConnection.h"
+
+@import CocoaAsyncSocket;
+
 #import "MVDirectChatConnectionPrivate.h"
 
 #import "InterThreadMessaging.h"
@@ -10,8 +13,6 @@
 #import "MVUtilities.h"
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
-
-#import "GCDAsyncSocket.h"
 
 #if USE(ATTRIBUTED_CHAT_STRING)
 #import "NSAttributedStringAdditions.h"

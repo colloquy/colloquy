@@ -1,6 +1,7 @@
 #import "CQBouncerConnection.h"
 
-#import "GCDAsyncSocket.h"
+@import CocoaAsyncSocket;
+
 #import "CQBouncerSettings.h"
 
 #import <objc/message.h>
