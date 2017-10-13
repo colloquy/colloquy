@@ -344,6 +344,7 @@
 		B6D085B61B8D6E8400734C96 /* CQActivities.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D085B51B8D6E8400734C96 /* CQActivities.m */; };
 		C25BD6781F916300007C69D3 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C25BD6771F9162FA007C69D3 /* CocoaAsyncSocket.framework */; };
 		C25BD6791F916302007C69D3 /* CocoaAsyncSocket.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C25BD6771F9162FA007C69D3 /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2A939F91F91684E007618C4 /* OnePasswordExtension.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1918E39E1F89680000559039 /* OnePasswordExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -371,6 +372,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C25BD6791F916302007C69D3 /* CocoaAsyncSocket.framework in Copy Frameworks */,
+				C2A939F91F91684E007618C4 /* OnePasswordExtension.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
