@@ -28,6 +28,7 @@
 - (IBAction) getInfo:(id) sender;
 @end
 
+COLLOQUY_EXPORT
 @interface JVInspectorController : NSWindowController <NSWindowDelegate> {
 	id _self;
 	BOOL _locked;

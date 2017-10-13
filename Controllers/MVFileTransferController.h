@@ -3,6 +3,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 
 @class MVFileTransfer;
 
+COLLOQUY_EXPORT
 @interface MVFileTransferController : NSWindowController <NSOpenSavePanelDelegate, NSToolbarDelegate, NSURLDownloadDelegate> {
 @private
 	IBOutlet NSProgressIndicator *progressBar;

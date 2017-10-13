@@ -2,6 +2,7 @@
 
 @class MVChatConnection;
 
+COLLOQUY_EXPORT
 @interface MVConnectionsController : NSWindowController <JVInspectionDelegator, NSToolbarDelegate> {
 @private
 	IBOutlet NSTableView *connections;

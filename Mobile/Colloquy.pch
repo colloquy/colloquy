@@ -1,5 +1,7 @@
 #import <TargetConditionals.h>
 
+#define COLLOQUY_EXPORT
+
 #define ENABLE(FEATURE) (defined(ENABLE_##FEATURE) && ENABLE_##FEATURE)
 #define SYSTEM(NAME) (defined(SYSTEM_##NAME) && SYSTEM_##NAME)
 

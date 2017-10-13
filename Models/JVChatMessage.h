@@ -69,6 +69,7 @@ typedef enum _JVChatMessageType {
 - (id) attributeForKey:(id) key;
 @end
 
+COLLOQUY_EXPORT
 @interface JVMutableChatMessage : JVChatMessage {
 	@protected
 	id _sender;

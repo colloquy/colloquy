@@ -13,6 +13,7 @@
 
 @protocol JVChatViewController;
 
+COLLOQUY_EXPORT
 @interface JVChatController : NSObject {
 	@private
 	NSMutableSet *_chatWindows;

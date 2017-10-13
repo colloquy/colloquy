@@ -83,75 +83,76 @@ typedef BOOL (^MVPeerTrustHandler)(SecTrustRef);
 @class MVChatUser;
 @class MVChatUserWatchRule;
 
-extern NSString *MVChatConnectionWatchFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionWatchFeature;
 
 // IRC3v1 Required
-extern NSString *MVChatConnectionSASLFeature;
-extern NSString *MVChatConnectionMultipleNicknamePrefixFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionSASLFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionMultipleNicknamePrefixFeature;
 
 // IRC3v1 Optional
-extern NSString *MVChatConnectionAccountNotifyFeature;
-extern NSString *MVChatConnectionAwayNotifyFeature;
-extern NSString *MVChatConnectionExtendedJoinFeature;
-extern NSString *MVChatConnectionTLSFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionAccountNotifyFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionAwayNotifyFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionExtendedJoinFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionTLSFeature;
 
 // IRC3v2 Required
-extern NSString *MVChatConnectionMessageTagsFeature;
-extern NSString *MVChatConnectionMonitorFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionMessageTagsFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionMonitorFeature;
 
 // IRC3v2 Optional
-extern NSString *MVChatConnectionServerTimeFeature;
-extern NSString *MVChatConnectionBatchFeature;
-extern NSString *MVChatConnectionUserhostInNamesFeature;
-extern NSString *MVChatConnectionChghostFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionServerTimeFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionBatchFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionUserhostInNamesFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionChghostFeature;
 
-extern NSString *MVChatConnectionAccountTagFeature;
-extern NSString *MVChatConnectionCapNotifyFeature;
-extern NSString *MVChatConnectionInviteFeature;
-extern NSString *MVChatConnectionEchoMessageFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionAccountTagFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionCapNotifyFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionInviteFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionEchoMessageFeature;
 
 // IRC3v3 Prototypes
-extern NSString *MVChatConnectionSTSFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionSTSFeature;
 
 // InspIRCd Enhancements
-extern NSString *MVChatConnectionNamesxFeature;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionNamesxFeature;
 
 // Notifications
-extern NSString *MVChatConnectionWillConnectNotification;
-extern NSString *MVChatConnectionDidConnectNotification;
-extern NSString *MVChatConnectionDidNotConnectNotification;
-extern NSString *MVChatConnectionWillDisconnectNotification;
-extern NSString *MVChatConnectionDidDisconnectNotification;
-extern NSString *MVChatConnectionGotErrorNotification;
-extern NSString *MVChatConnectionErrorNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionWillConnectNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionDidConnectNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionDidNotConnectNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionWillDisconnectNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionDidDisconnectNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionGotErrorNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionErrorNotification;
 
-extern NSString *MVChatConnectionNeedTLSPeerTrustFeedbackNotification; // used when connecting
-extern NSString *MVChatConnectionNeedNicknamePasswordNotification;
-extern NSString *MVChatConnectionNeedServerPasswordNotification;
-extern NSString *MVChatConnectionNeedCertificatePasswordNotification;
-extern NSString *MVChatConnectionNeedPublicKeyVerificationNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionNeedTLSPeerTrustFeedbackNotification; // used when connecting
+COLLOQUY_EXPORT extern NSString *MVChatConnectionNeedNicknamePasswordNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionNeedServerPasswordNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionNeedCertificatePasswordNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionNeedPublicKeyVerificationNotification;
 
-extern NSString *MVChatConnectionGotBeepNotification;
-extern NSString *MVChatConnectionGotImportantMessageNotification;
-extern NSString *MVChatConnectionGotInformationalMessageNotification;
-extern NSString *MVChatConnectionGotRawMessageNotification;
-extern NSString *MVChatConnectionGotPrivateMessageNotification;
-extern NSString *MVChatConnectionChatRoomListUpdatedNotification;
-extern NSString *MVChatConnectionBatchUpdatesWillBeginNotification;
-extern NSString *MVChatConnectionBatchUpdatesDidEndNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionGotBeepNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionGotImportantMessageNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionGotInformationalMessageNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionGotRawMessageNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionGotPrivateMessageNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionChatRoomListUpdatedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionBatchUpdatesWillBeginNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionBatchUpdatesDidEndNotification;
 
-extern NSString *MVChatConnectionSelfAwayStatusChangedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionSelfAwayStatusChangedNotification;
 
-extern NSString *MVChatConnectionNicknameAcceptedNotification;
-extern NSString *MVChatConnectionNicknameRejectedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionNicknameAcceptedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionNicknameRejectedNotification;
 
-extern NSString *MVChatConnectionDidIdentifyWithServicesNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionDidIdentifyWithServicesNotification;
 
-extern NSString *MVChatConnectionSubcodeRequestNotification;
-extern NSString *MVChatConnectionSubcodeReplyNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionSubcodeRequestNotification;
+COLLOQUY_EXPORT extern NSString *MVChatConnectionSubcodeReplyNotification;
 
 extern NSString *MVChatConnectionErrorDomain;
 
+COLLOQUY_EXPORT
 @interface MVChatConnection : NSObject {
 @protected
 	NSMutableSet *_supportedFeatures;

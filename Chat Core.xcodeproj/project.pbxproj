@@ -195,7 +195,6 @@
 		1C7B83CA0668D765004F1EFE /* NSNotificationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSNotificationAdditions.m; path = Additions/NSNotificationAdditions.m; sourceTree = "<group>"; };
 		1C7C776707DBBA4500FB5F83 /* NSScriptCommandAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSScriptCommandAdditions.h; path = Additions/NSScriptCommandAdditions.h; sourceTree = "<group>"; };
 		1C7C776807DBBA4500FB5F83 /* NSScriptCommandAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSScriptCommandAdditions.m; path = Additions/NSScriptCommandAdditions.m; sourceTree = "<group>"; };
-		1C8AA4B609D60B1100CF29EB /* Chat Core.exp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.exports; path = "Chat Core.exp"; sourceTree = "<group>"; };
 		1C8AAEFC09D69F2700CF29EB /* MVChatUserWatchRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUserWatchRule.h; path = "Chat Core/MVChatUserWatchRule.h"; sourceTree = "<group>"; };
 		1C8AAEFD09D69F2700CF29EB /* MVChatUserWatchRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatUserWatchRule.m; path = "Chat Core/MVChatUserWatchRule.m"; sourceTree = "<group>"; };
 		1C914B130705BFE100CBA5F1 /* MVIRCChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVIRCChatUser.h; path = "Chat Core/MVIRCChatUser.h"; sourceTree = "<group>"; };
@@ -523,7 +522,6 @@
 				1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */,
 				1CCA517E0598AFBA00F0A4CD /* ChatCore.scriptSuite */,
 				1CCA517F0598AFBA00F0A4CD /* ChatCore.scriptTerminology */,
-				1C8AA4B609D60B1100CF29EB /* Chat Core.exp */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -843,7 +841,6 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
-				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Basic.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -888,7 +885,6 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
-				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Basic.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (

@@ -762,7 +762,6 @@
 		928FB02F13EE643E00A0DF4B /* NSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSStringAdditions.h; path = Additions/NSStringAdditions.h; sourceTree = "<group>"; };
 		928FB03013EE643E00A0DF4B /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSStringAdditions.m; path = Additions/NSStringAdditions.m; sourceTree = "<group>"; };
 		928FB03513EE64C700A0DF4B /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
-		9295C84E1675E10A009F9014 /* Colloquy.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = Colloquy.exp; sourceTree = "<group>"; };
 		92C70D081A5E87CF00080E45 /* room.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = room.pdf; path = Resources/room.pdf; sourceTree = "<group>"; };
 		92C70D0A1A5E88CE00080E45 /* half-op.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = "half-op.pdf"; path = "Resources/half-op.pdf"; sourceTree = "<group>"; };
 		92C70D0B1A5E88CE00080E45 /* person.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = person.pdf; path = Resources/person.pdf; sourceTree = "<group>"; };
@@ -1580,7 +1579,6 @@
 				F51F91D7037967CB01A35792 /* Chat.clr */,
 				1CC6FD38054AF1940075807C /* preview.colloquyTranscript */,
 				0A5B683E0810EC9700398D5A /* default.css */,
-				9295C84E1675E10A009F9014 /* Colloquy.exp */,
 				1C1AFB3C09C295D900BF3E2A /* base.html */,
 				1C1AFDAA09C3BC4F00BF3E2A /* roomTopicBanner.html */,
 				1C3C116005029DE1000001C8 /* template.html */,
@@ -2811,9 +2809,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-$(COLLOQUY_BASE_CONFIGURATION)";
-				EXPORTED_SYMBOLS_FILE = Colloquy.exp;
 				GCC_PREFIX_HEADER = Colloquy.pch;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Resources/Info.plist;
 				OTHER_CFLAGS = (
 					"-fconstant-cfstrings",
@@ -2865,9 +2861,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-$(COLLOQUY_BASE_CONFIGURATION)";
-				EXPORTED_SYMBOLS_FILE = Colloquy.exp;
 				GCC_PREFIX_HEADER = Colloquy.pch;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Resources/Info.plist;
 				OTHER_CFLAGS = (
 					"-fconstant-cfstrings",

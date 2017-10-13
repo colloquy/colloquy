@@ -1,3 +1,4 @@
+COLLOQUY_EXPORT
 @interface JVNotificationController : NSObject <NSUserNotificationCenterDelegate> {
 	NSMutableDictionary *_bubbles;
 	NSMutableDictionary *_sounds;

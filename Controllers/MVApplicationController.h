@@ -1,7 +1,7 @@
 extern NSString *JVChatStyleInstalledNotification;
 extern NSString *JVChatEmoticonSetInstalledNotification;
 extern NSString *JVMachineBecameIdleNotification;
-extern NSString *JVMachineStoppedIdlingNotification;
+COLLOQUY_EXPORT extern NSString *JVMachineStoppedIdlingNotification;
 
 @class CQMPreferencesWindowController;
 @class SUUpdater;

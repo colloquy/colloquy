@@ -2,6 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+COLLOQUY_EXPORT
 @interface CQKeychain : NSObject
 + (CQKeychain *) standardKeychain;
 

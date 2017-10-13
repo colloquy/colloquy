@@ -6,9 +6,10 @@ NS_ASSUME_NONNULL_BEGIN
 @class MVChatUser;
 @class MVChatConnection;
 
-extern NSString *MVChatUserWatchRuleMatchedNotification;
-extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
+COLLOQUY_EXPORT extern NSString *MVChatUserWatchRuleMatchedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
 
+COLLOQUY_EXPORT
 @interface MVChatUserWatchRule : NSObject <NSCopying>
 - (instancetype) initWithDictionaryRepresentation:(NSDictionary *) dictionary;
 - (NSDictionary *) dictionaryRepresentation;

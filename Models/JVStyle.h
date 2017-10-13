@@ -9,6 +9,7 @@ extern NSString *JVDefaultStyleVariantChangedNotification;
 extern NSString *JVNewStyleVariantAddedNotification;
 extern NSString *JVStyleVariantChangedNotification;
 
+COLLOQUY_EXPORT
 @interface JVStyle : NSObject {
 	NSBundle *_bundle;
 	NSDictionary *_parameters;

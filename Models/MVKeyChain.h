@@ -32,7 +32,7 @@ enum {
 
 typedef SecProtocolType MVKeyChainProtocol;
 
-
+COLLOQUY_EXPORT
 @interface MVKeyChain : NSObject
 + (MVKeyChain *) defaultKeyChain;
 

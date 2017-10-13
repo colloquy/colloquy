@@ -5,6 +5,7 @@
 
 extern NSString *const MVFavoritesListDidUpdateNotification;
 
+COLLOQUY_EXPORT
 @interface JVChatRoomPanel : JVDirectChatPanel {
 	@protected
 	NSMutableArray<JVChatRoomMember *> *_sortedMembers;
