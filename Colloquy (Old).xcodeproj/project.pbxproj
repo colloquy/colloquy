@@ -2817,6 +2817,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy;
 				PRODUCT_NAME = Colloquy;
+				STRIP_STYLE = "non-global";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2875,6 +2876,7 @@
 					__text,
 					Colloquy.order,
 				);
+				STRIP_STYLE = "non-global";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
