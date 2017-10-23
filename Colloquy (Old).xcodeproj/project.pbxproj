@@ -189,10 +189,10 @@
 		C236F65D1BDCE8E600E64469 /* schema.strings in Resources */ = {isa = PBXBuildFile; fileRef = C236F6581BDCE81F00E64469 /* schema.strings */; };
 		C25750D41F64194F008AE623 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; };
 		C25750D51F641958008AE623 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; };
-		C25750D61F64195B008AE623 /* ChatCore.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C25750D61F64195B008AE623 /* ChatCore.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C25750D81F64209D008AE623 /* MASPreferences.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C25750D71F64209D008AE623 /* MASPreferences.framework */; };
-		C25750D91F6420E2008AE623 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C25750D71F64209D008AE623 /* MASPreferences.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C267EE2C1F7304DC00F3380D /* CocoaAsyncSocket.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C267EE2B1F7304D000F3380D /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C25750D91F6420E2008AE623 /* MASPreferences.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C25750D71F64209D008AE623 /* MASPreferences.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C267EE2C1F7304DC00F3380D /* CocoaAsyncSocket.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C267EE2B1F7304D000F3380D /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C29654101BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */; };
 		C29654131BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654151BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib */; };
 		C29654161BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654181BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib */; };
@@ -200,10 +200,10 @@
 		C296541C1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C296541E1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib */; };
 		C296541F1BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654211BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib */; };
 		C29654221BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29654241BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib */; };
-		C29FF96C1F6538790044954E /* KissXML.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96B1F6538650044954E /* KissXML.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C29FF9701F6544EB0044954E /* CocoaLumberjack.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96E1F6544D90044954E /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C29FF9711F6544EB0044954E /* libidn.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96F1F6544D90044954E /* libidn.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C29FF9721F6544EB0044954E /* XMPPFramework.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96D1F6544BA0044954E /* XMPPFramework.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C29FF96C1F6538790044954E /* KissXML.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96B1F6538650044954E /* KissXML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C29FF9701F6544EB0044954E /* CocoaLumberjack.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96E1F6544D90044954E /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C29FF9711F6544EB0044954E /* libidn.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96F1F6544D90044954E /* libidn.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C29FF9721F6544EB0044954E /* XMPPFramework.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C29FF96D1F6544BA0044954E /* XMPPFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2B6BF501F6F00FC0044C20E /* Mac.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C2A889561F6EFD5300F2C6D4 /* Mac.xcassets */; };
 		C2B9D0ED1C258BA200C2B4C4 /* CQMPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */; };
 		CBF6855F08201B7300F498FB /* schema.xml in Resources */ = {isa = PBXBuildFile; fileRef = CBF685340820190D00F498FB /* schema.xml */; };
