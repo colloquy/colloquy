@@ -5,13 +5,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class MVChatUser;
 
-extern NSString *MVDownloadFileTransferOfferNotification;
-extern NSString *MVFileTransferDataTransferredNotification;
-extern NSString *MVFileTransferStartedNotification;
-extern NSString *MVFileTransferFinishedNotification;
-extern NSString *MVFileTransferErrorOccurredNotification;
+COLLOQUY_EXPORT extern NSString *MVDownloadFileTransferOfferNotification;
+COLLOQUY_EXPORT extern NSString *MVFileTransferDataTransferredNotification;
+COLLOQUY_EXPORT extern NSString *MVFileTransferStartedNotification;
+COLLOQUY_EXPORT extern NSString *MVFileTransferFinishedNotification;
+COLLOQUY_EXPORT extern NSString *MVFileTransferErrorOccurredNotification;
 
-extern NSString *MVFileTransferErrorDomain;
+COLLOQUY_EXPORT extern NSString *MVFileTransferErrorDomain;
 
 typedef NS_ENUM(OSType, MVFileTransferStatus) {
 	MVFileTransferDoneStatus = 'trDn',
@@ -41,6 +41,7 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 	}
 }
 
+COLLOQUY_EXPORT
 @interface MVFileTransfer : NSObject
 
 #if __has_feature(objc_class_property)
@@ -79,6 +80,7 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 
 #pragma mark -
 
+COLLOQUY_EXPORT
 @interface MVUploadFileTransfer : MVFileTransfer {
 @protected
 	NSString *_source;
@@ -90,6 +92,7 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 
 #pragma mark -
 
+COLLOQUY_EXPORT
 @interface MVDownloadFileTransfer : MVFileTransfer {
 @protected
 	BOOL _rename;

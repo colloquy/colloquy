@@ -2,8 +2,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString *NSChatWindowsIRCFormatType;
-extern NSString *NSChatCTCPTwoFormatType;
+COLLOQUY_EXPORT extern NSString *NSChatWindowsIRCFormatType;
+COLLOQUY_EXPORT extern NSString *NSChatCTCPTwoFormatType;
 
 #define JVItalicObliquenessValue 0.16
 

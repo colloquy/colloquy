@@ -129,7 +129,6 @@
 		89E87C090FA0450800B49230 /* CQSoundController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E87C080FA0450800B49230 /* CQSoundController.m */; };
 		920B6D5917196C6700879D86 /* topic.css in Resources */ = {isa = PBXBuildFile; fileRef = 920B6D5817196C6700879D86 /* topic.css */; };
 		920B6D5C17196E3F00879D86 /* roomTopicBanner.js in Resources */ = {isa = PBXBuildFile; fileRef = 920B6D5A17196C7900879D86 /* roomTopicBanner.js */; };
-		9215E175168AE04100E7E77F /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9215E174168AE04100E7E77F /* GCDAsyncSocket.m */; };
 		921857D819D13AE70076F87E /* CQUIChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 921857D619D13AE70076F87E /* CQUIChatView.xib */; };
 		921857D919D13AE70076F87E /* CQWKChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 921857D719D13AE70076F87E /* CQWKChatView.xib */; };
 		92196CA316C918D10020FE35 /* CQChatRoomInfoDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92196CA016C918D10020FE35 /* CQChatRoomInfoDisplayViewController.m */; };
@@ -235,7 +234,6 @@
 		B6831D301BE4508B00D3AC1D /* MVIRCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ECE13100F220088C737 /* MVIRCChatRoom.m */; };
 		B6831D311BE4508B00D3AC1D /* MVIRCChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED013100F220088C737 /* MVIRCChatUser.m */; };
 		B6831D321BE4508B00D3AC1D /* MVIRCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED213100F220088C737 /* MVIRCFileTransfer.m */; };
-		B6831D331BE4509100D3AC1D /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9215E174168AE04100E7E77F /* GCDAsyncSocket.m */; };
 		B6831D341BE4509100D3AC1D /* InterThreadMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED713100F220088C737 /* InterThreadMessaging.m */; };
 		B6831D351BE4509100D3AC1D /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EB913100F220088C737 /* MVChatConnection.m */; };
 		B6831D361BE4509100D3AC1D /* MVChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EBC13100F220088C737 /* MVChatRoom.m */; };
@@ -350,6 +348,9 @@
 		B6AEBB441C58592400F7CF66 /* CQGiphyController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6AEBB431C58592400F7CF66 /* CQGiphyController.m */; };
 		B6BFA5431BBDA3B6000C3BBC /* UIWindowAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B6BFA5421BBDA3B6000C3BBC /* UIWindowAdditions.m */; };
 		B6D085B61B8D6E8400734C96 /* CQActivities.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D085B51B8D6E8400734C96 /* CQActivities.m */; };
+		C25BD6781F916300007C69D3 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C25BD6771F9162FA007C69D3 /* CocoaAsyncSocket.framework */; };
+		C25BD6791F916302007C69D3 /* CocoaAsyncSocket.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C25BD6771F9162FA007C69D3 /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2A939F91F91684E007618C4 /* OnePasswordExtension.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1918E39E1F89680000559039 /* OnePasswordExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -368,6 +369,21 @@
 			remoteInfo = OnePasswordExtension;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C25BD6751F9162C3007C69D3 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C25BD6791F916302007C69D3 /* CocoaAsyncSocket.framework in Copy Frameworks */,
+				C2A939F91F91684E007618C4 /* OnePasswordExtension.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1918E3991F8967FF00559039 /* OnePasswordExtension.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OnePasswordExtension.xcodeproj; path = "Carthage/Checkouts/onepassword-extension/OnePasswordExtension.xcodeproj"; sourceTree = "<group>"; };
@@ -574,8 +590,6 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		920B6D5817196C6700879D86 /* topic.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = topic.css; sourceTree = "<group>"; };
 		920B6D5A17196C7900879D86 /* roomTopicBanner.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = roomTopicBanner.js; path = Resources/roomTopicBanner.js; sourceTree = SOURCE_ROOT; };
-		9215E173168AE04100E7E77F /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncSocket.h; path = ../Carthage/Checkouts/CocoaAsyncSocket/Source/GCD/GCDAsyncSocket.h; sourceTree = "<group>"; };
-		9215E174168AE04100E7E77F /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDAsyncSocket.m; path = ../Carthage/Checkouts/CocoaAsyncSocket/Source/GCD/GCDAsyncSocket.m; sourceTree = "<group>"; };
 		921857D619D13AE70076F87E /* CQUIChatView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CQUIChatView.xib; sourceTree = "<group>"; };
 		921857D719D13AE70076F87E /* CQWKChatView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CQWKChatView.xib; sourceTree = "<group>"; };
 		92196C9F16C918D10020FE35 /* CQChatRoomInfoDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatRoomInfoDisplayViewController.h; sourceTree = "<group>"; };
@@ -699,6 +713,7 @@
 		B6D085B51B8D6E8400734C96 /* CQActivities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQActivities.m; sourceTree = "<group>"; };
 		C21297001F64661C00555EE3 /* old-mac-target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
 		C22181CE1F648ED200F2E814 /* target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = target.xcconfig; sourceTree = "<group>"; };
+		C25BD6771F9162FA007C69D3 /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CocoaAsyncSocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -708,6 +723,7 @@
 			files = (
 				1918E3A11F89680700559039 /* OnePasswordExtension.framework in Frameworks */,
 				9261B6FC18419FCA001B14C3 /* HockeySDK.framework in Frameworks */,
+				C25BD6781F916300007C69D3 /* CocoaAsyncSocket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1030,8 +1046,6 @@
 		1C716EB513100F220088C737 /* Utility Classes */ = {
 			isa = PBXGroup;
 			children = (
-				9215E174168AE04100E7E77F /* GCDAsyncSocket.m */,
-				9215E173168AE04100E7E77F /* GCDAsyncSocket.h */,
 				1C716ED713100F220088C737 /* InterThreadMessaging.m */,
 				1C716ED813100F220088C737 /* InterThreadMessaging.h */,
 			);
@@ -1241,6 +1255,7 @@
 			children = (
 				1918E3991F8967FF00559039 /* OnePasswordExtension.xcodeproj */,
 				9261B6FB18419FCA001B14C3 /* HockeySDK.framework */,
+				C25BD6771F9162FA007C69D3 /* CocoaAsyncSocket.framework */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -1312,6 +1327,7 @@
 				922C766C16D9BF4500AEFCB4 /* Insert API Keys */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
 				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+				C25BD6751F9162C3007C69D3 /* Copy Frameworks */,
 				1C0C33330EEFA8E400062186 /* Update Build Info */,
 			);
 			buildRules = (
@@ -1658,7 +1674,6 @@
 				92F1C9E3161D936D0035A9AF /* UIActionSheetAdditions.m in Sources */,
 				B6831CC61BE425C300D3AC1D /* CQUITextChatTranscriptView.m in Sources */,
 				922C1630163BDBCE00B01C3D /* NSDateAdditions.m in Sources */,
-				9215E175168AE04100E7E77F /* GCDAsyncSocket.m in Sources */,
 				92823CEC168FE6CB000EC36E /* CQIgnoreRulesController.m in Sources */,
 				92823CEF168FE6EC000EC36E /* KAIgnoreRule.m in Sources */,
 				92823D3516911677000EC36E /* CQConsoleController.m in Sources */,
@@ -1700,7 +1715,6 @@
 				B6831D301BE4508B00D3AC1D /* MVIRCChatRoom.m in Sources */,
 				B6831D311BE4508B00D3AC1D /* MVIRCChatUser.m in Sources */,
 				B6831D321BE4508B00D3AC1D /* MVIRCFileTransfer.m in Sources */,
-				B6831D331BE4509100D3AC1D /* GCDAsyncSocket.m in Sources */,
 				B6831D341BE4509100D3AC1D /* InterThreadMessaging.m in Sources */,
 				B6831D351BE4509100D3AC1D /* MVChatConnection.m in Sources */,
 				B6831D361BE4509100D3AC1D /* MVChatRoom.m in Sources */,

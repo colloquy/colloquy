@@ -5,6 +5,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString * __nonnull JVEmoticonSetsScannedNotification;
 
+COLLOQUY_EXPORT
 @interface JVEmoticonSet : NSObject {
 	NSBundle *_bundle;
 	NSDictionary *_emoticonMappings;

@@ -4,6 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+COLLOQUY_EXPORT
 @interface JVSpeechController : NSObject <NSSpeechSynthesizerDelegate> {
 	NSMutableArray<NSDictionary<NSString*, NSString*>*> *_speechQueue;
 	NSArray<NSSpeechSynthesizer*> *_synthesizers;

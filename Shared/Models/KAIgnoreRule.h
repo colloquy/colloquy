@@ -15,6 +15,7 @@ typedef NS_ENUM(OSType, JVIgnoreMatchResult) {
 	JVNotIgnored = 'noIg'
 };
 
+COLLOQUY_EXPORT
 @interface KAIgnoreRule : NSObject
 + (instancetype) ruleForUser:(nullable NSString *) user mask:(nullable NSString *) mask message:(nullable NSString *) message inRooms:(nullable NSArray<NSString*> *) rooms isPermanent:(BOOL) permanent friendlyName:(nullable NSString *) friendlyName;
 - (instancetype) initForUser:(nullable NSString *) user mask:(nullable NSString *) mask message:(nullable NSString *) message inRooms:(nullable NSArray<NSString*> *) rooms isPermanent:(BOOL) permanent friendlyName:(nullable NSString *) friendlyName;

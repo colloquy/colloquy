@@ -15,6 +15,7 @@ typedef NS_ENUM(OSType, MVBuddyListSortOrder) {
 	MVServerSortOrder = 'serV'
 };
 
+COLLOQUY_EXPORT
 @interface MVBuddyListController : NSWindowController <JVInspectionDelegator, NSTableViewDataSource> {
 	@private
 	IBOutlet MVTableView *buddies;

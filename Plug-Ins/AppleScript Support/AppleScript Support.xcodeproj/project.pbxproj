@@ -293,12 +293,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C29E3BE61F64A2C000C18D21 /* target.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(BUILT_PRODUCTS_DIR)",
-				);
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					../../Additions,
@@ -325,8 +319,6 @@
 			baseConfigurationReference = C29E3BE31F64A2C000C18D21 /* Base.xcconfig */;
 			buildSettings = {
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)/../..";
-				ENABLE_TESTABILITY = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				SDKROOT = macosx;
 				SYMROOT = ../../build;
 			};
@@ -336,13 +328,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C29E3BE61F64A2C000C18D21 /* target.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
-				COMBINE_HIDPI_IMAGES = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(BUILT_PRODUCTS_DIR)",
-				);
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					../../Additions,

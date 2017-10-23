@@ -29,8 +29,12 @@ typedef NS_ENUM(FourCharCode, MVKeyChainProtocol) {
 	MVKeyChainProtocolSSH = kSecProtocolTypeSSH
 };
 
+typedef SecProtocolType MVKeyChainProtocol;
+
 NS_ASSUME_NONNULL_BEGIN
 
+
+COLLOQUY_EXPORT
 @interface MVKeyChain : NSObject
 #if __has_feature(objc_class_property)
 @property (class, readonly, retain) MVKeyChain *defaultKeyChain;

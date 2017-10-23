@@ -2,6 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+COLLOQUY_EXPORT
 @interface JVNotificationController : NSObject <NSUserNotificationCenterDelegate, KABubbleWindowControllerDelegate> {
 	NSMutableDictionary *_bubbles;
 	NSMutableDictionary *_sounds;

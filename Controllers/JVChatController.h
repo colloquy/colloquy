@@ -16,6 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+COLLOQUY_EXPORT
 @interface JVChatController : NSObject {
 	@private
 	NSMutableSet *_chatWindows;

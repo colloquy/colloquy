@@ -23,4 +23,3 @@ SKIP_INSTALL_plugin = YES
 SKIP_INSTALL_xctest = YES
 
 // TODO: Set STRIP_STYLE according to https://developer.apple.com/library/content/technotes/tn2004/tn2123.html#SECSTRIPPINGMACHOSYMBOLS
-// TODO: Do this in combination with reviewing https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/CppRuntimeEnv/Articles/SymbolVisibility.html which could obsolete our export symbols file.

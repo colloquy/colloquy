@@ -1,6 +1,7 @@
 #import "MVDirectClientConnection.h"
 
-#import "GCDAsyncSocket.h"
+@import CocoaAsyncSocket;
+
 #import "InterThreadMessaging.h"
 #import "MVChatConnectionPrivate.h"
 #import "MVFileTransfer.h"

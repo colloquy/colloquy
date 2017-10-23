@@ -1,4 +1,7 @@
 #import "MVChatConnection.h"
+
+@import CocoaAsyncSocket;
+
 #import "MVChatConnectionPrivate.h"
 #import "MVChatRoom.h"
 #import "MVChatRoomPrivate.h"
@@ -39,8 +42,6 @@
 #if ENABLE(XMPP)
 #import "MVXMPPChatConnection.h"
 #endif
-
-#import "GCDAsyncSocket.h"
 
 NSString *MVChatConnectionWatchFeature = @"MVChatConnectionWatchFeature";
 

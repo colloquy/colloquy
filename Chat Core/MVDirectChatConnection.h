@@ -6,15 +6,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString *MVDirectChatConnectionOfferNotification;
+COLLOQUY_EXPORT extern NSString *MVDirectChatConnectionOfferNotification;
 
-extern NSString *MVDirectChatConnectionDidConnectNotification;
-extern NSString *MVDirectChatConnectionDidDisconnectNotification;
-extern NSString *MVDirectChatConnectionErrorOccurredNotification;
+COLLOQUY_EXPORT extern NSString *MVDirectChatConnectionDidConnectNotification;
+COLLOQUY_EXPORT extern NSString *MVDirectChatConnectionDidDisconnectNotification;
+COLLOQUY_EXPORT extern NSString *MVDirectChatConnectionErrorOccurredNotification;
 
-extern NSString *MVDirectChatConnectionGotMessageNotification;
+COLLOQUY_EXPORT extern NSString *MVDirectChatConnectionGotMessageNotification;
 
-extern NSString *MVDirectChatConnectionErrorDomain;
+COLLOQUY_EXPORT extern NSString *MVDirectChatConnectionErrorDomain;
 
 typedef NS_ENUM(OSType, MVDirectChatConnectionStatus) {
 	MVDirectChatConnectionConnectedStatus = 'dcCo',
@@ -25,6 +25,7 @@ typedef NS_ENUM(OSType, MVDirectChatConnectionStatus) {
 
 @class MVChatUser;
 
+COLLOQUY_EXPORT
 @interface MVDirectChatConnection : NSObject <MVMessaging>
 + (instancetype) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive;
 

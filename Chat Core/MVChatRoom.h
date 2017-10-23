@@ -34,37 +34,38 @@ typedef NS_OPTIONS(NSUInteger, MVChatRoomMemberDisciplineMode) {
 	MVChatRoomMemberDisciplineQuietedMode = 1 << 0
 };
 
-extern NSString *MVChatRoomMemberQuietedFeature;
-extern NSString *MVChatRoomMemberVoicedFeature;
-extern NSString *MVChatRoomMemberHalfOperatorFeature;
-extern NSString *MVChatRoomMemberOperatorFeature;
-extern NSString *MVChatRoomMemberAdministratorFeature;
-extern NSString *MVChatRoomMemberFounderFeature;
+COLLOQUY_EXPORT extern NSString *MVChatRoomMemberQuietedFeature;
+COLLOQUY_EXPORT extern NSString *MVChatRoomMemberVoicedFeature;
+COLLOQUY_EXPORT extern NSString *MVChatRoomMemberHalfOperatorFeature;
+COLLOQUY_EXPORT extern NSString *MVChatRoomMemberOperatorFeature;
+COLLOQUY_EXPORT extern NSString *MVChatRoomMemberAdministratorFeature;
+COLLOQUY_EXPORT extern NSString *MVChatRoomMemberFounderFeature;
 
-extern NSString *MVChatRoomJoinedNotification;
-extern NSString *MVChatRoomPartedNotification;
-extern NSString *MVChatRoomKickedNotification;
-extern NSString *MVChatRoomInvitedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomJoinedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomPartedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomKickedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomInvitedNotification;
 
-extern NSString *MVChatRoomMemberUsersSyncedNotification;
-extern NSString *MVChatRoomBannedUsersSyncedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomMemberUsersSyncedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomBannedUsersSyncedNotification;
 
-extern NSString *MVChatRoomUserJoinedNotification;
-extern NSString *MVChatRoomUserPartedNotification;
-extern NSString *MVChatRoomUserKickedNotification;
-extern NSString *MVChatRoomUserBannedNotification;
-extern NSString *MVChatRoomUserBanRemovedNotification;
-extern NSString *MVChatRoomUserModeChangedNotification;
-extern NSString *MVChatRoomUserBrickedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomUserJoinedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomUserPartedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomUserKickedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomUserBannedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomUserBanRemovedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomUserModeChangedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomUserBrickedNotification;
 
-extern NSString *MVChatRoomGotMessageNotification;
-extern NSString *MVChatRoomTopicChangedNotification;
-extern NSString *MVChatRoomModesChangedNotification;
-extern NSString *MVChatRoomAttributeUpdatedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomGotMessageNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomTopicChangedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomModesChangedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatRoomAttributeUpdatedNotification;
 
 @class MVChatConnection;
 @class MVChatUser;
 
+COLLOQUY_EXPORT
 @interface MVChatRoom : NSObject <MVMessaging> {
 @protected
 	__weak MVChatConnection *_connection;

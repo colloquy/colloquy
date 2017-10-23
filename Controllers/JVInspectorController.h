@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction) getInfo:(nullable id) sender;
 @end
 
+COLLOQUY_EXPORT
 @interface JVInspectorController : NSWindowController <NSWindowDelegate> {
 	id _self;
 	BOOL _locked;

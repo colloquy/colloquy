@@ -2,7 +2,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern BOOL isValidUTF8( const char *string, NSUInteger length );
+COLLOQUY_EXPORT BOOL isValidUTF8( const char *string, NSUInteger length );
 
 #define is7Bit(ch) (((ch) & 0x80) == 0)
 #define isUTF8Tupel(ch) (((ch) & 0xE0) == 0xC0)

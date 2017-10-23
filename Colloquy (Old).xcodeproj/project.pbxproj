@@ -634,7 +634,6 @@
 		9200339E13D9258A005B69BA /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_TW; path = "zh-Hant.lproj/MVFileTransfer.xib"; sourceTree = "<group>"; };
 		92823CF0168FFA0A000EC36E /* KAIgnoreRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KAIgnoreRule.h; path = Shared/Models/KAIgnoreRule.h; sourceTree = SOURCE_ROOT; };
 		92823CF1168FFA0A000EC36E /* KAIgnoreRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KAIgnoreRule.m; path = Shared/Models/KAIgnoreRule.m; sourceTree = SOURCE_ROOT; };
-		9295C84E1675E10A009F9014 /* Colloquy.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; name = Colloquy.exp; path = ../Colloquy.exp; sourceTree = "<group>"; };
 		A1429C720901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = it.lproj/Colloquy.xib; sourceTree = "<group>"; };
 		A1429C750901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = it.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
 		A1429C760901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Italian; path = it.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
@@ -729,6 +728,7 @@
 		C23298971C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSWindow+CQMCoordinateSpaceConversion.h"; sourceTree = "<group>"; };
 		C23298981C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSWindow+CQMCoordinateSpaceConversion.m"; sourceTree = "<group>"; };
 		C236F6561BDCE81200E64469 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		C236F6591BDCE81F00E64469 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/schema.strings; sourceTree = "<group>"; };
 		C25154471C22063900551BB4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
 		C25154491C2207A200551BB4 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
 		C251544B1C2207A900551BB4 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
@@ -1373,7 +1373,6 @@
 				F51F91D7037967CB01A35792 /* Chat.clr */,
 				1CC6FD38054AF1940075807C /* preview.colloquyTranscript */,
 				0A5B683E0810EC9700398D5A /* default.css */,
-				9295C84E1675E10A009F9014 /* Colloquy.exp */,
 				1C1AFB3C09C295D900BF3E2A /* base.html */,
 				1C1AFDAA09C3BC4F00BF3E2A /* roomTopicBanner.html */,
 				1C3C116005029DE1000001C8 /* template.html */,
@@ -2224,6 +2223,7 @@
 		C236F6581BDCE81F00E64469 /* schema.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
+				C236F6591BDCE81F00E64469 /* English */,
 			);
 			name = schema.strings;
 			sourceTree = "<group>";
@@ -2461,9 +2461,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-$(COLLOQUY_BASE_CONFIGURATION)";
-				EXPORTED_SYMBOLS_FILE = Colloquy.exp;
 				GCC_PREFIX_HEADER = Colloquy.pch;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Resources/Info.plist;
 				OTHER_CFLAGS = (
 					"-fconstant-cfstrings",
@@ -2471,6 +2469,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy;
 				PRODUCT_NAME = Colloquy;
+				STRIP_STYLE = "non-global";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2514,9 +2513,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-$(COLLOQUY_BASE_CONFIGURATION)";
-				EXPORTED_SYMBOLS_FILE = Colloquy.exp;
 				GCC_PREFIX_HEADER = Colloquy.pch;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = Resources/Info.plist;
 				OTHER_CFLAGS = (
 					"-fconstant-cfstrings",
@@ -2530,6 +2527,7 @@
 					__text,
 					Colloquy.order,
 				);
+				STRIP_STYLE = "non-global";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -2,6 +2,7 @@
 
 @class MVChatConnection;
 
+COLLOQUY_EXPORT
 @interface JVChatRoomBrowser : NSWindowController {
 	id _self;
 	IBOutlet NSTableView *roomsTable;

@@ -72,6 +72,7 @@ typedef NS_ENUM(OSType, JVChatMessageType) {
 - (nullable id) attributeForKey:(id) key;
 @end
 
+COLLOQUY_EXPORT
 @interface JVMutableChatMessage : JVChatMessage {
 	@protected
 	id _sender;

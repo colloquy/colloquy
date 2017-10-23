@@ -26,50 +26,51 @@ typedef NS_OPTIONS(NSUInteger, MVChatUserMode) {
 	MVChatUserInvisibleMode = 1 << 0
 };
 
-extern NSString *MVChatUserKnownRoomsAttribute;
-extern NSString *MVChatUserPictureAttribute;
-extern NSString *MVChatUserPingAttribute;
-extern NSString *MVChatUserLocalTimeAttribute;
-extern NSString *MVChatUserClientInfoAttribute;
-extern NSString *MVChatUserVCardAttribute;
-extern NSString *MVChatUserServiceAttribute;
-extern NSString *MVChatUserMoodAttribute;
-extern NSString *MVChatUserStatusMessageAttribute;
-extern NSString *MVChatUserPreferredLanguageAttribute;
-extern NSString *MVChatUserPreferredContactMethodsAttribute;
-extern NSString *MVChatUserTimezoneAttribute;
-extern NSString *MVChatUserGeoLocationAttribute;
-extern NSString *MVChatUserDeviceInfoAttribute;
-extern NSString *MVChatUserExtensionAttribute;
-extern NSString *MVChatUserPublicKeyAttribute;
-extern NSString *MVChatUserServerPublicKeyAttribute;
-extern NSString *MVChatUserDigitalSignatureAttribute;
-extern NSString *MVChatUserServerDigitalSignatureAttribute;
-extern NSString *MVChatUserBanServerAttribute;
-extern NSString *MVChatUserBanAuthorAttribute;
-extern NSString *MVChatUserBanDateAttribute;
-extern NSString *MVChatUserSSLCertFingerprintAttribute;
-extern NSString *MVChatUserEmailAttribute;
-extern NSString *MVChatUserPhoneAttribute;
-extern NSString *MVChatUserWebsiteAttribute;
-extern NSString *MVChatUserIMServiceAttribute;
-extern NSString *MVChatUserCurrentlyPlayingAttribute;
-extern NSString *MVChatUserStatusAttribute;
-extern NSString *MVChatUserClientNameAttribute;
-extern NSString *MVChatUserClientVersionAttribute;
-extern NSString *MVChatUserClientUnknownAttributes;
+COLLOQUY_EXPORT extern NSString *MVChatUserKnownRoomsAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserPictureAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserPingAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserLocalTimeAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserClientInfoAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserVCardAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserServiceAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserMoodAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserStatusMessageAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserPreferredLanguageAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserPreferredContactMethodsAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserTimezoneAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserGeoLocationAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserDeviceInfoAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserExtensionAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserPublicKeyAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserServerPublicKeyAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserDigitalSignatureAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserServerDigitalSignatureAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserBanServerAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserBanAuthorAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserBanDateAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserSSLCertFingerprintAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserEmailAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserPhoneAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserWebsiteAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserIMServiceAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserCurrentlyPlayingAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserStatusAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserClientNameAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserClientVersionAttribute;
+COLLOQUY_EXPORT extern NSString *MVChatUserClientUnknownAttributes;
 
-extern NSString *MVChatUserNicknameChangedNotification;
-extern NSString *MVChatUserStatusChangedNotification;
-extern NSString *MVChatUserAwayStatusMessageChangedNotification;
-extern NSString *MVChatUserIdleTimeUpdatedNotification;
-extern NSString *MVChatUserModeChangedNotification;
-extern NSString *MVChatUserInformationUpdatedNotification;
-extern NSString *MVChatUserAttributeUpdatedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatUserNicknameChangedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatUserStatusChangedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatUserAwayStatusMessageChangedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatUserIdleTimeUpdatedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatUserModeChangedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatUserInformationUpdatedNotification;
+COLLOQUY_EXPORT extern NSString *MVChatUserAttributeUpdatedNotification;
 
 @class MVChatConnection;
 @class MVUploadFileTransfer;
 
+COLLOQUY_EXPORT
 @interface MVChatUser : NSObject <MVMessaging> {
 @protected
 	__weak MVChatConnection *_connection;
