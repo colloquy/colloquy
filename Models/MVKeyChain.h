@@ -29,8 +29,6 @@ typedef NS_ENUM(FourCharCode, MVKeyChainProtocol) {
 	MVKeyChainProtocolSSH = kSecProtocolTypeSSH
 };
 
-typedef SecProtocolType MVKeyChainProtocol;
-
 NS_ASSUME_NONNULL_BEGIN
 
 

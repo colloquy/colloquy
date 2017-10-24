@@ -29,3 +29,5 @@
 #ifndef ENABLE_XMPP
 #define ENABLE_XMPP 1
 #endif
+
+#define COLLOQUY_EXPORT __attribute__((__visibility__("default")))
