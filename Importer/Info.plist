@@ -7,6 +7,8 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Chat transcript</string>
 			<key>CFBundleTypeRole</key>
 			<string>MDImporter</string>
 			<key>LSItemContentTypes</key>
@@ -16,7 +18,7 @@
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>Colloquy</string>
+	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
@@ -26,7 +28,7 @@
 	<key>CFBundleName</key>
 	<string>Colloquy Metadata Importer</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>1.0.1</string>
 	<key>CFPlugInDynamicRegisterFunction</key>
 	<string></string>
 	<key>CFPlugInDynamicRegistration</key>
@@ -45,5 +47,38 @@
 	</dict>
 	<key>CFPlugInUnloadFunction</key>
 	<string></string>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.xml</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Chat transcript</string>
+			<key>UTTypeIdentifier</key>
+			<string>info.colloquy.transcript</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://colloquy.info</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<array>
+					<string>coTr</string>
+				</array>
+				<key>public.filename-extension</key>
+				<array>
+					<string>colloquyTranscript</string>
+					<string>colloquytranscript</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/x-colloquy-transcript</string>
+					<string>application/xml</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>

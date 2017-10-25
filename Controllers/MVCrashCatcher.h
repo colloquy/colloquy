@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 @interface MVCrashCatcher : NSObject {
 	IBOutlet NSTextView *comments;
 	IBOutlet NSTextView *log;

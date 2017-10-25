@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="JVChatRoomMember">
+            <connections>
+                <outlet property="banButton" destination="17" id="24"/>
+                <outlet property="banTitle" destination="12" id="19"/>
+                <outlet property="banWindow" destination="5" id="18"/>
+                <outlet property="cancelButton" destination="27" id="28"/>
+                <outlet property="firstField" destination="14" id="29"/>
+                <outlet property="firstTitle" destination="13" id="30"/>
+                <outlet property="secondField" destination="16" id="31"/>
+                <outlet property="secondTitle" destination="15" id="32"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="5" userLabel="CustomBan">
+            <windowStyleMask key="styleMask" titled="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="182" y="501" width="378" height="207"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <value key="minSize" type="size" width="320" height="152"/>
+            <view key="contentView" id="6">
+                <rect key="frame" x="0.0" y="0.0" width="378" height="208"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="12">
+                        <rect key="frame" x="18" y="171" width="342" height="17"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="40">
+                            <font key="font" metaFont="systemBold"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="13">
+                        <rect key="frame" x="18" y="146" width="342" height="17"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="41">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="14">
+                        <rect key="frame" x="20" y="116" width="338" height="22"/>
+                        <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="42">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <outlet property="nextKeyView" destination="16" id="34"/>
+                        </connections>
+                    </textField>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="15">
+                        <rect key="frame" x="18" y="91" width="342" height="17"/>
+                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" id="43">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="16">
+                        <rect key="frame" x="20" y="61" width="338" height="22"/>
+                        <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="44">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <outlet property="nextKeyView" destination="27" id="35"/>
+                        </connections>
+                    </textField>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="17">
+                        <rect key="frame" x="320" y="13" width="44" height="32"/>
+                        <buttonCell key="cell" type="push" title=" " bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="45">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                        </buttonCell>
+                        <connections>
+                            <outlet property="nextKeyView" destination="14" id="37"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="27">
+                        <rect key="frame" x="238" y="13" width="82" height="32"/>
+                        <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="46">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                            <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                        </buttonCell>
+                        <connections>
+                            <action selector="cancelSheet:" target="-2" id="33"/>
+                            <outlet property="nextKeyView" destination="17" id="36"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="17" secondAttribute="bottom" constant="20" symbolic="YES" id="407-vO-nhj"/>
+                    <constraint firstItem="27" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6" secondAttribute="leading" constant="20" symbolic="YES" id="5b3-Qn-OjZ"/>
+                    <constraint firstItem="27" firstAttribute="top" secondItem="16" secondAttribute="bottom" constant="20" id="6dg-zv-mTj"/>
+                    <constraint firstItem="15" firstAttribute="trailing" secondItem="13" secondAttribute="trailing" id="Hgu-Ho-LGU"/>
+                    <constraint firstItem="17" firstAttribute="leading" secondItem="27" secondAttribute="trailing" constant="12" symbolic="YES" id="ITg-dk-XhR"/>
+                    <constraint firstItem="13" firstAttribute="centerX" secondItem="14" secondAttribute="centerX" id="L20-PA-TiC"/>
+                    <constraint firstItem="16" firstAttribute="trailing" secondItem="14" secondAttribute="trailing" id="Rzw-om-OkO"/>
+                    <constraint firstItem="16" firstAttribute="trailing" secondItem="17" secondAttribute="trailing" id="TUT-kH-EEA"/>
+                    <constraint firstItem="14" firstAttribute="top" secondItem="13" secondAttribute="bottom" constant="8" symbolic="YES" id="UH5-mS-oEL"/>
+                    <constraint firstItem="12" firstAttribute="trailing" secondItem="13" secondAttribute="trailing" id="UQ0-II-zRo"/>
+                    <constraint firstAttribute="trailing" secondItem="14" secondAttribute="trailing" constant="20" symbolic="YES" id="Zli-Xa-LtU"/>
+                    <constraint firstItem="12" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="20" symbolic="YES" id="Zyn-YJ-twF"/>
+                    <constraint firstItem="12" firstAttribute="top" secondItem="6" secondAttribute="top" constant="20" symbolic="YES" id="aa6-De-XZP"/>
+                    <constraint firstItem="15" firstAttribute="top" secondItem="14" secondAttribute="bottom" constant="8" symbolic="YES" id="dCc-Y6-er7"/>
+                    <constraint firstItem="17" firstAttribute="baseline" secondItem="27" secondAttribute="baseline" id="em2-ZX-UlS"/>
+                    <constraint firstItem="13" firstAttribute="top" secondItem="12" secondAttribute="bottom" constant="8" symbolic="YES" id="f2p-lr-xco"/>
+                    <constraint firstItem="14" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="20" symbolic="YES" id="hjx-3N-btz"/>
+                    <constraint firstItem="16" firstAttribute="leading" secondItem="14" secondAttribute="leading" id="iC5-Ia-bxc"/>
+                    <constraint firstItem="16" firstAttribute="top" secondItem="15" secondAttribute="bottom" constant="8" symbolic="YES" id="jSV-pG-y0s"/>
+                    <constraint firstItem="13" firstAttribute="leading" secondItem="15" secondAttribute="leading" id="sau-bB-UDh"/>
+                    <constraint firstItem="13" firstAttribute="leading" secondItem="12" secondAttribute="leading" id="x2t-kJ-ipx"/>
+                </constraints>
+            </view>
+            <connections>
+                <outlet property="initialFirstResponder" destination="14" id="38"/>
+            </connections>
+        </window>
+    </objects>
+</document>

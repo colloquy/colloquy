@@ -2,7 +2,8 @@
 #import "NSImageAdditions.h"
 
 @implementation JVDetailCell
-- (id) init {
+
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_altImage = nil;
 		_statusImage = nil;
@@ -39,7 +40,7 @@
 #pragma mark -
 
 - (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView {
-	float imageWidth = 0.;
+	CGFloat imageWidth = 0.;
 	BOOL highlighted = ( [self isHighlighted] && [[controlView window] firstResponder] == controlView && [[controlView window] isKeyWindow] && [[NSApplication sharedApplication] isActive] );
 
 	NSMutableParagraphStyle *paraStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
@@ -62,14 +63,14 @@
 		[shadow setShadowBlurRadius:0.1];
 		[shadow setShadowColor:[[NSColor shadowColor] colorWithAlphaComponent:0.2]];
 
-		[attributes setObject:boldFont forKey:NSFontAttributeName];
-		[attributes setObject:whiteColor forKey:NSForegroundColorAttributeName];
-		[attributes setObject:shadow forKey:NSShadowAttributeName];
+		attributes[NSFontAttributeName] = boldFont;
+		attributes[NSForegroundColorAttributeName] = whiteColor;
+		attributes[NSShadowAttributeName] = shadow;
 
 		boldFont = [[NSFontManager sharedFontManager] fontWithFamily:@"Lucida Grande" traits:0 weight:15 size:9.];
-		[subAttributes setObject:boldFont forKey:NSFontAttributeName];
-		[subAttributes setObject:whiteColor forKey:NSForegroundColorAttributeName];
-		[subAttributes setObject:shadow forKey:NSShadowAttributeName];
+		subAttributes[NSFontAttributeName] = boldFont;
+		subAttributes[NSForegroundColorAttributeName] = whiteColor;
+		subAttributes[NSShadowAttributeName] = shadow;
 	}
 
 	if( highlighted && _altImage ) {
@@ -120,7 +121,7 @@
 #define JVDetailCellStatusImageLeftPadding 2.
 #define JVDetailCellStatusImageRightPadding JVDetailCellStatusImageLeftPadding
 
-	float statusWidth = ( _statusImage ? [_statusImage size].width + JVDetailCellStatusImageRightPadding : 0. );
+	CGFloat statusWidth = ( _statusImage ? [_statusImage size].width + JVDetailCellStatusImageRightPadding : 0. );
 	if( ! _statusImage && ( _statusNumber || _importantStatusNumber ) ) {
 		NSColor *textColor = [NSColor whiteColor];
 		NSColor *backgroundColor = [NSColor colorWithCalibratedRed:0.6 green:0.6705882352941176 blue:0.7725490196078431 alpha:1.];
@@ -138,14 +139,14 @@
 		NSMutableParagraphStyle *numberParaStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 		[numberParaStyle setAlignment:NSCenterTextAlignment];
 
-		NSDictionary *statusNumberAttributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, numberParaStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, [NSNumber numberWithFloat:1.0], NSKernAttributeName, nil];
+		NSDictionary *statusNumberAttributes = @{NSFontAttributeName: font, NSParagraphStyleAttributeName: numberParaStyle, NSForegroundColorAttributeName: textColor, NSKernAttributeName: @1.0f};
 
 		NSString *statusText = [NSString stringWithFormat:@"%ld", ( _statusNumber ? _statusNumber : _importantStatusNumber )];
 		NSSize numberSize = [statusText sizeWithAttributes:statusNumberAttributes];
 		statusWidth = numberSize.width + 12.;
 
 		if( imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : JVDetailCellLabelPadding ) + statusWidth < NSWidth( cellFrame ) ) {
-			float radius = ( _importantStatusNumber ? 8. : 7. );
+			CGFloat radius = ( _importantStatusNumber ? 8. : 7. );
 			NSRect mainRect = NSMakeRect( NSMinX( cellFrame ) + NSWidth( cellFrame ) - statusWidth - 2., NSMinY( cellFrame ) + ( ( NSHeight( cellFrame ) / 2 ) - radius ), statusWidth, radius * 2 );
 			NSRect pathRect = NSInsetRect( mainRect, radius, radius );
 
@@ -159,7 +160,7 @@
 			if( _importantStatusNumber ) {
 				NSString *importantStatusText = [NSString stringWithFormat:@"%ld", _importantStatusNumber];
 				numberSize = [importantStatusText sizeWithAttributes:statusNumberAttributes];
-				float mainStatusWidth = statusWidth;
+				CGFloat mainStatusWidth = statusWidth;
 				statusWidth += numberSize.width + 10.;
 				radius = 7.;
 
@@ -201,14 +202,14 @@
 	}
 
 	if( ( ! [_infoText length] && [_mainText length] ) || ( ( subStringSize.height + mainStringSize.height ) >= NSHeight( cellFrame ) - 2. ) ) {
-		float mainYLocation = 0.;
+		CGFloat mainYLocation = 0.;
 
 		if( NSHeight( cellFrame ) >= mainStringSize.height ) {
 			mainYLocation = NSMinY( cellFrame ) + ( NSHeight( cellFrame ) / 2 ) - ( mainStringSize.height / 2 );
 			[_mainText drawInRect:NSMakeRect( NSMinX( cellFrame ) + imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : JVDetailCellLabelPadding ), mainYLocation, NSWidth( cellFrame ) - imageWidth - ( JVDetailCellImageLabelPadding * 1. ) - statusWidth, [_mainText sizeWithAttributes:attributes].height ) withAttributes:attributes];
 		}
 	} else if( [_infoText length] && [_mainText length] ) {
-		float mainYLocation = 0., subYLocation = 0.;
+		CGFloat mainYLocation = 0., subYLocation = 0.;
 
 		if( NSHeight( cellFrame ) >= mainStringSize.height ) {
 			mainYLocation = NSMinY( cellFrame ) + ( NSHeight( cellFrame ) / 2 ) - mainStringSize.height + ( JVDetailCellTextLeading / 2. );

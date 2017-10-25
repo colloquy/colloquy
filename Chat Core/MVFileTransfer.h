@@ -13,7 +13,7 @@ COLLOQUY_EXPORT extern NSString *MVFileTransferErrorOccurredNotification;
 
 COLLOQUY_EXPORT extern NSString *MVFileTransferErrorDomain;
 
-typedef NS_ENUM(NSInteger, MVFileTransferStatus) {
+typedef NS_ENUM(OSType, MVFileTransferStatus) {
 	MVFileTransferDoneStatus = 'trDn',
 	MVFileTransferNormalStatus = 'trNo',
 	MVFileTransferHoldingStatus = 'trHo',
@@ -43,11 +43,17 @@ static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus st
 
 COLLOQUY_EXPORT
 @interface MVFileTransfer : NSObject
+
+#if __has_feature(objc_class_property)
+@property (class) NSRange fileTransferPortRange;
+@property (class, getter=isAutoPortMappingEnabled) BOOL autoPortMappingEnabled;
+#else
 + (void) setFileTransferPortRange:(NSRange) range;
 + (NSRange) fileTransferPortRange;
 
 + (void) setAutoPortMappingEnabled:(BOOL) enable;
 + (BOOL) isAutoPortMappingEnabled;
+#endif
 
 - (instancetype) init NS_UNAVAILABLE;
 - (instancetype) initWithUser:(MVChatUser *) user NS_DESIGNATED_INITIALIZER;

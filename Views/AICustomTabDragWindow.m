@@ -17,7 +17,7 @@
 
 
 @interface AICustomTabDragWindow (PRIVATE)
-- (id)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent;
+- (instancetype)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent;
 @end
 
 @implementation AICustomTabDragWindow
@@ -27,7 +27,7 @@
 }
 
 //init
-- (id)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent
+- (instancetype)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent
 
 {
 	if (!(self = [super init])) return nil;

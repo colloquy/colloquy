@@ -31,7 +31,7 @@ static  NSImage			*tabBackground = nil;
 static  NSImage			*tabDivider = nil;
 
 @interface AICustomTabsView (PRIVATE)
-- (id)initWithFrame:(NSRect)frameRect;
+- (instancetype)initWithFrame:(NSRect)frameRect;
 
 //Positioning
 - (void)arrangeTabs;
@@ -41,13 +41,13 @@ static  NSImage			*tabDivider = nil;
 - (BOOL)_arrangeCellsAbsolute:(BOOL)absolute;
 
 //Dragging
-- (NSArray *)acceptableDragTypes;
+@property (readonly, copy) NSArray *acceptableDragTypes;
 - (NSPoint)_dropPointForTabOfWidth:(int)dragTabWidth hoveredAtScreenPoint:(NSPoint)inPoint dropIndex:(NSInteger *)outIndex;
 - (BOOL)allowsTabRearranging;
 
 //Tab Data Access (Guarded)
 - (void)removeTabCell:(AICustomTabCell *)inCell;
-- (NSArray *)tabCellArray;
+@property (readonly, copy) NSArray *tabCellArray;
 
 //Cursor tracking
 - (void)startCursorTracking;
@@ -63,7 +63,7 @@ static  NSImage			*tabDivider = nil;
 }
 
 //init
-- (id)initWithFrame:(NSRect)frameRect
+- (instancetype)initWithFrame:(NSRect)frameRect
 {
     //Init
     if (!(self = [super initWithFrame:frameRect])) return nil;
@@ -104,17 +104,14 @@ static  NSImage			*tabDivider = nil;
 //Configure ------------------------------------------------------------------------------------------------------------
 #pragma mark Configure
 //Set our delegate
-- (void)setDelegate:(id)inDelegate
+@synthesize delegate;
+- (void)setDelegate:(id<AICustomTabsViewDelegate>)inDelegate
 {
     delegate = inDelegate;
 
     //Update our accepted drag types
     [self unregisterDraggedTypes];
     [self registerForDraggedTypes:[self acceptableDragTypes]];
-}
-- (id)delegate
-{
-    return(delegate);
 }
 
 //Does removing the last tab of a window cause that window to hide?
@@ -130,15 +127,11 @@ static  NSImage			*tabDivider = nil;
 //Can the user close inactive tabs?
 - (void)setAllowsInactiveTabClosing:(BOOL)inValue
 {
-    NSEnumerator		*enumerator;
-    AICustomTabCell		*tabCell;
-
     //Save the value
     allowsInactiveTabClosing = inValue;
 
     //Pass it onto our tabs
-    enumerator = [tabCellArray objectEnumerator];
-    while((tabCell = [enumerator nextObject])){
+    for (AICustomTabCell *tabCell in tabCellArray) {
 		[tabCell setAllowsInactiveTabClosing:allowsInactiveTabClosing];
     }
 }
@@ -173,7 +166,7 @@ static  NSImage			*tabDivider = nil;
 }
 
 //Move a tab
-- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(int)index
+- (void)moveTab:(NSTabViewItem *)tabViewItem toIndex:(NSInteger)index
 {
 	[self moveTab:tabViewItem toIndex:index selectTab:NO animate:YES];
 }
@@ -272,10 +265,8 @@ static  NSImage			*tabDivider = nil;
 - (int)totalWidthOfTabs
 {
     int				totalWidth = (CUSTOM_TABS_INDENT * 2);
-    NSEnumerator	*enumerator = [tabCellArray objectEnumerator];
-    AICustomTabCell	*tabCell;
 
-    while((tabCell = [enumerator nextObject])){
+    for (AICustomTabCell *tabCell in tabCellArray) {
 		if(tabCell != dragCell) totalWidth += [tabCell size].width + CUSTOM_TABS_GAP;
     }
 
@@ -564,7 +555,7 @@ static  NSImage			*tabDivider = nil;
 }
 
 //Constrain a rect horizontally
-static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
+static NSRect AIConstrainRectWidth(NSRect rect, CGFloat left, CGFloat right)
 {
 	if(rect.origin.x < left){
 		rect.size.width -= left - rect.origin.x;
@@ -702,7 +693,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
         types = [delegate customTabViewAcceptableDragTypes:self];
     }
 
-    return(types ? [types arrayByAddingObject:TAB_CELL_IDENTIFIER] : [NSArray arrayWithObject:TAB_CELL_IDENTIFIER]);
+    return(types ? [types arrayByAddingObject:TAB_CELL_IDENTIFIER] : @[TAB_CELL_IDENTIFIER]);
 }
 
 //Return YES to accept drags
@@ -716,7 +707,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 {
     NSPoint			location = [self convertPoint:[sender draggingLocation] fromView:nil];
 	NSPasteboard	*pboard = [sender draggingPasteboard];
-    NSString        *type = [pboard availableTypeFromArray:[NSArray arrayWithObject:TAB_CELL_IDENTIFIER]];
+    NSString        *type = [pboard availableTypeFromArray:@[TAB_CELL_IDENTIFIER]];
     BOOL            success = NO;
 	NSInteger		dropIndex;
 	AICustomTabCell	*tabCell;
@@ -747,7 +738,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 //Called when a drag enters this toolbar
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
-	NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:TAB_CELL_IDENTIFIER]];
+	NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:@[TAB_CELL_IDENTIFIER]];
 	NSDragOperation	operation = NSDragOperationNone;
 
 	[self stopCursorTracking];
@@ -771,7 +762,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 {
     NSPoint			location = [self convertPoint:[sender draggingLocation] fromView:nil];
     NSPasteboard 	*pboard = [sender draggingPasteboard];
-    NSString 		*type = [pboard availableTypeFromArray:[NSArray arrayWithObject:TAB_CELL_IDENTIFIER]];
+    NSString 		*type = [pboard availableTypeFromArray:@[TAB_CELL_IDENTIFIER]];
     NSDragOperation	operation = NSDragOperationNone;
 
     if(type && [type isEqualToString:TAB_CELL_IDENTIFIER]){ //Dragging a tab
@@ -803,7 +794,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard 	*pboard = [sender draggingPasteboard];
-	NSString 		*type = [pboard availableTypeFromArray:[NSArray arrayWithObject:TAB_CELL_IDENTIFIER]];
+	NSString 		*type = [pboard availableTypeFromArray:@[TAB_CELL_IDENTIFIER]];
 
 	if(type && [type isEqualToString:TAB_CELL_IDENTIFIER]){ //Dragging a tab
 
@@ -826,7 +817,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 	if(allowsTabRearranging){
 		NSEnumerator 	*enumerator;
 		AICustomTabCell	*tabCell;
-		float			lastLocation = CUSTOM_TABS_INDENT;
+		CGFloat			lastLocation = CUSTOM_TABS_INDENT;
 		NSUInteger 		hoverIndex = 0;
 
 		//Figure out where the user is hovering the tabcell item
@@ -859,7 +850,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		if(desiredIndex == 0){
 			hover = CUSTOM_TABS_INDENT;
 		}else{
-			hover = NSMaxX([[tabCellArray objectAtIndex:desiredIndex-1] frame]) + CUSTOM_TABS_GAP;
+			hover = NSMaxX([tabCellArray[desiredIndex-1] frame]) + CUSTOM_TABS_GAP;
 		}
 		return([[self window] cqm_convertPointToScreen:[self convertPoint:NSMakePoint(hover,0) toView:nil]]);
 	}
@@ -880,16 +871,13 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 {
     //Track only if we're within a valid window
     if([self window] && !trackingCursor){
-        NSEnumerator		*enumerator;
-        AICustomTabCell		*tabCell;
         NSPoint			localPoint;
 
         //Local mouse location
 		localPoint = [[self window] cqm_convertPointToScreen:[NSEvent mouseLocation]];
 
         //Install tracking rects for each tab
-        enumerator = [tabCellArray objectEnumerator];
-        while((tabCell = [enumerator nextObject])){
+        for (AICustomTabCell *tabCell in tabCellArray) {
             NSRect trackRect = [tabCell frame];
             [tabCell addTrackingRectsWithFrame:trackRect cursorLocation:localPoint];
         }
@@ -902,11 +890,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 - (void)stopCursorTracking
 {
 	if(trackingCursor){
-		NSEnumerator	*enumerator;
-		AICustomTabCell	*tabCell;
-
-		enumerator = [tabCellArray objectEnumerator];
-		while((tabCell = [enumerator nextObject])){
+		for (AICustomTabCell *tabCell in tabCellArray) {
 			[tabCell removeTrackingRects];
 		}
 

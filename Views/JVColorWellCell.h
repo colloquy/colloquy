@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 extern NSString *JVColorWellCellColorDidChangeNotification;
 
 @interface JVColorWellCell : NSButtonCell {
@@ -5,15 +7,15 @@ extern NSString *JVColorWellCellColorDidChangeNotification;
 	BOOL _showsWebValue;
 	BOOL _releasing;
 }
+- (instancetype) initTextCell:(NSString *) string NS_DESIGNATED_INITIALIZER;
+- (instancetype) initImageCell:(NSImage *) image NS_DESIGNATED_INITIALIZER;
 - (void) deactivate;
 - (void) activate:(BOOL) exclusive;
-- (BOOL) isActive;
+@property (readonly, getter=isActive) BOOL active;
 
 - (void) takeColorFrom:(id) sender;
 
-- (void) setColor:(NSColor *) color;
-- (NSColor *) color;
+@property (strong) NSColor *color;
 
-- (void) setShowsWebValue:(BOOL) web;
-- (BOOL) showsWebValue;
+@property BOOL showsWebValue;
 @end

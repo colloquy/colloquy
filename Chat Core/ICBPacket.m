@@ -37,7 +37,7 @@
 #import "ICBPacket.h"
 
 @implementation ICBPacket
-
+@synthesize type = _type;
 //
 // An ICB packet has the following format:
 //
@@ -124,7 +124,7 @@
 	else {
 		s = [s stringByAppendingString:@"fields: "];
 		for( NSUInteger i = 0; i < _fields.count; i++ ) {
-			const NSString *f = [_fields objectAtIndex:i];
+			const NSString *f = _fields[i];
 			if (i < _fields.count - 1)
 				s = [s stringByAppendingFormat:@"%@, ", f];
 			else
@@ -165,7 +165,7 @@
 	// Fill the packet data.
 	data[0] = '\0';
 	for( NSUInteger i = 0; i < _fields.count; i++) {
-		const NSString *f = [_fields objectAtIndex:i];
+		const NSString *f = _fields[i];
 
 		length = strlcat(data, [f UTF8String], maxDataLength);
 		if (i < _fields.count - 1)
@@ -182,11 +182,12 @@
 	return [NSData dataWithBytes:raw length:length + 3];
 }
 
-- (char) type {
-	return _type;
-}
-
 #pragma mark Modifiers
+
+- (void) addFieldsFromArray:(NSArray<NSString*>*)newFields
+{
+	[_fields addObjectsFromArray:newFields];
+}
 
 - (void) addFields:(NSString *) first, ... {
 	[_fields addObject:first];

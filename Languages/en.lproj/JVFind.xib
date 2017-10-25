@@ -134,13 +134,13 @@
                         <connections>
                             <binding destination="271" name="selectedTag" keyPath="values.JVFindOperation" id="381">
                                 <dictionary key="options">
-                                    <integer key="NSConditionallySetsEnabled" value="0"/>
+                                    <bool key="NSConditionallySetsEnabled" value="NO"/>
                                     <decimal key="NSMultipleValuesPlaceholder" value="1"/>
                                     <decimal key="NSNoSelectionPlaceholder" value="1"/>
                                     <decimal key="NSNotApplicablePlaceholder" value="1"/>
                                     <decimal key="NSNullPlaceholder" value="1"/>
-                                    <integer key="NSRaisesForNotApplicableKeys" value="0"/>
-                                    <integer key="NSValidatesImmediately" value="1"/>
+                                    <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                    <bool key="NSValidatesImmediately" value="YES"/>
                                 </dictionary>
                             </binding>
                         </connections>
@@ -193,13 +193,13 @@ DQ
                         <connections>
                             <binding destination="271" name="value" keyPath="values.JVFindWrapAround" id="339">
                                 <dictionary key="options">
-                                    <integer key="NSConditionallySetsEnabled" value="0"/>
+                                    <bool key="NSConditionallySetsEnabled" value="NO"/>
                                     <integer key="NSMultipleValuesPlaceholder" value="1"/>
                                     <integer key="NSNoSelectionPlaceholder" value="1"/>
                                     <integer key="NSNotApplicablePlaceholder" value="1"/>
                                     <integer key="NSNullPlaceholder" value="1"/>
-                                    <integer key="NSRaisesForNotApplicableKeys" value="0"/>
-                                    <integer key="NSValidatesImmediately" value="1"/>
+                                    <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                    <bool key="NSValidatesImmediately" value="YES"/>
                                 </dictionary>
                             </binding>
                             <outlet property="nextKeyView" destination="253" id="254"/>
@@ -215,13 +215,13 @@ DQ
                         <connections>
                             <binding destination="271" name="value" keyPath="values.JVFindIgnoreCase" id="340">
                                 <dictionary key="options">
-                                    <integer key="NSConditionallySetsEnabled" value="0"/>
+                                    <bool key="NSConditionallySetsEnabled" value="NO"/>
                                     <integer key="NSMultipleValuesPlaceholder" value="1"/>
                                     <integer key="NSNoSelectionPlaceholder" value="1"/>
                                     <integer key="NSNotApplicablePlaceholder" value="1"/>
                                     <integer key="NSNullPlaceholder" value="1"/>
-                                    <integer key="NSRaisesForNotApplicableKeys" value="0"/>
-                                    <integer key="NSValidatesImmediately" value="1"/>
+                                    <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                    <bool key="NSValidatesImmediately" value="YES"/>
                                 </dictionary>
                             </binding>
                             <outlet property="nextKeyView" destination="249" id="401"/>

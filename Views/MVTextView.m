@@ -1,7 +1,7 @@
 #import "MVTextView.h"
 #import "JVTranscriptFindWindowController.h"
 
-@interface MVTextView (MVTextViewPrivate)
+@interface MVTextView ()
 - (BOOL) checkKeyEvent:(NSEvent *) event;
 - (BOOL) triggerKeyEvent:(NSEvent *) event;
 @end
@@ -9,18 +9,10 @@
 #pragma mark -
 
 @implementation MVTextView
-- (id)initWithFrame:(NSRect)frameRect textContainer:(NSTextContainer *)aTextContainer {
+- (instancetype)initWithFrame:(NSRect)frameRect textContainer:(NSTextContainer *)aTextContainer {
 	if( (self = [super initWithFrame:frameRect textContainer:aTextContainer] ) )
 		defaultTypingAttributes = [[NSDictionary alloc] init];
 	return self;
-}
-
-- (void) dealloc {
-	defaultTypingAttributes = nil;
-
-	_lastCompletionMatch = nil;
-
-	_lastCompletionPrefix = nil;
 }
 
 #pragma mark -
@@ -126,7 +118,7 @@
 	if( ! font ) {
 		font = [NSFont userFontOfSize:0.];
 		defaultTypingAttributes = [[NSDictionary alloc] init];
-	} else defaultTypingAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:font, NSFontAttributeName, nil];
+	} else defaultTypingAttributes = @{NSFontAttributeName: font};
 	[self setTypingAttributes:defaultTypingAttributes];
 	[self setFont:font];
 }
@@ -165,7 +157,7 @@
 	limitRange = NSMakeRange( 0, [[self string] length] );
 	while( limitRange.length > 0 ) {
 		NSDictionary *dict = [[self textStorage] attributesAtIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
-		NSString *link = [dict objectForKey:NSLinkAttributeName];
+		NSString *link = dict[NSLinkAttributeName];
 		if( link ) {
 			rects = [[self layoutManager] rectArrayForCharacterRange:effectiveRange withinSelectedCharacterRange:effectiveRange inTextContainer:[self textContainer] rectCount:&count];
 			for( i = 0; i < count; i++ ) [self addCursorRect:NSIntersectionRect( [self visibleRect], rects[i] ) cursor:linkCursor];
@@ -207,12 +199,12 @@
 		}
 	} else {
 		NSMutableDictionary *attributes = [[self typingAttributes] mutableCopy];
-		NSFont *font = [attributes objectForKey:NSFontAttributeName];
+		NSFont *font = attributes[NSFontAttributeName];
 		if( ! font ) font = [NSFont userFontOfSize:0.];
 		if( [[NSFontManager sharedFontManager] traitsOfFont:font] & NSBoldFontMask )
 			font = [[NSFontManager sharedFontManager] convertFont:font toNotHaveTrait:NSBoldFontMask];
 		else font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
-		[attributes setObject:font forKey:NSFontAttributeName];
+		attributes[NSFontAttributeName] = font;
 		[self setTypingAttributes:attributes];
 	}
 }
@@ -239,12 +231,12 @@
 		}
 	} else {
 		NSMutableDictionary *attributes = [[self typingAttributes] mutableCopy];
-		NSFont *font = [attributes objectForKey:NSFontAttributeName];
+		NSFont *font = attributes[NSFontAttributeName];
 		if( ! font ) font = [NSFont userFontOfSize:0.];
 		if( [[NSFontManager sharedFontManager] traitsOfFont:font] & NSItalicFontMask )
 			font = [[NSFontManager sharedFontManager] convertFont:font toNotHaveTrait:NSItalicFontMask];
 		else font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSItalicFontMask];
-		[attributes setObject:font forKey:NSFontAttributeName];
+		attributes[NSFontAttributeName] = font;
 		[self setTypingAttributes:attributes];
 	}
 }
@@ -258,7 +250,7 @@
 	if( [color alphaComponent] == 0. ) color = nil;
 	if( color && ! range.length ) {
 		NSMutableDictionary *attributes = [[self typingAttributes] mutableCopy];
-		[attributes setObject:color forKey:NSBackgroundColorAttributeName];
+		attributes[NSBackgroundColorAttributeName] = color;
 		[self setTypingAttributes:attributes];
 	} else [[self textStorage] addAttribute:NSBackgroundColorAttributeName value:color range:range];
 }
@@ -276,16 +268,6 @@
 
 - (IBAction) findPrevious:(id) sender {
 	[[JVTranscriptFindWindowController sharedController] findPrevious:sender];
-}
-
-#pragma mark -
-
-- (void) setUsesSystemCompleteOnTab:(BOOL) use {
-	_usesSystemCompleteOnTab = use;
-}
-
-- (BOOL) usesSystemCompleteOnTab {
-	return _usesSystemCompleteOnTab;
 }
 
 #pragma mark -
@@ -329,7 +311,7 @@
 
 	// insert word or suggestion
 	if( [possibleNicks count] == 1 && ( curPos.location == [[self string] length] || [illegalCharacters characterIsMember:[[self string] characterAtIndex:curPos.location]] ) ) {
-		name = [possibleNicks objectAtIndex:0];
+		name = possibleNicks[0];
 		NSRange replacementRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
 
 		_ignoreSelectionChanges = YES;
@@ -354,7 +336,7 @@
 
 		if( curPos.location == [[self string] length] || [illegalCharacters characterIsMember:[[self string] characterAtIndex:curPos.location]] ) {
 			wordRange = NSMakeRange( curPos.location - [partialCompletion length], [partialCompletion length] );
-			name = [possibleNicks objectAtIndex:0];
+			name = possibleNicks[0];
 		} else {
 			wordRange = [[self string] rangeOfCharacterFromSet:illegalCharacters options:0 range:NSMakeRange( curPos.location, [[self string] length] - curPos.location )];
 			if( wordRange.location == NSNotFound )
@@ -366,12 +348,12 @@
 			unsigned count = 0;
 
 			do {
-				keepSearching = ! [[possibleNicks objectAtIndex:count] isEqualToString:tempWord];
+				keepSearching = ! [possibleNicks[count] isEqualToString:tempWord];
 			} while ( ++count < [possibleNicks count] && keepSearching );
 
 			if( count == [possibleNicks count] ) count = 0;
 
-			name = [possibleNicks objectAtIndex:count];
+			name = possibleNicks[count];
 			full = NO;
 		}
 

@@ -2,17 +2,18 @@
 
 #import "MVAvailability.h"
 #import "MVChatString.h"
+#import "MVMessaging.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, MVChatUserType) {
+typedef NS_ENUM(OSType, MVChatUserType) {
 	MVChatRemoteUserType = 'remT',
 	MVChatLocalUserType = 'locL',
 	MVChatWildcardUserType = 'wilD'
 };
 
-typedef NS_ENUM(NSInteger, MVChatUserStatus) {
+typedef NS_ENUM(OSType, MVChatUserStatus) {
 	MVChatUserUnknownStatus = 'uKnw',
 	MVChatUserOfflineStatus = 'oflN',
 	MVChatUserDetachedStatus = 'detA',
@@ -70,7 +71,7 @@ COLLOQUY_EXPORT extern NSString *MVChatUserAttributeUpdatedNotification;
 @class MVUploadFileTransfer;
 
 COLLOQUY_EXPORT
-@interface MVChatUser : NSObject {
+@interface MVChatUser : NSObject <MVMessaging> {
 @protected
 	__weak MVChatConnection *_connection;
 	id _uniqueIdentifier;
@@ -98,9 +99,9 @@ COLLOQUY_EXPORT
 	BOOL _serverOperator;
 	BOOL _onlineNotificationSent;
 }
-+ (instancetype) wildcardUserFromString:(NSString *) mask;
-+ (instancetype) wildcardUserWithNicknameMask:(NSString * __nullable) nickname andHostMask:(NSString * __nullable) host;
-+ (instancetype) wildcardUserWithFingerprint:(NSString *) fingerprint;
++ (MVChatUser*) wildcardUserFromString:(NSString *) mask;
++ (MVChatUser*) wildcardUserWithNicknameMask:(NSString * __nullable) nickname andHostMask:(NSString * __nullable) host;
++ (MVChatUser*) wildcardUserWithFingerprint:(NSString *) fingerprint;
 
 @property(weak, nullable, readonly) MVChatConnection *connection;
 @property(readonly) MVChatUserType type;
@@ -112,37 +113,37 @@ COLLOQUY_EXPORT
 @property(readonly, getter=isIdentified) BOOL identified;
 @property(readonly, getter=isServerOperator) BOOL serverOperator;
 
-@property(readonly) MVChatUserStatus status;
-@property(strong, readonly) NSData *awayStatusMessage;
+@property(nonatomic, readonly) MVChatUserStatus status;
+@property(copy, readonly) NSData *awayStatusMessage;
 
-@property(strong, readonly) NSDate *dateConnected;
-@property(strong, readonly) NSDate *dateDisconnected;
-@property(strong, readonly) NSDate *dateUpdated;
+@property(copy, readonly) NSDate *dateConnected;
+@property(copy, readonly) NSDate *dateDisconnected;
+@property(copy, readonly) NSDate *dateUpdated;
 @property(nonatomic, copy) NSDate *mostRecentUserActivity;
 
-@property(readonly) NSTimeInterval idleTime;
+@property(nonatomic, readonly) NSTimeInterval idleTime;
 @property(readonly) NSTimeInterval lag;
 
-@property(strong, readonly) NSString *displayName;
-@property(strong, readonly) NSString *nickname;
-@property(strong, readonly) NSString *realName;
-@property(strong, readonly) NSString *username;
-@property(strong, readonly) NSString *account;
-@property(strong, readonly) NSString *address;
-@property(strong, readonly) NSString *serverAddress;
-@property(strong, readonly, nullable) NSString *maskRepresentation;
+@property(copy, readonly) NSString *displayName;
+@property(copy, readonly) NSString *nickname;
+@property(copy, readonly) NSString *realName;
+@property(copy, readonly) NSString *username;
+@property(copy, readonly) NSString *account;
+@property(copy, readonly) NSString *address;
+@property(copy, readonly) NSString *serverAddress;
+@property(copy, readonly, nullable) NSString *maskRepresentation;
 
-@property(strong, readonly) id uniqueIdentifier;
-@property(strong, readonly) NSData *publicKey;
-@property(strong, readonly) NSString *fingerprint;
+@property(nonatomic, strong, readonly) id uniqueIdentifier;
+@property(copy, readonly) NSData *publicKey;
+@property(copy, readonly) NSString *fingerprint;
 
 @property(readonly) NSUInteger supportedModes;
 @property(readonly) NSUInteger modes;
 
-@property(strong, readonly) NSSet *supportedAttributes;
-@property(strong, readonly) NSDictionary *attributes;
+@property(strong, readonly) NSSet<NSString*> *supportedAttributes;
+@property(strong, readonly) NSDictionary<NSString*,id> *attributes;
 
-- (BOOL) isEqual:(id) object;
+- (BOOL) isEqual:(nullable id) object;
 - (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser;
 
 - (NSComparisonResult) compare:(MVChatUser *) otherUser;
@@ -158,11 +159,11 @@ COLLOQUY_EXPORT
 - (void) refreshAttributeForKey:(NSString *) key;
 
 - (BOOL) hasAttributeForKey:(NSString *) key;
-- (id) attributeForKey:(NSString *) key;
+- (id __nullable) attributeForKey:(NSString *) key;
 - (void) setAttribute:(id __nullable) attribute forKey:(id) key;
 
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
-- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes;
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary<NSString*,id> *) attributes;
 
 - (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments withEncoding:(NSStringEncoding) encoding;
 

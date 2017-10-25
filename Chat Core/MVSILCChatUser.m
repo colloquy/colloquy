@@ -41,23 +41,23 @@ NS_ASSUME_NONNULL_BEGIN
 		[_connection _removeKnownUser:self];
 
 	if( clientEntry -> nickname )
-		[self _setNickname:[NSString stringWithUTF8String:clientEntry -> nickname]];
+		[self _setNickname:@(clientEntry->nickname)];
 
 	if( clientEntry -> username )
-		[self _setUsername:[NSString stringWithUTF8String:clientEntry -> username]];
+		[self _setUsername:@(clientEntry->username)];
 
 	if( clientEntry -> hostname )
-		[self _setAddress:[NSString stringWithUTF8String:clientEntry -> hostname]];
+		[self _setAddress:@(clientEntry->hostname)];
 
 	if( clientEntry -> server )
-		[self _setServerAddress:[NSString stringWithUTF8String:clientEntry -> server]];
+		[self _setServerAddress:@(clientEntry->server)];
 
 	if( clientEntry -> realname )
-		[self _setRealName:[NSString stringWithUTF8String:clientEntry -> realname]];
+		[self _setRealName:@(clientEntry->realname)];
 
 	if( clientEntry -> fingerprint ) {
 		char *tmp = silc_fingerprint( clientEntry -> fingerprint, clientEntry -> fingerprint_len);
-		[self _setFingerprint:[NSString stringWithUTF8String:tmp]];
+		[self _setFingerprint:@(tmp)];
 		silc_free( tmp );
 	}
 
@@ -84,9 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (SilcClientEntry) _getClientEntry {
-	return _clientEntry;
-}
+@synthesize clientEntry = _clientEntry;
 
 #pragma mark -
 
@@ -111,7 +109,7 @@ NS_ASSUME_NONNULL_BEGIN
 	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:message andChatFormat:[[self connection] outgoingChatFormat]];
 	SilcMessageFlags flags = SILC_MESSAGE_FLAG_UTF8;
 
-	if( [[attributes objectForKey:@"action"] boolValue]) flags |= SILC_MESSAGE_FLAG_ACTION;
+	if( [attributes[@"action"] boolValue]) flags |= SILC_MESSAGE_FLAG_ACTION;
 
 	// unpack the identifier here for now
 	// we might want to keep a duplicate of the SilcClientID struct as a instance variable

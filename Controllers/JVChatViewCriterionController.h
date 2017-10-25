@@ -1,10 +1,11 @@
 #import "JVChatWindowController.h"
 
-typedef enum JVChatViewCriterionFormat { // cooresponds to the nib tab view identifiers
+/// corresponds to the nib tab view identifiers
+typedef NS_ENUM(NSInteger, JVChatViewCriterionFormat) {
 	JVChatViewTextCriterionFormat = 1,
 	JVChatViewBooleanCriterionFormat,
 	JVChatViewListCriterionFormat
-} JVChatViewCriterionFormat;
+};
 
 /// corresponds to the nib menu tags
 typedef NS_ENUM(NSInteger, JVChatViewCriterionKind) {
@@ -59,29 +60,23 @@ typedef NS_ENUM(NSInteger, JVChatViewCriterionOperation) {
 
 	BOOL _changed;
 }
-+ (id) controller;
++ (instancetype) controller;
 
-- (NSView *) view;
+@property (readonly, strong) NSView *view;
 
-- (JVChatViewCriterionFormat) format;
-
-- (JVChatViewCriterionKind) kind;
-- (void) setKind:(JVChatViewCriterionKind) kind;
-
-- (JVChatViewCriterionOperation) operation;
-- (void) setOperation:(JVChatViewCriterionOperation) operation;
-
-- (id) query;
-- (void) setQuery:(id) query;
+@property (nonatomic, readonly) JVChatViewCriterionFormat format;
+@property (nonatomic) JVChatViewCriterionKind kind;
+@property (nonatomic) JVChatViewCriterionOperation operation;
+@property (nonatomic, strong) id query;
 
 - (IBAction) selectCriterionKind:(id) sender;
 - (IBAction) selectCriterionOperation:(id) sender;
 - (IBAction) changeQuery:(id) sender;
 - (IBAction) noteOtherChanges:(id) sender;
 
-- (BOOL) changedSinceLastMatch;
+@property (readonly) BOOL changedSinceLastMatch;
 - (BOOL) matchChatView:(id <JVChatViewController>) chatView ignoringCase:(BOOL) ignoreCase;
 
-- (NSView *) firstKeyView;
-- (NSView *) lastKeyView;
+@property (readonly, strong) NSView *firstKeyView;
+@property (readonly, strong) NSView *lastKeyView;
 @end

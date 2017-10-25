@@ -7,13 +7,20 @@
 #import <ChatCore/NSRegularExpressionAdditions.h>
 
 @implementation JVChatViewCriterionController
-+ (id) controller {
+@synthesize format = _format;
+@synthesize view = subview;
+@synthesize kind = _kind;
+@synthesize operation = _operation;
+@synthesize query = _query;
+@synthesize changedSinceLastMatch = _changed;
+
++ (instancetype) controller {
 	return [[self alloc] init];
 }
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_query = @"";
 		_changed = NO;
@@ -24,7 +31,7 @@
 	return self;
 }
 
-- (id) initWithCoder:(NSCoder *) coder {
+- (instancetype) initWithCoder:(NSCoder *) coder {
 	if( [coder allowsKeyedCoding] ) {
 		self = [self init];
 		[self setKind:[coder decodeIntForKey:@"kind"]];
@@ -58,18 +65,10 @@
 	return [self copyWithZone:zone];
 }
 
-- (void) dealloc {
-
-	subview = nil;
-	kindMenu = nil;
-	_query = nil;
-
-}
-
 #pragma mark -
 
 - (void) awakeFromNib {
-	[tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%d", [self format]]];
+	[tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%ld", (long)[self format]]];
 
 	if( [self format] == JVChatViewTextCriterionFormat ) {
 		[textKindButton selectItemAtIndex:[textKindButton indexOfItemWithTag:[self kind]]];
@@ -100,15 +99,11 @@
 
 #pragma mark -
 
-- (JVChatViewCriterionFormat) format {
-	return _format;
-}
-
 - (void) setFormat:(JVChatViewCriterionFormat) format {
 	if( format != _format ) {
 		_format = format;
 
-		[tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%d", format]];
+		[tabView selectTabViewItemWithIdentifier:[NSString stringWithFormat:@"%ld", (long)format]];
 
 		if( [self format] == JVChatViewTextCriterionFormat ) {
 			[textKindButton selectItemAtIndex:[textKindButton indexOfItemWithTag:[self kind]]];
@@ -121,10 +116,6 @@
 }
 
 #pragma mark -
-
-- (JVChatViewCriterionKind) kind {
-	return _kind;
-}
 
 - (void) setKind:(JVChatViewCriterionKind) kind {
 	if( kind != _kind ) {
@@ -160,10 +151,6 @@
 
 #pragma mark -
 
-- (JVChatViewCriterionOperation) operation {
-	return _operation;
-}
-
 - (void) setOperation:(JVChatViewCriterionOperation) operation {
 	_operation = operation;
 
@@ -175,10 +162,6 @@
 }
 
 #pragma mark -
-
-- (id) query {
-	return _query;
-}
 
 - (void) setQuery:(id) query {
 	_query = query;
@@ -220,7 +203,7 @@
 	} else if( [self format] == JVChatViewListCriterionFormat ) {
 		NSMenuItem *mitem = [listQuery selectedItem];
 		if( [mitem representedObject] ) [self setQuery:[mitem representedObject]];
-		else [self setQuery:[NSNumber numberWithLong:[mitem tag]]];
+		else [self setQuery:@([mitem tag])];
 	}
 }
 
@@ -233,10 +216,6 @@
 }
 
 #pragma mark -
-
-- (BOOL) changedSinceLastMatch {
-	return _changed;
-}
 
 - (BOOL) matchChatView:(id <JVChatViewController>) chatView ignoringCase:(BOOL) ignoreCase {
 	_changed = NO;

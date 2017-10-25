@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 @class MVChatConnection;
 
 COLLOQUY_EXPORT
@@ -24,7 +26,7 @@ COLLOQUY_EXPORT
 	BOOL _ignoreFontColors;
 	BOOL _ignoreFontTraits;
 }
-+ (id) chatRoomBrowserForConnection:(MVChatConnection *) connection;
++ (instancetype) chatRoomBrowserForConnection:(MVChatConnection *) connection;
 
 - (IBAction) close:(id) sender;
 - (IBAction) joinRoom:(id) sender;
@@ -35,9 +37,7 @@ COLLOQUY_EXPORT
 
 - (IBAction) changeConnection:(id) sender;
 
-- (void) setFilter:(NSString *) filter;
-- (NSString *) filter;
+@property (copy) NSString *filter;
 
-- (void) setConnection:(MVChatConnection *) connection;
-- (MVChatConnection *) connection;
+@property (strong) MVChatConnection *connection;
 @end

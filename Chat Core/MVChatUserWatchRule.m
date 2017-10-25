@@ -27,6 +27,14 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	BOOL _addressIsRegex;
 	BOOL _interim;
 }
+@synthesize usernameIsRegularExpression = _usernameIsRegex;
+@synthesize address = _address;
+@synthesize username = _username;
+@synthesize addressIsRegularExpression = _addressIsRegex;
+@synthesize nickname = _nickname;
+@synthesize nicknameIsRegularExpression = _nicknameIsRegex;
+@synthesize realNameIsRegularExpression = _realNameIsRegex;
+@synthesize realName = _realName;
 
 - (instancetype) initWithDictionaryRepresentation:(NSDictionary *) dictionary {
 	if( ( self = [super init] ) ) {
@@ -70,7 +78,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	if( _publicKey ) dictionary[@"publicKey"] = _publicKey;
 	if( _interim ) dictionary[@"interim"] = @(_interim);
 	if( _applicableServerDomains ) dictionary[@"applicableServerDomains"] = _applicableServerDomains;
-	return dictionary;
+	return [dictionary copy];
 }
 
 - (BOOL) isEqual:(id) object {
@@ -194,10 +202,6 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	MVSafeCopyAssign( _nickname, newNickname );
 }
 
-- (BOOL) nicknameIsRegularExpression {
-	return _nicknameIsRegex;
-}
-
 - (NSString *__nullable) realName {
 	return (_realNameIsRegex && _realName ? [NSString stringWithFormat:@"/%@/", _realName] : _realName);
 }
@@ -209,10 +213,6 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 		newRealName = [newRealName substringWithRange:NSMakeRange( 1, newRealName.length - 2)];
 
 	MVSafeCopyAssign( _realName, newRealName );
-}
-
-- (BOOL) realNameIsRegularExpression {
-	return _realNameIsRegex;
 }
 
 - (NSString *__nullable) username {
@@ -228,10 +228,6 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	MVSafeCopyAssign( _username, newUsername );
 }
 
-- (BOOL) usernameIsRegularExpression {
-	return _usernameIsRegex;
-}
-
 - (NSString *__nullable) address {
 	return (_addressIsRegex && _address ? [NSString stringWithFormat:@"/%@/", _address] : _address);
 }
@@ -245,33 +241,6 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	MVSafeCopyAssign( _address, newAddress );
 }
 
-- (BOOL) addressIsRegularExpression {
-	return _addressIsRegex;
-}
-
-- (NSData *) publicKey {
-	return _publicKey;
-}
-
-- (void) setPublicKey:(NSData *) publicKey {
-	MVSafeCopyAssign( _publicKey, publicKey );
-}
-
-- (BOOL) isInterim {
-	return _interim;
-}
-
-- (void) setInterim:(BOOL) interim {
-	_interim = interim;
-}
-
-- (NSArray <NSString *> *) applicableServerDomains {
-	return _applicableServerDomains;
-}
-
-- (void) setApplicableServerDomains:(NSArray <NSString *> *) serverDomains {
-	MVSafeCopyAssign( _applicableServerDomains, serverDomains );
-}
 @end
 
 NS_ASSUME_NONNULL_END

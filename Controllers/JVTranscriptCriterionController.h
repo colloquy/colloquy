@@ -1,11 +1,13 @@
+#import <Cocoa/Cocoa.h>
 #import "JVChatWindowController.h"
 
-typedef enum JVTranscriptCriterionFormat { // cooresponds to the nib tab view identifiers
+/// corresponds to the nib tab view identifiers
+typedef NS_ENUM(NSInteger, JVTranscriptCriterionFormat) {
 	JVTranscriptTextCriterionFormat = 1,
 	JVTranscriptDateCriterionFormat,
 	JVTranscriptBooleanCriterionFormat,
 	JVTranscriptListCriterionFormat
-} JVTranscriptCriterionFormat;
+};
 
 /// corresponds to the nib menu tags
 typedef NS_ENUM(NSInteger, JVTranscriptCriterionKind) {
@@ -96,14 +98,13 @@ typedef NS_ENUM(NSInteger, JVTranscriptCriterionQueryUnits) {
 	BOOL _smartTranscriptCriterion;
 	BOOL _changed;
 }
-+ (id) controller;
++ (instancetype) controller;
 
-- (NSView *) view;
+@property (readonly, strong) NSView *view;
 
-- (JVTranscriptCriterionFormat) format;
+@property (readonly) JVTranscriptCriterionFormat format;
 
-- (JVTranscriptCriterionKind) kind;
-- (void) setKind:(JVTranscriptCriterionKind) kind;
+@property JVTranscriptCriterionKind kind;
 
 - (IBAction) selectCriterionKind:(id) sender;
 - (IBAction) selectCriterionOperation:(id) sender;
@@ -111,21 +112,17 @@ typedef NS_ENUM(NSInteger, JVTranscriptCriterionQueryUnits) {
 - (IBAction) changeQuery:(id) sender;
 - (IBAction) noteOtherChanges:(id) sender;
 
-- (BOOL) changedSinceLastMatch;
+@property (readonly) BOOL changedSinceLastMatch;
 - (BOOL) matchMessage:(JVChatMessage *) message fromChatView:(id <JVChatViewController>) chatView ignoringCase:(BOOL) ignoreCase;
 
-- (id) query;
-- (void) setQuery:(id) query;
+@property (strong) id query;
 
-- (JVTranscriptCriterionOperation) operation;
-- (void) setOperation:(JVTranscriptCriterionOperation) operation;
+@property JVTranscriptCriterionOperation operation;
 
-- (JVTranscriptCriterionQueryUnits) queryUnits;
-- (void) setQueryUnits:(JVTranscriptCriterionQueryUnits) units;
+@property JVTranscriptCriterionQueryUnits queryUnits;
 
-- (BOOL) usesSmartTranscriptCriterion;
-- (void) setUsesSmartTranscriptCriterion:(BOOL) use;
+@property BOOL usesSmartTranscriptCriterion;
 
-- (NSView *) firstKeyView;
-- (NSView *) lastKeyView;
+@property (readonly, strong) NSView *firstKeyView;
+@property (readonly, strong) NSView *lastKeyView;
 @end

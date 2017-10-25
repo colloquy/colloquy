@@ -13,24 +13,29 @@ static NSMutableSet *allEmoticonSets = nil;
 NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotification";
 
 @implementation JVEmoticonSet
+@synthesize bundle = _bundle;
 + (void) scanForEmoticonSets {
+	NSFileManager *fm = [NSFileManager defaultManager];
 	NSMutableSet *styles = [NSMutableSet set];
 	if( ! allEmoticonSets ) allEmoticonSets = styles;
 
 	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:5];
-	[paths addObject:[NSString stringWithFormat:@"%@/Emoticons", [[NSBundle bundleForClass:[self class]] resourcePath]]];
+	[paths addObject:[[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:@"Emoticons"]];
 	if( ! [[NSBundle mainBundle] isEqual:[NSBundle bundleForClass:[self class]]] )
-		[paths addObject:[NSString stringWithFormat:@"%@/Emoticons", [[NSBundle mainBundle] resourcePath]]];
-	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Emoticons", bundleName] stringByExpandingTildeInPath]];
-	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Emoticons", bundleName]];
-	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Emoticons", bundleName]];
+		[paths addObject:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Emoticons"]];
+	NSArray *urls = [fm URLsForDirectory:NSApplicationSupportDirectory inDomains:NSAllDomainsMask & ~NSSystemDomainMask];
+	for (NSURL *url in urls) {
+		NSURL *newURL = [url URLByAppendingPathComponent:bundleName];
+		newURL = [newURL URLByAppendingPathComponent:@"Emoticons" isDirectory:YES];
+		[paths addObject:[newURL path]];
+	}
 
 	for( NSString *path in paths ) {
-		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
+		for( NSString *file in [fm contentsOfDirectoryAtPath:path error:nil] ) {
 			NSString *fullPath = [path stringByAppendingPathComponent:file];
-			NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:nil];
-			if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyEmoticons"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coEm' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
+			NSDictionary *attributes = [fm attributesOfItemAtPath:fullPath error:nil];
+			if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyEmoticons"] == NSOrderedSame || ( [attributes[NSFileHFSTypeCode] unsignedIntValue] == 'coEm' && [attributes[NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
 				NSBundle *bundle = nil;
 				JVEmoticonSet *emoticon = nil;
 				if( ( bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]] ) ) {
@@ -46,10 +51,10 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 }
 
 + (NSSet *) emoticonSets {
-	return allEmoticonSets;
+	return [allEmoticonSets copy];
 }
 
-+ (id) emoticonSetWithIdentifier:(NSString *) identifier {
++ (instancetype) emoticonSetWithIdentifier:(NSString *) identifier {
 	if( [identifier isEqualToString:@"cc.javelin.colloquy.emoticons.text-only"] )
 		return [self textOnlyEmoticonSet];
 
@@ -92,7 +97,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 #pragma mark -
 
-- (id) initWithBundle:(NSBundle *) bundle {
+- (instancetype) initWithBundle:(NSBundle *) bundle {
 	if( ! bundle ) {
 		return nil;
 	}
@@ -138,7 +143,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 
 	for( NSString *key in [self emoticonMappings] ) {
-		NSArray *obj = [[self emoticonMappings] objectForKey:key];
+		NSArray *obj = [self emoticonMappings][key];
 
 		for( NSString *str in obj ) {
 			NSMutableString *search = [str mutableCopy];
@@ -163,10 +168,6 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 #pragma mark -
 
-- (NSBundle *) bundle {
-	return _bundle;
-}
-
 - (NSString *) identifier {
 	if( [[self bundle] isEqual:[NSBundle mainBundle]] )
 		return @"cc.javelin.colloquy.emoticons.text-only";
@@ -189,37 +190,33 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 #pragma mark -
 
-- (NSDictionary *) emoticonMappings {
-	return _emoticonMappings;
-}
-
 - (NSArray *) emoticonMenuItems {
 	NSMutableArray *ret = [NSMutableArray array];
 	NSMenuItem *menuItem = nil;
 	NSDictionary *info = nil;
 
 	for( info in _emoticonMenu ) {
-		if( ! [(NSString *)[info objectForKey:@"name"] length] ) continue;
-		menuItem = [[NSMenuItem alloc] initWithTitle:[info objectForKey:@"name"] action:NULL keyEquivalent:@""];
-		if( [(NSString *)[info objectForKey:@"image"] length] )
-			[menuItem setImage:[[NSImage alloc] initWithContentsOfFile:[[self bundle] pathForResource:[info objectForKey:@"image"] ofType:nil]]];
-		[menuItem setRepresentedObject:[info objectForKey:@"insert"]];
+		if( ! [(NSString *)info[@"name"] length] ) continue;
+		menuItem = [[NSMenuItem alloc] initWithTitle:info[@"name"] action:NULL keyEquivalent:@""];
+		if( [(NSString *)info[@"image"] length] )
+			[menuItem setImage:[[NSImage alloc] initWithContentsOfFile:[[self bundle] pathForResource:info[@"image"] ofType:nil]]];
+		[menuItem setRepresentedObject:info[@"insert"]];
 		[ret addObject:menuItem];
 	}
 
-	return [NSArray arrayWithArray:ret];
+	return [ret copy];
 }
 
 #pragma mark -
 
 - (NSURL *) baseLocation {
 	if( [[self bundle] isEqual:[NSBundle mainBundle]] ) return nil;
-	return [NSURL fileURLWithPath:[[self bundle] resourcePath]];
+	return [[self bundle] resourceURL];
 }
 
 - (NSURL *) styleSheetLocation {
 	if( [[self bundle] isEqual:[NSBundle mainBundle]] ) return nil;
-	return [NSURL fileURLWithPath:[[self bundle] pathForResource:@"emoticons" ofType:@"css"]];
+	return [[self bundle] URLForResource:@"emoticons" withExtension:@"css"];
 }
 
 #pragma mark -

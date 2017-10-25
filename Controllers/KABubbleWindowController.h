@@ -1,9 +1,13 @@
+#import <Cocoa/Cocoa.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
 @class KABubbleWindowController;
 
 @protocol KABubbleWindowControllerDelegate <NSObject>
 @optional
-- (void) bubbleWillFadeIn:(KABubbleWindowController *) bubble;
-- (void) bubbleDidFadeIn:(KABubbleWindowController *) bubble;
+- (void) bubbleWillFadeIn:(KABubbleWindowController *) bubble NS_SWIFT_NAME(bubbleWillFadeIn(_:));
+- (void) bubbleDidFadeIn:(KABubbleWindowController *) bubble NS_SWIFT_NAME(bubbleDidFadeIn(_:));
 
 - (void) bubbleWillFadeOut:(KABubbleWindowController *) bubble;
 - (void) bubbleDidFadeOut:(KABubbleWindowController *) bubble;
@@ -11,32 +15,22 @@
 
 @interface KABubbleWindowController : NSWindowController <NSWindowDelegate> {
 	id _self;
-	id <KABubbleWindowControllerDelegate> _delegate;
 	NSTimer *_animationTimer;
 	NSUInteger _depth;
-	BOOL _autoFadeOut;
-	SEL _action;
-	id _target;
-	id _representedObject;
 }
-+ (KABubbleWindowController *) bubble;
-+ (KABubbleWindowController *) bubbleWithTitle:(NSString *) title text:(id) text icon:(NSImage *) icon;
+
+- (instancetype) init;
++ (instancetype) bubble NS_SWIFT_UNAVAILABLE("Use KABubbleWindowController() instead");
++ (instancetype) bubbleWithTitle:(nullable NSString *) title text:(nullable id) text icon:(nullable NSImage *) icon NS_SWIFT_NAME(init(title:text:icon:));
 
 - (void) startFadeIn;
 - (void) startFadeOut;
 
-- (BOOL) automaticallyFadesOut;
-- (void) setAutomaticallyFadesOut:(BOOL) autoFade;
-
-- (id) target;
-- (void) setTarget:(id) object;
-
-- (SEL) action;
-- (void) setAction:(SEL) selector;
-
-- (id) representedObject;
-- (void) setRepresentedObject:(id) object;
-
-- (id) delegate;
-- (void) setDelegate:(id <KABubbleWindowControllerDelegate>) delegate;
+@property BOOL automaticallyFadesOut;
+@property (weak) id target;
+@property (nullable) SEL action;
+@property (strong, nullable) id representedObject;
+@property (weak) id <KABubbleWindowControllerDelegate> delegate;
 @end
+
+NS_ASSUME_NONNULL_END

@@ -1,31 +1,22 @@
 // provided for scripting support
 @interface NSTextStorage (NSTextStorageAdditions)
-- (NSColor *) backgroundColor;
-- (void) setBackgroundColor:(NSColor *) color;
+@property (copy) NSColor *backgroundColor;
 
-- (NSString *) hyperlink;
-- (void) setHyperlink:(NSString *) link;
+@property (copy) NSString *hyperlink;
 
-- (BOOL) boldState;
-- (void) setBoldState:(BOOL) bold;
+@property  BOOL boldState;
 
-- (BOOL) italicState;
-- (void) setItalicState:(BOOL) italic;
+@property  BOOL italicState;
 
-- (BOOL) underlineState;
-- (void) setUnderlineState:(BOOL) underline;
+@property  BOOL underlineState;
 
-- (NSArray *) styleClasses;
-- (void) setStyleClasses:(NSArray *) classes;
+@property (copy) NSArray *styleClasses;
 
-- (NSString *) styleText;
-- (void) setStyleText:(NSString *) style;
+@property (copy) NSString *styleText;
 
-- (NSString *) XHTMLStart;
-- (void) setXHTMLStart:(NSString *) html;
+@property (copy) NSString *XHTMLStart;
 
-- (NSString *) XHTMLEnd;
-- (void) setXHTMLEnd:(NSString *) html;
+@property (copy) NSString *XHTMLEnd;
 
 - (NSTextStorage *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set;
 @end

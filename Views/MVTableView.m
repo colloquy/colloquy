@@ -42,7 +42,7 @@
 
 	if( row >= 0 ) {
 		NSTableColumn *column = nil;
-		if( col >= 0 ) column = [_tableColumns objectAtIndex:col];
+		if( col >= 0 ) column = _tableColumns[col];
 
 		if( _tvFlags.delegateShouldSelectRow ) {
 			if( [_delegate tableView:self shouldSelectRow:row] )
@@ -117,7 +117,7 @@
 	NSInteger column = [self columnAtPoint:point];
 
 	NSTableColumn *tcolumn = nil;
-	if( column >= 0 ) tcolumn = [_tableColumns objectAtIndex:column];
+	if( column >= 0 ) tcolumn = _tableColumns[column];
 
 	if( row >= 0 && [_dataSource respondsToSelector:@selector( tableView:toolTipForTableColumn:row: )] )
 		return [_dataSource tableView:self toolTipForTableColumn:tcolumn row:row];

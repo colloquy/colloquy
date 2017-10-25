@@ -1,3 +1,5 @@
+#import <Foundation/Foundation.h>
+
 #import <ChatCore/MVAvailability.h>
 #import <ChatCore/MVUtilities.h>
 #import <ChatCore/MVChatString.h>
@@ -10,6 +12,7 @@
 #import <ChatCore/MVDirectChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
 
+// Additions
 #import <ChatCore/NSAttributedStringAdditions.h>
 #import <ChatCore/NSStringAdditions.h>
 #import <ChatCore/NSNumberAdditions.h>
@@ -19,3 +22,5 @@
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/NSNotificationAdditions.h>
 #import <ChatCore/NSScriptCommandAdditions.h>
+#import <ChatCore/NSDateAdditions.h>
+#import <ChatCore/NSRegularExpressionAdditions.h>

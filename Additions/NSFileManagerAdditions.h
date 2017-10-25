@@ -1,3 +1,5 @@
+#import <Foundation/Foundation.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef struct {
@@ -7,7 +9,8 @@ typedef struct {
 	BOOL ppc64;
 	BOOL armv6;
 	BOOL armv7;
-	NSInteger unknown; // 68k, MIPS, etc
+	BOOL armv8;
+	NSInteger unknown; ///< 68k, MIPS, etc
 } MVArchitectures;
 
 @interface NSFileManager (Additions)

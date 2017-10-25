@@ -6,6 +6,8 @@
 //  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
+#import <Cocoa/Cocoa.h>
+
 @class ESFloater;
 @class AICustomTabsView;
 @class AICustomTabCell;
@@ -25,7 +27,7 @@
 - (void)moveToPoint:(NSPoint)inPoint;
 - (NSImage *)dragTabImageForTabCell:(AICustomTabCell *)tabCell inCustomTabsView:(AICustomTabsView *)customTabsView;
 - (NSImage *)dragWindowImageForWindow:(NSWindow *)window customTabsView:(AICustomTabsView *)customTabsView tabCell:(AICustomTabCell *)tabCell;
-- (NSImage *)dragImage;
+@property (readonly, copy) NSImage *dragImage;
 - (void)closeWindow;
 
 @end

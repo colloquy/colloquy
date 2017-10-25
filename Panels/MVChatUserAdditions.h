@@ -1,15 +1,22 @@
+#import <Cocoa/Cocoa.h>
+#import <ChatCore/MVChatUser.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
 @interface MVChatUser (MVChatUserAdditions)
-- (NSString *) xmlDescription;
+@property (readonly, copy) NSString *xmlDescription;
 - (NSString *) xmlDescriptionWithTagName:(NSString *) tag;
 
-- (NSArray *) standardMenuItems;
+- (NSArray<NSMenuItem*> *) standardMenuItems;
 
-- (IBAction) getInfo:(id) sender;
+- (IBAction) getInfo:(nullable id) sender;
 
-- (IBAction) startChat:(id) sender;
-- (IBAction) startDirectChat:(id) sender;
-- (IBAction) sendFile:(id) sender;
-- (IBAction) addBuddy:(id) sender;
+- (IBAction) startChat:(nullable id) sender;
+- (IBAction) startDirectChat:(nullable id) sender;
+- (IBAction) sendFile:(nullable id) sender;
+- (IBAction) addBuddy:(nullable id) sender;
 
-- (IBAction) toggleIgnore:(id) sender;
+- (IBAction) toggleIgnore:(nullable id) sender;
 @end
+
+NS_ASSUME_NONNULL_END

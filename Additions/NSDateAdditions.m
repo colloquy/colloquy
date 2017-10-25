@@ -25,8 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 	return [dateFormatter stringFromDate:date];
 }
 
-+ (NSString *) formattedStringWithDate:(NSDate *) date dateStyle:(int) dateStyle timeStyle:(int) timeStyle {
-	NSString *key = [NSString stringWithFormat:@"%d-%d", dateStyle, timeStyle];
++ (NSString *) formattedStringWithDate:(NSDate *) date dateStyle:(NSDateFormatterStyle) dateStyle timeStyle:(NSDateFormatterStyle) timeStyle {
+	NSString *key = [[NSString alloc] initWithFormat:@"%lu-%lu", (unsigned long)dateStyle, (unsigned long)timeStyle];
 	NSDateFormatter *dateFormatter = [self cq_cacheDictionary][key];
 
 	if (!dateFormatter) {

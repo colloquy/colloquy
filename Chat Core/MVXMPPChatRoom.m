@@ -73,7 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return _localMemberUser;
 }
 
-- (NSSet *) memberUsersWithNickname:(NSString *) nickname {
+- (nullable NSSet *) memberUsersWithNickname:(NSString *) nickname {
 	MVChatUser *user = [self memberUserWithUniqueIdentifier:nickname];
 	if( user ) return [NSSet setWithObject:user];
 	return nil;

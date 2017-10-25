@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
@@ -21,20 +21,18 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="46" y="582" width="350" height="187"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="350" height="129"/>
             <value key="maxSize" type="size" width="700" height="450"/>
             <view key="contentView" id="6">
                 <rect key="frame" x="0.0" y="0.0" width="350" height="187"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <progressIndicator verticalHuggingPriority="750" maxValue="1" bezeled="NO" controlSize="small" style="bar" id="20">
-                        <rect key="frame" x="19" y="47" width="311" height="12"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                    </progressIndicator>
-                    <textField verticalHuggingPriority="750" id="23">
-                        <rect key="frame" x="19" y="16" width="311" height="26"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="23">
+                        <rect key="frame" x="18" y="20" width="313" height="26"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="26" id="Jfe-Se-Cm2"/>
+                        </constraints>
                         <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" id="50">
                             <font key="font" metaFont="label"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -52,7 +50,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="350" height="90"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
                                         <tableColumn identifier="status" editable="NO" width="16" minWidth="16" maxWidth="16" id="46">
@@ -123,7 +121,22 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </tableHeaderView>
                     </scrollView>
+                    <progressIndicator wantsLayer="YES" verticalHuggingPriority="750" maxValue="1" bezeled="NO" controlSize="small" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="20">
+                        <rect key="frame" x="19" y="54" width="311" height="12"/>
+                    </progressIndicator>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="33" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="-1" id="09S-Xl-jw4"/>
+                    <constraint firstItem="33" firstAttribute="top" secondItem="6" secondAttribute="top" constant="-1" id="2q0-57-Yr4"/>
+                    <constraint firstItem="23" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="20" symbolic="YES" id="7ht-qR-r2V"/>
+                    <constraint firstItem="20" firstAttribute="leading" secondItem="6" secondAttribute="leading" constant="19" id="Lgy-Gv-mgt"/>
+                    <constraint firstAttribute="bottom" secondItem="23" secondAttribute="bottom" constant="20" symbolic="YES" id="ORP-r8-LSc"/>
+                    <constraint firstAttribute="trailing" secondItem="33" secondAttribute="trailing" constant="-1" id="R2Z-C6-A3d"/>
+                    <constraint firstItem="23" firstAttribute="top" secondItem="20" secondAttribute="bottom" constant="8" symbolic="YES" id="WeT-ZC-6z2"/>
+                    <constraint firstAttribute="trailing" secondItem="20" secondAttribute="trailing" constant="20" symbolic="YES" id="dnr-xo-DSF"/>
+                    <constraint firstItem="20" firstAttribute="top" secondItem="33" secondAttribute="bottom" constant="8" symbolic="YES" id="ra3-ed-jPY"/>
+                    <constraint firstItem="23" firstAttribute="centerX" secondItem="20" secondAttribute="centerX" id="ypl-cc-PQY"/>
+                </constraints>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="37"/>

@@ -1,6 +1,6 @@
-#import "MVChatPluginManager.h"
+#import <ChatCore/MVChatPluginManager.h>
 
 @interface JVAppleScriptPluginLoader : NSObject <MVChatPlugin> {
-	MVChatPluginManager *_manager;
+	__weak MVChatPluginManager *_manager;
 }
 @end

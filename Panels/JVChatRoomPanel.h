@@ -1,7 +1,11 @@
+#import <Cocoa/Cocoa.h>
 #import "JVDirectChatPanel.h"
+#import <ChatCore/MVMessaging.h>
 
 @class JVChatRoomMember;
 @class MVChatUser;
+
+NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const MVFavoritesListDidUpdateNotification;
 
@@ -19,21 +23,22 @@ COLLOQUY_EXPORT
 - (void) joined;
 - (void) parting;
 
-- (void) joinChat:(id) sender;
-- (void) partChat:(id) sender;
+- (IBAction) joinChat:(nullable id) sender;
+- (IBAction) partChat:(nullable id) sender;
 
-- (IBAction) toggleFavorites:(id) sender;
+- (IBAction) toggleFavorites:(nullable id) sender;
 
-- (NSSet *) chatRoomMembersWithName:(NSString *) name;
-- (JVChatRoomMember *) firstChatRoomMemberWithName:(NSString *) name;
-- (JVChatRoomMember *) chatRoomMemberForUser:(MVChatUser *) user;
-- (JVChatRoomMember *) localChatRoomMember;
+- (NSSet<JVChatRoomMember*> *) chatRoomMembersWithName:(NSString *) name;
+- (nullable JVChatRoomMember *) firstChatRoomMemberWithName:(NSString *) name;
+- (nullable JVChatRoomMember *) chatRoomMemberForUser:(MVChatUser *) user;
+@property (readonly, strong, nullable) JVChatRoomMember *localChatRoomMember;
 - (void) resortMembers;
 
 - (void) handleRoomMessageNotification:(NSNotification *) notification;
 @end
 
-@interface NSObject (MVChatPluginRoomSupport)
+@protocol MVChatPluginRoomSupport <MVChatPlugin>
+@optional
 - (void) memberJoined:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room;
 - (void) memberParted:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room forReason:(NSAttributedString *) reason;
 - (void) memberKicked:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason;
@@ -46,3 +51,5 @@ COLLOQUY_EXPORT
 
 - (void) topicChangedTo:(NSAttributedString *) topic inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) member;
 @end
+
+NS_ASSUME_NONNULL_END

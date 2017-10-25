@@ -94,54 +94,6 @@ static BOOL autoPortMapping = YES;
 	return NO;
 }
 
-- (BOOL) isPassive {
-	return _passive;
-}
-
-- (MVFileTransferStatus) status {
-	return _status;
-}
-
-- (NSError *) lastError {
-	return _lastError;
-}
-
-#pragma mark -
-
-- (unsigned long long) finalSize {
-	return _finalSize;
-}
-
-- (unsigned long long) transferred {
-	return _transferred;
-}
-
-#pragma mark -
-
-- (NSDate *) startDate {
-	return _startDate;
-}
-
-- (unsigned long long) startOffset {
-	return _startOffset;
-}
-
-#pragma mark -
-
-- (NSString *) host {
-	return _host;
-}
-
-- (unsigned short) port {
-	return _port;
-}
-
-#pragma mark -
-
-- (MVChatUser *) user {
-	return _user;
-}
-
 #pragma mark -
 
 - (void) cancel {
@@ -215,12 +167,6 @@ static BOOL autoPortMapping = YES;
 
 #pragma mark -
 
-- (NSString *) source {
-	return _source;
-}
-
-#pragma mark -
-
 - (BOOL) isUpload {
 	return YES;
 }
@@ -250,12 +196,6 @@ static BOOL autoPortMapping = YES;
 
 - (NSString *) destination {
 	return _destination;
-}
-
-#pragma mark -
-
-- (NSString *) originalFileName {
-	return _originalFileName;
 }
 
 #pragma mark -

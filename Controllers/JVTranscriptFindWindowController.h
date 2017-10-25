@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 @class JVChatTranscriptPanel;
 @class JVChatMessage;
 
@@ -16,9 +18,13 @@
 	NSUInteger _lastMessageIndex;
 	BOOL _findPasteboardNeedsUpdated;
 }
+#if __has_feature(objc_class_property)
+@property (readonly, strong, class) JVTranscriptFindWindowController *sharedController;
+#else
 + (JVTranscriptFindWindowController *) sharedController;
+#endif
 
-- (JVChatTranscriptPanel *) focusedChatTranscriptPanel;
+@property (readonly, strong) JVChatTranscriptPanel *focusedChatTranscriptPanel;
 
 - (IBAction) addRow:(id) sender;
 - (IBAction) removeRow:(id) sender;

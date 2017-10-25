@@ -20,7 +20,7 @@ COLLOQUY_EXPORT
 - (void) removeMatchedUser:(MVChatUser *) user;
 - (void) removeMatchedUsersForConnection:(MVChatConnection *) connection;
 
-@property(strong, readonly) NSSet *matchedChatUsers;
+@property(strong, readonly) NSSet<MVChatUser*> *matchedChatUsers;
 
 @property(copy, nullable) NSString *nickname;
 @property(readonly) BOOL nicknameIsRegularExpression;

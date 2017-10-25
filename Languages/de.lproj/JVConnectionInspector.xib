@@ -462,7 +462,7 @@ betreten:</string>
                                         </connections>
                                     </button>
                                     <button id="182">
-                                        <rect key="frame" x="63" y="153" width="19" height="19"/>
+                                        <rect key="frame" x="63" y="152" width="19" height="19"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="450">
                                             <behavior key="behavior" lightByContents="YES"/>
@@ -479,7 +479,7 @@ betreten:</string>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <clipView key="contentView" id="RqM-5Y-0SG">
                                             <rect key="frame" x="1" y="1" width="228" height="113"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" id="179">
                                                     <rect key="frame" x="0.0" y="0.0" width="228" height="113"/>
@@ -531,7 +531,7 @@ betreten:</string>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <clipView key="contentView" id="P5a-JR-s5w">
                                             <rect key="frame" x="1" y="1" width="228" height="90"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" spellingCorrection="YES" smartInsertDelete="YES" id="195">
                                                     <rect key="frame" x="0.0" y="0.0" width="228" height="90"/>
@@ -638,21 +638,10 @@ betreten:</string>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                     </scrollView>
-                                    <button toolTip="Ignorier-Regel hinzufügen" id="404">
-                                        <rect key="frame" x="235" y="5" width="23" height="22"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="453">
-                                            <behavior key="behavior" lightByContents="YES"/>
-                                            <font key="font" metaFont="label"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="addRule:" target="-2" id="410"/>
-                                        </connections>
-                                    </button>
                                     <button toolTip="Ignorier-Regel bearbeiten" id="405">
                                         <rect key="frame" x="287" y="5" width="23" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="editWidget" imagePosition="only" alignment="center" alternateImage="editWidgetPressed" enabled="NO" inset="2" id="454">
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="454">
                                             <behavior key="behavior" lightByContents="YES"/>
                                             <font key="font" metaFont="label"/>
                                         </buttonCell>
@@ -670,6 +659,17 @@ betreten:</string>
                                         </buttonCell>
                                         <connections>
                                             <action selector="removeRule:" target="-2" id="411"/>
+                                        </connections>
+                                    </button>
+                                    <button toolTip="Ignorier-Regel hinzufügen" id="404">
+                                        <rect key="frame" x="239" y="5" width="23" height="22"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="453">
+                                            <behavior key="behavior" lightByContents="YES"/>
+                                            <font key="font" metaFont="label"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="addRule:" target="-2" id="410"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -694,7 +694,7 @@ betreten:</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" id="P2M-qS-A6a">
                             <rect key="frame" x="1" y="1" width="254" height="64"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" id="322">
                                     <rect key="frame" x="0.0" y="0.0" width="254" height="64"/>
@@ -930,9 +930,8 @@ Gw
         </window>
     </objects>
     <resources>
+        <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="editWidget" width="22" height="22"/>
-        <image name="editWidgetPressed" width="22" height="22"/>
     </resources>
 </document>

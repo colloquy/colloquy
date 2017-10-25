@@ -1,10 +1,10 @@
-#import "MVChatPluginManager.h"
+#import <ChatCore/MVChatPluginManager.h>
 #import <Python.h>
 
 extern NSString *JVPythonErrorDomain;
 
 @interface JVPythonChatPlugin : NSObject <MVChatPlugin> {
-	MVChatPluginManager *_manager;
+	__weak MVChatPluginManager *_manager;
 	NSString *_path;
 	NSDate *_modDate;
 	NSString *_uniqueModuleName;
@@ -12,10 +12,10 @@ extern NSString *JVPythonErrorDomain;
 	BOOL _firstLoad;
 	BOOL _errorShown;
 }
-- (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
+- (instancetype) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 
-- (MVChatPluginManager *) pluginManager;
-- (NSString *) scriptFilePath;
+@property (readonly, weak) MVChatPluginManager *pluginManager;
+@property (readonly, copy) NSString *scriptFilePath;
 - (void) reloadFromDisk;
 
 - (BOOL) reportErrorIfNeededInFunction:(NSString *) functionName;

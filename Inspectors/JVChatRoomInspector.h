@@ -1,9 +1,11 @@
+#import <Cocoa/Cocoa.h>
+
 #import "JVChatRoomPanel.h"
 #import "JVInspectorController.h"
 
 
 @interface JVChatRoomPanel (JVChatRoomInspection) <JVInspection>
-- (id <JVInspector>) inspector;
+@property (readonly, strong) id<JVInspector> inspector;
 @end
 
 @interface JVChatRoomInspector : NSObject <JVInspector> {
@@ -34,7 +36,7 @@
 	NSMutableArray *_latestBanList;
 	BOOL _nibLoaded;
 }
-- (id) initWithRoom:(JVChatRoomPanel *) room;
+- (instancetype) initWithRoom:(JVChatRoomPanel *) room;
 
 - (IBAction) changeChatOption:(id) sender;
 - (IBAction) refreshBanList:(id) sender;

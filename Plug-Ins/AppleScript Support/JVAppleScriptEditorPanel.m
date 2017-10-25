@@ -1,6 +1,6 @@
 #import "JVAppleScriptEditorPanel.h"
 #import "JVAppleScriptChatPlugin.h"
-#import "JVChatController.h"
+#import <ChatCore/JVChatController.h>
 
 #include <OpenScripting/OSA.h>
 
@@ -42,6 +42,9 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 #pragma mark -
 
 @implementation JVAppleScriptEditorPanel
+@synthesize contents;
+@synthesize editor;
+
 + (NSDictionary *) uncompiledScriptAttributes {
 	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 	NSFont *font = [NSFont fontWithName:@"Courier" size:12.];
@@ -113,7 +116,7 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 
 - (NSView *) view {
 	if( ! _nibLoaded ) {
-		_nibLoaded = [[NSBundle bundleForClass:[self class]] loadNibFile:@"AppleScriptPanel" externalNameTable:[NSDictionary dictionaryWithObject:self forKey:@"NSOwner"] withZone:[self zone]];
+		_nibLoaded = [[NSBundle bundleForClass:[self class]] loadNibFile:@"AppleScriptPanel" externalNameTable:[[NSDictionary alloc] initWithObject:self forKey:@"NSOwner"] withZone:[self zone]];
 	}
 
 	return contents;

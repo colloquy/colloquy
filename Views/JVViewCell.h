@@ -1,7 +1,5 @@
-@interface JVViewCell : NSCell {
-    @private
-    NSView *_view;
-}
-- (void) setView:(NSView *) view;
-- (NSView *) view;
+#import <Cocoa/Cocoa.h>
+
+@interface JVViewCell : NSCell
+@property (strong) NSView *view;
 @end

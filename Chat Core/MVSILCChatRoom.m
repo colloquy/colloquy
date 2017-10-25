@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if( _uniqueIdentifier )
 		[_connection _removeKnownRoom:self];
 
-	_name = [[NSString alloc] initWithUTF8String:channelEntry -> channel_name];
+	_name = @(channelEntry -> channel_name);
 
 	unsigned char *identifier = silc_id_id2str( channelEntry -> id, SILC_ID_CHANNEL );
 	SilcUInt32 len = silc_id_get_len( channelEntry -> id, SILC_ID_CHANNEL );
@@ -82,7 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
 	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:message andChatFormat:[[self connection] outgoingChatFormat]];
 	SilcMessageFlags flags = SILC_MESSAGE_FLAG_UTF8;
 
-	if( [[attributes objectForKey:@"action"] boolValue] ) flags |= SILC_MESSAGE_FLAG_ACTION;
+	if( [attributes[@"action"] boolValue] ) flags |= SILC_MESSAGE_FLAG_ACTION;
 
 	SilcLock( [[self connection] _silcClient] );
 
@@ -260,9 +260,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (SilcChannelEntry) _getChannelEntry {
-	return _channelEntry;
-}
+@synthesize channelEntry = _channelEntry;
 
 #pragma mark -
 

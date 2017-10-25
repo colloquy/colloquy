@@ -64,7 +64,7 @@
                         <imageView id="377">
                             <rect key="frame" x="0.0" y="2" width="32" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="room" id="448"/>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="roomIcon" id="448"/>
                         </imageView>
                     </subviews>
                 </customView>
@@ -203,7 +203,7 @@
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <size key="minSize" width="283" height="207"/>
                                                     <size key="maxSize" width="285" height="10000000"/>
-                                                    <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <connections>
                                                         <outlet property="delegate" destination="-2" id="394"/>
                                                     </connections>
@@ -265,7 +265,7 @@ DQ
                                                     <rect key="frame" x="0.0" y="0.0" width="286" height="206"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                     <tableColumns>
                                                         <tableColumn identifier="rule" width="180" minWidth="53.79931640625" maxWidth="1000" id="336">
@@ -325,7 +325,7 @@ DQ
                                     <button toolTip="Edit ban" imageHugsTitle="YES" id="339">
                                         <rect key="frame" x="67" y="12" width="23" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="editWidget" imagePosition="only" alignment="center" alternateImage="editWidgetPressed" enabled="NO" inset="2" id="432">
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="432">
                                             <behavior key="behavior" lightByContents="YES"/>
                                             <font key="font" metaFont="label"/>
                                         </buttonCell>
@@ -476,10 +476,9 @@ DQ
         <userDefaultsController representsSharedInstance="YES" id="373" userLabel="Shared Defaults"/>
     </objects>
     <resources>
+        <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="editWidget" width="22" height="22"/>
-        <image name="editWidgetPressed" width="22" height="22"/>
-        <image name="room" width="55" height="55"/>
+        <image name="roomIcon" width="55" height="55"/>
     </resources>
 </document>

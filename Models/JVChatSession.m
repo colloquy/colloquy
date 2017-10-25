@@ -1,30 +1,15 @@
+#include <libxml/tree.h>
 #import "JVChatSession.h"
-#import <libxml/tree.h>
+
+@interface JVChatSession ()
+@property (readwrite, setter=_setNode:) xmlNode *node;
+
+@end
 
 @implementation JVChatSession
-- (void) dealloc {
-	_startDate = nil;
-	_transcript = nil;
-	_node = NULL;
-}
 
-#pragma mark -
+@synthesize transcript = _transcript;
+@synthesize node = _node;
+@synthesize startDate = _startDate;
 
-- (void *) node {
-	return _node;
-}
-
-- (void) setNode:(xmlNode *) node {
-	_node = node;
-}
-
-#pragma mark -
-
-- (JVChatTranscript *) transcript {
-	return _transcript;
-}
-
-- (NSDate *) startDate {
-	return _startDate;
-}
 @end

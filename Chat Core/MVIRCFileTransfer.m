@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 	BOOL _doneSending;
 	long long _passiveId;
 }
+@synthesize _passiveIdentifier = _passiveId;
+@synthesize _fileNameQuoted;
 
 + (nullable instancetype) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	static long long passiveId = 0;
@@ -190,26 +192,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) _setPassiveIdentifier:(long long) identifier {
-	_passiveId = identifier;
-}
-
-- (long long) _passiveIdentifier {
-	return _passiveId;
-}
-
-#pragma mark -
-
-- (void) _setFileNameQuoted:(BOOL) quoted {
-	_fileNameQuoted = quoted;
-}
-
-- (BOOL) _fileNameQuoted {
-	return _fileNameQuoted;
-}
-
-#pragma mark -
-
 - (void) _setStartOffset:(unsigned long long) newStartOffset {
 	[_fileHandle seekToFileOffset:newStartOffset];
 	[super _setStartOffset:newStartOffset];
@@ -228,6 +210,9 @@ NS_ASSUME_NONNULL_BEGIN
 	BOOL _turbo;
 	long long _passiveId;
 }
+@synthesize _passiveIdentifier = _passiveId;
+@synthesize _fileNameQuoted;
+@synthesize _turbo;
 
 - (void) dealloc {
 	[[[self user] connection] _removeDirectClientConnection:self];
@@ -382,35 +367,6 @@ NS_ASSUME_NONNULL_BEGIN
 	else [_directClientConnection connectToHost:[self host] onPort:[self port]];
 }
 
-#pragma mark -
-
-- (void) _setTurbo:(BOOL) turbo {
-	_turbo = turbo;
-}
-
-- (BOOL) _turbo {
-	return _turbo;
-}
-
-#pragma mark -
-
-- (void) _setPassiveIdentifier:(long long) identifier {
-	_passiveId = identifier;
-}
-
-- (long long) _passiveIdentifier {
-	return _passiveId;
-}
-
-#pragma mark -
-
-- (void) _setFileNameQuoted:(BOOL) quoted {
-	_fileNameQuoted = quoted;
-}
-
-- (BOOL) _fileNameQuoted {
-	return _fileNameQuoted;
-}
 @end
 
 NS_ASSUME_NONNULL_END

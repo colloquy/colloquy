@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>AppleScript Support</string>
+	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleGetInfoString</key>
 	<string>AppleScript Support Plugin 1.0; Copyright © 2003-2007, Timothy Hatcher</string>
 	<key>CFBundleIconFile</key>
@@ -21,7 +21,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
-	<string>????</string>
+	<string>coRC</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>NSHumanReadableCopyright</key>

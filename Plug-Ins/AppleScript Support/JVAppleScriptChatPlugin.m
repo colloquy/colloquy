@@ -1,18 +1,26 @@
-#import "MVChatPluginManager.h"
+#import <ChatCore/MVChatPluginManager.h>
+#import <ChatCore/MVChatConnection.h>
 #import "JVAppleScriptChatPlugin.h"
-#import "MVChatUser.h"
-#import "MVChatRoom.h"
+#import <ChatCore/MVChatUser.h>
+#import <ChatCore/MVChatRoom.h>
 #import "JVChatWindowController.h"
 #import "JVChatMessage.h"
 #import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
-#import "NSColorAdditions.h"
+#import "JVChatController.h"
+#import "MVApplicationController.h"
+#import "JVNotificationController.h"
+#import <ChatCore/NSColorAdditions.h>
+
+@interface JVAppleScriptChatPlugin () <MVChatPluginCommandSupport, MVChatPluginContextualMenuSupport, MVChatPluginNotificationSupport, MVChatPluginConnectionSupport, MVChatPluginRoomSupport, MVChatPluginDirectChatSupport, MVChatPluginLinkClickSupport>
+
+@end
 
 @interface NSTerminologyRegistry : NSObject // Private Foundation Class
-- (id) initWithSuiteName:(NSString *) name bundle:(NSBundle *) bundle;
-- (NSString *) suiteName;
-- (NSArray *) suiteNameArray;
-- (NSString *) suiteDescription;
+- (instancetype) initWithSuiteName:(NSString *) name bundle:(NSBundle *) bundle;
+@property (readonly, copy) NSString *suiteName;
+@property (readonly, copy) NSArray *suiteNameArray;
+@property (readonly, copy) NSString *suiteDescription;
 - (NSDictionary *) classTerminologyDictionary:(NSString *) className;
 - (NSDictionary *) commandTerminologyDictionary:(NSString *) commandName;
 - (NSDictionary *) enumerationTerminologyDictionary:(NSString *) enumName;
@@ -29,35 +37,24 @@
 #pragma mark -
 
 @interface NSAEDescriptorTranslator : NSObject // Private Foundation Class
-+ (id) sharedAEDescriptorTranslator;
++ (NSAEDescriptorTranslator*) sharedAEDescriptorTranslator;
 - (NSAppleEventDescriptor *) descriptorByTranslatingObject:(id) object ofType:(id) type inSuite:(id) suite;
 - (id) objectByTranslatingDescriptor:(NSAppleEventDescriptor *) descriptor toType:(id) type inSuite:(id) suite;
 - (void) registerTranslator:(id) translator selector:(SEL) selector toTranslateFromClass:(Class) class;
-- (void) registerTranslator:(id) translator selector:(SEL) selector toTranslateFromDescriptorType:(unsigned int) type;
+- (void) registerTranslator:(id) translator selector:(SEL) selector toTranslateFromDescriptorType:(OSType) type;
 @end
 
 #pragma mark -
 
 @interface NSString (NSStringFourCharCode)
-- (FourCharCode) fourCharCode;
+@property (readonly) FourCharCode fourCharCode;
 @end
 
 #pragma mark -
 
 @implementation NSString (NSStringFourCharCode)
 - (FourCharCode) fourCharCode {
-	FourCharCode ret = 0, length = (FourCharCode)[self length];
-
-	if( length >= 1 ) ret |= ( [self characterAtIndex:0] & 0x00ff ) << 24;
-	else ret |= ' ' << 24;
-	if( length >= 2 ) ret |= ( [self characterAtIndex:1] & 0x00ff ) << 16;
-	else ret |= ' ' << 16;
-	if( length >= 3 ) ret |= ( [self characterAtIndex:2] & 0x00ff ) << 8;
-	else ret |= ' ' << 8;
-	if( length >= 4 ) ret |= ( [self characterAtIndex:3] & 0x00ff );
-	else ret |= ' ';
-
-	return ret;
+	return UTGetOSTypeFromString((CFStringRef)self);
 }
 @end
 
@@ -78,10 +75,13 @@
 #pragma mark -
 
 @implementation JVAppleScriptChatPlugin
-- (id) initWithManager:(MVChatPluginManager *) manager {
+@synthesize scriptFilePath = _path;
+@synthesize pluginManager = _manager;
+
+- (instancetype) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [self init] ) ) {
 		_manager = manager;
-		_doseNotRespond = [[NSMutableSet set] retain];
+		_doseNotRespond = [[NSMutableSet alloc] init];
 		_script = nil;
 		_path = nil;
 		_idleTimer = nil;
@@ -89,7 +89,7 @@
 	return self;
 }
 
-- (id) initWithScript:(NSAppleScript *) script atPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
+- (instancetype) initWithScript:(NSAppleScript *) script atPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
 	if( ( self = [self initWithManager:manager] ) ) {
 		_script = [script retain];
 		_path = [path copyWithZone:[self zone]];
@@ -102,7 +102,7 @@
 	return self;
 }
 
-- (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
+- (instancetype) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
 	NSAppleScript *script = [[[NSAppleScript alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:NULL] autorelease];
 	if( ! [script compileAndReturnError:NULL] ) {
 		[self release];
@@ -138,18 +138,6 @@
 
 #pragma mark -
 
-- (NSAppleScript *) script {
-	return _script;
-}
-
-- (void) setScript:(NSAppleScript *) script {
-	id old = _script;
-	_script = [script retain];
-	[old release];
-}
-
-#pragma mark -
-
 - (void) reloadFromDisk {
 	NSString *filePath = [self scriptFilePath];
 
@@ -167,24 +155,6 @@
 
 #pragma mark -
 
-- (MVChatPluginManager *) pluginManager {
-	return _manager;
-}
-
-#pragma mark -
-
-- (NSString *) scriptFilePath {
-	return _path;
-}
-
-- (void) setScriptFilePath:(NSString *) path {
-	id old = _path;
-	_path = [path copyWithZone:[self zone]];
-	[old release];
-}
-
-#pragma mark -
-
 - (id) callScriptHandler:(FourCharCode) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector {
 	if( ! _script ) return nil;
 
@@ -192,18 +162,15 @@
 	NSAppleEventDescriptor *targetAddress = [NSAppleEventDescriptor descriptorWithDescriptorType:typeKernelProcessID bytes:&pid length:sizeof( pid )];
 	NSAppleEventDescriptor *event = [NSAppleEventDescriptor appleEventWithEventClass:'cplG' eventID:handler targetDescriptor:targetAddress returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID];
 
-	NSEnumerator *enumerator = [arguments objectEnumerator];
-	NSEnumerator *kenumerator = [arguments keyEnumerator];
 	NSAppleEventDescriptor *descriptor = nil;
-	NSString *key = nil;
-	id value = nil;
 
-	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
+	for (NSString *key in arguments) {
+		id value = arguments[key];
 		NSScriptObjectSpecifier *specifier = nil;
 		if( [value isKindOfClass:[NSScriptObjectSpecifier class]] ) specifier = value;
 		else specifier = [value objectSpecifier];
 
-		if( specifier ) descriptor = [[value objectSpecifier] _asDescriptor]; // custom object, use it's object specitier
+		if( specifier ) descriptor = [[value objectSpecifier] _asDescriptor]; // custom object, use its object specifier
 		else descriptor = [[NSAEDescriptorTranslator sharedAEDescriptorTranslator] descriptorByTranslatingObject:value ofType:nil inSuite:nil];
 
 		if( ! descriptor ) descriptor = [NSAppleEventDescriptor nullDescriptor];
@@ -214,11 +181,11 @@
 	NSAppleEventDescriptor *result = [_script executeAppleEvent:event error:&error];
 
 	if( error && ! result ) { // an error
-		int code = [[error objectForKey:NSAppleScriptErrorNumber] intValue];
+		int code = [error[NSAppleScriptErrorNumber] intValue];
 		if( code == errAEEventNotHandled || code == errAEHandlerNotFound ) {
 			[self doesNotRespondToSelector:selector]; // disable for future calls
 		} else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAppleScriptDebugging"] ) {
-			NSString *errorDesc = [error objectForKey:NSAppleScriptErrorMessage];
+			NSString *errorDesc = error[NSAppleScriptErrorMessage];
 			NSScriptCommandDescription *commandDesc = [[NSScriptSuiteRegistry sharedScriptSuiteRegistry] commandDescriptionWithAppleEventClass:'cplG' andAppleEventCode:handler];
 			NSString *scriptSuiteName = [[NSScriptSuiteRegistry sharedScriptSuiteRegistry] suiteForAppleEventCode:'cplG'];
 			NSTerminologyRegistry *term = [[[NSClassFromString( @"NSTerminologyRegistry" ) alloc] initWithSuiteName:scriptSuiteName bundle:[NSBundle mainBundle]] autorelease];
@@ -359,7 +326,7 @@
 	[self callScriptHandler:'pcMX' withArguments:args forSelector:_cmd];
 }
 
-- (void) buildMenuInto:(NSMutableArray *) itemList fromReturnContainer:(id) container withRepresentedObject:(id) object {
+- (void) buildMenuInto:(NSMutableArray<NSMenuItem*> *) itemList fromReturnContainer:(id) container withRepresentedObject:(id) object {
 	if( [container respondsToSelector:@selector( objectEnumerator )] ) {
 		NSEnumerator *enumerator = [container objectEnumerator];
 		id item = nil;
@@ -376,16 +343,16 @@
 					[mitem release];
 				}
 			} else if( [item isKindOfClass:[NSDictionary class]] ) {
-				NSString *title = [item objectForKey:@"title"];
-				NSArray *sub = [item objectForKey:@"submenu"];
-				NSNumber *enabled = [item objectForKey:@"enabled"];
-				NSNumber *checked = [item objectForKey:@"checked"];
-				NSNumber *indent = [item objectForKey:@"indent"];
-				NSNumber *alternate = [item objectForKey:@"alternate"];
-				id iconPath = [item objectForKey:@"icon"];
-				id iconSize = [item objectForKey:@"iconsize"];
-				NSString *tooltip = [item objectForKey:@"tooltip"];
-				id context = [item objectForKey:@"context"];
+				NSString *title = item[@"title"];
+				NSArray *sub = item[@"submenu"];
+				NSNumber *enabled = item[@"enabled"];
+				NSNumber *checked = item[@"checked"];
+				NSNumber *indent = item[@"indent"];
+				NSNumber *alternate = item[@"alternate"];
+				id iconPath = item[@"icon"];
+				id iconSize = item[@"iconsize"];
+				NSString *tooltip = item[@"tooltip"];
+				id context = item[@"context"];
 
 				if( ! [title isKindOfClass:[NSString class]] ) continue;
 				if( ! [tooltip isKindOfClass:[NSString class]] ) tooltip = nil;
@@ -422,7 +389,7 @@
 					if( [iconPath hasPrefix:@"#"] ) {
 						NSSize size = NSZeroSize;
 						if( [iconSize isKindOfClass:[NSArray class]] && [(NSArray *)iconSize count] == 2 ) {
-							size = NSMakeSize( [[iconSize objectAtIndex:0] unsignedIntValue], [[iconSize objectAtIndex:1] unsignedIntValue] );
+							size = NSMakeSize( [iconSize[0] unsignedIntValue], [iconSize[1] unsignedIntValue] );
 						} else if( [iconSize isKindOfClass:[NSNumber class]] ) {
 							size = NSMakeSize( [iconSize unsignedIntValue], [iconSize unsignedIntValue] );
 						} else size = NSMakeSize( 24., 12. );
@@ -457,7 +424,7 @@
 					
 					NSSize size = NSZeroSize;
 					if( [iconSize isKindOfClass:[NSArray class]] && [(NSArray *)iconSize count] == 2 ) {
-						size = NSMakeSize( [[iconSize objectAtIndex:0] unsignedIntValue], [[iconSize objectAtIndex:1] unsignedIntValue] );
+						size = NSMakeSize( [iconSize[0] unsignedIntValue], [iconSize[1] unsignedIntValue] );
 					} else if( [iconSize isKindOfClass:[NSNumber class]] ) {
 						size = NSMakeSize( [iconSize unsignedIntValue], [iconSize unsignedIntValue] );
 					}
@@ -468,12 +435,12 @@
 				} else if( [iconPath isKindOfClass:[NSArray class]] && [(NSArray *)iconPath count] == 3 ) {
 					NSSize size = NSZeroSize;
 					if( [iconSize isKindOfClass:[NSArray class]] && [(NSArray *)iconSize count] == 2 ) {
-						size = NSMakeSize( [[iconSize objectAtIndex:0] unsignedIntValue], [[iconSize objectAtIndex:1] unsignedIntValue] );
+						size = NSMakeSize( [iconSize[0] unsignedIntValue], [iconSize[1] unsignedIntValue] );
 					} else if( [iconSize isKindOfClass:[NSNumber class]] ) {
 						size = NSMakeSize( [iconSize unsignedIntValue], [iconSize unsignedIntValue] );
 					} else size = NSMakeSize( 24., 12. );
 
-					NSColor *color = [NSColor colorWithCalibratedRed:( [[iconPath objectAtIndex:0] unsignedIntValue] / 65535. ) green:( [[iconPath objectAtIndex:1] unsignedIntValue] / 65535. ) blue:( [[iconPath objectAtIndex:2] unsignedIntValue] / 65535. ) alpha:1.];
+					NSColor *color = [NSColor colorWithCalibratedRed:( [iconPath[0] unsignedIntValue] / 65535. ) green:( [iconPath[1] unsignedIntValue] / 65535. ) blue:( [iconPath[2] unsignedIntValue] / 65535. ) alpha:1.];
 					NSImage *icon = [[NSImage alloc] initWithSize:size];
 
 					[icon lockFocus];
@@ -516,7 +483,7 @@
 
 	if( ! result ) return nil;
 	if( ! [result isKindOfClass:[NSArray class]] )
-		result = [NSArray arrayWithObject:result];
+		result = @[result];
 
 	[self buildMenuInto:ret fromReturnContainer:result withRepresentedObject:object];
 

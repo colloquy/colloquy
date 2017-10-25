@@ -1,3 +1,4 @@
+#import <Cocoa/Cocoa.h>
 #import "JVInspectorController.h"
 #import <AddressBook/ABPeoplePickerView.h>
 
@@ -7,7 +8,7 @@
 @class ABPeoplePickerController;
 @class MVChatConnection;
 
-typedef NS_ENUM(NSInteger, MVBuddyListSortOrder) {
+typedef NS_ENUM(OSType, MVBuddyListSortOrder) {
 	MVAvailabilitySortOrder = 'avlY',
 	MVFirstNameSortOrder = 'fSnM',
 	MVLastNameSortOrder = 'lSnM',
@@ -15,11 +16,11 @@ typedef NS_ENUM(NSInteger, MVBuddyListSortOrder) {
 };
 
 COLLOQUY_EXPORT
-@interface MVBuddyListController : NSWindowController <JVInspectionDelegator> {
+@interface MVBuddyListController : NSWindowController <JVInspectionDelegator, NSTableViewDataSource> {
 	@private
 	IBOutlet MVTableView *buddies;
 	IBOutlet NSButton *sendMessageButton;
-	IBOutlet NSButton *actionButton;
+	IBOutlet NSPopUpButton *actionButton;
 	IBOutlet NSButton *infoButton;
 
 	IBOutlet NSWindow *pickerWindow;
@@ -47,13 +48,17 @@ COLLOQUY_EXPORT
 	BOOL _showOfflineBuddies;
 	MVBuddyListSortOrder _sortOrder;
 
-	float _animationPosition;
+	CGFloat _animationPosition;
 	NSMutableArray *_oldPositions;
 	BOOL _viewingTop;
 	BOOL _needsToAnimate;
 	BOOL _animating;
 }
+#if __has_feature(objc_class_property)
+@property (readonly, strong, class) MVBuddyListController *sharedBuddyList;
+#else
 + (MVBuddyListController *) sharedBuddyList;
+#endif
 
 - (void) save;
 
@@ -65,8 +70,8 @@ COLLOQUY_EXPORT
 - (void) addBuddy:(JVBuddy *) buddy;
 
 - (JVBuddy *) buddyForUser:(MVChatUser *) user;
-- (NSArray *) buddies;
-- (NSSet *) onlineBuddies;
+@property (readonly, copy) NSArray<JVBuddy*> *buddies;
+@property (readonly, copy) NSSet<JVBuddy*> *onlineBuddies;
 
 - (IBAction) showBuddyPickerSheet:(id) sender;
 - (IBAction) cancelBuddySelection:(id) sender;
@@ -83,24 +88,19 @@ COLLOQUY_EXPORT
 - (IBAction) messageSelectedBuddy:(id) sender;
 - (IBAction) sendFileToSelectedBuddy:(id) sender;
 
-- (void) setShowFullNames:(BOOL) flag;
-- (BOOL) showFullNames;
+@property BOOL showFullNames;
 - (IBAction) toggleShowFullNames:(id) sender;
 
-- (void) setShowNicknameAndServer:(BOOL) flag;
-- (BOOL) showNicknameAndServer;
+@property BOOL showNicknameAndServer;
 - (IBAction) toggleShowNicknameAndServer:(id) sender;
 
-- (void) setShowIcons:(BOOL) flag;
-- (BOOL) showIcons;
+@property BOOL showIcons;
 - (IBAction) toggleShowIcons:(id) sender;
 
-- (void) setShowOfflineBuddies:(BOOL) flag;
-- (BOOL) showOfflineBuddies;
+@property BOOL showOfflineBuddies;
 - (IBAction) toggleShowOfflineBuddies:(id) sender;
 
-- (void) setSortOrder:(MVBuddyListSortOrder) order;
-- (MVBuddyListSortOrder) sortOrder;
+@property MVBuddyListSortOrder sortOrder;
 - (IBAction) sortByAvailability:(id) sender;
 - (IBAction) sortByFirstName:(id) sender;
 - (IBAction) sortByLastName:(id) sender;

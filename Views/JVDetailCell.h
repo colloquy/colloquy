@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 @interface JVDetailCell : NSImageCell
 @property (copy) NSImage *statusImage;
 @property NSUInteger statusNumber;

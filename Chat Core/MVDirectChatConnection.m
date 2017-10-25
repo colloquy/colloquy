@@ -81,30 +81,6 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 #pragma mark -
 
-- (BOOL) isPassive {
-	return _passive;
-}
-
-- (MVDirectChatConnectionStatus) status {
-	return _status;
-}
-
-- (MVChatUser *) user {
-	return _user;
-}
-
-- (NSString *) host {
-	return _host;
-}
-
-- (NSString *) connectedHost {
-	return _connectedHost;
-}
-
-- (unsigned short) port {
-	return _port;
-}
-
 - (NSString *) description {
 	return [[self user] description];
 }

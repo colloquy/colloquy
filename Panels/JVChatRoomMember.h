@@ -1,9 +1,12 @@
+#import <Cocoa/Cocoa.h>
 #import "JVChatWindowController.h"
 
 @class JVChatRoomPanel;
 @class MVChatConnection;
 @class MVChatUser;
 @class JVBuddy;
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface JVChatRoomMember : NSObject <JVChatListItem, JVChatListItemScripting> {
 	__weak JVChatRoomPanel *_room;
@@ -20,57 +23,58 @@
 	IBOutlet NSButton *cancelButton;
 	IBOutlet NSWindow *banWindow;
 }
-- (id) initWithRoom:(JVChatRoomPanel *) room andUser:(MVChatUser *) user;
-- (id) initLocalMemberWithRoom:(JVChatRoomPanel *) room;
+- (instancetype) initWithRoom:(JVChatRoomPanel *) room andUser:(MVChatUser *) user NS_DESIGNATED_INITIALIZER;
+- (instancetype) initLocalMemberWithRoom:(JVChatRoomPanel *) room;
+- (instancetype) init UNAVAILABLE_ATTRIBUTE;
 
 - (NSComparisonResult) compare:(JVChatRoomMember *) member;
 - (NSComparisonResult) compareUsingStatus:(JVChatRoomMember *) member;
 - (NSComparisonResult) compareUsingBuddyStatus:(JVChatRoomMember *) member;
 
-- (JVChatRoomPanel *) room;
-- (MVChatConnection *) connection;
-- (MVChatUser *) user;
-- (JVBuddy *) buddy;
+@property (readonly, weak) JVChatRoomPanel *room;
+@property (readonly, strong) MVChatConnection *connection;
+@property (readonly, strong) MVChatUser *user;
+@property (readonly, strong, nullable) JVBuddy *buddy;
 
-- (NSString *) displayName;
-- (NSString *) nickname;
-- (NSString *) realName;
-- (NSString *) username;
-- (NSString *) address;
-- (NSString *) hostmask;
+@property (readonly, copy) NSString *displayName;
+@property (readonly, copy) NSString *nickname;
+@property (readonly, copy) NSString *realName;
+@property (readonly, copy) NSString *username;
+@property (readonly, copy) NSString *address;
+@property (readonly, copy, nullable) NSString *hostmask;
 
-- (BOOL) voice;
-- (BOOL) quieted;
-- (BOOL) operator;
-- (BOOL) halfOperator;
-- (BOOL) roomAdministrator;
-- (BOOL) roomFounder;
-- (BOOL) serverOperator;
-- (BOOL) isLocalUser;
+@property (readonly) BOOL voice;
+@property (readonly) BOOL quieted;
+@property (readonly) BOOL operator;
+@property (readonly) BOOL halfOperator;
+@property (readonly) BOOL roomAdministrator;
+@property (readonly) BOOL roomFounder;
+@property (readonly) BOOL serverOperator;
+@property (getter=isLocalUser, readonly) BOOL localUser;
 
-- (NSString *) xmlDescription;
+@property (readonly, copy) NSString *xmlDescription;
 - (NSString *) xmlDescriptionWithTagName:(NSString *) tag;
 
-- (IBAction) startChat:(id) sender;
-- (IBAction) sendFile:(id) sender;
-- (IBAction) addBuddy:(id) sender;
+- (IBAction) startChat:(nullable id) sender;
+- (IBAction) sendFile:(nullable id) sender;
+- (IBAction) addBuddy:(nullable id) sender;
 
-- (IBAction) toggleOperatorStatus:(id) sender;
-- (IBAction) toggleHalfOperatorStatus:(id) sender;
-- (IBAction) toggleVoiceStatus:(id) sender;
-- (IBAction) toggleQuietedStatus:(id) sender;
+- (IBAction) toggleOperatorStatus:(nullable id) sender;
+- (IBAction) toggleHalfOperatorStatus:(nullable id) sender;
+- (IBAction) toggleVoiceStatus:(nullable id) sender;
+- (IBAction) toggleQuietedStatus:(nullable id) sender;
 
-- (IBAction) kick:(id) sender;
-- (IBAction) ban:(id) sender;
-- (IBAction) customKick:(id) sender;
-- (IBAction) customBan:(id) sender;
-- (IBAction) kickban:(id) sender;
-- (IBAction) customKickban:(id) sender;
+- (IBAction) kick:(nullable id) sender;
+- (IBAction) ban:(nullable id) sender;
+- (IBAction) customKick:(nullable id) sender;
+- (IBAction) customBan:(nullable id) sender;
+- (IBAction) kickban:(nullable id) sender;
+- (IBAction) customKickban:(nullable id) sender;
 
-- (IBAction) closeKickSheet:(id) sender;
-- (IBAction) closeBanSheet:(id) sender;
-- (IBAction) closeKickbanSheet:(id) sender;
-- (IBAction) cancelSheet:(id) sender;
+- (IBAction) closeKickSheet:(nullable id) sender;
+- (IBAction) closeBanSheet:(nullable id) sender;
+- (IBAction) closeKickbanSheet:(nullable id) sender;
+- (IBAction) cancelSheet:(nullable id) sender;
 @end
 
 @interface JVChatRoomMember (Private)
@@ -79,3 +83,5 @@
 - (NSString *) _selfCompositeName;
 - (NSString *) _selfStoredNickname;
 @end
+
+NS_ASSUME_NONNULL_END

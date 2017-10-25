@@ -1,7 +1,7 @@
-#import "MVChatPluginManager.h"
+#import <ChatCore/MVChatPluginManager.h>
 
 @interface JVPythonPluginLoader : NSObject <MVChatPlugin> {
-	MVChatPluginManager *_manager;
+	__unsafe_unretained MVChatPluginManager *_manager;
 	BOOL _pyobjcInstalled;
 }
 - (void) loadPluginNamed:(NSString *) name;

@@ -8,9 +8,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 static MVChatPluginManager *sharedInstance = nil;
-NSString *MVChatPluginManagerWillReloadPluginsNotification = @"MVChatPluginManagerWillReloadPluginsNotification";
-NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManagerDidReloadPluginsNotification";
-NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginManagerDidFindInvalidPluginsNotification";
+NSString *const MVChatPluginManagerWillReloadPluginsNotification = @"MVChatPluginManagerWillReloadPluginsNotification";
+NSString *const MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManagerDidReloadPluginsNotification";
+NSString *const MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginManagerDidFindInvalidPluginsNotification";
 
 #pragma mark -
 
@@ -25,16 +25,16 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 }
 
 + (NSArray *) pluginSearchPaths {
+	NSFileManager *fm = [NSFileManager defaultManager];
 	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-	NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:5];
-
-	BOOL directory = NO;
-	NSString *pluginsPath = [[NSString stringWithFormat:@"~/Library/Application Support/%@/Plugins", bundleName] stringByExpandingTildeInPath];
-	if( [[NSFileManager defaultManager] fileExistsAtPath:pluginsPath isDirectory:&directory] && directory )
-		[paths addObject:pluginsPath];
-	else [paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/PlugIns", bundleName] stringByExpandingTildeInPath]];
-	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/PlugIns", bundleName]];
-	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/PlugIns", bundleName]];
+	NSArray *appSupports = [fm URLsForDirectory:NSApplicationSupportDirectory inDomains:NSAllDomainsMask & ~NSSystemDomainMask];
+	NSMutableArray<NSString*> *paths = [[NSMutableArray alloc] initWithCapacity:appSupports.count + 2];
+	for (NSURL *support in appSupports) {
+		NSString *newDir = [support path];
+		newDir = [newDir stringByAppendingPathComponent:bundleName];
+		newDir = [newDir stringByAppendingPathComponent:@"PlugIns"];
+		[paths addObject:newDir];
+	}
 	[paths addObject:[[NSBundle bundleForClass:[self class]] builtInPlugInsPath]];
 	if( ! [[NSBundle mainBundle] isEqual:[NSBundle bundleForClass:[self class]]] )
 		[paths addObject:[[NSBundle mainBundle] builtInPlugInsPath]];
@@ -43,7 +43,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if( ! ( self = [super init] ) )
 		return nil;
 
@@ -79,9 +79,9 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			if( [[file pathExtension] isEqualToString:@"bundle"] || [[file pathExtension] isEqualToString:@"plugin"] ) {
 				NSBundle *bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]];
-				NSString *bundleIdentifier = [[bundle infoDictionary] objectForKey:@"CFBundleIdentifier"];
-				NSString *previousPluginVersion = [_invalidPlugins objectForKey:bundleIdentifier];
-				NSString *pluginVersion = [[bundle infoDictionary] objectForKey:@"CFBundleVersion"];
+				NSString *bundleIdentifier = [bundle infoDictionary][@"CFBundleIdentifier"];
+				NSString *previousPluginVersion = _invalidPlugins[bundleIdentifier];
+				NSString *pluginVersion = [bundle infoDictionary][@"CFBundleVersion"];
 
 				if( pluginVersion.length ) {
 					if( [previousPluginVersion isCaseInsensitiveEqualToString:pluginVersion] )
@@ -90,9 +90,9 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 				}
 
 				if( ![[NSFileManager defaultManager] canExecutePluginAtPath:bundle.executablePath] ) {
-					[invalidPluginList addObject:[NSString stringWithFormat:@"%@/%@", path, file]];
+					[invalidPluginList addObject:[path stringByAppendingPathComponent:file]];
 
-					[_invalidPlugins setObject:pluginVersion forKey:bundleIdentifier];
+					_invalidPlugins[bundleIdentifier] = pluginVersion;
 
 					continue;
 				}
@@ -111,7 +111,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	_reloadingPlugins = NO;
 }
 
-- (void) addPlugin:(NSBundle *) plugin {
+- (void) addPlugin:(id<MVChatPlugin>) plugin {
 	if( plugin ) {
 		[_plugins addObject:plugin];
 		if( [plugin respondsToSelector:@selector( load )] )
@@ -119,7 +119,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	}
 }
 
-- (void) removePlugin:(NSBundle *) plugin {
+- (void) removePlugin:(id<MVChatPlugin>) plugin {
 	if( plugin ) {
 		if( [plugin respondsToSelector:@selector( unload )] )
 			[plugin unload];
@@ -141,11 +141,11 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	return [_plugins copy];
 }
 
-- (NSArray *) pluginsThatRespondToSelector:(SEL) selector {
+- (nullable NSArray *) pluginsThatRespondToSelector:(SEL) selector {
 	return [self pluginsOfClass:NULL thatRespondToSelector:selector];
 }
 
-- (NSArray *) pluginsOfClass:(Class __nullable) class thatRespondToSelector:(SEL) selector {
+- (nullable NSArray *) pluginsOfClass:(Class __nullable) class thatRespondToSelector:(SEL) selector {
 	NSParameterAssert( selector != NULL );
 
 	NSMutableArray *qualified = [[NSMutableArray alloc] init];
@@ -159,15 +159,15 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 
 #pragma mark -
 
-- (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation {
+- (nullable NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation {
 	return [self makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
 }
 
-- (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop {
+- (nullable NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop {
 	return [self makePluginsOfClass:NULL performInvocation:invocation stoppingOnFirstSuccessfulReturn:stop];
 }
 
-- (NSArray *) makePluginsOfClass:(Class __nullable) class performInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop {
+- (nullable NSArray *) makePluginsOfClass:(Class __nullable) class performInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop {
 	NSParameterAssert( invocation != nil );
 	NSParameterAssert( [invocation selector] != NULL );
 
@@ -178,7 +178,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	NSMutableArray *results = [[NSMutableArray alloc] init];
 	NSMethodSignature *sig = [invocation methodSignature];
 
-	for ( id plugin in plugins ) {
+	for ( id<MVChatPlugin> plugin in plugins ) {
 		@try {
 			[invocation invokeWithTarget:plugin];
 		} @catch ( NSException *exception ) {

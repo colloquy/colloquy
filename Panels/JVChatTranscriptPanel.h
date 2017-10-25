@@ -1,3 +1,4 @@
+#import <Cocoa/Cocoa.h>
 #import "JVChatWindowController.h"
 
 #import <WebKit/WebKit.h>
@@ -8,6 +9,8 @@
 @class JVEmoticonSet;
 @class JVChatMessage;
 @class JVChatTranscript;
+
+NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *JVToolbarChooseStyleItemIdentifier;
 extern NSString *JVToolbarEmoticonsItemIdentifier;
@@ -31,38 +34,36 @@ extern NSString *JVToolbarQuickSearchItemIdentifier;
 	NSString *_searchQuery;
 	NSRegularExpression *_searchQueryRegex;
 }
-- (id) initWithTranscript:(NSString *) filename;
+- (instancetype) init NS_DESIGNATED_INITIALIZER;
+- (nullable instancetype) initWithTranscript:(NSString *) filename;
 
-- (IBAction) changeStyle:(id) sender;
+- (IBAction) changeStyle:(nullable id) sender;
 - (void) setStyle:(JVStyle *) style withVariant:(NSString *) variant;
-- (JVStyle *) style;
+@property (readonly, strong) JVStyle *style;
 
-- (IBAction) changeStyleVariant:(id) sender;
-- (void) setStyleVariant:(NSString *) variant;
-- (NSString *) styleVariant;
+- (IBAction) changeStyleVariant:(nullable id) sender;
+@property (copy) NSString *styleVariant;
 
-- (IBAction) changeEmoticons:(id) sender;
-- (void) setEmoticons:(JVEmoticonSet *) emoticons;
-- (JVEmoticonSet *) emoticons;
+- (IBAction) changeEmoticons:(nullable id) sender;
+@property (strong) JVEmoticonSet *emoticons;
 
-- (JVChatTranscript *) transcript;
+@property (readonly, strong) JVChatTranscript *transcript;
 - (void) jumpToMessage:(JVChatMessage *) message;
 
-- (IBAction) close:(id) sender;
-- (IBAction) activate:(id) sender;
+- (IBAction) close:(nullable id) sender;
+- (IBAction) activate:(nullable id) sender;
 
-- (IBAction) performQuickSearch:(id) sender;
-- (void) quickSearchMatchMessage:(JVChatMessage *) message;
+- (IBAction) performQuickSearch:(nullable id) sender;
+- (void) quickSearchMatchMessage:(nullable JVChatMessage *) message;
 
-- (void) setSearchQuery:(NSString *) query;
-- (NSString *) searchQuery;
+@property (copy, nullable) NSString *searchQuery;
 
-- (JVStyleView *) display;
+@property (readonly, strong) JVStyleView *display;
 @end
 
 #pragma mark -
 
-@interface NSObject (MVChatPluginLinkClickSupport)
+@protocol MVChatPluginLinkClickSupport <MVChatPlugin>
 - (BOOL) handleClickedLink:(NSURL *) url inView:(id <JVChatViewController>) view;
 @end
 
@@ -74,7 +75,7 @@ extern NSString *JVToolbarQuickSearchItemIdentifier;
 - (void) _refreshSearch;
 - (void) _didSwitchStyles:(NSNotification *) notification;
 
-- (void) _reloadCurrentStyle:(id) sender;
+- (void) _reloadCurrentStyle:(nullable id) sender;
 - (NSMenu *) _stylesMenu;
 - (void) _changeStyleMenuSelection;
 - (void) _updateStylesMenu;
@@ -86,6 +87,8 @@ extern NSString *JVToolbarQuickSearchItemIdentifier;
 - (void) _updateEmoticonsMenu;
 - (BOOL) _usingSpecificEmoticons;
 
-- (void) _openAppearancePreferences:(id) sender;
+- (void) _openAppearancePreferences:(nullable id) sender;
 
 @end
+
+NS_ASSUME_NONNULL_END

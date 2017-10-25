@@ -1,4 +1,9 @@
-extern NSString *JVEmoticonSetsScannedNotification;
+#import <Foundation/Foundation.h>
+#import <AppKit/NSMenuItem.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+extern NSString * __nonnull JVEmoticonSetsScannedNotification;
 
 COLLOQUY_EXPORT
 @interface JVEmoticonSet : NSObject {
@@ -7,30 +12,40 @@ COLLOQUY_EXPORT
 	NSArray *_emoticonMenu;
 }
 + (void) scanForEmoticonSets;
-+ (NSSet *) emoticonSets;
-+ (id) emoticonSetWithIdentifier:(NSString *) identifier;
-+ (id) newWithBundle:(NSBundle *) bundle;
+#if __has_feature(objc_class_property)
+@property (readonly, class, copy) NSSet<JVEmoticonSet*> *emoticonSets;
+#else
++ (NSSet<JVEmoticonSet*> *) emoticonSets;
+#endif
++ (nullable JVEmoticonSet*) emoticonSetWithIdentifier:(NSString *) identifier;
++ (nullable JVEmoticonSet*) newWithBundle:(NSBundle *) bundle NS_SWIFT_NAME(with(bundle:));
 
-+ (id) textOnlyEmoticonSet;
+#if __has_feature(objc_class_property)
+@property (class, strong, readonly) JVEmoticonSet* textOnlyEmoticonSet;
+#else
++ (JVEmoticonSet*) textOnlyEmoticonSet;
+#endif
 
-- (id) initWithBundle:(NSBundle *) bundle;
+- (nullable instancetype) initWithBundle:(nonnull NSBundle *) bundle;
 
 - (void) unlink;
-- (BOOL) isCompliant;
+@property (readonly, getter=isCompliant) BOOL compliant;
 
 - (void) performEmoticonSubstitution:(NSMutableAttributedString *) string;
 
-- (NSBundle *) bundle;
-- (NSString *) identifier;
+@property (readonly, strong, nonatomic, null_resettable) NSBundle *bundle;
+@property (readonly, copy) NSString *identifier;
 
 - (NSComparisonResult) compare:(JVEmoticonSet *) style;
-- (NSString *) displayName;
+@property (readonly, copy) NSString *displayName;
 
-- (NSDictionary *) emoticonMappings;
-- (NSArray *) emoticonMenuItems;
+@property (readonly, copy) NSDictionary<NSString*, NSArray<NSString*>*> *emoticonMappings;
+@property (readonly, copy) NSArray<NSMenuItem*> *emoticonMenuItems;
 
-- (NSURL *) baseLocation;
-- (NSURL *) styleSheetLocation;
+@property (readonly, copy, nullable) NSURL *baseLocation;
+@property (readonly, copy, nullable) NSURL *styleSheetLocation;
 
-- (NSString *) contentsOfStyleSheet;
+@property (readonly, copy) NSString *contentsOfStyleSheet;
 @end
+
+NS_ASSUME_NONNULL_END

@@ -1,11 +1,10 @@
+#import <Cocoa/Cocoa.h>
 #import "JVChatWindowController.h"
 
 @class JVChatWindowController;
 @class JVAppleScriptChatPlugin;
 
-@interface JVAppleScriptEditorPanel : NSObject <JVChatViewController> {
-	IBOutlet NSView *contents;
-	IBOutlet NSTextView *editor;
+@interface JVAppleScriptEditorPanel : NSObject <JVChatViewController, NSToolbarDelegate> {
 	BOOL _nibLoaded;
 	JVChatWindowController *_windowController;
 	NSImage *_icon;
@@ -13,6 +12,9 @@
 	JVAppleScriptChatPlugin *_plugin;
 	BOOL _unsavedChanges;
 }
-- (id) initWithAppleScriptChatPlugin:(JVAppleScriptChatPlugin *) plugin;
-- (JVAppleScriptChatPlugin *) plugin;
+@property (assign) IBOutlet NSView *contents;
+@property (assign) IBOutlet NSTextView *editor;
+@property (readonly, retain) JVAppleScriptChatPlugin *plugin;
+
+- (instancetype) initWithAppleScriptChatPlugin:(JVAppleScriptChatPlugin *) plugin;
 @end

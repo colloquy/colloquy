@@ -697,12 +697,12 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	}
 }
 
-- (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
+- (nullable MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
 	return [super joinedChatRoomWithUniqueIdentifier:[(NSString *)identifier lowercaseString]];
 }
 
-- (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
+- (nullable MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
 	return [self joinedChatRoomWithUniqueIdentifier:[self properNameForChatRoomNamed:name]];
 }
 
@@ -719,7 +719,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 
 #pragma mark -
 
-- (NSCharacterSet *) chatRoomNamePrefixes {
+- (nullable NSCharacterSet *) chatRoomNamePrefixes {
 	static NSCharacterSet *defaultPrefixes = nil;
 	if( ! _roomPrefixes && ! defaultPrefixes )
 		defaultPrefixes = [NSCharacterSet characterSetWithCharactersInString:@"#&+!~"];
@@ -1564,7 +1564,7 @@ parsingFinished: { // make a scope for this
 
 	if( isUser || isRoom ) {
 		if( [command isCaseInsensitiveEqualToString:@"me"] || [command isCaseInsensitiveEqualToString:@"action"] ) {
-			[self _sendMessage:arguments withEncoding:encoding toTarget:target withTargetPrefix:@"" withAttributes:@{ @"action": @(YES) } localEcho:YES];
+			[self _sendMessage:arguments withEncoding:encoding toTarget:target withTargetPrefix:@"" withAttributes:@{ @"action": @YES } localEcho:YES];
 			return;
 		} else if( [command isCaseInsensitiveEqualToString:@"say"] ) {
 			[self _sendMessage:arguments withEncoding:encoding toTarget:target withTargetPrefix:@"" withAttributes:@{ } localEcho:YES];
@@ -3187,7 +3187,7 @@ parsingFinished: { // make a scope for this
 			if( !handled && [msg isMatchedByRegex:@"on .+? ca .+?\\(.+?\\) ft .+?\\(.+?\\)" options:NSRegularExpressionCaseInsensitive inRange:NSMakeRange(0, msg.length) error:NULL] )
 				handled = YES;
 
-			if( handled ) noticeInfo[@"handled"] = @(YES);
+			if( handled ) noticeInfo[@"handled"] = @YES;
 
 		} else if( ![self isConnected] && [[sender nickname] isCaseInsensitiveEqualToString:@"Welcome"] ) {
 			// Workaround for psybnc bouncers which are configured to combine multiple networks in one bouncer connection. These bouncers don't send a 001 command on connect...
@@ -3215,7 +3215,7 @@ parsingFinished: { // make a scope for this
 				_gamesurgeGlobalBotMOTD = YES;
 
 			if ( _gamesurgeGlobalBotMOTD ) {
-				noticeInfo[@"handled"] = @(YES);
+				noticeInfo[@"handled"] = @YES;
 
 				if ( [msg isEqualToString:@"---------- END OF MESSAGE(S) OF THE DAY ----------"] )
 					_gamesurgeGlobalBotMOTD = NO;
@@ -3242,7 +3242,7 @@ parsingFinished: { // make a scope for this
 					[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidIdentifyWithServicesNotification object:self userInfo:noticeInfo];
 				[[self localUser] _setIdentified:YES];
 
-				noticeInfo[@"handled"] = @(YES);
+				noticeInfo[@"handled"] = @YES;
 
 			} else if( ( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@" ID"] ) ||
 					  [msg hasCaseInsensitiveSubstring:@"identify yourself"] ||
@@ -3260,7 +3260,7 @@ parsingFinished: { // make a scope for this
 					[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self];
 				else [self _identifyWithServicesUsingNickname:[self nickname]]; // responding to nickserv -> current nickname
 
-				noticeInfo[@"handled"] = @(YES);
+				noticeInfo[@"handled"] = @YES;
 
 			} else if( ( [msg hasCaseInsensitiveSubstring:@"invalid"] ||		// NickServ/freenode, X/undernet
 						 [msg hasCaseInsensitiveSubstring:@"incorrect"] ) &&	// NickServ/dalnet+foonetic+sorcery+azzurra+webchat+rizon, Q/quakenet, AuthServ/gamesurge
@@ -3272,7 +3272,7 @@ parsingFinished: { // make a scope for this
 
 				[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self];
 
-				noticeInfo[@"handled"] = @(YES);
+				noticeInfo[@"handled"] = @YES;
 
 			} else if( [msg isCaseInsensitiveEqualToString:@"Syntax: \002IDENTIFY \037password\037\002"] ) {
 
@@ -3282,16 +3282,16 @@ parsingFinished: { // make a scope for this
 
 				[self _identifyWithServicesUsingNickname:[self nickname]]; // responding nickserv error about the "nickserv identify <nick> <pass>" syntax -> current nickname
 
-				noticeInfo[@"handled"] = @(YES);
+				noticeInfo[@"handled"] = @YES;
 
 			} else if( [msg isCaseInsensitiveEqualToString:@"Remember: Nobody from CService will ever ask you for your password, do NOT give out your password to anyone claiming to be CService."] ||													// Undernet
 					  [msg isCaseInsensitiveEqualToString:@"REMINDER: Do not share your password with anyone. DALnet staff will not ask for your password unless"] || [msg hasCaseInsensitiveSubstring:@"you are seeking their assistance. See"] ||		// DALnet
 					  [msg hasCaseInsensitiveSubstring:@"You have been invited to"] ) {	// ChanServ invite, hide since it's auto accepted
 
-				noticeInfo[@"handled"] = @(YES);
+				noticeInfo[@"handled"] = @YES;
 
 			} else if ([[sender nickname] isEqualToString:@"ChanServ"] && [msg hasCaseInsensitiveSubstring:@"You're already on"])
-				noticeInfo[@"handled"] = @(YES);
+				noticeInfo[@"handled"] = @YES;
 
 			// Catch "[#room] - Welcome to #room!" notices and show them in the room instead
 			NSString *possibleRoomPrefix = [msg stringByMatching:@"^[\\[\\(](.+?)[\\]\\)]" capture:1];
@@ -3299,7 +3299,7 @@ parsingFinished: { // make a scope for this
 				MVChatRoom *roomInWelcomeToRoomNotice = [self chatRoomWithUniqueIdentifier:possibleRoomPrefix];
 				if( roomInWelcomeToRoomNotice ) {
 					[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:roomInWelcomeToRoomNotice userInfo:noticeInfo];
-					noticeInfo[@"handled"] = @(YES);
+					noticeInfo[@"handled"] = @YES;
 				}
 			}
 		}
@@ -3339,7 +3339,7 @@ parsingFinished: { // make a scope for this
 		if( ctcp ) {
 			[self _handleCTCP:msgData asRequest:NO fromSender:sender toTarget:target forRoom:room withTags:tags];
 		} else {
-			NSMutableDictionary *noticeInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", @(YES), @"notice", target, @"target", room, @"room", nil];
+			NSMutableDictionary *noticeInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", @YES, @"notice", target, @"target", room, @"room", nil];
 			[noticeInfo addEntriesFromDictionary:tags];
 			[self _handleNotice:noticeInfo];
 		}
@@ -5012,34 +5012,32 @@ parsingFinished: { // make a scope for this
 		[_umichNoIdentdCaptcha addObject:parameterString];
 
 		if( _umichNoIdentdCaptcha.count == 7 ) {
-			NSDictionary *captchaAlphabet = [NSDictionary dictionaryWithObjectsAndKeys:
-										  @"A", @"     /     /_    / /   / _   / /_   \\ \\_    \\ _     \\ \\     \\_      \\ ",
-										  @"B", @" ||||| _    _ _ | |_ ______ _ ) )_  \\ < /   | |  ",
-										  @"C", @"  |||   /   \\ _ |||_ __  __ __  __ __  __ __  __  |   | ",
-										  @"D", @" ||||| _    _ _ |||_ __  __ __  __ _ |||_  \\   /   |||  ",
-										  @"E", @" ||||| _    _ _ | |_ ______ ______ __ |__ __  __  |   | ",
-										  @"F", @" ||||| _    _ _ | || ____   ____   __ |   __      |     ",
-										  @"G", @"  |||   /   \\ _ |||_ __  __ __ |__ ____|_ ___  _  | ||| ",
-										  @"H", @" ||||| _    _  || ||   __     __    || || _    _  ||||| ",
-										  @"I", @" |   | __  __ _ |||_ _    _ _ |||_ __  __  |   | ",
-										  @"J", @"    |     _ \\     |_     __     __  ||||_ _    /  ||||  ",
-										  @"K", @" ||||| _    _  |' .|  / < \\ _ / \\_ _/   \\ ",
-										  @"L", @" ||||| _    _  ||||_     __     __     __     __      | ",
-										  @"M", @" ||||| _    _ _ \\|||  \\ \\    / /   _ /||| _    _  ||||| ",
-										  @"N", @" ||||| _    _  \\ .||   \\ \\   ||` \\ _    _  ||||| ",
-										  @"O", @"  |||   /   \\ _ |||_ __  __ __  __ _ |||_  \\   /   |||  ",
-										  @"P", @" ||||| _    _ _ | || ____   ____   _ )_    \\ /     |    ",
-										  @"Q", @"  |||   /   \\ _ |||_ __  __ __  __ _ |||\\  \\   _   |||\\ ",
-										  @"R", @" ||||| _    _ _ | || ____   ___ \\  _ )  \\  \\ /\\_   |  \\ ",
-										  @"S", @"  |  |  / \\__ _ (___ ______ ______ ___ )_ __ \\ /  |  |  ",
-										  @"T", @" |     __     __     _ |||| _    _ _ |||| __     __      |     ",
-										  @"U", @" ||||  _    \\  ||||_     __     __  ||||_ _    /  ||||  ",
-										  @"V", @"_\\     _ \\     \\ \\     \\ \\     \\ \\    / /   / /   / /   _ /    _/     ",
-										  @"W", @"_\\     _ \\     \\ \\     \\ \\     \\ \\    / /   / /    \\ \\     \\ \\    / /   / /   / /   _ /    _/     ",
-										  @"X", @"_\\   / _ \\ /_  \\ > /   V .   / < \\ _ / \\_ _/   \\ ",
-										  @"Y", @"_\\     _ \\     \\ \\     \\ ||   _  _   / ||  / /   _ /    _/     ",
-										  @"Z", @" |   / __  /_ __ / _ __/ /_ _  /__ _ / __ _/   | ",
-			nil];
+			NSDictionary *captchaAlphabet = @{@"     /     /_    / /   / _   / /_   \\ \\_    \\ _     \\ \\     \\_      \\ ": @"A",
+										  @" ||||| _    _ _ | |_ ______ _ ) )_  \\ < /   | |  ": @"B",
+										  @"  |||   /   \\ _ |||_ __  __ __  __ __  __ __  __  |   | ": @"C",
+										  @" ||||| _    _ _ |||_ __  __ __  __ _ |||_  \\   /   |||  ": @"D",
+										  @" ||||| _    _ _ | |_ ______ ______ __ |__ __  __  |   | ": @"E",
+										  @" ||||| _    _ _ | || ____   ____   __ |   __      |     ": @"F",
+										  @"  |||   /   \\ _ |||_ __  __ __ |__ ____|_ ___  _  | ||| ": @"G",
+										  @" ||||| _    _  || ||   __     __    || || _    _  ||||| ": @"H",
+										  @" |   | __  __ _ |||_ _    _ _ |||_ __  __  |   | ": @"I",
+										  @"    |     _ \\     |_     __     __  ||||_ _    /  ||||  ": @"J",
+										  @" ||||| _    _  |' .|  / < \\ _ / \\_ _/   \\ ": @"K",
+										  @" ||||| _    _  ||||_     __     __     __     __      | ": @"L",
+										  @" ||||| _    _ _ \\|||  \\ \\    / /   _ /||| _    _  ||||| ": @"M",
+										  @" ||||| _    _  \\ .||   \\ \\   ||` \\ _    _  ||||| ": @"N",
+										  @"  |||   /   \\ _ |||_ __  __ __  __ _ |||_  \\   /   |||  ": @"O",
+										  @" ||||| _    _ _ | || ____   ____   _ )_    \\ /     |    ": @"P",
+										  @"  |||   /   \\ _ |||_ __  __ __  __ _ |||\\  \\   _   |||\\ ": @"Q",
+										  @" ||||| _    _ _ | || ____   ___ \\  _ )  \\  \\ /\\_   |  \\ ": @"R",
+										  @"  |  |  / \\__ _ (___ ______ ______ ___ )_ __ \\ /  |  |  ": @"S",
+										  @" |     __     __     _ |||| _    _ _ |||| __     __      |     ": @"T",
+										  @" ||||  _    \\  ||||_     __     __  ||||_ _    /  ||||  ": @"U",
+										  @"_\\     _ \\     \\ \\     \\ \\     \\ \\    / /   / /   / /   _ /    _/     ": @"V",
+										  @"_\\     _ \\     \\ \\     \\ \\     \\ \\    / /   / /    \\ \\     \\ \\    / /   / /   / /   _ /    _/     ": @"W",
+										  @"_\\   / _ \\ /_  \\ > /   V .   / < \\ _ / \\_ _/   \\ ": @"X",
+										  @"_\\     _ \\     \\ \\     \\ ||   _  _   / ||  / /   _ /    _/     ": @"Y",
+										  @" |   / __  /_ __ / _ __/ /_ _  /__ _ / __ _/   | ": @"Z"};
 
 			NSMutableString *testString = [NSMutableString string];
 			NSMutableString *captchaReply = [NSMutableString string];

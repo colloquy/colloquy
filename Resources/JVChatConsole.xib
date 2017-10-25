@@ -65,7 +65,6 @@
                                         </connections>
                                     </customView>
                                 </subviews>
-                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                             </clipView>
                             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="0.17543859779834747" horizontal="YES" id="89">
                                 <rect key="frame" x="-100" y="-100" width="129" height="11"/>

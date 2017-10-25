@@ -41,9 +41,9 @@ static NSSize		rightCapSize;
 #define TAB_MIN_WIDTH			48      //(Could be used to) Enforce a mininum tab size safari style
 #define TAB_SELECTED_HIGHER     NO     	//Draw the selected tab higher?
 
-@interface AICustomTabCell (PRIVATE)
-- (id)initForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView;
-- (NSRect)_closeButtonRect;
+@interface AICustomTabCell ()
+- (instancetype)initForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView;
+@property (readonly) NSRect _closeButtonRect;
 @end
 
 @implementation AICustomTabCell
@@ -55,7 +55,7 @@ static NSSize		rightCapSize;
 }
 
 //init
-- (id)initForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView
+- (instancetype)initForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView
 {
     static BOOL haveLoadedImages = NO;
 
@@ -67,10 +67,12 @@ static NSSize		rightCapSize;
 		tabFrontMiddle = [NSImage imageNamed:@"aquaTabMiddle"];
 		tabFrontRight = [NSImage imageNamed:@"aquaTabRight"];
 
-		tabCloseFront = [NSImage imageNamed:@"aquaTabClose"];
-		tabCloseBack = [NSImage imageNamed:@"aquaTabCloseBack"];
-		tabCloseFrontPressed = [NSImage imageNamed:@"aquaTabClosePressed"];
-		tabCloseFrontRollover = [NSImage imageNamed:@"aquaTabCloseRollover"];
+		NSImage *stopTemp = [NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate];
+		//TODO: Darken/lighten based on what Cocoa/Apple's HIG expects, rather than manually...
+		tabCloseFront = [NSImage templateImage:stopTemp withColor:[NSColor colorWithCalibratedWhite:0.5 alpha:1] andSize:NSZeroSize];
+		tabCloseBack = [NSImage templateImage:stopTemp withColor:[NSColor colorWithCalibratedWhite:0.7 alpha:1] andSize:NSZeroSize];
+		tabCloseFrontPressed = [NSImage templateImage:stopTemp withColor:[NSColor colorWithCalibratedWhite:0.25 alpha:1] andSize:NSZeroSize];
+		tabCloseFrontRollover = [NSImage templateImage:stopTemp withColor:[NSColor colorWithCalibratedWhite:0.33 alpha:1] andSize:NSZeroSize];
 
 		leftCapSize = [tabFrontLeft size];
 		rightCapSize = [tabFrontRight size];
@@ -78,6 +80,8 @@ static NSSize		rightCapSize;
         haveLoadedImages = YES;
     }
 
+	//TODO: maybe we can use background styles somehow?
+	//self.backgroundStyle = NSBackgroundStyleRaised;
     tabViewItem = inTabViewItem;
 	view = inView;
     allowsInactiveTabClosing = NO;
@@ -91,8 +95,6 @@ static NSSize		rightCapSize;
 
     return(self);
 }
-
-//dealloc
 
 //Return the desired size of this tab
 - (NSSize)size
@@ -117,7 +119,6 @@ static NSSize		rightCapSize;
 
     }else{
         return(NSOrderedSame);
-
     }
 }
 
@@ -293,11 +294,9 @@ static NSSize		rightCapSize;
 
 		//Update the attributed string
 		attributedLabel = [[NSAttributedString alloc] initWithString:[tabViewItem label] attributes:
-			[NSDictionary dictionaryWithObjectsAndKeys:
-				( wasEnabled ? [NSColor controlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.5] ), NSForegroundColorAttributeName,
-				[NSFont systemFontOfSize:11], NSFontAttributeName,
-				paragraphStyle, NSParagraphStyleAttributeName,
-				nil]];
+			@{NSForegroundColorAttributeName: ( wasEnabled ? [NSColor controlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.5] ),
+				NSFontAttributeName: [NSFont systemFontOfSize:11],
+				NSParagraphStyleAttributeName: paragraphStyle}];
 	}
 
 	return(attributedLabel);

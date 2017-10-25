@@ -1,4 +1,7 @@
+#import <Cocoa/Cocoa.h>
 #import "JVChatTranscriptPanel.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface JVSmartTranscriptPanel : JVChatTranscriptPanel <NSCoding, NSTableViewDataSource, NSTableViewDelegate> {
 	IBOutlet NSWindow *settingsSheet;
@@ -16,19 +19,22 @@
 	NSUInteger _newMessages;
 	NSUInteger _origSheetHeight;
 }
-- (id) initWithSettings:(NSDictionary *) settings;
+- (instancetype) init NS_DESIGNATED_INITIALIZER;
+- (nullable instancetype) initWithSettings:(nullable NSDictionary<NSString*,id> *) settings;
 
 - (NSComparisonResult) compare:(JVSmartTranscriptPanel *) panel;
 
-- (NSMutableArray *) rules;
+@property (readonly, retain) NSMutableArray *rules;
 
-- (NSUInteger) newMessagesWaiting;
+@property (readonly) NSUInteger newMessagesWaiting;
 - (void) matchMessage:(JVChatMessage *) message fromView:(id <JVChatViewController>) view;
 
-- (IBAction) editSettings:(id) sender;
-- (IBAction) closeEditSettingsSheet:(id) sender;
-- (IBAction) saveSettings:(id) sender;
+- (IBAction) editSettings:(nullable id) sender;
+- (IBAction) closeEditSettingsSheet:(nullable id) sender;
+- (IBAction) saveSettings:(nullable id) sender;
 
-- (IBAction) addRow:(id) sender;
-- (IBAction) removeRow:(id) sender;
+- (IBAction) addRow:(nullable id) sender;
+- (IBAction) removeRow:(nullable id) sender;
 @end
+
+NS_ASSUME_NONNULL_END

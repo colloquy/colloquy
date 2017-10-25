@@ -34,7 +34,7 @@ void MVFindDCCFriendlyAddress( NSString *address, MVStringParameterBlock complet
 
 - (void) writeData:(NSData *) data withTimeout:(NSTimeInterval) timeout withTag:(long) tag;
 
-@property (weak, null_resettable) id <MVDirectClientConnectionDelegate> delegate;
+@property (weak, nullable) NSObject<MVDirectClientConnectionDelegate> *delegate;
 @end
 
 NS_ASSUME_NONNULL_END

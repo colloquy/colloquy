@@ -28,7 +28,9 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="23" y="311" width="385" height="420"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+            <value key="minSize" type="size" width="385" height="250"/>
+            <value key="maxSize" type="size" width="1500" height="1500"/>
             <view key="contentView" id="5">
                 <rect key="frame" x="0.0" y="0.0" width="385" height="420"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -215,10 +217,10 @@
                                         <outlet property="nextKeyView" destination="22" id="83"/>
                                     </connections>
                                 </comboBox>
-                                <button imageHugsTitle="YES" id="22">
+                                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" imageHugsTitle="YES" id="22">
                                     <rect key="frame" x="337" y="4" width="27" height="24"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <buttonCell key="cell" type="square" title="Button" bezelStyle="shadowlessSquare" imagePosition="only" alignment="left" enabled="NO" state="on" borderStyle="border" inset="2" id="140">
+                                    <buttonCell key="cell" type="disclosure" title="Button" bezelStyle="roundedDisclosure" imagePosition="only" alignment="left" enabled="NO" state="on" borderStyle="border" inset="2" id="140">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>

@@ -3,11 +3,11 @@
 #import "JVDetailCell.h"
 
 @implementation JVSidebarChatWindowController
-- (id) init {
+- (instancetype) init {
 	return [self initWithWindowNibName:@"JVSidebarChatWindow"];
 }
 
-- (id) initWithWindowNibName:(NSString *) windowNibName {
+- (instancetype) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:windowNibName] ) )
 		_forceSplitViewPosition = YES;
 	return self;
@@ -80,11 +80,11 @@
 	if( ! item ) return;
 
 	if( ( [item conformsToProtocol:@protocol( JVChatViewController )] && item != (id) _activeViewController ) || ( ! _activeViewController && [[item parent] conformsToProtocol:@protocol( JVChatViewController )] && ( item = [item parent] ) ) ) {
-		id lastActive = _activeViewController;
+		id<JVChatViewController> lastActive = _activeViewController;
 		if( [_activeViewController respondsToSelector:@selector( willUnselect )] )
-			[(NSObject *)_activeViewController willUnselect];
+			[(id<JVChatViewController>)_activeViewController willUnselect];
 		if( [item respondsToSelector:@selector( willSelect )] )
-			[(NSObject *)item willSelect];
+			[(id<JVChatViewController>)item willSelect];
 
 		_activeViewController = item;
 
@@ -100,9 +100,9 @@
 		[self _refreshToolbar];
 
 		if( [lastActive respondsToSelector:@selector( didUnselect )] )
-			[(NSObject *)lastActive didUnselect];
+			[lastActive didUnselect];
 		if( [_activeViewController respondsToSelector:@selector( didSelect )] )
-			[(NSObject *)_activeViewController didSelect];
+			[_activeViewController didSelect];
 	} else if( ! [_views count] || ! _activeViewController ) {
 		[[[bodyView subviews] lastObject] removeFromSuperview];
 		[[[self window] toolbar] setDelegate:nil];

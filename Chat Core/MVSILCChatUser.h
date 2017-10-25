@@ -11,11 +11,12 @@ NS_ASSUME_NONNULL_BEGIN
 	SilcClientEntry _clientEntry;
 	BOOL _releasing;
 }
-- (id) initLocalUserWithConnection:(MVSILCChatConnection *) connection;
-- (id) initWithClientEntry:(SilcClientEntry) clientEntry andConnection:(MVSILCChatConnection *) connection;
+- (instancetype) initLocalUserWithConnection:(MVSILCChatConnection *) connection;
+- (instancetype) initWithClientEntry:(SilcClientEntry) clientEntry andConnection:(MVSILCChatConnection *) connection;
 - (void) updateWithClientEntry:(SilcClientEntry) clientEntry;
 
 - (SilcClientEntry) _getClientEntry;
+@property (readonly, getter=_getClientEntry) SilcClientEntry clientEntry;
 @end
 
 NS_ASSUME_NONNULL_END

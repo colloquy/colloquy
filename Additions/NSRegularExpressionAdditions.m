@@ -3,7 +3,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation NSRegularExpression (Additions)
-+ (NSRegularExpression *) cachedRegularExpressionWithPattern:(NSString *) pattern options:(NSRegularExpressionOptions) options error:(NSError *__autoreleasing*) error {
++ (nullable NSRegularExpression *) cachedRegularExpressionWithPattern:(NSString *) pattern options:(NSRegularExpressionOptions) options error:(NSError *__autoreleasing*) error {
 	static NSMutableDictionary *dangerousCache = nil;
 	static dispatch_once_t pred;
 	dispatch_once(&pred, ^{

@@ -1,6 +1,7 @@
 #import <Security/Security.h>
+#import <Foundation/Foundation.h>
 
-enum {
+typedef NS_ENUM(FourCharCode, MVKeyChainAuthenticationType) {
 	MVKeyChainAuthenticationTypeAny = 0,
 	MVKeyChainAuthenticationTypeNTLM = kSecAuthenticationTypeNTLM,
 	MVKeyChainAuthenticationTypeMSN = kSecAuthenticationTypeMSN,
@@ -10,9 +11,7 @@ enum {
 	MVKeyChainAuthenticationTypeDefault = kSecAuthenticationTypeDefault
 };
 
-typedef SecAuthenticationType MVKeyChainAuthenticationType;
-
-enum {
+typedef NS_ENUM(FourCharCode, MVKeyChainProtocol) {
 	MVKeyChainProtocolAny = 0,
 	MVKeyChainProtocolFTP = kSecProtocolTypeFTP,
 	MVKeyChainProtocolFTPAccount = kSecProtocolTypeFTPAccount,
@@ -30,15 +29,22 @@ enum {
 	MVKeyChainProtocolSSH = kSecProtocolTypeSSH
 };
 
-typedef SecProtocolType MVKeyChainProtocol;
+NS_ASSUME_NONNULL_BEGIN
+
 
 COLLOQUY_EXPORT
 @interface MVKeyChain : NSObject
+#if __has_feature(objc_class_property)
+@property (class, readonly, retain) MVKeyChain *defaultKeyChain;
+#else
 + (MVKeyChain *) defaultKeyChain;
+#endif
 
-- (NSString *) genericPasswordForService:(NSString *) service account:(NSString *) account;
+- (nullable NSString *) genericPasswordForService:(nullable NSString *) service account:(nullable NSString *) account;
 - (void) removeGenericPasswordForService:(NSString *) service account:(NSString *) account;
 
-- (NSString *) internetPasswordForServer:(NSString *) server securityDomain:(NSString *) domain account:(NSString *) account path:(NSString *) path port:(unsigned short) port protocol:(MVKeyChainProtocol) protocol authenticationType:(MVKeyChainAuthenticationType) authType;
-- (void) removeInternetPasswordForServer:(NSString *) server securityDomain:(NSString *) domain account:(NSString *) account path:(NSString *) path port:(unsigned short) port protocol:(MVKeyChainProtocol) protocol authenticationType:(MVKeyChainAuthenticationType) authType;
+- (nullable NSString *) internetPasswordForServer:(NSString *) server securityDomain:(NSString *) domain account:(nullable NSString *) account path:(nullable NSString *) path port:(unsigned short) port protocol:(MVKeyChainProtocol) protocol authenticationType:(MVKeyChainAuthenticationType) authType;
+- (void) removeInternetPasswordForServer:(NSString *) server securityDomain:(nullable NSString *) domain account:(nullable NSString *) account path:(nullable NSString *) path port:(unsigned short) port protocol:(MVKeyChainProtocol) protocol authenticationType:(MVKeyChainAuthenticationType) authType;
 @end
+
+NS_ASSUME_NONNULL_END

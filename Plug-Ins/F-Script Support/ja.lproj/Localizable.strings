@@ -1,0 +1,58 @@
+﻿/* plugin named console panel title */
+"%@ Console" = "%@ コンソール";
+
+/* browse fscript toolbar button name */
+"Browse" = "ブラウズ";
+
+/* close contextual menu item title */
+"Close" = "閉じる";
+
+/* detach from window contextual menu item title */
+"Detach From Window" = "ウィンドウから分離";
+
+/* edit button title */
+"Edit..." = "編集...";
+
+/* F-Script console panel title */
+"F-Script Console" = "F-Script コンソール";
+
+/* F-Script required error title */
+"F-Script Framework Required" = "F-Script フレームワークが必要です";
+
+/* F-Script plugin file changed dialog title */
+"F-Script Plugin Changed" = "F-Script プラグインが変更されました";
+
+/* F-Script plugin error title */
+"F-Script Plugin Error" = "F-Script プラグインのエラー";
+
+/* inspect button title */
+"Inspect" = "インスペクタ";
+
+/* keep previous version button title */
+"Keep Previous Version" = "以前のバージョンを使用";
+
+/* browse fscript toolbar customize palette name
+   object browser menu item title */
+
+"Object Browser" = "オブジェクトブラウザ";
+
+/* open script file menu item title */
+"Open Script File" = "スクリプトファイルを開く";
+
+/* reload button title */
+"Reload" = "再読込";
+
+/* reload script file menu item title */
+"Reload Script File" = "スクリプトファイルを再読込";
+
+/* F-Script framework required error message */
+"The F-Script framework was not found. The F-Script console and any F-Script plugins will not work during this session. For the latest version of F-Script visit http://www.fscript.org." = "F-Script フレームワークが見つかりませんでした。F-Script コンソールと F-Script プラグインはこのセッション中は動作しません。F-Script の最新バージョンを手に入れるには http://www.fscript.org/ を訪れてください。";
+
+/* F-Script plugin error message */
+"The F-Script plugin \"%@\" had an error while calling the \"%@\" block.%@\n\n%@" = "F-Script プラグイン「%1$@」は「%2$@」ブロックの呼び出し中にエラーが起きました。%3$@\n\n%4$@";
+
+/* F-Script plugin error message */
+"The F-Script plugin \"%@\" had an error while loading. The error occured near character %d.\n\n%@" = "F-Script プラグイン「%1$@」は読み込み中にエラーが起こりました。文字 %2$d 付近にてエラーが発生しました。\n\n%3$@";
+
+/* F-Script plugin changed on disk message */
+"The F-Script plugin \"%@\" has changed on disk. Any script variables will reset if reloaded. All local block modifications will also be lost." = "F-Script プラグイン「%@」はディスク上で変更されています。再読込を行った場合、スクリプトの変数はリセットされます。ローカルで編集したブロックの内容も失われます。";

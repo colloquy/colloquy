@@ -1,4 +1,4 @@
-#import "MVChatPluginManager.h"
+#import <ChatCore/MVChatPluginManager.h>
 
 #import <WebKit/WebKit.h>
 
@@ -8,7 +8,7 @@ extern NSString *JVJavaScriptErrorDomain;
 @class WebView;
 
 @interface JVJavaScriptChatPlugin : NSObject <MVChatPlugin, WebUIDelegate, WebPolicyDelegate, WebFrameLoadDelegate> {
-	MVChatPluginManager *_manager;
+	__unsafe_unretained MVChatPluginManager *_manager;
 	NSString *_path;
 	NSDate *_modDate;
 	WebView *_webview;
@@ -18,10 +18,10 @@ extern NSString *JVJavaScriptErrorDomain;
 	BOOL _errorShown;
 	BOOL _scriptGlobalsAdded;
 }
-- (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
+- (instancetype) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 
-- (MVChatPluginManager *) pluginManager;
-- (NSString *) scriptFilePath;
+@property (readonly, assign) MVChatPluginManager *pluginManager;
+@property (readonly, copy) NSString *scriptFilePath;
 - (void) reloadFromDisk;
 
 - (void) setupScriptGlobalsForWebView:(WebView *) webView;

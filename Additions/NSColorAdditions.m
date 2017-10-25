@@ -10,7 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 @implementation NSColor (NSColorAdditions)
-+ (NSColor *) colorWithHTMLAttributeValue:(NSString *) attribute {
++ (nullable NSColor *) colorWithHTMLAttributeValue:(NSString *) attribute {
 	NSCharacterSet *hex = [NSCharacterSet characterSetWithCharactersInString:@"1234567890abcdefABCDEF"];
 	NSScanner *scanner = [NSScanner scannerWithString:( [attribute hasPrefix:@"#"] ? [attribute substringFromIndex:1] : attribute )];
 	NSString *code = nil;
@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 		else if( [attribute hasPrefix:@"red"] ) return [self redColor];
 		else if( [attribute hasPrefix:@"silver"] ) return [self colorWithCalibratedRed:0.75 green:0.75 blue:0.75 alpha:1.];
 		else if( [attribute hasPrefix:@"maroon"] ) return [self colorWithCalibratedRed:0.5 green:0. blue:0. alpha:1.];
-		else if( [attribute hasPrefix:@"purple"] ) return [self colorWithCalibratedRed:0.5 green:0. blue:0.5 alpha:1.];
+		else if( [attribute hasPrefix:@"purple"] ) return [self purpleColor];
 		else if( [attribute hasPrefix:@"green"] ) return [self colorWithCalibratedRed:0. green:0.5 blue:0. alpha:1.];
 		else if( [attribute hasPrefix:@"olive"] ) return [self colorWithCalibratedRed:0.5 green:0.5 blue:0. alpha:1.];
 		else if( [attribute hasPrefix:@"navy"] ) return [self colorWithCalibratedRed:0. green:0. blue:0.5 alpha:1.];
@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return nil;
 }
 
-+ (NSColor *) colorWithCSSAttributeValue:(NSString *) attribute {
++ (nullable NSColor *) colorWithCSSAttributeValue:(NSString *) attribute {
 	NSColor *ret = [self colorWithHTMLAttributeValue:attribute];
 
 	if( ! ret && [attribute hasPrefix:@"rgb"] ) {

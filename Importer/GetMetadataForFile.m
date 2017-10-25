@@ -1,7 +1,8 @@
-#import <CoreServices/CoreServices.h>
+#include <CoreServices/CoreServices.h>
 #import <Foundation/Foundation.h>
-#import <libxml/tree.h>
-#import <libxml/xmlerror.h>
+#include <libxml/tree.h>
+#include <libxml/xmlerror.h>
+#include "GetMetadataForFile.h"
 
 /* Sample transcript:
 <log began="2005-07-11 12:19:09 -0400" source="irc://irc.freenode.net/%23barcamp">
@@ -23,47 +24,58 @@
 </log>
 */
 
-@interface JVChatTranscriptMetadataExtractor : NSObject <NSXMLParserDelegate> {
+__private_extern @interface JVChatTranscriptMetadataExtractor : NSObject <NSXMLParserDelegate> {
 	BOOL inEnvelope;
 	BOOL inMessage;
 	NSString *lastElement;
 	NSDate *dateStarted;
 	NSString *lastEventDate;
 	NSString *source;
-	NSMutableString *content;
-	NSMutableSet *participants;
-	NSCharacterSet *lineBreaks;
 }
-- (id) initWithCapacity:(NSUInteger) capacity;
-- (NSDictionary *) metadataAttributes;
+@property (strong) NSCharacterSet *lineBreaks;
+@property (strong) NSMutableString *content;
+@property (strong) NSMutableSet<NSString*> *participants;
+
+- (instancetype) initWithCapacity:(NSUInteger) capacity NS_DESIGNATED_INITIALIZER;
+@property (readonly, copy) NSDictionary *metadataAttributes;
 @end
 
 @implementation JVChatTranscriptMetadataExtractor
-- (id) initWithCapacity:(NSUInteger) capacity {
-	if( ( self = [super init] ) ) {
-		content = [[NSMutableString alloc] initWithCapacity:capacity];
-		participants = [[NSMutableSet alloc] initWithCapacity:400];
-		lineBreaks = [NSCharacterSet characterSetWithCharactersInString:@"\n\r"];
+@synthesize lineBreaks;
+@synthesize content;
+@synthesize participants;
+
+- (instancetype)init
+{
+	return self = [self initWithCapacity:40];
+}
+
+- (instancetype)initWithCapacity:(NSUInteger)capacity {
+	if (self = [super init]) {
+		self.content = [[NSMutableString alloc] initWithCapacity:capacity];
+		self.participants = [[NSMutableSet alloc] initWithCapacity:400];
+		self.lineBreaks = [NSCharacterSet characterSetWithCharactersInString:@"\n\r"];
 	}
 
 	return self;
 }
 
 - (NSDictionary *) metadataAttributes {
-	NSMutableDictionary *ret = [NSMutableDictionary dictionary];
-	[ret setObject:content forKey:(NSString *) kMDItemTextContent];
+	NSMutableDictionary *ret = [[NSMutableDictionary alloc] init];
+	ret[(NSString *) kMDItemTextContent] = content;
 
-	if( dateStarted ) [ret setObject:dateStarted forKey:(NSString *) kMDItemContentCreationDate];
-	if( [lastEventDate length] ) {
+	if (dateStarted)
+		ret[(NSString *) kMDItemContentCreationDate] = dateStarted;
+	if ([lastEventDate length]) {
 		NSDate *lastDate = [NSDate dateWithString:lastEventDate];
 		if( lastDate ) {
-			[ret setObject:lastDate forKey:(NSString *) kMDItemContentModificationDate];
-			[ret setObject:lastDate forKey:(NSString *) kMDItemLastUsedDate];
+			ret[(NSString *) kMDItemContentModificationDate] = lastDate;
+			ret[(NSString *) kMDItemLastUsedDate] = lastDate;
 
 			if( dateStarted ) {
 				// Set Duration
 				NSTimeInterval logDuration = [lastDate timeIntervalSinceDate:dateStarted];
-				[ret setObject:@(logDuration) forKey:(NSString *) kMDItemDurationSeconds];
+				ret[(NSString *) kMDItemDurationSeconds] = @(logDuration);
 
 				// Set Coverage
 				NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -72,47 +84,55 @@
 				[formatter setTimeStyle:NSDateFormatterShortStyle];
 
 				NSString *coverageWording = [NSString stringWithFormat:@"%@ - %@", [formatter stringFromDate:dateStarted], [formatter stringFromDate:lastDate]];
-				[ret setObject:coverageWording forKey:(NSString *) kMDItemCoverage];
+				ret[(NSString *) kMDItemCoverage] = coverageWording;
 			}
 		}
 	}
 
-	if( [participants count] ) [ret setObject:[participants allObjects] forKey:(NSString *) kMDItemContributors];
-	if( [source length] ) [ret setObject:source forKey:(NSString *) kMDItemWhereFroms];
+	if ([participants count])
+		ret[(NSString *) kMDItemContributors] = [participants allObjects];
+	if ([source length])
+		ret[(NSString *) kMDItemWhereFroms] = @[source];
 
-	[ret setObject:@"transcript" forKey:(NSString *) kMDItemKind];
-	[ret setObject:@"Colloquy" forKey:(NSString *) kMDItemCreator];
+	ret[(NSString *) kMDItemKind] = @"transcript";
+	ret[(NSString *) kMDItemCreator] = @"Colloquy";
 
-	return ret;
+	return [ret copy];
 }
 
 - (void) parser:(NSXMLParser *) parser didStartElement:(NSString *) elementName namespaceURI:(NSString *) namespaceURI qualifiedName:(NSString *) qName attributes:(NSDictionary *) attributes {
 	lastElement = elementName;
 
-	if( [elementName isEqualToString:@"envelope"] ) inEnvelope = YES;
-	else if( inEnvelope && [elementName isEqualToString:@"message"] ) {
+	if ([elementName isEqualToString:@"envelope"]) {
+		inEnvelope = YES;
+	} else if (inEnvelope && [elementName isEqualToString:@"message"]) {
 		inMessage = YES;
-		NSString *date = [attributes objectForKey:@"received"];
-		if( date ) {
-			lastEventDate = [date copy];
-			if( ! dateStarted ) dateStarted = [[NSDate alloc] initWithString:date];
+		NSString *date = attributes[@"received"];
+		if (date) {
+			lastEventDate = date;
+			if (!dateStarted)
+				dateStarted = [[NSDate alloc] initWithString:date];
 		}
-	} else if( ! inEnvelope && [elementName isEqualToString:@"event"] ) {
-		NSString *date = [attributes objectForKey:@"occurred"];
-		if( date ) {
-			lastEventDate = [date copy];
-			if( ! dateStarted ) dateStarted = [[NSDate alloc] initWithString:date];
+	} else if (!inEnvelope && [elementName isEqualToString:@"event"] ) {
+		NSString *date = attributes[@"occurred"];
+		if (date) {
+			lastEventDate = date ;
+			if (!dateStarted)
+				dateStarted = [[NSDate alloc] initWithString:date];
 		}
-	} else if( ! inEnvelope && [elementName isEqualToString:@"log"] ) {
-		NSString *date = [attributes objectForKey:@"began"];
-		if( date && ! dateStarted ) dateStarted = [[NSDate alloc] initWithString:date];
-		if( ! source ) source = [[attributes objectForKey:@"source"] copy];
+	} else if (!inEnvelope && [elementName isEqualToString:@"log"]) {
+		NSString *date = attributes[@"began"];
+		if (date && !dateStarted)
+			dateStarted = [[NSDate alloc] initWithString:date];
+		if (!source)
+			source = attributes[@"source"];
 	}
 }
 
 - (void) parser:(NSXMLParser *) parser didEndElement:(NSString *) elementName namespaceURI:(NSString *) namespaceURI qualifiedName:(NSString *) qName {
-	if( inEnvelope && [elementName isEqualToString:@"envelope"] ) inEnvelope = NO;
-	else if( inEnvelope && inMessage && [elementName isEqualToString:@"message"] ) {
+	if (inEnvelope && [elementName isEqualToString:@"envelope"]) {
+		inEnvelope = NO;
+	} else if (inEnvelope && inMessage && [elementName isEqualToString:@"message"] ) {
 		inMessage = NO;
 		[content appendString:@"\n"]; // append a newline after messages
 	}
@@ -120,41 +140,61 @@
 	lastElement = nil;
 }
 
-- (void) parser:(NSXMLParser *) parser foundCharacters:(NSString *) string {
-	if( inEnvelope && inMessage ) {
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
+	if (inEnvelope && inMessage) {
 		NSString *newString = [string stringByTrimmingCharactersInSet:lineBreaks];
-		if( [newString length] ) [content appendString:newString];
-	} else if( inEnvelope && [lastElement isEqualToString:@"sender"] ) {
-		if( [string length] ) [participants addObject:string];
+		if ([newString length])
+			[content appendString:newString];
+	} else if (inEnvelope && [lastElement isEqualToString:@"sender"]) {
+		if ([string length])
+			[participants addObject:string];
 	}
 }
+
 @end
 
-Boolean GetMetadataForFile( void *thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile );
+static BOOL GetMetadataForNSURL(void* thisInterface, NSMutableDictionary *attributes, NSString *contentTypeUTI, NSURL *urlForFile)
+{
+	NSXMLParser *parser;
+	JVChatTranscriptMetadataExtractor *extractor;
+	NSNumber *fileSizeClass;
+	
+	if (![urlForFile checkResourceIsReachableAndReturnError:NULL])
+		goto badend;
+	
+	parser = [[NSXMLParser alloc] initWithContentsOfURL:urlForFile];
+	
+	if (![urlForFile getResourceValue:&fileSizeClass forKey:NSURLFileSizeKey error:NULL])
+		goto badend;
+	
+	unsigned long long fileSize = [fileSizeClass unsignedLongLongValue];
+	
+	NSUInteger capacity = (NSUInteger)( fileSize ? fileSize / 3 : 5000 ); // the message content takes up about a third of the XML file's size
+	
+	extractor = [[JVChatTranscriptMetadataExtractor alloc] initWithCapacity:capacity];
+	
+	[parser setDelegate:extractor];
+	[parser parse];
+	
+	[attributes addEntriesFromDictionary:[extractor metadataAttributes]];
+	
+	xmlSetStructuredErrorFunc( NULL, NULL );
+	return YES;
+	
+badend:
+	return NO;
+}
 
-Boolean GetMetadataForFile( void *thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile ) {
+
+Boolean GetMetadataForURL(void* thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFURLRef urlForFile)
+{
 	@autoreleasepool {
-		NSFileManager *fm = [NSFileManager defaultManager];
-
-		if( ! [fm fileExistsAtPath:(__bridge NSString *) pathToFile] ) goto end;
-		if( ! [fm isReadableFileAtPath:(__bridge NSString *) pathToFile] ) goto end;
-
-		NSURL *file = [NSURL fileURLWithPath:(__bridge NSString *) pathToFile];
-		NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:file];
-
-		unsigned long long fileSize = [[[fm attributesOfItemAtPath:(__bridge NSString *) pathToFile error:nil] objectForKey:NSFileSize] unsignedLongLongValue];
-		NSUInteger capacity = (NSUInteger)( fileSize ? fileSize / 3 : 5000 ); // the message content takes up about a third of the XML file's size
-
-		JVChatTranscriptMetadataExtractor *extractor = [[JVChatTranscriptMetadataExtractor alloc] initWithCapacity:capacity];
-
-		[parser setDelegate:extractor];
-		[parser parse];
-
-		[(__bridge NSMutableDictionary *) attributes addEntriesFromDictionary:[extractor metadataAttributes]];
-
-		xmlSetStructuredErrorFunc( NULL, NULL );
-
+		return GetMetadataForNSURL(thisInterface, (__bridge NSMutableDictionary*)attributes, (__bridge NSString*)contentTypeUTI, (__bridge NSURL*)urlForFile);
 	}
-end:
-    return TRUE;
+}
+
+Boolean GetMetadataForFile(void *thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile) {
+	@autoreleasepool {
+		return GetMetadataForNSURL(thisInterface, (__bridge NSMutableDictionary*)attributes, (__bridge NSString*)contentTypeUTI, [NSURL fileURLWithPath:(__bridge NSString*)pathToFile]);
+	}
 }

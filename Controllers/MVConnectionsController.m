@@ -12,6 +12,7 @@
 //#import "JVDirectChatPanel.h"
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
+#import <Carbon/Carbon.h>
 
 #import <SecurityInterface/SFCertificateTrustPanel.h>
 
@@ -64,12 +65,6 @@ static NSMenu *favoritesMenu = nil;
 
 #pragma mark -
 
-@interface NSAlert (LeopardOnly)
-- (void) setAccessoryView:(NSView *) view;
-@end
-
-#pragma mark -
-
 @implementation MVConnectionsController
 + (MVConnectionsController *) defaultController {
 	if( ! sharedInstance ) {
@@ -93,8 +88,16 @@ static NSMenu *favoritesMenu = nil;
 		favoritesMenu = [[NSMenu alloc] initWithTitle:@""];
 	else [favoritesMenu removeAllItems];
 
-	NSString *path = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
-	NSArray *favorites = [NSArray arrayWithContentsOfFile:path];
+
+	NSURL *appSupport = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+	appSupport = [[appSupport URLByAppendingPathComponent:@"Colloquy"] URLByAppendingPathComponent:@"Favorites"];
+	appSupport = [appSupport URLByAppendingPathComponent:@"Favorites.plist" isDirectory:NO];
+	NSArray *favorites = [[NSArray alloc] initWithContentsOfURL:appSupport];
+	if (!favorites) {
+		NSString *path = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
+		favorites = [[NSArray alloc] initWithContentsOfFile:path];
+		[favorites writeToURL:appSupport atomically:YES];
+	}
 
 	NSMenuItem *menuItem = nil;
 	if( ! [favorites count] ) {
@@ -102,18 +105,18 @@ static NSMenu *favoritesMenu = nil;
 		[favoritesMenu addItem:menuItem];
 	}
 
-	NSImage *icon = [[NSImage imageNamed:@"room"] copy];
+	NSImage *icon = [[NSImage imageNamed:@"roomIcon"] copy];
 	[icon setSize:NSMakeSize( 16., 16. )];
 
 	for( NSDictionary *item in favorites ) {
-		NSString *scheme = [item objectForKey:@"scheme"];
-		NSString *server = [item objectForKey:@"server"];
-		NSString *target = [item objectForKey:@"target"];
+		NSString *scheme = item[@"scheme"];
+		NSString *server = item[@"server"];
+		NSString *target = item[@"target"];
 
-		menuItem = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", target, server] action:@selector( _connectToFavorite: ) keyEquivalent:@""];
+		menuItem = [[NSMenuItem alloc] initWithTitle:[[NSString alloc] initWithFormat:@"%@ (%@)", target, server] action:@selector( _connectToFavorite: ) keyEquivalent:@""];
 		[menuItem setImage:icon];
 		[menuItem setTarget:self];
-		[menuItem setRepresentedObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", [item objectForKey:@"scheme"], [item objectForKey:@"server"], [item objectForKey:@"target"]]]];
+		[menuItem setRepresentedObject:[NSURL URLWithString:[[NSString alloc] initWithFormat:@"%@://%@/%@", scheme, server, target]]];
 
 		for (MVChatConnection *connection in [[MVConnectionsController defaultController] connections]) {
 			if (!(connection.isConnected || connection.status == MVChatConnectionConnectingStatus))
@@ -180,7 +183,7 @@ static NSMenu *favoritesMenu = nil;
 	return type;
 }
 
-- (id) initWithWindowNibName:(NSString *) windowNibName {
+- (instancetype) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
 		_bookmarks = nil;
 		_passConnection = nil;
@@ -196,9 +199,10 @@ static NSMenu *favoritesMenu = nil;
 		// this can likely be removed when 3.0 starts, if we even keep MVConnectionsController around (zach)
 		// agreed. and once we do, we should document it in a list of "retired user defaults keys". (alex)
 		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVFavoritesMigrated"] ) {
+			NSFileManager *fm = [NSFileManager defaultManager];
 			NSString *path = [@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath];
 
-			NSArray *directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+			NSArray *directoryContents = [fm contentsOfDirectoryAtPath:path error:nil];
 			for ( NSString *item in directoryContents ) {
 				if ( ![[item pathExtension] isEqualToString:@"inetloc"] ) {
 					continue;
@@ -207,7 +211,7 @@ static NSMenu *favoritesMenu = nil;
 				// This code previously migrated favorites from being resource fork based (.inetloc files) to the newer
 				// plist (shipped 4 versions with it from 2012 to at least 2015), now it just deletes the old files.
 
-				[[NSFileManager defaultManager] removeItemAtPath:item error:nil];
+				[fm removeItemAtPath:item error:nil];
 			}
 
 			[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVFavoritesMigrated"];
@@ -260,7 +264,7 @@ static NSMenu *favoritesMenu = nil;
 	theColumn = [connections tableColumnWithIdentifier:@"status"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"statusHeader"]];
 
-	[connections registerForDraggedTypes:[NSArray arrayWithObjects:MVConnectionPboardType,NSURLPboardType,@"CorePasteboardFlavorType 0x75726C20",nil]];
+	[connections registerForDraggedTypes:@[MVConnectionPboardType,NSURLPboardType,@"CorePasteboardFlavorType 0x75726C20"]];
 	[connections setTarget:self];
 	[connections setDoubleAction:@selector( _connect: )];
 
@@ -301,13 +305,13 @@ static NSMenu *favoritesMenu = nil;
 
 	NSRect frame = [sender frame];
 	NSScrollView *scrollView = [connections enclosingScrollView];
-	float displayedHeight = [[scrollView contentView] bounds].size.height;
-	float heightChange = [[scrollView documentView] bounds].size.height - displayedHeight;
-	float heightExcess = 0.;
+	CGFloat displayedHeight = [[scrollView contentView] bounds].size.height;
+	CGFloat heightChange = [[scrollView documentView] bounds].size.height - displayedHeight;
+	CGFloat heightExcess = 0.;
 
 	if( heightChange >= 0 && heightChange <= 1 ) {
 		// either the window is already optimal size, or it's too big
-		float rowHeight = [connections rowHeight] + [connections intercellSpacing].height;
+		CGFloat rowHeight = [connections rowHeight] + [connections intercellSpacing].height;
 		heightChange = (rowHeight * [connections numberOfRows]) - displayedHeight;
 	}
 
@@ -331,12 +335,12 @@ static NSMenu *favoritesMenu = nil;
 
 - (id <JVInspection>) objectToInspect {
 	if( [connections selectedRow] == -1 ) return nil;
-	return [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
+	return _bookmarks[[connections selectedRow]][@"connection"];
 }
 
 - (IBAction) getInfo:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
-	MVChatConnection *conection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
+	MVChatConnection *conection = _bookmarks[[connections selectedRow]][@"connection"];
 	[[JVInspectorController inspectorOfObject:conection] show:sender];
 }
 
@@ -375,7 +379,7 @@ static NSMenu *favoritesMenu = nil;
 
 	MVChatConnectionType type = [self newTypeToConnectionType];
 	if( [[MVChatConnection defaultServerPortsForType:type] count] )
-		[newPort setObjectValue:[[MVChatConnection defaultServerPortsForType:type] objectAtIndex:0]];
+		[newPort setObjectValue:[MVChatConnection defaultServerPortsForType:type][0]];
 
 	[openConnection center];
 	[openConnection makeKeyAndOrderFront:nil];
@@ -386,7 +390,7 @@ static NSMenu *favoritesMenu = nil;
 
 	[newPort reloadData];
 	if( [[MVChatConnection defaultServerPortsForType:type] count] )
-		[newPort setObjectValue:[[MVChatConnection defaultServerPortsForType:type] objectAtIndex:0]];
+		[newPort setObjectValue:[MVChatConnection defaultServerPortsForType:type][0]];
 
 	if( type == MVChatConnectionICBType ) {
 		[sslConnection setEnabled:NO];
@@ -404,7 +408,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (IBAction) toggleNewConnectionDetails:(id) sender {
-	float offset = NSHeight( [detailsTabView frame] );
+	CGFloat offset = NSHeight( [detailsTabView frame] );
 	NSRect windowFrame = [openConnection frame];
 	NSRect newWindowFrame = NSMakeRect( NSMinX( windowFrame ), NSMinY( windowFrame ) + ( [sender state] ? offset * -1 : offset ), NSWidth( windowFrame ), ( [sender state] ? NSHeight( windowFrame ) + offset : NSHeight( windowFrame ) - offset ) );
 	if( ! [sender state] ) [detailsTabView selectTabViewItemAtIndex:0];
@@ -535,8 +539,8 @@ static NSMenu *favoritesMenu = nil;
 		return;
 	}
 
-	for( NSDictionary *info in _bookmarks ) {
-		MVChatConnection *connection = [info objectForKey:@"connection"];
+	for( NSMutableDictionary *info in _bookmarks ) {
+		MVChatConnection *connection = info[@"connection"];
 
 		if( [[connection server] isEqualToString:[newAddress stringValue]] && [connection serverPort] == [newPort intValue] &&
 			[[connection nickname] isEqualToString:[newNickname stringValue]] &&
@@ -568,8 +572,8 @@ static NSMenu *favoritesMenu = nil;
 
 	MVChatConnection *connection = [[MVChatConnection alloc] initWithType:type];
 	[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
-	[connection setOutgoingChatFormat:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"]];
-	[connection setProxyType:[[newProxy selectedItem] tag]];
+	[connection setOutgoingChatFormat:(OSType)[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"]];
+	[connection setProxyType:(OSType)[[newProxy selectedItem] tag]];
 	[connection setSecure:[sslConnection state]];
 	[connection setPassword:[newServerPassword stringValue]];
 	[connection setUsername:[newUsername stringValue]];
@@ -596,7 +600,7 @@ static NSMenu *favoritesMenu = nil;
 	if( [connections selectedRow] == -1 ) return;
 
 	if( [sender tag] ) {
-		NSSet *users = [[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] chatUsersWithNickname:[userToMessage stringValue]];
+		NSSet *users = [_bookmarks[[connections selectedRow]][@"connection"] chatUsersWithNickname:[userToMessage stringValue]];
 		MVChatUser *user;
 
 		if( [users count] == 0 ) return;
@@ -661,7 +665,7 @@ static NSMenu *favoritesMenu = nil;
 
 	_publicKeyDictionary = nil;
 
-	MVChatConnection *connection = [dict objectForKey:@"connection"];
+	MVChatConnection *connection = dict[@"connection"];
 
 	BOOL accepted = NO;
 
@@ -700,7 +704,7 @@ static NSMenu *favoritesMenu = nil;
 		return;
 	}
 
-	[[JVChatController defaultController] chatViewControllerForUser:[_userSelectionPossibleUsers objectAtIndex:row] ifExists:NO];
+	[[JVChatController defaultController] chatViewControllerForUser:_userSelectionPossibleUsers[row] ifExists:NO];
 	[userSelectionPanel orderOut:nil];
 
 	_userSelectionPossibleUsers = nil;
@@ -712,7 +716,7 @@ static NSMenu *favoritesMenu = nil;
 	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
 
 	for( id info in _bookmarks ) {
-		MVChatConnection *connection = [info objectForKey:@"connection"];
+		MVChatConnection *connection = info[@"connection"];
 		if( connection ) [ret addObject:connection];
 	}
 
@@ -723,7 +727,7 @@ static NSMenu *favoritesMenu = nil;
 	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
 
 	for( id info in _bookmarks ) {
-		MVChatConnection *connection = [info objectForKey:@"connection"];
+		MVChatConnection *connection = info[@"connection"];
 		if( [connection isConnected] )
 			[ret addObject:connection];
 	}
@@ -732,10 +736,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address {
-	NSArray *result = [self connectionsForServerAddress:address];
-	if( [result count] )
-		return [result objectAtIndex:0];
-	return nil;
+	return [[self connectionsForServerAddress:address] firstObject];
 }
 
 - (NSArray *) connectionsForServerAddress:(NSString *) address {
@@ -744,7 +745,7 @@ static NSMenu *favoritesMenu = nil;
 	address = [address stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@". \t\n"]];
 
 	for( id info in _bookmarks ) {
-		MVChatConnection *connection = [info objectForKey:@"connection"];
+		MVChatConnection *connection = info[@"connection"];
 		NSString *server = [connection server];
 		NSRange range = [server rangeOfString:address options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch ) range:NSMakeRange( 0, [server length] )];
 		if( range.location != NSNotFound && ( range.location == 0 || [server characterAtIndex:( range.location - 1 )] == '.' ) )
@@ -756,7 +757,7 @@ static NSMenu *favoritesMenu = nil;
 
 - (BOOL) managesConnection:(MVChatConnection *) connection {
 	for( NSDictionary *info in _bookmarks )
-		if( [[info objectForKey:@"connection"] isEqual:connection] )
+		if( [info[@"connection"] isEqual:connection] )
 			return YES;
 
 	return NO;
@@ -770,9 +771,9 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) addConnection:(MVChatConnection *) connection keepBookmark:(BOOL) keep {
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
-	[info setObject:[NSDate date] forKey:@"created"];
-	[info setObject:connection forKey:@"connection"];
-	if( ! keep ) [info setObject:[NSNumber numberWithBool:YES] forKey:@"temporary"];
+	info[@"created"] = [NSDate date];
+	info[@"connection"] = connection;
+	if( ! keep ) info[@"temporary"] = @YES;
 
 	if( keep && [[connection password] length] ) {
 		[[CQKeychain standardKeychain] setPassword:[connection password] forServer:connection.uniqueIdentifier area:@"Server" displayValue:connection.server];
@@ -788,8 +789,8 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) insertConnection:(MVChatConnection *) connection atIndex:(NSUInteger) index {
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
-	[info setObject:[NSDate date] forKey:@"created"];
-	[info setObject:connection forKey:@"connection"];
+	info[@"created"] = [NSDate date];
+	info[@"connection"] = connection;
 
 	[_bookmarks insertObject:info atIndex:index];
 	[self _saveBookmarkList];
@@ -803,7 +804,7 @@ static NSMenu *favoritesMenu = nil;
 	unsigned index = 0;
 
 	for( NSDictionary *info in _bookmarks ) {
-		if( [[info objectForKey:@"connection"] isEqual:connection] )
+		if( [info[@"connection"] isEqual:connection] )
 			break;
 		index++;
 	}
@@ -812,7 +813,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) removeConnectionAtIndex:(NSUInteger) index {
-	MVChatConnection *connection = [[_bookmarks objectAtIndex:index] objectForKey:@"connection"];
+	MVChatConnection *connection = _bookmarks[index][@"connection"];
     if( ! connection ) return;
 
 	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
@@ -835,10 +836,10 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) replaceConnectionAtIndex:(NSUInteger) index withConnection:(MVChatConnection *) connection {
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
-	[info setObject:[NSDate date] forKey:@"created"];
-	[info setObject:connection forKey:@"connection"];
+	info[@"created"] = [NSDate date];
+	info[@"connection"] = connection;
 
-	MVChatConnection *oldConnection = [[_bookmarks objectAtIndex:index] objectForKey:@"connection"];
+	MVChatConnection *oldConnection = _bookmarks[index][@"connection"];
 
 	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
 	if ( [quitMessage length] ) {
@@ -854,7 +855,7 @@ static NSMenu *favoritesMenu = nil;
 
 	[self _registerNotificationsForConnection:connection];
 
-	[_bookmarks replaceObjectAtIndex:index withObject:info];
+	_bookmarks[index] = info;
 	[self _saveBookmarkList];
 
 	[connections noteNumberOfRowsChanged];
@@ -873,8 +874,8 @@ static NSMenu *favoritesMenu = nil;
 			target = [[[url path] substringFromIndex:1] stringByDecodingIllegalURLCharacters];
 		}
 
-		for( NSDictionary *info in _bookmarks ) {
-			MVChatConnection *connection = [info objectForKey:@"connection"];
+		for( NSMutableDictionary *info in _bookmarks ) {
+			MVChatConnection *connection = info[@"connection"];
 
 			if( [[connection server] isEqualToString:[url host]] &&
 				( ! [[url user] length] || [[connection nickname] isEqualToString:[url user]] ) &&
@@ -899,13 +900,13 @@ static NSMenu *favoritesMenu = nil;
 			NSInteger index = [newType indexOfItemWithTag:( [[url scheme] isEqualToString:@"silc"] ? 2 : 1 )];
 			[newType selectItemAtIndex:index];
 
-			[self newConnectionWithJoinRooms:( target ? [NSArray arrayWithObject:target] : nil )];
+			[self newConnectionWithJoinRooms:( target ? @[target] : nil )];
 
 			if( [url port] ) [newPort setObjectValue:[url port]];
 		} else if( ! handled && [[url user] length] ) {
 			MVChatConnection *connection = [[MVChatConnection alloc] initWithURL:url];
 			[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
-			[connection setOutgoingChatFormat:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"]];
+			[connection setOutgoingChatFormat:(OSType)[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"]];
 
 			[self addConnection:connection keepBookmark:NO];
 
@@ -923,9 +924,9 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) setAutoConnect:(BOOL) autoConnect forConnection:(MVChatConnection *) connection {
 	for( NSMutableDictionary *info in _bookmarks ) {
-		if( [info objectForKey:@"connection"] == connection ) {
-			if( autoConnect ) [info setObject:[NSNumber numberWithBool:NO] forKey:@"temporary"];
-			[info setObject:[NSNumber numberWithBool:autoConnect] forKey:@"automatic"];
+		if( info[@"connection"] == connection ) {
+			if( autoConnect ) info[@"temporary"] = @NO;
+			info[@"automatic"] = @(autoConnect);
 			[self _saveBookmarkList];
 			break;
 		}
@@ -934,8 +935,8 @@ static NSMenu *favoritesMenu = nil;
 
 - (BOOL) autoConnectForConnection:(MVChatConnection *) connection {
 	for( NSMutableDictionary *info in _bookmarks ) {
-		if( [info objectForKey:@"connection"] == connection ) {
-			return [[info objectForKey:@"automatic"] boolValue];
+		if( info[@"connection"] == connection ) {
+			return [info[@"automatic"] boolValue];
 		}
 	}
 
@@ -946,8 +947,8 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) setShowConsoleOnConnect:(BOOL) autoConsole forConnection:(MVChatConnection *) connection {
 	for( NSMutableDictionary *info in _bookmarks ) {
-		if( [info objectForKey:@"connection"] == connection ) {
-			[info setObject:[NSNumber numberWithBool:autoConsole] forKey:@"showConsole"];
+		if( info[@"connection"] == connection ) {
+			info[@"showConsole"] = @(autoConsole);
 			[self _saveBookmarkList];
 			break;
 		}
@@ -956,8 +957,8 @@ static NSMenu *favoritesMenu = nil;
 
 - (BOOL) showConsoleOnConnectForConnection:(MVChatConnection *) connection {
 	for( NSMutableDictionary *info in _bookmarks ) {
-		if( [info objectForKey:@"connection"] == connection ) {
-			return [[info objectForKey:@"showConsole"] boolValue];
+		if( info[@"connection"] == connection ) {
+			return [info[@"showConsole"] boolValue];
 		}
 	}
 
@@ -969,8 +970,8 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) setJoinRooms:(NSArray *) rooms forConnection:(MVChatConnection *) connection {
 	for( NSMutableDictionary *info in _bookmarks ) {
-		if( [info objectForKey:@"connection"] == connection ) {
-			if( [rooms count] ) [info setObject:[rooms mutableCopy] forKey:@"rooms"];
+		if( info[@"connection"] == connection ) {
+			if( [rooms count] ) info[@"rooms"] = [rooms mutableCopy];
 			else [info removeObjectForKey:@"rooms"];
 			[self _saveBookmarkList];
 			break;
@@ -980,11 +981,11 @@ static NSMenu *favoritesMenu = nil;
 
 - (NSMutableArray *) joinRoomsForConnection:(MVChatConnection *) connection {
 	for( NSMutableDictionary *info in _bookmarks ) {
-		if( [info objectForKey:@"connection"] == connection ) {
-			NSMutableArray *ret = [info objectForKey:@"rooms"];
+		if( info[@"connection"] == connection ) {
+			NSMutableArray *ret = info[@"rooms"];
 			if( ! ret ) {
-				ret = [NSMutableArray array];
-				[info setObject:ret forKey:@"rooms"];
+				ret = [[NSMutableArray alloc] init];
+				info[@"rooms"] = ret;
 			}
 			return ret;
 		}
@@ -997,8 +998,8 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) setConnectCommands:(NSString *) commands forConnection:(MVChatConnection *) connection {
 	for( NSMutableDictionary *info in _bookmarks ) {
-		if( [info objectForKey:@"connection"] == connection ) {
-			if( commands ) [info setObject:[commands mutableCopy] forKey:@"commands"];
+		if( info[@"connection"] == connection ) {
+			if( commands ) info[@"commands"] = [commands mutableCopy];
 			else [info removeObjectForKey:@"commands"];
 			[self _saveBookmarkList];
 			break;
@@ -1008,8 +1009,8 @@ static NSMenu *favoritesMenu = nil;
 
 - (NSString *) connectCommandsForConnection:(MVChatConnection *) connection {
 	for( NSMutableDictionary *info in _bookmarks ) {
-		if( [info objectForKey:@"connection"] == connection ) {
-			return [info objectForKey:@"commands"];
+		if( info[@"connection"] == connection ) {
+			return info[@"commands"];
 		}
 	}
 
@@ -1020,12 +1021,12 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) setIgnoreRules:(NSArray *) ignores forConnection:(MVChatConnection *) connection {
 	for( NSMutableDictionary *info in _bookmarks ) {
-		if( [info objectForKey:@"connection"] == connection ) {
+		if( info[@"connection"] == connection ) {
 			if( [ignores count] ) {
 				NSMutableArray *copy = (id)ignores;
 				if( ! [ignores isKindOfClass:[NSMutableArray class]] )
 					copy = [ignores mutableCopy];
-				[info setObject:copy forKey:@"ignores"];
+				info[@"ignores"] = copy;
 			} else [info removeObjectForKey:@"ignores"];
 			[self _saveBookmarkList];
 			break;
@@ -1035,11 +1036,11 @@ static NSMenu *favoritesMenu = nil;
 
 - (NSMutableArray *) ignoreRulesForConnection:(MVChatConnection *) connection {
 	for( NSMutableDictionary *info in _bookmarks ) {
-		if( [info objectForKey:@"connection"] == connection ) {
-			NSMutableArray *ret = [info objectForKey:@"ignores"];
+		if( info[@"connection"] == connection ) {
+			NSMutableArray *ret = info[@"ignores"];
 			if( ! ret ) {
 				ret = [NSMutableArray array];
-				[info setObject:ret forKey:@"ignores"];
+				info[@"ignores"] = ret;
 			}
 			return ret;
 		}
@@ -1054,9 +1055,9 @@ static NSMenu *favoritesMenu = nil;
 	MVChatConnection *connection = nil;
 
 	if( [connections selectedRow] == -1 ) return;
-	connection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
+	connection = _bookmarks[[connections selectedRow]][@"connection"];
 
-	[[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObjects:NSURLPboardType, NSStringPboardType, nil] owner:self];
+	[[NSPasteboard generalPasteboard] declareTypes:@[NSURLPboardType, NSStringPboardType] owner:self];
 
 	[[connection url] writeToPasteboard:[NSPasteboard generalPasteboard]];
 	[[NSPasteboard generalPasteboard] setString:[[connection url] description] forType:NSStringPboardType];
@@ -1068,9 +1069,9 @@ static NSMenu *favoritesMenu = nil;
 	MVChatConnection *connection = nil;
 
 	if( [connections selectedRow] == -1 ) return;
-	connection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
+	connection = _bookmarks[[connections selectedRow]][@"connection"];
 
-	[[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObjects:NSURLPboardType, NSStringPboardType, nil] owner:self];
+	[[NSPasteboard generalPasteboard] declareTypes:@[NSURLPboardType, NSStringPboardType] owner:self];
 
 	[[connection url] writeToPasteboard:[NSPasteboard generalPasteboard]];
 	[[NSPasteboard generalPasteboard] setString:[[connection url] description] forType:NSStringPboardType];
@@ -1119,18 +1120,18 @@ static NSMenu *favoritesMenu = nil;
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == connections ) {
 		if( [[column identifier] isEqualToString:@"auto"] ) {
-			return [[_bookmarks objectAtIndex:row] objectForKey:@"automatic"];
+			return _bookmarks[row][@"automatic"];
 		} else if( [[column identifier] isEqualToString:@"address"] ) {
-			return [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] server];
+			return [(MVChatConnection *)_bookmarks[row][@"connection"] server];
 		} else if( [[column identifier] isEqualToString:@"port"] ) {
-			return [NSNumber numberWithUnsignedShort:[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] serverPort]];
+			return @([(MVChatConnection *)_bookmarks[row][@"connection"] serverPort]);
 		} else if( [[column identifier] isEqualToString:@"nickname"] ) {
-			return [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] nickname];
+			return [(MVChatConnection *)_bookmarks[row][@"connection"] nickname];
 		}
 	} else if( view == newJoinRooms ) {
-		return [_joinRooms objectAtIndex:row];
+		return _joinRooms[row];
 	} else if( view == userSelectionTable ) {
-		MVChatUser *user = [_userSelectionPossibleUsers objectAtIndex:row];
+		MVChatUser *user = _userSelectionPossibleUsers[row];
 
 		if( [[column identifier] isEqualToString:@"hostname"] ) {
 			return [user address];
@@ -1147,12 +1148,12 @@ static NSMenu *favoritesMenu = nil;
 		if( [[column identifier] isEqual:@"status"] ) {
 			NSString *imageName = nil;
 			NSString *title = nil;
-			if( [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] isConnected] ) {
+			if( [(MVChatConnection *)_bookmarks[row][@"connection"] isConnected] ) {
 				if( [view editedRow] != row && ( [view selectedRow] != row || ! [[view window] isKeyWindow] || ( [view selectedRow] == row && [[view window] firstResponder] != view ) ) ) imageName = @"connected";
 				else imageName = @"connectedSelected";
 
 				title = NSLocalizedString(@"Connected", "VoiceOver title for connected image");
-			} else if( [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] status] == MVChatConnectionConnectingStatus ) {
+			} else if( [(MVChatConnection *)_bookmarks[row][@"connection"] status] == MVChatConnectionConnectingStatus ) {
 				if( [view editedRow] != row && ( [view selectedRow] != row || ! [[view window] isKeyWindow] || ( [view selectedRow] == row && [[view window] firstResponder] != view ) ) ) imageName = @"connecting";
 				else imageName = @"connectingSelected";
 
@@ -1169,7 +1170,7 @@ static NSMenu *favoritesMenu = nil;
 
 - (NSMenu *) tableView:(NSTableView *) view menuForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == connections ) {
-		MVChatConnection *connection = [[_bookmarks objectAtIndex:row] objectForKey:@"connection"];
+		MVChatConnection *connection = _bookmarks[row][@"connection"];
 		BOOL connected = [connection isConnected];
 		NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 		NSMenuItem *item = nil;
@@ -1242,19 +1243,19 @@ static NSMenu *favoritesMenu = nil;
 - (void) tableView:(NSTableView *) view setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == connections ) {
 		if( [[column identifier] isEqual:@"auto"] ) {
-			[[_bookmarks objectAtIndex:row] setObject:object forKey:@"automatic"];
+			_bookmarks[row][@"automatic"] = object;
 			if( [object boolValue] )
-				[[_bookmarks objectAtIndex:row] setObject:[NSNumber numberWithBool:NO] forKey:@"temporary"];
+				_bookmarks[row][@"temporary"] = @NO;
 		} else if( [[column identifier] isEqual:@"nickname"] ) {
-			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setPreferredNickname:object];
+			[(MVChatConnection *)_bookmarks[row][@"connection"] setPreferredNickname:object];
 		} else if( [[column identifier] isEqual:@"address"] ) {
-			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServer:object];
+			[(MVChatConnection *)_bookmarks[row][@"connection"] setServer:object];
 		} else if( [[column identifier] isEqual:@"port"] ) {
-			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServerPort:( [object unsignedIntValue] % 65536 )];
+			[(MVChatConnection *)_bookmarks[row][@"connection"] setServerPort:( [object unsignedIntValue] % 65536 )];
 		}
 		[self _saveBookmarkList];
 	} else if( view == newJoinRooms ) {
-		[_joinRooms replaceObjectAtIndex:row withObject:object];
+		_joinRooms[row] = object;
 	}
 }
 
@@ -1280,11 +1281,11 @@ static NSMenu *favoritesMenu = nil;
 
 		if( row == -1 ) return NO;
 
-		info = [_bookmarks objectAtIndex:row];
-		connection = [info objectForKey:@"connection"];
+		info = _bookmarks[row];
+		connection = info[@"connection"];
 		data = [NSData dataWithBytes:&row length:sizeof( &row )];
 
-		[board declareTypes:[NSArray arrayWithObjects:MVConnectionPboardType, NSURLPboardType, NSStringPboardType, @"CorePasteboardFlavorType 0x75726C20", @"CorePasteboardFlavorType 0x75726C6E", @"WebURLsWithTitlesPboardType", nil] owner:self];
+		[board declareTypes:@[MVConnectionPboardType, NSURLPboardType, NSStringPboardType, @"CorePasteboardFlavorType 0x75726C20", @"CorePasteboardFlavorType 0x75726C6E", @"WebURLsWithTitlesPboardType"] owner:self];
 
 		[board setData:data forType:MVConnectionPboardType];
 
@@ -1341,7 +1342,7 @@ static NSMenu *favoritesMenu = nil;
 			if( string && [MVChatConnection supportsURLScheme:[[NSURL URLWithString:string] scheme]] )
 				return NSDragOperationEvery;
 
-			string = [[[[info draggingPasteboard] propertyListForType:@"WebURLsWithTitlesPboardType"] objectAtIndex:0] objectAtIndex:0];
+			string = [[info draggingPasteboard] propertyListForType:@"WebURLsWithTitlesPboardType"][0][0];
 			if( string && [MVChatConnection supportsURLScheme:[[NSURL URLWithString:string] scheme]] )
 				return NSDragOperationEvery;
 		}
@@ -1352,13 +1353,13 @@ static NSMenu *favoritesMenu = nil;
 
 - (BOOL) tableView:(NSTableView *) view acceptDrop:(id <NSDraggingInfo>) info row:(NSInteger) row dropOperation:(NSTableViewDropOperation) operation {
 	if( view == connections ) {
-		if( [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:MVConnectionPboardType]] ) {
+		if( [[info draggingPasteboard] availableTypeFromArray:@[MVConnectionPboardType]] ) {
 			NSInteger index = -1;
 			NSData *pboardData = [[info draggingPasteboard] dataForType:MVConnectionPboardType];
 			[pboardData getBytes:&index length:[pboardData length]];
 			if( row > index ) row--;
 
-			id item = [_bookmarks objectAtIndex:index];
+			id item = _bookmarks[index];
 			[_bookmarks removeObjectAtIndex:index];
 			[_bookmarks insertObject:item atIndex:row];
 
@@ -1374,7 +1375,7 @@ static NSMenu *favoritesMenu = nil;
 			}
 
 			if( ! url || ! [MVChatConnection supportsURLScheme:[url scheme]] ) {
-				string = [[[[info draggingPasteboard] propertyListForType:@"WebURLsWithTitlesPboardType"] objectAtIndex:0] objectAtIndex:0];
+				string = [[info draggingPasteboard] propertyListForType:@"WebURLsWithTitlesPboardType"][0][0];
 				if( string ) url = [NSURL URLWithString:string];
 			}
 
@@ -1408,10 +1409,10 @@ static NSMenu *favoritesMenu = nil;
 
 - (id) comboBox:(NSComboBox *) comboBox objectValueForItemAtIndex:(NSInteger) index {
 	if( comboBox == newAddress ) {
-		return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] objectAtIndex:index];
+		return [[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"][index];
 	} else if( comboBox == newPort ) {
 		MVChatConnectionType type = [self newTypeToConnectionType];
-		return [[MVChatConnection defaultServerPortsForType:type] objectAtIndex:index];
+		return [MVChatConnection defaultServerPortsForType:type][index];
 	}
 
 	return nil;
@@ -1453,7 +1454,7 @@ static NSMenu *favoritesMenu = nil;
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Connection Info", "name for connection info button in customize palette" )];
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Show connection info", "connection info button tooltip" )];
-		[toolbarItem setImage:[NSImage imageNamed:@"info"]];
+		[toolbarItem setImage:[NSImage imageNamed:NSImageNameInfo]];
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:NULL];
@@ -1471,8 +1472,7 @@ static NSMenu *favoritesMenu = nil;
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Delete Connection", "name for delete connection button in customize palette" )];
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Delete Connection", "delete connection button tooltip" )];
-		NSImage *deleteImage = [NSImage imageNamed:@"delete"];
-		[toolbarItem setImage:deleteImage];
+		[toolbarItem setImage:[[NSWorkspace sharedWorkspace] iconForFileType: NSFileTypeForHFSTypeCode(kToolbarDeleteIcon)]];
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:NULL];
 	} else if( [itemIdent isEqualToString:MVToolbarConsoleItemIdentifier] ) {
@@ -1498,7 +1498,7 @@ static NSMenu *favoritesMenu = nil;
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Message User", "toolbar message user button name" )];
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Message a user", "message user button tooltip" )];
-		[toolbarItem setImage:[NSImage imageNamed:@"messageUser"]];
+		[toolbarItem setImage:[NSImage imageNamed:@"directChatIcon"]];
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:NULL];
@@ -1508,16 +1508,16 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	return [NSArray arrayWithObjects:MVToolbarConnectToggleItemIdentifier, NSToolbarSeparatorItemIdentifier,
+	return @[MVToolbarConnectToggleItemIdentifier, NSToolbarSeparatorItemIdentifier,
 		MVToolbarJoinRoomItemIdentifier, MVToolbarQueryUserItemIdentifier, MVToolbarConsoleItemIdentifier,
-		NSToolbarFlexibleSpaceItemIdentifier, MVToolbarEditItemIdentifier, MVToolbarDeleteItemIdentifier, nil];
+		NSToolbarFlexibleSpaceItemIdentifier, MVToolbarEditItemIdentifier, MVToolbarDeleteItemIdentifier];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	return [NSArray arrayWithObjects:NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier,
+	return @[NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier,
 		NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, MVToolbarConnectToggleItemIdentifier,
 		MVToolbarEditItemIdentifier, MVToolbarInspectorItemIdentifier, MVToolbarDeleteItemIdentifier, MVToolbarConsoleItemIdentifier,
-		MVToolbarJoinRoomItemIdentifier, MVToolbarQueryUserItemIdentifier, nil];
+		MVToolbarJoinRoomItemIdentifier, MVToolbarQueryUserItemIdentifier];
 }
 @end
 
@@ -1623,8 +1623,8 @@ static NSMenu *favoritesMenu = nil;
 	}
 
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:errorTitle forKey:@"title"];
-	[context setObject:[[[notification userInfo] objectForKey:@"error"] localizedDescription] forKey:@"description"];
+	context[@"title"] = errorTitle;
+	context[@"description"] = [[notification userInfo][@"error"] localizedDescription];
 	[[JVNotificationController defaultController] performNotification:@"JVChatError" withContextInfo:context];
 
 	NSMapTable *errorToAlertMappingsForConnection = [_connectionToErrorToAlertMap objectForKey:notification.object];
@@ -1642,8 +1642,8 @@ static NSMenu *favoritesMenu = nil;
 
 	[chatErrorAlert setMessageText:errorTitle];
 	if( error.userInfo[@"errorLiteralReason"] )
-		[chatErrorAlert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"%@\n\nServer Details:\n%@", "error alert informative text with literal reason"), [[[notification userInfo] objectForKey:@"error"] localizedDescription], [[[[notification userInfo] objectForKey:@"error"] userInfo] objectForKey:@"errorLiteralReason"]]];
-	else [chatErrorAlert setInformativeText:[[[notification userInfo] objectForKey:@"error"] localizedDescription]];
+		[chatErrorAlert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"%@\n\nServer Details:\n%@", "error alert informative text with literal reason"), [[notification userInfo][@"error"] localizedDescription], [[notification userInfo][@"error"] userInfo][@"errorLiteralReason"]]];
+	else [chatErrorAlert setInformativeText:[[notification userInfo][@"error"] localizedDescription]];
 
 	[chatErrorAlert setAlertStyle:NSInformationalAlertStyle];
 
@@ -1666,7 +1666,7 @@ static NSMenu *favoritesMenu = nil;
 		// [chatErrorAlert layout];
 		// [[chatErrorAlert window] setInitialFirstResponder:roomKeyAccessory];
 		if ( [chatErrorAlert runModal] == NSAlertFirstButtonReturn ) {
-			[[notification object] joinChatRoomNamed:[[[[notification userInfo] objectForKey:@"error"] userInfo] objectForKey:@"room"] withPassphrase:[roomKeyAccessory stringValue]];
+			[[notification object] joinChatRoomNamed:[[notification userInfo][@"error"] userInfo][@"room"] withPassphrase:[roomKeyAccessory stringValue]];
 		}
 	} else {
 		[chatErrorAlert runModal];
@@ -1740,47 +1740,47 @@ static NSMenu *favoritesMenu = nil;
 	NSMutableArray *saveList = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
 
 	for( id info in _bookmarks ) {
-		if( ! [[info objectForKey:@"temporary"] boolValue] ) {
-			MVChatConnection *connection = [info objectForKey:@"connection"];
+		if( ! [info[@"temporary"] boolValue] ) {
+			MVChatConnection *connection = info[@"connection"];
 			if( ! connection ) continue;
 
 			NSMutableDictionary *data = [NSMutableDictionary dictionary];
-			[data setObject:[NSNumber numberWithBool:[[info objectForKey:@"automatic"] boolValue]] forKey:@"automatic"];
-			[data setObject:[NSNumber numberWithBool:[[info objectForKey:@"showConsole"] boolValue]] forKey:@"showConsole"];
-			[data setObject:[NSNumber numberWithBool:[connection isSecure]] forKey:@"secure"];
-			[data setObject:[NSNumber numberWithBool:connection.requestsSASL] forKey:@"requestsSASL"];
-			[data setObject:[NSNumber numberWithBool:connection.roomsWaitForIdentification] forKey:@"roomsWaitForIdentification"];
-			[data setObject:[NSNumber numberWithLong:[connection proxyType]] forKey:@"proxy"];
-			[data setObject:[NSNumber numberWithLong:[connection encoding]] forKey:@"encoding"];
-			[data setObject:[connection uniqueIdentifier] forKey:@"uniqueIdentifier"];
-			[data setObject:[connection server] forKey:@"server"];
-			[data setObject:[NSNumber numberWithUnsignedShort:[connection serverPort]] forKey:@"port"];
+			data[@"automatic"] = @([info[@"automatic"] boolValue]);
+			data[@"showConsole"] = @([info[@"showConsole"] boolValue]);
+			data[@"secure"] = @([connection isSecure]);
+			data[@"requestsSASL"] = @(connection.requestsSASL);
+			data[@"roomsWaitForIdentification"] = @(connection.roomsWaitForIdentification);
+			data[@"proxy"] = @([connection proxyType]);
+			data[@"encoding"] = @([connection encoding]);
+			data[@"uniqueIdentifier"] = [connection uniqueIdentifier];
+			data[@"server"] = [connection server];
+			data[@"port"] = @([connection serverPort]);
 			if( [connection preferredNickname] )
-				[data setObject:[connection preferredNickname] forKey:@"nickname"];
+				data[@"nickname"] = [connection preferredNickname];
 			if( [[connection alternateNicknames] count] )
-				[data setObject:[connection alternateNicknames] forKey:@"alternateNicknames"];
-			if( [(NSArray *)[info objectForKey:@"rooms"] count] ) [data setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
-			if( [info objectForKey:@"commands"] ) [data setObject:[info objectForKey:@"commands"] forKey:@"commands"];
-			[data setObject:[info objectForKey:@"created"] forKey:@"created"];
+				data[@"alternateNicknames"] = [connection alternateNicknames];
+			if( [(NSArray *)info[@"rooms"] count] ) data[@"rooms"] = info[@"rooms"];
+			if( info[@"commands"] ) data[@"commands"] = info[@"commands"];
+			data[@"created"] = info[@"created"];
 			if( [connection realName] )
-				[data setObject:[connection realName] forKey:@"realName"];
+				data[@"realName"] = [connection realName];
 			if( [connection username] )
-				[data setObject:[connection username] forKey:@"username"];
-			[data setObject:[connection urlScheme] forKey:@"type"];
+				data[@"username"] = [connection username];
+			data[@"type"] = [connection urlScheme];
 
 			if( [[connection persistentInformation] count] )
-				[data setObject:[connection persistentInformation] forKey:@"persistentInformation"];
+				data[@"persistentInformation"] = [connection persistentInformation];
 
 			NSMutableArray *permIgnores = [NSMutableArray array];
 
-			for( KAIgnoreRule *rule in [info objectForKey:@"ignores"] ) {
+			for( KAIgnoreRule *rule in info[@"ignores"] ) {
 				if( [rule isPermanent] ) {
 					NSData *archive = [NSKeyedArchiver archivedDataWithRootObject:rule];
 					if( archive ) [permIgnores addObject:archive];
 				}
 			}
 
-			if( [permIgnores count] ) [data setObject:permIgnores forKey:@"ignores"];
+			if( [permIgnores count] ) data[@"ignores"] = permIgnores;
 
 			roomCount += [[connection knownChatRooms] count];
 
@@ -1793,8 +1793,8 @@ static NSMenu *favoritesMenu = nil;
 
 	JVAnalyticsController *analyticsController = [JVAnalyticsController defaultController];
 	if (analyticsController) {
-		[analyticsController setObject:[NSNumber numberWithUnsignedLong:roomCount] forKey:@"total-rooms"];
-		[analyticsController setObject:[NSNumber numberWithUnsignedLong:[saveList count]] forKey:@"total-connections"];
+		[analyticsController setObject:@(roomCount) forKey:@"total-rooms"];
+		[analyticsController setObject:@([saveList count]) forKey:@"total-connections"];
 	}
 
 	[self _validateToolbar];
@@ -1808,19 +1808,24 @@ static NSMenu *favoritesMenu = nil;
 	_bookmarks = [[NSMutableArray alloc] init];
 
 	for( __strong NSMutableDictionary *info in list ) {
-		info = [NSMutableDictionary dictionaryWithDictionary:info];
+		info = [info mutableCopy];
 
 		MVChatConnection *connection = nil;
 
 		MVChatConnectionType type;
-		if( ! [(NSString *)[info objectForKey:@"type"] length] )
+		if( ! [(NSString *)info[@"type"] length] )
 		    type = MVChatConnectionIRCType;
 		else {
-			if( [info[@"type"] isEqualToString:@"icb"] ) type = MVChatConnectionICBType;
-			else if( [info[@"type"] isEqualToString:@"irc"] ) type = MVChatConnectionIRCType;
-		    else if( [info[@"type"] isEqualToString:@"silc"] ) type = MVChatConnectionSILCType;
-		    else if( [info[@"type"] isEqualToString:@"xmpp"] ) type = MVChatConnectionXMPPType;
-			else type = MVChatConnectionIRCType;
+			if( [info[@"type"] isEqualToString:@"icb"] ) {
+				type = MVChatConnectionICBType;
+			} else if( [info[@"type"] isEqualToString:@"irc"] ) {
+				type = MVChatConnectionIRCType;
+			} else if( [info[@"type"] isEqualToString:@"silc"] ) {
+		        type = MVChatConnectionSILCType;
+			} else if( [info[@"type"] isEqualToString:@"xmpp"] ) {
+		        type = MVChatConnectionXMPPType;
+			} else
+				type = MVChatConnectionIRCType;
 		}
 
 		if( info[@"url"] ) {
@@ -1834,12 +1839,12 @@ static NSMenu *favoritesMenu = nil;
 		if (info[@"uniqueIdentifier"]) connection.uniqueIdentifier = info[@"uniqueIdentifier"];
 
 		connection.persistentInformation = info[@"persistentInformation"];
-		connection.proxyType = [info[@"proxy"] unsignedLongValue];
+		connection.proxyType = [info[@"proxy"] unsignedIntValue];
 
 		if( [info[@"encoding"] longValue] ) connection.encoding = [info[@"encoding"] longValue];
 		else connection.encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 
-		connection.outgoingChatFormat = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"];
+		connection.outgoingChatFormat = (OSType)[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"];
 
 		if( info[@"realName"] ) connection.realName = info[@"realName"];
 		if( info[@"nickname"] ) connection.preferredNickname = info[@"nickname"];
@@ -1848,7 +1853,7 @@ static NSMenu *favoritesMenu = nil;
 			connection.alternateNicknames = info[@"alternateNicknames"];
 
 		NSMutableArray *permIgnores = [NSMutableArray array];
-		for( NSData *rule in [info objectForKey:@"ignores"] ) {
+		for( NSData *rule in info[@"ignores"] ) {
 			NSData *archive = [NSKeyedUnarchiver unarchiveObjectWithData:rule];
 			if( archive ) [permIgnores addObject:archive];
 		}
@@ -1905,7 +1910,7 @@ static NSMenu *favoritesMenu = nil;
 	MVChatConnectionStatus status = MVChatConnectionDisconnectedStatus;
 
 	if( [connections selectedRow] != -1 ) noneSelected = NO;
-	if( ! noneSelected ) status = [(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] status];
+	if( ! noneSelected ) status = [(MVChatConnection *)_bookmarks[[connections selectedRow]][@"connection"] status];
 
 	for( NSToolbarItem *item in [[[self window] toolbar] visibleItems] ) {
 		if( [[item itemIdentifier] isEqualToString:MVToolbarConnectToggleItemIdentifier] ) {
@@ -2004,7 +2009,7 @@ static NSMenu *favoritesMenu = nil;
 		return;
 	}
 
-	switch( [[dict objectForKey:@"publicKeyType"] unsignedLongValue] ) {
+	switch( [dict[@"publicKeyType"] unsignedLongValue] ) {
 		case MVChatConnectionClientPublicKeyType:
 			[publicKeyNameDescription setObjectValue:NSLocalizedString( @"User name:", "verification target name" )];
 			[publicKeyDescription setObjectValue:NSLocalizedString( @"Please verify the users public key.", "message of verification for public key" )];
@@ -2015,9 +2020,9 @@ static NSMenu *favoritesMenu = nil;
 			break;
 	}
 
-	[publicKeyName setObjectValue:[dict objectForKey:@"name"]];
-	[publicKeyFingerprint setObjectValue:[dict objectForKey:@"fingerprint"]];
-	[publicKeyBabbleprint setObjectValue:[dict objectForKey:@"babbleprint"]];
+	[publicKeyName setObjectValue:dict[@"name"]];
+	[publicKeyFingerprint setObjectValue:dict[@"fingerprint"]];
+	[publicKeyBabbleprint setObjectValue:dict[@"babbleprint"]];
 	[publicKeyAlwaysAccept setState:NSOffState];
 
 	_publicKeyDictionary = dict;
@@ -2054,10 +2059,10 @@ static NSMenu *favoritesMenu = nil;
 	MVChatConnection *connection = [notification object];
 
 	if ( [[notification name] isEqualToString:MVChatConnectionDidIdentifyWithServicesNotification] ) {
-		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:NSLocalizedString( @"You Have Been Identified", "identified bubble title" ) forKey:@"title"];
-		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has identified you as %@ on %@.", "identified bubble message, server message and server name" ), [[notification userInfo] objectForKey:@"user"], [[notification userInfo] objectForKey:@"target"], [connection server]] forKey:@"description"];
-		[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
+		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
+		context[@"title"] = NSLocalizedString( @"You Have Been Identified", "identified bubble title" );
+		context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@ has identified you as %@ on %@.", "identified bubble message, server message and server name" ), [notification userInfo][@"user"], [notification userInfo][@"target"], [connection server]];
+		context[@"image"] = [NSImage imageNamed:@"Keychain"];
 		[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
 	}
 
@@ -2163,9 +2168,9 @@ static NSMenu *favoritesMenu = nil;
 - (void) _didConnect:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:NSLocalizedString( @"Connected", "connected bubble title" ) forKey:@"title"];
-	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You're now connected to %@ as %@.", "you are now connected bubble text" ), [connection server], [connection nickname]] forKey:@"description"];
-	[context setObject:[NSImage imageNamed:@"connect"] forKey:@"image"];
+	context[@"title"] = NSLocalizedString( @"Connected", "connected bubble title" );
+	context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"You're now connected to %@ as %@.", "you are now connected bubble text" ), [connection server], [connection nickname]];
+	context[@"image"] = [NSImage imageNamed:@"connect"];
 	[[JVNotificationController defaultController] performNotification:@"JVChatConnected" withContextInfo:context];
 
 	[[NSProcessInfo processInfo] disableSuddenTermination];
@@ -2176,9 +2181,9 @@ static NSMenu *favoritesMenu = nil;
 	MVChatConnection *connection = [notification object];
 	if( [connection status] == MVChatConnectionServerDisconnectedStatus ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:NSLocalizedString( @"Disconnected", "disconnected bubble title" ) forKey:@"title"];
-		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You're were disconnected from %@.", "you were disconnected bubble text" ), [connection server]] forKey:@"description"];
-		[context setObject:[NSImage imageNamed:@"disconnect"] forKey:@"image"];
+		context[@"title"] = NSLocalizedString( @"Disconnected", "disconnected bubble title" );
+		context[@"description"] = [[NSString alloc] initWithFormat:NSLocalizedString( @"You're were disconnected from %@.", "you were disconnected bubble text" ), [connection server]];
+		context[@"image"] = [NSImage imageNamed:@"disconnect"];
 		[[JVNotificationController defaultController] performNotification:@"JVChatDisconnected" withContextInfo:context];
 	}
 
@@ -2237,7 +2242,7 @@ static NSMenu *favoritesMenu = nil;
 	NSInteger row = [connections selectedRow];
 	if( row == -1 ) return;
 	
-	MVChatConnection *selectedBookmarkedConnection = [[_bookmarks objectAtIndex:row] objectForKey:@"connection"];
+	MVChatConnection *selectedBookmarkedConnection = _bookmarks[row][@"connection"];
 
 	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
 	if ( [quitMessage length] ) {
@@ -2275,7 +2280,7 @@ static NSMenu *favoritesMenu = nil;
 - (void) _openConsole:(id) sender {
 	NSInteger row = [connections selectedRow];
 	if( row == -1 ) return;
-	[[JVChatController defaultController] chatConsoleForConnection:[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] ifExists:NO];
+	[[JVChatController defaultController] chatConsoleForConnection:_bookmarks[row][@"connection"] ifExists:NO];
 }
 
 + (void) _openFavoritesFolder:(id) sender {
@@ -2312,7 +2317,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (MVChatConnection *) valueInChatConnectionsAtIndex:(NSUInteger) index {
-	return [[self chatConnections] objectAtIndex:index];
+	return [self chatConnections][index];
 }
 
 - (MVChatConnection *) valueInChatConnectionsWithUniqueID:(id) identifier {

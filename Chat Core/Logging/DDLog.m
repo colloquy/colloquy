@@ -20,12 +20,12 @@
 
 #import "DDLog.h"
 
-#import <pthread.h>
+#include <pthread.h>
 #import <objc/runtime.h>
-#import <mach/mach_host.h>
-#import <mach/host_info.h>
-#import <libkern/OSAtomic.h>
-#import <Availability.h>
+#include <mach/mach_host.h>
+#include <mach/host_info.h>
+#include <libkern/OSAtomic.h>
+#include <Availability.h>
 #if TARGET_OS_IOS
     #import <UIKit/UIDevice.h>
 #endif

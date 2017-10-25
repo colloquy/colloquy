@@ -4,9 +4,11 @@
 #import "JVChatEvent.h"
 #import "KAIgnoreRule.h"
 #import "NSAttributedStringMoreAdditions.h"
-#import "NSDateAdditions.h"
+#import <ChatCore/NSDateAdditions.h>
 
-#import <libxml/tree.h>
+#include <libxml/tree.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotification";
 
@@ -32,15 +34,15 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 */
 
 @interface JVChatSession (JVChatSessionPrivate)
-- (id) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript;
-- (void) _setNode:(xmlNode *) node;
+- (nullable instancetype) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript NS_RETURNS_RETAINED;
+- (void) _setNode:(nullable xmlNode *) node;
 @end
 
 #pragma mark -
 
 @interface JVChatMessage (JVChatMessagePrivate)
-- (id) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript;
-- (void) _setNode:(xmlNode *) node;
+- (nullable instancetype) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript NS_RETURNS_RETAINED;
+- (void) _setNode:(nullable xmlNode *) node;
 - (void) _loadFromXML;
 - (void) _loadSenderFromXML;
 - (void) _loadBodyFromXML;
@@ -49,36 +51,38 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 #pragma mark -
 
 @interface JVChatEvent (JVChatEventPrivate)
-- (id) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript;
-- (void) _setNode:(xmlNode *) node;
+- (nullable instancetype) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript NS_RETURNS_RETAINED;
+- (void) _setNode:(nullable xmlNode *) node;
 @end
 
 #pragma mark -
 
 @implementation JVChatTranscript
-+ (id) chatTranscript {
+@synthesize elementLimit = _elementLimit;
+
++ (instancetype) chatTranscript {
 	return [[self alloc] init];
 }
 
-+ (id) chatTranscriptWithChatTranscript:(JVChatTranscript *) transcript {
++ (instancetype) chatTranscriptWithChatTranscript:(JVChatTranscript *) transcript {
 	return [[self alloc] initWithChatTranscript:transcript];
 }
 
-+ (id) chatTranscriptWithElements:(NSArray *) elements {
++ (instancetype) chatTranscriptWithElements:(NSArray *) elements {
 	return [[self alloc] initWithElements:elements];
 }
 
-+ (id) chatTranscriptWithContentsOfFile:(NSString *) path {
++ (nullable instancetype) chatTranscriptWithContentsOfFile:(NSString *) path {
 	return [[self alloc] initWithContentsOfFile:path];
 }
 
-+ (id) chatTranscriptWithContentsOfURL:(NSURL *) url {
++ (nullable instancetype) chatTranscriptWithContentsOfURL:(NSURL *) url {
 	return [[self alloc] initWithContentsOfURL:url];
 }
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_filePath = nil;
 		_logFile = nil;
@@ -100,21 +104,21 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	return self;
 }
 
-- (id) initWithChatTranscript:(JVChatTranscript *) transcript {
+- (instancetype) initWithChatTranscript:(JVChatTranscript *) transcript {
 	if( ( self = [self init] ) )
 		[self appendChatTranscript:transcript];
 
 	return self;
 }
 
-- (id) initWithElements:(NSArray *) elements {
+- (instancetype) initWithElements:(NSArray *) elements {
 	if( ( self = [self init] ) )
 		[self appendElements:elements];
 
 	return self;
 }
 
-- (id) initWithContentsOfFile:(NSString *) path {
+- (nullable instancetype) initWithContentsOfFile:(NSString *) path {
 	if( ( self = [self init] ) ) {
 		path = [path stringByStandardizingPath];
 
@@ -132,7 +136,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	return self;
 }
 
-- (id) initWithContentsOfURL:(NSURL *) url {
+- (nullable instancetype) initWithContentsOfURL:(NSURL *) url {
 	if( ( self = [self init] ) ) {
 		NSData *contents = [NSData dataWithContentsOfURL:url];
 		if( ! contents || ! [contents length] || [contents length] > INT_MAX ) {
@@ -152,7 +156,6 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 }
 
 - (void) dealloc {
-
 	xmlFreeDoc( _xmlLog );
 
 	_objectSpecifier = nil;
@@ -160,12 +163,11 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	_logFile = nil;
 	_messages = nil;
 	_xmlLog = NULL;
-
 }
 
 #pragma mark -
 
-- (void *) document {
+- (xmlDoc *) document {
 	return _xmlLog;
 }
 
@@ -262,12 +264,12 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (NSArray *) elements {
+- (nullable NSArray *) elements {
 	return [self elementsInRange:NSMakeRange( 0, -1 )]; // will stop at the total number of elements.
 }
 
-- (NSArray *) elementsInRange:(NSRange) range {
-	if( ! range.length ) return [NSArray array];
+- (nullable NSArray *) elementsInRange:(NSRange) range {
+	if( ! range.length ) return @[];
 
 	@synchronized( self ) {
 		NSUInteger i = 0;
@@ -309,11 +311,11 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	} return nil;
 }
 
-- (id) elementAtIndex:(NSUInteger) index {
+- (nullable id) elementAtIndex:(NSUInteger) index {
 	return [[self elementsInRange:NSMakeRange( index, 1 )] lastObject];
 }
 
-- (id) lastElement {
+- (nullable id) lastElement {
 	@synchronized( self ) {
 		xmlNode *node = xmlGetLastChild( xmlDocGetRootElement( _xmlLog ) );
 		do {
@@ -359,12 +361,12 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (NSArray *) messages {
+- (nullable NSArray *) messages {
 	return [self messagesInRange:NSMakeRange( 0, -1 )]; // will stop at the total number of messages.
 }
 
-- (NSArray *) messagesInRange:(NSRange) range {
-	if( ! range.length ) return [NSArray array];
+- (nullable NSArray *) messagesInRange:(NSRange) range {
+	if( ! range.length ) return @[];
 
 	@synchronized( self ) {
 		if( [_messages count] >= ( range.location + range.length ) ) {
@@ -396,7 +398,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 								msg = [[JVChatMessage alloc] _initWithNode:subNode andTranscript:self];
 								id classDesc = [NSClassDescription classDescriptionForClass:[self class]];
 								[msg setObjectSpecifier:[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDesc containerSpecifier:[self objectSpecifier] key:@"messages" uniqueID:[msg messageIdentifier]]];
-								[_messages replaceObjectAtIndex:i withObject:msg];
+								_messages[i] = msg;
 							} else if( [_messages count] == i ) {
 								msg = [[JVChatMessage alloc] _initWithNode:subNode andTranscript:self];
 								id classDesc = [NSClassDescription classDescriptionForClass:[self class]];
@@ -417,12 +419,12 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	} return nil;
 }
 
-- (JVChatMessage *) messageAtIndex:(NSUInteger) index {
+- (nullable JVChatMessage *) messageAtIndex:(NSUInteger) index {
 	NSRange range = NSMakeRange( index, 1 );
 
 	@synchronized( self ) {
 		if( [_messages count] > index ) {
-			id obj = [_messages objectAtIndex:index];
+			id obj = _messages[index];
 			if( ! [obj isKindOfClass:[NSNull class]] ) {
 				return obj;
 			}
@@ -432,7 +434,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	return [[self messagesInRange:range] lastObject];
 }
 
-- (JVChatMessage *) messageWithIdentifier:(NSString *) identifier {
+- (nullable JVChatMessage *) messageWithIdentifier:(NSString *) identifier {
 	NSParameterAssert( identifier != nil );
 	NSParameterAssert( [identifier length] > 0 );
 
@@ -459,7 +461,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	} return nil;
 }
 
-- (JVChatMessage *) lastMessage {
+- (nullable JVChatMessage *) lastMessage {
 	@synchronized( self ) {
 		xmlNode *foundNode = NULL;
 		xmlNode *node = xmlGetLastChild( xmlDocGetRootElement( _xmlLog ) );
@@ -511,11 +513,11 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (JVChatMessage *) appendMessage:(JVChatMessage *) message {
+- (nullable JVChatMessage *) appendMessage:(JVChatMessage *) message {
 	return [self appendMessage:message forceNewEnvelope:NO];
 }
 
-- (JVChatMessage *) appendMessage:(JVChatMessage *) message forceNewEnvelope:(BOOL) forceEnvelope {
+- (nullable JVChatMessage *) appendMessage:(JVChatMessage *) message forceNewEnvelope:(BOOL) forceEnvelope {
 	NSParameterAssert( message != nil );
 	NSParameterAssert( [message node] != NULL );
 	NSParameterAssert( [message transcript] != self );
@@ -530,7 +532,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 				NSString *msgSource = [[message source] absoluteString];
 
 				xmlChar *sourceStr = xmlGetProp( lastChild, (xmlChar *) "source" );
-				NSString *source = ( sourceStr ? [NSString stringWithUTF8String:(char *) sourceStr] : @"" );
+				NSString *source = ( sourceStr ? @((char *) sourceStr) : @"" );
 				xmlFree( sourceStr );
 
 				if( ( ! msgSource && ! source ) || [msgSource isEqualToString:source] ) { // same chat source, proceed to sender check
@@ -542,18 +544,18 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 							NSString *name = [message senderName];
 
 							xmlChar *senderNameStr = xmlNodeGetContent( subNode );
-							NSString *senderName = [NSString stringWithUTF8String:(char *) senderNameStr];
+							NSString *senderName = @((char *) senderNameStr);
 							xmlFree( senderNameStr );
 
 							NSString *senderNickname = nil;
 							NSString *senderIdentifier = nil;
 
 							xmlChar *prop = xmlGetProp( subNode, (xmlChar *) "nickname" );
-							if( prop ) senderNickname = [NSString stringWithUTF8String:(char *) prop];
+							if( prop ) senderNickname = @((char *) prop);
 							xmlFree( prop );
 
 							prop = xmlGetProp( subNode, (xmlChar *) "identifier" );
-							if( prop ) senderIdentifier = [NSString stringWithUTF8String:(char *) prop];
+							if( prop ) senderIdentifier = @((char *) prop);
 							xmlFree( prop );
 
 							if( [senderIdentifier isEqualToString:identifier] || [senderNickname isEqualToString:nickname] || [senderName isEqualToString:name] )
@@ -575,7 +577,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 			if( [message ignoreStatus] == JVUserIgnored )
 				xmlSetProp( root, (xmlChar *) "ignored", (xmlChar *) "yes" );
 
-			xmlNode *subNode = ((xmlNode *) [message node]) -> parent -> children;
+			xmlNode *subNode = ([message node]) -> parent -> children;
 
 			do {
 				if( ! strcmp( "sender", (char *) subNode -> name ) ) break;
@@ -584,11 +586,11 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 			child = xmlDocCopyNode( subNode, _xmlLog, 1 );
 			xmlAddChild( root, child );
 
-			child = xmlDocCopyNode( (xmlNode *) [message node], _xmlLog, 1 );
+			child = xmlDocCopyNode( [message node], _xmlLog, 1 );
 			xmlAddChild( root, child );
 		} else { // append message to an existing envelope
 			root = parent;
-			child = (xmlNode *) [message node];
+			child = [message node];
 			child = xmlAddChild( parent, xmlDocCopyNode( child, _xmlLog, 1 ) );
 		}
 
@@ -633,7 +635,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 }
 
 - (NSArray *) sessionsInRange:(NSRange) range {
-	if( ! range.length ) return [NSArray array];
+	if( ! range.length ) return @[];
 
 	@synchronized( self ) {
 		NSUInteger i = 0;
@@ -660,7 +662,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	return [[self sessionsInRange:NSMakeRange( index, 1 )] lastObject];
 }
 
-- (JVChatSession *) lastSession {
+- (nullable JVChatSession *) lastSession {
 	@synchronized( self ) {
 		xmlNode *node = xmlGetLastChild( xmlDocGetRootElement( _xmlLog ) );
 		do {
@@ -674,7 +676,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (JVChatSession *) startNewSession {
+- (nullable JVChatSession *) startNewSession {
 	return nil;
 //	return [self appendSession:[NSDate date]];
 }
@@ -697,7 +699,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 }
 
 - (NSArray *) eventsInRange:(NSRange) range {
-	if( ! range.length ) return [NSArray array];
+	if( ! range.length ) return @[];
 
 	@synchronized( self ) {
 		NSUInteger i = 0;
@@ -724,7 +726,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	return [[self eventsInRange:NSMakeRange( index, 1 )] lastObject];
 }
 
-- (JVChatEvent *) lastEvent {
+- (nullable JVChatEvent *) lastEvent {
 	@synchronized( self ) {
 		xmlNode *node = xmlGetLastChild( xmlDocGetRootElement( _xmlLog ) );
 		do {
@@ -777,11 +779,9 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (NSString *) filePath {
-	return _filePath;
-}
+@synthesize filePath = _filePath;
 
-- (void) setFilePath:(NSString *) filePath {
+- (void) setFilePath:(nullable NSString *) filePath {
 	if( filePath && ! [[NSFileManager defaultManager] fileExistsAtPath:filePath] ) {
 		BOOL success = [[NSFileManager defaultManager] createFileAtPath:filePath contents:[NSData data] attributes:nil];
 		if( success ) [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil]; // remove the blank until we need to write the real file, since we now know it will likely work
@@ -811,7 +811,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (NSDateComponents *) dateBegan {
+- (NSDateComponents *__nullable) dateBegan {
 	if( ! _xmlLog ) return nil;
 
 	xmlNode *node = xmlDocGetRootElement( _xmlLog );
@@ -832,7 +832,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (NSURL *) source {
+- (null_unspecified NSURL *) source {
 	if( ! _xmlLog ) return nil;
 
 	xmlNode *node = xmlDocGetRootElement( _xmlLog );
@@ -840,7 +840,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 	xmlChar *prop = xmlGetProp( node, (xmlChar *) "source" );
 	if( prop ) {
-		NSString *urlString = [NSString stringWithUTF8String:(char *) prop];
+		NSString *urlString = @((char *) prop);
 		NSURL *ret = [NSURL URLWithString:urlString];
 		xmlFree( prop );
 		return ret;
@@ -849,7 +849,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	return nil;
 }
 
-- (void) setSource:(NSURL *) source {
+- (void) setSource:(null_unspecified NSURL *) source {
 	NSParameterAssert( source != nil );
 	xmlSetProp( xmlDocGetRootElement( _xmlLog ), (xmlChar *) "source", (xmlChar *) [[source absoluteString] UTF8String] );
 }
@@ -925,7 +925,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (NSScriptObjectSpecifier *) objectSpecifier {
+- (nullable NSScriptObjectSpecifier *) objectSpecifier {
 	return _objectSpecifier;
 }
 
@@ -1094,20 +1094,23 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 }
 
 - (void) _changeFileAttributesAtPath:(NSString *) path {
-	[[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] ofItemAtPath:path error:nil];
+	[[NSFileManager defaultManager] setAttributes:@{NSFileExtensionHidden: @YES, NSFileHFSTypeCode: @((OSType)'coTr'), NSFileHFSCreatorCode: @((OSType)'coRC')} ofItemAtPath:path error:nil];
 
 	if( _logFile ) {
 		NSDate *began = [[NSCalendar autoupdatingCurrentCalendar] dateFromComponents:[self dateBegan]];
 		NSString *beganDateString = [began localizedDescription];
 		NSString *lastDateString = [[[self lastMessage] date] localizedDescription];
-		NSString *target = [[self source] path];
+		NSURL *source = [self source];
+		NSString *target = [source path];
 		if( [target length] > 1 ) target = [target substringFromIndex:1];
+		int fd = [_logFile fileDescriptor];
 
-		fsetxattr( [_logFile fileDescriptor], "sourceAddress", [[[self source] absoluteString] UTF8String], [[[self source] absoluteString] length], 0, 0 );
-		fsetxattr( [_logFile fileDescriptor], "server", [[[self source] host] UTF8String], [[[self source] host] length], 0, 0 );
-		fsetxattr( [_logFile fileDescriptor], "target", [target UTF8String], [target length], 0, 0 );
-		fsetxattr( [_logFile fileDescriptor], "dateBegan", [beganDateString UTF8String], [beganDateString length], 0, 0 );
-		if( [lastDateString length] ) fsetxattr( [_logFile fileDescriptor], "lastMessageDate", [lastDateString UTF8String], [lastDateString length], 0, 0 );
+		fsetxattr( fd, "sourceAddress", [[source absoluteString] UTF8String], [[source absoluteString] lengthOfBytesUsingEncoding:NSUTF8StringEncoding], 0, 0 );
+		fsetxattr( fd, "server", [[source host] UTF8String], [[source host] lengthOfBytesUsingEncoding:NSUTF8StringEncoding], 0, 0 );
+		fsetxattr( fd, "target", [target UTF8String], [target lengthOfBytesUsingEncoding:NSUTF8StringEncoding], 0, 0 );
+		fsetxattr( fd, "dateBegan", [beganDateString UTF8String], [beganDateString lengthOfBytesUsingEncoding:NSUTF8StringEncoding], 0, 0 );
+		if( [lastDateString length] )
+			fsetxattr( fd, "lastMessageDate", [lastDateString UTF8String], [lastDateString lengthOfBytesUsingEncoding:NSUTF8StringEncoding], 0, 0 );
 	}
 }
 
@@ -1129,7 +1132,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 @implementation JVChatTranscript (JVChatTranscriptScripting)
 - (void) saveScriptCommand:(NSScriptCommand *) command {
 	NSDictionary *args = [command evaluatedArguments];
-	id path = [args objectForKey:@"File"];
+	id path = args[@"File"];
 
 	if( path && ! [path isKindOfClass:[NSString class]] ) {
 		[command setScriptErrorNumber:1000];
@@ -1150,7 +1153,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (id) valueForUndefinedKey:(NSString *) key {
+- (nullable id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
 		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The transcript doesn't have the \"%@\" property.", key]];
@@ -1160,7 +1163,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	return [super valueForUndefinedKey:key];
 }
 
-- (void) setValue:(id) value forUndefinedKey:(NSString *) key {
+- (void) setValue:(nullable id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
 		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of the transcript is read only.", key]];
@@ -1228,7 +1231,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 #pragma mark -
 
 @implementation JVChatSession (JVChatSessionChatTranscriptPrivate)
-- (id) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
+- (nullable id) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
 	if( ( self = [self init] ) ) {
 		_node = node;
 		_transcript = transcript; // weak reference
@@ -1252,7 +1255,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 #pragma mark -
 
 @implementation JVChatMessage (JVChatMessageChatTranscriptPrivate)
-- (id) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
+- (nullable id) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
 	if( ( self = [self init] ) ) {
 		_node = node;
 		_transcript = transcript; // weak reference
@@ -1295,7 +1298,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		_type = ( ( prop && ! strcmp( (char *) prop, "notice" ) ) ? JVChatMessageNoticeType : JVChatMessageNormalType );
 		xmlFree( prop );
 
-		xmlNode *envelope = ((xmlNode *) _node) -> parent;
+		xmlNode *envelope = (_node) -> parent;
 
 		prop = xmlGetProp( envelope, (xmlChar *) "ignored" );
 		_ignoreStatus = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? JVUserIgnored : _ignoreStatus );
@@ -1322,7 +1325,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	if( _senderLoaded || ! _node ) return;
 
 	@synchronized( _transcript ) {
-		xmlNode *subNode = ((xmlNode *) _node) -> parent -> children;
+		xmlNode *subNode = ( _node) -> parent -> children;
 
 		do {
 			if( subNode -> type == XML_ELEMENT_NODE && ! strcmp( "sender", (char *) subNode -> name ) ) {
@@ -1378,7 +1381,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 #pragma mark -
 
 @implementation JVChatEvent (JVChatEventChatTranscriptPrivate)
-- (id) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
+- (nullable id) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
 	if( ( self = [self init] ) ) {
 		_node = node;
 		_transcript = transcript; // weak reference
@@ -1388,7 +1391,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		}
 
 		@synchronized( _transcript ) {
-			xmlChar *prop = xmlGetProp( (xmlNode *) _node, (xmlChar *) "id" );
+			xmlChar *prop = xmlGetProp( _node, (xmlChar *) "id" );
 			_eventIdentifier = ( prop ? [[NSString alloc] initWithUTF8String:(char *) prop] : nil );
 			xmlFree( prop );
 		}
@@ -1397,3 +1400,5 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	return self;
 }
 @end
+
+NS_ASSUME_NONNULL_END

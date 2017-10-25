@@ -8,7 +8,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MVSILCUploadFileTransfer : MVUploadFileTransfer {
 	SilcUInt32 _sessionID;
 }
-- (id) initWithSessionID:(SilcUInt32) sessionID toUser:(MVChatUser *) user;
+- (instancetype) initWithSessionID:(SilcUInt32) sessionID toUser:(MVChatUser *) user;
 @end
 
 #pragma mark -
@@ -16,12 +16,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MVSILCDownloadFileTransfer : MVDownloadFileTransfer {
 	SilcUInt32 _sessionID;
 }
-- (id) initWithSessionID:(SilcUInt32) sessionID toUser:(MVChatUser *) user;
+- (instancetype) initWithSessionID:(SilcUInt32) sessionID toUser:(MVChatUser *) user;
 @end
 
 #pragma mark -
 
 @interface MVSILCUploadFileTransfer (MVSILCUploadFileTransferPrivate)
+@property (getter=_sessionID, setter=_setSessionID:) SilcUInt32 sessionID;
 - (SilcUInt32) _sessionID;
 - (void) _setSessionID:(SilcUInt32) sessionID;
 @end
@@ -29,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 @interface MVSILCDownloadFileTransfer (MVSILCDownloadFileTransferPrivate)
+@property (getter=_sessionID, setter=_setSessionID:) SilcUInt32 sessionID;
 - (SilcUInt32) _sessionID;
 - (void) _setSessionID:(SilcUInt32) sessionID;
 @end

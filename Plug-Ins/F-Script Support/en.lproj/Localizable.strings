@@ -1,0 +1,58 @@
+﻿/* plugin named console panel title */
+"%@ Console" = "%@ Console";
+
+/* browse fscript toolbar button name */
+"Browse" = "Browse";
+
+/* close contextual menu item title */
+"Close" = "Close";
+
+/* detach from window contextual menu item title */
+"Detach From Window" = "Detach From Window";
+
+/* edit button title */
+"Edit..." = "Edit…";
+
+/* F-Script console panel title */
+"F-Script Console" = "F-Script Console";
+
+/* F-Script required error title */
+"F-Script Framework Required" = "F-Script Framework Required";
+
+/* F-Script plugin file changed dialog title */
+"F-Script Plugin Changed" = "F-Script Plugin Changed";
+
+/* F-Script plugin error title */
+"F-Script Plugin Error" = "F-Script Plugin Error";
+
+/* inspect button title */
+"Inspect" = "Inspect";
+
+/* keep previous version button title */
+"Keep Previous Version" = "Keep Previous Version";
+
+/* browse fscript toolbar customize palette name
+   object browser menu item title */
+"Object Browser" = "Object Browser";
+
+/* open script file menu item title */
+"Open Script File" = "Open Script File";
+
+/* reload button title */
+"Reload" = "Reload";
+
+/* reload script file menu item title */
+"Reload Script File" = "Reload Script File";
+
+/* F-Script framework required error message */
+"The F-Script framework was not found. The F-Script console and any F-Script plugins will not work during this session. For the latest version of F-Script visit http://www.fscript.org." = "The F-Script framework was not found. The F-Script console and any F-Script plugins will not work during this session. For the latest version of F-Script visit http://www.fscript.org.";
+
+/* F-Script plugin error message */
+"The F-Script plugin \"%@\" had an error while calling the \"%@\" block.%@\n\n%@" = "The F-Script plugin \"%1$@\" had an error while calling the \"%2$@\" block.%3$@\n\n%4$@";
+
+/* F-Script plugin error message */
+"The F-Script plugin \"%@\" had an error while loading. The error occured near character %d.\n\n%@" = "The F-Script plugin \"%1$@\" had an error while loading. The error occured near character %2$d.\n\n%3$@";
+
+/* F-Script plugin changed on disk message */
+"The F-Script plugin \"%@\" has changed on disk. Any script variables will reset if reloaded. All local block modifications will also be lost." = "The F-Script plugin \"%@\" has changed on disk. Any script variables will reset if reloaded. All local block modifications will also be lost.";
+

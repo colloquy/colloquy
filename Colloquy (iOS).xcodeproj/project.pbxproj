@@ -116,6 +116,12 @@
 		1CFCC0C511172B2A00EA5F10 /* CQChatPresentationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCC0C411172B2A00EA5F10 /* CQChatPresentationController.m */; };
 		1CFF6E820EDF772800D3C557 /* UITableViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
+		553A75A01F8FEC9F00F6DB31 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 556CEBE61BCD86DA00F00EAA /* AppIcon.xcassets */; };
+		553A75A11F8FEC9F00F6DB31 /* Shared Toolbar.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55F42AC31AEC3AD30085CA56 /* Shared Toolbar.xcassets */; };
+		553A75A21F8FEC9F00F6DB31 /* Room Member Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55F42ABC1AEC36E00085CA56 /* Room Member Icons.xcassets */; };
+		556CEBE71BCD86DA00F00EAA /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 556CEBE61BCD86DA00F00EAA /* AppIcon.xcassets */; };
+		55F42ABD1AEC36E00085CA56 /* Room Member Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55F42ABC1AEC36E00085CA56 /* Room Member Icons.xcassets */; };
+		55F42AC41AEC3AD30085CA56 /* Shared Toolbar.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55F42AC31AEC3AD30085CA56 /* Shared Toolbar.xcassets */; };
 		8900D7340FBFB2D900DE3E3B /* Servers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8900D7330FBFB2D900DE3E3B /* Servers.plist */; };
 		891E84D4123F0C8C00EC3C0F /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 891E84D3123F0C8C00EC3C0F /* NSCharacterSetAdditions.m */; };
 		896E84610F15AB6C00D810FE /* notes.css in Resources */ = {isa = PBXBuildFile; fileRef = 896E84600F15AB6C00D810FE /* notes.css */; };
@@ -504,8 +510,8 @@
 		1C82C27B0D847EA4009ABD9F /* CQChatListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatListViewController.h; sourceTree = "<group>"; };
 		1C82C27C0D847EA4009ABD9F /* CQChatListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatListViewController.m; sourceTree = "<group>"; };
 		1C8408BE0F1552A7004665DC /* chromatic-dark.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "chromatic-dark.js"; sourceTree = "<group>"; };
-		1C8CFE960F60E11900B672F9 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = Mobile/Languages/en.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
-		1C8CFEAB0F60EC8F00B672F9 /* de */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = de; path = Mobile/Languages/de.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
+		1C8CFE960F60E11900B672F9 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = Mobile/Languages/en.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
+		1C8CFEAB0F60EC8F00B672F9 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = Mobile/Languages/de.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
 		1C95B41C0FEC9BD900DAE9DF /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		1C9B15A30D878B6A003794A5 /* CQConnectionEditViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQConnectionEditViewController.h; sourceTree = "<group>"; };
 		1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQConnectionEditViewController.m; sourceTree = "<group>"; };
@@ -570,6 +576,10 @@
 		1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UITableViewAdditions.m; path = Mobile/Additions/UITableViewAdditions.m; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* Colloquy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Mobile/main.m; sourceTree = "<group>"; };
+		556CEBE61BCD86DA00F00EAA /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = AppIcon.xcassets; path = ../../Resources/AppIcon.xcassets; sourceTree = "<group>"; };
+		55F42ABC1AEC36E00085CA56 /* Room Member Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "Room Member Icons.xcassets"; path = "Resources/Room Member Icons.xcassets"; sourceTree = SOURCE_ROOT; };
+		55F42AC31AEC3AD30085CA56 /* Shared Toolbar.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "Shared Toolbar.xcassets"; path = "Resources/Toolbar Icons/Shared Toolbar.xcassets"; sourceTree = SOURCE_ROOT; };
+		55F42AC51AEC3D4A0085CA56 /* RunOnMainThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RunOnMainThread.h; path = Additions/RunOnMainThread.h; sourceTree = "<group>"; };
 		8900D7330FBFB2D900DE3E3B /* Servers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Servers.plist; sourceTree = "<group>"; };
 		891E84D2123F0C8C00EC3C0F /* NSCharacterSetAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSCharacterSetAdditions.h; path = Additions/NSCharacterSetAdditions.h; sourceTree = "<group>"; };
 		891E84D3123F0C8C00EC3C0F /* NSCharacterSetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSCharacterSetAdditions.m; path = Additions/NSCharacterSetAdditions.m; sourceTree = "<group>"; };
@@ -1141,6 +1151,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources & Additions */ = {
 			isa = PBXGroup;
 			children = (
+				55F42AC51AEC3D4A0085CA56 /* RunOnMainThread.h */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				92F1C9E2161D936D0035A9AF /* UIActionSheetAdditions.m */,
 				92F1C9E1161D936D0035A9AF /* UIActionSheetAdditions.h */,
@@ -1204,7 +1215,10 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				556CEBE61BCD86DA00F00EAA /* AppIcon.xcassets */,
 				926678F519BFE22900CCE5BE /* Images.xcassets */,
+				55F42AC31AEC3AD30085CA56 /* Shared Toolbar.xcassets */,
+				55F42ABC1AEC36E00085CA56 /* Room Member Icons.xcassets */,
 				92B6661217ED7C5000BA3DD9 /* Fonts */,
 				1C4CE6240FA03D7800215521 /* Sounds */,
 				1CA2653811C3600F00AB4E44 /* Transcript Styles */,
@@ -1422,6 +1436,7 @@
 				1CAE8C8C0EE61AD000CE1AF8 /* transcript.js in Resources */,
 				1C09313B0D80C8F600A2705D /* Defaults.plist in Resources */,
 				921857D919D13AE70076F87E /* CQWKChatView.xib in Resources */,
+				55F42AC41AEC3AD30085CA56 /* Shared Toolbar.xcassets in Resources */,
 				1CAE8BF50EE612DA00CE1AF8 /* base.html in Resources */,
 				1CAE8BF60EE612DA00CE1AF8 /* standard.css in Resources */,
 				1CA718AA0EF5F136006225CD /* Settings.bundle in Resources */,
@@ -1445,11 +1460,13 @@
 				1C4CE63F0FA03D7800215521 /* Kick.aiff in Resources */,
 				1C4CE6400FA03D7800215521 /* Laser.aiff in Resources */,
 				1C4CE6410FA03D7800215521 /* Pop.aiff in Resources */,
+				55F42ABD1AEC36E00085CA56 /* Room Member Icons.xcassets in Resources */,
 				1C4CE6420FA03D7800215521 /* Rattle.aiff in Resources */,
 				1C4CE6430FA03D7800215521 /* Sonar Beep.aiff in Resources */,
 				1C4CE6440FA03D7800215521 /* Stoof.aiff in Resources */,
 				1C4CE6450FA03D7800215521 /* Switch.aiff in Resources */,
 				1C4CE6460FA03D7800215521 /* Whip.aiff in Resources */,
+				556CEBE71BCD86DA00F00EAA /* AppIcon.xcassets in Resources */,
 				194D95D31B2A33910061AE55 /* LaunchScreen.xib in Resources */,
 				8900D7340FBFB2D900DE3E3B /* Servers.plist in Resources */,
 				92B6661417ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf in Resources */,
@@ -1491,6 +1508,7 @@
 				B6831CF61BE44F7800D3AC1D /* console.css in Resources */,
 				B6831CF71BE44F7800D3AC1D /* standard.css in Resources */,
 				B6831CF81BE44F7800D3AC1D /* standard-dark.css in Resources */,
+				553A75A01F8FEC9F00F6DB31 /* AppIcon.xcassets in Resources */,
 				B6831CF91BE44F7800D3AC1D /* standard-grey-dark.css in Resources */,
 				B6831CFA1BE44F7800D3AC1D /* chromatic.css in Resources */,
 				B6831CFB1BE44F7800D3AC1D /* chromatic-dark.css in Resources */,
@@ -1499,12 +1517,14 @@
 				B6831CFE1BE44F7800D3AC1D /* chromatic-redux.css in Resources */,
 				B6831D001BE44F7800D3AC1D /* topic.css in Resources */,
 				B6831D011BE44F8A00D3AC1D /* Beep 1.aiff in Resources */,
+				553A75A11F8FEC9F00F6DB31 /* Shared Toolbar.xcassets in Resources */,
 				B6831D021BE44F8A00D3AC1D /* Beep 2.aiff in Resources */,
 				B6831D031BE44F8A00D3AC1D /* Bell 1.aiff in Resources */,
 				B6831D041BE44F8A00D3AC1D /* Bell 2.aiff in Resources */,
 				B6831D051BE44F8A00D3AC1D /* Clap.aiff in Resources */,
 				B6831D061BE44F8A00D3AC1D /* Cymbal.aiff in Resources */,
 				B6831D071BE44F8A00D3AC1D /* DJ Scratch.aiff in Resources */,
+				553A75A21F8FEC9F00F6DB31 /* Room Member Icons.xcassets in Resources */,
 				B6831D081BE44F8A00D3AC1D /* Electronic Signal.aiff in Resources */,
 				B6831D091BE44F8A00D3AC1D /* Explosion.aiff in Resources */,
 				B6831D0A1BE44F8A00D3AC1D /* Kick.aiff in Resources */,
@@ -1856,7 +1876,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Colloquy;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
 				CODE_SIGN_ENTITLEMENTS = Mobile/Resources/Entitlements.plist;
@@ -1892,7 +1912,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Colloquy;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
 				CODE_SIGN_ENTITLEMENTS = Mobile/Resources/Entitlements.plist;
@@ -1928,7 +1948,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Colloquy;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
 				CODE_SIGN_ENTITLEMENTS = Mobile/Resources/Entitlements.plist;

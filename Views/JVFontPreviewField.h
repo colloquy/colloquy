@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 @protocol JVFontPreviewFieldDelegate;
 
 @interface JVFontPreviewField : NSTextField {
@@ -9,7 +11,8 @@
 - (void)setDelegate:(id <JVFontPreviewFieldDelegate>)anObject;
 - (void) selectFont:(id) sender;
 - (IBAction) chooseFontWithFontPanel:(id) sender;
-- (void) setShowPointSize:(BOOL) show;
+@property BOOL showPointSize;
+@property BOOL showFontFace;
 @end
 
 @protocol JVFontPreviewFieldDelegate <NSTextFieldDelegate>

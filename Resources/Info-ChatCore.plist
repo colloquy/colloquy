@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>ChatCore</string>
+	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleGetInfoString</key>
 	<string>Chat Core Framework 2.0; Copyright © 2003-2005, Timothy Hatcher</string>
 	<key>CFBundleIconFile</key>

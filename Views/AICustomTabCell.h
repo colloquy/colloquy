@@ -13,10 +13,12 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@protocol AICustomTabViewItem
-- (NSString *)label;
-- (NSImage *)icon;
-- (BOOL) isEnabled;
+#import <AppKit/AppKit.h>
+
+@protocol AICustomTabViewItem <NSObject>
+@property (readonly, copy) NSString *label;
+@property (readonly) NSImage *icon;
+@property (readonly, getter=isEnabled) BOOL enabled;
 @end
 
 @class AICustomTabsView;
@@ -41,19 +43,15 @@
 	AICustomTabsView					*view;
 }
 
-+ (id)customTabForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView;
-- (void)setAllowsInactiveTabClosing:(BOOL)inValue;
-- (BOOL)allowsInactiveTabClosing;
-- (void)setSelected:(BOOL)inSelected;
-- (BOOL)isSelected;
++ (instancetype)customTabForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView;
+@property BOOL allowsInactiveTabClosing;
+@property (getter=isSelected) BOOL selected;
 - (void)setHoveringClose:(BOOL)hovering;
-- (void)setHighlighted:(BOOL)inHighlight;
-- (BOOL)isHighlighted;
-- (void)setFrame:(NSRect)inFrame;
-- (NSRect)frame;
-- (NSSize)size;
+@property (getter=isHighlighted) BOOL highlighted;
+@property NSRect frame;
+@property (readonly) NSSize size;
 - (NSComparisonResult)compareWidth:(AICustomTabCell *)tab;
-- (NSTabViewItem *)tabViewItem;
+@property (readonly, strong) NSTabViewItem *tabViewItem;
 - (void)drawWithFrame:(NSRect)rect inView:(NSView *)controlView;
 - (void)drawWithFrame:(NSRect)rect inView:(NSView *)controlView ignoreSelection:(BOOL)ignoreSelection;
 - (void)addTrackingRectsWithFrame:(NSRect)trackRect cursorLocation:(NSPoint)cursorLocation;
@@ -64,6 +62,6 @@
 - (BOOL)startTrackingAt:(NSPoint)startPoint inView:(NSView *)controlView;
 - (BOOL)continueTracking:(NSPoint)lastPoint at:(NSPoint)currentPoint inView:(NSView *)controlView;
 - (void)stopTracking:(NSPoint)lastPoint at:(NSPoint)stopPoint inView:(NSView *)controlView mouseIsUp:(BOOL)flag;
-- (NSAttributedString *)attributedLabel;
+@property (readonly, copy) NSAttributedString *attributedLabel;
 
 @end

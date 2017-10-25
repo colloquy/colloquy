@@ -1,7 +1,7 @@
 #import "JVFontPreviewField.h"
 
 @implementation JVFontPreviewField
-- (id) initWithCoder:(NSCoder *) coder {
+- (instancetype) initWithCoder:(NSCoder *) coder {
 	self = [super initWithCoder:coder];
 	if( [coder allowsKeyedCoding] ) {
 		_showPointSize = [coder decodeBoolForKey:@"showPointSize"];
@@ -28,10 +28,6 @@
 	}
 }
 
-- (void) dealloc {
-	_actualFont = nil;
-}
-
 - (id <JVFontPreviewFieldDelegate>)delegate {
 	return (id <JVFontPreviewFieldDelegate>)[super delegate];
 }
@@ -39,7 +35,6 @@
 - (void)setDelegate:(id <JVFontPreviewFieldDelegate>)anObject {
 	[super setDelegate:anObject];
 }
-
 
 - (void) selectFont:(id) sender {
 	NSFont *font = [sender convertFont:[self font]];
@@ -94,13 +89,5 @@
 	[[NSFontManager sharedFontManager] setAction:@selector( selectFont: )];
 	[[self window] makeFirstResponder:self];
 	[[NSFontManager sharedFontManager] orderFrontFontPanel:nil];
-}
-
-- (void) setShowPointSize:(BOOL) show {
-	_showPointSize = show;
-}
-
-- (void) setShowFontFace:(BOOL) show {
-	_showFontFace = show;
 }
 @end

@@ -3,11 +3,12 @@
 
 #import <ChatCore/MVAvailability.h>
 #import <ChatCore/MVChatString.h>
+#import <ChatCore/MVChatPluginManager.h>
 
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, MVChatConnectionType) {
+typedef NS_ENUM(OSType, MVChatConnectionType) {
 	MVChatConnectionUnsupportedType = 0,
 	MVChatConnectionICBType = 'icbC',
 	MVChatConnectionIRCType = 'ircC',
@@ -15,7 +16,7 @@ typedef NS_ENUM(NSInteger, MVChatConnectionType) {
 	MVChatConnectionXMPPType = 'xmpC'
 };
 
-typedef NS_ENUM(NSInteger, MVChatConnectionStatus) {
+typedef NS_ENUM(OSType, MVChatConnectionStatus) {
 	MVChatConnectionDisconnectedStatus = 'disC',
 	MVChatConnectionServerDisconnectedStatus = 'sdsC',
 	MVChatConnectionConnectingStatus = 'conG',
@@ -23,7 +24,7 @@ typedef NS_ENUM(NSInteger, MVChatConnectionStatus) {
 	MVChatConnectionSuspendedStatus = 'susP'
 };
 
-typedef NS_ENUM(NSInteger, MVChatConnectionProxy) {
+typedef NS_ENUM(OSType, MVChatConnectionProxy) {
 	MVChatConnectionNoProxy = 'nonE',
 	MVChatConnectionHTTPProxy = 'httP',
 	MVChatConnectionHTTPSProxy = 'htpS',
@@ -31,18 +32,18 @@ typedef NS_ENUM(NSInteger, MVChatConnectionProxy) {
 	MVChatConnectionSOCKS5Proxy = 'soK5'
 };
 
-typedef NS_ENUM(NSInteger, MVChatConnectionBouncer) {
+typedef NS_ENUM(OSType, MVChatConnectionBouncer) {
 	MVChatConnectionNoBouncer = 'nonB',
 	MVChatConnectionGenericBouncer = 'gbnC',
 	MVChatConnectionColloquyBouncer = 'cbnC'
 };
 
-typedef NS_ENUM(NSInteger, MVChatConnectionPublicKeyType) {
+typedef NS_ENUM(OSType, MVChatConnectionPublicKeyType) {
 	MVChatConnectionServerPublicKeyType = 'serV',
 	MVChatConnectionClientPublicKeyType = 'clnT'
 };
 
-typedef NS_ENUM(NSInteger, MVChatMessageFormat) {
+typedef NS_ENUM(OSType, MVChatMessageFormat) {
 	MVChatConnectionDefaultMessageFormat = 'cDtF',
 	MVChatNoMessageFormat = 'nOcF',
 	MVChatWindowsIRCMessageFormat = 'mIrF',
@@ -162,7 +163,7 @@ COLLOQUY_EXPORT
 	NSString *_uniqueIdentifier;
 
 	NSMapTable *_knownUsers;
-	NSMutableDictionary *_knownRooms;
+	NSMutableDictionary<NSString*,MVChatRoom*> *_knownRooms;
 	NSMutableSet *_joinedRooms;
 	MVChatUser *_localUser;
 	NSMutableDictionary *_roomsCache;
@@ -210,7 +211,7 @@ COLLOQUY_EXPORT
 	NSUInteger _hash;
 }
 + (BOOL) supportsURLScheme:(NSString *__nullable) scheme;
-+ (NSArray <NSNumber *> *) defaultServerPortsForType:(MVChatConnectionType) type;
++ (nullable NSArray <NSNumber *> *) defaultServerPortsForType:(MVChatConnectionType) type;
 + (NSUInteger) maxMessageLengthForType:(MVChatConnectionType) type;
 
 #pragma mark -
@@ -221,20 +222,21 @@ COLLOQUY_EXPORT
 
 #pragma mark -
 
+/// subclass this method
 @property(readonly) MVChatConnectionType type;
 
-@property(copy) NSString *uniqueIdentifier;
+@property(nonatomic, copy) NSString *uniqueIdentifier;
 
-@property(strong, readonly) NSSet *supportedFeatures;
+@property(strong, readonly) NSSet<NSString*> *supportedFeatures;
 @property(readonly) const NSStringEncoding *supportedStringEncodings;
 
 @property(strong, readonly) NSError *lastError;
 @property(strong, readonly) NSError *serverError;
 
 @property(strong, readonly) NSString *urlScheme;
-@property(strong, readonly) NSURL *url;
+@property(strong, readonly, nullable) NSURL *url;
 
-@property NSStringEncoding encoding;
+@property(nonatomic) NSStringEncoding encoding;
 
 @property(copy, nullable) NSString *realName;
 
@@ -282,14 +284,14 @@ COLLOQUY_EXPORT
 @property(copy) NSString *bouncerDeviceIdentifier;
 @property(copy) NSString *bouncerConnectionIdentifier;
 
-@property(strong, readonly) NSSet *knownChatRooms;
-@property(strong, readonly) NSSet *joinedChatRooms;
-@property(strong, readonly) NSCharacterSet *chatRoomNamePrefixes;
+@property(strong, readonly) NSSet<__kindof MVChatRoom*> *knownChatRooms;
+@property(strong, readonly) NSSet<__kindof MVChatRoom*> *joinedChatRooms;
+@property(strong, readonly, nullable) NSCharacterSet *chatRoomNamePrefixes;
 
-@property(strong, readonly) NSSet *knownChatUsers;
+@property(strong, readonly) NSSet<__kindof MVChatUser*> *knownChatUsers;
 @property(strong, readonly) MVChatUser *localUser;
 
-@property(strong, readonly) NSSet *chatUserWatchRules;
+@property(strong, readonly) NSSet<MVChatUserWatchRule*> *chatUserWatchRules;
 
 @property(copy, null_resettable) MVChatString *awayStatusMessage;
 
@@ -299,6 +301,7 @@ COLLOQUY_EXPORT
 @property(readonly, getter=isWaitingToReconnect) BOOL waitingToReconnect;
 @property(readonly) unsigned short reconnectAttemptCount;
 @property(readonly) MVChatConnectionStatus status;
+/// subclass this method, if needed
 @property(readonly) NSUInteger lag;
 
 #pragma mark -
@@ -320,6 +323,7 @@ COLLOQUY_EXPORT
 
 #pragma mark -
 
+//! subclass this method
 - (void) connect;
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname;
 - (void) disconnect;
@@ -347,6 +351,7 @@ COLLOQUY_EXPORT
 #pragma mark -
 
 - (void) processIncomingMessage:(id) raw;
+/// subclass this method, don't call super
 - (void) processIncomingMessage:(id) raw fromServer:(BOOL) fromServer;
 
 #pragma mark -
@@ -357,8 +362,8 @@ COLLOQUY_EXPORT
 
 #pragma mark -
 
-- (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier;
-- (MVChatRoom *) joinedChatRoomWithName:(NSString *) room;
+- (nullable MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier;
+- (nullable MVChatRoom *) joinedChatRoomWithName:(NSString *) room;
 
 #pragma mark -
 
@@ -372,8 +377,8 @@ COLLOQUY_EXPORT
 
 #pragma mark -
 
-- (NSSet *) chatUsersWithNickname:(NSString *) nickname;
-- (NSSet *) chatUsersWithFingerprint:(NSString *) fingerprint;
+- (NSSet<__kindof MVChatUser*> *) chatUsersWithNickname:(NSString *) nickname;
+- (NSSet<__kindof MVChatUser*> *) chatUsersWithFingerprint:(NSString *) fingerprint;
 - (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier;
 
 #pragma mark -
@@ -407,7 +412,8 @@ COLLOQUY_EXPORT
 
 #pragma mark -
 
-@interface NSObject (MVChatPluginConnectionSupport)
+@protocol MVChatPluginConnectionSupport <MVChatPlugin>
+@optional
 - (void) processIncomingMessageAsData:(NSMutableData *) message from:(MVChatUser *) sender to:(id) receiver attributes:(NSMutableDictionary *)msgAttributes;
 - (void) processOutgoingMessageAsData:(NSMutableData *) message to:(id) receiver attributes:(NSDictionary *)msgAttributes;
 

@@ -1,3 +1,7 @@
+#import <Foundation/Foundation.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *JVBuddyCameOnlineNotification;
 extern NSString *JVBuddyWentOfflineNotification;
 
@@ -9,6 +13,7 @@ extern NSString *JVBuddyUserIdleTimeUpdatedNotification;
 extern NSString *JVBuddyActiveUserChangedNotification;
 
 @class ABPerson;
+@class MVChatUser;
 
 typedef NS_ENUM(NSInteger, JVBuddyName) {
 	JVBuddyActiveNickname = 0x0,
@@ -16,70 +21,53 @@ typedef NS_ENUM(NSInteger, JVBuddyName) {
 	JVBuddyFullName = 0x2
 };
 
-@interface JVBuddy : NSObject {
-	ABPerson *_person;
-	NSMutableArray *_rules;
-	NSMutableSet *_users;
-	MVChatUser *_activeUser;
-	NSImage *_picture;
-	NSString *_firstName;
-	NSString *_lastName;
-	NSString *_primaryEmail;
-	NSString *_givenNickname;
-	NSString *_speechVoice;
-	NSString *_uniqueIdentifier;
-}
+@interface JVBuddy : NSObject
+#if __has_feature(objc_class_property)
+@property (readwrite, class) JVBuddyName preferredName;
+#else
 + (JVBuddyName) preferredName;
 + (void) setPreferredName:(JVBuddyName) preferred;
+#endif
 
-- (id) initWithDictionaryRepresentation:(NSDictionary *) dictionary;
-- (NSDictionary *) dictionaryRepresentation;
+- (instancetype) init NS_DESIGNATED_INITIALIZER;
+- (instancetype) initWithDictionaryRepresentation:(NSDictionary<NSString*,id> *) dictionary;
+- (NSDictionary<NSString*,id> *) dictionaryRepresentation;
 
 - (void) registerWithConnection:(MVChatConnection *) connection;
 - (void) registerWithApplicableConnections;
 - (void) unregisterWithConnection:(MVChatConnection *) connection;
 - (void) unregisterWithConnections;
 
-- (MVChatUser *) activeUser;
-- (void) setActiveUser:(MVChatUser *) user;
+@property (nonatomic, strong, nullable) MVChatUser *activeUser;
 
-- (MVChatUserStatus) status;
-- (NSData *) awayStatusMessage;
+@property (readonly) MVChatUserStatus status;
+@property (readonly) NSData *awayStatusMessage;
 
-- (BOOL) isOnline;
-- (NSDate *) dateConnected;
-- (NSDate *) dateDisconnected;
+@property (readonly, getter=isOnline) BOOL online;
+@property (readonly) NSDate *dateConnected;
+@property (readonly) NSDate *dateDisconnected;
 
-- (NSTimeInterval) idleTime;
+@property (readonly) NSTimeInterval idleTime;
 
-- (NSString *) displayName;
-- (NSString *) nickname;
+@property (readonly, copy) NSString *displayName;
+@property (readonly, copy) NSString *nickname;
 
-- (NSSet *) users;
+@property (readonly, copy) NSSet<MVChatUser*> *users;
 
-- (NSArray *) watchRules;
+@property (readonly, copy) NSArray<MVChatUserWatchRule*> *watchRules;
 - (void) addWatchRule:(MVChatUserWatchRule *) rule;
 - (void) removeWatchRule:(MVChatUserWatchRule *) rule;
 
-- (NSImage *) picture;
-- (void) setPicture:(NSImage *) picture;
+@property (nonatomic, copy, nullable) NSImage *picture;
+@property (readonly, copy) NSString *compositeName;
+@property (nonatomic, copy, nullable) NSString *firstName;
+@property (nonatomic, copy, nullable) NSString *lastName;
+@property (nonatomic, copy, nullable) NSString *primaryEmail;
+@property (nonatomic, copy, nullable) NSString *givenNickname;
+@property (copy, nullable) NSString *speechVoice;
+@property (readonly, copy) NSString *uniqueIdentifier;
 
-- (NSString *) compositeName;
-- (NSString *) firstName;
-- (NSString *) lastName;
-- (NSString *) primaryEmail;
-- (NSString *) givenNickname;
-- (NSString *) speechVoice;
-- (NSString *) uniqueIdentifier;
-
-- (void) setFirstName:(NSString *) name;
-- (void) setLastName:(NSString *) name;
-- (void) setPrimaryEmail:(NSString *) email;
-- (void) setGivenNickname:(NSString *) name;
-- (void) setSpeechVoice:(NSString *) voice;
-
-- (ABPerson *) addressBookPersonRecord;
-- (void) setAddressBookPersonRecord:(ABPerson *) record;
+@property (strong) ABPerson *addressBookPersonRecord;
 - (void) editInAddressBook;
 - (void) viewInAddressBook;
 
@@ -89,3 +77,5 @@ typedef NS_ENUM(NSInteger, JVBuddyName) {
 - (NSComparisonResult) serverCompare:(JVBuddy *) buddy;
 - (NSComparisonResult) nicknameCompare:(JVBuddy *) buddy;
 @end
+
+NS_ASSUME_NONNULL_END

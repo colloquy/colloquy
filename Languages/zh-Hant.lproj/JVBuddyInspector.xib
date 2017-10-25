@@ -80,7 +80,7 @@
                 <button toolTip="Edit identifier" imageHugsTitle="YES" id="209">
                     <rect key="frame" x="69" y="68" width="23" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="editWidget" imagePosition="only" alignment="center" alternateImage="editWidgetPressed" enabled="NO" inset="2" id="347">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="347">
                         <behavior key="behavior" lightByContents="YES"/>
                         <font key="font" metaFont="label"/>
                     </buttonCell>
@@ -293,6 +293,7 @@
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="267" y="404" width="318" height="300"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <value key="minSize" type="size" width="213" height="113"/>
             <view key="contentView" autoresizesSubviews="NO" id="215">
                 <rect key="frame" x="0.0" y="0.0" width="318" height="300"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -427,7 +428,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="198" height="97"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
                                         <tableColumn identifier="nickname" width="195" minWidth="10" maxWidth="1000" id="285">
@@ -518,9 +519,8 @@ Gw
         </window>
     </objects>
     <resources>
+        <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="editWidget" width="22" height="22"/>
-        <image name="editWidgetPressed" width="22" height="22"/>
     </resources>
 </document>

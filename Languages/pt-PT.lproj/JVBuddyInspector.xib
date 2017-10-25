@@ -80,7 +80,7 @@
                 <button toolTip="Edit identifier" id="209">
                     <rect key="frame" x="69" y="68" width="23" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="editWidget" imagePosition="only" alignment="center" alternateImage="editWidgetPressed" enabled="NO" inset="2" id="347">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="347">
                         <behavior key="behavior" lightByContents="YES"/>
                         <font key="font" metaFont="label"/>
                     </buttonCell>
@@ -250,7 +250,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" id="72">
-                                <rect key="frame" x="0.0" y="0.0" width="198" height="97"/>
+                                <rect key="frame" x="0.0" y="0.0" width="198" height="16"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -292,7 +292,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="267" y="404" width="318" height="300"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1257"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
             <value key="minSize" type="size" width="213" height="113"/>
             <view key="contentView" id="215">
                 <rect key="frame" x="0.0" y="0.0" width="318" height="300"/>
@@ -464,7 +464,7 @@
                     <button toolTip="Add domain" id="287">
                         <rect key="frame" x="72" y="40" width="23" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" enabled="NO" inset="2" id="361">
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="361">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="label"/>
                             <string key="keyEquivalent">+</string>
@@ -477,7 +477,7 @@
                     <button toolTip="Delete domain" id="289">
                         <rect key="frame" x="72" y="64" width="23" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" inset="2" id="362">
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="362">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="label"/>
                         </buttonCell>
@@ -519,9 +519,8 @@ Gw
         </window>
     </objects>
     <resources>
+        <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="editWidget" width="22" height="22"/>
-        <image name="editWidgetPressed" width="22" height="22"/>
     </resources>
 </document>

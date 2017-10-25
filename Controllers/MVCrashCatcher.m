@@ -10,7 +10,7 @@ static MVCrashCatcher *crashCatcher = nil;
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if (!(self = [super init]))
 		return nil;
 
@@ -64,8 +64,8 @@ static MVCrashCatcher *crashCatcher = nil;
 
 	NSDictionary *clientVersion = [NSBundle mainBundle].infoDictionary;
 
-	[body appendFormat:@"app_version=%@%%20(%@)&", [[clientVersion objectForKey:@"CFBundleShortVersionString"] stringByEncodingIllegalURLCharacters], [[clientVersion objectForKey:@"CFBundleVersion"] stringByEncodingIllegalURLCharacters]];
-	[body appendFormat:@"os_version=%@:%@&", [[systemVersion objectForKey:@"ProductUserVisibleVersion"] stringByEncodingIllegalURLCharacters], [[systemVersion objectForKey:@"ProductBuildVersion"] stringByEncodingIllegalURLCharacters]];
+	[body appendFormat:@"app_version=%@%%20(%@)&", [clientVersion[@"CFBundleShortVersionString"] stringByEncodingIllegalURLCharacters], [clientVersion[@"CFBundleVersion"] stringByEncodingIllegalURLCharacters]];
+	[body appendFormat:@"os_version=%@:%@&", [systemVersion[@"ProductUserVisibleVersion"] stringByEncodingIllegalURLCharacters], [systemVersion[@"ProductBuildVersion"] stringByEncodingIllegalURLCharacters]];
 
 	int selector[2] = { CTL_HW, HW_MODEL };
 	char model[64] = "";

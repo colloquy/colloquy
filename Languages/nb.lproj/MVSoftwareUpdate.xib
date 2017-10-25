@@ -21,6 +21,7 @@
             <windowPositionMask key="initialPositionMask" leftStrut="YES" topStrut="YES"/>
             <rect key="contentRect" x="475" y="370" width="370" height="415"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <value key="minSize" type="size" width="94" height="7"/>
             <view key="contentView" autoresizesSubviews="NO" id="30">
                 <rect key="frame" x="0.0" y="0.0" width="370" height="415"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -98,7 +99,7 @@ DQ
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <size key="minSize" width="315" height="259"/>
                                     <size key="maxSize" width="589" height="10000000"/>
-                                    <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                 </textView>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

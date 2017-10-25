@@ -1,17 +1,22 @@
 #import "JVFScriptPluginLoader.h"
 #import "JVFScriptConsolePanel.h"
 #import "JVFScriptChatPlugin.h"
-#import "MVChatConnection.h"
+#import <ChatCore/MVChatConnection.h>
 #import "JVChatWindowController.h"
+#import "JVChatController.h"
 
 #import <FScript/FScript.h>
+
+@interface JVFScriptPluginLoader () <MVChatPluginCommandSupport>
+
+@end
 
 #if !(defined(__FScript_FSNSObject_H__) || defined(__FScript_FSNSString_H__))
 #error STOP: You need F-Script installed to build Colloquy. F-Script can be found at: http://www.fscript.org
 #endif
 
 @implementation JVFScriptPluginLoader
-- (id) initWithManager:(MVChatPluginManager *) manager {
+- (instancetype) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [super init] ) ) {
 		_manager = manager;
 		_fscriptInstalled = ( NSClassFromString( @"FSInterpreter" ) ? YES : NO );
@@ -23,7 +28,6 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	_manager = nil;
-	[super dealloc];
 }
 
 - (void) displayInstallationWarning {
@@ -32,7 +36,6 @@
 	alert.informativeText = NSLocalizedStringFromTableInBundle( @"The F-Script framework was not found. The F-Script console and any F-Script plugins will not work during this session. For the latest version of F-Script visit http://www.fscript.org.", nil, [NSBundle bundleForClass:[self class]], "F-Script framework required error message" );
 	alert.alertStyle = NSAlertStyleCritical;
 	[alert runModal];
-	[alert release];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
@@ -43,10 +46,10 @@
 		}
 
 		NSArray *args = [[[arguments string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
-		NSString *subcmd = ( [args count] ? [args objectAtIndex:0] : nil );
+		NSString *subcmd = ( [args count] ? args[0] : nil );
 		if( [args count] == 1 ) {
 			if( view && ! [subcmd caseInsensitiveCompare:@"console"] ) {
-				JVFScriptConsolePanel *console = [[[JVFScriptConsolePanel alloc] init] autorelease];
+				JVFScriptConsolePanel *console = [[JVFScriptConsolePanel alloc] init];
 				[[view windowController] addChatViewController:console];
 				[[view windowController] performSelector:@selector(showChatViewController:) withObject:console afterDelay:0];
 			} else if( ! [subcmd caseInsensitiveCompare:@"browse"] ) {
@@ -80,7 +83,7 @@
 						} else if( ! [subcmd caseInsensitiveCompare:@"create"] ) {
 							path = [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"fscript"];
 							if( ! [path isAbsolutePath] )
-								path = [[[[_manager class] pluginSearchPaths] objectAtIndex:0] stringByAppendingPathComponent:path];
+								path = [[[_manager class] pluginSearchPaths][0] stringByAppendingPathComponent:path];
 							if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] ) {
 								if( [[NSFileManager defaultManager] createFileAtPath:path contents:[NSData data] attributes:nil] )
 									[[NSWorkspace sharedWorkspace] openFile:path];
@@ -92,7 +95,7 @@
 						} else if( ! [subcmd caseInsensitiveCompare:@"unload"] ) {
 							[_manager removePlugin:plugin];
 						} else if( view && ! [subcmd caseInsensitiveCompare:@"console"] ) {
-							JVFScriptConsolePanel *console = [[[JVFScriptConsolePanel alloc] initWithFScriptChatPlugin:plugin] autorelease];
+							JVFScriptConsolePanel *console = [[JVFScriptConsolePanel alloc] initWithFScriptChatPlugin:plugin];
 							[[view windowController] addChatViewController:console];
 							[[view windowController] showChatViewController:console];
 						} else if( ! [subcmd caseInsensitiveCompare:@"edit"] ) {
@@ -119,9 +122,7 @@
 		NSArray *paths = [[_manager class] pluginSearchPaths];
 		NSFileManager *fm = [NSFileManager defaultManager];
 	
-		NSEnumerator *enumerator = [paths objectEnumerator];
-		NSString *path = nil;
-		while( ( path = [enumerator nextObject] ) ) {
+		for (__strong NSString *path in paths) {
 			path = [path stringByAppendingPathComponent:[name stringByDeletingPathExtension]];
 			path = [path stringByAppendingPathExtension:@"fscript"];
 			if( [fm fileExistsAtPath:path] ) {
@@ -130,14 +131,14 @@
 					return;
 				}
 
-				JVFScriptChatPlugin *plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:path withManager:_manager] autorelease];
+				JVFScriptChatPlugin *plugin = [[JVFScriptChatPlugin alloc] initWithScriptAtPath:path withManager:_manager];
 				if( plugin ) [_manager addPlugin:plugin];
 				return;
 			}
 		}
 	}
 
-	JVFScriptChatPlugin *plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:name withManager:_manager] autorelease];
+	JVFScriptChatPlugin *plugin = [[JVFScriptChatPlugin alloc] initWithScriptAtPath:name withManager:_manager];
 	if( plugin ) [_manager addPlugin:plugin];
 }
 
@@ -152,7 +153,7 @@
 					return;
 				}
 
-				JVFScriptChatPlugin *plugin = [[[JVFScriptChatPlugin alloc] initWithScriptAtPath:[path stringByAppendingPathComponent:file] withManager:_manager] autorelease];
+				JVFScriptChatPlugin *plugin = [[JVFScriptChatPlugin alloc] initWithScriptAtPath:[path stringByAppendingPathComponent:file] withManager:_manager];
 				if( plugin ) [_manager addPlugin:plugin];
 			}
 		}

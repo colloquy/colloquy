@@ -32,20 +32,25 @@
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface ICBPacket : NSObject {
 @private
 	char _type;
-	NSMutableArray *_fields;
+	NSMutableArray<NSString*> *_fields;
 }
 
-- (id) initWithPacketType:(char) type;
-- (id) initFromRawData:(NSData *) raw;
+- (instancetype) initWithPacketType:(char) type;
+- (nullable instancetype) initFromRawData:(NSData *) raw;
 
 - (NSString *) description;
-- (NSArray *) fields;
-- (NSUInteger) length;
-- (NSData *) rawData;
-- (char) type;
+@property (readonly, copy) NSArray<NSString*> *fields;
+@property (readonly) NSUInteger length;
+@property (readonly, copy) NSData * rawData;
+@property (readonly) char type;
 
+- (void) addFieldsFromArray:(NSArray<NSString*>*)newFields;
 - (void) addFields:(NSString *) first, ...;
 @end
+
+NS_ASSUME_NONNULL_END

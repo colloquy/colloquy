@@ -22,6 +22,8 @@
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="32" y="559" width="514" height="159"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1024" height="746"/>
+            <value key="minSize" type="size" width="514" height="159"/>
+            <value key="maxSize" type="size" width="700" height="159"/>
             <view key="contentView" autoresizesSubviews="NO" id="2">
                 <rect key="frame" x="0.0" y="0.0" width="514" height="159"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -37,7 +39,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="472" height="30"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
                                         <tableColumn identifier="criteria" editable="NO" width="423" minWidth="40" maxWidth="2000" id="209">

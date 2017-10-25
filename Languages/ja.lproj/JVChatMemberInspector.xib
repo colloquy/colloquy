@@ -37,9 +37,9 @@
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" imageHugsTitle="YES" id="61">
-                    <rect key="frame" x="230" y="61" width="32" height="31"/>
+                    <rect key="frame" x="236" y="71" width="19" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="round" bezelStyle="circular" image="connecting" imagePosition="only" alignment="center" controlSize="mini" borderStyle="border" id="95">
+                    <buttonCell key="cell" type="bevel" bezelStyle="circular" image="NSRefreshFreestandingTemplate" imagePosition="only" alignment="center" controlSize="mini" id="95">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="label"/>
                     </buttonCell>
@@ -84,9 +84,9 @@
                     </textFieldCell>
                 </textField>
                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" imageHugsTitle="YES" id="32">
-                    <rect key="frame" x="230" y="5" width="32" height="31"/>
+                    <rect key="frame" x="236" y="15" width="19" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="round" bezelStyle="circular" image="connecting" imagePosition="only" alignment="center" controlSize="mini" borderStyle="border" id="90">
+                    <buttonCell key="cell" type="bevel" bezelStyle="circular" image="NSRefreshFreestandingTemplate" imagePosition="only" alignment="center" controlSize="mini" id="90">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="label"/>
                     </buttonCell>
@@ -212,9 +212,9 @@
                     </textFieldCell>
                 </textField>
                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" imageHugsTitle="YES" id="18">
-                    <rect key="frame" x="230" y="33" width="32" height="31"/>
+                    <rect key="frame" x="236" y="43" width="19" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="round" bezelStyle="circular" image="connecting" imagePosition="only" alignment="center" controlSize="mini" borderStyle="border" id="76">
+                    <buttonCell key="cell" type="bevel" bezelStyle="circular" image="NSRefreshFreestandingTemplate" imagePosition="only" alignment="center" controlSize="mini" id="76">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="label"/>
                     </buttonCell>
@@ -225,7 +225,7 @@
                 <imageView id="17">
                     <rect key="frame" x="50" y="312" width="32" height="32"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="largePerson" id="75"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="userNormal" id="75"/>
                 </imageView>
                 <textField verticalHuggingPriority="750" id="16">
                     <rect key="frame" x="87" y="209" width="172" height="14"/>
@@ -325,7 +325,7 @@
         </customView>
     </objects>
     <resources>
-        <image name="connecting" width="9" height="16"/>
-        <image name="largePerson" width="128" height="128"/>
+        <image name="NSRefreshFreestandingTemplate" width="14" height="14"/>
+        <image name="userNormal" width="29" height="27"/>
     </resources>
 </document>

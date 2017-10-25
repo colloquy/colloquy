@@ -1,4 +1,4 @@
-#import <libxml/tree.h>
+#include <libxml/tree.h>
 
 #import "JVChatMessage.h"
 #import "JVBuddy.h"
@@ -7,10 +7,16 @@
 #import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
 #import "NSAttributedStringMoreAdditions.h"
-#import "NSDateAdditions.h"
+#import <ChatCore/NSDateAdditions.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 @implementation JVChatMessage
+@synthesize node = _node;
+@synthesize objectSpecifier = _objectSpecifier;
+@synthesize transcript = _transcript;
+@synthesize messageIdentifier = _messageIdentifier;
+
 + (void) initialize {
 	[super initialize];
 	static BOOL tooLate = NO;
@@ -58,7 +64,7 @@
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_ignoreStatus = JVNotIgnored;
 		_type = JVChatMessageNormalType;
@@ -67,7 +73,7 @@
 	return self;
 }
 
-- (id) mutableCopyWithZone:(NSZone *) zone {
+- (id) mutableCopyWithZone:(nullable NSZone *) zone {
 	JVMutableChatMessage *ret =  nil;
 
 	@synchronized( _transcript ) {
@@ -116,14 +122,13 @@
 
 	if( _doc ) xmlFreeDoc( _doc );
 	_doc = NULL;
-
 }
 
 #pragma mark -
 
-- (void *) node {
+- (nullable xmlNode *) node {
 	if( ! _node ) {
-		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+		NSDictionary *options = @{@"IgnoreFonts": @YES, @"IgnoreFontSizes": @YES};
 		NSString *htmlMessage = ( [self body] ? [[self body] HTMLFormatWithOptions:options] : @"" );
 		const char *msgStr = [[NSString stringWithFormat:@"<message>%@</message>", [htmlMessage stringByStrippingIllegalXMLCharacters]] UTF8String];
 
@@ -192,7 +197,7 @@
 	return _node;
 }
 
-- (void) _setNode:(xmlNode *) node {
+- (void) _setNode:(nullable xmlNode *) node {
 	if( _doc ) {
 		xmlFreeDoc( _doc );
 		_doc = NULL;
@@ -264,7 +269,7 @@
 }
 
 - (NSString *) bodyAsHTML {
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	NSDictionary *options = @{@"IgnoreFonts": @YES, @"IgnoreFontSizes": @YES};
 	return [[self body] HTMLFormatWithOptions:options];
 }
 
@@ -297,37 +302,19 @@
 	return _source;
 }
 
-- (JVChatTranscript *) transcript {
-	return _transcript;
-}
-
-- (NSString *) messageIdentifier {
-	return _messageIdentifier;
-}
-
-#pragma mark -
-
-- (NSScriptObjectSpecifier *) objectSpecifier {
-	return _objectSpecifier;
-}
-
-- (void) setObjectSpecifier:(NSScriptObjectSpecifier *) objectSpecifier {
-	_objectSpecifier = objectSpecifier;
-}
-
 #pragma mark -
 
 - (NSDictionary *) attributes {
 	// Add important attributes which are set via normal setters, and therefore don't exist normally in the attributes-dict.
 	if( ! _attributes )
 		_attributes = [[NSMutableDictionary alloc] init];
-	[_attributes setObject:[NSNumber numberWithBool:_action] forKey:@"action"];
+	_attributes[@"action"] = @(_action);
 
 	return _attributes;
 }
 
-- (id) attributeForKey:(id) key {
-	return [_attributes objectForKey:key];
+- (nullable id) attributeForKey:(id) key {
+	return _attributes[key];
 }
 
 #pragma mark -
@@ -342,7 +329,7 @@
 
 #pragma mark -
 
-- (id) valueForUndefinedKey:(NSString *) key {
+- (nullable id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
 		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The message id %@ doesn't have the \"%@\" property.", [self messageIdentifier], key]];
@@ -352,7 +339,7 @@
 	return [super valueForUndefinedKey:key];
 }
 
-- (void) setValue:(id) value forUndefinedKey:(NSString *) key {
+- (void) setValue:(nullable id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		// this is a non-mutable message, give AppleScript a good error if this is a script command call
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
@@ -367,6 +354,16 @@
 #pragma mark -
 
 @implementation JVMutableChatMessage
+@dynamic action;
+@dynamic highlighted;
+@dynamic ignoreStatus;
+@dynamic type;
+@dynamic date;
+@dynamic bodyAsPlainText;
+@dynamic bodyAsHTML;
+@dynamic source;
+@dynamic messageIdentifier;
+
 + (void) initialize {
 	[super initialize];
 	static BOOL tooLate = NO;
@@ -379,36 +376,31 @@
 	}
 }
 
-+ (id) messageWithText:(id) body sender:(id) sender {
++ (instancetype) messageWithText:(id) body sender:(nullable id) sender {
 	return [[self alloc] initWithText:body sender:sender];
 }
 
 #pragma mark -
 
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		_loaded = YES;
 		_bodyLoaded = YES;
 		_senderLoaded = YES;
-		[self setDate:[NSDate date]];
-		[self setMessageIdentifier:[NSString locallyUniqueString]];
+		self.date = [NSDate date];
+		self.messageIdentifier = [NSString locallyUniqueString];
 	}
 
 	return self;
 }
 
-- (id) initWithText:(id) body sender:(id) sender {
+- (instancetype) initWithText:(id) body sender:(nullable id) sender {
 	if( ( self = [self init] ) ) {
 		[self setBody:body];
-		[self setSender:sender];
+		self.sender = sender;
 	}
 
 	return self;
-}
-
-- (void) dealloc {
-	_sender = nil;
-
 }
 
 #pragma mark -
@@ -562,12 +554,12 @@
 - (void) setAttribute:(id) object forKey:(id) key {
 	if( ! _attributes )
 		_attributes = [[NSMutableDictionary alloc] init];
-	[_attributes setObject:object forKey:key];
+	_attributes[key] = object;
 }
 
 #pragma mark -
 
-- (void) setValue:(id) value forUndefinedKey:(NSString *) key {
+- (void) setValue:(nullable id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
 		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of message id %@ is read only.", key, [self messageIdentifier]]];
@@ -577,3 +569,5 @@
 	[super setValue:value forUndefinedKey:key];
 }
 @end
+
+NS_ASSUME_NONNULL_END

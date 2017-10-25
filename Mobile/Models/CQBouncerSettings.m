@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 	else _identifier = [[NSString locallyUniqueString] copy];
 
 	if (info[@"bouncerType"])
-		self.type = [info[@"bouncerType"] unsignedLongValue];
+		self.type = [info[@"bouncerType"] unsignedIntValue];
 
 	if (info[@"bouncerDescription"])
 		self.displayName = info[@"bouncerDescription"];

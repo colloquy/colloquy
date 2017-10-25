@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 
 #import "MVChatConnection.h"
+#import "MVMessaging.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -15,38 +16,36 @@ COLLOQUY_EXPORT extern NSString *MVDirectChatConnectionGotMessageNotification;
 
 COLLOQUY_EXPORT extern NSString *MVDirectChatConnectionErrorDomain;
 
-typedef enum {
+typedef NS_ENUM(OSType, MVDirectChatConnectionStatus) {
 	MVDirectChatConnectionConnectedStatus = 'dcCo',
 	MVDirectChatConnectionWaitingStatus = 'dcWa',
 	MVDirectChatConnectionDisconnectedStatus = 'dcDs',
 	MVDirectChatConnectionErrorStatus = 'dcEr'
-} MVDirectChatConnectionStatus;
+};
 
 @class MVChatUser;
 
 COLLOQUY_EXPORT
-@interface MVDirectChatConnection : NSObject
-+ (id) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive;
+@interface MVDirectChatConnection : NSObject <MVMessaging>
++ (instancetype) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive;
 
-- (BOOL) isPassive;
-- (MVDirectChatConnectionStatus) status;
+@property (getter=isPassive, readonly) BOOL passive;
+@property (readonly) MVDirectChatConnectionStatus status;
 
-- (MVChatUser *) user;
-- (NSString *) host;
-- (NSString *) connectedHost;
-- (unsigned short) port;
+@property (readonly, strong) MVChatUser *user;
+@property (readonly, copy) NSString *host;
+@property (readonly, copy) NSString *connectedHost;
+@property (readonly) unsigned short port;
 
 - (void) initiate;
 - (void) disconnect;
 
-- (void) setEncoding:(NSStringEncoding) encoding;
-- (NSStringEncoding) encoding;
+@property NSStringEncoding encoding;
 
-- (void) setOutgoingChatFormat:(MVChatMessageFormat) format;
-- (MVChatMessageFormat) outgoingChatFormat;
+@property MVChatMessageFormat outgoingChatFormat;
 
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
-- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *)attributes;
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary<NSString*,id> *)attributes;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -1,3 +1,4 @@
+#import <ChatCore/MVChatConnection.h>
 #import "JVChatRoomBrowser.h"
 #import "JVChatController.h"
 #import "JVChatConsolePanel.h"
@@ -5,7 +6,7 @@
 #import "MVTableView.h"
 #import "NSImageAdditions.h"
 
-@interface JVChatRoomBrowser (Private)
+@interface JVChatRoomBrowser (Private) <NSTableViewDelegate>
 - (void) _needToRefreshResults:(id) sender;
 - (void) _refreshResults:(id) sender;
 - (void) _resortResults;
@@ -13,13 +14,13 @@
 - (void) _startFetch;
 - (void) _stopFetch;
 
-- (void) tableView:(NSTableView *) view didClickTableColumn:(NSTableColumn *) column;
+//- (void) tableView:(NSTableView *) view didClickTableColumn:(NSTableColumn *) column;
 @end
 
 #pragma mark -
 
 @implementation JVChatRoomBrowser
-- (id) initWithWindowNibName:(NSString *) windowNibName {
+- (instancetype) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
 		_self = self;
 		_sortColumn = @"room";
@@ -35,14 +36,14 @@
 	return self;
 }
 
-- (id) initWithConnection:(MVChatConnection *) connection {
+- (instancetype) initWithConnection:(MVChatConnection *) connection {
 	if( ( self = [self initWithWindowNibName:@"JVChatRoomBrowser"] ) ) {
 		[self setConnection:connection];
 	}
 	return self;
 }
 
-+ (id) chatRoomBrowserForConnection:(MVChatConnection *) connection {
++ (instancetype) chatRoomBrowserForConnection:(MVChatConnection *) connection {
 	return [[self alloc] initWithConnection:connection];
 }
 
@@ -64,7 +65,7 @@
 	[roomsTable setAccessibilityLabel:NSLocalizedString(@"Chat rooms", "VoiceOver title for chat rooms table")];
 
 	theColumn = [roomsTable tableColumnWithIdentifier:@"members"];
-	NSImage *headerImage = [NSImage imageFromPDF:@"person"];
+	NSImage *headerImage = [NSImage imageNamed:@"person"];
 	headerImage.size = NSMakeSize(10., 10.);
 	[[theColumn headerCell] setImage:headerImage];
 	[[theColumn headerCell] setAccessibilityLabel:NSLocalizedString(@"Participants", "VoiceOver title for number of connected users in chat room browser table")];
@@ -194,16 +195,16 @@
 		}
 	}
 
-	static float origWidth = 0.;
+	static CGFloat origWidth = 0.;
 	if( ! origWidth ) origWidth = NSWidth( windowFrame );
 
-	static float origOffset = 0.;
+	static CGFloat origOffset = 0.;
 	if( ! origOffset ) origOffset = NSHeight( [browserArea frame] );
 
-	float offset = NSHeight( [browserArea frame] );
+	CGFloat offset = NSHeight( [browserArea frame] );
 	if( ! offset ) offset = origOffset;
 
-	float width = 500.;
+	CGFloat width = 500.;
 
 	[searchArea selectTabViewItemAtIndex:2];
 
@@ -292,7 +293,7 @@
 }
 
 - (id) comboBox:(NSComboBox *) comboBox objectValueForItemAtIndex:(NSInteger) index {
-	return [_roomOrder objectAtIndex:index];
+	return _roomOrder[index];
 }
 
 - (NSUInteger) comboBox:(NSComboBox *) comboBox indexOfItemWithStringValue:(NSString *) string {
@@ -401,7 +402,7 @@
 	_sortColumn = [[column identifier] copy];
 
 	NSInteger index = [roomsTable selectedRow];
-	NSString *selectedRoom = ( index != -1 && [_roomOrder count] ? [[_roomOrder objectAtIndex:index] copy] : nil );
+	NSString *selectedRoom = ( index != -1 && [_roomOrder count] ? [_roomOrder[index] copy] : nil );
 	[roomsTable deselectAll:nil];
 
 	[self _resortResults];
@@ -423,7 +424,7 @@
 		[roomField setObjectValue:@""];
 		[acceptButton setEnabled:( [[roomField stringValue] length] )];
 	} else {
-		[roomField setObjectValue:[_roomOrder objectAtIndex:[roomsTable selectedRow]]];
+		[roomField setObjectValue:_roomOrder[[roomsTable selectedRow]]];
 		[acceptButton setEnabled:( [[roomField stringValue] length] )];
 	}
 }
@@ -441,14 +442,14 @@ static NSComparisonResult sortByRoomNameDescending( NSString *room1, NSString *r
 
 static NSComparisonResult sortByNumberOfMembersAscending( NSString *room1, NSString *room2, void *context ) {
 	NSDictionary *info = (__bridge NSDictionary *)(context);
-	NSComparisonResult res = [(NSNumber *)[info[room1] objectForKey:@"users"] compare:[info[room2] objectForKey:@"users"]];
+	NSComparisonResult res = [(NSNumber *)(info[room1])[@"users"] compare:(info[room2])[@"users"]];
 	if( res != NSOrderedSame ) return res;
 	return [room1 caseInsensitiveCompare:room2];
 }
 
 static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSString *room2, void *context ) {
 	NSDictionary *info = (__bridge NSDictionary *)(context);
-	NSComparisonResult res = [(NSNumber *)[info[room2] objectForKey:@"users"] compare:[info[room1] objectForKey:@"users"]];
+	NSComparisonResult res = [(NSNumber *)(info[room2])[@"users"] compare:(info[room1])[@"users"]];
 	if( res != NSOrderedSame ) return res;
 	return [room1 caseInsensitiveCompare:room2];
 }
@@ -615,9 +616,9 @@ refresh:
 @implementation JVOpenRoomBrowserScriptCommand
 - (id) performDefaultImplementation {
 	NSDictionary *args = [self evaluatedArguments];
-	id connection = [args objectForKey:@"connection"];
-	id filter = [args objectForKey:@"filter"];
-	id expanded = [args objectForKey:@"expanded"];
+	id connection = args[@"connection"];
+	id filter = args[@"filter"];
+	id expanded = args[@"expanded"];
 	BOOL realExpanded = NO;
 
 	if( [expanded isKindOfClass:[NSNumber class]] )

@@ -84,7 +84,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (BOOL) isEqual:(id) object {
+- (BOOL) isEqual:(nullable id) object {
 	if( object == self ) return YES;
 	if( ! object || ! [object isKindOfClass:[self class]] ) return NO;
 	return [self isEqualToChatRoom:object];
@@ -254,13 +254,13 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	}
 }
 
-- (id) attributeForKey:(NSString *) key {
+- (id __nullable) attributeForKey:(NSString *) key {
 	@synchronized( _attributes ) {
 		return _attributes[key];
 	}
 }
 
-- (void) setAttribute:(id) attribute forKey:(id) key {
+- (void) setAttribute:(id __nullable) attribute forKey:(id) key {
 	NSParameterAssert( key != nil );
 	@synchronized( _attributes ) {
 		if( attribute ) _attributes[key] = attribute;
@@ -342,7 +342,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return users;
 }
 
-- (NSSet *) memberUsersWithNickname:(NSString *) nickname {
+- (nullable NSSet *) memberUsersWithNickname:(NSString *) nickname {
 	NSMutableSet *users = [[NSMutableSet alloc] init];
 
 	@synchronized( _memberUsers ) {
@@ -668,7 +668,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (MVChatUser *) valueInMemberUsersArrayAtIndex:(NSUInteger) index {
-	return [[self memberUsersArray] objectAtIndex:index];
+	return [self memberUsersArray][index];
 }
 
 - (MVChatUser *) valueInMemberUsersArrayWithUniqueID:(id) identifier {
@@ -697,11 +697,11 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (unsigned long) scriptTypedEncoding {
+- (OSType) scriptTypedEncoding {
 	return [NSString scriptTypedEncodingFromStringEncoding:[self encoding]];
 }
 
-- (void) setScriptTypedEncoding:(unsigned long) newEncoding {
+- (void) setScriptTypedEncoding:(OSType) newEncoding {
 	[self setEncoding:[NSString stringEncodingFromScriptTypedEncoding:newEncoding]];
 }
 

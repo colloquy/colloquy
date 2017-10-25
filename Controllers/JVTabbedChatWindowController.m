@@ -3,6 +3,7 @@
 #import "MVApplicationController.h"
 #import "AICustomTabsView.h"
 #import "JVChatTabItem.h"
+#import "MVApplicationController.h"
 
 @interface JVTabbedChatWindowController (JVTabbedChatWindowControllerPrivate)
 - (void) _supressTabBarHiding:(BOOL) supress;
@@ -13,11 +14,11 @@
 #pragma mark -
 
 @implementation JVTabbedChatWindowController
-- (id) init {
+- (instancetype) init {
 	return [self initWithWindowNibName:@"JVTabbedChatWindow"];
 }
 
-- (id) initWithWindowNibName:(NSString *) windowNibName {
+- (instancetype) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
 		_tabItems = [NSMutableArray array];
 		_tabIsShowing = YES;
@@ -40,7 +41,7 @@
 	[chatViewsOutlineView setRefusesFirstResponder:NO];
 	[chatViewsOutlineView setAllowsEmptySelection:YES];
 
-	[[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER, nil]];
+	[[self window] registerForDraggedTypes:@[TAB_CELL_IDENTIFIER]];
 }
 
 #pragma mark -
@@ -85,7 +86,7 @@
 
 	JVChatTabItem *newTab = [[JVChatTabItem alloc] initWithChatViewController:controller];
 
-	[_tabItems replaceObjectAtIndex:index withObject:newTab];
+	_tabItems[index] = newTab;
 	[tabView removeTabViewItem:[tabView tabViewItemAtIndex:index]];
 	[tabView insertTabViewItem:newTab atIndex:index];
 
@@ -128,14 +129,14 @@
 	[super openViewsDrawer:sender];
 
 	if( [_activeViewController respondsToSelector:@selector( setPreference:forKey: )] )
-		[(id)_activeViewController setPreference:[NSNumber numberWithBool:YES] forKey:@"expanded"];
+		[(id)_activeViewController setPreference:@YES forKey:@"expanded"];
 }
 
 - (IBAction) closeViewsDrawer:(id) sender {
 	[super closeViewsDrawer:sender];
 
 	if( [_activeViewController respondsToSelector:@selector( setPreference:forKey: )] )
-		[(id)_activeViewController setPreference:[NSNumber numberWithBool:NO] forKey:@"expanded"];
+		[(id)_activeViewController setPreference:@NO forKey:@"expanded"];
 }
 
 #pragma mark -
@@ -291,12 +292,12 @@
 
 - (NSString *) customTabView:(AICustomTabsView *) view toolTipForTabViewItem:(NSTabViewItem *) tabViewItem {
 	if( [[(JVChatTabItem *)tabViewItem chatViewController] respondsToSelector:@selector( toolTip )] )
-		return [(NSObject *)[(JVChatTabItem *)tabViewItem chatViewController] toolTip];
+		return [(id<JVChatViewController>)[(JVChatTabItem *)tabViewItem chatViewController] toolTip];
 	return nil;
 }
 
 - (NSArray *) customTabViewAcceptableDragTypes:(AICustomTabsView *) tabsView {
-	return [NSArray arrayWithObject:NSFilenamesPboardType];
+	return @[NSFilenamesPboardType];
 }
 
 - (BOOL) customTabView:(AICustomTabsView *) tabsView didAcceptDragPasteboard:(NSPasteboard *) pasteboard onTabViewItem:(NSTabViewItem *) tabViewItem {
@@ -306,8 +307,8 @@
 	BOOL accepted = NO;
 
 	for( id file in files ) {
-		if( [(NSObject *)[(JVChatTabItem *)tabViewItem chatViewController] acceptsDraggedFileOfType:[file pathExtension]] ) {
-			[(NSObject *)[(JVChatTabItem *)tabViewItem chatViewController] handleDraggedFile:file];
+		if( [(id<JVChatViewController>)[(JVChatTabItem *)tabViewItem chatViewController] acceptsDraggedFileOfType:[file pathExtension]] ) {
+			[(id<JVChatViewController>)[(JVChatTabItem *)tabViewItem chatViewController] handleDraggedFile:file];
 			accepted = YES;
 		}
 	}
@@ -368,8 +369,8 @@
 	else if( _forceTabBarVisible > 0 ) _forceTabBarVisible = 0;
 
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVTabBarAlwaysVisible"] )
-		[self setPreference:( _forceTabBarVisible == 1 ? [NSNumber numberWithUnsignedLong:1] : nil ) forKey:@"tab bar visible"];
-	else [self setPreference:[NSNumber numberWithLong:_forceTabBarVisible] forKey:@"tab bar visible"];
+		[self setPreference:( _forceTabBarVisible == 1 ? @1UL : nil ) forKey:@"tab bar visible"];
+	else [self setPreference:@(_forceTabBarVisible) forKey:@"tab bar visible"];
 
 	[self updateTabBarVisibilityAndAnimate:NO];
 }
@@ -391,7 +392,7 @@
 
 // Drag entered, enable suppression
 - (NSDragOperation) draggingEntered:(id <NSDraggingInfo>) sender {
-	NSString *type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER, nil]];
+	NSString *type = [[sender draggingPasteboard] availableTypeFromArray:@[TAB_CELL_IDENTIFIER]];
 	NSDragOperation	operation = NSDragOperationNone;
 
 	if( ! sender || type ) {
@@ -405,7 +406,7 @@
 
 // Drag exited, disable suppression
 - (void) draggingExited:(id <NSDraggingInfo>) sender {
-	NSString *type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER, nil]];
+	NSString *type = [[sender draggingPasteboard] availableTypeFromArray:@[TAB_CELL_IDENTIFIER]];
 	if( ! sender || type ) [self _supressTabBarHiding:NO]; // hide the tab bar
 }
 @end
@@ -513,11 +514,11 @@
 	if( ! item ) return;
 
 	if( ( [item conformsToProtocol:@protocol( JVChatViewController )] && item != (id) _activeViewController ) || ( ! _activeViewController && [[item parent] conformsToProtocol:@protocol( JVChatViewController )] && ( item = [item parent] ) ) ) {
-		id lastActive = _activeViewController;
+		id<JVChatViewController> lastActive = _activeViewController;
 		if( [_activeViewController respondsToSelector:@selector( willUnselect )] )
-			[(NSObject *)_activeViewController willUnselect];
+			[(id<JVChatViewController>)_activeViewController willUnselect];
 		if( [item respondsToSelector:@selector( willSelect )] )
-			[(NSObject *)item willSelect];
+			[(id<JVChatViewController>)item willSelect];
 
 		_activeViewController = item;
 
@@ -526,9 +527,9 @@
 		[self _refreshToolbar];
 
 		if( [lastActive respondsToSelector:@selector( didUnselect )] )
-			[(NSObject *)lastActive didUnselect];
+			[lastActive didUnselect];
 		if( [_activeViewController respondsToSelector:@selector( didSelect )] )
-			[(NSObject *)_activeViewController didSelect];
+			[_activeViewController didSelect];
 	} else if( ! [_views count] || ! _activeViewController ) {
 		[[self window] setContentView:[[NSView alloc] initWithFrame:[[[self window] contentView] frame]]];
 		[[[self window] toolbar] setDelegate:nil];

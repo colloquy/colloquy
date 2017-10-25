@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1C0431BC07CAEC1700304949 /* JVAppleScriptChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0431BA07CAEC1700304949 /* JVAppleScriptChatPlugin.m */; };
+		1C0431BC07CAEC1700304949 /* JVAppleScriptChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0431BA07CAEC1700304949 /* JVAppleScriptChatPlugin.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1C4FD36807C6BC25000EA451 /* JVAppleScriptPluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FD36607C6BC25000EA451 /* JVAppleScriptPluginLoader.m */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		9295C94C16782FCE009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9295C94B16782FCE009F9014 /* ChatCore.framework */; };
@@ -55,7 +55,7 @@
 		1C4FD36607C6BC25000EA451 /* JVAppleScriptPluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppleScriptPluginLoader.m; sourceTree = "<group>"; };
 		1C4FD3CC07C6BF1B000EA451 /* JVAppleScriptEditorPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppleScriptEditorPanel.h; sourceTree = "<group>"; };
 		1C4FD3CD07C6BF1B000EA451 /* JVAppleScriptEditorPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppleScriptEditorPanel.m; sourceTree = "<group>"; };
-		1CE3FB5407C7DFD50049A366 /* AppleScriptPanel.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = AppleScriptPanel.nib; sourceTree = "<group>"; };
+		1CE3FB5407C7DFD50049A366 /* AppleScriptPanel.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AppleScriptPanel.xib; sourceTree = "<group>"; };
 		1CF7A61407CD661200965F52 /* compile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compile.png; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* AppleScript Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AppleScript Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -83,23 +83,22 @@
 			isa = PBXGroup;
 			children = (
 				92823CF516900F97000EC36E /* Colloquy (Old).xcodeproj */,
-				9295C94B16782FCE009F9014 /* ChatCore.framework */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				1C9AE8FA086A552A008ED7AD /* Settings */,
-				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
+				089C1671FE841209C02AAC07 /* Frameworks */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
 			);
 			name = "FScript Plugin";
 			sourceTree = "<group>";
 		};
-		089C1671FE841209C02AAC07 /* Frameworks and Libraries */ = {
+		089C1671FE841209C02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
 				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
 			);
-			name = "Frameworks and Libraries";
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		089C167CFE841241C02AAC07 /* Resources */ = {
@@ -107,7 +106,7 @@
 			children = (
 				1C04316407CADBE100304949 /* scriptEditor.png */,
 				1CF7A61407CD661200965F52 /* compile.png */,
-				1CE3FB5407C7DFD50049A366 /* AppleScriptPanel.nib */,
+				1CE3FB5407C7DFD50049A366 /* AppleScriptPanel.xib */,
 				8D5B49B7048680CD000E48DA /* Info.plist */,
 			);
 			indentWidth = 4;
@@ -135,6 +134,7 @@
 		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9295C94B16782FCE009F9014 /* ChatCore.framework */,
 				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
@@ -190,6 +190,7 @@
 			buildPhases = (
 				8D5B49B1048680CD000E48DA /* Sources */,
 				8D5B49B3048680CD000E48DA /* Frameworks */,
+				55B748201AD348F2001459F7 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -208,7 +209,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Colloquy Project";
 			};
 			buildConfigurationList = 1C7F30420855482D00D41FB0 /* Build configuration list for PBXProject "AppleScript Support" */;
@@ -256,6 +257,16 @@
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		55B748201AD348F2001459F7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8D5B49B1048680CD000E48DA /* Sources */ = {
@@ -307,8 +318,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C29E3BE31F64A2C000C18D21 /* Base.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = NO;
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)/../..";
+				SDKROOT = macosx;
 				SYMROOT = ../../build;
 			};
 			name = Debug;
@@ -342,8 +353,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C29E3BE31F64A2C000C18D21 /* Base.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = NO;
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)/../..";
+				SDKROOT = macosx;
 				SYMROOT = ../../build;
 			};
 			name = Release;

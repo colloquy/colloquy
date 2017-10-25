@@ -1,25 +1,23 @@
-#import "MVChatPluginManager.h"
+#import <ChatCore/MVChatPluginManager.h>
 
 @interface JVAppleScriptChatPlugin : NSObject <MVChatPlugin> {
-	MVChatPluginManager *_manager;
+	__unsafe_unretained MVChatPluginManager *_manager;
 	NSAppleScript *_script;
 	NSString *_path;
 	NSMutableSet *_doseNotRespond;
 	NSTimer *_idleTimer;
 	NSDate *_modDate;
 }
-- (id) initWithScript:(NSAppleScript *) script atPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
-- (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
+- (instancetype) initWithScript:(NSAppleScript *) script atPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
+- (instancetype) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 
-- (NSAppleScript *) script;
-- (void) setScript:(NSAppleScript *) script;
+@property (strong) NSAppleScript *script;
 
 - (void) reloadFromDisk;
 
-- (MVChatPluginManager *) pluginManager;
+@property (readonly, assign) MVChatPluginManager *pluginManager;
 
-- (NSString *) scriptFilePath;
-- (void) setScriptFilePath:(NSString *) path;
+@property (copy) NSString *scriptFilePath;
 
 - (id) callScriptHandler:(FourCharCode) handler withArguments:(NSDictionary *) arguments forSelector:(SEL) selector;
 
@@ -28,5 +26,5 @@
 @end
 
 @interface NSAppleScript (NSAppleScriptIdentifier)
-- (NSNumber *) scriptIdentifier;
+@property (readonly, copy) NSNumber *scriptIdentifier;
 @end

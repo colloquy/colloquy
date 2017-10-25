@@ -26,6 +26,8 @@
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="32" y="584" width="520" height="138"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <value key="minSize" type="size" width="520" height="118"/>
+            <value key="maxSize" type="size" width="700" height="140"/>
             <view key="contentView" autoresizesSubviews="NO" id="2">
                 <rect key="frame" x="0.0" y="0.0" width="520" height="138"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -50,7 +52,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="472" height="30"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                     <tableColumns>
                                         <tableColumn identifier="criteria" editable="NO" width="423" minWidth="40" maxWidth="2000" id="209">
@@ -86,7 +88,7 @@
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
-                                            <buttonCell key="dataCell" type="bevel" bezelStyle="regularSquare" image="NSAddTemplate" imagePosition="only" alignment="center" alternateImage="addWidgetSelected" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="246">
+                                            <buttonCell key="dataCell" type="bevel" bezelStyle="regularSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="246">
                                                 <behavior key="behavior" lightByContents="YES"/>
                                                 <font key="font" metaFont="cellTitle"/>
                                                 <connections>
@@ -262,6 +264,5 @@ DQ
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSCaution" width="32" height="32"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="addWidgetSelected" width="128" height="128"/>
     </resources>
 </document>

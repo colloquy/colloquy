@@ -1,3 +1,7 @@
+#import <Foundation/Foundation.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
 @class MVChatUser;
 @class CQChatController;
 
@@ -5,7 +9,7 @@
 @protocol JVChatViewController;
 #endif
 
-typedef NS_ENUM(NSInteger, JVIgnoreMatchResult) {
+typedef NS_ENUM(OSType, JVIgnoreMatchResult) {
 	JVUserIgnored = 'usIg',
 	JVMessageIgnored = 'msIg',
 	JVNotIgnored = 'noIg'
@@ -13,22 +17,24 @@ typedef NS_ENUM(NSInteger, JVIgnoreMatchResult) {
 
 COLLOQUY_EXPORT
 @interface KAIgnoreRule : NSObject
-+ (instancetype) ruleForUser:(NSString *) user mask:(NSString *) mask message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
-- (instancetype) initForUser:(NSString *) user mask:(NSString *) mask message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
++ (instancetype) ruleForUser:(nullable NSString *) user mask:(nullable NSString *) mask message:(nullable NSString *) message inRooms:(nullable NSArray<NSString*> *) rooms isPermanent:(BOOL) permanent friendlyName:(nullable NSString *) friendlyName;
+- (instancetype) initForUser:(nullable NSString *) user mask:(nullable NSString *) mask message:(nullable NSString *) message inRooms:(nullable NSArray<NSString*> *) rooms isPermanent:(BOOL) permanent friendlyName:(nullable NSString *) friendlyName;
 
-+ (KAIgnoreRule *) ruleForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
-- (instancetype) initForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
++ (instancetype) ruleForUser:(nullable NSString *) user message:(nullable NSString *) message inRooms:(nullable NSArray<NSString*> *) rooms isPermanent:(BOOL) permanent friendlyName:(nullable NSString *) friendlyName;
+- (instancetype) initForUser:(nullable NSString *) user message:(nullable NSString *) message inRooms:(nullable NSArray<NSString*> *) rooms isPermanent:(BOOL) permanent friendlyName:(nullable NSString *) friendlyName;
 
 #if SYSTEM(MAC)
-- (JVIgnoreMatchResult) matchUser:(MVChatUser *) user message:(NSString *) message inView:(id <JVChatViewController>) view;
+- (JVIgnoreMatchResult) matchUser:(MVChatUser *) user message:(nullable NSString *) message inView:(nullable id <JVChatViewController>) view;
 #else
 - (JVIgnoreMatchResult) matchUser:(MVChatUser *) user message:(NSString *) message inTargetRoom:(id) target;
 #endif
 
 @property (nonatomic, getter=isPermanent) BOOL permanent;
 @property (nonatomic, copy) NSString *friendlyName;
-@property (nonatomic, copy) NSArray *rooms;
-@property (nonatomic, copy) NSString *message;
-@property (nonatomic, copy) NSString *user;
-@property (nonatomic, copy) NSString *mask;
+@property (nonatomic, copy, nullable) NSArray<NSString*> *rooms;
+@property (nonatomic, copy, nullable) NSString *message;
+@property (nonatomic, copy, nullable) NSString *user;
+@property (nonatomic, copy, nullable) NSString *mask;
 @end
+
+NS_ASSUME_NONNULL_END

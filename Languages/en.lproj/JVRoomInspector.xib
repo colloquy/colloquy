@@ -64,7 +64,7 @@
                         <imageView id="377">
                             <rect key="frame" x="0.0" y="2" width="32" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="room" id="448"/>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="roomIcon" id="448"/>
                         </imageView>
                     </subviews>
                 </customView>
@@ -74,11 +74,11 @@
                     <tabViewItems>
                         <tabViewItem label="Modes" identifier="modes" id="318">
                             <view key="view" id="319">
-                                <rect key="frame" x="10" y="29" width="315" height="260"/>
+                                <rect key="frame" x="10" y="25" width="315" height="264"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <customView id="372">
-                                        <rect key="frame" x="49" y="13" width="217" height="252"/>
+                                        <rect key="frame" x="49" y="17" width="217" height="252"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <subviews>
                                             <button tag="8" id="361">
@@ -325,7 +325,7 @@ DQ
                                     <button toolTip="Edit ban" id="339">
                                         <rect key="frame" x="67" y="12" width="23" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="editWidget" imagePosition="only" alignment="center" alternateImage="editWidgetPressed" enabled="NO" inset="2" id="432">
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="432">
                                             <behavior key="behavior" lightByContents="YES"/>
                                             <font key="font" metaFont="label"/>
                                         </buttonCell>
@@ -363,14 +363,14 @@ DQ
                                             <action selector="refreshBanList:" target="-2" id="417"/>
                                             <binding destination="373" name="selectedTag" keyPath="values.JVChatRoomInspectorBanListSort" id="416">
                                                 <dictionary key="options">
-                                                    <integer key="NSAllowsEditingMultipleValuesSelection" value="0"/>
-                                                    <integer key="NSConditionallySetsEnabled" value="0"/>
+                                                    <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                                    <bool key="NSConditionallySetsEnabled" value="NO"/>
                                                     <decimal key="NSMultipleValuesPlaceholder" value="1"/>
                                                     <decimal key="NSNoSelectionPlaceholder" value="1"/>
                                                     <decimal key="NSNotApplicablePlaceholder" value="1"/>
                                                     <decimal key="NSNullPlaceholder" value="1"/>
-                                                    <integer key="NSRaisesForNotApplicableKeys" value="0"/>
-                                                    <integer key="NSValidatesImmediately" value="1"/>
+                                                    <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                                    <bool key="NSValidatesImmediately" value="YES"/>
                                                 </dictionary>
                                             </binding>
                                         </connections>
@@ -465,8 +465,8 @@ DQ
                     <connections>
                         <binding destination="373" name="selectedIdentifier" keyPath="values.JVChatRoomInspectorLastTab" id="376">
                             <dictionary key="options">
-                                <integer key="NSRaisesForNotApplicableKeys" value="0"/>
-                                <integer key="NSValidatesImmediately" value="1"/>
+                                <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                <bool key="NSValidatesImmediately" value="YES"/>
                             </dictionary>
                         </binding>
                     </connections>
@@ -476,10 +476,9 @@ DQ
         <userDefaultsController representsSharedInstance="YES" id="373" userLabel="Shared Defaults"/>
     </objects>
     <resources>
+        <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="editWidget" width="22" height="22"/>
-        <image name="editWidgetPressed" width="22" height="22"/>
-        <image name="room" width="55" height="55"/>
+        <image name="roomIcon" width="55" height="55"/>
     </resources>
 </document>

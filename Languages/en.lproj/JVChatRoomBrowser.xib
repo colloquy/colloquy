@@ -217,10 +217,10 @@
                                         <outlet property="nextKeyView" destination="22" id="83"/>
                                     </connections>
                                 </comboBox>
-                                <button id="22">
+                                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" id="22">
                                     <rect key="frame" x="337" y="4" width="27" height="24"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <buttonCell key="cell" type="square" title="Button" bezelStyle="shadowlessSquare" imagePosition="only" alignment="left" enabled="NO" state="on" borderStyle="border" inset="2" id="154">
+                                    <buttonCell key="cell" type="disclosure" title="Button" bezelStyle="roundedDisclosure" imagePosition="only" alignment="left" enabled="NO" state="on" borderStyle="border" inset="2" id="154">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>

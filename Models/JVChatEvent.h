@@ -1,9 +1,14 @@
+#import <Foundation/Foundation.h>
 #import "JVChatTranscript.h"
+#if !((defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) || (defined(TARGET_OS_TV) && TARGET_OS_TV))
+#import <AppKit/NSTextStorage.h>
+#endif
+NS_ASSUME_NONNULL_BEGIN
 
 @interface JVChatEvent : NSObject <JVChatTranscriptElement> {
 	@protected
-	/* xmlNode */ void *_node;
-	/* xmlDoc */ void *_doc;
+	struct _xmlNode *_node;
+	struct _xmlDoc *_doc;
 	NSString *_eventIdentifier;
 	NSScriptObjectSpecifier *_objectSpecifier;
 	__weak JVChatTranscript *_transcript;
@@ -15,33 +20,39 @@
 	BOOL _loadedAttributes;
 	BOOL _loadedSmall;
 }
-- (/* xmlNode */ void *) node;
 
-- (JVChatTranscript *) transcript;
-- (NSString *) eventIdentifier;
+@property (readonly, nullable) struct _xmlNode *node;
 
-- (NSDate *) date;
-- (NSString *) name;
+@property (readonly, weak) JVChatTranscript *transcript;
+@property (readonly, copy) NSString *eventIdentifier;
+
+@property (readonly, strong) NSDate *date;
+@property (readonly, copy) NSString *name;
 
 - (NSTextStorage *) message;
-- (NSString *) messageAsPlainText;
-- (NSString *) messageAsHTML;
+@property (readonly, copy) NSString *messageAsPlainText;
+@property (readonly, copy) NSString *messageAsHTML;
 
-- (NSDictionary *) attributes;
+@property (readonly, copy) NSDictionary<NSString*,id> *attributes;
+- (instancetype) init NS_DESIGNATED_INITIALIZER;
+
 @end
 
 @interface JVMutableChatEvent : JVChatEvent
-+ (id) chatEventWithName:(NSString *) name andMessage:(id) message;
-- (id) initWithName:(NSString *) name andMessage:(id) message;
+- (instancetype) init NS_DESIGNATED_INITIALIZER;
++ (instancetype) chatEventWithName:(NSString *) name andMessage:(id) message;
+- (instancetype) initWithName:(NSString *) name andMessage:(id) message;
 
-- (void) setDate:(NSDate *) date;
-- (void) setName:(NSString *) name;
+@property (readwrite, strong) NSDate *date;
+@property (readwrite, copy) NSString *name;
 
 - (void) setMessage:(id) message;
-- (void) setMessageAsPlainText:(NSString *) message;
-- (void) setMessageAsHTML:(NSString *) message;
+@property (readwrite, copy) NSString *messageAsPlainText;
+@property (readwrite, copy) NSString *messageAsHTML;
 
-- (void) setAttributes:(NSDictionary *) attributes;
+@property (readwrite, copy) NSDictionary<NSString*,id> *attributes;
 
-- (void) setEventIdentifier:(NSString *) identifier;
+@property (readwrite, copy) NSString *eventIdentifier;
 @end
+
+NS_ASSUME_NONNULL_END

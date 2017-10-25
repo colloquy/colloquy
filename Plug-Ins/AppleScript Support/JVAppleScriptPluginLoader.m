@@ -2,11 +2,16 @@
 #import "JVAppleScriptEditorPanel.h"
 #import "JVAppleScriptChatPlugin.h"
 #import "JVChatWindowController.h"
+#import "JVChatController.h"
 
-#import "MVChatConnection.h"
+#import <ChatCore/MVChatConnection.h>
+
+@interface JVAppleScriptPluginLoader () <MVChatPluginCommandSupport>
+
+@end
 
 @implementation JVAppleScriptPluginLoader
-- (id) initWithManager:(MVChatPluginManager *) manager {
+- (instancetype) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [super init] ) )
 		_manager = manager;
 	return self;
@@ -15,7 +20,6 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	_manager = nil;
-	[super dealloc];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
@@ -39,7 +43,7 @@
 				break;
 
 		if( ! plugin && ! [subcmd caseInsensitiveCompare:@"load"] ) {
-			plugin = [[[JVAppleScriptChatPlugin alloc] initWithScriptAtPath:path withManager:_manager] autorelease];
+			plugin = [[JVAppleScriptChatPlugin alloc] initWithScriptAtPath:path withManager:_manager];
 			if( plugin ) [_manager addPlugin:plugin];
 		} else if( ( ! [subcmd caseInsensitiveCompare:@"reload"] || ! [subcmd caseInsensitiveCompare:@"load"] ) && plugin ) {
 			[plugin reloadFromDisk];
@@ -61,7 +65,7 @@
 	for( NSString *path in [[_manager class] pluginSearchPaths] ) {
 		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			if( [[file pathExtension] isEqualToString:@"scpt"] || [[file pathExtension] isEqualToString:@"scptd"] || [[file pathExtension] isEqualToString:@"applescript"] ) {
-				JVAppleScriptChatPlugin *plugin = [[[JVAppleScriptChatPlugin alloc] initWithScriptAtPath:[NSString stringWithFormat:@"%@/%@", path, file] withManager:_manager] autorelease];
+				JVAppleScriptChatPlugin *plugin = [[JVAppleScriptChatPlugin alloc] initWithScriptAtPath:[NSString stringWithFormat:@"%@/%@", path, file] withManager:_manager];
 				if( plugin ) [_manager addPlugin:plugin];
 			}
 		}

@@ -11,8 +11,8 @@
 #pragma mark -
 
 @implementation JVBuddyInspector
-- (id) initWithBuddy:(JVBuddy *) buddy {
-	if( ( self = [self init] ) )
+- (instancetype) initWithBuddy:(JVBuddy *) buddy {
+	if( ( self = [super init] ) )
 		_buddy = buddy;
 	return self;
 }
@@ -22,12 +22,6 @@
 
 	[identifiersTable setDataSource:nil];
 	[identifiersTable setDelegate:nil];
-
-
-	_buddy = nil;
-	_currentRule = nil;
-	_editDomains = nil;
-
 }
 
 #pragma mark -
@@ -54,7 +48,7 @@
 		[voices removeItemAtIndex:2];
 
 	for( NSString *voiceIdentifier in [NSSpeechSynthesizer availableVoices] ) {
-		[voices addItemWithTitle:[[NSSpeechSynthesizer attributesForVoice:voiceIdentifier] objectForKey:NSVoiceName]];
+		[voices addItemWithTitle:[NSSpeechSynthesizer attributesForVoice:voiceIdentifier][NSVoiceName]];
 		[[voices lastItem] setRepresentedObject:voiceIdentifier];
 	}
 
@@ -111,7 +105,7 @@
 	NSInteger index = [identifiersTable selectedRow];
 	if( index == -1 ) return;
 
-	_currentRule = [[_buddy watchRules] objectAtIndex:index];
+	_currentRule = [_buddy watchRules][index];
 
 	_editDomains = [[NSMutableArray alloc] init];
 	if( [[_currentRule applicableServerDomains] count] ) {
@@ -157,7 +151,7 @@
 	NSInteger index = [identifiersTable selectedRow];
 	if( index == -1 ) return;
 
-	MVChatUserWatchRule *rule = [[_buddy watchRules] objectAtIndex:index];
+	MVChatUserWatchRule *rule = [_buddy watchRules][index];
 	[_buddy removeWatchRule:rule];
 
 	[_buddy unregisterWithConnections];
@@ -268,7 +262,7 @@
 	if( [sender indexOfSelectedItem] != 0 ) {
 		voiceIdentifier = [[sender selectedItem] representedObject];
 		NSSpeechSynthesizer *synth = [[NSSpeechSynthesizer alloc] initWithVoice:voiceIdentifier];
-		[synth startSpeakingString:[[NSSpeechSynthesizer attributesForVoice:voiceIdentifier] objectForKey:NSVoiceDemoText]];
+		[synth startSpeakingString:[NSSpeechSynthesizer attributesForVoice:voiceIdentifier][NSVoiceDemoText]];
 	}
 
 	[_buddy setSpeechVoice:voiceIdentifier];
@@ -286,8 +280,8 @@
 
 - (id) tableView:(NSTableView *) tableView objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( [tableView isEqual:identifiersTable] ) {
-		NSMutableString *description = [NSMutableString string];
-		MVChatUserWatchRule *rule = [[_buddy watchRules] objectAtIndex:row];
+		NSMutableString *description = [[NSMutableString alloc] init];
+		MVChatUserWatchRule *rule = [_buddy watchRules][row];
 		NSUInteger count = 0;
 
 		NSString *string = [rule nickname];
@@ -328,14 +322,14 @@
 	}
 
 	if( [tableView isEqual:identifierDomainsTable] )
-		return [_editDomains objectAtIndex:row];
+		return _editDomains[row];
 
 	return nil;
 }
 
 - (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( [tableView isEqual:identifierDomainsTable] )
-		[_editDomains replaceObjectAtIndex:row withObject:object];
+		_editDomains[row] = object;
 }
 
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {

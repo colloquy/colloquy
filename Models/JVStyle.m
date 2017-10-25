@@ -1,27 +1,30 @@
-#import <libxml/tree.h>
-#import <libxslt/transform.h>
-#import <libxslt/xsltutils.h>
+#include <libxml/tree.h>
+#include <libxslt/transform.h>
+#include <libxslt/xsltutils.h>
 
 #import "JVStyle.h"
 #import "JVEmoticonSet.h"
 #import "JVChatMessage.h"
 #import "NSBundleAdditions.h"
+#import "MaddsPathExtensions.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface JVStyle (Private)
-+ (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
-+ (void) _freeXsltParamArray:(const char **) params;
++ (const char * _Nullable *) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary;
++ (void) _freeXsltParamArray:(const char *__nullable*) params;
 
 - (void) _clearVariantCache;
-- (void) _setBundle:(NSBundle *) bundle;
-- (void) _setXSLStyle:(NSURL *) location;
-- (void) _setStyleOptions:(NSArray *) options;
-- (void) _setVariants:(NSArray *) variants;
-- (void) _setUserVariants:(NSArray *) variants;
+- (void) _setBundle:(nullable NSBundle *) bundle;
+- (void) _setXSLStyle:(nullable NSURL *) location;
+- (void) _setStyleOptions:(nullable NSArray *) options;
+- (void) _setVariants:(nullable NSArray *) variants;
+- (void) _setUserVariants:(nullable NSArray *) variants;
 @end
 
 #pragma mark -
 
-static NSMutableSet *allStyles = nil;
+static NSMutableSet * __null_unspecified allStyles = nil;
 
 NSString *JVStylesScannedNotification = @"JVStylesScannedNotification";
 NSString *JVDefaultStyleChangedNotification = @"JVDefaultStyleChangedNotification";
@@ -31,23 +34,29 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 @implementation JVStyle
 + (void) scanForStyles {
-	NSMutableSet *styles = [NSMutableSet set];
+	NSFileManager *fm = [NSFileManager defaultManager];
+	NSMutableSet *styles = [[NSMutableSet alloc] init];
 	if( ! allStyles ) allStyles = styles;
 
 	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:5];
-	[paths addObject:[NSString stringWithFormat:@"%@/Styles", [[NSBundle bundleForClass:[self class]] resourcePath]]];
-	if( ! [[NSBundle mainBundle] isEqual:[NSBundle bundleForClass:[self class]]] )
-		[paths addObject:[NSString stringWithFormat:@"%@/Styles", [[NSBundle mainBundle] resourcePath]]];
-	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles", bundleName] stringByExpandingTildeInPath]];
-	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Styles", bundleName]];
-	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Styles", bundleName]];
+	NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:5];
+	{
+		NSString *frameworkStyles = [[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:@"Styles"];
+		[paths addObject:frameworkStyles];
+		if( ! [[NSBundle mainBundle] isEqual:[NSBundle bundleForClass:[self class]]] )
+			[paths addObject:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Styles"]];
+		NSArray *arr = [fm URLsForDirectory:NSApplicationSupportDirectory inDomains:(NSAllDomainsMask & ~NSSystemDomainMask)];
+		for (NSURL *loc in arr) {
+			NSURL *bLoc = [loc URLByAppendingPathComponents:@[bundleName, @"Styles"]];
+			[paths addObject:bLoc.path];
+		}
+	}
 
 	for( NSString *path in paths ) {
-		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
+		for( NSString *file in [fm contentsOfDirectoryAtPath:path error:nil] ) {
 			NSString *fullPath = [path stringByAppendingPathComponent:file];
 			NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:NULL];
-			if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[file pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coSt' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
+			if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[file pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedIntValue] == 'coSt' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
 				NSBundle *bundle = nil;
 				JVStyle *style = nil;
 				if( ( bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]] ) ) {
@@ -63,11 +72,23 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	[[NSNotificationCenter chatCenter] postNotificationName:JVStylesScannedNotification object:allStyles];
 }
 
-+ (NSSet *) styles {
-	return allStyles;
+- (NSString*)variantsPath
+{
+	NSURL *varURL = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+	varURL = [varURL URLByAppendingPathComponents:@[[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], @"Styles", @"Variants", self.identifier]];
+	return varURL.path;
 }
 
-+ (id) styleWithIdentifier:(NSString *) identifier {
+- (NSString*)variantPathForName:(NSString*)name
+{
+	return [[[self variantsPath] stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"css"];
+}
+
++ (NSSet *) styles {
+	return [allStyles copy];
+}
+
++ (nullable instancetype) styleWithIdentifier:(NSString *) identifier {
 	for( JVStyle *style in allStyles )
 		if( [[style identifier] isEqualToString:identifier] )
 			return style;
@@ -78,14 +99,14 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return nil;
 }
 
-+ (id) newWithBundle:(NSBundle *) bundle {
++ (nullable id) newWithBundle:(NSBundle *) bundle {
 	id ret = [self styleWithIdentifier:[bundle bundleIdentifier]];
 	if( ! ret ) ret = [[JVStyle alloc] initWithBundle:bundle];
 	return ret;
 }
 
 + (void) initialize {
-	[super initialize];
+	//[super initialize];
 	static BOOL tooLate = NO;
 	if( ! tooLate ) {
 		[self scanForStyles];
@@ -95,7 +116,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 #pragma mark -
 
-+ (id) defaultStyle {
++ (JVStyle*) defaultStyle {
 	id ret = [self styleWithIdentifier:[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatDefaultStyle"]];
 	if( ! ret ) {
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultStyle"];
@@ -104,20 +125,20 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return ret;
 }
 
-+ (void) setDefaultStyle:(JVStyle *) style {
++ (void) setDefaultStyle:(nullable JVStyle *) style {
 	JVStyle *oldDefault = [self defaultStyle];
 	if( style == oldDefault ) return;
 
 	if( ! style ) [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatDefaultStyle"];
 	else [[NSUserDefaults standardUserDefaults] setObject:[style identifier] forKey:@"JVChatDefaultStyle"];
 
-	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[self defaultStyle], @"default", nil];
+	NSDictionary *info = @{@"default": [self defaultStyle]};
 	[[NSNotificationCenter chatCenter] postNotificationName:JVStyleVariantChangedNotification object:oldDefault userInfo:info];
 }
 
 #pragma mark -
 
-- (id) initWithBundle:(NSBundle *) bundle {
+- (nullable instancetype) initWithBundle:(NSBundle *) bundle {
 	if( ( self = [self init] ) ) {
 		if( ! bundle ) {
 			return nil;
@@ -147,7 +168,6 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 	[self _setBundle:nil]; // this will dealloc all other dependant objects
 	[self unlink];
-
 }
 
 #pragma mark -
@@ -178,9 +198,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 #pragma mark -
 
-- (NSBundle *) bundle {
-	return _bundle;
-}
+@synthesize bundle = _bundle;
 
 - (NSString *) identifier {
 	return [_bundle bundleIdentifier];
@@ -188,14 +206,14 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 #pragma mark -
 
-- (NSString *) transformChatTranscript:(JVChatTranscript *) transcript withParameters:(NSDictionary *) parameters {
+- (nullable NSString *) transformChatTranscript:(JVChatTranscript *) transcript withParameters:(NSDictionary *) parameters {
 	@synchronized( transcript ) {
 		if( ! [transcript document] ) return nil;
 		return [self transformXMLDocument:[transcript document] withParameters:parameters];
 	}
 }
 
-- (NSString *) transformChatTranscriptElement:(id <JVChatTranscriptElement>) element withParameters:(NSDictionary *) parameters {
+- (nullable NSString *) transformChatTranscriptElement:(id <JVChatTranscriptElement>) element withParameters:(NSDictionary *) parameters {
 	@synchronized( ( [element transcript] ? (id) [element transcript] : (id) element ) ) {
 		xmlDoc *doc = xmlNewDoc( (xmlChar *) "1.0" );
 		if( ! doc ) return nil;
@@ -213,7 +231,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	}
 }
 
-- (NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary *) parameters {
+- (nullable NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary *) parameters {
 	@synchronized( ( [message transcript] ? (id) [message transcript] : (id) message ) ) {
 		// Styles depend on being passed all the messages in the same envelope.
 		// This lets them know it is a consecutive message.
@@ -234,7 +252,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	}
 }
 
-- (NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters {
+- (nullable NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters {
 	JVChatTranscript *transcript = [[JVChatTranscript alloc] initWithElements:elements];
 	NSString *ret = [self transformChatTranscript:transcript withParameters:parameters];
 	return ret;
@@ -242,7 +260,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 #pragma mark -
 
-- (NSString *) transformXML:(NSString *) xml withParameters:(NSDictionary *) parameters {
+- (nullable NSString *) transformXML:(NSString *) xml withParameters:(NSDictionary *) parameters {
 	NSParameterAssert( xml != nil );
 	if( ! [xml length] ) return @"";
 
@@ -258,7 +276,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return result;
 }
 
-- (NSString *) transformXMLDocument:(void *) document withParameters:(NSDictionary *) parameters {
+- (nullable NSString *) transformXMLDocument:(xmlDocPtr) document withParameters:(NSDictionary *) parameters {
 	NSParameterAssert( document != NULL );
 
 	@synchronized( self ) {
@@ -267,7 +285,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 		NSMutableDictionary *pms = (NSMutableDictionary *)[self mainParameters];
 		if( parameters ) {
-			pms = [NSMutableDictionary dictionaryWithDictionary:[self mainParameters]];
+			pms = [[NSMutableDictionary alloc] initWithDictionary:[self mainParameters]];
 			[pms addEntriesFromDictionary:parameters];
 		}
 
@@ -284,7 +302,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		}
 
 		if( result ) {
-			ret = [NSString stringWithUTF8String:(char *) result];
+			ret = @((char *) result);
 			free( result );
 		}
 
@@ -313,7 +331,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 - (NSArray *) variantStyleSheetNames {
 	if( ! _variants ) {
-		NSMutableArray *ret = [NSMutableArray array];
+		NSMutableArray *ret = [[NSMutableArray alloc] init];
 		NSArray *files = [_bundle pathsForResourcesOfType:@"css" inDirectory:@"Variants"];
 
 		for( NSString *file in files )
@@ -327,8 +345,8 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 - (NSArray *) userVariantStyleSheetNames {
 	if( ! _userVariants ) {
-		NSMutableArray *ret = [NSMutableArray array];
-		NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles/Variants/%@/", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], [self identifier]] stringByExpandingTildeInPath] error:nil];
+		NSMutableArray *ret = [[NSMutableArray alloc] init];
+		NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self variantsPath] error:nil];
 
 		for( NSString *file in files )
 			if( [[file pathExtension] isEqualToString:@"css"] || [[file pathExtension] isEqualToString:@"colloquyVariant"] )
@@ -341,7 +359,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 - (BOOL) isUserVariantName:(NSString *) name {
-	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles/Variants/%@/%@.css", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], [self identifier], name] stringByExpandingTildeInPath];
+	NSString *path = [self variantPathForName:name];
 	return [[NSFileManager defaultManager] isReadableFileAtPath:path];
 }
 
@@ -358,7 +376,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
 	} else {
 		if( [self isUserVariantName:name] ) {
-			NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles/Variants/%@/%@.css", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], [self identifier], name] stringByExpandingTildeInPath];
+			NSString *path = [self variantPathForName:name];
 			[[NSUserDefaults standardUserDefaults] setObject:path forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
 		} else {
 			[[NSUserDefaults standardUserDefaults] setObject:name forKey:[NSString stringWithFormat:@"JVChatDefaultStyleVariant %@", [self identifier]]];
@@ -405,72 +423,80 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 #pragma mark -
 
-- (void) setMainParameters:(NSDictionary *) parameters {
-	_parameters = parameters;
-}
-
-- (NSDictionary *) mainParameters {
-	return _parameters;
-}
+@synthesize mainParameters = _parameters;
 
 #pragma mark -
 
 - (NSURL *) baseLocation {
-	return [NSURL fileURLWithPath:[_bundle resourcePath]];
+	return [_bundle resourceURL];
 }
 
 - (NSURL *) mainStyleSheetLocation {
-	return [NSURL fileURLWithPath:[_bundle pathForResource:@"main" ofType:@"css"]];
+	return [_bundle URLForResource:@"main" withExtension:@"css"];
 }
 
-- (NSURL *) variantStyleSheetLocationWithName:(NSString *) name {
+- (nullable NSURL *) variantStyleSheetLocationWithName:(NSString *) name {
 	if( ! [name length] ) return nil;
 
-	NSString *path = [_bundle pathForResource:name ofType:@"css" inDirectory:@"Variants"];
-	if( path ) return [NSURL fileURLWithPath:path];
+	NSURL *URLpath = [_bundle URLForResource:name withExtension:@"css" subdirectory:@"Variants"];
+	if( URLpath ) return URLpath;
 
-	NSString *root = [[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles/Variants/", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByStandardizingPath];
-	path = [[NSString stringWithFormat:@"%@/%@/%@.css", root, [self identifier], name] stringByExpandingTildeInPath];
-	if( [path hasPrefix:root] && [[NSFileManager defaultManager] isReadableFileAtPath:path] )
+	NSFileManager *fm = [NSFileManager defaultManager];
+	{
+		URLpath = [fm URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+		URLpath = [URLpath URLByAppendingPathComponent:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"] isDirectory:YES];
+		URLpath = [URLpath URLByAppendingPathComponent:@"Styles" isDirectory:YES];
+		URLpath = [URLpath URLByAppendingPathComponent:@"Variants" isDirectory:YES];
+		URLpath = [URLpath URLByAppendingPathComponent:[self identifier] isDirectory:YES];
+		URLpath = [URLpath URLByAppendingPathComponent:name isDirectory:NO];
+		URLpath = [URLpath URLByAppendingPathExtension:@"css"];
+		if ([URLpath checkResourceIsReachableAndReturnError:NULL]) {
+			return URLpath;
+		}
+	}
+	NSString *path;
+	NSString *root = [[[NSString alloc] initWithFormat:@"~/Library/Application Support/%@/Styles/Variants/", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByStandardizingPath];
+	path = [[[NSString alloc] initWithFormat:@"%@/%@/%@.css", root, [self identifier], name] stringByExpandingTildeInPath];
+	if( [path hasPrefix:root] && [fm isReadableFileAtPath:path] )
 		return [NSURL fileURLWithPath:path];
 
 	return nil;
 }
 
-- (NSURL *) bodyTemplateLocationWithName:(NSString *) name {
+- (nullable NSURL *) bodyTemplateLocationWithName:(NSString *) name {
 	if( ! [name length] ) name = @"generic";
 
-	NSString *path = [_bundle pathForResource:[name stringByAppendingString:@"Template"] ofType:@"html"];
-	if( path ) return [NSURL fileURLWithPath:path];
+	NSURL *path = [_bundle URLForResource:[name stringByAppendingString:@"Template"] withExtension:@"html"];
+	if( path ) return path;
 
-	path = [_bundle pathForResource:@"genericTemplate" ofType:@"html"];
-	if( path ) return [NSURL fileURLWithPath:path];
+	path = [_bundle URLForResource:@"genericTemplate" withExtension:@"html"];
+	if( path ) return path;
 
-	path = [[NSBundle mainBundle] pathForResource:[name stringByAppendingString:@"Template"] ofType:@"html"];
-	if( path ) return [NSURL fileURLWithPath:path];
+	path = [[NSBundle mainBundle] URLForResource:[name stringByAppendingString:@"Template"] withExtension:@"html"];
+	if( path ) return path;
 
-	path = [[NSBundle mainBundle] pathForResource:@"genericTemplate" ofType:@"html"];
-	if( path ) return [NSURL fileURLWithPath:path];
-
-	return nil;
-}
-
-- (NSURL *) XMLStyleSheetLocation {
-	NSString *path = [_bundle pathForResource:@"main" ofType:@"xsl"];
-	if( path ) return [NSURL fileURLWithPath:path];
-
-	path = [[NSBundle mainBundle] pathForResource:@"default" ofType:@"xsl"];
-	if( path ) return [NSURL fileURLWithPath:path];
+	path = [[NSBundle mainBundle] URLForResource:@"genericTemplate" withExtension:@"html"];
+	if( path ) return path;
 
 	return nil;
 }
 
-- (NSURL *) previewTranscriptLocation {
-	NSString *path = [_bundle pathForResource:@"preview" ofType:@"colloquyTranscript"];
-	if( path ) return [NSURL fileURLWithPath:path];
+- (nullable NSURL *) XMLStyleSheetLocation {
+	NSURL *path = [_bundle URLForResource:@"main" withExtension:@"xsl"];
+	if( path ) return path;
 
-	path = [[NSBundle mainBundle] pathForResource:@"preview" ofType:@"colloquyTranscript"];
-	if( path ) return [NSURL fileURLWithPath:path];
+	path = [[NSBundle mainBundle] URLForResource:@"default" withExtension:@"xsl"];
+	if( path ) return path;
+
+	return nil;
+}
+
+- (nullable NSURL *) previewTranscriptLocation {
+	NSURL *path = [_bundle URLForResource:@"preview" withExtension:@"colloquyTranscript"];
+	if( path ) return path;
+
+	path = [[NSBundle mainBundle] URLForResource:@"preview" withExtension:@"colloquyTranscript"];
+	if( path ) return path;
 
 	return nil;
 }
@@ -493,7 +519,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 	NSString *contents = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
 
-	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
+	NSURL *resources = [[NSBundle mainBundle] resourceURL];
 	return ( contents ? [NSString stringWithFormat:contents, [resources absoluteString], @""] : @"" );
 }
 
@@ -507,7 +533,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 #pragma mark -
 
 @implementation JVStyle (Private)
-+ (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary {
++ (const char * _Nullable *) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary {
 	const char **temp = NULL, **ret = NULL;
 
 	if( ! [dictionary count] ) return NULL;
@@ -515,7 +541,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	ret = temp = malloc( ( ( [dictionary count] * 2 ) + 1 ) * sizeof( char * ) );
 
 	for( NSString *key in dictionary ) {
-		NSString *value = [dictionary objectForKey:key];
+		NSString *value = dictionary[key];
 
 		*(temp++) = (char *) strdup( [key UTF8String] );
 		*(temp++) = (char *) strdup( [value UTF8String] );
@@ -526,7 +552,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return ret;
 }
 
-+ (void) _freeXsltParamArray:(const char **) params {
++ (void) _freeXsltParamArray:(const char * __nullable*) params {
 	const char **temp = params;
 
 	if( ! params ) return;
@@ -546,7 +572,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	[self _setUserVariants:nil];
 }
 
-- (void) _setBundle:(NSBundle *) bundle {
+- (void) _setBundle:(nullable NSBundle *) bundle {
 	NSParameterAssert(bundle);
 
 	NSString *file = [bundle pathForResource:@"parameters" ofType:@"plist"];
@@ -558,23 +584,25 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	[self reload];
 }
 
-- (void) _setXSLStyle:(NSURL *) location {
+- (void) _setXSLStyle:(nullable NSURL *) location {
 	@synchronized( self ) {
 		if( _XSLStyle ) xsltFreeStylesheet( _XSLStyle );
 		_XSLStyle = ( [[location absoluteString] length] ? xsltParseStylesheetFile( (const xmlChar *)[[location absoluteString] fileSystemRepresentation] ) : NULL );
-		if( _XSLStyle ) ((xsltStylesheetPtr) _XSLStyle) -> indent = 0; // this is done because our whitespace escaping causes problems otherwise
+		if( _XSLStyle ) _XSLStyle -> indent = 0; // this is done because our whitespace escaping causes problems otherwise
 	}
 }
 
-- (void) _setStyleOptions:(NSArray *) options {
+- (void) _setStyleOptions:(nullable NSArray *) options {
 	_styleOptions = options;
 }
 
-- (void) _setVariants:(NSArray *) variants {
+- (void) _setVariants:(nullable NSArray *) variants {
 	_variants = variants;
 }
 
-- (void) _setUserVariants:(NSArray *) variants {
+- (void) _setUserVariants:(nullable NSArray *) variants {
 	_userVariants = variants;
 }
 @end
+
+NS_ASSUME_NONNULL_END

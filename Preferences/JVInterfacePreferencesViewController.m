@@ -83,7 +83,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	
 	[self.windowSetsTable setTarget:self];
 	[self.windowSetsTable setDoubleAction:@selector( editWindowSet: )];
-	[self.windowSetsTable registerForDraggedTypes:[NSArray arrayWithObject:JVInterfacePreferencesWindowDragPboardType]];
+	[self.windowSetsTable registerForDraggedTypes:@[JVInterfacePreferencesWindowDragPboardType]];
 	
 	[self.rulesTable setTarget:self];
 	[self.rulesTable setDoubleAction:@selector( editRuleSet: )];
@@ -107,7 +107,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 }
 
 - (NSImage *) toolbarItemImage {
-	return [NSImage imageNamed:@"InterfacePreferences"];
+	return [NSImage imageNamed:@"Preferences/Interface"];
 }
 
 - (NSString *) toolbarItemLabel {
@@ -313,7 +313,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 		NSData *data = [NSData dataWithBytes:&row length:sizeof( &row )];
 
-		[pboard declareTypes:[NSArray arrayWithObject:JVInterfacePreferencesWindowDragPboardType] owner:self];
+		[pboard declareTypes:@[JVInterfacePreferencesWindowDragPboardType] owner:self];
 		[pboard setData:data forType:JVInterfacePreferencesWindowDragPboardType];
 		return YES;
 	}
@@ -322,7 +322,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 }
 
 - (NSDragOperation) tableView:(NSTableView *) view validateDrop:(id <NSDraggingInfo>) info proposedRow:(NSInteger) row proposedDropOperation:(NSTableViewDropOperation) operation {
-	if( view == self.windowSetsTable && [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:JVInterfacePreferencesWindowDragPboardType]] ) {
+	if( view == self.windowSetsTable && [[info draggingPasteboard] availableTypeFromArray:@[JVInterfacePreferencesWindowDragPboardType]] ) {
 		if( operation == NSTableViewDropOn && row != -1 ) return NSDragOperationNone;
 
 		NSInteger index = -1;
@@ -339,7 +339,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 }
 
 - (BOOL) tableView:(NSTableView *) view acceptDrop:(id <NSDraggingInfo>) info row:(NSInteger) row dropOperation:(NSTableViewDropOperation) operation {
-	if( view == self.windowSetsTable && [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:JVInterfacePreferencesWindowDragPboardType]] ) {
+	if( view == self.windowSetsTable && [[info draggingPasteboard] availableTypeFromArray:@[JVInterfacePreferencesWindowDragPboardType]] ) {
 		NSInteger index = -1;
 		NSData *pboardData = [[info draggingPasteboard] dataForType:JVInterfacePreferencesWindowDragPboardType];
 		[pboardData getBytes:&index length:[pboardData length]];

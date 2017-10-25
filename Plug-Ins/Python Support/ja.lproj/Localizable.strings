@@ -1,0 +1,32 @@
+﻿/* edit button title */
+"Edit..." = "編集...";
+
+/* keep previous version button title */
+"Keep Previous Version" = "以前のバージョンを使用";
+
+/* PyObjC required error title */
+"PyObjC Required" = "PyObjC が必要です";
+
+/* PyObjC required error message */
+"PyObjC was not found. The Python console and any Python plugins will not work during this session. For the latest version of PyObjC visit http://pyobjc.sourceforge.net." = "PyObjC が見つかりませんでした。Python コンソールと Python プラグインはこのセッション中は動作しません。PyObjC の最新バージョンを手に入れるには http://pyobjc.sourceforge.net/ を訪れてください。";
+
+/* Python script file changed dialog title */
+"Python Script Changed" = "Python スクリプトが変更されました";
+
+/* Python script error title */
+"Python Script Error" = "Python スクリプトのエラー";
+
+/* reload button title */
+"Reload" = "再読込";
+
+/* F-Script plugin error message */
+"The Python script \"%@\" had an error while calling the \"%@\" function.\n\n%@" = "Python スクリプト「%1$@」は関数「%2$@」の呼び出し中にエラーが起きました。\n\n%3$@";
+
+/* Python script error message */
+"The Python script \"%@\" had an error while loading.\n\n%@" = "Python プラグイン「%1$@」は読み込み中にエラーが起こりました。\n\n%2$@";
+
+/* Python script changed on disk message */
+"The Python script \"%@\" has changed on disk. Any script variables will reset if reloaded." = "Python プラグイン「%@」はディスク上で変更されています。再読込を行った場合、スクリプトの変数はリセットされます。";
+
+/* unknown error */
+"Unknown Error" = "不明なエラー";

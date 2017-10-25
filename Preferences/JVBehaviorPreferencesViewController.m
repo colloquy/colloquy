@@ -31,7 +31,7 @@
 }
 
 - (NSImage *) toolbarItemImage {
-	return [NSImage imageNamed:@"BehaviorPreferences"];
+	return [NSImage imageNamed:@"Preferences/Behavior"];
 }
 
 - (NSString *)toolbarItemLabel {

@@ -436,7 +436,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 }
 
 #if ENABLE(SCRIPTING)
-+ (unsigned long) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding {
++ (OSType) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding {
 	switch( encoding ) {
 		default:
 		case NSUTF8StringEncoding: return 'utF8';
@@ -485,7 +485,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	return 'utF8'; // default encoding
 }
 
-+ (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(unsigned long) encoding {
++ (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(OSType) encoding {
 	switch( encoding ) {
 		default:
 		case 'utF8': return NSUTF8StringEncoding;
@@ -1181,7 +1181,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	return [self substringWithRange:resultRange];
 }
 
-- (NSArray <NSString *> *) captureComponentsMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options range:(NSRange) range error:(NSError **) error {
+- (nullable NSArray <NSString *> *) captureComponentsMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options range:(NSRange) range error:(NSError **) error {
 	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingReportCompletion range:range];
 
@@ -1196,11 +1196,11 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	return [results copy];
 }
 
-- (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement {
+- (nullable NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement {
 	return [self stringByReplacingOccurrencesOfRegex:regex withString:replacement options:0 range:NSMakeRange(0, self.length) error:nil];
 }
 
-- (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
+- (nullable NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
 	NSMutableString *replacementString = [self mutableCopy];
 	[replacementString replaceOccurrencesOfRegex:regex withString:replacement options:options range:searchRange error:error];
 	return [replacementString copy];

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		1C4FD36807C6BC25000EA451 /* JVJavaScriptPluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FD36607C6BC25000EA451 /* JVJavaScriptPluginLoader.m */; };
 		1C8748F40B2A801800286F24 /* plugin.html in Resources */ = {isa = PBXBuildFile; fileRef = 1C8748F30B2A801800286F24 /* plugin.html */; };
-		1CEF8F1C0A3AB66F0054298A /* JVJavaScriptChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEF8E6B0A3AAF530054298A /* JVJavaScriptChatPlugin.m */; };
+		1CEF8F1C0A3AB66F0054298A /* JVJavaScriptChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEF8E6B0A3AAF530054298A /* JVJavaScriptChatPlugin.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		9295C8511675E158009F9014 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9295C8501675E158009F9014 /* WebKit.framework */; };
 		9295C95D16782FF1009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9295C95C16782FF1009F9014 /* ChatCore.framework */; };
@@ -89,20 +89,20 @@
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				1C9AE940086A59CF008ED7AD /* Settings */,
-				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
+				089C1671FE841209C02AAC07 /* Frameworks */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
 			);
 			name = "FScript Plugin";
 			sourceTree = "<group>";
 		};
-		089C1671FE841209C02AAC07 /* Frameworks and Libraries */ = {
+		089C1671FE841209C02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				9295C8501675E158009F9014 /* WebKit.framework */,
 				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
 				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
 			);
-			name = "Frameworks and Libraries";
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		089C167CFE841241C02AAC07 /* Resources */ = {
@@ -208,7 +208,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Colloquy Project";
 			};
 			buildConfigurationList = 1C7F306F0855489300D41FB0 /* Build configuration list for PBXProject "JavaScript Support" */;
@@ -339,7 +339,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C29E3BED1F64A31200C18D21 /* Base.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = NO;
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)/../..";
 				SYMROOT = ../../build;
 			};
@@ -349,7 +348,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C29E3BED1F64A31200C18D21 /* Base.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = NO;
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)/../..";
 				SYMROOT = ../../build;
 			};

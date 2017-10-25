@@ -20,6 +20,7 @@
 
 #import "CQMPreferencesWindowController.h"
 #import "JVAppearancePreferencesViewController.h"
+#import "MaddsPathExtensions.h"
 
 #import <Sparkle/SUUpdater.h>
 
@@ -51,7 +52,7 @@ static BOOL applicationIsTerminating = NO;
 
 @synthesize preferencesWindowController = _preferencesWindowController;
 
-- (id) init {
+- (instancetype) init {
 	if( ( self = [super init] ) ) {
 		mach_port_t masterPort = 0;
 		IOMasterPort( MACH_PORT_NULL, &masterPort );
@@ -75,8 +76,6 @@ static BOOL applicationIsTerminating = NO;
 		IOObjectRelease( _hidEntry );
 		_hidEntry = 0;
 	}
-
-
 }
 
 #pragma mark -
@@ -94,7 +93,7 @@ static BOOL applicationIsTerminating = NO;
 	CFMutableDictionaryRef hidPropertiesRef = (__bridge CFMutableDictionaryRef)hidProperties;
 	IORegistryEntryCreateCFProperties( _hidEntry, &hidPropertiesRef, kCFAllocatorDefault, 0 );
 
-	id hidIdleTimeObj = [hidProperties objectForKey:@"HIDIdleTime"];
+	id hidIdleTimeObj = hidProperties[@"HIDIdleTime"];
 	unsigned long long result;
 
 	if( [hidIdleTimeObj isKindOfClass:[NSData class]] ) [hidIdleTimeObj getBytes:&result length:[hidIdleTimeObj length]];
@@ -114,7 +113,7 @@ static BOOL applicationIsTerminating = NO;
 			// no longer idle
 
 			_isIdle = NO;
-			[[NSNotificationCenter chatCenter] postNotificationName:JVMachineStoppedIdlingNotification object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithDouble:idle] forKey:@"idleTime"]];
+			[[NSNotificationCenter chatCenter] postNotificationName:JVMachineStoppedIdlingNotification object:self userInfo:@{@"idleTime": @(idle)}];
 
 			// reschedule the timer, to check for idle every 10 seconds
 			[_idleCheck invalidate];
@@ -126,7 +125,7 @@ static BOOL applicationIsTerminating = NO;
 			// we're now idle
 
 			_isIdle = YES;
-			[[NSNotificationCenter chatCenter] postNotificationName:JVMachineBecameIdleNotification object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithDouble:idle] forKey:@"idleTime"]];
+			[[NSNotificationCenter chatCenter] postNotificationName:JVMachineBecameIdleNotification object:self userInfo:@{@"idleTime": @(idle)}];
 
 			// reschedule the timer, we will check every 2 seconds to catch the user's return quickly
 			[_idleCheck invalidate];
@@ -154,7 +153,7 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) emailDeveloper:(id) sender {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"mailto:support@colloquy.info?subject=Colloquy%%20%%28build%%20%@%%29", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"mailto:support@colloquy.info?subject=Colloquy%%20%%28build%%20%@%%29", [[NSBundle mainBundle] infoDictionary][@"CFBundleVersion"]]]];
 }
 
 - (IBAction) productWebsite:(id) sender {
@@ -189,20 +188,33 @@ static BOOL applicationIsTerminating = NO;
 
 - (void) setupFolders {
 	NSFileManager *fm = [NSFileManager defaultManager];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/PlugIns" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Styles" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Styles/Variants" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Emoticons" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Sounds" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-//	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Recent Chat Rooms" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-//	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Recent Acquaintances" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Silc" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Silc/Client Keys" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Application Support/Colloquy/Silc/Server Keys" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Scripts/Applications" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
-	[fm createDirectoryAtPath:[@"~/Library/Scripts/Applications/Colloquy" stringByExpandingTildeInPath] withIntermediateDirectories:YES attributes:nil error:nil];
+	NSArray *toCreate;
+	{
+		NSURL *varURL = [fm URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+		varURL = [varURL URLByAppendingPathComponent:@"Colloquy" isDirectory:YES];
+		NSMutableArray *tmpCreate = [[NSMutableArray alloc] initWithCapacity:11];
+		[tmpCreate addObject:varURL];
+		for (NSString *subdir in @[@"PlugIns", @"Styles", @"Emoticons", @"Sounds", @"Favorites" /*, @"Recent Chat Rooms", @"Recent Acquaintances"*/, @"Silc"]) {
+			[tmpCreate addObject:[varURL URLByAppendingPathComponent:subdir isDirectory:YES]];
+		}
+		
+		for (NSArray<NSString*> *subdirs in @[@[@"Styles", @"Variants"], @[@"Silc", @"Client Keys"], @[@"Silc", @"Server Keys"]]) {
+			NSURL *tmpURL = varURL;
+			for (NSString *subdir in subdirs) {
+				tmpURL = [tmpURL URLByAppendingPathComponent:subdir isDirectory:YES];
+			}
+			[tmpCreate addObject:tmpURL];
+		}
+		
+		varURL = [[[[fm URLForDirectory:NSLibraryDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL] URLByAppendingPathComponent:@"Scripts"] URLByAppendingPathComponent:@"Applications"] URLByAppendingPathComponent:@"Colloquy" isDirectory:YES];
+		
+		[tmpCreate addObject:varURL];
+		
+		toCreate = [tmpCreate copy];
+	}
+	for (NSURL *createURL in toCreate) {
+		[fm createDirectoryAtURL:createURL withIntermediateDirectories:YES attributes:nil error:NULL];
+	}
 }
 
 #pragma mark -
@@ -240,15 +252,21 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) openDocument:(id) sender {
-	NSString *path = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	NSURL *path = [defaults URLForKey:@"JVChatTranscriptFolder"];
+	if (!path) {
+		path = [NSURL fileURLWithPath:[[defaults stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath] isDirectory:YES];
+		//Force the preference to be an NSURL entry
+		[defaults setURL:path forKey:@"JVChatTranscriptFolder"];
+	}
 
-	NSArray *fileTypes = [NSArray arrayWithObject:@"colloquyTranscript"];
+	NSArray *fileTypes = @[@"colloquyTranscript"];
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	[openPanel setCanChooseDirectories:NO];
 	[openPanel setCanChooseFiles:YES];
 	[openPanel setAllowsMultipleSelection:NO];
 	[openPanel setResolvesAliases:YES];
-	[openPanel setDirectoryURL:[NSURL fileURLWithPath:path isDirectory:YES]];
+	[openPanel setDirectoryURL:path];
 	[openPanel setAllowedFileTypes:fileTypes];
 	[openPanel beginWithCompletionHandler:^(NSInteger result) {
 		[self openDocumentPanelDidEnd:openPanel returnCode:result contextInfo:NULL];
@@ -258,7 +276,7 @@ static BOOL applicationIsTerminating = NO;
 - (void) openDocumentPanelDidEnd:(NSOpenPanel *) panel returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo {
 	NSString *filename = [[panel URL] path];
 	NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filename error:nil];
-	if( returnCode == NSModalResponseOK && [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
+	if( returnCode == NSModalResponseOK && [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedIntValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
 		[[JVChatController defaultController] chatViewControllerForTranscript:filename];
 	}
 }
@@ -291,7 +309,7 @@ static BOOL applicationIsTerminating = NO;
 	if( ! [[[MVConnectionsController defaultController] connections] count] )
 		return;
 	NSArray *connections = [[MVConnectionsController defaultController] connectedConnections];
-	MVChatConnection *connection = ( [connections count] ? [connections objectAtIndex:0] : nil );
+	MVChatConnection *connection = ( [connections count] ? connections[0] : nil );
 	[[JVChatRoomBrowser chatRoomBrowserForConnection:connection] showWindow:nil];
 }
 
@@ -309,7 +327,7 @@ static BOOL applicationIsTerminating = NO;
 - (BOOL) application:(NSApplication *) sender openFile:(NSString *) filename {
 	NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filename error:nil];
 
-	if( [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
+	if( [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [attributes[NSFileHFSTypeCode] unsignedIntValue] == 'coTr' && [attributes[NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
 		NSString *searchString = nil;
 
 		NSAppleEventManager *sam = [NSAppleEventManager sharedAppleEventManager];
@@ -320,8 +338,15 @@ static BOOL applicationIsTerminating = NO;
 		if( searchString ) [transcript setSearchQuery:searchString];
 
 		return YES;
-	} else if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:filename] && */ ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[filename pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coSt' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
-		NSString *newPath = [[@"~/Library/Application Support/Colloquy/Styles" stringByExpandingTildeInPath] stringByAppendingPathComponent:[filename lastPathComponent]];
+	} else if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:filename] && */ ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[filename pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [attributes[NSFileHFSTypeCode] unsignedIntValue] == 'coSt' && [attributes[NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
+		NSString *newPath;
+		@autoreleasepool {
+			NSURL *aURL = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+			aURL = [aURL URLByAppendingPathComponents:@[@"Colloquy", @"Styles", filename.lastPathComponent]];
+			newPath = aURL.path;
+		}
+		if (!newPath)
+		newPath = [[@"~/Library/Application Support/Colloquy/Styles" stringByExpandingTildeInPath] stringByAppendingPathComponent:[filename lastPathComponent]];
 		if( [newPath isEqualToString:filename] ) return NO;
 
 		if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:newPath] && */ [[NSFileManager defaultManager] isDeletableFileAtPath:newPath] ) {
@@ -369,8 +394,15 @@ static BOOL applicationIsTerminating = NO;
 			[alert runModal];
 			
 		} return NO;
-	} else if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:filename] && */ ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyEmoticons"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coEm' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
-		NSString *newPath = [[@"~/Library/Application Support/Colloquy/Emoticons" stringByExpandingTildeInPath] stringByAppendingPathComponent:[filename lastPathComponent]];
+	} else if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:filename] && */ ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyEmoticons"] == NSOrderedSame || ( [attributes[NSFileHFSTypeCode] unsignedIntValue] == 'coEm' && [attributes[NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
+		NSString *newPath;
+		@autoreleasepool {
+			NSURL *aURL = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+			aURL = [aURL URLByAppendingPathComponents:@[@"Colloquy", @"Emoticons", filename.lastPathComponent]];
+			newPath = aURL.path;
+		}
+		if (!newPath)
+		newPath = [[@"~/Library/Application Support/Colloquy/Emoticons" stringByExpandingTildeInPath] stringByAppendingPathComponent:[filename lastPathComponent]];
 		if( [newPath isEqualToString:filename] ) return NO;
 
 		if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:newPath] && */ [[NSFileManager defaultManager] isDeletableFileAtPath:newPath] ) {
@@ -442,11 +474,11 @@ static BOOL applicationIsTerminating = NO;
 		NSMutableDictionary *connectionInformation = [[NSMutableDictionary alloc] init];
 
 		[connection disconnectWithReason:quitAttributedString];
-		[connectionInformation setObject:connection forKey:@"connection"];
+		connectionInformation[@"connection"] = connection;
 
 		if ( [[connection awayStatusMessage] length] )
-			[connectionInformation setObject:[connection awayStatusMessage] forKey:@"away"];
-		else [connectionInformation setObject:@"" forKey:@"away"];
+			connectionInformation[@"away"] = [connection awayStatusMessage];
+		else connectionInformation[@"away"] = @"";
 
 		[_previouslyConnectedConnections addObject:connectionInformation];
 
@@ -462,11 +494,11 @@ static BOOL applicationIsTerminating = NO;
 	NSDictionary *connectionInformation = nil;
 
 	for ( connectionInformation in _previouslyConnectedConnections ) {
-		MVChatConnection *connection = [connectionInformation objectForKey:@"connection"];
+		MVChatConnection *connection = connectionInformation[@"connection"];
 		[connection connect];
 
-		if ([(MVChatString *) [connectionInformation objectForKey:@"away"] length])
-			[connection setAwayStatusMessage:[connectionInformation objectForKey:@"away"]];
+		if ([(MVChatString *) connectionInformation[@"away"] length])
+			[connection setAwayStatusMessage:connectionInformation[@"away"]];
 	}
 
 	_previouslyConnectedConnections = nil;
@@ -573,7 +605,7 @@ static BOOL applicationIsTerminating = NO;
 	[[NSURLCache sharedURLCache] removeAllCachedResponses];
 
 	NSTimeInterval runTime = ABS([_launchDate timeIntervalSinceNow]);
-	[[JVAnalyticsController defaultController] setObject:[NSNumber numberWithDouble:runTime] forKey:@"run-time"];
+	[[JVAnalyticsController defaultController] setObject:@(runTime) forKey:@"run-time"];
 }
 
 - (NSApplicationTerminateReply) applicationShouldTerminate:(NSApplication *) sender {
@@ -659,19 +691,19 @@ static BOOL applicationIsTerminating = NO;
 		return;
 	}
 
-	NSArray *invalidPlugins = notification.object;
+	NSArray<NSString*> *invalidPlugins = notification.object;
 
 	NSAlert *alert = [[NSAlert alloc] init];
 	alert.messageText = (invalidPlugins.count > 1) ? NSLocalizedString( @"Unable to load plugins", @"Unable to load plugins message text" ) : NSLocalizedString( @"Unable to load a plugin", @"Unable to load a plugin message text" );
 
-	NSString *informativeText = nil;
+	NSMutableString *informativeText = nil;
 	if( invalidPlugins.count > 1 ) {
-		informativeText = NSLocalizedString( @"Colloquy is unable to load the following plugins:\n", @"Colloquy is unable to load the following plugins:\n. informative text");
+		informativeText = [NSLocalizedString( @"Colloquy is unable to load the following plugins:\n", @"Colloquy is unable to load the following plugins:\n. informative text") mutableCopy];
 		for( NSString *pluginName in invalidPlugins )
-			informativeText = [informativeText stringByAppendingFormat:@"%@\n", [pluginName fileName]];
+			[informativeText appendFormat:@"%@\n", [pluginName fileName]];
 	} else {
 		NSString *pluginName = [[invalidPlugins lastObject] fileName];
-		informativeText = [NSString stringWithFormat:NSLocalizedString( @"Colloquy is unable to load the plugin named \"%@\".", @"Colloquy is unable to load the plugin named \"%@\". informative text"), pluginName];
+		informativeText = [NSMutableString stringWithFormat:NSLocalizedString( @"Colloquy is unable to load the plugin named \"%@\".", @"Colloquy is unable to load the plugin named \"%@\". informative text"), pluginName];
 	}
 
 	alert.informativeText = informativeText;
@@ -695,7 +727,7 @@ static BOOL applicationIsTerminating = NO;
 		for( JVChatRoomPanel *directChat in [[JVChatController defaultController] chatViewControllersOfClass:[JVDirectChatPanel class]] )
 			totalHighlightCount += [directChat newMessagesWaiting];
 
-		[[NSApp dockTile] setBadgeLabel:( totalHighlightCount == 0 ? nil : [[NSNumber numberWithUnsignedInteger:totalHighlightCount] stringValue] )];
+		[[NSApp dockTile] setBadgeLabel:( totalHighlightCount == 0 ? nil : [@(totalHighlightCount) stringValue] )];
 		[[NSApp dockTile] display];
 	} else {
 		[[NSApp dockTile] setBadgeLabel:nil];
@@ -714,13 +746,13 @@ static BOOL applicationIsTerminating = NO;
 	if (analyticsController) {
 		NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
 
-		NSString *information = [infoDictionary objectForKey:@"CFBundleName"];
+		NSString *information = infoDictionary[@"CFBundleName"];
 		[[JVAnalyticsController defaultController] setObject:information forKey:@"application-name"];
 
-		information = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+		information = infoDictionary[@"CFBundleShortVersionString"];
 		[[JVAnalyticsController defaultController] setObject:information forKey:@"application-version"];
 
-		information = [infoDictionary objectForKey:@"CFBundleVersion"];
+		information = infoDictionary[@"CFBundleVersion"];
 		[[JVAnalyticsController defaultController] setObject:information forKey:@"application-build-version"];
 
 		[[JVAnalyticsController defaultController] setObject:[[NSLocale currentLocale] localeIdentifier] forKey:@"locale"];

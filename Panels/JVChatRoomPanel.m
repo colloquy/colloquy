@@ -14,6 +14,8 @@
 #import "MVChatUserAdditions.h"
 #import "MVApplicationController.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdateNotification";
 
 @interface JVChatRoomPanel (Private)
@@ -33,7 +35,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 - (void) _memberModeChanged:(NSNotification *) notification;
 - (void) _membersSynced:(NSNotification *) notification;
 - (void) _bannedMembersSynced:(NSNotification *) notification;
-- (void) _topicChanged:(id) sender;
+- (void) _topicChanged:(nullable id) sender;
 - (void) _didClearDisplay:(NSNotification *) notification;
 
 - (NSInteger) _roomIndexInFavoritesMenu;
@@ -42,7 +44,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 #pragma mark -
 
 @implementation JVChatRoomPanel
-- (id) initWithTarget:(id) target {
+- (instancetype) initWithTarget:(id) target {
 	if( ( self = [super initWithTarget:target] ) ) {
 		_sortedMembers = [[NSMutableArray alloc] initWithCapacity:100];
 		_preferredTabCompleteNicknames = [[NSMutableArray alloc] initWithCapacity:10];
@@ -87,18 +89,12 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	[_sortedMembers makeObjectsPerformSelector:@selector( _detach )];
 	[_nextMessageAlertMembers makeObjectsPerformSelector:@selector( _detach )];
-
-
-	_sortedMembers = nil;
-	_preferredTabCompleteNicknames = nil;
-	_nextMessageAlertMembers = nil;
-
 }
 
 #pragma mark -
 #pragma mark Chat View Protocol Support
 
-- (void) setWindowController:(JVChatWindowController *) controller {
+- (void) setWindowController:(nullable JVChatWindowController *) controller {
 	[super setWindowController:controller];
 	if( [[self preferenceForKey:@"expanded"] boolValue] )
 		[controller performSelector:@selector( expandListItem: ) withObject:self afterDelay:0.];
@@ -121,7 +117,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	return [NSString stringWithFormat:@"%@ (%@)", [self title], [[self connection] server]];
 }
 
-- (NSString *) information {
+- (nullable NSString *) information {
 	if( _kickedFromRoom )
 		return NSLocalizedString( @"kicked out", "chat room kicked status line in drawer" );
 	if( ! [_sortedMembers count] )
@@ -158,10 +154,10 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 #pragma mark -
 
 - (NSImage *) icon {
-	return [NSImage imageNamed:@"room"];
+	return [NSImage imageNamed:@"roomIcon"];
 }
 
-- (NSImage *) statusImage {
+- (nullable NSImage *) statusImage {
 	if( [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] ) {
 		if( _isActive && [[[self view] window] isKeyWindow] ) {
 			_newMessageCount = 0;
@@ -187,10 +183,10 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 }
 
 - (id) childAtIndex:(NSUInteger) index {
-	return [_sortedMembers objectAtIndex:index];
+	return _sortedMembers[index];
 }
 
-- (NSArray *) children {
+- (nullable NSArray *) children {
 	return _sortedMembers;
 }
 
@@ -282,22 +278,29 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 #pragma mark -
 #pragma mark Miscellaneous
 
-- (IBAction) clearDisplay:(id) sender {
+- (IBAction) clearDisplay:(nullable id) sender {
 	[display clear];
 }
 
-- (IBAction) toggleFavorites:(id) sender {
-	NSString *favoritesPath = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
-	NSMutableArray *favorites = [NSMutableArray arrayWithContentsOfFile:favoritesPath];
+- (IBAction) toggleFavorites:(nullable id) sender {
+	NSURL *appSupport = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+	appSupport = [[appSupport URLByAppendingPathComponent:@"Colloquy"] URLByAppendingPathComponent:@"Favorites"];
+	appSupport = [appSupport URLByAppendingPathComponent:@"Favorites.plist" isDirectory:NO];
+	NSMutableArray *favorites = [[NSMutableArray alloc] initWithContentsOfURL:appSupport];
+	if (!favorites) {
+		//fall-back to old location/method
+		NSString *favoritesPath = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
+		favorites = [[NSMutableArray alloc] initWithContentsOfFile:favoritesPath];
+	}
 	if (!favorites)
-		favorites = [NSMutableArray array];
+		favorites = [[NSMutableArray alloc] init];
 
 	NSInteger favoriteIndex = [self _roomIndexInFavoritesMenu];
 	if (favoriteIndex != NSNotFound)
 		[favorites removeObjectAtIndex:favoriteIndex];
-	else [favorites addObject:[NSDictionary dictionaryWithObjectsAndKeys:[_target description], @"target", [[self connection] server], @"server", [[self connection] urlScheme], @"scheme", nil]];
+	else [favorites addObject:@{@"target": [_target description], @"server": [[self connection] server], @"scheme": [[self connection] urlScheme]}];
 
-	[favorites writeToFile:favoritesPath atomically:YES];
+	[favorites writeToURL:appSupport atomically:YES];
 
 	[MVConnectionsController refreshFavoritesMenu];
 
@@ -317,7 +320,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	[[MVConnectionsController defaultController] setJoinRooms:rooms forConnection:[self connection]];
 }
 
-- (IBAction) changeEncoding:(id) sender {
+- (IBAction) changeEncoding:(nullable id) sender {
 	[super changeEncoding:sender];
 	[[self target] setValue:@([self encoding]) forKey:@"encoding"];
 	if( sender ) [self _topicChanged:nil];
@@ -327,8 +330,8 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 #pragma mark Message Handling
 
 - (void) handleRoomMessageNotification:(NSNotification *) notification {
-	JVChatMessageType type = ( [[[notification userInfo] objectForKey:@"notice"] boolValue] ? JVChatMessageNoticeType : JVChatMessageNormalType );
-	[self addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] fromUser:[[notification userInfo] objectForKey:@"user"] withAttributes:[notification userInfo] withIdentifier:[[notification userInfo] objectForKey:@"identifier"] andType:type];
+	JVChatMessageType type = ( [[notification userInfo][@"notice"] boolValue] ? JVChatMessageNoticeType : JVChatMessageNormalType );
+	[self addMessageToDisplay:[notification userInfo][@"message"] fromUser:[notification userInfo][@"user"] withAttributes:[notification userInfo] withIdentifier:[notification userInfo][@"identifier"] andType:type];
 }
 
 - (void) processIncomingMessage:(JVMutableChatMessage *) message {
@@ -342,26 +345,26 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	if( [message ignoreStatus] == JVNotIgnored && [[message sender] respondsToSelector:@selector( isLocalUser )] && ! [[message sender] isLocalUser] ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ Room Activity", "room activity bubble title" ), [self title]] forKey:@"title"];
-		if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has a message waiting\nfrom %@.", "new single room message bubble text" ), [self title], [member displayName]] forKey:@"title"];
-		else [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has %d messages waiting.\nLast from %@", "new room messages bubble text" ), [self title], [self newMessagesWaiting], [member displayName]] forKey:@"title"];
-		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@", "room activity bubble message" ), [message bodyAsPlainText]] forKey:@"description"];
-		[context setObject:[NSImage imageNamed:@"room"] forKey:@"image"];
-		[context setObject:[[self windowTitle] stringByAppendingString:@"JVChatRoomActivity"] forKey:@"coalesceKey"];
-		[context setObject:self forKey:@"target"];
-		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-		[context setObject:[NSString stringWithFormat:@"%@ — %@: %@", [member displayName], self.target, [message bodyAsPlainText]] forKey:@"subtitle"];
+		context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"%@ Room Activity", "room activity bubble title" ), [self title]];
+		if( [self newMessagesWaiting] == 1 ) context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"%@ has a message waiting\nfrom %@.", "new single room message bubble text" ), [self title], [member displayName]];
+		else context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"%@ has %d messages waiting.\nLast from %@", "new room messages bubble text" ), [self title], [self newMessagesWaiting], [member displayName]];
+		context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@", "room activity bubble message" ), [message bodyAsPlainText]];
+		context[@"image"] = [NSImage imageNamed:@"roomIcon"];
+		context[@"coalesceKey"] = [[self windowTitle] stringByAppendingString:@"JVChatRoomActivity"];
+		context[@"target"] = self;
+		context[@"action"] = NSStringFromSelector( @selector( activate: ) );
+		context[@"subtitle"] = [NSString stringWithFormat:@"%@ — %@: %@", [member displayName], self.target, [message bodyAsPlainText]];
 		[self performNotification:@"JVChatRoomActivity" withContextInfo:context];
 	}
 
 	if( [message ignoreStatus] == JVNotIgnored && [_nextMessageAlertMembers containsObject:[message sender]] ) {
-		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ Replied", "member replied bubble title" ), [[message sender] title]] forKey:@"title"];
-		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has possibly replied to your message.", "new room messages bubble text" ), [[message sender] title]] forKey:@"description"];
-		[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
-		[context setObject:self forKey:@"target"];
-		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-		[context setObject:[NSString stringWithFormat:@"%@: %@", self.target, [message bodyAsPlainText]] forKey:@"subtitle"];
+		NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
+		context[@"title"] = [NSString stringWithFormat:NSLocalizedString( @"%@ Replied", "member replied bubble title" ), [[message sender] title]];
+		context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@ has possibly replied to your message.", "new room messages bubble text" ), [[message sender] title]];
+		context[@"image"] = [NSImage imageNamed:@"activityNewImportant"];
+		context[@"target"] = self;
+		context[@"action"] = NSStringFromSelector( @selector( activate: ) );
+		context[@"subtitle"] = [NSString stringWithFormat:@"%@: %@", self.target, [message bodyAsPlainText]];
 		[self performNotification:@"JVChatReplyAfterAddressing" withContextInfo:context];
 
 		[_nextMessageAlertMembers removeObject:[message sender]];
@@ -466,13 +469,13 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 #pragma mark -
 
-- (void) joinChat:(id) sender {
+- (void) joinChat:(nullable id) sender {
 	if( ! [[self connection] isConnected] )
 		[[self connection] connect];
 	[[self target] join];
 }
 
-- (void) partChat:(id) sender {
+- (void) partChat:(nullable id) sender {
 	if( [[self target] isJoined] ) {
 		[self parting];
 		[[self target] part];
@@ -501,7 +504,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	return [NSSet setWithSet:ret];
 }
 
-- (JVChatRoomMember *) firstChatRoomMemberWithName:(NSString *) name {
+- (nullable JVChatRoomMember *) firstChatRoomMemberWithName:(NSString *) name {
 	if( ! [name length] ) return nil;
 
 	JVChatRoomMember *member = nil;
@@ -517,7 +520,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	return nil;
 }
 
-- (JVChatRoomMember *) chatRoomMemberForUser:(MVChatUser *) user {
+- (nullable JVChatRoomMember *) chatRoomMemberForUser:(MVChatUser *) user {
 	if( ! user ) return nil;
 
 	JVChatRoomMember *member = nil;
@@ -529,7 +532,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	return nil;
 }
 
-- (JVChatRoomMember *) localChatRoomMember {
+- (nullable JVChatRoomMember *) localChatRoomMember {
 	JVChatRoomMember *member = nil;
 
 	for( member in _sortedMembers )
@@ -569,8 +572,8 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
 	// valid member links: "member:xenon" or "member:identifier:qI+rEcbsuX1T0tNbi6mM+A=="
-	if( [[[element objectForKey:WebElementLinkURLKey] scheme] isEqualToString:@"member"] ) {
-		NSString *resource = [[[element objectForKey:WebElementLinkURLKey] resourceSpecifier] stringByDecodingIllegalURLCharacters];
+	if( [[element[WebElementLinkURLKey] scheme] isEqualToString:@"member"] ) {
+		NSString *resource = [[element[WebElementLinkURLKey] resourceSpecifier] stringByDecodingIllegalURLCharacters];
 		BOOL specific = [resource hasPrefix:@"identifier:"];
 		NSString *nick = [resource substringFromIndex:( specific ? 11 : 0 )];
 		JVChatRoomMember *mbr = nil;
@@ -632,8 +635,8 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
 	// valid member links: "member:xenon" or "member:identifier:qI+rEcbsuX1T0tNbi6mM+A=="
-	if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"member"] ) {
-		NSString *resource = [[[actionInformation objectForKey:WebActionOriginalURLKey] resourceSpecifier] stringByDecodingIllegalURLCharacters];
+	if( [[actionInformation[WebActionOriginalURLKey] scheme] isEqualToString:@"member"] ) {
+		NSString *resource = [[actionInformation[WebActionOriginalURLKey] resourceSpecifier] stringByDecodingIllegalURLCharacters];
 		BOOL specific = [resource hasPrefix:@"identifier:"];
 		NSString *nick = [resource substringFromIndex:( specific ? 11 : 0 )];
 		MVChatUser *user = nil;
@@ -660,7 +663,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	if( [prefix isEqualToString:@""] ) {
 		if( [_preferredTabCompleteNicknames count] )
-			[possibleCompletion addObject:[_preferredTabCompleteNicknames objectAtIndex:0]];
+			[possibleCompletion addObject:_preferredTabCompleteNicknames[0]];
 		return possibleCompletion;
 	}
 
@@ -675,7 +678,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	}
 
 	static NSArray *commands;
-	if (!commands) commands = [[NSArray alloc] initWithObjects:@"/topic ", @"/kick ", @"/ban ", @"/kickban ", @"/op ", @"/voice ", @"/halfop ", @"/quiet ", @"/deop ", @"/devoice ", @"/dehalfop ", @"/dequiet ", @"/unban ", @"/bankick ", @"/cycle ", @"/hop ", @"/me ", @"/msg ", @"/nick ", @"/away ", @"/say ", @"/raw ", @"/quote ", @"/join ", @"/quit ", @"/disconnect ", @"/query ", @"/umode ", @"/globops ", @"/google ", @"/part ", nil];
+	if (!commands) commands = @[@"/topic ", @"/kick ", @"/ban ", @"/kickban ", @"/op ", @"/voice ", @"/halfop ", @"/quiet ", @"/deop ", @"/devoice ", @"/dehalfop ", @"/dequiet ", @"/unban ", @"/bankick ", @"/cycle ", @"/hop ", @"/me ", @"/msg ", @"/nick ", @"/away ", @"/say ", @"/raw ", @"/quote ", @"/join ", @"/quit ", @"/disconnect ", @"/query ", @"/umode ", @"/globops ", @"/google ", @"/part "];
 
 	for( NSString *name in commands )
 		if ([name hasCaseInsensitivePrefix:prefix])
@@ -729,7 +732,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
+	NSMutableArray *list = [[super toolbarDefaultItemIdentifiers:toolbar] mutableCopy];
 	[list addObject:JVToolbarTextEncodingItemIdentifier];
 	[list addObject:NSToolbarFlexibleSpaceItemIdentifier];
 	[list addObject:JVToolbarMarkItemIdentifier];
@@ -758,12 +761,12 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	_cantSendMessages = NO;
 
-	NSMutableAttributedString *rstring = [self _convertRawMessage:[[notification userInfo] objectForKey:@"reason"]];
-	[self addEventMessageToDisplay:NSLocalizedString( @"You left the room.", "you parted the room status message" ) withName:@"parted" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
+	NSMutableAttributedString *rstring = [self _convertRawMessage:[notification userInfo][@"reason"]];
+	[self addEventMessageToDisplay:NSLocalizedString( @"You left the room.", "you parted the room status message" ) withName:@"parted" andAttributes:@{@"reason": ( rstring ? (id) rstring : (id) [NSNull null] )}];
 }
 
 - (void) _roomModeChanged:(NSNotification *) notification {
-	MVChatUser *user = [[notification userInfo] objectForKey:@"by"];
+	MVChatUser *user = [notification userInfo][@"by"];
 
 	if( ! user ) return;
 	if( [[self connection] type] == MVChatConnectionIRCType && [[user nickname] rangeOfString:@"."].location != NSNotFound )
@@ -771,7 +774,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	JVChatRoomMember *mbr = [self chatRoomMemberForUser:user];
 
-	NSUInteger changedModes = [[[notification userInfo] objectForKey:@"changedModes"] unsignedIntValue];
+	NSUInteger changedModes = [[notification userInfo][@"changedModes"] unsignedIntValue];
 	NSUInteger newModes = [[self target] modes];
 
 	while( changedModes ) {
@@ -929,7 +932,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 		if( message && mode ) [self addEventMessageToDisplay:message withName:@"modeChange" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? (id) mbr : (id) user ), @"by", mode, @"mode", ( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ? @"yes" : @"no" ), @"enabled", parameter, @"parameter", nil]];
 
-		NSString *unsupportedModes = [notification.userInfo objectForKey:@"unsupportedModes"];
+		NSString *unsupportedModes = (notification.userInfo)[@"unsupportedModes"];
 		if (unsupportedModes.length) {
 			if (unsupportedModes.length > 2) {
 				if (user.localUser)
@@ -948,7 +951,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 - (void) _selfNicknameChanged:(NSNotification *) notification {
 	[self resortMembers];
-	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as <span class=\"member\">%@</span>.", "you changed nicknames" ), [[[self connection] nickname] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"newNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[self localChatRoomMember], @"who", nil]];
+	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as <span class=\"member\">%@</span>.", "you changed nicknames" ), [[[self connection] nickname] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"newNickname" andAttributes:@{@"who": [self localChatRoomMember]}];
 }
 
 - (void) _memberNicknameChanged:(NSNotification *) notification {
@@ -959,12 +962,12 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	JVChatRoomMember *member = [self chatRoomMemberForUser:[notification object]];
 	if( ! member ) return;
 
-	NSString *oldNickname = [[notification userInfo] objectForKey:@"oldNickname"];
+	NSString *oldNickname = [notification userInfo][@"oldNickname"];
 
 	NSUInteger index = [_preferredTabCompleteNicknames indexOfObject:oldNickname];
-	if( index != NSNotFound ) [_preferredTabCompleteNicknames replaceObjectAtIndex:index withObject:[member nickname]];
+	if( index != NSNotFound ) _preferredTabCompleteNicknames[index] = [member nickname];
 
-	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as <span class=\"member\">%@</span>.", "user has changed nicknames" ), [oldNickname stringByEncodingXMLSpecialCharactersAsEntities], [[member nickname] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"memberNewNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:oldNickname, @"old", member, @"who", nil]];
+	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as <span class=\"member\">%@</span>.", "user has changed nicknames" ), [oldNickname stringByEncodingXMLSpecialCharactersAsEntities], [[member nickname] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"memberNewNickname" andAttributes:@{@"old": oldNickname, @"who": member}];
 }
 
 - (void) _memberJoined:(NSNotification *) notification {
@@ -991,10 +994,10 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:NSLocalizedString( @"Room Member Joined", "member joined title" ) forKey:@"title"];
-	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ joined the chat room %@.", "bubble message member joined string" ), name, _target] forKey:@"description"];
-	[context setObject:self forKey:@"target"];
-	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
+	context[@"title"] = NSLocalizedString( @"Room Member Joined", "member joined title" );
+	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@ joined the chat room %@.", "bubble message member joined string" ), name, _target];
+	context[@"target"] = self;
+	context[@"action"] = NSStringFromSelector( @selector( activate: ) );
 	[self performNotification:@"JVChatMemberJoinedRoom" withContextInfo:context];
 }
 
@@ -1003,7 +1006,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	JVChatRoomMember *member = [self chatRoomMemberForUser:user];
 	if( ! member ) return;
 
-	NSMutableAttributedString *rstring = [self _convertRawMessage:[[notification userInfo] objectForKey:@"reason"]];
+	NSMutableAttributedString *rstring = [self _convertRawMessage:[notification userInfo][@"reason"]];
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( JVChatRoomMember * ), @encode( JVChatRoomPanel * ), @encode( NSAttributedString * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -1025,9 +1028,9 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:NSLocalizedString( @"Room Member Left", "member left title" ) forKey:@"title"];
-	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ left the chat room %@.", "bubble message member left string" ), name, _target] forKey:@"description"];
-	[context setObject:self forKey:@"target"];
-	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
+	context[@"description"] = [NSString stringWithFormat:NSLocalizedString( @"%@ left the chat room %@.", "bubble message member left string" ), name, _target];
+	context[@"target"] = self;
+	context[@"action"] = NSStringFromSelector( @selector( activate: ) );
 	[self performNotification:@"JVChatMemberLeftRoom" withContextInfo:context];
 
 	[member _detach];
@@ -1039,7 +1042,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 }
 
 - (void) _userBricked:(NSNotification *) notification {
-	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
+	MVChatUser *user = [notification userInfo][@"user"];
 
 	NSString *message = nil;
 	NSString *ctxmessage = nil;
@@ -1053,7 +1056,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 			ctxmessage = [NSString stringWithFormat:NSLocalizedString( @"%@ has been bricked.", "bubble message user bricked string" ), name];
 		}
 
-		[self addEventMessageToDisplay:message withName:@"userBricked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:user, @"who", nil]];
+		[self addEventMessageToDisplay:message withName:@"userBricked" andAttributes:@{@"who": user}];
 	} else {
 		message = NSLocalizedString( @"A brick flies off into the ether.", "a brick flies off into the ether status message" );
 		ctxmessage = NSLocalizedString( @"A brick flies off into the ether.", "bubble message nobody bricked string" );
@@ -1073,10 +1076,10 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:NSLocalizedString( @"Chat User Bricked", "user bricked title" ) forKey:@"title"];
-	[context setObject:ctxmessage forKey:@"description"];
-	[context setObject:self forKey:@"target"];
-	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
+	context[@"title"] = NSLocalizedString( @"Chat User Bricked", "user bricked title" );
+	context[@"description"] = ctxmessage;
+	context[@"target"] = self;
+	context[@"action"] = NSStringFromSelector( @selector( activate: ) );
 }
 
 - (void) _kicked:(NSNotification *) notification {
@@ -1182,10 +1185,10 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 - (void) _memberBanned:(NSNotification *) notification {
 	if( ! _banListSynced ) return;
 
-	MVChatUser *byUser = [[notification userInfo] objectForKey:@"byUser"];
+	MVChatUser *byUser = [notification userInfo][@"byUser"];
 	JVChatRoomMember *byMbr = [self chatRoomMemberForUser:byUser];
 
-	MVChatUser *ban = [[notification userInfo] objectForKey:@"user"];
+	MVChatUser *ban = [notification userInfo][@"user"];
 
 	NSString *message = nil;
 	NSString *banned = nil;
@@ -1204,14 +1207,14 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> set a ban on %@.", "user set a ban chat room status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), (banned ? banned : [[ban description] stringByEncodingXMLSpecialCharactersAsEntities])];
 	}
 
-	[self addEventMessageToDisplay:message withName:@"memberBanned" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[ban description], @"ban", byMbr, @"by", nil]];
+	[self addEventMessageToDisplay:message withName:@"memberBanned" andAttributes:@{@"ban": [ban description], @"by": byMbr}];
 }
 
 - (void) _memberBanRemoved:(NSNotification *) notification {
-	MVChatUser *byUser = [[notification userInfo] objectForKey:@"byUser"];
+	MVChatUser *byUser = [notification userInfo][@"byUser"];
 	JVChatRoomMember *byMbr = [self chatRoomMemberForUser:byUser];
 
-	MVChatUser *ban = [[notification userInfo] objectForKey:@"user"];
+	MVChatUser *ban = [notification userInfo][@"user"];
 
 	NSString *message = nil;
 	NSString *banned = nil;
@@ -1230,7 +1233,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> removed the ban on %@.", "user removed a ban chat room status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), (banned ? banned : [[ban description] stringByEncodingXMLSpecialCharactersAsEntities])];
 	}
 
-	[self addEventMessageToDisplay:message withName:@"banRemoved" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[ban description], @"ban", byMbr, @"by", nil]];
+	[self addEventMessageToDisplay:message withName:@"banRemoved" andAttributes:@{@"ban": [ban description], @"by": byMbr}];
 }
 
 - (void) _memberModeChanged:(NSNotification *) notification {
@@ -1446,10 +1449,10 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	if( title && description && notificationKey ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:title forKey:@"title"];
-		[context setObject:description forKey:@"description"];
-		[context setObject:self forKey:@"target"];
-		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
+		context[@"title"] = title;
+		context[@"description"] = description;
+		context[@"target"] = self;
+		context[@"action"] = NSStringFromSelector( @selector( activate: ) );
 		[self performNotification:notificationKey withContextInfo:context];
 	}
 }
@@ -1488,10 +1491,10 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	_banListSynced = YES;
 }
 
-- (void) _topicChanged:(id) sender {
+- (void) _topicChanged:(nullable id) sender {
 	NSAttributedString *topic = [self _convertRawMessage:[[self target] topic]];
 	JVChatRoomMember *author = ( [[self target] topicAuthor] ? [self chatRoomMemberForUser:[[self target] topicAuthor]] : nil );
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	NSDictionary *options = @{@"IgnoreFonts": @YES, @"IgnoreFontSizes": @YES};
 	NSString *topicString = [topic HTMLFormatWithOptions:options];
 
 	if( topic && [[self target] topicAuthor] && sender ) {
@@ -1519,7 +1522,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	}
 
 	id authorArg = ( author ? [author title] : [[[self target] topicAuthor] displayName] );
-	NSArray *args = [NSArray arrayWithObjects:topicString, ( authorArg ? authorArg : [NSNull null] ), [NSNumber numberWithBool:emptyTopic], nil];
+	NSArray *args = @[topicString, ( authorArg ? authorArg : [NSNull null] ), @(emptyTopic)];
 	[[display windowScriptObject] callWebScriptMethod:@"changeTopic" withArguments:args];
 }
 
@@ -1528,21 +1531,23 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 }
 
 - (NSInteger) _roomIndexInFavoritesMenu {
-	NSString *favoritesPath = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
-	NSMutableArray *favorites = [NSMutableArray arrayWithContentsOfFile:favoritesPath];
+	NSURL *appSupport = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+	appSupport = [[appSupport URLByAppendingPathComponent:@"Colloquy"] URLByAppendingPathComponent:@"Favorites"];
+	appSupport = [appSupport URLByAppendingPathComponent:@"Favorites.plist" isDirectory:NO];
+	NSMutableArray *favorites = [[NSMutableArray alloc] initWithContentsOfURL:appSupport];
 	if (!favorites)
 		return NSNotFound;
 
 	for (NSUInteger i = 0; i < favorites.count; i++) {
-		NSDictionary *favoritesDictionary = [favorites objectAtIndex:i];
+		NSDictionary *favoritesDictionary = favorites[i];
 
-		if (![[favoritesDictionary objectForKey:@"scheme"] isCaseInsensitiveEqualToString:[[self connection] urlScheme]])
+		if (![favoritesDictionary[@"scheme"] isCaseInsensitiveEqualToString:[[self connection] urlScheme]])
 			continue;
 
-		if (![[favoritesDictionary objectForKey:@"server"] isCaseInsensitiveEqualToString:[[self connection] server]])
+		if (![favoritesDictionary[@"server"] isCaseInsensitiveEqualToString:[[self connection] server]])
 			continue;
 
-		if (![[favoritesDictionary objectForKey:@"target"] isCaseInsensitiveEqualToString:[_target description]])
+		if (![favoritesDictionary[@"target"] isCaseInsensitiveEqualToString:[_target description]])
 			continue;
 
 		return i;
@@ -1563,7 +1568,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	return [self firstChatRoomMemberWithName:name];
 }
 
-- (JVChatRoomMember *) valueInChatMembersWithUniqueID:(id) identifier {
+- (nullable JVChatRoomMember *) valueInChatMembersWithUniqueID:(id) identifier {
 	JVChatRoomMember *member = nil;
 
 	for( member in _sortedMembers )
@@ -1587,9 +1592,11 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 #pragma mark -
 
 @implementation JVChatRoomMember (JVChatRoomMemberObjectSpecifier)
-- (NSScriptObjectSpecifier *) objectSpecifier {
+- (nullable NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatRoomPanel class]];
 	NSScriptObjectSpecifier *container = [[self room] objectSpecifier];
 	return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatMembers" uniqueID:[self uniqueIdentifier]];
 }
 @end
+
+NS_ASSUME_NONNULL_END

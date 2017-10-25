@@ -1,3 +1,4 @@
+#import <tgmath.h>
 #import "JVMarkedScroller.h"
 
 @interface JVMark : NSObject
@@ -19,7 +20,7 @@
 @end
 
 @implementation JVMarkedScroller
-- (id) initWithFrame:(NSRect) frame {
+- (instancetype) initWithFrame:(NSRect) frame {
 	if( ( self = [super initWithFrame:frame] ) ) {
 		_marks = [NSMutableSet set];
 		_shades = [NSMutableArray array];
@@ -30,25 +31,18 @@
 	return self;
 }
 
-- (void) dealloc {
-
-	_marks = nil;
-	_shades = nil;
-
-}
-
 #pragma mark -
 
 - (void) drawRect:(NSRect) rect {
 	[super drawRect:rect];
 
 	NSAffineTransform *transform = [NSAffineTransform transform];
-	float width = [[self class] scrollerWidthForControlSize:[self controlSize] scrollerStyle:NSScrollerStyleOverlay];
+	CGFloat width = [[self class] scrollerWidthForControlSize:[self controlSize] scrollerStyle:NSScrollerStyleOverlay];
 
-	float scale = [self scaleToContentView];
+	CGFloat scale = [self scaleToContentView];
 	[transform scaleXBy:( sFlags.isHoriz ? scale : 1. ) yBy:( sFlags.isHoriz ? 1. : scale )];
 
-	float offset = [self rectForPart:NSScrollerKnobSlot].origin.y;
+	CGFloat offset = [self rectForPart:NSScrollerKnobSlot].origin.y;
 	[transform translateXBy:( sFlags.isHoriz ? offset / scale : 0. ) yBy:( sFlags.isHoriz ? 0. : offset / scale )];
 
 	NSBezierPath *shades = [NSBezierPath bezierPath];
@@ -113,8 +107,8 @@
 
 		NSPoint point = NSMakePoint( ( sFlags.isHoriz ? value : 0. ), ( sFlags.isHoriz ? 0. : value ) );
 		point = [transform transformPoint:point];
-		point.x = ( sFlags.isHoriz ? roundf( point.x ) + 0.5 : point.x );
-		point.y = ( sFlags.isHoriz ? point.y : roundf( point.y ) + 0.5 );
+		point.x = ( sFlags.isHoriz ? round( point.x ) + 0.5 : point.x );
+		point.y = ( sFlags.isHoriz ? point.y : round( point.y ) + 0.5 );
 
 		if( ! NSPointInRect( point, knobRect ) ) {
 			if( mark.color ) {
@@ -243,7 +237,7 @@
 	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSPoint where = [self convertPoint:[event locationInWindow] fromView:nil];
 	NSRect slotRect = [self rectForPart:NSScrollerKnobSlot];
-	float scale = [self scaleToContentView];
+	CGFloat scale = [self scaleToContentView];
 	[self removeMarksLessThan:( ( sFlags.isHoriz ? where.x - NSMinX( slotRect ) : where.y - NSMinY( slotRect ) ) / scale )];
 }
 
@@ -251,7 +245,7 @@
 	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSPoint where = [self convertPoint:[event locationInWindow] fromView:nil];
 	NSRect slotRect = [self rectForPart:NSScrollerKnobSlot];
-	float scale = [self scaleToContentView];
+	CGFloat scale = [self scaleToContentView];
 	[self removeMarksGreaterThan:( ( sFlags.isHoriz ? where.x - NSMinX( slotRect ) : where.y - NSMinY( slotRect ) ) / scale )];
 }
 
@@ -274,7 +268,7 @@
 	if( _nearestPreviousMark != NSNotFound ) {
 		_currentMark = _nearestPreviousMark;
 		_jumpingToMark = YES;
-		float shift = [self shiftAmountToCenterAlign];
+		CGFloat shift = [self shiftAmountToCenterAlign];
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 		_jumpingToMark = NO;
 
@@ -286,7 +280,7 @@
 	if( _nearestNextMark != NSNotFound ) {
 		_currentMark = _nearestNextMark;
 		_jumpingToMark = YES;
-		float shift = [self shiftAmountToCenterAlign];
+		CGFloat shift = [self shiftAmountToCenterAlign];
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 		_jumpingToMark = NO;
 
@@ -308,7 +302,7 @@
 	}
 
 	if( foundMark ) {
-		float shift = [self shiftAmountToCenterAlign];
+		CGFloat shift = [self shiftAmountToCenterAlign];
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 	}
 
@@ -319,7 +313,7 @@
 
 - (void) shiftMarksAndShadedAreasBy:(long long) displacement {
 	BOOL negative = ( displacement >= 0 ? NO : YES );
-	NSMutableSet *shiftedMarks = [NSMutableSet set];
+	NSMutableSet *shiftedMarks = [[NSMutableSet alloc] init];
 	unsigned long long unsignedDisplacement = (unsigned long long)ABS( displacement );
 
 	if( ! ( negative && _nearestPreviousMark < unsignedDisplacement ) ) _nearestPreviousMark += unsignedDisplacement;
@@ -351,11 +345,11 @@
 		if( stop ) {
 			unsigned long long shiftedStop = [stop unsignedLongLongValue];
 			if( ! ( negative && shiftedStart < unsignedDisplacement ) && ! ( negative && shiftedStop < unsignedDisplacement ) ) {
-				[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStart + unsignedDisplacement )]];
-				[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStop + unsignedDisplacement )]];
+				[shiftedShades addObject:@( shiftedStart + unsignedDisplacement )];
+				[shiftedShades addObject:@( shiftedStop + unsignedDisplacement )];
 			}
 		} else if( ! ( negative && shiftedStart < unsignedDisplacement ) ) {
-			[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStart + unsignedDisplacement )]];
+			[shiftedShades addObject:@( shiftedStart + unsignedDisplacement )];
 		}
 	}
 
@@ -462,14 +456,14 @@
 
 - (void) startShadedAreaAt:(unsigned long long) location {
 	if( ! [_shades count] || ! ( [_shades count] % 2 ) ) {
-		[_shades addObject:[NSNumber numberWithUnsignedLongLong:location]];
+		[_shades addObject:@(location)];
 		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 	}
 }
 
 - (void) stopShadedAreaAt:(unsigned long long) location {
 	if( [_shades count] && ( [_shades count] % 2 ) == 1 ) {
-		[_shades addObject:[NSNumber numberWithUnsignedLongLong:location]];
+		[_shades addObject:@(location)];
 		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 	}
 }
@@ -494,7 +488,7 @@
 }
 
 - (CGFloat) shiftAmountToCenterAlign {
-	float scale = [self scaleToContentView];
+	CGFloat scale = [self scaleToContentView];
 	if( sFlags.isHoriz ) return ( ( NSWidth( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
 	else return ( ( NSHeight( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
 }

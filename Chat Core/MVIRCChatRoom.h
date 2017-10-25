@@ -8,13 +8,15 @@ NS_ASSUME_NONNULL_BEGIN
 @class MVIRCChatConnection;
 
 @interface MVIRCChatRoom : MVChatRoom
-- (id) initWithName:(NSString *) name andConnection:(MVIRCChatConnection *) connection;
+- (instancetype) initWithName:(NSString *) name andConnection:(MVIRCChatConnection *) connection;
 - (NSString *) modifyAddressForBan:(MVChatUser *) user;
 @end
 
 #pragma mark -
 
 @interface MVChatRoom (MVIRCChatRoomPrivate)
+@property (getter=_namesSynced, setter=_setNamesSynced:) BOOL namesSynced;
+@property (getter=_bansSynced, setter=_setBansSynced:) BOOL bansSynced;
 - (BOOL) _namesSynced;
 - (void) _setNamesSynced:(BOOL) synced;
 - (BOOL) _bansSynced;

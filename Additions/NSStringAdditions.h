@@ -1,3 +1,5 @@
+#import <Foundation/NSString.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 COLLOQUY_EXPORT BOOL isValidUTF8( const char *string, NSUInteger length );
@@ -19,12 +21,17 @@ COLLOQUY_EXPORT BOOL isValidUTF8( const char *string, NSUInteger length );
 + (NSString *) locallyUniqueString;
 
 #if ENABLE(SCRIPTING)
-+ (unsigned long) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding;
-+ (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(unsigned long) encoding;
++ (OSType) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding;
++ (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(OSType) encoding;
 #endif
 
+#if __has_feature(objc_class_property)
+@property (class, readonly, copy) NSArray <NSString *> *knownEmoticons;
+@property (class, readonly, copy) NSSet <NSString *> *knownEmojiWithEmoticons;
+#else
 + (NSArray <NSString *> *) knownEmoticons;
-+ (NSSet *) knownEmojiWithEmoticons;
++ (NSSet <NSString *> *) knownEmojiWithEmoticons;
+#endif
 
 - (instancetype) initWithChatData:(NSData *) data encoding:(NSStringEncoding) encoding;
 
@@ -67,19 +74,19 @@ COLLOQUY_EXPORT BOOL isValidUTF8( const char *string, NSUInteger length );
 @property (readonly, copy) NSString *stringBySubstitutingEmojiForEmoticons;
 @property (readonly, copy) NSString *stringBySubstitutingEmoticonsForEmoji;
 
-- (BOOL) isMatchedByRegex:(NSString *) regex;
+- (BOOL) isMatchedByRegex:(NSString *) regex NS_SWIFT_UNAVAILABLE("Use 'isMached(byRegex:options:in:) throws' instead");
 - (BOOL) isMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range error:(NSError **) error;
 
-- (NSRange) rangeOfRegex:(NSString *) regex inRange:(NSRange) range;
+- (NSRange) rangeOfRegex:(NSString *) regex inRange:(NSRange) range NS_SWIFT_UNAVAILABLE("Use 'range(ofRegex:options:in:capture:) throws' instead");
 - (NSRange) rangeOfRegex:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error;
 
-- (NSString *__nullable) stringByMatching:(NSString *) regex capture:(NSInteger) capture;
+- (NSString *__nullable) stringByMatching:(NSString *) regex capture:(NSInteger) capture NS_SWIFT_UNAVAILABLE("Use 'matching(_:options:in:capture:) throws' instead");
 - (NSString *__nullable) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error;
 
-- (NSArray <NSString *> *) captureComponentsMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options range:(NSRange) range error:(NSError **) error;
+- (nullable NSArray <NSString *> *) captureComponentsMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options range:(NSRange) range error:(NSError **) error;
 
-- (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement;
-- (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error;
+- (nullable NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement NS_SWIFT_UNAVAILABLE("Use 'stringByReplacingOccurrences(ofRegex:with:options:range:) throws' instead");
+- (nullable NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error;
 
 - (NSString *) cq_stringByRemovingCharactersInSet:(NSCharacterSet *) set;
 @end
@@ -105,7 +112,7 @@ COLLOQUY_EXPORT BOOL isValidUTF8( const char *string, NSUInteger length );
 - (void) substituteEmojiForEmoticonsInRange:(NSRangePointer) range;
 - (void) substituteEmojiForEmoticonsInRange:(NSRangePointer) range encodeXMLSpecialCharactersAsEntities:(BOOL) encode;
 
-- (BOOL) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement;
+- (BOOL) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement NS_SWIFT_UNAVAILABLE("Use 'replaceOccurrences(ofRegex:with:options:range:) throws' instead");
 - (BOOL) replaceOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error;
 @end
 

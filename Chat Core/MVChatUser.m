@@ -150,7 +150,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
-- (BOOL) isEqual:(id) object {
+- (BOOL) isEqual:(nullable id) object {
 	if( object == self ) return YES;
 	if( ! object || ! [object isKindOfClass:[MVChatUser class]] ) return NO;
 	if( _type == MVChatWildcardUserType || [(MVChatUser *)object type] == MVChatWildcardUserType )
@@ -329,7 +329,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	}
 }
 
-- (id) attributeForKey:(NSString *) key {
+- (id __nullable) attributeForKey:(NSString *) key {
 	@synchronized( _attributes ) {
 		return _attributes[key];
 	}

@@ -117,6 +117,13 @@ static const NSStringEncoding supportedEncodings[] = {
 };
 
 @implementation MVChatConnection
+// subclass this method
+@dynamic nickname;
+@synthesize alternateNicknames = _alternateNicks;
+
+// subclass this method
+@dynamic serverPort;
+
 + (BOOL) supportsURLScheme:(NSString *__nullable) scheme {
 	return
 #if ENABLE(ICB)
@@ -134,7 +141,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		NO;
 }
 
-+ (NSArray <NSNumber *> *) defaultServerPortsForType:(MVChatConnectionType) type {
++ (nullable NSArray <NSNumber *> *) defaultServerPortsForType:(MVChatConnectionType) type {
 #if ENABLE(ICB)
 	if( type == MVChatConnectionICBType )
 		return [MVICBChatConnection defaultServerPorts];
@@ -196,7 +203,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		_joinedRooms = [[NSMutableSet alloc] initWithCapacity:10];
 
 		CFDictionaryValueCallBacks valueCallbacks = { 0, NULL, NULL, kCFTypeDictionaryValueCallBacks.copyDescription, kCFTypeDictionaryValueCallBacks.equal };
-		_knownRooms = (NSMutableDictionary *)CFBridgingRelease(CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &valueCallbacks));
+		_knownRooms = (NSMutableDictionary *)CFBridgingRelease(CFDictionaryCreateMutable(NULL, 0, &kCFCopyStringDictionaryKeyCallBacks, &valueCallbacks));
 
 		_knownUsers = [[NSMapTable alloc] initWithKeyOptions:NSMapTableObjectPointerPersonality|NSMapTableCopyIn
 												valueOptions:NSMapTableObjectPointerPersonality|NSMapTableWeakMemory
@@ -235,7 +242,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		break;
 #endif
 	default:
-		self = nil;
+		return nil;
 	}
 
 	[self setUniqueIdentifier:[NSString locallyUniqueString]];
@@ -330,9 +337,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (NSString *) uniqueIdentifier {
-	return _uniqueIdentifier;
-}
+@synthesize uniqueIdentifier = _uniqueIdentifier;
 
 - (void) setUniqueIdentifier:(NSString *) uniqueIdentifier {
 	NSParameterAssert( uniqueIdentifier != nil );
@@ -401,16 +406,6 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (NSError *) lastError {
-	return _lastError;
-}
-
-- (NSError *) serverError {
-	return _serverError;
-}
-
-#pragma mark -
-
 - (NSString *) urlScheme {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
@@ -431,10 +426,6 @@ static const NSStringEncoding supportedEncodings[] = {
 		_encoding = newEncoding;
 }
 
-- (NSStringEncoding) encoding {
-	return _encoding;
-}
-
 #pragma mark -
 
 - (void) setRealName:(NSString *) name {
@@ -449,17 +440,6 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 #pragma mark -
-
-- (void) setNickname:(NSString *) nickname {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
-}
-
-- (NSString *) nickname {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
-	return nil;
-}
 
 - (void) setPreferredNickname:(NSString *) nickname {
 // subclass this method, if needed
@@ -853,10 +833,6 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	}
 }
 
-- (MVChatUser *) localUser {
-	return _localUser;
-}
-
 #pragma mark -
 
 - (void) addChatUserWatchRule:(MVChatUserWatchRule *) rule {
@@ -915,16 +891,8 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
-- (NSDate *) connectedDate {
-	return _connectedDate;
-}
-
 - (BOOL) isConnected {
 	return ( _status == MVChatConnectionConnectedStatus );
-}
-
-- (MVChatConnectionStatus) status {
-	return _status;
 }
 
 - (NSUInteger) lag {
@@ -964,10 +932,6 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (BOOL) isWaitingToReconnect {
 	return ( ! [self isConnected] && _reconnectTimer ? YES : NO );
-}
-
-- (unsigned short) reconnectAttemptCount {
-	return _reconnectAttemptCount;
 }
 
 - (void) purgeCaches {
@@ -1267,11 +1231,11 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
-- (NSUInteger) scriptTypedEncoding {
+- (OSType) scriptTypedEncoding {
 	return [NSString scriptTypedEncodingFromStringEncoding:[self encoding]];
 }
 
-- (void) setScriptTypedEncoding:(NSUInteger) newEncoding {
+- (void) setScriptTypedEncoding:(OSType) newEncoding {
 	[self setEncoding:[NSString stringEncodingFromScriptTypedEncoding:newEncoding]];
 }
 
@@ -1288,7 +1252,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
  @warning This is not particularily safe, since the order of the underlying array is not guaranteed to remain the same between calls.
  */
 - (MVChatUser *) valueInKnownChatUsersArrayAtIndex:(NSUInteger) index {
-	return [[self knownChatUsersArray] objectAtIndex:index];
+	return [self knownChatUsersArray][index];
 }
 
 - (MVChatUser *) valueInKnownChatUsersArrayWithUniqueID:(id) identifier {
@@ -1310,7 +1274,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 }
 
 - (MVChatRoom *) valueInJoinedChatRoomsArrayAtIndex:(NSUInteger) index {
-	return [[self joinedChatRoomsArray] objectAtIndex:index];
+	return [self joinedChatRoomsArray][index];
 }
 
 - (MVChatRoom *) valueInJoinedChatRoomsArrayWithUniqueID:(id) identifier {
@@ -1339,15 +1303,15 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	// the subject didn't respond to the command, so do our default implementation
 	NSDictionary *args = [self evaluatedArguments];
 	id message = [self evaluatedDirectParameter];
-	id target = [args objectForKey:@"target"];
-	id action = [args objectForKey:@"action"];
-	id localEcho = [args objectForKey:@"echo"];
-	id encoding = [args objectForKey:@"encoding"];
+	id target = args[@"target"];
+	id action = args[@"action"];
+	id localEcho = args[@"echo"];
+	id encoding = args[@"encoding"];
 
 	if( [message isKindOfClass:[MVChatConnection class]] ) {
 		// old compatability mode; flip some parameters
 		MVChatConnection *connection = message;
-		message = [args objectForKey:@"message"];
+		message = args[@"message"];
 
 		if( ! [connection isConnected] ) return nil;
 
@@ -1438,14 +1402,14 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 	NSArray *targets = nil;
 	if( [target isKindOfClass:[NSArray class]] ) targets = target;
-	else targets = [NSArray arrayWithObject:target];
+	else targets = @[target];
 
 	for( target in targets ) {
 		if( ! [target isKindOfClass:[MVChatUser class]] && ! [target isKindOfClass:[MVChatRoom class]] )
 			continue;
 
 		if( encoding ) {
-			realEncoding = [NSString stringEncodingFromScriptTypedEncoding:[encoding unsignedLongValue]];
+			realEncoding = [NSString stringEncodingFromScriptTypedEncoding:[encoding unsignedIntValue]];
 		} else if( [target isKindOfClass:[MVChatRoom class]] ) {
 			realEncoding = [(MVChatRoom *)target encoding];
 		} else {
@@ -1501,8 +1465,8 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	// the subject didn't respond to the command, so do our default implementation
 	NSDictionary *args = [self evaluatedArguments];
 	id message = [self evaluatedDirectParameter];
-	id connection = [args objectForKey:@"connection"];
-	id priority = [args objectForKey:@"priority"];
+	id connection = args[@"connection"];
+	id priority = args[@"priority"];
 
 	if( ! message ) {
 		[self setScriptErrorNumber:-1715]; // errAEParamMissed
@@ -1556,7 +1520,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 	NSArray *targets = nil;
 	if( [connection isKindOfClass:[NSArray class]] ) targets = connection;
-	else targets = [NSArray arrayWithObject:connection];
+	else targets = @[connection];
 
 	for( connection in targets ) {
 		if( ! [connection isKindOfClass:[MVChatConnection class]] ) continue;
@@ -1580,7 +1544,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	// the subject didn't respond to the command, so do our default implementation
 	NSDictionary *args = [self evaluatedArguments];
 	id room = [self evaluatedDirectParameter];
-	id connection = [args objectForKey:@"connection"];
+	id connection = args[@"connection"];
 
 	if( ! room || ( ! [room isKindOfClass:[NSString class]] && ! [room isKindOfClass:[NSArray class]] ) ) {
 		[self setScriptErrorNumber:-1715]; // errAEParamMissed
@@ -1608,7 +1572,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 	NSArray *targets = nil;
 	if( [connection isKindOfClass:[NSArray class]] ) targets = connection;
-	else targets = [NSArray arrayWithObject:connection];
+	else targets = @[connection];
 
 	for( connection in targets ) {
 		if( ! [connection isKindOfClass:[MVChatConnection class]] ) continue;

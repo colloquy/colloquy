@@ -1,6 +1,7 @@
 #import "JVNotificationPreferencesViewController.h"
 
 #import <ChatCore/NSRegularExpressionAdditions.h>
+#import "MaddsPathExtensions.h"
 
 
 @interface JVNotificationPreferencesViewController ()
@@ -57,7 +58,7 @@
 }
 
 - (NSImage *) toolbarItemImage {
-	return [NSImage imageNamed:@"NotificationPreferences"];
+	return [[NSWorkspace sharedWorkspace] iconForFileType: NSFileTypeForHFSTypeCode(kAlertNoteIcon)];
 }
 
 - (NSString *) toolbarItemLabel {
@@ -163,15 +164,26 @@
 	}
 
 	NSFileManager *fm = [NSFileManager defaultManager];
-	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-	NSArray *paths = [NSArray arrayWithObjects:
-		[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Sounds", bundleName],
-		[NSString stringWithFormat:@"/Library/Application Support/%@/Sounds", bundleName],
-		[[NSString stringWithFormat:@"~/Library/Application Support/%@/Sounds", bundleName] stringByExpandingTildeInPath],
-		@"-",
-		@"/System/Library/Sounds",
-		[@"~/Library/Sounds" stringByExpandingTildeInPath],
-		nil];
+	NSArray *paths;
+	{
+		NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+		NSMutableArray *tmpPaths = [NSMutableArray arrayWithCapacity:6];
+		NSArray *appSupport = [[fm URLsForDirectory:NSApplicationSupportDirectory inDomains:NSAllDomainsMask & ~NSSystemDomainMask] sortedArrayUsingSelector:@selector(compare:)];
+		for (NSURL *aURL in appSupport) {
+			NSURL *bURL = [aURL URLByAppendingPathComponents:@[bundleName, @"Sounds"]];
+			[tmpPaths addObject:bURL.path];
+		}
+		
+		[tmpPaths addObject:@"-"];
+		
+		NSArray *soundsDir = [[fm URLsForDirectory:NSLibraryDirectory inDomains:NSAllDomainsMask] sortedArrayUsingSelector:@selector(compare:)];
+		for (NSURL *aURL in soundsDir) {
+			NSString *dir = [aURL path];
+			dir = [dir stringByAppendingPathComponent:@"Sounds"];
+			[tmpPaths addObject:dir];
+		}
+		paths = [tmpPaths copy];
+	}
 
 	for( __strong NSString *aPath in paths ) {
 		if( [aPath isEqualToString:@"-"] ) {
@@ -250,7 +262,7 @@
 	[self saveEventSettings];
 
 	if( [self.playSound state] == NSOnState ) {
-		if( ! [path isAbsolutePath] ) path = [[NSString stringWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:path];
+		if( ! [path isAbsolutePath] ) path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponents:@[@"Sounds", path]];
 		NSSound *sound = [[NSSound alloc] initWithContentsOfFile:path byReference:YES];
 		[sound play];
 	}

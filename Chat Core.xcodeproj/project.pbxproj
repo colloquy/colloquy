@@ -46,7 +46,6 @@
 		1C9CF4FE0615091400330D8D /* MVChatPluginManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C9CF4FF0615091500330D8D /* MVChatPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */; };
 		1C9CF5010615091700330D8D /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F52D043001873FC401EE70DE /* MVChatConnection.m */; };
-		1C9FFB140FA1958300748177 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C9FFB130FA1958300748177 /* libicucore.dylib */; };
 		1CB643D50C84F1EF00B79FB0 /* MVChatString.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CB643D40C84F1EF00B79FB0 /* MVChatString.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1CCA51800598AFBA00F0A4CD /* ChatCore.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1CCA517E0598AFBA00F0A4CD /* ChatCore.scriptSuite */; };
 		1CCA51810598AFBA00F0A4CD /* ChatCore.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 1CCA517F0598AFBA00F0A4CD /* ChatCore.scriptTerminology */; };
@@ -72,11 +71,16 @@
 		32C46E1A0B3AB37E00B96B27 /* MVICBChatUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 32C46E180B3AB37E00B96B27 /* MVICBChatUser.h */; };
 		32C46E1B0B3AB37E00B96B27 /* MVICBChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 32C46E190B3AB37E00B96B27 /* MVICBChatUser.m */; };
 		431261C3072EE37A00720AD1 /* MVSILCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */; };
+		5577DD0F1C599B48001A76E1 /* MVMessaging.h in Headers */ = {isa = PBXBuildFile; fileRef = 5577DD0E1C599B48001A76E1 /* MVMessaging.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		55A3A0541D0B8B29001F92CA /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 55A3A0531D0B8B29001F92CA /* libicucore.tbd */; };
+		55B2608B1F8CC2390084EEA9 /* MaddsPathExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 55B260891F8CC2350084EEA9 /* MaddsPathExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		55B748171AD2E6FD001459F7 /* RunOnMainThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 55B748161AD2E6FD001459F7 /* RunOnMainThread.h */; };
+		55B748181AD2E6FD001459F7 /* RunOnMainThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 55B748161AD2E6FD001459F7 /* RunOnMainThread.h */; };
 		899F4EFE12617870003B9D9A /* NSFileManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */; };
 		899F4EFF12617870003B9D9A /* NSFileManagerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */; };
 		922B1FF71692C42F002ECDFD /* DDLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 922B1FF31692C42F002ECDFD /* DDLog.h */; };
 		922B1FF81692C42F002ECDFD /* DDLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 922B1FF31692C42F002ECDFD /* DDLog.h */; };
-		922B1FF91692C42F002ECDFD /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FF41692C42F002ECDFD /* DDLog.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		922B1FF91692C42F002ECDFD /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FF41692C42F002ECDFD /* DDLog.m */; };
 		922B1FFA1692C42F002ECDFD /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FF41692C42F002ECDFD /* DDLog.m */; };
 		922B1FFB1692C42F002ECDFD /* MVDelegateLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 922B1FF51692C42F002ECDFD /* MVDelegateLogger.h */; };
 		922B1FFC1692C42F002ECDFD /* MVDelegateLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 922B1FF51692C42F002ECDFD /* MVDelegateLogger.h */; };
@@ -135,7 +139,7 @@
 		B6310B611C6FE3760033E88E /* DDLegacyMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = B6310B601C6FE3760033E88E /* DDLegacyMacros.h */; };
 		B6310B621C6FE3760033E88E /* DDLegacyMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = B6310B601C6FE3760033E88E /* DDLegacyMacros.h */; };
 		C22181D11F649FE300F2E814 /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C22181D01F649FCE00F2E814 /* NSDateAdditions.m */; };
-		C22181D21F649FE600F2E814 /* NSDateAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = C22181CF1F649FCE00F2E814 /* NSDateAdditions.h */; };
+		C22181D21F649FE600F2E814 /* NSDateAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = C22181CF1F649FCE00F2E814 /* NSDateAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C2417A091F915D8C0073F676 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C24179FE1F915C8C0073F676 /* CocoaAsyncSocket.framework */; };
 		C2B1A2031F652442003442D5 /* XMPPFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2B1A2021F652442003442D5 /* XMPPFramework.framework */; };
 		DD0A301B0BD8812D0054443A /* MVDirectClientConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -203,7 +207,7 @@
 		1C9C13370B50A7AC005F9F28 /* MVDirectChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectChatConnection.h; path = "Chat Core/MVDirectChatConnection.h"; sourceTree = "<group>"; };
 		1C9C13380B50A7AC005F9F28 /* MVDirectChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDirectChatConnection.m; path = "Chat Core/MVDirectChatConnection.m"; sourceTree = "<group>"; };
 		1C9C14170B50B3AB005F9F28 /* MVDirectChatConnectionPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectChatConnectionPrivate.h; path = "Chat Core/MVDirectChatConnectionPrivate.h"; sourceTree = "<group>"; };
-		1C9FFB130FA1958300748177 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
+		1C9FFB130FA1958300748177 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		1CB643D40C84F1EF00B79FB0 /* MVChatString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatString.h; path = "Chat Core/MVChatString.h"; sourceTree = "<group>"; };
 		1CCA517E0598AFBA00F0A4CD /* ChatCore.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ChatCore.scriptSuite; path = Resources/ChatCore.scriptSuite; sourceTree = "<group>"; };
 		1CCA517F0598AFBA00F0A4CD /* ChatCore.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ChatCore.scriptTerminology; path = Resources/ChatCore.scriptTerminology; sourceTree = "<group>"; };
@@ -234,6 +238,13 @@
 		32C46E190B3AB37E00B96B27 /* MVICBChatUser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MVICBChatUser.m; path = "Chat Core/MVICBChatUser.m"; sourceTree = "<group>"; };
 		431261C0072EE37A00720AD1 /* MVSILCFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = MVSILCFileTransfer.h; path = "Chat Core/MVSILCFileTransfer.h"; sourceTree = "<group>"; };
 		431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MVSILCFileTransfer.m; path = "Chat Core/MVSILCFileTransfer.m"; sourceTree = "<group>"; };
+		5577DD0E1C599B48001A76E1 /* MVMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVMessaging.h; path = "Chat Core/MVMessaging.h"; sourceTree = "<group>"; };
+		55A3A0531D0B8B29001F92CA /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
+		55A3A05A1D0BB993001F92CA /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libicucore.tbd; sourceTree = DEVELOPER_DIR; };
+		55AA73C81C554FD000BD820C /* ChatCore.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = ChatCore.modulemap; sourceTree = "<group>"; };
+		55B260891F8CC2350084EEA9 /* MaddsPathExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MaddsPathExtensions.h; path = Additions/MaddsPathExtensions.h; sourceTree = "<group>"; };
+		55B2608A1F8CC2350084EEA9 /* MaddsPathExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MaddsPathExtensions.m; path = Additions/MaddsPathExtensions.m; sourceTree = "<group>"; };
+		55B748161AD2E6FD001459F7 /* RunOnMainThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RunOnMainThread.h; path = Additions/RunOnMainThread.h; sourceTree = "<group>"; };
 		899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerAdditions.h; path = Additions/NSFileManagerAdditions.h; sourceTree = "<group>"; };
 		899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSFileManagerAdditions.m; path = Additions/NSFileManagerAdditions.m; sourceTree = "<group>"; };
 		89FB4F2512FAAC6800668905 /* old-mac-target.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
@@ -270,7 +281,7 @@
 			files = (
 				1C5A234006FA4FEE00A51F10 /* libsilcclient.framework in Frameworks */,
 				1C5A233F06FA4FEE00A51F10 /* libsilc.framework in Frameworks */,
-				1C9FFB140FA1958300748177 /* libicucore.dylib in Frameworks */,
+				55A3A0541D0B8B29001F92CA /* libicucore.tbd in Frameworks */,
 				C2417A091F915D8C0073F676 /* CocoaAsyncSocket.framework in Frameworks */,
 				1C386E8E103246B500660864 /* TCMPortMapper.framework in Frameworks */,
 				C2B1A2031F652442003442D5 /* XMPPFramework.framework in Frameworks */,
@@ -296,24 +307,25 @@
 				F50B0AA10170C89301A84BDE /* Resources */,
 				1C9AE8DF086A5218008ED7AD /* Settings */,
 				C26D0E131F5B0B3C00B58261 /* old-mac-binary-frameworks */,
-				089C1671FE841209C02AAC07 /* Frameworks & Libraries */,
+				089C1671FE841209C02AAC07 /* Frameworks */,
 				1CB2C8CC052DDA360094AAA4 /* Products */,
-				92BFCEAA14FDEF95001D02BB /* libChat Core.a */,
 			);
 			name = "Massinova Menu Extra";
 			sourceTree = "<group>";
 		};
-		089C1671FE841209C02AAC07 /* Frameworks & Libraries */ = {
+		089C1671FE841209C02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				55A3A05C1D0BB99D001F92CA /* iOS */,
 				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
 			);
-			name = "Frameworks & Libraries";
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				55A3A0531D0B8B29001F92CA /* libicucore.tbd */,
 				1C9FFB130FA1958300748177 /* libicucore.dylib */,
 				C24179FE1F915C8C0073F676 /* CocoaAsyncSocket.framework */,
 				1C386E8D103246B500660864 /* TCMPortMapper.framework */,
@@ -367,12 +379,12 @@
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 1;
-			wrapsLines = 0;
 		};
 		1CB2C8CC052DDA360094AAA4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				1C51B48B052DE0CB00BB459B /* ChatCore.framework */,
+				92BFCEAA14FDEF95001D02BB /* libChat Core.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -393,7 +405,15 @@
 			name = "ICB Support";
 			sourceTree = "<group>";
 			tabWidth = 4;
-			usesTabs = 0;
+			usesTabs = 1;
+		};
+		55A3A05C1D0BB99D001F92CA /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				55A3A05A1D0BB993001F92CA /* libicucore.tbd */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
 		};
 		922B1FF21692C41F002ECDFD /* Logging */ = {
 			isa = PBXGroup;
@@ -458,6 +478,7 @@
 				1C9C13370B50A7AC005F9F28 /* MVDirectChatConnection.h */,
 				1C9C13380B50A7AC005F9F28 /* MVDirectChatConnection.m */,
 				1C9C14170B50B3AB005F9F28 /* MVDirectChatConnectionPrivate.h */,
+				5577DD0E1C599B48001A76E1 /* MVMessaging.h */,
 				1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */,
 				1C0FE8A90B4F647D00855B9C /* MVDirectClientConnection.m */,
 				1C943AA9063C260800618CD9 /* MVFileTransfer.h */,
@@ -471,11 +492,12 @@
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 1;
-			wrapsLines = 0;
 		};
 		F50B0AA00170C89301A84BDE /* Other Sources & Additions */ = {
 			isa = PBXGroup;
 			children = (
+				55B260891F8CC2350084EEA9 /* MaddsPathExtensions.h */,
+				55B2608A1F8CC2350084EEA9 /* MaddsPathExtensions.m */,
 				1C3560050B4CCE95008A93FA /* MVUtilities.h */,
 				F5E98623018B412B01EE70DE /* NSAttributedStringAdditions.h */,
 				F5E98622018B412B01EE70DE /* NSAttributedStringAdditions.m */,
@@ -497,6 +519,7 @@
 				92FC6D3A16C7C04E00EF6568 /* NSRegularExpressionAdditions.m */,
 				1C668DB707BF9C4C008400F7 /* NSScannerAdditions.h */,
 				1C668DB807BF9C4C008400F7 /* NSScannerAdditions.m */,
+				55B748161AD2E6FD001459F7 /* RunOnMainThread.h */,
 				1C7C776707DBBA4500FB5F83 /* NSScriptCommandAdditions.h */,
 				1C7C776807DBBA4500FB5F83 /* NSScriptCommandAdditions.m */,
 				1CD020B205759347000F93B4 /* NSStringAdditions.h */,
@@ -509,7 +532,6 @@
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 1;
-			wrapsLines = 0;
 		};
 		F50B0AA10170C89301A84BDE /* Resources */ = {
 			isa = PBXGroup;
@@ -518,6 +540,7 @@
 				1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */,
 				1CCA517E0598AFBA00F0A4CD /* ChatCore.scriptSuite */,
 				1CCA517F0598AFBA00F0A4CD /* ChatCore.scriptTerminology */,
+				55AA73C81C554FD000BD820C /* ChatCore.modulemap */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -526,7 +549,6 @@
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 1;
-			wrapsLines = 0;
 		};
 /* End PBXGroup section */
 
@@ -539,6 +561,7 @@
 				1C943AAB063C260800618CD9 /* MVFileTransfer.h in Headers */,
 				1CF6513006EA23300073DEA8 /* MVChatConnection.h in Headers */,
 				1C91405E07051A9200CBA5F1 /* MVChatUser.h in Headers */,
+				55B748171AD2E6FD001459F7 /* RunOnMainThread.h in Headers */,
 				1CDDD9AD0718BD2E00FE11C3 /* MVChatRoom.h in Headers */,
 				1C668DBC07BF9C66008400F7 /* NSAttributedStringAdditions.h in Headers */,
 				1C668DBD07BF9C67008400F7 /* NSStringAdditions.h in Headers */,
@@ -549,6 +572,7 @@
 				1C668DC207BF9C6A008400F7 /* NSMethodSignatureAdditions.h in Headers */,
 				1C668DC307BF9C6B008400F7 /* NSNotificationAdditions.h in Headers */,
 				1C7C776907DBBA4500FB5F83 /* NSScriptCommandAdditions.h in Headers */,
+				5577DD0F1C599B48001A76E1 /* MVMessaging.h in Headers */,
 				1C63E9ED086E59D700A40DD4 /* ChatCore.h in Headers */,
 				1CE4630F095ECCFE00AB7732 /* MVChatUserPrivate.h in Headers */,
 				1CE4631E095ECD7300AB7732 /* MVChatRoomPrivate.h in Headers */,
@@ -596,6 +620,7 @@
 				92417D75149C019A0009B06E /* MVFileTransferPrivate.h in Headers */,
 				92417D76149C019A0009B06E /* MVChatConnectionPrivate.h in Headers */,
 				92417D65149C019A0009B06E /* MVFileTransfer.h in Headers */,
+				55B2608B1F8CC2390084EEA9 /* MaddsPathExtensions.h in Headers */,
 				92417D66149C019A0009B06E /* MVChatConnection.h in Headers */,
 				92417D67149C019A0009B06E /* MVChatUser.h in Headers */,
 				92417D68149C019A0009B06E /* MVChatRoom.h in Headers */,
@@ -620,6 +645,7 @@
 				92417D8D149C019A0009B06E /* MVIRCFileTransfer.h in Headers */,
 				92417D8E149C019A0009B06E /* MVIRCNumerics.h in Headers */,
 				92417D92149C019A0009B06E /* NSFileManagerAdditions.h in Headers */,
+				55B748181AD2E6FD001459F7 /* RunOnMainThread.h in Headers */,
 				922B1FF81692C42F002ECDFD /* DDLog.h in Headers */,
 				922B1FFC1692C42F002ECDFD /* MVDelegateLogger.h in Headers */,
 			);
@@ -633,10 +659,10 @@
 			buildConfigurationList = 1C041DDA08553AD200A5A5BA /* Build configuration list for PBXNativeTarget "Chat Core (Framework)" */;
 			buildPhases = (
 				1CAF64A8099EAB390036A727 /* Unarchive Frameworks */,
+				1C51B46F052DE0CB00BB459B /* Headers */,
 				1C51B47B052DE0CB00BB459B /* Sources */,
 				1C51B484052DE0CB00BB459B /* Frameworks */,
 				1C51B47A052DE0CB00BB459B /* Resources */,
-				1C51B46F052DE0CB00BB459B /* Headers */,
 			);
 			buildRules = (
 			);
@@ -681,7 +707,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
-				English,
+				en,
 				Japanese,
 				French,
 				German,
@@ -694,8 +720,6 @@
 				Spanish,
 				zh_TW,
 				Norwegian,
-				Engligh,
-				en,
 				he,
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
@@ -831,8 +855,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
+				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
+				DYLIB_INSTALL_NAME_BASE = "@executable_path/../Frameworks";
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Basic.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -850,14 +876,15 @@
 				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				MODULEMAP_FILE = ChatCore.modulemap;
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
 					"-lxml2",
-					"-I/usr/include/libxml2",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.chatCore;
 				PRODUCT_NAME = ChatCore;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -875,8 +902,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
+				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
+				DYLIB_INSTALL_NAME_BASE = "@executable_path/../Frameworks";
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Basic.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -894,14 +923,15 @@
 				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				MODULEMAP_FILE = ChatCore.modulemap;
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
 					"-lxml2",
-					"-I/usr/include/libxml2",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.chatCore;
 				PRODUCT_NAME = ChatCore;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;
@@ -939,6 +969,7 @@
 					"RKL_BLOCKS=0",
 				);
 				GCC_THUMB_SUPPORT = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
@@ -947,21 +978,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				VALID_ARCHS = "armv6 armv7 armv7f armv7k";
-				"VALID_ARCHS[sdk=iphonesimulator*]" = i386;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wextra",
-					"-Wchar-subscripts",
-					"-Wformat-security",
-					"-Wmissing-format-attribute",
-					"-Wpointer-arith",
-					"-Wwrite-strings",
-					"-Wno-format-y2k",
-					"-Wno-unused-parameter",
-					"-Wbad-function-cast",
-					"-Wmissing-declarations",
-					"-Wnested-externs",
-				);
+				"VALID_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
 				WRAPPER_EXTENSION = a;
 			};
 			name = Release;
@@ -990,6 +1007,7 @@
 					"RKL_BLOCKS=0",
 				);
 				GCC_THUMB_SUPPORT = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0xa10000,
@@ -998,21 +1016,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				VALID_ARCHS = "armv6 armv7 armv7f armv7k";
-				"VALID_ARCHS[sdk=iphonesimulator*]" = i386;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wextra",
-					"-Wchar-subscripts",
-					"-Wformat-security",
-					"-Wmissing-format-attribute",
-					"-Wpointer-arith",
-					"-Wwrite-strings",
-					"-Wno-format-y2k",
-					"-Wno-unused-parameter",
-					"-Wbad-function-cast",
-					"-Wmissing-declarations",
-					"-Wnested-externs",
-				);
+				"VALID_ARCHS[sdk=iphonesimulator*]" = "i386 x86_64";
 				WRAPPER_EXTENSION = a;
 			};
 			name = Debug;

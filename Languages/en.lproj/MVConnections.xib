@@ -66,10 +66,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <clipView key="contentView" id="oTu-bd-Lr7">
                             <rect key="frame" x="0.0" y="0.0" width="350" height="191"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" headerView="100869" id="114" customClass="MVTableView">
-                                    <rect key="frame" x="0.0" y="0.0" width="350" height="168"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="350" height="174"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -81,7 +81,7 @@
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" white="0.33333299" alpha="1" colorSpace="calibratedWhite"/>
                                             </tableHeaderCell>
-                                            <imageCell key="dataCell" refusesFirstResponder="YES" alignment="left" animates="YES" id="633"/>
+                                            <imageCell key="dataCell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" id="633"/>
                                         </tableColumn>
                                         <tableColumn identifier="address" width="125" minWidth="65" maxWidth="1000" id="115">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Server">
@@ -152,11 +152,11 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="100870">
-                            <rect key="frame" x="334" y="23" width="16" height="168"/>
+                            <rect key="frame" x="334" y="17" width="16" height="174"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <tableHeaderView key="headerView" id="100869">
-                            <rect key="frame" x="0.0" y="0.0" width="350" height="23"/>
+                            <rect key="frame" x="0.0" y="0.0" width="350" height="17"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </tableHeaderView>
                     </scrollView>
@@ -198,7 +198,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <clipView key="contentView" id="dOT-UR-0ZI">
                                                 <rect key="frame" x="1" y="1" width="197" height="77"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" id="673">
                                                         <rect key="frame" x="0.0" y="0.0" width="402" height="77"/>
@@ -499,11 +499,11 @@ DQ
                             <outlet property="nextKeyView" destination="295" id="760"/>
                         </connections>
                     </comboBox>
-                    <button id="636">
-                        <rect key="frame" x="16" y="291" width="27" height="24"/>
+                    <button horizontalHuggingPriority="750" verticalHuggingPriority="750" id="636">
+                        <rect key="frame" x="16" y="289" width="29" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" title="Button" bezelStyle="shadowlessSquare" imagePosition="only" alignment="left" state="on" borderStyle="border" inset="2" id="100804">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" imagePosition="only" alignment="left" state="on" borderStyle="border" inset="2" id="100804">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
@@ -761,7 +761,7 @@ DQ
             <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1257"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="710">
-                <rect key="frame" x="1" y="1" width="420" height="189"/>
+                <rect key="frame" x="0.0" y="0.0" width="420" height="189"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField verticalHuggingPriority="750" id="711">
@@ -848,7 +848,7 @@ DQ
             <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1257"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="732">
-                <rect key="frame" x="1" y="1" width="433" height="213"/>
+                <rect key="frame" x="0.0" y="0.0" width="433" height="213"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView id="734">
@@ -964,7 +964,7 @@ DQ
             <rect key="screenRect" x="0.0" y="0.0" width="2048" height="1257"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="777">
-                <rect key="frame" x="1" y="1" width="449" height="242"/>
+                <rect key="frame" x="0.0" y="0.0" width="449" height="242"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField verticalHuggingPriority="750" id="779">
@@ -993,7 +993,7 @@ DQ
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" headerView="100874" id="782">
-                                    <rect key="frame" x="0.0" y="0.0" width="407" height="65"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="407" height="71"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1037,11 +1037,11 @@ DQ
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="100875">
-                            <rect key="frame" x="392" y="23" width="16" height="65"/>
+                            <rect key="frame" x="392" y="17" width="16" height="71"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <tableHeaderView key="headerView" id="100874">
-                            <rect key="frame" x="0.0" y="0.0" width="407" height="23"/>
+                            <rect key="frame" x="0.0" y="0.0" width="407" height="17"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </tableHeaderView>
                     </scrollView>

@@ -1,3 +1,4 @@
+#import <ChatCore/MVChatPluginManager.h>
 #import "JVChatWindowController.h"
 
 @class FSInterpreterView;
@@ -12,7 +13,7 @@
 	NSImage *_icon;
 	JVFScriptChatPlugin *_plugin;
 }
-- (id) initWithFScriptChatPlugin:(JVFScriptChatPlugin *) plugin;
-- (JVFScriptChatPlugin *) plugin;
-- (FSInterpreterView *) interpreterView;
+- (instancetype) initWithFScriptChatPlugin:(JVFScriptChatPlugin *) plugin;
+@property (readonly, strong) JVFScriptChatPlugin *plugin;
+@property (readonly, strong) FSInterpreterView *interpreterView;
 @end

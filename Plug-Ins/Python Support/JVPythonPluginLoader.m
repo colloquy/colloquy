@@ -1,11 +1,16 @@
 #import "JVPythonPluginLoader.h"
 #import "JVPythonChatPlugin.h"
-#import "MVChatConnection.h"
+#import <ChatCore/MVChatConnection.h>
 #import "JVChatWindowController.h"
+#import "JVChatController.h"
 #import "pyobjc-api.h"
 
+@interface JVPythonPluginLoader () <MVChatPluginCommandSupport>
+
+@end
+
 @implementation JVPythonPluginLoader
-- (id) initWithManager:(MVChatPluginManager *) manager {
+- (instancetype) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [super init] ) ) {
 		_manager = manager;
 		_pyobjcInstalled = ( &PyObjC_ImportAPI != NULL ? YES : NO );
@@ -17,7 +22,6 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	_manager = nil;
-	[super dealloc];
 }
 
 - (void) displayInstallationWarning {
@@ -26,7 +30,6 @@
 	alert.informativeText = NSLocalizedStringFromTableInBundle( @"PyObjC was not found. The Python console and any Python plugins will not work during this session. For the latest version of PyObjC visit http://pyobjc.sourceforge.net.", nil, [NSBundle bundleForClass:[self class]], "PyObjC required error message" );
 	alert.alertStyle = NSAlertStyleCritical;
 	[alert runModal];
-	[alert release];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
@@ -37,7 +40,7 @@
 		}
 
 		NSArray *args = [[[arguments string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
-		NSString *subcmd = ( [args count] ? [args objectAtIndex:0] : nil );
+		NSString *subcmd = ( [args count] ? args[0] : nil );
 		/* if( [args count] == 1 ) {
 			if( view && ! [subcmd caseInsensitiveCompare:@"console"] ) {
 				JVPythonConsolePanel *console = [[[JVPythonConsolePanel alloc] init] autorelease];
@@ -63,7 +66,7 @@
 					} else if( ! [subcmd caseInsensitiveCompare:@"create"] ) {
 						path = [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"py"];
 						if( ! [path isAbsolutePath] )
-							path = [[[[_manager class] pluginSearchPaths] objectAtIndex:0] stringByAppendingPathComponent:path];
+							path = [[[_manager class] pluginSearchPaths][0] stringByAppendingPathComponent:path];
 						if( ! [[NSFileManager defaultManager] fileExistsAtPath:path] ) {
 							if( [[NSFileManager defaultManager] createFileAtPath:path contents:[NSData data] attributes:nil] )
 								[[NSWorkspace sharedWorkspace] openFile:path];
@@ -113,14 +116,14 @@
 					return;
 				}
 
-				JVPythonChatPlugin *plugin = [[[JVPythonChatPlugin alloc] initWithScriptAtPath:pathExt withManager:_manager] autorelease];
+				JVPythonChatPlugin *plugin = [[JVPythonChatPlugin alloc] initWithScriptAtPath:pathExt withManager:_manager];
 				if( plugin ) [_manager addPlugin:plugin];
 				return;
 			}
 		}
 	}
 
-	JVPythonChatPlugin *plugin = [[[JVPythonChatPlugin alloc] initWithScriptAtPath:name withManager:_manager] autorelease];
+	JVPythonChatPlugin *plugin = [[JVPythonChatPlugin alloc] initWithScriptAtPath:name withManager:_manager];
 	if( plugin ) [_manager addPlugin:plugin];
 }
 
@@ -131,7 +134,7 @@
 	NSFileManager *fm = [NSFileManager defaultManager];
 
 	for( NSString *path in [[_manager class] pluginSearchPaths] ) {
-		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
+		for( __strong NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			if( [[file pathExtension] isEqualToString:@"pyc"] || [[file pathExtension] isEqualToString:@"py"] || [[file pathExtension] isEqualToString:@"pyo"] ) {
 				if( ! _pyobjcInstalled ) {
 					[self displayInstallationWarning];
@@ -148,7 +151,7 @@
 				if( ! [fm fileExistsAtPath:pathExt] ) pathExt = [file stringByAppendingPathExtension:@"pyo"];
 				if( ! [fm fileExistsAtPath:pathExt] ) pathExt = [file stringByAppendingPathExtension:@"pyc"];
 
-				JVPythonChatPlugin *plugin = [[[JVPythonChatPlugin alloc] initWithScriptAtPath:pathExt withManager:_manager] autorelease];
+				JVPythonChatPlugin *plugin = [[JVPythonChatPlugin alloc] initWithScriptAtPath:pathExt withManager:_manager];
 				if( plugin ) [_manager addPlugin:plugin];
 			}
 		}

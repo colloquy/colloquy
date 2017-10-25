@@ -10,10 +10,11 @@ NS_ASSUME_NONNULL_BEGIN
 @private
 	BOOL _roomMember;
 }
-- (id) initWithJabberID:(XMPPJID *) identifier andConnection:(MVXMPPChatConnection *) connection;
+- (instancetype) initWithJabberID:(XMPPJID *) identifier andConnection:(MVXMPPChatConnection *) connection;
 @end
 
 @interface MVXMPPChatUser (MVXMPPChatUserPrivate)
+@property (getter=_isRoomMember, setter=_setRoomMember:) BOOL roomMember;
 - (void) _setRoomMember:(BOOL) member;
 - (BOOL) _isRoomMember;
 @end

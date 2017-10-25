@@ -1,21 +1,21 @@
-#import "MVChatPluginManager.h"
+#import <ChatCore/MVChatPluginManager.h>
 
 extern NSString *JVFScriptErrorDomain;
 
 @class FSInterpreter;
 
 @interface JVFScriptChatPlugin : NSObject <MVChatPlugin> {
-	MVChatPluginManager *_manager;
+	__unsafe_unretained MVChatPluginManager *_manager;
 	FSInterpreter *_scriptInterpreter;
 	NSString *_path;
 	NSDate *_modDate;
 	BOOL _errorShown;
 }
-- (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
+- (instancetype) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 
-- (MVChatPluginManager *) pluginManager;
-- (FSInterpreter *) scriptInterpreter;
-- (NSString *) scriptFilePath;
+@property (readonly, assign) MVChatPluginManager *pluginManager;
+@property (readonly, strong) FSInterpreter *scriptInterpreter;
+@property (readonly, copy) NSString *scriptFilePath;
 - (void) reloadFromDisk;
 - (void) inspectVariableNamed:(NSString *) variableName;
 

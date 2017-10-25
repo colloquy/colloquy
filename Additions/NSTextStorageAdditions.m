@@ -56,7 +56,7 @@
 
 - (void) setUnderlineState:(BOOL) underline {
 	if( ! underline ) [self removeAttribute:NSUnderlineStyleAttributeName range:NSMakeRange( 0, [self length] )];
-	else [self addAttribute:NSUnderlineStyleAttributeName value:@(1) range:NSMakeRange( 0, [self length] )];
+	else [self addAttribute:NSUnderlineStyleAttributeName value:@1 range:NSMakeRange( 0, [self length] )];
 }
 
 - (NSArray *) styleClasses {

@@ -1,3 +1,5 @@
+#import <Cocoa/Cocoa.h>
+
 #import "JVChatRoomMember.h"
 #import "JVDirectChatPanel.h"
 #import "JVInspectorController.h"
@@ -42,7 +44,7 @@
 	BOOL _nibLoaded;
 	BOOL _addressResolved;
 }
-- (id) initWithChatUser:(MVChatUser *) user;
+- (instancetype) initWithChatUser:(MVChatUser *) user;
 - (void) updateLocalTime;
 
 - (IBAction) requestLocalTime:(id) sender;

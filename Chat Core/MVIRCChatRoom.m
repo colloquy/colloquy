@@ -289,7 +289,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (NSSet *) memberUsersWithNickname:(NSString *) nickname {
+- (nullable NSSet *) memberUsersWithNickname:(NSString *) nickname {
 	MVChatUser *user = [self memberUserWithUniqueIdentifier:nickname];
 	if( user ) return [NSSet setWithObject:user];
 	return [NSSet set];

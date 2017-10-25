@@ -37,29 +37,22 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 }
 + (void) emptyCache;
 
-- (void) setTranscript:(JVChatTranscript *) transcript;
-- (JVChatTranscript *) transcript;
+@property (strong) JVChatTranscript *transcript;
 
-- (void) setStyle:(JVStyle *) style;
+@property (strong) JVStyle *style;
 - (void) setStyle:(JVStyle *) style withVariant:(NSString *) variant;
-- (JVStyle *) style;
 
-- (void) setStyleVariant:(NSString *) variant;
-- (NSString *) styleVariant;
+@property (copy) NSString *styleVariant;
 
-- (void) setBodyTemplate:(NSString *) bodyTemplate;
-- (NSString *) bodyTemplate;
+@property (copy) NSString *bodyTemplate;
 
 - (void) addBanner:(NSString *) name;
 
-- (void) setStyleParameters:(NSDictionary *) parameters;
-- (NSDictionary *) styleParameters;
+@property (copy) NSDictionary *styleParameters;
 
-- (void) setEmoticons:(JVEmoticonSet *) emoticons;
-- (JVEmoticonSet *) emoticons;
+@property (strong) JVEmoticonSet *emoticons;
 
-- (void) setScrollbackLimit:(NSUInteger) limit;
-- (NSUInteger) scrollbackLimit;
+@property NSUInteger scrollbackLimit;
 
 - (void) reloadCurrentStyle;
 - (void) clear;
@@ -78,21 +71,20 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 
 - (void) markScrollbarForMessage:(JVChatMessage *) message;
 - (void) markScrollbarForMessage:(JVChatMessage *) message usingMarkIdentifier:(NSString *) identifier andColor:(NSColor *) color;
-- (void) markScrollbarForMessages:(NSArray *) messages;
+- (void) markScrollbarForMessages:(NSArray<JVChatMessage*> *) messages;
 
 - (void) clearScrollbarMarks;
 - (void) clearScrollbarMarksWithIdentifier:(NSString *) identifier;
 
-- (JVMarkedScroller *) verticalMarkedScroller;
+@property (readonly, strong) JVMarkedScroller *verticalMarkedScroller;
 - (IBAction) jumpToMark:(id) sender;
 - (IBAction) jumpToPreviousHighlight:(id) sender;
 - (IBAction) jumpToNextHighlight:(id) sender;
 - (void) jumpToMessage:(JVChatMessage *) message;
 - (void) scrollToBottom;
-- (BOOL) scrolledNearBottom;
+@property (readonly) BOOL scrolledNearBottom;
 
-- (NSTextView *) nextTextView;
-- (void) setNextTextView:(NSTextView *) textView;
+@property (strong) NSTextView *nextTextView;
 @end
 
 @interface JVStyleView (Private)

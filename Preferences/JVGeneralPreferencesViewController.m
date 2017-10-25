@@ -29,7 +29,7 @@ extern const NSStringEncoding JVAllowedTextEncodings[];
 }
 
 - (NSImage *) toolbarItemImage {
-	return [NSImage imageNamed:@"GeneralPreferences"];
+	return [NSImage imageNamed:NSImageNamePreferencesGeneral];
 }
 
 - (NSString *) toolbarItemLabel {

@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation MVXMPPChatConnection
 + (NSArray *) defaultServerPorts {
-	return @[ @(5222), @(5223) ];
+	return @[ @((unsigned short)5222), @((unsigned short)5223) ];
 }
 
 + (NSUInteger) maxMessageLength {
@@ -281,12 +281,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) outgoingPacket:(NSNotification *) notification {
 	NSString *string = [[NSString alloc] initWithData:[notification object] encoding:NSUTF8StringEncoding];
-	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", @(YES), @"outbound", nil]];
+	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", @YES, @"outbound", nil]];
 }
 
 - (void) incomingPacket:(NSNotification *) notification {
 	NSString *string = [[NSString alloc] initWithData:[notification object] encoding:NSUTF8StringEncoding];
-	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", @(NO), @"outbound", nil]];
+	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", @NO, @"outbound", nil]];
 }
 
 - (void) xmppStream:(XMPPStream *) stream didReceiveMessage:(XMPPMessage *) message {
@@ -373,7 +373,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if ([[presence type] isCaseInsensitiveEqualToString:@"unavailable"]) {
 		[room _removeMemberUser:user];
-		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
+		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomUserPartedNotification object:room userInfo:@{@"user": user}];
 		return;
 	}
 
@@ -391,7 +391,7 @@ NS_ASSUME_NONNULL_BEGIN
 		[room _addMemberUser:user];
 		[self _markUserAsOnline:user];
 
-		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSArray arrayWithObject:user] forKey:@"added"];
+		NSDictionary *userInfo = @{@"added": @[user]};
 		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomMemberUsersSyncedNotification object:room userInfo:userInfo];
 	}
 

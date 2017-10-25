@@ -2,7 +2,7 @@
 #import "JVChatRoomPanel.h"
 #import "JVBuddy.h"
 #import "MVFileTransferController.h"
-#import "NSDateAdditions.h"
+#import <ChatCore/NSDateAdditions.h>
 
 @implementation JVDirectChatPanel (JVDirectChatPanelInspection)
 - (id <JVInspector>) inspector {
@@ -29,21 +29,14 @@
 #pragma mark -
 
 @implementation JVChatUserInspector
-- (id) initWithChatUser:(MVChatUser *) user {
-	if( ( self = [self init] ) )
+- (instancetype) initWithChatUser:(MVChatUser *) user {
+	if( ( self = [super init] ) )
 		_user = user;
 	return self;
 }
 
 - (void) dealloc {
 	[[NSNotificationCenter chatCenter] removeObserver:self];
-
-
-	_localTimeUpdated = nil;
-	_localTimeUpdateTimer = nil;
-	_updateTimer = nil;
-	_user = nil;
-
 }
 
 #pragma mark -
@@ -110,11 +103,11 @@
 	if( ! message || ! [message length] ) return nil;
 	if( ! baseFont ) baseFont = [NSFont labelFontOfSize:11.];
 
-	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:[[_user connection] encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:@([[_user connection] encoding]), @"StringEncoding", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]), @"IgnoreFontColors", @([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]), @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
 	NSMutableAttributedString *messageString = [NSMutableAttributedString attributedStringWithChatFormat:message options:options];
 
 	if( ! messageString ) {
-		[options setObject:[NSNumber numberWithUnsignedLong:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
+		options[@"StringEncoding"] = @(NSISOLatin1StringEncoding);
 		messageString = [NSMutableAttributedString attributedStringWithChatFormat:message options:options];
 	}
 
@@ -168,7 +161,7 @@
 }
 
 - (void) attributeUpdated:(NSNotification *) notification {
-	NSString *key = [[notification userInfo] objectForKey:@"attribute"];
+	NSString *key = [notification userInfo][@"attribute"];
 	if( [key isEqualToString:MVChatUserPingAttribute] ) {
 		NSTimeInterval pingSeconds = [[_user attributeForKey:key] doubleValue];
 		NSString *pingString = [NSString stringWithFormat:@"%.2f %@", pingSeconds, NSLocalizedString( @"seconds", "plural seconds" )];
@@ -191,9 +184,9 @@
 }
 
 - (void) errorOccurred:(NSNotification *) notification {
-	NSError *error = [[notification userInfo] objectForKey:@"error"];
+	NSError *error = [notification userInfo][@"error"];
 	if( [error code] == MVChatConnectionNoSuchUserError ) {
-		MVChatUser *user = [[error userInfo] objectForKey:@"user"];
+		MVChatUser *user = [error userInfo][@"user"];
 		if( [user isEqualTo:_user] )
 			[self gotAddress:nil];
 	}
