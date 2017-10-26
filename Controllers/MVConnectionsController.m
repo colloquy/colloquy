@@ -568,7 +568,7 @@ static NSMenu *favoritesMenu = nil;
 
 	MVChatConnection *connection = [[MVChatConnection alloc] initWithType:type];
 	[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
-	[connection setOutgoingChatFormat:(OSType)[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"]];
+	[connection setOutgoingChatFormat:[[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatFormat"] unsignedIntValue]];
 	[connection setProxyType:(OSType)[[newProxy selectedItem] tag]];
 	[connection setSecure:[sslConnection state]];
 	[connection setPassword:[newServerPassword stringValue]];
@@ -905,7 +905,7 @@ static NSMenu *favoritesMenu = nil;
 		} else if( ! handled && [[url user] length] ) {
 			MVChatConnection *connection = [[MVChatConnection alloc] initWithURL:url];
 			[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
-			[connection setOutgoingChatFormat:(OSType)[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"]];
+			[connection setOutgoingChatFormat:[[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatFormat"] unsignedIntValue]];
 
 			[self addConnection:connection keepBookmark:NO];
 
@@ -1839,7 +1839,7 @@ static NSMenu *favoritesMenu = nil;
 		if( [info[@"encoding"] longValue] ) connection.encoding = [info[@"encoding"] longValue];
 		else connection.encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 
-		connection.outgoingChatFormat = (OSType)[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"];
+		connection.outgoingChatFormat = [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatFormat"] unsignedIntValue];
 
 		if( info[@"realName"] ) connection.realName = info[@"realName"];
 		if( info[@"nickname"] ) connection.preferredNickname = info[@"nickname"];
