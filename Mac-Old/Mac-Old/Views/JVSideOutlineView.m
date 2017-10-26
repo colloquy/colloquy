@@ -1,9 +1,9 @@
 #import "JVSideOutlineView.h"
 
 static void gradientInterpolate( void *info, CGFloat const *inData, CGFloat *outData ) {
-	static float light[4] = { 0.67843137, 0.73333333, 0.81568627, 1. };
-	static float dark[4] = { 0.59607843, 0.66666667, 0.76862745, 1. };
-	float a = inData[0];
+	static const CGFloat light[4] = { 0.67843137, 0.73333333, 0.81568627, 1. };
+	static const CGFloat dark[4] = { 0.59607843, 0.66666667, 0.76862745, 1. };
+	CGFloat a = inData[0];
 	NSUInteger i = 0;
 
 	for( i = 0; i < 4; i++ )

@@ -646,7 +646,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	NSInteger loc = [self _locationOfMessage:message];
 	if( loc != NSNotFound ) {
 		JVMarkedScroller *scroller = [self verticalMarkedScroller];
-		float shift = [scroller shiftAmountToCenterAlign];
+		CGFloat shift = [scroller shiftAmountToCenterAlign];
 		[scroller setLocationOfCurrentMark:loc];
 
 		[[_domDocument body] setInteger:( loc - shift ) forDOMProperty:@"scrollTop"];

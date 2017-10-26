@@ -122,7 +122,7 @@
 //Smoothly
 - (void)_updateWindowVisiblityTimer:(NSTimer *)inTimer
 {
-    float   alphaValue = [panel alphaValue];
+    CGFloat   alphaValue = [panel alphaValue];
 
     if(windowIsVisible){
         alphaValue += (maxOpacity - alphaValue) * (( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) ? WINDOW_FADE_SLOW_STEP : WINDOW_FADE_STEP);

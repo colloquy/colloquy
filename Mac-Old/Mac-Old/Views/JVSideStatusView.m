@@ -51,17 +51,17 @@
 
 	id <NSSplitViewDelegate> delegate = [splitView delegate];
 	if( delegate && [delegate respondsToSelector:@selector( splitView:constrainSplitPosition:ofSubviewAt: )] ) {
-		float new = [delegate splitView:splitView constrainSplitPosition:newFrame.size.width ofSubviewAt:0];
+		CGFloat new = [delegate splitView:splitView constrainSplitPosition:newFrame.size.width ofSubviewAt:0];
 		newFrame.size.width = new;
 	}
 
 	if( delegate && [delegate respondsToSelector:@selector( splitView:constrainMinCoordinate:ofSubviewAt: )] ) {
-		float min = [delegate splitView:splitView constrainMinCoordinate:0. ofSubviewAt:0];
+		CGFloat min = [delegate splitView:splitView constrainMinCoordinate:0. ofSubviewAt:0];
 		newFrame.size.width = MAX( min, newFrame.size.width );
 	}
 
 	if( delegate && [delegate respondsToSelector:@selector( splitView:constrainMaxCoordinate:ofSubviewAt: )] ) {
-		float max = [delegate splitView:splitView constrainMaxCoordinate:0. ofSubviewAt:0];
+		CGFloat max = [delegate splitView:splitView constrainMaxCoordinate:0. ofSubviewAt:0];
 		newFrame.size.width = MIN( max, newFrame.size.width );
 	}
 

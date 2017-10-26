@@ -1,9 +1,9 @@
 #import "KABubbleWindowView.h"
 
 static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat *outData ) {
-	static float dark[4] = { .69412, .83147, .96078, .95 };
-	static float light[4] = { .93725, .96863, .99216, .95 };
-	float a = inData[0];
+	static const CGFloat dark[4] = { .69412, .83147, .96078, .95 };
+	static const CGFloat light[4] = { .93725, .96863, .99216, .95 };
+	CGFloat a = inData[0];
 	NSUInteger i = 0;
 
 	for( i = 0; i < 4; i++ )
@@ -24,11 +24,11 @@ static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat
 	[[NSColor clearColor] set];
 	NSRectFill( [self frame] );
 
-	float lineWidth = 4.;
+	CGFloat lineWidth = 4.;
 	NSBezierPath *path = [NSBezierPath bezierPath];
 	[path setLineWidth:lineWidth];
 
-	float radius = 9.;
+	CGFloat radius = 9.;
 	NSRect irect = NSInsetRect( [self bounds], radius + lineWidth, radius + lineWidth );
 	[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMinX( irect ), NSMinY( irect ) ) radius:radius startAngle:180. endAngle:270.];
 	[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMaxX( irect ), NSMinY( irect ) ) radius:radius startAngle:270. endAngle:360.];
