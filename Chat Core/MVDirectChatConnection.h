@@ -15,12 +15,12 @@ COLLOQUY_EXPORT extern NSString *MVDirectChatConnectionGotMessageNotification;
 
 COLLOQUY_EXPORT extern NSString *MVDirectChatConnectionErrorDomain;
 
-typedef enum {
+typedef NS_ENUM(OSType, MVDirectChatConnectionStatus) {
 	MVDirectChatConnectionConnectedStatus = 'dcCo',
 	MVDirectChatConnectionWaitingStatus = 'dcWa',
 	MVDirectChatConnectionDisconnectedStatus = 'dcDs',
 	MVDirectChatConnectionErrorStatus = 'dcEr'
-} MVDirectChatConnectionStatus;
+};
 
 @class MVChatUser;
 
