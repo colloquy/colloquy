@@ -7,7 +7,7 @@
 @class ABPeoplePickerController;
 @class MVChatConnection;
 
-typedef NS_ENUM(NSInteger, MVBuddyListSortOrder) {
+typedef NS_ENUM(OSType, MVBuddyListSortOrder) {
 	MVAvailabilitySortOrder = 'avlY',
 	MVFirstNameSortOrder = 'fSnM',
 	MVLastNameSortOrder = 'lSnM',

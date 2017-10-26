@@ -1,10 +1,10 @@
 #import "JVChatTranscript.h"
 #import "KAIgnoreRule.h"
 
-typedef enum _JVChatMessageType {
+typedef NS_ENUM(OSType, JVChatMessageType) {
 	JVChatMessageNormalType = 'noMt',
 	JVChatMessageNoticeType = 'nTMt'
-} JVChatMessageType;
+};
 
 @interface JVChatMessage : NSObject <NSMutableCopying, JVChatTranscriptElement> {
 	@public

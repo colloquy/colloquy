@@ -13,7 +13,7 @@ COLLOQUY_EXPORT extern NSString *MVFileTransferErrorOccurredNotification;
 
 COLLOQUY_EXPORT extern NSString *MVFileTransferErrorDomain;
 
-typedef NS_ENUM(NSInteger, MVFileTransferStatus) {
+typedef NS_ENUM(OSType, MVFileTransferStatus) {
 	MVFileTransferDoneStatus = 'trDn',
 	MVFileTransferNormalStatus = 'trNo',
 	MVFileTransferHoldingStatus = 'trHo',
