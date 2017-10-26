@@ -78,7 +78,7 @@
 	}
 
 	if( [participants count] ) [ret setObject:[participants allObjects] forKey:(NSString *) kMDItemContributors];
-	if( [source length] ) [ret setObject:source forKey:(NSString *) kMDItemWhereFroms];
+	if( [source length] ) [ret setObject:[NSArray arrayWithObject:source] forKey:(NSString *) kMDItemWhereFroms];
 
 	[ret setObject:@"transcript" forKey:(NSString *) kMDItemKind];
 	[ret setObject:@"Colloquy" forKey:(NSString *) kMDItemCreator];
