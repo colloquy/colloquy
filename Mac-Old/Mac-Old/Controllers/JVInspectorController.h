@@ -5,9 +5,8 @@
 - (NSSize) minSize;
 - (NSString *) title;
 - (NSString *) type;
-@end
 
-@interface NSObject (JVInspectorOptional)
+@optional
 - (void) willLoad;
 - (void) didLoad;
 
@@ -17,9 +16,8 @@
 
 @protocol JVInspection <NSObject>
 - (id <JVInspector>) inspector;
-@end
 
-@interface NSObject (JVInspectionOptional)
+@optional
 - (void) willBeInspected;
 @end
 
