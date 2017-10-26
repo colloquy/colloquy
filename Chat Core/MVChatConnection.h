@@ -7,7 +7,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, MVChatConnectionType) {
+typedef NS_ENUM(OSType, MVChatConnectionType) {
 	MVChatConnectionUnsupportedType = 0,
 	MVChatConnectionICBType = 'icbC',
 	MVChatConnectionIRCType = 'ircC',
@@ -15,7 +15,7 @@ typedef NS_ENUM(NSInteger, MVChatConnectionType) {
 	MVChatConnectionXMPPType = 'xmpC'
 };
 
-typedef NS_ENUM(NSInteger, MVChatConnectionStatus) {
+typedef NS_ENUM(OSType, MVChatConnectionStatus) {
 	MVChatConnectionDisconnectedStatus = 'disC',
 	MVChatConnectionServerDisconnectedStatus = 'sdsC',
 	MVChatConnectionConnectingStatus = 'conG',
@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, MVChatConnectionStatus) {
 	MVChatConnectionSuspendedStatus = 'susP'
 };
 
-typedef NS_ENUM(NSInteger, MVChatConnectionProxy) {
+typedef NS_ENUM(OSType, MVChatConnectionProxy) {
 	MVChatConnectionNoProxy = 'nonE',
 	MVChatConnectionHTTPProxy = 'httP',
 	MVChatConnectionHTTPSProxy = 'htpS',
@@ -31,18 +31,18 @@ typedef NS_ENUM(NSInteger, MVChatConnectionProxy) {
 	MVChatConnectionSOCKS5Proxy = 'soK5'
 };
 
-typedef NS_ENUM(NSInteger, MVChatConnectionBouncer) {
+typedef NS_ENUM(OSType, MVChatConnectionBouncer) {
 	MVChatConnectionNoBouncer = 'nonB',
 	MVChatConnectionGenericBouncer = 'gbnC',
 	MVChatConnectionColloquyBouncer = 'cbnC'
 };
 
-typedef NS_ENUM(NSInteger, MVChatConnectionPublicKeyType) {
+typedef NS_ENUM(OSType, MVChatConnectionPublicKeyType) {
 	MVChatConnectionServerPublicKeyType = 'serV',
 	MVChatConnectionClientPublicKeyType = 'clnT'
 };
 
-typedef NS_ENUM(NSInteger, MVChatMessageFormat) {
+typedef NS_ENUM(OSType, MVChatMessageFormat) {
 	MVChatConnectionDefaultMessageFormat = 'cDtF',
 	MVChatNoMessageFormat = 'nOcF',
 	MVChatWindowsIRCMessageFormat = 'mIrF',

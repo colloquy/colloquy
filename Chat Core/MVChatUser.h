@@ -6,13 +6,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, MVChatUserType) {
+typedef NS_ENUM(OSType, MVChatUserType) {
 	MVChatRemoteUserType = 'remT',
 	MVChatLocalUserType = 'locL',
 	MVChatWildcardUserType = 'wilD'
 };
 
-typedef NS_ENUM(NSInteger, MVChatUserStatus) {
+typedef NS_ENUM(OSType, MVChatUserStatus) {
 	MVChatUserUnknownStatus = 'uKnw',
 	MVChatUserOfflineStatus = 'oflN',
 	MVChatUserDetachedStatus = 'detA',

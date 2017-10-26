@@ -436,7 +436,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 }
 
 #if ENABLE(SCRIPTING)
-+ (unsigned long) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding {
++ (OSType) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding {
 	switch( encoding ) {
 		default:
 		case NSUTF8StringEncoding: return 'utF8';
@@ -485,7 +485,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	return 'utF8'; // default encoding
 }
 
-+ (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(unsigned long) encoding {
++ (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(OSType) encoding {
 	switch( encoding ) {
 		default:
 		case 'utF8': return NSUTF8StringEncoding;

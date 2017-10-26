@@ -5,7 +5,7 @@
 @protocol JVChatViewController;
 #endif
 
-typedef NS_ENUM(NSInteger, JVIgnoreMatchResult) {
+typedef NS_ENUM(OSType, JVIgnoreMatchResult) {
 	JVUserIgnored = 'usIg',
 	JVMessageIgnored = 'msIg',
 	JVNotIgnored = 'noIg'

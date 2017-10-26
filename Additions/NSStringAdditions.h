@@ -19,8 +19,8 @@ COLLOQUY_EXPORT BOOL isValidUTF8( const char *string, NSUInteger length );
 + (NSString *) locallyUniqueString;
 
 #if ENABLE(SCRIPTING)
-+ (unsigned long) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding;
-+ (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(unsigned long) encoding;
++ (OSType) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding;
++ (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(OSType) encoding;
 #endif
 
 + (NSArray <NSString *> *) knownEmoticons;
