@@ -258,7 +258,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return result;
 }
 
-- (NSString *) transformXMLDocument:(void *) document withParameters:(NSDictionary *) parameters {
+- (NSString *) transformXMLDocument:(xmlDoc *) document withParameters:(NSDictionary *) parameters {
 	NSParameterAssert( document != NULL );
 
 	@synchronized( self ) {

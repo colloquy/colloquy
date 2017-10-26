@@ -6,13 +6,13 @@
 extern NSString *JVChatTranscriptUpdatedNotification;
 
 @protocol JVChatTranscriptElement
-- (/* xmlNode */ void *) node;
+- (struct _xmlNode *) node;
 - (JVChatTranscript *) transcript;
 @end
 
 @interface JVChatTranscript : NSObject {
 	NSScriptObjectSpecifier *_objectSpecifier;
-	void *_xmlLog; /* xmlDoc * */
+	struct _xmlDoc *_xmlLog;
 	NSMutableArray *_messages;
 	NSString *_filePath;
 	NSFileHandle *_logFile;
@@ -33,7 +33,7 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 - (id) initWithContentsOfFile:(NSString *) path;
 - (id) initWithContentsOfURL:(NSURL *) url;
 
-- (/* xmlDoc */ void *) document;
+- (struct _xmlDoc *) document;
 
 - (BOOL) isEmpty;
 - (NSUInteger) elementCount;

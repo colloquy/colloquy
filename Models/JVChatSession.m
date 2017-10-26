@@ -10,7 +10,7 @@
 
 #pragma mark -
 
-- (void *) node {
+- (xmlNode *) node {
 	return _node;
 }
 

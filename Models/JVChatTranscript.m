@@ -165,7 +165,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (void *) document {
+- (xmlDoc *) document {
 	return _xmlLog;
 }
 

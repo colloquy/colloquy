@@ -40,7 +40,7 @@ COLLOQUY_EXPORT
 - (NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary *) parameters;
 - (NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters;
 - (NSString *) transformXML:(NSString *) xml withParameters:(NSDictionary *) parameters;
-- (NSString *) transformXMLDocument:(/* xmlDoc */ void *) document withParameters:(NSDictionary *) parameters;
+- (NSString *) transformXMLDocument:(struct _xmlDoc *) document withParameters:(NSDictionary *) parameters;
 
 - (NSComparisonResult) compare:(JVStyle *) style;
 - (NSString *) displayName;

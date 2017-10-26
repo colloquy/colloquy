@@ -107,7 +107,7 @@
 
 #pragma mark -
 
-- (void *) node {
+- (xmlNode *) node {
 	if( ! _node ) {
 		if( _doc ) xmlFreeDoc( _doc );
 		_doc = xmlNewDoc( (xmlChar *) "1.0" );
