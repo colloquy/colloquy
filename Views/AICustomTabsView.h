@@ -18,7 +18,8 @@
 
 @class AICustomTabCell, AICustomTabsView;
 
-@interface NSObject (AICustomTabsViewDelegate)
+@protocol AICustomTabsViewDelegate <NSObject>
+@optional
 - (void)customTabView:(AICustomTabsView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
 - (void)customTabView:(AICustomTabsView *)tabView closeTabViewItem:(NSTabViewItem *)tabViewItem;
 - (void)customTabViewDidChangeNumberOfTabViewItems:(AICustomTabsView *)tabView;

@@ -13,12 +13,14 @@
 - (NSRect) originalRectOfRow:(NSInteger) row;
 @end
 
-@interface NSObject (MVTableViewDataSource)
+@protocol MVTableViewDataSource <NSTableViewDataSource>
+@optional
 - (NSMenu *) tableView:(MVTableView *) view menuForTableColumn:(NSTableColumn *) column row:(NSInteger) row;
 - (NSString *) tableView:(MVTableView *) view toolTipForTableColumn:(NSTableColumn *) column row:(NSInteger) row;
 @end
 
-@interface NSObject (MVTableViewDelegate)
+@protocol MVTableViewDelegate <NSTableViewDelegate>
+@optional
 - (void) clear:(id) sender;
 - (NSRect) tableView:(MVTableView *) tableView rectOfRow:(NSInteger) row defaultRect:(NSRect) defaultRect;
 - (NSRange) tableView:(MVTableView *) tableView rowsInRect:(NSRect) rect defaultRange:(NSRange) defaultRange;

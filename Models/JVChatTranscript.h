@@ -5,7 +5,7 @@
 
 extern NSString *JVChatTranscriptUpdatedNotification;
 
-@protocol JVChatTranscriptElement
+@protocol JVChatTranscriptElement <NSObject>
 - (/* xmlNode */ void *) node;
 - (JVChatTranscript *) transcript;
 @end

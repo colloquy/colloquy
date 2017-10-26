@@ -110,9 +110,8 @@ extern NSString *JVChatViewPboardType;
 - (NSString *) toolbarIdentifier;
 - (NSString *) windowTitle;
 - (NSString *) identifier;
-@end
 
-@interface NSObject (JVChatViewControllerOptional)
+@optional
 - (void) willSelect;
 - (void) didSelect;
 
@@ -122,7 +121,7 @@ extern NSString *JVChatViewPboardType;
 - (void) willDispose;
 @end
 
-@protocol JVChatListItemScripting
+@protocol JVChatListItemScripting <NSObject>
 - (NSNumber *) uniqueIdentifier;
 - (NSArray *) children;
 - (NSString *) information;
@@ -139,9 +138,8 @@ extern NSString *JVChatViewPboardType;
 - (id <JVChatListItem>) parent;
 - (NSImage *) icon;
 - (NSString *) title;
-@end
 
-@interface NSObject (JVChatListItemOptional)
+@optional
 - (BOOL) acceptsDraggedFileOfType:(NSString *) type;
 - (void) handleDraggedFile:(NSString *) path;
 - (IBAction) doubleClicked:(id) sender;
