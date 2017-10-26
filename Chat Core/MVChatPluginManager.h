@@ -28,11 +28,11 @@ COLLOQUY_EXPORT
 - (NSArray *) makePluginsOfClass:(Class __nullable) class performInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop;
 @end
 
-@protocol MVChatPlugin
+@protocol MVChatPlugin <NSObject>
 - (id) initWithManager:(MVChatPluginManager *) manager;
-@end
 
-@interface NSObject (MVChatPluginReloadSupport)
+#pragma mark MVChatPluginReloadSupport
+@optional
 - (void) load;
 - (void) unload;
 @end

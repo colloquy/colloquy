@@ -70,7 +70,7 @@ static NSMutableSet *inspectors = nil;
 		[[self window] close];
 
 	if( [_inspector respondsToSelector:@selector( didUnload )] )
-		[(NSObject *)_inspector didUnload];
+		[_inspector didUnload];
 
 	_inspectorLoaded = NO;
 
@@ -112,7 +112,7 @@ static NSMutableSet *inspectors = nil;
 	if( object == _object ) return;
 
 	if( [_inspector respondsToSelector:@selector( shouldUnload )] )
-		if( ! [(NSObject *)_inspector shouldUnload] ) return;
+		if( ! [_inspector shouldUnload] ) return;
 
 	_object = object;
 
@@ -122,7 +122,7 @@ static NSMutableSet *inspectors = nil;
 
 	if( [[self window] isVisible] ) {
 		if( [oldInspector respondsToSelector:@selector( didUnload )] )
-			[(NSObject *)oldInspector didUnload];
+			[oldInspector didUnload];
 		[self _loadInspector];
 	}
 }
@@ -143,7 +143,7 @@ static NSMutableSet *inspectors = nil;
 	BOOL should = YES;
 
 	if( [_inspector respondsToSelector:@selector( shouldUnload )] )
-		should = [(NSObject *)_inspector shouldUnload];
+		should = [_inspector shouldUnload];
 
 	if( should ) {
 		[inspectors removeObject:self];
@@ -170,10 +170,10 @@ static NSMutableSet *inspectors = nil;
 	NSView *view = [_inspector view];
 
 	if( [_object respondsToSelector:@selector( willBeInspected )] )
-		[(NSObject *)_object willBeInspected];
+		[_object willBeInspected];
 
 	if( [_inspector respondsToSelector:@selector( willLoad )] )
-		[(NSObject *)_inspector willLoad];
+		[_inspector willLoad];
 
 	if( view && _inspector ) {
 		NSRect windowFrame = [[[self window] contentView] frame];
@@ -189,7 +189,7 @@ static NSMutableSet *inspectors = nil;
 		[[self window] setContentView:view];
 
 		if( [_inspector respondsToSelector:@selector( didLoad )] )
-			[(NSObject *)_inspector didLoad];
+			[_inspector didLoad];
 		_inspectorLoaded = YES;
 	} else {
 		[[self window] setTitle:NSLocalizedString( @"No Info", "no info inspector title" )];
@@ -212,6 +212,6 @@ static NSMutableSet *inspectors = nil;
 
 - (void) _applicationQuitting:(NSNotification *) notification {
 	if( _inspectorLoaded && [_inspector respondsToSelector:@selector( didUnload )] )
-		[(NSObject *)_inspector didUnload];
+		[_inspector didUnload];
 }
 @end
