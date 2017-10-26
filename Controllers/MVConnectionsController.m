@@ -2004,7 +2004,7 @@ static NSMenu *favoritesMenu = nil;
 		return;
 	}
 
-	switch( [[dict objectForKey:@"publicKeyType"] unsignedLongValue] ) {
+	switch( [[dict objectForKey:@"publicKeyType"] unsignedIntValue] ) {
 		case MVChatConnectionClientPublicKeyType:
 			[publicKeyNameDescription setObjectValue:NSLocalizedString( @"User name:", "verification target name" )];
 			[publicKeyDescription setObjectValue:NSLocalizedString( @"Please verify the users public key.", "message of verification for public key" )];
