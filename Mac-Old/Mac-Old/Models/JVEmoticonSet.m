@@ -214,12 +214,12 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 - (NSURL *) baseLocation {
 	if( [[self bundle] isEqual:[NSBundle mainBundle]] ) return nil;
-	return [NSURL fileURLWithPath:[[self bundle] resourcePath]];
+	return [[self bundle] resourceURL];
 }
 
 - (NSURL *) styleSheetLocation {
 	if( [[self bundle] isEqual:[NSBundle mainBundle]] ) return nil;
-	return [NSURL fileURLWithPath:[[self bundle] pathForResource:@"emoticons" ofType:@"css"]];
+	return [[self bundle] URLForResource:@"emoticons" withExtension:@"css"];
 }
 
 #pragma mark -
