@@ -1963,11 +1963,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 #pragma mark -
 
-- (unsigned long) scriptTypedEncoding {
+- (OSType) scriptTypedEncoding {
 	return [NSString scriptTypedEncodingFromStringEncoding:[self encoding]];
 }
 
-- (void) setScriptTypedEncoding:(unsigned long) encoding {
+- (void) setScriptTypedEncoding:(OSType) encoding {
 	[self setPreference:[NSNumber numberWithLong:encoding] forKey:@"encoding"];
 	[self changeEncoding:self];
 }

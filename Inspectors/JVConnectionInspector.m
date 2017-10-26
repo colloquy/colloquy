@@ -223,7 +223,7 @@
 }
 
 - (IBAction) changeProxy:(id) sender {
-	[_connection setProxyType:[[editProxy selectedItem] tag]];
+	[_connection setProxyType:(OSType)[[editProxy selectedItem] tag]];
 }
 
 - (IBAction) addRoom:(id) sender {
