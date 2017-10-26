@@ -249,7 +249,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	if( [currentFiles selectedRow] != -1 ) {
 		info = [self _infoForTransferAtIndex:[currentFiles selectedRow]];
 		[[info objectForKey:@"controller"] cancel];
-		[info setObject:[NSNumber numberWithUnsignedLong:MVFileTransferStoppedStatus] forKey:@"status"];
+		[info setObject:[NSNumber numberWithUnsignedInt:MVFileTransferStoppedStatus] forKey:@"status"];
 	}
 
 	[currentFiles reloadData];
@@ -495,7 +495,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			NSTimeInterval timeslice = [[info objectForKey:@"started"] timeIntervalSinceNow] * -1;
 			unsigned long long transferred = [[info objectForKey:@"transferred"] unsignedLongLongValue] + length;
 
-			[info setObject:[NSNumber numberWithUnsignedLong:MVFileTransferNormalStatus] forKey:@"status"];
+			[info setObject:[NSNumber numberWithUnsignedInt:MVFileTransferNormalStatus] forKey:@"status"];
 			[info setObject:[NSNumber numberWithUnsignedLongLong:transferred] forKey:@"transferred"];
 
 			if( transferred > [[info objectForKey:@"size"] unsignedLongLongValue] )
@@ -521,7 +521,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 - (void) downloadDidFinish:(NSURLDownload *) download {
 	for( NSMutableDictionary *info in [_transferStorage copy] ) {
 		if( [info objectForKey:@"controller"] == download ) {
-			[info setObject:[NSNumber numberWithUnsignedLong:MVFileTransferDoneStatus] forKey:@"status"];
+			[info setObject:[NSNumber numberWithUnsignedInt:MVFileTransferDoneStatus] forKey:@"status"];
 
 			[[NSWorkspace sharedWorkspace] noteFileSystemChanged:[info objectForKey:@"path"]];
 
@@ -543,7 +543,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 - (void) download:(NSURLDownload *) download didFailWithError:(NSError *) error {
 	for( NSMutableDictionary *info in _transferStorage ) {
 		if( [info objectForKey:@"controller"] == download ) {
-			[info setObject:[NSNumber numberWithUnsignedLong:MVFileTransferErrorStatus] forKey:@"status"];
+			[info setObject:[NSNumber numberWithUnsignedInt:MVFileTransferErrorStatus] forKey:@"status"];
 			[currentFiles reloadData];
 			break;
 		}
@@ -725,7 +725,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 		for( NSMutableDictionary *info in _transferStorage ) {
 			if( [info objectForKey:@"controller"] == download ) {
-				[info setObject:[NSNumber numberWithUnsignedLong:MVFileTransferStoppedStatus] forKey:@"status"];
+				[info setObject:[NSNumber numberWithUnsignedInt:MVFileTransferStoppedStatus] forKey:@"status"];
 				break;
 			}
 		}
@@ -769,7 +769,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 				[info setObject:[NSNumber numberWithDouble:currentRate] forKey:@"rate"];
 			} else currentRate = [[info valueForKey:@"rate"] doubleValue];
 
-			[info setObject:[NSNumber numberWithUnsignedLong:[transferController status]] forKey:@"status"];
+			[info setObject:[NSNumber numberWithUnsignedInt:[transferController status]] forKey:@"status"];
 
 			if( [transferController isUpload] ) {
 				totalSizeUp += [transferController finalSize];
@@ -856,7 +856,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	if( [[info objectForKey:@"controller"] isKindOfClass:[MVFileTransfer class]] ) {
 		MVFileTransfer *transfer = [info objectForKey:@"controller"];
-		[info setObject:[NSNumber numberWithUnsignedLong:[transfer status]] forKey:@"status"];
+		[info setObject:[NSNumber numberWithUnsignedInt:[transfer status]] forKey:@"status"];
 		[info setObject:[transfer user] forKey:@"user"];
 	}
 
