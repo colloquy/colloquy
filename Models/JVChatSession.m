@@ -1,5 +1,5 @@
 #import "JVChatSession.h"
-#import <libxml/tree.h>
+#include <libxml/tree.h>
 
 @implementation JVChatSession
 - (void) dealloc {

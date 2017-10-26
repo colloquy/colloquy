@@ -1,5 +1,5 @@
 #import "NSNotificationAdditions.h"
-#import <pthread.h>
+#include <pthread.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

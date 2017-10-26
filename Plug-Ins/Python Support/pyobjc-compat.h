@@ -21,7 +21,7 @@
 #define likely(x)	x 
 #endif
 
-#import <AvailabilityMacros.h>
+#include <AvailabilityMacros.h>
 /* On 10.1 there are no defines for the OS version. */
 #ifndef MAC_OS_X_VERSION_10_1
 #define MAC_OS_X_VERSION_10_1 1010

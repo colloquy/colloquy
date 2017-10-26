@@ -13,7 +13,7 @@
 #import "JVChatMessage.h"
 #import "JVChatRoomMember.h"
 
-#import <libxml/parser.h>
+#include <libxml/parser.h>
 
 static JVChatController *sharedInstance = nil;
 static NSMenu *smartTranscriptMenu = nil;
@@ -368,7 +368,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	NSParameterAssert( panel != nil );
 
 	if( [panel respondsToSelector:@selector( willDispose )] )
-		[(NSObject *)panel willDispose];
+		[panel willDispose];
 
 	[[panel windowController] removeChatViewController:panel];
 	[_chatControllers removeObject:panel];
@@ -403,7 +403,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	NSParameterAssert( controller != nil );
 
 	if( [controller respondsToSelector:@selector( willDispose )] )
-		[(NSObject *)controller willDispose];
+		[controller willDispose];
 
 	[[controller windowController] removeChatViewController:controller];
 

@@ -37,7 +37,7 @@ MVInline BOOL useSystemThreadPerformSelector() {
 
 #if !ALWAYS_HAS_SYSTEM_SUPPORT
 
-#import <pthread.h>
+#include <pthread.h>
 
 typedef struct InterThreadMessage {
 	SEL selector;

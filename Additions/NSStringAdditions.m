@@ -4,7 +4,7 @@
 #import "NSScannerAdditions.h"
 #import "NSRegularExpressionAdditions.h"
 
-#import <sys/time.h>
+#include <sys/time.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -13,7 +13,7 @@
 #import <TCMPortMapper/TCMPortMapper.h>
 #endif
 
-#import <arpa/inet.h>
+#include <arpa/inet.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

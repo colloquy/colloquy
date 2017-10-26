@@ -29,7 +29,7 @@
 #endif
 
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
-#import <CFNetwork/CFNetwork.h>
+#include <CFNetwork/CFNetwork.h>
 #endif
 
 NS_ASSUME_NONNULL_BEGIN
