@@ -1,7 +1,7 @@
-#import <CoreServices/CoreServices.h>
+#include <CoreServices/CoreServices.h>
 #import <Foundation/Foundation.h>
-#import <libxml/tree.h>
-#import <libxml/xmlerror.h>
+#include <libxml/tree.h>
+#include <libxml/xmlerror.h>
 
 /* Sample transcript:
 <log began="2005-07-11 12:19:09 -0400" source="irc://irc.freenode.net/%23barcamp">

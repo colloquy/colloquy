@@ -13,7 +13,7 @@
 #import "JVChatMessage.h"
 #import "JVChatRoomMember.h"
 
-#import <libxml/parser.h>
+#include <libxml/parser.h>
 
 static JVChatController *sharedInstance = nil;
 static NSMenu *smartTranscriptMenu = nil;

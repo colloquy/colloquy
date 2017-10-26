@@ -1,4 +1,4 @@
-#import <pthread.h>
+#include <pthread.h>
 
 #define MVInline static __inline__ __attribute__((always_inline))
 

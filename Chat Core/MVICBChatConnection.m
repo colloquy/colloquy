@@ -34,7 +34,7 @@
 
 #import "MVICBChatConnection.h"
 
-#import <stdarg.h>
+#include <stdarg.h>
 #import <Foundation/Foundation.h>
 
 @import CocoaAsyncSocket;

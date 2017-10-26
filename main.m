@@ -1,7 +1,7 @@
-#import <libxml/globals.h>
-#import <libxml/parser.h>
-#import <libxslt/xslt.h>
-#import <libexslt/exslt.h>
+#include <libxml/globals.h>
+#include <libxml/parser.h>
+#include <libxslt/xslt.h>
+#include <libexslt/exslt.h>
 
 int main( int count, const char *arg[] ) {
 	srandom( (unsigned int)time( NULL ) );

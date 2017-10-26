@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import <SystemConfiguration/SCNetworkReachability.h>
+#include <SystemConfiguration/SCNetworkReachability.h>
 
 #import <ChatCore/MVAvailability.h>
 #import <ChatCore/MVChatString.h>

@@ -1,5 +1,5 @@
 #import "MVCrashCatcher.h"
-#import <sys/sysctl.h>
+#include <sys/sysctl.h>
 
 static MVCrashCatcher *crashCatcher = nil;
 

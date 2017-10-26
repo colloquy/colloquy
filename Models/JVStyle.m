@@ -1,6 +1,6 @@
-#import <libxml/tree.h>
-#import <libxslt/transform.h>
-#import <libxslt/xsltutils.h>
+#include <libxml/tree.h>
+#include <libxslt/transform.h>
+#include <libxslt/xsltutils.h>
 
 #import "JVStyle.h"
 #import "JVEmoticonSet.h"
@@ -416,11 +416,11 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 #pragma mark -
 
 - (NSURL *) baseLocation {
-	return [NSURL fileURLWithPath:[_bundle resourcePath]];
+	return [_bundle resourceURL];
 }
 
 - (NSURL *) mainStyleSheetLocation {
-	return [NSURL fileURLWithPath:[_bundle pathForResource:@"main" ofType:@"css"]];
+	return [_bundle URLForResource:@"main" withExtension:@"css"];
 }
 
 - (NSURL *) variantStyleSheetLocationWithName:(NSString *) name {
