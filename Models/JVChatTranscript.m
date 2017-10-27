@@ -1094,7 +1094,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 }
 
 - (void) _changeFileAttributesAtPath:(NSString *) path {
-	[[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] ofItemAtPath:path error:nil];
+	[[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedInt:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedInt:'coRC'], NSFileHFSCreatorCode, nil] ofItemAtPath:path error:nil];
 
 	if( _logFile ) {
 		NSDate *began = [[NSCalendar autoupdatingCurrentCalendar] dateFromComponents:[self dateBegan]];

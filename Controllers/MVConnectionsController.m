@@ -568,8 +568,8 @@ static NSMenu *favoritesMenu = nil;
 
 	MVChatConnection *connection = [[MVChatConnection alloc] initWithType:type];
 	[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
-	[connection setOutgoingChatFormat:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"]];
-	[connection setProxyType:[[newProxy selectedItem] tag]];
+	[connection setOutgoingChatFormat:[[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatFormat"] unsignedIntValue]];
+	[connection setProxyType:(OSType)[[newProxy selectedItem] tag]];
 	[connection setSecure:[sslConnection state]];
 	[connection setPassword:[newServerPassword stringValue]];
 	[connection setUsername:[newUsername stringValue]];
@@ -905,7 +905,7 @@ static NSMenu *favoritesMenu = nil;
 		} else if( ! handled && [[url user] length] ) {
 			MVChatConnection *connection = [[MVChatConnection alloc] initWithURL:url];
 			[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
-			[connection setOutgoingChatFormat:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"]];
+			[connection setOutgoingChatFormat:[[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatFormat"] unsignedIntValue]];
 
 			[self addConnection:connection keepBookmark:NO];
 
@@ -1834,12 +1834,12 @@ static NSMenu *favoritesMenu = nil;
 		if (info[@"uniqueIdentifier"]) connection.uniqueIdentifier = info[@"uniqueIdentifier"];
 
 		connection.persistentInformation = info[@"persistentInformation"];
-		connection.proxyType = [info[@"proxy"] unsignedLongValue];
+		connection.proxyType = [info[@"proxy"] unsignedIntValue];
 
 		if( [info[@"encoding"] longValue] ) connection.encoding = [info[@"encoding"] longValue];
 		else connection.encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 
-		connection.outgoingChatFormat = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"];
+		connection.outgoingChatFormat = [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatFormat"] unsignedIntValue];
 
 		if( info[@"realName"] ) connection.realName = info[@"realName"];
 		if( info[@"nickname"] ) connection.preferredNickname = info[@"nickname"];
@@ -2004,7 +2004,7 @@ static NSMenu *favoritesMenu = nil;
 		return;
 	}
 
-	switch( [[dict objectForKey:@"publicKeyType"] unsignedLongValue] ) {
+	switch( [[dict objectForKey:@"publicKeyType"] unsignedIntValue] ) {
 		case MVChatConnectionClientPublicKeyType:
 			[publicKeyNameDescription setObjectValue:NSLocalizedString( @"User name:", "verification target name" )];
 			[publicKeyDescription setObjectValue:NSLocalizedString( @"Please verify the users public key.", "message of verification for public key" )];

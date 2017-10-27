@@ -1267,11 +1267,11 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
-- (NSUInteger) scriptTypedEncoding {
+- (OSType) scriptTypedEncoding {
 	return [NSString scriptTypedEncodingFromStringEncoding:[self encoding]];
 }
 
-- (void) setScriptTypedEncoding:(NSUInteger) newEncoding {
+- (void) setScriptTypedEncoding:(OSType) newEncoding {
 	[self setEncoding:[NSString stringEncodingFromScriptTypedEncoding:newEncoding]];
 }
 
@@ -1445,7 +1445,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 			continue;
 
 		if( encoding ) {
-			realEncoding = [NSString stringEncodingFromScriptTypedEncoding:[encoding unsignedLongValue]];
+			realEncoding = [NSString stringEncodingFromScriptTypedEncoding:[encoding unsignedIntValue]];
 		} else if( [target isKindOfClass:[MVChatRoom class]] ) {
 			realEncoding = [(MVChatRoom *)target encoding];
 		} else {

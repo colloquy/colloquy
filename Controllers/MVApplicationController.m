@@ -258,7 +258,7 @@ static BOOL applicationIsTerminating = NO;
 - (void) openDocumentPanelDidEnd:(NSOpenPanel *) panel returnCode:(NSInteger) returnCode contextInfo:(void *) contextInfo {
 	NSString *filename = [[panel URL] path];
 	NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filename error:nil];
-	if( returnCode == NSModalResponseOK && [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
+	if( returnCode == NSModalResponseOK && [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedIntValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
 		[[JVChatController defaultController] chatViewControllerForTranscript:filename];
 	}
 }
@@ -309,7 +309,7 @@ static BOOL applicationIsTerminating = NO;
 - (BOOL) application:(NSApplication *) sender openFile:(NSString *) filename {
 	NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filename error:nil];
 
-	if( [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
+	if( [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedIntValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
 		NSString *searchString = nil;
 
 		NSAppleEventManager *sam = [NSAppleEventManager sharedAppleEventManager];
@@ -320,7 +320,7 @@ static BOOL applicationIsTerminating = NO;
 		if( searchString ) [transcript setSearchQuery:searchString];
 
 		return YES;
-	} else if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:filename] && */ ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[filename pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coSt' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
+	} else if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:filename] && */ ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[filename pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedIntValue] == 'coSt' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
 		NSString *newPath = [[@"~/Library/Application Support/Colloquy/Styles" stringByExpandingTildeInPath] stringByAppendingPathComponent:[filename lastPathComponent]];
 		if( [newPath isEqualToString:filename] ) return NO;
 
@@ -369,7 +369,7 @@ static BOOL applicationIsTerminating = NO;
 			[alert runModal];
 			
 		} return NO;
-	} else if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:filename] && */ ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyEmoticons"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coEm' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
+	} else if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:filename] && */ ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyEmoticons"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedIntValue] == 'coEm' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedIntValue] == 'coRC' ) ) ) {
 		NSString *newPath = [[@"~/Library/Application Support/Colloquy/Emoticons" stringByExpandingTildeInPath] stringByAppendingPathComponent:[filename lastPathComponent]];
 		if( [newPath isEqualToString:filename] ) return NO;
 
