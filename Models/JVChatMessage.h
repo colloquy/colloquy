@@ -8,8 +8,8 @@ typedef NS_ENUM(OSType, JVChatMessageType) {
 
 @interface JVChatMessage : NSObject <NSMutableCopying, JVChatTranscriptElement> {
 	@public
-	/* xmlNode */ void *_node;
-	/* xmlDoc */ void *_doc;
+	struct _xmlNode *_node;
+	struct _xmlDoc *_doc;
 	NSString *_messageIdentifier;
 	NSScriptObjectSpecifier *_objectSpecifier;
 	__weak JVChatTranscript *_transcript;

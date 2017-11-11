@@ -2,12 +2,12 @@
 
 @interface JVChatSession : NSObject <JVChatTranscriptElement> {
 	@protected
-	/* xmlNode */ void *_node;
+	struct _xmlNode *_node;
 	NSScriptObjectSpecifier *_objectSpecifier;
 	__weak JVChatTranscript *_transcript;
 	NSDate *_startDate;
 }
-- (/* xmlNode */ void *) node;
+- (struct _xmlNode *) node;
 - (JVChatTranscript *) transcript;
 - (NSDate *) startDate;
 @end

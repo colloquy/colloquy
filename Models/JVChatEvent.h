@@ -2,8 +2,8 @@
 
 @interface JVChatEvent : NSObject <JVChatTranscriptElement> {
 	@protected
-	/* xmlNode */ void *_node;
-	/* xmlDoc */ void *_doc;
+	struct _xmlNode *_node;
+	struct _xmlDoc *_doc;
 	NSString *_eventIdentifier;
 	NSScriptObjectSpecifier *_objectSpecifier;
 	__weak JVChatTranscript *_transcript;
@@ -15,7 +15,7 @@
 	BOOL _loadedAttributes;
 	BOOL _loadedSmall;
 }
-- (/* xmlNode */ void *) node;
+- (struct _xmlNode *) node;
 
 - (JVChatTranscript *) transcript;
 - (NSString *) eventIdentifier;
