@@ -66,8 +66,8 @@
 		1CE3FB5407C7DFD50049A366 /* F-ScriptConsole.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = "F-ScriptConsole.nib"; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* F-Script Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "F-Script Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		92823D1316900FC0000EC36E /* Colloquy (Old).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Colloquy (Old).xcodeproj"; path = "../../Colloquy (Old).xcodeproj"; sourceTree = "<group>"; };
-		9295C96E16783011009F9014 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChatCore.framework; path = ../../build/Development/ChatCore.framework; sourceTree = "<group>"; };
+		92823D1316900FC0000EC36E /* Colloquy (Old).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Colloquy (Old).xcodeproj"; path = "../../../../Colloquy (Old).xcodeproj"; sourceTree = "<group>"; };
+		9295C96E16783011009F9014 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1F6107B0957E488001B65CD /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C29E3BF31F64A33A00C18D21 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
 		C29E3BF41F64A33A00C18D21 /* old-mac-target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
@@ -177,7 +177,7 @@
 			);
 			indentWidth = 4;
 			name = Settings;
-			path = ../../Settings;
+			path = ../../../../Settings;
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 1;
@@ -324,14 +324,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C29E3BF41F64A33A00C18D21 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				GCC_PREFIX_HEADER = ../../Basic.pch;
+				GCC_PREFIX_HEADER = "${COLLOQUY_WORKSPACE_ROOT}/Basic.pch";
 				HEADER_SEARCH_PATHS = (
-					../../Additions,
-					"\"../../Chat Core\"",
 					../../Controllers,
 					../../Models,
 					../../Panels,
-					../../Shared/Models,
+					"${COLLOQUY_WORKSPACE_ROOT}/Additions",
+					"\"${COLLOQUY_WORKSPACE_ROOT}/Chat Core\"",
+					"${COLLOQUY_WORKSPACE_ROOT}/Shared/Models",
 				);
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.fscript-support";
@@ -344,14 +344,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C29E3BF41F64A33A00C18D21 /* old-mac-target.xcconfig */;
 			buildSettings = {
-				GCC_PREFIX_HEADER = ../../Basic.pch;
+				GCC_PREFIX_HEADER = "${COLLOQUY_WORKSPACE_ROOT}/Basic.pch";
 				HEADER_SEARCH_PATHS = (
-					../../Additions,
-					"\"../../Chat Core\"",
 					../../Controllers,
 					../../Models,
 					../../Panels,
-					../../Shared/Models,
+					"${COLLOQUY_WORKSPACE_ROOT}/Additions",
+					"\"${COLLOQUY_WORKSPACE_ROOT}/Chat Core\"",
+					"${COLLOQUY_WORKSPACE_ROOT}/Shared/Models",
 				);
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.fscript-support";
@@ -365,7 +365,7 @@
 			baseConfigurationReference = C29E3BF31F64A33A00C18D21 /* Base.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
-				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)/../..";
+				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)/../../../..";
 				SYMROOT = ../../build;
 			};
 			name = Debug;
@@ -375,7 +375,7 @@
 			baseConfigurationReference = C29E3BF31F64A33A00C18D21 /* Base.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
-				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)/../..";
+				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)/../../../..";
 				SYMROOT = ../../build;
 			};
 			name = Release;

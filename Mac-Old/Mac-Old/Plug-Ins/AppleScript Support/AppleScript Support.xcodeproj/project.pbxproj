@@ -59,8 +59,8 @@
 		1CF7A61407CD661200965F52 /* compile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compile.png; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* AppleScript Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AppleScript Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		92823CF516900F97000EC36E /* Colloquy (Old).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Colloquy (Old).xcodeproj"; path = "../../Colloquy (Old).xcodeproj"; sourceTree = "<group>"; };
-		9295C94B16782FCE009F9014 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChatCore.framework; path = ../../build/Development/ChatCore.framework; sourceTree = "<group>"; };
+		92823CF516900F97000EC36E /* Colloquy (Old).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Colloquy (Old).xcodeproj"; path = "../../../../Colloquy (Old).xcodeproj"; sourceTree = "<group>"; };
+		9295C94B16782FCE009F9014 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C29E3BE31F64A2C000C18D21 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
 		C29E3BE51F64A2C000C18D21 /* old-mac-target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
 		C29E3BE61F64A2C000C18D21 /* target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = target.xcconfig; sourceTree = "<group>"; };
@@ -166,7 +166,7 @@
 			);
 			indentWidth = 4;
 			name = Settings;
-			path = ../../Settings;
+			path = ../../../../Settings;
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 1;
@@ -282,15 +282,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C29E3BE61F64A2C000C18D21 /* target.xcconfig */;
 			buildSettings = {
-				GCC_PREFIX_HEADER = ../../Basic.pch;
+				GCC_PREFIX_HEADER = "${COLLOQUY_WORKSPACE_ROOT}/Basic.pch";
 				HEADER_SEARCH_PATHS = (
-					../../Additions,
-					"\"../../Chat Core\"",
 					../../Controllers,
 					../../Models,
 					../../Panels,
 					../../Views,
-					../../Shared/Models,
+					"${COLLOQUY_WORKSPACE_ROOT}/Additions",
+					"\"${COLLOQUY_WORKSPACE_ROOT}/Chat Core\"",
+					"${COLLOQUY_WORKSPACE_ROOT}/Shared/Models",
 				);
 				INFOPLIST_FILE = Info.plist;
 				OTHER_LDFLAGS = (
@@ -308,7 +308,7 @@
 			baseConfigurationReference = C29E3BE31F64A2C000C18D21 /* Base.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
-				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)/../..";
+				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)/../../../..";
 				SYMROOT = ../../build;
 			};
 			name = Debug;
@@ -317,15 +317,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C29E3BE61F64A2C000C18D21 /* target.xcconfig */;
 			buildSettings = {
-				GCC_PREFIX_HEADER = ../../Basic.pch;
+				GCC_PREFIX_HEADER = "${COLLOQUY_WORKSPACE_ROOT}/Basic.pch";
 				HEADER_SEARCH_PATHS = (
-					../../Additions,
-					"\"../../Chat Core\"",
 					../../Controllers,
 					../../Models,
 					../../Panels,
 					../../Views,
-					../../Shared/Models,
+					"${COLLOQUY_WORKSPACE_ROOT}/Additions",
+					"\"${COLLOQUY_WORKSPACE_ROOT}/Chat Core\"",
+					"${COLLOQUY_WORKSPACE_ROOT}/Shared/Models",
 				);
 				INFOPLIST_FILE = Info.plist;
 				OTHER_LDFLAGS = (
@@ -343,7 +343,7 @@
 			baseConfigurationReference = C29E3BE31F64A2C000C18D21 /* Base.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
-				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)/../..";
+				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)/../../../..";
 				SYMROOT = ../../build;
 			};
 			name = Release;
