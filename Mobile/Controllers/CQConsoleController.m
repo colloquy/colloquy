@@ -8,7 +8,7 @@
 #import "MVDelegateLogger.h"
 #import "MVIRCChatConnection.h"
 
-#import "DDLogMacros.h"
+#import <CocoaLumberjack/DDLogMacros.h>
 
 static BOOL showNICKs;
 static BOOL showTraffic; // JOIN, PART, KICK, INVITE
