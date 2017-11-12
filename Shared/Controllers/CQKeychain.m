@@ -59,7 +59,7 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	if (status == errSecDuplicateItem) {
 		[passwordEntry removeObjectForKey:(__bridge id)kSecValueData];
 
-		NSMutableDictionary *attributesToUpdate = [[NSMutableDictionary alloc] initWithObjectsAndKeys:passwordData, (__bridge id)kSecValueData, nil];
+		NSDictionary *attributesToUpdate = @{(__bridge id)kSecValueData: passwordData};
 
 		SecItemUpdate((__bridge CFDictionaryRef)passwordEntry, (__bridge CFDictionaryRef)attributesToUpdate);
 	}
@@ -75,7 +75,7 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 
 	NSMutableDictionary *passwordQuery = createBaseDictionary(server, area);
 
-	passwordQuery[(__bridge id)kSecReturnData] = (__bridge id)kCFBooleanTrue;
+	passwordQuery[(__bridge id)kSecReturnData] = @YES;
 	passwordQuery[(__bridge id)kSecMatchLimit] = (__bridge id)kSecMatchLimitOne;
 
 	CFTypeRef resultDataRef;
