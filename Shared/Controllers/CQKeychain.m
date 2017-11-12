@@ -81,7 +81,7 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	CFTypeRef resultDataRef;
 	OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)passwordQuery, &resultDataRef);
 	if (status == noErr && resultDataRef)
-		return (__bridge NSData *)CFAutorelease(resultDataRef);
+		return CFBridgingRelease(resultDataRef);
 
 	return nil;
 }
