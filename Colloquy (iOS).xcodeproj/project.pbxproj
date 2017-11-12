@@ -116,6 +116,8 @@
 		1CFCC0C511172B2A00EA5F10 /* CQChatPresentationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCC0C411172B2A00EA5F10 /* CQChatPresentationController.m */; };
 		1CFF6E820EDF772800D3C557 /* UITableViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
+		5522A8DB1FB8FAA2003B37CA /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5522A8DC1FB8FAA2003B37CA /* CocoaLumberjack.framework */; };
+		5522A8DD1FB8FAAC003B37CA /* CocoaLumberjack.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 5522A8DC1FB8FAA2003B37CA /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8900D7340FBFB2D900DE3E3B /* Servers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8900D7330FBFB2D900DE3E3B /* Servers.plist */; };
 		891E84D4123F0C8C00EC3C0F /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 891E84D3123F0C8C00EC3C0F /* NSCharacterSetAdditions.m */; };
 		896E84610F15AB6C00D810FE /* notes.css in Resources */ = {isa = PBXBuildFile; fileRef = 896E84600F15AB6C00D810FE /* notes.css */; };
@@ -154,7 +156,6 @@
 		92823CEC168FE6CB000EC36E /* CQIgnoreRulesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CEB168FE6CB000EC36E /* CQIgnoreRulesController.m */; };
 		92823CEF168FE6EC000EC36E /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CEE168FE6EC000EC36E /* KAIgnoreRule.m */; };
 		92823D3516911677000EC36E /* CQConsoleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3416911677000EC36E /* CQConsoleController.m */; };
-		92823D4A169123FD000EC36E /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3E169123FD000EC36E /* DDLog.m */; };
 		92823D551691390E000EC36E /* CQProcessConsoleMessageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */; };
 		9290603616B261840095EC03 /* CQPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9290603516B261830095EC03 /* CQPreferencesViewController.m */; };
 		9290D7C21694F3A400ACF833 /* console.css in Resources */ = {isa = PBXBuildFile; fileRef = 9290D7C11694F3A400ACF833 /* console.css */; };
@@ -222,7 +223,6 @@
 		B6831D131BE44FA200D3AC1D /* OpenDyslexic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 92B6661317ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf */; };
 		B6831D141BE44FB800D3AC1D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1C8CFE950F60E11900B672F9 /* Localizable.strings */; };
 		B6831D2C1BE4505C00D3AC1D /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6FB18419FCA001B14C3 /* HockeySDK.framework */; };
-		B6831D2D1BE4508400D3AC1D /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3E169123FD000EC36E /* DDLog.m */; };
 		B6831D2E1BE4508400D3AC1D /* MVDelegateLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FE016926749002ECDFD /* MVDelegateLogger.m */; };
 		B6831D2F1BE4508B00D3AC1D /* MVIRCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ECC13100F220088C737 /* MVIRCChatConnection.m */; };
 		B6831D301BE4508B00D3AC1D /* MVIRCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ECE13100F220088C737 /* MVIRCChatRoom.m */; };
@@ -371,6 +371,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				5522A8DD1FB8FAAC003B37CA /* CocoaLumberjack.framework in Copy Frameworks */,
 				C25BD6791F916302007C69D3 /* CocoaAsyncSocket.framework in Copy Frameworks */,
 				C2A939F91F91684E007618C4 /* OnePasswordExtension.framework in Copy Frameworks */,
 			);
@@ -570,6 +571,7 @@
 		1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UITableViewAdditions.m; path = Mobile/Additions/UITableViewAdditions.m; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* Colloquy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Mobile/main.m; sourceTree = "<group>"; };
+		5522A8DC1FB8FAA2003B37CA /* CocoaLumberjack.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CocoaLumberjack.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8900D7330FBFB2D900DE3E3B /* Servers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Servers.plist; sourceTree = "<group>"; };
 		891E84D2123F0C8C00EC3C0F /* NSCharacterSetAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSCharacterSetAdditions.h; path = Additions/NSCharacterSetAdditions.h; sourceTree = "<group>"; };
 		891E84D3123F0C8C00EC3C0F /* NSCharacterSetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSCharacterSetAdditions.m; path = Additions/NSCharacterSetAdditions.m; sourceTree = "<group>"; };
@@ -639,8 +641,6 @@
 		92823CEE168FE6EC000EC36E /* KAIgnoreRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KAIgnoreRule.m; sourceTree = "<group>"; };
 		92823D3316911677000EC36E /* CQConsoleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConsoleController.h; sourceTree = "<group>"; };
 		92823D3416911677000EC36E /* CQConsoleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConsoleController.m; sourceTree = "<group>"; };
-		92823D3D169123FD000EC36E /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDLog.h; path = Logging/DDLog.h; sourceTree = "<group>"; };
-		92823D3E169123FD000EC36E /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDLog.m; path = Logging/DDLog.m; sourceTree = "<group>"; };
 		92823D531691390E000EC36E /* CQProcessConsoleMessageOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQProcessConsoleMessageOperation.h; sourceTree = "<group>"; };
 		92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQProcessConsoleMessageOperation.m; sourceTree = "<group>"; };
 		9290603416B261830095EC03 /* CQPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesViewController.h; path = Mobile/Controllers/CQPreferencesViewController.h; sourceTree = "<group>"; };
@@ -684,8 +684,6 @@
 		97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQFileTransferTableCell.m; sourceTree = "<group>"; };
 		B6024FF11BCD2D44000A5058 /* CQRootContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQRootContainerViewController.h; path = Mobile/Controllers/CQRootContainerViewController.h; sourceTree = "<group>"; };
 		B6024FF21BCD2D44000A5058 /* CQRootContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQRootContainerViewController.m; path = Mobile/Controllers/CQRootContainerViewController.m; sourceTree = "<group>"; };
-		B6310B641C6FE3C80033E88E /* DDLogMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DDLogMacros.h; path = Logging/DDLogMacros.h; sourceTree = "<group>"; };
-		B6310B651C6FE52C0033E88E /* DDLegacyMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DDLegacyMacros.h; path = Logging/DDLegacyMacros.h; sourceTree = "<group>"; };
 		B6831CC41BE425C300D3AC1D /* CQUITextChatTranscriptView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQUITextChatTranscriptView.h; sourceTree = "<group>"; };
 		B6831CC51BE425C300D3AC1D /* CQUITextChatTranscriptView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQUITextChatTranscriptView.m; sourceTree = "<group>"; };
 		B6831CCD1BE44EC000D3AC1D /* Colloquy TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Colloquy TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -711,6 +709,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5522A8DB1FB8FAA2003B37CA /* CocoaLumberjack.framework in Frameworks */,
 				1918E3A11F89680700559039 /* OnePasswordExtension.framework in Frameworks */,
 				9261B6FC18419FCA001B14C3 /* HockeySDK.framework in Frameworks */,
 				C25BD6781F916300007C69D3 /* CocoaAsyncSocket.framework in Frameworks */,
@@ -1239,6 +1238,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5522A8DC1FB8FAA2003B37CA /* CocoaLumberjack.framework */,
 				1918E3991F8967FF00559039 /* OnePasswordExtension.xcodeproj */,
 				9261B6FB18419FCA001B14C3 /* HockeySDK.framework */,
 				C25BD6771F9162FA007C69D3 /* CocoaAsyncSocket.framework */,
@@ -1275,10 +1275,6 @@
 		92823D36169123D5000EC36E /* Logging */ = {
 			isa = PBXGroup;
 			children = (
-				92823D3E169123FD000EC36E /* DDLog.m */,
-				92823D3D169123FD000EC36E /* DDLog.h */,
-				B6310B641C6FE3C80033E88E /* DDLogMacros.h */,
-				B6310B651C6FE52C0033E88E /* DDLegacyMacros.h */,
 				922B1FE016926749002ECDFD /* MVDelegateLogger.m */,
 				922B1FDF16926749002ECDFD /* MVDelegateLogger.h */,
 			);
@@ -1657,7 +1653,6 @@
 				92823CEC168FE6CB000EC36E /* CQIgnoreRulesController.m in Sources */,
 				92823CEF168FE6EC000EC36E /* KAIgnoreRule.m in Sources */,
 				92823D3516911677000EC36E /* CQConsoleController.m in Sources */,
-				92823D4A169123FD000EC36E /* DDLog.m in Sources */,
 				92823D551691390E000EC36E /* CQProcessConsoleMessageOperation.m in Sources */,
 				92AF958D1A520D6A006E3152 /* UIColorAdditions.m in Sources */,
 				922B1FE116926749002ECDFD /* MVDelegateLogger.m in Sources */,
@@ -1687,7 +1682,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B6831D2D1BE4508400D3AC1D /* DDLog.m in Sources */,
 				B69FE8001BE4559900CA7B84 /* CQWelcomeController.m in Sources */,
 				B69FE8011BE4559900CA7B84 /* CQWelcomeViewController.m in Sources */,
 				B6831D2E1BE4508400D3AC1D /* MVDelegateLogger.m in Sources */,

@@ -74,10 +74,6 @@
 		431261C3072EE37A00720AD1 /* MVSILCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */; };
 		899F4EFE12617870003B9D9A /* NSFileManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */; };
 		899F4EFF12617870003B9D9A /* NSFileManagerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */; };
-		922B1FF71692C42F002ECDFD /* DDLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 922B1FF31692C42F002ECDFD /* DDLog.h */; };
-		922B1FF81692C42F002ECDFD /* DDLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 922B1FF31692C42F002ECDFD /* DDLog.h */; };
-		922B1FF91692C42F002ECDFD /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FF41692C42F002ECDFD /* DDLog.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		922B1FFA1692C42F002ECDFD /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FF41692C42F002ECDFD /* DDLog.m */; };
 		922B1FFB1692C42F002ECDFD /* MVDelegateLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 922B1FF51692C42F002ECDFD /* MVDelegateLogger.h */; };
 		922B1FFC1692C42F002ECDFD /* MVDelegateLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 922B1FF51692C42F002ECDFD /* MVDelegateLogger.h */; };
 		922B1FFD1692C42F002ECDFD /* MVDelegateLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FF61692C42F002ECDFD /* MVDelegateLogger.m */; };
@@ -132,8 +128,6 @@
 		92417D92149C019A0009B06E /* NSFileManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */; };
 		92FC6D3B16C7C04E00EF6568 /* NSRegularExpressionAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 92FC6D3916C7C04E00EF6568 /* NSRegularExpressionAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		92FC6D3C16C7C04E00EF6568 /* NSRegularExpressionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FC6D3A16C7C04E00EF6568 /* NSRegularExpressionAdditions.m */; };
-		B6310B611C6FE3760033E88E /* DDLegacyMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = B6310B601C6FE3760033E88E /* DDLegacyMacros.h */; };
-		B6310B621C6FE3760033E88E /* DDLegacyMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = B6310B601C6FE3760033E88E /* DDLegacyMacros.h */; };
 		C22181D11F649FE300F2E814 /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C22181D01F649FCE00F2E814 /* NSDateAdditions.m */; };
 		C22181D21F649FE600F2E814 /* NSDateAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = C22181CF1F649FCE00F2E814 /* NSDateAdditions.h */; };
 		C2417A091F915D8C0073F676 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C24179FE1F915C8C0073F676 /* CocoaAsyncSocket.framework */; };
@@ -237,14 +231,11 @@
 		899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerAdditions.h; path = Additions/NSFileManagerAdditions.h; sourceTree = "<group>"; };
 		899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSFileManagerAdditions.m; path = Additions/NSFileManagerAdditions.m; sourceTree = "<group>"; };
 		89FB4F2512FAAC6800668905 /* old-mac-target.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
-		922B1FF31692C42F002ECDFD /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDLog.h; path = "Chat Core/Logging/DDLog.h"; sourceTree = "<group>"; };
-		922B1FF41692C42F002ECDFD /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDLog.m; path = "Chat Core/Logging/DDLog.m"; sourceTree = "<group>"; };
 		922B1FF51692C42F002ECDFD /* MVDelegateLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDelegateLogger.h; path = "Chat Core/Logging/MVDelegateLogger.h"; sourceTree = "<group>"; };
 		922B1FF61692C42F002ECDFD /* MVDelegateLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDelegateLogger.m; path = "Chat Core/Logging/MVDelegateLogger.m"; sourceTree = "<group>"; };
 		92BFCEAA14FDEF95001D02BB /* libChat Core.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libChat Core.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		92FC6D3916C7C04E00EF6568 /* NSRegularExpressionAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSRegularExpressionAdditions.h; path = Additions/NSRegularExpressionAdditions.h; sourceTree = "<group>"; };
 		92FC6D3A16C7C04E00EF6568 /* NSRegularExpressionAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSRegularExpressionAdditions.m; path = Additions/NSRegularExpressionAdditions.m; sourceTree = "<group>"; };
-		B6310B601C6FE3760033E88E /* DDLegacyMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDLegacyMacros.h; path = "Chat Core/Logging/DDLegacyMacros.h"; sourceTree = "<group>"; };
 		C21296FD1F6463A000555EE3 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
 		C22181CF1F649FCE00F2E814 /* NSDateAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		C22181D01F649FCE00F2E814 /* NSDateAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NSDateAdditions.m; path = Additions/NSDateAdditions.m; sourceTree = "<group>"; };
@@ -398,9 +389,6 @@
 		922B1FF21692C41F002ECDFD /* Logging */ = {
 			isa = PBXGroup;
 			children = (
-				922B1FF41692C42F002ECDFD /* DDLog.m */,
-				922B1FF31692C42F002ECDFD /* DDLog.h */,
-				B6310B601C6FE3760033E88E /* DDLegacyMacros.h */,
 				922B1FF61692C42F002ECDFD /* MVDelegateLogger.m */,
 				922B1FF51692C42F002ECDFD /* MVDelegateLogger.h */,
 			);
@@ -569,7 +557,6 @@
 				DD0A30240BD8815F0054443A /* MVXMPPChatConnection.h in Headers */,
 				DD0A30250BD881610054443A /* MVSILCChatConnection.h in Headers */,
 				DD0A30260BD881620054443A /* MVSILCChatRoom.h in Headers */,
-				B6310B611C6FE3760033E88E /* DDLegacyMacros.h in Headers */,
 				DD0A30270BD881620054443A /* MVSILCChatUser.h in Headers */,
 				DD0A30280BD881630054443A /* MVSILCFileTransfer.h in Headers */,
 				DD0A30290BD881650054443A /* MVIRCChatConnection.h in Headers */,
@@ -581,7 +568,6 @@
 				1C18955A0E29CC19003CFED0 /* MVAvailability.h in Headers */,
 				C22181D21F649FE600F2E814 /* NSDateAdditions.h in Headers */,
 				899F4EFE12617870003B9D9A /* NSFileManagerAdditions.h in Headers */,
-				922B1FF71692C42F002ECDFD /* DDLog.h in Headers */,
 				922B1FFB1692C42F002ECDFD /* MVDelegateLogger.h in Headers */,
 				92FC6D3B16C7C04E00EF6568 /* NSRegularExpressionAdditions.h in Headers */,
 			);
@@ -599,7 +585,6 @@
 				92417D66149C019A0009B06E /* MVChatConnection.h in Headers */,
 				92417D67149C019A0009B06E /* MVChatUser.h in Headers */,
 				92417D68149C019A0009B06E /* MVChatRoom.h in Headers */,
-				B6310B621C6FE3760033E88E /* DDLegacyMacros.h in Headers */,
 				92417D6A149C019A0009B06E /* NSStringAdditions.h in Headers */,
 				92417D6B149C019A0009B06E /* NSNumberAdditions.h in Headers */,
 				92417D6D149C019A0009B06E /* NSDataAdditions.h in Headers */,
@@ -620,7 +605,6 @@
 				92417D8D149C019A0009B06E /* MVIRCFileTransfer.h in Headers */,
 				92417D8E149C019A0009B06E /* MVIRCNumerics.h in Headers */,
 				92417D92149C019A0009B06E /* NSFileManagerAdditions.h in Headers */,
-				922B1FF81692C42F002ECDFD /* DDLog.h in Headers */,
 				922B1FFC1692C42F002ECDFD /* MVDelegateLogger.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -791,7 +775,6 @@
 				DDF64E1A0BD2CABE009E8FF6 /* MVXMPPChatUser.m in Sources */,
 				DD4741310BD35A2E00D93AB9 /* MVXMPPChatRoom.m in Sources */,
 				899F4EFF12617870003B9D9A /* NSFileManagerAdditions.m in Sources */,
-				922B1FF91692C42F002ECDFD /* DDLog.m in Sources */,
 				922B1FFD1692C42F002ECDFD /* MVDelegateLogger.m in Sources */,
 				92FC6D3C16C7C04E00EF6568 /* NSRegularExpressionAdditions.m in Sources */,
 			);
@@ -819,7 +802,6 @@
 				92417D49149C019A0009B06E /* MVDirectClientConnection.m in Sources */,
 				92417D4A149C019A0009B06E /* MVDirectChatConnection.m in Sources */,
 				92417D53149C019A0009B06E /* NSFileManagerAdditions.m in Sources */,
-				922B1FFA1692C42F002ECDFD /* DDLog.m in Sources */,
 				922B1FFE1692C42F002ECDFD /* MVDelegateLogger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
