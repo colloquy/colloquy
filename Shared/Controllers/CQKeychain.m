@@ -7,7 +7,10 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation CQKeychain
 + (CQKeychain *) standardKeychain {
 	static CQKeychain *sharedInstance;
-	if (!sharedInstance) sharedInstance = [[self alloc] init];
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		sharedInstance = [[self alloc] init];
+	});
 	return sharedInstance;
 }
 
