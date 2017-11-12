@@ -766,13 +766,13 @@ static MVBuddyListController *sharedInstance = nil;
 		NSRect oldR = [tableView originalRectOfRow:oldPosition];
 		NSRect newR = [tableView originalRectOfRow:row];
 
-		float t = _animationPosition;
+		CGFloat t = _animationPosition;
 
 		NSUInteger count = [_buddyOrder count];
-		float rowPos = ( (float) row / (float) count );
-		float rowPosAdjusted = _viewingTop ? ( 1. - rowPos ) : rowPos;
-		float curve = 0.3;
-		float p = rowPosAdjusted * ( curve * 2. ) + 1. - curve;
+		CGFloat rowPos = ( (CGFloat) row / (CGFloat) count );
+		CGFloat rowPosAdjusted = _viewingTop ? ( 1. - rowPos ) : rowPos;
+		CGFloat curve = 0.3;
+		CGFloat p = rowPosAdjusted * ( curve * 2. ) + 1. - curve;
 
 		t = curveFunction( t, p );
 		t = easeFunction( t );

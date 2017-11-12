@@ -275,7 +275,7 @@
 	if( _nearestPreviousMark != NSNotFound ) {
 		_currentMark = _nearestPreviousMark;
 		_jumpingToMark = YES;
-		float shift = [self shiftAmountToCenterAlign];
+		CGFloat shift = [self shiftAmountToCenterAlign];
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 		_jumpingToMark = NO;
 
@@ -287,7 +287,7 @@
 	if( _nearestNextMark != NSNotFound ) {
 		_currentMark = _nearestNextMark;
 		_jumpingToMark = YES;
-		float shift = [self shiftAmountToCenterAlign];
+		CGFloat shift = [self shiftAmountToCenterAlign];
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 		_jumpingToMark = NO;
 
@@ -309,7 +309,7 @@
 	}
 
 	if( foundMark ) {
-		float shift = [self shiftAmountToCenterAlign];
+		CGFloat shift = [self shiftAmountToCenterAlign];
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 	}
 

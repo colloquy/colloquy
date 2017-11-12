@@ -44,8 +44,8 @@ static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat
 	CGFunctionRef function = CGFunctionCreate( NULL, 1, NULL, 4, NULL, &callbacks );
 	CGColorSpaceRef cspace = CGColorSpaceCreateDeviceRGB();
 
-	float srcX = NSMinX( [self bounds] ), srcY = NSMinY( [self bounds] );
-	float dstX = NSMinX( [self bounds] ), dstY = NSMaxY( [self bounds] );
+	CGFloat srcX = NSMinX( [self bounds] ), srcY = NSMinY( [self bounds] );
+	CGFloat dstX = NSMinX( [self bounds] ), dstY = NSMaxY( [self bounds] );
 	CGShadingRef shading = CGShadingCreateAxial( cspace, CGPointMake( srcX, srcY ), CGPointMake( dstX, dstY ), function, false, false );
 
 	CGContextDrawShading( [[NSGraphicsContext currentContext] graphicsPort], shading );

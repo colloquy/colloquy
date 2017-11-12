@@ -2,7 +2,7 @@
 
 @interface JVSideStatusView : NSView {
 	IBOutlet NSSplitView *splitView;
-	float _clickOffset;
+	CGFloat _clickOffset;
 	BOOL _insideResizeArea;
 }
 @end
