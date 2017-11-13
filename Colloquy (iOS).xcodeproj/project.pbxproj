@@ -342,9 +342,9 @@
 		B6AEBB441C58592400F7CF66 /* CQGiphyController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6AEBB431C58592400F7CF66 /* CQGiphyController.m */; };
 		B6BFA5431BBDA3B6000C3BBC /* UIWindowAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B6BFA5421BBDA3B6000C3BBC /* UIWindowAdditions.m */; };
 		B6D085B61B8D6E8400734C96 /* CQActivities.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D085B51B8D6E8400734C96 /* CQActivities.m */; };
-		C25BD6781F916300007C69D3 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C25BD6771F9162FA007C69D3 /* CocoaAsyncSocket.framework */; };
-		C25BD6791F916302007C69D3 /* CocoaAsyncSocket.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C25BD6771F9162FA007C69D3 /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2A939F91F91684E007618C4 /* OnePasswordExtension.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1918E39E1F89680000559039 /* OnePasswordExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2F276F41FBA4694004A6EBD /* CocoaAsyncSocket.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C2F276F01FBA44E7004A6EBD /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2F276F51FBA469F004A6EBD /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F276F01FBA44E7004A6EBD /* CocoaAsyncSocket.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -371,7 +371,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C25BD6791F916302007C69D3 /* CocoaAsyncSocket.framework in Copy Frameworks */,
+				C2F276F41FBA4694004A6EBD /* CocoaAsyncSocket.framework in Copy Frameworks */,
 				C2A939F91F91684E007618C4 /* OnePasswordExtension.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
@@ -703,7 +703,7 @@
 		B6D085B51B8D6E8400734C96 /* CQActivities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQActivities.m; sourceTree = "<group>"; };
 		C21297001F64661C00555EE3 /* old-mac-target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
 		C22181CE1F648ED200F2E814 /* target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = target.xcconfig; sourceTree = "<group>"; };
-		C25BD6771F9162FA007C69D3 /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CocoaAsyncSocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C2F276F01FBA44E7004A6EBD /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CocoaAsyncSocket.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -713,7 +713,7 @@
 			files = (
 				1918E3A11F89680700559039 /* OnePasswordExtension.framework in Frameworks */,
 				9261B6FC18419FCA001B14C3 /* HockeySDK.framework in Frameworks */,
-				C25BD6781F916300007C69D3 /* CocoaAsyncSocket.framework in Frameworks */,
+				C2F276F51FBA469F004A6EBD /* CocoaAsyncSocket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1131,6 +1131,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				1C15B12813107243006FA16B /* Settings */,
 				B6831CCE1BE44EC000D3AC1D /* Colloquy TV */,
+				C2F276EF1FBA44CE004A6EBD /* Source Dependencies */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
@@ -1241,7 +1242,6 @@
 			children = (
 				1918E3991F8967FF00559039 /* OnePasswordExtension.xcodeproj */,
 				9261B6FB18419FCA001B14C3 /* HockeySDK.framework */,
-				C25BD6771F9162FA007C69D3 /* CocoaAsyncSocket.framework */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -1301,6 +1301,15 @@
 			);
 			path = "Colloquy TV";
 			sourceTree = "<group>";
+		};
+		C2F276EF1FBA44CE004A6EBD /* Source Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				C2F276F01FBA44E7004A6EBD /* CocoaAsyncSocket.framework */,
+			);
+			name = "Source Dependencies";
+			path = "$(COLLOQUY_FRAMEWORKS_BUILT_PRODUCTS_DIR)";
+			sourceTree = "<absolute>";
 		};
 /* End PBXGroup section */
 
