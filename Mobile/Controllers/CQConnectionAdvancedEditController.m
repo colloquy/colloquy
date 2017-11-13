@@ -7,7 +7,7 @@
 
 #import <ChatCore/MVChatConnection.h>
 
-#import <OnePasswordExtension/OnePasswordExtension.h>
+@import OnePasswordExtension;
 
 #define SettingsTableSection 0
 #define AuthenticationTableSection 1

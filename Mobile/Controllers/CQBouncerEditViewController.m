@@ -8,7 +8,7 @@
 #import "CQPreferencesSwitchCell.h"
 #import "CQPreferencesTextCell.h"
 
-#import <OnePasswordExtension/OnePasswordExtension.h>
+@import OnePasswordExtension;
 
 static unsigned short ServerTableSection = 0;
 static unsigned short AuthenticationTableSection = 1;
