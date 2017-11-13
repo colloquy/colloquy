@@ -1425,7 +1425,7 @@ CQBouncerConnectionDelegate>
 
 	connection.persistentInformation = persistentInformation;
 
-	connection.proxyType = [info[@"proxy"] unsignedLongValue];
+	connection.proxyType = [info[@"proxy"] unsignedIntValue];
 	connection.secure = [info[@"secure"] boolValue];
 
 	if (info[@"requestsSASL"])
