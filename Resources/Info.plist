@@ -134,6 +134,8 @@
 	<string>Colloquy</string>
 	<key>SmartCrashReports_URL</key>
 	<string>http://colloquy.info/crash.php</string>
+	<key>NSSupportsAutomaticGraphicsSwitching</key>
+	<true/>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
