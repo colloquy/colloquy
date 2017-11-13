@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return sharedInstance;
 }
 
-static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *account) {
+static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *__nullable account) {
 	NSCParameterAssert(server);
 
 	NSMutableDictionary *query = [[NSMutableDictionary alloc] init];
@@ -23,11 +23,11 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	return query;
 }
 
-- (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *) area {
+- (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *__nullable) area {
 	[self setPassword:password forServer:server area:area displayValue:nil];
 }
 
-- (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *) area displayValue:(NSString *__nullable)displayValue {
+- (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *__nullable) area displayValue:(NSString *__nullable)displayValue {
 	if (!password.length) {
 		[self removePasswordForServer:server area:area];
 		return;
@@ -38,11 +38,11 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	[self setData:passwordData forServer:server area:area displayValue:displayValue];
 }
 
-- (void) setData:(NSData *) passwordData forServer:(NSString *) server area:(NSString *) area {
+- (void) setData:(NSData *) passwordData forServer:(NSString *) server area:(NSString *__nullable) area {
 	[self setData:passwordData forServer:server area:area displayValue:nil];
 }
 
-- (void) setData:(NSData *) passwordData forServer:(NSString *) server area:(NSString *) area displayValue:(NSString *__nullable)displayValue {
+- (void) setData:(NSData *) passwordData forServer:(NSString *) server area:(NSString *__nullable) area displayValue:(NSString *__nullable)displayValue {
 	NSParameterAssert(server);
 
 	if (!passwordData.length) {
@@ -65,12 +65,12 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	}
 }
 
-- (NSString *__nullable) passwordForServer:(NSString *) server area:(NSString *) area {
+- (NSString *__nullable) passwordForServer:(NSString *) server area:(NSString *__nullable) area {
 	NSData *data = [self dataForServer:server area:area];
 	return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
-- (NSData *__nullable) dataForServer:(NSString *) server area:(NSString *) area {
+- (NSData *__nullable) dataForServer:(NSString *) server area:(NSString *__nullable) area {
 	NSParameterAssert(server);
 
 	NSMutableDictionary *passwordQuery = createBaseDictionary(server, area);
@@ -86,11 +86,11 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	return nil;
 }
 
-- (void) removePasswordForServer:(NSString *) server area:(NSString *) area {
+- (void) removePasswordForServer:(NSString *) server area:(NSString *__nullable) area {
 	[self removeDataForServer:server area:area];
 }
 
-- (void) removeDataForServer:(NSString *) server area:(NSString *) area {
+- (void) removeDataForServer:(NSString *) server area:(NSString *__nullable) area {
 	NSParameterAssert(server);
 
 	NSMutableDictionary *passwordQuery = createBaseDictionary(server, area);
