@@ -30,7 +30,7 @@
 		return;
 	}
 
-	float dividerThickness = [self dividerThickness];
+	CGFloat dividerThickness = [self dividerThickness];
 	NSRect newFrame = [self frame];
 
 	NSView *mainView = [[self subviews] objectAtIndex:_mainSubviewIndex];

@@ -47,7 +47,7 @@ COLLOQUY_EXPORT
 	BOOL _showOfflineBuddies;
 	MVBuddyListSortOrder _sortOrder;
 
-	float _animationPosition;
+	CGFloat _animationPosition;
 	NSMutableArray *_oldPositions;
 	BOOL _viewingTop;
 	BOOL _needsToAnimate;

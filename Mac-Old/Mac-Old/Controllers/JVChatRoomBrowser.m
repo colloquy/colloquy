@@ -194,16 +194,16 @@
 		}
 	}
 
-	static float origWidth = 0.;
+	static CGFloat origWidth = 0.;
 	if( ! origWidth ) origWidth = NSWidth( windowFrame );
 
-	static float origOffset = 0.;
+	static CGFloat origOffset = 0.;
 	if( ! origOffset ) origOffset = NSHeight( [browserArea frame] );
 
-	float offset = NSHeight( [browserArea frame] );
+	CGFloat offset = NSHeight( [browserArea frame] );
 	if( ! offset ) offset = origOffset;
 
-	float width = 500.;
+	CGFloat width = 500.;
 
 	[searchArea selectTabViewItemAtIndex:2];
 

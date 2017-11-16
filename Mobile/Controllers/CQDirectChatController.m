@@ -2117,7 +2117,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSString *chatTranscriptFontSizeString = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFontSize"];
 	NSUInteger chatTranscriptFontSize = [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize;
 
-	const float CQDefaultDynamicTypeFontSize = 17.;
+	const CGFloat CQDefaultDynamicTypeFontSize = 17.;
 
 	if (chatTranscriptFontSize == CQDefaultDynamicTypeFontSize || [[NSUserDefaults standardUserDefaults] boolForKey:@"CQOverrideDynamicTypeSize"]) {
 		if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular) {

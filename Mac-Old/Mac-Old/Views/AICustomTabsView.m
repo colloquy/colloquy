@@ -564,7 +564,7 @@ static  NSImage			*tabDivider = nil;
 }
 
 //Constrain a rect horizontally
-static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
+static NSRect AIConstrainRectWidth(NSRect rect, CGFloat left, CGFloat right)
 {
 	if(rect.origin.x < left){
 		rect.size.width -= left - rect.origin.x;
@@ -826,7 +826,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 	if(allowsTabRearranging){
 		NSEnumerator 	*enumerator;
 		AICustomTabCell	*tabCell;
-		float			lastLocation = CUSTOM_TABS_INDENT;
+		CGFloat			lastLocation = CUSTOM_TABS_INDENT;
 		NSUInteger 		hoverIndex = 0;
 
 		//Figure out where the user is hovering the tabcell item
