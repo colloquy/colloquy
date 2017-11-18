@@ -1363,6 +1363,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL) handleShrugCommandWithArguments:(MVChatString *) arguments {
 	static NSString *const shrug = @"¯\\_(ツ)_/¯";
 	NSString *trimmed = [MVChatStringAsString(arguments) stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	if (!trimmed.length) {
+		[self sendMessage:[[NSAttributedString alloc] initWithString:shrug] asAction:NO];
+		return YES;
+	}
+
 	if (![trimmed hasSuffix:shrug]) {
 #if( defined(USE_ATTRIBUTED_CHAT_STRING) && USE_ATTRIBUTED_CHAT_STRING )
 		NSMutableAttributedString *stringWithShrug = [arguments mutableCopy];
