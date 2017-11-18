@@ -17,7 +17,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 	NSMutableArray *_ignoreRules;
 	MVChatConnection *_connection;
 
-	NSString *_appSupportPath;
+	NSURL *_appSupportURL;
 }
 
 - (instancetype) init {
@@ -32,8 +32,10 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 	_connection = connection;
 	_ignoreRules = [[NSMutableArray alloc] init];
 
-	if (self._ignoreFilePath.length) {
-		for (NSData *data in [NSKeyedUnarchiver unarchiveObjectWithFile:self._ignoreFilePath])
+	if (self._ignoreFileURL) {
+		NSData *root = [NSData dataWithContentsOfURL:self._ignoreFileURL];
+
+		for (NSData *data in [NSKeyedUnarchiver unarchiveObjectWithData:root])
 			[_ignoreRules addObject:[NSKeyedUnarchiver unarchiveObjectWithData:data]];
 	}
 
@@ -115,14 +117,13 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 		if (rule.isPermanent)
 			[permanentIgnores addObject:[NSKeyedArchiver archivedDataWithRootObject:rule]];
 
-	if (!permanentIgnores.count && self._ignoreFilePath.length) {
-		[[NSFileManager defaultManager] removeItemAtPath:self._ignoreFilePath error:nil];
+	if (!permanentIgnores.count && self._ignoreFileURL) {
+		[[NSFileManager defaultManager] removeItemAtURL:self._ignoreFileURL error:nil];
 
 		return;
 	}
 
-	NSString *ignoreFilePath = self._ignoreFilePath;
-	if (!ignoreFilePath) {
+	if (!self._ignoreFileURL) {
 		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQIgnoreRulesNotSavedNotification object:nil userInfo:nil];
 
 		return;
@@ -131,32 +132,20 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 
 	NSError *error = nil;
 	NSData *rootData = [NSKeyedArchiver archivedDataWithRootObject:permanentIgnores];
-	if (![rootData writeToFile:ignoreFilePath options:NSDataWritingAtomic error:&error])
+	if (![rootData writeToURL:self._ignoreFileURL options:NSDataWritingAtomic error:&error]`)
 		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQIgnoreRulesNotSavedNotification object:nil userInfo:@{@"connection": _connection, @"error": error}];
 }
 
 #pragma mark -
 
-- (NSString *__nullable) _ignoreFilePath {
-	if (!_appSupportPath) {
-		NSString *appSupportPath = nil;
-		appSupportPath = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
-		appSupportPath = [appSupportPath stringByAppendingPathComponent:([NSBundle mainBundle].infoDictionary)[(id)kCFBundleExecutableKey]];
-
-		if (![[NSFileManager defaultManager] fileExistsAtPath:appSupportPath]) {
-			[[NSFileManager defaultManager] createDirectoryAtPath:appSupportPath withIntermediateDirectories:YES attributes:nil error:nil];
-
-			if (![[NSFileManager defaultManager] fileExistsAtPath:appSupportPath])
-				NSAssert(NO, @"should not reach this point");
-				__builtin_unreachable();
-		}
-
-		_appSupportPath = [appSupportPath copy];
+- (NSURL *__nullable) _ignoreFileURL {
+	if (!_appSupportURL) {
+		_appSupportURL = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
+		_appSupportURL = [[_appSupportURL URLByAppendingPathComponent:[NSBundle mainBundle].infoDictionary[(id)kCFBundleExecutableKey]] copy];
 	}
 
 	NSString *ignoreFile = [NSString stringWithFormat:@"%@:%d.dat", _connection.server, _connection.serverPort];
-
-	return [_appSupportPath stringByAppendingPathComponent:ignoreFile];
+	return [_appSupportURL URLByAppendingPathComponent:ignoreFile];
 }
 @end
 
