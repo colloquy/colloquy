@@ -1294,8 +1294,8 @@
 		C2F276EF1FBA44CE004A6EBD /* Source Dependencies */ = {
 			isa = PBXGroup;
 			children = (
-				C2A2CAB71FC103DA00A68495 /* CocoaLumberjack.framework */,
 				C2F276F01FBA44E7004A6EBD /* CocoaAsyncSocket.framework */,
+				C2A2CAB71FC103DA00A68495 /* CocoaLumberjack.framework */,
 			);
 			name = "Source Dependencies";
 			path = "$(COLLOQUY_FRAMEWORKS_BUILT_PRODUCTS_DIR)";
