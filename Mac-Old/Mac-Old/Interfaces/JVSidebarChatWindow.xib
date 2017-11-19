@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13529"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -11,7 +11,6 @@
                 <outlet property="bodyView" destination="309" id="318"/>
                 <outlet property="chatViewsOutlineView" destination="313" id="321"/>
                 <outlet property="favoritesButton" destination="328" id="329"/>
-                <outlet property="sideView" destination="311" id="319"/>
                 <outlet property="splitView" destination="308" id="320"/>
                 <outlet property="viewActionButton" destination="316" id="327"/>
                 <outlet property="window" destination="195" id="200"/>
