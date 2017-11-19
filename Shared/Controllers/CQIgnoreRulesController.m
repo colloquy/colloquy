@@ -132,7 +132,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 
 	NSError *error = nil;
 	NSData *rootData = [NSKeyedArchiver archivedDataWithRootObject:permanentIgnores];
-	if (![rootData writeToURL:self._ignoreFileURL options:NSDataWritingAtomic error:&error]`)
+	if (![rootData writeToURL:self._ignoreFileURL options:NSDataWritingAtomic error:&error])
 		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQIgnoreRulesNotSavedNotification object:nil userInfo:@{@"connection": _connection, @"error": error}];
 }
 
