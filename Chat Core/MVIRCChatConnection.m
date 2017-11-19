@@ -1557,7 +1557,7 @@ parsingFinished: { // make a scope for this
 	BOOL isUser = ([target isKindOfClass:[MVChatUser class]] || [target isKindOfClass:[MVDirectChatConnection class]]);
 
 	NSCharacterSet *whitespaceCharacters = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-	NSScanner *argumentsScanner = [NSScanner scannerWithString:MVChatStringAsString(arguments)];
+	NSScanner *argumentsScanner = [NSScanner scannerWithString:(MVChatStringAsString(arguments) ?: @"")];
 	[argumentsScanner setCharactersToBeSkipped:nil];
 
 	if( isUser || isRoom ) {
