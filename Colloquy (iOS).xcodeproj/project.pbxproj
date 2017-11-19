@@ -1955,7 +1955,7 @@
 					"ENABLE_CHAT_CENTER=1",
 				);
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile.release;
 				PRODUCT_NAME = Colloquy;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
