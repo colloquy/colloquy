@@ -49,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewDidAppear:(BOOL) animated {
 	[super viewDidAppear:animated];
 
+	[self _updateTimes];
+
 	_updateTimesTimer = [NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(_updateTimes) userInfo:nil repeats:YES];
 	_updateInfoTimer = [NSTimer scheduledTimerWithTimeInterval:20. target:self selector:@selector(_updateInfo) userInfo:nil repeats:YES];
 }

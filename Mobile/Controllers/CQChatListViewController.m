@@ -699,6 +699,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (void) viewWillAppear:(BOOL) animated {
 	_active = YES;
 
+	[self _updateConnectTimes];
 	[self _startUpdatingConnectTimes];
 
 	[self _refreshIndexPathForChatControllersCache];
