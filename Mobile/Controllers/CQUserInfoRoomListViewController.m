@@ -25,6 +25,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	[self.tableView hideEmptyCells];
+}
+
+#pragma mark -
+
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
 	return _rooms.count;
 }

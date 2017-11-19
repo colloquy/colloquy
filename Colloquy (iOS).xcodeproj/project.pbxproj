@@ -101,7 +101,6 @@
 		1CC576D30ED4684700FEC2C1 /* UITableViewCellAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */; };
 		1CC64B2D0EE97F8B00DE91D0 /* CQChatUserListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC64B2C0EE97F8B00DE91D0 /* CQChatUserListViewController.m */; };
 		1CD46802102A5EBB00A7A49E /* whats-new.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CD46801102A5EBB00A7A49E /* whats-new.html */; };
-		1CDDE9C5118C8EB700C83EBE /* CQTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9C4118C8EB700C83EBE /* CQTableViewController.m */; };
 		1CDDE9F6118CD2B800C83EBE /* NSObjectAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9F5118CD2B800C83EBE /* NSObjectAdditions.m */; };
 		1CE3FB120D8A3DC100FB035F /* CQConnectionCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */; };
 		1CE69FD90EE317F200389442 /* CQChatInputBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE69FD80EE317F200389442 /* CQChatInputBar.m */; };
@@ -257,7 +256,6 @@
 		B6831D511BE450A900D3AC1D /* CQPreferencesTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B6661617ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m */; };
 		B6831D521BE450A900D3AC1D /* CQPreferencesTextEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 924B8239116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m */; };
 		B6831D531BE450A900D3AC1D /* CQSoundController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E87C080FA0450800B49230 /* CQSoundController.m */; };
-		B6831D541BE450A900D3AC1D /* CQTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9C4118C8EB700C83EBE /* CQTableViewController.m */; };
 		B6831D571BE450A900D3AC1D /* CQRootContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6024FF21BCD2D44000A5058 /* CQRootContainerViewController.m */; };
 		B6831D581BE450B400D3AC1D /* CQConnectionsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1AD0D83D30F009ABD9F /* CQConnectionsController.m */; };
 		B6831D591BE450B400D3AC1D /* CQConnectionsNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3CDB641113D2E000FE29AA /* CQConnectionsNavigationController.m */; };
@@ -540,8 +538,6 @@
 		1CC64B2B0EE97F8B00DE91D0 /* CQChatUserListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatUserListViewController.h; sourceTree = "<group>"; };
 		1CC64B2C0EE97F8B00DE91D0 /* CQChatUserListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatUserListViewController.m; sourceTree = "<group>"; };
 		1CD46801102A5EBB00A7A49E /* whats-new.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "whats-new.html"; sourceTree = "<group>"; };
-		1CDDE9C3118C8EB700C83EBE /* CQTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQTableViewController.h; path = Mobile/Controllers/CQTableViewController.h; sourceTree = "<group>"; };
-		1CDDE9C4118C8EB700C83EBE /* CQTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQTableViewController.m; path = Mobile/Controllers/CQTableViewController.m; sourceTree = "<group>"; };
 		1CDDE9F4118CD2B800C83EBE /* NSObjectAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSObjectAdditions.h; path = Additions/NSObjectAdditions.h; sourceTree = "<group>"; };
 		1CDDE9F5118CD2B800C83EBE /* NSObjectAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSObjectAdditions.m; path = Additions/NSObjectAdditions.m; sourceTree = "<group>"; };
 		1CE3FB100D8A3DC100FB035F /* CQConnectionCreationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQConnectionCreationViewController.h; sourceTree = "<group>"; };
@@ -931,8 +927,6 @@
 				924B8238116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.h */,
 				89E87C080FA0450800B49230 /* CQSoundController.m */,
 				89E87C070FA0450800B49230 /* CQSoundController.h */,
-				1CDDE9C4118C8EB700C83EBE /* CQTableViewController.m */,
-				1CDDE9C3118C8EB700C83EBE /* CQTableViewController.h */,
 				1CFCBA341114FB2500EA5F10 /* CQWelcomeController.m */,
 				1CFCBA331114FB2500EA5F10 /* CQWelcomeController.h */,
 				1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */,
@@ -1639,7 +1633,6 @@
 				92F3BF80117186AF00A4F554 /* CQTextView.m in Sources */,
 				925C594C1177CB63001995E0 /* CQModalNavigationController.m in Sources */,
 				925C59591177D84C001995E0 /* CQAwayStatusController.m in Sources */,
-				1CDDE9C5118C8EB700C83EBE /* CQTableViewController.m in Sources */,
 				1CDDE9F6118CD2B800C83EBE /* NSObjectAdditions.m in Sources */,
 				891E84D4123F0C8C00EC3C0F /* NSCharacterSetAdditions.m in Sources */,
 				B6AEBB441C58592400F7CF66 /* CQGiphyController.m in Sources */,
@@ -1733,7 +1726,6 @@
 				B6831D511BE450A900D3AC1D /* CQPreferencesTextViewController.m in Sources */,
 				B6831D521BE450A900D3AC1D /* CQPreferencesTextEditViewController.m in Sources */,
 				B6831D531BE450A900D3AC1D /* CQSoundController.m in Sources */,
-				B6831D541BE450A900D3AC1D /* CQTableViewController.m in Sources */,
 				B6831D571BE450A900D3AC1D /* CQRootContainerViewController.m in Sources */,
 				B6831D581BE450B400D3AC1D /* CQConnectionsController.m in Sources */,
 				B6831D591BE450B400D3AC1D /* CQConnectionsNavigationController.m in Sources */,

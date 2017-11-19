@@ -1,10 +1,8 @@
-#import "CQTableViewController.h"
-
 @class MVChatConnection;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatRoomListViewController : CQTableViewController
+@interface CQChatRoomListViewController : UITableViewController
 @property (nonatomic, strong) MVChatConnection *connection;
 @property (nonatomic, copy) NSString *selectedRoom;
 

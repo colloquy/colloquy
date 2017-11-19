@@ -81,6 +81,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[_searchBar sizeToFit];
 
 	self.tableView.tableHeaderView = _searchBar;
+	[self.tableView hideEmptyCells];
 }
 
 #pragma mark -

@@ -1,8 +1,6 @@
-#import "CQTableViewController.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatListViewController : CQTableViewController
+@interface CQChatListViewController : UITableViewController
 @property (nonatomic) BOOL active;
 
 - (void) chatViewControllerAdded:(id) controller;

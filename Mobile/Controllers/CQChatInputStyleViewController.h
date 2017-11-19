@@ -1,5 +1,3 @@
-#import "CQTableViewController.h"
-
 @class CQChatInputStyleViewController;
 
 typedef NS_ENUM(NSInteger, CQTextTrait) {
@@ -22,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) chatInputStyleView:(CQChatInputStyleViewController *) chatInputStyleView didSelectColor:(UIColor *) color forColorPosition:(CQColorPosition) position;
 @end
 
-@interface CQChatInputStyleViewController : CQTableViewController
+@interface CQChatInputStyleViewController : UITableViewController
 @property (atomic, weak) id <CQChatInputStyleDelegate> delegate;
 
 @property (nonatomic, copy) NSDictionary *attributes;

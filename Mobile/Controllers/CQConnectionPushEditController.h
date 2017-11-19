@@ -1,10 +1,8 @@
-#import "CQTableViewController.h"
-
 @class MVChatConnection;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQConnectionPushEditController : CQTableViewController
+@interface CQConnectionPushEditController : UITableViewController
 @property (nonatomic, strong) MVChatConnection *connection;
 @property (nonatomic, assign) BOOL newConnection;
 @end

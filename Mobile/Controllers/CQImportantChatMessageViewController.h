@@ -1,5 +1,3 @@
-#import "CQTableViewController.h"
-
 #import "MVChatString.h"
 
 @class CQImportantChatMessageViewController;
@@ -11,7 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) importantChatMessageViewController:(CQImportantChatMessageViewController *) importantChatMessageViewController didSelectMessage:(MVChatString *) message isAction:(BOOL) isAction;
 @end
 
-@interface CQImportantChatMessageViewController : CQTableViewController
+@interface CQImportantChatMessageViewController : UITableViewController
 - (instancetype) initWithNibName:(NSString *__nullable) nibNameOrNil bundle:(NSBundle *__nullable) nibBundleOrNil NS_UNAVAILABLE;
 - (instancetype) initWithStyle:(UITableViewStyle) style NS_UNAVAILABLE;
 - (instancetype) initWithCoder:(NSCoder *) aDecoder NS_UNAVAILABLE;

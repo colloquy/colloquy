@@ -114,6 +114,12 @@ static NSString *const CQPSListTypeFont = @"Font";
 
 #pragma mark -
 
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	[self.tableView hideEmptyCells];
+}
+
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 

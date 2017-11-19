@@ -20,6 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 	self.view = _textView;
 }
 
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	[self.tableView hideEmptyCells];
+}
+
 #pragma mark -
 
 - (void) setText:(NSString *) text {

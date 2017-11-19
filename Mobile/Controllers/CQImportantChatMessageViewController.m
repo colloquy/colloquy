@@ -46,6 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 	[super viewDidLoad];
 
 	self.title = NSLocalizedString(@"Recent Messages", @"Recent Messages title");
+
+	[self.tableView hideEmptyCells];
 }
 
 #pragma mark -

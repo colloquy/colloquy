@@ -1,5 +1,3 @@
-#import "CQTableViewController.h"
-
 @class CQPreferencesListViewController;
 
 typedef NS_ENUM(NSInteger, CQPreferencesListType) {
@@ -13,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^CQPreferencesListBlock)(CQPreferencesListViewController *preferencesListViewController);
 
-@interface CQPreferencesListViewController : CQTableViewController
+@interface CQPreferencesListViewController : UITableViewController
 @property (nonatomic) BOOL allowEditing;
 @property (nonatomic) NSInteger selectedItemIndex;
 @property (nonatomic, copy) NSArray *items;

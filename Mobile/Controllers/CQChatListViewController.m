@@ -692,6 +692,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	if ([self respondsToSelector:@selector(registerForPreviewingWithDelegate:sourceView:)])
 		_previewingContext = [self registerForPreviewingWithDelegate:self sourceView:self.view.window];
+
+	[self.tableView hideEmptyCells];
 }
 
 - (void) viewWillAppear:(BOOL) animated {

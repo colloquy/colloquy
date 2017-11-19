@@ -29,6 +29,15 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 
 #pragma mark -
 
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	[self.tableView hideEmptyCells];
+}
+
+#pragma mark -
+
+
 - (void) loadHelpContent {
 	if (_loading)
 		return;

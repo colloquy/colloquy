@@ -41,6 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 	self.tableView.showsVerticalScrollIndicator = NO;
 
+	[self.tableView hideEmptyCells];
+
 	self.navigationItem.leftBarButtonItem.target = self;
 	self.navigationItem.leftBarButtonItem.action = @selector(close:);
 }

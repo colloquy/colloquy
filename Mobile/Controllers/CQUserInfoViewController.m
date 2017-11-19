@@ -40,6 +40,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	[self.tableView hideEmptyCells];
+}
+
 - (void) viewDidAppear:(BOOL) animated {
 	[super viewDidAppear:animated];
 

@@ -1,8 +1,6 @@
-#import "CQTableViewController.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQPreferencesDisplayViewController : CQTableViewController
+@interface CQPreferencesDisplayViewController : UITableViewController
 - (instancetype) initWithNibName:(NSString *__nullable) nibNameOrNil bundle:(NSBundle *__nullable) nibBundleOrNil NS_UNAVAILABLE;
 - (instancetype) initWithStyle:(UITableViewStyle) style NS_UNAVAILABLE;
 - (instancetype) initWithCoder:(NSCoder *) aDecoder NS_UNAVAILABLE;

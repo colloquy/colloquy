@@ -84,6 +84,8 @@ NS_ASSUME_NONNULL_BEGIN
 	self.tableView.dataSource = self;
 	self.tableView.delegate = self;
 
+	[self.tableView hideEmptyCells];
+
 	[self _updateRoomInfo];
 	[self _refreshBanList];
 

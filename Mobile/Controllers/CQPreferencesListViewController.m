@@ -59,6 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[super viewDidLoad];
 
 	self.tableView.allowsSelectionDuringEditing = YES;
+	[self.tableView hideEmptyCells];
 }
 
 - (void) viewWillAppear:(BOOL) animated {

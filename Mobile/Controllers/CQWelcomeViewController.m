@@ -34,6 +34,13 @@ NS_ASSUME_NONNULL_BEGIN
 	return self;
 }
 
+#pragma mark -
+
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	[self.tableView hideEmptyCells];
+}
 
 #pragma mark -
 

@@ -1,5 +1,3 @@
-#import "CQTableViewController.h"
-
 @class MVChatRoom;
 
 typedef NS_ENUM(NSUInteger, CQChatRoomInfo) {
@@ -10,7 +8,7 @@ typedef NS_ENUM(NSUInteger, CQChatRoomInfo) {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQChatRoomInfoDisplayViewController : CQTableViewController
+@interface CQChatRoomInfoDisplayViewController : UITableViewController
 - (instancetype) initWithNibName:(NSString *__nullable) nibNameOrNil bundle:(NSBundle *__nullable) nibBundleOrNil NS_UNAVAILABLE;
 - (instancetype) initWithStyle:(UITableViewStyle) style NS_UNAVAILABLE;
 - (instancetype) initWithCoder:(NSCoder *) aDecoder NS_UNAVAILABLE;

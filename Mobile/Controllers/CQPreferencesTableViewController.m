@@ -5,6 +5,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation CQPreferencesTableViewController
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	[self.tableView hideEmptyCells];
+}
+
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 

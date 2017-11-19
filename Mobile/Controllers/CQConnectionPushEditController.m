@@ -19,6 +19,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	[self.tableView hideEmptyCells];
+}
+
+#pragma mark -
+
 - (void) setConnection:(MVChatConnection *) connection {
 	_connection = connection;
 
