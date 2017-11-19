@@ -1,5 +1,7 @@
 #import "CQConsoleController.h"
 
+@import CocoaLumberjack;
+
 #import "CQProcessConsoleMessageOperation.h"
 
 #import "NSAttributedStringAdditions.h"
@@ -7,8 +9,6 @@
 
 #import "MVDelegateLogger.h"
 #import "MVIRCChatConnection.h"
-
-#import "DDLogMacros.h"
 
 static BOOL showNICKs;
 static BOOL showTraffic; // JOIN, PART, KICK, INVITE
