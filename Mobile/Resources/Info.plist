@@ -44,6 +44,13 @@
 	<string>source</string>
 	<key>CQBuildType</key>
 	<string>personal</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>org-appextension-feature-password-management</string>
+		<string>googlechrome</string>
+		<string>googlechromes</string>
+		<string>itms-apps</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
@@ -75,10 +82,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-	</array>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>org-appextension-feature-password-management</string>
 	</array>
 </dict>
 </plist>

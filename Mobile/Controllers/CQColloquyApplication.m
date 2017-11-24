@@ -14,6 +14,8 @@
 #import "UIApplicationAdditions.h"
 #import "UIFontAdditions.h"
 
+#import <SafariServices/SafariServices.h>
+
 #import <HockeySDK/HockeySDK.h>
 
 static NSMutableArray <NSString *> *highlightWords;
@@ -603,7 +605,44 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		[alert addButtonWithTitle:NSLocalizedString(@"Open", @"Open button title")];
 
 		[alert show];
-	} else [super openURL:url];
+	} else {
+		NSString *openLinksIn = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQOpenLinksIn"];
+
+		if ([openLinksIn isEqualToString:@"Safari"]) {
+				[super openURL:url];
+		} else if ([openLinksIn isEqualToString:@"Chrome"]) {
+			NSString *scheme = url.scheme;
+			
+			// Replace the URL Scheme with the Chrome equivalent.
+			NSString *chromeScheme = nil;
+			if ([scheme isEqualToString:@"http"]) {
+				chromeScheme = @"googlechrome";
+			} else if ([scheme isEqualToString:@"https"]) {
+				chromeScheme = @"googlechromes";
+			}
+			
+			// Proceed only if a valid Google Chrome URI Scheme is available.
+			if (chromeScheme) {
+				NSString *absoluteString = [url absoluteString];
+				NSRange rangeForScheme = [absoluteString rangeOfString:@":"];
+				NSString *urlNoScheme =
+				[absoluteString substringFromIndex:rangeForScheme.location];
+				NSString *chromeURLString =
+				[chromeScheme stringByAppendingString:urlNoScheme];
+				NSURL *chromeURL = [NSURL URLWithString:chromeURLString];
+				
+				// Open the URL with Chrome.
+				if ([self canOpenURL:chromeURL]) {
+					[super openURL:chromeURL];
+				} else {
+					[super openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/us/app/chrome/id535886823"]];
+				}
+			}
+		} else {
+			SFSafariViewController *safari = [[SFSafariViewController alloc] initWithURL:url];
+			[[self window].rootViewController presentViewController:safari animated:YES completion:nil];
+		}
+	}
 
 	return YES;
 }
