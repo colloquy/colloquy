@@ -156,7 +156,7 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 		NSURL *url = [NSURL URLWithString:info[@"Link"]];
 
 		if (url) {
-			[[UIApplication sharedApplication] openURL:url];
+			[[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
 		} else {
 			[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 		}

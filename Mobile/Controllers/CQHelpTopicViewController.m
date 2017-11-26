@@ -47,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!_urlToHandle)
 		return;
 
-	[[UIApplication sharedApplication] openURL:_urlToHandle];
+	[[CQColloquyApplication sharedApplication] openURL:_urlToHandle options:@{} completionHandler:nil];
 
 	_urlToHandle = nil;
 }
@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 		return YES;
 
 	if ([[CQColloquyApplication sharedApplication] isSpecialApplicationURL:request.URL]) {
-		[[UIApplication sharedApplication] openURL:request.URL];
+		[[CQColloquyApplication sharedApplication] openURL:request.URL options:@{} completionHandler:nil];
 		return NO;
 	}
 

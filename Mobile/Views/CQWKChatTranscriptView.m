@@ -299,7 +299,7 @@ NS_ASSUME_NONNULL_BEGIN
 		}
 	}
 
-	[[UIApplication sharedApplication] openURL:navigationAction.request.URL];
+	[[UIApplication sharedApplication] openURL:navigationAction.request.URL options:@{} completionHandler:nil];
 
 	decisionHandler(WKNavigationActionPolicyCancel);
 }

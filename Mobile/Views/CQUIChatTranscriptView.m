@@ -299,7 +299,7 @@ NS_ASSUME_NONNULL_BEGIN
 		if ([transcriptDelegate transcriptView:self handleOpenURL:request.URL])
 			return NO;
 
-	[[UIApplication sharedApplication] openURL:request.URL];
+	[[UIApplication sharedApplication] openURL:request.URL options:@{} completionHandler:nil];
 
 	return NO;
 }

@@ -572,13 +572,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	return @"";
 }
 
-- (void)openURL:(NSURL*)url options:(NSDictionary<NSString *, id> *)options completionHandler:(void (^ __nullable)(BOOL success))completionHandler {
+- (void) openURL:(NSURL*) url options:(NSDictionary<NSString *, id> *) options completionHandler:(void (^ __nullable)(BOOL success)) completionHandler {
 	[self openURL:url options:options completionHandler:completionHandler promptForExternal:YES];
-}
-
-- (BOOL) openURL:(NSURL *) url {
-	[self openURL:url options:@{} completionHandler:nil promptForExternal:YES];
-	return YES;
 }
 
 - (void) openURL:(NSURL *) url options:(NSDictionary<NSString *,id> *) options completionHandler:(void (^)(BOOL)) completionHandler promptForExternal:(BOOL) prompt {

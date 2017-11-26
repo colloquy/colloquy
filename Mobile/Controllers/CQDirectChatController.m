@@ -1003,7 +1003,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL) _openURL:(NSURL *) url {
 	[self _forceResignKeyboard];
 
-	return [[CQColloquyApplication sharedApplication] openURL:url];
+	[[CQColloquyApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+
+	return YES;
 }
 
 - (BOOL) _handleURLCommandWithArguments:(MVChatString *) arguments {
@@ -1648,7 +1650,7 @@ NS_ASSUME_NONNULL_BEGIN
 		url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", url.scheme, self.connection.server, target]];
 	}
 
-	[[UIApplication sharedApplication] openURL:url];
+	[[CQColloquyApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
 
 	return YES;
 }
@@ -1979,14 +1981,14 @@ NS_ASSUME_NONNULL_BEGIN
 			[self showUserInformation];
 	} else if (actionSheet.tag == URLActionSheet) {
 		Class <CQBookmarking> bookmarkingService = [CQBookmarkingController activeService];
-		NSURL *URL = [actionSheet associatedObjectForKey:@"URL"];
+		NSURL *url = [actionSheet associatedObjectForKey:@"URL"];
 
 		if (buttonIndex == 0)
-			[[UIApplication sharedApplication] openURL:URL];
+			[[CQColloquyApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
 		else if (bookmarkingService && buttonIndex == 1)
-			[bookmarkingService bookmarkLink:URL.absoluteString];
+			[bookmarkingService bookmarkLink:url.absoluteString];
 		else if ((!bookmarkingService && buttonIndex == 1) || (bookmarkingService && buttonIndex == 2))
-			[[UIPasteboard generalPasteboard] setURL:URL];
+			[[UIPasteboard generalPasteboard] setURL:url];
 	}
 }
 
