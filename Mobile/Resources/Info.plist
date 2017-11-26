@@ -48,8 +48,6 @@
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>org-appextension-feature-password-management</string>
-		<string>googlechrome</string>
-		<string>googlechromes</string>
 		<string>itms-apps</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
