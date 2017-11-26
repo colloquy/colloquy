@@ -1842,6 +1842,7 @@
 					"$(inherited)",
 					"$(SOURCE_ROOT)",
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2129,6 +2130,7 @@
 					"$(inherited)",
 					"$(SOURCE_ROOT)",
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2144,6 +2146,7 @@
 					"$(inherited)",
 					"$(SOURCE_ROOT)",
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

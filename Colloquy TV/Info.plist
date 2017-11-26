@@ -39,11 +39,11 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.8.7</string>
+	<string>1.9.0</string>
 	<key>CQBuildType</key>
 	<string>personal</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>9.0</string>
+	<string>10.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
