@@ -609,29 +609,23 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		NSString *openLinksIn = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQOpenLinksIn"];
 
 		if ([openLinksIn isEqualToString:@"Safari"]) {
-				[super openURL:url];
+			[super openURL:url];
 		} else if ([openLinksIn isEqualToString:@"Chrome"]) {
 			NSString *scheme = url.scheme;
-			
-			// Replace the URL Scheme with the Chrome equivalent.
+
+			// Match HTTP(s) with the Chrome equivalent
 			NSString *chromeScheme = nil;
 			if ([scheme caseInsensitiveCompare:@"http"] == NSOrderedSame) {
 				chromeScheme = @"googlechrome";
 			} else if ([scheme caseInsensitiveCompare:@"https"] == NSOrderedSame) {
 				chromeScheme = @"googlechromes";
 			}
-			
-			// Proceed only if a valid Google Chrome URI Scheme is available.
-			if (chromeScheme) {
-				NSString *absoluteString = [url absoluteString];
-				NSRange rangeForScheme = [absoluteString rangeOfString:@":"];
-				NSString *urlNoScheme =
-				[absoluteString substringFromIndex:rangeForScheme.location];
-				NSString *chromeURLString =
-				[chromeScheme stringByAppendingString:urlNoScheme];
-				NSURL *chromeURL = [NSURL URLWithString:chromeURLString];
-				
-				// Open the URL with Chrome.
+
+			if (chromeScheme.length) {
+				NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+				components.scheme = chromeScheme;
+
+				NSURL *chromeURL = components.url;
 				if ([self canOpenURL:chromeURL]) {
 					[super openURL:chromeURL];
 				} else {
@@ -641,8 +635,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 				[super openURL:url];
 			}
 		} else {
-			SFSafariViewController *safari = [[SFSafariViewController alloc] initWithURL:url];
-			[[self window].rootViewController presentViewController:safari animated:YES completion:nil];
+			SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
+			[self.window.rootViewController presentViewController:safariViewController animated:YES completion:nil];
 		}
 	}
 
