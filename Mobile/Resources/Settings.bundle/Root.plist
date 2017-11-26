@@ -192,9 +192,9 @@
 			<key>Title</key>
 			<string>Open Links In</string>
 			<key>Key</key>
-			<string>CQOpenLinksIn</string>
+			<string>CQSelectedBrowser</string>
 			<key>DefaultValue</key>
-			<string>In-App</string>
+			<string>Safari</string>
 			<key>Values</key>
 			<array>
 				<string>In-App</string>

@@ -606,7 +606,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 		[alert show];
 	} else {
-		NSString *openLinksIn = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQOpenLinksIn"];
+		NSString *openLinksIn = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSelectedBrowser"];
 
 		if ([openLinksIn isEqualToString:@"Safari"]) {
 			[super openURL:url];

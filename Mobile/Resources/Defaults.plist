@@ -150,5 +150,7 @@
 	<integer>2</integer>
 	<key>CQIndexInSpotlight</key>
 	<true/>
+	<key>CQSelectedBrowser</key>
+	<string>Safari</string>
 </dict>
 </plist>
