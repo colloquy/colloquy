@@ -14,6 +14,8 @@
 #import "UIApplicationAdditions.h"
 #import "UIFontAdditions.h"
 
+#import <SafariServices/SafariServices.h>
+
 #import <HockeySDK/HockeySDK.h>
 
 static NSMutableArray <NSString *> *highlightWords;
@@ -603,7 +605,40 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		[alert addButtonWithTitle:NSLocalizedString(@"Open", @"Open button title")];
 
 		[alert show];
-	} else [super openURL:url];
+	} else {
+		NSString *openLinksIn = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQOpenLinksIn"];
+
+		if ([openLinksIn isEqualToString:@"Safari"]) {
+			[super openURL:url];
+		} else if ([openLinksIn isEqualToString:@"Chrome"]) {
+			NSString *scheme = url.scheme;
+
+			// Match HTTP(s) with the Chrome equivalent
+			NSString *chromeScheme = nil;
+			if ([scheme caseInsensitiveCompare:@"http"] == NSOrderedSame) {
+				chromeScheme = @"googlechrome";
+			} else if ([scheme caseInsensitiveCompare:@"https"] == NSOrderedSame) {
+				chromeScheme = @"googlechromes";
+			}
+
+			if (chromeScheme.length) {
+				NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+				components.scheme = chromeScheme;
+
+				NSURL *chromeURL = components.URL;
+				if ([self canOpenURL:chromeURL]) {
+					[super openURL:chromeURL];
+				} else {
+					[super openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/us/app/chrome/id535886823"]];
+				}
+			} else {
+				[super openURL:url];
+			}
+		} else {
+			SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
+			[self.window.rootViewController presentViewController:safariViewController animated:YES completion:nil];
+		}
+	}
 
 	return YES;
 }
