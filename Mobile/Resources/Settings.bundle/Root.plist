@@ -197,15 +197,19 @@
 			<string>Safari</string>
 			<key>Values</key>
 			<array>
-				<string>In-App</string>
 				<string>Safari</string>
+				<string>Colloquy</string>
+				<string>Firefox</string>
 				<string>Chrome</string>
+				<string>Brave</string>
 			</array>
 			<key>Titles</key>
 			<array>
-				<string>In-App Browser</string>
 				<string>Safari</string>
+				<string>In-App Browser</string>
+				<string>Firefox</string>
 				<string>Chrome</string>
+				<string>Brave</string>
 			</array>
 		</dict>
 		<dict>

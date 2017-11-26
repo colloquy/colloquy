@@ -572,20 +572,26 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	return @"";
 }
 
-- (BOOL) openURL:(NSURL *) url {
-	return [self openURL:url promptForExternal:YES];
+- (void)openURL:(NSURL*)url options:(NSDictionary<NSString *, id> *)options completionHandler:(void (^ __nullable)(BOOL success))completionHandler {
+	[self openURL:url options:options completionHandler:completionHandler promptForExternal:YES];
 }
 
-- (BOOL) openURL:(NSURL *) url promptForExternal:(BOOL) prompt {
-	if ([[CQConnectionsController defaultController] handleOpenURL:url])
-		return YES;
+- (BOOL) openURL:(NSURL *) url {
+	[self openURL:url options:@{} completionHandler:nil promptForExternal:YES];
+	return YES;
+}
 
-	if (url && ![self canOpenURL:url])
-		return NO;
+- (void) openURL:(NSURL *) url options:(NSDictionary<NSString *,id> *) options completionHandler:(void (^)(BOOL)) completionHandler promptForExternal:(BOOL) prompt {
+	if ([[CQConnectionsController defaultController] handleOpenURL:url]) {
+		completionHandler(YES);
+		return;
+	}
 
 	if ([self isSpecialApplicationURL:url]) {
-		if (!prompt)
-			return [super openURL:url];
+		if (!prompt) {
+			[super openURL:url options:options completionHandler:completionHandler];
+			return;
+		}
 
 		CQAlertView *alert = [[CQAlertView alloc] init];
 
@@ -606,41 +612,66 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 		[alert show];
 	} else {
-		NSString *openLinksIn = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSelectedBrowser"];
+		NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
 
-		if ([openLinksIn isEqualToString:@"Safari"]) {
-			[super openURL:url];
-		} else if ([openLinksIn isEqualToString:@"Chrome"]) {
-			NSString *scheme = url.scheme;
+		BOOL isWebLink = [components.scheme isCaseInsensitiveEqualToString:@"http"] || [components.scheme isCaseInsensitiveEqualToString:@"https"];
+		NSString *selectedBrowser = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSelectedBrowser"];
+		if (!isWebLink || [selectedBrowser isEqualToString:@"Safari"]) {
+			[super openURL:url options:options completionHandler:completionHandler];
 
-			// Match HTTP(s) with the Chrome equivalent
-			NSString *chromeScheme = nil;
-			if ([scheme caseInsensitiveCompare:@"http"] == NSOrderedSame) {
-				chromeScheme = @"googlechrome";
-			} else if ([scheme caseInsensitiveCompare:@"https"] == NSOrderedSame) {
-				chromeScheme = @"googlechromes";
-			}
+			return;
+		}
 
-			if (chromeScheme.length) {
-				NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
-				components.scheme = chromeScheme;
-
-				NSURL *chromeURL = components.URL;
-				if ([self canOpenURL:chromeURL]) {
-					[super openURL:chromeURL];
-				} else {
-					[super openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/us/app/chrome/id535886823"]];
-				}
-			} else {
-				[super openURL:url];
-			}
-		} else {
+		if ([selectedBrowser isEqualToString:@"Colloquy"]) {
 			SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
 			[self.window.rootViewController presentViewController:safariViewController animated:YES completion:nil];
-		}
-	}
 
-	return YES;
+			return;
+		}
+
+		NSURL *nextURL = nil;
+		if ([selectedBrowser isEqualToString:@"Chrome"]) {
+			components.scheme = [components.scheme stringByReplacingOccurrencesOfString:@"http" withString:@"googlechrome" options:NSCaseInsensitiveSearch | NSAnchoredSearch range:NSMakeRange(0, components.scheme.length)];
+
+			nextURL = components.URL;
+		} else if ([selectedBrowser isEqualToString:@"Firefox"]) {
+			NSURLComponents *nextComponents = [[NSURLComponents alloc] initWithString:@"firefox://open-url"];
+			nextComponents.queryItems = @[
+				[NSURLQueryItem queryItemWithName:@"url" value:url.absoluteString]
+			];
+
+			nextURL = nextComponents.URL;
+		} else if ([selectedBrowser isEqualToString:@"Brave"]) {
+			NSURLComponents *nextComponents = [[NSURLComponents alloc] initWithString:@"brave://open-url"];
+			nextComponents.queryItems = @[
+				[NSURLQueryItem queryItemWithName:@"url" value:url.absoluteString]
+			];
+
+			nextURL = nextComponents.URL;
+		}
+
+		[super openURL:nextURL options:options completionHandler:^(BOOL success) {
+			if (completionHandler)
+				completionHandler(success);
+
+			if (!success) {
+				[self redirectURLFromUnhandledAppNamed:selectedBrowser toSafari:url];
+			}
+		}];
+
+	}
+}
+
+- (void) redirectURLFromUnhandledAppNamed:(NSString *) appName toSafari:(NSURL *) url {
+	CQAlertView *alert = [[CQAlertView alloc] init];
+	alert.delegate = self;
+	alert.tag = BrowserAlertTag;
+	alert.title = NSLocalizedString(@"Browser Error", @"Browser Error Alert Title");
+	alert.message = [NSString stringWithFormat:NSLocalizedString(@"There was a problem opening '%@' in '%@'. Continue with Safari?", @"Browser Error message text containing URL and App Name"), url.absoluteString, appName];
+	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+	[alert associateObject:url forKey:@"userInfo"];
+	[alert addButtonWithTitle:NSLocalizedString(@"Continue", @"Continue button title")];
+	[alert show];
 }
 
 #pragma mark -
@@ -648,7 +679,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (alertView.tag != BrowserAlertTag || alertView.cancelButtonIndex == buttonIndex)
 		return;
-	[super openURL:[alertView associatedObjectForKey:@"userInfo"]];
+	[super openURL:[alertView associatedObjectForKey:@"userInfo"] options:@{} completionHandler:nil];
 }
 
 #pragma mark -
