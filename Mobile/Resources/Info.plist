@@ -37,6 +37,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>colloquy</string>
+				<string>colloquys</string>
 			</array>
 		</dict>
 	</array>

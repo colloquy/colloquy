@@ -176,7 +176,8 @@ CQBouncerConnectionDelegate>
 #pragma mark -
 
 - (BOOL) handleOpenURL:(NSURL *) url {
-	if ((![url.scheme isCaseInsensitiveEqualToString:@"irc"] && ![url.scheme isCaseInsensitiveEqualToString:@"ircs"]) || !url.host.length)
+	NSArray *handledSchemes = @[ @"irc", @"ircs", @"colloquy", @"colloquys" ];
+	if (!url.scheme.length || !url.host.length || ![handledSchemes containsObject:url.scheme.lowercaseString])
 		return NO;
 
 	NSString *target = @"";
