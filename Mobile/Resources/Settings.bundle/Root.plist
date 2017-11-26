@@ -210,6 +210,14 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+			<key>Title</key>
+			<string>Advanced Behavior</string>
+			<key>File</key>
+			<string>AdvancedBehavior</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>
 		<dict>

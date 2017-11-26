@@ -615,9 +615,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 			
 			// Replace the URL Scheme with the Chrome equivalent.
 			NSString *chromeScheme = nil;
-			if ([scheme isEqualToString:@"http"]) {
+			if ([scheme caseInsensitiveCompare:@"http"] == NSOrderedSame) {
 				chromeScheme = @"googlechrome";
-			} else if ([scheme isEqualToString:@"https"]) {
+			} else if ([scheme caseInsensitiveCompare:@"https"] == NSOrderedSame) {
 				chromeScheme = @"googlechromes";
 			}
 			
@@ -637,6 +637,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 				} else {
 					[super openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/us/app/chrome/id535886823"]];
 				}
+			} else {
+				[super openURL:url];
 			}
 		} else {
 			SFSafariViewController *safari = [[SFSafariViewController alloc] initWithURL:url];
