@@ -249,7 +249,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	__block NSString *tappedURL = nil;
 #define TappedPointOffset 20
-	for (int x = point.x - TappedPointOffset, i = 0; i < 3 && !tappedURL.length; x += TappedPointOffset, i++)
+	for (int x = point.x - TappedPointOffset, i = 0; i < 3 && !tappedURL.length; x += TappedPointOffset, i++) {
 		for (int y = point.y - TappedPointOffset, j = 0; j < 3 && !tappedURL.length; y += TappedPointOffset, j++) {
 			[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"urlUnderTapAtPoint(%d, %d)", x, y] completionHandler:^(NSString *result) {
 				if (tappedURL.length) // if a different execution found a URL already, don't call the delegate again
@@ -265,6 +265,7 @@ NS_ASSUME_NONNULL_BEGIN
 					[transcriptDelegate transcriptView:self handleLongPressURL:[NSURL URLWithString:tappedURL] atLocation:_lastTouchLocation];
 			}];
 		}
+	}
 }
 
 - (void) swipeGestureRecognized:(UISwipeGestureRecognizer *) swipeGestureRecognizer {
