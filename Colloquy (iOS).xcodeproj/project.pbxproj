@@ -175,7 +175,6 @@
 		92F99FB819D14034004A7A22 /* UIViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F99FB719D14034004A7A22 /* UIViewAdditions.m */; };
 		9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
 		B6024FF31BCD2D44000A5058 /* CQRootContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6024FF21BCD2D44000A5058 /* CQRootContainerViewController.m */; };
-		B6831CC61BE425C300D3AC1D /* CQUITextChatTranscriptView.m in Sources */ = {isa = PBXBuildFile; fileRef = B6831CC51BE425C300D3AC1D /* CQUITextChatTranscriptView.m */; };
 		B6831CE41BE44F2F00D3AC1D /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1CA718A90EF5F136006225CD /* Settings.bundle */; };
 		B6831CE51BE44F3B00D3AC1D /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C09313A0D80C8F600A2705D /* Defaults.plist */; };
 		B6831CE71BE44F3B00D3AC1D /* Servers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8900D7330FBFB2D900DE3E3B /* Servers.plist */; };
@@ -1656,7 +1655,6 @@
 				1C15B2681311838C006FA16B /* CQAnalyticsController.m in Sources */,
 				924108D615A5605A001F7681 /* NSFileManagerMoreAdditions.m in Sources */,
 				92F1C9E3161D936D0035A9AF /* UIActionSheetAdditions.m in Sources */,
-				B6831CC61BE425C300D3AC1D /* CQUITextChatTranscriptView.m in Sources */,
 				922C1630163BDBCE00B01C3D /* NSDateAdditions.m in Sources */,
 				92823CEC168FE6CB000EC36E /* CQIgnoreRulesController.m in Sources */,
 				92823CEF168FE6EC000EC36E /* KAIgnoreRule.m in Sources */,

@@ -169,6 +169,16 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 }
 
+- (NSString *) selectedText {
+	if (self.isLoading)
+		return nil;
+
+	if (self.selectedRange.location == NSNotFound || self.selectedRange.length == 0)
+		return nil;
+
+	return [self.text substringWithRange:self.selectedRange];
+}
+
 - (UIScrollView *) scrollView {
 	return self;
 }
@@ -276,7 +286,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (BOOL) textView:(UITextView *) textView shouldInteractWithURL:(NSURL *) URL inRange:(NSRange) characterRange {
+- (BOOL)textView:(UITextView *) textView shouldInteractWithURL:(NSURL *) URL inRange:(NSRange) characterRange interaction:(UITextItemInteraction) interaction {
 #if SYSTEM(TV)
 	return NO;
 #else
@@ -298,7 +308,7 @@ NS_ASSUME_NONNULL_BEGIN
 		if ([transcriptDelegate transcriptView:self handleOpenURL:URL])
 			return NO;
 
-	[[UIApplication sharedApplication] openURL:URL];
+	[[UIApplication sharedApplication] openURL:URL options:@{} completionHandler:nil];
 
 	return NO;
 #endif
