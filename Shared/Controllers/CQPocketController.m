@@ -3,6 +3,7 @@
 #import "CQKeychain.h"
 
 #import "NSNotificationAdditions.h"
+#import "NSURLSessionAdditions.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -52,7 +53,8 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 	NSMutableURLRequest *request = [self _postRequestWithURL:@"https://getpocket.com/v3/oauth/authorize"];
 	request.HTTPBody = @{ @"consumer_key": [self _consumerKey], @"code": activeCode }.postDataRepresentation;
 
-	[[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+	NSURLSession *backgroundSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"Pocket"]];
+	[[backgroundSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 		NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
 		if ((HTTPResponse.statusCode / 100) == 2) {
 			NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
@@ -103,7 +105,7 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 	NSMutableURLRequest *request = [self _postRequestWithURL:@"https://getpocket.com/v3/add"];
 	request.HTTPBody = @{ @"url": link, @"consumer_key": [self _consumerKey], @"access_token": token }.postDataRepresentation;
 
-	[[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+	[[[NSURLSession CQ_backgroundSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 		[self handleBookmarkingResponse:response withData:data forLink:link];
 	}] resume];
 }

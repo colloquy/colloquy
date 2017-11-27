@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1910F61C1FCBDEA6009B692D /* NSURLSessionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1910F61B1FCBDEA6009B692D /* NSURLSessionAdditions.m */; };
 		1918E3A11F89680700559039 /* OnePasswordExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1918E39E1F89680000559039 /* OnePasswordExtension.framework */; };
 		194D95D31B2A33910061AE55 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 194D95D21B2A33910061AE55 /* LaunchScreen.xib */; };
 		1C0931030D80C6E900A2705D /* CQColloquyApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0931010D80C6E900A2705D /* CQColloquyApplication.m */; };
@@ -379,6 +380,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1910F61A1FCBDEA6009B692D /* NSURLSessionAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSURLSessionAdditions.h; path = Additions/NSURLSessionAdditions.h; sourceTree = "<group>"; };
+		1910F61B1FCBDEA6009B692D /* NSURLSessionAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NSURLSessionAdditions.m; path = Additions/NSURLSessionAdditions.m; sourceTree = "<group>"; };
 		1918E3991F8967FF00559039 /* OnePasswordExtension.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OnePasswordExtension.xcodeproj; path = "Carthage/Checkouts/onepassword-extension/OnePasswordExtension.xcodeproj"; sourceTree = "<group>"; };
 		194D95D21B2A33910061AE55 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		1C0931010D80C6E900A2705D /* CQColloquyApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQColloquyApplication.m; path = Mobile/Controllers/CQColloquyApplication.m; sourceTree = "<group>"; };
@@ -1184,6 +1187,8 @@
 				1C0932700D80CA4800A2705D /* NSScannerAdditions.h */,
 				1C0932750D80CA4800A2705D /* NSStringAdditions.m */,
 				1C0932740D80CA4800A2705D /* NSStringAdditions.h */,
+				1910F61A1FCBDEA6009B692D /* NSURLSessionAdditions.h */,
+				1910F61B1FCBDEA6009B692D /* NSURLSessionAdditions.m */,
 				1C09325D0D80CA4800A2705D /* MVUtilities.h */,
 			);
 			fileEncoding = 4;
@@ -1561,6 +1566,7 @@
 				1C09327E0D80CA4800A2705D /* NSDataAdditions.m in Sources */,
 				B6BFA5431BBDA3B6000C3BBC /* UIWindowAdditions.m in Sources */,
 				B68725B11B8E3E320003D4F8 /* UIPrintPageRendererAdditions.m in Sources */,
+				1910F61C1FCBDEA6009B692D /* NSURLSessionAdditions.m in Sources */,
 				1C0932810D80CA4800A2705D /* NSNotificationAdditions.m in Sources */,
 				1C0932830D80CA4800A2705D /* NSScannerAdditions.m in Sources */,
 				1C0932850D80CA4800A2705D /* NSStringAdditions.m in Sources */,

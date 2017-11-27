@@ -1,5 +1,7 @@
 #import "CQAnalyticsController.h"
 
+#import "NSURLSessionAdditions.h"
+
 #include <sys/sysctl.h>
 
 #if SYSTEM(MAC)
@@ -141,7 +143,6 @@ static void generateDeviceIdentifier() {
 @implementation CQAnalyticsController {
 	NSMutableDictionary *_data;
 	BOOL _pendingSynchronize;
-	NSURLSession *_backgroundSession;
 }
 
 + (CQAnalyticsController *) defaultController {
@@ -172,18 +173,6 @@ static void generateDeviceIdentifier() {
 	}
 
 	_data = [[NSMutableDictionary alloc] initWithCapacity:10];
-
-	NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"info.colloquy.mobi.backgroundSession"];
-	configuration.discretionary = YES;
-	configuration.allowsCellularAccess = YES;
-	configuration.sessionSendsLaunchEvents = NO;
-	configuration.HTTPShouldUsePipelining = NO;
-	configuration.HTTPCookieAcceptPolicy = NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain;
-	configuration.HTTPMaximumConnectionsPerHost = 1;
-	configuration.shouldUseExtendedBackgroundIdleMode = YES;
-
-
-	_backgroundSession = [NSURLSession sessionWithConfiguration:configuration];
 
 	generateDeviceIdentifier();
 
@@ -300,7 +289,7 @@ static void generateDeviceIdentifier() {
 	_data[deviceIdentifierKey] = deviceIdentifier;
 	_data[applicationNameKey] = applicationName;
 
-	[[_backgroundSession dataTaskWithRequest:[self _urlRequest]] resume];
+	[[[NSURLSession CQ_backgroundSession] dataTaskWithRequest:[self _urlRequest]] resume];
 
 	[_data removeAllObjects];
 }
@@ -308,7 +297,7 @@ static void generateDeviceIdentifier() {
 #pragma mark -
 
 - (void) applicationWillTerminate {
-	[[_backgroundSession dataTaskWithRequest:[self _urlRequest]] resume];
+	[[[NSURLSession CQ_backgroundSession] dataTaskWithRequest:[self _urlRequest]] resume];
 }
 @end
 
