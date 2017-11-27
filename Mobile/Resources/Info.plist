@@ -48,7 +48,6 @@
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>org-appextension-feature-password-management</string>
-		<string>itms-apps</string>
 		<string>pocket-oauth-v1</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
