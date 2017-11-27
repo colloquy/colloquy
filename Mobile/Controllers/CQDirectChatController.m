@@ -1423,14 +1423,25 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL) handleTweetCommandWithArguments:(MVChatString *) arguments {
 #if !SYSTEM(TV)
 	SLComposeViewController *composeViewController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
-	if ([UIPasteboard generalPasteboard].string.length)
-		[composeViewController setInitialText:[UIPasteboard generalPasteboard].string];
+	NSString *selectedText = transcriptView.selectedText;
 
-	if ([UIPasteboard generalPasteboard].URL)
-		[composeViewController addURL:[UIPasteboard generalPasteboard].URL];
+	if (selectedText.length) {
+		NSURL *url = [NSURL URLWithString:selectedText];
+		if (url) {
+			[composeViewController addURL:url];
+		} else {
+			[composeViewController setInitialText:selectedText];
+		}
+	} else {
+		if ([UIPasteboard generalPasteboard].string.length)
+			[composeViewController setInitialText:[UIPasteboard generalPasteboard].string];
 
-	if ([UIPasteboard generalPasteboard].image)
-		[composeViewController addImage:[UIPasteboard generalPasteboard].image];
+		if ([UIPasteboard generalPasteboard].URL)
+			[composeViewController addURL:[UIPasteboard generalPasteboard].URL];
+
+		if ([UIPasteboard generalPasteboard].image)
+			[composeViewController addImage:[UIPasteboard generalPasteboard].image];
+	}
 
 	composeViewController.completionHandler = ^(SLComposeViewControllerResult result) { /* do nothing */ };
 	[self.navigationController presentViewController:composeViewController animated:YES completion:NULL];

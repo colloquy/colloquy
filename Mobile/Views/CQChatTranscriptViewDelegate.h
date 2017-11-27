@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) UIScrollView *scrollView;
 
 @property (nonatomic, readonly) NSData *PDFRepresentation;
+@property (nonatomic, readonly) NSString *selectedText;
 
 - (void) addPreviousSessionComponents:(NSArray <NSDictionary *> *) components;
 - (void) addComponents:(NSArray <NSDictionary *> *) components animated:(BOOL) animated;

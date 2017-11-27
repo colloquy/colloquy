@@ -51,6 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 	WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
 	configuration.allowsInlineMediaPlayback = YES;
 	configuration.processPool = [[WKProcessPool alloc] init];
+	configuration.dataDetectorTypes = WKDataDetectorTypeAll;
 
 	if (!(self = [super initWithFrame:frame configuration:configuration]))
 		return nil;
@@ -148,6 +149,23 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	return [renderer PDFRender];
+}
+
+- (NSString *) selectedText {
+	if (self.isLoading)
+		return nil;
+
+	static NSString *const selectedTextJSCommand = @"window.getSelection().toString()";
+
+	__block NSString *selectedText = nil;
+	dispatch_group_t group = dispatch_group_create();
+	dispatch_group_enter(group);
+	[self stringByEvaluatingJavaScriptFromString:selectedTextJSCommand completionHandler:^(NSString *result) {
+		selectedText = result ?: @"";
+		dispatch_group_leave(group);
+	}];
+	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+	return selectedText;
 }
 
 - (void) setTimestampPosition:(CQTimestampPosition) timestampPosition {
@@ -520,8 +538,8 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) _commonInitialization {
-	if ([self respondsToSelector:@selector(setAllowsLinkPreview:)])
-		self.allowsLinkPreview = YES;
+	self.allowsLinkPreview = YES;
+
 	self.scrollView.delegate = self;
 	self.navigationDelegate = self;
 

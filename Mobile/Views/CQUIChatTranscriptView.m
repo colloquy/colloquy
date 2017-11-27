@@ -159,6 +159,23 @@ NS_ASSUME_NONNULL_BEGIN
 	return [renderer PDFRender];
 }
 
+- (NSString *) selectedText {
+	if (self.isLoading)
+		return nil;
+
+	static NSString *const selectedTextJSCommand = @"window.getSelection().toString()";
+
+	__block NSString *selectedText = nil;
+	dispatch_group_t group = dispatch_group_create();
+	dispatch_group_enter(group);
+	[self stringByEvaluatingJavaScriptFromString:selectedTextJSCommand completionHandler:^(NSString *result) {
+		selectedText = result ?: @"";
+		dispatch_group_leave(group);
+	}];
+	dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+	return selectedText;
+}
+
 - (void) setTimestampPosition:(CQTimestampPosition) timestampPosition {
 	_timestampPosition = timestampPosition;
 
