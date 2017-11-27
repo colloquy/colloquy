@@ -1332,7 +1332,6 @@ parsingFinished: { // make a scope for this
 	}
 
 	if( [self respondsToSelector:selector] ) {
-
 		@try {
 			if( hasTagsToSend ) {
 				NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:selector]];

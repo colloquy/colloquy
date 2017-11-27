@@ -854,10 +854,6 @@ retry:
 	paragraphStyle.lineSpacing = 1.1;
 	paragraphStyle.lineHeightMultiple = 1.1;
 
-	if ([paragraphStyle respondsToSelector:@selector(setAllowsDefaultTighteningForTruncation:)]) {
-		paragraphStyle.allowsDefaultTighteningForTruncation = YES;
-	}
-
 	attributes[NSParagraphStyleAttributeName] = [paragraphStyle copy];
 
 	if (foregroundColor) attributes[NSForegroundColorAttributeName] = foregroundColor;

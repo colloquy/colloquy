@@ -599,8 +599,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(didNotBookmarkLink:) name:CQBookmarkingDidNotSaveLinkNotification object:nil];
 
 	if ([transcriptView.styleIdentifier hasCaseInsensitiveSuffix:@"-dark"])
-		if ([self.navigationController.navigationBar respondsToSelector:@selector(setBarTintColor:)])
-			self.navigationController.navigationBar.barTintColor = [[UIColor darkGrayColor] colorWithAlphaComponent:.9];
+		self.navigationController.navigationBar.barTintColor = [[UIColor darkGrayColor] colorWithAlphaComponent:.9];
 }
 
 - (void) viewDidAppear:(BOOL) animated {

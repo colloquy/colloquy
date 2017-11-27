@@ -704,9 +704,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) setAppIconOptions:(CQAppIconOptions) appIconOptions {
-	if (![self respondsToSelector:@selector(setShortcutItems:)])
-		return;
-
 	_appIconOptions = appIconOptions;
 
 	NSMutableArray <UIMutableApplicationShortcutItem *> *options = [NSMutableArray array];

@@ -180,9 +180,8 @@ static void generateDeviceIdentifier() {
 	configuration.HTTPShouldUsePipelining = NO;
 	configuration.HTTPCookieAcceptPolicy = NSHTTPCookieAcceptPolicyOnlyFromMainDocumentDomain;
 	configuration.HTTPMaximumConnectionsPerHost = 1;
+	configuration.shouldUseExtendedBackgroundIdleMode = YES;
 
-	if ([configuration respondsToSelector:@selector(setShouldUseExtendedBackgroundIdleMode:)])
-		configuration.shouldUseExtendedBackgroundIdleMode = YES;
 
 	_backgroundSession = [NSURLSession sessionWithConfiguration:configuration];
 

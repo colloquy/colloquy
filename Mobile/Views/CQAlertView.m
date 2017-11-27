@@ -96,7 +96,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 		[self.alertController addAction:action];
 
-		if (i == self.cancelButtonIndex && [self.alertController respondsToSelector:@selector(setPreferredAction:)])
+		if (i == self.cancelButtonIndex)
 			self.alertController.preferredAction = action;
 	}
 

@@ -57,8 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 	_alertController = nil;
 
 	UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-	if ([alertController.popoverPresentationController respondsToSelector:@selector(canOverlapSourceViewRect)])
-		alertController.popoverPresentationController.canOverlapSourceViewRect = YES;
+	alertController.popoverPresentationController.canOverlapSourceViewRect = YES;
 
 	// The overlapping view is needed to work around the following iOS 8(.1-only?) bug on iPad:
 	// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
@@ -113,8 +112,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 		[alertController addAction:action];
 
-		if (i == self.cancelButtonIndex && [alertController respondsToSelector:@selector(setPreferredAction:)])
-			alertController.preferredAction = action;
+		alertController.preferredAction = action;
 	}
 
 	[_overlappingPresentationViewController presentViewController:alertController animated:YES completion:nil];
