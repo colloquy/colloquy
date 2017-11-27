@@ -15,6 +15,7 @@
 #import "UIFontAdditions.h"
 
 #import <SafariServices/SafariServices.h>
+#import <UserNotifications/UserNotifications.h>
 
 #import <HockeySDK/HockeySDK.h>
 
@@ -26,7 +27,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #define BrowserAlertTag 1
 
-@interface CQColloquyApplication () <UIApplicationDelegate, CQAlertViewDelegate, BITHockeyManagerDelegate>
+@interface CQColloquyApplication () <UIApplicationDelegate, CQAlertViewDelegate, BITHockeyManagerDelegate, UNUserNotificationCenterDelegate>
 @end
 
 @implementation CQColloquyApplication {
@@ -337,6 +338,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	_mainWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	_rootContainerViewController = [[CQRootContainerViewController alloc] init];
 
+	// UNUserNotificationCenter required (requires?) this to be done before app…:didFinishLaunching…: return's
+	[UNUserNotificationCenter currentNotificationCenter].delegate = self;
+
 	return YES;
 }
 
@@ -366,7 +370,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 - (void) applicationWillEnterForeground:(UIApplication *) application {
 #if !SYSTEM(TV)
-	[self cancelAllLocalNotifications];
+	[[UNUserNotificationCenter currentNotificationCenter] removeAllPendingNotificationRequests];
 #endif
 }
 
@@ -374,23 +378,13 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	_oldSwipeOrientationValue = [[CQSettingsController settingsController] objectForKey:@"CQSplitSwipeOrientations"];
 }
 
+- (void) userNotificationCenter:(UNUserNotificationCenter *) center didReceiveNotificationResponse:(UNNotificationResponse *) response withCompletionHandler:(void(^)(void)) completionHandler {
+	[self handleNotificationWithUserInfo:response.notification.request.content.userInfo];
+
+	self.applicationIconBadgeNumber = response.notification.request.content.badge.integerValue;
+}
+
 #if !SYSTEM(TV)
-- (void) application:(UIApplication *) application didReceiveLocalNotification:(UILocalNotification *) notification {
-	[self handleNotificationWithUserInfo:notification.userInfo];
-}
-
-- (void) application:(UIApplication *) application didReceiveRemoteNotification:(NSDictionary *) userInfo {
-	NSDictionary *apsInfo = userInfo[@"aps"];
-	if (!apsInfo.count)
-		return;
-
-	self.applicationIconBadgeNumber = [apsInfo[@"badge"] integerValue];
-}
-
-- (void) application:(UIApplication *) application didRegisterUserNotificationSettings:(UIUserNotificationSettings *) notificationSettings {
-	[self registerForRemoteNotifications];
-}
-
 - (void) application:(UIApplication *) application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *) deviceToken {
 	if (!deviceToken.length) {
 		[[CQAnalyticsController defaultController] setObject:nil forKey:@"device-push-token"];
@@ -750,41 +744,12 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #pragma mark -
 
-- (UIUserNotificationType) enabledNotificationTypes {
-	return self.currentUserNotificationSettings.types;
-}
-
-- (void) registerForNotificationTypes:(UIUserNotificationType) types {
-	[self registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:types categories:nil]];
-}
-
-- (BOOL) areNotificationBadgesAllowed {
-	return (_deviceToken || [self enabledNotificationTypes] & UIUserNotificationTypeBadge);
-}
-
-- (BOOL) areNotificationSoundsAllowed {
-	return (_deviceToken || [self enabledNotificationTypes] & UIUserNotificationTypeSound);
-}
-
-- (BOOL) areNotificationAlertsAllowed {
-	return (_deviceToken || [self enabledNotificationTypes] & UIUserNotificationTypeAlert);
-}
-
-- (void) setApplicationIconBadgeNumber:(NSInteger) applicationIconBadgeNumber {
-	if (self.areNotificationBadgesAllowed)
-		[super setApplicationIconBadgeNumber:applicationIconBadgeNumber];
-}
-
-- (void) presentLocalNotificationNow:(UILocalNotification *) notification {
-	if (![self areNotificationAlertsAllowed])
-		notification.alertBody = nil;
-	if (![self areNotificationSoundsAllowed])
-		notification.soundName = nil;
-	if (![self areNotificationBadgesAllowed])
-		notification.applicationIconBadgeNumber = 0;
-
-	if (notification.alertBody.length || notification.soundName.length || notification.applicationIconBadgeNumber > 0)
-		[super presentLocalNotificationNow:notification];
+- (void) registerForNotificationTypes:(UNAuthorizationOptions) types {
+	[[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:types completionHandler:^(BOOL granted, NSError * _Nullable error) {
+		if (granted) {
+			[self registerForRemoteNotifications];
+		}
+	}];
 }
 
 - (void) registerForPushNotifications {
@@ -792,7 +757,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	static BOOL registeredForPush;
 	if (!registeredForPush) {
 
-		[self registerForNotificationTypes:UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert];
+		[self registerForNotificationTypes:UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert];
 		registeredForPush = YES;
 	}
 #endif

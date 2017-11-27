@@ -36,10 +36,6 @@ typedef NS_OPTIONS(NSInteger, CQAppIconOptions) {
 - (void) dismissModalViewControllerAnimated:(BOOL) animated;
 
 #if !SYSTEM(TV)
-@property (readonly) BOOL areNotificationBadgesAllowed;
-@property (readonly) BOOL areNotificationSoundsAllowed;
-@property (readonly) BOOL areNotificationAlertsAllowed;
-
 - (void) registerForPushNotifications;
 #endif
 

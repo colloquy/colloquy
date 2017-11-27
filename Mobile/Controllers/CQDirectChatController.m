@@ -29,8 +29,8 @@
 
 #if !SYSTEM(TV)
 #import <MediaPlayer/MPMusicPlayerController.h>
-
 #import <Social/Social.h>
+#import <UserNotifications/UserNotifications.h>
 #endif
 
 #import <objc/message.h>
@@ -2286,6 +2286,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 }
 
+- (NSString *) _localNotificationTitleForMessage:(NSDictionary *) message {
+	MVChatUser *user = message[@"user"];
+	return user.connection.displayName;
+}
+
 - (NSString *) _localNotificationBodyForMessage:(NSDictionary *) message {
 	MVChatUser *user = message[@"user"];
 	NSString *messageText = message[@"messagePlain"];
@@ -2304,13 +2309,15 @@ NS_ASSUME_NONNULL_BEGIN
 		return;
 
 #if !SYSTEM(TV)
-	UILocalNotification *notification = [[UILocalNotification alloc] init];
+	UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+	content.threadIdentifier = @"Global";
+	content.userInfo = [self _localNotificationUserInfoForMessage:message];
+	content.body = [self _localNotificationBodyForMessage:message];
+	content.title = [self _localNotificationTitleForMessage:message];
+	content.sound = [UNNotificationSound soundNamed:soundName];
 
-	notification.alertBody = [self _localNotificationBodyForMessage:message];
-	notification.userInfo = [self _localNotificationUserInfoForMessage:message];
-	notification.soundName = [soundName stringByAppendingPathExtension:@"aiff"];
-
-	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+	UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"multitasking" content:content trigger:nil];
+	[[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:nil];
 #endif
 }
 

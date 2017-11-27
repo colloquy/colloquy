@@ -22,6 +22,8 @@
 
 #import "NSNotificationAdditions.h"
 
+#import <UserNotifications/UserNotifications.h>
+
 static CQSoundController *highlightSound;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -280,14 +282,15 @@ static CQSoundController *fileTransferSound;
 
 #if !SYSTEM(TV)
 	if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
-		UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+		UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+		content.threadIdentifier = connection.uniqueIdentifier;
+		content.body = message;
+//		content.act = NSLocalizedString(@"Join", "Join button title");
+		content.userInfo = @{@"c": connection.uniqueIdentifier, @"r": room.name, @"a": @"j"};
+		content.sound = [UNNotificationSound defaultSound];
 
-		localNotification.alertBody = message;
-		localNotification.alertAction = NSLocalizedString(@"Join", "Join button title");
-		localNotification.userInfo = @{@"c": connection.uniqueIdentifier, @"r": room.name, @"a": @"j"};
-		localNotification.soundName = UILocalNotificationDefaultSoundName;
-
-		[[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+		UNNotificationRequest *localNotificationRequest = [UNNotificationRequest requestWithIdentifier:roomName content:content trigger:nil];
+		[[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:localNotificationRequest withCompletionHandler:nil];
 
 		return;
 	}
@@ -442,8 +445,7 @@ static CQSoundController *fileTransferSound;
 	_totalImportantUnreadCount = count;
 
 #if !SYSTEM(TV)
-	if ([CQColloquyApplication sharedApplication].areNotificationBadgesAllowed)
-		[UIApplication sharedApplication].applicationIconBadgeNumber = count;
+	[UIApplication sharedApplication].applicationIconBadgeNumber = count;
 #endif
 
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatControllerChangedTotalImportantUnreadCountNotification object:self];

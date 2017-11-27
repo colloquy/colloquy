@@ -25,6 +25,7 @@
 
 #import <CoreSpotlight/CoreSpotlight.h>
 #import <MobileCoreServices/MobileCoreServices.h>
+#import <UserNotifications/UserNotifications.h>
 
 #if SYSTEM(MAC)
 #import <SecurityInterface/SFCertificatePanel.h>
@@ -54,6 +55,8 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 static NSString *const connectionInvalidSSLCertAction = nil;
 
+@class UNNotificationRequest;
+
 @interface CQConnectionsController () <CQActionSheetDelegate, CQAlertViewDelegate,
 #if !SYSTEM(TV)
 CSSearchableIndexDelegate,
@@ -74,7 +77,7 @@ CQBouncerConnectionDelegate>
 	NSUInteger _connectingCount;
 	NSUInteger _connectedCount;
 #if !SYSTEM(TV)
-	UILocalNotification *_timeRemainingLocalNotifiction;
+	UNNotificationRequest *_timeRemainingLocalNotifiction;
 #endif
 	UIBackgroundTaskIdentifier _backgroundTask;
 	NSTimeInterval _allowedBackgroundTime;
@@ -670,13 +673,13 @@ CQBouncerConnectionDelegate>
 			[alertView show];
 		} else {
 #if !SYSTEM(TV)
-			UILocalNotification *notification = [[UILocalNotification alloc] init];
+			UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+			content.threadIdentifier = @"Global";
+			content.body = NSLocalizedString(@"You have been disconnected due to the loss of network connectivity", @"Disconnected due to network local notification body");
+			content.sound = [UNNotificationSound defaultSound];
 
-			notification.alertBody = NSLocalizedString(@"You have been disconnected due to the loss of network connectivity", @"Disconnected due to network local notification body");
-			notification.soundName = UILocalNotificationDefaultSoundName;
-			notification.hasAction = NO;
-
-			[[CQColloquyApplication sharedApplication] presentLocalNotificationNow:notification];
+			UNNotificationRequest *localNotificationRequest = [UNNotificationRequest requestWithIdentifier:@"connectivity" content:content trigger:nil];
+			[[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:localNotificationRequest withCompletionHandler:nil];
 #endif
 		}
 	}
@@ -755,13 +758,14 @@ CQBouncerConnectionDelegate>
 		return;
 
 #if !SYSTEM(TV)
-	UILocalNotification *notification = [[UILocalNotification alloc] init];
+	UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+	content.threadIdentifier = @"Global";
+	content.body = NSLocalizedString(@"No multitasking time remaining, so you have been disconnected.", "No multitasking time remaining alert message");
+//	content.action = NSLocalizedString(@"Open", "Open button title");
+	content.sound = [UNNotificationSound defaultSound];
 
-	notification.alertBody = NSLocalizedString(@"No multitasking time remaining, so you have been disconnected.", "No multitasking time remaining alert message");
-	notification.alertAction = NSLocalizedString(@"Open", "Open button title");
-	notification.soundName = UILocalNotificationDefaultSoundName;
-
-	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+	UNNotificationRequest *localNotificationRequest = [UNNotificationRequest requestWithIdentifier:@"multitasking" content:content trigger:nil];
+	[[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:localNotificationRequest withCompletionHandler:nil];
 #endif
 }
 
@@ -779,20 +783,22 @@ CQBouncerConnectionDelegate>
 		return;
 
 #if !SYSTEM(TV)
-	UILocalNotification *notification = [[UILocalNotification alloc] init];
+	UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+	content.threadIdentifier = @"Global";
 
 	NSUInteger minutes = ceil(_allowedBackgroundTime / 60.);
 
 	if (minutes == 1)
-		notification.alertBody = [NSString stringWithFormat:NSLocalizedString(@"You have been disconnected due to 1 minute of inactivity.", "Disconnected due to 1 minute of inactivity alert message"), minutes];
+		content.body = [NSString stringWithFormat:NSLocalizedString(@"You have been disconnected due to 1 minute of inactivity.", "Disconnected due to 1 minute of inactivity alert message"), minutes];
 	else if (minutes > 1)
-		notification.alertBody = [NSString stringWithFormat:NSLocalizedString(@"You have been disconnected due to %u minutes of inactivity.", "Disconnected due to inactivity alert message"), minutes];
-	else notification.alertBody = NSLocalizedString(@"You have been disconnected.", "Disconnected alert message");
+		content.body = [NSString stringWithFormat:NSLocalizedString(@"You have been disconnected due to %u minutes of inactivity.", "Disconnected due to inactivity alert message"), minutes];
+	else content.body = NSLocalizedString(@"You have been disconnected.", "Disconnected alert message");
 
-	notification.alertAction = NSLocalizedString(@"Open", "Open button title");
-	notification.soundName = UILocalNotificationDefaultSoundName;
+//	content.action = NSLocalizedString(@"Open", "Open button title");
+	content.sound = [UNNotificationSound defaultSound];
 
-	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+	UNNotificationRequest *localNotificationRequest = [UNNotificationRequest requestWithIdentifier:@"multitasking" content:content trigger:nil];
+	[[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:localNotificationRequest withCompletionHandler:nil];
 #endif
 }
 
@@ -808,17 +814,17 @@ CQBouncerConnectionDelegate>
 
 #if !SYSTEM(TV)
 	if (_timeRemainingLocalNotifiction) {
-		[[UIApplication sharedApplication] cancelLocalNotification:_timeRemainingLocalNotifiction];
+		[[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[ _timeRemainingLocalNotifiction.identifier ]];
 	}
 
-	UILocalNotification *notification = [[UILocalNotification alloc] init];
+	UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+	content.threadIdentifier = @"Global";
+	content.body = NSLocalizedString(@"You will be disconnected in less than a minute due to inactivity.", "Disconnected in less than a minute alert message");
+//	content.action = NSLocalizedString(@"Open", "Open button title");
+	content.sound = [UNNotificationSound defaultSound];
 
-	notification.alertBody = NSLocalizedString(@"You will be disconnected in less than a minute due to inactivity.", "Disconnected in less than a minute alert message");
-	notification.alertAction = NSLocalizedString(@"Open", "Open button title");
-	notification.soundName = UILocalNotificationDefaultSoundName;
-
-	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
-	_timeRemainingLocalNotifiction = notification;
+	_timeRemainingLocalNotifiction = [UNNotificationRequest requestWithIdentifier:@"multitasking" content:content trigger:nil];
+	[[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:_timeRemainingLocalNotifiction withCompletionHandler:nil];
 #endif
 }
 
@@ -840,7 +846,7 @@ CQBouncerConnectionDelegate>
 
 #if !SYSTEM(TV)
 	if (_timeRemainingLocalNotifiction) {
-		[[UIApplication sharedApplication] cancelLocalNotification:_timeRemainingLocalNotifiction];
+		[[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[ _timeRemainingLocalNotifiction.identifier ]];
 		_timeRemainingLocalNotifiction = nil;
 	}
 #endif
@@ -1775,11 +1781,14 @@ CQBouncerConnectionDelegate>
 
 				[alertView show];
 			} else {
-				UILocalNotification *notification = [[UILocalNotification alloc] init];
-				notification.alertTitle = title;
-				notification.alertBody = message;
+				UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+				content.threadIdentifier = @"Global";
+				content.body = message;
+				content.title = title;
+				content.sound = [UNNotificationSound defaultSound];
 
-				[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+				UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"multitasking" content:content trigger:nil];
+				[[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:nil];
 			}
 		}
 	}];
