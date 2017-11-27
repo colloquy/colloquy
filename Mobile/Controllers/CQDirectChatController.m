@@ -551,15 +551,22 @@ NS_ASSUME_NONNULL_BEGIN
 	[super loadView];
 
 //	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
-////	CQUITextChatTranscriptView *webkitChatTranscriptView = [[CQUITextChatTranscriptView alloc] initWithFrame:transcriptView.frame];
-//	CQWKChatTranscriptView *webkitChatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
-//	webkitChatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
-//	webkitChatTranscriptView.transcriptDelegate = self;
-//
-//	[transcriptView.superview insertSubview:webkitChatTranscriptView aboveSubview:transcriptView];
-//
-//	[transcriptView removeFromSuperview];
-//	transcriptView = webkitChatTranscriptView;
+#if SYSTEM(TV)
+	CQUITextChatTranscriptView *chatTranscriptView = [[CQUITextChatTranscriptView alloc] initWithFrame:transcriptView.frame];
+#elif 1
+	CQWKChatTranscriptView *chatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
+#else
+	CQUIChatTranscriptView *chatTranscriptView = nil;
+#endif
+	chatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
+	chatTranscriptView.transcriptDelegate = self;
+
+	if (chatTranscriptView) {
+		[transcriptView.superview insertSubview:chatTranscriptView aboveSubview:transcriptView];
+
+		[transcriptView removeFromSuperview];
+		transcriptView = chatTranscriptView;
+	}
 }
 
 - (void) viewDidLoad {
