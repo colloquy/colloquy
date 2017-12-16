@@ -22,3 +22,6 @@
 [submodule "Carthage/Checkouts/onepassword-extension"]
 	path = Carthage/Checkouts/onepassword-extension
 	url = ssh://git@github.com/AgileBits/onepassword-extension.git
+[submodule "Carthage/Checkouts/Sparkle"]
+	path = Carthage/Checkouts/Sparkle
+	url = ssh://git@github.com/sparkle-project/Sparkle.git

@@ -9,6 +9,7 @@
 github "mugginsoft/TCMPortMapper" "master"
 github "colloquy/XMPPFramework" "colloquy-patches"
 github "shpakovski/MASPreferences" ~> 1.3
+github "sparkle-project/Sparkle" "master"
 
 # iOS Dependencies
 github "AgileBits/onepassword-extension" "add-framework-support"

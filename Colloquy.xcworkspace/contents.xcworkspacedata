@@ -46,6 +46,13 @@
          location = "group:Checkouts"
          name = "Checkouts">
          <Group
+            location = "group:Sparkle"
+            name = "Sparkle">
+            <FileRef
+               location = "group:Sparkle.xcodeproj">
+            </FileRef>
+         </Group>
+         <Group
             location = "group:CocoaAsyncSocket"
             name = "CocoaAsyncSocket">
             <FileRef
