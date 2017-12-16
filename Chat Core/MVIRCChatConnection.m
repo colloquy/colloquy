@@ -4344,7 +4344,7 @@ parsingFinished: { // make a scope for this
 
 		if (statusString.length >= 2) {
 			[member _setServerOperator:( [statusString characterAtIndex:1] == '*' )];
-			NSString *modesString = [statusString substringFromIndex:2];
+			NSString *modesString = [statusString substringFromIndex:1];
 			MVChatRoomMemberMode modes = [self _stripModePrefixesFromNickname:&modesString];
 			MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[self _stringFromPossibleData:parameters[1]]];
 			[room _setModes:modes forMemberUser:member];
