@@ -24,6 +24,13 @@
       </FileRef>
    </Group>
    <Group
+      location = "group:Tools"
+      name = "Tools">
+      <FileRef
+         location = "group:writeVersionToInfoPlist.sh">
+      </FileRef>
+   </Group>
+   <Group
       location = "container:"
       name = "Dependency Configuration">
       <FileRef
