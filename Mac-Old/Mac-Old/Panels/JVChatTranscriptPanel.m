@@ -501,7 +501,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		[toolbarItem setLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item patlette label" )];
 
-		NSImage *image = [NSImage imageNamed:@"emoticon.png"];
+		NSImage *image = [NSImage imageNamed:@"emoticon"];
 
 		if ( willBeInserted ) {
 			MVMenuButton *button = [[MVMenuButton alloc] initWithFrame:NSMakeRect( 0., 0., 32., 32. )];
