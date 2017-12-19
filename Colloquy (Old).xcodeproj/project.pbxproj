@@ -1488,6 +1488,7 @@
 		C2B92F211FE9432100F3F23D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1C5959010507803F000001C8 /* Generic.icns */,
 				C2A889561F6EFD5300F2C6D4 /* Mac-Old.xcassets */,
 				C2B92F231FE9432200F3F23D /* Misc Images */,
 				C2B92F291FE9543200F3F23D /* Room Member Icons */,
@@ -1710,7 +1711,6 @@
 				1C1AFB3C09C295D900BF3E2A /* base.html */,
 				1C1AFDAA09C3BC4F00BF3E2A /* roomTopicBanner.html */,
 				1C3C116005029DE1000001C8 /* template.html */,
-				1C5959010507803F000001C8 /* Generic.icns */,
 				0AA811220826DB8800A3BF2D /* default.js */,
 				1C1AFE8109C3D8C900BF3E2A /* roomTopicBanner.js */,
 				1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */,
