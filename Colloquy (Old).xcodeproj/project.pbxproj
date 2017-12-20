@@ -1492,6 +1492,7 @@
 				C2A889561F6EFD5300F2C6D4 /* Mac-Old.xcassets */,
 				C2B92F231FE9432200F3F23D /* Misc Images */,
 				C2B92F291FE9543200F3F23D /* Room Member Icons */,
+				C2F459071FEA868B00FE478F /* Scripting Support */,
 				C2B92F221FE9432200F3F23D /* Toolbar Icons */,
 				1CBC6317054896CB009E59E1 /* Toolbar Icons - Preferences */,
 				C2B92F251FE9432200F3F23D /* Widgets - Generic */,
@@ -1635,6 +1636,24 @@
 			path = "Room Member Icons";
 			sourceTree = "<group>";
 		};
+		C2F459071FEA868B00FE478F /* Scripting Support */ = {
+			isa = PBXGroup;
+			children = (
+				1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */,
+				1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */,
+				1C59BD61059E2E02001487E2 /* ChatPlugIn.scriptSuite */,
+				1CCA510D0598108000F0A4CD /* Colloquy.scriptSuite */,
+				1C7C76E507DBA1C100FB5F83 /* NSCoreSuite.scriptSuite */,
+				1C7C76E707DBA1C100FB5F83 /* NSTextSuite.scriptSuite */,
+				1C59BD63059E2E16001487E2 /* ChatPlugIn.scriptTerminology */,
+				1CCA510E0598108000F0A4CD /* Colloquy.scriptTerminology */,
+				1C7C76E607DBA1C100FB5F83 /* NSCoreSuite.scriptTerminology */,
+				1C7C76E807DBA1C100FB5F83 /* NSTextSuite.scriptTerminology */,
+				1CD9DF6507D934F70006BB99 /* Colloquy.sdef */,
+			);
+			path = "Scripting Support";
+			sourceTree = "<group>";
+		};
 		CBF684F00820174000F498FB /* Metadata Importer */ = {
 			isa = PBXGroup;
 			children = (
@@ -1722,19 +1741,8 @@
 				1C9982AF0604BEAA006C6417 /* notifications.plist */,
 				1CA75A260652537A000141D5 /* styleOptions.plist */,
 				F5675B8601DB767601EE70DE /* verbs.plist */,
-				1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */,
-				1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */,
 				1C1D19F105992D80000BB31A /* ChatCore.scriptSuite */,
-				1C59BD61059E2E02001487E2 /* ChatPlugIn.scriptSuite */,
-				1CCA510D0598108000F0A4CD /* Colloquy.scriptSuite */,
-				1C7C76E507DBA1C100FB5F83 /* NSCoreSuite.scriptSuite */,
-				1C7C76E707DBA1C100FB5F83 /* NSTextSuite.scriptSuite */,
 				1C1D19F205992D80000BB31A /* ChatCore.scriptTerminology */,
-				1C59BD63059E2E16001487E2 /* ChatPlugIn.scriptTerminology */,
-				1CCA510E0598108000F0A4CD /* Colloquy.scriptTerminology */,
-				1C7C76E607DBA1C100FB5F83 /* NSCoreSuite.scriptTerminology */,
-				1C7C76E807DBA1C100FB5F83 /* NSTextSuite.scriptTerminology */,
-				1CD9DF6507D934F70006BB99 /* Colloquy.sdef */,
 				1CEC004D0A20EF95004C2B86 /* transcriptSchema.sql */,
 				F52BA284037C13C201A35792 /* GPL.txt */,
 				1CBECDCF0508C8AB000001C8 /* default.xsl */,

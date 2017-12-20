@@ -22,6 +22,9 @@
       <FileRef
          location = "group:CODE_OF_CONDUCT.md">
       </FileRef>
+      <FileRef
+         location = "group:reorganisation_notes.md">
+      </FileRef>
    </Group>
    <Group
       location = "group:Tools"
