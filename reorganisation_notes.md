@@ -8,7 +8,9 @@ The goal is to clearly separate the sources, resources and supporting files away
 - Most files will move / have moved to /Mac-Old/Mac-Old/Resources
 - To be decided:
 	- Used by Mac-Old and ChatCore:
-		- /Resources/ChatCore.scriptTerminology
-		- /Resources/ChatCore.scriptSuite
+		- ChatCore.scriptTerminology
+		- ChatCore.scriptSuite
 	- Used by Mac-Old and iOS:
-		- /Resources/Sounds	
+		- Sounds/
+		- roomTopicBanner.js
+		- verbs.plist

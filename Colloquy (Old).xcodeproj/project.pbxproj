@@ -1488,11 +1488,14 @@
 		C2B92F211FE9432100F3F23D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1CC6FD38054AF1940075807C /* preview.colloquyTranscript */,
 				1C5959010507803F000001C8 /* Generic.icns */,
+				F52BA284037C13C201A35792 /* GPL.txt */,
 				C2A889561F6EFD5300F2C6D4 /* Mac-Old.xcassets */,
 				C2B92F231FE9432200F3F23D /* Misc Images */,
 				C2B92F291FE9543200F3F23D /* Room Member Icons */,
 				C2F459071FEA868B00FE478F /* Scripting Support */,
+				C2F459081FEA8AAD00FE478F /* Style Support */,
 				C2B92F221FE9432200F3F23D /* Toolbar Icons */,
 				1CBC6317054896CB009E59E1 /* Toolbar Icons - Preferences */,
 				C2B92F251FE9432200F3F23D /* Widgets - Generic */,
@@ -1506,19 +1509,19 @@
 		C2B92F221FE9432200F3F23D /* Toolbar Icons */ = {
 			isa = PBXGroup;
 			children = (
-				1CBECE5D050A8D21000001C8 /* chooseStyle.png */,
 				19F292951B130440000198FE /* connect.pdf */,
 				92C70D1A1A5E898100080E45 /* console.pdf */,
 				19F2929D1B132BB7000198FE /* delete.pdf */,
 				19F292961B130440000198FE /* disconnect.pdf */,
+				19F292971B130440000198FE /* joinRoom.pdf */,
+				92C70D1C1A5E89A000080E45 /* messageUser.pdf */,
+				1CBECE5D050A8D21000001C8 /* chooseStyle.png */,
 				F5E98659018CB25601EE70DE /* emoticon.png */,
 				F5D04C03019489B801A35792 /* encoding.png */,
 				1CF627CA07558F79005DFCFA /* fileSend.png */,
 				F5BC17DF019656E901A35792 /* info.png */,
 				1CE95885063F3BF90071C9C3 /* inspector.png */,
-				19F292971B130440000198FE /* joinRoom.pdf */,
 				1C05F4550828727D006FCB72 /* markDisplay.png */,
-				92C70D1C1A5E89A000080E45 /* messageUser.pdf */,
 				1CBECD660508C61B000001C8 /* showdrawer.png */,
 				1CF4D76507E6AD4400DB421A /* smartTranscriptSettings.png */,
 			);
@@ -1532,12 +1535,15 @@
 				B6310B491C6EFA800033E88E /* activityNew.pdf */,
 				B6310B4A1C6EFA800033E88E /* activityNewImportant.pdf */,
 				C237FEC91CA2EA9B00CB8C69 /* autoHeader.pdf */,
-				F56539F501C5B6C301A35792 /* clear.png */,
-				1C6075E005138ED600A8FE6E /* colloquy-alpha.png */,
 				B6310B521C6F0A300033E88E /* connected.pdf */,
 				B6310B5A1C6F0ADE0033E88E /* connectedSelected.pdf */,
 				B6310B541C6F0A300033E88E /* connecting.pdf */,
 				B6310B551C6F0A300033E88E /* connectingSelected.pdf */,
+				92C70D081A5E87CF00080E45 /* room.pdf */,
+				B6310B3F1C6EF9C80033E88E /* smartTranscript.pdf */,
+				B6310B401C6EF9C80033E88E /* smartTranscriptActivity.pdf */,
+				F56539F501C5B6C301A35792 /* clear.png */,
+				1C6075E005138ED600A8FE6E /* colloquy-alpha.png */,
 				F51A4F3B01C3204701EE70DE /* done.png */,
 				F51A4F3101C2ED2C01EE70DE /* download.png */,
 				F51A4F3701C319D801EE70DE /* error.png */,
@@ -1547,10 +1553,7 @@
 				1C45BFA4086F4BD80079E014 /* newWindow.png */,
 				F51A4F3801C319D801EE70DE /* pending.png */,
 				F56539F601C5B6C301A35792 /* reveal.png */,
-				92C70D081A5E87CF00080E45 /* room.pdf */,
 				1C6E43C30955EFD7002D22E7 /* serverWindow.png */,
-				B6310B3F1C6EF9C80033E88E /* smartTranscript.pdf */,
-				B6310B401C6EF9C80033E88E /* smartTranscriptActivity.pdf */,
 				1C9982AC0604BA1F006C6417 /* sound.png */,
 				1C710C4D09F323F8007B4515 /* splitviewDimple.png */,
 				1C710C4E09F323F8007B4515 /* splitviewDividerBackground.png */,
@@ -1573,6 +1576,10 @@
 		C2B92F241FE9432200F3F23D /* Widgets - Tabs Interface */ = {
 			isa = PBXGroup;
 			children = (
+				B6310B3B1C6EF9C80033E88E /* privateChatTab.pdf */,
+				B6310B3C1C6EF9C80033E88E /* privateChatTabNewMessage.pdf */,
+				B6310B3D1C6EF9C80033E88E /* roomTabNewHighlightMessage.pdf */,
+				B6310B3E1C6EF9C80033E88E /* roomTabNewMessage.pdf */,
 				1C2391B40677E8F1000E89A7 /* aquaTabBackground.png */,
 				1C2391B50677E8F1000E89A7 /* aquaTabClose.png */,
 				1C23927206795020000E89A7 /* aquaTabCloseBack.png */,
@@ -1582,10 +1589,6 @@
 				1C2391B70677E8F1000E89A7 /* aquaTabLeft.png */,
 				1C2391B80677E8F1000E89A7 /* aquaTabMiddle.png */,
 				1C2391B90677E8F1000E89A7 /* aquaTabRight.png */,
-				B6310B3B1C6EF9C80033E88E /* privateChatTab.pdf */,
-				B6310B3C1C6EF9C80033E88E /* privateChatTabNewMessage.pdf */,
-				B6310B3D1C6EF9C80033E88E /* roomTabNewHighlightMessage.pdf */,
-				B6310B3E1C6EF9C80033E88E /* roomTabNewMessage.pdf */,
 			);
 			path = "Widgets - Tabs Interface";
 			sourceTree = "<group>";
@@ -1652,6 +1655,21 @@
 				1CD9DF6507D934F70006BB99 /* Colloquy.sdef */,
 			);
 			path = "Scripting Support";
+			sourceTree = "<group>";
+		};
+		C2F459081FEA8AAD00FE478F /* Style Support */ = {
+			isa = PBXGroup;
+			children = (
+				1C3C116205029E03000001C8 /* Styles */,
+				0A5B683E0810EC9700398D5A /* default.css */,
+				1C1AFB3C09C295D900BF3E2A /* base.html */,
+				1C1AFDAA09C3BC4F00BF3E2A /* roomTopicBanner.html */,
+				1C3C116005029DE1000001C8 /* template.html */,
+				0AA811220826DB8800A3BF2D /* default.js */,
+				1CA75A260652537A000141D5 /* styleOptions.plist */,
+				1CBECDCF0508C8AB000001C8 /* default.xsl */,
+			);
+			path = "Style Support";
 			sourceTree = "<group>";
 		};
 		CBF684F00820174000F498FB /* Metadata Importer */ = {
@@ -1723,14 +1741,7 @@
 				F5394C0B0378E44D01A35792 /* Localizable.strings */,
 				1C258E55050B9656000001C8 /* Emoticons */,
 				F520458E01B1D37701EBB4B5 /* Sounds */,
-				1C3C116205029E03000001C8 /* Styles */,
 				F51F91D7037967CB01A35792 /* Chat.clr */,
-				1CC6FD38054AF1940075807C /* preview.colloquyTranscript */,
-				0A5B683E0810EC9700398D5A /* default.css */,
-				1C1AFB3C09C295D900BF3E2A /* base.html */,
-				1C1AFDAA09C3BC4F00BF3E2A /* roomTopicBanner.html */,
-				1C3C116005029DE1000001C8 /* template.html */,
-				0AA811220826DB8800A3BF2D /* default.js */,
 				1C1AFE8109C3D8C900BF3E2A /* roomTopicBanner.js */,
 				1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */,
 				1C746A95050CF86B000001C8 /* emoticons.plist */,
@@ -1739,13 +1750,10 @@
 				F5BC17DD019655DC01A35792 /* info.colloquy.plist */,
 				1C51B89D052DF91E00BB459B /* Info.plist */,
 				1C9982AF0604BEAA006C6417 /* notifications.plist */,
-				1CA75A260652537A000141D5 /* styleOptions.plist */,
 				F5675B8601DB767601EE70DE /* verbs.plist */,
 				1C1D19F105992D80000BB31A /* ChatCore.scriptSuite */,
 				1C1D19F205992D80000BB31A /* ChatCore.scriptTerminology */,
 				1CEC004D0A20EF95004C2B86 /* transcriptSchema.sql */,
-				F52BA284037C13C201A35792 /* GPL.txt */,
-				1CBECDCF0508C8AB000001C8 /* default.xsl */,
 			);
 			indentWidth = 4;
 			path = Resources;
