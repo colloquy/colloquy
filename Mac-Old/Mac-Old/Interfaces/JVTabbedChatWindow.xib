@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -10,9 +10,9 @@
             <connections>
                 <outlet property="chatViewsOutlineView" destination="28" id="39"/>
                 <outlet property="customTabsView" destination="10" id="19"/>
-                <outlet property="favoritesButton" destination="29" id="38"/>
+                <outlet property="favoritesButton" destination="mWl-Yx-sWw" id="aXQ-Dn-Qga"/>
                 <outlet property="tabView" destination="6" id="20"/>
-                <outlet property="viewActionButton" destination="27" id="37"/>
+                <outlet property="viewActionButton" destination="6Oa-ua-AVy" id="TYV-sP-PIG"/>
                 <outlet property="viewsDrawer" destination="22" id="32"/>
                 <outlet property="window" destination="9" id="21"/>
             </connections>
@@ -73,42 +73,15 @@
             <rect key="frame" x="0.0" y="0.0" width="190" height="120"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button id="24">
-                    <rect key="frame" x="63" y="-1" width="22" height="22"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="infoWidget" imagePosition="only" alignment="left" alternateImage="infoWidgetPressed" id="45">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="label"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="getInfo:" target="-2" id="40"/>
-                    </connections>
-                </button>
-                <button id="29" customClass="MVMenuButton">
-                    <rect key="frame" x="32" y="-1" width="28" height="22"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="favorites" imagePosition="only" alignment="left" alternateImage="favoritesPressed" id="47">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="label"/>
-                    </buttonCell>
-                </button>
-                <button id="27" customClass="MVMenuButton">
-                    <rect key="frame" x="1" y="-1" width="28" height="22"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="only" alignment="left" borderStyle="border" imageScaling="proportionallyDown" id="46">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="label"/>
-                    </buttonCell>
-                </button>
-                <scrollView autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="23">
-                    <rect key="frame" x="0.0" y="25" width="190" height="95"/>
+                <scrollView misplaced="YES" autohidesScrollers="YES" horizontalLineScroll="22" horizontalPageScroll="10" verticalLineScroll="22" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="23">
+                    <rect key="frame" x="0.0" y="32" width="190" height="88"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <clipView key="contentView" id="j7F-YI-f5Y">
-                        <rect key="frame" x="1" y="1" width="188" height="93"/>
+                        <rect key="frame" x="1" y="1" width="188" height="86"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" rowHeight="20" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="26" id="28" customClass="ASExtendedOutlineView">
-                                <rect key="frame" x="0.0" y="0.0" width="188" height="93"/>
+                                <rect key="frame" x="0.0" y="0.0" width="188" height="86"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -144,13 +117,39 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                 </scrollView>
+                <button misplaced="YES" id="6Oa-ua-AVy" userLabel="View Action Button" customClass="MVMenuButton">
+                    <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="Ag9-DH-GTM">
+                        <behavior key="behavior" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <button misplaced="YES" id="mWl-Yx-sWw" userLabel="Favorites Button" customClass="MVMenuButton">
+                    <rect key="frame" x="31" y="0.0" width="32" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSBookmarksTemplate" imagePosition="only" alignment="center" inset="2" id="Sqi-K5-Hpk">
+                        <behavior key="behavior" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <button misplaced="YES" id="24" userLabel="Info Button">
+                    <rect key="frame" x="62" y="0.0" width="32" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="infoWidget" imagePosition="only" alignment="left" alternateImage="infoWidgetPressed" imageScaling="proportionallyDown" id="45">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="getInfo:" target="-2" id="40"/>
+                    </connections>
+                </button>
             </subviews>
         </customView>
     </objects>
     <resources>
         <image name="NSActionTemplate" width="14" height="14"/>
-        <image name="favorites" width="28" height="22"/>
-        <image name="favoritesPressed" width="28" height="22"/>
+        <image name="NSBookmarksTemplate" width="17" height="18"/>
         <image name="infoWidget" width="22" height="22"/>
         <image name="infoWidgetPressed" width="22" height="22"/>
     </resources>

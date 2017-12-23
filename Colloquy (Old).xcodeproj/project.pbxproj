@@ -95,14 +95,7 @@
 		1C710A0209F23730007B4515 /* JVSidebarChatWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C710A0009F23730007B4515 /* JVSidebarChatWindowController.m */; };
 		1C710A2009F2396C007B4515 /* JVSidebarChatWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C710A1F09F2396C007B4515 /* JVSidebarChatWindow.xib */; };
 		1C710A6C09F23AF0007B4515 /* JVSideSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C710A6609F23AF0007B4515 /* JVSideSplitView.m */; };
-		1C710A6E09F23AF0007B4515 /* JVSideStatusView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C710A6809F23AF0007B4515 /* JVSideStatusView.m */; };
 		1C710A7009F23AF0007B4515 /* JVSideOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C710A6A09F23AF0007B4515 /* JVSideOutlineView.m */; };
-		1C710ABE09F23D9C007B4515 /* sidebarActionWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710ABA09F23D9C007B4515 /* sidebarActionWidget.png */; };
-		1C710ABF09F23D9C007B4515 /* sidebarActionWidgetPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710ABB09F23D9C007B4515 /* sidebarActionWidgetPressed.png */; };
-		1C710AC009F23D9D007B4515 /* sidebarResizeWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710ABC09F23D9C007B4515 /* sidebarResizeWidget.png */; };
-		1C710AC109F23D9D007B4515 /* sidebarStatusAreaBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710ABD09F23D9C007B4515 /* sidebarStatusAreaBackground.png */; };
-		1C710B4C09F247AC007B4515 /* sidebarFavoritesWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710B4A09F247AC007B4515 /* sidebarFavoritesWidget.png */; };
-		1C710B4D09F247AC007B4515 /* sidebarFavoritesWidgetPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710B4B09F247AC007B4515 /* sidebarFavoritesWidgetPressed.png */; };
 		1C710C4F09F323F8007B4515 /* splitviewDimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710C4D09F323F8007B4515 /* splitviewDimple.png */; };
 		1C710C5009F323F8007B4515 /* splitviewDividerBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710C4E09F323F8007B4515 /* splitviewDividerBackground.png */; };
 		1C7780DE08FA1D82006AD8E5 /* JVSpeechController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7780DC08FA1D81006AD8E5 /* JVSpeechController.m */; };
@@ -542,16 +535,8 @@
 		1C710A1F09F2396C007B4515 /* JVSidebarChatWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = JVSidebarChatWindow.xib; sourceTree = "<group>"; };
 		1C710A6509F23AF0007B4515 /* JVSideSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVSideSplitView.h; sourceTree = "<group>"; };
 		1C710A6609F23AF0007B4515 /* JVSideSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVSideSplitView.m; sourceTree = "<group>"; };
-		1C710A6709F23AF0007B4515 /* JVSideStatusView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVSideStatusView.h; sourceTree = "<group>"; };
-		1C710A6809F23AF0007B4515 /* JVSideStatusView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVSideStatusView.m; sourceTree = "<group>"; };
 		1C710A6909F23AF0007B4515 /* JVSideOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVSideOutlineView.h; sourceTree = "<group>"; };
 		1C710A6A09F23AF0007B4515 /* JVSideOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVSideOutlineView.m; sourceTree = "<group>"; };
-		1C710ABA09F23D9C007B4515 /* sidebarActionWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sidebarActionWidget.png; sourceTree = "<group>"; };
-		1C710ABB09F23D9C007B4515 /* sidebarActionWidgetPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sidebarActionWidgetPressed.png; sourceTree = "<group>"; };
-		1C710ABC09F23D9C007B4515 /* sidebarResizeWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sidebarResizeWidget.png; sourceTree = "<group>"; };
-		1C710ABD09F23D9C007B4515 /* sidebarStatusAreaBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sidebarStatusAreaBackground.png; sourceTree = "<group>"; };
-		1C710B4A09F247AC007B4515 /* sidebarFavoritesWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sidebarFavoritesWidget.png; sourceTree = "<group>"; };
-		1C710B4B09F247AC007B4515 /* sidebarFavoritesWidgetPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sidebarFavoritesWidgetPressed.png; sourceTree = "<group>"; };
 		1C710C4D09F323F8007B4515 /* splitviewDimple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splitviewDimple.png; sourceTree = "<group>"; };
 		1C710C4E09F323F8007B4515 /* splitviewDividerBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splitviewDividerBackground.png; sourceTree = "<group>"; };
 		1C746A95050CF86B000001C8 /* emoticons.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = emoticons.plist; sourceTree = "<group>"; };
@@ -1288,8 +1273,6 @@
 				1CABFCAF0657F10900801C15 /* JVSplitView.h */,
 				1C710A6609F23AF0007B4515 /* JVSideSplitView.m */,
 				1C710A6509F23AF0007B4515 /* JVSideSplitView.h */,
-				1C710A6809F23AF0007B4515 /* JVSideStatusView.m */,
-				1C710A6709F23AF0007B4515 /* JVSideStatusView.h */,
 				1C710A6A09F23AF0007B4515 /* JVSideOutlineView.m */,
 				1C710A6909F23AF0007B4515 /* JVSideOutlineView.h */,
 				F5E2538503882A8501000102 /* MVColorPanel.m */,
@@ -1615,12 +1598,6 @@
 		C2B92F261FE9432200F3F23D /* Widgets - Sidebar Interface */ = {
 			isa = PBXGroup;
 			children = (
-				1C710ABA09F23D9C007B4515 /* sidebarActionWidget.png */,
-				1C710ABB09F23D9C007B4515 /* sidebarActionWidgetPressed.png */,
-				1C710B4A09F247AC007B4515 /* sidebarFavoritesWidget.png */,
-				1C710B4B09F247AC007B4515 /* sidebarFavoritesWidgetPressed.png */,
-				1C710ABC09F23D9C007B4515 /* sidebarResizeWidget.png */,
-				1C710ABD09F23D9C007B4515 /* sidebarStatusAreaBackground.png */,
 			);
 			path = "Widgets - Sidebar Interface";
 			sourceTree = "<group>";
@@ -2095,13 +2072,7 @@
 				1C1AFB3D09C295D900BF3E2A /* base.html in Resources */,
 				1C1AFDAB09C3BC5000BF3E2A /* roomTopicBanner.html in Resources */,
 				1C710A2009F2396C007B4515 /* JVSidebarChatWindow.xib in Resources */,
-				1C710ABE09F23D9C007B4515 /* sidebarActionWidget.png in Resources */,
-				1C710ABF09F23D9C007B4515 /* sidebarActionWidgetPressed.png in Resources */,
-				1C710AC009F23D9D007B4515 /* sidebarResizeWidget.png in Resources */,
-				1C710AC109F23D9D007B4515 /* sidebarStatusAreaBackground.png in Resources */,
 				C296541F1BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib in Resources */,
-				1C710B4C09F247AC007B4515 /* sidebarFavoritesWidget.png in Resources */,
-				1C710B4D09F247AC007B4515 /* sidebarFavoritesWidgetPressed.png in Resources */,
 				1C710C4F09F323F8007B4515 /* splitviewDimple.png in Resources */,
 				1C710C5009F323F8007B4515 /* splitviewDividerBackground.png in Resources */,
 				1CEC004F0A20EF99004C2B86 /* transcriptSchema.sql in Resources */,
@@ -2286,7 +2257,6 @@
 				1C710A0209F23730007B4515 /* JVSidebarChatWindowController.m in Sources */,
 				C23298991C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m in Sources */,
 				1C710A6C09F23AF0007B4515 /* JVSideSplitView.m in Sources */,
-				1C710A6E09F23AF0007B4515 /* JVSideStatusView.m in Sources */,
 				1C710A7009F23AF0007B4515 /* JVSideOutlineView.m in Sources */,
 				1C415F270B350CA300239EB3 /* JVToolbarItem.m in Sources */,
 				DDF034100BD529AE0096B109 /* JVDetailCell.m in Sources */,

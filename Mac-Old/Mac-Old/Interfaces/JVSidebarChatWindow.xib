@@ -8,9 +8,11 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="JVSidebarChatWindowController">
             <connections>
+                <outlet property="additionalDividerHandle" destination="9E0-oI-vnV" id="Ifc-YX-TDo"/>
                 <outlet property="bodyView" destination="309" id="318"/>
                 <outlet property="chatViewsOutlineView" destination="313" id="321"/>
                 <outlet property="favoritesButton" destination="328" id="329"/>
+                <outlet property="mainSplitView" destination="308" id="maC-Mo-7CT"/>
                 <outlet property="splitView" destination="308" id="320"/>
                 <outlet property="viewActionButton" destination="316" id="327"/>
                 <outlet property="window" destination="195" id="200"/>
@@ -32,19 +34,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="690" height="413"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <customView id="311">
+                            <customView id="311" customClass="NSVisualEffectView">
                                 <rect key="frame" x="0.0" y="0.0" width="201" height="413"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="16" horizontalPageScroll="0.0" verticalLineScroll="16" verticalPageScroll="0.0" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="312">
-                                        <rect key="frame" x="0.0" y="23" width="201" height="390"/>
+                                    <scrollView misplaced="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="16" horizontalPageScroll="0.0" verticalLineScroll="16" verticalPageScroll="0.0" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="312">
+                                        <rect key="frame" x="0.0" y="33" width="201" height="382"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <clipView key="contentView" id="WSq-AY-dqg">
-                                            <rect key="frame" x="0.0" y="0.0" width="201" height="390"/>
+                                        <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="WSq-AY-dqg">
+                                            <rect key="frame" x="0.0" y="0.0" width="201" height="382"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="314" id="313" customClass="JVSideOutlineView">
-                                                    <rect key="frame" x="0.0" y="0.0" width="201" height="390"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="201" height="382"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -80,30 +82,36 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                     </scrollView>
-                                    <customView id="315" customClass="JVSideStatusView">
-                                        <rect key="frame" x="0.0" y="0.0" width="201" height="23"/>
+                                    <customView misplaced="YES" id="cEa-PN-gas">
+                                        <rect key="frame" x="0.0" y="0.0" width="201" height="33"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <button id="328" customClass="MVMenuButton">
-                                                <rect key="frame" x="30" y="0.0" width="32" height="23"/>
+                                            <box verticalHuggingPriority="750" misplaced="YES" boxType="separator" id="3ES-i2-Lch">
+                                                <rect key="frame" x="0.0" y="30" width="201" height="5"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                            </box>
+                                            <button misplaced="YES" id="316" customClass="MVMenuButton">
+                                                <rect key="frame" x="0.0" y="0.0" width="32" height="32"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
-                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="sidebarFavoritesWidget" imagePosition="only" alignment="center" alternateImage="sidebarFavoritesWidgetPressed" inset="2" id="332">
-                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSActionTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="331">
+                                                    <behavior key="behavior" lightByContents="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
                                             </button>
-                                            <button id="316" customClass="MVMenuButton">
-                                                <rect key="frame" x="-1" y="0.0" width="32" height="23"/>
+                                            <button misplaced="YES" id="328" customClass="MVMenuButton">
+                                                <rect key="frame" x="31" y="0.0" width="32" height="32"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
-                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="sidebarActionWidget" imagePosition="only" alignment="center" alternateImage="sidebarActionWidgetPressed" inset="2" id="331">
-                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSBookmarksTemplate" imagePosition="only" alignment="center" inset="2" id="332">
+                                                    <behavior key="behavior" lightByContents="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
                                             </button>
+                                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="9E0-oI-vnV" userLabel="Drag Handle">
+                                                <rect key="frame" x="169" y="0.0" width="32" height="32"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
+                                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSLeftFacingTriangleTemplate" id="7UH-wt-eku"/>
+                                            </imageView>
                                         </subviews>
-                                        <connections>
-                                            <outlet property="splitView" destination="308" id="322"/>
-                                        </connections>
                                     </customView>
                                 </subviews>
                             </customView>
@@ -125,12 +133,12 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="325"/>
             </connections>
+            <point key="canvasLocation" x="139" y="161.5"/>
         </window>
     </objects>
     <resources>
-        <image name="sidebarActionWidget" width="32" height="23"/>
-        <image name="sidebarActionWidgetPressed" width="32" height="23"/>
-        <image name="sidebarFavoritesWidget" width="32" height="23"/>
-        <image name="sidebarFavoritesWidgetPressed" width="32" height="23"/>
+        <image name="NSActionTemplate" width="14" height="14"/>
+        <image name="NSBookmarksTemplate" width="17" height="18"/>
+        <image name="NSLeftFacingTriangleTemplate" width="9" height="12"/>
     </resources>
 </document>

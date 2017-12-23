@@ -23,8 +23,8 @@
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSidebarSelectedRowHasBlackText"] )
 		[[[chatViewsOutlineView outlineTableColumn] dataCell] setBoldAndWhiteOnHighlight:YES];
 
-	[splitView setMainSubviewIndex:1];
-	[splitView setPositionUsingName:@"JVSidebarSplitViewPosition"];
+	[mainSplitView setMainSubviewIndex:1];
+	[mainSplitView setPositionUsingName:@"JVSidebarSplitViewPosition"];
 }
 
 - (CGFloat) outlineView:(NSOutlineView *) outlineView heightOfRowByItem:(id) item {
@@ -53,7 +53,7 @@
 
 - (void) splitViewDidResizeSubviews:(NSNotification *) notification {
 	if( ! _forceSplitViewPosition )
-		[splitView savePositionUsingName:@"JVSidebarSplitViewPosition"];
+		[mainSplitView savePositionUsingName:@"JVSidebarSplitViewPosition"];
 	_forceSplitViewPosition = NO;
 }
 
@@ -69,6 +69,10 @@
 
 - (BOOL) splitView:(NSSplitView *) splitView canCollapseSubview:(NSView *) subview {
 	return NO;
+}
+
+- (NSRect) splitView:(NSSplitView *)splitView additionalEffectiveRectOfDividerAtIndex:(NSInteger)dividerIndex {
+	return [additionalDividerHandle convertRect:additionalDividerHandle.bounds toView:mainSplitView];
 }
 
 - (NSToolbarItem *) toggleChatDrawerToolbarItem {
