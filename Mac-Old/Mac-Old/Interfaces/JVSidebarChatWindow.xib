@@ -39,14 +39,14 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <scrollView misplaced="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="16" horizontalPageScroll="0.0" verticalLineScroll="16" verticalPageScroll="0.0" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="312">
-                                        <rect key="frame" x="0.0" y="33" width="201" height="382"/>
+                                        <rect key="frame" x="0.0" y="33" width="201" height="380"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="WSq-AY-dqg">
-                                            <rect key="frame" x="0.0" y="0.0" width="201" height="382"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="201" height="380"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="314" id="313" customClass="JVSideOutlineView">
-                                                    <rect key="frame" x="0.0" y="0.0" width="201" height="382"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="201" height="380"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
