@@ -198,8 +198,6 @@
 		1CD0200F057588D3000F93B4 /* buddyOptionsBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = F5FB4D100393F04701000102 /* buddyOptionsBlue.png */; };
 		1CD0201005758A33000F93B4 /* MVBuddyList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CC7CAAE03C48E8B001C0D62 /* MVBuddyList.xib */; };
 		1CD0201305758CE7000F93B4 /* MVBuddyListController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FB4D200393F70E01000102 /* MVBuddyListController.m */; };
-		1CD4BD9D05AA773800F72EE6 /* favorites.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD4BD9B05AA773800F72EE6 /* favorites.png */; };
-		1CD4BD9E05AA773800F72EE6 /* favoritesPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD4BD9C05AA773800F72EE6 /* favoritesPressed.png */; };
 		1CD733CC05A0E2470080F952 /* JVChatMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD733CA05A0E2470080F952 /* JVChatMessage.m */; };
 		1CDEE25E05823C26000B9075 /* JVFileTransferPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE25605823C13000B9075 /* JVFileTransferPreferencesViewController.m */; };
 		1CDEE47A0583DC58000B9075 /* JVBuddyInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE4780583DC58000B9075 /* JVBuddyInspector.m */; };
@@ -672,8 +670,6 @@
 		1CD4B741078209E00003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
 		1CD4B743078209E10003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
 		1CD4B744078209E10003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = German; path = Languages/de.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
-		1CD4BD9B05AA773800F72EE6 /* favorites.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favorites.png; sourceTree = "<group>"; };
-		1CD4BD9C05AA773800F72EE6 /* favoritesPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favoritesPressed.png; sourceTree = "<group>"; };
 		1CD6C413051DFA1C00A8FE10 /* JVChatTranscriptPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVChatTranscriptPanel.h; sourceTree = "<group>"; };
 		1CD6C414051DFA1D00A8FE10 /* JVChatTranscriptPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = JVChatTranscriptPanel.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1CD6C417051E0B3000A8FE10 /* JVChatTranscript.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = JVChatTranscript.xib; sourceTree = "<group>"; };
@@ -1587,8 +1583,6 @@
 				F5FB4D100393F04701000102 /* buddyOptionsBlue.png */,
 				1CF16CDD083ADE590037F222 /* editWidget.png */,
 				1CF16CDE083ADE590037F222 /* editWidgetPressed.png */,
-				1CD4BD9B05AA773800F72EE6 /* favorites.png */,
-				1CD4BD9C05AA773800F72EE6 /* favoritesPressed.png */,
 				1CBA4E64062CCDA90082D1BF /* infoWidget.png */,
 				1CBA4E65062CCDA90082D1BF /* infoWidgetPressed.png */,
 			);
@@ -2000,8 +1994,6 @@
 				1CDEE8C505878D30000B9075 /* InterfacePreferences.png in Resources */,
 				1CBA56ED058D202200257832 /* emoticon.png in Resources */,
 				1C6EA23E05A735D6006A559F /* JVChatRoomBrowser.xib in Resources */,
-				1CD4BD9D05AA773800F72EE6 /* favorites.png in Resources */,
-				1CD4BD9E05AA773800F72EE6 /* favoritesPressed.png in Resources */,
 				B6310B431C6EF9C80033E88E /* roomTabNewHighlightMessage.pdf in Resources */,
 				1C9981FA0603EF2F006C6417 /* NotificationPreferences.png in Resources */,
 				1C9982AA0604B979006C6417 /* Sounds in Resources */,
