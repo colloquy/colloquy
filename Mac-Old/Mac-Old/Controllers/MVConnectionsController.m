@@ -1453,7 +1453,7 @@ static NSMenu *favoritesMenu = nil;
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Connection Info", "name for connection info button in customize palette" )];
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Show connection info", "connection info button tooltip" )];
-		[toolbarItem setImage:[NSImage imageNamed:@"info"]];
+		[toolbarItem setImage:[NSImage imageNamed:NSImageNameInfo]];
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:NULL];

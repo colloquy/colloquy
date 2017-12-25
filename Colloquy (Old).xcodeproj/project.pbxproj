@@ -122,7 +122,6 @@
 		1CABFD0F0658629200801C15 /* JVStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CABFD0D0658629200801C15 /* JVStyle.m */; };
 		1CB2CD17052DDC560094AAA4 /* encoding.png in Resources */ = {isa = PBXBuildFile; fileRef = F5D04C03019489B801A35792 /* encoding.png */; };
 		1CB2CD18052DDC560094AAA4 /* info.colloquy.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5BC17DD019655DC01A35792 /* info.colloquy.plist */; };
-		1CB2CD19052DDC560094AAA4 /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = F5BC17DF019656E901A35792 /* info.png */; };
 		1CB2CD1A052DDC560094AAA4 /* download.png in Resources */ = {isa = PBXBuildFile; fileRef = F51A4F3101C2ED2C01EE70DE /* download.png */; };
 		1CB2CD1B052DDC560094AAA4 /* upload.png in Resources */ = {isa = PBXBuildFile; fileRef = F51A4F3201C2ED2C01EE70DE /* upload.png */; };
 		1CB2CD1C052DDC560094AAA4 /* error.png in Resources */ = {isa = PBXBuildFile; fileRef = F51A4F3701C319D801EE70DE /* error.png */; };
@@ -981,7 +980,6 @@
 		F599994901890E4601EE70DE /* MVTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVTextView.m; sourceTree = "<group>"; };
 		F599994A01890E4601EE70DE /* MVTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVTextView.h; sourceTree = "<group>"; };
 		F5BC17DD019655DC01A35792 /* info.colloquy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = info.colloquy.plist; sourceTree = "<group>"; };
-		F5BC17DF019656E901A35792 /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info.png; sourceTree = "<group>"; };
 		F5C497740385713801000102 /* MVConnectionsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVConnectionsController.h; sourceTree = "<group>"; };
 		F5C497750385713801000102 /* MVConnectionsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVConnectionsController.m; sourceTree = "<group>"; };
 		F5C4977C0385785401000102 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/MVConnections.xib; sourceTree = "<group>"; };
@@ -1498,7 +1496,6 @@
 				F5E98659018CB25601EE70DE /* emoticon.png */,
 				F5D04C03019489B801A35792 /* encoding.png */,
 				1CF627CA07558F79005DFCFA /* fileSend.png */,
-				F5BC17DF019656E901A35792 /* info.png */,
 				1CE95885063F3BF90071C9C3 /* inspector.png */,
 				1C05F4550828727D006FCB72 /* markDisplay.png */,
 				1CBECD660508C61B000001C8 /* showdrawer.png */,
@@ -1925,7 +1922,6 @@
 				C237FECA1CA2EA9B00CB8C69 /* autoHeader.pdf in Resources */,
 				1CB2CD18052DDC560094AAA4 /* info.colloquy.plist in Resources */,
 				C29654131BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib in Resources */,
-				1CB2CD19052DDC560094AAA4 /* info.png in Resources */,
 				1CB2CD1A052DDC560094AAA4 /* download.png in Resources */,
 				1CB2CD1B052DDC560094AAA4 /* upload.png in Resources */,
 				C29654101BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib in Resources */,
