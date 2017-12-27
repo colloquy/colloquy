@@ -109,7 +109,7 @@
                                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="9E0-oI-vnV" userLabel="Drag Handle">
                                                 <rect key="frame" x="169" y="0.0" width="32" height="32"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
-                                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSLeftFacingTriangleTemplate" id="7UH-wt-eku"/>
+                                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="dividerHandleTemplate" id="7UH-wt-eku"/>
                                             </imageView>
                                         </subviews>
                                     </customView>
@@ -139,6 +139,6 @@
     <resources>
         <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSBookmarksTemplate" width="17" height="18"/>
-        <image name="NSLeftFacingTriangleTemplate" width="9" height="12"/>
+        <image name="dividerHandleTemplate" width="7" height="12"/>
     </resources>
 </document>

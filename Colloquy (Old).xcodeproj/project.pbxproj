@@ -281,6 +281,7 @@
 		C2B92F281FE9538600F3F23D /* smartTranscriptActivity.pdf in Resources */ = {isa = PBXBuildFile; fileRef = B6310B401C6EF9C80033E88E /* smartTranscriptActivity.pdf */; };
 		C2B92F2A1FE954A200F3F23D /* room.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 92C70D081A5E87CF00080E45 /* room.pdf */; };
 		C2B9D0ED1C258BA200C2B4C4 /* CQMPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */; };
+		C2D184FD1FF44C2700384D6F /* dividerHandleTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = C2D184FC1FF44C2600384D6F /* dividerHandleTemplate.pdf */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
 		CBF6855F08201B7300F498FB /* schema.xml in Resources */ = {isa = PBXBuildFile; fileRef = CBF685340820190D00F498FB /* schema.xml */; };
@@ -932,6 +933,7 @@
 		C2A889561F6EFD5300F2C6D4 /* Mac-Old.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Mac-Old.xcassets"; sourceTree = "<group>"; };
 		C2B9D0EB1C258BA200C2B4C4 /* CQMPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQMPreferencesWindowController.h; sourceTree = "<group>"; };
 		C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQMPreferencesWindowController.m; sourceTree = "<group>"; };
+		C2D184FC1FF44C2600384D6F /* dividerHandleTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = dividerHandleTemplate.pdf; sourceTree = "<group>"; };
 		C2EB205F1C1EA95F00CB88B2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
 		C2EB20611C1EAA0A00CB88B2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
 		C2EB20631C1EAA0F00CB88B2 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
@@ -1586,6 +1588,7 @@
 		C2B92F261FE9432200F3F23D /* Widgets - Sidebar Interface */ = {
 			isa = PBXGroup;
 			children = (
+				C2D184FC1FF44C2600384D6F /* dividerHandleTemplate.pdf */,
 			);
 			path = "Widgets - Sidebar Interface";
 			sourceTree = "<group>";
@@ -1960,6 +1963,7 @@
 				92C70D121A5E88CE00080E45 /* half-op.pdf in Resources */,
 				C29654221BDBA02100F28873 /* JVBehaviorPreferencesViewController.xib in Resources */,
 				92C70D191A5E88CE00080E45 /* super-op.pdf in Resources */,
+				C2D184FD1FF44C2700384D6F /* dividerHandleTemplate.pdf in Resources */,
 				1CB2CD60052DDC560094AAA4 /* JVChatConsole.xib in Resources */,
 				1C1AD00B053487ED00F71D4E /* JVConnectionInspector.xib in Resources */,
 				1CB4DCAB053627C00080D36F /* JVRoomInspector.xib in Resources */,
