@@ -328,12 +328,8 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 	for ( NSTextCheckingResult *match in [linkDataDetector matchesInString:[self string] options:0 range:NSMakeRange( 0, [self string].length )]) {
 		NSRange foundRange = [match range];
 		NSString *currentLink = [self attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
-		NSString *contents = [[self string] substringWithRange:foundRange];
 		if( ! currentLink ) {
-			NSURL *linkURL = [NSURL URLWithString:contents];
-			if( !linkURL.scheme )
-				contents = [@"http://" stringByAppendingString:contents];
-			[self addAttribute:NSLinkAttributeName value: contents range:foundRange];
+			[self addAttribute:NSLinkAttributeName value: match.URL.absoluteString range:foundRange];
 		}
 	}
 }
