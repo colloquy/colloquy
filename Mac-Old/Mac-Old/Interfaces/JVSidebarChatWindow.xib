@@ -13,7 +13,6 @@
                 <outlet property="chatViewsOutlineView" destination="313" id="321"/>
                 <outlet property="favoritesButton" destination="328" id="329"/>
                 <outlet property="mainSplitView" destination="308" id="maC-Mo-7CT"/>
-                <outlet property="splitView" destination="308" id="320"/>
                 <outlet property="viewActionButton" destination="316" id="327"/>
                 <outlet property="window" destination="195" id="200"/>
             </connections>
