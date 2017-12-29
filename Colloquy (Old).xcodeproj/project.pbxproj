@@ -147,7 +147,7 @@
 		1CB2CD54052DDC560094AAA4 /* default.xsl in Resources */ = {isa = PBXBuildFile; fileRef = 1CBECDCF0508C8AB000001C8 /* default.xsl */; };
 		1CB2CD56052DDC560094AAA4 /* JVChatWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CBECE390508D58F000001C8 /* JVChatWindow.xib */; };
 		1CB2CD57052DDC560094AAA4 /* JVDirectChat.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CBECE3A0508D58F000001C8 /* JVDirectChat.xib */; };
-		1CB2CD58052DDC560094AAA4 /* chooseStyle.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBECE5D050A8D21000001C8 /* chooseStyle.png */; };
+		1CB2CD58052DDC560094AAA4 /* chooseStyle.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 1CBECE5D050A8D21000001C8 /* chooseStyle.pdf */; };
 		1CB2CD59052DDC560094AAA4 /* Emoticons in Resources */ = {isa = PBXBuildFile; fileRef = 1C258E55050B9656000001C8 /* Emoticons */; };
 		1CB2CD5A052DDC560094AAA4 /* emoticons.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C746A95050CF86B000001C8 /* emoticons.plist */; };
 		1CB2CD5B052DDC560094AAA4 /* colloquy-alpha.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6075E005138ED600A8FE6E /* colloquy-alpha.png */; };
@@ -628,7 +628,7 @@
 		1CBECDCF0508C8AB000001C8 /* default.xsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = default.xsl; sourceTree = "<group>"; };
 		1CBECE390508D58F000001C8 /* JVChatWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = JVChatWindow.xib; sourceTree = "<group>"; };
 		1CBECE3A0508D58F000001C8 /* JVDirectChat.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = JVDirectChat.xib; sourceTree = "<group>"; };
-		1CBECE5D050A8D21000001C8 /* chooseStyle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chooseStyle.png; sourceTree = "<group>"; };
+		1CBECE5D050A8D21000001C8 /* chooseStyle.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = chooseStyle.pdf; sourceTree = "<group>"; };
 		1CC6FC500549FCD70075807C /* JVAppearancePreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppearancePreferencesViewController.h; sourceTree = "<group>"; };
 		1CC6FC510549FCD70075807C /* JVAppearancePreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppearancePreferencesViewController.m; sourceTree = "<group>"; };
 		1CC6FC540549FDD70075807C /* JVBehaviorPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVBehaviorPreferencesViewController.h; sourceTree = "<group>"; };
@@ -1485,6 +1485,7 @@
 		C2B92F221FE9432200F3F23D /* Toolbar Icons */ = {
 			isa = PBXGroup;
 			children = (
+				1CBECE5D050A8D21000001C8 /* chooseStyle.pdf */,
 				19F292951B130440000198FE /* connect.pdf */,
 				92C70D1A1A5E898100080E45 /* console.pdf */,
 				19F2929D1B132BB7000198FE /* delete.pdf */,
@@ -1495,7 +1496,6 @@
 				19F292971B130440000198FE /* joinRoom.pdf */,
 				1C05F4550828727D006FCB72 /* markDisplay.pdf */,
 				92C70D1C1A5E89A000080E45 /* messageUser.pdf */,
-				1CBECE5D050A8D21000001C8 /* chooseStyle.png */,
 				F56539F501C5B6C301A35792 /* clear.png */,
 				1CF627CA07558F79005DFCFA /* fileSend.png */,
 				F56539F601C5B6C301A35792 /* reveal.png */,
@@ -1953,7 +1953,7 @@
 				1CB2CD54052DDC560094AAA4 /* default.xsl in Resources */,
 				1CB2CD56052DDC560094AAA4 /* JVChatWindow.xib in Resources */,
 				1CB2CD57052DDC560094AAA4 /* JVDirectChat.xib in Resources */,
-				1CB2CD58052DDC560094AAA4 /* chooseStyle.png in Resources */,
+				1CB2CD58052DDC560094AAA4 /* chooseStyle.pdf in Resources */,
 				1CB2CD59052DDC560094AAA4 /* Emoticons in Resources */,
 				1CB2CD5A052DDC560094AAA4 /* emoticons.plist in Resources */,
 				1CB2CD5B052DDC560094AAA4 /* colloquy-alpha.png in Resources */,
