@@ -36,7 +36,7 @@
 		19F2929E1B132BB7000198FE /* delete.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 19F2929D1B132BB7000198FE /* delete.pdf */; };
 		1C043B4B13DC8B7200B8FD9E /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1C043B4913DC8B7200B8FD9E /* Credits.rtf */; };
 		1C05E1EF08F262F500E097BC /* ColloquyScripting.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */; };
-		1C05F4560828727D006FCB72 /* markDisplay.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C05F4550828727D006FCB72 /* markDisplay.png */; };
+		1C05F4560828727D006FCB72 /* markDisplay.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 1C05F4550828727D006FCB72 /* markDisplay.pdf */; };
 		1C06052606471FFB002438AF /* JVMixedTableColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C06052406471FFB002438AF /* JVMixedTableColumn.m */; };
 		1C06077C064A5DE8002438AF /* JVColorWellCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C06077A064A5DE8002438AF /* JVColorWellCell.m */; };
 		1C0730CA0677765B008D8AD9 /* AICustomTabCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0730C20677765B008D8AD9 /* AICustomTabCell.m */; };
@@ -423,7 +423,7 @@
 		1C018BF90A26930500C18024 /* Basic.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Basic.pch; path = ../../Basic.pch; sourceTree = "<group>"; };
 		1C04394607CAFC7D00304949 /* AppleScript Support.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "AppleScript Support.xcodeproj"; sourceTree = "<group>"; };
 		1C043B4A13DC8B7200B8FD9E /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = ../Languages/en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		1C05F4550828727D006FCB72 /* markDisplay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = markDisplay.png; sourceTree = "<group>"; };
+		1C05F4550828727D006FCB72 /* markDisplay.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = markDisplay.pdf; sourceTree = "<group>"; };
 		1C06052306471FFB002438AF /* JVMixedTableColumn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVMixedTableColumn.h; sourceTree = "<group>"; };
 		1C06052406471FFB002438AF /* JVMixedTableColumn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVMixedTableColumn.m; sourceTree = "<group>"; };
 		1C060779064A5DE8002438AF /* JVColorWellCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVColorWellCell.h; sourceTree = "<group>"; };
@@ -1493,11 +1493,11 @@
 				F5D04C03019489B801A35792 /* encoding.pdf */,
 				1CE95885063F3BF90071C9C3 /* inspector.pdf */,
 				19F292971B130440000198FE /* joinRoom.pdf */,
+				1C05F4550828727D006FCB72 /* markDisplay.pdf */,
 				92C70D1C1A5E89A000080E45 /* messageUser.pdf */,
 				1CBECE5D050A8D21000001C8 /* chooseStyle.png */,
 				F56539F501C5B6C301A35792 /* clear.png */,
 				1CF627CA07558F79005DFCFA /* fileSend.png */,
-				1C05F4550828727D006FCB72 /* markDisplay.png */,
 				F56539F601C5B6C301A35792 /* reveal.png */,
 				1CBECD660508C61B000001C8 /* showdrawer.png */,
 				1CF4D76507E6AD4400DB421A /* smartTranscriptSettings.png */,
@@ -2028,7 +2028,7 @@
 				1CF4D76607E6AD4400DB421A /* smartTranscriptSettings.png in Resources */,
 				0A5B683F0810EC9700398D5A /* default.css in Resources */,
 				0AA8117B0826E08000A3BF2D /* default.js in Resources */,
-				1C05F4560828727D006FCB72 /* markDisplay.png in Resources */,
+				1C05F4560828727D006FCB72 /* markDisplay.pdf in Resources */,
 				1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.xib in Resources */,
 				1CF16CE1083ADE590037F222 /* editWidget.png in Resources */,
 				1CF16CE2083ADE590037F222 /* editWidgetPressed.png in Resources */,
