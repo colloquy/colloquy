@@ -108,7 +108,7 @@
 		1C9014C107A2D798002942A7 /* MVChatUserAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9014BF07A2D798002942A7 /* MVChatUserAdditions.m */; };
 		1C94370B0639F86700618CD9 /* JVMarkedScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9437090639F86700618CD9 /* JVMarkedScroller.m */; };
 		1C96E93F06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m */; };
-		1C96E95906AAEC280013B0A9 /* TranscriptPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C96E95806AAEC280013B0A9 /* TranscriptPreferences.png */; };
+		1C96E95906AAEC280013B0A9 /* TranscriptPreferences.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 1C96E95806AAEC280013B0A9 /* TranscriptPreferences.pdf */; };
 		1C9981FA0603EF2F006C6417 /* NotificationPreferences.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 1C9981F90603EF2F006C6417 /* NotificationPreferences.pdf */; };
 		1C9982030603EFD6006C6417 /* JVNotificationPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9982010603EFD6006C6417 /* JVNotificationPreferencesViewController.m */; };
 		1C9982AA0604B979006C6417 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = F520458E01B1D37701EBB4B5 /* Sounds */; };
@@ -556,7 +556,7 @@
 		1C9437090639F86700618CD9 /* JVMarkedScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVMarkedScroller.m; sourceTree = "<group>"; };
 		1C96E93C06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVTranscriptPreferencesViewController.h; sourceTree = "<group>"; };
 		1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVTranscriptPreferencesViewController.m; sourceTree = "<group>"; };
-		1C96E95806AAEC280013B0A9 /* TranscriptPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TranscriptPreferences.png; sourceTree = "<group>"; };
+		1C96E95806AAEC280013B0A9 /* TranscriptPreferences.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = TranscriptPreferences.pdf; sourceTree = "<group>"; };
 		1C9981F90603EF2F006C6417 /* NotificationPreferences.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = NotificationPreferences.pdf; sourceTree = "<group>"; };
 		1C9982000603EFD6006C6417 /* JVNotificationPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVNotificationPreferencesViewController.h; sourceTree = "<group>"; };
 		1C9982010603EFD6006C6417 /* JVNotificationPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVNotificationPreferencesViewController.m; sourceTree = "<group>"; };
@@ -1233,8 +1233,8 @@
 			children = (
 				1CDEE8260586C723000B9075 /* InterfacePreferences.pdf */,
 				1C9981F90603EF2F006C6417 /* NotificationPreferences.pdf */,
+				1C96E95806AAEC280013B0A9 /* TranscriptPreferences.pdf */,
 				1CC6FCD2054A25040075807C /* FileTransferPreferences.png */,
-				1C96E95806AAEC280013B0A9 /* TranscriptPreferences.png */,
 			);
 			path = "Toolbar Icons - Preferences";
 			sourceTree = "<group>";
@@ -2010,7 +2010,7 @@
 				C2B92F271FE9538600F3F23D /* smartTranscript.pdf in Resources */,
 				1C23927306795020000E89A7 /* aquaTabCloseBack.png in Resources */,
 				0A3187FC067ECEB600271E42 /* TSCustomBan.xib in Resources */,
-				1C96E95906AAEC280013B0A9 /* TranscriptPreferences.png in Resources */,
+				1C96E95906AAEC280013B0A9 /* TranscriptPreferences.pdf in Resources */,
 				19F292991B130440000198FE /* disconnect.pdf in Resources */,
 				92C70D181A5E88CE00080E45 /* voice.pdf in Resources */,
 				1CF627CB07558F79005DFCFA /* fileSend.png in Resources */,
