@@ -128,7 +128,7 @@
 		1CB2CD1D052DDC560094AAA4 /* pending.png in Resources */ = {isa = PBXBuildFile; fileRef = F51A4F3801C319D801EE70DE /* pending.png */; };
 		1CB2CD1E052DDC560094AAA4 /* done.png in Resources */ = {isa = PBXBuildFile; fileRef = F51A4F3B01C3204701EE70DE /* done.png */; };
 		1CB2CD1F052DDC560094AAA4 /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = F56539F301C5A91401A35792 /* stop.png */; };
-		1CB2CD20052DDC560094AAA4 /* clear.png in Resources */ = {isa = PBXBuildFile; fileRef = F56539F501C5B6C301A35792 /* clear.png */; };
+		1CB2CD20052DDC560094AAA4 /* clear.pdf in Resources */ = {isa = PBXBuildFile; fileRef = F56539F501C5B6C301A35792 /* clear.pdf */; };
 		1CB2CD21052DDC560094AAA4 /* reveal.png in Resources */ = {isa = PBXBuildFile; fileRef = F56539F601C5B6C301A35792 /* reveal.png */; };
 		1CB2CD22052DDC560094AAA4 /* stopped.png in Resources */ = {isa = PBXBuildFile; fileRef = F5765F9501C6669D01A35792 /* stopped.png */; };
 		1CB2CD24052DDC560094AAA4 /* verbs.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5675B8601DB767601EE70DE /* verbs.plist */; };
@@ -967,7 +967,7 @@
 		F555208701F0DC2B01EE70DE /* MVCrashCatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MVCrashCatcher.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		F555208801F0DC2B01EE70DE /* MVCrashCatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVCrashCatcher.h; sourceTree = "<group>"; };
 		F56539F301C5A91401A35792 /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stop.png; sourceTree = "<group>"; };
-		F56539F501C5B6C301A35792 /* clear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clear.png; sourceTree = "<group>"; };
+		F56539F501C5B6C301A35792 /* clear.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = clear.pdf; sourceTree = "<group>"; };
 		F56539F601C5B6C301A35792 /* reveal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reveal.png; sourceTree = "<group>"; };
 		F5675B8601DB767601EE70DE /* verbs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = verbs.plist; sourceTree = "<group>"; };
 		F5765F9501C6669D01A35792 /* stopped.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stopped.png; sourceTree = "<group>"; };
@@ -1480,6 +1480,7 @@
 			isa = PBXGroup;
 			children = (
 				1CBECE5D050A8D21000001C8 /* chooseStyle.pdf */,
+				F56539F501C5B6C301A35792 /* clear.pdf */,
 				19F292951B130440000198FE /* connect.pdf */,
 				92C70D1A1A5E898100080E45 /* console.pdf */,
 				19F2929D1B132BB7000198FE /* delete.pdf */,
@@ -1490,7 +1491,6 @@
 				19F292971B130440000198FE /* joinRoom.pdf */,
 				1C05F4550828727D006FCB72 /* markDisplay.pdf */,
 				92C70D1C1A5E89A000080E45 /* messageUser.pdf */,
-				F56539F501C5B6C301A35792 /* clear.png */,
 				1CF627CA07558F79005DFCFA /* fileSend.png */,
 				F56539F601C5B6C301A35792 /* reveal.png */,
 				1CBECD660508C61B000001C8 /* showdrawer.png */,
@@ -1924,7 +1924,7 @@
 				1CB2CD1E052DDC560094AAA4 /* done.png in Resources */,
 				1CB2CD1F052DDC560094AAA4 /* stop.png in Resources */,
 				19F292981B130440000198FE /* connect.pdf in Resources */,
-				1CB2CD20052DDC560094AAA4 /* clear.png in Resources */,
+				1CB2CD20052DDC560094AAA4 /* clear.pdf in Resources */,
 				1CB2CD21052DDC560094AAA4 /* reveal.png in Resources */,
 				92C70D171A5E88CE00080E45 /* founder.pdf in Resources */,
 				1CB2CD22052DDC560094AAA4 /* stopped.png in Resources */,
