@@ -109,7 +109,7 @@
 		1C94370B0639F86700618CD9 /* JVMarkedScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9437090639F86700618CD9 /* JVMarkedScroller.m */; };
 		1C96E93F06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m */; };
 		1C96E95906AAEC280013B0A9 /* TranscriptPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C96E95806AAEC280013B0A9 /* TranscriptPreferences.png */; };
-		1C9981FA0603EF2F006C6417 /* NotificationPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9981F90603EF2F006C6417 /* NotificationPreferences.png */; };
+		1C9981FA0603EF2F006C6417 /* NotificationPreferences.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 1C9981F90603EF2F006C6417 /* NotificationPreferences.pdf */; };
 		1C9982030603EFD6006C6417 /* JVNotificationPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9982010603EFD6006C6417 /* JVNotificationPreferencesViewController.m */; };
 		1C9982AA0604B979006C6417 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = F520458E01B1D37701EBB4B5 /* Sounds */; };
 		1C9982AE0604BA1F006C6417 /* sound.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9982AC0604BA1F006C6417 /* sound.png */; };
@@ -183,9 +183,7 @@
 		1CC5650708F0CFEE00B8E333 /* Colloquy.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */; };
 		1CC6FC530549FCD80075807C /* JVAppearancePreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FC510549FCD70075807C /* JVAppearancePreferencesViewController.m */; };
 		1CC6FC570549FDD70075807C /* JVBehaviorPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FC550549FDD70075807C /* JVBehaviorPreferencesViewController.m */; };
-		1CC6FC70054A02F70075807C /* BehaviorPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC6FC6F054A02F70075807C /* BehaviorPreferences.png */; };
 		1CC6FCD3054A25050075807C /* FileTransferPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC6FCD2054A25040075807C /* FileTransferPreferences.png */; };
-		1CC6FCD5054A2BF80075807C /* AppearancePreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC6FCD4054A2BF80075807C /* AppearancePreferences.png */; };
 		1CC6FD39054AF1940075807C /* preview.colloquyTranscript in Resources */ = {isa = PBXBuildFile; fileRef = 1CC6FD38054AF1940075807C /* preview.colloquyTranscript */; };
 		1CC6FD65054B70BC0075807C /* JVFontPreviewField.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC6FD63054B70BC0075807C /* JVFontPreviewField.m */; };
 		1CD02008057588CD000F93B4 /* buddyMessageBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = F5FB4D1C0393F2D301000102 /* buddyMessageBlue.png */; };
@@ -559,7 +557,7 @@
 		1C96E93C06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVTranscriptPreferencesViewController.h; sourceTree = "<group>"; };
 		1C96E93D06AADBBD0013B0A9 /* JVTranscriptPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVTranscriptPreferencesViewController.m; sourceTree = "<group>"; };
 		1C96E95806AAEC280013B0A9 /* TranscriptPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TranscriptPreferences.png; sourceTree = "<group>"; };
-		1C9981F90603EF2F006C6417 /* NotificationPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NotificationPreferences.png; sourceTree = "<group>"; };
+		1C9981F90603EF2F006C6417 /* NotificationPreferences.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = NotificationPreferences.pdf; sourceTree = "<group>"; };
 		1C9982000603EFD6006C6417 /* JVNotificationPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVNotificationPreferencesViewController.h; sourceTree = "<group>"; };
 		1C9982010603EFD6006C6417 /* JVNotificationPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVNotificationPreferencesViewController.m; sourceTree = "<group>"; };
 		1C9982AC0604BA1F006C6417 /* sound.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sound.png; sourceTree = "<group>"; };
@@ -633,9 +631,7 @@
 		1CC6FC510549FCD70075807C /* JVAppearancePreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppearancePreferencesViewController.m; sourceTree = "<group>"; };
 		1CC6FC540549FDD70075807C /* JVBehaviorPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVBehaviorPreferencesViewController.h; sourceTree = "<group>"; };
 		1CC6FC550549FDD70075807C /* JVBehaviorPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVBehaviorPreferencesViewController.m; sourceTree = "<group>"; };
-		1CC6FC6F054A02F70075807C /* BehaviorPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BehaviorPreferences.png; sourceTree = "<group>"; };
 		1CC6FCD2054A25040075807C /* FileTransferPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FileTransferPreferences.png; sourceTree = "<group>"; };
-		1CC6FCD4054A2BF80075807C /* AppearancePreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppearancePreferences.png; sourceTree = "<group>"; };
 		1CC6FD38054AF1940075807C /* preview.colloquyTranscript */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = preview.colloquyTranscript; sourceTree = "<group>"; };
 		1CC6FD62054B70BC0075807C /* JVFontPreviewField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVFontPreviewField.h; sourceTree = "<group>"; };
 		1CC6FD63054B70BC0075807C /* JVFontPreviewField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFontPreviewField.m; sourceTree = "<group>"; };
@@ -1235,11 +1231,9 @@
 		1CBC6317054896CB009E59E1 /* Toolbar Icons - Preferences */ = {
 			isa = PBXGroup;
 			children = (
-				1CC6FCD4054A2BF80075807C /* AppearancePreferences.png */,
-				1CC6FC6F054A02F70075807C /* BehaviorPreferences.png */,
+				1C9981F90603EF2F006C6417 /* NotificationPreferences.pdf */,
 				1CC6FCD2054A25040075807C /* FileTransferPreferences.png */,
 				1CDEE8260586C723000B9075 /* InterfacePreferences.png */,
-				1C9981F90603EF2F006C6417 /* NotificationPreferences.png */,
 				1C96E95806AAEC280013B0A9 /* TranscriptPreferences.png */,
 			);
 			path = "Toolbar Icons - Preferences";
@@ -1969,9 +1963,7 @@
 				1CB4DCAB053627C00080D36F /* JVRoomInspector.xib in Resources */,
 				1C8BDD2205436A030035B84A /* JVChatMemberInspector.xib in Resources */,
 				92C70D1B1A5E898100080E45 /* console.pdf in Resources */,
-				1CC6FC70054A02F70075807C /* BehaviorPreferences.png in Resources */,
 				1CC6FCD3054A25050075807C /* FileTransferPreferences.png in Resources */,
-				1CC6FCD5054A2BF80075807C /* AppearancePreferences.png in Resources */,
 				1CC6FD39054AF1940075807C /* preview.colloquyTranscript in Resources */,
 				B6310B441C6EF9C80033E88E /* roomTabNewMessage.pdf in Resources */,
 				92C70D141A5E88CE00080E45 /* admin.pdf in Resources */,
@@ -1991,7 +1983,7 @@
 				1CBA56ED058D202200257832 /* emoticon.pdf in Resources */,
 				1C6EA23E05A735D6006A559F /* JVChatRoomBrowser.xib in Resources */,
 				B6310B431C6EF9C80033E88E /* roomTabNewHighlightMessage.pdf in Resources */,
-				1C9981FA0603EF2F006C6417 /* NotificationPreferences.png in Resources */,
+				1C9981FA0603EF2F006C6417 /* NotificationPreferences.pdf in Resources */,
 				1C9982AA0604B979006C6417 /* Sounds in Resources */,
 				1C9982AE0604BA1F006C6417 /* sound.png in Resources */,
 				B6310B421C6EF9C80033E88E /* privateChatTabNewMessage.pdf in Resources */,
