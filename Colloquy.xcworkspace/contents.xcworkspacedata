@@ -32,6 +32,9 @@
       <FileRef
          location = "group:writeVersionToInfoPlist.sh">
       </FileRef>
+      <FileRef
+         location = "group:release-mac-old.sh">
+      </FileRef>
    </Group>
    <Group
       location = "container:"
