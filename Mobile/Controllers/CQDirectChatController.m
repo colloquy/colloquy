@@ -1744,9 +1744,6 @@ NS_ASSUME_NONNULL_BEGIN
 	if (![self isViewLoaded] || !self.view.window)
 		return;
 
-	if (![notification.userInfo[UIKeyboardIsLocalUserInfoKey] boolValue])
-		return;
-
 	CGRect keyboardRect = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	keyboardRect = [self.view.window convertRect:keyboardRect toView:self.view];
 
@@ -1768,9 +1765,6 @@ NS_ASSUME_NONNULL_BEGIN
 	_showingKeyboard = NO;
 
 	if (![self isViewLoaded])
-		return;
-
-	if (![notification.userInfo[UIKeyboardIsLocalUserInfoKey] boolValue])
 		return;
 
 	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
