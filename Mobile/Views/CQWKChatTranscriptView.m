@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation CQWKChatTranscriptView {
 @protected
 	UIView *_blockerView;
+	UILongPressGestureRecognizer *_longPressGestureRecognizer;
 	NSMutableArray <NSDictionary *> *_pendingPreviousSessionComponents;
 	NSMutableArray <NSDictionary *> *_pendingComponents;
 	BOOL _scrolling;
@@ -238,11 +239,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 	__strong __typeof__((_transcriptDelegate)) transcriptDelegate = _transcriptDelegate;
 	BOOL shouldBecomeFirstResponder = YES;
-	if ([transcriptDelegate respondsToSelector:@selector(transcriptViewShouldBecomeFirstResponder:)])
-		shouldBecomeFirstResponder = [transcriptDelegate transcriptViewShouldBecomeFirstResponder:self];
+	if (!self.isFirstResponder) {
+		if ([transcriptDelegate respondsToSelector:@selector(transcriptViewShouldBecomeFirstResponder:)])
+			shouldBecomeFirstResponder = [transcriptDelegate transcriptViewShouldBecomeFirstResponder:self];
 
-	if (shouldBecomeFirstResponder)
-		[self performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.];
+		if (shouldBecomeFirstResponder)
+			[self performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.];
+	}
 
 	CGPoint point = [longPressGestureRecognizer locationInView:self];
 	point = [self convertPoint:point toView:self.scrollView];
@@ -291,6 +294,11 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	if (navigationAction.navigationType != WKNavigationTypeLinkActivated) {
+		decisionHandler(WKNavigationActionPolicyCancel);
+		return;
+	}
+
+	if (_longPressGestureRecognizer.state != UIGestureRecognizerStatePossible) {
 		decisionHandler(WKNavigationActionPolicyCancel);
 		return;
 	}
@@ -577,10 +585,10 @@ NS_ASSUME_NONNULL_BEGIN
 		[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
 	}
 
-	UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureRecognizerRecognized:)];
-	longPressGestureRecognizer.delegate = self;
+	_longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureRecognizerRecognized:)];
+	_longPressGestureRecognizer.delegate = self;
 
-	[self addGestureRecognizer:longPressGestureRecognizer];
+	[self addGestureRecognizer:_longPressGestureRecognizer];
 
 	_showRoomTopic = (CQShowRoomTopic)[[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
 	_addedMessage = NO;
