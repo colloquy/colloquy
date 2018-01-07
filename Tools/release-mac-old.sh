@@ -9,7 +9,7 @@
 set -eu
 
 
-# Define variables.
+# MARK: Define variables.
 CQ_VERSION_COLLOQUY=$(Tools/writeVersionToInfoPlist.sh)
 CQ_VERSION_BOUNCER=$(xcrun git -C "../bouncer" rev-list --count HEAD)
 
@@ -21,10 +21,10 @@ CQ_APP_NAME="Colloquy.app"
 CQ_ZIP_NAME="Colloquy_${CQ_VERSION_COLLOQUY}_with_Bouncer_${CQ_VERSION_BOUNCER}.zip"
 
 CQ_APP="$CQ_BUILT_PRODUCTS_DIR/$CQ_APP_NAME"
-CQ_ZIP_TARGET="$CQ_BUILT_PRODUCTS_DIR/$CQ_ZIP_NAME"
-CQ_ZIP_SOURCE="$CQ_BUILD_DIR/$CQ_ZIP_NAME"
+CQ_ZIP="$CQ_BUILD_DIR/$CQ_ZIP_NAME"
 
-# Define the commands.
+
+# MARK: Define the commands.
 CQ_CLEAN_DERIVED_DATA_CMD=(rm -rf $CQ_DERIVED_DATA_DIR)
 
 CQ_BUILD_CMD=(
@@ -39,18 +39,12 @@ CQ_BUILD_CMD=(
 CQ_BUILD_COLLOQUY_CMD=(${CQ_BUILD_CMD[@]} -scheme "Colloquy (Aggregate)")
 CQ_BUILD_BOUNCER_CMD=(${CQ_BUILD_CMD[@]} -scheme "Colloquy Bouncer (Plug-In)")
 
-CQ_ZIP_PUSHD_CMD=(pushd $CQ_BUILT_PRODUCTS_DIR)
-CQ_ZIP_CMD=(zip --quiet --recurse-paths $CQ_ZIP_NAME $CQ_APP_NAME)
-CQ_ZIP_POPD_CMD=(popd)
+CQ_ZIP_CMD=(ditto -c -k --sequesterRsrc --keepParent $CQ_APP $CQ_ZIP)
 
-CQ_MOVE_CMD=(mv $CQ_ZIP_TARGET $CQ_ZIP_SOURCE)
 
-# Run the commands.
+# MARK: Run the commands.
 "${CQ_CLEAN_DERIVED_DATA_CMD[@]}"
 "${CQ_BUILD_COLLOQUY_CMD[@]}"
 "${CQ_BUILD_BOUNCER_CMD[@]}"
 "${CQ_BUILD_COLLOQUY_CMD[@]}"
-"${CQ_ZIP_PUSHD_CMD[@]}"
 "${CQ_ZIP_CMD[@]}"
-"${CQ_ZIP_POPD_CMD[@]}"
-"${CQ_MOVE_CMD[@]}"
