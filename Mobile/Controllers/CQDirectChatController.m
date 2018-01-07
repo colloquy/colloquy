@@ -21,6 +21,7 @@
 #import "NSDateAdditions.h"
 #import "NSNotificationAdditions.h"
 #import "UIViewAdditions.h"
+#import "CQUIChatTranscriptView.h"
 #import "CQUITextChatTranscriptView.h"
 #import "CQWKChatTranscriptView.h"
 
@@ -553,9 +554,10 @@ NS_ASSUME_NONNULL_BEGIN
 //	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
 #if SYSTEM(TV)
 	CQUITextChatTranscriptView *chatTranscriptView = [[CQUITextChatTranscriptView alloc] initWithFrame:transcriptView.frame];
-#elif 1
+#elif 0
 	CQWKChatTranscriptView *chatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
 #else
+	// if we want to keep using UIWebView-based transcripts, don't set the var to anything so it never gets removed
 	CQUIChatTranscriptView *chatTranscriptView = nil;
 #endif
 	chatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
