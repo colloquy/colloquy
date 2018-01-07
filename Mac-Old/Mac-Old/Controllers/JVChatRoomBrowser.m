@@ -463,8 +463,8 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [connection server], [connection nickname]] action:NULL keyEquivalent:@""];
 
 		NSImage *icon = nil;
-		if( [connection isConnected] ) icon = [NSImage imageNamed:@"connected"];
-		else icon = [[NSImage alloc] initWithSize:NSMakeSize( 9., 16. )];
+		if( [connection isConnected] ) icon = [NSImage imageNamed:@"connectedTemplate"];
+		else icon = [[NSImage alloc] initWithSize:NSMakeSize( 16., 16. )];
 		[item setImage:icon];
 
 		[item setRepresentedObject:connection];
