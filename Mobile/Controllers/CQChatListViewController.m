@@ -690,8 +690,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	self.tableView.allowsSelectionDuringEditing = self.view.window.isFullscreen;
 	self.clearsSelectionOnViewWillAppear = !self.view.window.isFullscreen;
 
-	_previewingContext = [self registerForPreviewingWithDelegate:self sourceView:self.view.window];
-
 	[self.tableView hideEmptyCells];
 }
 
@@ -735,6 +733,12 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (void) traitCollectionDidChange:(nullable UITraitCollection *) previousTraitCollection {
 	self.tableView.allowsSelectionDuringEditing = self.view.window.isFullscreen;
 	self.clearsSelectionOnViewWillAppear = !self.view.window.isFullscreen;
+
+	if (self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable) {
+		_previewingContext = [self registerForPreviewingWithDelegate:self sourceView:self.view.window];
+	} else if (_previewingContext) {
+		[self unregisterForPreviewingWithContext:_previewingContext];
+	}
 }
 
 #pragma mark -
