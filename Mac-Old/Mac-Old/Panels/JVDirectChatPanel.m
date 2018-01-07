@@ -1327,7 +1327,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	NSRect sendFrame = [[[send superview] superview] frame];
 	CGFloat dividerThickness = [splitView dividerThickness];
 	CGFloat maxContentHeight = ( NSHeight( splitViewFrame ) - dividerThickness - 75. );
-	CGFloat newContentHeight =  MIN( maxContentHeight, MAX( 22., contentSize.height + 8. ) );
+	CGFloat newContentHeight =  MIN( maxContentHeight, MAX( 33. - dividerThickness, contentSize.height + 8. ) );
 
 	if( newContentHeight == NSHeight( sendFrame ) ) return;
 
