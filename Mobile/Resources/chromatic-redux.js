@@ -57,7 +57,7 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 
 	var aElement = document.createElement("a");
 	aElement.className = "nickname"
-	aElement.setAttribute("href", "colloquy://" + senderNickname);
+	aElement.setAttribute("href", "colloquy-nav://" + senderNickname);
 
 	var senderElement = document.createElement("div");
 	senderElement.className = className;

@@ -296,7 +296,7 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	__strong __typeof__((_transcriptDelegate)) transcriptDelegate = _transcriptDelegate;
-	if ([navigationAction.request.URL.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
+	if ([navigationAction.request.URL.scheme isCaseInsensitiveEqualToString:@"colloquy-nav"]) {
 		if ([transcriptDelegate respondsToSelector:@selector(transcriptView:handleNicknameTap:atLocation:)]) {
 			NSRange endOfSchemeRange = [navigationAction.request.URL.absoluteString rangeOfString:@"://"];
 			if (endOfSchemeRange.location == NSNotFound) {
