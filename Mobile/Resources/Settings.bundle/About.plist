@@ -180,6 +180,16 @@
 			<key>DefaultValue</key>
 			<string>Italian Translation</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Woosuk Park</string>
+			<key>Key</key>
+			<string>CQCreditsTranslatorWoosuk</string>
+			<key>DefaultValue</key>
+			<string>Korean Translation</string>
+		</dict>
 	</array>
 </dict>
 </plist>
