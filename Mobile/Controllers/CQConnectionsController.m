@@ -1205,7 +1205,7 @@ CQBouncerConnectionDelegate>
 	CQAlertView *alertView = [[CQAlertView alloc] init];
 	alertView.tag = NotIdentifiedWithServicesTag;
 	alertView.delegate = self;
-	alertView.title = NSLocalizedString(@"Serivces Password", @"Serivces Password alert title");
+	alertView.title = NSLocalizedString(@"Services Password", @"Services Password alert title");
 	alertView.message = connection.displayName;
 
 	alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
@@ -1224,7 +1224,7 @@ CQBouncerConnectionDelegate>
 	CQAlertView *alertView = [[CQAlertView alloc] init];
 	alertView.tag = ServerPasswordRequiredTag;
 	alertView.delegate = self;
-	alertView.title = NSLocalizedString(@"Serivces Password", @"Serivces Password alert title");
+	alertView.title = NSLocalizedString(@"Services Password", @"Services Password alert title");
 	alertView.message = connection.displayName;
 
 	alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
@@ -1319,7 +1319,7 @@ CQBouncerConnectionDelegate>
 			CQAlertView *nextAlertView = [[CQAlertView alloc] init];
 			nextAlertView.tag = NotIdentifiedWithServicesTag;
 			nextAlertView.delegate = self;
-			nextAlertView.title = NSLocalizedString(@"Serivces Password", @"Serivces Password alert title");
+			nextAlertView.title = NSLocalizedString(@"Services Password", @"Services Password alert title");
 			nextAlertView.message = connection.displayName;
 
 			nextAlertView.cancelButtonIndex = [nextAlertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
