@@ -490,7 +490,7 @@
 		1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTextStorageAdditions.m; sourceTree = "<group>"; };
 		1C51B4CC052DE14B00BB459B /* Info-StandardCommands.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-StandardCommands.plist"; sourceTree = "<group>"; };
 		1C51B4CD052DE14B00BB459B /* Standard Commands.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Standard Commands.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1C51B89D052DF91E00BB459B /* Info.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.xml; fileEncoding = 4; path = Info.plist; sourceTree = "<group>"; };
+		1C51B89D052DF91E00BB459B /* Info-Mac-Old.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.xml; fileEncoding = 4; path = "Info-Mac-Old.plist"; sourceTree = "<group>"; };
 		1C5959010507803F000001C8 /* Generic.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Generic.icns; sourceTree = "<group>"; };
 		1C59A91F09FDEBA3000682B8 /* JVChatWindowControllerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVChatWindowControllerTests.m; sourceTree = "<group>"; };
 		1C59BD61059E2E02001487E2 /* ChatPlugIn.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.scriptSuite; path = ChatPlugIn.scriptSuite; sourceTree = "<group>"; };
@@ -1033,14 +1033,14 @@
 		089C166AFE841209C02AAC07 /* Massinova Menu Extra */ = {
 			isa = PBXGroup;
 			children = (
-				C26F48CE1FB7223700FB8FA6 /* Shared */,
-				F50B0A9F0170C89301A84BDE /* Sources & Headers */,
+				F50B0A9F0170C89301A84BDE /* Mac-Old */,
+				CBF684F00820174000F498FB /* MetadataImporter */,
+				C24705C220135D4800385F62 /* StandardCommands */,
 				F50B0AA00170C89301A84BDE /* Additions */,
-				1C59A92909FDEBC6000682B8 /* Unit Tests */,
-				F5185C82018626F701EE70DE /* Interfaces */,
 				F50B0AA10170C89301A84BDE /* Resources */,
-				C2B92F211FE9432100F3F23D /* Resources */,
 				1C6A13E608666DDC009EE6D2 /* Settings */,
+				C26F48CE1FB7223700FB8FA6 /* Shared */,
+				1C59A92909FDEBC6000682B8 /* Unit Tests */,
 				C26D0E121F5B0A7700B58261 /* old-mac-binary-frameworks */,
 				089C1671FE841209C02AAC07 /* Frameworks & Libraries */,
 				1CB2C8CC052DDA360094AAA4 /* Products */,
@@ -1286,7 +1286,6 @@
 		1CC478470427BB2C00000102 /* Plug–Ins */ = {
 			isa = PBXGroup;
 			children = (
-				1CC478480427BB5500000102 /* Standard Commands */,
 				1C04393E07CAFC5800304949 /* AppleScript Support */,
 				1CEF8F340A3AB70E0054298A /* JavaScript Support */,
 				1CE3F7BC07C7B60A0049A366 /* F-Script Support */,
@@ -1295,15 +1294,6 @@
 			);
 			name = "Plug–Ins";
 			path = "Plug-Ins";
-			sourceTree = "<group>";
-		};
-		1CC478480427BB5500000102 /* Standard Commands */ = {
-			isa = PBXGroup;
-			children = (
-				1C3B4D570427BD5200000102 /* JVStandardCommands.m */,
-				1C3B4D560427BD5200000102 /* JVStandardCommands.h */,
-			);
-			path = "Standard Commands";
 			sourceTree = "<group>";
 		};
 		1CE3F7BC07C7B60A0049A366 /* F-Script Support */ = {
@@ -1413,6 +1403,17 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
+		C24705C220135D4800385F62 /* StandardCommands */ = {
+			isa = PBXGroup;
+			children = (
+				1C3B4D560427BD5200000102 /* JVStandardCommands.h */,
+				1C3B4D570427BD5200000102 /* JVStandardCommands.m */,
+				1C51B4CC052DE14B00BB459B /* Info-StandardCommands.plist */,
+			);
+			name = StandardCommands;
+			path = "Mac-Old/StandardCommands";
+			sourceTree = "<group>";
+		};
 		C26D0E121F5B0A7700B58261 /* old-mac-binary-frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1453,8 +1454,14 @@
 		C2B92F211FE9432100F3F23D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1C258E55050B9656000001C8 /* Emoticons */,
 				1CC6FD38054AF1940075807C /* preview.colloquyTranscript */,
 				1C5959010507803F000001C8 /* Generic.icns */,
+				1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */,
+				1C746A95050CF86B000001C8 /* emoticons.plist */,
+				1C51B89D052DF91E00BB459B /* Info-Mac-Old.plist */,
+				F5BC17DD019655DC01A35792 /* info.colloquy.plist */,
+				1C9982AF0604BEAA006C6417 /* notifications.plist */,
 				F52BA284037C13C201A35792 /* GPL.txt */,
 				C2A889561F6EFD5300F2C6D4 /* Mac-Old.xcassets */,
 				C2B92F231FE9432200F3F23D /* Misc Images */,
@@ -1467,8 +1474,7 @@
 				C2B92F261FE9432200F3F23D /* Widgets - Sidebar Interface */,
 				C2B92F241FE9432200F3F23D /* Widgets - Tabs Interface */,
 			);
-			name = Resources;
-			path = "Mac-Old/Mac-Old/Resources";
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		C2B92F221FE9432200F3F23D /* Toolbar Icons */ = {
@@ -1627,7 +1633,7 @@
 			path = "Style Support";
 			sourceTree = "<group>";
 		};
-		CBF684F00820174000F498FB /* Metadata Importer */ = {
+		CBF684F00820174000F498FB /* MetadataImporter */ = {
 			isa = PBXGroup;
 			children = (
 				CBF685320820190D00F498FB /* Info.plist */,
@@ -1637,27 +1643,28 @@
 				CBF685330820190D00F498FB /* main.c */,
 				CBF685310820190D00F498FB /* GetMetadataForFile.m */,
 			);
-			name = "Metadata Importer";
-			path = Importer;
+			name = MetadataImporter;
+			path = "Mac-Old/MetadataImporter";
 			sourceTree = "<group>";
 		};
-		F50B0A9F0170C89301A84BDE /* Sources & Headers */ = {
+		F50B0A9F0170C89301A84BDE /* Mac-Old */ = {
 			isa = PBXGroup;
 			children = (
 				F50B0AA20170CAD701A84BDE /* main.m */,
 				1C018BF90A26930500C18024 /* Basic.pch */,
 				1CF6511406EA22480073DEA8 /* Colloquy.pch */,
-				1CFAFE9A053C1B3D00C702F9 /* Models */,
-				1CC00D2407B06C8800A301F2 /* Views */,
 				1CFAFED8053C1BC500C702F9 /* Controllers */,
-				1CABFD090658622600801C15 /* Panels & List Items */,
 				1CFAFED5053C1BA500C702F9 /* Inspectors */,
-				1CBC62F405488D5A009E59E1 /* Preferences */,
+				F5185C82018626F701EE70DE /* Interfaces */,
+				1CFAFE9A053C1B3D00C702F9 /* Models */,
+				1CABFD090658622600801C15 /* Panels & List Items */,
 				1CC478470427BB2C00000102 /* Plug–Ins */,
-				CBF684F00820174000F498FB /* Metadata Importer */,
+				1CBC62F405488D5A009E59E1 /* Preferences */,
+				C2B92F211FE9432100F3F23D /* Resources */,
+				1CC00D2407B06C8800A301F2 /* Views */,
 			);
 			indentWidth = 4;
-			name = "Sources & Headers";
+			name = "Mac-Old";
 			path = "Mac-Old/Mac-Old";
 			sourceTree = "<group>";
 			tabWidth = 4;
@@ -1694,16 +1701,9 @@
 			children = (
 				1C043B4913DC8B7200B8FD9E /* Credits.rtf */,
 				F5394C0B0378E44D01A35792 /* Localizable.strings */,
-				1C258E55050B9656000001C8 /* Emoticons */,
 				F520458E01B1D37701EBB4B5 /* Sounds */,
 				F51F91D7037967CB01A35792 /* Chat.clr */,
 				1C1AFE8109C3D8C900BF3E2A /* roomTopicBanner.js */,
-				1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */,
-				1C746A95050CF86B000001C8 /* emoticons.plist */,
-				1C51B4CC052DE14B00BB459B /* Info-StandardCommands.plist */,
-				F5BC17DD019655DC01A35792 /* info.colloquy.plist */,
-				1C51B89D052DF91E00BB459B /* Info.plist */,
-				1C9982AF0604BEAA006C6417 /* notifications.plist */,
 				F5675B8601DB767601EE70DE /* verbs.plist */,
 				1C1D19F105992D80000BB31A /* ChatCore.scriptSuite */,
 				1C1D19F205992D80000BB31A /* ChatCore.scriptTerminology */,
@@ -1743,8 +1743,7 @@
 				1C703EF307E4B956005CEA40 /* JVSmartTranscriptFilterSheet.xib */,
 				895BCD3812BD39400082AB5A /* CQActivityWindow.xib */,
 			);
-			name = Interfaces;
-			path = "Mac-Old/Mac-Old/Interfaces";
+			path = Interfaces;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2749,7 +2748,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				GCC_PREFIX_HEADER = Basic.pch;
-				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
+				INFOPLIST_FILE = "Mac-Old/StandardCommands/Info-StandardCommands.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.standard-commands";
 				PRODUCT_NAME = "Standard Commands";
 				WRAPPER_EXTENSION = plugin;
@@ -2763,7 +2762,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-$(COLLOQUY_BASE_CONFIGURATION)";
 				GCC_PREFIX_HEADER = "Mac-Old/Mac-Old/Colloquy.pch";
-				INFOPLIST_FILE = Resources/Info.plist;
+				INFOPLIST_FILE = "Mac-Old/Mac-Old/Resources/Info-Mac-Old.plist";
 				OTHER_CFLAGS = (
 					"-fconstant-cfstrings",
 					"-Wno-arc-performSelector-leaks",
@@ -2780,7 +2779,7 @@
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Basic.pch;
-				INFOPLIST_FILE = "Mac-Old/Mac-Old/Importer/Info.plist";
+				INFOPLIST_FILE = "Mac-Old/MetadataImporter/Info.plist";
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.metadata-importer";
 				PRODUCT_NAME = Colloquy;
@@ -2802,7 +2801,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = NO;
 				GCC_PREFIX_HEADER = Basic.pch;
-				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
+				INFOPLIST_FILE = "Mac-Old/StandardCommands/Info-StandardCommands.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.standard-commands";
 				PRODUCT_NAME = "Standard Commands";
 				WRAPPER_EXTENSION = plugin;
@@ -2816,7 +2815,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-$(COLLOQUY_BASE_CONFIGURATION)";
 				GCC_PREFIX_HEADER = "Mac-Old/Mac-Old/Colloquy.pch";
-				INFOPLIST_FILE = Resources/Info.plist;
+				INFOPLIST_FILE = "Mac-Old/Mac-Old/Resources/Info-Mac-Old.plist";
 				OTHER_CFLAGS = (
 					"-fconstant-cfstrings",
 					"-Wno-arc-performSelector-leaks",
@@ -2839,7 +2838,7 @@
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Basic.pch;
-				INFOPLIST_FILE = "Mac-Old/Mac-Old/Importer/Info.plist";
+				INFOPLIST_FILE = "Mac-Old/MetadataImporter/Info.plist";
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.colloquy.metadata-importer";
 				PRODUCT_NAME = Colloquy;
