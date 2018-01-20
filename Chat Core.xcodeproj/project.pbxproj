@@ -106,7 +106,7 @@
 /* Begin PBXFileReference section */
 		1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectClientConnection.h; path = "Chat Core/MVDirectClientConnection.h"; sourceTree = "<group>"; };
 		1C0FE8A90B4F647D00855B9C /* MVDirectClientConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDirectClientConnection.m; path = "Chat Core/MVDirectClientConnection.m"; sourceTree = "<group>"; };
-		1C11B7A009C27AC800789814 /* BSD License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "BSD License.txt"; path = "Resources/BSD License.txt"; sourceTree = "<group>"; };
+		1C11B7A009C27AC800789814 /* BSD License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "BSD License.txt"; sourceTree = "<group>"; };
 		1C1895590E29CC19003CFED0 /* MVAvailability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVAvailability.h; path = "Chat Core/MVAvailability.h"; sourceTree = "<group>"; };
 		1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatPluginManager.h; path = "Chat Core/MVChatPluginManager.h"; sourceTree = "<group>"; };
 		1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatPluginManager.m; path = "Chat Core/MVChatPluginManager.m"; sourceTree = "<group>"; };
@@ -115,7 +115,7 @@
 		1C3D55BA05A4CBBE00F25F5E /* NSNumberAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSNumberAdditions.m; path = Additions/NSNumberAdditions.m; sourceTree = "<group>"; };
 		1C3D55BF05A4DC1E00F25F5E /* NSMethodSignatureAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSMethodSignatureAdditions.h; path = Additions/NSMethodSignatureAdditions.h; sourceTree = "<group>"; };
 		1C3D55C005A4DC1E00F25F5E /* NSMethodSignatureAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSMethodSignatureAdditions.m; path = Additions/NSMethodSignatureAdditions.m; sourceTree = "<group>"; };
-		1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Info-ChatCore.plist"; path = "Resources/Info-ChatCore.plist"; sourceTree = SOURCE_ROOT; };
+		1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info-ChatCore.plist"; path = "Chat Core/Resources/Info-ChatCore.plist"; sourceTree = SOURCE_ROOT; };
 		1C51B48B052DE0CB00BB459B /* ChatCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C5A1A2206F8F4A000A51F10 /* MVIRCChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVIRCChatConnection.h; path = "Chat Core/MVIRCChatConnection.h"; sourceTree = "<group>"; };
 		1C5A1A2306F8F4A000A51F10 /* MVIRCChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVIRCChatConnection.m; path = "Chat Core/MVIRCChatConnection.m"; sourceTree = "<group>"; };
@@ -229,6 +229,7 @@
 				F50B0A9F0170C89301A84BDE /* Sources & Headers */,
 				F50B0AA00170C89301A84BDE /* Other Sources & Additions */,
 				F50B0AA10170C89301A84BDE /* Resources */,
+				C24705B920134D4700385F62 /* Resources */,
 				1C9AE8DF086A5218008ED7AD /* Settings */,
 				C26D0E131F5B0B3C00B58261 /* old-mac-binary-frameworks */,
 				C2A2CAB21FC1012C00A68495 /* Source Dependencies */,
@@ -334,6 +335,16 @@
 				922B1FF51692C42F002ECDFD /* MVDelegateLogger.h */,
 			);
 			name = Logging;
+			sourceTree = "<group>";
+		};
+		C24705B920134D4700385F62 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */,
+				1C11B7A009C27AC800789814 /* BSD License.txt */,
+			);
+			name = Resources;
+			path = "Chat Core/Resources";
 			sourceTree = "<group>";
 		};
 		C26D0E131F5B0B3C00B58261 /* old-mac-binary-frameworks */ = {
@@ -454,8 +465,6 @@
 		F50B0AA10170C89301A84BDE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				1C11B7A009C27AC800789814 /* BSD License.txt */,
-				1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */,
 				1CCA517E0598AFBA00F0A4CD /* ChatCore.scriptSuite */,
 				1CCA517F0598AFBA00F0A4CD /* ChatCore.scriptTerminology */,
 			);
@@ -693,7 +702,7 @@
 					"RKL_CACHE_SIZE=47",
 					"RKL_BLOCKS=0",
 				);
-				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
+				INFOPLIST_FILE = "Chat Core/Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
@@ -737,7 +746,7 @@
 					"RKL_CACHE_SIZE=47",
 					"RKL_BLOCKS=0",
 				);
-				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
+				INFOPLIST_FILE = "Chat Core/Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				OTHER_LDFLAGS = (
 					"-seg1addr",

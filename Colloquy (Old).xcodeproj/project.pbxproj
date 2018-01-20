@@ -488,7 +488,6 @@
 		1C45BFA4086F4BD80079E014 /* newWindow.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = newWindow.pdf; sourceTree = "<group>"; };
 		1C4671E306D7759100071DC6 /* NSTextStorageAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTextStorageAdditions.h; sourceTree = "<group>"; };
 		1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTextStorageAdditions.m; sourceTree = "<group>"; };
-		1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-ChatCore.plist"; sourceTree = "<group>"; };
 		1C51B4CC052DE14B00BB459B /* Info-StandardCommands.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-StandardCommands.plist"; sourceTree = "<group>"; };
 		1C51B4CD052DE14B00BB459B /* Standard Commands.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Standard Commands.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C51B89D052DF91E00BB459B /* Info.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.xml; fileEncoding = 4; path = Info.plist; sourceTree = "<group>"; };
@@ -1701,7 +1700,6 @@
 				1C1AFE8109C3D8C900BF3E2A /* roomTopicBanner.js */,
 				1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */,
 				1C746A95050CF86B000001C8 /* emoticons.plist */,
-				1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */,
 				1C51B4CC052DE14B00BB459B /* Info-StandardCommands.plist */,
 				F5BC17DD019655DC01A35792 /* info.colloquy.plist */,
 				1C51B89D052DF91E00BB459B /* Info.plist */,
