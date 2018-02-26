@@ -1706,8 +1706,6 @@ NS_ASSUME_NONNULL_BEGIN
 		_pendingPreviousSessionComponents = nil;
 	} else if (_recentMessages.count) {
 		[view addPreviousSessionComponents:_recentMessages];
-
-		[_recentMessages removeAllObjects];
 	}
 }
 
