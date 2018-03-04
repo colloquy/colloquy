@@ -124,21 +124,12 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	_orderingQueue = dispatch_queue_create("info.colloquy.orderingQueue", DISPATCH_QUEUE_SERIAL);
 	_chatControllers = @[];
 
-	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_asyncSortChatControllers) name:CQChatViewControllerHandledMessageNotification object:nil];
-
 	return self;
 }
 
 #pragma mark -
 
-- (void) _asyncSortChatControllers {
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_sortChatControllers) object:nil];
-	[self performSelector:@selector(_sortChatControllers) withObject:nil afterDelay:0.];
-}
-
-
 - (void) _sortChatControllers {
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_sortChatControllers) object:nil];
 	dispatch_sync(_orderingQueue, ^{
 		_chatControllers = [[_chatControllers copy] sortedArrayUsingFunction:sortControllersAscending context:NULL];
 	});
