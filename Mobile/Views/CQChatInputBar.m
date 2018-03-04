@@ -92,9 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[self addSubview:_backgroundView];
 	[self addSubview:_topLineView];
 
-	if ([UIDevice currentDevice].isRetina)
-		frame = CGRectMake(6.5, 6.5, frame.size.width - 12., frame.size.height - 12.);
-	else frame = CGRectMake(6., 7., frame.size.width - 12., frame.size.height - 12.);
+	frame = CGRectMake(6 + (1 / [UIScreen mainScreen].nativeScale), 6.5 + (1 / [UIScreen mainScreen].nativeScale), frame.size.width - 12., frame.size.height - 12.);
 
 	_inputView = [[CQTextView alloc] initWithFrame:frame];
 	_inputView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
@@ -112,9 +110,7 @@ NS_ASSUME_NONNULL_BEGIN
 	_inputView.scrollEnabled = NO;
 
 	_inputView.layer.borderColor = [UIColor colorWithRed:(200. / 255.) green:(200. / 255.) blue:(205. / 255.) alpha:1.].CGColor;
-	if ([UIDevice currentDevice].isRetina)
-		_inputView.layer.borderWidth = .5;
-	else _inputView.layer.borderWidth = 1.;
+	_inputView.layer.borderWidth = (1 / [UIScreen mainScreen].nativeScale);
 	_inputView.layer.backgroundColor = [UIColor colorWithWhite:(250. / 255.) alpha:1.].CGColor;
 	_inputView.layer.cornerRadius = 5.;
 	[self addSubview:_inputView];
@@ -727,15 +723,11 @@ retry:
 
 	_backgroundView.frame = self.bounds;
 
-	if ([UIDevice currentDevice].isRetina)
-		_topLineView.frame = CGRectMake(0., 0., CGRectGetWidth(_backgroundView.frame), .5);
-	else _topLineView.frame = CGRectMake(0., 0., CGRectGetWidth(_backgroundView.frame), 1.);
-#define ButtonMargin 6.5
+	_topLineView.frame = CGRectMake(0., 0., CGRectGetWidth(_backgroundView.frame), (1 / [UIScreen mainScreen].nativeScale));
+#define ButtonMargin 6 + (1 / [UIScreen mainScreen].nativeScale)
 #define ButtonWidth 18.
 	__block CGRect frame = _backgroundView.frame;
-	if ([UIDevice currentDevice].isRetina)
-		frame.size.width -= (ButtonWidth + ButtonMargin);
-	else frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
+	frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
 	_overlayBackgroundView.frame = frame;
 
 	frame.origin.x = CGRectGetMaxX(frame);
@@ -743,14 +735,10 @@ retry:
 	_overlayBackgroundViewPiece.frame = frame;
 
 	frame = self.bounds;
-	if ([UIDevice currentDevice].isRetina)
-		frame = CGRectMake(6.5, 6.5, frame.size.width - 12., frame.size.height - 12.);
-	else frame = CGRectMake(6., 7., frame.size.width - 12., frame.size.height - 12.);
+	frame = CGRectMake(6 + (1 / [UIScreen mainScreen].nativeScale), 6 + (1 / [UIScreen mainScreen].nativeScale), frame.size.width - 12., frame.size.height - 12.);
 
 	frame.size.width = _backgroundView.frame.size.width - (frame.origin.x * 2);
-	if ([UIDevice currentDevice].isRetina)
-		frame.size.width -= (ButtonWidth + ButtonMargin);
-	else frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
+	frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
 
 	frame.size.height = (self.frame.size.height - CQInputBarVerticalPadding);
 	frame.origin.y = (self.frame.size.height - frame.size.height) / 2.;
@@ -758,9 +746,7 @@ retry:
 	_inputView.textContainer.size = CGSizeMake(frame.size.width, 0); // 0 = unlimited space
 
 	frame = _accessoryButton.frame;
-	if ([UIDevice currentDevice].isRetina)
-		frame.origin.x = CGRectGetMaxX(_inputView.frame) + ButtonMargin;
-	else frame.origin.x = CGRectGetMaxX(_inputView.frame) + floorf(ButtonMargin);
+	frame.origin.x = CGRectGetMaxX(_inputView.frame) + floorf(ButtonMargin);
 	frame.origin.y = (ButtonMargin * 2);
 	frame.size.width = ButtonWidth;
 	frame.size.height = ButtonWidth;

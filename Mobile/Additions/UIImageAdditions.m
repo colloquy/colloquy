@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (UIImage *) resizeToSize:(CGSize) size {
-	CGFloat scale = [UIScreen mainScreen].scale;
+	CGFloat scale = [UIScreen mainScreen].nativeScale;
 	size.width *= scale;
 	size.height *= scale;
 

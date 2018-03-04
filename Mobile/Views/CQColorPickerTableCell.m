@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 	_colorToButtonMap = [NSMapTable strongToStrongObjectsMapTable];
 	_buttonToColorMap = [NSMapTable strongToStrongObjectsMapTable];
 
-	CGFloat scale = self.window ? self.window.screen.scale : [UIScreen mainScreen].scale;
+	CGFloat scale = self.window ? self.window.screen.nativeScale : [UIScreen mainScreen].nativeScale;
 	[colors enumerateObjectsUsingBlock:^(id color, NSUInteger index, BOOL *stop) {
 		UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
 
