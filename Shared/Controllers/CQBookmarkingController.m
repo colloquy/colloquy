@@ -60,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:link] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.];
 	if (![NSURLConnection canHandleRequest:request]) {
 		NSError *error = [NSError errorWithDomain:CQBookmarkingErrorDomain code:CQBookmarkingErrorGeneric userInfo:nil];
-		[[NSNotificationCenter chatCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:nil userInfo:@{
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQBookmarkingDidNotSaveLinkNotification object:nil userInfo:@{
 			@"error": error, @"service": [[self class] serviceName]
 		}];
 
@@ -85,7 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	if ((statusCode / 100) == 2) { // 200 (OK), 201 (Created) and 204 (No Content) are all used to indicate success
-		[[NSNotificationCenter chatCenter] postNotificationName:CQBookmarkingDidSaveLinkNotification object:link];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQBookmarkingDidSaveLinkNotification object:link];
 	} else {
 		Class <CQBookmarking> class = [self class];
 		NSError *error = nil;
@@ -102,7 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
 		} else error = [NSError errorWithDomain:CQBookmarkingErrorDomain code:CQBookmarkingErrorGeneric userInfo:nil];
 
 		dispatch_async(dispatch_get_main_queue(), ^{
-			[[NSNotificationCenter chatCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:link userInfo:@{
+			[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQBookmarkingDidNotSaveLinkNotification object:link userInfo:@{
 				@"error": error, @"service": [class serviceName]
 			}];
 		});

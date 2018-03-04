@@ -37,12 +37,12 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 
 + (void) _postServerErrorNotification {
 	NSError *error = [NSError errorWithDomain:CQBookmarkingErrorDomain code:CQBookmarkingErrorServer userInfo:nil];
-	[[NSNotificationCenter chatCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:nil userInfo:@{ @"error": error }];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQBookmarkingDidNotSaveLinkNotification object:nil userInfo:@{ @"error": error }];
 }
 
 + (void) _postAuthenticationErrorNotificationForLink:(NSString *) link {
 	NSError *error = [NSError errorWithDomain:CQBookmarkingErrorDomain code:CQBookmarkingErrorAuthorization userInfo:nil];
-	[[NSNotificationCenter chatCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:link userInfo:@{ @"error": error }];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQBookmarkingDidNotSaveLinkNotification object:link userInfo:@{ @"error": error }];
 }
 
 + (void) _shouldConvertTokenFromTokenNotification:(NSNotification *) notification {

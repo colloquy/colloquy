@@ -26,7 +26,9 @@ static void reachabilityStatusChangedCallback(SCNetworkReachabilityRef target, S
 			reachabilityState = CQReachabilityStateWWAN;
 	}
 
-	[application cq_setReachabilityState:reachabilityState];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[application cq_setReachabilityState:reachabilityState];
+	});
 }
 
 @implementation UIApplication (Additions)

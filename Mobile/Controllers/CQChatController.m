@@ -139,6 +139,8 @@ static CQSoundController *fileTransferSound;
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotFileDownloadOffer:) name:MVDownloadFileTransferOfferNotification object:nil];
 #endif
 
+	(void)[CQChatOrderingController defaultController];
+
 	return self;
 }
 

@@ -944,7 +944,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 			return;
 		}
 
-		[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:self userInfo:@{
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:self userInfo:@{
 			@"completionHandler": completionHandler,
 			@"trust": (__bridge id)trust,
 			@"result": [NSString stringWithFormat:@"%d", result]
@@ -4173,7 +4173,7 @@ parsingFinished: { // make a scope for this
 		[user _setUsername:newUser];
 		[user _setAddress:newHost];
 
-		[[NSNotificationCenter chatCenter] postNotificationName:MVChatUserInformationUpdatedNotification object:sender userInfo:@{ @"oldUsername": oldUser, @"oldAddress": oldHost }];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatUserInformationUpdatedNotification object:sender userInfo:@{ @"oldUsername": oldUser, @"oldAddress": oldHost }];
 	}
 }
 
@@ -4776,7 +4776,7 @@ parsingFinished: { // make a scope for this
 		NSString *message = [self _stringFromPossibleData:parameters[1]];
 
 		if( [message hasCaseInsensitiveSubstring:@"Password Required"] )
-			[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionNeedServerPasswordNotification object:self];
+			[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedServerPasswordNotification object:self];
 		else if( [message hasCaseInsensitiveSubstring:@"Invalid Password"] )
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionServerPasswordIncorrectError userInfo:nil]];
 	}

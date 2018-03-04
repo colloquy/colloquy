@@ -141,7 +141,9 @@ static BOOL loadedRemoteFontList = NO;
 
 			if (!data.length || error) {
 				if (completion) {
-					completion(availableRemoteFontNames);
+					dispatch_async(dispatch_get_main_queue(), ^{
+						completion(availableRemoteFontNames);
+					});
 				}
 
 				if (error.code != NSURLErrorCancelled) {
@@ -156,7 +158,9 @@ static BOOL loadedRemoteFontList = NO;
 			NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:data options:0 format:&format error:&plistParseError];
 			if (!plist || plistParseError) {
 				if (completion) {
-					completion(availableRemoteFontNames);
+					dispatch_async(dispatch_get_main_queue(), ^{
+						completion(availableRemoteFontNames);
+					});
 				}
 
 				NSLog(@"Error parsing font list %@", plistParseError);
@@ -190,11 +194,14 @@ static BOOL loadedRemoteFontList = NO;
 			loadedRemoteFontList = YES;
 
 			[[NSUserDefaults standardUserDefaults] setObject:availableRemoteFontNames forKey:@"CQAvailableRemoteFontNames"];
-			[[NSNotificationCenter defaultCenter] postNotificationName:CQRemoteFontCourierDidLoadFontListNotification object:nil userInfo:@{ CQRemoteFontCourierFontListKey: [availableRemoteFontNames copy] }];
 
-			if (completion) {
-				completion(availableRemoteFontNames);
-			}
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[[NSNotificationCenter defaultCenter] postNotificationName:CQRemoteFontCourierDidLoadFontListNotification object:nil userInfo:@{ CQRemoteFontCourierFontListKey: [availableRemoteFontNames copy] }];
+
+				if (completion) {
+					completion(availableRemoteFontNames);
+				}
+			});
 		};
 
 		NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration] delegate:delegate delegateQueue:nil];
