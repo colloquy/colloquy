@@ -1159,6 +1159,13 @@ CQBouncerConnectionDelegate>
 
 		[_automaticallySetConnectionAwayStatus removeObject:self];
 	}
+
+#if !SYSTEM(TV)
+	CQBouncerSettings *bouncerSettings = connection.bouncerSettings;
+
+	if ((!bouncerSettings || bouncerSettings.pushNotifications) && connection.pushNotifications)
+		[[CQColloquyApplication sharedApplication] registerForPushNotifications];
+#endif
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
