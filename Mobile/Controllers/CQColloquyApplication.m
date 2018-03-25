@@ -382,6 +382,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[self handleNotificationWithUserInfo:response.notification.request.content.userInfo];
 
 	self.applicationIconBadgeNumber = response.notification.request.content.badge.integerValue;
+
+	completionHandler();
 }
 
 #if !SYSTEM(TV)
@@ -737,6 +739,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	}
 
 	[self updateAppShortcuts];
+
+	completionHandler(YES);
 }
 
 #pragma mark -
@@ -744,7 +748,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) registerForNotificationTypes:(UNAuthorizationOptions) types {
 	[[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:types completionHandler:^(BOOL granted, NSError * _Nullable error) {
 		if (granted) {
-			[self registerForRemoteNotifications];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self registerForRemoteNotifications];
+			});
 		}
 	}];
 }
