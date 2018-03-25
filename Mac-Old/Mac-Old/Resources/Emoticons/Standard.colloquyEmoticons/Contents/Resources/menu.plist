@@ -1,0 +1,13 @@
+(
+	{name = "🙂 Smile :)"; insert = ":)";},
+	{name = "🙁 Frown :("; insert = ":(";},
+	{name = "😉 Wink ;)"; insert = ";)";},
+	{name = "😀 Happy :D"; insert = ":D";},
+	{name = "😐 Stoic :|"; insert = ":|";},
+	{name = "😎 Cool 8)"; insert = "8)";},
+	{name = "😛 Razz :P"; insert = ":P";},
+	{name = "😯 Surprised :O"; insert = ":O";},
+	{name = "🙄 Sarcastic 9.9"; insert = "9.9";},
+	{name = "😕 Annoyed :\\"; insert = ":\\";},
+	{name = "😡 Angry :x"; insert = ":x";}
+)

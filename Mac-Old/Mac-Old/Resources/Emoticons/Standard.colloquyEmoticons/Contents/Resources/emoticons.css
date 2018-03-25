@@ -1,0 +1,51 @@
+.emoticon.angel samp,
+.emoticon.angry samp,
+.emoticon.anime samp,
+.emoticon.annoyed samp,
+.emoticon.confused samp,
+.emoticon.cool samp,
+.emoticon.dead samp,
+.emoticon.dorkgrin samp,
+.emoticon.evil samp,
+.emoticon.flag samp,
+.emoticon.frosty samp,
+.emoticon.frown samp,
+.emoticon.happy samp,
+.emoticon.hat samp,
+.emoticon.pumpkin samp,
+.emoticon.razz samp,
+.emoticon.rose samp,
+.emoticon.sarcasm samp,
+.emoticon.shocked samp,
+.emoticon.shockedfrown samp,
+.emoticon.smile samp,
+.emoticon.stoic samp,
+.emoticon.suprised samp,
+.emoticon.wink samp {
+    display: none;
+}
+
+.emoticon.angel:after        { content: "😇"; }
+.emoticon.angry:after        { content: "😡"; }
+.emoticon.anime:after        { content: "😁"; }
+.emoticon.annoyed:after      { content: "😕"; }
+.emoticon.confused:after     { content: "🤨"; }
+.emoticon.cool:after         { content: "😎"; }
+.emoticon.dead:after         { content: "😵"; }
+.emoticon.dorkgrin:after     { content: "😆"; }
+.emoticon.evil:after         { content: "😈"; }
+.emoticon.flag:after         { content: "🇺🇸"; }
+.emoticon.frosty:after       { content: "⛄️"; }
+.emoticon.frown:after        { content: "🙁"; }
+.emoticon.happy:after        { content: "😀"; }
+.emoticon.hat:after          { content: "🤠"; }
+.emoticon.pumpkin:after      { content: "🎃"; }
+.emoticon.razz:after         { content: "😛"; }
+.emoticon.rose:after         { content: "🌹"; }
+.emoticon.sarcasm:after      { content: "🙄"; }
+.emoticon.shocked:after      { content: "😱"; }
+.emoticon.shockedfrown:after { content: "😨"; }
+.emoticon.smile:after        { content: "🙂"; }
+.emoticon.stoic:after        { content: "😐"; }
+.emoticon.suprised:after     { content: "😯"; }
+.emoticon.wink:after         { content: "😉"; }
