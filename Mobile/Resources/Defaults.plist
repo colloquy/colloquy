@@ -87,9 +87,9 @@
 	<key>CQChatRoomSortOrder</key>
 	<string>alphabetic</string>
 	<key>JVQuitMessage</key>
-	<string>Colloquy for iPhone - http://colloquy.mobi</string>
+	<string>Colloquy for iOS - http://colloquy.mobi</string>
 	<key>CQAwayStatus</key>
-	<string>Colloquy for iPhone - http://colloquy.mobi</string>
+	<string>Colloquy for iOS - http://colloquy.mobi</string>
 	<key>CQAutoAwayWhenMultitasking</key>
 	<true/>
 	<key>CQConsoleDisplayNick</key>
