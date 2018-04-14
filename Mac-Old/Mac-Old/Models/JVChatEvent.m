@@ -3,7 +3,7 @@
 #import "NSDateAdditions.h"
 #import "JVChatRoomMember.h"
 
-#import <libxml/tree.h>
+#import <libxml/parser.h>
 
 @implementation JVChatEvent
 - (void) dealloc {
