@@ -1,141 +1,51 @@
-.emoticon.smile samp,
-.emoticon.wink samp,
-.emoticon.happy samp,
-.emoticon.stoic samp,
-.emoticon.frown samp,
-.emoticon.annoyed samp,
-.emoticon.razz samp,
-.emoticon.angry samp,
-.emoticon.cool samp,
-.emoticon.headphones samp,
-.emoticon.hat samp,
 .emoticon.angel samp,
-.emoticon.evil samp,
+.emoticon.angry samp,
 .emoticon.anime samp,
-.emoticon.frosty samp,
-.emoticon.kirby samp,
-.emoticon.pikachu samp,
-.emoticon.suprised samp,
+.emoticon.annoyed samp,
 .emoticon.confused samp,
-.emoticon.sarcasm samp,
-.emoticon.pumpkin samp,
+.emoticon.cool samp,
+.emoticon.dead samp,
+.emoticon.dorkgrin samp,
+.emoticon.evil samp,
 .emoticon.flag samp,
+.emoticon.frosty samp,
+.emoticon.frown samp,
+.emoticon.happy samp,
+.emoticon.hat samp,
+.emoticon.pumpkin samp,
+.emoticon.razz samp,
 .emoticon.rose samp,
+.emoticon.sarcasm samp,
 .emoticon.shocked samp,
 .emoticon.shockedfrown samp,
-.emoticon.dead samp,
-.emoticon.dorkgrin samp {
-	display: none;
+.emoticon.smile samp,
+.emoticon.stoic samp,
+.emoticon.suprised samp,
+.emoticon.wink samp {
+    display: none;
 }
 
-.emoticon:after {
-	vertical-align: -40%;
-}
-
-.emoticon.smile:after {
-	content: url( "smile.png" );
-}
-
-.emoticon.wink:after {
-	content: url( "wink.png" );
-}
-
-.emoticon.happy:after {
-	content: url( "happy.png" );
-}
-
-.emoticon.stoic:after {
-	content: url( "stoic.png" );
-}
-
-.emoticon.frown:after {
-	content: url( "frown.png" );
-}
-
-.emoticon.annoyed:after {
-	content: url( "annoyed.png" );
-}
-
-.emoticon.razz:after {
-	content: url( "razz.png" );
-}
-
-.emoticon.angry:after {
-	content: url( "angry.png" );
-}
-
-.emoticon.cool:after {
-	content: url( "cool.png" );
-}
-
-.emoticon.headphones:after {
-	content: url( "headphones.png" );
-}
-
-.emoticon.hat:after {
-	content: url( "hat.png" );
-}
-
-.emoticon.angel:after {
-	content: url( "angel.png" );
-}
-
-.emoticon.evil:after {
-	content: url( "evil.png" );
-}
-
-.emoticon.anime:after {
-	content: url( "anime.png" );
-}
-
-.emoticon.frosty:after {
-	content: url( "frosty.png" );
-}
-
-.emoticon.kirby:after {
-	content: url( "kirby.png" );
-}
-
-.emoticon.pikachu:after {
-	content: url( "pikachu.png" );
-}
-
-.emoticon.suprised:after {
-	content: url( "suprised.png" );
-}
-
-.emoticon.confused:after {
-	content: url( "confused.png" );
-}
-
-.emoticon.sarcasm:after {
-	content: url( "sarcasm.png" );
-}
-
-.emoticon.pumpkin:after {
-	content: url( "pumpkin.png" );
-}
-
-.emoticon.flag:after {
-	content: url( "flag.png" );
-}
-
-.emoticon.rose:after {
-	content: url( "rose.png" );
-}
-
-.emoticon.shocked:after {
-	content: url( "shocked.png" );
-}
-
-.emoticon.shockedfrown:after {
-	content: url( "shockedfrown.png" );
-}
-
-.emoticon.dead:after {
-	content: url( "dead.png" );
-}
-
-.emoticon.dorkgrin:after {
-	content: url( "dorkgrin.png" );
-}
+.emoticon.angel:after        { content: "😇"; }
+.emoticon.angry:after        { content: "😡"; }
+.emoticon.anime:after        { content: "😁"; }
+.emoticon.annoyed:after      { content: "😕"; }
+.emoticon.confused:after     { content: "🤨"; }
+.emoticon.cool:after         { content: "😎"; }
+.emoticon.dead:after         { content: "😵"; }
+.emoticon.dorkgrin:after     { content: "😆"; }
+.emoticon.evil:after         { content: "😈"; }
+.emoticon.flag:after         { content: "🇺🇸"; }
+.emoticon.frosty:after       { content: "⛄️"; }
+.emoticon.frown:after        { content: "🙁"; }
+.emoticon.happy:after        { content: "😀"; }
+.emoticon.hat:after          { content: "🤠"; }
+.emoticon.pumpkin:after      { content: "🎃"; }
+.emoticon.razz:after         { content: "😛"; }
+.emoticon.rose:after         { content: "🌹"; }
+.emoticon.sarcasm:after      { content: "🙄"; }
+.emoticon.shocked:after      { content: "😱"; }
+.emoticon.shockedfrown:after { content: "😨"; }
+.emoticon.smile:after        { content: "🙂"; }
+.emoticon.stoic:after        { content: "😐"; }
+.emoticon.suprised:after     { content: "😯"; }
+.emoticon.wink:after         { content: "😉"; }

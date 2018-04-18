@@ -22,15 +22,15 @@ NSString *const CQBookmarkingServiceSafariReadingList = @"CQBookmarkingServiceSa
 	NSURL *linkURL = [NSURL URLWithString:link];
 	if (![SSReadingList supportsURL:linkURL]) {
 		NSError *error = [NSError errorWithDomain:CQBookmarkingErrorDomain code:CQBookmarkingErrorInvalidLink userInfo:nil];
-		[[NSNotificationCenter chatCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:link userInfo:@{
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQBookmarkingDidNotSaveLinkNotification object:link userInfo:@{
 			@"error": error, @"service": [self serviceName]
 		}];
 	}
 
 	NSError *error = nil;
 	if ([[SSReadingList defaultReadingList] addReadingListItemWithURL:linkURL title:nil previewText:nil error:&error])
-		[[NSNotificationCenter chatCenter] postNotificationName:CQBookmarkingDidSaveLinkNotification object:link];
-	else [[NSNotificationCenter chatCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:link userInfo:@{
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQBookmarkingDidSaveLinkNotification object:link];
+	else [[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQBookmarkingDidNotSaveLinkNotification object:link userInfo:@{
 		@"error": error, @"service": [self serviceName]
 	}];
 }

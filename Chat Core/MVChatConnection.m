@@ -1479,7 +1479,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 			if( [target isKindOfClass:[MVChatRoom class]] ) {
 				NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:[[(MVChatRoom *)target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", @(realAction), @"action", nil];
-				[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomGotMessageNotification object:target userInfo:info];
+				[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:target userInfo:info];
 			} // we can't really echo a private message with our current notifications
 		}
 	}

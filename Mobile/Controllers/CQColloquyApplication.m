@@ -382,6 +382,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[self handleNotificationWithUserInfo:response.notification.request.content.userInfo];
 
 	self.applicationIconBadgeNumber = response.notification.request.content.badge.integerValue;
+
+	completionHandler();
 }
 
 #if !SYSTEM(TV)
@@ -570,9 +572,10 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[self openURL:url options:options completionHandler:completionHandler promptForExternal:YES];
 }
 
-- (void) openURL:(NSURL *) url options:(NSDictionary<NSString *,id> *) options completionHandler:(void (^)(BOOL)) completionHandler promptForExternal:(BOOL) prompt {
+- (void) openURL:(NSURL *) url options:(NSDictionary<NSString *,id> *) options completionHandler:(void (^__nullable)(BOOL)) completionHandler promptForExternal:(BOOL) prompt {
 	if ([[CQConnectionsController defaultController] handleOpenURL:url]) {
-		completionHandler(YES);
+		if (completionHandler)
+			completionHandler(YES);
 		return;
 	}
 
@@ -737,6 +740,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	}
 
 	[self updateAppShortcuts];
+
+	completionHandler(YES);
 }
 
 #pragma mark -
@@ -744,7 +749,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) registerForNotificationTypes:(UNAuthorizationOptions) types {
 	[[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:types completionHandler:^(BOOL granted, NSError * _Nullable error) {
 		if (granted) {
-			[self registerForRemoteNotifications];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self registerForRemoteNotifications];
+			});
 		}
 	}];
 }

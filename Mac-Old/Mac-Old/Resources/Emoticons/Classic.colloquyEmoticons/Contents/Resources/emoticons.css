@@ -1,0 +1,141 @@
+.emoticon.smile samp,
+.emoticon.wink samp,
+.emoticon.happy samp,
+.emoticon.stoic samp,
+.emoticon.frown samp,
+.emoticon.annoyed samp,
+.emoticon.razz samp,
+.emoticon.angry samp,
+.emoticon.cool samp,
+.emoticon.headphones samp,
+.emoticon.hat samp,
+.emoticon.angel samp,
+.emoticon.evil samp,
+.emoticon.anime samp,
+.emoticon.frosty samp,
+.emoticon.kirby samp,
+.emoticon.pikachu samp,
+.emoticon.suprised samp,
+.emoticon.confused samp,
+.emoticon.sarcasm samp,
+.emoticon.pumpkin samp,
+.emoticon.flag samp,
+.emoticon.rose samp,
+.emoticon.shocked samp,
+.emoticon.shockedfrown samp,
+.emoticon.dead samp,
+.emoticon.dorkgrin samp {
+	display: none;
+}
+
+.emoticon:after {
+	vertical-align: -40%;
+}
+
+.emoticon.smile:after {
+	content: url( "smile.png" );
+}
+
+.emoticon.wink:after {
+	content: url( "wink.png" );
+}
+
+.emoticon.happy:after {
+	content: url( "happy.png" );
+}
+
+.emoticon.stoic:after {
+	content: url( "stoic.png" );
+}
+
+.emoticon.frown:after {
+	content: url( "frown.png" );
+}
+
+.emoticon.annoyed:after {
+	content: url( "annoyed.png" );
+}
+
+.emoticon.razz:after {
+	content: url( "razz.png" );
+}
+
+.emoticon.angry:after {
+	content: url( "angry.png" );
+}
+
+.emoticon.cool:after {
+	content: url( "cool.png" );
+}
+
+.emoticon.headphones:after {
+	content: url( "headphones.png" );
+}
+
+.emoticon.hat:after {
+	content: url( "hat.png" );
+}
+
+.emoticon.angel:after {
+	content: url( "angel.png" );
+}
+
+.emoticon.evil:after {
+	content: url( "evil.png" );
+}
+
+.emoticon.anime:after {
+	content: url( "anime.png" );
+}
+
+.emoticon.frosty:after {
+	content: url( "frosty.png" );
+}
+
+.emoticon.kirby:after {
+	content: url( "kirby.png" );
+}
+
+.emoticon.pikachu:after {
+	content: url( "pikachu.png" );
+}
+
+.emoticon.suprised:after {
+	content: url( "suprised.png" );
+}
+
+.emoticon.confused:after {
+	content: url( "confused.png" );
+}
+
+.emoticon.sarcasm:after {
+	content: url( "sarcasm.png" );
+}
+
+.emoticon.pumpkin:after {
+	content: url( "pumpkin.png" );
+}
+
+.emoticon.flag:after {
+	content: url( "flag.png" );
+}
+
+.emoticon.rose:after {
+	content: url( "rose.png" );
+}
+
+.emoticon.shocked:after {
+	content: url( "shocked.png" );
+}
+
+.emoticon.shockedfrown:after {
+	content: url( "shockedfrown.png" );
+}
+
+.emoticon.dead:after {
+	content: url( "dead.png" );
+}
+
+.emoticon.dorkgrin:after {
+	content: url( "dorkgrin.png" );
+}

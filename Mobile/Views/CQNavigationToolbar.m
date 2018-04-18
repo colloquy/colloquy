@@ -60,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 	}
 
-	CGFloat height = _bottomLineView.image.size.height / [UIScreen mainScreen].scale;
+	CGFloat height = _bottomLineView.image.size.height / [UIScreen mainScreen].nativeScale;
 	_bottomLineView.frame = CGRectMake(0., CGRectGetHeight(self.frame), CGRectGetWidth(self.frame), height);
 
 	[self bringSubviewToFront:_bottomLineView];

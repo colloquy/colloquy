@@ -32,8 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 	self.affectingForeground = YES;
 
-	CGFloat scale = self.tableView.window ? self.tableView.window.screen.scale : [UIScreen mainScreen].scale;
-	self.tableView.layer.cornerRadius = (scale > 1. ? 4.5 : 5.);
+	CGFloat scale = self.tableView.window ? self.tableView.window.screen.nativeScale : [UIScreen mainScreen].nativeScale;
+	self.tableView.layer.cornerRadius = 4 + (1 / scale);
 	self.tableView.layer.borderWidth = 1. / scale;
 	self.tableView.layer.borderColor = [UIApplication sharedApplication].keyWindow.tintColor.CGColor;
 #if !SYSTEM(TV)

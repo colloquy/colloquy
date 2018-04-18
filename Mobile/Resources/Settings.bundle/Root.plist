@@ -54,7 +54,7 @@
 			<key>Key</key>
 			<string>CQAwayStatus</string>
 			<key>DefaultValue</key>
-			<string>Colloquy for iPhone - http://colloquy.mobi</string>
+			<string>Colloquy for iOS - http://colloquy.mobi</string>
 			<key>AutocapitalizationType</key>
 			<string>Sentences</string>
 		</dict>
@@ -66,7 +66,7 @@
 			<key>Key</key>
 			<string>JVQuitMessage</string>
 			<key>DefaultValue</key>
-			<string>Colloquy for iPhone - http://colloquy.mobi</string>
+			<string>Colloquy for iOS - http://colloquy.mobi</string>
 			<key>AutocapitalizationType</key>
 			<string>Sentences</string>
 		</dict>

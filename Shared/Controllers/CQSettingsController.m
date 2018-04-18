@@ -106,7 +106,7 @@ NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotificat
 	}
 
 	if (changedLocation == _settingsLocation) {
-		[[NSNotificationCenter chatCenter] postNotificationName:CQSettingsDidChangeNotification object:nil userInfo:nil];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQSettingsDidChangeNotification object:nil userInfo:nil];
 	}
 }
 

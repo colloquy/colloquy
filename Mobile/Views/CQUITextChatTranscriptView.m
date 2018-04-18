@@ -291,7 +291,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return NO;
 #else
 	__strong __typeof__((_transcriptDelegate)) transcriptDelegate = _transcriptDelegate;
-	if ([URL.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
+	if ([URL.scheme isCaseInsensitiveEqualToString:@"colloquy-nav"]) {
 		if ([transcriptDelegate respondsToSelector:@selector(transcriptView:handleNicknameTap:atLocation:)]) {
 			NSRange endOfSchemeRange = [URL.absoluteString rangeOfString:@"://"];
 			if (endOfSchemeRange.location == NSNotFound)

@@ -83,19 +83,9 @@ NS_ASSUME_NONNULL_BEGIN
 	BOOL landscapeOrientation = YES;
 #endif
 
-	if ([UIApplication sharedApplication].keyWindow.isFullscreen) {
-		if (landscapeOrientation)
-			return (CGFloat)MIN(size.height, size.width) / 3;
-		return (CGFloat)MIN(size.height, size.width) / 2;
-	} else if ([[UIDevice currentDevice] isRetina]) {
-		if (landscapeOrientation)
-			return (CGFloat)MIN(size.height, size.width) / 3;
-		return (CGFloat)MAX(size.height, size.width) / 2;
-	} else {
-		if (landscapeOrientation)
-			return floor(((CGFloat)MIN(size.height, size.width) / 4));
-		return ((CGFloat)MAX(size.height, size.width) / 3);
-	}
+	if (landscapeOrientation)
+		return (CGFloat)MIN(size.height, size.width) / 3;
+	return (CGFloat)MIN(size.height, size.width) / 2;
 }
 
 - (CGFloat) height {

@@ -5,13 +5,13 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Standard Colloquy Chat Emoticons</string>
+	<string>Classic Colloquy Chat Emoticons</string>
 	<key>CFBundleIdentifier</key>
-	<string>cc.javelin.colloquy.emoticons.standard</string>
+	<string>cc.javelin.colloquy.emoticons.classic</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Standard</string>
+	<string>Classic</string>
 	<key>CFBundlePackageType</key>
 	<string>coEm</string>
 </dict>

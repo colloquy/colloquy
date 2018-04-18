@@ -6,7 +6,7 @@
 #import "NSAttributedStringMoreAdditions.h"
 #import "NSDateAdditions.h"
 
-#import <libxml/tree.h>
+#import <libxml/parser.h>
 
 NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotification";
 

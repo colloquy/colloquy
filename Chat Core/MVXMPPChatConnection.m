@@ -281,12 +281,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) outgoingPacket:(NSNotification *) notification {
 	NSString *string = [[NSString alloc] initWithData:[notification object] encoding:NSUTF8StringEncoding];
-	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", @(YES), @"outbound", nil]];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", @(YES), @"outbound", nil]];
 }
 
 - (void) incomingPacket:(NSNotification *) notification {
 	NSString *string = [[NSString alloc] initWithData:[notification object] encoding:NSUTF8StringEncoding];
-	[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", @(NO), @"outbound", nil]];
+	[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", @(NO), @"outbound", nil]];
 }
 
 - (void) xmppStream:(XMPPStream *) stream didReceiveMessage:(XMPPMessage *) message {
@@ -330,9 +330,9 @@ NS_ASSUME_NONNULL_BEGIN
 	if( ! msgData.length ) return;
 
 	if( room ) {
-		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:msgAttributes];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:room userInfo:msgAttributes];
 	} else {
-		[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:msgAttributes];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:msgAttributes];
 	}
 }
 
@@ -346,7 +346,7 @@ NS_ASSUME_NONNULL_BEGIN
 			return;
 		}
 
-		[[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:self userInfo:@{
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:self userInfo:@{
 			@"completionHandler": completionHandler,
 			@"trust": (__bridge id)trust,
 			@"result": [NSString stringWithFormat:@"%d", result]
@@ -373,17 +373,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 	if ([[presence type] isCaseInsensitiveEqualToString:@"unavailable"]) {
 		[room _removeMemberUser:user];
-		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
 		return;
 	}
 
-	__strong id me = room;
-	 // retain incase the following release is the last reference
-
 	if( ! [room isJoined] ) {
 		[room _setDateJoined:[NSDate date]];
-		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomJoinedNotification object:room];
-		 // balance the alloc or retain in joinChatRoomNamed:
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomJoinedNotification object:room];
 	}
 
 	if( ! [room hasUser:user] ) {
@@ -392,10 +388,8 @@ NS_ASSUME_NONNULL_BEGIN
 		[self _markUserAsOnline:user];
 
 		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSArray arrayWithObject:user] forKey:@"added"];
-		[[NSNotificationCenter chatCenter] postNotificationName:MVChatRoomMemberUsersSyncedNotification object:room userInfo:userInfo];
+		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomMemberUsersSyncedNotification object:room userInfo:userInfo];
 	}
-
-	me = nil;
 }
 @end
 

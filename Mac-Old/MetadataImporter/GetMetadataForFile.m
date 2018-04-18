@@ -1,6 +1,6 @@
 #import <CoreServices/CoreServices.h>
 #import <Foundation/Foundation.h>
-#import <libxml/tree.h>
+#import <libxml/parser.h>
 #import <libxml/xmlerror.h>
 
 /* Sample transcript:

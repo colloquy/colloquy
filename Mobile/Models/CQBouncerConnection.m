@@ -105,8 +105,10 @@ NS_ASSUME_NONNULL_BEGIN
 	_error = nil;
 
 	__strong __typeof__((_delegate)) delegate = _delegate;
-	if ([delegate respondsToSelector:@selector(bouncerConnectionDidConnect:)])
-		[delegate bouncerConnectionDidConnect:self];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		if ([delegate respondsToSelector:@selector(bouncerConnectionDidConnect:)])
+			[delegate bouncerConnectionDidConnect:self];
+	});
 
 	NSAssert(_settings.username.length, @"Bouncer username required");
 	NSAssert(_settings.password.length, @"Bouncer password required");
@@ -130,8 +132,11 @@ NS_ASSUME_NONNULL_BEGIN
 	_socket = nil;
 
 	__strong __typeof__((_delegate)) delegate = _delegate;
-	if ([delegate respondsToSelector:@selector(bouncerConnectionDidDisconnect:withError:)])
-		[delegate bouncerConnectionDidDisconnect:self withError:_error];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		if ([delegate respondsToSelector:@selector(bouncerConnectionDidDisconnect:withError:)]) {
+			[delegate bouncerConnectionDidDisconnect:self withError:_error];
+		}
+	});
 }
 
 - (void) socket:(GCDAsyncSocket *) sock didWriteDataWithTag:(long) tag {
@@ -308,44 +313,49 @@ end:
 - (void) _handle810WithParameters:(NSArray <NSString *> *) parameters {
 	__strong __typeof__((_delegate)) delegate = _delegate;
 
-	if ([delegate respondsToSelector:@selector(bouncerConnection:didRecieveConnectionInfo:)]) {
-		NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:10];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		if ([delegate respondsToSelector:@selector(bouncerConnection:didRecieveConnectionInfo:)]) {
+			NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:10];
 
-		if (_connectionIdentifier.length)
-			info[@"connectionIdentifier"] = _connectionIdentifier;
-		if (_serverAddress.length)
-			info[@"serverAddress"] = _serverAddress;
-		if (_serverPort)
-			info[@"serverPort"] = @(_serverPort);
-		if (_secure)
-			info[@"secure"] = @(_secure);
-		if (_username.length)
-			info[@"username"] = _username;
-		if (_realName.length)
-			info[@"realName"] = _realName;
-		if (_password.length)
-			info[@"password"] = _password;
-		if (_nickname.length)
-			info[@"nickname"] = _nickname;
-		if (_nicknamePassword.length)
-			info[@"nicknamePassword"] = _nicknamePassword;
-		if (_alternateNicknames.count)
-			info[@"alternateNicknames"] = _alternateNicknames;
-		if (_connectedTime)
-			info[@"connectedTime"] = @(_connectedTime);
-		if (_encoding)
-			info[@"encoding"] = @(_encoding);
+			if (_connectionIdentifier.length)
+				info[@"connectionIdentifier"] = _connectionIdentifier;
+			if (_serverAddress.length)
+				info[@"serverAddress"] = _serverAddress;
+			if (_serverPort)
+				info[@"serverPort"] = @(_serverPort);
+			if (_secure)
+				info[@"secure"] = @(_secure);
+			if (_username.length)
+				info[@"username"] = _username;
+			if (_realName.length)
+				info[@"realName"] = _realName;
+			if (_password.length)
+				info[@"password"] = _password;
+			if (_nickname.length)
+				info[@"nickname"] = _nickname;
+			if (_nicknamePassword.length)
+				info[@"nicknamePassword"] = _nicknamePassword;
+			if (_alternateNicknames.count)
+				info[@"alternateNicknames"] = _alternateNicknames;
+			if (_connectedTime)
+				info[@"connectedTime"] = @(_connectedTime);
+			if (_encoding)
+				info[@"encoding"] = @(_encoding);
 
-		[delegate bouncerConnection:self didRecieveConnectionInfo:info];
-	}
+			[delegate bouncerConnection:self didRecieveConnectionInfo:info];
+		}
+	});
 
 	[self _resetState];
 }
 
 - (void) _handle811WithParameters:(NSArray <NSString *> *) parameters {
 	__strong __typeof__((_delegate)) delegate = _delegate;
-	if ([delegate respondsToSelector:@selector(bouncerConnectionDidFinishConnectionList:)])
-		[delegate bouncerConnectionDidFinishConnectionList:self];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		if ([delegate respondsToSelector:@selector(bouncerConnectionDidFinishConnectionList:)]) {
+			[delegate bouncerConnectionDidFinishConnectionList:self];
+		}
+	});
 	[self disconnect];
 }
 

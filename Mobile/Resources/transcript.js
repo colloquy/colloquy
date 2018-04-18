@@ -91,7 +91,7 @@ function senderText(senderNickname, highlighted, action, notice, self) {
 
 function nicknameChanged(from, to) {
 	var className = "nickname " + from;
-	var url = "colloquy://" + to;
+	var url = "colloquy-nav://" + to;
 
 	var elements = document.getElementsByClassName(className);
 	for (var i = 0; i < elements.length; i++) {
@@ -125,7 +125,7 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 
 	var aElement = document.createElement("a");
 	aElement.className = "nickname " + senderNickname;
-	aElement.setAttribute("href", "colloquy://" + senderNickname);
+	aElement.setAttribute("href", "colloquy-nav://" + senderNickname);
 
 	var senderElement = document.createElement("span");
 	senderElement.className = className;

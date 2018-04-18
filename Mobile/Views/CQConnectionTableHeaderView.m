@@ -214,7 +214,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) layoutSubviews {
 	[super layoutSubviews];
 
-	self.layer.borderWidth = (1. / (self.window.screen.scale ?: [UIScreen mainScreen].scale));
+	self.layer.borderWidth = (1. / (self.window.screen.nativeScale ?: [UIScreen mainScreen].nativeScale));
 
 	[self.textLabel removeFromSuperview];
 	[self.detailTextLabel removeFromSuperview];
