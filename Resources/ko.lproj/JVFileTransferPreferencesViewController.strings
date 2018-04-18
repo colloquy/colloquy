@@ -1,0 +1,69 @@
+
+/* Class = "NSButtonCell"; title = "Automatically open ports in router"; ObjectID = "5DW-mg-u7k"; */
+"5DW-mg-u7k.title" = "라우터 안에서 자동으로 포트 열기";
+
+/* Class = "NSMenuItem"; title = "When Colloquy Quits"; ObjectID = "Cve-pv-DRB"; */
+"Cve-pv-DRB.title" = "Colloquy가 종료시";
+
+/* Class = "NSMenuItem"; title = "Buddies in my Buddy List"; ObjectID = "DWS-HZ-6QY"; */
+"DWS-HZ-6QY.title" = "친구 목록 내 친구";
+
+/* Class = "NSMenuItem"; title = "Nobody"; ObjectID = "Ed2-Aq-H9o"; */
+"Ed2-Aq-H9o.title" = "아무도 받지 않음";
+
+/* Class = "NSMenuItem"; title = "Upon Successful Transfer"; ObjectID = "Fb7-FF-obo"; */
+"Fb7-FF-obo.title" = "성공적으로 전송이 완료된 경우";
+
+/* Class = "NSMenuItem"; title = "Other…"; ObjectID = "HFh-yb-3cg"; */
+"HFh-yb-3cg.title" = "기타…";
+
+/* Class = "NSMenuItem"; title = "Anyone"; ObjectID = "IF5-Ha-6bv"; */
+"IF5-Ha-6bv.title" = "모든 사람";
+
+/* Class = "NSMenuItem"; title = "Ask Every Time"; ObjectID = "MDy-cK-h3Q"; */
+"MDy-cK-h3Q.title" = "할때마다 물어보기";
+
+/* Class = "NSMenuItem"; title = "Overwrite Every Time"; ObjectID = "MeG-B9-hc8"; */
+"MeG-B9-hc8.title" = "할때마다 덮어쓰기";
+
+/* Class = "NSTextFieldCell"; title = "“Safe” files include movies, pictures, sounds, PDF and text documents, disk images and other archive formats."; ObjectID = "OM2-Wq-fbw"; */
+"OM2-Wq-fbw.title" = "“안전한” 파일에는 영화, 그림, 사운드, PDF 그리고 텍스트 파일, 디스크 이미지와 기타 압축파일이 포함되어 있습니다.";
+
+/* Class = "NSTextFieldCell"; title = "Save downloaded files to:"; ObjectID = "WCK-qb-Mqs"; */
+"WCK-qb-Mqs.title" = "다운로드 받은 파일 저장:";
+
+/* Class = "NSMenuItem"; title = "Ask Every Time"; ObjectID = "Xwu-lJ-YF3"; */
+"Xwu-lJ-YF3.title" = "할때마다 묻기";
+
+/* Class = "NSButtonCell"; title = "Send files passively by default"; ObjectID = "YcT-g2-fHv"; */
+"YcT-g2-fHv.title" = "기본으로 수동적으로 보내기";
+
+/* Class = "NSTextFieldCell"; title = "to"; ObjectID = "bxk-I1-QAg"; */
+"bxk-I1-QAg.title" = "에서부터";
+
+/* Class = "NSTextFieldCell"; title = "Auto accept files from:"; ObjectID = "cOx-pj-7fV"; */
+"cOx-pj-7fV.title" = "자동으로 수락할 파일:";
+
+/* Class = "NSTextFieldCell"; title = "If files already exist:"; ObjectID = "crQ-ds-MM5"; */
+"crQ-ds-MM5.title" = "만약 파일이 이미 존재할시:";
+
+/* Class = "NSTextFieldCell"; title = "Remove transferred items:"; ObjectID = "dh9-nC-zhV"; */
+"dh9-nC-zhV.title" = "전송항목 삭제:";
+
+/* Class = "NSTextFieldCell"; title = "File transfer port range:"; ObjectID = "eqU-Nn-bv5"; */
+"eqU-Nn-bv5.title" = "파일 전송 포트 범위:";
+
+/* Class = "NSMenuItem"; title = "Cancel Every Time"; ObjectID = "gIz-oi-5n1"; */
+"gIz-oi-5n1.title" = "언제나 취소";
+
+/* Class = "NSMenuItem"; title = "Resume if Possible"; ObjectID = "i8b-Gd-NsL"; */
+"i8b-Gd-NsL.title" = "만약 가능하다면 진행";
+
+/* Class = "NSTextFieldCell"; title = "Requires a router that supports NAT-PMP or UPnP."; ObjectID = "tqu-1q-aXX"; */
+"tqu-1q-aXX.title" = "라우터가 NAT-PNP 혹은 UPnP를 지원해야 합니다.";
+
+/* Class = "NSTextFieldCell"; title = "Passive transfers allow files to be sent without the need to open up ports in your firewall or router—the receiver will need to."; ObjectID = "u9L-og-Bev"; */
+"u9L-og-Bev.title" = "패시브 전송을 사용하게 되면 수신자의 방화벽이나 라우터의 포트를 열 필요가 없습니다.";
+
+/* Class = "NSButtonCell"; title = "Open \"safe\" files after downloading"; ObjectID = "wtZ-ek-f8M"; */
+"wtZ-ek-f8M.title" = "다운로드가 끝난후 \"안전한\" 파일들 열기";

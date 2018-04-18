@@ -1,0 +1,45 @@
+
+/* Class = "NSMenuItem"; title = "Folder For Each Server"; ObjectID = "2QZ-yS-hqI"; */
+"2QZ-yS-hqI.title" = "서버마다 폴더 두기";
+
+/* Class = "NSMenuItem"; title = "Multiple Sessions in One File"; ObjectID = "6z0-W1-z1K"; */
+"6z0-W1-z1K.title" = "여러 세션 내용을 한 파일로 만들기";
+
+/* Class = "NSMenuItem"; title = "Same Folder"; ObjectID = "ApN-wZ-phP"; */
+"ApN-wZ-phP.title" = "같은 폴더";
+
+/* Class = "NSButtonCell"; title = "Log Private Chat sessions"; ObjectID = "D2f-TO-UZg"; */
+"D2f-TO-UZg.title" = "개인적인 메시지 세션도 기록";
+
+/* Class = "NSTextFieldCell"; title = "Transcripts Folder:"; ObjectID = "DSw-dm-Icu"; */
+"DSw-dm-Icu.title" = "사본 폴더:";
+
+/* Class = "NSButtonCell"; title = "Log Chat Room sessions"; ObjectID = "NwH-Dh-Sbn"; */
+"NwH-Dh-Sbn.title" = "채팅방 내용 기록";
+
+/* Class = "NSTextFieldCell"; title = "Folder Organization:"; ObjectID = "OD1-jj-0et"; */
+"OD1-jj-0et.title" = "폴더 구성:";
+
+/* Class = "NSMenuItem"; title = "Folder For Each Chat under Server"; ObjectID = "Se5-az-yMX"; */
+"Se5-az-yMX.title" = "서버 각각마다 폴더 두기";
+
+/* Class = "NSMenuItem"; title = "Other…"; ObjectID = "U9k-NY-Sp1"; */
+"U9k-NY-Sp1.title" = "기타…";
+
+/* Class = "NSMenuItem"; title = "Folder For Each Chat and Server"; ObjectID = "cjT-zd-FvA"; */
+"cjT-zd-FvA.title" = "서버 각각와 대화 각각마다 폴더 두기";
+
+/* Class = "NSTextFieldCell"; title = "Session Handling:"; ObjectID = "eSk-IS-AQA"; */
+"eSk-IS-AQA.title" = "세션 처리:";
+
+/* Class = "NSTextFieldCell"; title = "Automatically:"; ObjectID = "kTL-SI-EfW"; */
+"kTL-SI-EfW.title" = "자동:";
+
+/* Class = "NSMenuItem"; title = "One File Per Session"; ObjectID = "mPP-iU-L0F"; */
+"mPP-iU-L0F.title" = "세션 당 하나의 파일";
+
+/* Class = "NSMenuItem"; title = "One File Per Session Day"; ObjectID = "zL5-p9-oz2"; */
+"zL5-p9-oz2.title" = "세선 일당 하나의 파일";
+
+/* Class = "NSButtonCell"; title = "Human-readable file formatting"; ObjectID = "zr8-mI-XtE"; */
+"zr8-mI-XtE.title" = "읽을수 있는 파일 포맷팅";
