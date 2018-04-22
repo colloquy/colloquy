@@ -225,7 +225,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSAttributedString *msg = nil;
 	id strMsg = [message mutableCopy];
 	NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
-	NSMutableParagraphStyle *para = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	NSUInteger numeric = 0;
 
 	if( [[self connection] type] == MVChatConnectionIRCType ) {
@@ -283,14 +282,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		}
 	}
 
-	[para setParagraphSpacing:3.];
-	[para setMaximumLineHeight:9.];
-	if( ! outbound ) [para setMaximumLineHeight:9.];
-	else [para setMaximumLineHeight:11.];
-
-	if( outbound ) [attrs setObject:[NSFont boldSystemFontOfSize:11.] forKey:NSFontAttributeName];
-	else [attrs setObject:[[NSFontManager sharedFontManager] fontWithFamily:@"Monaco" traits:0 weight:5 size:9.] forKey:NSFontAttributeName];
-	[attrs setObject:para forKey:NSParagraphStyleAttributeName];
+	NSFont *font = [NSFont fontWithName:(outbound ? @"Menlo-Bold" : @"Menlo") size:[NSFont smallSystemFontSize]];
+	[attrs setObject:font forKey:NSFontAttributeName];
 
 	NSScrollView *scrollView = [display enclosingScrollView];
 	NSScroller *scroller = [scrollView verticalScroller];
