@@ -184,7 +184,7 @@ DQ
                     <button toolTip="Continue search at the beginning of the document" imageHugsTitle="YES" id="252">
                         <rect key="frame" x="136" y="30" width="146" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="check" title="Nur Nachrichtenverlauf" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" state="on" inset="2" id="410">
+                        <buttonCell key="cell" type="check" title="Nur Nachrichtenverlauf" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="410">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
@@ -206,7 +206,7 @@ DQ
                     <button toolTip="Groß-/Kleinschreibung ignorieren" imageHugsTitle="YES" id="253">
                         <rect key="frame" x="136" y="12" width="205" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="check" title="Groß-/Kleinschreibung ignorieren" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" state="on" inset="2" id="411">
+                        <buttonCell key="cell" type="check" title="Groß-/Kleinschreibung ignorieren" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="411">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="smallSystem"/>
                         </buttonCell>

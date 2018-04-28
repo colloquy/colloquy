@@ -136,7 +136,7 @@
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
-                                            <buttonCell key="dataCell" type="check" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" inset="2" id="634">
+                                            <buttonCell key="dataCell" type="check" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" inset="2" id="634">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="cellTitle"/>
                                             </buttonCell>
@@ -402,7 +402,7 @@
                                         <button imageHugsTitle="YES" id="726">
                                             <rect key="frame" x="279" y="185" width="122" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="check" title="Conexión SSL" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="824">
+                                            <buttonCell key="cell" type="check" title="Conexión SSL" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="824">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -448,7 +448,7 @@
                     <button imageHugsTitle="YES" id="295">
                         <rect key="frame" x="189" y="294" width="195" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Recordar esta conexión" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="804">
+                        <buttonCell key="cell" type="check" title="Recordar esta conexión" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="804">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -738,7 +738,7 @@ DQ
                     <button imageHugsTitle="YES" id="464">
                         <rect key="frame" x="189" y="58" width="204" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="check" title="Añadir a Llaves" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="842">
+                        <buttonCell key="cell" type="check" title="Añadir a Llaves" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="842">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -800,7 +800,7 @@ DQ
                     <button imageHugsTitle="YES" id="713">
                         <rect key="frame" x="189" y="55" width="172" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="check" title="Añadir a Llaves" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="849">
+                        <buttonCell key="cell" type="check" title="Añadir a Llaves" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="849">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -920,7 +920,7 @@ DQ
                     <button imageHugsTitle="YES" id="744">
                         <rect key="frame" x="200" y="56" width="160" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="check" title="Siempre aceptar clave" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="859">
+                        <buttonCell key="cell" type="check" title="Siempre aceptar clave" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="859">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>

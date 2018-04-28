@@ -159,7 +159,7 @@ Gw
                     <button toolTip="Ignora maiuscole/minuscole" imageHugsTitle="YES" id="253">
                         <rect key="frame" x="168" y="18" width="174" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="check" title="Ignora maiuscole/minuscole" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" state="on" inset="2" id="421">
+                        <buttonCell key="cell" type="check" title="Ignora maiuscole/minuscole" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="421">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="smallSystem"/>
                         </buttonCell>

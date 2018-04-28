@@ -184,7 +184,7 @@ DQ
                     <button toolTip="Continue search at the beginning of the document" imageHugsTitle="YES" id="252">
                         <rect key="frame" x="158" y="22" width="105" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="check" title="Solo scrollback" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" state="on" inset="2" id="410">
+                        <buttonCell key="cell" type="check" title="Solo scrollback" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="410">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
@@ -206,7 +206,7 @@ DQ
                     <button toolTip="Ignora casi estremi" imageHugsTitle="YES" id="253">
                         <rect key="frame" x="158" y="4" width="174" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="check" title="Ignora maiuscole/minuscole" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" state="on" inset="2" id="411">
+                        <buttonCell key="cell" type="check" title="Ignora maiuscole/minuscole" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="411">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="smallSystem"/>
                         </buttonCell>

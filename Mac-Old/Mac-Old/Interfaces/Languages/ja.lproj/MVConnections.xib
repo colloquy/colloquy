@@ -136,7 +136,7 @@
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
-                                            <buttonCell key="dataCell" type="check" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" inset="2" id="100866">
+                                            <buttonCell key="dataCell" type="check" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" inset="2" id="100866">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="cellTitle"/>
                                             </buttonCell>
@@ -402,7 +402,7 @@
                                         <button imageHugsTitle="YES" id="726">
                                             <rect key="frame" x="212" y="185" width="122" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="check" title="SSL 接続" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="100820">
+                                            <buttonCell key="cell" type="check" title="SSL 接続" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="100820">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -448,7 +448,7 @@
                     <button imageHugsTitle="YES" id="295">
                         <rect key="frame" x="130" y="294" width="195" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="この接続を覚えておく" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="100800">
+                        <buttonCell key="cell" type="check" title="この接続を覚えておく" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="100800">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -738,7 +738,7 @@ DQ
                     <button imageHugsTitle="YES" id="464">
                         <rect key="frame" x="189" y="46" width="204" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="check" title="キーチェーンに追加" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="100838">
+                        <buttonCell key="cell" type="check" title="キーチェーンに追加" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="100838">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -800,7 +800,7 @@ DQ
                     <button imageHugsTitle="YES" id="713">
                         <rect key="frame" x="189" y="55" width="139" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="check" title="キーチェーンに追加" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="100845">
+                        <buttonCell key="cell" type="check" title="キーチェーンに追加" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="100845">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -920,7 +920,7 @@ DQ
                     <button imageHugsTitle="YES" id="744">
                         <rect key="frame" x="197" y="56" width="136" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <buttonCell key="cell" type="check" title="いつも鍵を許可" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="100855">
+                        <buttonCell key="cell" type="check" title="いつも鍵を許可" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="100855">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>

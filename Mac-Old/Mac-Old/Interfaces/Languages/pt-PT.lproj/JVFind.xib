@@ -186,7 +186,7 @@ DQ
                     <button toolTip="Continue search at the beginning of the document" imageHugsTitle="YES" id="252">
                         <rect key="frame" x="53" y="20" width="151" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="check" title="Só mensagens passadas" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" state="on" inset="2" id="410">
+                        <buttonCell key="cell" type="check" title="Só mensagens passadas" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="410">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
@@ -208,7 +208,7 @@ DQ
                     <button toolTip="Ignorar MAIÚSCULAS e minúsculas" imageHugsTitle="YES" id="253">
                         <rect key="frame" x="204" y="20" width="134" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="check" title="Ignorar capitalização" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" state="on" inset="2" id="411">
+                        <buttonCell key="cell" type="check" title="Ignorar capitalização" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="411">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="smallSystem"/>
                         </buttonCell>

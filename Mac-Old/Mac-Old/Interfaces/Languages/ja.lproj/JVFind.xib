@@ -184,7 +184,7 @@ DQ
                     <button toolTip="文章の最後にきたら先頭に折り返して検索します" imageHugsTitle="YES" id="252">
                         <rect key="frame" x="116" y="20" width="99" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="check" title="スクロールのみ" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" state="on" inset="2" id="410">
+                        <buttonCell key="cell" type="check" title="スクロールのみ" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="410">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
@@ -206,7 +206,7 @@ DQ
                     <button toolTip="大／小文字の違いを無視します" imageHugsTitle="YES" id="253">
                         <rect key="frame" x="224" y="20" width="110" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="check" title="大／小文字を無視" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" state="on" inset="2" id="411">
+                        <buttonCell key="cell" type="check" title="大／小文字を無視" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="411">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="smallSystem"/>
                         </buttonCell>

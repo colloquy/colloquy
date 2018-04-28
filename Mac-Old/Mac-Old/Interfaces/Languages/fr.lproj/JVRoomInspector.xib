@@ -84,7 +84,7 @@
                                             <button tag="8" imageHugsTitle="YES" id="361">
                                                 <rect key="frame" x="17" y="40" width="254" height="18"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                                                <buttonCell key="cell" type="check" title="Mot de passe requis pour rejoindre le canal" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="8" inset="2" id="439">
+                                                <buttonCell key="cell" type="check" title="Mot de passe requis pour rejoindre le canal" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="8" inset="2" id="439">
                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                     <font key="font" metaFont="smallSystem"/>
                                                 </buttonCell>
@@ -133,33 +133,33 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                 <size key="cellSize" width="268" height="18"/>
                                                 <size key="intercellSpacing" width="4" height="4"/>
-                                                <buttonCell key="prototype" type="check" title="Switch" bezelStyle="regularSquare" imagePosition="leading" alignment="left" tag="-1" inset="2" id="451">
+                                                <buttonCell key="prototype" type="check" title="Switch" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="-1" inset="2" id="451">
                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
                                                 <cells>
                                                     <column>
-                                                        <buttonCell type="check" title="Pas de messages éxtérieurs" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="1" inset="2" id="354">
+                                                        <buttonCell type="check" title="Pas de messages éxtérieurs" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="1" inset="2" id="354">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
-                                                        <buttonCell type="check" title="Sujet modifiable seulement par les opérateurs" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="2" inset="2" id="356">
+                                                        <buttonCell type="check" title="Sujet modifiable seulement par les opérateurs" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="2" inset="2" id="356">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
-                                                        <buttonCell type="check" title="Canal de discussion modéré" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="3" inset="2" id="351">
+                                                        <buttonCell type="check" title="Canal de discussion modéré" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="3" inset="2" id="351">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
-                                                        <buttonCell type="check" title="Canal de discussion sur invitation seulement" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="4" inset="2" id="353">
+                                                        <buttonCell type="check" title="Canal de discussion sur invitation seulement" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="4" inset="2" id="353">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
-                                                        <buttonCell type="check" title="Canal de discussion privé" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="5" inset="2" id="355">
+                                                        <buttonCell type="check" title="Canal de discussion privé" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="5" inset="2" id="355">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
-                                                        <buttonCell type="check" title="Canal de discussion secret" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="6" inset="2" id="352">
+                                                        <buttonCell type="check" title="Canal de discussion secret" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="6" inset="2" id="352">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
@@ -172,7 +172,7 @@
                                             <button tag="7" imageHugsTitle="YES" id="349">
                                                 <rect key="frame" x="17" y="84" width="187" height="18"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                                                <buttonCell key="cell" type="check" title="Limiter le nombre de membres" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="7" inset="2" id="436">
+                                                <buttonCell key="cell" type="check" title="Limiter le nombre de membres" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="7" inset="2" id="436">
                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                     <font key="font" metaFont="smallSystem"/>
                                                 </buttonCell>

@@ -84,7 +84,7 @@
                                             <button tag="8" imageHugsTitle="YES" id="361">
                                                 <rect key="frame" x="17" y="40" width="155" height="18"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                                                <buttonCell key="cell" type="check" title="加入時需要輸入密碼" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="8" inset="2" id="439">
+                                                <buttonCell key="cell" type="check" title="加入時需要輸入密碼" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="8" inset="2" id="439">
                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                     <font key="font" metaFont="smallSystem"/>
                                                 </buttonCell>
@@ -133,33 +133,33 @@
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                 <size key="cellSize" width="182" height="18"/>
                                                 <size key="intercellSpacing" width="4" height="4"/>
-                                                <buttonCell key="prototype" type="check" title="Switch" bezelStyle="regularSquare" imagePosition="leading" alignment="left" tag="-1" inset="2" id="451">
+                                                <buttonCell key="prototype" type="check" title="Switch" bezelStyle="regularSquare" imagePosition="left" alignment="left" tag="-1" inset="2" id="451">
                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                     <font key="font" metaFont="system"/>
                                                 </buttonCell>
                                                 <cells>
                                                     <column>
-                                                        <buttonCell type="check" title="沒有外部訊息" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="1" inset="2" id="354">
+                                                        <buttonCell type="check" title="沒有外部訊息" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="1" inset="2" id="354">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
-                                                        <buttonCell type="check" title="只有管理員可以設定聊天室主題" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="2" inset="2" id="356">
+                                                        <buttonCell type="check" title="只有管理員可以設定聊天室主題" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="2" inset="2" id="356">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
-                                                        <buttonCell type="check" title="被管理中的聊天室" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="3" inset="2" id="351">
+                                                        <buttonCell type="check" title="被管理中的聊天室" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="3" inset="2" id="351">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
-                                                        <buttonCell type="check" title="聊天室只能夠透過邀請加入" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="4" inset="2" id="353">
+                                                        <buttonCell type="check" title="聊天室只能夠透過邀請加入" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="4" inset="2" id="353">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
-                                                        <buttonCell type="check" title="私人聊天室" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="5" inset="2" id="355">
+                                                        <buttonCell type="check" title="私人聊天室" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="5" inset="2" id="355">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
-                                                        <buttonCell type="check" title="選擇聊天室" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="6" inset="2" id="352">
+                                                        <buttonCell type="check" title="選擇聊天室" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="6" inset="2" id="352">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="smallSystem"/>
                                                         </buttonCell>
@@ -172,7 +172,7 @@
                                             <button tag="7" imageHugsTitle="YES" id="349">
                                                 <rect key="frame" x="17" y="84" width="182" height="18"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                                                <buttonCell key="cell" type="check" title="成員數量上限" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" enabled="NO" tag="7" inset="2" id="436">
+                                                <buttonCell key="cell" type="check" title="成員數量上限" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" enabled="NO" tag="7" inset="2" id="436">
                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                     <font key="font" metaFont="smallSystem"/>
                                                 </buttonCell>

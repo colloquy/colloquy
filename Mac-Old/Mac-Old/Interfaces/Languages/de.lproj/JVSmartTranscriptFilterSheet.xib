@@ -159,7 +159,7 @@ Gw
                     <button toolTip="Groß-/Kleinschreibung ignorieren" imageHugsTitle="YES" id="253">
                         <rect key="frame" x="131" y="20" width="205" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                        <buttonCell key="cell" type="check" title="Groß-/Kleinschreibung ignorieren" bezelStyle="regularSquare" imagePosition="leading" alignment="left" controlSize="small" state="on" inset="2" id="421">
+                        <buttonCell key="cell" type="check" title="Groß-/Kleinschreibung ignorieren" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="small" state="on" inset="2" id="421">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
