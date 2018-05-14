@@ -19,11 +19,10 @@
 
 - (NSSize) minimumSizeForContent;
 
-- (void) bold:(id) sender;
-- (void) italic:(id) sender;
+- (IBAction) bold:(id) sender;
+- (IBAction) italic:(id) sender;
 
-- (void) setUsesSystemCompleteOnTab:(BOOL) use;
-- (BOOL) usesSystemCompleteOnTab;
+@property BOOL usesSystemCompleteOnTab;
 
 - (BOOL) autocompleteWithSuffix:(BOOL) suffix;
 

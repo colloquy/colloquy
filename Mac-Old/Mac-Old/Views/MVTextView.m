@@ -35,7 +35,7 @@
 
 #pragma mark -
 
-- (void) interpretKeyEvents:(NSArray *) eventArray {
+- (void) interpretKeyEvents:(NSArray<NSEvent *> *) eventArray {
 	NSMutableArray *newArray = [[NSMutableArray alloc] init];
 
 	if( ! [self isEditable] ) {
@@ -280,13 +280,7 @@
 
 #pragma mark -
 
-- (void) setUsesSystemCompleteOnTab:(BOOL) use {
-	_usesSystemCompleteOnTab = use;
-}
-
-- (BOOL) usesSystemCompleteOnTab {
-	return _usesSystemCompleteOnTab;
-}
+@synthesize usesSystemCompleteOnTab=_usesSystemCompleteOnTab;
 
 #pragma mark -
 
