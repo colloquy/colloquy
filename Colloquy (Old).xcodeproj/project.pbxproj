@@ -619,6 +619,7 @@
 		1CF79CBD07AC77E600696918 /* JVChatTranscript.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVChatTranscript.m; sourceTree = "<group>"; };
 		1CF8030C070C893500C9B54C /* libsilc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libsilc.framework; sourceTree = "<group>"; };
 		1CF8030D070C893500C9B54C /* libsilcclient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libsilcclient.framework; sourceTree = "<group>"; };
+		55CFBD9F20B5CB8900AD846B /* nn */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = nn; path = Languages/nn.lproj/Localizable.strings; sourceTree = "<group>"; };
 		891E8465123F0AEF00EC3C0F /* NSCharacterSetAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCharacterSetAdditions.h; sourceTree = "<group>"; };
 		891E8466123F0AEF00EC3C0F /* NSCharacterSetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCharacterSetAdditions.m; sourceTree = "<group>"; };
 		891EF3D0106426CB00CCEA35 /* PFMoveApplicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFMoveApplicationController.m; sourceTree = "<group>"; };
@@ -749,49 +750,49 @@
 		C23298971C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSWindow+CQMCoordinateSpaceConversion.h"; sourceTree = "<group>"; };
 		C23298981C3D98230085CBF7 /* NSWindow+CQMCoordinateSpaceConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSWindow+CQMCoordinateSpaceConversion.m"; sourceTree = "<group>"; };
 		C236F6561BDCE81200E64469 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		C236F6591BDCE81F00E64469 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/schema.strings; sourceTree = "<group>"; };
+		C236F6591BDCE81F00E64469 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/schema.strings; sourceTree = "<group>"; };
 		C237FEC91CA2EA9B00CB8C69 /* autoHeaderTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = autoHeaderTemplate.pdf; sourceTree = "<group>"; };
-		C25154471C22063900551BB4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
-		C25154491C2207A200551BB4 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
-		C251544B1C2207A900551BB4 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
-		C251544D1C2207B400551BB4 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
-		C251544F1C2207B900551BB4 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
-		C25154511C2207E500551BB4 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
-		C25154531C2207E900551BB4 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
-		C25154551C2207EE00551BB4 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVFileTransferPreferencesViewController.strings"; sourceTree = "<group>"; };
-		C25154571C2207F300551BB4 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
-		C25154591C2207F600551BB4 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVFileTransferPreferencesViewController.strings"; sourceTree = "<group>"; };
-		C257417A1C12F4570069B4C8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
-		C257417C1C12F5280069B4C8 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
-		C257417E1C12F52B0069B4C8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
-		C25741801C12F52E0069B4C8 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
-		C25741821C12F5310069B4C8 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
-		C25741841C12F5340069B4C8 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
-		C25741861C12F5380069B4C8 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
-		C25741881C12F53B0069B4C8 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVInterfacePreferencesViewController.strings"; sourceTree = "<group>"; };
-		C257418A1C12F53E0069B4C8 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
-		C257418C1C12F5410069B4C8 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVInterfacePreferencesViewController.strings"; sourceTree = "<group>"; };
+		C25154471C22063900551BB4 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C25154491C2207A200551BB4 /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C251544B1C2207A900551BB4 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C251544D1C2207B400551BB4 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C251544F1C2207B900551BB4 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C25154511C2207E500551BB4 /* ja */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C25154531C2207E900551BB4 /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C25154551C2207EE00551BB4 /* pt-PT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVFileTransferPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C25154571C2207F300551BB4 /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		C25154591C2207F600551BB4 /* zh-Hant */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVFileTransferPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C257417A1C12F4570069B4C8 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C257417C1C12F5280069B4C8 /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C257417E1C12F52B0069B4C8 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C25741801C12F52E0069B4C8 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C25741821C12F5310069B4C8 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C25741841C12F5340069B4C8 /* ja */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C25741861C12F5380069B4C8 /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C25741881C12F53B0069B4C8 /* pt-PT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVInterfacePreferencesViewController.strings"; sourceTree = "<group>"; };
+		C257418A1C12F53E0069B4C8 /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		C257418C1C12F5410069B4C8 /* zh-Hant */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVInterfacePreferencesViewController.strings"; sourceTree = "<group>"; };
 		C25750D71F64209D008AE623 /* MASPreferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MASPreferences.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C26287ED1FC1A45D0085B19F /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C26756161C2173CF0039BB6E /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
-		C26756181C2173D30039BB6E /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
-		C267561A1C2173E80039BB6E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
-		C267561C1C2173EB0039BB6E /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
-		C267561E1C2173EE0039BB6E /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
-		C26756201C2173F10039BB6E /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
-		C26756221C2173F30039BB6E /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVNotificationPreferencesViewController.strings"; sourceTree = "<group>"; };
-		C26756241C2173F60039BB6E /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
-		C26756261C2173F90039BB6E /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVNotificationPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C26756161C2173CF0039BB6E /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C26756181C2173D30039BB6E /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C267561A1C2173E80039BB6E /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C267561C1C2173EB0039BB6E /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C267561E1C2173EE0039BB6E /* ja */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C26756201C2173F10039BB6E /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C26756221C2173F30039BB6E /* pt-PT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVNotificationPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C26756241C2173F60039BB6E /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C26756261C2173F90039BB6E /* zh-Hant */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVNotificationPreferencesViewController.strings"; sourceTree = "<group>"; };
 		C267EE2B1F7304D000F3380D /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CocoaAsyncSocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C2784FED1C255BA200AE399E /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
-		C2784FEF1C255BA400AE399E /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
-		C2784FF11C255BA900AE399E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
-		C2784FF31C255BAC00AE399E /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
-		C2784FF51C255BB000AE399E /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
-		C2784FF71C255BB400AE399E /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
-		C2784FF91C255BB700AE399E /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVBehaviorPreferencesViewController.strings"; sourceTree = "<group>"; };
-		C2784FFB1C255BBC00AE399E /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
-		C2784FFD1C255BC000AE399E /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVBehaviorPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C2784FED1C255BA200AE399E /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C2784FEF1C255BA400AE399E /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C2784FF11C255BA900AE399E /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C2784FF31C255BAC00AE399E /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C2784FF51C255BB000AE399E /* ja */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C2784FF71C255BB400AE399E /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C2784FF91C255BB700AE399E /* pt-PT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVBehaviorPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C2784FFB1C255BBC00AE399E /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C2784FFD1C255BC000AE399E /* zh-Hant */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVBehaviorPreferencesViewController.strings"; sourceTree = "<group>"; };
 		C27B6C081BDC0BD90017EDAF /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
 		C27B6C0A1BDC0BDB0017EDAF /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
 		C27B6C0C1BDC0BDF0017EDAF /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
@@ -809,18 +810,18 @@
 		C296541D1BDBA00D00F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVFileTransferPreferencesViewController.xib; sourceTree = "<group>"; };
 		C29654201BDBA01900F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVTranscriptPreferencesViewController.xib; sourceTree = "<group>"; };
 		C29654231BDBA02100F28873 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/JVBehaviorPreferencesViewController.xib; sourceTree = "<group>"; };
-		C296542C1BDBA08300F28873 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
-		C29654301BDBA09700F28873 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
-		C29654321BDBA0A100F28873 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
-		C29B1AD11C10D3BC005CA86A /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
-		C29B1AD31C10D3BF005CA86A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
-		C29B1AD51C10D3C2005CA86A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
-		C29B1AD71C10D3C4005CA86A /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
-		C29B1AD91C10D3C7005CA86A /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
-		C29B1ADB1C10D3C9005CA86A /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
-		C29B1ADD1C10D3CC005CA86A /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVTranscriptPreferencesViewController.strings"; sourceTree = "<group>"; };
-		C29B1ADF1C10D3CE005CA86A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
-		C29B1AE11C10D3D0005CA86A /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVTranscriptPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C296542C1BDBA08300F28873 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29654301BDBA09700F28873 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29654321BDBA0A100F28873 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVBehaviorPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AD11C10D3BC005CA86A /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AD31C10D3BF005CA86A /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AD51C10D3C2005CA86A /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AD71C10D3C4005CA86A /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AD91C10D3C7005CA86A /* ja */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1ADB1C10D3C9005CA86A /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1ADD1C10D3CC005CA86A /* pt-PT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVTranscriptPreferencesViewController.strings"; sourceTree = "<group>"; };
+		C29B1ADF1C10D3CE005CA86A /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		C29B1AE11C10D3D0005CA86A /* zh-Hant */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVTranscriptPreferencesViewController.strings"; sourceTree = "<group>"; };
 		C29E3BFC1F64A3CB00C18D21 /* target.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = target.xcconfig; sourceTree = "<group>"; };
 		C29FF9651F6532B80044954E /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = /usr/lib/libxml2.2.dylib; sourceTree = "<absolute>"; };
 		C29FF9671F6533360044954E /* libxslt.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxslt.1.dylib; path = /usr/lib/libxslt.1.dylib; sourceTree = "<absolute>"; };
@@ -832,16 +833,16 @@
 		C2A889561F6EFD5300F2C6D4 /* Mac-Old.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Mac-Old.xcassets"; sourceTree = "<group>"; };
 		C2B9D0EB1C258BA200C2B4C4 /* CQMPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQMPreferencesWindowController.h; sourceTree = "<group>"; };
 		C2B9D0EC1C258BA200C2B4C4 /* CQMPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQMPreferencesWindowController.m; sourceTree = "<group>"; };
-		C2EB205F1C1EA95F00CB88B2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
-		C2EB20611C1EAA0A00CB88B2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
-		C2EB20631C1EAA0F00CB88B2 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
-		C2EB20651C1EAA1300CB88B2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
-		C2EB20671C1EAA1E00CB88B2 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
-		C2EB20691C1EAA2300CB88B2 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
-		C2EB206B1C1EAA2800CB88B2 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
-		C2EB206D1C1EAA3000CB88B2 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVAppearancePreferencesViewController.strings"; sourceTree = "<group>"; };
-		C2EB206F1C1EAA5300CB88B2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
-		C2EB20711C1EAA5800CB88B2 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVAppearancePreferencesViewController.strings"; sourceTree = "<group>"; };
+		C2EB205F1C1EA95F00CB88B2 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB20611C1EAA0A00CB88B2 /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB20631C1EAA0F00CB88B2 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB20651C1EAA1300CB88B2 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB20671C1EAA1E00CB88B2 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB20691C1EAA2300CB88B2 /* ja */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB206B1C1EAA2800CB88B2 /* nb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB206D1C1EAA3000CB88B2 /* pt-PT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/JVAppearancePreferencesViewController.strings"; sourceTree = "<group>"; };
+		C2EB206F1C1EAA5300CB88B2 /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		C2EB20711C1EAA5800CB88B2 /* zh-Hant */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/JVAppearancePreferencesViewController.strings"; sourceTree = "<group>"; };
 		CB66DEA00631F8160034F76E /* Keychain.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Keychain.png; sourceTree = "<group>"; };
 		CB66DEA10631F8160034F76E /* Stickies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Stickies.png; sourceTree = "<group>"; };
 		CBF685150820186F00F498FB /* Colloquy.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Colloquy.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1627,6 +1628,7 @@
 				it,
 				ja,
 				nb,
+				nn,
 				"pt-PT",
 				es,
 				"zh-Hant",
@@ -2462,6 +2464,7 @@
 				A15DE0420957E1490040042E /* zh_TW */,
 				1C9D851E0C9869F000BB6C58 /* Japanese */,
 				1C9D85400C986A2000BB6C58 /* nb */,
+				55CFBD9F20B5CB8900AD846B /* nn */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
