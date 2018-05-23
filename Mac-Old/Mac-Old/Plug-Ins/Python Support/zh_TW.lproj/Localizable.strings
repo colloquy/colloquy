@@ -3,16 +3,9 @@
 "Python Script Error" = "Python 工序指令錯誤";
 "PyObjC was not found. The Python console and any Python plugins will not work during this session. For the latest version of PyObjC visit http://pyobjc.sourceforge.net." = "找不到 PyObjC。因此您無法使用 Python 主控台以及 Python 外掛程式，要取得最新版本的 PyObjC ，請瀏覽 http://pyobjc.sourceforge.net 網站。";
 "Keep Previous Version" = "保存之前的版本";
-"The Python script \"%@\" had an error while loading.
-
-%@" = "在載入 Python 工序指令 \"%1$@\" 時發生錯誤。
-
-%2$@";
+"The Python script \"%@\" had an error while loading.\n\n%@" = "在載入 Python 工序指令 \"%1$@\" 時發生錯誤。\n\n%2$@";
 "Python Script Changed" = "Python 工序指令已修改";
 "PyObjC Required" = "需要 PyObjc";
 "Unknown Error" = "不詳的錯誤";
-"The Python script \"%@\" had an error while calling the \"%@\" function.
-
-%@" = "Python 工序指令 \"%1$@\" 在呼叫 \"%2$@\" 函式的時候發生錯誤。
-";
+"The Python script \"%@\" had an error while calling the \"%@\" function.\n\n%@" = "Python 工序指令 \"%1$@\" 在呼叫 \"%2$@\" 函式的時候發生錯誤。\n";
 "Reload" = "重新載入";
