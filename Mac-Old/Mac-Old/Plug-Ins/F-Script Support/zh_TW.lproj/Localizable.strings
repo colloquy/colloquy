@@ -1,15 +1,7 @@
 "Reload Script File" = "重新載入工序指令檔案";
 "F-Script Console" = "F-Script 主控台";
-"The F-Script plugin \"%@\" had an error while loading. The error occured near character %d.
-
-%@" = "F-Script 外掛程式 \"%1$@\" 發生錯誤。這個錯誤發生在靠近字元 %2$d 的地方。
-
-%3$@";
-"The F-Script plugin \"%@\" had an error while calling the \"%@\" block.%@
-
-%@" = "F-Script 外掛程式 \"%1$@\" 在呼叫 \"%2$@\" 區塊.%3$@ 時發生錯誤ㄡ
-
-%4$@";
+"The F-Script plugin \"%@\" had an error while loading. The error occured near character %d.\n\n%@" = "F-Script 外掛程式 \"%1$@\" 發生錯誤。這個錯誤發生在靠近字元 %2$d 的地方。\n\n%3$@";
+"The F-Script plugin \"%@\" had an error while calling the \"%@\" block.%@\n\n%@" = "F-Script 外掛程式 \"%1$@\" 在呼叫 \"%2$@\" 區塊.%3$@ 時發生錯誤ㄡ\n\n%4$@";
 "Open Script File" = "打開工序指令檔案";
 "The F-Script plugin \"%@\" has changed on disk. Any script variables will reset if reloaded. All local block modifications will also be lost." = "F-Script 外掛程式 \"%@\" 已經被修改了。所有工序指令使用的變數都會在重新載入之後被重設。所有本機的修改也都會同時遺失。";
 "Detach From Window" = "從視窗中分離成獨立視窗";
