@@ -1866,8 +1866,6 @@
 			outputPaths = (
 				"$(SRCROOT)/old-mac-binary-frameworks/Sparkle.framework",
 				"$(SRCROOT)/old-mac-binary-frameworks/Growl.framework",
-				"$(SRCROOT)/old-mac-binary-frameworks/libsilc.framework",
-				"$(SRCROOT)/old-mac-binary-frameworks/libsilcclient.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2539,6 +2537,7 @@
 			baseConfigurationReference = C21296FF1F6465FC00555EE3 /* Base.xcconfig */;
 			buildSettings = {
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -2598,6 +2597,7 @@
 			baseConfigurationReference = C21296FF1F6465FC00555EE3 /* Base.xcconfig */;
 			buildSettings = {
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
