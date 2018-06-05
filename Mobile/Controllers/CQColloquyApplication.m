@@ -640,6 +640,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 			];
 
 			nextURL = nextComponents.URL;
+		} else {
+			return;
 		}
 
 		[super openURL:nextURL options:options completionHandler:^(BOOL success) {

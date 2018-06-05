@@ -159,7 +159,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return [renderer PDFRender];
 }
 
-- (NSString *) selectedText {
+- (NSString *_Nullable) selectedText {
 	if (self.isLoading)
 		return nil;
 

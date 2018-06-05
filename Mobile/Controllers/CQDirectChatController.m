@@ -2325,7 +2325,8 @@ NS_ASSUME_NONNULL_BEGIN
 	content.userInfo = [self _localNotificationUserInfoForMessage:message];
 	content.body = [self _localNotificationBodyForMessage:message];
 	content.title = [self _localNotificationTitleForMessage:message];
-	content.sound = [UNNotificationSound soundNamed:soundName];
+	if (soundName != nil)
+		content.sound = [UNNotificationSound soundNamed:soundName];
 
 	UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"multitasking" content:content trigger:nil];
 	[[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:nil];

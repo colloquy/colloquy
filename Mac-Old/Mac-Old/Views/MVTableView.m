@@ -1,17 +1,24 @@
 #import "MVTableView.h"
 
 @implementation MVTableView
-
-- (void) setDelegate:(id) delegate {
-	[super setDelegate:delegate];
-	delegateRectOfRow = [_delegate respondsToSelector:@selector( tableView:rectOfRow:defaultRect: )];
-	delegateRowsInRect = [_delegate respondsToSelector:@selector( tableView:rowsInRect:defaultRange: )];
+- (id<MVTableViewDelegate>) delegate {
+	return (id<MVTableViewDelegate>)super.delegate;
 }
 
-- (void) setDataSource:(id) source {
+- (void) setDelegate:(id<MVTableViewDelegate>) delegate {
+	[super setDelegate:delegate];
+	delegateRectOfRow = [delegate respondsToSelector:@selector( tableView:rectOfRow:defaultRect: )];
+	delegateRowsInRect = [delegate respondsToSelector:@selector( tableView:rowsInRect:defaultRange: )];
+}
+
+- (id<MVTableViewDataSource>) dataSource {
+	return (id<MVTableViewDataSource>)super.dataSource;
+}
+
+- (void) setDataSource:(id<MVTableViewDataSource>) source {
 	[super setDataSource:source];
-	dataSourceMenuForTableColumn = [_dataSource respondsToSelector:@selector( tableView:menuForTableColumn:row: )];
-	dataSourceToolTipForTableColumn = [_dataSource respondsToSelector:@selector( tableView:toolTipForTableColumn:row: )];
+	dataSourceMenuForTableColumn = [source respondsToSelector:@selector( tableView:menuForTableColumn:row: )];
+	dataSourceToolTipForTableColumn = [source respondsToSelector:@selector( tableView:toolTipForTableColumn:row: )];
 }
 
 - (BOOL) autosaveTableColumnHighlight {
@@ -42,15 +49,15 @@
 
 	if( row >= 0 ) {
 		NSTableColumn *column = nil;
-		if( col >= 0 ) column = [_tableColumns objectAtIndex:col];
+		if( col >= 0 ) column = [self.tableColumns objectAtIndex:col];
 
-		if( _tvFlags.delegateShouldSelectRow ) {
-			if( [_delegate tableView:self shouldSelectRow:row] )
+		if( [self.delegate respondsToSelector:@selector(tableView:shouldSelectRow:)] ) {
+			if( [self.delegate tableView:self shouldSelectRow:row] )
 				[self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
 		} else [self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
 
 		if( dataSourceMenuForTableColumn )
-			return [_dataSource tableView:self menuForTableColumn:column row:row];
+			return [self.dataSource tableView:self menuForTableColumn:column row:row];
 		else return [self menu];
 	}
 
@@ -61,8 +68,8 @@
 - (void) keyDown:(NSEvent *) event {
 	NSString *chars = [event charactersIgnoringModifiers];
 	if( [chars length] && [chars characterAtIndex:0] == NSDeleteCharacter ) {
-		if( [_delegate respondsToSelector:@selector( clear: )] ) {
-			[_delegate clear:self];
+		if( [self.delegate respondsToSelector:@selector( clear: )] ) {
+			[self.delegate clear:self];
 			return;
 		}
 	}
@@ -72,7 +79,7 @@
 - (NSRect) rectOfRow:(NSInteger) row {
 	NSRect defaultRect = [super rectOfRow:row];
 	if( delegateRectOfRow )
-		return [_delegate tableView:self rectOfRow:row defaultRect:defaultRect];
+		return [self.delegate tableView:self rectOfRow:row defaultRect:defaultRect];
 	return defaultRect;
 }
 
@@ -83,7 +90,7 @@
 - (NSRange) rowsInRect:(NSRect) rect {
 	NSRange defaultRange = [super rowsInRect:rect];
 	if( delegateRowsInRect )
-		return [_delegate tableView:self rowsInRect:rect defaultRange:defaultRange];
+		return [self.delegate tableView:self rowsInRect:rect defaultRange:defaultRange];
 	return defaultRange;
 }
 
@@ -117,10 +124,10 @@
 	NSInteger column = [self columnAtPoint:point];
 
 	NSTableColumn *tcolumn = nil;
-	if( column >= 0 ) tcolumn = [_tableColumns objectAtIndex:column];
+	if( column >= 0 ) tcolumn = [self.tableColumns objectAtIndex:column];
 
-	if( row >= 0 && [_dataSource respondsToSelector:@selector( tableView:toolTipForTableColumn:row: )] )
-		return [_dataSource tableView:self toolTipForTableColumn:tcolumn row:row];
+	if( row >= 0 && [self.dataSource respondsToSelector:@selector( tableView:toolTipForTableColumn:row: )] )
+		return [self.dataSource tableView:self toolTipForTableColumn:tcolumn row:row];
 
 	return [self toolTip];
 }
