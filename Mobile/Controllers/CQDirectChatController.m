@@ -21,14 +21,16 @@
 #import "NSDateAdditions.h"
 #import "NSNotificationAdditions.h"
 #import "UIViewAdditions.h"
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 #import "CQUIChatTranscriptView.h"
+#endif
 #import "CQUITextChatTranscriptView.h"
 #import "CQWKChatTranscriptView.h"
 
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatUserWatchRule.h>
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 #import <MediaPlayer/MPMusicPlayerController.h>
 #import <Social/Social.h>
 #import <UserNotifications/UserNotifications.h>
@@ -226,6 +228,10 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (instancetype) initWithTarget:(__nullable id) target {
+#if SYSTEM(MARZIPAN)
+	if (!(self = [super initWithNibName:@"CQWKChatView" bundle:nil]))
+		return nil;
+#else
 #if !SYSTEM(TV)
 	if (!(self = [super initWithNibName:@"CQUIChatView" bundle:nil]))
 		return nil;
@@ -424,7 +430,7 @@ NS_ASSUME_NONNULL_BEGIN
 	sheet.delegate = self;
 	sheet.tag = InfoActionSheet;
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
 		sheet.title = self.user.displayName;
 #endif
@@ -558,7 +564,7 @@ NS_ASSUME_NONNULL_BEGIN
 	CQWKChatTranscriptView *chatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
 #else
 	// if we want to keep using UIWebView-based transcripts, don't set the var to anything so it never gets removed
-	CQUIChatTranscriptView *chatTranscriptView = nil;
+	UIView <CQChatTranscriptView> *chatTranscriptView = nil;
 #endif
 	chatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
 	chatTranscriptView.transcriptDelegate = self;
@@ -659,7 +665,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewDidDisappear:(BOOL) animated {
 	[super viewDidDisappear:animated];
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[UIMenuController sharedMenuController].menuItems = nil;
 #endif
 
@@ -716,7 +722,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) chatInputBarTextDidChange:(CQChatInputBar *) theChatInputBar {
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	if (chatInputBar.textView.text.length || chatInputBar.textView.attributedText.length) {
 		chatInputBar.textView.allowsEditingTextAttributes = YES;
 		[UIMenuController sharedMenuController].menuItems = @[ [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Style", @"Style text menu item") action:@selector(style:)] ];
@@ -1194,7 +1200,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleMusicCommandWithArguments:(MVChatString *) arguments {
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	MPMusicPlayerController *musicController = [MPMusicPlayerController systemMusicPlayer];
 	MPMediaItem *nowPlayingItem = musicController.nowPlayingItem;
 
@@ -1429,7 +1435,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleTweetCommandWithArguments:(MVChatString *) arguments {
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	SLComposeViewController *composeViewController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
 	NSString *selectedText = transcriptView.selectedText;
 
@@ -1460,7 +1466,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL) handleSysinfoCommandWithArguments:(MVChatString *) arguments {
 	NSString *version = [[CQSettingsController settingsController] stringForKey:@"CQCurrentVersion"];
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	NSString *orientation = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? NSLocalizedString(@"landscape", @"landscape orientation") : NSLocalizedString(@"portrait", @"portrait orientation");
 #else
 	NSString *orientation = NSLocalizedString(@"landscape", @"landscape orientation");
@@ -1474,7 +1480,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSString *systemMemory = [NSByteCountFormatter stringFromByteCount:physicalMemory countStyle:NSByteCountFormatterCountStyleBinary];
 
 	NSString *message = nil;
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	BOOL batteryMonitoringEnabled = [UIDevice currentDevice].batteryMonitoringEnabled;
 	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
 	if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateUnplugged)
@@ -1482,7 +1488,7 @@ NS_ASSUME_NONNULL_BEGIN
 	else
 #endif
 		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %d processors, %@ RAM and a system uptime of %@.", @"System info message"), version, orientation, model, systemVersion, processorsInTotal, systemMemory, systemUptime];
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[UIDevice currentDevice].batteryMonitoringEnabled = batteryMonitoringEnabled;
 #endif
 
@@ -1574,7 +1580,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) handleResetbadgeCommandWithArguments:(MVChatString *) arguments {
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[CQColloquyApplication sharedApplication].applicationIconBadgeNumber = 0;
 #endif
 }
@@ -2006,7 +2012,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) _showActivityViewControllerWithItems:(NSArray *) items activities:(NSArray <UIActivity *> *) activities {
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	_showingActivityViewController = YES;
 
 	UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:activities];
@@ -2319,7 +2325,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
 		return;
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
 	content.threadIdentifier = @"Global";
 	content.userInfo = [self _localNotificationUserInfoForMessage:message];

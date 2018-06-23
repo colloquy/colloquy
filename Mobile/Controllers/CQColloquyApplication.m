@@ -7,14 +7,18 @@
 #import "CQConnectionsController.h"
 #import "CQConnectionsNavigationController.h"
 #import "CQRootContainerViewController.h"
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 #import "CQWelcomeController.h"
+#endif
 
 #import "NSNotificationAdditions.h"
 #import "NSRegularExpressionAdditions.h"
 #import "UIApplicationAdditions.h"
 #import "UIFontAdditions.h"
 
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 #import <SafariServices/SafariServices.h>
+#endif
 #import <UserNotifications/UserNotifications.h>
 
 #import <HockeySDK/HockeySDK.h>
@@ -359,7 +363,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if ([[CQChatController defaultController] hasPendingChatController])
 		[[CQChatController defaultController] showPendingChatControllerAnimated:NO];
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[self handleNotificationWithUserInfo:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
 #endif
 
@@ -369,7 +373,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) applicationWillEnterForeground:(UIApplication *) application {
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[[UNUserNotificationCenter currentNotificationCenter] removeAllPendingNotificationRequests];
 #endif
 }
@@ -386,7 +390,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	completionHandler();
 }
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 - (void) application:(UIApplication *) application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *) deviceToken {
 	if (!deviceToken.length) {
 		[[CQAnalyticsController defaultController] setObject:nil forKey:@"device-push-token"];
@@ -420,7 +424,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) applicationWillTerminate:(UIApplication *) application {
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 
 	self.appIconOptions = CQAppIconOptionConnect;
@@ -510,16 +514,20 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #pragma mark -
 
 - (void) showHelp:(__nullable id) sender {
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	CQWelcomeController *welcomeController = [[CQWelcomeController alloc] init];
 	welcomeController.shouldShowOnlyHelpTopics = YES;
 
 	[self presentModalViewController:welcomeController animated:YES];
+#endif
 }
 
 - (void) showWelcome:(__nullable id) sender {
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	CQWelcomeController *welcomeController = [[CQWelcomeController alloc] init];
 
 	[self presentModalViewController:welcomeController animated:YES];
+#endif
 }
 
 - (void) toggleConnections:(__nullable id) sender {
@@ -614,12 +622,14 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 			return;
 		}
 
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 		if ([selectedBrowser isEqualToString:@"Colloquy"]) {
 			SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:url];
 			[self.window.rootViewController presentViewController:safariViewController animated:YES completion:nil];
 
 			return;
 		}
+#endif
 
 		NSURL *nextURL = nil;
 		if ([selectedBrowser isEqualToString:@"Chrome"]) {
@@ -692,7 +702,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #pragma mark -
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 - (void) updateAppShortcuts {
 	CQAppIconOptions options = CQAppIconOptionNone;
 

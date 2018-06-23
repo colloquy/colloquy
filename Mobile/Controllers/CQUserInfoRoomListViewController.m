@@ -73,9 +73,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(__nullable id) sender {
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	NSString *roomName = _rooms[indexPath.row];
 
-#if !SYSTEM(TV)
 	if (action == @selector(copy:))
 		[UIPasteboard generalPasteboard].string = roomName;
 #endif

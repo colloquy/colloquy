@@ -3,7 +3,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation UIViewController (UIViewControllerAdditions)
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 - (BOOL) shouldAutorotate {
 	return YES;
 }
