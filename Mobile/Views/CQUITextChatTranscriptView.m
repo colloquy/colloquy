@@ -4,7 +4,9 @@
 
 #import <ChatCore/MVChatUser.h>
 
+#if !SYSTEM(MARZIPAN)
 #import "UIPrintPageRendererAdditions.h"
+#endif
 #import "NSNotificationAdditions.h"
 
 #import <JavaScriptCore/JavaScriptCore.h>
@@ -144,7 +146,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (self.isLoading)
 		return nil;
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	UIPrintPageRenderer *renderer = [[UIPrintPageRenderer alloc] init];
 	[renderer addPrintFormatter:self.viewPrintFormatter startingAtPageAtIndex:0];
 
@@ -540,7 +542,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[self reset];
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	_allowSingleSwipeGesture = YES;
 	_singleSwipeGestureRecognizers = [[NSMutableArray alloc] init];
 
@@ -572,7 +574,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	_showRoomTopic = (CQShowRoomTopic)[[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	self.dataDetectorTypes = UIDataDetectorTypeNone;
 	self.editable = NO;
 #endif

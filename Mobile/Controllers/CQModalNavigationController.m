@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	self.delegate = self;
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	self.modalPresentationStyle = UIModalPresentationFormSheet;
 #endif
 

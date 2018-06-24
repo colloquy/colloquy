@@ -430,7 +430,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) _keyboardWillShow:(NSNotification *) notification {
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	if (UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation))
 #endif
 		[self performSelector:@selector(_scrollToRevealSeclectedRow) withObject:nil afterDelay:0.];

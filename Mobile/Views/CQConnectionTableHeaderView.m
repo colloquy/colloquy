@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 	_nicknameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	_timeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	_disclosureButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	_disclosureButton.showsTouchWhenHighlighted = YES;
 #endif
 	_disclosureButton.adjustsImageWhenHighlighted = YES;

@@ -1,0 +1,105 @@
+
+/* Class = "NSMenuItem"; title = "all"; ObjectID = "101"; */
+"101.title" = "전부";
+
+/* Class = "NSMenuItem"; title = "any"; ObjectID = "102"; */
+"102.title" = "일부";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Ignore UPPPERCASE and lowercase"; ObjectID = "106"; */
+"106.ibShadowedToolTip" = "대소문자 구별 안";
+
+/* Class = "NSButtonCell"; title = "OK"; ObjectID = "317"; */
+"317.title" = "확인";
+
+/* Class = "NSButtonCell"; title = "Cancel"; ObjectID = "318"; */
+"318.title" = "취소";
+
+/* Class = "NSTextFieldCell"; title = "Window Name:"; ObjectID = "319"; */
+"319.title" = "창 이름:";
+
+/* Class = "NSButtonCell"; title = "Remember manually attached panels"; ObjectID = "321"; */
+"321.title" = "수동으로 패널 붙인 패널 기억하기";
+
+/* Class = "NSTextFieldCell"; title = "Include panels that meet"; ObjectID = "322"; */
+"322.title" = "패널들 중에";
+
+/* Class = "NSTextFieldCell"; title = "of the following conditions:"; ObjectID = "324"; */
+"324.title" = "다음 항목에 포함되는 조건들:";
+
+/* Class = "NSButtonCell"; title = "OK"; ObjectID = "325"; */
+"325.title" = "확인";
+
+/* Class = "NSButtonCell"; title = "Cancel"; ObjectID = "326"; */
+"326.title" = "취소";
+
+/* Class = "NSButtonCell"; title = "Ignore Case"; ObjectID = "327"; */
+"327.title" = "철자법 무시";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Add rule"; ObjectID = "0lE-bY-T3x"; */
+"0lE-bY-T3x.ibShadowedToolTip" = "규칙 추가";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Edit window"; ObjectID = "16s-kX-eR3"; */
+"16s-kX-eR3.ibShadowedToolTip" = "창 편집";
+
+/* Class = "NSMenuItem"; title = "Auto"; ObjectID = "2Og-Dg-Vgi"; */
+"2Og-Dg-Vgi.title" = "자동";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Delete window"; ObjectID = "4dc-gg-ELR"; */
+"4dc-gg-ELR.ibShadowedToolTip" = "창 삭제";
+
+/* Class = "NSMenuItem"; title = "None"; ObjectID = "5Gf-hO-OGq"; */
+"5Gf-hO-OGq.title" = "아님";
+
+/* Class = "NSMenuItem"; title = "Right"; ObjectID = "DUg-aN-y1L"; */
+"DUg-aN-y1L.title" = "오른쪽";
+
+/* Class = "NSTextFieldCell"; title = "Panels will be grouped in windows based on the rule sets below.\nA new window will be opened if no rule sets apply."; ObjectID = "Hkt-sW-eRK"; */
+"Hkt-sW-eRK.title" = "패널들은 아래 규칙 세트를 기반으로 하여 그룹을 짓습니다.\n규칙이 없다면 새 창이 열리게 됩니다.";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Add window"; ObjectID = "Oec-2h-wvG"; */
+"Oec-2h-wvG.ibShadowedToolTip" = "창 추가";
+
+/* Class = "NSTextFieldCell"; title = "Drawer Side:"; ObjectID = "PQN-3f-sSG"; */
+"PQN-3f-sSG.title" = "서랍 방향:";
+
+/* Class = "NSMenuItem"; title = "Tabbed Window"; ObjectID = "UKJ-o0-Xnf"; */
+"UKJ-o0-Xnf.title" = "탭이 있는 창";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Edit rule"; ObjectID = "VrK-V3-91k"; */
+"VrK-V3-91k.ibShadowedToolTip" = "규칙 편집";
+
+/* Class = "NSMenuItem"; title = "Sidebar List"; ObjectID = "ZFz-f9-FZQ"; */
+"ZFz-f9-FZQ.title" = "사이드바 목록";
+
+/* Class = "NSButtonCell"; title = "Show full Chat Room names"; ObjectID = "ftU-Cn-45H"; */
+"ftU-Cn-45H.title" = "전체 채널명 보이기";
+
+/* Class = "NSTextFieldCell"; title = "Show Notices as Private Chat:"; ObjectID = "gU0-QK-lxt"; */
+"gU0-QK-lxt.title" = "개인적인 대화에 대한 알림 보이기:";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Delete rule"; ObjectID = "guZ-k9-84S"; */
+"guZ-k9-84S.ibShadowedToolTip" = "기본 규칙";
+
+/* Class = "NSButtonCell"; title = "Always show tab bar"; ObjectID = "hBj-zd-jba"; */
+"hBj-zd-jba.title" = "언제나 탭 바 보이기";
+
+/* Class = "NSTextFieldCell"; title = "Window Interface:"; ObjectID = "ngY-2l-q9i"; */
+"ngY-2l-q9i.title" = "창 인터페이스:";
+
+/* Class = "NSMenuItem"; title = "Automatic"; ObjectID = "oOl-3Z-zNT"; */
+"oOl-3Z-zNT.title" = "자동";
+
+/* Class = "NSTextFieldCell"; title = "The badge will reflect the number of unread highlights and private messages."; ObjectID = "qFO-Zh-cVm"; */
+"qFO-Zh-cVm.title" = "아직 읽지 않은 하이라이트된 항목과 개인적인 대화를 보여줍니다.";
+
+/* Class = "NSMenuItem"; title = "Left"; ObjectID = "qkG-Zn-QEG"; */
+"qkG-Zn-QEG.title" = "왼쪽";
+
+/* Class = "NSMenuItem"; title = "All"; ObjectID = "swI-NA-TAm"; */
+"swI-NA-TAm.title" = "전부";
+
+/* Class = "NSButtonCell"; title = "Sort Chat Room members by status"; ObjectID = "woO-2w-Ltx"; */
+"woO-2w-Ltx.title" = "지위에 따라 사용자 정렬";
+
+/* Class = "NSButtonCell"; title = "Show Badge on Dock Icon"; ObjectID = "yw7-i8-neX"; */
+"yw7-i8-neX.title" = "독 아이콘에 뱃지 보이기";

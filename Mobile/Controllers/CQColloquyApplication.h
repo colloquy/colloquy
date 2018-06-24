@@ -35,14 +35,14 @@ typedef NS_OPTIONS(NSInteger, CQAppIconOptions) {
 - (void) presentModalViewController:(UIViewController *) modalViewController animated:(BOOL) animated singly:(BOOL) singly;
 - (void) dismissModalViewControllerAnimated:(BOOL) animated;
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 - (void) registerForPushNotifications;
 #endif
 
 @property (nonatomic, readonly) NSDate *launchDate;
 @property (nonatomic, strong) NSDate *resumeDate;
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 - (void) updateAppShortcuts;
 @property (nonatomic) CQAppIconOptions appIconOptions;
 #endif

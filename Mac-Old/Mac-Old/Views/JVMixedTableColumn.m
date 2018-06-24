@@ -12,7 +12,7 @@
 
 - (id) dataCellForRow:(int) row {
 	id ret = nil;
-	if( delegateDataCellForRow && ( ret = [(id <JVMixedTableColumnDelegate>)[self.tableView delegate] tableView:_tableView dataCellForRow:row tableColumn:self] ) )
+	if( delegateDataCellForRow && ( ret = [(id <JVMixedTableColumnDelegate>)[self.tableView delegate] tableView:self.tableView dataCellForRow:row tableColumn:self] ) )
 		return ret;
 	return [super dataCellForRow:row];
 }

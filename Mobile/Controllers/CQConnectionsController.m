@@ -58,7 +58,7 @@ static NSString *const connectionInvalidSSLCertAction = nil;
 @class UNNotificationRequest;
 
 @interface CQConnectionsController () <CQActionSheetDelegate, CQAlertViewDelegate,
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 CSSearchableIndexDelegate,
 #endif
 CQBouncerConnectionDelegate>
@@ -76,7 +76,7 @@ CQBouncerConnectionDelegate>
 	BOOL _loadedConnections;
 	NSUInteger _connectingCount;
 	NSUInteger _connectedCount;
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	UNNotificationRequest *_timeRemainingLocalNotifiction;
 #endif
 	UIBackgroundTaskIdentifier _backgroundTask;
@@ -115,7 +115,7 @@ CQBouncerConnectionDelegate>
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_errorOccurred:) name:MVChatConnectionErrorNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_deviceTokenRecieved:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batteryStateChanged) name:UIDeviceBatteryStateDidChangeNotification object:nil];
 #endif
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_peerTrustFeedbackNotification:) name:MVChatConnectionNeedTLSPeerTrustFeedbackNotification object:nil];
@@ -133,7 +133,7 @@ CQBouncerConnectionDelegate>
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
 #endif
 
@@ -155,7 +155,7 @@ CQBouncerConnectionDelegate>
 	_shouldLogRawMessagesToConsole = [[CQSettingsController settingsController] boolForKey:@"CQLogRawMessagesToConsole"];
 #endif
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	if (NSClassFromString(@"CSSearchableIndex"))
 		[CSSearchableIndex defaultSearchableIndex].indexDelegate = self;
 #endif
@@ -407,7 +407,7 @@ CQBouncerConnectionDelegate>
 
 #pragma mark -
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 - (void) searchableIndex:(CSSearchableIndex *) searchableIndex reindexSearchableItemsWithIdentifiers:(NSArray <NSString *> *) identifiers acknowledgementHandler:(void (^)(void)) acknowledgementHandler {
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"])
 		[self indexConnectionsInSpotlight];
@@ -672,7 +672,7 @@ CQBouncerConnectionDelegate>
 			alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 			[alertView show];
 		} else {
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 			UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
 			content.threadIdentifier = @"Global";
 			content.body = NSLocalizedString(@"You have been disconnected due to the loss of network connectivity", @"Disconnected due to network local notification body");
@@ -757,7 +757,7 @@ CQBouncerConnectionDelegate>
 	if (![self _anyConnectedOrConnectingConnections])
 		return;
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
 	content.threadIdentifier = @"Global";
 	content.body = NSLocalizedString(@"No multitasking time remaining, so you have been disconnected.", "No multitasking time remaining alert message");
@@ -782,7 +782,7 @@ CQBouncerConnectionDelegate>
 	if (![self _anyConnectedOrConnectingConnections])
 		return;
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
 	content.threadIdentifier = @"Global";
 
@@ -812,7 +812,7 @@ CQBouncerConnectionDelegate>
 	if (![self _anyConnectedOrConnectingConnections])
 		return;
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	if (_timeRemainingLocalNotifiction) {
 		[[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[ _timeRemainingLocalNotifiction.identifier ]];
 	}
@@ -844,7 +844,7 @@ CQBouncerConnectionDelegate>
 - (void) _disconnectForSuspend {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	if (_timeRemainingLocalNotifiction) {
 		[[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[ _timeRemainingLocalNotifiction.identifier ]];
 		_timeRemainingLocalNotifiction = nil;
@@ -918,7 +918,7 @@ CQBouncerConnectionDelegate>
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_disconnectForSuspend) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_showRemainingTimeAlert) object:nil];
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	_timeRemainingLocalNotifiction = nil;
 #endif
 
@@ -946,7 +946,7 @@ CQBouncerConnectionDelegate>
 }
 
 - (BOOL) _shouldDisableIdleTimer {
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateCharging)
 		return YES;
 	return ([self _anyConnectedOrConnectingConnections] && [[CQSettingsController settingsController] boolForKey:@"CQIdleTimerDisabled"]);
@@ -973,7 +973,7 @@ CQBouncerConnectionDelegate>
 		(void)[[CQChatOrderingController defaultController] consoleViewControllerForConnection:connection ifExists:NO];
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 #endif
 
@@ -1062,7 +1062,7 @@ CQBouncerConnectionDelegate>
 }
 
 - (void) _didConnectOrDidNotConnect:(NSNotification *) notification {
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
 #endif
@@ -1160,7 +1160,7 @@ CQBouncerConnectionDelegate>
 		[_automaticallySetConnectionAwayStatus removeObject:self];
 	}
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	CQBouncerSettings *bouncerSettings = connection.bouncerSettings;
 
 	if ((!bouncerSettings || bouncerSettings.pushNotifications) && connection.pushNotifications)
@@ -1170,7 +1170,9 @@ CQBouncerConnectionDelegate>
 
 - (void) _didDisconnect:(NSNotification *) notification {
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
+#endif
 
 	MVChatConnection *connection = notification.object;
 	[connection removePersistentInformationObjectForKey:@"tryBouncerFirst"];
@@ -1190,7 +1192,7 @@ CQBouncerConnectionDelegate>
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"])
 		[self indexConnectionsInSpotlight];
 	else [self removeConnectionsIndexfromSpotlight];
@@ -1477,7 +1479,7 @@ CQBouncerConnectionDelegate>
 	if (connection.temporaryDirectConnection)
 		connection.bouncerType = MVChatConnectionNoBouncer;
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	if ((!bouncerSettings || bouncerSettings.pushNotifications) && connection.pushNotifications)
 		[[CQColloquyApplication sharedApplication] registerForPushNotifications];
 #endif
@@ -1664,7 +1666,7 @@ CQBouncerConnectionDelegate>
 
 	NSMutableArray *connections = [[NSMutableArray alloc] initWithCapacity:_directConnections.count];
 	for (MVChatConnection *connection in _directConnections) {
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQIndexInSpotlight"])
 			[self _indexConnetionInSpotlight:connection];
 #endif
@@ -1729,7 +1731,7 @@ CQBouncerConnectionDelegate>
 
 #pragma mark -
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 - (void) _indexConnetionInSpotlight:(MVChatConnection *) connection {
 	if (NSClassFromString(@"CSSearchableIndex") == nil)
 		return;

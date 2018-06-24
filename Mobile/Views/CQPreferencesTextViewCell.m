@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 		return nil;
 
 	_textView = [[CQTextView alloc] initWithFrame:CGRectZero];
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	_textView.editable = YES;
 #endif
 	_textView.scrollEnabled = !self.window.isFullscreen;
@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[super prepareForReuse];
 
 	_textView.text = @"";
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	_textView.editable = YES;
 #endif
 	_textView.scrollEnabled = !self.window.isFullscreen;
@@ -77,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (CGFloat) height {
 	CGSize size = [UIScreen mainScreen].bounds.size;
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	BOOL landscapeOrientation = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation);
 #else
 	BOOL landscapeOrientation = YES;

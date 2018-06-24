@@ -82,8 +82,6 @@
 		1C710A2009F2396C007B4515 /* JVSidebarChatWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C710A1F09F2396C007B4515 /* JVSidebarChatWindow.xib */; };
 		1C710A6C09F23AF0007B4515 /* JVSideSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C710A6609F23AF0007B4515 /* JVSideSplitView.m */; };
 		1C710A7009F23AF0007B4515 /* JVSideOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C710A6A09F23AF0007B4515 /* JVSideOutlineView.m */; };
-		1C710C4F09F323F8007B4515 /* splitviewDimple.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710C4D09F323F8007B4515 /* splitviewDimple.png */; };
-		1C710C5009F323F8007B4515 /* splitviewDividerBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710C4E09F323F8007B4515 /* splitviewDividerBackground.png */; };
 		1C7780DE08FA1D82006AD8E5 /* JVSpeechController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7780DC08FA1D81006AD8E5 /* JVSpeechController.m */; };
 		1C77822908FA4104006AD8E5 /* topicBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77822808FA4101006AD8E5 /* topicBackground.png */; };
 		1C77831208FA4EA2006AD8E5 /* topicToggleDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */; };
@@ -463,8 +461,6 @@
 		1C710A6609F23AF0007B4515 /* JVSideSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVSideSplitView.m; sourceTree = "<group>"; };
 		1C710A6909F23AF0007B4515 /* JVSideOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVSideOutlineView.h; sourceTree = "<group>"; };
 		1C710A6A09F23AF0007B4515 /* JVSideOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVSideOutlineView.m; sourceTree = "<group>"; };
-		1C710C4D09F323F8007B4515 /* splitviewDimple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splitviewDimple.png; sourceTree = "<group>"; };
-		1C710C4E09F323F8007B4515 /* splitviewDividerBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splitviewDividerBackground.png; sourceTree = "<group>"; };
 		1C746A95050CF86B000001C8 /* emoticons.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = emoticons.plist; sourceTree = "<group>"; };
 		1C7780DB08FA1D81006AD8E5 /* JVSpeechController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVSpeechController.h; sourceTree = "<group>"; };
 		1C7780DC08FA1D81006AD8E5 /* JVSpeechController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVSpeechController.m; sourceTree = "<group>"; };
@@ -1383,8 +1379,6 @@
 				1C705701051A830200A8FE6E /* newMessage.png */,
 				F51A4F3801C319D801EE70DE /* pending.png */,
 				1C9982AC0604BA1F006C6417 /* sound.png */,
-				1C710C4D09F323F8007B4515 /* splitviewDimple.png */,
-				1C710C4E09F323F8007B4515 /* splitviewDividerBackground.png */,
 				CB66DEA10631F8160034F76E /* Stickies.png */,
 				F5765F9501C6669D01A35792 /* stopped.png */,
 				1C77822808FA4101006AD8E5 /* topicBackground.png */,
@@ -1788,8 +1782,6 @@
 				1C1AFDAB09C3BC5000BF3E2A /* roomTopicBanner.html in Resources */,
 				1C710A2009F2396C007B4515 /* JVSidebarChatWindow.xib in Resources */,
 				C296541F1BDBA01900F28873 /* JVTranscriptPreferencesViewController.xib in Resources */,
-				1C710C4F09F323F8007B4515 /* splitviewDimple.png in Resources */,
-				1C710C5009F323F8007B4515 /* splitviewDividerBackground.png in Resources */,
 				1CEC004F0A20EF99004C2B86 /* transcriptSchema.sql in Resources */,
 				1C6268E5103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem in Resources */,
 				9200338D13D92515005B69BA /* MVFileTransfer.xib in Resources */,

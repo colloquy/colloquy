@@ -9,7 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) loadView {
 	_textView = [[UITextView alloc] initWithFrame:CGRectZero];
 	_textView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin);
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	_textView.dataDetectorTypes = (UIDataDetectorTypeLink | UIDataDetectorTypePhoneNumber);
 	_textView.editable = NO;
 #endif

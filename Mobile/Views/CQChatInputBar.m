@@ -97,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
 	_inputView = [[CQTextView alloc] initWithFrame:frame];
 	_inputView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
 	_inputView.textContainer.heightTracksTextView = YES;
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	_inputView.dataDetectorTypes = UIDataDetectorTypeNone;
 #endif
 	_inputView.returnKeyType = UIReturnKeySend;
@@ -126,7 +126,7 @@ NS_ASSUME_NONNULL_BEGIN
 	_autocorrect = NO;
 #endif
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideCompletions) name:UIDeviceOrientationDidChangeNotification object:nil];
 #endif
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];

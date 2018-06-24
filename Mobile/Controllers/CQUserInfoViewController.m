@@ -231,7 +231,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!selectedCell)
 		return;
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[UIPasteboard generalPasteboard].string = selectedCell.detailTextLabel.text;
 #endif
 }
