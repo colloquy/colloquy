@@ -118,7 +118,9 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		_isActive = NO;
 		_forceSplitViewPosition = YES;
 		_historyIndex = 0;
-		_sendHeight = 25.;
+
+		_minimumSendHeight = 0.;
+		_sendHeight = _minimumSendHeight;
 
 		_encoding = NSASCIIStringEncoding;
 		_encodingMenu = nil;
@@ -210,6 +212,10 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[send setUsesRuler:NO];
 	[send setDelegate:self];
 	[send reset:nil];
+
+	NSRect sendFrame = [[send enclosingScrollView] frame];
+	_minimumSendHeight = sendFrame.size.height;
+	_sendHeight = _minimumSendHeight;
 
 	NSSplitViewDividerStyle dividerStyle;
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] ) {
@@ -1324,17 +1330,24 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
 		return;
 
+	_scrollerIsAtBottom = [display scrolledNearBottom];
+
+	[self resizeSendFieldToFitContent];
+
+	if( _scrollerIsAtBottom ) [display scrollToBottom];
+}
+
+- (void) resizeSendFieldToFitContent {
 	// We need to resize the textview to fit the content.
-	// The scroll views are two superviews up: NSTextView(WebView) -> NSClipView -> NSScrollView
-	NSSplitView *splitView = (NSSplitView *)[[[send superview] superview] superview];
+	// The scroll views are two superviews up: NSTextView -> NSClipView -> NSScrollView
+	NSSplitView *splitView = (NSSplitView *)[[send enclosingScrollView] superview];
 	NSRect splitViewFrame = [splitView frame];
+
 	NSSize contentSize = [send minimumSizeForContent];
-	NSRect sendFrame = [[[send superview] superview] frame];
+	NSRect sendFrame = [[send enclosingScrollView] frame];
 	CGFloat dividerThickness = [splitView dividerThickness];
 	CGFloat maxContentHeight = ( NSHeight( splitViewFrame ) - dividerThickness - 75. );
-	CGFloat newContentHeight =  MIN( maxContentHeight, MAX( 33. - dividerThickness, contentSize.height + 8. ) );
-
-	if( newContentHeight == NSHeight( sendFrame ) ) return;
+	CGFloat newContentHeight =  MIN( maxContentHeight, MAX( _minimumSendHeight, contentSize.height));
 
 	NSRect webFrame = [display frame];
 
@@ -1346,15 +1359,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	sendFrame.size.height = newContentHeight;
 	sendFrame.origin.y = NSHeight( webFrame ) + dividerThickness;
 
-	_scrollerIsAtBottom = [display scrolledNearBottom];
-
 	// Commit the changes
-	[[[send superview] superview] setFrame:sendFrame];
+	[[send enclosingScrollView] setFrame:sendFrame];
 	[display setFrame:webFrame];
 
 	[splitView adjustSubviews];
-
-	if( _scrollerIsAtBottom ) [display scrollToBottom];
 }
 
 #pragma mark -
@@ -1384,6 +1393,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 }
 
 - (void) splitView:(NSSplitView *) sender resizeSubviewsWithOldSize:(NSSize) oldSize {
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] ) {
+		[self resizeSendFieldToFitContent];
+		return;
+	}
+
 	CGFloat dividerThickness = [sender dividerThickness];
 	NSRect newFrame = [sender frame];
 
