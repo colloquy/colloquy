@@ -122,82 +122,73 @@
 
 	CGFloat statusWidth = ( _statusImage ? [_statusImage size].width + JVDetailCellStatusImageRightPadding : 0. );
 	if( ! _statusImage && ( _statusNumber || _importantStatusNumber ) ) {
+
 		NSColor *textColor = [NSColor whiteColor];
-		NSColor *backgroundColor = [NSColor colorWithCalibratedRed:0.6 green:0.6705882352941176 blue:0.7725490196078431 alpha:1.];
-		NSColor *importantColor = [NSColor colorWithCalibratedRed:0.831372549019608 green:0.572549019607843 blue:0.541176470588235 alpha:1.];
+		NSColor *standardBackgroundColor = [NSColor systemGrayColor];
+		NSColor *importantBackgroundColor = [NSColor systemRedColor];
+		NSFont *font = [NSFont boldSystemFontOfSize:[NSFont smallSystemFontSize]];
+		CGFloat radius = 7.;
 
-		if( ! _statusNumber && _importantStatusNumber )
-			backgroundColor = importantColor;
+		NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+		[paragraphStyle setAlignment:NSCenterTextAlignment];
+		NSDictionary *statusNumberAttributes = @{ NSFontAttributeName: font,
+												  NSParagraphStyleAttributeName: paragraphStyle,
+												  NSForegroundColorAttributeName: textColor };
 
-		if( [self isHighlighted] ) {
-			textColor = [backgroundColor shadowWithLevel:0.2];
-			backgroundColor = [backgroundColor highlightWithLevel:0.7];
+		NSString *mainStatus = nil;
+		NSColor *mainBackgroundColor = nil;
+		NSString *secondaryStatus = nil;
+		NSColor *secondaryBackgroundColor = nil;
+
+		if ( _statusNumber && ! _importantStatusNumber ) {
+			mainStatus = [NSString stringWithFormat:@"%ld", _statusNumber];
+			mainBackgroundColor = standardBackgroundColor;
+		} else if ( ! _statusNumber && _importantStatusNumber) {
+			mainStatus = [NSString stringWithFormat:@"%ld", _importantStatusNumber];
+			mainBackgroundColor = importantBackgroundColor;
+		} else if ( _statusNumber && _importantStatusNumber) {
+			mainStatus = [NSString stringWithFormat:@"%ld", _statusNumber];
+			mainBackgroundColor = standardBackgroundColor;
+			secondaryStatus = [NSString stringWithFormat:@"%ld", _importantStatusNumber];
+			secondaryBackgroundColor = importantBackgroundColor;
 		}
 
-		NSFont *font = [[NSFontManager sharedFontManager] fontWithFamily:@"Helvetica" traits:NSBoldFontMask weight:9 size:11.];
-		NSMutableParagraphStyle *numberParaStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-		[numberParaStyle setAlignment:NSCenterTextAlignment];
+		if ( mainStatus ) {
+			NSSize mainnSize = [mainStatus sizeWithAttributes:statusNumberAttributes];
+			statusWidth = mainnSize.width + 12.;
 
-		NSDictionary *statusNumberAttributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, numberParaStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, [NSNumber numberWithFloat:1.0], NSKernAttributeName, nil];
+			NSRect mainRect = NSMakeRect( NSMinX( cellFrame ) + NSWidth( cellFrame ) - statusWidth - 2.,
+										 NSMinY( cellFrame ) + ( ( NSHeight( cellFrame ) / 2 ) - radius ),
+										 statusWidth,
+										 radius * 2 );
 
-		NSString *statusText = [NSString stringWithFormat:@"%ld", ( _statusNumber ? _statusNumber : _importantStatusNumber )];
-		NSSize numberSize = [statusText sizeWithAttributes:statusNumberAttributes];
-		statusWidth = numberSize.width + 12.;
+			NSBezierPath *mainPath = [NSBezierPath bezierPathWithRoundedRect:mainRect xRadius:radius yRadius:radius];
 
-		if( imageWidth + ( imageWidth ? JVDetailCellImageLabelPadding : JVDetailCellLabelPadding ) + statusWidth < NSWidth( cellFrame ) ) {
-			CGFloat radius = ( _importantStatusNumber ? 8. : 7. );
-			NSRect mainRect = NSMakeRect( NSMinX( cellFrame ) + NSWidth( cellFrame ) - statusWidth - 2., NSMinY( cellFrame ) + ( ( NSHeight( cellFrame ) / 2 ) - radius ), statusWidth, radius * 2 );
-			NSRect pathRect = NSInsetRect( mainRect, radius, radius );
-
-			NSBezierPath *mainPath = [NSBezierPath bezierPath];
-			[mainPath appendBezierPathWithArcWithCenter:NSMakePoint( NSMinX( pathRect ), NSMinY( pathRect ) ) radius:radius startAngle:180. endAngle:270.];
-			[mainPath appendBezierPathWithArcWithCenter:NSMakePoint( NSMaxX( pathRect ), NSMinY( pathRect ) ) radius:radius startAngle:270. endAngle:360.];
-			[mainPath appendBezierPathWithArcWithCenter:NSMakePoint( NSMaxX( pathRect ), NSMaxY( pathRect ) ) radius:radius startAngle:0. endAngle:90.];
-			[mainPath appendBezierPathWithArcWithCenter:NSMakePoint( NSMinX( pathRect ), NSMaxY( pathRect ) ) radius:radius startAngle:90. endAngle:180.];
-			[mainPath closePath];
-
-			if( _importantStatusNumber ) {
-				NSString *importantStatusText = [NSString stringWithFormat:@"%ld", _importantStatusNumber];
-				numberSize = [importantStatusText sizeWithAttributes:statusNumberAttributes];
+			if( secondaryStatus ) {
+				NSSize secondarySize = [secondaryStatus sizeWithAttributes:statusNumberAttributes];
 				CGFloat mainStatusWidth = statusWidth;
-				statusWidth += numberSize.width + 10.;
-				radius = 7.;
+				statusWidth += secondarySize.width + 10.;
 
-				NSRect rect = NSMakeRect( NSMinX( cellFrame ) + NSWidth( cellFrame ) - statusWidth - 2., NSMinY( cellFrame ) + ( ( NSHeight( cellFrame ) / 2 ) - radius ), statusWidth - mainStatusWidth + 10., radius * 2 );
-				pathRect = NSInsetRect( rect, radius, radius );
+				NSRect rect = NSMakeRect( NSMinX( cellFrame ) + NSWidth( cellFrame ) - statusWidth - 2.,
+										 NSMinY( cellFrame ) + ( ( NSHeight( cellFrame ) / 2 ) - radius ),
+										 statusWidth - mainStatusWidth + 10.,
+										 radius * 2 );
 
-				NSBezierPath *path = [NSBezierPath bezierPath];
-				[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMinX( pathRect ), NSMinY( pathRect ) ) radius:radius startAngle:180. endAngle:270.];
-				[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMaxX( pathRect ), NSMinY( pathRect ) ) radius:radius startAngle:270. endAngle:360.];
-				[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMaxX( pathRect ), NSMaxY( pathRect ) ) radius:radius startAngle:0. endAngle:90.];
-				[path appendBezierPathWithArcWithCenter:NSMakePoint( NSMinX( pathRect ), NSMaxY( pathRect ) ) radius:radius startAngle:90. endAngle:180.];
-				[path closePath];
+				NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:radius yRadius:radius];
 
-				if( [self isHighlighted] ) [[NSColor whiteColor] set];
-				else [[NSColor colorWithCalibratedRed:0.92156862745098 green:0.231372549019608 blue:0.243137254901961 alpha:0.85] set];
+				[secondaryBackgroundColor set];
 				[path fill];
 
 				rect.origin.x -= 3.;
-				[importantStatusText drawInRect:rect withAttributes:statusNumberAttributes];
+				[secondaryStatus drawInRect:rect withAttributes:statusNumberAttributes];
 			}
 
-			[backgroundColor set];
+			[mainBackgroundColor set];
 			[mainPath fill];
-
-			if( _importantStatusNumber ) {
-				if( [self isHighlighted] ) [[NSColor colorWithCalibratedRed:0.5803921568627451 green:0.6705882352941176 blue:0.7882352941176471 alpha:1.] set];
-				else [[NSColor whiteColor] set];
-
-				[mainPath setLineWidth:1.25];
-				[mainPath stroke];
-			}
-
-			if( _importantStatusNumber ) mainRect.origin.y += 1.;
-			[statusText drawInRect:mainRect withAttributes:statusNumberAttributes];
+			[mainStatus drawInRect:mainRect withAttributes:statusNumberAttributes];
 
 			statusWidth += JVDetailCellStatusImageRightPadding + 3.;
-
-		} else statusWidth = 0.;
+		}
 	}
 
 	if( ( ! [_infoText length] && [_mainText length] ) || ( ( subStringSize.height + mainStringSize.height ) >= NSHeight( cellFrame ) - 2. ) ) {
