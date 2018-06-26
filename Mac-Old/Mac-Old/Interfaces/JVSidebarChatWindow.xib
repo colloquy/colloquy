@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14269.14"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -29,29 +29,29 @@
                 <rect key="frame" x="0.0" y="0.0" width="690" height="413"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <splitView vertical="YES" id="308" customClass="JVSideSplitView">
+                    <splitView dividerStyle="thin" vertical="YES" id="308" customClass="JVSideSplitView">
                         <rect key="frame" x="0.0" y="0.0" width="690" height="413"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <customView id="311" customClass="NSVisualEffectView">
-                                <rect key="frame" x="0.0" y="0.0" width="201" height="413"/>
+                                <rect key="frame" x="0.0" y="0.0" width="203" height="413"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <scrollView misplaced="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="16" horizontalPageScroll="0.0" verticalLineScroll="16" verticalPageScroll="0.0" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="312">
-                                        <rect key="frame" x="0.0" y="33" width="201" height="380"/>
+                                        <rect key="frame" x="0.0" y="33" width="203" height="380"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="WSq-AY-dqg">
-                                            <rect key="frame" x="0.0" y="0.0" width="201" height="380"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="203" height="380"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="14" indentationPerLevel="16" autoresizesOutlineColumn="YES" outlineTableColumn="314" id="313" customClass="JVSideOutlineView">
-                                                    <rect key="frame" x="0.0" y="0.0" width="201" height="380"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="203" height="380"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                     <tableColumns>
-                                                        <tableColumn identifier="" width="198" minWidth="16" maxWidth="1000" id="314">
+                                                        <tableColumn width="200" minWidth="16" maxWidth="1000" id="314">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -60,7 +60,7 @@
                                                             <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" id="333">
                                                                 <font key="font" metaFont="smallSystem"/>
                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             </textFieldCell>
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                         </tableColumn>
@@ -72,21 +72,21 @@
                                                 </outlineView>
                                             </subviews>
                                         </clipView>
-                                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="334">
+                                        <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="334">
                                             <rect key="frame" x="-100" y="-100" width="128" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
-                                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="335">
+                                        <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="335">
                                             <rect key="frame" x="-30" y="0.0" width="15" height="390"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                     </scrollView>
                                     <customView misplaced="YES" id="cEa-PN-gas">
-                                        <rect key="frame" x="0.0" y="0.0" width="201" height="33"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="203" height="33"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <box verticalHuggingPriority="750" misplaced="YES" boxType="separator" id="3ES-i2-Lch">
-                                                <rect key="frame" x="0.0" y="30" width="201" height="5"/>
+                                                <rect key="frame" x="0.0" y="30" width="203" height="5"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                             </box>
                                             <button misplaced="YES" id="316" customClass="MVMenuButton">
@@ -106,7 +106,7 @@
                                                 </buttonCell>
                                             </button>
                                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="9E0-oI-vnV" userLabel="Drag Handle">
-                                                <rect key="frame" x="169" y="0.0" width="32" height="32"/>
+                                                <rect key="frame" x="171" y="0.0" width="32" height="32"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
                                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="dividerHandleTemplate" id="7UH-wt-eku"/>
                                             </imageView>
@@ -115,7 +115,7 @@
                                 </subviews>
                             </customView>
                             <customView id="309">
-                                <rect key="frame" x="210" y="0.0" width="480" height="413"/>
+                                <rect key="frame" x="204" y="0.0" width="486" height="413"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </customView>
                         </subviews>
