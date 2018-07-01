@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
+            <connections>
+                <outlet property="delegate" destination="254" id="263"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <menu title="Massinova" systemMenu="main" id="29" userLabel="MainMenu">
+            <items>
+                <menuItem title="Colloquy" id="56">
+                    <menu key="submenu" title="Colloquy" systemMenu="apple" id="57">
+                        <items>
+                            <menuItem title="Colloquy에 대하여" id="58">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="업데이트 확인…" id="696">
+                                <connections>
+                                    <action selector="checkForUpdate:" target="254" id="697"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="982">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="설정…" keyEquivalent="," id="129">
+                                <connections>
+                                    <action selector="showPreferences:" target="254" id="877"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="143">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="서비스" id="131">
+                                <menu key="submenu" title="서비스" systemMenu="services" id="130"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="144">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Colloquy 숨기기" keyEquivalent="h" id="134">
+                                <connections>
+                                    <action selector="hide:" target="-2" id="152"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="다른 창 숨기기" keyEquivalent="h" id="145">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="hideOtherApplications:" target="-2" id="146"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="모두 보이기" id="150">
+                                <connections>
+                                    <action selector="unhideAllApplications:" target="-2" id="153"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="149">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Colloquy 종료…" keyEquivalent="q" id="136">
+                                <connections>
+                                    <action selector="terminate:" target="-2" id="139"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Colloquy 종료" alternate="YES" keyEquivalent="q" id="977">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="terminateWithoutConfirm:" target="254" id="978"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="파일" tag="1" id="83">
+                    <menu key="submenu" title="파일" id="81">
+                        <items>
+                            <menuItem title="새 연결…" keyEquivalent="n" id="749">
+                                <connections>
+                                    <action selector="newConnection:" target="-1" id="779"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="채팅 방 접속…" keyEquivalent="j" id="880">
+                                <connections>
+                                    <action selector="joinRoom:" target="-1" id="882"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="962">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="스마트 채팅 기록" tag="30" id="960">
+                                <menu key="submenu" title="스마트 채팅 기록" id="961"/>
+                            </menuItem>
+                            <menuItem title="즐겨찾기" tag="20" id="890">
+                                <menu key="submenu" title="즐겨찾기" id="888"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="883">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="채팅기록 열기…" id="974">
+                                <connections>
+                                    <action selector="openDocument:" target="-1" id="975"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="최근 항목 열기" id="804">
+                                <menu key="submenu" title="최근 항목 열기" systemMenu="recentDocuments" id="805">
+                                    <items>
+                                        <menuItem title="메뉴 비우기" id="806">
+                                            <connections>
+                                                <action selector="clearRecentDocuments:" target="-1" id="807"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="754">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="패널 분리" keyEquivalent="d" id="919">
+                                <connections>
+                                    <action selector="detachCurrentPanel:" target="-1" id="920"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="창 닫기" tag="1" keyEquivalent="w" id="73">
+                                <connections>
+                                    <action selector="performClose:" target="-1" id="892"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="현재 패널 닫기" tag="2" id="789">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="closeCurrentPanel:" target="-1" id="798"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="다른 이름으로 저장…" keyEquivalent="s" id="780">
+                                <connections>
+                                    <action selector="saveDocumentTo:" target="-1" id="808"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="편집" tag="2" id="217">
+                    <menu key="submenu" title="편집" id="205">
+                        <items>
+                            <menuItem title="실행 취소" keyEquivalent="z" id="207">
+                                <connections>
+                                    <action selector="undo:" target="-1" id="223"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="실행 복귀" keyEquivalent="Z" id="215">
+                                <connections>
+                                    <action selector="redo:" target="-1" id="231"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="206">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="자르기" keyEquivalent="x" id="199">
+                                <connections>
+                                    <action selector="cut:" target="-1" id="228"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="복사하기" keyEquivalent="c" id="197">
+                                <connections>
+                                    <action selector="copy:" target="-1" id="979"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="붙여넣기" keyEquivalent="v" id="900">
+                                <connections>
+                                    <action selector="pasteAsPlainText:" target="-1" id="905"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="리치 텍스트로 붙여넣기" keyEquivalent="V" id="901">
+                                <connections>
+                                    <action selector="pasteAsRichText:" target="-1" id="904"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="삭제" id="202">
+                                <connections>
+                                    <action selector="clear:" target="-1" id="229"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="모두 선택" keyEquivalent="a" id="198">
+                                <connections>
+                                    <action selector="selectAll:" target="-1" id="232"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="214">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="찾기" id="948">
+                                <menu key="submenu" title="찾기" id="949">
+                                    <items>
+                                        <menuItem title="찾기…" tag="1" keyEquivalent="f" id="944">
+                                            <connections>
+                                                <action selector="orderFrontFindPanel:" target="-1" id="957"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="다음 찾기" tag="2" keyEquivalent="g" id="950">
+                                            <connections>
+                                                <action selector="findNext:" target="-1" id="958"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="이전 찾기" tag="3" keyEquivalent="G" id="946">
+                                            <connections>
+                                                <action selector="findPrevious:" target="-1" id="959"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Use Selection for Find" tag="7" keyEquivalent="e" id="945">
+                                            <connections>
+                                                <action selector="copySelectionToFindPboard:" target="-1" id="985"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="철자" id="216">
+                                <menu key="submenu" title="철자" id="200">
+                                    <items>
+                                        <menuItem title="철자법..." keyEquivalent=":" id="204">
+                                            <connections>
+                                                <action selector="showGuessPanel:" target="-1" id="230"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="철자법 확인" keyEquivalent=";" id="201">
+                                            <connections>
+                                                <action selector="checkSpelling:" target="-1" id="225"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="작성한 항목 철자 확인" id="219">
+                                            <connections>
+                                                <action selector="toggleContinuousSpellChecking:" target="-1" id="222"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="보기" tag="3" id="391">
+                    <menu key="submenu" title="보기" id="392">
+                        <items>
+                            <menuItem title="서랍 보이기" keyEquivalent="D" id="863">
+                                <connections>
+                                    <action selector="toggleViewsDrawer:" target="-1" id="865"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="탭 바 보이기" keyEquivalent="T" id="915">
+                                <connections>
+                                    <action selector="toggleTabBarVisible:" target="-1" id="917"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="864">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="정보 가져오기" alternate="YES" keyEquivalent="I" id="908">
+                                <connections>
+                                    <action selector="getInfo:" target="-1" id="909"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="조사창 보이기" alternate="YES" keyEquivalent="I" id="906">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="showInspector:" target="-1" id="907"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="918">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="툴바 보이기" id="395">
+                                <connections>
+                                    <action selector="toggleToolbarShown:" target="-1" id="396"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="툴바 사용자 정의…" id="393">
+                                <connections>
+                                    <action selector="runToolbarCustomizationPalette:" target="-1" id="397"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="921">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="작은 서랍 아이콘 사용" id="867">
+                                <connections>
+                                    <action selector="toggleSmallDrawerIcons:" target="-1" id="868"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="928">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="이전 스크롤 내용 삭제" keyEquivalent="k" id="922">
+                                <connections>
+                                    <action selector="clearDisplay:" target="-1" id="931"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="이전 스크롤 내용에 표시 붙이기" keyEquivalent="M" id="964">
+                                <connections>
+                                    <action selector="markDisplay:" target="-1" id="965"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="전부 표식붙이기" alternate="YES" keyEquivalent="M" id="966">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="markAllDisplays:" target="254" id="968"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="866">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="이전 하이라이트 항목으로 이동" keyEquivalent="[" id="924">
+                                <connections>
+                                    <action selector="jumpToPreviousHighlight:" target="-1" id="929"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="다음 하이라이트 항목으로 이동" keyEquivalent="]" id="926">
+                                <connections>
+                                    <action selector="jumpToNextHighlight:" target="-1" id="930"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="표식된 항목으로 이동" keyEquivalent="J" id="969">
+                                <connections>
+                                    <action selector="jumpToMark:" target="-1" id="970"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="글꼴" tag="4" id="720">
+                    <menu key="submenu" title="글꼴" systemMenu="font" id="710">
+                        <items>
+                            <menuItem title="굵게" tag="2" keyEquivalent="b" id="719">
+                                <connections>
+                                    <action selector="bold:" target="-1" id="747"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="이탤릭" tag="1" keyEquivalent="i" id="711">
+                                <connections>
+                                    <action selector="italic:" target="-1" id="748"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="밑줄" keyEquivalent="u" id="701">
+                                <connections>
+                                    <action selector="underline:" target="-1" id="742"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="727">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="색상 보기" keyEquivalent="C" id="715">
+                                <connections>
+                                    <action selector="orderFrontColorPanel:" target="-1" id="734"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="717">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="스타일 복사" keyEquivalent="c" id="723">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="copyFont:" target="-1" id="738"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="스타일 붙여넣기" keyEquivalent="v" id="709">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="pasteFont:" target="-1" id="741"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="창" tag="5" id="19">
+                    <menu key="submenu" title="창" systemMenu="window" id="24">
+                        <items>
+                            <menuItem title="최소화" keyEquivalent="m" id="23">
+                                <connections>
+                                    <action selector="performMiniaturize:" target="-1" id="37"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="92">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="이전 패널 선택" keyEquivalent="" id="794">
+                                <connections>
+                                    <action selector="selectPreviousPanel:" target="-1" id="803"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="이전 활성 패널 선택" alternate="YES" keyEquivalent="" id="910">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selectPreviousActivePanel:" target="-1" id="913"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="다음 패널 선택" keyEquivalent="" id="793">
+                                <connections>
+                                    <action selector="selectNextPanel:" target="-1" id="802"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="다음 활성 패널 선택" alternate="YES" keyEquivalent="" id="911">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="selectNextActivePanel:" target="-1" id="914"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="795">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="연결" keyEquivalent="1" id="751">
+                                <connections>
+                                    <action selector="showConnectionManager:" target="254" id="774"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="파일 전송" keyEquivalent="2" id="658">
+                                <connections>
+                                    <action selector="showTransferManager:" target="254" id="775"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="친구 목록" keyEquivalent="3" id="878">
+                                <connections>
+                                    <action selector="showBuddyList:" target="254" id="879"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="657">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="모두 앞으로 가져오기" id="5">
+                                <connections>
+                                    <action selector="arrangeInFront:" target="-1" id="39"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="도움말" tag="6" id="103">
+                    <menu key="submenu" title="도움말" id="106">
+                        <items>
+                            <menuItem title="Colloquy 도움말" keyEquivalent="?" id="111">
+                                <connections>
+                                    <action selector="helpWebsite:" target="254" id="984"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="757">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Colloquy 채팅 채널" id="756">
+                                <connections>
+                                    <action selector="connectToSupportRoom:" target="254" id="771"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="피드백" id="776">
+                                <connections>
+                                    <action selector="emailDeveloper:" target="254" id="777"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="버그 리포트 보내기" id="786">
+                                <connections>
+                                    <action selector="bugReportWebsite:" target="254" id="981"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Colloquy 정보" id="980">
+                                <connections>
+                                    <action selector="productWebsite:" target="254" id="983"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+            </items>
+        </menu>
+        <customObject id="254" userLabel="MVApplicationController" customClass="MVApplicationController"/>
+        <customObject id="453" userLabel="Font Manager" customClass="NSFontManager"/>
+    </objects>
+</document>
