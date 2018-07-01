@@ -1,0 +1,60 @@
+
+/* Class = "NSTextFieldCell"; title = "Press Enter key to:"; ObjectID = "2Xv-k4-rwc"; */
+"2Xv-k4-rwc.title" = "엔터키를 누를때:";
+
+/* Class = "NSTextFieldCell"; title = "Send History:"; ObjectID = "3L3-IE-DmA"; */
+"3L3-IE-DmA.title" = "역사 보내기:";
+
+/* Class = "NSTextFieldCell"; title = "Message Scrollback:"; ObjectID = "4aK-ze-JKp"; */
+"4aK-ze-JKp.title" = "메시지 스크롤백:";
+
+/* Class = "NSTextFieldCell"; title = "Also available by pressing F5 while typing.\nNickname tab completion is supported without this preference."; ObjectID = "4jp-UJ-tUu"; */
+"4jp-UJ-tUu.title" = "또한 타이핑중 F5를 누르실수 있습니다\n별명 탭은 완성은 설정에서 허용안해도 지원합니다.";
+
+/* Class = "NSMenuItem"; title = "Insert a new line"; ObjectID = "BFs-hq-DTa"; */
+"BFs-hq-DTa.title" = "새 라인 추가";
+
+/* Class = "NSButtonCell"; title = "Auto rejoin when kicked from room"; ObjectID = "Db8-WZ-PVh"; */
+"Db8-WZ-PVh.title" = "채널에서 내쫓겼을때 다시 재입장";
+
+/* Class = "NSButtonCell"; title = "Auto join chat rooms on invite"; ObjectID = "JQs-X4-QSI"; */
+"JQs-X4-QSI.title" = "초대를 받았을시 자동 입장";
+
+/* Class = "NSButtonCell"; title = "Check spelling as you type"; ObjectID = "LkH-sq-XsW"; */
+"LkH-sq-XsW.title" = "타이핑 하는 동안 철자 검사";
+
+/* Class = "NSTextFieldCell"; title = "Press Return key to:"; ObjectID = "UnW-il-L99"; */
+"UnW-il-L99.title" = "리턴 키를 눌렀을시:";
+
+/* Class = "NSMenuItem"; title = "Send an action message"; ObjectID = "Unv-0w-acR"; */
+"Unv-0w-acR.title" = "행동 메시지 보내기";
+
+/* Class = "NSTextFieldCell"; title = "After:"; ObjectID = "ZtQ-oR-of1"; */
+"ZtQ-oR-of1.title" = "이후:";
+
+/* Class = "NSTextFieldCell"; title = "Automatically sends messages that begin with common action verbs as actions"; ObjectID = "dc5-nK-lqg"; */
+"dc5-nK-lqg.title" = "행동에 대한 공통 행동 동사를 자동으로 보냅니";
+
+/* Class = "NSButtonCell"; title = "Detect natural language actions"; ObjectID = "fbp-R6-UMD"; */
+"fbp-R6-UMD.title" = "자연어 행동 탐지";
+
+/* Class = "NSMenuItem"; title = "Send an action message"; ObjectID = "hKk-jz-VLy"; */
+"hKk-jz-VLy.title" = "행동 메시지 보내기";
+
+/* Class = "NSMenuItem"; title = "Send a chat message"; ObjectID = "kel-Q4-KwP"; */
+"kel-Q4-KwP.title" = "채팅 메시지 보내기";
+
+/* Class = "NSButtonCell"; title = "Tab key triggers word completion"; ObjectID = "nbo-5A-7Fd"; */
+"nbo-5A-7Fd.title" = "탭 키를 눌러 단어 완성하기";
+
+/* Class = "NSTextFieldCell"; title = "seconds"; ObjectID = "o2F-B5-aW5"; */
+"o2F-B5-aW5.title" = "초";
+
+/* Class = "NSMenuItem"; title = "Send a chat message"; ObjectID = "pGD-vP-UM1"; */
+"pGD-vP-UM1.title" = "채팅 메시지 보내기";
+
+/* Class = "NSTextFieldCell"; title = "Use the ⌥↑ & ⌥↓ keys to cycle through sent messages"; ObjectID = "tWP-5e-QKx"; */
+"tWP-5e-QKx.title" = "⌥↑ 와 ⌥↓ 를 사용하여 보낼려는 메시지들 사이에서 이동할수 있습니다";
+
+/* Class = "NSMenuItem"; title = "Insert a new line"; ObjectID = "tvB-6R-Fg6"; */
+"tvB-6R-Fg6.title" = "새 라인 추가";
