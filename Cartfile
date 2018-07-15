@@ -17,7 +17,7 @@ github "AgileBits/onepassword-extension" "add-framework-support"
 # Shared Dependencies
 
 github "colloquy/CocoaAsyncSocket" "colloquy-patches"
-github "CocoaLumberjack/CocoaLumberjack" ~> 3.4
+github "CocoaLumberjack/CocoaLumberjack" ~> 3.4.2
 
 # Overwrites of sub-dependencies
 
