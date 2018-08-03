@@ -182,6 +182,11 @@
 		1CF8030F070C893500C9B54C /* libsilcclient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; };
 		1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		41E2486621143C89001A2663 /* CQActivityWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 895BCD3812BD39400082AB5A /* CQActivityWindow.xib */; };
+		41E2486A21143CED001A2663 /* JVGeneralPreferencesViewController.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41E2486821143CED001A2663 /* JVGeneralPreferencesViewController.strings */; };
+		41E2486D21143D02001A2663 /* JVInterfacePreferencesViewController.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41E2486B21143D01001A2663 /* JVInterfacePreferencesViewController.strings */; };
+		41E2487021143D16001A2663 /* JVAppearancePreferencesViewController.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41E2486E21143D16001A2663 /* JVAppearancePreferencesViewController.strings */; };
+		41E2487321143D23001A2663 /* JVNotificationPreferencesViewController.strings in Resources */ = {isa = PBXBuildFile; fileRef = 41E2487121143D22001A2663 /* JVNotificationPreferencesViewController.strings */; };
 		891E8467123F0AEF00EC3C0F /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 891E8466123F0AEF00EC3C0F /* NSCharacterSetAdditions.m */; };
 		891EF3D1106426CB00CCEA35 /* PFMoveApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 891EF3D0106426CB00CCEA35 /* PFMoveApplicationController.m */; };
 		9200338D13D92515005B69BA /* MVFileTransfer.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9200338B13D92515005B69BA /* MVFileTransfer.xib */; };
@@ -546,7 +551,7 @@
 		1CBC630905489484009E59E1 /* JVGeneralPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVGeneralPreferencesViewController.h; sourceTree = "<group>"; };
 		1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVGeneralPreferencesViewController.m; sourceTree = "<group>"; };
 		1CBECDCF0508C8AB000001C8 /* default.xsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = default.xsl; sourceTree = "<group>"; };
-		1CBECE390508D58F000001C8 /* JVChatWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = JVChatWindow.xib; sourceTree = "<group>"; };
+		1CBECE390508D58F000001C8 /* JVChatWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JVChatWindow.xib; sourceTree = "<group>"; };
 		1CBECE3A0508D58F000001C8 /* JVDirectChat.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = JVDirectChat.xib; sourceTree = "<group>"; };
 		1CC6FC500549FCD70075807C /* JVAppearancePreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVAppearancePreferencesViewController.h; sourceTree = "<group>"; };
 		1CC6FC510549FCD70075807C /* JVAppearancePreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVAppearancePreferencesViewController.m; sourceTree = "<group>"; };
@@ -615,12 +620,39 @@
 		1CF79CBD07AC77E600696918 /* JVChatTranscript.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVChatTranscript.m; sourceTree = "<group>"; };
 		1CF8030C070C893500C9B54C /* libsilc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libsilc.framework; sourceTree = "<group>"; };
 		1CF8030D070C893500C9B54C /* libsilcclient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = libsilcclient.framework; sourceTree = "<group>"; };
+		41E2485721143966001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
+		41E2485821143977001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/Colloquy.xib; sourceTree = "<group>"; };
+		41E2485921143986001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/MVBuddyList.xib; sourceTree = "<group>"; };
+		41E2485A21143990001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/MVConnections.xib; sourceTree = "<group>"; };
+		41E2485B2114399B001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/MVCrashCatcher.xib; sourceTree = "<group>"; };
+		41E2485C211439B8001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/JVFind.xib; sourceTree = "<group>"; };
+		41E2485D211439D8001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/MVSoftwareUpdate.xib; sourceTree = "<group>"; };
+		41E2485E211439EE001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/JVChatTranscriptBrowserPanel.xib; sourceTree = "<group>"; };
+		41E2485F21143A13001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/JVTranscriptCriterion.xib; sourceTree = "<group>"; };
+		41E2486021143A29001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/JVConnectionInspector.xib; sourceTree = "<group>"; };
+		41E2486121143C0A001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/JVRoomInspector.xib; sourceTree = "<group>"; };
+		41E2486221143C2F001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/JVChatMemberInspector.xib; sourceTree = "<group>"; };
+		41E2486321143C45001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/JVBuddyInspector.xib; sourceTree = "<group>"; };
+		41E2486421143C59001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/JVChatRoomBrowser.xib; sourceTree = "<group>"; };
+		41E2486521143C89001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
+		41E2486721143C9F001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ko; path = Languages/ko.lproj/TSCustomBan.xib; sourceTree = "<group>"; };
+		41E2486921143CED001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
+		41E2486C21143D01001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		41E2486F21143D16001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		41E2487221143D22001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		41E2487421143D41001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/JVAppearancePreferencesViewController.strings; sourceTree = "<group>"; };
+		41E2487521143D47001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/JVInterfacePreferencesViewController.strings; sourceTree = "<group>"; };
+		41E2487621143D4B001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/JVGeneralPreferencesViewController.strings; sourceTree = "<group>"; };
+		41E2487721143D50001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/JVNotificationPreferencesViewController.strings; sourceTree = "<group>"; };
+		41E2487821143D54001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/JVFileTransferPreferencesViewController.strings; sourceTree = "<group>"; };
+		41E2487921143D58001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/JVTranscriptPreferencesViewController.strings; sourceTree = "<group>"; };
+		41E2487A21143D8C001A2663 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = Languages/ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		55CFBD9F20B5CB8900AD846B /* nn */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nn; path = Languages/nn.lproj/Localizable.strings; sourceTree = "<group>"; };
 		891E8465123F0AEF00EC3C0F /* NSCharacterSetAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCharacterSetAdditions.h; sourceTree = "<group>"; };
 		891E8466123F0AEF00EC3C0F /* NSCharacterSetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCharacterSetAdditions.m; sourceTree = "<group>"; };
 		891EF3D0106426CB00CCEA35 /* PFMoveApplicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFMoveApplicationController.m; sourceTree = "<group>"; };
 		891EF4091064278200CCEA35 /* PFMoveApplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFMoveApplicationController.h; sourceTree = "<group>"; };
-		895BCD3812BD39400082AB5A /* CQActivityWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CQActivityWindow.xib; sourceTree = "<group>"; };
+		895BCD3812BD39400082AB5A /* CQActivityWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CQActivityWindow.xib; sourceTree = "<group>"; };
 		89FB4EDC12FAABBB00668905 /* old-mac-target.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "old-mac-target.xcconfig"; sourceTree = "<group>"; };
 		9200338C13D92515005B69BA /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Dutch; path = Languages/nl.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
 		9200338E13D92530005B69BA /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Languages/en.lproj/MVFileTransfer.xib; sourceTree = "<group>"; };
@@ -1094,15 +1126,19 @@
 				1CBC630905489484009E59E1 /* JVGeneralPreferencesViewController.h */,
 				1CBC630A05489484009E59E1 /* JVGeneralPreferencesViewController.m */,
 				C29654121BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib */,
+				41E2486821143CED001A2663 /* JVGeneralPreferencesViewController.strings */,
 				1C6A40C7083FF6C600572AB6 /* JVInterfacePreferencesViewController.h */,
 				1C6A40C8083FF6C600572AB6 /* JVInterfacePreferencesViewController.m */,
 				C29654151BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib */,
+				41E2486B21143D01001A2663 /* JVInterfacePreferencesViewController.strings */,
 				1CC6FC500549FCD70075807C /* JVAppearancePreferencesViewController.h */,
 				1CC6FC510549FCD70075807C /* JVAppearancePreferencesViewController.m */,
 				C29654181BDB9FFD00F28873 /* JVAppearancePreferencesViewController.xib */,
+				41E2486E21143D16001A2663 /* JVAppearancePreferencesViewController.strings */,
 				1C9982000603EFD6006C6417 /* JVNotificationPreferencesViewController.h */,
 				1C9982010603EFD6006C6417 /* JVNotificationPreferencesViewController.m */,
 				C296541B1BDBA00400F28873 /* JVNotificationPreferencesViewController.xib */,
+				41E2487121143D22001A2663 /* JVNotificationPreferencesViewController.strings */,
 				1CDEE25505823C13000B9075 /* JVFileTransferPreferencesViewController.h */,
 				1CDEE25605823C13000B9075 /* JVFileTransferPreferencesViewController.m */,
 				C296541E1BDBA00D00F28873 /* JVFileTransferPreferencesViewController.xib */,
@@ -1626,6 +1662,7 @@
 				"pt-PT",
 				es,
 				"zh-Hant",
+				ko,
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
 			productRefGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
@@ -1700,6 +1737,7 @@
 				C29654131BDB9FF500F28873 /* JVInterfacePreferencesViewController.xib in Resources */,
 				1CB2CD1A052DDC560094AAA4 /* download.png in Resources */,
 				1CB2CD1B052DDC560094AAA4 /* upload.png in Resources */,
+				41E2487021143D16001A2663 /* JVAppearancePreferencesViewController.strings in Resources */,
 				C29654101BDB9FE900F28873 /* JVGeneralPreferencesViewController.xib in Resources */,
 				1CB2CD1C052DDC560094AAA4 /* error.png in Resources */,
 				1CB2CD1D052DDC560094AAA4 /* pending.png in Resources */,
@@ -1716,12 +1754,14 @@
 				1CB2CD35052DDC560094AAA4 /* statusHeaderTemplate.pdf in Resources */,
 				B6310B4C1C6EFA800033E88E /* activityNew.pdf in Resources */,
 				C2B92F2A1FE954A200F3F23D /* room.pdf in Resources */,
+				41E2486D21143D02001A2663 /* JVInterfacePreferencesViewController.strings in Resources */,
 				1CB2CD4E052DDC560094AAA4 /* viewAlert.png in Resources */,
 				1CB2CD50052DDC560094AAA4 /* template.html in Resources */,
 				1CB2CD52052DDC560094AAA4 /* Generic.icns in Resources */,
 				1CB2CD54052DDC560094AAA4 /* default.xsl in Resources */,
 				1CB2CD56052DDC560094AAA4 /* JVChatWindow.xib in Resources */,
 				1CB2CD57052DDC560094AAA4 /* JVDirectChat.xib in Resources */,
+				41E2487321143D23001A2663 /* JVNotificationPreferencesViewController.strings in Resources */,
 				1CB2CD59052DDC560094AAA4 /* Emoticons in Resources */,
 				1CB2CD5A052DDC560094AAA4 /* emoticons.plist in Resources */,
 				1CB2CD5B052DDC560094AAA4 /* colloquy-alpha.png in Resources */,
@@ -1732,6 +1772,7 @@
 				1CB2CD60052DDC560094AAA4 /* JVChatConsole.xib in Resources */,
 				1C1AD00B053487ED00F71D4E /* JVConnectionInspector.xib in Resources */,
 				1CB4DCAB053627C00080D36F /* JVRoomInspector.xib in Resources */,
+				41E2486621143C89001A2663 /* CQActivityWindow.xib in Resources */,
 				1C8BDD2205436A030035B84A /* JVChatMemberInspector.xib in Resources */,
 				1CC6FD39054AF1940075807C /* preview.colloquyTranscript in Resources */,
 				1CD0201005758A33000F93B4 /* MVBuddyList.xib in Resources */,
@@ -1772,6 +1813,7 @@
 				1CE6916D08B183C6006D9CA0 /* Colloquy.scriptTerminology in Resources */,
 				1CE6916E08B183C7006D9CA0 /* Colloquy.scriptSuite in Resources */,
 				1CE6916F08B183C7006D9CA0 /* NSTextSuite.scriptTerminology in Resources */,
+				41E2486A21143CED001A2663 /* JVGeneralPreferencesViewController.strings in Resources */,
 				1CE6917008B183C8006D9CA0 /* NSTextSuite.scriptSuite in Resources */,
 				B6310B561C6F0A300033E88E /* connectedTemplate.pdf in Resources */,
 				1C77822908FA4104006AD8E5 /* topicBackground.png in Resources */,
@@ -2031,6 +2073,7 @@
 				A15DE10D0957E1B20040042E /* zh_TW */,
 				1C9D853A0C986A0700BB6C58 /* Japanese */,
 				1C9D855C0C986A2C00BB6C58 /* nb */,
+				41E2486721143C9F001A2663 /* ko */,
 			);
 			name = TSCustomBan.xib;
 			sourceTree = "<group>";
@@ -2057,6 +2100,7 @@
 				A15DE1000957E1B20040042E /* zh_TW */,
 				1C9D852D0C986A0700BB6C58 /* Japanese */,
 				1C9D854F0C986A2C00BB6C58 /* nb */,
+				41E2485C211439B8001A2663 /* ko */,
 			);
 			name = JVFind.xib;
 			sourceTree = "<group>";
@@ -2074,6 +2118,7 @@
 				A15DE1060957E1B20040042E /* zh_TW */,
 				1C9D85330C986A0700BB6C58 /* Japanese */,
 				1C9D85550C986A2C00BB6C58 /* nb */,
+				41E2485F21143A13001A2663 /* ko */,
 			);
 			name = JVTranscriptCriterion.xib;
 			sourceTree = "<group>";
@@ -2091,6 +2136,7 @@
 				A15DE0FE0957E1B20040042E /* zh_TW */,
 				1C9D852B0C986A0700BB6C58 /* Japanese */,
 				1C9D854D0C986A2C00BB6C58 /* nb */,
+				41E2486021143A29001A2663 /* ko */,
 			);
 			name = JVConnectionInspector.xib;
 			sourceTree = "<group>";
@@ -2108,6 +2154,7 @@
 				A15DE0FC0957E1B20040042E /* zh_TW */,
 				1C9D85290C986A0700BB6C58 /* Japanese */,
 				1C9D854B0C986A2C00BB6C58 /* nb */,
+				41E2485E211439EE001A2663 /* ko */,
 			);
 			name = JVChatTranscriptBrowserPanel.xib;
 			sourceTree = "<group>";
@@ -2142,6 +2189,7 @@
 				A15DE0FB0957E1B20040042E /* zh_TW */,
 				1C9D85280C986A0700BB6C58 /* Japanese */,
 				1C9D854A0C986A2C00BB6C58 /* nb */,
+				41E2486421143C59001A2663 /* ko */,
 			);
 			name = JVChatRoomBrowser.xib;
 			sourceTree = "<group>";
@@ -2159,6 +2207,7 @@
 				A15DE1050957E1B20040042E /* zh_TW */,
 				1C9D85320C986A0700BB6C58 /* Japanese */,
 				1C9D85540C986A2C00BB6C58 /* nb */,
+				41E2486521143C89001A2663 /* ko */,
 			);
 			name = JVSmartTranscriptFilterSheet.xib;
 			sourceTree = "<group>";
@@ -2176,6 +2225,7 @@
 				A15DE0FA0957E1B20040042E /* zh_TW */,
 				1C9D85270C986A0700BB6C58 /* Japanese */,
 				1C9D85490C986A2C00BB6C58 /* nb */,
+				41E2486221143C2F001A2663 /* ko */,
 			);
 			name = JVChatMemberInspector.xib;
 			sourceTree = "<group>";
@@ -2193,6 +2243,7 @@
 				A15DE1040957E1B20040042E /* zh_TW */,
 				1C9D85310C986A0700BB6C58 /* Japanese */,
 				1C9D85530C986A2C00BB6C58 /* nb */,
+				41E2486121143C0A001A2663 /* ko */,
 			);
 			name = JVRoomInspector.xib;
 			sourceTree = "<group>";
@@ -2210,6 +2261,7 @@
 				A15DE1080957E1B20040042E /* zh_TW */,
 				1C9D85350C986A0700BB6C58 /* Japanese */,
 				1C9D85570C986A2C00BB6C58 /* nb */,
+				41E2485921143986001A2663 /* ko */,
 			);
 			name = MVBuddyList.xib;
 			sourceTree = "<group>";
@@ -2227,8 +2279,41 @@
 				A15DE0F90957E1B20040042E /* zh_TW */,
 				1C9D85260C986A0700BB6C58 /* Japanese */,
 				1C9D85480C986A2C00BB6C58 /* nb */,
+				41E2486321143C45001A2663 /* ko */,
 			);
 			name = JVBuddyInspector.xib;
+			sourceTree = "<group>";
+		};
+		41E2486821143CED001A2663 /* JVGeneralPreferencesViewController.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				41E2486921143CED001A2663 /* ko */,
+			);
+			name = JVGeneralPreferencesViewController.strings;
+			sourceTree = "<group>";
+		};
+		41E2486B21143D01001A2663 /* JVInterfacePreferencesViewController.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				41E2486C21143D01001A2663 /* ko */,
+			);
+			name = JVInterfacePreferencesViewController.strings;
+			sourceTree = "<group>";
+		};
+		41E2486E21143D16001A2663 /* JVAppearancePreferencesViewController.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				41E2486F21143D16001A2663 /* ko */,
+			);
+			name = JVAppearancePreferencesViewController.strings;
+			sourceTree = "<group>";
+		};
+		41E2487121143D22001A2663 /* JVNotificationPreferencesViewController.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				41E2487221143D22001A2663 /* ko */,
+			);
+			name = JVNotificationPreferencesViewController.strings;
 			sourceTree = "<group>";
 		};
 		9200338B13D92515005B69BA /* MVFileTransfer.xib */ = {
@@ -2244,6 +2329,7 @@
 				9200339A13D92578005B69BA /* pt_PT */,
 				9200339C13D92581005B69BA /* Spanish */,
 				9200339E13D9258A005B69BA /* zh_TW */,
+				41E2485721143966001A2663 /* ko */,
 			);
 			name = MVFileTransfer.xib;
 			sourceTree = "<group>";
@@ -2278,6 +2364,7 @@
 				C27B6C161BDC0BFD0017EDAF /* es */,
 				C27B6C181BDC0C010017EDAF /* zh-Hant */,
 				C27B6C1A1BDC21470017EDAF /* en */,
+				41E2487621143D4B001A2663 /* ko */,
 			);
 			name = JVGeneralPreferencesViewController.xib;
 			sourceTree = "<group>";
@@ -2296,6 +2383,7 @@
 				C25741881C12F53B0069B4C8 /* pt-PT */,
 				C257418A1C12F53E0069B4C8 /* es */,
 				C257418C1C12F5410069B4C8 /* zh-Hant */,
+				41E2487521143D47001A2663 /* ko */,
 			);
 			name = JVInterfacePreferencesViewController.xib;
 			sourceTree = "<group>";
@@ -2314,6 +2402,7 @@
 				C2EB206D1C1EAA3000CB88B2 /* pt-PT */,
 				C2EB206F1C1EAA5300CB88B2 /* es */,
 				C2EB20711C1EAA5800CB88B2 /* zh-Hant */,
+				41E2487421143D41001A2663 /* ko */,
 			);
 			name = JVAppearancePreferencesViewController.xib;
 			sourceTree = "<group>";
@@ -2332,6 +2421,7 @@
 				C26756221C2173F30039BB6E /* pt-PT */,
 				C26756241C2173F60039BB6E /* es */,
 				C26756261C2173F90039BB6E /* zh-Hant */,
+				41E2487721143D50001A2663 /* ko */,
 			);
 			name = JVNotificationPreferencesViewController.xib;
 			sourceTree = "<group>";
@@ -2350,6 +2440,7 @@
 				C25154551C2207EE00551BB4 /* pt-PT */,
 				C25154571C2207F300551BB4 /* es */,
 				C25154591C2207F600551BB4 /* zh-Hant */,
+				41E2487821143D54001A2663 /* ko */,
 			);
 			name = JVFileTransferPreferencesViewController.xib;
 			sourceTree = "<group>";
@@ -2368,6 +2459,7 @@
 				C29B1ADD1C10D3CC005CA86A /* pt-PT */,
 				C29B1ADF1C10D3CE005CA86A /* es */,
 				C29B1AE11C10D3D0005CA86A /* zh-Hant */,
+				41E2487921143D58001A2663 /* ko */,
 			);
 			name = JVTranscriptPreferencesViewController.xib;
 			sourceTree = "<group>";
@@ -2403,6 +2495,7 @@
 				A15DE0F60957E1B10040042E /* zh_TW */,
 				1C9D85230C986A0700BB6C58 /* Japanese */,
 				1C9D85450C986A2C00BB6C58 /* nb */,
+				41E2485821143977001A2663 /* ko */,
 			);
 			name = Colloquy.xib;
 			sourceTree = "<group>";
@@ -2420,6 +2513,7 @@
 				A15DE10A0957E1B20040042E /* zh_TW */,
 				1C9D85370C986A0700BB6C58 /* Japanese */,
 				1C9D85590C986A2C00BB6C58 /* nb */,
+				41E2485B2114399B001A2663 /* ko */,
 			);
 			name = MVCrashCatcher.xib;
 			sourceTree = "<group>";
@@ -2437,6 +2531,7 @@
 				A15DE10C0957E1B20040042E /* zh_TW */,
 				1C9D85390C986A0700BB6C58 /* Japanese */,
 				1C9D855B0C986A2C00BB6C58 /* nb */,
+				41E2485D211439D8001A2663 /* ko */,
 			);
 			name = MVSoftwareUpdate.xib;
 			sourceTree = "<group>";
@@ -2455,6 +2550,7 @@
 				1C9D851E0C9869F000BB6C58 /* Japanese */,
 				1C9D85400C986A2000BB6C58 /* nb */,
 				55CFBD9F20B5CB8900AD846B /* nn */,
+				41E2487A21143D8C001A2663 /* ko */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -2472,6 +2568,7 @@
 				A15DE1090957E1B20040042E /* zh_TW */,
 				1C9D85360C986A0700BB6C58 /* Japanese */,
 				1C9D85580C986A2C00BB6C58 /* nb */,
+				41E2485A21143990001A2663 /* ko */,
 			);
 			name = MVConnections.xib;
 			sourceTree = "<group>";
