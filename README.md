@@ -10,4 +10,4 @@ Additionally, the `Colloquy.xcworkspace` expects the bouncer repository at `../b
 
 ## Build & Run
 
-To build and run an app, open up `Colloquy.xcworkspace` and select the appropriate scheme from the dropdown menu.
+To build and run an app, open up `Colloquy.xcworkspace` and select the appropriate scheme from the dropdown menu. For macOS builds `Colloquy (Aggregate)` is the correct target, and iOS builds should use `Colloquy (iOS)`.
