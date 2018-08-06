@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
     </dependencies>
     <objects>
@@ -212,7 +213,7 @@
                                                 <action selector="findPrevious:" target="-1" id="959"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Use Selection for Find" tag="7" keyEquivalent="e" id="945">
+                                        <menuItem title="선택한 내용으로 찾기" tag="7" keyEquivalent="e" id="945">
                                             <connections>
                                                 <action selector="copySelectionToFindPboard:" target="-1" id="985"/>
                                             </connections>
