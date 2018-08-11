@@ -2,6 +2,7 @@
 #import <Foundation/Foundation.h>
 #import <libxml/parser.h>
 #import <libxml/xmlerror.h>
+#import "NSDateAdditions.h"
 
 /* Sample transcript:
 <log began="2005-07-11 12:19:09 -0400" source="irc://irc.freenode.net/%23barcamp">
@@ -95,17 +96,17 @@
 		NSString *date = [attributes objectForKey:@"received"];
 		if( date ) {
 			lastEventDate = [date copy];
-			if( ! dateStarted ) dateStarted = [[NSDate alloc] initWithString:date];
+			if( ! dateStarted ) dateStarted = [date dateFromFormat:@"yyyy-MM-DD HH:mm:ss ZZZZZ"];
 		}
 	} else if( ! inEnvelope && [elementName isEqualToString:@"event"] ) {
 		NSString *date = [attributes objectForKey:@"occurred"];
 		if( date ) {
 			lastEventDate = [date copy];
-			if( ! dateStarted ) dateStarted = [[NSDate alloc] initWithString:date];
+			if( ! dateStarted ) dateStarted = [date dateFromFormat:@"yyyy-MM-DD HH:mm:ss ZZZZZ"];
 		}
 	} else if( ! inEnvelope && [elementName isEqualToString:@"log"] ) {
 		NSString *date = [attributes objectForKey:@"began"];
-		if( date && ! dateStarted ) dateStarted = [[NSDate alloc] initWithString:date];
+		if( date && ! dateStarted ) dateStarted = [date dateFromFormat:@"yyyy-MM-DD HH:mm:ss ZZZZZ"];
 		if( ! source ) source = [[attributes objectForKey:@"source"] copy];
 	}
 }
