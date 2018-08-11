@@ -1606,7 +1606,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = "Colloquy Project";
 			};
 			buildConfigurationList = 1C041A700854E97700A5A5BA /* Build configuration list for PBXProject "Colloquy (Old)" */;
