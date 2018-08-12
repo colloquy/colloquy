@@ -56,7 +56,7 @@
 
 	if( dateStarted ) [ret setObject:dateStarted forKey:(NSString *) kMDItemContentCreationDate];
 	if( [lastEventDate length] ) {
-		NSDate *lastDate = [NSDate dateWithString:lastEventDate];
+		NSDate *lastDate = [lastEventDate dateFromFormat:@"yyyy-MM-DD HH:mm:ss ZZZZZ"];
 		if( lastDate ) {
 			[ret setObject:lastDate forKey:(NSString *) kMDItemContentModificationDate];
 			[ret setObject:lastDate forKey:(NSString *) kMDItemLastUsedDate];
