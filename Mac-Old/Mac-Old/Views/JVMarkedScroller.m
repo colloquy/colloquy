@@ -19,6 +19,10 @@
 }
 @end
 
+@interface JVMarkedScroller ()
+@property (nonatomic, readonly, getter=isHorizontal) BOOL horizontal;
+@end
+
 @implementation JVMarkedScroller
 - (id) initWithFrame:(NSRect) frame {
 	if( ( self = [super initWithFrame:frame] ) ) {
@@ -47,10 +51,10 @@
 	CGFloat width = [[self class] scrollerWidthForControlSize:[self controlSize] scrollerStyle:NSScrollerStyleOverlay];
 
 	CGFloat scale = [self scaleToContentView];
-	[transform scaleXBy:( sFlags.isHoriz ? scale : 1. ) yBy:( sFlags.isHoriz ? 1. : scale )];
+	[transform scaleXBy:( self.isHorizontal ? scale : 1. ) yBy:( self.isHorizontal ? 1. : scale )];
 
 	CGFloat offset = [self rectForPart:NSScrollerKnobSlot].origin.y;
-	[transform translateXBy:( sFlags.isHoriz ? offset / scale : 0. ) yBy:( sFlags.isHoriz ? 0. : offset / scale )];
+	[transform translateXBy:( self.isHorizontal ? offset / scale : 0. ) yBy:( self.isHorizontal ? 0. : offset / scale )];
 
 	NSBezierPath *shades = [NSBezierPath bezierPath];
 	NSEnumerator *enumerator = [_shades objectEnumerator];
@@ -62,7 +66,7 @@
 		unsigned long long stop = [stopNum unsignedLongLongValue];
 
 		NSRect appendingRect = NSZeroRect;
-		if( sFlags.isHoriz ) appendingRect = NSMakeRect( start, 0., ( stop - start ), width );
+		if( self.isHorizontal ) appendingRect = NSMakeRect( start, 0., ( stop - start ), width );
 		else appendingRect = NSMakeRect( 0., start, width, ( stop - start ) );
 
 		appendingRect.origin = [transform transformPoint:appendingRect.origin];
@@ -76,7 +80,7 @@
 		unsigned long long start = [[_shades lastObject] unsignedLongLongValue];
 		unsigned long long stop = [self contentViewLength];
 
-		if( sFlags.isHoriz ) appendingRect = NSMakeRect( start, 0., ( stop - start ), width );
+		if( self.isHorizontal ) appendingRect = NSMakeRect( start, 0., ( stop - start ), width );
 		else appendingRect = NSMakeRect( 0., start, width, ( stop - start ) );
 
 		appendingRect.origin = [transform transformPoint:appendingRect.origin];
@@ -85,7 +89,7 @@
 		[shades appendBezierPathWithRect:NSIntegralRect( appendingRect )];
 	}
 
-	NSRectClip( NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( sFlags.isHoriz ? 4. : 3. ), ( sFlags.isHoriz ? 3. : 4. ) ) );
+	NSRectClip( NSInsetRect( [self rectForPart:NSScrollerKnobSlot], ( self.isHorizontal ? 4. : 3. ), ( self.isHorizontal ? 3. : 4. ) ) );
 
 	if( ! [shades isEmpty ] ) {
 		[[[NSColor knobColor] colorWithAlphaComponent:0.45] set];
@@ -112,24 +116,24 @@
 			foundNext = YES;
 		}
 
-		NSPoint point = NSMakePoint( ( sFlags.isHoriz ? value : 0. ), ( sFlags.isHoriz ? 0. : value ) );
+		NSPoint point = NSMakePoint( ( self.isHorizontal ? value : 0. ), ( self.isHorizontal ? 0. : value ) );
 		point = [transform transformPoint:point];
-		point.x = ( sFlags.isHoriz ? round( point.x ) + 0.5 : point.x );
-		point.y = ( sFlags.isHoriz ? point.y : round( point.y ) + 0.5 );
+		point.x = ( self.isHorizontal ? round( point.x ) + 0.5 : point.x );
+		point.y = ( self.isHorizontal ? point.y : round( point.y ) + 0.5 );
 
 		if( ! NSPointInRect( point, knobRect ) ) {
 			if( mark.color ) {
 				NSBezierPath *line = [NSBezierPath bezierPath];
 				[line moveToPoint:point];
 
-				point = NSMakePoint( ( sFlags.isHoriz ? 0. : width ), ( sFlags.isHoriz ? width : 0. ) );
+				point = NSMakePoint( ( self.isHorizontal ? 0. : width ), ( self.isHorizontal ? width : 0. ) );
 				[line relativeLineToPoint:point];
 				[lineArray addObject:mark.color];
 				[lineArray addObject:line];
 			} else {
 				[lines moveToPoint:point];
 
-				point = NSMakePoint( ( sFlags.isHoriz ? 0. : width ), ( sFlags.isHoriz ? width : 0. ) );
+				point = NSMakePoint( ( self.isHorizontal ? 0. : width ), ( self.isHorizontal ? width : 0. ) );
 				[lines relativeLineToPoint:point];
 			}
 		}
@@ -177,7 +181,7 @@
 	[item setTarget:self];
 	[menu addItem:item];
 
-	if( sFlags.isHoriz ) {
+	if( self.isHorizontal ) {
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Left", "clear marks from here left contextual menu") action:@selector( clearMarksHereLess: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
@@ -245,7 +249,7 @@
 	NSPoint where = [self convertPoint:[event locationInWindow] fromView:nil];
 	NSRect slotRect = [self rectForPart:NSScrollerKnobSlot];
 	CGFloat scale = [self scaleToContentView];
-	[self removeMarksLessThan:( ( sFlags.isHoriz ? where.x - NSMinX( slotRect ) : where.y - NSMinY( slotRect ) ) / scale )];
+	[self removeMarksLessThan:( ( self.isHorizontal ? where.x - NSMinX( slotRect ) : where.y - NSMinY( slotRect ) ) / scale )];
 }
 
 - (IBAction) clearMarksHereGreater:(id) sender {
@@ -253,7 +257,7 @@
 	NSPoint where = [self convertPoint:[event locationInWindow] fromView:nil];
 	NSRect slotRect = [self rectForPart:NSScrollerKnobSlot];
 	CGFloat scale = [self scaleToContentView];
-	[self removeMarksGreaterThan:( ( sFlags.isHoriz ? where.x - NSMinX( slotRect ) : where.y - NSMinY( slotRect ) ) / scale )];
+	[self removeMarksGreaterThan:( ( self.isHorizontal ? where.x - NSMinX( slotRect ) : where.y - NSMinY( slotRect ) ) / scale )];
 }
 
 #pragma mark -
@@ -485,18 +489,24 @@
 #pragma mark -
 
 - (unsigned long long) contentViewLength {
-	if( sFlags.isHoriz ) return ( NSWidth( [self frame] ) / [self knobProportion] );
+	if( self.isHorizontal ) return ( NSWidth( [self frame] ) / [self knobProportion] );
 	else return ( NSHeight( [self frame] ) / [self knobProportion] );
 }
 
 - (CGFloat) scaleToContentView {
-	if( sFlags.isHoriz ) return NSWidth( [self rectForPart:NSScrollerKnobSlot] ) / NSWidth( [[(NSScrollView *)[self superview] contentView] documentRect] );
+	if( self.isHorizontal ) return NSWidth( [self rectForPart:NSScrollerKnobSlot] ) / NSWidth( [[(NSScrollView *)[self superview] contentView] documentRect] );
 	else return NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / NSHeight( [[(NSScrollView *)[self superview] contentView] documentRect] );
 }
 
 - (CGFloat) shiftAmountToCenterAlign {
 	CGFloat scale = [self scaleToContentView];
-	if( sFlags.isHoriz ) return ( ( NSWidth( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
+	if( self.isHorizontal ) return ( ( NSWidth( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
 	else return ( ( NSHeight( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
 }
+
+- (BOOL) isHorizontal {
+	NSRect bounds = [self bounds];
+	return NSHeight(bounds) < NSWidth(bounds);
+}
+
 @end
