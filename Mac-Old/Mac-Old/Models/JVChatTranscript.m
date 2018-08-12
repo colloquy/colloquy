@@ -378,7 +378,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 			for( NSUInteger i = [_messages count]; i < range.location; i++ )
 				[_messages insertObject:[NSNull null] atIndex:i];
 
-		NSMutableArray *ret = [[NSMutableArray alloc] initWithCapacity:range.length];
+		NSMutableArray *ret = [[NSMutableArray alloc] init];
 		JVChatMessage *msg = nil;
 
 		NSUInteger i = 0;
