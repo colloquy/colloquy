@@ -2,7 +2,6 @@
 #import <Foundation/Foundation.h>
 #import <libxml/parser.h>
 #import <libxml/xmlerror.h>
-#import "NSDateAdditions.h"
 
 /* Sample transcript:
 <log began="2005-07-11 12:19:09 -0400" source="irc://irc.freenode.net/%23barcamp">
@@ -34,17 +33,28 @@
 	NSMutableString *content;
 	NSMutableSet *participants;
 	NSCharacterSet *lineBreaks;
+	NSDateFormatter *dateFormatter;
 }
+@property (strong) NSDateFormatter *dateFormatter;
+
 - (id) initWithCapacity:(NSUInteger) capacity;
 - (NSDictionary *) metadataAttributes;
 @end
 
 @implementation JVChatTranscriptMetadataExtractor
+@synthesize dateFormatter;
+
 - (id) initWithCapacity:(NSUInteger) capacity {
 	if( ( self = [super init] ) ) {
 		content = [[NSMutableString alloc] initWithCapacity:capacity];
 		participants = [[NSMutableSet alloc] initWithCapacity:400];
 		lineBreaks = [NSCharacterSet characterSetWithCharactersInString:@"\n\r"];
+		NSDateFormatter *ourFormatter = [[NSDateFormatter alloc] init];
+		ourFormatter.dateFormat = @"yyyy-MM-DD HH:mm:ss ZZZZZ";
+		ourFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]; //Just in case other locales mess with the formatting
+		ourFormatter.calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian]; //Just in case the default calendar is different.
+
+		self.dateFormatter = ourFormatter;
 	}
 
 	return self;
@@ -56,7 +66,7 @@
 
 	if( dateStarted ) [ret setObject:dateStarted forKey:(NSString *) kMDItemContentCreationDate];
 	if( [lastEventDate length] ) {
-		NSDate *lastDate = [lastEventDate dateFromFormat:@"yyyy-MM-DD HH:mm:ss ZZZZZ"];
+		NSDate *lastDate = [dateFormatter dateFromString:lastEventDate];
 		if( lastDate ) {
 			[ret setObject:lastDate forKey:(NSString *) kMDItemContentModificationDate];
 			[ret setObject:lastDate forKey:(NSString *) kMDItemLastUsedDate];
@@ -96,17 +106,17 @@
 		NSString *date = [attributes objectForKey:@"received"];
 		if( date ) {
 			lastEventDate = [date copy];
-			if( ! dateStarted ) dateStarted = [date dateFromFormat:@"yyyy-MM-DD HH:mm:ss ZZZZZ"];
+			if( ! dateStarted ) dateStarted = [dateFormatter dateFromString:date];
 		}
 	} else if( ! inEnvelope && [elementName isEqualToString:@"event"] ) {
 		NSString *date = [attributes objectForKey:@"occurred"];
 		if( date ) {
 			lastEventDate = [date copy];
-			if( ! dateStarted ) dateStarted = [date dateFromFormat:@"yyyy-MM-DD HH:mm:ss ZZZZZ"];
+			if( ! dateStarted ) dateStarted = [dateFormatter dateFromString:date];
 		}
 	} else if( ! inEnvelope && [elementName isEqualToString:@"log"] ) {
 		NSString *date = [attributes objectForKey:@"began"];
-		if( date && ! dateStarted ) dateStarted = [date dateFromFormat:@"yyyy-MM-DD HH:mm:ss ZZZZZ"];
+		if( date && ! dateStarted ) dateStarted = [dateFormatter dateFromString:date];
 		if( ! source ) source = [[attributes objectForKey:@"source"] copy];
 	}
 }
