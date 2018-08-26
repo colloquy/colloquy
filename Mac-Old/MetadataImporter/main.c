@@ -25,7 +25,7 @@ typedef struct __MetadataImporterPluginType
 MetadataImporterPluginType  *AllocMetadataImporterPluginType(CFUUIDRef inFactoryID);
 void                      DeallocMetadataImporterPluginType(MetadataImporterPluginType *thisInstance);
 HRESULT                   MetadataImporterQueryInterface(void *thisInstance,REFIID iid,LPVOID *ppv);
-void                     *MetadataImporterPluginFactory(CFAllocatorRef allocator,CFUUIDRef typeID);
+COLLOQUY_EXPORT void      *MetadataImporterPluginFactory(CFAllocatorRef allocator,CFUUIDRef typeID);
 ULONG                     MetadataImporterPluginAddRef(void *thisInstance);
 ULONG                     MetadataImporterPluginRelease(void *thisInstance);
 

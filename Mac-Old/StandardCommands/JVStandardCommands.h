@@ -3,6 +3,7 @@
 @class MVChatConnection;
 @protocol JVChatViewController;
 
+COLLOQUY_EXPORT
 @interface JVStandardCommands : NSObject <MVChatPlugin>
 - (BOOL) handleFileSendWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection;
 - (BOOL) handleCTCPWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection;
