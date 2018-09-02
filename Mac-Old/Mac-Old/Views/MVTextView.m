@@ -10,8 +10,10 @@
 
 @implementation MVTextView
 - (id)initWithFrame:(NSRect)frameRect textContainer:(NSTextContainer *)aTextContainer {
-	if( (self = [super initWithFrame:frameRect textContainer:aTextContainer] ) )
-		defaultTypingAttributes = [[NSDictionary alloc] init];
+	if( (self = [super initWithFrame:frameRect textContainer:aTextContainer] ) ) {
+		NSColor *textColor = [NSColor textColor];
+		defaultTypingAttributes = @{NSForegroundColorAttributeName: textColor};
+	}
 	return self;
 }
 
@@ -123,10 +125,13 @@
 #pragma mark -
 
 - (void) setBaseFont:(NSFont *) font {
+	NSColor *textColor = [NSColor textColor];
 	if( ! font ) {
-		font = [NSFont userFontOfSize:0.];
-		defaultTypingAttributes = [[NSDictionary alloc] init];
-	} else defaultTypingAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:font, NSFontAttributeName, nil];
+		font = [NSFont systemFontOfSize:[NSFont systemFontSize]];
+		defaultTypingAttributes = @{NSForegroundColorAttributeName: textColor};
+	} else {
+		defaultTypingAttributes = @{NSForegroundColorAttributeName: textColor, NSFontAttributeName: font};
+	}
 	[self setTypingAttributes:defaultTypingAttributes];
 	[self setFont:font];
 }

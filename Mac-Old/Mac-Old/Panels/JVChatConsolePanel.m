@@ -337,6 +337,13 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( [_sendHistory count] > [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatMaximumHistory"] unsignedIntValue] )
 		[_sendHistory removeObjectAtIndex:[_sendHistory count] - 1];
 
+	// Strip semantic text color (used for 10.14 dark mode)
+	[[send textStorage] enumerateAttribute:NSForegroundColorAttributeName inRange:NSMakeRange(0, [send textStorage].length) options:0 usingBlock:^(id  _Nullable value, NSRange attributeRange, BOOL * _Nonnull stop) {
+		if ([NSColor.textColor isEqual:value]) {
+			[[send textStorage] removeAttribute:NSForegroundColorAttributeName range:attributeRange];
+		}
+	}];
+
 	while( [[send string] length] ) {
 		range = [[[send textStorage] string] rangeOfString:@"\n"];
 		if( ! range.length ) range.location = [[send string] length];
