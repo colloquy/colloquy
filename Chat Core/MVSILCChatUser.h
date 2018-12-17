@@ -1,7 +1,11 @@
 #import "MVChatUser.h"
 #import "MVChatUserPrivate.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wstrict-prototypes"
 #include <libsilcclient/client.h>
 #include <libsilc/silcincludes.h>
+#pragma clang diagnostic pop
 
 NS_ASSUME_NONNULL_BEGIN
 

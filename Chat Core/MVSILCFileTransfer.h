@@ -1,7 +1,11 @@
 #import "MVFileTransfer.h"
 #import "MVFileTransferPrivate.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wstrict-prototypes"
 #include <libsilc/silcincludes.h>
 #include <libsilcclient/silcclient.h>
+#pragma clang diagnostic pop
 
 NS_ASSUME_NONNULL_BEGIN
 

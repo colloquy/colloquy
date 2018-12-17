@@ -1,7 +1,11 @@
 #import "MVChatConnection.h"
 #import "MVChatConnectionPrivate.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wstrict-prototypes"
 #include <libsilc/silcincludes.h>
 #include <libsilcclient/silcclient.h>
+#pragma clang diagnostic pop
 
 #define SilcLock(client) silc_mutex_lock(silc_schedule_get_callback_lock((client)->schedule))
 #define SilcUnlock(client) silc_mutex_unlock(silc_schedule_get_callback_lock((client)->schedule))

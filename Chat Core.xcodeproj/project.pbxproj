@@ -59,7 +59,7 @@
 		1CE4633C095ECE4F00AB7732 /* MVChatConnectionPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CE4633B095ECE4F00AB7732 /* MVChatConnectionPrivate.h */; };
 		1CF4E5120698E9E900986498 /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF4E5100698E9E900986498 /* NSDataAdditions.m */; };
 		1CF6513006EA23300073DEA8 /* MVChatConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = F52D043101873FC401EE70DE /* MVChatConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1CF6B82D07122670008ABEFA /* MVSILCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5A230806FA4F2700A51F10 /* MVSILCChatConnection.m */; };
+		1CF6B82D07122670008ABEFA /* MVSILCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5A230806FA4F2700A51F10 /* MVSILCChatConnection.m */; settings = {COMPILER_FLAGS = "-Wno-varargs"; }; };
 		1CF6B82E07122672008ABEFA /* MVSILCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF6B4970710894D008ABEFA /* MVSILCChatRoom.m */; };
 		1CF6B82F07122673008ABEFA /* MVSILCChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF6B4990710894D008ABEFA /* MVSILCChatUser.m */; };
 		322F54D10B53F6730023AE39 /* ICBPacket.h in Headers */ = {isa = PBXBuildFile; fileRef = 322F54CF0B53F6730023AE39 /* ICBPacket.h */; };
