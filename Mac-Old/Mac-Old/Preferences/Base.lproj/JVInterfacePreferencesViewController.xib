@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="JVInterfacePreferencesViewController">
@@ -31,7 +32,7 @@
             <rect key="frame" x="0.0" y="0.0" width="525" height="494"/>
             <subviews>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3kZ-4n-JGL">
-                    <rect key="frame" x="239" y="180" width="239" height="26"/>
+                    <rect key="frame" x="239" y="180" width="239" height="25"/>
                     <popUpButtonCell key="cell" type="push" title="Sidebar List" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingMiddle" state="on" borderStyle="borderAndBezel" tag="2" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="ZFz-f9-FZQ" id="0RH-iP-evV">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
@@ -58,7 +59,7 @@
                     </connections>
                 </popUpButton>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xVS-yP-JZ4">
-                    <rect key="frame" x="48" y="186" width="187" height="17"/>
+                    <rect key="frame" x="49" y="185" width="186" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="Window Interface:" usesSingleLineMode="YES" id="ngY-2l-q9i">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -96,7 +97,7 @@
                     </connections>
                 </button>
                 <button hidden="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JDO-pf-HEG">
-                    <rect key="frame" x="18" y="17" width="25" height="25"/>
+                    <rect key="frame" x="18" y="16" width="25" height="25"/>
                     <buttonCell key="cell" type="help" bezelStyle="helpButton" alignment="center" borderStyle="border" inset="2" id="pUw-0i-O41">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
@@ -139,8 +140,8 @@ A new window will be opened if no rule sets apply.</string>
                         <rect key="frame" x="1" y="1" width="211" height="153"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" rowHeight="36" id="8Hg-pr-0B1" customClass="MVTableView">
-                                <rect key="frame" x="0.0" y="0.0" width="211" height="38"/>
+                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" emptySelection="NO" autosaveColumns="NO" rowHeight="36" id="8Hg-pr-0B1">
+                                <rect key="frame" x="0.0" y="0.0" width="211" height="153"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -166,17 +167,16 @@ A new window will be opened if no rule sets apply.</string>
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="155" id="Hgh-6d-38s"/>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="kFQ-XF-Fsg"/>
                     </constraints>
-                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="gjs-az-vE3">
+                    <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="gjs-az-vE3">
                         <rect key="frame" x="-100" y="-100" width="150" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="3Vx-LH-fev">
+                    <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="3Vx-LH-fev">
                         <rect key="frame" x="-14" y="1" width="15" height="0.0"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
@@ -201,8 +201,8 @@ A new window will be opened if no rule sets apply.</string>
                         <rect key="frame" x="1" y="1" width="262" height="153"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" id="nB9-B3-0vi" customClass="MVTableView">
-                                <rect key="frame" x="0.0" y="0.0" width="258" height="20"/>
+                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="18" id="nB9-B3-0vi">
+                                <rect key="frame" x="0.0" y="0.0" width="262" height="153"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -227,16 +227,15 @@ A new window will be opened if no rule sets apply.</string>
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="Eqm-Ro-Qu9"/>
                     </constraints>
-                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Swt-ou-9UW">
+                    <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="Swt-ou-9UW">
                         <rect key="frame" x="-100" y="-100" width="253" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="NGU-SS-pWe">
+                    <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="NGU-SS-pWe">
                         <rect key="frame" x="-14" y="1" width="15" height="0.0"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
@@ -297,7 +296,7 @@ A new window will be opened if no rule sets apply.</string>
                     </connections>
                 </button>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="e8X-lq-TqE">
-                    <rect key="frame" x="239" y="211" width="239" height="26"/>
+                    <rect key="frame" x="239" y="211" width="239" height="25"/>
                     <popUpButtonCell key="cell" type="push" title="Automatic" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingMiddle" state="on" borderStyle="borderAndBezel" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="oOl-3Z-zNT" id="wd0-s8-8KC">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
@@ -344,7 +343,7 @@ A new window will be opened if no rule sets apply.</string>
                     </connections>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Meq-y1-57z">
-                    <rect key="frame" x="48" y="103" width="187" height="17"/>
+                    <rect key="frame" x="49" y="102" width="186" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="Show Notices as Private Chat:" usesSingleLineMode="YES" id="gU0-QK-lxt">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -352,7 +351,7 @@ A new window will be opened if no rule sets apply.</string>
                     </textFieldCell>
                 </textField>
                 <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rYW-KA-hVi">
-                    <rect key="frame" x="239" y="97" width="239" height="26"/>
+                    <rect key="frame" x="239" y="97" width="239" height="25"/>
                     <popUpButtonCell key="cell" type="push" title="Automatic" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingMiddle" state="on" borderStyle="borderAndBezel" tag="2" imageScaling="proportionallyDown" inset="2" selectedItem="2Og-Dg-Vgi" id="9sE-0W-YBK">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="menu"/>
@@ -410,7 +409,7 @@ A new window will be opened if no rule sets apply.</string>
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QB3-ch-uC1">
-                    <rect key="frame" x="48" y="217" width="187" height="17"/>
+                    <rect key="frame" x="49" y="216" width="186" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="right" title="Drawer Side:" usesSingleLineMode="YES" id="PQN-3f-sSG">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -418,13 +417,13 @@ A new window will be opened if no rule sets apply.</string>
                     </textFieldCell>
                 </textField>
                 <customView horizontalCompressionResistancePriority="200" verticalCompressionResistancePriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="qEg-NF-Juw">
-                    <rect key="frame" x="20" y="220" width="30" height="21"/>
+                    <rect key="frame" x="20" y="219" width="31" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="mRS-jT-TWR"/>
                     </constraints>
                 </customView>
                 <customView horizontalCompressionResistancePriority="200" verticalCompressionResistancePriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="iot-Pe-t6D">
-                    <rect key="frame" x="475" y="220" width="30" height="21"/>
+                    <rect key="frame" x="475" y="219" width="30" height="21"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="GIf-22-OzI"/>
                     </constraints>
@@ -513,7 +512,7 @@ A new window will be opened if no rule sets apply.</string>
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="507" y="292" width="382" height="125"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="76">
                 <rect key="frame" x="0.0" y="0.0" width="382" height="125"/>
@@ -557,7 +556,7 @@ Gw
                         <rect key="frame" x="120" y="83" width="242" height="22"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="320">
                             <font key="font" metaFont="system"/>
-                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
@@ -594,7 +593,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="233" y="313" width="514" height="122"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1177"/>
             <value key="minSize" type="size" width="213" height="107"/>
             <view key="contentView" id="90">
                 <rect key="frame" x="0.0" y="0.0" width="514" height="122"/>
@@ -604,7 +603,7 @@ Gw
                         <rect key="frame" x="20" y="46" width="474" height="30"/>
                         <clipView key="contentView" id="YVd-Bo-M3n">
                             <rect key="frame" x="1" y="1" width="472" height="28"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="28" id="92">
                                     <rect key="frame" x="0.0" y="0.0" width="472" height="30"/>
@@ -657,13 +656,12 @@ Gw
                                     </tableColumns>
                                 </tableView>
                             </subviews>
-                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="336">
+                        <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="336">
                             <rect key="frame" x="-100" y="-100" width="423" height="15"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="335">
+                        <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="335">
                             <rect key="frame" x="-100" y="-100" width="15" height="209"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
@@ -677,7 +675,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="99">
-                        <rect key="frame" x="155" y="81" width="53" height="22"/>
+                        <rect key="frame" x="155" y="81" width="55" height="22"/>
                         <popUpButtonCell key="cell" type="push" title="any" bezelStyle="rounded" alignment="left" controlSize="small" lineBreakMode="truncatingMiddle" state="on" borderStyle="borderAndBezel" tag="1" imageScaling="proportionallyDown" inset="2" arrowPosition="arrowAtCenter" preferredEdge="maxY" selectedItem="102" id="323">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="smallSystem"/>
@@ -692,7 +690,7 @@ Gw
                         </popUpButtonCell>
                     </popUpButton>
                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="103">
-                        <rect key="frame" x="211" y="86" width="147" height="14"/>
+                        <rect key="frame" x="213" y="86" width="147" height="14"/>
                         <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="left" title="of the following conditions:" usesSingleLineMode="YES" id="324">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -700,7 +698,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="104">
-                        <rect key="frame" x="437" y="14" width="62" height="28"/>
+                        <rect key="frame" x="437" y="14" width="62" height="27"/>
                         <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="325">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="smallSystem"/>
@@ -714,7 +712,7 @@ DQ
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="105">
-                        <rect key="frame" x="377" y="14" width="62" height="28"/>
+                        <rect key="frame" x="377" y="14" width="62" height="27"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="326">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="smallSystem"/>
