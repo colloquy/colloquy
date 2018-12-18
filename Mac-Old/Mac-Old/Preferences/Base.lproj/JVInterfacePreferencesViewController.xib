@@ -187,7 +187,7 @@ A new window will be opened if no rule sets apply.</string>
                         <constraint firstAttribute="height" constant="20" id="BD2-Ik-YWo"/>
                         <constraint firstAttribute="width" constant="22" id="Isn-OX-tM5"/>
                     </constraints>
-                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" inset="2" id="XTx-ff-AMF">
+                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="XTx-ff-AMF">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -246,7 +246,7 @@ A new window will be opened if no rule sets apply.</string>
                         <constraint firstAttribute="width" constant="22" id="RMc-Ek-OrI"/>
                         <constraint firstAttribute="height" constant="20" id="t6V-xB-AS6"/>
                     </constraints>
-                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" inset="2" id="aRT-2I-VEK">
+                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="aRT-2I-VEK">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -256,7 +256,7 @@ A new window will be opened if no rule sets apply.</string>
                 </button>
                 <button toolTip="Edit rule" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VrK-V3-91k">
                     <rect key="frame" x="283" y="254" width="22" height="22"/>
-                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="editWidget" imagePosition="only" alignment="center" alternateImage="editWidgetPressed" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="VeP-pA-fHf">
+                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSActionTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="VeP-pA-fHf">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -266,7 +266,7 @@ A new window will be opened if no rule sets apply.</string>
                 </button>
                 <button toolTip="Edit window" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="16s-kX-eR3">
                     <rect key="frame" x="62" y="254" width="22" height="22"/>
-                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="editWidget" imagePosition="only" alignment="center" alternateImage="editWidgetPressed" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="l2A-pq-Vnt">
+                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSActionTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="l2A-pq-Vnt">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -324,7 +324,7 @@ A new window will be opened if no rule sets apply.</string>
                 </popUpButton>
                 <button toolTip="Delete window" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4dc-gg-ELR">
                     <rect key="frame" x="41" y="254" width="22" height="22"/>
-                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" inset="2" id="Uvh-mo-LcR">
+                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Uvh-mo-LcR">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -334,7 +334,7 @@ A new window will be opened if no rule sets apply.</string>
                 </button>
                 <button toolTip="Delete rule" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="guZ-k9-84S">
                     <rect key="frame" x="262" y="254" width="22" height="22"/>
-                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" inset="2" id="BKf-87-upk">
+                    <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="BKf-87-upk">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -436,6 +436,7 @@ A new window will be opened if no rule sets apply.</string>
                 <constraint firstItem="qEg-NF-Juw" firstAttribute="leading" secondItem="cXD-3y-f4D" secondAttribute="leading" constant="20" symbolic="YES" id="2Sj-aS-dMF"/>
                 <constraint firstItem="guZ-k9-84S" firstAttribute="top" secondItem="0lE-bY-T3x" secondAttribute="top" id="3Me-Ie-9PT"/>
                 <constraint firstItem="3kZ-4n-JGL" firstAttribute="leading" secondItem="e8X-lq-TqE" secondAttribute="leading" id="43l-tO-lhB"/>
+                <constraint firstItem="qEg-NF-Juw" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="JDO-pf-HEG" secondAttribute="trailing" id="49C-G5-1NL"/>
                 <constraint firstItem="FuB-FT-B42" firstAttribute="leading" secondItem="cXD-3y-f4D" secondAttribute="leading" constant="20" symbolic="YES" id="4RC-R5-mGd"/>
                 <constraint firstItem="C4N-3e-9ta" firstAttribute="top" secondItem="rYW-KA-hVi" secondAttribute="bottom" constant="8" symbolic="YES" id="68X-dJ-mU8"/>
                 <constraint firstAttribute="bottom" secondItem="y8V-WO-FBl" secondAttribute="bottom" constant="20" symbolic="YES" id="6L8-Ku-TCz"/>
@@ -503,6 +504,7 @@ A new window will be opened if no rule sets apply.</string>
                 <constraint firstItem="guZ-k9-84S" firstAttribute="leading" secondItem="0lE-bY-T3x" secondAttribute="trailing" constant="-1" id="v0e-Qc-ncI"/>
                 <constraint firstItem="6kD-TU-LQA" firstAttribute="top" secondItem="KEM-st-9i2" secondAttribute="bottom" constant="8" symbolic="YES" id="v2l-Ay-uho"/>
                 <constraint firstItem="Meq-y1-57z" firstAttribute="trailing" secondItem="QB3-ch-uC1" secondAttribute="trailing" id="xaw-l2-kWb"/>
+                <constraint firstItem="JDO-pf-HEG" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Oec-2h-wvG" secondAttribute="bottom" constant="12" symbolic="YES" id="yxQ-XP-6wV"/>
                 <constraint firstItem="VrK-V3-91k" firstAttribute="width" secondItem="0lE-bY-T3x" secondAttribute="width" id="zIQ-ro-eeb"/>
                 <constraint firstItem="Oec-2h-wvG" firstAttribute="top" secondItem="FuB-FT-B42" secondAttribute="bottom" constant="8" symbolic="YES" id="zLF-7C-Wm5"/>
             </constraints>
@@ -603,7 +605,7 @@ Gw
                         <rect key="frame" x="20" y="46" width="474" height="30"/>
                         <clipView key="contentView" id="YVd-Bo-M3n">
                             <rect key="frame" x="1" y="1" width="472" height="28"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="28" id="92">
                                     <rect key="frame" x="0.0" y="0.0" width="472" height="30"/>
@@ -689,14 +691,6 @@ Gw
                             </menu>
                         </popUpButtonCell>
                     </popUpButton>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="103">
-                        <rect key="frame" x="213" y="86" width="147" height="14"/>
-                        <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="left" title="of the following conditions:" usesSingleLineMode="YES" id="324">
-                            <font key="font" metaFont="smallSystem"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="104">
                         <rect key="frame" x="437" y="14" width="62" height="27"/>
                         <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" inset="2" id="325">
@@ -735,6 +729,14 @@ Gw
                             <outlet property="nextKeyView" destination="104" id="111"/>
                         </connections>
                     </button>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="103">
+                        <rect key="frame" x="213" y="86" width="147" height="14"/>
+                        <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" alignment="left" title="of the following conditions:" usesSingleLineMode="YES" id="324">
+                            <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
                 <constraints>
                     <constraint firstItem="105" firstAttribute="baseline" secondItem="106" secondAttribute="baseline" id="0Og-hO-gDl"/>
@@ -745,7 +747,9 @@ Gw
                     <constraint firstItem="99" firstAttribute="top" secondItem="90" secondAttribute="top" constant="20" symbolic="YES" id="FVx-as-0Ws"/>
                     <constraint firstAttribute="trailing" secondItem="91" secondAttribute="trailing" constant="20" symbolic="YES" id="Jmn-JM-m6o"/>
                     <constraint firstItem="98" firstAttribute="leading" secondItem="90" secondAttribute="leading" constant="20" symbolic="YES" id="Kbp-A5-djP"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="103" secondAttribute="trailing" constant="20" symbolic="YES" id="MJb-5c-4c9"/>
                     <constraint firstAttribute="bottom" secondItem="104" secondAttribute="bottom" constant="20" symbolic="YES" id="PIF-GK-0KE"/>
+                    <constraint firstItem="106" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="90" secondAttribute="leading" constant="20" symbolic="YES" id="YLT-Ae-pfQ"/>
                     <constraint firstItem="104" firstAttribute="top" secondItem="91" secondAttribute="bottom" constant="8" symbolic="YES" id="ZkK-lf-S7S"/>
                     <constraint firstItem="103" firstAttribute="baseline" secondItem="99" secondAttribute="baseline" id="e5e-eL-Nd2"/>
                     <constraint firstItem="104" firstAttribute="width" secondItem="105" secondAttribute="width" id="eAl-lg-fFA"/>
@@ -761,9 +765,8 @@ Gw
         <userDefaultsController representsSharedInstance="YES" id="138" userLabel="Shared Defaults"/>
     </objects>
     <resources>
+        <image name="NSActionTemplate" width="14" height="14"/>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSRemoveTemplate" width="11" height="11"/>
-        <image name="editWidget" width="22" height="22"/>
-        <image name="editWidgetPressed" width="22" height="22"/>
     </resources>
 </document>
