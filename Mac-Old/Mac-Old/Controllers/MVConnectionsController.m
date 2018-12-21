@@ -31,7 +31,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 
 static NSMenu *favoritesMenu = nil;
 
-@interface MVConnectionsController (Private)
+@interface MVConnectionsController (Private) <NSMenuDelegate>
 - (void) _loadInterfaceIfNeeded;
 - (void) _registerNotificationsForConnection:(MVChatConnection *) connection;
 - (void) _deregisterNotificationsForConnection:(MVChatConnection *) connection;
@@ -265,10 +265,7 @@ static NSMenu *favoritesMenu = nil;
 	[connections setDoubleAction:@selector( _connect: )];
 
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
-	NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"New Connection", "new connection contextual menu item title" ) action:@selector( newConnection: ) keyEquivalent:@""];
-	[item setTarget:self];
-	[menu addItem:item];
-
+	[menu setDelegate:self];
 	[connections setMenu:menu];
 
 	[userSelectionTable setTarget:self];
@@ -1163,48 +1160,70 @@ static NSMenu *favoritesMenu = nil;
 	}
 }
 
-- (NSMenu *) tableView:(NSTableView *) view menuForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
-	if( view == connections ) {
-		MVChatConnection *connection = [[_bookmarks objectAtIndex:row] objectForKey:@"connection"];
+- (void)menuNeedsUpdate:(NSMenu*)menu {
+	if (menu == [connections menu]) {
+		NSInteger clickedRow = [connections clickedRow];
+		MVChatConnection *connection = nil;
+		if (clickedRow != -1) {
+			connection = [[_bookmarks objectAtIndex:clickedRow] objectForKey:@"connection"];
+		}
+		NSArray<NSMenuItem *> *menuItems = [self menuItemsForConnection:connection];
+		if (@available(macOS 10.14, *)) {
+			[menu setItemArray:menuItems];
+		} else {
+			[menu removeAllItems];
+			for (NSMenuItem *item in menuItems) {
+				[menu addItem:item];
+			}
+		}
+	}
+}
+
+- (NSArray<NSMenuItem *> *) menuItemsForConnection:(nullable MVChatConnection *)connection {
+	if (!connection) {
+		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"New Connection", "new connection contextual menu item title" ) action:@selector( newConnection: ) keyEquivalent:@""];
+		[item setTarget:self];
+		return @[item];
+	} else {
 		BOOL connected = [connection isConnected];
-		NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+		NSMutableArray *menuItems = [NSMutableArray array];
 		NSMenuItem *item = nil;
 
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""];
 		[item setTarget:self];
-		[menu addItem:item];
+		[menuItems addObject:item];
 
 		if( connected ) {
 			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Disconnect", "disconnect from server title" ) action:@selector( _disconnect: ) keyEquivalent:@""];
 			[item setTarget:self];
-			[menu addItem:item];
+			[menuItems addObject:item];
 		} else {
 			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Connect", "connect to server title" ) action:@selector( _connect: ) keyEquivalent:@""];
 			[item setTarget:self];
-			[menu addItem:item];
+			[menuItems addObject:item];
 		}
 
-		[menu addItem:[NSMenuItem separatorItem]];
+		[menuItems addObject:[NSMenuItem separatorItem]];
 
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Join Room...", "join room contextual menu item title" ) action:@selector( joinRoom: ) keyEquivalent:@""];
 		[item setTarget:self];
 		if( ! [_bookmarks count] ) [item setAction:NULL];
-		[menu addItem:item];
+		[menuItems addObject:item];
 
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Message User...", "message user contextual menu item title" ) action:@selector( _messageUser: ) keyEquivalent:@""];
 		[item setTarget:self];
 		if( ! connected ) [item setAction:NULL];
-		[menu addItem:item];
+		[menuItems addObject:item];
 
-		[menu addItem:[NSMenuItem separatorItem]];
+		[menuItems addObject:[NSMenuItem separatorItem]];
 
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"New Connection", "new connection contextual menu item title" ) action:@selector( newConnection: ) keyEquivalent:@""];
 		[item setTarget:self];
-		[menu addItem:item];
+		[menuItems addObject:item];
 
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Delete", "delete item title" ) action:@selector( _delete: ) keyEquivalent:@""];
 		[item setTarget:self];
-		[menu addItem:item];
+		[menuItems addObject:item];
 
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -1216,23 +1235,23 @@ static NSMenu *favoritesMenu = nil;
 
 		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		if( [results count] ) {
-			if( [menu numberOfItems ] && ! [[[menu itemArray] lastObject] isSeparatorItem] )
-				[menu addItem:[NSMenuItem separatorItem]];
+			if( [menuItems count ] && ! [[menuItems lastObject] isSeparatorItem] )
+				[menuItems addObject:[NSMenuItem separatorItem]];
 
 			for( NSArray *items in results ) {
 				if( ![items conformsToProtocol:@protocol(NSFastEnumeration)] ) continue;
-				for( item in items )
-					if( [item isKindOfClass:[NSMenuItem class]] ) [menu addItem:item];
+				for( item in items ) {
+					if( [item isKindOfClass:[NSMenuItem class]] ) [menuItems addObject:item];
+				}
 			}
 		}
 
-		if( [[[menu itemArray] lastObject] isSeparatorItem] )
-			[menu removeItem:[[menu itemArray] lastObject]];
+		if( [[menuItems lastObject] isSeparatorItem] ) {
+			[menuItems removeLastObject];
+		}
 
-		return menu;
+		return menuItems;
 	}
-
-	return nil;
 }
 
 - (void) tableView:(NSTableView *) view setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
