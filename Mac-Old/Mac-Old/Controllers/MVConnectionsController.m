@@ -1166,6 +1166,7 @@ static NSMenu *favoritesMenu = nil;
 		MVChatConnection *connection = nil;
 		if (clickedRow != -1) {
 			connection = [[_bookmarks objectAtIndex:clickedRow] objectForKey:@"connection"];
+			[connections selectRowIndexes:[NSIndexSet indexSetWithIndex:clickedRow] byExtendingSelection:NO];
 		}
 		NSArray<NSMenuItem *> *menuItems = [self menuItemsForConnection:connection];
 		if (@available(macOS 10.14, *)) {
