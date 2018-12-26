@@ -279,8 +279,8 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	}
 }
 
-- (NSString *) tableView:(NSTableView *) view toolTipForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
-	if( view == self.rulesTable ) {
+- (NSString *)tableView:(NSTableView *)tableView toolTipForCell:(NSCell *)cell rect:(NSRectPointer)rect tableColumn:(nullable NSTableColumn *)tableColumn row:(NSInteger)row mouseLocation:(NSPoint)mouseLocation {
+	if( tableView == self.rulesTable ) {
 		NSArray *ruleSets = [self selectedRules];
 		NSDictionary *info = [ruleSets objectAtIndex:row];
 		return [self titleForRules:[info objectForKey:@"criterion"] booleanAndOperation:( [[info objectForKey:@"operation"] intValue] == 2 )];
