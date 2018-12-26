@@ -680,7 +680,7 @@ static MVBuddyListController *sharedInstance = nil;
 	return [self _menuForBuddy:buddy];
 }
 
-- (NSString *) tableView:(MVTableView *) tableView toolTipForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
+- (NSString *)tableView:(NSTableView *)tableView toolTipForCell:(NSCell *)cell rect:(NSRectPointer)rect tableColumn:(nullable NSTableColumn *)tableColumn row:(NSInteger)row mouseLocation:(NSPoint)mouseLocation {
 	if( tableView != buddies || row == -1 || row >= (int)[_buddyOrder count] ) return nil;
 
 	NSMutableString *ret = [NSMutableString string];
