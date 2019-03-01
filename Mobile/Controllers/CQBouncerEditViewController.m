@@ -8,7 +8,9 @@
 #import "CQPreferencesSwitchCell.h"
 #import "CQPreferencesTextCell.h"
 
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 @import OnePasswordExtension;
+#endif
 
 static unsigned short ServerTableSection = 0;
 static unsigned short AuthenticationTableSection = 1;
@@ -187,6 +189,7 @@ NS_ASSUME_NONNULL_BEGIN
 			cell.accessibilityLabel = NSLocalizedString(@"Password", @"Voiceover password label");
 			cell.accessibilityHint = NSLocalizedString(@"Required", @"Voiceover required label");
 
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 			if ([[OnePasswordExtension sharedExtension] isAppExtensionAvailable]) {
 				UIButton *onePasswordButton = [UIButton buttonWithType:UIButtonTypeSystem];
 				[onePasswordButton addTarget:self action:@selector(onePasswordActionForPassword:) forControlEvents:UIControlEventTouchUpInside];
@@ -201,6 +204,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 				onePasswordButton.transform = CGAffineTransformMakeScale(.83, .83);
 			}
+#endif
 		}
 
 		if (cell)
@@ -323,6 +327,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) onePasswordActionForPassword:(id) sender {
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[[OnePasswordExtension sharedExtension] findLoginForURLString:_settings.server forViewController:self sender:sender completion:^(NSDictionary *loginDictionary, NSError *error) {
 		if (!loginDictionary.count) {
 			if (error.code != AppExtensionErrorCodeCancelledByUser) {
@@ -343,6 +348,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 		[self updateConnectButton];
 	}];
+#endif
 }
 @end
 

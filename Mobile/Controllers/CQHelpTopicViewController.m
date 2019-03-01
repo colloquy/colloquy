@@ -13,20 +13,22 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!(self = [self init]))
 		return nil;
 
-	_webView = [[UIWebView alloc] initWithFrame:CGRectZero];
-	_webView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
-	_webView.delegate = self;
+	UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectZero];
+	webView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
+	webView.delegate = self;
 
 	NSString *templatePath = [[NSBundle mainBundle] pathForResource:@"help-base" ofType:@"html"];
 	NSString *templateString = [NSString stringWithContentsOfFile:templatePath encoding:NSUTF8StringEncoding error:NULL];
 
-	[_webView loadHTMLString:[NSString stringWithFormat:templateString, content] baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+	[webView loadHTMLString:[NSString stringWithFormat:templateString, content] baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+
+	_webView = webView;
 
 	return self;
 }
 
 - (void) dealloc {
-	_webView.delegate = nil;
+	((UIWebView *)_webView).delegate = nil;
 }
 
 #pragma mark -

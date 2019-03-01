@@ -238,7 +238,7 @@ NS_ASSUME_NONNULL_BEGIN
 #else
 	if (!(self = [super initWithNibName:nil bundle:nil]))
 #endif
-
+#endif
 	_target = target;
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_awayStatusChanged:) name:MVChatConnectionSelfAwayStatusChangedNotification object:self.connection];

@@ -7,7 +7,9 @@
 
 #import <ChatCore/MVChatConnection.h>
 
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 @import OnePasswordExtension;
+#endif
 
 #define SettingsTableSection 0
 #define AuthenticationTableSection 1
@@ -380,6 +382,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
 			cell.textField.secureTextEntry = YES;
 
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 			if ([[OnePasswordExtension sharedExtension] isAppExtensionAvailable]) {
 				UIButton *onePasswordButton = [UIButton buttonWithType:UIButtonTypeSystem];
 				[onePasswordButton addTarget:self action:@selector(onePasswordActionForServerPassword:) forControlEvents:UIControlEventTouchUpInside];
@@ -394,6 +397,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 
 				onePasswordButton.transform = CGAffineTransformMakeScale(.83, .83);
 			}
+#endif
 
 			if (_connection.directConnection) {
 				cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
@@ -418,6 +422,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 			if ([[OnePasswordExtension sharedExtension] isAppExtensionAvailable]) {
 				UIButton *onePasswordButton = [UIButton buttonWithType:UIButtonTypeSystem];
 				[onePasswordButton addTarget:self action:@selector(onePasswordActionForPassword:) forControlEvents:UIControlEventTouchUpInside];
@@ -432,6 +437,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 
 				onePasswordButton.transform = CGAffineTransformMakeScale(.83, .83);
 			}
+#endif
 
 			cell.accessibilityLabel = NSLocalizedString(@"Nickname password.", @"Voiceover nickname password label");
  			cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
@@ -556,6 +562,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 #pragma mark -
 
 - (void) onePasswordActionForPassword:(id) sender {
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[[OnePasswordExtension sharedExtension] findLoginForURLString:_connection.server forViewController:self sender:sender completion:^(NSDictionary *loginDictionary, NSError *error) {
 		if (!loginDictionary.count) {
 			if (error.code != AppExtensionErrorCodeCancelledByUser) {
@@ -572,9 +579,11 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 
 		[self reloadAuthenticationSection];
 	}];
+#endif
 }
 
 - (void) onePasswordActionForServerPassword:(id) sender {
+#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[[OnePasswordExtension sharedExtension] findLoginForURLString:_connection.server forViewController:self sender:sender completion:^(NSDictionary *loginDictionary, NSError *error) {
 		if (!loginDictionary.count) {
 			if (error.code != AppExtensionErrorCodeCancelledByUser) {
@@ -591,6 +600,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 
 		[self reloadAuthenticationSection];
 	}];
+#endif
 }
 @end
 
