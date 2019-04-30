@@ -26,7 +26,7 @@ static const unsigned char mIRCColors[][3] = {
 	{ 0xd6, 0xd6, 0xd6 } /* 15) light gray */
 };
 
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 static const unsigned char CTCPColors[][3] = {
 	{ 0x00, 0x00, 0x00 }, /* 0) black */
 	{ 0x00, 0x00, 0x7f }, /* 1) blue */
@@ -62,7 +62,7 @@ static unsigned short colorRGBToMIRCColor( unsigned char red, unsigned char gree
 	return color;
 }
 
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 static BOOL scanOneOrTwoDigits( NSScanner *scanner, NSUInteger *number ) {
 	NSCharacterSet *characterSet = [NSCharacterSet decimalDigitCharacterSet];
 	NSString *chars = nil;
@@ -108,7 +108,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 #pragma mark -
 
 @implementation NSAttributedString (NSAttributedStringHTMLAdditions)
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 + (instancetype) attributedStringWithHTMLFragment:(NSString *) fragment {
 	NSParameterAssert( fragment != nil );
 
@@ -231,13 +231,13 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 #pragma mark -
 
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 + (instancetype) attributedStringWithChatFormat:(NSData *) data options:(NSDictionary *) options {
 	return [[self alloc] initWithChatFormat:data options:options];
 }
 #endif
 
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 - (instancetype) initWithChatFormat:(NSData *) data options:(NSDictionary *) options {
 	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedLongValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
@@ -613,7 +613,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 		id link = dict[NSLinkAttributeName];
 		BOOL bold = NO, italic = NO, underline = NO;
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 		NSFont *currentFont = [dict objectForKey:NSFontAttributeName];
 		NSColor *foregroundColor = [dict objectForKey:NSForegroundColorAttributeName];
 		NSColor *backgroundColor = [dict objectForKey:NSBackgroundColorAttributeName];
@@ -623,7 +623,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		UIColor *backgroundColor = dict[NSBackgroundColorAttributeName];
 #endif
 		if( ! [options[@"IgnoreFontTraits"] boolValue] ) {
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 			NSFontTraitMask traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
 			if( traits & NSBoldFontMask ) bold = YES;
 			if( traits & NSItalicFontMask ) italic = YES;
@@ -637,7 +637,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			if( [dict[NSUnderlineStyleAttributeName] intValue] ) underline = YES;
 		}
 
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 		if( backgroundColor && ! foregroundColor )
 			foregroundColor = [NSColor colorWithCalibratedRed:0. green:0. blue:0. alpha:1.];
 
@@ -655,7 +655,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			snprintf( buffer, 6, "\003%d", ircColor );
 			[ret appendBytes:buffer length:strlen( buffer )];
 
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 			if( ! [[backgroundColor colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && ! [[backgroundColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace] )
 				backgroundColor = [backgroundColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace]; // we need to convert to RGB space
 #endif
@@ -694,7 +694,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	return ret;
 }
 
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 - (NSData *) _CTCP2FormatWithOptions:(NSDictionary *) options {
 	NSRange limitRange, effectiveRange;
 	NSMutableData *ret = [[NSMutableData alloc] initWithCapacity:( self.length + 40 )];
@@ -871,7 +871,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 - (NSData *) chatFormatWithOptions:(NSDictionary *) options {
 	NSString *format = options[@"FormatType"];
 
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 	if( [format isEqualToString:NSChatCTCPTwoFormatType] ) return [self _CTCP2FormatWithOptions:options];
 	else if( [format isEqualToString:NSChatWindowsIRCFormatType] ) return [self _mIRCFormatWithOptions:options];
 #else

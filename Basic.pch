@@ -5,8 +5,6 @@
 #define ENABLE(FEATURE) (defined(ENABLE_##FEATURE) && ENABLE_##FEATURE)
 #define SYSTEM(NAME) (defined(SYSTEM_##NAME) && SYSTEM_##NAME)
 
-#define SYSTEM_MAC 1
-
 #ifdef __OBJC__
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 	#import <Foundation/Foundation.h>

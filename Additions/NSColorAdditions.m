@@ -1,4 +1,4 @@
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 #import "NSColorAdditions.h"
 
 NS_ASSUME_NONNULL_BEGIN

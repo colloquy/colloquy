@@ -6,7 +6,7 @@ COLLOQUY_EXPORT extern NSString *NSChatCTCPTwoFormatType;
 #define JVItalicObliquenessValue 0.16
 
 @interface NSAttributedString (NSAttributedStringHTMLAdditions)
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 + (instancetype) attributedStringWithHTMLFragment:(NSString *) fragment;
 
 + (instancetype) attributedStringWithChatFormat:(NSData *) data options:(NSDictionary *) options;

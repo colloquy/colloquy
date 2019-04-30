@@ -1,7 +1,7 @@
 @class MVChatUser;
 @class CQChatController;
 
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 @protocol JVChatViewController;
 #endif
 
@@ -19,7 +19,7 @@ COLLOQUY_EXPORT
 + (KAIgnoreRule *) ruleForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
 - (instancetype) initForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName;
 
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 - (JVIgnoreMatchResult) matchUser:(MVChatUser *) user message:(NSString *) message inView:(id <JVChatViewController>) view;
 #else
 - (JVIgnoreMatchResult) matchUser:(MVChatUser *) user message:(NSString *) message inTargetRoom:(id) target;

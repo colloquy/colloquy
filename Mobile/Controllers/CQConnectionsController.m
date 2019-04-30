@@ -27,7 +27,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <UserNotifications/UserNotifications.h>
 
-#if SYSTEM(MAC)
+#if TARGET_OS_OSX
 #import <SecurityInterface/SFCertificatePanel.h>
 #endif
 
@@ -494,7 +494,7 @@ CQBouncerConnectionDelegate>
 		[errorToAlertMappingsForConnection setObject:alertView forKey:@"peerTrust"];
 
 		[alertView show];
-#elif SYSTEM(MAC)
+#elif TARGET_OS_OSX
 		// Ask people what to do
 		SFCertificateTrustPanel *panel = [SFCertificateTrustPanel sharedCertificateTrustPanel];
 		panel.showsHelp = YES;

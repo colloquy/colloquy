@@ -19,3 +19,5 @@
 #import <ChatCore/NSMethodSignatureAdditions.h>
 #import <ChatCore/NSNotificationAdditions.h>
 #import <ChatCore/NSScriptCommandAdditions.h>
+#import <ChatCore/NSRegularExpressionAdditions.h>
+#import <ChatCore/MVDirectClientConnection.h>
