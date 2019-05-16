@@ -3,7 +3,6 @@
 #define COLLOQUY_EXPORT __attribute__((__visibility__("default")))
 
 #define ENABLE(FEATURE) (defined(ENABLE_##FEATURE) && ENABLE_##FEATURE)
-#define SYSTEM(NAME) (defined(SYSTEM_##NAME) && SYSTEM_##NAME)
 
 #ifdef __OBJC__
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
