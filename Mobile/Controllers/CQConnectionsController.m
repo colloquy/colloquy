@@ -436,7 +436,7 @@ CQBouncerConnectionDelegate>
 	} else if ([connectionInvalidSSLCertAction isEqualToString:@"Allow"]) {
 		completionHandler(YES);
 	} else { // Ask people what to do
-#if SYSTEM(IOS)
+#if TARGET_OS_IPHONE
 		SecTrustRef trust = (__bridge SecTrustRef)notification.userInfo[@"trust"];
 		SecCertificateRef certificate;
 		NSString *certificateSubject = nil;

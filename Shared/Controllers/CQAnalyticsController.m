@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 static NSString *applicationNameKey = @"application-name";
 
-#if SYSTEM(IOS)
+#if TARGET_OS_IPHONE
 static NSString *analyticsURL = @"http://colloquy.mobi/analytics.php";
 static NSString *deviceIdentifierKey = @"device-identifier";
 #elif TARGET_OS_OSX
@@ -127,7 +127,7 @@ static void generateDeviceIdentifier() {
 	}
 
 	IOObjectRelease(intfIterator);
-#elif SYSTEM(IOS)
+#elif TARGET_OS_IPHONE
 	deviceIdentifier = [[UIDevice currentDevice].identifierForVendor.UUIDString mutableCopy];
 	if (deviceIdentifier)
 		return;
@@ -176,7 +176,7 @@ static void generateDeviceIdentifier() {
 
 	generateDeviceIdentifier();
 
-#if SYSTEM(IOS)
+#if TARGET_OS_IPHONE
 	_data[@"device-model"] = [UIDevice currentDevice].modelIdentifier;
 	_data[@"device-system-name"] = [UIDevice currentDevice].systemName;
 	_data[@"device-system-version"] = [UIDevice currentDevice].systemVersion;

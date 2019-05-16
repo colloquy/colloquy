@@ -8,8 +8,6 @@
 #define LIKELY(x) __builtin_expect((x) ? 1 : 0, 1)
 #define UNLIKELY(x) __builtin_expect((x) ? 1 : 0, 0)
 
-
-#define SYSTEM_IOS 1
 #define SYSTEM_MARZIPAN 1
 
 #if defined(TARGET_OS_TV) && TARGET_OS_TV

@@ -84,7 +84,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 
 @property (nonatomic, readonly) CQActionSheet *actionSheet;
 
-#if SYSTEM(IOS)
+#if TARGET_OS_IPHONE
 @property (nonatomic, readonly) UIScrollView *scrollView;
 #endif
 @end
