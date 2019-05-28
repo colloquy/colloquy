@@ -165,13 +165,8 @@ NS_ASSUME_NONNULL_BEGIN
 		NSString *info = [[NSString alloc] initWithData:arguments encoding:[connection encoding]];
 		[self setAttribute:info forKey:MVChatUserClientInfoAttribute];
 	} else if( [command isCaseInsensitiveEqualToString:@"TIME"] ) {
-		NSString *date = [[NSString alloc] initWithData:arguments encoding:[connection encoding]];
-#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
-		[self setAttribute:date forKey:MVChatUserLocalTimeAttribute];
-#else
-		NSCalendarDate *localThere = [NSCalendarDate dateWithNaturalLanguageString:date];
-		[self setAttribute:localThere forKey:MVChatUserLocalTimeAttribute];
-#endif
+		NSString *dateString = [[NSString alloc] initWithData:arguments encoding:[connection encoding]];
+		[self setAttribute:dateString forKey:MVChatUserLocalTimeAttribute];
 	}
 }
 

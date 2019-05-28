@@ -38,12 +38,8 @@
 - (void) dealloc {
 	[[NSNotificationCenter chatCenter] removeObserver:self];
 
-
-	_localTimeUpdated = nil;
-	_localTimeUpdateTimer = nil;
 	_updateTimer = nil;
 	_user = nil;
-
 }
 
 #pragma mark -
@@ -88,11 +84,6 @@
 }
 
 - (void) didUnload {
-	_localTimeUpdated = nil;
-
-	[_localTimeUpdateTimer invalidate];
-	_localTimeUpdateTimer = nil;
-
 	[_updateTimer invalidate];
 	_updateTimer = nil;
 }
@@ -175,11 +166,9 @@
 		[ping setObjectValue:pingString];
 		[ping setToolTip:pingString];
 	} else if( [key isEqualToString:MVChatUserLocalTimeAttribute] ) {
-		_localTimeUpdated = [NSDate date];
-
-		[self updateLocalTime];
-		if( ! _localTimeUpdateTimer )
-			_localTimeUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:10. target:self selector:@selector( updateLocalTime ) userInfo:nil repeats:YES];
+		NSString *string = [_user attributeForKey:MVChatUserLocalTimeAttribute];
+		[localTime setObjectValue:string];
+		[localTime setToolTip:string];
 	} else if( [key isEqualToString:MVChatUserClientInfoAttribute] ) {
 		[clientInfo setObjectValue:[_user attributeForKey:key]];
 		[clientInfo setToolTip:[_user attributeForKey:key]];
@@ -197,15 +186,6 @@
 		if( [user isEqualTo:_user] )
 			[self gotAddress:nil];
 	}
-}
-
-- (void) updateLocalTime {
-	NSTimeInterval now = ABS( [_localTimeUpdated timeIntervalSinceNow] );
-	NSDate *adjustedDate = [[NSDate alloc] initWithTimeIntervalSinceNow:now];
-	NSString *formatedDate = [NSDate formattedShortDateAndTimeStringForDate:adjustedDate];
-
-	[localTime setObjectValue:formatedDate];
-	[localTime setToolTip:[formatedDate description]];
 }
 
 - (IBAction) sendPing:(id) sender {
