@@ -208,18 +208,18 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Colloquy Project";
 			};
 			buildConfigurationList = 1C7F306F0855489300D41FB0 /* Build configuration list for PBXProject "JavaScript Support" */;
 			compatibilityVersion = "Xcode 8.0";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
 			knownRegions = (
-				English,
-				Japanese,
-				French,
-				German,
+				en,
+				ja,
+				fr,
+				de,
 				zh_TW,
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
