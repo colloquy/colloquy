@@ -546,7 +546,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (NSString *) server {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
-	return nil;
+	return @"";
 }
 
 #pragma mark -

@@ -357,8 +357,8 @@ COLLOQUY_EXPORT
 
 #pragma mark -
 
-- (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier;
-- (MVChatRoom *) joinedChatRoomWithName:(NSString *) room;
+- (nullable MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier;
+- (nullable MVChatRoom *) joinedChatRoomWithName:(NSString *) room;
 
 #pragma mark -
 

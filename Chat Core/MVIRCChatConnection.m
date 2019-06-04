@@ -465,7 +465,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	if( [newNickname isEqualToString:_currentNickname] )
 		return;
 
-	if( ! _currentNickname || ! connectiongOrConnected )
+	if( ( ! _currentNickname || ! connectiongOrConnected ) && newNickname )
 		[self _setCurrentNickname:newNickname];
 
 	if( connectiongOrConnected )
@@ -697,12 +697,12 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	}
 }
 
-- (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
+- (nullable MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
 	return [super joinedChatRoomWithUniqueIdentifier:[(NSString *)identifier lowercaseString]];
 }
 
-- (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
+- (nullable MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
 	return [self joinedChatRoomWithUniqueIdentifier:[self properNameForChatRoomNamed:name]];
 }
 
@@ -1285,7 +1285,7 @@ parsingFinished: { // make a scope for this
 			[chatUser _setAddress:hostString];
 		}
 
-		if( ! [chatUser username] ) {
+		if( ! [chatUser username] && userLength > 0 && user != NULL ) {
 			NSString *userString = [self _newStringWithBytes:user length:userLength];
 			[chatUser _setUsername:userString];
 		}
