@@ -11,11 +11,15 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (instancetype) initWithRoom:(MVChatRoom *) room showingInfoType:(CQChatRoomInfo) infoType {
-	if (!(self = [super init]))
+	CQChatRoomInfoDisplayViewController *roomInfoDisplayViewController = [[CQChatRoomInfoDisplayViewController alloc] initWithRoom:_room showingInfoType:_infoType];
+
+	if (!(self = [super initWithRootViewController:roomInfoDisplayViewController]))
 		return nil;
 
 	_room = room;
 	_infoType = infoType;
+	_rootViewController = roomInfoDisplayViewController;
+	roomInfoDisplayViewController.title = _room.displayName;
 
 	return self;
 }
@@ -23,9 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) viewDidLoad {
 	if (!_rootViewController) {
-		CQChatRoomInfoDisplayViewController *roomInfoDisplayViewController = [[CQChatRoomInfoDisplayViewController alloc] initWithRoom:_room showingInfoType:_infoType];
-		roomInfoDisplayViewController.title = _room.displayName;
-		_rootViewController = roomInfoDisplayViewController;
 	}
 
 	[super viewDidLoad];

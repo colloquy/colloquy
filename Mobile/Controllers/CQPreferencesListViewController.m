@@ -181,7 +181,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return UITableViewCellAccessoryNone;
 }
 
-- (UIView *__nullable) accessoryViewForAccessoryType:(int) accessoryType {
+- (UIView *__nullable) accessoryViewForAccessoryType:(UITableViewCellAccessoryType) accessoryType {
 	if (accessoryType != CQTableViewCellAccessoryPlay)
 		return nil;
 
@@ -296,7 +296,7 @@ NS_ASSUME_NONNULL_BEGIN
 	else cell.textLabel.textColor = [UIColor blackColor];
 
 	cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
-	int accessoryType = [self accessoryTypeForIndexPath:indexPath];
+	UITableViewCellAccessoryType accessoryType = [self accessoryTypeForIndexPath:indexPath];
 	cell.accessoryType = accessoryType;
 	cell.accessoryView = [self accessoryViewForAccessoryType:accessoryType];
 
@@ -316,7 +316,7 @@ NS_ASSUME_NONNULL_BEGIN
 		NSIndexPath *previouslySelectedIndexPath = [NSIndexPath indexPathForRow:_selectedItemIndex inSection:0];
 		
 		UITableViewCell *cell = (_selectedItemIndex != NSNotFound ? [tableView cellForRowAtIndexPath:previouslySelectedIndexPath] : nil);
-		int previouslySelectedAccessoryType = [self accessoryTypeForIndexPath:previouslySelectedIndexPath];
+		UITableViewCellAccessoryType previouslySelectedAccessoryType = [self accessoryTypeForIndexPath:previouslySelectedIndexPath];
 		cell.accessoryType = previouslySelectedAccessoryType;
 		cell.accessoryView = [self accessoryViewForAccessoryType:previouslySelectedAccessoryType];
 		cell.textLabel.textColor = [UIColor blackColor];
@@ -328,7 +328,7 @@ NS_ASSUME_NONNULL_BEGIN
 		_pendingChanges = YES;
 
 		cell = [tableView cellForRowAtIndexPath:indexPath];
-		int accessoryType = [self accessoryTypeForIndexPath:indexPath];
+		UITableViewCellAccessoryType accessoryType = [self accessoryTypeForIndexPath:indexPath];
 		cell.accessoryType = accessoryType;
 		cell.accessoryView = [self accessoryViewForAccessoryType:accessoryType];
 		cell.textLabel.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];

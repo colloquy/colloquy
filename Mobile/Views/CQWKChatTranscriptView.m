@@ -195,7 +195,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) setScrollbackLimit:(BOOL) scrollbackLimit {
 	_scrollbackLimit = scrollbackLimit;
 
-	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setScrollbackLimit(%tu)", scrollbackLimit]];
+	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setScrollbackLimit(%@)", @(scrollbackLimit)]];
 }
 
 - (void) willStartScrolling {
