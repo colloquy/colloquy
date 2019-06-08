@@ -480,7 +480,7 @@ static BOOL applicationIsTerminating = NO;
 - (void) applicationWillFinishLaunching:(NSNotification *) notification {
 	PFMoveToApplicationsFolderIfNecessary();
 
-	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
+	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"info.colloquy" ofType:@"plist"]]];
 	if ([[[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys] indexOfObject:@"JVRemoveTransferedItems"] != NSNotFound) {
 		[[NSUserDefaults standardUserDefaults] setInteger:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] forKey:@"JVRemoveTransferredItems"];
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVRemoveTransferedItems"];
