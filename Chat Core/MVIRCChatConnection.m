@@ -1972,7 +1972,10 @@ parsingFinished: { // make a scope for this
 	MVSafeRetainAssign( _queueWait, [NSDate dateWithTimeIntervalSinceNow:0.5] );
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self _resetSendQueueInterval];
-		[self _didConnect];
+
+		dispatch_async(_connectionQueue, ^{
+			[self _didConnect];
+		});
 	});
 }
 
