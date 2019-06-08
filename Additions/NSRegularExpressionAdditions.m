@@ -21,11 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 				dangerousCache[pattern] = patternKey;
 			}
 		}
-	#if TARGET_OS_OSX
-		NSString *key = [NSString stringWithFormat:@"%ld-%@", options, patternKey];
-	#else
-		NSString *key = [NSString stringWithFormat:@"%tu-%@", options, patternKey];
-	#endif
+
+		NSString *key = [NSString stringWithFormat:@"%@-%@", @(options), patternKey];
 		regularExpression = dangerousCache[key];
 
 		if (!regularExpression) {
