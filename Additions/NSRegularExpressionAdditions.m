@@ -6,35 +6,39 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSRegularExpression *) cachedRegularExpressionWithPattern:(NSString *) pattern options:(NSRegularExpressionOptions) options error:(NSError *__autoreleasing*) error {
 	static NSMutableDictionary *dangerousCache = nil;
 	static dispatch_once_t pred;
+	static dispatch_queue_t cacheQueue = NULL;
 	dispatch_once(&pred, ^{
 		dangerousCache = [[NSMutableDictionary alloc] init];
+		cacheQueue = dispatch_queue_create("info.colloquy.regex.cache", DISPATCH_QUEUE_SERIAL);
 	});
 
-	NSString *patternKey = dangerousCache[pattern];
-	if (!patternKey) {
-		@synchronized([NSRegularExpression class]) {
-			patternKey = [NSRegularExpression escapedPatternForString:pattern];
-			dangerousCache[pattern] = patternKey;
+	__block NSRegularExpression *regularExpression = NULL;
+	dispatch_sync(cacheQueue, ^{
+		NSString *patternKey = dangerousCache[pattern];
+		if (!patternKey) {
+			@synchronized([NSRegularExpression class]) {
+				patternKey = [NSRegularExpression escapedPatternForString:pattern];
+				dangerousCache[pattern] = patternKey;
+			}
 		}
-	}
-#if TARGET_OS_OSX
-	NSString *key = [NSString stringWithFormat:@"%ld-%@", options, patternKey];
-#else
-	NSString *key = [NSString stringWithFormat:@"%tu-%@", options, patternKey];
-#endif
-	NSRegularExpression *regularExpression = dangerousCache[key];
+	#if TARGET_OS_OSX
+		NSString *key = [NSString stringWithFormat:@"%ld-%@", options, patternKey];
+	#else
+		NSString *key = [NSString stringWithFormat:@"%tu-%@", options, patternKey];
+	#endif
+		regularExpression = dangerousCache[key];
 
-	if (regularExpression)
-		return regularExpression;
-
-	NSError *internalError = nil;
-	regularExpression = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:&internalError];
-	if (!regularExpression) {
-		NSLog(@"%@", internalError);
-		if (error) *error = internalError;
-	} else {
-		dangerousCache[key] = regularExpression;
-	}
+		if (!regularExpression) {
+			NSError *internalError = nil;
+			regularExpression = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:&internalError];
+			if (!regularExpression) {
+				NSLog(@"%@", internalError);
+				if (error) *error = internalError;
+			} else {
+				dangerousCache[key] = regularExpression;
+			}
+		}
+	});
 
 	return regularExpression;
 }
