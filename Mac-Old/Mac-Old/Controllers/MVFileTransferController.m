@@ -1,4 +1,5 @@
 #import "MVFileTransferController.h"
+#import "MVBuddyListController.h"
 
 #import "JVDetailCell.h"
 
@@ -7,6 +8,18 @@ static MVFileTransferController *sharedInstance = nil;
 static NSString *MVToolbarStopItemIdentifier = @"MVToolbarStopItem";
 static NSString *MVToolbarRevealItemIdentifier = @"MVToolbarRevealItem";
 static NSString *MVToolbarClearItemIdentifier = @"MVToolbarClearItem";
+
+typedef NS_ENUM(NSInteger, JVAutoAcceptFilesFromSetting) {
+	/// Ask before accepting any file transfer.
+	/// This is the default option.
+	JVAutoAcceptFilesFromSettingNoOne = 1,
+
+	/// Automatically accept file transfers from buddies, and ask for everyone else
+	JVAutoAcceptFilesFromSettingBuddies = 2,
+
+	/// Automatically accept all incoming file transfers
+	JVAutoAcceptFilesFromSettingEveryone = 3
+};
 
 NSString *MVPrettyFileSize( unsigned long long size ) {
 	NSString *ret = nil;
@@ -601,24 +614,23 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 - (void) _incomingFile:(NSNotification *) notification {
 	MVDownloadFileTransfer *transfer = [notification object];
 
-	if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 3 ) {
+	BOOL automaticallyAcceptFileTransfer = NO;
+	JVAutoAcceptFilesFromSetting autoAcceptSettings = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"];
+	switch (autoAcceptSettings) {
+		case JVAutoAcceptFilesFromSettingEveryone:
+			automaticallyAcceptFileTransfer = YES;
+			break;
+		case JVAutoAcceptFilesFromSettingBuddies:
+			automaticallyAcceptFileTransfer = [[MVBuddyListController sharedBuddyList] buddyForUser:transfer.user] != nil;
+			break;
+		case JVAutoAcceptFilesFromSettingNoOne:
+			// default value works, nothing to do
+			break;
+	}
+
+	if (automaticallyAcceptFileTransfer) {
 		[self _incomingFileSheetDidEndWithReturnCode:NSAlertFirstButtonReturn fileTransfer:transfer];
-	} else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 2 ) {
-//		JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:[transfer user] onServer:[(MVChatConnection *)[transfer connection] server]];
-//		if( buddy ) [self _incomingFileSheetDidEnd:nil returnCode:NSModalResponseOK contextInfo:(void *)[transfer retain]];
-//		else
-		// transfer is released when the sheet closes
-		
-		NSAlert *alert = [[NSAlert alloc] init];
-		alert.messageText = NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" );
-		alert.informativeText = [NSString stringWithFormat:NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer user], MVPrettyFileSize( [transfer finalSize] )];
-		alert.alertStyle = NSAlertStyleInformational;
-		[alert addButtonWithTitle:NSLocalizedString( @"Accept", "accept button name" )];
-		[alert addButtonWithTitle:NSLocalizedString( @"Refuse", "refuse button name" )];
-		[alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode) {
-			[self _incomingFileSheetDidEndWithReturnCode:returnCode fileTransfer:transfer];
-		}];
-	} else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 1 ) {
+	} else {
 		NSAlert *alert = [[NSAlert alloc] init];
 		alert.messageText = NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" );
 		alert.informativeText = [NSString stringWithFormat:NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer user], MVPrettyFileSize( [transfer finalSize] )];
