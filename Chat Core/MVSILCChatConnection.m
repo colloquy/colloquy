@@ -1216,7 +1216,7 @@ static SilcClientOperations silcClientOps = {
 	else [self sendRawMessageWithFormat:@"JOIN %@", [self properNameForChatRoomNamed:room]];
 }
 
-- (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
+- (nullable MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSData class]] );
 	return [super joinedChatRoomWithUniqueIdentifier:identifier];
 }
