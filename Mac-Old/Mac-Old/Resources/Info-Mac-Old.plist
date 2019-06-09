@@ -105,6 +105,8 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>source</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.social-networking</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
