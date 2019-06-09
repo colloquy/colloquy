@@ -653,6 +653,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			NSSavePanel *savePanel = [NSSavePanel savePanel];
 			[savePanel setDelegate:self];
 			[savePanel setDirectoryURL:[NSURL fileURLWithPath:[[self class] userPreferredDownloadFolder] isDirectory:YES]];
+			[savePanel setNameFieldStringValue:transfer.originalFileName];
 			[savePanel beginWithCompletionHandler:^(NSModalResponse result) {
 				[self _incomingFileSavePanelDidEnd:savePanel returnCode:result fileTransfer:transfer];
 			}];
