@@ -127,7 +127,7 @@ COLLOQUY_EXPORT
 @property(nullable, strong, readonly) NSString *nickname;
 @property(nullable, strong, readonly) NSString *realName;
 @property(nullable, strong, readonly) NSString *username;
-@property(strong, readonly) NSString *account;
+@property(nullable, strong, readonly) NSString *account;
 @property(strong, readonly) NSString *address;
 @property(nullable, strong, readonly) NSString *serverAddress;
 @property(strong, readonly, nullable) NSString *maskRepresentation;

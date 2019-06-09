@@ -263,7 +263,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	return _realName;
 }
 
-- (NSString *) account {
+- (nullable NSString *) account {
 	if (_type == MVChatLocalUserType)
 		return _username;
 	return _account;
