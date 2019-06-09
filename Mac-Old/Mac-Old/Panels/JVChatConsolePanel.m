@@ -55,6 +55,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[send setImportsGraphics:NO];
 	[send setUsesFindPanel:NO];
 	[send setUsesFontPanel:NO];
+	[send setTextContainerInset:NSMakeSize(3.0, 6.0)];
 	[send reset:nil];
 
 	NSRect sendFrame = [[send enclosingScrollView] frame];

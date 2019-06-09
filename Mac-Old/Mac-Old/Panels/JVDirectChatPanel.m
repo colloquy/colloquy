@@ -211,6 +211,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[send setAllowsUndo:YES];
 	[send setUsesRuler:NO];
 	[send setDelegate:self];
+	[send setTextContainerInset:NSMakeSize(3.0, 6.0)];
 	[send reset:nil];
 
 	NSRect sendFrame = [[send enclosingScrollView] frame];
