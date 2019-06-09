@@ -324,7 +324,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 #pragma mark Rooms handling
 
-- (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
+- (nullable MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
 
 	MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:identifier];
@@ -365,7 +365,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	return [NSSet setWithObject:[self chatUserWithUniqueIdentifier:nickname]];
 }
 
-- (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
+- (nullable MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
 	MVChatUser *user = [super chatUserWithUniqueIdentifier:[identifier lowercaseString]];
 	if( ! user ) user = [[[MVICBChatUser alloc] initWithNickname:identifier andConnection:self] autorelease];

@@ -47,7 +47,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (id) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
 		_views = [[NSMutableArray alloc] initWithCapacity:10];
-		_settings = [[NSMutableDictionary alloc] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]];
+		_settings = [[NSMutableDictionary alloc] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]] ?: @{}];
 	}
 
 	return self;
@@ -156,7 +156,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (void) setIdentifier:(NSString *) identifier {
 	_identifier = [identifier copy];
-	_settings = [[NSMutableDictionary alloc] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]];
+	_settings = [[NSMutableDictionary alloc] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]] ?: @{}];
 
 	if( [[self identifier] length] ) {
 		[[self window] setDelegate:nil]; // so we don't act on the windowDidResize notification
@@ -1134,10 +1134,14 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) _refreshPreferences {
-	NSSize drawerSize = NSSizeFromString( [self preferenceForKey:@"drawer size"] );
-	if( drawerSize.width ) [viewsDrawer setContentSize:drawerSize];
+	NSString *savedDrawerSize = [self preferenceForKey:@"drawer size"];
+	if ( savedDrawerSize.length > 0 ) {
+		NSSize drawerSize = NSSizeFromString( [self preferenceForKey:@"drawer size"] );
+		if( drawerSize.width ) [viewsDrawer setContentSize:drawerSize];
+	}
 
-	if( [[self preferenceForKey:@"drawer open"] boolValue] )
+	NSString *drawerOpen = [self preferenceForKey:@"drawer open"];
+	if( drawerOpen && [drawerOpen boolValue] )
 		[self performSelector:@selector( openViewsDrawer: ) withObject:nil afterDelay:0.0];
 
 	_usesSmallIcons = [[self preferenceForKey:@"small drawer icons"] boolValue];

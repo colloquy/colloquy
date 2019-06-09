@@ -510,8 +510,17 @@
 }
 
 - (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view {
-	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:object, @"----", ( view ? (id) view : (id) [NSNull null] ), @"cMi1", nil];
-	id result = [self callScriptHandler:'cMiX' withArguments:args forSelector:_cmd];
+	NSMutableDictionary *args = [NSMutableDictionary dictionary];
+	if (object) {
+		args[@"----"] = object;
+	}
+	if (view) {
+		args[@"cMi1"] = view;
+	} else {
+		args[@"cMi1"] = NSNull.null;
+	}
+
+	id result = [self callScriptHandler:'cMiX' withArguments:args.copy forSelector:_cmd];
 	NSMutableArray *ret = [NSMutableArray array];
 
 	if( ! result ) return nil;

@@ -164,7 +164,7 @@
 	NSRange limitRange, effectiveRange;
 	NSUInteger count = 0, i = 0;
 	NSRectArray rects = NULL;
-	NSCursor *linkCursor = [[NSCursor alloc] initWithImage:[NSImage imageNamed:@"MVLinkCursor"] hotSpot:NSMakePoint( 6., 0. )];
+	NSCursor *linkCursor = [[NSCursor alloc] initWithImage:NSCursor.currentSystemCursor.image hotSpot:NSMakePoint( 6., 0. )];
 
 	[super resetCursorRects];
 	limitRange = NSMakeRange( 0, [[self string] length] );

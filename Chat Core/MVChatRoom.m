@@ -610,7 +610,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	if (date) [connection _removeJoinedRoom:self];
 }
 
-- (void) _setTopic:(NSData *) newTopic {
+- (void) _setTopic:(nullable NSData *) newTopic {
 	MVSafeCopyAssign( _topic, newTopic );
 }
 
@@ -675,7 +675,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return [self memberUserWithUniqueIdentifier:identifier];
 }
 
-- (MVChatUser *) valueInMemberUsersArrayWithName:(NSString *) memberName {
+- (nullable MVChatUser *) valueInMemberUsersArrayWithName:(NSString *) memberName {
 	for( MVChatUser *user in [self memberUsers] )
 		if( [[user nickname] isCaseInsensitiveEqualToString:memberName] )
 			return user;

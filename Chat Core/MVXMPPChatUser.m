@@ -30,15 +30,15 @@ NS_ASSUME_NONNULL_BEGIN
 	return [self username];
 }
 
-- (NSString *) nickname {
+- (nullable NSString *) nickname {
 	return [self username];
 }
 
-- (NSString *) realName {
+- (nullable NSString *) realName {
 	return nil;
 }
 
-- (NSString *) username {
+- (nullable NSString *) username {
 	if( _roomMember )
 		return [_uniqueIdentifier resource];
 	return [_uniqueIdentifier username];
@@ -48,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return [_uniqueIdentifier domain];
 }
 
-- (NSString *) serverAddress {
+- (nullable NSString *) serverAddress {
 	return [_uniqueIdentifier domain];
 }
 

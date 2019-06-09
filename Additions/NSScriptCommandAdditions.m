@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return YES;
 }
 
-- (id) executeCommandOnSubject {
+- (nullable id) executeCommandOnSubject {
 	NSScriptObjectSpecifier *subjectSpecifier = [self subjectSpecifier];
 	NSScriptClassDescription *classDesc = [subjectSpecifier keyClassDescription];
 	NSScriptCommandDescription *cmdDesc = [self commandDescription];

@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) _clearModes;
 - (void) _setDateJoined:(NSDate * __nullable) date;
 - (void) _setDateParted:(NSDate * __nullable) date;
-- (void) _setTopic:(NSData *) topic;
+- (void) _setTopic:(nullable NSData *) topic;
 - (void) _setTopicAuthor:(MVChatUser *) author;
 - (void) _setTopicDate:(NSDate *) date;
 @end

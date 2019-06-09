@@ -242,6 +242,6 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 	NSString *file = [_bundle pathForResource:@"menu" ofType:@"plist"];
 
-	_emoticonMenu = [NSArray arrayWithContentsOfFile:file];
+	if (file) _emoticonMenu = [NSArray arrayWithContentsOfFile:file];
 }
 @end

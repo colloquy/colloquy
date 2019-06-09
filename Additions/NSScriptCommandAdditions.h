@@ -5,7 +5,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSScriptObjectSpecifier *) subjectSpecifier;
 - (void) setSubjectSpecifier:(NSScriptObjectSpecifier *) subject;
 - (BOOL) subjectSupportsCommand;
-- (id) executeCommandOnSubject;
+- (nullable id) executeCommandOnSubject;
 - (id) evaluatedDirectParameter;
 @end
 

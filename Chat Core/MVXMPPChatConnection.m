@@ -186,7 +186,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return [NSSet setWithObject:[self chatUserWithUniqueIdentifier:name]];
 }
 
-- (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
+- (nullable MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] || [identifier isKindOfClass:[XMPPJID class]] );
 
 	if( [identifier isKindOfClass:[NSString class]] )

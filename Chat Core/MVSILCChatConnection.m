@@ -1285,7 +1285,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	return ( results.count ? results : nil );
 }
 
-- (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
+- (nullable MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSData class]] || [identifier isKindOfClass:[NSString class]] );
 
 	if( ! [self _silcConn] ) return nil;

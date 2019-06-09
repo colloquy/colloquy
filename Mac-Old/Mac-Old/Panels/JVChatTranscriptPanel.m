@@ -122,7 +122,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (void) setWindowController:(JVChatWindowController *) controller {
-	if( [[[_windowController window] representedFilename] isEqualToString:[[self transcript] filePath]] )
+	if( [[self transcript] filePath] && [[[_windowController window] representedFilename] isEqualToString:[[self transcript] filePath]] )
 		[[_windowController window] setRepresentedFilename:@""];
 
 	_windowController = controller;
@@ -751,6 +751,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #pragma mark Style Support
 - (void) _refreshWindowFileProxy {
 	if(	[[self windowController] activeChatViewController] != self ) return;
+	if( ![[self transcript] filePath] ) return;
 	if( ! [[NSFileManager defaultManager] fileExistsAtPath:[[self transcript] filePath]] ) {
 		[[_windowController window] setRepresentedFilename:@""];
 	} else {

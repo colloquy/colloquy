@@ -251,13 +251,13 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	return [self nickname];
 }
 
-- (NSString *) nickname {
+- (nullable NSString *) nickname {
 	if( _type == MVChatLocalUserType )
 		return [[self connection] nickname];
 	return _nickname;
 }
 
-- (NSString *) realName {
+- (nullable NSString *) realName {
 	if( _type == MVChatLocalUserType )
 		return [[self connection] realName];
 	return _realName;
@@ -269,13 +269,13 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	return _account;
 }
 
-- (NSString *) username {
+- (nullable NSString *) username {
 	if( _type == MVChatLocalUserType )
 		return [[self connection] username];
 	return _username;
 }
 
-- (NSString *) serverAddress {
+- (nullable NSString *) serverAddress {
 	if( ! _serverAddress ) return [[self connection] server];
 	return _serverAddress;
 }
