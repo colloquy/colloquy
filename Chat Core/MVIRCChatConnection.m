@@ -3416,10 +3416,6 @@ parsingFinished: { // make a scope for this
 	[invocation setArgument:&unsafeArguments atIndex:3];
 	[invocation setArgument:&unsafeSender atIndex:4];
 
-	command = nil;
-	arguments = nil;
-	sender = nil;
-
 	NSArray <NSNumber *> *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 	if( [[results lastObject] boolValue] ) {
 		return;
