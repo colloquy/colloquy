@@ -453,7 +453,7 @@
 		1C6EA24205A738DD006A559F /* JVChatRoomBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVChatRoomBrowser.m; sourceTree = "<group>"; };
 		1C70377C07E49F25005CEA40 /* JVSmartTranscriptPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVSmartTranscriptPanel.h; sourceTree = "<group>"; };
 		1C70377D07E49F25005CEA40 /* JVSmartTranscriptPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = JVSmartTranscriptPanel.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		1C703EF407E4B956005CEA40 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Languages/en.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
+		1C703EF407E4B956005CEA40 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Languages/en.lproj/JVSmartTranscriptFilterSheet.xib; sourceTree = "<group>"; };
 		1C705701051A830200A8FE6E /* newMessage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newMessage.png; sourceTree = "<group>"; };
 		1C7109FF09F23730007B4515 /* JVSidebarChatWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVSidebarChatWindowController.h; sourceTree = "<group>"; };
 		1C710A0009F23730007B4515 /* JVSidebarChatWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVSidebarChatWindowController.m; sourceTree = "<group>"; };
@@ -1607,7 +1607,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1100;
 				ORGANIZATIONNAME = "Colloquy Project";
 			};
 			buildConfigurationList = 1C041A700854E97700A5A5BA /* Build configuration list for PBXProject "Colloquy (Old)" */;
@@ -2152,7 +2152,7 @@
 		1C703EF307E4B956005CEA40 /* JVSmartTranscriptFilterSheet.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				1C703EF407E4B956005CEA40 /* English */,
+				1C703EF407E4B956005CEA40 /* en */,
 				A18BC9EA08FF569A0005DC2D /* es */,
 				A18BCA2108FF588E0005DC2D /* nl */,
 				A18BCA2208FF589D0005DC2D /* de */,
