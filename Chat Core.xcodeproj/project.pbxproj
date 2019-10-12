@@ -569,25 +569,23 @@
 			};
 			buildConfigurationList = 1C041DDE08553AD200A5A5BA /* Build configuration list for PBXProject "Chat Core" */;
 			compatibilityVersion = "Xcode 8.0";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
 			knownRegions = (
-				English,
-				Japanese,
-				French,
-				German,
 				zh_CN,
-				Danish,
-				Finnish,
-				Italian,
-				Korean,
 				pt_BR,
-				Spanish,
 				zh_TW,
-				Norwegian,
-				Engligh,
 				en,
 				he,
+				fr,
+				it,
+				ko,
+				de,
+				es,
+				fi,
+				da,
+				ja,
+				nb,
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
 			productRefGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
