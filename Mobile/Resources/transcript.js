@@ -30,10 +30,10 @@ function animateScroll(target, duration, callback) {
 
 		if (animationComplete < duration) {
 			currentScrollTop = cubicInOut(animationComplete, startScrollTop, targetScrollTop - startScrollTop, duration);
-			document.body.scrollTop = currentScrollTop;
+			document.scrollingElement.scrollTop = currentScrollTop;
 		} else {
 			currentScrollTop = targetScrollTop;
-			document.body.scrollTop = currentScrollTop;
+			document.scrollingElement.scrollTop = currentScrollTop;
 
 			clearInterval(animationInterval);
 			animationInterval = null;
@@ -217,7 +217,7 @@ function resumeAutoscroll() {
 }
 
 function nearBottom() {
-	return (animatingScroll || (window.innerHeight + window.scrollY) + 45 >= document.body.offsetHeight);
+	return (animatingScroll || (window.innerHeight + window.scrollY) + 45 >= document.scrollingElement.offsetHeight);
 }
 
 function scrollToBottomIfNeeded(animated) {
@@ -232,8 +232,8 @@ function scrollToBottom(animated, suppressEnforceScrollbackLimit) {
 		if (!suppressEnforceScrollbackLimit)
 			enforceScrollbackLimit();
 
-		currentScrollTop = (document.body.scrollHeight - window.innerHeight);
-		document.body.scrollTop = currentScrollTop;
+		currentScrollTop = (document.scrollingElement.scrollHeight - window.innerHeight);
+		document.scrollingElement.scrollTop = currentScrollTop;
 		return;
 	}
 
@@ -247,7 +247,7 @@ function scrollToBottom(animated, suppressEnforceScrollbackLimit) {
 			setTimeout(tryEnforcingScrollback, 500);
 	}
 
-	var newScrollTop = (document.body.scrollHeight - window.innerHeight);
+	var newScrollTop = (document.scrollingElement.scrollHeight - window.innerHeight);
 	animateScroll(newScrollTop, 250, animationFinished);
 }
 
