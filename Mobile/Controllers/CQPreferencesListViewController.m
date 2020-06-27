@@ -322,10 +322,11 @@ NS_ASSUME_NONNULL_BEGIN
 		cell.accessoryView = [self accessoryViewForAccessoryType:previouslySelectedAccessoryType];
 		cell.textLabel.textColor = [UIColor blackColor];
 
-		if (_selectedItemIndex == indexPath.row)
+		_selectedItemIndex = indexPath.row;
+
+		if (_listType == CQPreferencesListTypeAudio)
 			[self _previewAudioAlertAtIndex:_selectedItemIndex];
 
-		_selectedItemIndex = indexPath.row;
 		_pendingChanges = YES;
 
 		cell = [tableView cellForRowAtIndexPath:indexPath];
