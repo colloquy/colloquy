@@ -9,176 +9,6 @@
 /* Begin PBXBuildFile section */
 		1910F61C1FCBDEA6009B692D /* NSURLSessionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1910F61B1FCBDEA6009B692D /* NSURLSessionAdditions.m */; };
 		1918E3A11F89680700559039 /* OnePasswordExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1918E39E1F89680000559039 /* OnePasswordExtension.framework */; };
-		19267F8C20DEE1A1000AAD15 /* notes.js in Resources */ = {isa = PBXBuildFile; fileRef = 1C6D45BE10FAD85900BE77ED /* notes.js */; };
-		19267F8D20DEE1A1000AAD15 /* chromatic-redux.js in Resources */ = {isa = PBXBuildFile; fileRef = 9247414216119CCC009132B5 /* chromatic-redux.js */; };
-		19267F8E20DEE1A1000AAD15 /* chromatic-dark.js in Resources */ = {isa = PBXBuildFile; fileRef = 1C8408BE0F1552A7004665DC /* chromatic-dark.js */; };
-		19267F8F20DEE1A1000AAD15 /* chromatic.js in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F6A550F150776002BB855 /* chromatic.js */; };
-		19267F9020DEE1A1000AAD15 /* bubbles.js in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F686C0F1452A7002BB855 /* bubbles.js */; };
-		19267F9120DEE1A1000AAD15 /* transcript.js in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8C850EE6190A00CE1AF8 /* transcript.js */; };
-		19267F9220DEE1A1000AAD15 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C09313A0D80C8F600A2705D /* Defaults.plist */; };
-		19267F9320DEE1A1000AAD15 /* CQWKChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 921857D719D13AE70076F87E /* CQWKChatView.xib */; };
-		19267F9420DEE1A1000AAD15 /* base.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8BF20EE612DA00CE1AF8 /* base.html */; };
-		19267F9520DEE1A1000AAD15 /* standard.css in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8BF30EE612DA00CE1AF8 /* standard.css */; };
-		19267F9620DEE1A1000AAD15 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1CA718A90EF5F136006225CD /* Settings.bundle */; };
-		19267F9720DEE1A1000AAD15 /* standard-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C1253280F0D4FC1008F181B /* standard-dark.css */; };
-		19267F9820DEE1A1000AAD15 /* bubbles.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F686A0F144DBE002BB855 /* bubbles.css */; };
-		19267F9920DEE1A1000AAD15 /* chromatic.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F69440F15033C002BB855 /* chromatic.css */; };
-		19267F9A20DEE1A1000AAD15 /* chromatic-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F694E0F15035D002BB855 /* chromatic-dark.css */; };
-		19267F9B20DEE1A1000AAD15 /* notes.css in Resources */ = {isa = PBXBuildFile; fileRef = 896E84600F15AB6C00D810FE /* notes.css */; };
-		19267F9C20DEE1A1000AAD15 /* standard-grey-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */; };
-		19267F9D20DEE1A1000AAD15 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1C8CFE950F60E11900B672F9 /* Localizable.strings */; };
-		19267F9E20DEE1A1000AAD15 /* Beep 1.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6250FA03D7800215521 /* Beep 1.aiff */; };
-		19267F9F20DEE1A1000AAD15 /* Beep 2.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6260FA03D7800215521 /* Beep 2.aiff */; };
-		19267FA020DEE1A1000AAD15 /* Bell 1.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6270FA03D7800215521 /* Bell 1.aiff */; };
-		19267FA120DEE1A1000AAD15 /* Bell 2.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6280FA03D7800215521 /* Bell 2.aiff */; };
-		19267FA220DEE1A1000AAD15 /* Clap.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6290FA03D7800215521 /* Clap.aiff */; };
-		19267FA320DEE1A1000AAD15 /* Cymbal.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE62A0FA03D7800215521 /* Cymbal.aiff */; };
-		19267FA420DEE1A1000AAD15 /* DJ Scratch.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE62B0FA03D7800215521 /* DJ Scratch.aiff */; };
-		19267FA520DEE1A1000AAD15 /* Electronic Signal.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE62C0FA03D7800215521 /* Electronic Signal.aiff */; };
-		19267FA620DEE1A1000AAD15 /* Explosion.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE62D0FA03D7800215521 /* Explosion.aiff */; };
-		19267FA720DEE1A1000AAD15 /* Kick.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE62E0FA03D7800215521 /* Kick.aiff */; };
-		19267FA820DEE1A1000AAD15 /* Laser.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE62F0FA03D7800215521 /* Laser.aiff */; };
-		19267FA920DEE1A1000AAD15 /* Pop.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6300FA03D7800215521 /* Pop.aiff */; };
-		19267FAA20DEE1A1000AAD15 /* Rattle.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6310FA03D7800215521 /* Rattle.aiff */; };
-		19267FAB20DEE1A1000AAD15 /* Sonar Beep.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6320FA03D7800215521 /* Sonar Beep.aiff */; };
-		19267FAC20DEE1A1000AAD15 /* Stoof.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6330FA03D7800215521 /* Stoof.aiff */; };
-		19267FAD20DEE1A1000AAD15 /* Switch.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6340FA03D7800215521 /* Switch.aiff */; };
-		19267FAE20DEE1A1000AAD15 /* Whip.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6350FA03D7800215521 /* Whip.aiff */; };
-		19267FAF20DEE1A1000AAD15 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 194D95D21B2A33910061AE55 /* LaunchScreen.xib */; };
-		19267FB020DEE1A1000AAD15 /* Servers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8900D7330FBFB2D900DE3E3B /* Servers.plist */; };
-		19267FB120DEE1A1000AAD15 /* OpenDyslexic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 92B6661317ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf */; };
-		19267FB220DEE1A1000AAD15 /* verbs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1CB24E02101EBE4800217B50 /* verbs.plist */; };
-		19267FB320DEE1A1000AAD15 /* Help.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1CA3DD5610287D5F008B1AD2 /* Help.plist */; };
-		19267FB420DEE1A1000AAD15 /* help-base.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CA3DEFC10291146008B1AD2 /* help-base.html */; };
-		19267FB520DEE1A1000AAD15 /* help.css in Resources */ = {isa = PBXBuildFile; fileRef = 1CA3DF0010291176008B1AD2 /* help.css */; };
-		19267FB620DEE1A1000AAD15 /* whats-new.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CD46801102A5EBB00A7A49E /* whats-new.html */; };
-		19267FB720DEE1A1000AAD15 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 926678F519BFE22900CCE5BE /* Images.xcassets */; };
-		19267FB820DEE1A1000AAD15 /* chromatic-redux.css in Resources */ = {isa = PBXBuildFile; fileRef = 9247414116119CCC009132B5 /* chromatic-redux.css */; };
-		19267FB920DEE1A1000AAD15 /* console.css in Resources */ = {isa = PBXBuildFile; fileRef = 9290D7C11694F3A400ACF833 /* console.css */; };
-		19267FBA20DEE1A1000AAD15 /* common.css in Resources */ = {isa = PBXBuildFile; fileRef = 92196CA516CA345D0020FE35 /* common.css */; };
-		19267FBB20DEE1A1000AAD15 /* topic.css in Resources */ = {isa = PBXBuildFile; fileRef = 920B6D5817196C6700879D86 /* topic.css */; };
-		19267FBC20DEE1A1000AAD15 /* roomTopicBanner.js in Resources */ = {isa = PBXBuildFile; fileRef = 920B6D5A17196C7900879D86 /* roomTopicBanner.js */; };
-		19267FBF20DEE1A1000AAD15 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
-		19267FC020DEE1A1000AAD15 /* CQColloquyApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0931010D80C6E900A2705D /* CQColloquyApplication.m */; };
-		19267FC120DEE1A1000AAD15 /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932670D80CA4800A2705D /* NSDataAdditions.m */; };
-		19267FC220DEE1A1000AAD15 /* UIWindowAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B6BFA5421BBDA3B6000C3BBC /* UIWindowAdditions.m */; };
-		19267FC420DEE1A1000AAD15 /* NSURLSessionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1910F61B1FCBDEA6009B692D /* NSURLSessionAdditions.m */; };
-		19267FC520DEE1A1000AAD15 /* NSNotificationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09326D0D80CA4800A2705D /* NSNotificationAdditions.m */; };
-		19267FC620DEE1A1000AAD15 /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932710D80CA4800A2705D /* NSScannerAdditions.m */; };
-		19267FC720DEE1A1000AAD15 /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932750D80CA4800A2705D /* NSStringAdditions.m */; };
-		19267FC820DEE1A1000AAD15 /* CQChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937800D8116FC00A2705D /* CQChatController.m */; };
-		19267FC920DEE1A1000AAD15 /* CQDirectChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937EB0D8126D400A2705D /* CQDirectChatController.m */; };
-		19267FCA20DEE1A1000AAD15 /* CQChatRoomController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937ED0D8126D400A2705D /* CQChatRoomController.m */; };
-		19267FCB20DEE1A1000AAD15 /* CQChatTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1950D83CF1D009ABD9F /* CQChatTableCell.m */; };
-		19267FCD20DEE1A1000AAD15 /* CQConnectionTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1A20D83D133009ABD9F /* CQConnectionTableHeaderView.m */; };
-		19267FCE20DEE1A1000AAD15 /* CQConnectionsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1AD0D83D30F009ABD9F /* CQConnectionsController.m */; };
-		19267FCF20DEE1A1000AAD15 /* CQChatListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C27C0D847EA4009ABD9F /* CQChatListViewController.m */; };
-		19267FD020DEE1A1000AAD15 /* CQConnectionEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */; };
-		19267FD120DEE1A1000AAD15 /* CQConnectionCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */; };
-		19267FD220DEE1A1000AAD15 /* CQPreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7EBE6C0E01816C0018B0C8 /* CQPreferencesTextCell.m */; };
-		19267FD320DEE1A1000AAD15 /* CQConnectionAdvancedEditController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6E3D210ED1CEB6001822BD /* CQConnectionAdvancedEditController.m */; };
-		19267FD420DEE1A1000AAD15 /* CQPreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6100D20ED31C8B0016F968 /* CQPreferencesSwitchCell.m */; };
-		19267FD520DEE1A1000AAD15 /* CQPreferencesDeleteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */; };
-		19267FD620DEE1A1000AAD15 /* UITableViewCellAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */; };
-		19267FD720DEE1A1000AAD15 /* CQKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */; };
-		19267FD820DEE1A1000AAD15 /* CQPreferencesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */; };
-		19267FD920DEE1A1000AAD15 /* CQPreferencesListEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */; };
-		19267FDA20DEE1A1000AAD15 /* UITableViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */; };
-		19267FDB20DEE1A1000AAD15 /* CQChatInputBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE69FD80EE317F200389442 /* CQChatInputBar.m */; };
-		19267FDC20DEE1A1000AAD15 /* CQChatUserListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC64B2C0EE97F8B00DE91D0 /* CQChatUserListViewController.m */; };
-		19267FDD20DEE1A1000AAD15 /* CQColorPickerTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 922AF5DD1A42BD4B00B2A966 /* CQColorPickerTableCell.m */; };
-		19267FDE20DEE1A1000AAD15 /* CQUnreadCountView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA715190EF47D6F006225CD /* CQUnreadCountView.m */; };
-		19267FDF20DEE1A1000AAD15 /* CQActivities.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D085B51B8D6E8400734C96 /* CQActivities.m */; };
-		19267FE020DEE1A1000AAD15 /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */; };
-		19267FE120DEE1A1000AAD15 /* CQTextCompletionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBCFF2C0F04632900EEBCFB /* CQTextCompletionView.m */; };
-		19267FE220DEE1A1000AAD15 /* CQChatCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1254A30F0D8D7F008F181B /* CQChatCreationViewController.m */; };
-		19267FE320DEE1A1000AAD15 /* CQChatEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1255660F0EAA69008F181B /* CQChatEditViewController.m */; };
-		19267FE420DEE1A1000AAD15 /* UIApplicationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261B7001841AEA1001B14C3 /* UIApplicationAdditions.m */; };
-		19267FE520DEE1A1000AAD15 /* CQRootContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6024FF21BCD2D44000A5058 /* CQRootContainerViewController.m */; };
-		19267FE620DEE1A1000AAD15 /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
-		19267FE720DEE1A1000AAD15 /* CQSoundController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E87C080FA0450800B49230 /* CQSoundController.m */; };
-		19267FE820DEE1A1000AAD15 /* CQConnectionPushEditController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C633C9B0FABD06C00BB5866 /* CQConnectionPushEditController.m */; };
-		19267FE920DEE1A1000AAD15 /* CQBouncerSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6341630FAF30B600BB5866 /* CQBouncerSettings.m */; };
-		19267FEA20DEE1A1000AAD15 /* CQBouncerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B60E90FFAE4C400B7BAC0 /* CQBouncerConnection.m */; };
-		19267FEB20DEE1A1000AAD15 /* CQBouncerCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C16F77C0FFF049F008D7BB3 /* CQBouncerCreationViewController.m */; };
-		19267FEC20DEE1A1000AAD15 /* CQBouncerEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C16F77E0FFF049F008D7BB3 /* CQBouncerEditViewController.m */; };
-		19267FED20DEE1A1000AAD15 /* CQAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBEA7341002CC5C00546847 /* CQAlertView.m */; };
-		19267FEE20DEE1A1000AAD15 /* CQProcessChatMessageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0DBCA81005A57A003BEEF3 /* CQProcessChatMessageOperation.m */; };
-		19267FEF20DEE1A1000AAD15 /* CQChatRoomInfoTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C34A4971016C73800BAA714 /* CQChatRoomInfoTableCell.m */; };
-		19267FF020DEE1A1000AAD15 /* CQChatRoomListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C34A4A61016CC2500BAA714 /* CQChatRoomListViewController.m */; };
-		19267FF420DEE1A1000AAD15 /* CQPreferencesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6D464B10FAEA1A00BE77ED /* CQPreferencesTableViewController.m */; };
-		19267FF520DEE1A1000AAD15 /* UIDeviceAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3CD7951112357100FE29AA /* UIDeviceAdditions.m */; };
-		19267FF620DEE1A1000AAD15 /* CQConnectionsNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3CDB641113D2E000FE29AA /* CQConnectionsNavigationController.m */; };
-		19267FF720DEE1A1000AAD15 /* CQChatNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCB94E1114DD9600EA5F10 /* CQChatNavigationController.m */; };
-		19267FF820DEE1A1000AAD15 /* UINavigationControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCB9B91114EED200EA5F10 /* UINavigationControllerAdditions.m */; };
-		19267FF920DEE1A1000AAD15 /* CQUserInfoRoomListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCBA261114F9FE00EA5F10 /* CQUserInfoRoomListViewController.m */; };
-		19267FFA20DEE1A1000AAD15 /* CQUserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCBA281114F9FE00EA5F10 /* CQUserInfoViewController.m */; };
-		19267FFB20DEE1A1000AAD15 /* CQUserInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCBA2F1114FAFA00EA5F10 /* CQUserInfoController.m */; };
-		19267FFD20DEE1A1000AAD15 /* CQChatPresentationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCC0C411172B2A00EA5F10 /* CQChatPresentationController.m */; };
-		19267FFE20DEE1A1000AAD15 /* CQFileTransferController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */; };
-		19267FFF20DEE1A1000AAD15 /* CQFileTransferTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */; };
-		1926800020DEE1A1000AAD15 /* CQPreferencesListChannelEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */; };
-		1926800120DEE1A1000AAD15 /* UIViewControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */; };
-		1926800220DEE1A1000AAD15 /* CQPreferencesTextEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 924B8239116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m */; };
-		1926800320DEE1A1000AAD15 /* CQAwayStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 924B823F116FEB520007F1F8 /* CQAwayStatusViewController.m */; };
-		1926800420DEE1A1000AAD15 /* CQPreferencesTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F3BE4F11716FE700A4F554 /* CQPreferencesTextViewCell.m */; };
-		1926800520DEE1A1000AAD15 /* CQTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F3BF7F117186AF00A4F554 /* CQTextView.m */; };
-		1926800620DEE1A1000AAD15 /* CQModalNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C594B1177CB63001995E0 /* CQModalNavigationController.m */; };
-		1926800720DEE1A1000AAD15 /* CQAwayStatusController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C59581177D84C001995E0 /* CQAwayStatusController.m */; };
-		1926800820DEE1A1000AAD15 /* NSObjectAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9F5118CD2B800C83EBE /* NSObjectAdditions.m */; };
-		1926800920DEE1A1000AAD15 /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 891E84D3123F0C8C00EC3C0F /* NSCharacterSetAdditions.m */; };
-		1926800A20DEE1A1000AAD15 /* CQGiphyController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6AEBB431C58592400F7CF66 /* CQGiphyController.m */; };
-		1926800B20DEE1A1000AAD15 /* MVIRCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ECC13100F220088C737 /* MVIRCChatConnection.m */; };
-		1926800C20DEE1A1000AAD15 /* MVIRCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ECE13100F220088C737 /* MVIRCChatRoom.m */; };
-		1926800D20DEE1A1000AAD15 /* MVIRCChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED013100F220088C737 /* MVIRCChatUser.m */; };
-		1926800E20DEE1A1000AAD15 /* MVIRCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED213100F220088C737 /* MVIRCFileTransfer.m */; };
-		1926800F20DEE1A1000AAD15 /* NSAttributedStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 922F1CA91A4EBAF0000CBACE /* NSAttributedStringAdditions.m */; };
-		1926801020DEE1A1000AAD15 /* InterThreadMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED713100F220088C737 /* InterThreadMessaging.m */; };
-		1926801120DEE1A1000AAD15 /* CQWKChatTranscriptView.m in Sources */ = {isa = PBXBuildFile; fileRef = 926678F819C03C8500CCE5BE /* CQWKChatTranscriptView.m */; };
-		1926801220DEE1A1000AAD15 /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EB913100F220088C737 /* MVChatConnection.m */; };
-		1926801320DEE1A1000AAD15 /* MVChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EBC13100F220088C737 /* MVChatRoom.m */; };
-		1926801420DEE1A1000AAD15 /* MVChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EBF13100F220088C737 /* MVChatUser.m */; };
-		1926801520DEE1A1000AAD15 /* CQNavigationToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B6670617F927E200BA3DD9 /* CQNavigationToolbar.m */; };
-		1926801620DEE1A1000AAD15 /* MVChatUserWatchRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EC213100F220088C737 /* MVChatUserWatchRule.m */; };
-		1926801720DEE1A1000AAD15 /* MVDirectChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EC413100F220088C737 /* MVDirectChatConnection.m */; };
-		1926801820DEE1A1000AAD15 /* MVDirectClientConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EC713100F220088C737 /* MVDirectClientConnection.m */; };
-		1926801920DEE1A1000AAD15 /* MVFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EC913100F220088C737 /* MVFileTransfer.m */; };
-		1926801A20DEE1A1000AAD15 /* CQAnalyticsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B2661311838C006FA16B /* CQAnalyticsController.m */; };
-		1926801B20DEE1A1000AAD15 /* NSFileManagerMoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 924108D515A5605A001F7681 /* NSFileManagerMoreAdditions.m */; };
-		1926801C20DEE1A1000AAD15 /* UIActionSheetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F1C9E2161D936D0035A9AF /* UIActionSheetAdditions.m */; };
-		1926801D20DEE1A1000AAD15 /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C162F163BDBCE00B01C3D /* NSDateAdditions.m */; };
-		1926801E20DEE1A1000AAD15 /* CQIgnoreRulesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CEB168FE6CB000EC36E /* CQIgnoreRulesController.m */; };
-		1926801F20DEE1A1000AAD15 /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CEE168FE6EC000EC36E /* KAIgnoreRule.m */; };
-		1926802020DEE1A1000AAD15 /* CQConsoleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3416911677000EC36E /* CQConsoleController.m */; };
-		1926802120DEE1A1000AAD15 /* CQProcessConsoleMessageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */; };
-		1926802220DEE1A1000AAD15 /* UIColorAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AF958C1A520D6A006E3152 /* UIColorAdditions.m */; };
-		1926802320DEE1A1000AAD15 /* MVDelegateLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FE016926749002ECDFD /* MVDelegateLogger.m */; };
-		1926802420DEE1A1000AAD15 /* CQPreferencesIgnoreEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B20001692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.m */; };
-		1926802520DEE1A1000AAD15 /* UIFontAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9251306619FDCEAA00847018 /* UIFontAdditions.m */; };
-		1926802620DEE1A1000AAD15 /* CQPreferencesDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9292E92F16A956E300F22070 /* CQPreferencesDisplayViewController.m */; };
-		1926802720DEE1A1000AAD15 /* NSRegularExpressionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AFF85116B0D25D00940E5D /* NSRegularExpressionAdditions.m */; };
-		1926802820DEE1A1000AAD15 /* CQChatInputStyleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F77F631A3ECAE7005667FE /* CQChatInputStyleViewController.m */; };
-		1926802920DEE1A1000AAD15 /* CQPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9290603516B261830095EC03 /* CQPreferencesViewController.m */; };
-		1926802A20DEE1A1000AAD15 /* UIViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F99FB719D14034004A7A22 /* UIViewAdditions.m */; };
-		1926802B20DEE1A1000AAD15 /* CQChatRoomInfoDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92196CA016C918D10020FE35 /* CQChatRoomInfoDisplayViewController.m */; };
-		1926802C20DEE1A1000AAD15 /* CQChatRoomInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92196CA216C918D10020FE35 /* CQChatRoomInfoViewController.m */; };
-		1926802D20DEE1A1000AAD15 /* CQPreferencesTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B6661617ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m */; };
-		1926802E20DEE1A1000AAD15 /* CQChatOrderingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9271923B16CFA831003380F0 /* CQChatOrderingController.m */; };
-		1926802F20DEE1A1000AAD15 /* CQImportantChatMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 927192C516D3272D003380F0 /* CQImportantChatMessageViewController.m */; };
-		1926803020DEE1A1000AAD15 /* CQBookmarkingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C766A16D9B25400AEFCB4 /* CQBookmarkingController.m */; };
-		1926803120DEE1A1000AAD15 /* CQDeliciousController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C766E16D9C0E900AEFCB4 /* CQDeliciousController.m */; };
-		1926803220DEE1A1000AAD15 /* CQPrinterPage.m in Sources */ = {isa = PBXBuildFile; fileRef = B68725B31B8E7FF60003D4F8 /* CQPrinterPage.m */; };
-		1926803320DEE1A1000AAD15 /* CQInstapaperController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C767016D9C0E900AEFCB4 /* CQInstapaperController.m */; };
-		1926803420DEE1A1000AAD15 /* CQPinboardController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C767216D9C0E900AEFCB4 /* CQPinboardController.m */; };
-		1926803520DEE1A1000AAD15 /* CQPocketController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C767416D9C0E900AEFCB4 /* CQPocketController.m */; };
-		1926803620DEE1A1000AAD15 /* CQSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B257C9174023B300F303B5 /* CQSettingsController.m */; };
-		1926803820DEE1A1000AAD15 /* OnePasswordExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1918E39E1F89680000559039 /* OnePasswordExtension.framework */; };
-		1926803920DEE1A1000AAD15 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6FB18419FCA001B14C3 /* HockeySDK.framework */; };
-		1926803A20DEE1A1000AAD15 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F276F01FBA44E7004A6EBD /* CocoaAsyncSocket.framework */; };
-		1926803B20DEE1A1000AAD15 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2A2CAB71FC103DA00A68495 /* CocoaLumberjack.framework */; };
-		1926803D20DEE1A1000AAD15 /* CocoaAsyncSocket.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C2F276F01FBA44E7004A6EBD /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		1926803E20DEE1A1000AAD15 /* CocoaLumberjack.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C2A2CAB71FC103DA00A68495 /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		1926803F20DEE1A1000AAD15 /* OnePasswordExtension.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1918E39E1F89680000559039 /* OnePasswordExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		194D95D31B2A33910061AE55 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 194D95D21B2A33910061AE55 /* LaunchScreen.xib */; };
 		1C0931030D80C6E900A2705D /* CQColloquyApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0931010D80C6E900A2705D /* CQColloquyApplication.m */; };
 		1C09313B0D80C8F600A2705D /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C09313A0D80C8F600A2705D /* Defaults.plist */; };
@@ -528,29 +358,9 @@
 			remoteGlobalIDString = 9C3F4D8B1A59ACDC004B3ECE;
 			remoteInfo = OnePasswordExtension;
 		};
-		19267F8A20DEE1A1000AAD15 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1918E3991F8967FF00559039 /* OnePasswordExtension.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 9C3F4D8B1A59ACDC004B3ECE;
-			remoteInfo = OnePasswordExtension;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		1926803C20DEE1A1000AAD15 /* Copy Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				1926803D20DEE1A1000AAD15 /* CocoaAsyncSocket.framework in Copy Frameworks */,
-				1926803E20DEE1A1000AAD15 /* CocoaLumberjack.framework in Copy Frameworks */,
-				1926803F20DEE1A1000AAD15 /* OnePasswordExtension.framework in Copy Frameworks */,
-			);
-			name = "Copy Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C25BD6751F9162C3007C69D3 /* Copy Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -570,7 +380,6 @@
 		1910F61A1FCBDEA6009B692D /* NSURLSessionAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSURLSessionAdditions.h; path = Additions/NSURLSessionAdditions.h; sourceTree = "<group>"; };
 		1910F61B1FCBDEA6009B692D /* NSURLSessionAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NSURLSessionAdditions.m; path = Additions/NSURLSessionAdditions.m; sourceTree = "<group>"; };
 		1918E3991F8967FF00559039 /* OnePasswordExtension.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OnePasswordExtension.xcodeproj; path = "Carthage/Checkouts/onepassword-extension/OnePasswordExtension.xcodeproj"; sourceTree = "<group>"; };
-		1926804520DEE1A1000AAD15 /* Colloquy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1926804620DEE1A8000AAD15 /* Colloquy copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Colloquy copy2-Info.plist"; path = "/Users/z/Projects/Colloquy/Colloquy/Colloquy copy2-Info.plist"; sourceTree = "<absolute>"; };
 		194D95D21B2A33910061AE55 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		1C0931010D80C6E900A2705D /* CQColloquyApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQColloquyApplication.m; path = Mobile/Controllers/CQColloquyApplication.m; sourceTree = "<group>"; };
@@ -895,17 +704,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		1926803720DEE1A1000AAD15 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1926803820DEE1A1000AAD15 /* OnePasswordExtension.framework in Frameworks */,
-				1926803920DEE1A1000AAD15 /* HockeySDK.framework in Frameworks */,
-				1926803A20DEE1A1000AAD15 /* CocoaAsyncSocket.framework in Frameworks */,
-				1926803B20DEE1A1000AAD15 /* CocoaLumberjack.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1D60588F0D05DD3D006BFB54 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -941,7 +739,6 @@
 			children = (
 				1D6058910D05DD3D006BFB54 /* Colloquy.app */,
 				B6831CCD1BE44EC000D3AC1D /* Colloquy TV.app */,
-				1926804520DEE1A1000AAD15 /* Colloquy.app */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -1514,27 +1311,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		19267F8820DEE1A1000AAD15 /* Colloquy (Marzipan) */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1926804120DEE1A1000AAD15 /* Build configuration list for PBXNativeTarget "Colloquy (Marzipan)" */;
-			buildPhases = (
-				19267F8B20DEE1A1000AAD15 /* Resources */,
-				19267FBD20DEE1A1000AAD15 /* Insert API Keys */,
-				19267FBE20DEE1A1000AAD15 /* Sources */,
-				1926803720DEE1A1000AAD15 /* Frameworks */,
-				1926803C20DEE1A1000AAD15 /* Copy Frameworks */,
-				1926804020DEE1A1000AAD15 /* Update Build Info */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				19267F8920DEE1A1000AAD15 /* PBXTargetDependency */,
-			);
-			name = "Colloquy (Marzipan)";
-			productName = "Mobile Colloquy";
-			productReference = 1926804520DEE1A1000AAD15 /* Colloquy.app */;
-			productType = "com.apple.product-type.application";
-		};
 		1D6058900D05DD3D006BFB54 /* Colloquy */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Colloquy" */;
@@ -1582,14 +1358,6 @@
 				LastUpgradeCheck = 1120;
 				ORGANIZATIONNAME = "Colloquy Project";
 				TargetAttributes = {
-					19267F8820DEE1A1000AAD15 = {
-						ProvisioningStyle = Automatic;
-						SystemCapabilities = {
-							com.apple.Push = {
-								enabled = 0;
-							};
-						};
-					};
 					1D6058900D05DD3D006BFB54 = {
 						DevelopmentTeam = 37EUQ42C7J;
 						ProvisioningStyle = Automatic;
@@ -1632,7 +1400,6 @@
 			targets = (
 				1D6058900D05DD3D006BFB54 /* Colloquy */,
 				B6831CCC1BE44EC000D3AC1D /* Colloquy TV */,
-				19267F8820DEE1A1000AAD15 /* Colloquy (Marzipan) */,
 			);
 		};
 /* End PBXProject section */
@@ -1648,62 +1415,6 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
-		19267F8B20DEE1A1000AAD15 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				19267F8C20DEE1A1000AAD15 /* notes.js in Resources */,
-				19267F8D20DEE1A1000AAD15 /* chromatic-redux.js in Resources */,
-				19267F8E20DEE1A1000AAD15 /* chromatic-dark.js in Resources */,
-				19267F8F20DEE1A1000AAD15 /* chromatic.js in Resources */,
-				19267F9020DEE1A1000AAD15 /* bubbles.js in Resources */,
-				19267F9120DEE1A1000AAD15 /* transcript.js in Resources */,
-				19267F9220DEE1A1000AAD15 /* Defaults.plist in Resources */,
-				19267F9320DEE1A1000AAD15 /* CQWKChatView.xib in Resources */,
-				19267F9420DEE1A1000AAD15 /* base.html in Resources */,
-				19267F9520DEE1A1000AAD15 /* standard.css in Resources */,
-				19267F9620DEE1A1000AAD15 /* Settings.bundle in Resources */,
-				19267F9720DEE1A1000AAD15 /* standard-dark.css in Resources */,
-				19267F9820DEE1A1000AAD15 /* bubbles.css in Resources */,
-				19267F9920DEE1A1000AAD15 /* chromatic.css in Resources */,
-				19267F9A20DEE1A1000AAD15 /* chromatic-dark.css in Resources */,
-				19267F9B20DEE1A1000AAD15 /* notes.css in Resources */,
-				19267F9C20DEE1A1000AAD15 /* standard-grey-dark.css in Resources */,
-				19267F9D20DEE1A1000AAD15 /* Localizable.strings in Resources */,
-				19267F9E20DEE1A1000AAD15 /* Beep 1.aiff in Resources */,
-				19267F9F20DEE1A1000AAD15 /* Beep 2.aiff in Resources */,
-				19267FA020DEE1A1000AAD15 /* Bell 1.aiff in Resources */,
-				19267FA120DEE1A1000AAD15 /* Bell 2.aiff in Resources */,
-				19267FA220DEE1A1000AAD15 /* Clap.aiff in Resources */,
-				19267FA320DEE1A1000AAD15 /* Cymbal.aiff in Resources */,
-				19267FA420DEE1A1000AAD15 /* DJ Scratch.aiff in Resources */,
-				19267FA520DEE1A1000AAD15 /* Electronic Signal.aiff in Resources */,
-				19267FA620DEE1A1000AAD15 /* Explosion.aiff in Resources */,
-				19267FA720DEE1A1000AAD15 /* Kick.aiff in Resources */,
-				19267FA820DEE1A1000AAD15 /* Laser.aiff in Resources */,
-				19267FA920DEE1A1000AAD15 /* Pop.aiff in Resources */,
-				19267FAA20DEE1A1000AAD15 /* Rattle.aiff in Resources */,
-				19267FAB20DEE1A1000AAD15 /* Sonar Beep.aiff in Resources */,
-				19267FAC20DEE1A1000AAD15 /* Stoof.aiff in Resources */,
-				19267FAD20DEE1A1000AAD15 /* Switch.aiff in Resources */,
-				19267FAE20DEE1A1000AAD15 /* Whip.aiff in Resources */,
-				19267FAF20DEE1A1000AAD15 /* LaunchScreen.xib in Resources */,
-				19267FB020DEE1A1000AAD15 /* Servers.plist in Resources */,
-				19267FB120DEE1A1000AAD15 /* OpenDyslexic-Regular.otf in Resources */,
-				19267FB220DEE1A1000AAD15 /* verbs.plist in Resources */,
-				19267FB320DEE1A1000AAD15 /* Help.plist in Resources */,
-				19267FB420DEE1A1000AAD15 /* help-base.html in Resources */,
-				19267FB520DEE1A1000AAD15 /* help.css in Resources */,
-				19267FB620DEE1A1000AAD15 /* whats-new.html in Resources */,
-				19267FB720DEE1A1000AAD15 /* Images.xcassets in Resources */,
-				19267FB820DEE1A1000AAD15 /* chromatic-redux.css in Resources */,
-				19267FB920DEE1A1000AAD15 /* console.css in Resources */,
-				19267FBA20DEE1A1000AAD15 /* common.css in Resources */,
-				19267FBB20DEE1A1000AAD15 /* topic.css in Resources */,
-				19267FBC20DEE1A1000AAD15 /* roomTopicBanner.js in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1D60588D0D05DD3D006BFB54 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1814,35 +1525,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		19267FBD20DEE1A1000AAD15 /* Insert API Keys */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Insert API Keys";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/zsh;
-			shellScript = "if [[ \"$CONFIGURATION\" == \"Distribution\" ]]; then\n  KEYCHAINS=`security list-keychains`\n\n  if ! [[ \"$KEYCHAINS\" =~ \"colloquy\" ]]; then\n    open Shared/Resources/colloquy.keychain\n  fi\n\n  POCKET_IPHONE_KEY=`security find-generic-password -wa pocket-iphone`\n  perl -p -i -e \"s/Pocket_iPhone_Consumer_Key/$POCKET_IPHONE_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  POCKET_IPAD_KEY=`security find-generic-password -wa pocket-ipad`\n  perl -p -i -e \"s/Pocket_iPad_Consumer_Key/$POCKET_IPAD_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  HOCKEYAPP_IDENTIFIER=`security find-generic-password -wa hockeyapp`\n  perl -p -i -e \"s/Hockeyapp_App_Identifier/$HOCKEYAPP_IDENTIFIER/g\" \"$SRCROOT/Mobile/Controllers/CQColloquyApplication.m\"\nfi\n ";
-		};
-		1926804020DEE1A1000AAD15 /* Update Build Info */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Update Build Info";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = "/usr/bin/perl -w";
-			shellScript = "use strict;\n\n# Get the current subversion revision number and use it to set the CFBundleVersion value\nmy $version = undef;\n$version = `/usr/bin/git rev-list --no-merges --count HEAD` if -e \"/usr/bin/git\";\n$version = `/usr/local/bin/git rev-list --no-merges --count HEAD` if -e \"/usr/local/bin/git\";\n$version = `/opt/local/bin/git rev-list --no-merges --count HEAD` if -e \"/opt/local/bin/git\";\n\n# Match the last group of digits:\n($version =~ m/(\\d+)[MS]*$/) && ($version = $1);\n\n# Get the Info.plist path, and remove the \".plist\" extension for the defualts command\nmy $infoFile = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{INFOPLIST_PATH}\";\n$infoFile =~ s/\\.plist$//;\n\n# Specify the build type\nmy $buildType = undef;\n$buildType = \"official\" if $ENV{BUILD_STYLE} eq \"Distribution\";\n\nif (defined $version || defined $buildType) {\n\t`defaults write \"$infoFile\" CFBundleVersion -string \"$version\"` if defined $version;\n\t`defaults write \"$infoFile\" CQBuildType -string \"$buildType\"` if defined $buildType;\n}";
-			showEnvVarsInLog = 0;
-		};
 		1C0C33330EEFA8E400062186 /* Update Build Info */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1875,127 +1557,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		19267FBE20DEE1A1000AAD15 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				19267FBF20DEE1A1000AAD15 /* main.m in Sources */,
-				19267FC020DEE1A1000AAD15 /* CQColloquyApplication.m in Sources */,
-				19267FC120DEE1A1000AAD15 /* NSDataAdditions.m in Sources */,
-				19267FC220DEE1A1000AAD15 /* UIWindowAdditions.m in Sources */,
-				19267FC420DEE1A1000AAD15 /* NSURLSessionAdditions.m in Sources */,
-				19267FC520DEE1A1000AAD15 /* NSNotificationAdditions.m in Sources */,
-				19267FC620DEE1A1000AAD15 /* NSScannerAdditions.m in Sources */,
-				19267FC720DEE1A1000AAD15 /* NSStringAdditions.m in Sources */,
-				19267FC820DEE1A1000AAD15 /* CQChatController.m in Sources */,
-				19267FC920DEE1A1000AAD15 /* CQDirectChatController.m in Sources */,
-				19267FCA20DEE1A1000AAD15 /* CQChatRoomController.m in Sources */,
-				19267FCB20DEE1A1000AAD15 /* CQChatTableCell.m in Sources */,
-				19267FCD20DEE1A1000AAD15 /* CQConnectionTableHeaderView.m in Sources */,
-				19267FCE20DEE1A1000AAD15 /* CQConnectionsController.m in Sources */,
-				19267FCF20DEE1A1000AAD15 /* CQChatListViewController.m in Sources */,
-				19267FD020DEE1A1000AAD15 /* CQConnectionEditViewController.m in Sources */,
-				19267FD120DEE1A1000AAD15 /* CQConnectionCreationViewController.m in Sources */,
-				19267FD220DEE1A1000AAD15 /* CQPreferencesTextCell.m in Sources */,
-				19267FD320DEE1A1000AAD15 /* CQConnectionAdvancedEditController.m in Sources */,
-				19267FD420DEE1A1000AAD15 /* CQPreferencesSwitchCell.m in Sources */,
-				19267FD520DEE1A1000AAD15 /* CQPreferencesDeleteCell.m in Sources */,
-				19267FD620DEE1A1000AAD15 /* UITableViewCellAdditions.m in Sources */,
-				19267FD720DEE1A1000AAD15 /* CQKeychain.m in Sources */,
-				19267FD820DEE1A1000AAD15 /* CQPreferencesListViewController.m in Sources */,
-				19267FD920DEE1A1000AAD15 /* CQPreferencesListEditViewController.m in Sources */,
-				19267FDA20DEE1A1000AAD15 /* UITableViewAdditions.m in Sources */,
-				19267FDB20DEE1A1000AAD15 /* CQChatInputBar.m in Sources */,
-				19267FDC20DEE1A1000AAD15 /* CQChatUserListViewController.m in Sources */,
-				19267FDD20DEE1A1000AAD15 /* CQColorPickerTableCell.m in Sources */,
-				19267FDE20DEE1A1000AAD15 /* CQUnreadCountView.m in Sources */,
-				19267FDF20DEE1A1000AAD15 /* CQActivities.m in Sources */,
-				19267FE020DEE1A1000AAD15 /* NSDictionaryAdditions.m in Sources */,
-				19267FE120DEE1A1000AAD15 /* CQTextCompletionView.m in Sources */,
-				19267FE220DEE1A1000AAD15 /* CQChatCreationViewController.m in Sources */,
-				19267FE320DEE1A1000AAD15 /* CQChatEditViewController.m in Sources */,
-				19267FE420DEE1A1000AAD15 /* UIApplicationAdditions.m in Sources */,
-				19267FE520DEE1A1000AAD15 /* CQRootContainerViewController.m in Sources */,
-				19267FE620DEE1A1000AAD15 /* UIImageAdditions.m in Sources */,
-				19267FE720DEE1A1000AAD15 /* CQSoundController.m in Sources */,
-				19267FE820DEE1A1000AAD15 /* CQConnectionPushEditController.m in Sources */,
-				19267FE920DEE1A1000AAD15 /* CQBouncerSettings.m in Sources */,
-				19267FEA20DEE1A1000AAD15 /* CQBouncerConnection.m in Sources */,
-				19267FEB20DEE1A1000AAD15 /* CQBouncerCreationViewController.m in Sources */,
-				19267FEC20DEE1A1000AAD15 /* CQBouncerEditViewController.m in Sources */,
-				19267FED20DEE1A1000AAD15 /* CQAlertView.m in Sources */,
-				19267FEE20DEE1A1000AAD15 /* CQProcessChatMessageOperation.m in Sources */,
-				19267FEF20DEE1A1000AAD15 /* CQChatRoomInfoTableCell.m in Sources */,
-				19267FF020DEE1A1000AAD15 /* CQChatRoomListViewController.m in Sources */,
-				19267FF420DEE1A1000AAD15 /* CQPreferencesTableViewController.m in Sources */,
-				19267FF520DEE1A1000AAD15 /* UIDeviceAdditions.m in Sources */,
-				19267FF620DEE1A1000AAD15 /* CQConnectionsNavigationController.m in Sources */,
-				19267FF720DEE1A1000AAD15 /* CQChatNavigationController.m in Sources */,
-				19267FF820DEE1A1000AAD15 /* UINavigationControllerAdditions.m in Sources */,
-				19267FF920DEE1A1000AAD15 /* CQUserInfoRoomListViewController.m in Sources */,
-				19267FFA20DEE1A1000AAD15 /* CQUserInfoViewController.m in Sources */,
-				19267FFB20DEE1A1000AAD15 /* CQUserInfoController.m in Sources */,
-				19267FFD20DEE1A1000AAD15 /* CQChatPresentationController.m in Sources */,
-				19267FFE20DEE1A1000AAD15 /* CQFileTransferController.m in Sources */,
-				19267FFF20DEE1A1000AAD15 /* CQFileTransferTableCell.m in Sources */,
-				1926800020DEE1A1000AAD15 /* CQPreferencesListChannelEditViewController.m in Sources */,
-				1926800120DEE1A1000AAD15 /* UIViewControllerAdditions.m in Sources */,
-				1926800220DEE1A1000AAD15 /* CQPreferencesTextEditViewController.m in Sources */,
-				1926800320DEE1A1000AAD15 /* CQAwayStatusViewController.m in Sources */,
-				1926800420DEE1A1000AAD15 /* CQPreferencesTextViewCell.m in Sources */,
-				1926800520DEE1A1000AAD15 /* CQTextView.m in Sources */,
-				1926800620DEE1A1000AAD15 /* CQModalNavigationController.m in Sources */,
-				1926800720DEE1A1000AAD15 /* CQAwayStatusController.m in Sources */,
-				1926800820DEE1A1000AAD15 /* NSObjectAdditions.m in Sources */,
-				1926800920DEE1A1000AAD15 /* NSCharacterSetAdditions.m in Sources */,
-				1926800A20DEE1A1000AAD15 /* CQGiphyController.m in Sources */,
-				1926800B20DEE1A1000AAD15 /* MVIRCChatConnection.m in Sources */,
-				1926800C20DEE1A1000AAD15 /* MVIRCChatRoom.m in Sources */,
-				1926800D20DEE1A1000AAD15 /* MVIRCChatUser.m in Sources */,
-				1926800E20DEE1A1000AAD15 /* MVIRCFileTransfer.m in Sources */,
-				1926800F20DEE1A1000AAD15 /* NSAttributedStringAdditions.m in Sources */,
-				1926801020DEE1A1000AAD15 /* InterThreadMessaging.m in Sources */,
-				1926801120DEE1A1000AAD15 /* CQWKChatTranscriptView.m in Sources */,
-				1926801220DEE1A1000AAD15 /* MVChatConnection.m in Sources */,
-				1926801320DEE1A1000AAD15 /* MVChatRoom.m in Sources */,
-				1926801420DEE1A1000AAD15 /* MVChatUser.m in Sources */,
-				1926801520DEE1A1000AAD15 /* CQNavigationToolbar.m in Sources */,
-				1926801620DEE1A1000AAD15 /* MVChatUserWatchRule.m in Sources */,
-				1926801720DEE1A1000AAD15 /* MVDirectChatConnection.m in Sources */,
-				1926801820DEE1A1000AAD15 /* MVDirectClientConnection.m in Sources */,
-				1926801920DEE1A1000AAD15 /* MVFileTransfer.m in Sources */,
-				1926801A20DEE1A1000AAD15 /* CQAnalyticsController.m in Sources */,
-				1926801B20DEE1A1000AAD15 /* NSFileManagerMoreAdditions.m in Sources */,
-				1926801C20DEE1A1000AAD15 /* UIActionSheetAdditions.m in Sources */,
-				1926801D20DEE1A1000AAD15 /* NSDateAdditions.m in Sources */,
-				1926801E20DEE1A1000AAD15 /* CQIgnoreRulesController.m in Sources */,
-				1926801F20DEE1A1000AAD15 /* KAIgnoreRule.m in Sources */,
-				1926802020DEE1A1000AAD15 /* CQConsoleController.m in Sources */,
-				1926802120DEE1A1000AAD15 /* CQProcessConsoleMessageOperation.m in Sources */,
-				1926802220DEE1A1000AAD15 /* UIColorAdditions.m in Sources */,
-				1926802320DEE1A1000AAD15 /* MVDelegateLogger.m in Sources */,
-				1926802420DEE1A1000AAD15 /* CQPreferencesIgnoreEditViewController.m in Sources */,
-				1926802520DEE1A1000AAD15 /* UIFontAdditions.m in Sources */,
-				1926802620DEE1A1000AAD15 /* CQPreferencesDisplayViewController.m in Sources */,
-				1926802720DEE1A1000AAD15 /* NSRegularExpressionAdditions.m in Sources */,
-				1926802820DEE1A1000AAD15 /* CQChatInputStyleViewController.m in Sources */,
-				1926802920DEE1A1000AAD15 /* CQPreferencesViewController.m in Sources */,
-				1926802A20DEE1A1000AAD15 /* UIViewAdditions.m in Sources */,
-				1926802B20DEE1A1000AAD15 /* CQChatRoomInfoDisplayViewController.m in Sources */,
-				1926802C20DEE1A1000AAD15 /* CQChatRoomInfoViewController.m in Sources */,
-				1926802D20DEE1A1000AAD15 /* CQPreferencesTextViewController.m in Sources */,
-				1926802E20DEE1A1000AAD15 /* CQChatOrderingController.m in Sources */,
-				1926802F20DEE1A1000AAD15 /* CQImportantChatMessageViewController.m in Sources */,
-				1926803020DEE1A1000AAD15 /* CQBookmarkingController.m in Sources */,
-				1926803120DEE1A1000AAD15 /* CQDeliciousController.m in Sources */,
-				1926803220DEE1A1000AAD15 /* CQPrinterPage.m in Sources */,
-				1926803320DEE1A1000AAD15 /* CQInstapaperController.m in Sources */,
-				1926803420DEE1A1000AAD15 /* CQPinboardController.m in Sources */,
-				1926803520DEE1A1000AAD15 /* CQPocketController.m in Sources */,
-				1926803620DEE1A1000AAD15 /* CQSettingsController.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1D60588E0D05DD3D006BFB54 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2251,11 +1812,6 @@
 			name = OnePasswordExtension;
 			targetProxy = 1918E39F1F89680400559039 /* PBXContainerItemProxy */;
 		};
-		19267F8920DEE1A1000AAD15 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = OnePasswordExtension;
-			targetProxy = 19267F8A20DEE1A1000AAD15 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -2281,118 +1837,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		1926804220DEE1A1000AAD15 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
-				CODE_SIGN_ENTITLEMENTS = Mobile/Resources/Entitlements.plist;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 37EUQ42C7J;
-				ENABLE_ON_DEMAND_RESOURCES = NO;
-				GCC_PREFIX_HEADER = "Mobile/Colloquy-Marzipan.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(GCC_PREPROCESSOR_DEFINITIONS)",
-					ENABLE_SECRETS,
-					"ENABLE_SCRIPTING=0",
-					"ENABLE_PLUGINS=0",
-					"ENABLE_SILC=0",
-					"ENABLE_ICB=0",
-					"ENABLE_XMPP=0",
-					USE_HTML_CHAT_STRING,
-					USE_ATTRIBUTED_CHAT_STRING,
-					RKL_FAST_MUTABLE_CHECK,
-					"RKL_CACHE_SIZE=47",
-					"RKL_BLOCKS=0",
-					"ENABLE_CHAT_CENTER=1",
-				);
-				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				OTHER_CFLAGS = "-DSYSTEM_MARZIPAN";
-				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile.development;
-				PRODUCT_NAME = Colloquy;
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-			};
-			name = Debug;
-		};
-		1926804320DEE1A1000AAD15 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
-				CODE_SIGN_ENTITLEMENTS = Mobile/Resources/Entitlements.plist;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_ON_DEMAND_RESOURCES = NO;
-				GCC_PREFIX_HEADER = "Mobile/Colloquy-Marzipan.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(GCC_PREPROCESSOR_DEFINITIONS)",
-					ENABLE_SECRETS,
-					"ENABLE_SCRIPTING=0",
-					"ENABLE_PLUGINS=0",
-					"ENABLE_SILC=0",
-					"ENABLE_ICB=0",
-					"ENABLE_XMPP=0",
-					USE_HTML_CHAT_STRING,
-					USE_ATTRIBUTED_CHAT_STRING,
-					NS_BLOCK_ASSERTIONS,
-					RKL_FAST_MUTABLE_CHECK,
-					"RKL_CACHE_SIZE=47",
-					"RKL_BLOCKS=0",
-					"ENABLE_CHAT_CENTER=1",
-				);
-				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				OTHER_CFLAGS = "-DSYSTEM_MARZIPAN";
-				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile.release;
-				PRODUCT_NAME = Colloquy;
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-			};
-			name = Release;
-		};
-		1926804420DEE1A1000AAD15 /* Distribution */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C22181CE1F648ED200F2E814 /* target.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
-				CODE_SIGN_ENTITLEMENTS = Mobile/Resources/Entitlements.plist;
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_ON_DEMAND_RESOURCES = NO;
-				GCC_PREFIX_HEADER = "Mobile/Colloquy-Marzipan.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(GCC_PREPROCESSOR_DEFINITIONS)",
-					ENABLE_SECRETS,
-					"ENABLE_SCRIPTING=0",
-					"ENABLE_PLUGINS=0",
-					"ENABLE_SILC=0",
-					"ENABLE_ICB=0",
-					"ENABLE_XMPP=0",
-					USE_HTML_CHAT_STRING,
-					USE_ATTRIBUTED_CHAT_STRING,
-					NS_BLOCK_ASSERTIONS,
-					RKL_FAST_MUTABLE_CHECK,
-					"RKL_CACHE_SIZE=47",
-					"RKL_BLOCKS=0",
-					"ENABLE_CHAT_CENTER=1",
-				);
-				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				OTHER_CFLAGS = "-DSYSTEM_MARZIPAN";
-				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile;
-				PRODUCT_NAME = Colloquy;
-				PROVISIONING_PROFILE = "54ab4db4-4f40-4f53-bcaf-14067883cf1b";
-				PROVISIONING_PROFILE_SPECIFIER = distribution;
-			};
-			name = Distribution;
-		};
 		1C7F639F0FB3C50600E5FDD3 /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
@@ -2716,16 +2160,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1926804120DEE1A1000AAD15 /* Build configuration list for PBXNativeTarget "Colloquy (Marzipan)" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1926804220DEE1A1000AAD15 /* Debug */,
-				1926804320DEE1A1000AAD15 /* Release */,
-				1926804420DEE1A1000AAD15 /* Distribution */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Colloquy" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
