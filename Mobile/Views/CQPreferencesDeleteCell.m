@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	_deleteButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
 	_deleteButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-	_deleteButton.backgroundColor = [UIColor whiteColor];
+	_deleteButton.backgroundColor = [UIColor clearColor];
 	[_deleteButton setTitleColor:[UIColor colorWithRed:(223. / 255.) green:(59. / 255.) blue:(42. / 255.) alpha:1.] forState:UIControlStateNormal];
 	[_deleteButton setTitle:NSLocalizedString(@"Delete", @"Delete button title") forState:UIControlStateNormal];
 

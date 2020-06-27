@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 	_textField.font = [UIFont systemFontOfSize:17.];
 	_textField.adjustsFontSizeToFitWidth = YES;
 	_textField.minimumFontSize = 14.;
-	_textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(118. / 255.) blue:(251. / 255.) alpha:1.];
+	_textField.textColor = UIApplication.sharedApplication.keyWindow.tintColor;
 	_textField.enablesReturnKeyAutomatically = NO;
 	_textField.returnKeyType = UIReturnKeyDone;
 

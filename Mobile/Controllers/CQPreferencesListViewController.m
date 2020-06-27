@@ -185,7 +185,8 @@ NS_ASSUME_NONNULL_BEGIN
 	if (accessoryType != CQTableViewCellAccessoryPlay)
 		return nil;
 
-	UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"playAudioAccessory.png"] highlightedImage:[UIImage imageNamed:@"playAudioAccessory-pressed.png"]];
+	UIImageView *imageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"playAudioAccessory.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+											   highlightedImage:[[UIImage imageNamed:@"playAudioAccessory-pressed.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
 	imageView.userInteractionEnabled = YES;
 
 	UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(customAccessoryViewTapped:)];
@@ -292,8 +293,8 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	if (indexPath.row == _selectedItemIndex)
-		cell.textLabel.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
-	else cell.textLabel.textColor = [UIColor blackColor];
+		cell.textLabel.textColor = UIApplication.sharedApplication.keyWindow.tintColor;
+	else cell.textLabel.textColor = nil;
 
 	cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	UITableViewCellAccessoryType accessoryType = [self accessoryTypeForIndexPath:indexPath];
@@ -331,7 +332,6 @@ NS_ASSUME_NONNULL_BEGIN
 		UITableViewCellAccessoryType accessoryType = [self accessoryTypeForIndexPath:indexPath];
 		cell.accessoryType = accessoryType;
 		cell.accessoryView = [self accessoryViewForAccessoryType:accessoryType];
-		cell.textLabel.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 
 		if (self.listType == CQPreferencesListTypeFont) {
 			NSString *fontName = self.values[indexPath.row];

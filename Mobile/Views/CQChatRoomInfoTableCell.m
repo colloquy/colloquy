@@ -32,9 +32,11 @@ NS_ASSUME_NONNULL_BEGIN
 	[self.contentView addSubview:_nameLabel];
 
 	_iconImageView.image = [UIImage imageNamed:@"roomIconSmall.png"];
-	_memberIconImageView.image = [UIImage imageNamed:@"personBlueSmall.png"];
+	_memberIconImageView.tintColor = UIApplication.sharedApplication.keyWindow.tintColor;
+	_memberIconImageView.image = [[UIImage imageNamed:@"personBlueSmall.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 	_memberIconImageView.highlightedImage = [UIImage imageNamed:@"personWhiteSmall.png"];
-	_checkmarkImageView.image = [UIImage imageNamed:@"tableCellCheck.png"];
+	_checkmarkImageView.tintColor = UIApplication.sharedApplication.keyWindow.tintColor;
+	_checkmarkImageView.image = [[UIImage imageNamed:@"tableCellCheck.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 	_checkmarkImageView.highlightedImage = [UIImage imageNamed:@"tableCellCheckSelected.png"];
 
 	_checkmarkImageView.hidden = YES;
@@ -50,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 	_topicLabel.backgroundColor = [UIColor clearColor];
 
 	_memberCountLabel.font = [UIFont systemFontOfSize:14.];
-	_memberCountLabel.textColor = [UIColor colorWithRed:0.19607843 green:0.29803922 blue:0.84313725 alpha:1.];
+	_memberCountLabel.textColor = UIApplication.sharedApplication.keyWindow.tintColor;
 	_memberCountLabel.highlightedTextColor = self.textLabel.highlightedTextColor;
 	_memberCountLabel.backgroundColor = [UIColor clearColor];
 

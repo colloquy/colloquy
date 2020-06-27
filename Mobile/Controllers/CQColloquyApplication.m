@@ -278,12 +278,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) _applyTintColor {
 	BOOL darkerColorsEnabled = UIAccessibilityDarkerSystemColorsEnabled();
 
-	// rgb(109, 22, 101) == hsb(306°, 80%, 43%)
-	CGFloat hue = 306 * (darkerColorsEnabled ? 1.13 : 1.0);
-	CGFloat saturation = .8;
-	CGFloat brightness = .43 * (darkerColorsEnabled ? 0.88 : 1.0);
-
-	_mainWindow.tintColor = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1.0];
+	_mainWindow.tintColor = [UIColor colorWithRed:(162. / 255.) green:(122. / 255.) blue:(247. / 255.) alpha:1.];
 }
 
 #pragma mark -
@@ -676,8 +671,12 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #pragma mark -
 
 - (UIColor *__nullable) tintColor {
+#if SYSTEM(MAC)
+	return _mainWindow.tintColor;
+#endif
+
 	if ([UIDevice currentDevice].isPadModel)
-		return nil;
+		return _mainWindow.tintColor;
 
 	NSString *style = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptStyle"];
 	if ([style hasSuffix:@"-dark"])
