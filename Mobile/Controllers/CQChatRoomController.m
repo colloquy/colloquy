@@ -9,6 +9,7 @@
 #import "CQProcessChatMessageOperation.h"
 #import "CQChatRoomInfoViewController.h"
 #import "CQSoundController.h"
+#import "Colloquy-Swift.h"
 
 #import <ChatCore/MVChatUser.h>
 
@@ -119,7 +120,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	[chatInputBar setAccessibilityLabel:NSLocalizedString(@"Roomv Controls", @"Info Accessibility Label") forResponderState:CQChatInputBarNotResponder];
+	[self.chatView.chatInputBar setAccessibilityLabel:NSLocalizedString(@"Roomv Controls", @"Info Accessibility Label") forResponderState:CQChatInputBarNotResponder];
 }
 
 - (void) viewDidAppear:(BOOL) animated {
@@ -402,8 +403,8 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 }
 
 - (void) _noteTopicChangeTo:(NSString *) topicString by:(NSString *) user {
-	if (transcriptView)
-		[transcriptView noteTopicChangeTo:topicString by:user];
+	if (self.chatView.chatTranscriptView)
+		[self.chatView.chatTranscriptView noteTopicChangeTo:topicString by:user];
 	else if (topicString && user) {
 		_topicInformation = [@{ @"topic": topicString, @"user": user } copy];
 	}

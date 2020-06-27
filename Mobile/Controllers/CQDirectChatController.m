@@ -21,14 +21,13 @@
 #import "NSDateAdditions.h"
 #import "NSNotificationAdditions.h"
 #import "UIViewAdditions.h"
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
-#import "CQUIChatTranscriptView.h"
-#endif
 #import "CQUITextChatTranscriptView.h"
 #import "CQWKChatTranscriptView.h"
 
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatUserWatchRule.h>
+
+#import "Colloquy-Swift.h"
 
 #if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 #import <MediaPlayer/MPMusicPlayerController.h>
@@ -87,6 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CQDirectChatController () <CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, CQActionSheetDelegate, CQChatInputStyleDelegate>
 @property (strong, nullable) UIActivityViewController *activityController;
+@property (nonatomic, strong, readwrite) CQChatView *chatView;
 @end
 
 @implementation CQDirectChatController {
@@ -228,17 +228,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (instancetype) initWithTarget:(__nullable id) target {
-#if SYSTEM(MARZIPAN)
-	if (!(self = [super initWithNibName:@"CQWKChatView" bundle:nil]))
-		return nil;
-#else
-#if !SYSTEM(TV)
-	if (!(self = [super initWithNibName:@"CQUIChatView" bundle:nil]))
-		return nil;
-#else
 	if (!(self = [super initWithNibName:nil bundle:nil]))
-#endif
-#endif
+		return nil;
+
 	_target = target;
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_awayStatusChanged:) name:MVChatConnectionSelfAwayStatusChangedNotification object:self.connection];
@@ -469,7 +461,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) saveChatLog:(id) sender {
-	NSData *transcriptPDF = transcriptView.PDFRepresentation;
+	NSData *transcriptPDF = self.chatView.chatTranscriptView.PDFRepresentation;
 	if (!transcriptPDF)
 		return;
 
@@ -534,7 +526,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (UIScrollView *) scrollView {
-	return transcriptView.scrollView;
+	return self.chatView.chatTranscriptView.scrollView;
 }
 
 #pragma mark -
@@ -544,11 +536,11 @@ NS_ASSUME_NONNULL_BEGIN
 	if (![self isViewLoaded]) {
 		[self loadViewIfNeeded];
 
-		while (!transcriptView.readyForDisplay)
+		while (!self.chatView.chatTranscriptView.readyForDisplay)
 			[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:CQWebViewMagicNumber]];
 	}
 
-	viewController.view = [transcriptView snapshotViewAfterScreenUpdates:YES];
+	viewController.view = [self.chatView.chatTranscriptView snapshotViewAfterScreenUpdates:YES];
 	return viewController;
 }
 
@@ -557,24 +549,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) loadView {
 	[super loadView];
 
-//	// while CQWKChatView exists and is ready to be used (for the most part), WKWebView does not support being loaded from a xib yet
-#if SYSTEM(TV)
-	CQUITextChatTranscriptView *chatTranscriptView = [[CQUITextChatTranscriptView alloc] initWithFrame:transcriptView.frame];
-#elif 0
-	CQWKChatTranscriptView *chatTranscriptView = [[CQWKChatTranscriptView alloc] initWithFrame:transcriptView.frame];
-#else
-	// if we want to keep using UIWebView-based transcripts, don't set the var to anything so it never gets removed
-	UIView <CQChatTranscriptView> *chatTranscriptView = nil;
-#endif
-	chatTranscriptView.autoresizingMask = transcriptView.autoresizingMask;
-	chatTranscriptView.transcriptDelegate = self;
+	self.chatView = [[CQChatView alloc] initWithFrame:CGRectZero];
 
-	if (chatTranscriptView) {
-		[transcriptView.superview insertSubview:chatTranscriptView aboveSubview:transcriptView];
-
-		[transcriptView removeFromSuperview];
-		transcriptView = chatTranscriptView;
-	}
+	[self.view addSubview:self.chatView];
 }
 
 - (void) viewDidLoad {
@@ -582,19 +559,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[self _updateRightBarButtonItemAnimated:NO];
 
-	chatInputBar.accessibilityLabel = NSLocalizedString(@"Enter chat message.", @"Voiceover enter chat message label");
-	chatInputBar.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
+	self.chatView.chatTranscriptView.transcriptDelegate = self;
+	self.chatView.chatInputBar.delegate = self;
+	self.chatView.chatInputBar.accessibilityLabel = NSLocalizedString(@"Enter chat message.", @"Voiceover enter chat message label");
+	self.chatView.chatInputBar.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
 
 	[self _userDefaultsChanged];
 
-	transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] && !(self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryHidden || self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryOverlay));
-	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clear.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateNormal];
-	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clearPressed.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateHighlighted];
-	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButton.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
-	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButtonPressed.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateHighlighted];
+	self.chatView.chatTranscriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] && !(self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryHidden || self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryOverlay));
+	[self.chatView.chatInputBar setAccessoryImage:[UIImage imageNamed:@"clear.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateNormal];
+	[self.chatView.chatInputBar setAccessoryImage:[UIImage imageNamed:@"clearPressed.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateHighlighted];
+	[self.chatView.chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButton.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
+	[self.chatView.chatInputBar setAccessoryImage:[UIImage imageNamed:@"infoButtonPressed.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateHighlighted];
 
-	[chatInputBar setAccessibilityLabel:NSLocalizedString(@"User Controls", @"Info Accessibility Label") forResponderState:CQChatInputBarNotResponder];
-	[chatInputBar setAccessibilityLabel:NSLocalizedString(@"Clear Text", @"Clear Text Accessibility Label") forResponderState:CQChatInputBarResponder];
+	[self.chatView.chatInputBar setAccessibilityLabel:NSLocalizedString(@"User Controls", @"Info Accessibility Label") forResponderState:CQChatInputBarNotResponder];
+	[self.chatView.chatInputBar setAccessibilityLabel:NSLocalizedString(@"Clear Text", @"Clear Text Accessibility Label") forResponderState:CQChatInputBarResponder];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -602,7 +581,7 @@ NS_ASSUME_NONNULL_BEGIN
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
 	if (_showingKeyboard || showingKeyboard || hardwareKeyboard)
-		[chatInputBar becomeFirstResponder];
+		[self.chatView.chatInputBar becomeFirstResponder];
 
 	[super viewWillAppear:animated];
 
@@ -613,7 +592,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(didNotBookmarkLink:) name:CQBookmarkingDidNotSaveLinkNotification object:nil];
 
-	if ([transcriptView.styleIdentifier hasCaseInsensitiveSuffix:@"-dark"])
+	if ([self.chatView.chatTranscriptView.styleIdentifier hasCaseInsensitiveSuffix:@"-dark"])
 		self.navigationController.navigationBar.barTintColor = [[UIColor darkGrayColor] colorWithAlphaComponent:.9];
 }
 
@@ -627,7 +606,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[self _addPendingComponentsAnimated:YES];
 
-	[transcriptView performSelector:@selector(flashScrollIndicators) withObject:nil afterDelay:0.1];
+	[self.chatView.chatTranscriptView performSelector:@selector(flashScrollIndicators) withObject:nil afterDelay:0.1];
 
 	[self markAsRead];
 
@@ -640,10 +619,10 @@ NS_ASSUME_NONNULL_BEGIN
 	if (self.connection.connected)
 		[_target setMostRecentUserActivity:[NSDate date]];
 
-	hardwareKeyboard = (!_showingKeyboard && [chatInputBar isFirstResponder]);
-	[chatInputBar resignFirstResponder];
+	hardwareKeyboard = (!_showingKeyboard && [self.chatView.chatInputBar isFirstResponder]);
+	[self.chatView.chatInputBar resignFirstResponder];
 
-	[chatInputBar hideCompletions];
+	[self.chatView.chatInputBar hideCompletions];
 
 	_active = NO;
 	_allowEditingToEnd = YES;
@@ -670,7 +649,7 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 
 	if (!self.view.window.isFullscreen)
-		[chatInputBar resignFirstResponder];
+		[self.chatView.chatInputBar resignFirstResponder];
 
 	_allowEditingToEnd = NO;
 }
@@ -678,19 +657,21 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewWillLayoutSubviews {
 	[super viewWillLayoutSubviews];
 
-	[chatInputBar updateTextViewContentSize];
+	self.chatView.frame = self.view.bounds;
+
+	[self.chatView.chatInputBar updateTextViewContentSize];
 }
 
 - (void) viewWillTransitionToSize:(CGSize) size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>) coordinator {
-	BOOL isShowingCompletionsBeforeRotation = chatInputBar.isShowingCompletions;
+	BOOL isShowingCompletionsBeforeRotation = self.chatView.chatInputBar.isShowingCompletions;
 
 	[coordinator animateAlongsideTransition:nil completion:^(id <UIViewControllerTransitionCoordinatorContext> context) {
-		[transcriptView scrollToBottomAnimated:NO];
+		[self.chatView.chatTranscriptView scrollToBottomAnimated:NO];
 
 		if (isShowingCompletionsBeforeRotation)
 			[self _showChatCompletions];
 
-		transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] && !(self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryHidden || self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryOverlay));
+		self.chatView.chatTranscriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] && !(self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryHidden || self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryOverlay));
 	}];
 }
 
@@ -705,13 +686,13 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) isFirstResponder {
-	return [chatInputBar isFirstResponder];
+	return [self.chatView.chatInputBar isFirstResponder];
 }
 
 - (BOOL) resignFirstResponder {
 	if (_showingActivityViewController)
 		return [super resignFirstResponder];
-	return [chatInputBar resignFirstResponder];
+	return [self.chatView.chatInputBar resignFirstResponder];
 }
 
 - (void)traitCollectionDidChange:(UITraitCollection *__nullable)previousTraitCollection {
@@ -723,11 +704,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) chatInputBarTextDidChange:(CQChatInputBar *) theChatInputBar {
 #if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
-	if (chatInputBar.textView.text.length || chatInputBar.textView.attributedText.length) {
-		chatInputBar.textView.allowsEditingTextAttributes = YES;
+	if (self.chatView.chatInputBar.textView.text.length || self.chatView.chatInputBar.textView.attributedText.length) {
+		self.chatView.chatInputBar.textView.allowsEditingTextAttributes = YES;
 		[UIMenuController sharedMenuController].menuItems = @[ [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Style", @"Style text menu item") action:@selector(style:)] ];
 	} else {
-		chatInputBar.textView.allowsEditingTextAttributes = NO;
+		self.chatView.chatInputBar.textView.allowsEditingTextAttributes = NO;
 		[UIMenuController sharedMenuController].menuItems = nil;
 	}
 #endif
@@ -854,13 +835,13 @@ NS_ASSUME_NONNULL_BEGIN
 	if (difference == 0)
 		return NO;
 
-	CGRect frame = transcriptView.frame;
+	CGRect frame = self.chatView.chatTranscriptView.frame;
 	frame.size.height += difference;
-	transcriptView.frame = frame;
+	self.chatView.chatTranscriptView.frame = frame;
 
-	frame = chatInputBar.frame;
+	frame = self.chatView.chatInputBar.frame;
 	frame.origin.y += difference;
-	chatInputBar.frame = frame;
+	self.chatView.chatInputBar.frame = frame;
 
 	return YES;
 }
@@ -878,10 +859,10 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (NSMutableAttributedString *) _selectedChatInputBarAttributedString {
-	NSMutableAttributedString *attributedString = [chatInputBar.textView.attributedText mutableCopy];
+	NSMutableAttributedString *attributedString = [self.chatView.chatInputBar.textView.attributedText mutableCopy];
 	if (!attributedString) {
-		attributedString = [[NSMutableAttributedString alloc] initWithString:(chatInputBar.textView.text ?: @"") attributes:@{
-			NSFontAttributeName: chatInputBar.textView.font,
+		attributedString = [[NSMutableAttributedString alloc] initWithString:(self.chatView.chatInputBar.textView.text ?: @"") attributes:@{
+			NSFontAttributeName: self.chatView.chatInputBar.textView.font,
 		}];
 	}
 
@@ -889,7 +870,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) _updateAttributesForStyleViewController {
-	NSRange selectedRange = chatInputBar.textView.selectedRange;
+	NSRange selectedRange = self.chatView.chatInputBar.textView.selectedRange;
 	if (selectedRange.length == 0) {
 		return;
 	}
@@ -899,7 +880,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) chatInputStyleView:(CQChatInputStyleViewController *) chatInputStyleView didChangeTextTrait:(CQTextTrait) trait toState:(BOOL) state {
-	NSRange selectedRange = chatInputBar.textView.selectedRange;
+	NSRange selectedRange = self.chatView.chatInputBar.textView.selectedRange;
 	if (selectedRange.length == 0)
 		return;
 
@@ -910,7 +891,7 @@ NS_ASSUME_NONNULL_BEGIN
 	} else {
 		UIFont *font = [attributedString attribute:NSFontAttributeName atIndex:0 longestEffectiveRange:NULL inRange:NSMakeRange(0, attributedString.length)];
 		if (!font)
-			font = chatInputBar.textView.font;
+			font = self.chatView.chatInputBar.textView.font;
 
 		UIFontDescriptorSymbolicTraits symbolicTraits = font.fontDescriptor.symbolicTraits;
 		if (trait == CQTextTraitItalic) {
@@ -931,12 +912,12 @@ NS_ASSUME_NONNULL_BEGIN
 		[attributedString setAttributes:attributes range:range];
 	}];
 
-	chatInputBar.textView.attributedText = attributedString;
-	chatInputBar.textView.selectedRange = selectedRange;
+	self.chatView.chatInputBar.textView.attributedText = attributedString;
+	self.chatView.chatInputBar.textView.selectedRange = selectedRange;
 }
 
 - (void) chatInputStyleView:(CQChatInputStyleViewController *) chatInputStyleView didSelectColor:(UIColor *) color forColorPosition:(CQColorPosition) position {
-	NSRange selectedRange = chatInputBar.textView.selectedRange;
+	NSRange selectedRange = self.chatView.chatInputBar.textView.selectedRange;
 	if (selectedRange.length == 0)
 		return;
 
@@ -952,8 +933,8 @@ NS_ASSUME_NONNULL_BEGIN
 		[attributedString setAttributes:attributes range:range];
 	}];
 
-	chatInputBar.textView.attributedText = attributedString;
-	chatInputBar.textView.selectedRange = selectedRange;
+	self.chatView.chatInputBar.textView.attributedText = attributedString;
+	self.chatView.chatInputBar.textView.selectedRange = selectedRange;
 }
 
 - (void) chatInputStyleViewShouldClose:(CQChatInputStyleViewController *) chatInputStyleView {
@@ -971,10 +952,10 @@ NS_ASSUME_NONNULL_BEGIN
 		NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:@"/me " attributes:attributes];
 		[attributedString appendAttributedString:message];
 
-		chatInputBar.textView.attributedText = message;
-	} else chatInputBar.textView.attributedText = message;
+		self.chatView.chatInputBar.textView.attributedText = message;
+	} else self.chatView.chatInputBar.textView.attributedText = message;
 
-	[chatInputBar becomeFirstResponder];
+	[self.chatView.chatInputBar becomeFirstResponder];
 }
 
 #pragma mark -
@@ -989,7 +970,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[[NSNotificationCenter chatCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 
-	[transcriptView reset];
+	[self.chatView.chatTranscriptView reset];
 }
 
 - (void) markAsRead {
@@ -1009,7 +990,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!markScrollbackOnMultitasking)
 		return;
 
-	[transcriptView markScrollback];
+	[self.chatView.chatTranscriptView markScrollback];
 }
 
 #pragma mark -
@@ -1437,7 +1418,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL) handleTweetCommandWithArguments:(MVChatString *) arguments {
 #if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	SLComposeViewController *composeViewController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
-	NSString *selectedText = transcriptView.selectedText;
+	NSString *selectedText = self.chatView.chatTranscriptView.selectedText;
 
 	if (selectedText.length) {
 		NSURL *url = [NSURL URLWithString:selectedText];
@@ -1702,7 +1683,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) transcriptViewShouldBecomeFirstResponder:(id) transcriptView {
-	return chatInputBar.isFirstResponder;
+	return self.chatView.chatInputBar.isFirstResponder;
 }
 
 - (void) transcriptViewWasReset:(id) view {
@@ -1722,14 +1703,14 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) checkTranscriptViewForBecomeFirstResponder {
-	if (_didSendRecently || ![transcriptView canBecomeFirstResponder])
+	if (_didSendRecently || ![self.chatView.chatTranscriptView canBecomeFirstResponder])
 		return;
 
 	[self _forceResignKeyboard];
 }
 
 - (void) setScrollbackLength:(NSUInteger) scrollbackLength {
-	transcriptView.scrollbackLimit = scrollbackLength;
+	self.chatView.chatTranscriptView.scrollbackLimit = scrollbackLength;
 }
 
 - (void) setMostRecentIncomingMessageTimestamp:(NSDate *) date {
@@ -1756,12 +1737,12 @@ NS_ASSUME_NONNULL_BEGIN
 	NSTimeInterval animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 	[UIView animateWithDuration:(cq_shouldAnimate(_active) ? animationDuration : .0) delay:.0 options:animationCurve animations:^{
-		CGRect frame = containerView.frame;
+		CGRect frame = self.chatView.frame;
 		frame.size.height = CGRectGetMinY(keyboardRect);
-		containerView.frame = frame;
+		self.chatView.frame = frame;
 	} completion:NULL];
 
-	[transcriptView scrollToBottomAnimated:_active];
+	[self.chatView.chatTranscriptView scrollToBottomAnimated:_active];
 }
 
 - (void) keyboardWillHide:(NSNotification *) notification {
@@ -1777,7 +1758,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSUInteger animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 
 	[UIView animateWithDuration:(cq_shouldAnimate(_active && self.view.window) ? animationDuration : .0) delay:.0 options:(animationCurve << 16) animations:^{
-		containerView.frame = self.view.bounds;
+		self.chatView.frame = self.view.bounds;
 	} completion:NULL];
 }
 
@@ -2016,7 +1997,7 @@ NS_ASSUME_NONNULL_BEGIN
 	_showingActivityViewController = YES;
 
 	UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:activities];
-	BOOL inputBarWasFirstResponder = [chatInputBar isFirstResponder];
+	BOOL inputBarWasFirstResponder = [self.chatView.chatInputBar isFirstResponder];
 
 	[self becomeFirstResponder];
 
@@ -2030,7 +2011,7 @@ NS_ASSUME_NONNULL_BEGIN
 	};
 
 	activityController.modalPresentationStyle = UIModalPresentationPopover;
-	activityController.popoverPresentationController.sourceView = chatInputBar.accessoryButton;
+	activityController.popoverPresentationController.sourceView = self.chatView.chatInputBar.accessoryButton;
 	activityController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
 
 	id old = self.activityController;
@@ -2050,8 +2031,8 @@ NS_ASSUME_NONNULL_BEGIN
 	_showingActivityViewController = NO;
 
 	if (inputBarAsResponder)
-		[chatInputBar becomeFirstResponder];
-	else [transcriptView becomeFirstResponder];
+		[self.chatView.chatInputBar becomeFirstResponder];
+	else [self.chatView.chatTranscriptView becomeFirstResponder];
 }
 
 #pragma mark -
@@ -2084,26 +2065,26 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) _showChatCompletions {
-	NSRange possibleRange = [chatInputBar.textView.text rangeOfString:@" " options:NSBackwardsSearch range:NSMakeRange(0, chatInputBar.caretRange.location)];
+	NSRange possibleRange = [self.chatView.chatInputBar.textView.text rangeOfString:@" " options:NSBackwardsSearch range:NSMakeRange(0, self.chatView.chatInputBar.caretRange.location)];
 	NSString *lastWord = nil;
 	if (possibleRange.location != NSNotFound) {
-		lastWord = [chatInputBar.textView.text substringFromIndex:possibleRange.location];
+		lastWord = [self.chatView.chatInputBar.textView.text substringFromIndex:possibleRange.location];
 
 		possibleRange = NSMakeRange(possibleRange.location - possibleRange.length, possibleRange.length);
 	} else {
-		lastWord = chatInputBar.textView.text;
+		lastWord = self.chatView.chatInputBar.textView.text;
 
 		possibleRange = NSMakeRange(0, lastWord.length);
 	}
 
-	[chatInputBar showCompletionsForText:lastWord inRange:possibleRange];
+	[self.chatView.chatInputBar showCompletionsForText:lastWord inRange:possibleRange];
 }
 
 #pragma mark -
 
 - (void) _forceResignKeyboard {
 	_allowEditingToEnd = YES;
-	[chatInputBar resignFirstResponder];
+	[self.chatView.chatInputBar resignFirstResponder];
 	_allowEditingToEnd = NO;
 }
 
@@ -2177,28 +2158,28 @@ NS_ASSUME_NONNULL_BEGIN
 		}
 	}
 
-	transcriptView.styleIdentifier = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptStyle"];
-	transcriptView.fontFamily = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFont"];
-	transcriptView.fontSize = chatTranscriptFontSize;
-	transcriptView.timestampPosition = timestampEveryMessage ? (timestampOnLeft ? CQTimestampPositionLeft : CQTimestampPositionRight) : CQTimestampPositionCenter;
-	transcriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] && !(self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryHidden || self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryOverlay));
+	self.chatView.chatTranscriptView.styleIdentifier = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptStyle"];
+	self.chatView.chatTranscriptView.fontFamily = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFont"];
+	self.chatView.chatTranscriptView.fontSize = chatTranscriptFontSize;
+	self.chatView.chatTranscriptView.timestampPosition = timestampEveryMessage ? (timestampOnLeft ? CQTimestampPositionLeft : CQTimestampPositionRight) : CQTimestampPositionCenter;
+	self.chatView.chatTranscriptView.allowSingleSwipeGesture = (![[UIDevice currentDevice] isPadModel] && !(self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryHidden || self.splitViewController.displayMode == UISplitViewControllerDisplayModePrimaryOverlay));
 
-	chatInputBar.font = [chatInputBar.font fontWithSize:chatTranscriptFontSize];
-	if ([self isViewLoaded] && transcriptView)
-		self.view.backgroundColor = transcriptView.backgroundColor;
+	self.chatView.chatInputBar.font = [self.chatView.chatInputBar.font fontWithSize:chatTranscriptFontSize];
+	if ([self isViewLoaded] && self.chatView.chatTranscriptView)
+		self.view.backgroundColor = self.chatView.chatTranscriptView.backgroundColor;
 
 	NSString *completionBehavior = [[CQSettingsController settingsController] stringForKey:@"CQChatAutocompleteBehavior"];
-	chatInputBar.autocomplete = ![completionBehavior isEqualToString:@"Disabled"];
-	chatInputBar.spaceCyclesCompletions = [completionBehavior isEqualToString:@"Keyboard"];
+	self.chatView.chatInputBar.autocomplete = ![completionBehavior isEqualToString:@"Disabled"];
+	self.chatView.chatInputBar.spaceCyclesCompletions = [completionBehavior isEqualToString:@"Keyboard"];
 
 	BOOL autocorrect = ![[CQSettingsController settingsController] boolForKey:@"CQDisableChatAutocorrection"];
-	chatInputBar.autocorrect = autocorrect;
-	chatInputBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
+	self.chatView.chatInputBar.autocorrect = autocorrect;
+	self.chatView.chatInputBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
 	id capitalizationBehavior = [[CQSettingsController settingsController] objectForKey:@"CQChatAutocapitalizationBehavior"];
 	if ([capitalizationBehavior isKindOfClass:[NSNumber class]])
-		chatInputBar.autocapitalizationType = ([capitalizationBehavior boolValue] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
-	else chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
+		self.chatView.chatInputBar.autocapitalizationType = ([capitalizationBehavior boolValue] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
+	else self.chatView.chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
 }
 
 - (void) _nicknameDidChange:(NSNotification *) notification {
@@ -2207,7 +2188,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (![user.connection isEqual:[_target connection]])
 		return;
 
-	[transcriptView noteNicknameChangedFrom:notification.userInfo[@"oldNickname"] to:user.nickname];
+	[self.chatView.chatTranscriptView noteNicknameChangedFrom:notification.userInfo[@"oldNickname"] to:user.nickname];
 
 	if (_target == user)
 		self.title = user.nickname;
@@ -2405,7 +2386,7 @@ NS_ASSUME_NONNULL_BEGIN
 	BOOL active = _active;
 	active &= ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
 
-	if (!transcriptView || !active || _coalescePendingUpdates)
+	if (!self.chatView.chatTranscriptView || !active || _coalescePendingUpdates)
 		return;
 
 	if (!hadPendingComponents) {
@@ -2423,7 +2404,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!_pendingComponents.count || _coalescePendingUpdates)
 		return;
 
-	[transcriptView addComponents:_pendingComponents animated:animated];
+	[self.chatView.chatTranscriptView addComponents:_pendingComponents animated:animated];
 
 	[_pendingComponents removeAllObjects];
 }

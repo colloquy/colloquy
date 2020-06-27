@@ -6,6 +6,7 @@
 #define ToolbarTitleButtonTag 1
 #define ToolbarLastButtonTag 2
 
+@class CQChatView;
 @class CQChatTableCell;
 @class CQChatInputBar;
 @class CQChatInputStyleViewController;
@@ -27,10 +28,6 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 
 @interface CQDirectChatController : UIViewController <CQChatViewController> {
 	@protected
-	IBOutlet CQChatInputBar *chatInputBar;
-	IBOutlet UIView <CQChatTranscriptView> *transcriptView;
-	IBOutlet UIView *containerView;
-
 	CQChatInputStyleViewController *_styleViewController;
 
 	BOOL _coalescePendingUpdates;
@@ -64,6 +61,7 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 
 - (instancetype) initWithTarget:(__nullable id) target NS_DESIGNATED_INITIALIZER;
 
+@property (nonatomic, strong, readonly) CQChatView *chatView;
 @property (nonatomic, readonly) MVChatUser *user;
 
 @property (nonatomic, readonly) NSArray <NSDictionary *> *recentMessages;

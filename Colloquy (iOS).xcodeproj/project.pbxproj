@@ -10,6 +10,7 @@
 		1910F61C1FCBDEA6009B692D /* NSURLSessionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1910F61B1FCBDEA6009B692D /* NSURLSessionAdditions.m */; };
 		1918E3A11F89680700559039 /* OnePasswordExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1918E39E1F89680000559039 /* OnePasswordExtension.framework */; };
 		194D95D31B2A33910061AE55 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 194D95D21B2A33910061AE55 /* LaunchScreen.xib */; };
+		19520BC024A730E200040C41 /* CQChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19520BBF24A730E200040C41 /* CQChatView.swift */; };
 		1C0931030D80C6E900A2705D /* CQColloquyApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0931010D80C6E900A2705D /* CQColloquyApplication.m */; };
 		1C09313B0D80C8F600A2705D /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C09313A0D80C8F600A2705D /* Defaults.plist */; };
 		1C09327E0D80CA4800A2705D /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932670D80CA4800A2705D /* NSDataAdditions.m */; };
@@ -122,7 +123,6 @@
 		89E87C090FA0450800B49230 /* CQSoundController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E87C080FA0450800B49230 /* CQSoundController.m */; };
 		920B6D5917196C6700879D86 /* topic.css in Resources */ = {isa = PBXBuildFile; fileRef = 920B6D5817196C6700879D86 /* topic.css */; };
 		920B6D5C17196E3F00879D86 /* roomTopicBanner.js in Resources */ = {isa = PBXBuildFile; fileRef = 920B6D5A17196C7900879D86 /* roomTopicBanner.js */; };
-		921857D919D13AE70076F87E /* CQWKChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 921857D719D13AE70076F87E /* CQWKChatView.xib */; };
 		92196CA316C918D10020FE35 /* CQChatRoomInfoDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92196CA016C918D10020FE35 /* CQChatRoomInfoDisplayViewController.m */; };
 		92196CA416C918D10020FE35 /* CQChatRoomInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92196CA216C918D10020FE35 /* CQChatRoomInfoViewController.m */; };
 		92196CA616CA345D0020FE35 /* common.css in Resources */ = {isa = PBXBuildFile; fileRef = 92196CA516CA345D0020FE35 /* common.css */; };
@@ -382,6 +382,8 @@
 		1918E3991F8967FF00559039 /* OnePasswordExtension.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OnePasswordExtension.xcodeproj; path = "Carthage/Checkouts/onepassword-extension/OnePasswordExtension.xcodeproj"; sourceTree = "<group>"; };
 		1926804620DEE1A8000AAD15 /* Colloquy copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Colloquy copy2-Info.plist"; path = "/Users/z/Projects/Colloquy/Colloquy/Colloquy copy2-Info.plist"; sourceTree = "<absolute>"; };
 		194D95D21B2A33910061AE55 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
+		19520BBF24A730E200040C41 /* CQChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CQChatView.swift; sourceTree = "<group>"; };
+		19520BC124A7316300040C41 /* Colloquy-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Colloquy-Bridging-Header.h"; path = "Mobile/Colloquy-Bridging-Header.h"; sourceTree = "<group>"; };
 		1C0931010D80C6E900A2705D /* CQColloquyApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQColloquyApplication.m; path = Mobile/Controllers/CQColloquyApplication.m; sourceTree = "<group>"; };
 		1C0931020D80C6E900A2705D /* CQColloquyApplication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQColloquyApplication.h; path = Mobile/Controllers/CQColloquyApplication.h; sourceTree = "<group>"; };
 		1C09310A0D80C71800A2705D /* Colloquy.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Colloquy.pch; path = Mobile/Colloquy.pch; sourceTree = "<group>"; };
@@ -523,8 +525,6 @@
 		1CA715180EF47D6F006225CD /* CQUnreadCountView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQUnreadCountView.h; sourceTree = "<group>"; };
 		1CA715190EF47D6F006225CD /* CQUnreadCountView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQUnreadCountView.m; sourceTree = "<group>"; };
 		1CA718A90EF5F136006225CD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
-		1CAE8BC60EE6111900CE1AF8 /* CQUIChatTranscriptView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQUIChatTranscriptView.h; sourceTree = "<group>"; };
-		1CAE8BC70EE6111900CE1AF8 /* CQUIChatTranscriptView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQUIChatTranscriptView.m; sourceTree = "<group>"; };
 		1CAE8BF20EE612DA00CE1AF8 /* base.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = base.html; sourceTree = "<group>"; };
 		1CAE8BF30EE612DA00CE1AF8 /* standard.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = standard.css; sourceTree = "<group>"; };
 		1CAE8C850EE6190A00CE1AF8 /* transcript.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = transcript.js; sourceTree = "<group>"; };
@@ -578,8 +578,6 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		920B6D5817196C6700879D86 /* topic.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = topic.css; sourceTree = "<group>"; };
 		920B6D5A17196C7900879D86 /* roomTopicBanner.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = roomTopicBanner.js; path = Resources/roomTopicBanner.js; sourceTree = SOURCE_ROOT; };
-		921857D619D13AE70076F87E /* CQUIChatView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CQUIChatView.xib; sourceTree = "<group>"; };
-		921857D719D13AE70076F87E /* CQWKChatView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CQWKChatView.xib; sourceTree = "<group>"; };
 		92196C9F16C918D10020FE35 /* CQChatRoomInfoDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatRoomInfoDisplayViewController.h; sourceTree = "<group>"; };
 		92196CA016C918D10020FE35 /* CQChatRoomInfoDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatRoomInfoDisplayViewController.m; sourceTree = "<group>"; };
 		92196CA116C918D10020FE35 /* CQChatRoomInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatRoomInfoViewController.h; sourceTree = "<group>"; };
@@ -1050,8 +1048,6 @@
 				1C82C1950D83CF1D009ABD9F /* CQChatTableCell.m */,
 				1C82C1960D83CF1D009ABD9F /* CQChatTableCell.h */,
 				926678FC19C041B000CCE5BE /* CQChatTranscriptViewDelegate.h */,
-				1CAE8BC70EE6111900CE1AF8 /* CQUIChatTranscriptView.m */,
-				1CAE8BC60EE6111900CE1AF8 /* CQUIChatTranscriptView.h */,
 				B6831CC51BE425C300D3AC1D /* CQUITextChatTranscriptView.m */,
 				B6831CC41BE425C300D3AC1D /* CQUITextChatTranscriptView.h */,
 				926678F819C03C8500CCE5BE /* CQWKChatTranscriptView.m */,
@@ -1078,6 +1074,7 @@
 				92F3BF7E117186AF00A4F554 /* CQTextView.h */,
 				1CA715190EF47D6F006225CD /* CQUnreadCountView.m */,
 				1CA715180EF47D6F006225CD /* CQUnreadCountView.h */,
+				19520BBF24A730E200040C41 /* CQChatView.swift */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -1140,6 +1137,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources & Additions */ = {
 			isa = PBXGroup;
 			children = (
+				19520BC124A7316300040C41 /* Colloquy-Bridging-Header.h */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				92F1C9E2161D936D0035A9AF /* UIActionSheetAdditions.m */,
 				92F1C9E1161D936D0035A9AF /* UIActionSheetAdditions.h */,
@@ -1222,8 +1220,6 @@
 				920B6D5817196C6700879D86 /* topic.css */,
 				1CB24E02101EBE4800217B50 /* verbs.plist */,
 				1C8CFE950F60E11900B672F9 /* Localizable.strings */,
-				921857D619D13AE70076F87E /* CQUIChatView.xib */,
-				921857D719D13AE70076F87E /* CQWKChatView.xib */,
 				92E2E65415BFD6740013B032 /* FileTransferTableCell.xib */,
 				194D95D21B2A33910061AE55 /* LaunchScreen.xib */,
 			);
@@ -1360,6 +1356,7 @@
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
 						DevelopmentTeam = 37EUQ42C7J;
+						LastSwiftMigration = 1200;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -1426,7 +1423,6 @@
 				1C0F68830F1453CF002BB855 /* bubbles.js in Resources */,
 				1CAE8C8C0EE61AD000CE1AF8 /* transcript.js in Resources */,
 				1C09313B0D80C8F600A2705D /* Defaults.plist in Resources */,
-				921857D919D13AE70076F87E /* CQWKChatView.xib in Resources */,
 				1CAE8BF50EE612DA00CE1AF8 /* base.html in Resources */,
 				1CAE8BF60EE612DA00CE1AF8 /* standard.css in Resources */,
 				1CA718AA0EF5F136006225CD /* Settings.bundle in Resources */,
@@ -1661,6 +1657,7 @@
 				92823D3516911677000EC36E /* CQConsoleController.m in Sources */,
 				92823D551691390E000EC36E /* CQProcessConsoleMessageOperation.m in Sources */,
 				92AF958D1A520D6A006E3152 /* UIColorAdditions.m in Sources */,
+				19520BC024A730E200040C41 /* CQChatView.swift in Sources */,
 				922B1FE116926749002ECDFD /* MVDelegateLogger.m in Sources */,
 				922B20011692F19C002ECDFD /* CQPreferencesIgnoreEditViewController.m in Sources */,
 				9251306719FDCEAA00847018 /* UIFontAdditions.m in Sources */,
@@ -1860,6 +1857,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Mobile/Resources/Entitlements.plist;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
@@ -1882,10 +1880,13 @@
 					"ENABLE_CHAT_CENTER=1",
 				);
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile;
 				PRODUCT_NAME = Colloquy;
 				PROVISIONING_PROFILE = "54ab4db4-4f40-4f53-bcaf-14067883cf1b";
 				PROVISIONING_PROFILE_SPECIFIER = distribution;
+				SWIFT_OBJC_BRIDGING_HEADER = "Mobile/Colloquy-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Distribution;
 		};
@@ -1896,6 +1897,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Mobile/Resources/Entitlements.plist;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -1919,9 +1921,13 @@
 				);
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile.development;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = Colloquy;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Mobile/Colloquy-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1932,6 +1938,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Mobile/Resources/Entitlements.plist;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -1955,10 +1962,13 @@
 					"ENABLE_CHAT_CENTER=1",
 				);
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile.release;
 				PRODUCT_NAME = Colloquy;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Mobile/Colloquy-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

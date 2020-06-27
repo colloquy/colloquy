@@ -9,6 +9,7 @@
 
 #import "MVDelegateLogger.h"
 #import "MVIRCChatConnection.h"
+#import "Colloquy-Swift.h"
 
 static BOOL showNICKs;
 static BOOL showTraffic; // JOIN, PART, KICK, INVITE
@@ -95,11 +96,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (void) awakeFromNib {
-	[super awakeFromNib];
+- (void)loadView {
+	[super loadView];
 
-	transcriptView.styleIdentifier = @"console";
-	transcriptView.allowsStyleChanges = NO;
+	self.chatView.chatTranscriptView.styleIdentifier = @"console";
+	self.chatView.chatTranscriptView.allowsStyleChanges = NO;
 }
 
 - (void) viewDidLoad {
@@ -107,7 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	self.navigationItem.title = NSLocalizedString(@"Console", @"Console view title");
 
-	[transcriptView noteTopicChangeTo:@"" by:@""];
+	[self.chatView.chatTranscriptView noteTopicChangeTo:@"" by:@""];
 }
 
 #pragma mark -
