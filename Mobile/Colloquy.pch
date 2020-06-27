@@ -8,6 +8,10 @@
 #define LIKELY(x) __builtin_expect((x) ? 1 : 0, 1)
 #define UNLIKELY(x) __builtin_expect((x) ? 1 : 0, 0)
 
+#if defined(TARGET_OS_MACCATALYST)
+	#define SYSTEM_MAC 1
+#endif
+
 #if defined(TARGET_OS_TV) && TARGET_OS_TV
 	#define SYSTEM_TV 1
 #endif

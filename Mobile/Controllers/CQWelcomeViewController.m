@@ -5,7 +5,7 @@
 #import "CQHelpTopicsViewController.h"
 
 #define NewConnectionsTableSection 0
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV) && !SYSTEM(MAC)
 #define WhatsNewTableSection 1
 #define HelpTableSection 2
 #endif
@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation CQWelcomeViewController {
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV) && !SYSTEM(MAC)
 	CQHelpTopicsViewController *_helpTopicsController;
 #endif
 }
@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	self.title = NSLocalizedString(@"Welcome to Colloquy", @"Welcome view title");
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV) && !SYSTEM(MAC)
 	UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Welcome", @"Welcome back button label") style:UIBarButtonItemStylePlain target:nil action:nil];
 	self.navigationItem.backBarButtonItem = backButton;
 
@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
 	if (section == NewConnectionsTableSection)
 		return 2;
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV) && !SYSTEM(MAC)
 	if (section == WhatsNewTableSection)
 		return 1;
 	if (section == HelpTableSection)
@@ -84,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 			cell.imageView.image = [UIImage imageNamed:@"bouncer.png"];
 		}
 	}
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV) && !SYSTEM(MAC)
 	else if (indexPath.section == WhatsNewTableSection && indexPath.row == 0) {
 		cell.textLabel.text = NSLocalizedString(@"What's New in Colloquy", @"What's New in Colloquy button label");
 		cell.imageView.image = [UIImage imageNamed:@"new.png"];
@@ -106,7 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
 		else if (indexPath.row == 1)
 			[[CQConnectionsController defaultController] showBouncerCreationView:nil];
 	}
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV) && !SYSTEM(MAC)
 	else if (indexPath.section == WhatsNewTableSection && indexPath.row == 0) {
 		NSString *whatsNewContentPath = [[NSBundle mainBundle] pathForResource:@"whats-new" ofType:@"html"];
 		NSString *whatsNewContent = [[NSString alloc] initWithContentsOfFile:whatsNewContentPath encoding:NSUTF8StringEncoding error:NULL];

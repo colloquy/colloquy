@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!(self = [super initWithFrame:frame]))
 		return nil;
 	self.opaque = NO;
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	self.exclusiveTouch = YES;
 #endif
 	self.contentMode = UIViewContentModeRedraw;

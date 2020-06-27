@@ -7,7 +7,7 @@
 
 #import <ChatCore/MVChatConnection.h>
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 @import OnePasswordExtension;
 #endif
 
@@ -382,7 +382,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
 			cell.textField.secureTextEntry = YES;
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 			if ([[OnePasswordExtension sharedExtension] isAppExtensionAvailable]) {
 				UIButton *onePasswordButton = [UIButton buttonWithType:UIButtonTypeSystem];
 				[onePasswordButton addTarget:self action:@selector(onePasswordActionForServerPassword:) forControlEvents:UIControlEventTouchUpInside];
@@ -422,7 +422,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 			if ([[OnePasswordExtension sharedExtension] isAppExtensionAvailable]) {
 				UIButton *onePasswordButton = [UIButton buttonWithType:UIButtonTypeSystem];
 				[onePasswordButton addTarget:self action:@selector(onePasswordActionForPassword:) forControlEvents:UIControlEventTouchUpInside];
@@ -562,7 +562,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 #pragma mark -
 
 - (void) onePasswordActionForPassword:(id) sender {
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	[[OnePasswordExtension sharedExtension] findLoginForURLString:_connection.server forViewController:self sender:sender completion:^(NSDictionary *loginDictionary, NSError *error) {
 		if (!loginDictionary.count) {
 			if (error.code != AppExtensionErrorCodeCancelledByUser) {
@@ -583,7 +583,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 }
 
 - (void) onePasswordActionForServerPassword:(id) sender {
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	[[OnePasswordExtension sharedExtension] findLoginForURLString:_connection.server forViewController:self sender:sender completion:^(NSDictionary *loginDictionary, NSError *error) {
 		if (!loginDictionary.count) {
 			if (error.code != AppExtensionErrorCodeCancelledByUser) {

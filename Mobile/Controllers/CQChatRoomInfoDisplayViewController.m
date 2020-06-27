@@ -159,7 +159,7 @@ NS_ASSUME_NONNULL_BEGIN
 			NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle)
 		};
 		textViewCell.textView.delegate = self;
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 		textViewCell.textView.dataDetectorTypes = UIDataDetectorTypeAll;
 #endif
 

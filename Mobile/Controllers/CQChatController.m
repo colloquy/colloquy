@@ -56,7 +56,7 @@ static CQSoundController *fileTransferSound;
 #pragma mark -
 
 @interface CQChatController () <CQActionSheetDelegate, CQAlertViewDelegate
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 , UIImagePickerControllerDelegate
 #endif
 >
@@ -282,7 +282,7 @@ static CQSoundController *fileTransferSound;
 
 	NSString *message = [NSString stringWithFormat:NSLocalizedString(@"You are invited to \"%@\" by \"%@\" on \"%@\".", "Invited to join room alert message"), room.displayName, user.displayName, connection.displayName];
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
 		UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
 		content.threadIdentifier = connection.uniqueIdentifier;
@@ -446,7 +446,7 @@ static CQSoundController *fileTransferSound;
 
 	_totalImportantUnreadCount = count;
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	[UIApplication sharedApplication].applicationIconBadgeNumber = count;
 #endif
 

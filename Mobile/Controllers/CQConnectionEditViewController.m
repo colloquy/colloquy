@@ -197,7 +197,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		CQConnectionPushEditController *pushEditViewController = [[CQConnectionPushEditController alloc] init];
 		pushEditViewController.newConnection = self.newConnection;
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 		pushEditViewController.navigationItem.prompt = self.navigationItem.prompt;
 #endif
 		pushEditViewController.connection = _connection;
@@ -260,7 +260,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	if (indexPath.section == AdvancedTableSection && indexPath.row == 0) {
 		CQConnectionAdvancedEditController *advancedEditViewController = [[CQConnectionAdvancedEditController alloc] init];
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 		advancedEditViewController.navigationItem.prompt = self.navigationItem.prompt;
 #endif
 		advancedEditViewController.newConnection = _newConnection;

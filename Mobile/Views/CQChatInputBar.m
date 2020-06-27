@@ -11,7 +11,12 @@
 #define CQMaxLineHeight 84.
 #define CQInputBarVerticalPadding 17.
 
+#if SYSTEM(MAC)
+static BOOL hardwareKeyboard = YES;
+#else
 static BOOL hardwareKeyboard;
+#endif
+
 static BOOL boldText;
 static BOOL underlineText;
 static BOOL italicText;
@@ -97,7 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
 	_inputView = [[CQTextView alloc] initWithFrame:frame];
 	_inputView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
 	_inputView.textContainer.heightTracksTextView = YES;
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	_inputView.dataDetectorTypes = UIDataDetectorTypeNone;
 #endif
 	_inputView.returnKeyType = UIReturnKeySend;
@@ -126,7 +131,7 @@ NS_ASSUME_NONNULL_BEGIN
 	_autocorrect = NO;
 #endif
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideCompletions) name:UIDeviceOrientationDidChangeNotification object:nil];
 #endif
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];

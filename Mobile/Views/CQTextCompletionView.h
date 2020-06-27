@@ -1,3 +1,5 @@
+#import <UIKit/UIKit.h>
+
 @protocol CQTextCompletionViewDelegate;
 
 NS_ASSUME_NONNULL_BEGIN

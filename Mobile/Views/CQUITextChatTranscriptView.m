@@ -146,7 +146,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (self.isLoading)
 		return nil;
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	UIPrintPageRenderer *renderer = [[UIPrintPageRenderer alloc] init];
 	[renderer addPrintFormatter:self.viewPrintFormatter startingAtPageAtIndex:0];
 
@@ -542,7 +542,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[self reset];
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	_allowSingleSwipeGesture = YES;
 	_singleSwipeGestureRecognizers = [[NSMutableArray alloc] init];
 
@@ -574,7 +574,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	_showRoomTopic = (CQShowRoomTopic)[[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	self.dataDetectorTypes = UIDataDetectorTypeNone;
 	self.editable = NO;
 #endif

@@ -41,7 +41,7 @@ typedef NS_ENUM(NSInteger, CQSidebarOrientation) {
 #pragma mark -
 
 - (UISplitViewControllerDisplayMode) targetDisplayModeForActionInSplitViewController:(UISplitViewController *) splitViewController {
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV) && !SYSTEM(MAC)
 	NSUInteger allowedOrientation = [[CQSettingsController settingsController] integerForKey:@"CQSplitSwipeOrientations"];
 	if (allowedOrientation == CQSidebarOrientationNone)
 		return UISplitViewControllerDisplayModeAllVisible;

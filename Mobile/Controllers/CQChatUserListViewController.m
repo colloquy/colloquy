@@ -70,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	self.tableView.tableHeaderView = _searchController.searchBar;
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Members", @"Members back button label") style:UIBarButtonItemStylePlain target:nil action:nil];
 	self.navigationItem.backBarButtonItem = backButton;
 #endif
@@ -453,7 +453,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!user)
 		return;
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	if (action == @selector(copy:))
 		[UIPasteboard generalPasteboard].string = user.nickname;
 #endif

@@ -422,7 +422,7 @@ NS_ASSUME_NONNULL_BEGIN
 	sheet.delegate = self;
 	sheet.tag = InfoActionSheet;
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	if (self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
 		sheet.title = self.user.displayName;
 #endif
@@ -644,7 +644,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) viewDidDisappear:(BOOL) animated {
 	[super viewDidDisappear:animated];
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	[UIMenuController sharedMenuController].menuItems = nil;
 #endif
 
@@ -703,7 +703,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) chatInputBarTextDidChange:(CQChatInputBar *) theChatInputBar {
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	if (self.chatView.chatInputBar.textView.text.length || self.chatView.chatInputBar.textView.attributedText.length) {
 		self.chatView.chatInputBar.textView.allowsEditingTextAttributes = YES;
 		[UIMenuController sharedMenuController].menuItems = @[ [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Style", @"Style text menu item") action:@selector(style:)] ];
@@ -1461,7 +1461,7 @@ NS_ASSUME_NONNULL_BEGIN
 	NSString *systemMemory = [NSByteCountFormatter stringFromByteCount:physicalMemory countStyle:NSByteCountFormatterCountStyleBinary];
 
 	NSString *message = nil;
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	BOOL batteryMonitoringEnabled = [UIDevice currentDevice].batteryMonitoringEnabled;
 	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
 	if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateUnplugged)
@@ -1469,7 +1469,7 @@ NS_ASSUME_NONNULL_BEGIN
 	else
 #endif
 		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %@ processors, %@ RAM and a system uptime of %@.", @"System info message"), version, orientation, model, systemVersion, @(processorsInTotal), systemMemory, systemUptime];
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	[UIDevice currentDevice].batteryMonitoringEnabled = batteryMonitoringEnabled;
 #endif
 
@@ -1561,7 +1561,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) handleResetbadgeCommandWithArguments:(MVChatString *) arguments {
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	[CQColloquyApplication sharedApplication].applicationIconBadgeNumber = 0;
 #endif
 }
@@ -1993,7 +1993,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) _showActivityViewControllerWithItems:(NSArray *) items activities:(NSArray <UIActivity *> *) activities {
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	_showingActivityViewController = YES;
 
 	UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:activities];
@@ -2306,7 +2306,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
 		return;
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
 	content.threadIdentifier = @"Global";
 	content.userInfo = [self _localNotificationUserInfoForMessage:message];

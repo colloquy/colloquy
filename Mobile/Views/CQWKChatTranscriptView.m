@@ -4,9 +4,7 @@
 
 #import <ChatCore/MVChatUser.h>
 
-#if !SYSTEM(MARZIPAN)
 #import "UIPrintPageRendererAdditions.h"
-#endif
 #import "NSNotificationAdditions.h"
 
 #define DefaultFontSize 14
@@ -133,7 +131,6 @@ NS_ASSUME_NONNULL_BEGIN
 	if (self.isLoading)
 		return nil;
 
-#if !SYSTEM(MARZIPAN)
 	UIPrintPageRenderer *renderer = [[UIPrintPageRenderer alloc] init];
 	[renderer addPrintFormatter:self.viewPrintFormatter startingAtPageAtIndex:0];
 
@@ -153,9 +150,6 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	return [renderer PDFRender];
-#else
-	return nil;
-#endif
 }
 
 - (NSString *_Nullable) selectedText {

@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 		if (view != _bottomLineView && CGRectGetWidth(frame) == CGRectGetWidth(self.frame))
 			continue;
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 		CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
 		statusBarFrame = [[UIApplication sharedApplication].delegate.window convertRect:statusBarFrame toView:self];
 

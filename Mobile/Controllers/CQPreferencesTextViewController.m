@@ -9,8 +9,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) loadView {
 	_textView = [[UITextView alloc] initWithFrame:CGRectZero];
 	_textView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin);
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
-	_textView.dataDetectorTypes = (UIDataDetectorTypeLink | UIDataDetectorTypePhoneNumber);
+#if !SYSTEM(TV)
+	_textView.dataDetectorTypes = UIDataDetectorTypeAll;
 	_textView.editable = NO;
 #endif
 	_textView.font = [UIFont systemFontOfSize:19.];

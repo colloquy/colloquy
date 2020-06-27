@@ -5,7 +5,7 @@
 #import "CQPreferencesSwitchCell.h"
 #import "CQPreferencesTextCell.h"
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 #import <MessageUI/MessageUI.h>
 #endif
 #import <objc/runtime.h>
@@ -61,7 +61,7 @@ static NSString *const CQPSListTypeImage = @"Image";
 static NSString *const CQPSListTypeFont = @"Font";
 
 @interface CQPreferencesDisplayViewController ()
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 <MFMailComposeViewControllerDelegate>
 #endif
 @end
@@ -387,7 +387,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 		if ([rowDictionary[CQPSAction] isEqualToString:CQPSLink])
 			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:address] options:@{} completionHandler:nil];
 		else if ([rowDictionary[CQPSAction] isEqualToString:CQPSEmail]) {
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 			MFMailComposeViewController *mailComposeViewController = [[MFMailComposeViewController alloc] init];
 			mailComposeViewController.mailComposeDelegate = self;
 			mailComposeViewController.toRecipients = @[address];
@@ -411,7 +411,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 	}
 }
 
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 - (void) mailComposeController:(MFMailComposeViewController *) controller didFinishWithResult:(MFMailComposeResult) result error:(NSError *__nullable) error {
 	[controller dismissViewControllerAnimated:[UIView areAnimationsEnabled] completion:NULL];
 }

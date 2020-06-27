@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 	self.tableView.layer.cornerRadius = 4 + (1 / scale);
 	self.tableView.layer.borderWidth = 1. / scale;
 	self.tableView.layer.borderColor = [UIApplication sharedApplication].keyWindow.tintColor.CGColor;
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV)
 	self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 #endif
 	self.tableView.showsVerticalScrollIndicator = NO;
