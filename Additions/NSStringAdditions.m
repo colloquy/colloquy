@@ -1162,6 +1162,11 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	return foundRange;
 }
 
+- (NSUInteger) countOfStringsByMatching:(NSString *) regex {
+	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:@"#" options:(NSRegularExpressionOptions)0 error:NULL];
+	return [regularExpression numberOfMatchesInString:self options:NSMatchingReportCompletion range:NSMakeRange(0, self.length)];
+}
+
 - (NSString *__nullable) stringByMatching:(NSString *) regex capture:(NSInteger) capture {
 	return [self stringByMatching:regex options:0 inRange:NSMakeRange(0, self.length) capture:capture error:nil];
 }

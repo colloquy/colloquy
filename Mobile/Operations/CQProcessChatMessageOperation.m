@@ -144,6 +144,11 @@ static void commonChatAndImageReplacment(NSMutableString *string, NSRangePointer
 			}
 
 			NSURL *fullURL = [NSURL URLWithString:url];
+			if (!fullURL && [url hasCaseInsensitivePrefix:@"http"] && [url countOfStringsByMatching:@"#"] > 1) {
+				url = [url stringByReplacingOccurrencesOfString:@"#" withString:@"%23"];
+				fullURL = [NSURL URLWithString:url];
+			}
+
 			if (!fullURL.scheme.length)
 				fullURL = [NSURL URLWithString:[@"http://" stringByAppendingString:url]];
 
