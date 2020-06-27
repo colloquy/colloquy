@@ -276,8 +276,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) _applyTintColor {
-	BOOL darkerColorsEnabled = UIAccessibilityDarkerSystemColorsEnabled();
-
 	_mainWindow.tintColor = [UIColor colorWithRed:(162. / 255.) green:(122. / 255.) blue:(247. / 255.) alpha:1.];
 }
 
@@ -673,8 +671,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (UIColor *__nullable) tintColor {
 #if SYSTEM(MAC)
 	return _mainWindow.tintColor;
-#endif
-
+#else
 	if ([UIDevice currentDevice].isPadModel)
 		return _mainWindow.tintColor;
 
@@ -684,6 +681,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if ([style isEqualToString:@"notes"])
 		return [UIColor colorWithRed:0.224 green:0.082 blue:0. alpha:1.];
 	return nil;
+#endif
 }
 
 #pragma mark -

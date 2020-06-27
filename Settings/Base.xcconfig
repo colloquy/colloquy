@@ -123,6 +123,5 @@ PLIST_FILE_OUTPUT_FORMAT = binary
 PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO
 STRIP_INSTALLED_PRODUCT = $(COLLOQUY_DEBUG_NO_RELEASE_YES)
 VALIDATE_PRODUCT = $(COLLOQUY_DEBUG_NO_RELEASE_YES)
-VALID_ARCHS = x86_64 arm64 armv7 armv7s
 VERSION_INFO_FILE = $(PRODUCT_NAME)VersionInfo.c
 WARNING_CFLAGS = -Wmost -Wextra -Wchar-subscripts -Wformat-security -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-format-y2k -Wno-unused-parameter -Wbad-function-cast -Wmissing-declarations -Wnested-externs -Wno-objc-interface-ivars -Wno-documentation -Wno-direct-ivar-access -Wno-objc-missing-property-synthesis -Wno-gnu -Wno-custom-atomic-properties -Wno-format-nonliteral -Wno-objc-interface-ivars -Wno-implicit-retain-self -Wno-float-equal -Wno-arc-performSelector-leaks
