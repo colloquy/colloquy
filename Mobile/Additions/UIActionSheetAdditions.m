@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CQActionSheet () <CQActionSheetDelegate>
 @property (nullable, strong) NSMutableArray <NSString *> *buttonTitles;
-@property (nullable, strong) UIViewController *overlappingPresentationViewController;
 @property (nullable, strong) UIAlertController *alertController;
 
 @property (nonatomic, readonly) NSInteger numberOfButtons;
@@ -51,42 +50,24 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void) showforSender:(__nullable id) sender orFromPoint:(CGPoint) point animated:(BOOL) animated {
-	[_overlappingPresentationViewController.view removeFromSuperview];
-	_overlappingPresentationViewController = nil;
 	[_alertController dismissViewControllerAnimated:NO completion:nil];
 	_alertController = nil;
 
 	UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 	alertController.popoverPresentationController.canOverlapSourceViewRect = YES;
 
-	// The overlapping view is needed to work around the following iOS 8(.1-only?) bug on iPad:
-	// • If the root Split View Controller is configured to allow the main view overlap its detail views and we
-	// present an action sheet from a point on screen that results in the popover rect overlapping the main view,
-	// the z-index will be incorrect and the action sheet will be clipped by the main view.
-	_overlappingPresentationViewController = [[UIViewController alloc] init];
-	_overlappingPresentationViewController.view.backgroundColor = [UIColor clearColor];
-
 	UIWindow *mainWindow = [UIApplication sharedApplication].keyWindow;
 
-	UIView *__nonnull presentingInView = (UIView *__nonnull)_overlappingPresentationViewController.view;
 	if ([sender isKindOfClass:[UIView class]] && [UIDevice currentDevice].isPadModel && !mainWindow) {
-		_overlappingPresentationViewController.view.frame = [sender bounds];
-
-		[sender addSubview:presentingInView];
-
 		alertController.popoverPresentationController.sourceRect = [sender bounds];
 		alertController.popoverPresentationController.sourceView = sender;
 	} else {
-		_overlappingPresentationViewController.view.frame = mainWindow.frame;
-
-		[mainWindow addSubview:presentingInView];
-
 		CGRect rect = CGRectZero;
 		rect.size = CGSizeMake(1., 1.);
 		rect.origin = CGPointEqualToPoint(point, CGPointZero) ? mainWindow.center : point;
 
 		alertController.popoverPresentationController.sourceRect = rect;
-		alertController.popoverPresentationController.sourceView = _overlappingPresentationViewController.view;
+		alertController.popoverPresentationController.sourceView = UIApplication.sharedApplication.keyWindow.rootViewController.view;
 	}
 
 	for (NSInteger i = 0; i < (NSInteger)_buttonTitles.count; i++) {
@@ -103,9 +84,6 @@ NS_ASSUME_NONNULL_BEGIN
 			[strongSelf.alertController removeFromParentViewController];
 			[strongSelf.alertController.view removeFromSuperview];
 			strongSelf.alertController = nil;
-			[strongSelf->_overlappingPresentationViewController.view removeFromSuperview];
-			[strongSelf->_overlappingPresentationViewController removeFromParentViewController];
-			strongSelf->_overlappingPresentationViewController = nil;
 
 			[self.delegate actionSheet:self clickedButtonAtIndex:i];
 		}];
@@ -115,7 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
 		alertController.preferredAction = action;
 	}
 
-	[_overlappingPresentationViewController presentViewController:alertController animated:YES completion:nil];
+	[UIApplication.sharedApplication.keyWindow.rootViewController presentViewController:alertController animated:YES completion:nil];
 	_alertController = alertController;
 }
 @end
