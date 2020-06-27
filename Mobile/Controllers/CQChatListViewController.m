@@ -1377,10 +1377,26 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 #pragma mark -
 
-- (void) showPreferences:(_Nullable id) sender {
-	CQPreferencesViewController *preferencesViewController = [[CQPreferencesViewController alloc] init];
+- (BOOL) _showPreferencesMac:(_Nullable id) sender {
+#if SYSTEM(MAC)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+	id NSApplication = NSClassFromString(@"NSApplication");
+	id sharedApplication = [NSApplication performSelector:@selector(sharedApplication)];
+	if ([sharedApplication respondsToSelector:@selector(orderFrontPreferencesPanel:)]) {
+		[sharedApplication performSelector:@selector(orderFrontPreferencesPanel:)];
+		return YES;
+	}
+#endif
+	return NO;
+}
 
-	[[CQColloquyApplication sharedApplication] presentModalViewController:preferencesViewController animated:[UIView areAnimationsEnabled]];
+- (void) showPreferences:(_Nullable id) sender {
+	if (![self _showPreferencesMac:sender]) {
+		CQPreferencesViewController *preferencesViewController = [[CQPreferencesViewController alloc] init];
+
+		[[CQColloquyApplication sharedApplication] presentModalViewController:preferencesViewController animated:[UIView areAnimationsEnabled]];
+	}
 }
 @end
 
