@@ -1,10 +1,12 @@
+#import <WebKit/WebKit.h>
+
 #import "CQHelpTopicViewController.h"
 
 #import "CQColloquyApplication.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CQHelpTopicViewController () <UIWebViewDelegate>
+@interface CQHelpTopicViewController () <WKNavigationDelegate>
 @end
 
 @implementation CQHelpTopicViewController {
@@ -16,9 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!(self = [self init]))
 		return nil;
 
-	UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectZero];
+	WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectZero];
 	webView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
-	webView.delegate = self;
+	webView.navigationDelegate = self;
 
 	NSString *templatePath = [[NSBundle mainBundle] pathForResource:@"help-base" ofType:@"html"];
 	NSString *templateString = [NSString stringWithContentsOfFile:templatePath encoding:NSUTF8StringEncoding error:NULL];
@@ -28,10 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
 	_webView = webView;
 
 	return self;
-}
-
-- (void) dealloc {
-	((UIWebView *)_webView).delegate = nil;
 }
 
 #pragma mark -
@@ -56,20 +54,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-- (BOOL) webView:(UIWebView *) sender shouldStartLoadWithRequest:(NSURLRequest *) request navigationType:(UIWebViewNavigationType) navigationType {
-	if (navigationType == UIWebViewNavigationTypeOther)
-		return YES;
-
-	if ([[CQColloquyApplication sharedApplication] isSpecialApplicationURL:request.URL]) {
-		[[CQColloquyApplication sharedApplication] openURL:request.URL options:@{} completionHandler:nil];
-		return NO;
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+	if (navigationAction.navigationType == WKNavigationTypeOther) {
+		decisionHandler(WKNavigationActionPolicyAllow);
+		return;
 	}
 
-	_urlToHandle = request.URL;
+	if ([[CQColloquyApplication sharedApplication] isSpecialApplicationURL:navigationAction.request.URL]) {
+		[[CQColloquyApplication sharedApplication] openURL:navigationAction.request.URL options:@{} completionHandler:nil];
+		decisionHandler(WKNavigationActionPolicyCancel);
+		return;
+	}
+
+	_urlToHandle = navigationAction.request.URL;
 
 	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 
-	return NO;
+	decisionHandler(WKNavigationActionPolicyAllow);
 }
 @end
 
