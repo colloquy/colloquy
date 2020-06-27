@@ -322,7 +322,7 @@
 		if( count == 1 )
 			[description appendFormat:NSLocalizedString( @" (and 1 other criterion)", "one other buddy identifier criterion" ), count];
 		else if( count > 1 )
-			[description appendFormat:NSLocalizedString( @" (and %u other criteria)", "count of other buddy identifier criteria" ), count];
+			[description appendFormat:NSLocalizedString( @" (and %@ other criteria)", "count of other buddy identifier criteria" ), @(count)];
 
 		return description;
 	}

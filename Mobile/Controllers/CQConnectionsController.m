@@ -791,7 +791,7 @@ CQBouncerConnectionDelegate>
 	if (minutes == 1)
 		content.body = [NSString stringWithFormat:NSLocalizedString(@"You have been disconnected due to 1 minute of inactivity.", "Disconnected due to 1 minute of inactivity alert message"), minutes];
 	else if (minutes > 1)
-		content.body = [NSString stringWithFormat:NSLocalizedString(@"You have been disconnected due to %u minutes of inactivity.", "Disconnected due to inactivity alert message"), minutes];
+		content.body = [NSString stringWithFormat:NSLocalizedString(@"You have been disconnected due to %@ minutes of inactivity.", "Disconnected due to inactivity alert message"), @(minutes)];
 	else content.body = NSLocalizedString(@"You have been disconnected.", "Disconnected alert message");
 
 //	content.action = NSLocalizedString(@"Open", "Open button title");

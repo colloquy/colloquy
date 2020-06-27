@@ -331,7 +331,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	NSString *messageCount = @"";
 	if( [self newMessagesWaiting] == 0 ) messageCount = NSLocalizedString( @"no messages waiting", "no messages waiting room tooltip" );
 	else if( [self newMessagesWaiting] == 1 ) messageCount = NSLocalizedString( @"1 message waiting", "one message waiting room tooltip" );
-	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), [self newMessagesWaiting]];
+	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%@ messages waiting", "messages waiting room tooltip" ), @([self newMessagesWaiting])];
 
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
 		return [NSString stringWithFormat:@"%@\n%@ (%@)\n%@", [_buddy preferredName], [self target], [[self user] serverAddress], messageCount]; */
@@ -911,7 +911,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Private Message", "new message bubble title" ) forKey:@"title"];
 			if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"You have 1 message waiting from %@.", "new single message bubble text" ), [self title]] forKey:@"description"];
-			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You have %d messages waiting from %@.", "new messages bubble text" ), [self newMessagesWaiting], [self title]] forKey:@"description"];
+			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You have %@ messages waiting from %@.", "new messages bubble text" ), @([self newMessagesWaiting]), [self title]] forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
 			[context setObject:[windowTitle stringByAppendingString:@"JVChatPrivateMessage"] forKey:@"coalesceKey"];
 			[context setObject:self forKey:@"target"];
@@ -1034,7 +1034,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		if ( newlineCount > messageLimit ) {
 			NSAlert *alert = [[NSAlert alloc] init];
 			[alert setMessageText:NSLocalizedString( @"Multiple lines detected", "multiple lines detected alert dialog title")];
-			[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"You are about to send a message with %d lines. Are you sure you want to do this?", "about to send a %d line message alert dialog message" ), newlineCount]];
+			[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"You are about to send a message with %@ lines. Are you sure you want to do this?", "about to send a %d line message alert dialog message" ), @(newlineCount)]];
 			[alert addButtonWithTitle:NSLocalizedString( @"Send", "Send alert dialog button title" )];
 			[alert addButtonWithTitle:NSLocalizedString( @"Cancel", "Cancel alert dialog button title" )];
 			[alert setAlertStyle:NSWarningAlertStyle];

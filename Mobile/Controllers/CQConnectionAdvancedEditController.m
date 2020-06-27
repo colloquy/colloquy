@@ -455,7 +455,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 
 		if (_connection.alternateNicknames.count) {
 			cell.detailTextLabel.text = [NSString stringWithFormat:@"%tu", _connection.alternateNicknames.count];
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Alternate Nicknames: %u nicknames", @"Voiceover alternate nicknames count label"), _connection.alternateNicknames.count];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Alternate Nicknames: %@ nicknames", @"Voiceover alternate nicknames count label"), @(_connection.alternateNicknames.count)];
 		} else {
 			cell.detailTextLabel.text = NSLocalizedString(@"None", @"None label");
 			cell.accessibilityLabel = NSLocalizedString(@"Alternate Nicknames: None", @"Voiceover Alternate Nicknames none label");
@@ -476,7 +476,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		else cell.detailTextLabel.text = NSLocalizedString(@"None", @"None label");
 
 		if (commands.count)
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Automatic Commands: %u commands", @"Voiceover automatic commands label"), commands.count];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Automatic Commands: %@ commands", @"Voiceover automatic commands label"), @(commands.count)];
 		else cell.accessibilityLabel = NSLocalizedString(@"Automatic Commands: None", @"Voiceover automatic commands none label");
 
 		return cell;

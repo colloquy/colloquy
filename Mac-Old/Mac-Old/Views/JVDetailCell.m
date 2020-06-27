@@ -248,8 +248,8 @@
 - (NSString *)accessibilityValueDescription
 {
 	NSMutableArray *bits = [NSMutableArray array];
-	NSString *statusText = (!_statusImage && _statusNumber) ? [NSString stringWithFormat:NSLocalizedString(@"%d items", nil), _statusNumber]: nil;
-	NSString *importantStatusText = (!_statusImage && _importantStatusNumber) ? [NSString stringWithFormat:NSLocalizedString(@"%d important items", nil), _importantStatusNumber]: nil;
+	NSString *statusText = (!_statusImage && _statusNumber) ? [NSString stringWithFormat:NSLocalizedString(@"%@ items", nil), @(_statusNumber)]: nil;
+	NSString *importantStatusText = (!_statusImage && _importantStatusNumber) ? [NSString stringWithFormat:NSLocalizedString(@"%@ important items", nil), @(_importantStatusNumber)]: nil;
 #define NIL_TO_EMPTY_STRING(a) ((a) ? (a) : @"")
 	NSArray *candidates = @[NIL_TO_EMPTY_STRING(_mainText), NIL_TO_EMPTY_STRING(_infoText), NIL_TO_EMPTY_STRING(importantStatusText), NIL_TO_EMPTY_STRING(statusText), NIL_TO_EMPTY_STRING([_statusImage accessibilityDescription]), NIL_TO_EMPTY_STRING([_altImage accessibilityDescription])];
 #undef NIL_TO_EMPTY_STRING

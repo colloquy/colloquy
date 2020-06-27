@@ -129,7 +129,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	if( [[self connection] isConnected] ) {
 		if( [[[MVConnectionsController defaultController] connectedConnections] count] == 1 ) {
 			if( [_sortedMembers count] > 1 )
-				return [NSString stringWithFormat:NSLocalizedString( @"%d members", "number of room members information line" ), [_sortedMembers count]];
+				return [NSString stringWithFormat:NSLocalizedString( @"%@ members", "number of room members information line" ), @([_sortedMembers count])];
 			else if( [_sortedMembers count] == 1 )
 				return NSLocalizedString( @"1 member", "one room member information line" );
 		} else return [[self connection] server];
@@ -143,10 +143,10 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	if( [self newMessagesWaiting] == 0 ) messageCount = NSLocalizedString( @"no messages waiting", "no messages waiting room tooltip" );
 	else if( [self newMessagesWaiting] == 1 ) messageCount = NSLocalizedString( @"1 message waiting", "one message waiting room tooltip" );
-	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), [self newMessagesWaiting]];
+	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%@ messages waiting", "messages waiting room tooltip" ), @([self newMessagesWaiting])];
 
 	if( [_sortedMembers count] == 1 ) memberCount = NSLocalizedString( @"1 member", "one member room status info tooltip" );
-	else memberCount = [NSString stringWithFormat:NSLocalizedString( @"%d members", "number of members room status info tooltip" ), [_sortedMembers count]];
+	else memberCount = [NSString stringWithFormat:NSLocalizedString( @"%@ members", "number of members room status info tooltip" ), @([_sortedMembers count])];
 
 	return [NSString stringWithFormat:@"%@ (%@)\n%@\n%@", _target, [[self connection] server], memberCount, messageCount];
 }
@@ -344,7 +344,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ Room Activity", "room activity bubble title" ), [self title]] forKey:@"title"];
 		if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has a message waiting\nfrom %@.", "new single room message bubble text" ), [self title], [member displayName]] forKey:@"title"];
-		else [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has %d messages waiting.\nLast from %@", "new room messages bubble text" ), [self title], [self newMessagesWaiting], [member displayName]] forKey:@"title"];
+		else [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has %@ messages waiting.\nLast from %@", "new room messages bubble text" ), [self title], @([self newMessagesWaiting]), [member displayName]] forKey:@"title"];
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@", "room activity bubble message" ), [message bodyAsPlainText]] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"room"] forKey:@"image"];
 		[context setObject:[[self windowTitle] stringByAppendingString:@"JVChatRoomActivity"] forKey:@"coalesceKey"];

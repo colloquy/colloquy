@@ -1484,10 +1484,10 @@ NS_ASSUME_NONNULL_BEGIN
 	BOOL batteryMonitoringEnabled = [UIDevice currentDevice].batteryMonitoringEnabled;
 	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
 	if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateUnplugged)
-		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %d processors, %@ RAM, %.0f%% battery life remaining and a system uptime of %@.", @"System info message with battery level"), version, orientation, model, systemVersion, processorsInTotal, systemMemory, [UIDevice currentDevice].batteryLevel * 100., systemUptime];
+		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %@ processors, %@ RAM, %.0f%% battery life remaining and a system uptime of %@.", @"System info message with battery level"), version, orientation, model, systemVersion, @(processorsInTotal), systemMemory, [UIDevice currentDevice].batteryLevel * 100., systemUptime];
 	else
 #endif
-		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %d processors, %@ RAM and a system uptime of %@.", @"System info message"), version, orientation, model, systemVersion, processorsInTotal, systemMemory, systemUptime];
+		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iOS %@ with %@ processors, %@ RAM and a system uptime of %@.", @"System info message"), version, orientation, model, systemVersion, @(processorsInTotal), systemMemory, systemUptime];
 #if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
 	[UIDevice currentDevice].batteryMonitoringEnabled = batteryMonitoringEnabled;
 #endif

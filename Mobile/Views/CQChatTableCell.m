@@ -71,11 +71,11 @@ NS_ASSUME_NONNULL_BEGIN
 	else self.importantUnreadCount = 0;
 
 	if (self.importantUnreadCount && !self.unreadCount)
-		self.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%@: %u highlighted messages.", @"Voiceover highlights in chat label"), self.name, self.importantUnreadCount];
+		self.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%@: %@ highlighted messages.", @"Voiceover highlights in chat label"), self.name, @(self.importantUnreadCount)];
 	else if (self.importantUnreadCount && self.unreadCount)
-		self.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%@: %u highlighted and %u unread messages.", @"Voiceover highlights and unread messages in chat label"), self.name, self.importantUnreadCount, self.unreadCount];
+		self.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%@: %@ highlighted and %@ unread messages.", @"Voiceover highlights and unread messages in chat label"), self.name, @(self.importantUnreadCount), @(self.unreadCount)];
 	else if (self.unreadCount)
-		self.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%@: %u unread messages.", @"Voiceover unread messages in chat label"), self.name, self.unreadCount];
+		self.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%@: %@ unread messages.", @"Voiceover unread messages in chat label"), self.name, @(self.unreadCount)];
 	else self.accessibilityLabel = self.name;
 }
 

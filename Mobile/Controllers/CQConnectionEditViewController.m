@@ -398,7 +398,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			else cell.detailTextLabel.text = NSLocalizedString(@"None", @"None label");
 
 			if (rooms.count)
-				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Join Rooms: %u rooms", @"Voiceover join rooms label"), rooms.count];
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Join Rooms: %@ rooms", @"Voiceover join rooms label"), @(rooms.count)];
 			else cell.accessibilityLabel = NSLocalizedString(@"Join Rooms: None", @"Voiceover join rooms none label");
 
 			return cell;

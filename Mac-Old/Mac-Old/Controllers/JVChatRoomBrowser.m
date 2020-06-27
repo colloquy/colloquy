@@ -554,11 +554,11 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 
 refresh:
 	if( _connection && _connection.isConnected && _roomResults.count ) {
-		indexResults.objectValue = [NSString stringWithFormat:NSLocalizedString( @"%d rooms indexed.", "number of rooms listed on the server" ), _roomResults.count];
+		indexResults.objectValue = [NSString stringWithFormat:NSLocalizedString( @"%@ rooms indexed.", "number of rooms listed on the server" ), @(_roomResults.count)];
 		if( ! _currentFilter.length ) {
 			indexAndFindResults.objectValue = indexResults.stringValue;
 		} else {
-			indexAndFindResults.objectValue = [NSString stringWithFormat:NSLocalizedString( @"%d of %d rooms found.", "number of rooms found with a filter from the server listing" ), _roomOrder.count, _roomResults.count];
+			indexAndFindResults.objectValue = [NSString stringWithFormat:NSLocalizedString( @"%@ of %@ rooms found.", "number of rooms found with a filter from the server listing" ), @(_roomOrder.count), @(_roomResults.count)];
 		}
 	} else {
 		indexResults.objectValue = @"";
