@@ -21,8 +21,6 @@
 #endif
 #import <UserNotifications/UserNotifications.h>
 
-#import <HockeySDK/HockeySDK.h>
-
 static NSMutableArray <NSString *> *highlightWords;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -31,7 +29,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #define BrowserAlertTag 1
 
-@interface CQColloquyApplication () <UIApplicationDelegate, CQAlertViewDelegate, BITHockeyManagerDelegate, UNUserNotificationCenterDelegate>
+@interface CQColloquyApplication () <UIApplicationDelegate, CQAlertViewDelegate, UNUserNotificationCenterDelegate>
 @end
 
 @implementation CQColloquyApplication {
@@ -163,17 +161,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) performDeferredLaunchWork {
-#if !TARGET_IPHONE_SIMULATOR
-	NSString *hockeyappIdentifier = @"Hockeyapp_App_Identifier";
-	// Hacky check to make sure the identifier was replaced with a string that isn't ""
-	if (![hockeyappIdentifier hasPrefix:@"Hockeyapp"]) {
-		[[BITHockeyManager sharedHockeyManager] configureWithIdentifier:hockeyappIdentifier delegate:self];
-		[BITHockeyManager sharedHockeyManager].disableInstallTracking = YES;
-
-		[[BITHockeyManager sharedHockeyManager] startManager];
-	}
-#endif
-
 	[self cq_beginReachabilityMonitoring];
 
 	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];

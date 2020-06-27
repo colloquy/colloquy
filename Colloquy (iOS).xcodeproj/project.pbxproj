@@ -143,7 +143,6 @@
 		9251306719FDCEAA00847018 /* UIFontAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9251306619FDCEAA00847018 /* UIFontAdditions.m */; };
 		925C594C1177CB63001995E0 /* CQModalNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C594B1177CB63001995E0 /* CQModalNavigationController.m */; };
 		925C59591177D84C001995E0 /* CQAwayStatusController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C59581177D84C001995E0 /* CQAwayStatusController.m */; };
-		9261B6FC18419FCA001B14C3 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9261B6FB18419FCA001B14C3 /* HockeySDK.framework */; };
 		9261B7011841AEA1001B14C3 /* UIApplicationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9261B7001841AEA1001B14C3 /* UIApplicationAdditions.m */; };
 		926678F619BFE22900CCE5BE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 926678F519BFE22900CCE5BE /* Images.xcassets */; };
 		926678F919C03C8500CCE5BE /* CQWKChatTranscriptView.m in Sources */ = {isa = PBXBuildFile; fileRef = 926678F819C03C8500CCE5BE /* CQWKChatTranscriptView.m */; };
@@ -706,7 +705,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1918E3A11F89680700559039 /* OnePasswordExtension.framework in Frameworks */,
-				9261B6FC18419FCA001B14C3 /* HockeySDK.framework in Frameworks */,
 				C2F276F51FBA469F004A6EBD /* CocoaAsyncSocket.framework in Frameworks */,
 				C2A2CABA1FC104CF00A68495 /* CocoaLumberjack.framework in Frameworks */,
 			);
@@ -1546,7 +1544,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/zsh;
-			shellScript = "if [[ \"$CONFIGURATION\" == \"Distribution\" ]]; then\n  KEYCHAINS=`security list-keychains`\n\n  if ! [[ \"$KEYCHAINS\" =~ \"colloquy\" ]]; then\n    open Shared/Resources/colloquy.keychain\n  fi\n\n  POCKET_IPHONE_KEY=`security find-generic-password -wa pocket-iphone`\n  perl -p -i -e \"s/Pocket_iPhone_Consumer_Key/$POCKET_IPHONE_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  POCKET_IPAD_KEY=`security find-generic-password -wa pocket-ipad`\n  perl -p -i -e \"s/Pocket_iPad_Consumer_Key/$POCKET_IPAD_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  HOCKEYAPP_IDENTIFIER=`security find-generic-password -wa hockeyapp`\n  perl -p -i -e \"s/Hockeyapp_App_Identifier/$HOCKEYAPP_IDENTIFIER/g\" \"$SRCROOT/Mobile/Controllers/CQColloquyApplication.m\"\nfi\n ";
+			shellScript = "if [[ \"$CONFIGURATION\" == \"Distribution\" ]]; then\n  KEYCHAINS=`security list-keychains`\n\n  if ! [[ \"$KEYCHAINS\" =~ \"colloquy\" ]]; then\n    open Shared/Resources/colloquy.keychain\n  fi\n\n  POCKET_IPHONE_KEY=`security find-generic-password -wa pocket-iphone`\n  perl -p -i -e \"s/Pocket_iPhone_Consumer_Key/$POCKET_IPHONE_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\n\n  POCKET_IPAD_KEY=`security find-generic-password -wa pocket-ipad`\n  perl -p -i -e \"s/Pocket_iPad_Consumer_Key/$POCKET_IPAD_KEY/g\" \"$SRCROOT/Shared/Controllers/CQPocketController.m\"\nfi\n \n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
