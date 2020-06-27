@@ -1377,7 +1377,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 #pragma mark -
 
-- (void) showPreferences:(__nullable id) sender {
+- (void) showPreferences:(_Nullable id) sender {
 	CQPreferencesViewController *preferencesViewController = [[CQPreferencesViewController alloc] init];
 
 	[[CQColloquyApplication sharedApplication] presentModalViewController:preferencesViewController animated:[UIView areAnimationsEnabled]];
