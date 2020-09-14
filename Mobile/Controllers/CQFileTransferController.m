@@ -5,6 +5,7 @@
 
 #import "CQFileTransferController.h"
 #import "CQFileTransferTableCell.h"
+#import "NSNotificationAdditions.h"
 
 #import <ChatCore/MVFileTransfer.h>
 
@@ -19,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!(self = [self init]))
 		return nil;
 
-	_transfer = [transfer retain];
+	_transfer = transfer;
 
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_fileStarted:) name:MVFileTransferStartedNotification object:nil];
 	[[NSNotificationCenter chatCenter] addObserver:self selector:@selector(_fileFinished:) name:MVFileTransferFinishedNotification object:nil];
@@ -30,23 +31,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) dealloc {
 	[[NSNotificationCenter chatCenter] removeObserver:self];
-
-	[_transfer release];
-	[_timer release];
-
-	[super dealloc];
 }
 
 #pragma mark -
 
 - (void) close {
 	[_timer invalidate];
-	[_timer release];
 	_timer = nil;
 
 	_cell = nil;
 
-	[_transfer release];
 	_transfer = nil;
 }
 
@@ -55,7 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) _timerFired:(NSTimer *) timer {
 	if (_transfer.status == MVFileTransferDoneStatus || _transfer.status == MVFileTransferStoppedStatus) {
 		[_timer invalidate];
-		[_timer release];
 		_timer = nil;
 	} else {
 		[_cell takeValuesFromController:self];
@@ -65,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) _fileStarted:(NSNotification *)notification {
 	if (!_cell || _timer)
 		return;
-	_timer = [[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(_timerFired:) userInfo:nil repeats:YES] retain];
+	_timer = [NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(_timerFired:) userInfo:nil repeats:YES];
 }
 
 - (void) _fileFinished:(NSNotification *) notification {
@@ -93,7 +86,6 @@ NS_ASSUME_NONNULL_BEGIN
 	[[NSFileManager defaultManager] removeItemAtPath:path error:NULL];
 
 	[_timer invalidate];
-	[_timer release];
 	_timer = nil;
 }
 
@@ -104,7 +96,6 @@ NS_ASSUME_NONNULL_BEGIN
 		[[NSFileManager defaultManager] removeItemAtPath:((MVUploadFileTransfer *)_transfer).source error:NULL];
 
 	[_timer invalidate];
-	[_timer release];
 	_timer = nil;
 }
 
@@ -145,10 +136,9 @@ NS_ASSUME_NONNULL_BEGIN
 	_cell = cell;
 
 	if (_cell && !_timer && (_transfer.upload || (_transfer.download && _transfer.status == MVFileTransferNormalStatus))) {
-		_timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(_timerFired:) userInfo:nil repeats:YES] retain];
+		_timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(_timerFired:) userInfo:nil repeats:YES];
 	} else {
 		[_timer invalidate];
-		[_timer release];
 		_timer = nil;
 	}
 }

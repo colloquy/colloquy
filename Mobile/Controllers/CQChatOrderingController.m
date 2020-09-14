@@ -8,6 +8,8 @@
 #import "CQBouncerConnection.h"
 #import "CQBouncerSettings.h"
 
+#import "CQFileTransferController.h"
+
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatUser.h>
 
@@ -360,7 +362,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		CQFileTransferController *controller = [[CQFileTransferController alloc] initWithTransfer:transfer];
 		if (controller) {
 			[self _addFileTransferController:controller];
-			return [controller autorelease];
+			return controller;
 		}
 	}
 

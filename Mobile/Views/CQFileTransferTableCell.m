@@ -29,18 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
 	BOOL _upload;
 }
 
-- (void) dealloc {
-	[_iconImageView release];
-	[_progressView release];
-	[_userLabel release];
-	[_userTitle release];
-	[_fileLabel release];
-	[_fileTitle release];
-	[_thumb release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (void) takeValuesFromController:(CQFileTransferController *) controller {
@@ -61,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	if (!_thumb && controller.thumbnailAvailable)
-		_thumb = [[controller thumbnailWithSize:CGSizeMake(55., 55.)] retain];
+		_thumb = [controller thumbnailWithSize:CGSizeMake(55., 55.)];
 
 	_status = controller.transfer.status;
 	NSLog(@"%@", NSStringFromMVFileTransferStatus(_status));
@@ -131,35 +119,37 @@ NS_ASSUME_NONNULL_BEGIN
 	[super prepareForReuse];
 
 	_iconImageView.image = nil;
-	[_thumb release];
 	_thumb = nil;
 }
 
 - (void) setSelected:(BOOL) selected animated:(BOOL) animated {
 	[super setSelected:selected animated:animated];
 
-	if (animated)
-		[UIView beginAnimations:nil context:NULL];
+	dispatch_block_t animations = ^{
+		CGFloat alpha = (_status == MVFileTransferNormalStatus || selected) ? kNormalAlpha : kOtherAlpha;
+		_userLabel.alpha = _userTitle.alpha = alpha;
+		_fileLabel.alpha = _fileTitle.alpha = alpha;
+		_iconImageView.alpha = _progressView.alpha = alpha;
+	};
 
-	CGFloat alpha = (_status == MVFileTransferNormalStatus || selected) ? kNormalAlpha : kOtherAlpha;
-	_userLabel.alpha = _userTitle.alpha = alpha;
-	_fileLabel.alpha = _fileTitle.alpha = alpha;
-	_iconImageView.alpha = _progressView.alpha = alpha;
-
-	if (animated)
-		[UIView commitAnimations];
+	if (animated) {
+		UIViewAnimationOptions options = (selected ? UIViewAnimationOptionCurveEaseIn : UIViewAnimationOptionCurveEaseOut);
+		[UIView animateWithDuration:0.3 delay:0.0 options:options animations:animations completion:NULL];
+		[UIView animateWithDuration:0.3 animations:animations];
+	} else {
+		animations();
+	}
 }
 
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
 	if (animated) {
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationCurve:(editing ? UIViewAnimationCurveEaseIn : UIViewAnimationCurveEaseOut)];
+		UIViewAnimationOptions options = (editing ? UIViewAnimationOptionCurveEaseIn : UIViewAnimationOptionCurveEaseOut);
+		[UIView animateWithDuration:0.3 delay:0.0 options:options animations:^{
+			[super setEditing:editing animated:animated];
+		} completion:NULL];
+	} else {
+		[super setEditing:editing animated:animated];
 	}
-
-	[super setEditing:editing animated:animated];
-
-	if (animated)
-		[UIView commitAnimations];
 }
 
 
