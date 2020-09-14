@@ -153,6 +153,7 @@ NS_ASSUME_NONNULL_BEGIN
 	else if (self.editing)
 		frame.origin.x = contentRect.size.width - frame.size.width;
 	else frame.origin.x = contentRect.size.width - frame.size.width - TEXT_RIGHT_MARGIN;
+	frame.origin.x -= (CGRectGetMaxX(_checkmarkImageView.frame) / 2.0);
 
 	_memberIconImageView.frame = frame;
 
@@ -166,6 +167,7 @@ NS_ASSUME_NONNULL_BEGIN
 		frame.origin.x = contentRect.size.width - frame.size.width - _memberIconImageView.frame.size.width - MEMBER_ICON_LEFT_MARGIN;
 	else
 		frame.origin.x = contentRect.size.width - frame.size.width - _memberIconImageView.frame.size.width - MEMBER_ICON_LEFT_MARGIN - TEXT_RIGHT_MARGIN;
+	frame.origin.x -= (CGRectGetMaxX(_checkmarkImageView.frame) / 2);
 
 	_memberCountLabel.frame = frame;
 
@@ -181,6 +183,7 @@ NS_ASSUME_NONNULL_BEGIN
 	frame.origin.x = CGRectGetMaxX(_iconImageView.frame) + ICON_RIGHT_MARGIN;
 	frame.origin.y = round(contentRect.size.height / 2.);
 	frame.size.width = contentRect.size.width - frame.origin.x - TEXT_RIGHT_MARGIN;
+	frame.size.width -= (CGRectGetMaxX(_checkmarkImageView.frame) / 2.0);
 	_topicLabel.frame = frame;
 }
 @end

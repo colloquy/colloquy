@@ -750,12 +750,11 @@ retry:
 	_inputView.frame = frame;
 	_inputView.textContainer.size = CGSizeMake(frame.size.width, 0); // 0 = unlimited space
 
+	_accessoryButton.center = self.center;
 	frame = _accessoryButton.frame;
-	frame.origin.x = CGRectGetMaxX(_inputView.frame) + floorf(ButtonMargin);
-	frame.origin.y = (ButtonMargin * 2);
+	frame.origin.x = CGRectGetMaxX(_inputView.frame) - floorf(ButtonMargin);
 	frame.size.width = ButtonWidth;
 	frame.size.height = ButtonWidth;
-
 	_accessoryButton.frame = frame;
 
 #undef ButtonWidth
