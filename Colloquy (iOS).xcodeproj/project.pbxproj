@@ -1874,6 +1874,7 @@
 					"RKL_CACHE_SIZE=47",
 					"RKL_BLOCKS=0",
 					"ENABLE_CHAT_CENTER=1",
+					"ENABLE_FILE_TRANSFERS=1",
 				);
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1910,6 +1911,7 @@
 					"ENABLE_ICB=0",
 					"ENABLE_XMPP=0",
 					USE_HTML_CHAT_STRING,
+					"ENABLE_FILE_TRANSFERS=1",
 					USE_ATTRIBUTED_CHAT_STRING,
 					RKL_FAST_MUTABLE_CHECK,
 					"RKL_CACHE_SIZE=47",
@@ -1958,6 +1960,7 @@
 					"RKL_CACHE_SIZE=47",
 					"RKL_BLOCKS=0",
 					"ENABLE_CHAT_CENTER=1",
+					"ENABLE_FILE_TRANSFERS=1",
 				);
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
