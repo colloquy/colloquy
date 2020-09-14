@@ -479,6 +479,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #pragma mark -
 
+#if !SYSTEM(TV) && !SYSTEM(MAC)
 - (void) setNetworkActivityIndicatorVisible:(BOOL) visible {
 	if (visible) {
 		++_networkIndicatorStack;
@@ -490,6 +491,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 			super.networkActivityIndicatorVisible = NO;
 	}
 }
+#endif
 
 #pragma mark -
 

@@ -973,7 +973,7 @@ CQBouncerConnectionDelegate>
 		(void)[[CQChatOrderingController defaultController] consoleViewControllerForConnection:connection ifExists:NO];
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MAC)
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 #endif
 
@@ -1062,7 +1062,7 @@ CQBouncerConnectionDelegate>
 }
 
 - (void) _didConnectOrDidNotConnect:(NSNotification *) notification {
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MAC)
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	[[CQColloquyApplication sharedApplication] updateAppShortcuts];
 #endif

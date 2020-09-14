@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	_standardToolbarItems = @[];
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MAC)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applyiOS7NavigationBarSizing) name:UIApplicationWillChangeStatusBarFrameNotification object:nil];
 #endif
 
@@ -65,7 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark -
 
 - (void) updateToolbarAnimated:(BOOL) animated {
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MAC)
 	[self updateToolbarForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation animated:animated];
 }
 
@@ -191,7 +191,7 @@ NS_ASSUME_NONNULL_BEGIN
 	CGRect frame = _toolbar.frame;
 	frame.size.width = self.view.frame.size.width;
 
-#if !SYSTEM(TV)
+#if !SYSTEM(TV) && !SYSTEM(MAC)
 	// If we are on iOS 7 or up, the statusbar is now part of the navigation bar, so, we need to fake its height
 	CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
 	// We can't do the following:

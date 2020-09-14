@@ -1416,7 +1416,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL) handleTweetCommandWithArguments:(MVChatString *) arguments {
-#if !SYSTEM(TV) && !SYSTEM(MARZIPAN)
+#if !SYSTEM(TV) && !SYSTEM(MAC)
 	SLComposeViewController *composeViewController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
 	NSString *selectedText = self.chatView.chatTranscriptView.selectedText;
 
@@ -1512,7 +1512,7 @@ NS_ASSUME_NONNULL_BEGIN
 	if (!arguments.length)
 		return NO;
 
-	NSString *nick = [[arguments componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] objectAtIndex:0];
+	NSString *nick = [[arguments.string componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] objectAtIndex:0];
 	MVChatUser *user = [[self.connection chatUsersWithNickname:nick] anyObject];
 	[[CQChatController defaultController] showFilePickerWithUser:user];
 
