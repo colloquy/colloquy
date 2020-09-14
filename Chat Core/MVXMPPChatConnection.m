@@ -4,8 +4,10 @@
 #import "MVXMPPChatUser.h"
 #import "MVXMPPChatRoom.h"
 #import "MVUtilities.h"
+#if ENABLE(PLUGINS)
 #import "MVChatPluginManager.h"
 #import "NSMethodSignatureAdditions.h"
+#endif
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
 #import "MVChatString.h"
@@ -308,12 +310,14 @@ NS_ASSUME_NONNULL_BEGIN
 	}
 
 	NSMutableData *msgData = [[[message body] dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
-	__unsafe_unretained NSMutableData *unsafeMsgData = msgData;
 
 	NSMutableDictionary *msgAttributes = [[NSMutableDictionary alloc] init];
-	__unsafe_unretained NSMutableDictionary *unsafeMsgAttributes = msgAttributes;
 	[msgAttributes setObject:sender forKey:@"user"];
 	[msgAttributes setObject:msgData forKey:@"message"];
+
+#if ENABLE(PLUGINS)
+	__unsafe_unretained NSMutableDictionary *unsafeMsgAttributes = msgAttributes;
+	__unsafe_unretained NSMutableData *unsafeMsgData = msgData;
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatUser * ), @encode( id ), @encode( NSMutableDictionary * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -328,6 +332,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( ! msgData.length ) return;
+#endif
 
 	if( room ) {
 		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:room userInfo:msgAttributes];
