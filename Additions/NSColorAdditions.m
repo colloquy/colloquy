@@ -163,6 +163,7 @@ NS_ASSUME_NONNULL_BEGIN
 	return [NSAEDescriptorTranslator _descriptorByTranslatingColor:self ofType:nil inSuite:nil];
 }
 @end
-#endif
 
 NS_ASSUME_NONNULL_END
+
+#endif
