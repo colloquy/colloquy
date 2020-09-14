@@ -17,7 +17,6 @@
 				9295C9DB16784597009F9014 /* PBXTargetDependency */,
 				9295C9D316784593009F9014 /* PBXTargetDependency */,
 				9295C9D516784593009F9014 /* PBXTargetDependency */,
-				9295C9D716784593009F9014 /* PBXTargetDependency */,
 				9295C9D916784593009F9014 /* PBXTargetDependency */,
 			);
 			name = "Colloquy (Aggregate)";
@@ -97,7 +96,6 @@
 		1C9982AE0604BA1F006C6417 /* sound.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9982AC0604BA1F006C6417 /* sound.png */; };
 		1C9982B00604BEAA006C6417 /* notifications.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C9982AF0604BEAA006C6417 /* notifications.plist */; };
 		1C9982B90604D94C006C6417 /* JVNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA7D0F106015DBA00887614 /* JVNotificationController.m */; };
-		1C9D83DA0C98670000BB6C58 /* iTunes.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1C8CE1EB05A921A00020D841 /* iTunes.scpt */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		1CA75A270652537A000141D5 /* styleOptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1CA75A260652537A000141D5 /* styleOptions.plist */; };
 		1CABF8780656414100801C15 /* NSBundleAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CABF8760656414100801C15 /* NSBundleAdditions.m */; };
 		1CABFCB20657F10900801C15 /* JVSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CABFCB00657F10900801C15 /* JVSplitView.m */; };
@@ -276,13 +274,6 @@
 			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
 			remoteInfo = "Python Support Plugin";
 		};
-		9295C9D616784593009F9014 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1CE3F9BB07C7C29A0049A366 /* F-Script Support.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
-			remoteInfo = "F-Script Support Plugin";
-		};
 		9295C9D816784593009F9014 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1CEF8F7B0A3AB7BB0054298A /* JavaScript Support.xcodeproj */;
@@ -346,7 +337,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				1C9D83DA0C98670000BB6C58 /* iTunes.scpt in Copy Plugins */,
 			);
 			name = "Copy Plugins";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1606,7 +1596,6 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = NO;
 				LastUpgradeCheck = 1120;
 				ORGANIZATIONNAME = "Colloquy Project";
 			};
@@ -1997,11 +1986,6 @@
 			isa = PBXTargetDependency;
 			name = "Python Support Plugin";
 			targetProxy = 9295C9D416784593009F9014 /* PBXContainerItemProxy */;
-		};
-		9295C9D716784593009F9014 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "F-Script Support Plugin";
-			targetProxy = 9295C9D616784593009F9014 /* PBXContainerItemProxy */;
 		};
 		9295C9D916784593009F9014 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
