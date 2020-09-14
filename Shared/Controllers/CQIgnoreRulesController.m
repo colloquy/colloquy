@@ -35,8 +35,8 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 	if (self._ignoreFileURL) {
 		NSData *root = [NSData dataWithContentsOfURL:self._ignoreFileURL];
 
-		for (NSData *data in [NSKeyedUnarchiver unarchiveObjectWithData:root])
-			[_ignoreRules addObject:[NSKeyedUnarchiver unarchiveObjectWithData:data]];
+		for (NSData *data in [NSKeyedUnarchiver unarchivedObjectOfClass:NSArray.class fromData:root error:nil])
+			[_ignoreRules addObject:[NSKeyedUnarchiver unarchivedObjectOfClass:KAIgnoreRule.class fromData:data error:nil]];
 	}
 
 	return self;
@@ -115,7 +115,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 
 	for (KAIgnoreRule *rule in self.ignoreRules)
 		if (rule.isPermanent)
-			[permanentIgnores addObject:[NSKeyedArchiver archivedDataWithRootObject:rule]];
+			[permanentIgnores addObject:[NSKeyedArchiver archivedDataWithRootObject:rule requiringSecureCoding:NO error:nil]];
 
 	if (!permanentIgnores.count && self._ignoreFileURL) {
 		[[NSFileManager defaultManager] removeItemAtURL:self._ignoreFileURL error:nil];
@@ -131,7 +131,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 
 
 	NSError *error = nil;
-	NSData *rootData = [NSKeyedArchiver archivedDataWithRootObject:permanentIgnores];
+	NSData *rootData = [NSKeyedArchiver archivedDataWithRootObject:permanentIgnores requiringSecureCoding:NO error:nil];
 	if (![rootData writeToURL:self._ignoreFileURL options:NSDataWritingAtomic error:&error])
 		[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:CQIgnoreRulesNotSavedNotification object:nil userInfo:@{@"connection": _connection, @"error": error}];
 }
