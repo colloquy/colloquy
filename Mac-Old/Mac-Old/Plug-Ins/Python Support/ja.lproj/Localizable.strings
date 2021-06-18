@@ -19,7 +19,7 @@
 /* reload button title */
 "Reload" = "再読込";
 
-/* F-Script plugin error message */
+/* Python plugin error message */
 "The Python script \"%@\" had an error while calling the \"%@\" function.\n\n%@" = "Python スクリプト「%1$@」は関数「%2$@」の呼び出し中にエラーが起きました。\n\n%3$@";
 
 /* Python script error message */

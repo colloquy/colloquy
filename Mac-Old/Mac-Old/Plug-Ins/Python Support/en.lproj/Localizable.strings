@@ -19,7 +19,7 @@
 /* reload button title */
 "Reload" = "Reload";
 
-/* F-Script plugin error message */
+/* Python plugin error message */
 "The Python script \"%@\" had an error while calling the \"%@\" function.\n\n%@" = "The Python script \"%1$@\" had an error while calling the \"%2$@\" function.\n\n%3$@";
 
 /* Python script error message */

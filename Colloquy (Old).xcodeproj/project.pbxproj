@@ -239,13 +239,6 @@
 			remoteGlobalIDString = 8D5B49B6048680CD000E48DA;
 			remoteInfo = "AppleScript Support Plugin";
 		};
-		0A7F243008556AC100FA3D9B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1CE3F9BB07C7C29A0049A366 /* F-Script Support.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8D5B49B6048680CD000E48DA;
-			remoteInfo = "F-Script Support Plugin";
-		};
 		1C0A19A608B0418600324E25 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1C0A19A208B0418600324E25 /* Python Support.xcodeproj */;
@@ -592,7 +585,6 @@
 		1CE2BC4A042F53AD00000102 /* JVChatRoomPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVChatRoomPanel.m; sourceTree = "<group>"; };
 		1CE2BC53042F75FB00000102 /* JVChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVChatController.h; sourceTree = "<group>"; };
 		1CE2BC54042F75FB00000102 /* JVChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVChatController.m; sourceTree = "<group>"; };
-		1CE3F9BB07C7C29A0049A366 /* F-Script Support.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "F-Script Support.xcodeproj"; sourceTree = "<group>"; };
 		1CE72A95052C745400A8FE6E /* JVChatConsolePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVChatConsolePanel.h; sourceTree = "<group>"; };
 		1CE72A96052C745400A8FE6E /* JVChatConsolePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = JVChatConsolePanel.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1CE72A99052C79E700A8FE6E /* JVChatConsole.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = JVChatConsole.xib; sourceTree = "<group>"; };
@@ -949,14 +941,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		0A7F242D08556AC100FA3D9B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0A7F243108556AC100FA3D9B /* F-Script Support.plugin */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1161,20 +1145,11 @@
 			children = (
 				1C04393E07CAFC5800304949 /* AppleScript Support */,
 				1CEF8F340A3AB70E0054298A /* JavaScript Support */,
-				1CE3F7BC07C7B60A0049A366 /* F-Script Support */,
 				1C0A199A08B0416C00324E25 /* Python Support */,
 				1CA56CCD042A713E00000102 /* iTunes */,
 			);
 			name = "Plug–Ins";
 			path = "Plug-Ins";
-			sourceTree = "<group>";
-		};
-		1CE3F7BC07C7B60A0049A366 /* F-Script Support */ = {
-			isa = PBXGroup;
-			children = (
-				1CE3F9BB07C7C29A0049A366 /* F-Script Support.xcodeproj */,
-			);
-			path = "F-Script Support";
 			sourceTree = "<group>";
 		};
 		1CEF8F340A3AB70E0054298A /* JavaScript Support */ = {
@@ -1626,10 +1601,6 @@
 					ProjectRef = 1C04394607CAFC7D00304949 /* AppleScript Support.xcodeproj */;
 				},
 				{
-					ProductGroup = 0A7F242D08556AC100FA3D9B /* Products */;
-					ProjectRef = 1CE3F9BB07C7C29A0049A366 /* F-Script Support.xcodeproj */;
-				},
-				{
 					ProductGroup = 1CEF8F7C0A3AB7BB0054298A /* Products */;
 					ProjectRef = 1CEF8F7B0A3AB7BB0054298A /* JavaScript Support.xcodeproj */;
 				},
@@ -1654,13 +1625,6 @@
 			fileType = wrapper.cfbundle;
 			path = "AppleScript Support.plugin";
 			remoteRef = 0A7F240E08556A9B00FA3D9B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A7F243108556AC100FA3D9B /* F-Script Support.plugin */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "F-Script Support.plugin";
-			remoteRef = 0A7F243008556AC100FA3D9B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		1C0A19A708B0418600324E25 /* Python Support.plugin */ = {
