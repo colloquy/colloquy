@@ -3,7 +3,7 @@
 	url = ssh://git@github.com/colloquy/CocoaAsyncSocket.git
 [submodule "Carthage/Checkouts/TCMPortMapper"]
 	path = Carthage/Checkouts/TCMPortMapper
-	url = ssh://git@github.com/mugginsoft/TCMPortMapper.git
+	url = ssh://git@github.com/monkeydom/TCMPortMapper.git
 [submodule "Carthage/Checkouts/KissXML"]
 	path = Carthage/Checkouts/KissXML
 	url = ssh://git@github.com/colloquy/KissXML.git
