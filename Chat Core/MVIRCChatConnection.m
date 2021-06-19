@@ -2431,8 +2431,19 @@ parsingFinished: { // make a scope for this
 			for( NSString *capability in capabilities ) {
 				BOOL sendCapReqForFeature = YES;
 
+				NSString *key;
+				NSString *value;
+				NSRange range = [capability rangeOfString:@"="];
+				if (range.location == NSNotFound) {
+					key = capability;
+					value = nil;
+				} else {
+					key = [capability substringToIndex:range.location];
+					value = [capability substringFromIndex:NSMaxRange(range)];
+				}
+
 				// IRCv3.1 Required
-				if( [capability isCaseInsensitiveEqualToString:@"sasl"] ) {
+				if( [key isCaseInsensitiveEqualToString:@"sasl"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionSASLFeature];
 					}
@@ -2447,71 +2458,71 @@ parsingFinished: { // make a scope for this
 						[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self];
 						sendCapReqForFeature = NO;
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"multi-prefix"] ) {
+				} else if( [key isCaseInsensitiveEqualToString:@"multi-prefix"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionMultipleNicknamePrefixFeature];
 					}
 				}
 
 				// IRCv3.1 Optional
-				else if( [capability isCaseInsensitiveEqualToString:@"tls"] ) {
+				else if( [key isCaseInsensitiveEqualToString:@"tls"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionTLSFeature];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"away-notify"]) {
+				} else if( [key isCaseInsensitiveEqualToString:@"away-notify"]) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionAwayNotifyFeature];
 					}
 
-				} else if( [capability isCaseInsensitiveEqualToString:@"extended-join"] ) {
+				} else if( [key isCaseInsensitiveEqualToString:@"extended-join"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionExtendedJoinFeature];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"account-notify"] ) {
+				} else if( [key isCaseInsensitiveEqualToString:@"account-notify"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionAccountNotifyFeature];
 					}
 				}
 
 				// IRCv3.2 Required
-				else if( [capability isCaseInsensitiveEqualToString:@"account-tag"] ) {
+				else if( [key isCaseInsensitiveEqualToString:@"account-tag"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionAccountTagFeature];
 					}
 				}
 
 				// IRCv3.2 Optional
-				else if( [capability isCaseInsensitiveEqualToString:@"chghost"] ) {
+				else if( [key isCaseInsensitiveEqualToString:@"chghost"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionChghostFeature];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"server-time"] || [capability isCaseInsensitiveEqualToString:@"znc.in/server-time-iso"] ) {
+				} else if( [key isCaseInsensitiveEqualToString:@"server-time"] || [key isCaseInsensitiveEqualToString:@"znc.in/server-time-iso"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionServerTimeFeature];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"userhost-in-names"] ) {
+				} else if( [key isCaseInsensitiveEqualToString:@"userhost-in-names"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionUserhostInNamesFeature];
 					}
 				}
 
 				// IRCv3.2
-				else if( [capability isCaseInsensitiveEqualToString:@"cap-notify"] ) {
+				else if( [key isCaseInsensitiveEqualToString:@"cap-notify"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionCapNotifyFeature];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"self-message"] || [capability isCaseInsensitiveEqualToString:@"echo-message"] ) {
+				} else if( [key isCaseInsensitiveEqualToString:@"self-message"] || [key isCaseInsensitiveEqualToString:@"echo-message"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionEchoMessageFeature];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"invite-notify"] ) {
+				} else if( [key isCaseInsensitiveEqualToString:@"invite-notify"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionInviteFeature];
 					}
 				}
 
 				// ZNC plugins
-				else if( [capability isCaseInsensitiveEqualToString:@"znc.in/playback"] ) {
+				else if( [key isCaseInsensitiveEqualToString:@"znc.in/playback"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVIRCChatConnectionZNCPluginPlaybackFeature];
 					}
@@ -2520,18 +2531,17 @@ parsingFinished: { // make a scope for this
 						_hasRequestedPlaybackList = YES;
 						[self sendRawMessage:@"PRIVMSG *playback LIST" immediately:NO];
 					}
-				} else if( [capability isCaseInsensitiveEqualToString:@"znc/self-message"] || [capability isCaseInsensitiveEqualToString:@"znc/echo-message"] ) {
+				} else if( [key isCaseInsensitiveEqualToString:@"znc/self-message"] || [key isCaseInsensitiveEqualToString:@"znc/echo-message"] ) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVIRCChatConnectionZNCEchoMessageFeature];
 					}
 				}
 
 				// IRCv3.3
-				else if( [capability hasCaseInsensitivePrefix:@"sts"] ) {
-					NSString *parametersSubstring = [capability stringByReplacingOccurrencesOfString:@"sts=" withString:@"" options:NSAnchoredSearch range:NSMakeRange(0, capability.length)];
+				else if( [key isCaseInsensitiveEqualToString:@"sts"] ) {
 					NSDate *stsExpirationDate = nil;
 					unsigned short stsPort = 0;
-					for (NSString *keyValuePairs in [parametersSubstring componentsSeparatedByString:@","]) {
+					for (NSString *keyValuePairs in [value componentsSeparatedByString:@","]) {
 						NSArray *keyValueComponents = [keyValuePairs componentsSeparatedByString:@"="];
 						if( keyValueComponents.count != 2 ) continue;
 
@@ -2572,7 +2582,7 @@ parsingFinished: { // make a scope for this
 
 				if (sendCapReqForFeature) {
 					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", capability.lowercaseString];
+						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", key.lowercaseString];
 						furtherNegotiation = YES;
 					}
 				}
