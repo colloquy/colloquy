@@ -1347,7 +1347,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1120;
+				LastUpgradeCheck = 1250;
 				ORGANIZATIONNAME = "Colloquy Project";
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
@@ -1919,8 +1919,8 @@
 					"ENABLE_CHAT_CENTER=1",
 				);
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile.development;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = info.colloquy.mobile.development;
 				PRODUCT_NAME = Colloquy;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
