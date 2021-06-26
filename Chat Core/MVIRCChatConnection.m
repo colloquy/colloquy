@@ -1452,7 +1452,7 @@ parsingFinished: { // make a scope for this
 		NSString *messageTags = @"";
 		NSString *prefix = nil;
 		if ([self.supportedFeatures containsObject:MVChatConnectionAccountTagFeature] && self.localUser.account && self.localUser.isIdentified) {
-			messageTags = [NSString stringWithFormat:@"@account=%@ :", accountName];
+			messageTags = [NSString stringWithFormat:@"@account=%@ ", accountName];
 			prefix = [[NSString alloc] initWithFormat:@"%@PRIVMSG %@%@ :\001ACTION", messageTags, targetPrefix, targetName];
 		} else {
 			prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@%@ :\001ACTION ", targetPrefix, targetName];
@@ -1467,7 +1467,7 @@ parsingFinished: { // make a scope for this
 		NSUInteger messageTagLength = 0;
 		NSString *prefix = nil;
 		if ([self.supportedFeatures containsObject:MVChatConnectionAccountTagFeature] && self.localUser.account && self.localUser.isIdentified) {
-			messageTags = [NSString stringWithFormat:@"@account=%@ :", accountName];
+			messageTags = [NSString stringWithFormat:@"@account=%@ ", accountName];
 			messageTagLength = messageTags.length; // space is in the tag substring since we don't have to worry about \001 for regular PRIVMSGs
 			prefix = [[NSString alloc] initWithFormat:@"%@PRIVMSG %@%@ :", messageTags, targetPrefix, targetName];
 		} else {
