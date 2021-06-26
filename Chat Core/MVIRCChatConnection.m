@@ -1092,33 +1092,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	{ // schedule an end to the capability negotiation in case it stalls the connection
 		[self _sendEndCapabilityCommandAfterTimeout];
 
-		NSArray <NSString *> *IRCv31Required = nil;
-		if ( _requestsSASL && self.nicknamePassword.length )
-			IRCv31Required = @[ @"sasl", @"multi-prefix", @" " ];
-		else IRCv31Required = @[ @"multi-prefix", @" " ];
-
-		NSArray <NSString *> *IRCv31Optional = @[ @"tls", @"away-notify", @"extended-join", @"account-notify", @" " ];
-		NSArray <NSString *> *IRCv32Required = @[ @"account-tag", @"intent", @" " ];
-		NSArray <NSString *> *IRCv32Optional = @[ @"self-message", @"cap-notify", @"chghost", @"invite-notify", @"server-time", @"userhost-in-names", @"batch", @" " ];
-		NSArray <NSString *> *IRCv33Prototypes = nil;
-		if( !_secure )
-			IRCv33Prototypes = @[ /* @"sts", */ @" " ]; // we only request sts support if we are on insecure connections
-		else IRCv33Prototypes = @[ @" " ];
-
-		// Older versions of ZNC prefixes their capabilities (from when IRCv3.2 wasn't finished).
-		NSArray <NSString *> *ZNCPrefixedIRCv32Optional = @[ @"znc.in/server-time-iso", @"znc.in/self-message", @"znc.in/batch", @"znc.in/playback", @" " ];
-
 		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
-
-		NSMutableString *rawMessage = [@"CAP REQ : " mutableCopy];
-		[rawMessage appendString:[IRCv31Required componentsJoinedByString:@" "]];
-		[rawMessage appendString:[IRCv31Optional componentsJoinedByString:@" "]];
-		[rawMessage appendString:[IRCv32Required componentsJoinedByString:@" "]];
-		[rawMessage appendString:[IRCv32Optional componentsJoinedByString:@" "]];
-		[rawMessage appendString:[ZNCPrefixedIRCv32Optional componentsJoinedByString:@" "]];
-		[rawMessage appendString:[IRCv33Prototypes componentsJoinedByString:@" "]];
-
-		[self sendRawMessageImmediatelyWithFormat:[rawMessage copy]];
 	}
 
 	if( password.length ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
