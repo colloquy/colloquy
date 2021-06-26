@@ -3245,9 +3245,6 @@ parsingFinished: { // make a scope for this
 
 				_pendingIdentificationAttempt = NO;
 
-				if( [self.supportedFeatures containsObject:MVChatConnectionAccountNotifyFeature] && self.localUser.isIdentified )
-					[self sendRawMessageImmediatelyWithFormat:@"ACCOUNT %@", self.localUser.account];
-
 				if( ![[self localUser] isIdentified] )
 					[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidIdentifyWithServicesNotification object:self userInfo:noticeInfo];
 				[[self localUser] _setIdentified:YES];
