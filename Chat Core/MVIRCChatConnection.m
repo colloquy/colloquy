@@ -1446,33 +1446,16 @@ parsingFinished: { // make a scope for this
 
 	NSString *targetName = [target isKindOfClass:[MVChatRoom class]] ? [target name] : [target nickname];
 
-	NSString *accountName = self.localUser.account;
-	[self _stripModePrefixesFromNickname:&accountName];
 	if( [attributes[@"action"] boolValue] ) {
-		NSString *messageTags = @"";
-		NSString *prefix = nil;
-		if ([self.supportedFeatures containsObject:MVChatConnectionAccountTagFeature] && self.localUser.account && self.localUser.isIdentified) {
-			messageTags = [NSString stringWithFormat:@"@account=%@ ", accountName];
-			prefix = [[NSString alloc] initWithFormat:@"%@PRIVMSG %@%@ :\001ACTION", messageTags, targetPrefix, targetName];
-		} else {
-			prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@%@ :\001ACTION ", targetPrefix, targetName];
-		}
+		NSString *prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@%@ :\001ACTION ", targetPrefix, targetName];
 
 		NSUInteger bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
 
 		if ( msg.length > bytesLeft ) [self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
 		else [self sendRawMessageWithComponents:prefix, msg, @"\001", nil]; // exclude trailing \001 byte if we are using intent tags
 	} else {
-		NSString *messageTags = @"";
 		NSUInteger messageTagLength = 0;
-		NSString *prefix = nil;
-		if ([self.supportedFeatures containsObject:MVChatConnectionAccountTagFeature] && self.localUser.account && self.localUser.isIdentified) {
-			messageTags = [NSString stringWithFormat:@"@account=%@ ", accountName];
-			messageTagLength = messageTags.length; // space is in the tag substring since we don't have to worry about \001 for regular PRIVMSGs
-			prefix = [[NSString alloc] initWithFormat:@"%@PRIVMSG %@%@ :", messageTags, targetPrefix, targetName];
-		} else {
-			prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@%@ :", targetPrefix, targetName];
-		}
+		NSString *prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@%@ :", targetPrefix, targetName];
 
 		NSUInteger bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
 		bytesLeft += messageTagLength;
