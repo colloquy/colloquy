@@ -2400,7 +2400,7 @@ parsingFinished: { // make a scope for this
 				}
 
 				// IRCv3.1 Required
-				if( [key isCaseInsensitiveEqualToString:@"sasl"] ) {
+				if( [key isCaseInsensitiveEqualToString:@"sasl"] && (value == nil || [[value componentsSeparatedByString:@","] containsObject:@"PLAIN"])) {
 					@synchronized( _supportedFeatures ) {
 						[_supportedFeatures addObject:MVChatConnectionSASLFeature];
 					}
