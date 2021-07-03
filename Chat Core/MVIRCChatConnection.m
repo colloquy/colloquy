@@ -356,6 +356,8 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	dispatch_queue_t _connectionQueue;
 
 	NSTimeInterval _nextPingTimeInterval;
+
+	NSInteger _capabilityNegotiationMessageCounter;
 }
 
 + (NSArray <NSNumber *> *) defaultServerPorts {
@@ -367,6 +369,20 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 }
 
 #pragma mark -
+
+- (void) waitingForCapNegotiation {
+	_capabilityNegotiationMessageCounter++;
+	[self _sendEndCapabilityCommandAfterTimeout];
+}
+
+- (void) receivedCapResponse {
+	_capabilityNegotiationMessageCounter--;
+	if (_capabilityNegotiationMessageCounter < 1) {
+		[self _sendEndCapabilityCommandSoon];
+	} else {
+		[self _sendEndCapabilityCommandAfterTimeout];
+	}
+}
 
 - (instancetype) init {
 	if( ( self = [super init] ) ) {
@@ -886,6 +902,7 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 	_pendingIdentificationAttempt = NO;
 	_sentEndCapabilityCommand = NO;
 	_userDisconnected = NO;
+	_capabilityNegotiationMessageCounter = 0;
 
 	_failedNickname = nil;
 	_failedNicknameCount = 1;
@@ -1089,11 +1106,9 @@ NSString *const MVIRCChatConnectionZNCPluginPlaybackFeature = @"MVIRCChatConnect
 		}
 	}
 
-	{ // schedule an end to the capability negotiation in case it stalls the connection
-		[self _sendEndCapabilityCommandAfterTimeout];
-
-		[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
-	}
+	[self waitingForCapNegotiation];
+	
+	[self sendRawMessageImmediatelyWithFormat:@"CAP LS 302"];
 
 	if( password.length ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self preferredNickname]];
@@ -2373,16 +2388,21 @@ parsingFinished: { // make a scope for this
 #pragma mark Connecting Replies
 
 - (void) _handleCapWithParameters:(NSArray *) parameters fromSender:(id) sender {
-	BOOL furtherNegotiation = NO;
-
 	if( parameters.count >= 3 ) {
 		NSString *subCommand = parameters[1];
+
+		if ([subCommand isEqualToString:@"LS"] || [subCommand isEqualToString:@"ACK"] || [subCommand isEqualToString:@"NACK"]) {
+			[self receivedCapResponse];
+		}
+
 		if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"ACK"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] || [subCommand isCaseInsensitiveEqualToString:@"LIST"] ) {
 			NSString *capabilitiesString = [self _stringFromPossibleData:parameters[2]];
 
 			// IRCv3.2 says that multiline CAP replies will prefix capabilities with a * for all but the last line
 			if( [capabilitiesString isCaseInsensitiveEqualToString:@"*"] && parameters.count >= 4 )
 				capabilitiesString = [self _stringFromPossibleData:parameters[3]];
+
+			NSMutableArray <NSString *> *capabilitiesToRequest = [[NSMutableArray alloc] init];
 
 			NSArray <NSString *> *capabilities = [capabilitiesString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 			for( NSString *capability in capabilities ) {
@@ -2408,8 +2428,8 @@ parsingFinished: { // make a scope for this
 					if( self.nicknamePassword.length ) {
 						if( [subCommand isCaseInsensitiveEqualToString:@"ACK"] ) {
 							[self sendRawMessageImmediatelyWithFormat:@"AUTHENTICATE PLAIN"];
-							furtherNegotiation = YES;
 							sendCapReqForFeature = NO;
+							[self waitingForCapNegotiation];
 						}
 					} else {
 						[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self];
@@ -2538,10 +2558,34 @@ parsingFinished: { // make a scope for this
 				}
 
 				if (sendCapReqForFeature) {
-					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"NEW"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", key.lowercaseString];
-						furtherNegotiation = YES;
+					[capabilitiesToRequest addObject:key];
+				}
+			}
+			
+			if(capabilitiesToRequest.count && ([subCommand isEqualToString:@"LS"] || [subCommand isEqualToString:@"NEW"])) {
+				// rfc2812 specifies 510 bytes per command, minus "CAP REQ :" = 501 bytes per req
+				NSMutableArray <NSString *> *listsOfCapabilitiesToRequest = [[NSMutableArray alloc] init];
+				NSMutableString *newList = [[NSMutableString alloc] init];
+				for (NSString *capability in capabilitiesToRequest) {
+					if (newList.length == 0) {
+						[newList appendString:capability];
 					}
+					else if (newList.length + capability.length + 1 > 500) {
+						[listsOfCapabilitiesToRequest addObject:newList];
+						newList = [capability mutableCopy];
+					}
+					else {
+						[newList appendFormat:@" %@", capability];
+					}
+				}
+
+				if (newList.length > 0) {
+					[listsOfCapabilitiesToRequest addObject:newList];
+				}
+
+				for (NSString *list in listsOfCapabilitiesToRequest) {
+					[self waitingForCapNegotiation];
+					[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :%@", list];
 				}
 			}
 		} else if( [subCommand isCaseInsensitiveEqualToString:@"DEL"] ) {
@@ -2613,11 +2657,6 @@ parsingFinished: { // make a scope for this
 			}
 		}
 	}
-
-	if( furtherNegotiation )
-		[self _sendEndCapabilityCommandAfterTimeout];
-	else
-		[self _sendEndCapabilityCommandSoon];
 }
 
 - (void) _handleAuthenticateWithParameters:(NSArray *) parameters fromSender:(id) sender {
@@ -2639,6 +2678,7 @@ parsingFinished: { // make a scope for this
 			// If empty or the last string was exactly 400 bytes we need to send an empty AUTHENTICATE to indicate we're done.
 			[self sendRawMessageImmediatelyWithFormat:@"AUTHENTICATE +"];
 		}
+		[self receivedCapResponse];
 	} else [self _sendEndCapabilityCommandForcefully:YES];
 }
 
