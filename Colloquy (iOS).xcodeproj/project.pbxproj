@@ -1834,6 +1834,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Jane Lee (N94ANP6XYA)";
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
 				HEADER_SEARCH_PATHS = (
@@ -2141,6 +2142,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
 				HEADER_SEARCH_PATHS = (
@@ -2157,6 +2159,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COLLOQUY_WORKSPACE_ROOT = "$(SRCROOT)";
 				HEADER_SEARCH_PATHS = (
