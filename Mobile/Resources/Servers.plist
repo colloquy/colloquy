@@ -106,6 +106,14 @@
 	</dict>
 	<dict>
 		<key>Address</key>
+		<string>irc.libera.chat</string>
+		<key>Name</key>
+		<string>Libera.Chat</string>
+		<key>SSLPort</key>
+		<integer>6697</integer>
+	</dict>
+	<dict>
+		<key>Address</key>
 		<string>irc.macnn.com</string>
 		<key>Name</key>
 		<string>MacNN</string>

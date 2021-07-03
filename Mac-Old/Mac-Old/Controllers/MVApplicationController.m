@@ -150,7 +150,7 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) connectToSupportRoom:(id) sender {
-	[[MVConnectionsController defaultController] handleURL:[NSURL URLWithString:@"irc://irc.freenode.net/#colloquy"] andConnectIfPossible:YES];
+	[[MVConnectionsController defaultController] handleURL:[NSURL URLWithString:@"irc://irc.libera.chat/#colloquy"] andConnectIfPossible:YES];
 }
 
 - (IBAction) emailDeveloper:(id) sender {

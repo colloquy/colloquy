@@ -61,6 +61,6 @@
 	},
 	{
 		Title = "Colloquy Support Room";
-		Link = "irc://irc.freenode.net/colloquy-mobile";
+		Link = "irc://irc.libera.chat/#colloquy-mobile";
 	},
 )

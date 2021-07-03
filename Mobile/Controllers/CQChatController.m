@@ -649,13 +649,12 @@ static CQSoundController *fileTransferSound;
 #pragma mark -
 
 - (void) joinSupportRoom {
-	MVChatConnection *connection = [[CQConnectionsController defaultController] connectionForServerAddress:@"freenode.net"];
-	if (!connection) connection = [[CQConnectionsController defaultController] connectionForServerAddress:@"freenode.com"];
+	MVChatConnection *connection = [[CQConnectionsController defaultController] connectionForServerAddress:@"libera.chat"];
 
 	if (!connection) {
 		connection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
-		connection.displayName = @"Freenode";
-		connection.server = @"irc.freenode.net";
+		connection.displayName = @"Libera.Chat";
+		connection.server = @"irc.libera.chat";
 		connection.preferredNickname = [MVChatConnection defaultNickname];
 		connection.realName = [MVChatConnection defaultRealName];
 		connection.username = [connection.preferredNickname lowercaseString];
