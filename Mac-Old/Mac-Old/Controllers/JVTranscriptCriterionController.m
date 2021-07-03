@@ -46,10 +46,10 @@
 
 - (void) encodeWithCoder:(NSCoder *) coder {
 	if( [coder allowsKeyedCoding] ) {
-		[coder encodeInt:[self kind] forKey:@"kind"];
+		[coder encodeInteger:[self kind] forKey:@"kind"];
 		[coder encodeObject:[self query] forKey:@"query"];
-		[coder encodeInt:[self operation] forKey:@"operation"];
-		[coder encodeInt:[self queryUnits] forKey:@"queryUnits"];
+		[coder encodeInteger:[self operation] forKey:@"operation"];
+		[coder encodeInteger:[self queryUnits] forKey:@"queryUnits"];
 		[coder encodeBool:[self usesSmartTranscriptCriterion] forKey:@"smartTranscriptCriterion"];
 	}
 

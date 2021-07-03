@@ -40,9 +40,9 @@
 
 - (void) encodeWithCoder:(NSCoder *) coder {
 	if( [coder allowsKeyedCoding] ) {
-		[coder encodeInt:[self kind] forKey:@"kind"];
+		[coder encodeInteger:[self kind] forKey:@"kind"];
 		[coder encodeObject:[self query] forKey:@"query"];
-		[coder encodeInt:[self operation] forKey:@"operation"];
+		[coder encodeInteger:[self operation] forKey:@"operation"];
 	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 }
 
