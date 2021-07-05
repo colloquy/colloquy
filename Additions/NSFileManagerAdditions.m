@@ -29,10 +29,30 @@ static inline void markArchitectureAsActiveForCPUType(MVArchitectures *architect
 		case CPU_SUBTYPE_ARM_V7:
 		case CPU_SUBTYPE_ARM_V7F:
 		case CPU_SUBTYPE_ARM_V7K:
+		case CPU_SUBTYPE_ARM_V7S:
 			(*architectures).armv7 = YES;
+			break;
+		case CPU_SUBTYPE_ARM_V8:
+			architectures->armv8 = YES;
 			break;
 		default:
 			(*architectures).unknown++;
+			break;
+		}
+		break;
+	case CPU_TYPE_ARM64:
+		switch (cpuSubtype) {
+		case CPU_SUBTYPE_ARM64_ALL:
+			architectures->arm64 = YES;
+			break;
+		case CPU_SUBTYPE_ARM64_V8:
+			architectures->arm64 = YES;
+			break;
+		case CPU_SUBTYPE_ARM64E:
+			architectures->arm64 = YES;
+			break;
+		default:
+			architectures->unknown++;
 			break;
 		}
 		break;
@@ -50,7 +70,7 @@ static inline void swapIntsInHeader(uint8_t *bytes, ssize_t length) {
 #pragma mark -
 
 - (MVArchitectures) architecturesForBinaryAtPath:(NSString *) path {
-	MVArchitectures architectures = { NO, NO, NO, NO, NO, NO, 0 };
+	MVArchitectures architectures = { NO, NO, NO, NO, NO, NO, NO, NO, 0 };
 
 	NSFileHandle *executableFile = [NSFileHandle fileHandleForReadingAtPath:path];
 	NSData *data = [executableFile readDataOfLength:512];
@@ -95,7 +115,7 @@ static inline void swapIntsInHeader(uint8_t *bytes, ssize_t length) {
 #pragma mark -
 
 - (BOOL) canExecutePluginAtPath:(NSString *) pluginPath {
-	MVArchitectures validArchitectures = [[NSFileManager defaultManager] architecturesForBinaryAtPath:pluginPath];
+	MVArchitectures validArchitectures = [self architecturesForBinaryAtPath:pluginPath];
 
 #if __ppc__
 	return validArchitectures.ppc32;
@@ -109,6 +129,10 @@ static inline void swapIntsInHeader(uint8_t *bytes, ssize_t length) {
 	return validArchitectures.armv6;
 #elif __ARM_ARCH_7__
 	return validArchitectures.armv7;
+#elif __ARM_ARCH_8__
+	return validArchitectures.armv8;
+#elif __arm64__
+	return validArchitectures.arm64;
 #else
 	return validArchitectures.unknown;
 #endif
@@ -116,7 +140,7 @@ static inline void swapIntsInHeader(uint8_t *bytes, ssize_t length) {
 @end
 
 NSString *NSStringFromMVArchitectures(MVArchitectures architectures) {
-	return [NSString stringWithFormat:@"(\n\tPPC 32-Bit: %d\n\tPPC 64-Bit: %d\n\tIntel x86: %d\n\tIntel x86_64: %d\n\tArmv6: %d\n\tArmv7: %d\n\tUnknown Architectures: %ld\n)", architectures.ppc32, architectures.ppc64, architectures.x86, architectures.x86_64, architectures.armv6, architectures.armv7, architectures.unknown];
+	return [NSString stringWithFormat:@"(\n\tPPC 32-Bit: %d\n\tPPC 64-Bit: %d\n\tIntel x86: %d\n\tIntel x86_64: %d\n\tArmv6: %d\n\tArmv7: %d\n\tArmv8: %d\n\tArm64: %d\n\tUnknown Architectures: %ld\n)", architectures.ppc32, architectures.ppc64, architectures.x86, architectures.x86_64, architectures.armv6, architectures.armv7, architectures.armv8, architectures.arm64, (long)architectures.unknown];
 }
 
 NS_ASSUME_NONNULL_END
