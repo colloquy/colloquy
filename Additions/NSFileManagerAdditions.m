@@ -115,7 +115,7 @@ static inline void swapIntsInHeader(uint8_t *bytes, ssize_t length) {
 #pragma mark -
 
 - (BOOL) canExecutePluginAtPath:(NSString *) pluginPath {
-	MVArchitectures validArchitectures = [[NSFileManager defaultManager] architecturesForBinaryAtPath:pluginPath];
+	MVArchitectures validArchitectures = [self architecturesForBinaryAtPath:pluginPath];
 
 #if __ppc__
 	return validArchitectures.ppc32;
